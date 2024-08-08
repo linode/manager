@@ -78,8 +78,8 @@ const multiplier: { [label: string]: number } = {
 
 /**
  *
- * @param value : bit value based on which maximum possible unit will be generated
- * @returns : maximum possible rolled up unit for the input bit value
+ * @param value bit value based on which maximum possible unit will be generated
+ * @returns maximum possible rolled up unit for the input bit value
  */
 export const generateUnitByBitValue = (value: number): string => {
   if (value < multiplier.Kb) {
@@ -102,8 +102,8 @@ export const generateUnitByBitValue = (value: number): string => {
 
 /**
  *
- * @param value : byte value based on which maximum possible unit will be generated
- * @returns : maximum possible rolled up unit for the input byte value
+ * @param value byte value based on which maximum possible unit will be generated
+ * @returns maximum possible rolled up unit for the input byte value
  */
 export const generateUnitByByteValue = (value: number): string => {
   if (value < multiplier.KB) {
@@ -156,9 +156,9 @@ export const generateUnitByTimeValue = (value: number): string => {
 
 /**
  *
- * @param value : bit value to be rolled up based on maxUnit
- * @param maxUnit : maximum possible unit based on which value will be rolled up
- * @returns : rolled up value based on maxUnit
+ * @param value bit value to be rolled up based on maxUnit
+ * @param maxUnit maximum possible unit based on which value will be rolled up
+ * @returns rolled up value based on maxUnit
  */
 export const convertValueToUnit = (value: number, maxUnit: string) => {
   const convertingValue = multiplier[maxUnit] ?? 1;
@@ -171,9 +171,9 @@ export const convertValueToUnit = (value: number, maxUnit: string) => {
 
 /**
  *
- * @param value : bits or bytes value to be rolled up to highest possible unit according to base unit.
- * @param baseUnit : bits or bytes unit depends on which unit will be generated for value.
- * @returns : formatted string for the value rolled up to higher possible unit according to base unit.
+ * @param value bits or bytes value to be rolled up to highest possible unit according to base unit.
+ * @param baseUnit bits or bytes unit depends on which unit will be generated for value.
+ * @returns formatted string for the value rolled up to higher possible unit according to base unit.
  */
 export const formatToolTip = (value: number, baseUnit: string): string => {
   const unit = generateCurrentUnit(baseUnit);
@@ -194,9 +194,9 @@ export const formatToolTip = (value: number, baseUnit: string): string => {
 
 /**
  *
- * @param value : bits or bytes value for which unit to be generate
- * @param baseUnit : bits or bytes unit depends on which unit will be generated for value
- * @returns : Unit object if base unit is bits or bytes otherwise undefined
+ * @param value bits or bytes value for which unit to be generate
+ * @param baseUnit bits or bytes unit depends on which unit will be generated for value
+ * @returns Unit object if base unit is bits or bytes otherwise undefined
  */
 export const generateUnitByBaseUnit = (
   value: number,

@@ -5,11 +5,10 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 
+import { isDataEmpty } from '../../Utils/CloudPulseWidgetUtils';
+
 import type { LegendRow } from '../CloudPulseWidget';
-import type {
-  DataSet,
-  LineGraphProps,
-} from 'src/components/LineGraph/LineGraph';
+import type { LineGraphProps } from 'src/components/LineGraph/LineGraph';
 
 export interface CloudPulseLineGraph extends LineGraphProps {
   ariaLabel?: string;
@@ -22,7 +21,7 @@ export interface CloudPulseLineGraph extends LineGraphProps {
 }
 
 export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
-  const { ariaLabel, error, loading, ...rest } = props;
+  const { ariaLabel, data, error, legendRows, loading, ...rest } = props;
 
   if (loading) {
     return <CircleProgress sx={{ minHeight: '380px' }} />;
@@ -44,11 +43,12 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
         <LineGraph
           {...rest}
           ariaLabel={ariaLabel!}
+          data={data}
           isLegendsFullSize={true}
-          legendRows={props.legendRows}
+          legendRows={legendRows}
         />
       )}
-      {isDataEmpty(props.data) && (
+      {isDataEmpty(data) && (
         <Box
           sx={{
             bottom: '60%',
@@ -62,12 +62,3 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
     </Box>
   );
 });
-
-export const isDataEmpty = (data: DataSet[]) => {
-  return data.every(
-    (thisSeries) =>
-      thisSeries.data.length === 0 ||
-      // If we've padded the data, every y value will be null
-      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
-  );
-};

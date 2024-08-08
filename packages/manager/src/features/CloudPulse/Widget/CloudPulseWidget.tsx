@@ -115,6 +115,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
   const {
+    ariaLabel,
     authToken,
     availableMetrics,
     duration,
@@ -227,7 +228,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     status,
   } = useCloudPulseMetricsQuery(
     serviceType,
-    getCloudPulseMetricRequest(widget, duration, resources, resourceIds),
+    getCloudPulseMetricRequest({
+      duration,
+      resourceIds,
+      resources,
+      widget,
+    }),
     {
       authToken,
       isFlags: Boolean(flags),
@@ -244,18 +250,18 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   let currentUnit = unit;
   if (!isLoading && metricsList) {
-    const generatedData = generateGraphData(
-      {
+    const generatedData = generateGraphData({
+      flags,
+      metricsList,
+      resources,
+      widgetObject: {
         label: widget.label,
         serviceType,
         status,
         unit,
         widgetColor: widget.color,
       },
-      metricsList,
-      flags,
-      resources
-    );
+    });
 
     data = generatedData.dimensions;
     legendRows = generatedData.legendRowsData;
@@ -325,13 +331,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             legendRows={
               legendRows && legendRows.length > 0 ? legendRows : undefined
             }
-            ariaLabel={props.ariaLabel ? props.ariaLabel : ''}
+            ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
             formatData={(data: number) => convertValueToUnit(data, currentUnit)}
             formatTooltip={(value: number) => formatToolTip(value, unit)}
             gridSize={widget.size}
             loading={isLoading}
-            nativeLegend={true}
+            nativeLegend
             showToday={today}
             timezone={timezone}
             title={widget.label}

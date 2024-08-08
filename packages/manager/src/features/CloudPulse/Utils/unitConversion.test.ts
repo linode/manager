@@ -28,7 +28,7 @@ describe('Unit conversion', () => {
       expect(formatToolTip(2048, 'B')).toBe('2 KB');
       expect(formatToolTip(1000, 'ms')).toBe('1 s');
     }),
-    it('should generated maximum unit based on the base unit & value', () => {
+    it('should generate maximum unit based on the base unit & value', () => {
       expect(generateUnitByBaseUnit(1000000, 'b')).toBe('Mb');
       expect(generateUnitByBaseUnit(2048, 'B')).toBe('KB');
       expect(generateUnitByBaseUnit(60001, 'ms')).toBe('min');

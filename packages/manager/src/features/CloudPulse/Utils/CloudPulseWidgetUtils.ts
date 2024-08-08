@@ -24,35 +24,102 @@ import type {
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
-interface LabelObject {
-  flags: FlagSet;
-  label: string;
-  serviceType: string;
-  unit: string;
+interface LabelNameOptionsProps {
+  /**
+   * properties required to generate label
+   */
+  labelObject: {
+    flags: FlagSet;
+    label: string;
+    serviceType: string;
+    unit: string;
+  };
+
+  /**
+   * key-value to generate dimension name
+   */
+  metric: { [label: string]: string };
+
+  /**
+   * list of CloudPulseResources available
+   */
+  resources: CloudPulseResources[];
 }
 
-interface WidgetObject {
-  label: string;
-  serviceType: string;
-  status: string | undefined;
-  unit: string;
-  widgetColor: string | undefined;
+interface graphDataOptionsProps {
+  /**
+   * flags associated with metricsList
+   */
+  flags: FlagSet;
+
+  /**
+   * data that will be displayed on graph
+   */
+  metricsList: CloudPulseMetricsResponse | undefined;
+
+  /**
+   * list of CloudPulse resources
+   */
+  resources: CloudPulseResources[];
+
+  /**
+   * widget properties to generate the graph dimensions & legend rows
+   */
+  widgetObject: {
+    label: string;
+    serviceType: string;
+    status: string | undefined;
+    unit: string;
+    widgetColor: string | undefined;
+  };
+}
+
+interface MetricRequestProps {
+  /**
+   * time duration for the metrics data
+   */
+  duration: TimeDuration;
+
+  /**
+   * resource ids selected by user
+   */
+  resourceIds: string[];
+
+  /**
+   * list of CloudPulse resources available
+   */
+  resources: CloudPulseResources[];
+
+  /**
+   * widget filters for metrics data
+   */
+  widget: Widgets;
+}
+
+interface DimensionNameProperties {
+  /**
+   * flag dimension key mapping for service type
+   */
+  flag: CloudPulseResourceTypeMapFlag | undefined;
+
+  /**
+   * metric key-value to generate dimension name
+   */
+  metric: { [label: string]: string };
+
+  /**
+   * resources list of CloudPulseResources available
+   */
+  resources: CloudPulseResources[];
 }
 
 /**
  *
- * @param widgetObject widget properties to generate the graph data
- * @param metricsList data that will be displayed on graph
- * @param flags flags associated with metriclist
- * @param resources list of cloud pulse resources
  * @returns parameters which will be necessary to populate graph & legends
  */
-export const generateGraphData = (
-  widgetObject: WidgetObject,
-  metricsList: CloudPulseMetricsResponse | undefined,
-  flags: FlagSet,
-  resources: CloudPulseResources[]
-) => {
+export const generateGraphData = (props: graphDataOptionsProps) => {
+  const { flags, metricsList, resources, widgetObject } = props;
+
   const dimensions: DataSet[] = [];
   const legendRowsData: LegendRow[] = [];
 
@@ -60,8 +127,8 @@ export const generateGraphData = (
   const colors = COLOR_MAP.get(widgetObject.widgetColor ?? 'default')!;
   let today = false;
 
-  if (widgetObject.status === 'success' && metricsList?.data?.result?.length) {
-    metricsList!.data.result.forEach(
+  if (widgetObject.status === 'success') {
+    metricsList?.data?.result?.forEach(
       (graphData: CloudPulseMetricsList, index) => {
         if (!graphData) {
           return;
@@ -79,20 +146,22 @@ export const generateGraphData = (
           start: transformedData.values[0][0],
         };
 
+        const labelObject: LabelNameOptionsProps = {
+          labelObject: {
+            flags,
+            label: widgetObject.label,
+            serviceType: widgetObject.serviceType,
+            unit: widgetObject.unit,
+          },
+          metric: transformedData.metric,
+          resources,
+        };
+
         const dimension = {
           backgroundColor: color,
           borderColor: '',
           data: seriesDataFormatter(transformedData.values, start, end),
-          label: getLabelName(
-            {
-              flags,
-              label: widgetObject.label,
-              serviceType: widgetObject.serviceType,
-              unit: widgetObject.unit,
-            },
-            transformedData.metric,
-            resources
-          ),
+          label: getLabelName(labelObject),
         };
         // construct a legend row with the dimension
         const legendRow = {
@@ -136,11 +205,9 @@ const generateMaxUnit = (legendRowsData: LegendRow[], unit: string) => {
  * @returns a CloudPulseMetricRequest object to be passed as data to metric api call
  */
 export const getCloudPulseMetricRequest = (
-  widget: Widgets,
-  duration: TimeDuration,
-  resources: CloudPulseResources[],
-  resourceIds: string[]
+  props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
+  const { duration, resourceIds, resources, widget } = props;
   return {
     aggregate_function: widget.aggregate_function,
     filters: undefined,
@@ -162,16 +229,10 @@ export const getCloudPulseMetricRequest = (
 
 /**
  *
- * @param labelObject properties required to generate label
- * @param metric key-value to generate dimension name
- * @param resources list of CloudPulseResources available
  * @returns generated label name for graph dimension
  */
-const getLabelName = (
-  labelObject: LabelObject,
-  metric: { [label: string]: string },
-  resources: CloudPulseResources[]
-): string => {
+const getLabelName = (props: LabelNameOptionsProps): string => {
+  const { labelObject, metric, resources } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
@@ -183,21 +244,15 @@ const getLabelName = (
       obj.serviceType === labelObject.serviceType
   );
 
-  return getDimensionName(metric, flag, resources);
+  return getDimensionName({ flag, metric, resources });
 };
 
 /**
  *
- * @param metric key-value to generate dimension name
- * @param flag dimension key mapping for serivce type
- * @param resources list of CloudPulseResources available
  * @returns generated dimension name based on resources
  */
-export const getDimensionName = (
-  metric: { [label: string]: string },
-  flag: CloudPulseResourceTypeMapFlag | undefined,
-  resources: CloudPulseResources[]
-): string => {
+export const getDimensionName = (props: DimensionNameProperties): string => {
+  const { flag, metric, resources } = props;
   return Object.entries(metric)
     .map(([key, value]) => {
       if (key === flag?.dimensionKey) {
@@ -212,7 +267,7 @@ export const getDimensionName = (
 
 /**
  *
- * @param id resource id that should be search in resources list
+ * @param id resource id that should be searched in resources list
  * @param resources list of CloudPulseResources available
  * @returns resource label if id is found, the id if label is not found, and fall back on an empty string with an undefined id
  */
@@ -222,5 +277,19 @@ export const mapResourceIdToName = (
 ): string => {
   return (
     resources.find((resourceObj) => resourceObj?.id === id)?.label ?? id ?? ''
+  );
+};
+
+/**
+ *
+ * @param data data set to be checked for empty
+ * @returns true if data is not empty or contains all the null values otherwise false
+ */
+export const isDataEmpty = (data: DataSet[]): boolean => {
+  return data.every(
+    (thisSeries) =>
+      thisSeries.data.length === 0 ||
+      // If we've padded the data, every y value will be null
+      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
