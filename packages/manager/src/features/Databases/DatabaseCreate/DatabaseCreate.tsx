@@ -137,6 +137,7 @@ const engineIcons = {
   mongodb: <MongoDBIcon height="24" width="24" />,
   mysql: <MySQLIcon height="24" width="24" />,
   postgresql: <PostgreSQLIcon height="24" width="24" />,
+  redis: null,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
@@ -406,7 +407,7 @@ const DatabaseCreate = () => {
       return;
     }
 
-    const engineType = values.engine.split('/')[0];
+    const engineType = values.engine.split('/')[0] as Engine;
 
     setNodePricing({
       multi: type.engines[engineType].find(

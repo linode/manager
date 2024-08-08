@@ -1,14 +1,14 @@
 import { Box, Typography } from '@mui/material';
 import * as React from 'react';
 
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 
+import { isDataEmpty } from '../../Utils/CloudPulseWidgetUtils';
+
 import type { LegendRow } from '../CloudPulseWidget';
-import type {
-  DataSet,
-  LineGraphProps,
-} from 'src/components/LineGraph/LineGraph';
+import type { LineGraphProps } from 'src/components/LineGraph/LineGraph';
 
 export interface CloudPulseLineGraph extends LineGraphProps {
   ariaLabel?: string;
@@ -21,18 +21,20 @@ export interface CloudPulseLineGraph extends LineGraphProps {
 }
 
 export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
-  const { ariaLabel, error, loading, ...rest } = props;
+  const { ariaLabel, data, error, legendRows, loading, ...rest } = props;
 
-  const message = error // Error state is separate, don't want to put text on top of it
-    ? undefined
-    : loading // Loading takes precedence over empty data
-    ? 'Loading data...'
-    : isDataEmpty(props.data)
-    ? 'No data to display'
-    : undefined;
+  if (loading) {
+    return <CircleProgress sx={{ minHeight: '380px' }} />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error} />;
+  }
+
+  const noDataMessage = 'No data to display';
 
   return (
-    <Box p={2}>
+    <Box p={2} position="relative">
       {error ? (
         <Box sx={{ height: '100%' }}>
           <ErrorState errorText={error} />
@@ -45,31 +47,23 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
               border: 0,
             },
           }}
-          ariaLabel={ariaLabel!}
+          ariaLabel={ariaLabel}
+          data={data}
           isLegendsFullSize={true}
-          legendRows={props.legendRows}
+          legendRows={legendRows}
         />
       )}
-      {message && (
+      {isDataEmpty(data) && (
         <Box
           sx={{
-            left: '40%',
+            bottom: '60%',
+            left: '50%',
             position: 'absolute',
-            top: '30%',
           }}
         >
-          <Typography variant="body2">{message}</Typography>
+          <Typography variant="body2">{noDataMessage}</Typography>
         </Box>
       )}
     </Box>
   );
 });
-
-export const isDataEmpty = (data: DataSet[]) => {
-  return data.every(
-    (thisSeries) =>
-      thisSeries.data.length === 0 ||
-      // If we've padded the data, every y value will be null
-      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
-  );
-};
