@@ -71,7 +71,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   // on the UI and still have any errors returned by the API correspond to the correct subnet
   const createSubnetsPayloadAndMapping = () => {
     const subnetsPayload: CreateSubnetPayload[] = [];
-    const subnetIdxMapping = {};
+    const subnetIdxMapping: Record<number, number> = {};
     let apiSubnetIdx = 0;
 
     for (let i = 0; i < formik.values.subnets.length; i++) {
@@ -93,8 +93,8 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   };
 
   const combineErrorsAndSubnets = (
-    errors: {},
-    visualToAPISubnetMapping: {}
+    errors: Record<number, SubnetError>,
+    visualToAPISubnetMapping: Record<number, number>
   ) => {
     return formik.values.subnets.map((subnet, idx) => {
       const apiSubnetIdx: number | undefined = visualToAPISubnetMapping[idx];
@@ -206,7 +206,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   // Helper method to set a field's value and clear existing errors
   const onChangeField = (field: string, value: string) => {
     formik.setFieldValue(field, value);
-    if (formik.errors[field]) {
+    if (formik.errors[field as keyof CreateVPCFieldState]) {
       formik.setFieldError(field, undefined);
     }
   };

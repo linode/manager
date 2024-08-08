@@ -281,6 +281,7 @@ describe('User permission management', () => {
         cancel_account: true,
         child_account_access: true,
         add_domains: true,
+        add_databases: true,
         add_firewalls: true,
         add_images: true,
         add_linodes: true,

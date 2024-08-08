@@ -1,13 +1,19 @@
-import { Kernel } from '@linode/api-v4/lib/linodes/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
+
+import type { Kernel } from '@linode/api-v4';
+
+interface Option {
+  label: string;
+  value: string;
+}
 
 export interface KernelSelectProps {
   errorText?: string;
   kernels: Kernel[];
-  onChange: (selected: Item<string>) => void;
+  onChange: (selected: Option) => void;
   readOnly?: boolean;
   selectedKernel?: string;
 }
@@ -40,7 +46,7 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
 
 export const getSelectedKernelId = (
   kernelID: string | undefined,
-  options: GroupType<string>[]
+  options: KernelGroupOption[]
 ) => {
   if (!kernelID) {
     return null;
@@ -74,27 +80,37 @@ export const groupKernels = (kernel: Kernel) => {
   return 'Current';
 };
 
+type KernelGroup = ReturnType<typeof groupKernels>;
+
+interface KernelGroupOption {
+  label: KernelGroup;
+  options: Option[];
+}
+
 export const kernelsToGroupedItems = (kernels: Kernel[]) => {
   const groupedKernels = groupBy(groupKernels, kernels);
   groupedKernels.Current = sortCurrentKernels(groupedKernels.Current);
 
   return Object.keys(groupedKernels)
-    .reduce((accum: GroupType<string>[], thisGroup) => {
-      const group = groupedKernels[thisGroup];
-      if (!group || group.length === 0) {
-        return accum;
-      }
-      return [
-        ...accum,
-        {
-          label: thisGroup,
-          options: groupedKernels[thisGroup].map((thisKernel) => ({
-            label: thisKernel.label,
-            value: thisKernel.id,
-          })),
-        },
-      ];
-    }, [])
+    .reduce<KernelGroupOption[]>(
+      (accum: KernelGroupOption[], thisGroup: KernelGroup) => {
+        const group = groupedKernels[thisGroup];
+        if (!group || group.length === 0) {
+          return accum;
+        }
+        return [
+          ...accum,
+          {
+            label: thisGroup,
+            options: groupedKernels[thisGroup].map((thisKernel) => ({
+              label: thisKernel.label,
+              value: thisKernel.id,
+            })),
+          },
+        ];
+      },
+      []
+    )
     .sort(sortKernelGroups);
 };
 
@@ -105,7 +121,7 @@ const PRIORITY = {
   Deprecated: 1,
 };
 
-const sortKernelGroups = (a: GroupType, b: GroupType) => {
+const sortKernelGroups = (a: KernelGroupOption, b: KernelGroupOption) => {
   if (PRIORITY[a.label] > PRIORITY[b.label]) {
     return -1;
   }

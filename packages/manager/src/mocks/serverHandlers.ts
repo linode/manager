@@ -98,7 +98,9 @@ const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
 import type {
+  AccountMaintenance,
   CreateObjectStorageKeyPayload,
+  FirewallStatus,
   NotificationType,
   SecurityQuestionsPayload,
   TokenRequest,
@@ -792,13 +794,16 @@ export const handlers = [
     const firewall = firewallFactory.build();
     return HttpResponse.json(firewall);
   }),
-  http.put('*/v4beta/networking/firewalls/:firewallId', async ({ request }) => {
-    const body = await request.json();
-    const firewall = firewallFactory.build({
-      status: body?.['status'] ?? 'disabled',
-    });
-    return HttpResponse.json(firewall);
-  }),
+  http.put<{}, { status: FirewallStatus }>(
+    '*/v4beta/networking/firewalls/:firewallId',
+    async ({ request }) => {
+      const body = await request.json();
+      const firewall = firewallFactory.build({
+        status: body?.['status'] ?? 'disabled',
+      });
+      return HttpResponse.json(firewall);
+    }
+  ),
   // http.post('*/account/agreements', () => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
   // }),
@@ -860,7 +865,7 @@ export const handlers = [
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E1',
         region: 'us-sea',
-        s3_endpoint: 'us-sea-5.linodeobjects.com',
+        s3_endpoint: null,
       }),
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E2',
@@ -876,6 +881,11 @@ export const handlers = [
         endpoint_type: 'E3',
         region: 'us-east',
         s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-mia',
+        s3_endpoint: 'us-mia-1.linodeobjects.com',
       }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
@@ -1270,8 +1280,8 @@ export const handlers = [
 
     if (request.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
-        const statusA = a[headers['+order_by']];
-        const statusB = b[headers['+order_by']];
+        const statusA = a[headers['+order_by'] as keyof AccountMaintenance];
+        const statusB = b[headers['+order_by'] as keyof AccountMaintenance];
 
         if (statusA < statusB) {
           return -1;
@@ -1369,8 +1379,12 @@ export const handlers = [
       }
 
       filteredAccountUsers.sort((a, b) => {
-        const statusA = a[headers['+order_by']];
-        const statusB = b[headers['+order_by']];
+        const statusA = a[headers['+order_by'] as keyof User];
+        const statusB = b[headers['+order_by'] as keyof User];
+
+        if (!statusA || !statusB) {
+          return 0;
+        }
 
         if (statusA < statusB) {
           return -1;
@@ -1944,11 +1958,14 @@ export const handlers = [
   http.post('*/networking/vlans', () => {
     return HttpResponse.json({});
   }),
-  http.post('*/networking/ipv6/ranges', async ({ request }) => {
-    const body = await request.json();
-    const range = body?.['prefix_length'];
-    return HttpResponse.json({ range, route_target: '2001:DB8::0000' });
-  }),
+  http.post<{}, { prefix_length: number }>(
+    '*/networking/ipv6/ranges',
+    async ({ request }) => {
+      const body = await request.json();
+      const range = body?.['prefix_length'];
+      return HttpResponse.json({ range, route_target: '2001:DB8::0000' });
+    }
+  ),
   http.post('*/networking/ips/assign', () => {
     return HttpResponse.json({});
   }),

@@ -182,6 +182,7 @@ export type GlobalGrantTypes =
   | 'add_images'
   | 'add_linodes'
   | 'add_longview'
+  | 'add_databases'
   | 'add_nodebalancers'
   | 'add_stackscripts'
   | 'add_volumes'

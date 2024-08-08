@@ -543,7 +543,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           } else {
             this.setState({
               allStackScriptsLoaded: false,
-              currentSearchFilter: [],
+              currentSearchFilter: {},
             });
           }
         })

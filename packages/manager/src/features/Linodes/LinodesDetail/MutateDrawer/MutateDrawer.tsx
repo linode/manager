@@ -19,6 +19,7 @@ interface Spec {
   currentAmount: number;
   label: string;
   newAmount: null | number;
+  unit: string;
 }
 
 interface ExtendedUpgradeInfo {
@@ -114,28 +115,30 @@ export class MutateDrawer extends React.Component<Props, State> {
           <HighmemG6ToG7 />
         ) : (
           <ul className="nonMUI-list">
-            {Object.keys(extendedUpgradeInfo).map((newSpec) => {
-              const {
-                currentAmount,
-                label,
-                newAmount,
-                unit,
-              } = extendedUpgradeInfo[newSpec];
+            {Object.keys(extendedUpgradeInfo).map(
+              (newSpec: keyof typeof extendedUpgradeInfo) => {
+                const {
+                  currentAmount,
+                  label,
+                  newAmount,
+                  unit,
+                } = extendedUpgradeInfo[newSpec];
 
-              if (newAmount === null) {
-                return null;
+                if (newAmount === null) {
+                  return null;
+                }
+                return (
+                  <ListItem key={label}>
+                    <Typography>
+                      {label} goes from {currentAmount} {unit} to{' '}
+                      <strong>
+                        {newAmount} {unit}
+                      </strong>
+                    </Typography>
+                  </ListItem>
+                );
               }
-              return (
-                <ListItem key={label}>
-                  <Typography>
-                    {label} goes from {currentAmount} {unit} to{' '}
-                    <strong>
-                      {newAmount} {unit}
-                    </strong>
-                  </Typography>
-                </ListItem>
-              );
-            })}
+            )}
           </ul>
         )}
         <Typography style={{ marginBottom: 16, marginTop: 32 }} variant="h2">
