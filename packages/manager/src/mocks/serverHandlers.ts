@@ -28,7 +28,6 @@ import {
   eventFactory,
   firewallDeviceFactory,
   firewallFactory,
-  objectStorageEndpointsFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -63,6 +62,7 @@ import {
   notificationFactory,
   objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
+  objectStorageEndpointsFactory,
   objectStorageKeyFactory,
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
@@ -848,8 +848,44 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
   http.get('*/v4/object-storage/endpoints', ({}) => {
-    const endpoint = objectStorageEndpointsFactory.build();
-    return HttpResponse.json(endpoint);
+    const endpoints = [
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E0',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E1',
+        region: 'us-sea',
+        s3_endpoint: 'us-sea-1.linodeobjects.com',
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E1',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-east',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-mia',
+        s3_endpoint: 'us-mia-1.linodeobjects.com',
+      }),
+    ];
+    return HttpResponse.json(makeResourcePage(endpoints));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
