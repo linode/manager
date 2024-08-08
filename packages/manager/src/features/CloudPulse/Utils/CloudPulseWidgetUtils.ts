@@ -26,14 +26,14 @@ import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
   /**
-   * properties required to generate label
+   * flags received from config
    */
-  labelObject: {
-    flags: FlagSet;
-    label: string;
-    serviceType: string;
-    unit: string;
-  };
+  flags: FlagSet;
+
+  /**
+   * label for the graph title
+   */
+  label: string;
 
   /**
    * key-value to generate dimension name
@@ -44,6 +44,16 @@ interface LabelNameOptionsProps {
    * list of CloudPulseResources available
    */
   resources: CloudPulseResources[];
+
+  /**
+   * service type of the selected dashboard
+   */
+  serviceType: string;
+
+  /**
+   * unit of the data
+   */
+  unit: string;
 }
 
 interface graphDataOptionsProps {
@@ -51,6 +61,11 @@ interface graphDataOptionsProps {
    * flags associated with metricsList
    */
   flags: FlagSet;
+
+  /**
+   * label for the graph title
+   */
+  label: string;
 
   /**
    * data that will be displayed on graph
@@ -63,15 +78,24 @@ interface graphDataOptionsProps {
   resources: CloudPulseResources[];
 
   /**
-   * widget properties to generate the graph dimensions & legend rows
+   * service type of the selected dashboard
    */
-  widgetObject: {
-    label: string;
-    serviceType: string;
-    status: string | undefined;
-    unit: string;
-    widgetColor: string | undefined;
-  };
+  serviceType: string;
+
+  /**
+   * status returned from react query ( loading | error | success)
+   */
+  status: string | undefined;
+
+  /**
+   * unit of the data
+   */
+  unit: string;
+
+  /**
+   * preferred color for the widget's graph
+   */
+  widgetColor: string | undefined;
 }
 
 interface MetricRequestProps {
@@ -118,16 +142,25 @@ interface DimensionNameProperties {
  * @returns parameters which will be necessary to populate graph & legends
  */
 export const generateGraphData = (props: graphDataOptionsProps) => {
-  const { flags, metricsList, resources, widgetObject } = props;
+  const {
+    flags,
+    label,
+    metricsList,
+    resources,
+    serviceType,
+    status,
+    unit,
+    widgetColor,
+  } = props;
 
   const dimensions: DataSet[] = [];
   const legendRowsData: LegendRow[] = [];
 
   // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-  const colors = COLOR_MAP.get(widgetObject.widgetColor ?? 'default')!;
+  const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
   let today = false;
 
-  if (widgetObject.status === 'success') {
+  if (status === 'success') {
     metricsList?.data?.result?.forEach(
       (graphData: CloudPulseMetricsList, index) => {
         if (!graphData) {
@@ -135,7 +168,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
         }
         const transformedData = {
           metric: graphData.metric,
-          values: transformData(graphData.values, widgetObject.unit),
+          values: transformData(graphData.values, unit),
         };
         const color = colors[index];
         const { end, start } = convertTimeDurationToStartAndEndTimeRange({
@@ -146,27 +179,25 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
           start: transformedData.values[0][0],
         };
 
-        const labelObject: LabelNameOptionsProps = {
-          labelObject: {
-            flags,
-            label: widgetObject.label,
-            serviceType: widgetObject.serviceType,
-            unit: widgetObject.unit,
-          },
+        const labelOptions: LabelNameOptionsProps = {
+          flags,
+          label,
           metric: transformedData.metric,
           resources,
+          serviceType,
+          unit,
         };
 
         const dimension = {
           backgroundColor: color,
           borderColor: '',
           data: seriesDataFormatter(transformedData.values, start, end),
-          label: getLabelName(labelObject),
+          label: getLabelName(labelOptions),
         };
         // construct a legend row with the dimension
         const legendRow = {
           data: getMetrics(dimension.data as number[][]),
-          format: (value: number) => formatToolTip(value, widgetObject.unit),
+          format: (value: number) => formatToolTip(value, unit),
           legendColor: color,
           legendTitle: dimension.label,
         };
@@ -181,7 +212,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
     dimensions,
     legendRowsData,
     today,
-    unit: generateMaxUnit(legendRowsData, widgetObject.unit),
+    unit: generateMaxUnit(legendRowsData, unit),
   };
 };
 
@@ -232,16 +263,15 @@ export const getCloudPulseMetricRequest = (
  * @returns generated label name for graph dimension
  */
 const getLabelName = (props: LabelNameOptionsProps): string => {
-  const { labelObject, metric, resources } = props;
+  const { flags, label, metric, resources, serviceType, unit } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
-    return `${labelObject.label} (${labelObject.unit})`;
+    return `${label} (${unit})`;
   }
 
-  const flag = labelObject.flags?.aclpResourceTypeMap?.find(
-    (obj: CloudPulseResourceTypeMapFlag) =>
-      obj.serviceType === labelObject.serviceType
+  const flag = flags?.aclpResourceTypeMap?.find(
+    (obj: CloudPulseResourceTypeMapFlag) => obj.serviceType === serviceType
   );
 
   return getDimensionName({ flag, metric, resources });

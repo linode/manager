@@ -252,15 +252,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       flags,
+      label: widget.label,
       metricsList,
       resources,
-      widgetObject: {
-        label: widget.label,
-        serviceType,
-        status,
-        unit,
-        widgetColor: widget.color,
-      },
+      serviceType,
+      status,
+      unit,
+      widgetColor: widget.color,
     });
 
     data = generatedData.dimensions;
