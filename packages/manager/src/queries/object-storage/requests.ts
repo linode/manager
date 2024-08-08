@@ -57,18 +57,18 @@ export interface BucketsResponseGen2 {
   errors: BucketErrorGen2[];
 }
 
-// TODO: OBJGen2 -Remove the `Gen2` suffix when Gen2 is in GA.
+// TODO: OBJGen2 - Remove the `Gen2` suffix when Gen2 is in GA.
 export interface BucketErrorGen2 {
   endpoint: ObjectStorageEndpoint;
   error: APIError[];
 }
 
-// TODO: OBJGen2 -Only needed during interim period when Gen2 is in beta.
+// TODO: OBJGen2 - Only needed during interim period when Gen2 is in beta.
 export type BucketsResponseType<T> = T extends true
   ? BucketsResponseGen2
   : BucketsResponse;
 
-// TODO: OBJGen2 -Only needed during interim period when Gen2 is in beta.
+// TODO: OBJGen2 - Only needed during interim period when Gen2 is in beta.
 export function isBucketError(
   error: BucketError | BucketErrorGen2
 ): error is BucketError {
