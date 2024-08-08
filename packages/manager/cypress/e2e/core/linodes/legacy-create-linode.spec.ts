@@ -17,6 +17,7 @@ import { chooseRegion } from 'support/util/regions';
 import { getRegionById } from 'support/util/regions';
 import {
   accountFactory,
+  createLinodeRequestFactory,
   subnetFactory,
   vpcFactory,
   linodeFactory,
@@ -29,6 +30,8 @@ import {
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import { mockGetRegions } from 'support/intercepts/regions';
+import { API_ROOT } from 'src/constants';
+import { oauthToken } from 'support/constants/api';
 import {
   dcPricingPlanPlaceholder,
   dcPricingMockLinodeTypes,
@@ -179,6 +182,20 @@ describe('create linode', () => {
     const linodeLabel = randomLabel();
     const linodePass = randomString(32);
     const linodeRegion = chooseRegion();
+    const linodeType = 'g6-dedicated-2';
+    const linodeImage = 'linode/debian11';
+    const payload = createLinodeRequestFactory.build({
+      authorized_users: [],
+      backups_enabled: false,
+      booted: true,
+      image: linodeImage,
+      label: linodeLabel,
+      private_ip: false,
+      region: linodeRegion.id,
+      root_pass: linodePass,
+      tags: [],
+      type: linodeType,
+    });
 
     cy.visitWithLogin('/linodes/create');
 
@@ -188,7 +205,7 @@ describe('create linode', () => {
       .should('exist')
       .click();
 
-    cy.get('[id="g6-dedicated-2"]').click();
+    cy.get(`[id="${linodeType}"]`).click();
 
     cy.findByLabelText('Linode Label')
       .should('be.visible')
@@ -207,35 +224,51 @@ describe('create linode', () => {
       .should('be.enabled')
       .click();
 
+    // Confirm that clicking "Create Using Command Line" opens modal
     ui.dialog
       .findByTitle('Create Linode')
       .should('be.visible')
       .within(() => {
-        // Switch to cURL view if necessary.
+        // Switch to cURL view.
         cy.findByText('cURL')
           .should('be.visible')
           .should('have.attr', 'data-selected');
 
-        // Confirm that cURL command has expected details.
+        // Confirm that displayed cURL command matches selected options (e.g. region, image, plan, label, password, add-ons, etc.)
         [
-          `"region": "${linodeRegion.id}"`,
-          `"type": "g6-dedicated-2"`,
-          `"label": "${linodeLabel}"`,
-          `"root_pass": "${linodePass}"`,
-          '"booted": true',
+          `"authorized_users": ${payload.authorized_users}`,
+          `"backups_enabled": ${payload.backups_enabled}`,
+          `"booted": ${payload.booted}`,
+          `"image": "${payload.image}"`,
+          `"label": "${payload.label}"`,
+          `"private_ip": ${payload.private_ip},`,
+          `"region": "${payload.region}"`,
+          `"root_pass": "${payload.root_pass}"`,
+          `"tags": ${payload.tags}`,
+          `"type": "${payload.type}"`,
+          `${API_ROOT}/linode/instances`,
         ].forEach((line: string) =>
           cy.findByText(line, { exact: false }).should('be.visible')
         );
 
+        // Switch to "Linode CLI" view
         cy.findByText('Linode CLI').should('be.visible').click();
 
-        [
-          `--region ${linodeRegion.id}`,
-          '--type g6-dedicated-2',
-          `--label ${linodeLabel}`,
-          `--root_pass ${linodePass}`,
-          `--booted true`,
-        ].forEach((line: string) => cy.contains(line).should('be.visible'));
+        // Confirm that displayed Linode CLI command matches selected options (e.g. region, image, plan, label, password, add-ons, etc.)
+        cy.get('code').then(($code) => {
+          const codeText = $code.text();
+          [
+            'linode-cli linodes create',
+            `--backups_enabled ${payload.backups_enabled}`,
+            `--booted ${payload.booted}`,
+            `--image ${payload.image}`,
+            `--label ${payload.label}`,
+            `--private_ip ${payload.private_ip}`,
+            `--region ${payload.region}`,
+            `--root_pass ${payload.root_pass}`,
+            `--type ${payload.type}`,
+          ].forEach((line: string) => expect(codeText).to.contains(line));
+        });
 
         ui.buttonGroup
           .findButtonByTitle('Close')
@@ -243,6 +276,41 @@ describe('create linode', () => {
           .should('be.enabled')
           .click();
       });
+
+    // Continue on testing when the personal access token is given.
+    if (oauthToken) {
+      const curlRequest = `curl -H "Content-Type: application/json" \
+-H "Authorization: Bearer ${oauthToken}" \
+-X POST -d '{
+    "authorized_users": [],
+    "backups_enabled": ${payload.backups_enabled},
+    "booted": ${payload.booted},
+    "image": "${payload.image}",
+    "label": "${payload.label}",
+    "private_ip": ${payload.private_ip},
+    "region": "${payload.region}",
+    "root_pass": "${payload.root_pass}",
+    "tags": [],
+    "type": "${payload.type}"
+}' ${API_ROOT}/linode/instances`;
+      cy.exec(curlRequest).then((res) => {
+        // Check the linode instance details
+        expect(res.code).to.equal(0);
+
+        const resBody = JSON.parse(res.stdout);
+        expect(resBody.id).to.not.NaN;
+        expect(resBody.image).to.equal(payload.image);
+        expect(resBody.label).to.equal(payload.label);
+        expect(resBody.region).to.equal(payload.region);
+        expect(resBody.type).to.equal(payload.type);
+      });
+
+      cy.visitWithLogin('/linodes/');
+
+      // Confirm that the linode is created.
+      cy.findByText(linodeLabel).should('be.visible');
+      cy.findByText('Provisioning', { exact: false }).should('be.visible');
+    }
   });
 
   /*
