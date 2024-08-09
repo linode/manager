@@ -60,6 +60,24 @@ export const mockCreateLinode = (linode: Linode): Cypress.Chainable<null> => {
   );
 };
 
+/** Intercepts POST request to create a Linode and mocks an error response.
+ *
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeError = (
+  errorMessage: string,
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('linode/instances'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
 /* Intercepts GET request to get a Linode.
  *
  * @param linodeId - ID of Linode to fetch.
