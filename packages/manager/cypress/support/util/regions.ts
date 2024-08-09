@@ -152,15 +152,19 @@ export const getRegionById = (
  * If no known region exists with the given human-readable label, an error is
  * thrown.
  *
- * @param label - Label of the region to find.
+ * @param label - Label (API or Cloud-specific) of the region to find.
  * @param searchRegions - Optional array of Regions from which to search.
  *
  * @throws When no region exists in the `regions` array with the given label.
  */
 export const getRegionByLabel = (label: string, searchRegions?: Region[]) => {
-  const region = (searchRegions ?? regions).find(
-    (findRegion: Region) => findRegion.label === label
-  );
+  const region = (searchRegions ?? regions).find((findRegion: Region) => {
+    const extendedFindRegion = extendRegion(findRegion);
+    return (
+      extendedFindRegion.label === label ||
+      extendedFindRegion.apiLabel === label
+    );
+  });
   if (!region) {
     throw new Error(
       `Unable to find region by label. Unknown region label '${label}'.`
