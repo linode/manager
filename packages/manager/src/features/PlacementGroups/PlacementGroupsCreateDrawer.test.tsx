@@ -75,7 +75,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     );
 
     await waitFor(() => {
-      expect(getByText('Newark, NJ (us-east)')).toBeInTheDocument();
+      expect(getByText('US, Newark, NJ (us-east)')).toBeInTheDocument();
     });
   });
 
@@ -97,7 +97,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       target: { value: 'Newark, NJ (us-east)' },
     });
     await waitFor(() => {
-      const selectedRegionOption = getByText('Newark, NJ (us-east)');
+      const selectedRegionOption = getByText('US, Newark, NJ (us-east)');
       fireEvent.click(selectedRegionOption);
     });
 
@@ -119,7 +119,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [placementGroupFactory.build({ region: 'us-west' })],
     });
-    const regionWithoutCapacity = 'Fremont, CA (us-west)';
+    const regionWithoutCapacity = 'US, Fremont, CA (us-west)';
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );

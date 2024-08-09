@@ -57,7 +57,7 @@ describe('database current configuration section', () => {
     getByText('Nodes');
 
     getByText('Region');
-    getByText('Newark, NJ');
+    getByText('US, Newark, NJ');
 
     getByText('RAM');
     getByText('1 GB');

@@ -23,7 +23,7 @@ describe('ImageRegionRow', () => {
     );
 
     expect(getByText('creating')).toBeVisible();
-    expect(await findByText('Newark, NJ')).toBeVisible();
+    expect(await findByText('US, Newark, NJ')).toBeVisible();
   });
 
   it('calls onRemove when the remove button is clicked', async () => {

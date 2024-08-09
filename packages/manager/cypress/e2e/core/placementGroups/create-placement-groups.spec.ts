@@ -18,6 +18,7 @@ import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
 const mockAccount = accountFactory.build();
 
@@ -138,7 +139,9 @@ describe('Placement Group create flow', () => {
       .within(() => {
         cy.findByText('Anti-affinity').should('be.visible');
         cy.findByText('Strict').should('be.visible');
-        cy.findByText(mockPlacementGroupRegion.label).should('be.visible');
+        cy.findByText(getNewRegionLabel(mockPlacementGroupRegion)).should(
+          'be.visible'
+        );
         cy.findByText('Non-compliant').should('not.exist');
       });
   });

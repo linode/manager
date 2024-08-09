@@ -72,7 +72,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
 
   const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
-  const { data: regions } = useRegionsQuery(isGeckoGAEnabled);
+  const { data: regions } = useRegionsQuery();
 
   const isCloning = /clone/i.test(params.type);
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
