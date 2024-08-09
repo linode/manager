@@ -18,6 +18,7 @@ import {
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
+  FirewallTemplate,
   UpdateFirewallPayload,
 } from './types';
 
@@ -241,5 +242,34 @@ export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
       `${BETA_API_ROOT}/networking/firewalls/${encodeURIComponent(
         firewallID
       )}/devices/${encodeURIComponent(deviceID)}`
+    )
+  );
+
+// TEMPLATES
+
+/**
+ * getTemplates
+ *
+ * Returns a paginated list of all firewall templates on this account.
+ */
+export const getTemplates = () =>
+  Request<Page<FirewallTemplate>>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/templates`)
+  );
+
+/**
+ * getTemplate
+ *
+ * Get a specific firewall template by its slug.
+ *
+ */
+export const getTemplate = (templateSlug: string) =>
+  Request<FirewallTemplate>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/networking/firewalls/templates/${encodeURIComponent(
+        templateSlug
+      )}`
     )
   );

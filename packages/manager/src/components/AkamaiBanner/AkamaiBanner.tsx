@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
+import { replaceNewlinesWithLineBreaks } from 'src/utilities/replaceNewlinesWithLineBreaks';
 
 import { Box } from '../Box';
 import { Stack } from '../Stack';
@@ -31,16 +32,7 @@ export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
   const { action, link, margin, text, warning } = props;
   const flags = useFlags();
 
-  const textWithLineBreaks = text.split('\n').map((text, i, lines) =>
-    i === lines.length - 1 ? (
-      text
-    ) : (
-      <>
-        {text}
-        <br />
-      </>
-    )
-  );
+  const textWithLineBreaks = replaceNewlinesWithLineBreaks(text);
 
   return (
     <StyledBanner
@@ -82,11 +74,14 @@ export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
           })}
           variant="body2"
         >
-          {textWithLineBreaks}{' '}
+          {textWithLineBreaks}
           {link && (
-            <Link external to={link.url}>
-              {link.text}
-            </Link>
+            <>
+              {' '}
+              <Link external to={link.url}>
+                {link.text}
+              </Link>
+            </>
           )}
         </Typography>
       </Box>
