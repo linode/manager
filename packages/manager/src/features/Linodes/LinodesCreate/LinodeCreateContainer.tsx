@@ -25,7 +25,6 @@ import { withQueryClient } from 'src/containers/withQueryClient.container';
 import withAgreements from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { reportAgreementSigningError } from 'src/queries/account/agreements';
-import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
