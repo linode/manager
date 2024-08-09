@@ -8,10 +8,7 @@ export const community: PartialEventMap<'community'> = {
   community_like: {
     notification: (e) =>
       e.entity?.label ? (
-        <>
-          A post on <EventLink event={e} to="entity" /> has been{' '}
-          <strong>liked</strong>.
-        </>
+        <EventLink event={e} to="entity" />
       ) : (
         <>
           There has been a <strong>like</strong> on your community post.

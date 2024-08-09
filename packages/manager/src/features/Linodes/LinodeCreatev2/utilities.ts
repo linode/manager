@@ -65,10 +65,10 @@ export const useLinodeCreateQueryParams = () => {
     const newParams = new URLSearchParams(rawParams);
 
     for (const key in params) {
-      if (!params[key]) {
+      if (!params[key as keyof LinodeCreateQueryParams]) {
         newParams.delete(key);
       } else {
-        newParams.set(key, params[key]);
+        newParams.set(key, params[key as keyof LinodeCreateQueryParams]!);
       }
     }
 

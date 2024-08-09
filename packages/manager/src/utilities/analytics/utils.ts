@@ -2,9 +2,13 @@ import { ADOBE_ANALYTICS_URL } from 'src/constants';
 
 import type {
   AnalyticsEvent,
+  BasicFormEvent,
+  FormErrorEvent,
   FormEventOptions,
   FormEventType,
+  FormInputEvent,
   FormPayload,
+  FormStepEvent,
 } from './types';
 
 /**
@@ -39,7 +43,9 @@ export const sendFormEvent = (
   eventPayload: FormPayload,
   eventType: FormEventType
 ): void => {
-  const formEventPayload = {
+  const formEventPayload: Partial<
+    BasicFormEvent & FormErrorEvent & FormInputEvent & FormStepEvent
+  > = {
     formName: eventPayload.formName.replace(/\|/g, ''),
   };
   if (!ADOBE_ANALYTICS_URL) {
@@ -50,14 +56,14 @@ export const sendFormEvent = (
   if (window._satellite) {
     // Depending on the type of form event, send the correct payload for a form start, input, step, submit, or error.
     if (eventType === 'formStepInteraction' && 'stepName' in eventPayload) {
-      formEventPayload['stepName'] = eventPayload.stepName;
+      formEventPayload.stepName = eventPayload.stepName;
     } else if (eventType === 'formError' && 'formError' in eventPayload) {
-      formEventPayload['formError'] = eventPayload;
+      formEventPayload.formError = eventPayload.formError;
     } else if ('inputValue' in eventPayload) {
       // Handles form start, input, and submit events.
-      formEventPayload['inputValue'] = eventPayload.inputValue;
+      formEventPayload.inputValue = eventPayload.inputValue;
     }
-    window._satellite.track(eventType, formEventPayload);
+    window._satellite.track(eventType, formEventPayload as FormPayload);
   }
 };
 

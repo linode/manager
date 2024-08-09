@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Select from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { TIME_DURATION } from '../Utils/constants';
 import {
@@ -14,12 +14,14 @@ import type {
   Item,
 } from 'src/components/EnhancedSelect/Select';
 
-interface Props
+export interface CloudPulseTimeRangeSelectProps
   extends Omit<
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
   > {
-  handleStatsChange?: (start: number, end: number) => void;
+  handleStatsChange?: (timeDuration: TimeDuration) => void;
+  placeholder?: string;
+  savePreferences?: boolean;
 }
 
 const PAST_7_DAYS = 'Past 7 Days';
@@ -34,52 +36,59 @@ export type Labels =
   | 'Past 30 Days'
   | 'Past 30 Minutes';
 
-export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
-  const { handleStatsChange, ...restOfSelectProps } = props;
+export const CloudPulseTimeRangeSelect = React.memo(
+  (props: CloudPulseTimeRangeSelectProps) => {
+    const { handleStatsChange, placeholder } = props;
+    const options = generateSelectOptions();
+    const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
+      const defaultValue = getUserPreferenceObject().timeDuration;
 
-  // To set the default value fetched from preferences.
-  const getPreferredValue = () => {
-    const defaultValue = getUserPreferenceObject().timeDuration;
+      return options.find((o) => o.label === defaultValue) || options[0];
+    }, [options]);
+    const [selectedTimeRange, setSelectedTimeRange] = React.useState<
+      Item<Labels, Labels>
+    >(getDefaultValue());
 
-    return options.find((o) => o.label === defaultValue) || options[0];
-  };
+    React.useEffect(() => {
+      const item = getDefaultValue();
 
-  const options = generateSelectOptions();
+      if (handleStatsChange) {
+        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+      }
+      setSelectedTimeRange(item);
+    }, [handleStatsChange, getDefaultValue]);
 
-  const handleChange = (item: Item<Labels, Labels>) => {
-    updateGlobalFilterPreference({
-      [TIME_DURATION]: item.value,
-    });
+    const handleChange = (item: Item<Labels, Labels>) => {
+      updateGlobalFilterPreference({
+        [TIME_DURATION]: item.value,
+      });
 
-    /*
-      Why division by 1000?
+      if (handleStatsChange) {
+        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+      }
+    };
 
-      Because the LongView API doesn't expect the start and date time
-      to the nearest millisecond - if you send anything more than 10 digits
-      you won't get any data back
-    */
-    const nowInSeconds = Date.now() / 1000;
-
-    if (handleStatsChange) {
-      handleStatsChange(
-        Math.round(generateStartTime(item.value, nowInSeconds)),
-        Math.round(nowInSeconds)
-      );
-    }
-  };
-
-  return (
-    <Select
-      {...restOfSelectProps}
-      defaultValue={getPreferredValue()}
-      isClearable={false}
-      isSearchable={false}
-      onChange={handleChange}
-      options={options}
-      small
-    />
-  );
-});
+    return (
+      <Autocomplete
+        onChange={(_: any, value: Item<Labels, Labels>) => {
+          handleChange(value);
+        }}
+        textFieldProps={{
+          hideLabel: true,
+        }}
+        autoHighlight
+        data-testid="cloudpulse-time-duration"
+        disableClearable
+        fullWidth
+        isOptionEqualToValue={(option, value) => option.value === value.value}
+        label="Select Time Duration"
+        options={options}
+        placeholder={placeholder ?? 'Select Time Duration'}
+        value={selectedTimeRange}
+      />
+    );
+  }
+);
 
 /**
  * react-select option generator that aims to remain a pure function
@@ -142,8 +151,26 @@ export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
  * @param label label for time duration to get the corresponding time duration object
  * @returns time duration object for the label
  */
-export const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
-  const options = generateSelectOptions();
+const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
+  if (label === PAST_30_MINUTES) {
+    return { unit: 'min', value: 30 };
+  }
 
-  return options[label] || { unit: 'min', vlaue: 30 };
+  if (label === PAST_24_HOURS) {
+    return { unit: 'hr', value: 24 };
+  }
+
+  if (label === PAST_12_HOURS) {
+    return { unit: 'hr', value: 12 };
+  }
+
+  if (label === PAST_7_DAYS) {
+    return { unit: 'day', value: 7 };
+  }
+
+  if (label === PAST_30_DAYS) {
+    return { unit: 'day', value: 30 };
+  }
+
+  return { unit: 'min', value: 30 };
 };

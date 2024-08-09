@@ -352,7 +352,13 @@ const NodeBalancerCreate = () => {
     setDeleteConfigConfirmDialog(clone(defaultDeleteConfigConfirmDialogState));
   };
 
-  const onConfigValueChange = (configId: number, key: string, value: any) => {
+  const onConfigValueChange = <
+    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors
+  >(
+    configId: number,
+    key: Key,
+    value: NodeBalancerConfigFieldsWithStatusAndErrors[Key]
+  ) => {
     setNodeBalancerFields((prev) => {
       const newConfigs = [...prev.configs];
       newConfigs[configId][key] = value;

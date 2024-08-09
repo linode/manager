@@ -98,9 +98,11 @@ const cloneLandingReducer = (
         });
 
         if (existingFile) {
-          Object.keys(action.data).forEach((key) => {
-            existingFile[key] = action.data[key];
-          });
+          Object.keys(action.data).forEach(
+            (key: keyof Partial<ExtendedFile>) => {
+              (existingFile as any)[key] = action.data[key];
+            }
+          );
 
           // If the status has been changed, we need to update the count.
           if (action.data.status) {

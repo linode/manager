@@ -105,6 +105,6 @@ export const getErrorMap = <T extends string = string>(
         };
       }
     },
-    { none: undefined }
+    { none: undefined } as Record<string, string | undefined>
   ) as Record<'none' | T, string | undefined>;
 };
