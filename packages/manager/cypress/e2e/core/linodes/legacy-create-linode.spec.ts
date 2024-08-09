@@ -411,6 +411,7 @@ describe('create linode', () => {
       id: randomNumber(),
       region: 'us-southeast',
       subnets: [mockSubnet],
+      label: randomLabel(),
     });
     const mockVPCRegion = regionFactory.build({
       id: region.id,
@@ -497,6 +498,7 @@ describe('create linode', () => {
       cy.findByLabelText('Assign VPC')
         .should('be.visible')
         .focus()
+        .clear()
         .type(`${mockVPC.label}{downArrow}{enter}`);
       // select subnet
       cy.findByPlaceholderText('Select Subnet')
