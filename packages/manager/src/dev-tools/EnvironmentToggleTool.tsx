@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { DevToolSelect } from './components/DevToolSelect';
 import { storage } from 'src/utilities/storage';
 
 interface EnvironmentOption {
@@ -57,10 +58,7 @@ export const EnvironmentToggleTool = () => {
   return (
     <Grid container>
       <Grid xs={12}>
-        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Environment</h4>
-      </Grid>
-      <Grid xs={12}>
-        <select
+        <DevToolSelect
           onBlur={(e) => {
             const selectedIndex = options.findIndex(
               (o) => o.label === e.target.value
@@ -81,7 +79,7 @@ export const EnvironmentToggleTool = () => {
               </option>
             );
           })}
-        </select>
+        </DevToolSelect>
         <button
           onClick={() => {
             const selected = options[selectedOption];
