@@ -46,7 +46,6 @@ import {
 import {
   sendLinodeCreateFormErrorEvent,
   sendLinodeCreateFormInputEvent,
-  sendLinodeCreateFormStepEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -452,8 +451,6 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   handleTabChange = (index: number) => {
-    const prevTabIndex = this.state.selectedTab;
-
     this.props.resetCreationState();
 
     /** set the tab in redux state */
@@ -465,16 +462,6 @@ export class LinodeCreate extends React.PureComponent<
       planKey: v4(),
       selectedTab: index,
     });
-
-    // Do not fire the form event if a user is not switching to a different tab.
-    // Prevents a double-firing on Marketplace because we manually handle the tab change.
-    if (prevTabIndex !== index) {
-      sendLinodeCreateFormStepEvent({
-        createType: (this.tabs[prevTabIndex].title as LinodeCreateType) ?? 'OS',
-        label: `${this.tabs[index].title} Tab`,
-        interaction: 'click',
-      });
-    }
   };
 
   mounted: boolean = false;
