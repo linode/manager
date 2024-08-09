@@ -60,7 +60,7 @@ describe('Manage Image Regions', () => {
       .within(() => {
         // Verify the Image regions render
         cy.findByText(region1.label).should('be.visible');
-        cy.findByText(region1.label).should('be.visible');
+        cy.findByText(region2.label).should('be.visible');
 
         cy.findByText('Image will be available in these regions (2)').should(
           'be.visible'
