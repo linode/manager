@@ -11,7 +11,6 @@ import { ui } from 'support/ui';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { accountFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
-import { headerTestId } from 'src/components/Encryption/Encryption';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -226,7 +225,7 @@ describe('volume create flow', () => {
     cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
-    cy.get(`[data-testid=${headerTestId}]`).should('not.exist');
+    cy.findByText('Encrypt Volume').should('not.exist');
   });
 
   it('should have a "Volume Encryption" section visible if feature flag is on and user has the capability', () => {
@@ -249,6 +248,6 @@ describe('volume create flow', () => {
     cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
-    cy.get(`[data-testid="${headerTestId}"]`).should('exist');
+    cy.findByText('Encrypt Volume').should('exist');
   });
 });

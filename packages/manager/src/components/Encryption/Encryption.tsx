@@ -49,7 +49,7 @@ export const Encryption = (props: EncryptionProps) => {
         {descriptionCopy}
       </Typography>
       {notices && notices.length > 0 && (
-        <Notice marginTop="0.875rem" variant="warning">
+        <Notice marginTop="0.875rem" spacingBottom={4} variant="warning">
           <List
             sx={(theme) => ({
               '& > li': {
