@@ -22,6 +22,11 @@ const config: StorybookConfig = {
   },
   typescript: {
     reactDocgenTypescriptOptions: {
+      // Speeds up Storybook build time
+      compilerOptions: {
+        allowSyntheticDefaultImports: false,
+        esModuleInterop: false,
+      },
       // makes union prop types like variant and size appear as select controls
       shouldExtractLiteralValuesFromEnum: true,
       // makes string and boolean types that can be undefined appear as inputs and switches
