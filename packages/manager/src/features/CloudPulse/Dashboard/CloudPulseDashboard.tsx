@@ -1,7 +1,7 @@
 import { Grid, Paper } from '@mui/material';
 import React from 'react';
 
-import CloudPulseIcon from 'src/assets/icons/entityIcons/cv_overview.svg';
+import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
@@ -167,7 +167,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   const RenderWidgets = () => {
-    if (!dashboard || !Boolean(dashboard?.widgets?.length)) {
+    if (!dashboard || !dashboard.widgets?.length) {
       return renderPlaceHolder(
         'No visualizations are available at this moment. Create Dashboards to list here.'
       );

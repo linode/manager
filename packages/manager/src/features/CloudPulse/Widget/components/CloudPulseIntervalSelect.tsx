@@ -119,10 +119,13 @@ export const CloudPulseIntervalSelect = React.memo(
             value: selectedInterval?.value,
           });
         }}
+        textFieldProps={{
+          hideLabel: true,
+        }}
         defaultValue={{ ...default_interval }}
         disableClearable
         fullWidth={false}
-        label=""
+        label="Select an Interval"
         noMarginTop={true}
         options={[autoIntervalOption, ...available_interval_options]}
         sx={{ width: { xs: '100%' } }}
