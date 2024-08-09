@@ -15,7 +15,6 @@ import { buildArray } from 'support/util/arrays';
 import { formatUsd } from 'support/util/currency';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
-import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
 /**
  * Returns a string representation of a region, as shown on the invoice details page.
@@ -26,7 +25,7 @@ import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.util
  */
 const getRegionLabel = (regionId: string) => {
   const region = getRegionById(regionId);
-  return `${getNewRegionLabel(region)} (${region.id})`;
+  return `${region.label} (${region.id})`;
 };
 
 describe('Account invoices', () => {
