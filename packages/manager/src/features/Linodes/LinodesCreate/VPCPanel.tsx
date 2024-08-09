@@ -2,9 +2,9 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
-import Select from 'src/components/EnhancedSelect';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
@@ -27,7 +27,6 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
-import type { Item } from 'src/components/EnhancedSelect';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
@@ -38,7 +37,7 @@ export interface VPCPanelProps {
   from: 'linodeConfig' | 'linodeCreate';
   handleIPv4RangeChange: (ranges: ExtendedIP[]) => void;
   handleSelectVPC: (vpcId: number) => void;
-  handleSubnetChange: (subnetId: number) => void;
+  handleSubnetChange: (subnetId: number | undefined) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
   publicIPv4Error?: string;
   region: string | undefined;
@@ -107,23 +106,26 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
   const vpcs = vpcsData ?? [];
 
-  const vpcDropdownOptions: Item[] = vpcs.reduce((accumulator, vpc) => {
-    return vpc.region === region
-      ? [...accumulator, { label: vpc.label, value: vpc.id }]
-      : accumulator;
-  }, []);
-
   const fromLinodeCreate = from === 'linodeCreate';
   const fromLinodeConfig = from === 'linodeConfig';
 
-  if (fromLinodeCreate) {
-    vpcDropdownOptions.unshift({
-      label: 'None',
-      value: -1,
-    });
+  interface DropdownOption {
+    label: string;
+    value: number;
   }
 
-  const subnetDropdownOptions: Item[] =
+  const vpcDropdownOptions: DropdownOption[] = React.useMemo(() => {
+    return vpcs.reduce(
+      (accumulator, vpc) => {
+        return vpc.region === region
+          ? [...accumulator, { label: vpc.label, value: vpc.id }]
+          : accumulator;
+      },
+      fromLinodeCreate ? [{ label: 'None', value: -1 }] : []
+    );
+  }, [vpcs, region, fromLinodeCreate]);
+
+  const subnetDropdownOptions: DropdownOption[] =
     vpcs
       .find((vpc) => vpc.id === selectedVPCId)
       ?.subnets.map((subnet) => ({
@@ -139,7 +141,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
     if (fromLinodeConfig) {
       return null;
     }
-
     const copy =
       vpcDropdownOptions.length <= 1
         ? 'Allow Linode to communicate in an isolated environment.'
@@ -192,9 +193,12 @@ export const VPCPanel = (props: VPCPanelProps) => {
         )}
         <Stack>
           <Typography>{getMainCopyVPC()}</Typography>
-          <Select
-            onChange={(selectedVPC: Item<number, string>) => {
-              handleSelectVPC(selectedVPC.value);
+          <Autocomplete
+            isOptionEqualToValue={(option, value) => {
+              return option.label === value.label;
+            }}
+            onChange={(_, selectedVPC) => {
+              handleSelectVPC(selectedVPC?.value || -1);
               sendLinodeCreateFormStepEvent({
                 action: 'click',
                 category: 'select',
@@ -207,16 +211,21 @@ export const VPCPanel = (props: VPCPanelProps) => {
             textFieldProps={{
               tooltipText: REGION_CAVEAT_HELPER_TEXT,
             }}
-            value={vpcDropdownOptions.find(
-              (option) => option.value === selectedVPCId
-            )}
+            value={
+              selectedVPCId && selectedVPCId !== -1
+                ? vpcDropdownOptions.find(
+                    (option) => option.value === selectedVPCId
+                  )
+                : null
+            }
+            autoHighlight
+            clearIcon={null}
             defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
             disabled={!regionSupportsVPCs}
             errorText={vpcIdError ?? vpcError}
-            isClearable={false}
-            isLoading={isLoading}
             label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
-            noOptionsMessage={() => `No VPCs exist in this Linode's region.`}
+            loading={isLoading}
+            noOptionsText="No VPCs exist in this Linode's region."
             options={vpcDropdownOptions}
             placeholder={'Select a VPC'}
           />
@@ -259,18 +268,21 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
           {selectedVPCId !== -1 && regionSupportsVPCs && (
             <Stack data-testid="subnet-and-additional-options-section">
-              <Select
-                onChange={(selectedSubnet: Item<number, string>) =>
-                  handleSubnetChange(selectedSubnet.value)
-                }
+              <Autocomplete
+                onChange={(_, selectedSubnet) => {
+                  handleSubnetChange(selectedSubnet?.value);
+                }}
+                textFieldProps={{
+                  errorGroup: ERROR_GROUP_STRING,
+                }}
                 value={
                   subnetDropdownOptions.find(
                     (option) => option.value === selectedSubnetId
-                  ) || null
+                  ) ?? null
                 }
-                errorGroup={ERROR_GROUP_STRING}
+                autoHighlight
+                clearIcon={null}
                 errorText={subnetError}
-                isClearable={false}
                 label="Subnet"
                 options={subnetDropdownOptions}
                 placeholder="Select Subnet"
