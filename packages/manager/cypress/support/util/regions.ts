@@ -4,6 +4,66 @@ import { buildArray, shuffleArray } from './arrays';
 import type { Capabilities, Region } from '@linode/api-v4';
 
 /**
+ * Returns Region label formatted for Cloud Manager UI.
+ *
+ * This is a re-implementation of a similar util in the Cloud Manager code base.
+ * Because it is needed by our Cypress config, which does not go through Vite, we
+ * have to re-implement this util rather than import it because Cloud Manager
+ * source code cannot be imported without Vite.
+ *
+ * @see {@link src/components/RegionSelect/RegionSelect.utils}
+ */
+export const getCloudManagerLabel = (region: Region) => {
+  const [city] = region.label.split(', ');
+  // Include state for the US
+  if (region.country === 'us') {
+    return `${region.country.toUpperCase()}, ${region.label}`;
+  }
+  return `${region.country.toUpperCase()}, ${city}`;
+};
+
+/**
+ * Extended Region type to assist with Cloud Manager-specific label handling.
+ *
+ * Cloud Manager mutates region labels in many places throughout the app, and
+ * the `ExtendedRegion` type gives us a way to access a region's original label
+ * and its label as displayed by Cloud Manager.
+ *
+ * The Cloud Manager specific label is accessible via the `label` property,
+ * and the unmodified region label provided via the API can be accessed using
+ * the `apiLabel` property.
+ *
+ * @see {@link https://github.com/linode/manager/pull/10740|Cloud Manager PR #10740}
+ * @see {@link src/queries/regions/regions.ts}
+ */
+export interface ExtendedRegion extends Region {
+  /** Region label as defined by API v4. */
+  apiLabel: string;
+}
+
+export const isExtendedRegion = (
+  region: Region | ExtendedRegion
+): region is ExtendedRegion => {
+  if ('apiLabel' in region) {
+    return true;
+  }
+  return false;
+};
+
+export const extendRegion = (
+  region: Region | ExtendedRegion
+): ExtendedRegion => {
+  if (!isExtendedRegion(region)) {
+    return {
+      ...region,
+      label: getCloudManagerLabel(region),
+      apiLabel: region.label,
+    };
+  }
+  return region;
+};
+
+/**
  * Regions that cannot be selected using `chooseRegion()` and `chooseRegions()`.
  *
  * This is useful for regions which have capabilities that are required for tests,
@@ -28,7 +88,7 @@ const disallowedRegionIds = [
  *
  * @returns Override Cloud Manager region, or `undefined`.
  */
-export const getOverrideRegion = (): Region | undefined => {
+export const getOverrideRegion = (): ExtendedRegion | undefined => {
   const overrideRegionId = Cypress.env('CY_TEST_REGION');
 
   try {
@@ -43,7 +103,9 @@ export const getOverrideRegion = (): Region | undefined => {
  *
  * Retrieved via Linode APIv4 during Cypress start-up.
  */
-export const regions: Region[] = Cypress.env('cloudManagerRegions') as Region[];
+export const regions: ExtendedRegion[] = Cypress.env(
+  'cloudManagerRegions'
+) as ExtendedRegion[];
 
 /**
  * Linode region(s) exposed to Cypress for testing.
@@ -51,7 +113,7 @@ export const regions: Region[] = Cypress.env('cloudManagerRegions') as Region[];
  * This may be a subset of `regions` in order to test functionality for specific
  * regions.
  */
-export const getTestableRegions = (): Region[] => {
+export const getTestableRegions = (): ExtendedRegion[] => {
   const overrideRegion = getOverrideRegion();
   if (overrideRegion) {
     return [overrideRegion];
@@ -68,15 +130,20 @@ export const getTestableRegions = (): Region[] => {
  * @param searchRegions - Optional array of Regions from which to search.
  *
  * @throws When no region exists in the `regions` array with the given ID.
+ *
+ * @returns Extended Cloud Manager Region instance for region with the given ID.
  */
-export const getRegionById = (id: string, searchRegions?: Region[]) => {
+export const getRegionById = (
+  id: string,
+  searchRegions?: Region[]
+): ExtendedRegion => {
   const region = (searchRegions ?? regions).find(
     (findRegion: Region) => findRegion.id === id
   );
   if (!region) {
     throw new Error(`Unable to find region by ID. Unknown ID '${id}'.`);
   }
-  return region;
+  return extendRegion(region);
 };
 
 /**
@@ -99,7 +166,7 @@ export const getRegionByLabel = (label: string, searchRegions?: Region[]) => {
       `Unable to find region by label. Unknown region label '${label}'.`
     );
   }
-  return region;
+  return extendRegion(region);
 };
 
 interface ChooseRegionOptions {
@@ -144,7 +211,7 @@ const regionsWithCapabilities = (
   regions: Region[],
   capabilities: Capabilities[]
 ): Region[] => {
-  return regions.filter((region: Region) =>
+  return regions.filter((region: ExtendedRegion) =>
     regionHasCapabilities(region, capabilities)
   );
 };
@@ -215,8 +282,8 @@ const resolveSearchRegions = (
  *
  * @returns Object describing a Cloud Manager region to use during tests.
  */
-export const chooseRegion = (options?: ChooseRegionOptions): Region => {
-  return randomItem(resolveSearchRegions(options));
+export const chooseRegion = (options?: ChooseRegionOptions): ExtendedRegion => {
+  return extendRegion(randomItem(resolveSearchRegions(options)));
 };
 
 /**
@@ -256,7 +323,7 @@ export const chooseRegions = (
     );
   }
 
-  return buildArray(count, (i) => searchRegions.pop()!);
+  return buildArray(count, () => extendRegion(searchRegions.pop()!));
 };
 
 /**
@@ -264,9 +331,9 @@ export const chooseRegions = (
  */
 export const testRegions = (
   description: string,
-  testCallback: (region: Region) => void
+  testCallback: (region: ExtendedRegion) => void
 ) => {
-  getTestableRegions().forEach((region: Region) => {
+  getTestableRegions().forEach((region: ExtendedRegion) => {
     it(`${description} (${region.id})`, () => testCallback(region));
   });
 };
@@ -276,9 +343,9 @@ export const testRegions = (
  */
 export const describeRegions = (
   description: string,
-  describeCallback: (region: Region) => void
+  describeCallback: (region: ExtendedRegion) => void
 ) => {
-  getTestableRegions().forEach((region: Region) => {
+  getTestableRegions().forEach((region: ExtendedRegion) => {
     describe(`${description} (${region.id})`, () => describeCallback(region));
   });
 };

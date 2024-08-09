@@ -1,6 +1,9 @@
+import { getRegions } from '@linode/api-v4';
+import { extendRegion } from 'support/util/regions';
+
 import type { CypressPlugin } from './plugin';
 import type { ResourcePage, Region } from '@linode/api-v4';
-import { getRegions } from '@linode/api-v4';
+import type { ExtendedRegion } from 'support/util/regions';
 
 /**
  * Fetches Linode regions and stores data in Cypress `cloudManagerRegions` env.
@@ -10,11 +13,15 @@ import { getRegions } from '@linode/api-v4';
 export const fetchLinodeRegions: CypressPlugin = async (on, config) => {
   const regions: ResourcePage<Region> = await getRegions({ page_size: 500 });
 
+  const extendedRegions: ExtendedRegion[] = regions.data.map(
+    (apiRegion: Region): ExtendedRegion => extendRegion(apiRegion)
+  );
+
   return {
     ...config,
     env: {
       ...config.env,
-      cloudManagerRegions: regions.data,
+      cloudManagerRegions: extendedRegions,
     },
   };
 };
