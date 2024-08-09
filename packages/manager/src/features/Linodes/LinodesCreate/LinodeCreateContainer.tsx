@@ -84,6 +84,7 @@ import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import type { MapState } from 'src/store/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { accountQueries } from 'src/queries/account/queries';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -738,7 +739,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           signAgreement(agreeData)
             .then(() => {
               this.props.queryClient.setQueryData<Agreements>(
-                ['account', 'agreements'],
+                accountQueries.agreements.queryKey,
                 (prev) => ({
                   ...(prev ?? {}),
                   ...agreeData,
@@ -765,19 +766,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
         /** reset the Events polling */
         this.props.checkForNewEvents();
-
-        // If a VPC was assigned, invalidate the query so that the relevant VPC data
-        // gets displayed in the LinodeEntityDetail
-        if (
-          this.state.selectedVPCId !== undefined &&
-          this.state.selectedVPCId !== -1
-        ) {
-          this.props.queryClient.invalidateQueries(vpcQueries.all.queryKey);
-          this.props.queryClient.invalidateQueries(vpcQueries.paginated._def);
-          this.props.queryClient.invalidateQueries(
-            vpcQueries.vpc(this.state.selectedVPCId).queryKey
-          );
-        }
 
         /** send the user to the Linode detail page */
         this.props.history.push(`/linodes/${response.id}`);

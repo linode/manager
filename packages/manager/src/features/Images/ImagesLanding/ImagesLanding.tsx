@@ -304,7 +304,9 @@ export const ImagesLanding = () => {
     imageLabel: string,
     imageDescription: string
   ) => {
-    queryClient.invalidateQueries(imageQueries.paginated._def);
+    queryClient.invalidateQueries({
+      queryKey: imageQueries.paginated._def,
+    });
     history.push('/images/create/upload', {
       imageDescription,
       imageLabel,
@@ -312,7 +314,9 @@ export const ImagesLanding = () => {
   };
 
   const onCancelFailedClick = () => {
-    queryClient.invalidateQueries(imageQueries.paginated._def);
+    queryClient.invalidateQueries({
+      queryKey: imageQueries.paginated._def,
+    });
   };
 
   const deployNewLinode = (imageID: string) => {

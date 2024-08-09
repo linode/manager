@@ -37,7 +37,7 @@ export const useUnassignLinode = () => {
       linodeQueries.linode(linodeId)._ctx.configs.queryKey,
     ];
     await Promise.all(
-      queryKeys.map((key) => queryClient.invalidateQueries(key))
+      queryKeys.map((key) => queryClient.invalidateQueries({ queryKey: key }))
     );
   };
 

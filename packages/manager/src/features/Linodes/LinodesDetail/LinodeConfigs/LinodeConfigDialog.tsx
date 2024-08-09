@@ -398,14 +398,15 @@ export const LinodeConfigDialog = (props: Props) => {
     const actionType = Boolean(config) ? 'updated' : 'created';
     const handleSuccess = () => {
       formik.setSubmitting(false);
-      queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
       // If there's any chance a VLAN changed here, make sure our query data is up to date
       if (
         configData.interfaces?.some(
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries(vlanQueries._def);
+        queryClient.invalidateQueries({
+          queryKey: vlanQueries._def,
+        });
       }
 
       // Ensure VPC query data is up-to-date
@@ -414,9 +415,15 @@ export const LinodeConfigDialog = (props: Props) => {
       )?.vpc_id;
 
       if (vpcId) {
-        queryClient.invalidateQueries(vpcQueries.all.queryKey);
-        queryClient.invalidateQueries(vpcQueries.paginated._def);
-        queryClient.invalidateQueries(vpcQueries.vpc(vpcId).queryKey);
+        queryClient.invalidateQueries({
+          queryKey: vpcQueries.all.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: vpcQueries.paginated._def,
+        });
+        queryClient.invalidateQueries({
+          queryKey: vpcQueries.vpc(vpcId).queryKey,
+        });
       }
 
       enqueueSnackbar(
