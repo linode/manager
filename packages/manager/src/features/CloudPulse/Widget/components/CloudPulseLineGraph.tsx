@@ -42,6 +42,11 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
       ) : (
         <LineGraph
           {...rest}
+          sxTableStyles={{
+            '& .MuiTable-root': {
+              border: 0,
+            },
+          }}
           ariaLabel={ariaLabel}
           data={data}
           isLegendsFullSize={true}
