@@ -31,8 +31,14 @@ const config: StorybookConfig = {
         prop.parent
           ? !/node_modules\/(?!@mui)/.test(prop.parent.fileName)
           : true,
+      // Only compile files that have stories for faster local development performance
+      include: [
+        'src/components/**/*.{ts,tsx}',
+        'src/features/Events/*',
+        'src/features/Linodes/LinodesDetail/LinodesDetailHeader/*',
+        'src/features/TopMenu/**/*.{ts,tsx}',
+      ],
     },
-
     reactDocgen: 'react-docgen-typescript',
   },
   docs: {
@@ -47,6 +53,22 @@ const config: StorybookConfig = {
       },
       define: {
         'process.env': {},
+      },
+      optimizeDeps: {
+        include: [
+          '@storybook/addon-viewport',
+          '@storybook/blocks',
+          '@storybook/theming',
+          'storybook-dark-mode',
+          'react-hook-form',
+          'typescript-fsa-reducers',
+          'css-mediaquery',
+          'redux-mock-store',
+          'redux-thunk',
+          'redux',
+          '@testing-library/react',
+          'react-dom/test-utils',
+        ],
       },
     });
   },
