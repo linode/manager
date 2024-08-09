@@ -7,7 +7,7 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import type { Image } from '@linode/api-v4';
-import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
+import { extendRegion } from 'support/util/regions';
 
 describe('Manage Image Regions', () => {
   /**
@@ -20,10 +20,10 @@ describe('Manage Image Regions', () => {
     const region3 = regionFactory.build({ site_type: 'core' });
     const region4 = regionFactory.build({ site_type: 'core' });
 
-    const region1Label = getNewRegionLabel(region1);
-    const region2Label = getNewRegionLabel(region2);
-    const region3Label = getNewRegionLabel(region3);
-    const region4Label = getNewRegionLabel(region4);
+    const extendedRegion1 = extendRegion(region1);
+    const extendedRegion2 = extendRegion(region2);
+    const extendedRegion3 = extendRegion(region3);
+    const extendedRegion4 = extendRegion(region4);
 
     const image = imageFactory.build({
       size: 50,
@@ -52,7 +52,7 @@ describe('Manage Image Regions', () => {
         cy.findByText('Distributed').should('be.visible');
 
         // Verify the first region is rendered
-        cy.findByText(region1Label + ',').should('be.visible');
+        cy.findByText(extendedRegion1.label + ',').should('be.visible');
 
         // Click the "+1"
         cy.findByText('+1').should('be.visible').should('be.enabled').click();
@@ -64,8 +64,8 @@ describe('Manage Image Regions', () => {
       .should('be.visible')
       .within(() => {
         // Verify the Image regions render
-        cy.findByText(region1Label).should('be.visible');
-        cy.findByText(region1Label).should('be.visible');
+        cy.findByText(extendedRegion1.label).should('be.visible');
+        cy.findByText(extendedRegion1.label).should('be.visible');
 
         cy.findByText('Image will be available in these regions (2)').should(
           'be.visible'
@@ -117,14 +117,14 @@ describe('Manage Image Regions', () => {
 
     // Verify region3 shows up as an option and select it
     ui.autocompletePopper
-      .findByTitle(`${region3Label} (${region3.id})`)
+      .findByTitle(`${extendedRegion3.label} (${region3.id})`)
       .should('be.visible')
       .should('be.enabled')
       .click();
 
     // Verify region4 shows up as an option and select it
     ui.autocompletePopper
-      .findByTitle(`${region4Label} (${region4.id})`)
+      .findByTitle(`${extendedRegion4.label} (${region4.id})`)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -151,12 +151,12 @@ describe('Manage Image Regions', () => {
       .click()
       .within(() => {
         // Verify the existing image regions render
-        cy.findByText(region1Label).should('be.visible');
-        cy.findByText(region2Label).should('be.visible');
+        cy.findByText(extendedRegion1.label).should('be.visible');
+        cy.findByText(extendedRegion2.label).should('be.visible');
 
         // Verify the newly selected image regions render
-        cy.findByText(region3Label).should('be.visible');
-        cy.findByText(region4Label).should('be.visible');
+        cy.findByText(extendedRegion3.label).should('be.visible');
+        cy.findByText(extendedRegion4.label).should('be.visible');
         cy.findAllByText('unsaved').should('be.visible');
 
         // Verify the count is now 3
@@ -174,7 +174,7 @@ describe('Manage Image Regions', () => {
           .click();
 
         // Verify the image isn't shown in the list after being removed
-        cy.findByText(region1Label).should('not.exist');
+        cy.findByText(extendedRegion1.label).should('not.exist');
 
         // Verify the count is now 3
         cy.findByText('Image will be available in these regions (3)').should(
@@ -198,7 +198,7 @@ describe('Manage Image Regions', () => {
         cy.findByText('150 MB');
 
         // Verify the first region is rendered
-        cy.findByText(region2Label + ',').should('be.visible');
+        cy.findByText(extendedRegion2.label + ',').should('be.visible');
 
         cy.findByText('+2').should('be.visible').should('be.enabled');
 
