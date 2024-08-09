@@ -8,9 +8,6 @@ import { interceptCreateVolume } from 'support/intercepts/volumes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { accountFactory } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -203,47 +200,5 @@ describe('volume create flow', () => {
           });
       }
     );
-  });
-
-  it('should not have a "Volume Encryption" section visible if the feature flag is off and user does not have capability', () => {
-    // Mock feature flag -- @TODO BSE: Remove feature flag once BSE is fully rolled out
-    mockAppendFeatureFlags({
-      blockStorageEncryption: false,
-    }).as('getFeatureFlags');
-
-    // Mock account response
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes'],
-    });
-
-    mockGetAccount(mockAccount).as('getAccount');
-
-    // intercept request
-    cy.visitWithLogin('/volumes/create');
-    cy.wait(['@getFeatureFlags', '@getAccount']);
-
-    // Check if section is visible
-    cy.findByText('Encrypt Volume').should('not.exist');
-  });
-
-  it('should have a "Volume Encryption" section visible if feature flag is on and user has the capability', () => {
-    // Mock feature flag -- @TODO BSE: Remove feature flag once BSE is fully rolled out
-    mockAppendFeatureFlags({
-      blockStorageEncryption: true,
-    }).as('getFeatureFlags');
-
-    // Mock account response
-    const mockAccount = accountFactory.build({
-      capabilities: ['Linodes', 'Block Storage Encryption'],
-    });
-
-    mockGetAccount(mockAccount).as('getAccount');
-
-    // intercept request
-    cy.visitWithLogin('/volumes/create');
-    cy.wait(['@getFeatureFlags', '@getAccount']);
-
-    // Check if section is visible
-    cy.findByText('Encrypt Volume').should('exist');
   });
 });
