@@ -15,15 +15,10 @@ describe('Manage Image Regions', () => {
    * and removes one existing region (region 1).
    */
   it("updates an Image's regions", () => {
-    const region1 = regionFactory.build({ site_type: 'core' });
-    const region2 = regionFactory.build({ site_type: 'core' });
-    const region3 = regionFactory.build({ site_type: 'core' });
-    const region4 = regionFactory.build({ site_type: 'core' });
-
-    const extendedRegion1 = extendRegion(region1);
-    const extendedRegion2 = extendRegion(region2);
-    const extendedRegion3 = extendRegion(region3);
-    const extendedRegion4 = extendRegion(region4);
+    const region1 = extendRegion(regionFactory.build({ site_type: 'core' }));
+    const region2 = extendRegion(regionFactory.build({ site_type: 'core' }));
+    const region3 = extendRegion(regionFactory.build({ site_type: 'core' }));
+    const region4 = extendRegion(regionFactory.build({ site_type: 'core' }));
 
     const image = imageFactory.build({
       size: 50,
@@ -52,7 +47,7 @@ describe('Manage Image Regions', () => {
         cy.findByText('Distributed').should('be.visible');
 
         // Verify the first region is rendered
-        cy.findByText(extendedRegion1.label + ',').should('be.visible');
+        cy.findByText(region1.label + ',').should('be.visible');
 
         // Click the "+1"
         cy.findByText('+1').should('be.visible').should('be.enabled').click();
@@ -64,8 +59,8 @@ describe('Manage Image Regions', () => {
       .should('be.visible')
       .within(() => {
         // Verify the Image regions render
-        cy.findByText(extendedRegion1.label).should('be.visible');
-        cy.findByText(extendedRegion1.label).should('be.visible');
+        cy.findByText(region1.label).should('be.visible');
+        cy.findByText(region1.label).should('be.visible');
 
         cy.findByText('Image will be available in these regions (2)').should(
           'be.visible'
@@ -117,14 +112,14 @@ describe('Manage Image Regions', () => {
 
     // Verify region3 shows up as an option and select it
     ui.autocompletePopper
-      .findByTitle(`${extendedRegion3.label} (${region3.id})`)
+      .findByTitle(`${region3.label} (${region3.id})`)
       .should('be.visible')
       .should('be.enabled')
       .click();
 
     // Verify region4 shows up as an option and select it
     ui.autocompletePopper
-      .findByTitle(`${extendedRegion4.label} (${region4.id})`)
+      .findByTitle(`${region4.label} (${region4.id})`)
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -151,12 +146,12 @@ describe('Manage Image Regions', () => {
       .click()
       .within(() => {
         // Verify the existing image regions render
-        cy.findByText(extendedRegion1.label).should('be.visible');
-        cy.findByText(extendedRegion2.label).should('be.visible');
+        cy.findByText(region1.label).should('be.visible');
+        cy.findByText(region2.label).should('be.visible');
 
         // Verify the newly selected image regions render
-        cy.findByText(extendedRegion3.label).should('be.visible');
-        cy.findByText(extendedRegion4.label).should('be.visible');
+        cy.findByText(region3.label).should('be.visible');
+        cy.findByText(region4.label).should('be.visible');
         cy.findAllByText('unsaved').should('be.visible');
 
         // Verify the count is now 3
@@ -174,7 +169,7 @@ describe('Manage Image Regions', () => {
           .click();
 
         // Verify the image isn't shown in the list after being removed
-        cy.findByText(extendedRegion1.label).should('not.exist');
+        cy.findByText(region1.label).should('not.exist');
 
         // Verify the count is now 3
         cy.findByText('Image will be available in these regions (3)').should(
@@ -198,7 +193,7 @@ describe('Manage Image Regions', () => {
         cy.findByText('150 MB');
 
         // Verify the first region is rendered
-        cy.findByText(extendedRegion2.label + ',').should('be.visible');
+        cy.findByText(region2.label + ',').should('be.visible');
 
         cy.findByText('+2').should('be.visible').should('be.enabled');
 
