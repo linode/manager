@@ -1,26 +1,8 @@
 import { randomItem } from 'support/util/random';
 import { buildArray, shuffleArray } from './arrays';
+import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
 
 import type { Capabilities, Region } from '@linode/api-v4';
-
-/**
- * Returns Region label formatted for Cloud Manager UI.
- *
- * This is a re-implementation of a similar util in the Cloud Manager code base.
- * Because it is needed by our Cypress config, which does not go through Vite, we
- * have to re-implement this util rather than import it because Cloud Manager
- * source code cannot be imported without Vite.
- *
- * @see {@link src/components/RegionSelect/RegionSelect.utils}
- */
-export const getCloudManagerLabel = (region: Region) => {
-  const [city] = region.label.split(', ');
-  // Include state for the US
-  if (region.country === 'us') {
-    return `${region.country.toUpperCase()}, ${region.label}`;
-  }
-  return `${region.country.toUpperCase()}, ${city}`;
-};
 
 /**
  * Extended Region type to assist with Cloud Manager-specific label handling.
@@ -41,6 +23,13 @@ export interface ExtendedRegion extends Region {
   apiLabel: string;
 }
 
+/**
+ * Determines whether a region object is a `Region` or `ExtendedRegion` instance.
+ *
+ * @param region - `Region` or `ExtendedRegion` object.
+ *
+ * @returns `true` if `region` is an `ExtendedRegion` instance, `false` otherwise.
+ */
 export const isExtendedRegion = (
   region: Region | ExtendedRegion
 ): region is ExtendedRegion => {
@@ -50,19 +39,36 @@ export const isExtendedRegion = (
   return false;
 };
 
+/**
+ * Returns an `ExtendedRegion` object for the given `Region`.
+ *
+ * If the given region object is already an `ExtendedRegion` (i.e. it has an
+ * `apiLabel` property), then it will be returned unmodified.
+ *
+ * @param region - Region to extend.
+ *
+ * @returns `ExtendedRegion` object for `region`.
+ */
 export const extendRegion = (
   region: Region | ExtendedRegion
 ): ExtendedRegion => {
   if (!isExtendedRegion(region)) {
     return {
       ...region,
-      label: getCloudManagerLabel(region),
+      label: getNewRegionLabel(region),
       apiLabel: region.label,
     };
   }
   return region;
 };
 
+/**
+ * Returns a `Region` object for the given `ExtendedRegion`.
+ *
+ * @param extendedRegion - Extended region from which to create `Region`.
+ *
+ * @returns `Region` object for `extendedRegion`.
+ */
 export const getRegionFromExtendedRegion = (
   extendedRegion: ExtendedRegion
 ): Region => {
