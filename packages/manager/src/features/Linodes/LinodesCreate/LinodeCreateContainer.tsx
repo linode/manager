@@ -30,7 +30,11 @@ import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import {
+  sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormSubmitEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
+import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -885,12 +889,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           <LandingHeader
             onDocsClick={() => {
               sendLinodeCreateFlowDocsClickEvent('Getting Started');
-              sendLinodeCreateFormStepEvent({
-                action: 'click',
-                category: 'link',
+              sendLinodeCreateFormInputEvent({
                 createType: (this.params.type as LinodeCreateType) ?? 'OS',
+                interaction: 'click',
                 label: 'Getting Started',
-                version: 'v1',
               });
             }}
             docsLabel="Getting Started"
@@ -1011,6 +1013,11 @@ const handleAnalytics = (details: {
 }) => {
   const { label, linode: linode, payload, type } = details;
   const eventInfo = actionsAndLabels[type];
+  // Distinguish the form event create type by tab, which separates 'OS' from 'Image'.
+  const eventCreateType =
+    eventInfo?.action && payload?.image?.includes('linode/')
+      ? 'OS'
+      : capitalize(eventInfo?.action);
   let eventAction = 'unknown';
   let eventLabel = '';
 
@@ -1023,6 +1030,7 @@ const handleAnalytics = (details: {
     eventLabel = label;
   }
 
+  // Send custom event.
   sendCreateLinodeEvent(
     eventAction,
     eventLabel,
@@ -1030,4 +1038,8 @@ const handleAnalytics = (details: {
       ? { isLinodePoweredOff: linode.status === 'offline' }
       : undefined
   );
+  // Send form event.
+  sendLinodeCreateFormSubmitEvent({
+    createType: eventCreateType as LinodeCreateType,
+  });
 };

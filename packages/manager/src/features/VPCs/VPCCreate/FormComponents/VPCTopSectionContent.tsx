@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_VPC_HELPER_TEXT } from '../../constants';
@@ -12,6 +12,7 @@ import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 
@@ -39,13 +40,11 @@ export const VPCTopSectionContent = (props: Props) => {
         <Link
           onClick={() =>
             isFromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'link',
-              createType: queryParams.type ?? 'OS',
-              formStepName: 'Create VPC Drawer',
+            sendLinodeCreateFormInputEvent({
+              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+              headerName: 'Create VPC',
+              interaction: 'click',
               label: 'Learn more',
-              version: 'v1',
             })
           }
           to="https://www.linode.com/docs/products/networking/vpc/"
