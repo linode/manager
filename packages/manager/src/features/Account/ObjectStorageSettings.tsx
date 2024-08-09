@@ -1,3 +1,4 @@
+import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
@@ -33,6 +34,15 @@ export const ObjectStorageSettings = () => {
   const handleCloseCancelDialog = () => {
     setIsCancelDialogOpen(false);
     reset();
+  };
+
+  const handleCancelObjectStorage = async () => {
+    cancelObjectStorage().then(() => {
+      handleCloseCancelDialog();
+      enqueueSnackbar('Object Storage successfully canceled.', {
+        variant: 'success',
+      });
+    });
   };
 
   if (isLoading) {
@@ -83,7 +93,7 @@ export const ObjectStorageSettings = () => {
         }}
         label="Username"
         loading={isCancelLoading}
-        onClick={() => cancelObjectStorage()}
+        onClick={handleCancelObjectStorage}
         onClose={handleCloseCancelDialog}
         open={isCancelDialogOpen}
         title="Cancel Object Storage"
