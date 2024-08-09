@@ -3,7 +3,8 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-import type { Kernel } from '@linode/api-v4/lib/linodes/types';
+import type { Kernel } from '@linode/api-v4';
+
 export interface KernelSelectProps {
   errorText?: string;
   kernels: Kernel[];

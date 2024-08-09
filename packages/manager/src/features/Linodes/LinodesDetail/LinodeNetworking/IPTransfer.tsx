@@ -405,7 +405,7 @@ export const IPTransfer = (props: Props) => {
      */
     if (!equals(previousIPAddresses, ipAddresses)) {
       setIPs(
-        ipAddresses.reduce((acc, ip) => {
+        ipAddresses.reduce<IPRowState>((acc, ip) => {
           acc[ip] = defaultState(ip, linodeId);
           return acc;
         }, {})

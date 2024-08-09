@@ -55,14 +55,6 @@ export interface SearchLandingProps
   extends SearchProps,
     RouteComponentProps<{}> {}
 
-const splitWord = (word: any) => {
-  word = word.split('');
-  for (let i = 0; i < word.length; i += 2) {
-    word[i] = <span key={i}>{word[i]}</span>;
-  }
-  return word;
-};
-
 export const SearchLanding = (props: SearchLandingProps) => {
   const { entities, search, searchResultsByEntity } = props;
   const { data: regions } = useRegionsQuery();
@@ -285,25 +277,25 @@ export const SearchLanding = (props: SearchLandingProps) => {
             <Typography style={{ marginBottom: 16 }}>
               You searched for ...
             </Typography>
-            <Typography className="resultq">
-              {query && splitWord(query)}
-            </Typography>
+            <Typography className="resultq">{query}</Typography>
             <Typography className="nothing" style={{ marginTop: 56 }}>
-              Sorry, no results for this one
+              Sorry, no results for this one.
             </Typography>
           </StyledStack>
         </StyledGrid>
       )}
       {!loading && (
         <Grid sx={{ padding: 0 }}>
-          {Object.keys(finalResults).map((entityType, idx: number) => (
-            <ResultGroup
-              entity={displayMap[entityType]}
-              groupSize={100}
-              key={idx}
-              results={finalResults[entityType]}
-            />
-          ))}
+          {Object.keys(finalResults).map(
+            (entityType: keyof typeof displayMap, idx: number) => (
+              <ResultGroup
+                entity={displayMap[entityType]}
+                groupSize={100}
+                key={idx}
+                results={finalResults[entityType]}
+              />
+            )
+          )}
         </Grid>
       )}
     </StyledRootGrid>
