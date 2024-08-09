@@ -323,7 +323,7 @@ export const chooseRegion = (options?: ChooseRegionOptions): ExtendedRegion => {
 export const chooseRegions = (
   count: number,
   options?: ChooseRegionOptions
-): Region[] => {
+): ExtendedRegion[] => {
   if (count < 0) {
     throw new Error(
       'Unable to choose regions. The desired number of regions must be 0 or greater'
