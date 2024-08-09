@@ -63,6 +63,21 @@ export const extendRegion = (
   return region;
 };
 
+export const getRegionFromExtendedRegion = (
+  extendedRegion: ExtendedRegion
+): Region => {
+  return {
+    id: extendedRegion.id,
+    label: extendedRegion.apiLabel,
+    country: extendedRegion.country,
+    capabilities: extendedRegion.capabilities,
+    placement_group_limits: extendedRegion.placement_group_limits,
+    status: extendedRegion.status,
+    resolvers: extendedRegion.resolvers,
+    site_type: extendedRegion.site_type,
+  };
+};
+
 /**
  * Regions that cannot be selected using `chooseRegion()` and `chooseRegions()`.
  *
