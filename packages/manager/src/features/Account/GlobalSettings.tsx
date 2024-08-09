@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -15,8 +14,10 @@ import { BackupDrawer } from '../Backups';
 import AutoBackups from './AutoBackups';
 import CloseAccountSetting from './CloseAccountSetting';
 import { EnableManaged } from './EnableManaged';
-import EnableObjectStorage from './EnableObjectStorage';
 import NetworkHelper from './NetworkHelper';
+import { ObjectStorageSettings } from './ObjectStorageSettings';
+
+import type { APIError } from '@linode/api-v4';
 
 const GlobalSettings = () => {
   const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
@@ -66,12 +67,7 @@ const GlobalSettings = () => {
     return null;
   }
 
-  const {
-    backups_enabled,
-    managed,
-    network_helper,
-    object_storage,
-  } = accountSettings;
+  const { backups_enabled, managed, network_helper } = accountSettings;
 
   const toggleAutomaticBackups = () => {
     updateAccount({ backups_enabled: !backups_enabled }).catch(displayError);
@@ -94,7 +90,7 @@ const GlobalSettings = () => {
         networkHelperEnabled={network_helper}
         onChange={toggleNetworkHelper}
       />
-      <EnableObjectStorage object_storage={object_storage} />
+      <ObjectStorageSettings />
       <EnableManaged isManaged={managed} />
       <CloseAccountSetting />
       <BackupDrawer
