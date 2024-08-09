@@ -17,6 +17,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
@@ -41,7 +42,7 @@ export const ObjectStorageLanding = () => {
   const history = useHistory();
   const [mode, setMode] = React.useState<MODE>('creating');
   const { action, tab } = useParams<{
-    action?: 'create' | 'edit' | 'view';
+    action?: 'create';
     tab?: 'access-keys' | 'buckets';
   }>();
 
@@ -67,16 +68,16 @@ export const ObjectStorageLanding = () => {
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
 
+  const openDrawer = useOpenClose();
+
   const tabs = [
     { routeName: `/object-storage/buckets`, title: 'Buckets' },
     { routeName: `/object-storage/access-keys`, title: 'Access Keys' },
   ];
 
-  const openDrawer = (mode: MODE) => {
+  const handleOpenAccessDrawer = (mode: MODE) => {
     setMode(mode);
-    history.replace(
-      `/object-storage/access-keys/${mode === 'viewing' ? 'view' : 'edit'}`
-    );
+    openDrawer.open();
   };
 
   const navToURL = (index: number) => history.push(tabs[index].routeName);
@@ -96,6 +97,8 @@ export const ObjectStorageLanding = () => {
     !areBucketsLoading && tab === 'buckets' && userHasNoBucketCreated;
 
   const isAccessKeysTab = tab === 'access-keys';
+  const isCreateAction = action === 'create';
+
   const createButtonText = isAccessKeysTab
     ? 'Create Access Key'
     : 'Create Bucket';
@@ -104,14 +107,15 @@ export const ObjectStorageLanding = () => {
     if (isAccessKeysTab) {
       setMode('creating');
       history.replace('/object-storage/access-keys/create');
+      openDrawer.open();
     } else {
       history.replace('/object-storage/buckets/create');
     }
   };
 
   const tabIndex = tab === 'access-keys' ? 1 : 0;
-  const isCreateBucketOpen = tab === 'buckets' && action === 'create';
-  const isCreateAccessKeyOpen = isAccessKeysTab && action !== undefined;
+  const isCreateBucketOpen = !isAccessKeysTab && isCreateAction;
+  const isCreateAccessKeyOpen = isAccessKeysTab && isCreateAction;
 
   return (
     <React.Fragment>
@@ -148,13 +152,14 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
-                closeAccessDrawer={() =>
-                  history.replace('/object-storage/access-keys')
-                }
-                accessDrawerOpen={isCreateAccessKeyOpen}
+                closeAccessDrawer={() => {
+                  openDrawer.close();
+                  history.replace('/object-storage/access-keys');
+                }}
+                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
-                openAccessDrawer={openDrawer}
+                openAccessDrawer={handleOpenAccessDrawer}
               />
             </SafeTabPanel>
           </TabPanels>
