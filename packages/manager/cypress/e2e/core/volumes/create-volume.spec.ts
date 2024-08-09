@@ -219,9 +219,7 @@ describe('volume create flow', () => {
     mockGetAccount(mockAccount).as('getAccount');
 
     // intercept request
-    cy.visitWithLogin('/volumes/create', {
-      localStorageOverrides: pageSizeOverride,
-    });
+    cy.visitWithLogin('/volumes/create');
     cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
@@ -242,9 +240,7 @@ describe('volume create flow', () => {
     mockGetAccount(mockAccount).as('getAccount');
 
     // intercept request
-    cy.visitWithLogin('/volumes/create', {
-      localStorageOverrides: pageSizeOverride,
-    });
+    cy.visitWithLogin('/volumes/create');
     cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
