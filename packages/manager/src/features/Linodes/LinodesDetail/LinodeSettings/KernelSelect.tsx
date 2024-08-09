@@ -8,12 +8,15 @@ import type { Kernel } from '@linode/api-v4';
 export interface KernelSelectProps {
   errorText?: string;
   kernels: Kernel[];
-  onChange: (selected_value: string) => void;
+  onChange: (selectedValue: string) => void;
   readOnly?: boolean;
   selectedKernel?: string;
 }
-interface KernelOption {
-  kernelType: string;
+
+export type KernelType = '32 bit' | '64 bit' | 'Current' | 'Deprecated';
+
+export interface KernelOption {
+  kernelType: KernelType;
   label: string;
   value: string;
 }
@@ -90,7 +93,7 @@ export const kernelsToGroupedItems = (kernels: Kernel[]) => {
 
   groupedKernels.Current = sortCurrentKernels(groupedKernels.Current);
   return Object.keys(groupedKernels)
-    .reduce((accum: KernelOption[], thisGroup) => {
+    .reduce((accum: KernelOption[], thisGroup: KernelType) => {
       const group = groupedKernels[thisGroup];
       if (!group || group.length === 0) {
         return accum;
