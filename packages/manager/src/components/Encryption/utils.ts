@@ -29,3 +29,32 @@ export const useIsDiskEncryptionFeatureEnabled = (): {
 
   return { isDiskEncryptionFeatureEnabled };
 };
+
+/**
+ * Hook to determine if the Block Storage Encryption feature should be visible to the user.
+ * Based on the user's account capability and the feature flag.
+ *
+ * @returns { boolean } - Whether the Block Storage Encryption feature is enabled for the current user.
+ */
+export const useIsBlockStorageEncryptionFeatureEnabled = (): {
+  isBlockStorageEncryptionFeatureEnabled: boolean;
+} => {
+  const { data: account, error } = useAccount();
+  const flags = useFlags();
+
+  if (error || !flags) {
+    return { isBlockStorageEncryptionFeatureEnabled: false };
+  }
+
+  const hasAccountCapability = account?.capabilities?.includes(
+    'Block Storage Encryption'
+  );
+
+  const isFeatureFlagEnabled = flags.blockStorageEncryption;
+
+  const isBlockStorageEncryptionFeatureEnabled = Boolean(
+    hasAccountCapability && isFeatureFlagEnabled
+  );
+
+  return { isBlockStorageEncryptionFeatureEnabled };
+};
