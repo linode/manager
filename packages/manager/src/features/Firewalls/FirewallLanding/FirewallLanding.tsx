@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
@@ -12,8 +13,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -55,6 +58,11 @@ const FirewallLanding = () => {
 
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
+  // @ts-expect-error TODO Secure VMs: wire up firewall generation dialog
+  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
+
+  const flags = useFlags();
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
 
   const [selectedFirewallId, setSelectedFirewallId] = React.useState<
     number | undefined
@@ -126,6 +134,16 @@ const FirewallLanding = () => {
   return (
     <React.Fragment>
       <LandingHeader
+        extraActions={
+          secureVMNoticesEnabled && flags.secureVmCopy?.generateActionText ? (
+            <Button
+              buttonType="secondary"
+              onClick={() => setIsGenerateDialogOpen(true)}
+            >
+              {flags.secureVmCopy.generateActionText}
+            </Button>
+          ) : undefined
+        }
         breadcrumbProps={{ pathname: '/firewalls' }}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
         entity="Firewall"
