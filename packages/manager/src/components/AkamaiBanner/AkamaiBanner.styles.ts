@@ -16,23 +16,25 @@ export const StyledAkamaiLogo = styled(AkamaiLogo)({
   },
 });
 
-export const StyledWarningIcon = styled(Warning)(({ theme }) => ({
-  color: theme.palette.warning.dark,
-}));
+export const StyledWarningIcon = styled(Warning)({
+  color: 'black',
+});
 
 export const StyledBanner = styled(Stack, {
   shouldForwardProp: omittedProps(['warning', 'margin']),
 })<{ margin?: number; warning?: boolean }>(({ margin, theme, warning }) => ({
   backgroundColor: warning ? theme.palette.warning.light : theme.color.white,
-  border: `1px solid ${
+  border: `${warning ? '3px' : '1px'} solid ${
     warning ? theme.palette.warning.dark : theme.color.black
   }`,
   margin: `${theme.spacing(margin ?? 0)} 0`,
 }));
 
-export const StyledBannerLabel = styled(Box)(({ theme }) => ({
-  backgroundColor: 'black',
-  color: 'white',
+export const StyledBannerLabel = styled(Box, {
+  shouldForwardProp: omittedProps(['warning']),
+})<{ warning?: boolean }>(({ theme, warning }) => ({
+  backgroundColor: warning ? theme.palette.warning.dark : 'black',
+  color: warning ? 'black' : 'white',
   padding: theme.spacing(2.3),
   textWrap: 'nowrap',
   userSelect: 'none',
