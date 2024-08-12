@@ -28,7 +28,7 @@ import {
   StyledWrapper,
 } from './LineGraph.styles';
 
-import type { Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type {
   ChartData,
   ChartDataSets,
@@ -106,14 +106,18 @@ export interface LineGraphProps {
    */
   suggestedMax?: number;
   /**
+   * Custom styles for the table.
+   */
+  sxTableStyles?: SxProps;
+  /**
    * The suggested maximum y-axis value passed to **Chart,js**.
    */
   tabIndex?: number;
+
   /**
    * The timezone the graph should use for interpreting the UNIX date-times in the data set.
    */
   timezone: string;
-
   /**
    * The unit to add to the mouse-over tooltip in the chart.
    */
@@ -156,6 +160,7 @@ export const LineGraph = (props: LineGraphProps) => {
     rowHeaders,
     showToday,
     suggestedMax,
+    sxTableStyles,
     tabIndex,
     timezone,
     unit,
@@ -368,6 +373,7 @@ export const LineGraph = (props: LineGraphProps) => {
         <StyledContainer>
           <StyledTable
             sx={{
+              ...sxTableStyles,
               maxWidth: isLegendsFullSize ? '100%' : '600px',
               width: isLegendsFullSize ? '100%' : '85%',
             }} // this sx is added because styled table forcing the legends to be 85% width & 600px max width

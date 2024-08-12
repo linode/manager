@@ -10,7 +10,11 @@ import { TableRow } from 'src/components/TableRow';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import { StyledGravatar } from './EventRow.styles';
-import { formatProgressEvent, getEventMessage } from './utils';
+import {
+  formatProgressEvent,
+  getEventMessage,
+  getEventUsername,
+} from './utils';
 
 import type { Event } from '@linode/api-v4/lib/account';
 
@@ -25,7 +29,7 @@ export const EventRowV2 = (props: EventRowProps) => {
   const { action, message, username } = {
     action: event.action,
     message: getEventMessage(event),
-    username: event.username,
+    username: getEventUsername(event),
   };
 
   if (!message) {
@@ -51,8 +55,8 @@ export const EventRowV2 = (props: EventRowProps) => {
       <Hidden smDown>
         <TableCell data-qa-event-username-cell parentColumn="Username">
           <Box alignItems="center" display="flex" gap={1}>
-            <StyledGravatar username={username ?? ''} />
-            {username ?? 'Linode'}
+            <StyledGravatar username={username === 'Linode' ? '' : username} />
+            {username}
           </Box>
         </TableCell>
       </Hidden>

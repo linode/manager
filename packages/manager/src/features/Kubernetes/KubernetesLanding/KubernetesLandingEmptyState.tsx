@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import KubernetesSvg from 'src/assets/icons/entityIcons/kubernetes.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -12,7 +13,13 @@ import {
   youtubeLinkData,
 } from './KubernetesLandingEmptyStateData';
 
-export const KubernetesEmptyState = () => {
+interface Props {
+  isRestricted: boolean;
+}
+
+export const KubernetesEmptyState = (props: Props) => {
+  const { isRestricted = false } = props;
+
   const { push } = useHistory();
 
   return (
@@ -20,6 +27,7 @@ export const KubernetesEmptyState = () => {
       buttonProps={[
         {
           children: 'Create Cluster',
+          disabled: isRestricted,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
@@ -28,6 +36,11 @@ export const KubernetesEmptyState = () => {
             });
             push('/kubernetes/create');
           },
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'LKE Clusters',
+          }),
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
