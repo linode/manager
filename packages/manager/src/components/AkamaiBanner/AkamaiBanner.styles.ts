@@ -7,7 +7,9 @@ import { omittedProps } from 'src/utilities/omittedProps';
 import { Box } from '../Box';
 import { Stack } from '../Stack';
 
-export const StyledAkamaiLogo = styled(AkamaiLogo)({
+export const StyledAkamaiLogo = styled(AkamaiLogo, {
+  label: 'StyledAkamaiLogo',
+})({
   '& .akamai-logo-icon': {
     fill: 'white',
   },
@@ -16,11 +18,14 @@ export const StyledAkamaiLogo = styled(AkamaiLogo)({
   },
 });
 
-export const StyledWarningIcon = styled(Warning)({
+export const StyledWarningIcon = styled(Warning, {
+  label: 'StyledWarningIcon',
+})({
   color: 'black',
 });
 
 export const StyledBanner = styled(Stack, {
+  label: 'StyledBanner',
   shouldForwardProp: omittedProps(['warning', 'margin']),
 })<{ margin?: number; warning?: boolean }>(({ margin, theme, warning }) => ({
   backgroundColor: warning ? theme.palette.warning.light : theme.color.white,
@@ -31,6 +36,7 @@ export const StyledBanner = styled(Stack, {
 }));
 
 export const StyledBannerLabel = styled(Box, {
+  label: 'StyledBannerLabel',
   shouldForwardProp: omittedProps(['warning']),
 })<{ warning?: boolean }>(({ theme, warning }) => ({
   backgroundColor: warning ? theme.palette.warning.dark : 'black',
@@ -43,6 +49,7 @@ export const StyledBannerLabel = styled(Box, {
 }));
 
 export const StyledBannerAction = styled(Box, {
+  label: 'StyledBannerAction',
   shouldForwardProp: omittedProps(['warning']),
 })<{ warning?: boolean }>(({ theme, warning }) => ({
   color: warning ? theme.bg.mainContentBanner : theme.color.black,
