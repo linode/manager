@@ -32,7 +32,14 @@ const BaseApp = withDocumentTitleProvider(
     }
 
     return (
-      <ErrorBoundary fallback={<TheApplicationIsOnFire />}>
+      <ErrorBoundary
+        fallback={<TheApplicationIsOnFire />}
+        onError={(error, errorInfo) => {
+          if (error.message.includes('Failed to fetch dynamically imported module')) {
+            window.location.reload();
+          }
+        }}
+      >
         {/** Accessibility helper */}
         <a className="skip-link" href="#main-content">
           Skip to main content
