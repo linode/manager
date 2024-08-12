@@ -45,12 +45,14 @@ export interface Filters {
 }
 
 export interface AclpConfig {
-  dashboardId: number;
-  interval: string;
-  region: string;
-  resources: string[];
-  timeDuration: string;
-  widgets: { [label: string]: AclpWidget };
+  [key: string]:
+    | number
+    | string
+    | string[]
+    | number[]
+    | { [key: string]: AclpWidget }
+    | undefined;
+  widgets?: { [key: string]: AclpWidget };
 }
 
 export interface AclpWidget {

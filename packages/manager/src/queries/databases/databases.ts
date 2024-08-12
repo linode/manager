@@ -18,6 +18,7 @@ import {
   getAllDatabaseEngines,
   getAllDatabaseTypes,
   getAllDatabases,
+  getAllDatabasesWithFilters,
 } from './requests';
 
 import type {
@@ -57,6 +58,10 @@ export const databaseQueries = createQueryKeys('databases', {
         queryFn: getAllDatabases,
         queryKey: null,
       },
+      allWithFilters: (params: Params, filter: Filter) => ({
+        queryFn: () => getAllDatabasesWithFilters(params, filter),
+        queryKey: [params, filter],
+      }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getDatabases(params, filter),
         queryKey: [params, filter],

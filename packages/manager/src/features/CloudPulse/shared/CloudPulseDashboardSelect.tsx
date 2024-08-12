@@ -6,6 +6,7 @@ import { Typography } from 'src/components/Typography';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 
 import { DASHBOARD_ID, REGION, RESOURCES } from '../Utils/constants';
+import { clearSelectedFiltersAndChangeDashboardId } from '../Utils/FilterBuilder';
 import {
   getUserPreferenceObject,
   updateGlobalFilterPreference,
@@ -66,9 +67,7 @@ export const CloudPulseDashboardSelect = React.memo(
       <Autocomplete
         onChange={(_: any, dashboard: Dashboard) => {
           updateGlobalFilterPreference({
-            [DASHBOARD_ID]: dashboard?.id,
-            [REGION]: undefined,
-            [RESOURCES]: undefined,
+            ...clearSelectedFiltersAndChangeDashboardId(dashboard), // on change of the dashboard we need to clear the existing selections
           });
           setSelectedDashboard(dashboard);
           props.handleDashboardChange(dashboard);

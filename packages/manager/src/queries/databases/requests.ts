@@ -3,9 +3,16 @@ import {
   getDatabaseTypes,
   getDatabases,
 } from '@linode/api-v4';
-import { DatabaseEngine, DatabaseInstance, DatabaseType } from '@linode/api-v4';
 
 import { getAll } from 'src/utilities/getAll';
+
+import type {
+  DatabaseEngine,
+  DatabaseInstance,
+  DatabaseType,
+  Filter,
+  Params,
+} from '@linode/api-v4';
 
 export const getAllDatabases = () =>
   getAll<DatabaseInstance>((params) => getDatabases(params))().then(
@@ -21,3 +28,11 @@ export const getAllDatabaseTypes = () =>
   getAll<DatabaseType>((params) => getDatabaseTypes(params))().then(
     (data) => data.data
   );
+
+export const getAllDatabasesWithFilters = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
+  getAll<DatabaseInstance>((params, filter) =>
+    getDatabases({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+  )().then((data) => data.data);

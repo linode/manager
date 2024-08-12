@@ -56,11 +56,15 @@ export const CloudPulseResourcesSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      const defaultResources = getUserPreferenceObject()?.resources;
+      const defaultResources = Array.isArray(
+        getUserPreferenceObject()?.resources
+      )
+        ? (getUserPreferenceObject()?.resources as string[])
+        : undefined;
       if (resources) {
         if (defaultResources) {
           const resource = getResourcesList().filter((resource) =>
-            defaultResources.includes(String(resource.id))
+            defaultResources.includes(resource.id)
           );
 
           handleResourcesSelection(resource);

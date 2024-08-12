@@ -1,9 +1,18 @@
 import { dashboardFactory } from 'src/factories';
 
 import {
+  DASHBOARD_ID,
+  REGION,
+  RELATIVE_TIME_DURATION,
+  RESOURCE_ID,
+  RESOURCES,
+  TIME_DURATION,
+} from './constants';
+import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
   checkIfWeNeedToDisableFilterByFilterKey,
+  clearSelectedFiltersAndChangeDashboardId,
   getRegionProperties,
   getResourcesProperties,
   getTimeDurationProperties,
@@ -182,4 +191,20 @@ it('test checkIfAllMandatoryFiltersAreSelected method', () => {
   });
 
   expect(result).toEqual(false);
+});
+
+it('test clearSelectedFilters method', () => {
+  const result = clearSelectedFiltersAndChangeDashboardId(mockDashboard);
+  const clearableFilters = [
+    // all these filters should be cleared
+    RESOURCES,
+    REGION,
+    'engine',
+    DASHBOARD_ID,
+    RELATIVE_TIME_DURATION,
+    RESOURCE_ID,
+  ];
+  expect(
+    Object.keys(result).every((key) => clearableFilters.includes(key))
+  ).toBe(true);
 });

@@ -1,4 +1,5 @@
-import { RELATIVE_TIME_DURATION } from './constants';
+import { type CloudPulseCustomSelectProps, CloudPulseSelectTypes } from '../shared/CloudPulseCustomSelect';
+import { DASHBOARD_ID, RELATIVE_TIME_DURATION, RESOURCES } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -83,6 +84,49 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
+  };
+};
+
+/**
+ * This function returns a CloudPulseCustomSelectProps based on the filter config and selected filters
+ * @param props - The cloudpulse filter properties selected so far
+ * @param handleCustomSelectChange - The call back function when a filter change happens
+ * @returns {CloudPulseCustomSelectProps} - Returns a property compatible for CloudPulseCustomSelect Component
+ */
+export const getCustomSelectProperties = (
+  props: CloudPulseFilterProperties,
+  handleCustomSelectChange: (filterKey: string, value: FilterValueType) => void
+): CloudPulseCustomSelectProps => {
+  const {
+    apiIdField,
+    apiLabelField,
+    apiUrl,
+    filterKey,
+    filterType,
+    isMultiSelect,
+    maxSelections,
+    options,
+    placeholder,
+  } = props.config.configuration;
+  const { dashboard, dependentFilters, isServiceAnalyticsIntegration } = props;
+  return {
+    apiResponseIdField: apiIdField,
+    apiResponseLabelField: apiLabelField,
+    dataApiUrl: apiUrl,
+    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
+    filterKey,
+    filterType,
+    handleSelectionChange: handleCustomSelectChange,
+    isMultiSelect,
+    maxSelections,
+    options,
+    placeholder,
+    savePreferences: !isServiceAnalyticsIntegration,
+    type: options ? CloudPulseSelectTypes.static : CloudPulseSelectTypes.dynamic
   };
 };
 
@@ -205,4 +249,42 @@ export const checkIfAllMandatoryFiltersAreSelected = (
     const value = filterValue[filterKey];
     return value !== undefined && (!Array.isArray(value) || value.length > 0);
   });
+};
+
+/**
+ * This functions clears all the filters from the preferences
+ *
+ * @param dashboard - The current selected dashboard
+ * @returns {[key:string]: number | undefined}
+ */
+export const clearSelectedFiltersAndChangeDashboardId = (dashboard: Dashboard): {[key:string]: number | undefined} => {
+
+  const clearKeys : {[key:string] : number | undefined} = {};
+
+  clearKeys[DASHBOARD_ID] = dashboard ? dashboard.id : undefined;
+
+  getUniqueFilterKeys()
+  .forEach(filter => {
+    clearKeys[filter] = undefined;
+  })
+
+  clearKeys[RESOURCES] = undefined;
+
+  return clearKeys;
+
+}
+
+/**
+ * @returns {string[]} This returns the unique filter keys across filter config
+ */
+const getUniqueFilterKeys = (): string[] => {
+  const uniqueKeys = new Set<string>();
+
+  FILTER_CONFIG.forEach((config) => {
+    config.filters.forEach((filter) => {
+      uniqueKeys.add(filter.configuration.filterKey);
+    });
+  });
+
+  return Array.from(uniqueKeys);
 };
