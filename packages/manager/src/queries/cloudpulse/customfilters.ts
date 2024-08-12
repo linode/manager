@@ -19,9 +19,11 @@ export const useGetCustomFiltersQuery = (
     { [key: string]: unknown }[], // the use case here is api url and api response here is not consistent across multiple service types, it can list of db engines, list of node types etc.,
     unknown,
     CloudPulseServiceTypeFiltersOptions[]
-  >([queryKey], () => getAllFilters(params, filter, url), {
-    // receive filters and return only id and label
+  >({
+    // receive filters and  return only id and label
     enabled,
+    queryFn: () => getAllFilters(params, filter, url),
+    queryKey: [queryKey],
     select: (filters) => {
       // whatever field we receive, just return id and label
       return filters.map(
