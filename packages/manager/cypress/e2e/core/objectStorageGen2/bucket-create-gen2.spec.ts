@@ -121,6 +121,7 @@ describe('Object Storage Gen2', () => {
 
         // TODO (nts figure this out) - findByText for "This endpoint type supports up to 750 Requests Per Second (RPS). Understand bucket rate limits" ???
         cy.findByText('Bucket Rate Limits').should('be.visible');
+        // cy.findByText('This endpoint type supports up to 750 Requests Per Second (RPS). ').should('be.visible')
 
         // confirm bucket rate limit table should not exist when E0 endpoint is selected
         cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
@@ -141,7 +142,7 @@ describe('Object Storage Gen2', () => {
     ui.drawer.find().should('not.exist');
 
     // Confirm that bucket is created, initiate deletion.
-    // TODO: confirm endpoint type and endpoint url are visible (?)
+    // TODO: confirm endpoint type and endpoint url are visible
     cy.findByText(bucketLabel)
       .should('be.visible')
       .closest('tr')
