@@ -16,6 +16,7 @@ import {
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
+import { isBucketError } from 'src/queries/object-storage/requests';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
@@ -32,7 +33,6 @@ import { BucketTable } from './BucketTable';
 
 import type { APIError, ObjectStorageBucket, Region } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { BucketError } from 'src/queries/object-storage/requests';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -126,7 +126,7 @@ export const OMC_BucketLanding = () => {
 
   // @TODO OBJ Multicluster - region is defined as an optional field in BucketError. Once the feature is rolled out to production, we could clean this up and remove the filter.
   const unavailableRegions = objectStorageBucketsResponse?.errors
-    ?.map((error: BucketError) => error.region)
+    ?.map((error) => (isBucketError(error) ? error.region : error.endpoint))
     .filter((region): region is Region => region !== undefined);
 
   if (isRestrictedUser) {
