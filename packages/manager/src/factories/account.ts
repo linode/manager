@@ -37,6 +37,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   balance_uninvoiced: 0.0,
   billing_source: 'linode',
   capabilities: [
+    'Akamai Cloud Pulse',
     'Block Storage',
     'Cloud Firewall',
     'Disk Encryption',
