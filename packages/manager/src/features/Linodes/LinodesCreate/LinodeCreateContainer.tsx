@@ -989,7 +989,7 @@ const actionsAndLabels = {
   fromImage: { action: 'image', labelPayloadKey: 'image' },
   fromLinode: { action: 'clone', labelPayloadKey: 'type' },
   fromStackScript: { action: 'stackscript', labelPayloadKey: 'stackscript_id' },
-};
+} as const;
 
 const handleAnalytics = (details: {
   label?: string;
@@ -1005,12 +1005,7 @@ const handleAnalytics = (details: {
   if (eventInfo) {
     eventAction = eventInfo.action;
     const payloadLabel = payload[eventInfo.labelPayloadKey];
-    // Checking if payload label comes back as a number, if so return it as a string, otherwise event won't fire.
-    if (isNaN(payloadLabel)) {
-      eventLabel = payloadLabel;
-    } else {
-      eventLabel = payloadLabel.toString();
-    }
+    eventLabel = String(payloadLabel);
   }
   if (label) {
     eventLabel = label;

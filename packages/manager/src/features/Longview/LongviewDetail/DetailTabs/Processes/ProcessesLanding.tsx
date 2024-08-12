@@ -178,6 +178,7 @@ export const extendData = (
     const { longname, ...users } = processesData.Processes![processName];
 
     Object.keys(users).forEach((user) => {
+      // @ts-expect-error The types are completely wrong. They don't account for "user"
       const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({

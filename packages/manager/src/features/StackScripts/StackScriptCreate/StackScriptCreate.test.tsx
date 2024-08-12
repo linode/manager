@@ -39,7 +39,7 @@ describe('StackScriptCreate', () => {
 
     expect(getByLabelText('StackScript Label (required)')).toBeVisible();
     expect(getByLabelText('Description')).toBeVisible();
-    expect(getByLabelText('Target Images')).toBeVisible();
+    expect(getByLabelText('Target Images (required)')).toBeVisible();
     expect(getByLabelText('Script (required)')).toBeVisible();
     expect(getByLabelText('Revision Note')).toBeVisible();
 
