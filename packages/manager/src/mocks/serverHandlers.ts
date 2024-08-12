@@ -94,6 +94,9 @@ import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
+const getRandomWholeNumber = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
 import type {
   AccountMaintenance,
   CreateObjectStorageKeyPayload,
@@ -966,10 +969,12 @@ export const handlers = [
     const page = Number(url.searchParams.get('page') || 1);
     const pageSize = Number(url.searchParams.get('page_size') || 25);
 
+    const randomBucketNumber = getRandomWholeNumber(1, 500);
+
     const buckets = objectStorageBucketFactoryGen2.buildList(1, {
       cluster: `${region}-1`,
-      hostname: `obj-bucket-1.${region}.linodeobjects.com`,
-      label: `obj-bucket-1`,
+      hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+      label: `obj-bucket-${randomBucketNumber}`,
       region,
     });
 
