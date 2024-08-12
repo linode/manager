@@ -14,6 +14,7 @@ import {
   getLinodeTransfer,
   getLinodeTransferByDate,
   getLinodes,
+  getType,
   linodeBoot,
   linodeReboot,
   linodeShutdown,
@@ -43,6 +44,7 @@ import {
   getAllLinodeConfigs,
   getAllLinodeDisks,
   getAllLinodeKernelsRequest,
+  getAllLinodeTypes,
   getAllLinodesRequest,
 } from './requests';
 
@@ -132,6 +134,19 @@ export const linodeQueries = createQueryKeys('linodes', {
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getLinodes(params, filter),
         queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
+  types: {
+    contextQueries: {
+      all: {
+        queryFn: getAllLinodeTypes,
+        queryKey: null,
+      },
+      type: (id: string) => ({
+        queryFn: () => getType(id),
+        queryKey: [id],
       }),
     },
     queryKey: null,
