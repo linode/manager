@@ -6,7 +6,6 @@ import {
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
   RESOURCES,
-  TIME_DURATION,
 } from './constants';
 import {
   buildXFilter,

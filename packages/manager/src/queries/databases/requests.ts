@@ -29,6 +29,12 @@ export const getAllDatabaseTypes = () =>
     (data) => data.data
   );
 
+/**
+ * This method accepts params and xFilters as input and get all database instances, followed the existing standards
+ * @param passedParams - The parameters like pagination information etc.,
+ * @param passedFilter - The xFilters to be applied in the API
+ * @returns - List of DatabaseInstance
+ */
 export const getAllDatabasesWithFilters = (
   passedParams: Params = {},
   passedFilter: Filter = {}

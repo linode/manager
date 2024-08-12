@@ -5,7 +5,6 @@ import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 
-import { DASHBOARD_ID, REGION, RESOURCES } from '../Utils/constants';
 import { clearSelectedFiltersAndChangeDashboardId } from '../Utils/FilterBuilder';
 import {
   getUserPreferenceObject,

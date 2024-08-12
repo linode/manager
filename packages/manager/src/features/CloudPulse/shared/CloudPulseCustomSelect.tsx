@@ -12,21 +12,85 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
 import type { AclpWidget } from '@linode/api-v4';
 
+/**
+ * This is the properties requires for CloudPulseCustomSelect Components
+ * 
+ */
 export interface CloudPulseCustomSelectProps {
+  /**
+   * The id field of the response returned from the API
+   */
   apiResponseIdField?: string;
+
+  /**
+   * The label field of the response returned from the API
+   */
   apiResponseLabelField?: string;
+
+  /**
+   * The selections to be cleared on some filter updates
+   */
   clearSelections?: string[];
+
+  /**
+   * The api URL which contains the list of filters, passed when the select type is dynamic
+   */
   dataApiUrl?: string;
+
+  /**
+   * This property says, whether or not to disable the selection component
+   */
   disabled?: boolean;
+
+  /**
+   * The errorText that needs to be displayed
+   */
   errorText?: string;
+
+  /**
+   * The filterKey that needs to be used
+   */
   filterKey: string;
+
+  /**
+   * The type of the filter like string, number etc.,
+   */
   filterType: string;
+
+  /**
+   * The callback function , that will be called on a filter change
+   * @param filterKey - The filterKey of the component
+   * @param value - The selected filter value
+   */
   handleSelectionChange: (filterKey: string, value: FilterValueType) => void;
+
+  /**
+   * If true, multiselect is allowed, otherwise false
+   */
   isMultiSelect?: boolean;
+  /**
+   * The maximum selections that the user can make incase of multiselect
+   */
   maxSelections?: number;
+
+  /**
+   * The options to be listed down in the autocomplete if the select type is static
+   */
   options?: CloudPulseServiceTypeFiltersOptions[];
+
+  /**
+   * The placeholder that needs to displayed
+   */
   placeholder?: string;
+
+  /**
+   * This property controls whether to save the preferences or not
+   */
   savePreferences?: boolean;
+
+  /**
+   * The cloud pulse select types, it can be static or dynamic depending on the use case
+   */
   type: CloudPulseSelectTypes;
 }
 
