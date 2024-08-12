@@ -42,8 +42,7 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
   const specs = globSync(config.specPattern);
 
   // Information about test weights to be included in the info table, if applicable.
-  // TODO type.
-  let weightsInfo: Record<string, any> = {
+  let weightsInfo: Record<string, string | number> = {
     'Test Weights': '(Unavailable)',
   };
 
