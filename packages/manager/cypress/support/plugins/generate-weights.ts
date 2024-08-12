@@ -95,10 +95,11 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
 
     // Capture duration after each spec runs.
     on('after:spec', (spec, results) => {
-      if (results.stats.duration) {
+      const duration = results.stats.duration;
+      if (duration) {
         specResults.push({
           filepath: spec.relative,
-          duration: results.stats.duration,
+          duration,
         });
       } else {
         console.warn(
@@ -115,8 +116,6 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
           | CypressCommandLine.CypressRunResult
           | CypressCommandLine.CypressFailedRunResult
       ) => {
-        const totalWeight = 100;
-
         // Determine whether this is a failed run. "Failed" in this context means
         // that Cypress itself failed to run, not that the test results contained failures.
         const isFailedResult = (
@@ -128,6 +127,7 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
         };
 
         if (!isFailedResult(results)) {
+          const totalWeight = 100;
           const totalDuration = results.totalDuration;
           const weights: SpecWeights = {
             meta: {
