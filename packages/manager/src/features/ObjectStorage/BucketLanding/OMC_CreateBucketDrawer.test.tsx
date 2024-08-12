@@ -1,18 +1,12 @@
-import { fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { objectStorageEndpointsFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithThemeAndHookFormContext,
-} from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { OMC_CreateBucketDrawer } from './OMC_CreateBucketDrawer';
-
-beforeAll(() => mockMatchMedia());
 
 const props = {
   isOpen: true,
