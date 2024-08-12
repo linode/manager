@@ -91,7 +91,7 @@ export const BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY = `Volume encry
 
 // Caveats
 export const BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT =
-  'Please note encryption overhead may impact your volume IOPS performance negatively. This may compound when multiple encryption enabled volumes are attached to the same Linode.';
+  'Please note encryption overhead may impact your volume IOPS performance negatively. This may compound when multiple encryption-enabled volumes are attached to the same Linode.';
 
 export const BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT =
-  'User-side encryption on top of encryption enabled volumes is discouraged at this time, as it could severely impact your volume performance.';
+  'User-side encryption on top of encryption-enabled volumes is discouraged at this time, as it could severely impact your volume performance.';
