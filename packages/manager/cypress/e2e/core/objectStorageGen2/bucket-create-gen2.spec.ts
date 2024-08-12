@@ -15,7 +15,7 @@ import { randomLabel } from 'support/util/random';
 import { objectStorageEndpointsFactory, accountFactory } from 'src/factories';
 import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
-describe('Object Storage Gen2', () => {
+describe('Object Storage Gen2 create bucket tests', () => {
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E0
    * Confirms all endpoints are displayed regardless if there's multiple of the same type
@@ -119,9 +119,11 @@ describe('Object Storage Gen2', () => {
           .should('be.enabled')
           .click();
 
-        // TODO (nts figure this out) - findByText for "This endpoint type supports up to 750 Requests Per Second (RPS). Understand bucket rate limits" ???
+        // Confirm bucket rate limits text for E0 endpoint
         cy.findByText('Bucket Rate Limits').should('be.visible');
-        // cy.findByText('This endpoint type supports up to 750 Requests Per Second (RPS). ').should('be.visible')
+        cy.contains(
+          'This endpoint type supports up to 750 Requests Per Second (RPS). Understand bucket rate limits'
+        ).should('be.visible');
 
         // confirm bucket rate limit table should not exist when E0 endpoint is selected
         cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
