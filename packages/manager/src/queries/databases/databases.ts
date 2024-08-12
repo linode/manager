@@ -18,7 +18,6 @@ import {
   getAllDatabaseEngines,
   getAllDatabaseTypes,
   getAllDatabases,
-  getAllDatabasesWithFilters,
 } from './requests';
 
 import type {
@@ -54,13 +53,9 @@ export const databaseQueries = createQueryKeys('databases', {
   }),
   databases: {
     contextQueries: {
-      all: {
-        queryFn: getAllDatabases,
-        queryKey: null,
-      },
-      allWithFilters: (params: Params, filter: Filter) => ({
-        queryFn: () => getAllDatabasesWithFilters(params, filter),
-        queryKey: [params, filter],
+      all: (filter?: Filter) => ({
+        queryFn: () => getAllDatabases(filter),
+        queryKey: [filter],
       }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getDatabases(params, filter),
@@ -99,7 +94,7 @@ export const useDatabasesQuery = (params: Params, filter: Filter) =>
 
 export const useAllDatabasesQuery = (enabled: boolean = true) =>
   useQuery<DatabaseInstance[], APIError[]>({
-    ...databaseQueries.databases._ctx.all,
+    ...databaseQueries.databases._ctx.all(),
     enabled,
   });
 

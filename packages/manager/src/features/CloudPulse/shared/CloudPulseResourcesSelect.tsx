@@ -64,7 +64,7 @@ export const CloudPulseResourcesSelect = React.memo(
       if (resources) {
         if (defaultResources) {
           const resource = getResourcesList().filter((resource) =>
-            defaultResources.includes(resource.id)
+            defaultResources.includes(String(resource.id))
           );
 
           handleResourcesSelection(resource);
