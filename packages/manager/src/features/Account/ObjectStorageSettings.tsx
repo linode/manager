@@ -36,7 +36,7 @@ export const ObjectStorageSettings = () => {
     reset();
   };
 
-  const handleCancelObjectStorage = async () => {
+  const handleCancelObjectStorage = () => {
     cancelObjectStorage().then(() => {
       handleCloseCancelDialog();
       enqueueSnackbar('Object Storage successfully canceled.', {

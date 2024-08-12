@@ -92,7 +92,7 @@ describe('ObjectStorageSettings', () => {
       'button'
     );
 
-    // The confirm button should be disabled because the user need to type to confirm
+    // The confirm button is disabled because the user needs to type to confirm
     expect(confirmButton).toBeDisabled();
 
     const typeToConfirmTextField = getByLabelText('Username');
@@ -100,7 +100,7 @@ describe('ObjectStorageSettings', () => {
     // Type the user's username to confirm
     await userEvent.type(typeToConfirmTextField, 'my-username-1');
 
-    // The confirm button should become enabled because we typed username
+    // The confirm button became enabled because we typed username
     expect(confirmButton).toBeEnabled();
 
     // Confirm cancelation of Object Storage
