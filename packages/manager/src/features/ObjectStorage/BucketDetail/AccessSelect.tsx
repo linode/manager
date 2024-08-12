@@ -25,6 +25,7 @@ import type {
 import type { Theme } from '@mui/material/styles';
 
 export interface Props {
+  endpointType?: string;
   getAccess: () => Promise<ObjectStorageBucketAccess | ObjectStorageObjectACL>;
   name: string;
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
@@ -38,7 +39,7 @@ function isUpdateObjectStorageBucketAccessPayload(
 }
 
 export const AccessSelect = React.memo((props: Props) => {
-  const { getAccess, name, updateAccess, variant } = props;
+  const { endpointType, getAccess, name, updateAccess, variant } = props;
   // Access data for this Object (from the API).
   const [aclData, setACLData] = React.useState<ACLType | null>(null);
   const [corsData, setCORSData] = React.useState(true);
@@ -180,7 +181,9 @@ export const AccessSelect = React.memo((props: Props) => {
         ) : null}
       </div>
 
-      {variant === 'bucket' ? (
+      {variant === 'bucket' &&
+      endpointType !== 'E2' &&
+      endpointType !== 'E3' ? (
         <FormControlLabel
           control={
             <Toggle
@@ -194,7 +197,9 @@ export const AccessSelect = React.memo((props: Props) => {
         />
       ) : null}
 
-      {variant === 'bucket' ? (
+      {variant === 'bucket' &&
+      endpointType !== 'E2' &&
+      endpointType !== 'E3' ? (
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
