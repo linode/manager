@@ -14,6 +14,7 @@ import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { objectStorageEndpointsFactory, accountFactory } from 'src/factories';
 import type { ObjectStorageEndpoint } from '@linode/api-v4';
+
 describe('Object Storage Gen2', () => {
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E0
@@ -24,9 +25,11 @@ describe('Object Storage Gen2', () => {
     const bucketLabel = randomLabel();
     const bucketRegion = 'Seattle, WA';
     const bucketCluster = 'us-sea';
+
     interceptGetBuckets().as('getBuckets');
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
     interceptCreateBucket().as('createBucket');
+
     const mockEndpoints: ObjectStorageEndpoint[] = [
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E0',
@@ -54,6 +57,7 @@ describe('Object Storage Gen2', () => {
         s3_endpoint: null,
       }),
     ];
+
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(true),
       objectStorageGen2: makeFeatureFlagData(true),
@@ -67,9 +71,11 @@ describe('Object Storage Gen2', () => {
         ],
       })
     ).as('getAccount');
+
     interceptGetObjectStorageEndpoints(mockEndpoints).as(
       'getObjectStorageEndpoints'
     );
+
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
       '@getFeatureFlags',
@@ -77,6 +83,7 @@ describe('Object Storage Gen2', () => {
       '@getAccount',
       '@getObjectStorageEndpoints',
     ]);
+
     ui.drawer
       .findByTitle('Create Bucket')
       .should('be.visible')
@@ -86,6 +93,7 @@ describe('Object Storage Gen2', () => {
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
+
         // verify that all mocked endpoints show up as options
         ui.autocompletePopper
           .findByTitle('Standard (E1)')
@@ -103,14 +111,17 @@ describe('Object Storage Gen2', () => {
           .findByTitle('Standard (E3)')
           .should('be.visible')
           .should('be.enabled');
+
         // select E0 endpoint
         ui.autocompletePopper
           .findByTitle('Legacy (E0)')
           .should('be.visible')
           .should('be.enabled')
           .click();
+
         // TODO (nts figure this out) - findByText for "This endpoint type supports up to 750 Requests Per Second (RPS). Understand bucket rate limits" ???
         cy.findByText('Bucket Rate Limits').should('be.visible');
+
         // confirm bucket rate limit table should not exist when E0 endpoint is selected
         cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
         ui.buttonGroup
@@ -119,6 +130,7 @@ describe('Object Storage Gen2', () => {
           .should('be.enabled')
           .click();
       });
+
     // confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
       const requestPayload = xhr.request.body;
@@ -127,6 +139,7 @@ describe('Object Storage Gen2', () => {
       expect(requestPayload['cors_enabled']).to.equal(true);
     });
     ui.drawer.find().should('not.exist');
+
     // Confirm that bucket is created, initiate deletion.
     // TODO: confirm endpoint type and endpoint url are visible (?)
     cy.findByText(bucketLabel)
@@ -136,6 +149,7 @@ describe('Object Storage Gen2', () => {
         cy.findByText(bucketRegion).should('be.visible');
         ui.button.findByTitle('Delete').should('be.visible').click();
       });
+
     ui.dialog
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
@@ -147,6 +161,7 @@ describe('Object Storage Gen2', () => {
           .should('be.enabled')
           .click();
       });
+
     // Confirm bucket gets deleted
     cy.wait('@deleteBucket').its('response.statusCode').should('eq', 200);
     cy.findByText(bucketLabel).should('not.exist');
