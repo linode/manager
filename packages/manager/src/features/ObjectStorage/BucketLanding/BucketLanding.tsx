@@ -238,6 +238,7 @@ export const BucketLanding = () => {
         bucketLabel={bucketForDetails?.label}
         cluster={bucketForDetails?.cluster}
         created={bucketForDetails?.created}
+        endpointType={bucketForDetails?.endpoint_type}
         hostname={bucketForDetails?.hostname}
         objectsNumber={bucketForDetails?.objects}
         onClose={closeBucketDetailDrawer}

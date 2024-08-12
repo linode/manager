@@ -1,4 +1,3 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -12,6 +11,8 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { BucketTableRow } from './BucketTableRow';
+
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
 interface Props {
   data: ObjectStorageBucket[];
@@ -64,6 +65,17 @@ export const BucketTable = (props: Props) => {
                     label="cluster"
                   >
                     Region
+                  </TableSortCell>
+                </Hidden>
+                <Hidden lgDown>
+                  <TableSortCell
+                    active={orderBy === 'endpointType'}
+                    data-qa-created
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="endpointType"
+                  >
+                    Endpoint Type
                   </TableSortCell>
                 </Hidden>
                 <Hidden lgDown>

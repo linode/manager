@@ -30,6 +30,7 @@ export interface BucketDetailsDrawerProps {
   bucketRegion?: Region;
   cluster?: string;
   created?: string;
+  endpointType?: string;
   hostname?: string;
   objectsNumber?: number;
   onClose: () => void;
@@ -44,6 +45,7 @@ export const BucketDetailsDrawer = React.memo(
       bucketRegion,
       cluster,
       created,
+      endpointType,
       hostname,
       objectsNumber,
       onClose,
@@ -87,6 +89,11 @@ export const BucketDetailsDrawer = React.memo(
         {formattedCreated ? (
           <Typography data-testid="createdTime" variant="subtitle2">
             Created: {formattedCreated}
+          </Typography>
+        ) : null}
+        {endpointType ? (
+          <Typography data-testid="endpointType" variant="subtitle2">
+            Endpoint Type: {endpointType}
           </Typography>
         ) : null}
         {isObjMultiClusterEnabled ? (
@@ -155,6 +162,7 @@ export const BucketDetailsDrawer = React.memo(
                 payload
               );
             }}
+            endpointType={endpointType}
             name={bucketLabel}
             variant="bucket"
           />

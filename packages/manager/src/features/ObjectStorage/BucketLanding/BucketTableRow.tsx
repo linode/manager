@@ -1,4 +1,3 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -24,6 +23,8 @@ import {
   StyledBucketSizeCell,
 } from './BucketTableRow.styles';
 
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+
 export interface BucketTableRowProps extends ObjectStorageBucket {
   onDetails: () => void;
   onRemove: () => void;
@@ -33,6 +34,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const {
     cluster,
     created,
+    endpoint_type,
     hostname,
     label,
     objects,
@@ -91,6 +93,13 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
               : clusterRegion?.label ?? cluster}
           </Typography>
         </StyledBucketRegionCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell>
+          <Typography data-qa-size variant="body1">
+            {endpoint_type}
+          </Typography>
+        </TableCell>
       </Hidden>
       <Hidden lgDown>
         <TableCell>
