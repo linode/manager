@@ -36,7 +36,9 @@ export const StyledBannerLabel = styled(Box, {
   backgroundColor: warning ? theme.palette.warning.dark : 'black',
   color: warning ? 'black' : 'white',
   padding: theme.spacing(2.3),
-  textWrap: 'nowrap',
+  [theme.breakpoints.up('sm')]: {
+    textWrap: 'nowrap',
+  },
   userSelect: 'none',
 }));
 
@@ -45,5 +47,7 @@ export const StyledBannerAction = styled(Box, {
 })<{ warning?: boolean }>(({ theme, warning }) => ({
   color: warning ? theme.bg.mainContentBanner : theme.color.black,
   paddingRight: theme.spacing(2),
-  textWrap: 'nowrap',
+  [theme.breakpoints.up('sm')]: {
+    textWrap: 'nowrap',
+  },
 }));
