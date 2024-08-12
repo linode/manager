@@ -30,12 +30,7 @@ export const trackApiRequests = () => {
         middleware: true,
         url: /\/v4(?:beta)?\/.*/,
       },
-      (req) => {
-        // Delete internal-only header
-        req.on('before:response', (res) => {
-          delete res.headers['akamai-internal-account'];
-        });
-
+      () => {
         requests++;
         // Short-circuit if `maxRequests` is null.
         if (maxRequests === null) {
