@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
+import * as flags from 'src/hooks/useFlags';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
@@ -70,5 +71,30 @@ describe('PrimaryNav', () => {
     const databaseNavItem = await findByText('Databases');
 
     expect(databaseNavItem).toBeVisible();
+  });
+
+  it('should show Monitor menu item if the user has the account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    vi.spyOn(flags, 'useFlags').mockReturnValue({
+      aclp: {
+        beta: false,
+        enabled: true,
+      },
+    });
+
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
+
+    const monitorNavItem = await findByText('Monitor');
+
+    expect(monitorNavItem).toBeVisible();
   });
 });
