@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import * as flags from 'src/hooks/useFlags';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
