@@ -84,14 +84,16 @@ describe('PrimaryNav', () => {
       })
     );
 
-    vi.spyOn(flags, 'useFlags').mockReturnValue({
+    const flags = {
       aclp: {
         beta: false,
         enabled: true,
       },
-    });
+    };
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
 
     const monitorNavItem = await findByText('Monitor');
 
