@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
-import CloudPulse from 'src/assets/icons/cloudpulse.svg';
 import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -13,6 +12,7 @@ import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
+import CloudPulse from 'src/assets/icons/entityIcons/monitor.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import PlacementGroups from 'src/assets/icons/entityIcons/placement-groups.svg';

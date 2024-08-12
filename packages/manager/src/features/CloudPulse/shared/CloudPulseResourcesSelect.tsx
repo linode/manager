@@ -1,3 +1,4 @@
+import deepEqual from 'fast-deep-equal';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -9,27 +10,40 @@ import {
   updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
 
+import type { Filter } from '@linode/api-v4';
+
 export interface CloudPulseResources {
   id: string;
   label: string;
-  region?: string; // usually linodes are associated with only one region
-  regions?: string[]; // aclb are associated with multiple regions
+  region?: string;
 }
 
 export interface CloudPulseResourcesSelectProps {
+  disabled?: boolean;
   handleResourcesSelection: (resources: CloudPulseResources[]) => void;
   placeholder?: string;
-  region: string | undefined;
+  region?: string;
   resourceType: string | undefined;
+  savePreferences?: boolean;
+  xFilter?: Filter;
 }
 
 export const CloudPulseResourcesSelect = React.memo(
   (props: CloudPulseResourcesSelectProps) => {
+    const {
+      disabled,
+      handleResourcesSelection,
+      placeholder,
+      region,
+      resourceType,
+      xFilter,
+    } = props;
+
     const { data: resources, isLoading } = useResourcesQuery(
-      props.region && props.resourceType ? true : false,
-      props.resourceType,
+      disabled !== undefined ? !disabled : Boolean(region && resourceType),
+      resourceType,
       {},
-      { region: props.region }
+      xFilter ? xFilter : { region }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
@@ -49,17 +63,17 @@ export const CloudPulseResourcesSelect = React.memo(
             defaultResources.includes(String(resource.id))
           );
 
-          props.handleResourcesSelection(resource);
+          handleResourcesSelection(resource);
           setSelectedResources(resource);
         } else {
           setSelectedResources([]);
-          props.handleResourcesSelection([]);
+          handleResourcesSelection([]);
         }
       } else {
         setSelectedResources([]);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resources, props.region, props.resourceType]);
+    }, [resources, region, resourceType, xFilter]);
 
     return (
       <Autocomplete
@@ -70,20 +84,49 @@ export const CloudPulseResourcesSelect = React.memo(
             ),
           });
           setSelectedResources(resourceSelections);
-          props.handleResourcesSelection(resourceSelections);
+          handleResourcesSelection(resourceSelections);
+        }}
+        textFieldProps={{
+          hideLabel: true,
         }}
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
-        disabled={!props.region || !props.resourceType || isLoading}
+        disabled={disabled || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label=""
+        label="Select Resources"
         limitTags={2}
         multiple
         options={getResourcesList()}
-        placeholder={props.placeholder ? props.placeholder : 'Select Resources'}
+        placeholder={placeholder ? placeholder : 'Select Resources'}
         value={selectedResources}
       />
     );
-  }
+  },
+  compareProps
 );
+
+function compareProps(
+  prevProps: CloudPulseResourcesSelectProps,
+  nextProps: CloudPulseResourcesSelectProps
+): boolean {
+  // these properties can be extended going forward
+  const keysToCompare: (keyof CloudPulseResourcesSelectProps)[] = [
+    'region',
+    'resourceType',
+  ];
+
+  for (const key of keysToCompare) {
+    if (prevProps[key] !== nextProps[key]) {
+      return false;
+    }
+  }
+
+  // Deep comparison for xFilter
+  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
+    return false;
+  }
+
+  // Ignore function props in comparison
+  return true;
+}

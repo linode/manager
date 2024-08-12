@@ -131,7 +131,7 @@ export interface LinodeCreateProps {
   handlePlacementGroupChange: (placementGroup: PlacementGroup | null) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
-  handleSubnetChange: (subnetId: number) => void;
+  handleSubnetChange: (subnetId: number | undefined) => void;
   handleVLANChange: (updatedInterface: InterfacePayload) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
   history: any;

@@ -25,7 +25,7 @@ import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
 
-import type { Image } from '@linode/api-v4'
+import type { Image } from '@linode/api-v4';
 
 type FileSystem = 'ext3' | 'ext4' | 'initrd' | 'raw' | 'swap';
 
