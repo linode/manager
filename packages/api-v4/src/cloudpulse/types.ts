@@ -45,6 +45,7 @@ export interface Filters {
 }
 
 export interface AclpConfig {
+  // we maintain only the filters selected in the preferences for latest selected dashboard
   [key: string]:
     | number
     | string

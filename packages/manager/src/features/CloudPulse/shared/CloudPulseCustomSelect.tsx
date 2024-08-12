@@ -238,6 +238,7 @@ function compareProps(
 ) {
   return (
     oldProps.options?.length === newProps.options?.length &&
-    oldProps.dataApiUrl === newProps.dataApiUrl
+    oldProps.dataApiUrl === newProps.dataApiUrl &&
+    oldProps.disabled === newProps.disabled
   );
 }

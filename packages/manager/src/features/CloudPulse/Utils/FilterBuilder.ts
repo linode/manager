@@ -275,7 +275,8 @@ export const clearSelectedFiltersAndChangeDashboardId = (dashboard: Dashboard): 
 }
 
 /**
- * @returns {string[]} This returns the unique filter keys across filter config
+ * This functions gets all the unique filter keys across filter config
+ * @returns {string[]}
  */
 const getUniqueFilterKeys = (): string[] => {
   const uniqueKeys = new Set<string>();

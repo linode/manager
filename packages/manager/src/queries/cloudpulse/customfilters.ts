@@ -20,7 +20,7 @@ export const useGetCustomFiltersQuery = (
     unknown,
     CloudPulseServiceTypeFiltersOptions[]
   >([queryKey], () => getAllFilters(params, filter, url), {
-    // receive any array return id and label
+    // receive filters and return only id and label
     enabled,
     select: (filters) => {
       // whatever field we receive, just return id and label
@@ -30,7 +30,7 @@ export const useGetCustomFiltersQuery = (
         }): CloudPulseServiceTypeFiltersOptions => {
           return {
             id: String(filter[idField]),
-            label: String(filter[idField]),
+            label: String(filter[labelFields]),
           };
         }
       );
