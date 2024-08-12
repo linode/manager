@@ -12,6 +12,7 @@ import type {
   CreateObjectStorageBucketPayload,
   ObjectStorageBucket,
   ObjectStorageCluster,
+  ObjectStorageEndpoint,
   ObjectStorageKey,
 } from '@linode/api-v4';
 
@@ -485,6 +486,12 @@ export const interceptUpdateBucketAccess = (
  *
  * @returns Cypress chainable.
  */
-export const interceptGetObjectStorageEndpoints = (): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher(`object-storage/endpoints`));
+export const interceptGetObjectStorageEndpoints = (
+  endpoints: ObjectStorageEndpoint[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/endpoints*`),
+    paginateResponse(endpoints)
+  );
 };
