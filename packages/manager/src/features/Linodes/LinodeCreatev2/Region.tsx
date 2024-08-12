@@ -3,13 +3,16 @@ import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import {
+  isDistributedRegionSupported,
+  useIsGeckoEnabled,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
@@ -25,6 +28,7 @@ import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricin
 
 import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
 import { getDisabledRegions } from './Region.utils';
+import { TwoStepRegion } from './TwoStepRegion';
 import {
   getGeneratedLinodeLabel,
   useLinodeCreateQueryParams,
@@ -77,6 +81,10 @@ export const Region = () => {
   });
 
   const { data: regions } = useRegionsQuery();
+
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const showTwoStepRegion =
+    isGeckoGAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
@@ -174,6 +182,28 @@ export const Region = () => {
     regions: regions ?? [],
     selectedImage: image,
   });
+
+  if (showTwoStepRegion) {
+    return (
+      <TwoStepRegion
+        regionFilter={
+          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+          hideDistributedRegions && params.type !== 'Images'
+            ? 'core'
+            : undefined
+        }
+        showDistributedRegionIconHelperText={
+          showDistributedRegionIconHelperText
+        }
+        disabled={isLinodeCreateRestricted}
+        disabledRegions={disabledRegions}
+        errorText={fieldState.error?.message}
+        onChange={onChange}
+        textFieldProps={{ onBlur: field.onBlur }}
+        value={field.value}
+      />
+    );
+  }
 
   return (
     <Paper>

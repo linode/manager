@@ -6,12 +6,13 @@ import { parseCIDR, parse as parseIP } from 'ipaddr.js';
 import { uniq } from 'ramda';
 
 import {
-  FirewallOptionItem,
   allIPs,
   allIPv4,
   allIPv6,
   allowAllIPv4,
   allowAllIPv6,
+  allowNoneIPv4,
+  allowNoneIPv6,
   allowsAllIPs,
   predefinedFirewallFromRule,
 } from 'src/features/Firewalls/shared';
@@ -25,6 +26,7 @@ import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
@@ -172,11 +174,11 @@ export const getInitialAddressFormValue = (
     return 'all';
   }
 
-  if (allowAllIPv4(addresses)) {
+  if (allowAllIPv4(addresses) && allowNoneIPv6(addresses)) {
     return 'allIPv4';
   }
 
-  if (allowAllIPv6(addresses)) {
+  if (allowAllIPv6(addresses) && allowNoneIPv4(addresses)) {
     return 'allIPv6';
   }
 
@@ -281,9 +283,8 @@ export const portStringToItems = (
   const customInput: string[] = [];
 
   ports.forEach((thisPort) => {
-    const preset = PORT_PRESETS[thisPort];
-    if (preset) {
-      items.push(preset);
+    if (thisPort in PORT_PRESETS) {
+      items.push(PORT_PRESETS[thisPort as keyof typeof PORT_PRESETS]);
     } else {
       customInput.push(thisPort);
     }

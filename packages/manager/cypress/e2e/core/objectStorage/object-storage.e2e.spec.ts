@@ -4,7 +4,11 @@
 
 import 'cypress-file-upload';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
-import { accountFactory, objectStorageBucketFactory } from 'src/factories';
+import {
+  accountFactory,
+  createObjectStorageBucketFactoryLegacy,
+  createObjectStorageBucketFactoryGen1,
+} from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptGetNetworkUtilization,
@@ -55,14 +59,20 @@ const getNonEmptyBucketMessage = (bucketLabel: string) => {
  *
  * @param label - Bucket label.
  * @param cluster - Bucket cluster.
+ * @param cors_enabled - Enable CORS on the bucket: defaults to true for Gen1 and false for Gen2.
  *
  * @returns Promise that resolves to created Bucket.
  */
-const setUpBucket = (label: string, cluster: string) => {
+const setUpBucket = (
+  label: string,
+  cluster: string,
+  cors_enabled: boolean = true
+) => {
   return createBucket(
-    objectStorageBucketFactory.build({
+    createObjectStorageBucketFactoryLegacy.build({
       label,
       cluster,
+      cors_enabled,
 
       // API accepts either `cluster` or `region`, but not both. Our factory
       // populates both fields, so we have to manually set `region` to `undefined`
@@ -80,14 +90,20 @@ const setUpBucket = (label: string, cluster: string) => {
  *
  * @param label - Bucket label.
  * @param regionId - ID of Bucket region.
+ * @param cors_enabled - Enable CORS on the bucket: defaults to true for Gen1 and false for Gen2.
  *
  * @returns Promise that resolves to created Bucket.
  */
-const setUpBucketMulticluster = (label: string, regionId: string) => {
+const setUpBucketMulticluster = (
+  label: string,
+  regionId: string,
+  cors_enabled: boolean = true
+) => {
   return createBucket(
-    objectStorageBucketFactory.build({
+    createObjectStorageBucketFactoryGen1.build({
       label,
       region: regionId,
+      cors_enabled,
 
       // API accepts either `cluster` or `region`, but not both. Our factory
       // populates both fields, so we have to manually set `cluster` to `undefined`

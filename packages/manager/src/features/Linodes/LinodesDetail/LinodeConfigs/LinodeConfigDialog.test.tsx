@@ -1,21 +1,23 @@
-import { LinodeConfigInterfaceFactory } from 'src/factories';
+import React from 'react';
+import userEvent from '@testing-library/user-event';
+import { waitForElementToBeRemoved } from '@testing-library/react';
+
+import {
+  LinodeConfigInterfaceFactory,
+  linodeConfigFactory,
+} from 'src/factories';
 import {
   LINODE_UNREACHABLE_HELPER_TEXT,
   NATTED_PUBLIC_IP_HELPER_TEXT,
   NOT_NATTED_HELPER_TEXT,
 } from 'src/features/VPCs/constants';
-import { queryClientFactory } from 'src/queries/base';
-import { mockMatchMedia } from 'src/utilities/testHelpers';
+import 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
 import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
-import { MemoryLimit, padList } from './LinodeConfigDialog';
 
-const queryClient = queryClientFactory();
-
-beforeAll(() => mockMatchMedia());
-afterEach(() => {
-  queryClient.clear();
-});
+import type { MemoryLimit } from './LinodeConfigDialog';
 
 describe('LinodeConfigDialog', () => {
   describe('padInterface helper method', () => {
@@ -145,5 +147,45 @@ describe('LinodeConfigDialog', () => {
 
       expect(valueReturned?.props.text).toBe(undefined);
     });
+  });
+
+  it('should display the correct network interfaces', async () => {
+    const props = {
+      isReadOnly: false,
+      linodeId: 0,
+      onClose: vi.fn(),
+    };
+
+    const {
+      getAllByPlaceholderText,
+      findByText,
+      getByTestId,
+      rerender,
+    } = renderWithTheme(
+      <LinodeConfigDialog config={undefined} open={false} {...props} />
+    );
+
+    rerender(
+      <LinodeConfigDialog
+        config={linodeConfigFactory.build({
+          interfaces: [vpcInterface, publicInterface],
+        })}
+        open
+        {...props}
+      />
+    );
+
+    const loadingTestId = 'circle-progress';
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const interfaceSelectMenu = getAllByPlaceholderText('Select an Interface');
+
+    await userEvent.click(interfaceSelectMenu[0]);
+
+    await findByText('VPC');
+    await findByText('Public Internet');
   });
 });

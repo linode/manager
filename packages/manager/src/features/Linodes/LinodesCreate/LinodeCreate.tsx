@@ -92,10 +92,11 @@ import type {
 import type { PlacementGroup } from '@linode/api-v4';
 import type {
   CreateLinodePlacementGroupPayload,
+  CreateLinodeRequest,
   EncryptionStatus,
   InterfacePayload,
   PriceObject,
-} from '@linode/api-v4/lib/linodes';
+} from '@linode/api-v4';
 import type { Tag } from '@linode/api-v4/lib/tags/types';
 import type { MapDispatchToProps } from 'react-redux';
 import type { RouteComponentProps } from 'react-router-dom';
@@ -125,7 +126,7 @@ export interface LinodeCreateProps {
   handlePlacementGroupChange: (placementGroup: PlacementGroup | null) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
-  handleSubnetChange: (subnetId: number) => void;
+  handleSubnetChange: (subnetId: number | undefined) => void;
   handleVLANChange: (updatedInterface: InterfacePayload) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
   history: any;
@@ -289,7 +290,7 @@ export class LinodeCreate extends React.PureComponent<
     // eslint-disable-next-line sonarjs/no-unused-collection
     const interfaces: InterfacePayload[] = [];
 
-    const payload = {
+    const payload: CreateLinodeRequest = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,
@@ -428,7 +429,9 @@ export class LinodeCreate extends React.PureComponent<
     }
   };
 
-  handleClickCreateUsingCommandLine = () => {
+  handleClickCreateUsingCommandLine = (
+    isDxToolsAdditionsEnabled: boolean | undefined
+  ) => {
     const payload = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
@@ -448,7 +451,12 @@ export class LinodeCreate extends React.PureComponent<
         : [],
       type: this.props.selectedTypeID ?? '',
     };
-    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
+    sendApiAwarenessClickEvent(
+      'Button',
+      isDxToolsAdditionsEnabled
+        ? 'View Code Snippets'
+        : 'Create Using Command Line'
+    );
     this.props.checkValidation(payload);
   };
 
@@ -647,6 +655,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const hasErrorFor = getErrorMap(errorMap, errors);
     const generalError = getErrorMap(errorMap, errors).none;
+    const isDxToolsAdditionsEnabled = this.props.flags?.apicliDxToolsAdditions;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
@@ -1187,11 +1196,17 @@ export class LinodeCreate extends React.PureComponent<
                 userCannotCreateLinode ||
                 (showGDPRCheckbox && !signedAgreement)
               }
+              onClick={() =>
+                this.handleClickCreateUsingCommandLine(
+                  isDxToolsAdditionsEnabled
+                )
+              }
               buttonType="outlined"
               data-qa-api-cli-linode
-              onClick={this.handleClickCreateUsingCommandLine}
             >
-              Create using command line
+              {isDxToolsAdditionsEnabled
+                ? 'View Code Snippets'
+                : 'Create using command line'}
             </StyledCreateButton>
             <StyledCreateButton
               disabled={
