@@ -1,8 +1,9 @@
-import { type CloudPulseCustomSelectProps, CloudPulseSelectTypes } from '../shared/CloudPulseCustomSelect';
+import { CloudPulseSelectTypes } from '../shared/CloudPulseCustomSelect';
 import { DASHBOARD_ID, RELATIVE_TIME_DURATION, RESOURCES } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -126,7 +127,9 @@ export const getCustomSelectProperties = (
     options,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
-    type: options ? CloudPulseSelectTypes.static : CloudPulseSelectTypes.dynamic
+    type: options
+      ? CloudPulseSelectTypes.static
+      : CloudPulseSelectTypes.dynamic,
   };
 };
 
@@ -257,22 +260,21 @@ export const checkIfAllMandatoryFiltersAreSelected = (
  * @param dashboard - The current selected dashboard
  * @returns {[key:string]: number | undefined}
  */
-export const clearSelectedFiltersAndChangeDashboardId = (dashboard: Dashboard): {[key:string]: number | undefined} => {
-
-  const clearKeys : {[key:string] : number | undefined} = {};
+export const clearSelectedFiltersAndChangeDashboardId = (
+  dashboard: Dashboard
+): { [key: string]: number | undefined } => {
+  const clearKeys: { [key: string]: number | undefined } = {};
 
   clearKeys[DASHBOARD_ID] = dashboard ? dashboard.id : undefined;
 
-  getUniqueFilterKeys()
-  .forEach(filter => {
+  getUniqueFilterKeys().forEach((filter) => {
     clearKeys[filter] = undefined;
-  })
+  });
 
   clearKeys[RESOURCES] = undefined;
 
   return clearKeys;
-
-}
+};
 
 /**
  * This functions gets all the unique filter keys across filter config

@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import { databaseQueries, useAllDatabasesQuery } from '../databases/databases';
+import { databaseQueries } from '../databases/databases';
 import { getAllLinodesRequest } from '../linodes/requests';
 import { volumeQueries } from '../volumes/volumes';
 import { fetchCloudPulseMetrics } from './metrics';
