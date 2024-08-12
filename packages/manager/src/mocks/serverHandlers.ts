@@ -185,7 +185,7 @@ const entityTransfers = [
 ];
 
 const databases = [
-  http.get('*/databases/instancess', () => {
+  http.get('*/databases/instances', () => {
     const databases = databaseInstanceFactory.buildList(5);
     return HttpResponse.json(makeResourcePage(databases));
   }),
