@@ -76,7 +76,7 @@ const Panel = (props: NodePoolPanelProps) => {
 
   const extendedTypes = types.map(extendType);
 
-  const addPlan = (selectedPlanType: string, nodeCount: number) => {
+  const addPool = (selectedPlanType: string, nodeCount: number) => {
     addNodePool({
       count: nodeCount,
       id: Math.random(),
@@ -115,7 +115,7 @@ const Panel = (props: NodePoolPanelProps) => {
           header="Add Node Pools"
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          onAdd={addPlan}
+          onAdd={addPool}
           onSelect={(newType: string) => setSelectedType(newType)}
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
