@@ -1,3 +1,4 @@
+import deepEqual from 'fast-deep-equal';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -14,7 +15,7 @@ import type { AclpWidget } from '@linode/api-v4';
 
 /**
  * This is the properties requires for CloudPulseCustomSelect Components
- * 
+ *
  */
 export interface CloudPulseCustomSelectProps {
   /**
@@ -129,7 +130,7 @@ export const CloudPulseCustomSelect = React.memo(
       isLoading,
     } = useGetCustomFiltersQuery(
       dataApiUrl ?? '',
-      dataApiUrl !== undefined && (disabled !== undefined ? !disabled : true), // enable the query only if we have a valud api URL
+      dataApiUrl !== undefined && (disabled !== undefined ? !disabled : true), // enable the query only if we have a valid api URL
       filterKey,
       apiResponseIdField ? apiResponseIdField : 'id',
       apiResponseLabelField ? apiResponseLabelField : 'label'
@@ -297,12 +298,26 @@ export const CloudPulseCustomSelect = React.memo(
 );
 
 function compareProps(
-  oldProps: CloudPulseCustomSelectProps,
-  newProps: CloudPulseCustomSelectProps
-) {
-  return (
-    oldProps.options?.length === newProps.options?.length &&
-    oldProps.dataApiUrl === newProps.dataApiUrl &&
-    oldProps.disabled === newProps.disabled
-  );
+  prevProps: CloudPulseCustomSelectProps,
+  nextProps: CloudPulseCustomSelectProps
+): boolean {
+  // these properties can be extended going forward
+  const keysToCompare: (keyof CloudPulseCustomSelectProps)[] = [
+    'dataApiUrl',
+    'disabled',
+  ];
+
+  for (const key of keysToCompare) {
+    if (prevProps[key] !== nextProps[key]) {
+      return false;
+    }
+  }
+
+  // Deep comparison for options
+  if (!deepEqual(prevProps.options, nextProps.options)) {
+    return false;
+  }
+
+  // Ignore function props in comparison
+  return true;
 }
