@@ -199,7 +199,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
           <Typography>{getMainCopyVPC()}</Typography>
           <Autocomplete
             isOptionEqualToValue={(option, value) => {
-              return option.label === value.label;
+              return option.label === value?.label;
             }}
             onChange={(_, selectedVPC) => {
               handleSelectVPC(selectedVPC?.value || -1);
