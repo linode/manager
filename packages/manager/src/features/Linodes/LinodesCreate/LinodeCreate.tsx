@@ -403,10 +403,12 @@ export class LinodeCreate extends React.PureComponent<
       errorString += errorMap.region;
     }
     if (errorMap.type) {
-      errorString += `|${errorMap.type}`;
+      errorString += `${errorString.length > 0 ? `|` : ''}${errorMap.type}`;
     }
     if (errorMap.root_pass) {
-      errorString += `|${errorMap.root_pass}`;
+      errorString += `${errorString.length > 0 ? `|` : ''}${
+        errorMap.root_pass
+      }`;
     }
 
     sendLinodeCreateFormErrorEvent(errorString, selectedTabName ?? 'OS');
