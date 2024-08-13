@@ -49,12 +49,15 @@ const createFirewallFromTemplate = async (handlers: {
   const { createFirewall, queryClient, updateProgress } = handlers;
   updateProgress(0);
 
-  // Get firewall template
-  const template = await getFirewallTemplate(queryClient);
-  updateProgress(30);
+  // Get firewalls and firewall template in parallel
+  const [template, firewalls] = await Promise.all([
+    getFirewallTemplate(queryClient),
+    queryClient.fetchQuery(firewallQueries.firewalls._ctx.all),
+  ]);
+  updateProgress(50); // this gives the appearance of linear progress
 
   // Determine new firewall name
-  const label = await getUniqueFirewallLabel(queryClient, template);
+  const label = await getUniqueFirewallLabel(template, firewalls);
   updateProgress(80);
 
   // Create new firewall
@@ -70,12 +73,9 @@ const getFirewallTemplate = async (queryClient: QueryClient) => {
 };
 
 const getUniqueFirewallLabel = async (
-  queryClient: QueryClient,
-  template: FirewallTemplate
+  template: FirewallTemplate,
+  firewalls: Firewall[]
 ) => {
-  const firewalls = await queryClient.fetchQuery(
-    firewallQueries.firewalls._ctx.all
-  );
   let iterator = 1;
   const firewallLabelExists = (firewall: Firewall) =>
     firewall.label === firewallLabelFromSlug(template.slug, iterator);
