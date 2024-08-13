@@ -6,7 +6,7 @@ This guide covers various methods of mocking data while developing or testing Cl
 
 Often when developing a feature you'll need your account or resources to be in a specific state. In other words, you'll need to be receiving specific data from the API.
 
-The best way to do this is to _mock the API_. This is made simple using **factories** and the **mock service worker** tooling suite.
+The best way to do this is to _mock the API_. This is made simple using [**factories**](https://github.com/linode/manager/tree/develop/packages/manager/src/factories) and the [**mock service worker**](https://github.com/linode/manager/tree/develop/packages/manager/src/mocks) tooling suite.
 
 ### Factories
 We use [factory.ts](https://www.npmjs.com/package/factory.ts) to generate mock data. With factory.ts you define a base "factory" for a given type, then use the factory to generate real TypeScript objects:
