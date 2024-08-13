@@ -112,7 +112,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.visible')
           .should('be.enabled');
 
-        // select E0 endpoint
+        // Select E0 endpoint
         ui.autocompletePopper
           .findByTitle('Legacy (E0)')
           .should('be.visible')
@@ -125,8 +125,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
           'This endpoint type supports up to 750 Requests Per Second (RPS). Understand bucket rate limits'
         ).should('be.visible');
 
-        // confirm bucket rate limit table should not exist when E0 endpoint is selected
+        // Confirm bucket rate limit table should not exist when E0 endpoint is selected
         cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
+
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -134,17 +135,17 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    // confirm request body has expected data
+    // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
       const requestPayload = xhr.request.body;
-      console.log(requestPayload);
       expect(requestPayload['endpoint_type']).to.equal('E0');
       expect(requestPayload['cors_enabled']).to.equal(true);
     });
+
     ui.drawer.find().should('not.exist');
 
-    // Confirm that bucket is created, initiate deletion.
-    // TODO: confirm endpoint type and endpoint url are visible
+    // Confirm that bucket is created, initiate deletion for cleanup
+    // TODO: when M3-8304 is complete, confirm endpoint type and endpoint url are visible
     cy.findByText(bucketLabel)
       .should('be.visible')
       .closest('tr')
