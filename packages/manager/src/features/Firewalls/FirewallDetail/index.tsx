@@ -5,7 +5,9 @@ import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { LinkButton } from 'src/components/LinkButton';
 import { NotFound } from 'src/components/NotFound';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -39,9 +41,10 @@ export const FirewallDetail = () => {
   const { data: grants } = useGrants();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const flags = useFlags();
+  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
 
   const secureVMFirewallBanner =
-    (secureVMNoticesEnabled && flags.secureVmCopy?.firewallDetails) ?? false;
+    (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
   const firewallId = Number(id);
 
@@ -134,8 +137,18 @@ export const FirewallDetail = () => {
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
         title="Firewall Details"
       />
-      {secureVMFirewallBanner && (
-        <AkamaiBanner margin={3} {...secureVMFirewallBanner} />
+      {secureVMFirewallBanner && secureVMFirewallBanner.firewallDetails && (
+        <AkamaiBanner
+          action={
+            secureVMFirewallBanner.generateActionText ? (
+              <LinkButton onClick={() => setIsGenerateDialogOpen(true)}>
+                {secureVMFirewallBanner.generateActionText}
+              </LinkButton>
+            ) : undefined
+          }
+          margin={3}
+          {...secureVMFirewallBanner.firewallDetails}
+        />
       )}
       <Tabs
         index={tabIndex === -1 ? 0 : tabIndex}
@@ -169,6 +182,10 @@ export const FirewallDetail = () => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
+      <GenerateFirewallDialog
+        onClose={() => setIsGenerateDialogOpen(false)}
+        open={isGenerateDialogOpen}
+      />
     </React.Fragment>
   );
 };
