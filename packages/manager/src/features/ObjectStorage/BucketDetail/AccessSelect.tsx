@@ -209,7 +209,7 @@ export const AccessSelect = React.memo((props: Props) => {
         </Typography>
       ) : (
         // TODO: OBJGen2 - We need to handle link in upcoming PR
-        <Notice spacingTop={16} variant="warning">
+        <Notice spacingBottom={0} spacingTop={16} variant="warning">
           <Typography
             sx={(theme) => ({
               fontFamily: theme.font.bold,
