@@ -1,44 +1,51 @@
-import { Profile } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useTheme } from '@mui/material/styles';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { FormControl } from 'src/components/FormControl';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { FormControl } from 'src/components/FormControl';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+
+import type { Profile } from '@linode/api-v4/lib/profile';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export const LishSettings = () => {
   const theme = useTheme();
   const { data: profile, isLoading } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [lishAuthMethod, setLishAuthMethod] = React.useState<
-    Profile['lish_auth_method'] | undefined
-  >(profile?.lish_auth_method || 'password_keys');
-  const [authorizedKeys, setAuthorizedKeys] = React.useState<string[]>(
-    profile?.authorized_keys || []
-  );
-  const [authorizedKeysCount, setAuthorizedKeysCount] = React.useState<number>(
-    profile?.authorized_keys ? profile!.authorized_keys.length : 1
-  );
   const [errors, setErrors] = React.useState<APIError[]>([]);
   const [success, setSuccess] = React.useState<string>();
   const thirdPartyEnabled = profile?.authentication_type !== 'password';
+
+  const [lishAuthMethod, setLishAuthMethod] = React.useState<
+    Profile['lish_auth_method'] | undefined
+  >(profile?.lish_auth_method || 'password_keys');
+
+  const [authorizedKeys, setAuthorizedKeys] = React.useState<string[]>(
+    profile?.authorized_keys || []
+  );
+
+  const [authorizedKeysCount, setAuthorizedKeysCount] = React.useState<number>(
+    profile?.authorized_keys ? profile!.authorized_keys.length : 1
+  );
+
   const tooltipText = thirdPartyEnabled
     ? 'Password is disabled because Third-Party Authentication has been enabled.'
     : '';
+
   const hasErrorFor = getAPIErrorFor(
     {
       authorized_keys: 'ssh public keys',
@@ -46,6 +53,7 @@ export const LishSettings = () => {
     },
     errors
   );
+
   const generalError = hasErrorFor('none');
   const authMethodError = hasErrorFor('lish_auth_method');
   const authorizedKeysError = hasErrorFor('authorized_keys');
@@ -133,7 +141,7 @@ export const LishSettings = () => {
         {isLoading ? null : (
           <>
             <FormControl sx={{ display: 'flex' }}>
-              <Select
+              <Autocomplete
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-mode-select': true,
@@ -141,11 +149,10 @@ export const LishSettings = () => {
                   tooltipText,
                 }}
                 defaultValue={defaultMode}
+                disableClearable
                 errorText={authMethodError}
                 id="mode-select"
-                isClearable={false}
                 label="Authentication Mode"
-                name="mode-select"
                 onChange={onListAuthMethodChange as any}
                 options={modeOptions}
               />

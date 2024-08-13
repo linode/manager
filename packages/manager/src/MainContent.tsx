@@ -140,7 +140,11 @@ const Kubernetes = React.lazy(() =>
   }))
 );
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
-const Profile = React.lazy(() => import('src/features/Profile/Profile'));
+const Profile = React.lazy(() =>
+  import('src/features/Profile/Profile').then((module) => ({
+    default: module.Profile,
+  }))
+);
 const NodeBalancers = React.lazy(
   () => import('src/features/NodeBalancers/NodeBalancers')
 );

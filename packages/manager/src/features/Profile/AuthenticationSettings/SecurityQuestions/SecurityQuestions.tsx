@@ -1,6 +1,5 @@
-import { SecurityQuestionsData } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
-import { FormikConfig, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -16,6 +15,9 @@ import {
 
 import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
+
+import type { SecurityQuestionsData } from '@linode/api-v4';
+import type { FormikConfig } from 'formik';
 
 export const SecurityQuestions = ({
   securityQuestionRef,

@@ -1,10 +1,10 @@
 import { styled } from '@mui/material/styles';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
-import Select from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { FormHelperText } from 'src/components/FormHelperText';
 
 export const StyledCodeSentMessageBox = styled(Box, {
   label: 'StyledCodeSentMessageBox',
@@ -61,10 +61,10 @@ export const StyledPhoneNumberInput = styled(TextField, {
   minWidth: '300px',
 }));
 
-export const StyledSelect = styled(Select, {
+export const StyledSelect = styled(Autocomplete, {
   label: 'StyledSelect',
 })(({ theme }) => ({
-  '& .MuiInputBase-input .react-select__indicators svg': {
+  '& .MuiInputBase-input svg': {
     color: `${theme.palette.primary.main} !important`,
     opacity: '1 !important',
   },
