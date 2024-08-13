@@ -1,12 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
-import React from 'react';
 
 import { useCreateFirewall } from 'src/queries/firewalls';
 import { firewallQueries } from 'src/queries/firewalls';
 
-import { Button } from '../Button/Button';
-
-import type { ButtonProps } from '../Button/Button';
 import type { DialogState } from './GenerateFirewallDialog';
 import type {
   CreateFirewallPayload,
@@ -15,16 +11,15 @@ import type {
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
-export const GenerateButton = (
-  props: ButtonProps & {
-    onFirewallGenerated?: (firewall: Firewall) => void;
-    setDialogState: (state: DialogState) => void;
-  }
-) => {
-  const { onFirewallGenerated, setDialogState } = props;
+export const useCreateFirewallFromTemplate = (options: {
+  onFirewallGenerated?: (firewall: Firewall) => void;
+  setDialogState: (state: DialogState) => void;
+}) => {
+  const { onFirewallGenerated, setDialogState } = options;
   const queryClient = useQueryClient();
   const { mutateAsync: createFirewall } = useCreateFirewall();
-  const onClick = () =>
+
+  return () =>
     createFirewallFromTemplate({
       createFirewall,
       queryClient,
@@ -44,8 +39,6 @@ export const GenerateButton = (
           step: 'error',
         })
       );
-
-  return <Button onClick={onClick} {...props} />;
 };
 
 const createFirewallFromTemplate = async (handlers: {
@@ -61,11 +54,11 @@ const createFirewallFromTemplate = async (handlers: {
   updateProgress(30);
 
   // Determine new firewall name
-  const firewallLabel = await getUniqueFirewallLabel(queryClient, template);
+  const label = await getUniqueFirewallLabel(queryClient, template);
   updateProgress(80);
 
   // Create new firewall
-  return await createFirewall({ label: firewallLabel, rules: template.rules });
+  return await createFirewall({ label, rules: template.rules });
 };
 
 const getFirewallTemplate = async (queryClient: QueryClient) => {
@@ -93,6 +86,7 @@ const getUniqueFirewallLabel = async (
   return firewallLabelFromSlug(template.slug, iterator);
 };
 
+// Firewalls labels are constrained to 32 characters
 const firewallLabelFromSlug = (slug: string, iterator: number) => {
   const iteratorSuffix = `-${iterator}`;
   return slug.substring(0, 32 - iteratorSuffix.length) + iteratorSuffix;

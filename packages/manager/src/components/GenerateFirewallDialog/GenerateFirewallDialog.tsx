@@ -10,7 +10,7 @@ import { LinearProgress } from '../LinearProgress';
 import { Link } from '../Link';
 import { Stack } from '../Stack';
 import { Typography } from '../Typography';
-import { GenerateButton } from './GenerateFirewallButton';
+import { useCreateFirewallFromTemplate } from './useCreateFirewallFromTemplate';
 
 import type { Firewall } from '@linode/api-v4';
 
@@ -97,8 +97,13 @@ interface GenerateFirewallDialogContentProps<State extends DialogState> {
 const PromptDialogContent = (
   props: GenerateFirewallDialogContentProps<PromptDialogState>
 ) => {
+  const { onFirewallGenerated, setDialogState } = props;
   const flags = useFlags();
   const dialogCopy = flags.secureVmCopy?.generatePrompt;
+  const generateFirewall = useCreateFirewallFromTemplate({
+    onFirewallGenerated,
+    setDialogState,
+  });
 
   return (
     <Stack gap={3}>
@@ -116,9 +121,9 @@ const PromptDialogContent = (
         </Typography>
       )}
       <Box>
-        <GenerateButton buttonType="primary" {...props}>
+        <Button buttonType="primary" onClick={generateFirewall}>
           Generate Firewall Now
-        </GenerateButton>
+        </Button>
       </Box>
     </Stack>
   );
@@ -187,17 +192,24 @@ const ErrorDialogContent = (
 ) => {
   const {
     onClose,
+    onFirewallGenerated,
+    setDialogState,
     state: { error },
   } = props;
+
+  const generateFirewall = useCreateFirewallFromTemplate({
+    onFirewallGenerated,
+    setDialogState,
+  });
 
   return (
     <Stack gap={3}>
       <Typography variant="h2">An error occurred</Typography>
       <Typography>{error}</Typography>
       <Stack direction="row" gap={2}>
-        <GenerateButton buttonType="primary" {...props}>
+        <Button buttonType="primary" onClick={generateFirewall}>
           Retry
-        </GenerateButton>
+        </Button>
         <Button buttonType="secondary" onClick={onClose}>
           Close
         </Button>
