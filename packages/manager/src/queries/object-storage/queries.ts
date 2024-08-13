@@ -147,9 +147,7 @@ export const useObjectStorageBuckets = (enabled = true) => {
     enabled &&
     ((isObjectStorageGen2Enabled && Boolean(endpoints)) ||
       (isObjMultiClusterEnabled && Boolean(regions)) ||
-      (!isObjectStorageGen2Enabled &&
-        !isObjMultiClusterEnabled &&
-        Boolean(clusters)));
+      Boolean(clusters));
 
   const queryFn = isObjectStorageGen2Enabled
     ? () => getAllBucketsFromEndpoints(endpoints)
