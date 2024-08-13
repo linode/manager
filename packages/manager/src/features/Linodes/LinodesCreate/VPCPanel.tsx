@@ -199,7 +199,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
           <Typography>{getMainCopyVPC()}</Typography>
           <Autocomplete
             isOptionEqualToValue={(option, value) => {
-              return option.label === value?.label;
+              return option.label === value.label;
             }}
             onChange={(_, selectedVPC) => {
               handleSelectVPC(selectedVPC?.value || -1);
@@ -227,7 +227,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
               selectedVPCId && selectedVPCId !== -1
                 ? vpcDropdownOptions.find(
                     (option) => option.value === selectedVPCId
-                  )
+                  ) || null
                 : null
             }
             autoHighlight
