@@ -43,8 +43,8 @@ export interface AnalyticsEvent {
 
 export type FormEventType =
   | 'formError'
-  | 'formFocus' // Focus is used for Form Start
   | 'formInput'
+  | 'formStart'
   | 'formStepInteraction'
   | 'formSubmit';
 
@@ -53,8 +53,6 @@ export type FormPayload =
   | FormErrorEvent
   | FormInputEvent
   | FormStepEvent;
-
-export type LinodeCreateFlowVersion = 'v1' | 'v2';
 
 export interface BasicFormEvent {
   formName: string;
@@ -72,18 +70,34 @@ export interface FormErrorEvent extends BasicFormEvent {
   formError: string;
 }
 
-// To be used with form step events for consistent event formatting.
-export interface FormStepOptions {
-  action: string;
-  category: string;
-  formStepName?: string;
+// To be used with form input and step events for consistent event formatting.
+export interface FormEventOptions {
+  /**
+   * Paper, modal, or drawer name. If undefined, will be formatted as "No header".
+   */
+  headerName?: string;
+  /**
+   * The type of UI interaction (e.g. click) the user takes to trigger the event.
+   */
+  interaction: string;
+  /**
+   * The label of the button, form field, or other UI element the interaction is performed on.
+   */
   label: string;
+  /**
+   * Optional; e.g. an input field label visible in UI. If undefined, only the header will be sent.
+   */
+  subheaderName?: string;
+  /**
+   * If true, `label` will be modified to include an identifier that tells the Adobe backend
+   * to only track this event once per page view.
+   * @default false
+   */
+  trackOnce?: boolean;
 }
-
-export interface LinodeCreateFormStepOptions extends FormStepOptions {
+export interface LinodeCreateFormEventOptions extends FormEventOptions {
   createType: LinodeCreateType;
-  // Used to distinguish between the Linode Create pre and post-refactor.
-  version: LinodeCreateFlowVersion;
+  interaction: 'change' | 'clear' | 'click';
 }
 
 export interface AnalyticsPayload extends Omit<AnalyticsEvent, 'data'> {

@@ -5,8 +5,8 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TwoStepRegionSelect } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
@@ -17,7 +17,8 @@ import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormStartEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
@@ -129,6 +130,10 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     if (updateTypeID) {
       updateTypeID('');
     }
+    // Begin tracking the Linode Create form - fires once per page view, configured in AA backend.
+    sendLinodeCreateFormStartEvent({
+      createType: params.type ?? 'OS',
+    });
   };
 
   return (
@@ -149,12 +154,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         <DocsLink
           onClick={() =>
             isFromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'link',
+            sendLinodeCreateFormInputEvent({
               createType: params.type ?? 'OS',
+              headerName: 'Region',
+              interaction: 'click',
               label: DOCS_LINK_LABEL_DC_PRICING,
-              version: 'v1',
             })
           }
           href="https://www.linode.com/pricing"
@@ -196,6 +200,12 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         />
       ) : (
         <RegionSelect
+          onChange={(e, region) => {
+            handleSelection(region.id);
+            sendLinodeCreateFormStartEvent({
+              createType: params.type ?? 'OS',
+            });
+          }}
           regionFilter={
             // We don't want the Image Service Gen2 work to abide by Gecko feature flags
             hideDistributedRegions && params.type !== 'Images'
@@ -211,7 +221,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           disabledRegions={disabledRegions}
           errorText={error}
           helperText={helperText}
-          onChange={(e, region) => handleSelection(region.id)}
           regions={regions ?? []}
           value={selectedId}
           {...RegionSelectProps}

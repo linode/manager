@@ -1,7 +1,12 @@
 import { generateTimeOfDay } from './customEventAnalytics';
-import { waitForAdobeAnalyticsToBeLoaded } from './utils';
+import {
+  getFormattedStringFromFormEventOptions,
+  waitForAdobeAnalyticsToBeLoaded,
+} from './utils';
 
-describe('Utility Functions', () => {
+import type { FormEventOptions } from './types';
+
+describe('generateTimeOfDay', () => {
   it('should generate human-readable time of day', () => {
     expect(generateTimeOfDay(0)).toBe('Early Morning');
     expect(generateTimeOfDay(1)).toBe('Early Morning');
@@ -49,4 +54,40 @@ describe('waitForAdobeAnalyticsToBeLoaded', () => {
     },
     { timeout: 7000 }
   );
+});
+
+describe('getFormattedStringFromFormEventOptions', () => {
+  const formEventOptionsWithHeaders: FormEventOptions = {
+    headerName: 'Header',
+    interaction: 'click',
+    label: 'Component label',
+    subheaderName: 'Subheader',
+  };
+
+  it('should return a string in format "Header:Subheader|Interaction:Component label"', () => {
+    expect(
+      getFormattedStringFromFormEventOptions(formEventOptionsWithHeaders)
+    ).toEqual('Header:Subheader|click:Component label');
+  });
+
+  it('should return defaults if no header or subheader are provided', () => {
+    const formEventOptionsWithoutHeaders: FormEventOptions = {
+      interaction: 'click',
+      label: 'Component label',
+    };
+
+    expect(
+      getFormattedStringFromFormEventOptions(formEventOptionsWithoutHeaders)
+    ).toEqual('No header|click:Component label');
+  });
+
+  it("should append ':once' to the label's end to identify events to track once per page view", () => {
+    const formEventOptionsTrackOnce = {
+      ...formEventOptionsWithHeaders,
+      trackOnce: true,
+    };
+    expect(
+      getFormattedStringFromFormEventOptions(formEventOptionsTrackOnce)
+    ).toEqual('Header:Subheader|click:Component label:once');
+  });
 });

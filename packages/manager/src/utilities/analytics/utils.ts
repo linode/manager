@@ -1,9 +1,10 @@
 import { ADOBE_ANALYTICS_URL } from 'src/constants';
 
-import {
+import type {
   AnalyticsEvent,
   BasicFormEvent,
   FormErrorEvent,
+  FormEventOptions,
   FormEventType,
   FormInputEvent,
   FormPayload,
@@ -53,21 +54,16 @@ export const sendFormEvent = (
 
   // Send a Direct Call Rule if our environment is configured with an Adobe Launch script.
   if (window._satellite) {
-    // Depending on the type of form event, send the correct payload for a form focus, input, step, or error.
-    if (eventType === 'formInput' && 'inputValue' in eventPayload) {
-      formEventPayload['inputValue'] = eventPayload.inputValue.replace(
-        /\|/g,
-        ''
-      );
-    } else if (
-      eventType === 'formStepInteraction' &&
-      'stepName' in eventPayload
-    ) {
-      formEventPayload['stepName'] = eventPayload.stepName.replace(/\|/g, '');
+    // Depending on the type of form event, send the correct payload for a form start, input, step, submit, or error.
+    if (eventType === 'formStepInteraction' && 'stepName' in eventPayload) {
+      formEventPayload.stepName = eventPayload.stepName;
     } else if (eventType === 'formError' && 'formError' in eventPayload) {
-      formEventPayload['formError'] = eventPayload.formError.replace(/\|/g, '');
+      formEventPayload.formError = eventPayload.formError;
+    } else if ('inputValue' in eventPayload) {
+      // Handles form start, input, and submit events.
+      formEventPayload.inputValue = eventPayload.inputValue;
     }
-    // window._satellite.track(eventType, formEventPayload);
+    window._satellite.track(eventType, formEventPayload as FormPayload);
   }
 };
 
@@ -94,3 +90,20 @@ export const waitForAdobeAnalyticsToBeLoaded = () =>
       }
     }, 1000);
   });
+
+/**
+ * A utility function to consistently format the formInput 'inputValue' and formStep 'stepName' string.
+ *
+ * @returns a string of the format: Header:Subheader|Interaction:Component label
+ */
+export const getFormattedStringFromFormEventOptions = ({
+  headerName,
+  interaction,
+  label,
+  subheaderName,
+  trackOnce = false,
+}: FormEventOptions) => {
+  return `${headerName ?? 'No header'}${
+    subheaderName ? `:${subheaderName}` : ''
+  }|${interaction}:${label}${trackOnce ? ':once' : ''}`;
+};
