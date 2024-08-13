@@ -5,13 +5,13 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useGetCustomFiltersQuery } from 'src/queries/cloudpulse/customfilters';
 
 import {
-  getUserPreferenceObject as fetchUserPrefObject,
-  updateGlobalFilterPreference,
-} from '../Utils/UserPreference';
+  callSelectionChangeAndUpdateGlobalFilters,
+  getDefaultSelectionsFromPreferences,
+} from '../Utils/CustomSelectUtils';
+import { getUserPreferenceObject as fetchUserPrefObject } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
-import type { AclpWidget } from '@linode/api-v4';
 
 /**
  * This is the properties requires for CloudPulseCustomSelect Components
@@ -128,70 +128,16 @@ export const CloudPulseCustomSelect = React.memo(
       data: queriedResources,
       isError,
       isLoading,
-    } = useGetCustomFiltersQuery(
-      dataApiUrl ?? '',
-      dataApiUrl !== undefined && (disabled !== undefined ? !disabled : true), // enable the query only if we have a valid api URL
-      filterKey,
-      apiResponseIdField ? apiResponseIdField : 'id',
-      apiResponseLabelField ? apiResponseLabelField : 'label'
-    );
+    } = useGetCustomFiltersQuery({
+      enabled:
+        dataApiUrl !== undefined && (disabled !== undefined ? !disabled : true), // enable the query only if we have a valid api URL
+      filter: {},
+      idField: apiResponseIdField ? apiResponseIdField : 'id',
+      labelField: apiResponseLabelField ? apiResponseLabelField : 'label',
+      url: dataApiUrl ?? '',
+    });
 
     let staticErrorText = '';
-
-    const getDefaultSelectionsFromPreferences = React.useCallback(
-      (
-        defaultValue:
-          | { [key: string]: AclpWidget }
-          | number
-          | number[]
-          | string
-          | string[]
-          | undefined,
-        options: CloudPulseServiceTypeFiltersOptions[] | undefined
-      ):
-        | CloudPulseServiceTypeFiltersOptions
-        | CloudPulseServiceTypeFiltersOptions[]
-        | undefined => {
-        if (!options || options.length === 0) {
-          return isMultiSelect ? [] : undefined;
-        }
-
-        // Handle the case when there is no default value and preferences are not saved
-        if (!defaultValue && !savePreferences) {
-          const initialSelection = isMultiSelect ? [options[0]] : options[0];
-          handleSelectionChange(
-            filterKey,
-            isMultiSelect ? [options[0].id] : options[0].id
-          );
-          return initialSelection;
-        }
-
-        if (isMultiSelect) {
-          // Handle multiple selections
-          const selectedValues = options.filter((option) =>
-            (Array.isArray(defaultValue)
-              ? defaultValue
-              : [defaultValue]
-            ).includes(option.id.toString())
-          );
-          handleSelectionChange(
-            filterKey,
-            selectedValues.map((option) => option.id)
-          );
-          return selectedValues;
-        }
-
-        // Handle single selection
-        const selectedValue = options.find(
-          (option) => option.id === defaultValue
-        );
-        if (selectedValue) {
-          handleSelectionChange(filterKey, selectedValue.id);
-        }
-        return selectedValue;
-      },
-      [filterKey, handleSelectionChange, isMultiSelect, savePreferences]
-    );
 
     React.useEffect(() => {
       if (!selectedResource) {
@@ -199,10 +145,13 @@ export const CloudPulseCustomSelect = React.memo(
           ? fetchUserPrefObject()[filterKey]
           : undefined;
         setResource(
-          getDefaultSelectionsFromPreferences(
-            defaultValue,
-            type === CloudPulseSelectTypes.static ? options : queriedResources
-          )
+          getDefaultSelectionsFromPreferences(defaultValue, {
+            filterKey,
+            handleSelectionChange,
+            isMultiSelect: isMultiSelect ?? false,
+            options: options ?? [],
+            savePreferences: savePreferences ?? false,
+          })
         );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -215,38 +164,13 @@ export const CloudPulseCustomSelect = React.memo(
         | CloudPulseServiceTypeFiltersOptions[]
         | null
     ) => {
-      if (Array.isArray(value)) {
-        handleSelectionChange(
-          filterKey,
-          value.map((obj) => obj.id.toString())
-        );
-        updateGlobalFilterPreference({
-          [filterKey]: value.map((obj) => obj.id.toString()),
-        });
-        if (clearSelections) {
-          clearSelections.forEach((selection) =>
-            updateGlobalFilterPreference({ [selection]: undefined })
-          );
-        }
-        if (maxSelections && value.length > maxSelections) {
-          value = value.slice(0, maxSelections);
-        }
-      } else {
-        handleSelectionChange(
-          filterKey,
-          value ? value.id.toString() : undefined
-        );
-        updateGlobalFilterPreference({
-          [filterKey]: value ? value.id.toString() : null,
-        });
-      }
-
-      if (!value) {
-        updateGlobalFilterPreference({
-          [filterKey]: null,
-        });
-      }
-
+      callSelectionChangeAndUpdateGlobalFilters({
+        clearSelections: clearSelections ?? [],
+        filterKey,
+        handleSelectionChange,
+        maxSelections,
+        value,
+      });
       setResource(Array.isArray(value) ? [...value] : value ?? undefined);
     };
 
