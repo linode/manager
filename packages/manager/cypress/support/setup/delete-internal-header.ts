@@ -5,7 +5,6 @@
 export const deleteInternalHeader = () => {
   // Set up Linode APIv4 intercepts and set default alias value.
   beforeEach(() => {
-    cy.wrap([]).as('linodeApiV4Request');
     cy.intercept(
       {
         middleware: true,
@@ -17,6 +16,6 @@ export const deleteInternalHeader = () => {
           delete res.headers['akamai-internal-account'];
         });
       }
-    ).as('linodeApiV4Request');
+    );
   });
 };
