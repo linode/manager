@@ -3,6 +3,7 @@ import {
   getLinodeDisks,
   getLinodeFirewalls,
   getLinodeKernels,
+  getLinodeTypes,
   getLinodes,
 } from '@linode/api-v4';
 
@@ -59,3 +60,6 @@ export const getAllLinodeDisks = (id: number) =>
   getAll<Disk>((params, filter) => getLinodeDisks(id, params, filter))().then(
     (data) => data.data
   );
+
+export const getAllLinodeTypes = () =>
+  getAll(getLinodeTypes)().then((results) => results.data);
