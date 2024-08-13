@@ -44,16 +44,21 @@ export interface Filters {
   value: string;
 }
 
+// Define the type for filter values
+type FilterValue =
+  | number
+  | string
+  | string[]
+  | number[]
+  | WidgetFilterValue
+  | undefined;
+
+type WidgetFilterValue = { [key: string]: AclpWidget };
+
 export interface AclpConfig {
   // we maintain only the filters selected in the preferences for latest selected dashboard
-  [key: string]:
-    | number
-    | string
-    | string[]
-    | number[]
-    | { [key: string]: AclpWidget }
-    | undefined;
-  widgets?: { [key: string]: AclpWidget };
+  [key: string]: FilterValue;
+  widgets?: WidgetFilterValue;
 }
 
 export interface AclpWidget {
