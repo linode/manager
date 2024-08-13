@@ -6,15 +6,41 @@ import { getAll } from 'src/utilities/getAll';
 import type { Filter, Params } from '@linode/api-v4';
 import type { CloudPulseServiceTypeFiltersOptions } from 'src/features/CloudPulse/Utils/models';
 
+/**
+ * Interface that has the parameters required for making custom filter query call
+ */
 interface CustomFilterQueryProps {
+  /**
+   * This indicates whether or not to enable the query
+   */
   enabled: boolean;
+  /**
+   * The xFilter that is used to filter the results in API
+   */
   filter?: Filter;
+  /**
+   * The id field to consider from the response of the custom filter call
+   */
   idField: string;
+  /**
+   * The label field to consider from the response of the custom filter call
+   */
   labelField: string;
+  /**
+   * The params like pagination information to be passed to the API
+   */
   params?: Params;
+
+  /**
+   * The API-V4 url, which needs to be called
+   */
   url: string;
 }
 
+/**
+ * This functions queries the API-V4 URL and returns the filter value list like db engines, node types, region and resources etc.,
+ * @param queryProps - The parameters required for making custom filter query call
+ */
 export const useGetCustomFiltersQuery = (
   queryProps: CustomFilterQueryProps
 ) => {
