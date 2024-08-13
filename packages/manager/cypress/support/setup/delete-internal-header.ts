@@ -13,7 +13,7 @@ export const deleteInternalHeader = () => {
       },
       (req) => {
         // Delete internal-only header
-        req.continue((res) => {
+        req.on('before:response', (res) => {
           delete res.headers['akamai-internal-account'];
         });
       }
