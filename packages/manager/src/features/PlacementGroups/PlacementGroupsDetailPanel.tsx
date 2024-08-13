@@ -16,6 +16,7 @@ import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGr
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import {
   NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE,
@@ -159,6 +160,15 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
               allPlacementGroups: allPlacementGroupsInRegion,
               region: selectedRegion,
             })}
+            onClick={() => {
+              setIsCreatePlacementGroupDrawerOpen(true);
+              sendLinodeCreateFormInputEvent({
+                createType: 'OS',
+                headerName: 'Details',
+                interaction: 'click',
+                label: 'Create Placement Group',
+              });
+            }}
             sx={(theme) => ({
               fontFamily: theme.font.normal,
               fontSize: '0.875rem',
@@ -168,7 +178,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
             sxEndIcon={{
               color: theme.color.grey4,
             }}
-            onClick={() => setIsCreatePlacementGroupDrawerOpen(true)}
             tooltipText="This region has reached its Placement Group capacity."
             variant="text"
           >
