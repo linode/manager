@@ -24,13 +24,16 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { AccessSelect } from '../BucketDetail/AccessSelect';
 
 import type { Region } from '@linode/api-v4';
-import type { ACLType } from '@linode/api-v4/lib/object-storage';
+import type {
+  ACLType,
+  ObjectStorageEndpointTypes,
+} from '@linode/api-v4/lib/object-storage';
 export interface BucketDetailsDrawerProps {
   bucketLabel?: string;
   bucketRegion?: Region;
   cluster?: string;
   created?: string;
-  endpointType?: string;
+  endpointType?: ObjectStorageEndpointTypes;
   hostname?: string;
   objectsNumber?: number;
   onClose: () => void;
@@ -91,11 +94,11 @@ export const BucketDetailsDrawer = React.memo(
             Created: {formattedCreated}
           </Typography>
         ) : null}
-        {endpointType ? (
+        {Boolean(endpointType) && (
           <Typography data-testid="endpointType" variant="subtitle2">
             Endpoint Type: {endpointType}
           </Typography>
-        ) : null}
+        )}
         {isObjMultiClusterEnabled ? (
           <Typography data-testid="cluster" variant="subtitle2">
             {bucketRegion?.label}

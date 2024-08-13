@@ -20,12 +20,13 @@ import { copy } from './AccessSelect.data';
 import type {
   ACLType,
   ObjectStorageBucketAccess,
+  ObjectStorageEndpointTypes,
   ObjectStorageObjectACL,
 } from '@linode/api-v4/lib/object-storage';
 import type { Theme } from '@mui/material/styles';
 
 export interface Props {
-  endpointType?: string;
+  endpointType?: ObjectStorageEndpointTypes;
   getAccess: () => Promise<ObjectStorageBucketAccess | ObjectStorageObjectACL>;
   name: string;
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
@@ -140,6 +141,9 @@ export const AccessSelect = React.memo((props: Props) => {
     ? 'CORS Enabled'
     : 'CORS Disabled';
 
+  const isCorsEnabled =
+    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
+
   const selectedOption =
     _options.find((thisOption) => thisOption.value === selectedACL) ??
     _options.find((thisOption) => thisOption.value === 'private');
@@ -181,9 +185,7 @@ export const AccessSelect = React.memo((props: Props) => {
         ) : null}
       </div>
 
-      {variant === 'bucket' &&
-      endpointType !== 'E2' &&
-      endpointType !== 'E3' ? (
+      {isCorsEnabled ? (
         <FormControlLabel
           control={
             <Toggle
@@ -197,9 +199,7 @@ export const AccessSelect = React.memo((props: Props) => {
         />
       ) : null}
 
-      {variant === 'bucket' &&
-      endpointType !== 'E2' &&
-      endpointType !== 'E3' ? (
+      {isCorsEnabled ? (
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}

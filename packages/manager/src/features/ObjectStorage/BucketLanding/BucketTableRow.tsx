@@ -64,6 +64,9 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
+  const isLegacy = endpoint_type === 'E0';
+  const typeLabel = isLegacy ? 'Legacy' : 'Standard';
+
   return (
     <StyledBucketRow data-qa-bucket-cell={label} key={label}>
       <TableCell>
@@ -97,7 +100,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       <Hidden lgDown>
         <TableCell>
           <Typography data-qa-size variant="body1">
-            {endpoint_type}
+            {typeLabel} ({endpoint_type})
           </Typography>
         </TableCell>
       </Hidden>
