@@ -16,21 +16,14 @@ import {
   RESOURCE_ID,
 } from '../Utils/constants';
 import {
-  getCustomSelectProperties,
   getRegionProperties,
   getResourcesProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
-import { CloudPulseSelectTypes } from '../Utils/models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
-import type { CloudPulseCustomSelectProps } from './CloudPulseCustomSelect';
-import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
-import type {
-  CloudPulseResources,
-  CloudPulseResourcesSelectProps,
-} from './CloudPulseResourcesSelect';
+import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
@@ -111,13 +104,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       [emitFilterChangeByFilterKey]
     );
 
-    const handleCustomSelectChange = React.useCallback(
-      (filterKey: string, value: FilterValueType) => {
-        emitFilterChangeByFilterKey(filterKey, value);
-      },
-      [emitFilterChangeByFilterKey]
-    );
-
     const handleRegionChange = React.useCallback(
       (region: string | undefined) => {
         emitFilterChangeByFilterKey(REGION, region);
@@ -126,12 +112,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const getProps = React.useCallback(
-      (
-        config: CloudPulseServiceTypeFilters
-      ):
-        | CloudPulseCustomSelectProps
-        | CloudPulseRegionSelectProps
-        | CloudPulseResourcesSelectProps => {
+      (config: CloudPulseServiceTypeFilters) => {
         if (config.configuration.filterKey === REGION) {
           return getRegionProperties(
             { config, dashboard, isServiceAnalyticsIntegration },
@@ -148,22 +129,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             handleResourceChange
           );
         } else {
-          return getCustomSelectProperties(
-            {
-              config,
-              dashboard,
-              dependentFilters: dependentFilterReference.current,
-              isServiceAnalyticsIntegration,
-            },
-            handleCustomSelectChange
-          );
+          return {};
         }
       },
       [
         dashboard,
         handleRegionChange,
         handleResourceChange,
-        handleCustomSelectChange,
         isServiceAnalyticsIntegration,
       ]
     );
@@ -196,12 +168,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         .map((filter, index) => (
           <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
             {RenderComponent({
-              componentKey:
-                filter.configuration.type === CloudPulseSelectTypes.dynamic ||
-                filter.configuration.type === CloudPulseSelectTypes.static
-                  ? // for predefined selection components, the filter type will not be there
-                    'customSelect'
-                  : filter.configuration.filterKey,
+              componentKey: filter.configuration.filterKey,
               componentProps: { ...getProps(filter) },
               key: index + filter.configuration.filterKey,
             })}

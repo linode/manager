@@ -1,18 +1,9 @@
 import { dashboardFactory } from 'src/factories';
 
 import {
-  DASHBOARD_ID,
-  REGION,
-  RELATIVE_TIME_DURATION,
-  RESOURCE_ID,
-  RESOURCES,
-} from './constants';
-import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
   checkIfWeNeedToDisableFilterByFilterKey,
-  clearSelectedFiltersAndChangeDashboardId,
-  getCustomSelectProperties,
   getRegionProperties,
   getResourcesProperties,
   getTimeDurationProperties,
@@ -22,7 +13,6 @@ import { FILTER_CONFIG } from './FilterConfig';
 const mockDashboard = dashboardFactory.build();
 
 const linodeConfig = FILTER_CONFIG.get('linode');
-const dbaasConfig = FILTER_CONFIG.get('dbaas');
 
 it('test getRegionProperties method', () => {
   const regionConfig = linodeConfig?.filters.find(
@@ -192,43 +182,4 @@ it('test checkIfAllMandatoryFiltersAreSelected method', () => {
   });
 
   expect(result).toEqual(false);
-});
-
-it('test clearSelectedFilters method', () => {
-  const result = clearSelectedFiltersAndChangeDashboardId(mockDashboard);
-  const clearableFilters = [
-    // all these filters should be cleared
-    RESOURCES,
-    REGION,
-    'engine',
-    DASHBOARD_ID,
-    RELATIVE_TIME_DURATION,
-    RESOURCE_ID,
-  ];
-  expect(
-    Object.keys(result).every((key) => clearableFilters.includes(key))
-  ).toBe(true);
-});
-
-it('test getCustomSelectProperties method', () => {
-  const engineSelectionConfig = dbaasConfig?.filters.find(
-    (filterObj) => filterObj.name === 'DB Engine'
-  );
-
-  expect(engineSelectionConfig).toBeDefined();
-
-  if (engineSelectionConfig) {
-    const result = getCustomSelectProperties(
-      {
-        config: engineSelectionConfig,
-        dashboard: mockDashboard,
-        isServiceAnalyticsIntegration: true,
-      },
-      vi.fn()
-    );
-    expect(result['handleSelectionChange']).toBeDefined();
-    expect(result['savePreferences']).toEqual(false);
-    expect(result['options']).toBeDefined();
-    expect(result['options']?.length).toEqual(2);
-  }
 });
