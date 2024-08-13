@@ -6,6 +6,7 @@ import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
@@ -243,6 +244,10 @@ const defaultInterfaces: InterfacePayload[] = [
  */
 export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
+   * Manually override firewall policy for sensitive users
+   */
+  firewallOverride?: boolean;
+  /**
    * Whether or not the user has signed the EU agreement
    */
   hasSignedEUAgreement?: boolean;
@@ -437,6 +442,7 @@ export const getLinodeLabelFromLabelParts = (parts: string[]) => {
 
 interface LinodeCreateAnalyticsEventOptions {
   queryClient: QueryClient;
+  secureVMNoticesEnabled: boolean;
   type: LinodeCreateType;
   values: LinodeCreateFormValues;
 }
@@ -447,10 +453,16 @@ interface LinodeCreateAnalyticsEventOptions {
 export const captureLinodeCreateAnalyticsEvent = async (
   options: LinodeCreateAnalyticsEventOptions
 ) => {
-  const { queryClient, type, values } = options;
+  const { queryClient, secureVMNoticesEnabled, type, values } = options;
+
+  const secureVMCompliant = secureVMNoticesEnabled
+    ? isNotNullOrUndefined(values.firewall_id)
+    : undefined;
 
   if (type === 'Backups' && values.backup_id) {
-    sendCreateLinodeEvent('backup', String(values.backup_id));
+    sendCreateLinodeEvent('backup', String(values.backup_id), {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'Clone Linode' && values.linode) {
@@ -462,24 +474,31 @@ export const captureLinodeCreateAnalyticsEvent = async (
 
     sendCreateLinodeEvent('clone', values.type, {
       isLinodePoweredOff: linode.status === 'offline',
+      secureVMCompliant,
     });
   }
 
   if (type === 'OS' || type === 'Images') {
-    sendCreateLinodeEvent('image', values.image ?? undefined);
+    sendCreateLinodeEvent('image', values.image ?? undefined, {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'StackScripts' && values.stackscript_id) {
     const stackscript = await queryClient.ensureQueryData(
       stackscriptQueries.stackscript(values.stackscript_id)
     );
-    sendCreateLinodeEvent('stackscript', stackscript.label);
+    sendCreateLinodeEvent('stackscript', stackscript.label, {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'One-Click' && values.stackscript_id) {
     const stackscript = await queryClient.ensureQueryData(
       stackscriptQueries.stackscript(values.stackscript_id)
     );
-    sendCreateLinodeEvent('one-click', stackscript.label);
+    sendCreateLinodeEvent('one-click', stackscript.label, {
+      secureVMCompliant,
+    });
   }
 };

@@ -14,6 +14,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import {
   useCloneLinodeMutation,
@@ -27,6 +28,7 @@ import { Details } from './Details/Details';
 import { Error } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
+import { FirewallAuthorization } from './FirewallAuthorization';
 import { Plan } from './Plan';
 import { Region } from './Region';
 import { getLinodeCreateResolver } from './resolvers';
@@ -59,7 +61,10 @@ export const LinodeCreatev2 = () => {
 
   const queryClient = useQueryClient();
 
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+
   const form = useForm<LinodeCreateFormValues>({
+    context: { secureVMNoticesEnabled },
     defaultValues: () => defaultValues(params, queryClient),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
@@ -107,6 +112,7 @@ export const LinodeCreatev2 = () => {
 
       captureLinodeCreateAnalyticsEvent({
         queryClient,
+        secureVMNoticesEnabled,
         type: params.type ?? 'OS',
         values,
       });
@@ -206,6 +212,7 @@ export const LinodeCreatev2 = () => {
           <EUAgreement />
           <Summary />
           <SMTP />
+          <FirewallAuthorization />
           <Actions />
         </Stack>
       </form>
