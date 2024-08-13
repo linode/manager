@@ -1,3 +1,4 @@
+import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -31,13 +32,15 @@ interface AkamaiBannerProps {
 export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
   const { action, link, margin, text, warning } = props;
   const flags = useFlags();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const textWithLineBreaks = replaceNewlinesWithLineBreaks(text);
 
   return (
     <StyledBanner
       alignItems="stretch"
-      direction="row"
+      direction={isSmallScreen ? 'column' : 'row'}
       margin={margin}
       warning={warning}
     >
