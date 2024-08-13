@@ -21,18 +21,6 @@ export const SeedOptions = ({
   seeders,
   seedsCountMap,
 }: SeedOptionsProps) => {
-  const [localValues, setLocalValues] = React.useState<{
-    [key: string]: string;
-  }>(
-    Object.entries(seedsCountMap).reduce(
-      (acc, [key, value]) => ({
-        ...acc,
-        [key]: String(value),
-      }),
-      {}
-    )
-  );
-
   return (
     <ul>
       {getStateSeederGroups(dbSeeders).map((group) => (
@@ -54,24 +42,19 @@ export const SeedOptions = ({
                 {dbSeeder.canUpdateCount && (
                   <input
                     onBlur={(e) => {
-                      const value =
-                        e.target.value === '' ? '0' : e.target.value;
-                      setLocalValues((prev) => ({
-                        ...prev,
-                        [dbSeeder.id]: value,
-                      }));
+                      const value = e.target.value;
+                      if (value === '') {
+                        e.target.value = '0';
+                      }
+                    }}
+                    onChange={(e) => {
+                      const value = e.target.value;
                       onCountChange(
                         {
                           target: { value },
                         } as React.ChangeEvent<HTMLInputElement>,
                         dbSeeder.id
                       );
-                    }}
-                    onChange={(e) => {
-                      setLocalValues((prev) => ({
-                        ...prev,
-                        [dbSeeder.id]: e.target.value,
-                      }));
                     }}
                     onFocus={(e) => {
                       if (e.target.value === '0') {
@@ -83,7 +66,7 @@ export const SeedOptions = ({
                     min={0}
                     style={{ marginLeft: 8, width: 60 }}
                     type="number"
-                    value={localValues[dbSeeder.id] || '0'}
+                    value={seedsCountMap[dbSeeder.id] || '0'}
                   />
                 )}
               </li>

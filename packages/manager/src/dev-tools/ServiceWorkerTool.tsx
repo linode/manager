@@ -361,6 +361,7 @@ export const ServiceWorkerTool = () => {
             Discard Changes
           </button>
           <button
+            className={saveState.hasUnsavedChanges ? 'green' : ''}
             disabled={saveState.hasUnsavedChanges ? false : true}
             onClick={globalHandlers.applyChanges}
           >

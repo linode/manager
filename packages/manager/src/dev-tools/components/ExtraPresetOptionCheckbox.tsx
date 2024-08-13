@@ -20,16 +20,6 @@ export const ExtraPresetOptionCheckbox = (
     onTogglePreset,
     presetsCountMap,
   } = props;
-  const [localValues, setLocalValues] = React.useState<{
-    [key: string]: string;
-  }>(() =>
-    Object.fromEntries(
-      Object.entries(presetsCountMap).map(([key, value]) => [
-        key,
-        String(value),
-      ])
-    )
-  );
 
   return extraMockPresets
     .filter((extraMockPreset) => extraMockPreset.group.id === group)
@@ -76,11 +66,12 @@ export const ExtraPresetOptionCheckbox = (
                 </span>
                 <input
                   onBlur={(e) => {
-                    const value = e.target.value === '' ? '0' : e.target.value;
-                    setLocalValues((prev) => ({
-                      ...prev,
-                      [extraMockPreset.id]: value,
-                    }));
+                    if (e.target.value === '') {
+                      e.target.value = '0';
+                    }
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value;
                     onPresetCountChange(
                       {
                         target: { value },
@@ -88,19 +79,13 @@ export const ExtraPresetOptionCheckbox = (
                       extraMockPreset.id
                     );
                   }}
-                  onChange={(e) => {
-                    setLocalValues((prev) => ({
-                      ...prev,
-                      [extraMockPreset.id]: e.target.value,
-                    }));
-                  }}
                   onFocus={(e) => {
                     if (e.target.value === '0') {
                       e.target.value = '';
                     }
                   }}
                   value={
-                    localValues[extraMockPreset.id] ??
+                    presetsCountMap[extraMockPreset.id] ??
                     (presetsCountMap[extraMockPreset.id] || '0')
                   }
                   aria-label={`Value for ${extraMockPreset.label}`}

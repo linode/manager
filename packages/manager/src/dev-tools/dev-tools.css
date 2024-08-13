@@ -89,10 +89,21 @@
   &.right-align {
     float: right;
   }
+
+  &.green {
+    background: #17cf73;
+    color: #080808;
+  }
 }
 
 .dev-tools__body button:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.dev-tools__body button.green:hover {
+  background-color: #60e9a4;
+  color: #080808;
+
 }
 
 .dev-tools__body button:disabled,
@@ -160,7 +171,7 @@
 
 .dev-tools__toggle {
   width: 70px;
-  height: 60px;
+  height: 54px;
   border-top-right-radius: 12px;
   position: absolute;
   left: 0;
@@ -214,7 +225,7 @@
 }
 
 .dev-tools.dev-tools--open .dev-tools__toggle {
-  background-color: transparent;
+  background-color: #080808;
   backdrop-filter: none;
 }
 
