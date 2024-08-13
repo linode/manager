@@ -1031,8 +1031,8 @@ export default [
     offset: 2,
   },
   {
-    label: 'Eastern European Time - Kiev',
-    name: 'Europe/Kiev',
+    label: 'Eastern European Time - Kyiv',
+    name: 'Europe/Kyiv',
     offset: 2,
   },
   {

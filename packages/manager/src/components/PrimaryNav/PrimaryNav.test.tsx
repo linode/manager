@@ -71,4 +71,31 @@ describe('PrimaryNav', () => {
 
     expect(databaseNavItem).toBeVisible();
   });
+
+  it('should show Monitor menu item if the user has the account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Akamai Cloud Pulse'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags = {
+      aclp: {
+        beta: false,
+        enabled: true,
+      },
+    };
+
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const monitorNavItem = await findByText('Monitor');
+
+    expect(monitorNavItem).toBeVisible();
+  });
 });

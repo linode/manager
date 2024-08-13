@@ -7,13 +7,16 @@ import { connect } from 'react-redux';
 import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
+import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { Box } from 'src/components/Box';
+import { Checkbox } from 'src/components/Checkbox';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DetailsPanel } from 'src/components/DetailsPanel/DetailsPanel';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
@@ -116,10 +119,12 @@ export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
+  checkedFirewallAuthorizaton: boolean;
   createType: CreateTypes;
   diskEncryptionEnabled: boolean;
   firewallId?: number;
   handleAgreementChange: () => void;
+  handleFirewallAuthorizationChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
   handlePlacementGroupChange: (placementGroup: PlacementGroup | null) => void;
@@ -141,6 +146,7 @@ export interface LinodeCreateProps {
   setBackupID: (id: number) => void;
   setSelectedVPC: (vpcID: number) => void;
   showApiAwarenessModal: boolean;
+  showFirewallAuthorization: boolean;
   showGDPRCheckbox: boolean;
   showGeneralError?: boolean;
   signedAgreement: boolean;
@@ -596,10 +602,12 @@ export class LinodeCreate extends React.PureComponent<
     const {
       account,
       accountBackupsEnabled,
+      checkedFirewallAuthorizaton,
       errors,
       flags,
       formIsSubmitting,
       handleAgreementChange,
+      handleFirewallAuthorizationChange,
       handlePlacementGroupChange,
       handleShowApiAwarenessModal,
       imageDisplayInfo,
@@ -616,6 +624,7 @@ export class LinodeCreate extends React.PureComponent<
       regionsLoading,
       selectedRegionID,
       showApiAwarenessModal,
+      showFirewallAuthorization,
       showGDPRCheckbox,
       showGeneralError,
       signedAgreement,
@@ -823,6 +832,11 @@ export class LinodeCreate extends React.PureComponent<
       flags.gecko2?.enabled &&
         getIsDistributedRegion(regionsData, this.props.selectedRegionID ?? '')
     );
+
+    const secureVMViolation =
+      showFirewallAuthorization &&
+      !checkedFirewallAuthorizaton &&
+      this.props.firewallId === undefined;
 
     return (
       <StyledForm ref={this.createLinodeFormRef}>
@@ -1158,6 +1172,26 @@ export class LinodeCreate extends React.PureComponent<
                   onChange={handleAgreementChange}
                 />
               ) : null}
+              {showFirewallAuthorization &&
+              this.props.firewallId === undefined &&
+              flags.secureVmCopy?.firewallAuthorizationWarning ? (
+                <AkamaiBanner
+                  action={
+                    <Typography color="inherit">
+                      <FormControlLabel
+                        checked={checkedFirewallAuthorizaton}
+                        className="error-for-scroll"
+                        control={<Checkbox />}
+                        disableTypography
+                        label={flags.secureVmCopy.firewallAuthorizationLabel}
+                        onChange={handleFirewallAuthorizationChange}
+                      />
+                    </Typography>
+                  }
+                  text={flags.secureVmCopy.firewallAuthorizationWarning}
+                  warning
+                />
+              ) : null}
             </StyledMessageDiv>
           </Box>
           <StyledButtonGroupBox
@@ -1169,7 +1203,8 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showGDPRCheckbox && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement) ||
+                secureVMViolation
               }
               onClick={() =>
                 this.handleClickCreateUsingCommandLine(
@@ -1187,7 +1222,8 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showGDPRCheckbox && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement) ||
+                secureVMViolation
               }
               buttonType="primary"
               data-qa-deploy-linode
