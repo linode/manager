@@ -6,15 +6,20 @@ import { getAll } from 'src/utilities/getAll';
 import type { Filter, Params } from '@linode/api-v4';
 import type { CloudPulseServiceTypeFiltersOptions } from 'src/features/CloudPulse/Utils/models';
 
+interface CustomFilterQueryProps {
+  enabled: boolean;
+  filter?: Filter;
+  idField: string;
+  labelField: string;
+  params?: Params;
+  url: string;
+}
+
 export const useGetCustomFiltersQuery = (
-  url: string,
-  enabled: boolean,
-  queryKey: string, // the query will cache the results, this control is here given to the caller
-  idField: string,
-  labelFields: string,
-  params: Params = {},
-  filter: Filter = {}
+  queryProps: CustomFilterQueryProps
 ) => {
+  const { enabled, filter, idField, labelField, params, url } = queryProps;
+
   return useQuery<
     { [key: string]: unknown }[], // the use case here is api url and api response here is not consistent across multiple service types, it can list of db engines, list of node types etc.,
     unknown,
@@ -23,7 +28,7 @@ export const useGetCustomFiltersQuery = (
     // receive filters and  return only id and label
     enabled,
     queryFn: () => getAllFilters(params, filter, url),
-    queryKey: [queryKey],
+    queryKey: [url, filter],
     select: (filters) => {
       // whatever field we receive, just return id and label
       return filters.map(
@@ -32,7 +37,7 @@ export const useGetCustomFiltersQuery = (
         }): CloudPulseServiceTypeFiltersOptions => {
           return {
             id: String(filter[idField]),
-            label: String(filter[labelFields]),
+            label: String(filter[labelField]),
           };
         }
       );
