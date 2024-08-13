@@ -1,6 +1,5 @@
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 
 import { firewallFactory, firewallTemplateFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -45,11 +44,11 @@ describe('GenerateFirewallButton', () => {
 
     getByText('Generate an Akamai Compliant Firewall');
 
-    act(() => {
-      userEvent.click(getByText('Generate Firewall Now'));
-    });
+    const clickPromise = userEvent.click(getByText('Generate Firewall Now'));
 
     await findByText('Generating Firewall');
+
+    await clickPromise;
 
     await findByText('Complete!');
 
@@ -99,11 +98,11 @@ describe('GenerateFirewallButton', () => {
 
     getByText('Generate an Akamai Compliant Firewall');
 
-    act(() => {
-      userEvent.click(getByText('Generate Firewall Now'));
-    });
+    const clickPromise = userEvent.click(getByText('Generate Firewall Now'));
 
     await findByText('Generating Firewall');
+
+    await clickPromise;
 
     await findByText('An error occurred');
   });

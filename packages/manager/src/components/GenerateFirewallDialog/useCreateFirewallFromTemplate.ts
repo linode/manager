@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useCreateFirewall } from 'src/queries/firewalls';
 import { firewallQueries } from 'src/queries/firewalls';
+import { useCreateFirewall } from 'src/queries/firewalls';
 
 import type { DialogState } from './GenerateFirewallDialog';
 import type {
@@ -19,26 +19,28 @@ export const useCreateFirewallFromTemplate = (options: {
   const queryClient = useQueryClient();
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
-  return () =>
-    createFirewallFromTemplate({
-      createFirewall,
-      queryClient,
-      updateProgress: (progress: number) =>
-        setDialogState({ progress, step: 'progress' }),
-    })
-      .then((firewall) => {
-        onFirewallGenerated?.(firewall);
-        setDialogState({
-          firewall,
-          step: 'success',
-        });
+  return {
+    createFirewallFromTemplate: () =>
+      createFirewallFromTemplate({
+        createFirewall,
+        queryClient,
+        updateProgress: (progress: number) =>
+          setDialogState({ progress, step: 'progress' }),
       })
-      .catch((error) =>
-        setDialogState({
-          error: error?.[0]?.reason ?? error,
-          step: 'error',
+        .then((firewall) => {
+          onFirewallGenerated?.(firewall);
+          setDialogState({
+            firewall,
+            step: 'success',
+          });
         })
-      );
+        .catch((error) =>
+          setDialogState({
+            error: error?.[0]?.reason ?? error,
+            step: 'error',
+          })
+        ),
+  };
 };
 
 const createFirewallFromTemplate = async (handlers: {
@@ -54,25 +56,26 @@ const createFirewallFromTemplate = async (handlers: {
     getFirewallTemplate(queryClient),
     queryClient.fetchQuery(firewallQueries.firewalls._ctx.all),
   ]);
-  updateProgress(50); // this gives the appearance of linear progress
+  updateProgress(80); // this gives the appearance of linear progress
 
   // Determine new firewall name
-  const label = await getUniqueFirewallLabel(template, firewalls);
-  updateProgress(80);
+  const label = getUniqueFirewallLabel(template, firewalls);
 
   // Create new firewall
   return await createFirewall({ label, rules: template.rules });
 };
 
 const getFirewallTemplate = async (queryClient: QueryClient) => {
-  const templates = await queryClient.fetchQuery(firewallQueries.templates);
+  const templates = await queryClient.ensureQueryData(
+    firewallQueries.templates
+  );
   if (templates.length < 1) {
     throw Error('No firewall templates are available.');
   }
   return templates[0];
 };
 
-const getUniqueFirewallLabel = async (
+const getUniqueFirewallLabel = (
   template: FirewallTemplate,
   firewalls: Firewall[]
 ) => {
@@ -86,8 +89,10 @@ const getUniqueFirewallLabel = async (
   return firewallLabelFromSlug(template.slug, iterator);
 };
 
-// Firewalls labels are constrained to 32 characters
 const firewallLabelFromSlug = (slug: string, iterator: number) => {
+  const MAX_LABEL_LENGTH = 32;
   const iteratorSuffix = `-${iterator}`;
-  return slug.substring(0, 32 - iteratorSuffix.length) + iteratorSuffix;
+  return (
+    slug.substring(0, MAX_LABEL_LENGTH - iteratorSuffix.length) + iteratorSuffix
+  );
 };

@@ -56,8 +56,6 @@ export const GenerateFirewallDialog = (props: GenerateFirewallDialogProps) => {
     step: 'prompt',
   });
 
-  const dialogTitle = 'Generate an Akamai Compliant Firewall';
-
   const dialogProps = {
     onClose,
     onFirewallGenerated,
@@ -69,7 +67,7 @@ export const GenerateFirewallDialog = (props: GenerateFirewallDialogProps) => {
       onClose={onClose}
       onTransitionExited={() => setDialogState({ step: 'prompt' })}
       open={open}
-      title={dialogTitle}
+      title="Generate an Akamai Compliant Firewall"
     >
       {dialogState.step === 'prompt' && (
         <PromptDialogContent {...dialogProps} state={dialogState} />
@@ -100,7 +98,7 @@ const PromptDialogContent = (
   const { onFirewallGenerated, setDialogState } = props;
   const flags = useFlags();
   const dialogCopy = flags.secureVmCopy?.generatePrompt;
-  const generateFirewall = useCreateFirewallFromTemplate({
+  const { createFirewallFromTemplate } = useCreateFirewallFromTemplate({
     onFirewallGenerated,
     setDialogState,
   });
@@ -121,7 +119,7 @@ const PromptDialogContent = (
         </Typography>
       )}
       <Box>
-        <Button buttonType="primary" onClick={generateFirewall}>
+        <Button buttonType="primary" onClick={createFirewallFromTemplate}>
           Generate Firewall Now
         </Button>
       </Box>
@@ -197,7 +195,7 @@ const ErrorDialogContent = (
     state: { error },
   } = props;
 
-  const generateFirewall = useCreateFirewallFromTemplate({
+  const { createFirewallFromTemplate } = useCreateFirewallFromTemplate({
     onFirewallGenerated,
     setDialogState,
   });
@@ -207,7 +205,7 @@ const ErrorDialogContent = (
       <Typography variant="h2">An error occurred</Typography>
       <Typography>{error}</Typography>
       <Stack direction="row" gap={2}>
-        <Button buttonType="primary" onClick={generateFirewall}>
+        <Button buttonType="primary" onClick={createFirewallFromTemplate}>
           Retry
         </Button>
         <Button buttonType="secondary" onClick={onClose}>
