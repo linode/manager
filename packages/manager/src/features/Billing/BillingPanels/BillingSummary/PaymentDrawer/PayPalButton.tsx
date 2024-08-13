@@ -179,7 +179,9 @@ export const PayPalButton = (props: Props) => {
         setProcessing(false);
       });
       if (response) {
-        queryClient.invalidateQueries(accountQueries.payments._def);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.payments._def,
+        });
 
         setSuccess(
           `Payment for $${response.usd} successfully submitted with PayPal`,

@@ -63,7 +63,9 @@ const PaymentInformation = (props: Props) => {
       .then(() => {
         setDeleteLoading(false);
         closeDeleteDialog();
-        queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.paymentMethods.queryKey,
+        });
       })
       .catch((e: APIError[]) => {
         setDeleteLoading(false);

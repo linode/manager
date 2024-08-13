@@ -297,9 +297,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             restricted: user.restricted,
           });
           // refresh the data on /account/users so it is accurate
-          this.props.queryClient.invalidateQueries(
-            accountQueries.users._ctx.paginated._def
-          );
+          this.props.queryClient.invalidateQueries({
+            queryKey: accountQueries.users._ctx.paginated._def,
+          });
           // Update the user directly in the cache
           this.props.queryClient.setQueryData<User>(
             accountQueries.users._ctx.user(user.username).queryKey,

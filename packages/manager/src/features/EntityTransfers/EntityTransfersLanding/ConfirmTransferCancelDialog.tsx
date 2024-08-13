@@ -55,7 +55,9 @@ export const ConfirmTransferCancelDialog = React.memo((props: Props) => {
         sendEntityTransferCancelEvent();
 
         // Refresh the query for Entity Transfers.
-        queryClient.invalidateQueries([queryKey]);
+        queryClient.invalidateQueries({
+          queryKey: [queryKey],
+        });
 
         onClose();
         setSubmitting(false);

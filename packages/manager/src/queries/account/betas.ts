@@ -27,10 +27,14 @@ export const useCreateAccountBetaMutation = () => {
     onSuccess() {
       // Refetch the paginated list of account betas. If we just enrolled in a beta,
       // it will show up in account betas.
-      queryClient.invalidateQueries(accountQueries.betas._ctx.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.betas._ctx.paginated._def,
+      });
       // Refetch all regions data because enrolling in betas can enable new regions
       // or region capabilities.
-      queryClient.invalidateQueries(regionQueries._def);
+      queryClient.invalidateQueries({
+        queryKey: regionQueries._def,
+      });
     },
   });
 };
