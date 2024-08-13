@@ -86,7 +86,7 @@ Cloud Manager uses [LaunchDarkly](https://github.com/launchdarkly/react-client-s
 To run Cloud Manager without feature flags enabled, either:
 
 - Run the app without `REACT_APP_LAUNCH_DARKLY_ID` defined in `.env`, or:
-- In the browser Developer Tools, Block network requests to `*launchdarkly*`.
+- In the browser Developer Tools, block network requests to `*launchdarkly*`.
 
 To run Cloud Manager with _specific values_ assigned to feature flags:
 
