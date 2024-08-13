@@ -55,9 +55,9 @@ const fillOutStackscriptForm = (
       .type(description);
   }
 
-  cy.findByText('Target Images').click().type(`${targetImage}`);
+  cy.findByText('Target Images').click().type(targetImage);
 
-  cy.findByText(`${targetImage}`).should('be.visible').click();
+  cy.findByText(targetImage).should('be.visible').click();
 
   // Insert a script with invalid UDF data.
   cy.get('[data-qa-textfield-label="Script"]')

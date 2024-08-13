@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
-import CloudPulse from 'src/assets/icons/cloudpulse.svg';
 import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -13,6 +12,7 @@ import Image from 'src/assets/icons/entityIcons/image.svg';
 import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
+import CloudPulse from 'src/assets/icons/entityIcons/monitor.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import PlacementGroups from 'src/assets/icons/entityIcons/placement-groups.svg';
@@ -25,6 +25,7 @@ import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
+import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -104,9 +105,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const allowMarketplacePrefetch =
     !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
 
-  const showCloudPulse = Boolean(flags.aclp?.enabled);
-  // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
-  // const { isACLPEnabled } = useIsACLPEnabled();
+  const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
@@ -212,7 +211,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         },
         {
           display: 'Monitor',
-          hide: !showCloudPulse,
+          hide: !isACLPEnabled,
           href: '/monitor/cloudpulse',
           icon: <CloudPulse />,
           isBeta: flags.aclp?.beta,
@@ -253,7 +252,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       flags.databaseBeta,
       isPlacementGroupsEnabled,
       flags.placementGroups,
-      showCloudPulse,
+      isACLPEnabled,
     ]
   );
 
@@ -307,7 +306,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         return (
           <div key={idx}>
             <Divider
-              spacingTop={isManaged ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11}
               sx={(theme) => ({
                 borderColor:
                   theme.name === 'light'
@@ -316,6 +314,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               })}
               className={classes.divider}
               spacingBottom={11}
+              spacingTop={isManaged ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11}
             />
             {filteredLinks.map((thisLink) => {
               const props = {

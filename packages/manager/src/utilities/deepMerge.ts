@@ -24,17 +24,17 @@ export const deepMerge = <T extends {}, S extends {}>(
   const output = { ...target } as T & S;
   if (isObject(target) && isObject(source)) {
     Object.keys(source).forEach((key) => {
-      if (isObject(source[key])) {
+      if (isObject((source as any)[key])) {
         if (!(key in target)) {
-          Object.assign(output, { [key]: source[key] });
+          Object.assign(output, { [key]: (source as any)[key] });
         } else {
-          (output[key] as unknown) = deepMerge(
-            target[key] as ObjectType,
-            source[key] as ObjectType
+          ((output as any)[key] as unknown) = deepMerge(
+            (target as any)[key] as ObjectType,
+            (source as any)[key] as ObjectType
           );
         }
       } else {
-        Object.assign(output, { [key]: source[key] });
+        Object.assign(output, { [key]: (source as any)[key] });
       }
     });
   }
