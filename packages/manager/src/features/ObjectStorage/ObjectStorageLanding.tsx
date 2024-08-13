@@ -87,6 +87,8 @@ export const ObjectStorageLanding = () => {
       offer.features.includes('Object Storage')
     ) ?? [];
 
+  // Users must explicitly cancel Object Storage in their Account Settings to avoid being billed.
+  // Display a warning if the service is active but no buckets are present.
   const shouldDisplayBillingNotice =
     !areBucketsLoading &&
     !bucketsErrors &&
