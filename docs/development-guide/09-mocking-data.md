@@ -77,7 +77,7 @@ To enable the MSW, open the Local Dev Tools (development only, by clicking the ð
 <br>
 
 > [!IMPORTANT]
-> In CRUD mode, only data types that have RESTFUL handlers will be mocked. Since this is part of the MSW V2 tooling, only **some** content types are currently supported and return CRUD mock data. Endpoint that are not intercepted will return alpha/beta/production data depending on your chosen environment.<br><br>Please follow existing examples to add handlers and seeders and ensure to use `mswDB` utils to keep your stateful data synced with the `indexedDB` storage.
+> In CRUD mode, only data types that have RESTFUL handlers will be mocked. Since this is part of the MSW V2 tooling, only **some** content types are currently supported and return CRUD mock data. Endpoints that are not intercepted will return alpha/beta/production data depending on your chosen environment.<br><br>Please follow existing examples to add handlers and seeders and ensure to use `mswDB` utils to keep your stateful data synced with the `indexedDB` storage.
 
 ## Mocking feature flags
 
