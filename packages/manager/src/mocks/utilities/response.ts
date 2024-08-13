@@ -105,16 +105,26 @@ export const makePaginatedResponse = <T extends JsonBodyType>({
               '+contains'
             ].toLowerCase();
             return (
-              item?.[key] &&
-              String(item?.[key]).toLowerCase().includes(searchValue)
+              typeof item === 'object' &&
+              item !== null &&
+              key in item &&
+              String(item).toLowerCase().includes(searchValue)
             );
           })
         )
       : dataArray;
 
   // Sort the data based on the order_by X-Filter
+  // with type guards to ensure that the data is of the expected type
   filteredData.sort((a, b) => {
-    if (!a?.[orderBy] || !b?.[orderBy]) {
+    if (
+      !a ||
+      !b ||
+      !(orderBy in a) ||
+      !(orderBy in b) ||
+      typeof a !== 'object' ||
+      typeof b !== 'object'
+    ) {
       return 0;
     }
 
