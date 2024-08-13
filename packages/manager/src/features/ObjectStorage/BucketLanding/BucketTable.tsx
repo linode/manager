@@ -33,6 +33,8 @@ export const BucketTable = (props: Props) => {
     orderBy,
   } = props;
 
+  const isEndpointTypeAvailable = Boolean(data[0]?.endpoint_type);
+
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -67,17 +69,19 @@ export const BucketTable = (props: Props) => {
                     Region
                   </TableSortCell>
                 </Hidden>
-                <Hidden lgDown>
-                  <TableSortCell
-                    active={orderBy === 'endpointType'}
-                    data-qa-created
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    label="endpointType"
-                  >
-                    Endpoint Type
-                  </TableSortCell>
-                </Hidden>
+                {isEndpointTypeAvailable && (
+                  <Hidden lgDown>
+                    <TableSortCell
+                      active={orderBy === 'endpointType'}
+                      data-qa-created
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="endpointType"
+                    >
+                      Endpoint Type
+                    </TableSortCell>
+                  </Hidden>
+                )}
                 <Hidden lgDown>
                   <TableSortCell
                     active={orderBy === 'created'}
