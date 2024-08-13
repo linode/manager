@@ -53,7 +53,7 @@ export const databaseQueries = createQueryKeys('databases', {
   }),
   databases: {
     contextQueries: {
-      all: (filter?: Filter) => ({
+      all: (filter: Filter = {}) => ({
         queryFn: () => getAllDatabases(filter),
         queryKey: [filter],
       }),
