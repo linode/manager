@@ -20,15 +20,9 @@ import type { FieldErrors, Resolver } from 'react-hook-form';
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
   queryClient: QueryClient
-) => {
+): Resolver<LinodeCreateFormValues, { secureVMNoticesEnabled: boolean }> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
-
-  // eslint-disable-next-line sonarjs/prefer-immediate-return
-  const resolver: Resolver<LinodeCreateFormValues> = async (
-    values,
-    context,
-    options
-  ) => {
+  return async (values, context, options) => {
     const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
     const { errors } = await yupResolver(
@@ -70,14 +64,23 @@ export const getLinodeCreateResolver = (
       }
     }
 
+    const secureVMViolation =
+      context?.secureVMNoticesEnabled &&
+      !values.firewallOverride &&
+      !values.firewall_id;
+
+    if (secureVMViolation) {
+      (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
+        type: 'validate',
+      };
+    }
+
     if (errors) {
       return { errors, values };
     }
 
     return { errors: {}, values };
   };
-
-  return resolver;
 };
 
 export const linodeCreateResolvers = {
