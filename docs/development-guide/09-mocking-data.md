@@ -59,7 +59,7 @@ const handlers = [
 ];
 ```
 
-In this example, when MSW is enabled, any GET request that matches `*/profile` will be intercepted, and the response will be the `profile` JSON object we built from a factory.
+In this example, when MSW is enabled, any GET request that matches `*/entity/:id` will be intercepted, and the response will be the `entity` JSON object we built from a factory.
 
 The application treats these as _real_ network requests and will behave as though this data is coming from the actual API.
 
