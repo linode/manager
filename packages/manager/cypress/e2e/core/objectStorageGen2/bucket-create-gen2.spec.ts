@@ -13,6 +13,7 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { objectStorageEndpointsFactory, accountFactory } from 'src/factories';
+import type { Flags } from 'src/featureFlags';
 import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 create bucket tests', () => {
@@ -60,7 +61,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(true),
-      objectStorageGen2: makeFeatureFlagData(true),
+      objectStorageGen2: makeFeatureFlagData<Flags['objectStorageGen2']>({
+        enabled: true,
+      }),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetAccount(
