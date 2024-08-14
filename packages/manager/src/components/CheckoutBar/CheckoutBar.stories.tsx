@@ -1,13 +1,18 @@
 import React from 'react';
 
-import { Box } from 'src/components/Box';
-
 import { CheckoutBar } from './CheckoutBar';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof CheckoutBar> = {
   component: CheckoutBar,
+  decorators: [
+    (Story: StoryFn) => (
+      <div style={{ margin: '2em' }}>
+        <Story />
+      </div>
+    ),
+  ],
   title: 'Components/CheckoutBar',
 };
 
@@ -20,16 +25,12 @@ const Item = ({ children }: { children: React.ReactNode }) => (
 export const Default: Story = {
   args: {
     calculatedPrice: 30.0,
-    children: <Item>Children items can go here!</Item>,
+    children: <Item>Child items can go here!</Item>,
     heading: 'Checkout',
     onDeploy: () => alert('Deploy clicked'),
     submitText: 'Submit',
   },
-  render: (args) => (
-    <Box sx={{ margin: '1em 2em' }}>
-      <CheckoutBar {...args} />
-    </Box>
-  ),
+  render: (args) => <CheckoutBar {...args} />,
 };
 
 export const WithAgreement: Story = {
