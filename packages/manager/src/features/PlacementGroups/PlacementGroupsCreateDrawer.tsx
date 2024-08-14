@@ -22,7 +22,9 @@ import {
   useCreatePlacementGroup,
 } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { MAXIMUM_NUMBER_OF_PLACEMENT_GROUPS_IN_REGION } from './constants';
@@ -33,6 +35,7 @@ import {
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
+import type { LinodeCreateType } from '../Linodes/LinodesCreate/types';
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type {
   CreatePlacementGroupPayload,
@@ -67,7 +70,8 @@ export const PlacementGroupsCreateDrawer = (
   } = useFormValidateOnChange();
 
   const location = useLocation();
-  const displayRegionHeaderText = location.pathname.includes('/linodes/create');
+  const isFromLinodeCreate = location.pathname.includes('/linodes/create');
+  const queryParams = getQueryParamsFromQueryString(location.search);
 
   const handleRegionSelect = (region: Region['id']) => {
     setFieldValue('region', region);
@@ -100,6 +104,15 @@ export const PlacementGroupsCreateDrawer = (
 
       if (onPlacementGroupCreate) {
         onPlacementGroupCreate(response);
+        // Fire analytics form submit upon successful PG creation from Linode Create flow.
+        if (isFromLinodeCreate) {
+          sendLinodeCreateFormStepEvent({
+            createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+            headerName: 'Create Placement Group',
+            interaction: 'click',
+            label: 'Create Placement Group',
+          });
+        }
       }
       handleResetForm();
       onClose();
@@ -204,7 +217,7 @@ export const PlacementGroupsCreateDrawer = (
               </List>
             </Notice>
           )}
-          {selectedRegion && displayRegionHeaderText && (
+          {selectedRegion && isFromLinodeCreate && (
             <DescriptionList
               items={[
                 {

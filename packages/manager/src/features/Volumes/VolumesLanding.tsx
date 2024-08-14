@@ -5,6 +5,7 @@ import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { IconButton } from 'src/components/IconButton';
 import { InputAdornment } from 'src/components/InputAdornment';
@@ -74,6 +75,11 @@ export const VolumesLanding = () => {
     },
     filter
   );
+
+  const {
+    isBlockStorageEncryptionFeatureEnabled,
+  } = useIsBlockStorageEncryptionFeatureEnabled();
+
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(
     Boolean(location.state?.volume)
@@ -233,6 +239,9 @@ export const VolumesLanding = () => {
               Size
             </TableSortCell>
             <TableCell>Attached To</TableCell>
+            {isBlockStorageEncryptionFeatureEnabled && (
+              <TableCell>Encryption</TableCell>
+            )}
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -252,6 +261,9 @@ export const VolumesLanding = () => {
                 handleResize: () => handleResize(volume),
                 handleUpgrade: () => handleUpgrade(volume),
               }}
+              isBlockStorageEncryptionFeatureEnabled={
+                isBlockStorageEncryptionFeatureEnabled
+              }
               key={volume.id}
               volume={volume}
             />

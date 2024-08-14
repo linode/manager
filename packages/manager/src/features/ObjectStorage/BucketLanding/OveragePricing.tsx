@@ -66,51 +66,46 @@ export const OveragePricing = (props: Props) => {
       <CircleProgress size="sm" />
     </Box>
   ) : (
-    <>
-      <StyledTypography>
-        For this region, additional storage costs{' '}
-        <strong>
-          $
-          {storageOveragePrice && !isErrorObjTypes
-            ? parseFloat(storageOveragePrice)
-            : UNKNOWN_PRICE}{' '}
-          per GB
-        </strong>
-        .
-      </StyledTypography>
-
-      <StyledTypography>
-        Outbound transfer will cost{' '}
-        <strong>
-          $
-          {transferOveragePrice && !isErrorTransferTypes
-            ? parseFloat(transferOveragePrice)
-            : UNKNOWN_PRICE}{' '}
-          per GB
-        </strong>{' '}
-        if it exceeds{' '}
-        {isDcSpecificPricingRegion ? (
-          <>
-            the{' '}
-            <TextTooltip
-              displayText="network transfer pool for this region"
-              placement="top"
-              tooltipText={DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT}
-            />
-          </>
-        ) : (
-          <>
-            your{' '}
-            <TextTooltip
-              displayText="global network transfer pool"
-              placement="top"
-              tooltipText={GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT}
-            />
-          </>
-        )}
-        .
-      </StyledTypography>
-    </>
+    <StyledTypography>
+      For this region, additional storage costs{' '}
+      <strong>
+        $
+        {storageOveragePrice && !isErrorObjTypes
+          ? parseFloat(storageOveragePrice)
+          : UNKNOWN_PRICE}{' '}
+        per GB
+      </strong>
+      .<br />
+      Outbound transfer will cost{' '}
+      <strong>
+        $
+        {transferOveragePrice && !isErrorTransferTypes
+          ? parseFloat(transferOveragePrice)
+          : UNKNOWN_PRICE}{' '}
+        per GB
+      </strong>{' '}
+      if it exceeds{' '}
+      {isDcSpecificPricingRegion ? (
+        <>
+          the{' '}
+          <TextTooltip
+            displayText="network transfer pool for this region"
+            placement="top"
+            tooltipText={DC_SPECIFIC_TRANSFER_POOLS_TOOLTIP_TEXT}
+          />
+        </>
+      ) : (
+        <>
+          your{' '}
+          <TextTooltip
+            displayText="global network transfer pool"
+            placement="top"
+            tooltipText={GLOBAL_TRANSFER_POOL_TOOLTIP_TEXT}
+          />
+        </>
+      )}
+      .
+    </StyledTypography>
   );
 };
 

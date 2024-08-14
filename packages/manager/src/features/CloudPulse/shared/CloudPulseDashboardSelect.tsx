@@ -1,4 +1,3 @@
-import { Dashboard } from '@linode/api-v4';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -11,6 +10,8 @@ import {
   getUserPreferenceObject,
   updateGlobalFilterPreference,
 } from '../Utils/UserPreference';
+
+import type { Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
   handleDashboardChange: (
@@ -83,17 +84,19 @@ export const CloudPulseDashboardSelect = React.memo(
             {params.children}
           </Box>
         )}
+        textFieldProps={{
+          hideLabel: true,
+        }}
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
         disabled={!dashboardsList}
-        errorText={errorText}
+        errorText={dashboardsList ? '' : errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label=""
+        label="Select a Dashboard"
         loading={isLoading}
-        noMarginTop
         options={getSortedDashboardsList(dashboardsList?.data ?? [])}
         placeholder={placeHolder}
         value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component
