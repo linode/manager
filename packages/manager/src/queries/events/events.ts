@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
-import { useRef } from 'react';
+import { useState } from 'react';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
@@ -40,22 +40,39 @@ import type {
  */
 
 export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
+  const LIMIT = 25;
+
+  /**
+   * On the first request (when we don't have a `pageParam`) we only want to get events
+   * from the last 7 days.
+   */
+  const [defaultCreatedFilter] = useState(
+    DateTime.now()
+      .minus({ days: 7 })
+      .setZone('utc')
+      .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
+  );
+
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
     cacheTime: Infinity,
-    getNextPageParam: ({ data, results }) => {
-      if (results === data.length) {
+    getNextPageParam: ({ data }) => {
+      if (data.length < LIMIT) {
+        // If the page does not have 25 items, we know there is no more data to fetch.
         return undefined;
       }
-      return data[data.length - 1].id;
+      return data[data.length - 1].created;
     },
     queryFn: ({ pageParam }) =>
       getEvents(
         { page_size: 25 },
         {
           ...filter,
+          '+limit': LIMIT,
           '+order': 'desc',
-          '+order_by': 'id',
-          id: pageParam ? { '+lt': pageParam } : undefined,
+          '+order_by': 'created',
+          created: pageParam
+            ? { '+lt': pageParam }
+            : { '+gt': defaultCreatedFilter },
         }
       ),
     queryKey: ['events', 'infinite', filter],
@@ -111,7 +128,7 @@ export const useEventsPoller = () => {
 
   const hasFetchedInitialEvents = events !== undefined;
 
-  const mountTimestamp = useRef(
+  const [mountTimestamp] = useState(
     DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)
   );
 
@@ -140,9 +157,7 @@ export const useEventsPoller = () => {
       // If the user has events, poll for new events based on the most recent event's created time.
       // If the user has no events, poll events from the time the app mounted.
       const latestEventTime =
-        events && events.length > 0
-          ? events[0].created
-          : mountTimestamp.current;
+        events && events.length > 0 ? events[0].created : mountTimestamp;
 
       const {
         eventsThatAlreadyHappenedAtTheFilterTime,
