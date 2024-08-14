@@ -1,3 +1,12 @@
+import type {
+  DatabaseEngine,
+  DatabaseInstance,
+  DatabaseType,
+  Linode,
+  Volume,
+} from '@linode/api-v4';
+import { QueryFunction, QueryKey } from '@tanstack/react-query';
+
 /**
  * The CloudPulseServiceTypeMap has list of filters to be built for different service types like dbaas, linode etc.,The properties here are readonly as it is only for reading and can't be modified in code
  */
@@ -31,6 +40,28 @@ export interface CloudPulseServiceTypeFilters {
 }
 
 /**
+ * As of now, the list of possible custom filters are engine, database type, this union type will be expanded if we start enhancing our custom select config
+ */
+export type QueryFunctionType = DatabaseEngine[] | DatabaseType[];
+
+export type QueryFunctionNonArrayType = DatabaseEngine | DatabaseType;
+
+/**
+ * This interface holds the query function and query key from various factories, like databaseQueries, linodeQueries etc.,
+ */
+export interface QueryFunctionAndKey {
+  /**
+   * The query function that contains actual function that calls API like getDatabaseEngines, getDatabaseTypes etc.,
+   */
+  queryFn: QueryFunction<Awaited<QueryFunctionType>>;
+
+  /**
+   * The actual query key defined in the factory
+   */
+  queryKey: QueryKey;
+}
+
+/**
  * CloudPulseServiceTypeFiltersConfiguration is the actual configuration of the filter component
  */
 export interface CloudPulseServiceTypeFiltersConfiguration {
@@ -46,8 +77,9 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
 
   /**
    * This is an optional field, it is required if the type is dynamic for call the respective API to get the filters
+   * example, databaseQueries.types, databaseQueries.engines etc., makes use of existing query key and optimises cache
    */
-  apiUrl?: string;
+  apiV4FactoryFunction?: QueryFunctionAndKey;
 
   /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected
