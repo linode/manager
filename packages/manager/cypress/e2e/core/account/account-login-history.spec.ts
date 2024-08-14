@@ -90,13 +90,13 @@ describe('Account login history', () => {
 
   /**
    * - Confirms that a child user can navigate to the Login History page.
-   * - Confirms that a child user cannot see login history data.
+   * - Confirms that a restricted child user cannot see login history data.
    * - Confirms that a child user sees a notice instead.
    */
-  it('child users cannot view login history', () => {
+  it('restricted child users cannot view login history', () => {
     const mockProfile = profileFactory.build({
       username: 'mock-child-user',
-      restricted: false,
+      restricted: true,
       user_type: 'child',
     });
 
@@ -113,6 +113,29 @@ describe('Account login history', () => {
     cy.findByText(
       `You don't have permissions to edit this Account. Please contact your ${PARENT_USER} to request the necessary permissions.`
     );
+  });
+
+  /**
+   * - Confirms that a child user can navigate to the Login History page.
+   * - Confirms that a restricted child user cannot see login history data.
+   * - Confirms that a child user sees a notice instead.
+   */
+  it('Unrestricted child users can view login history', () => {
+    const mockProfile = profileFactory.build({
+      username: 'mock-child-user',
+      restricted: false,
+      user_type: 'child',
+    });
+
+    mockGetProfile(mockProfile).as('getProfile');
+
+    // Navigate to Account Login History page.
+    cy.visitWithLogin('/account/login-history');
+    cy.wait(['@getProfile']);
+
+    // Confirm helper text above table and table are not visible.
+    cy.findByText(loginHelperText).should('exist');
+    cy.findByLabelText('Account Logins').should('exist');
   });
 
   /**
