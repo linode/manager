@@ -26,6 +26,7 @@ import type {
   TicketType,
 } from './SupportTicketDialog';
 import type { APIError } from '@linode/api-v4';
+import { getEntityNameFromEntityType } from './ticketUtils';
 
 interface Props {
   ticketType?: TicketType;
@@ -183,10 +184,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     return eachTopic.value === entityType;
   });
 
-  const _entityType =
-    entityType !== 'general' && entityType !== 'none'
-      ? `${ENTITY_ID_TO_NAME_MAP[entityType]}s`
-      : 'entities';
+  const _entityType = getEntityNameFromEntityType(entityType, true);
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -195,10 +193,13 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
         <Controller
           render={({ field, fieldState }) => (
             <TextField
+              label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities.replace(
+                'entities',
+                _entityType
+              )}
               data-qa-ticket-number-of-entities
               errorText={fieldState.error?.message}
               helperText={`Current number of ${_entityType}: ${entityOptions.length}`}
-              label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities}
               name="numberOfEntities"
               onChange={field.onChange}
               placeholder={`Enter total number of ${_entityType}`}
