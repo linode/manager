@@ -3,7 +3,6 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { replaceNewlinesWithLineBreaks } from 'src/utilities/replaceNewlinesWithLineBreaks';
 
-import { Box } from '../Box';
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { LinearProgress } from '../LinearProgress';
@@ -95,7 +94,7 @@ interface GenerateFirewallDialogContentProps<State extends DialogState> {
 const PromptDialogContent = (
   props: GenerateFirewallDialogContentProps<PromptDialogState>
 ) => {
-  const { onFirewallGenerated, setDialogState } = props;
+  const { onClose, onFirewallGenerated, setDialogState } = props;
   const flags = useFlags();
   const dialogCopy = flags.secureVmCopy?.generatePrompt;
   const { createFirewallFromTemplate } = useCreateFirewallFromTemplate({
@@ -118,11 +117,14 @@ const PromptDialogContent = (
           )}
         </Typography>
       )}
-      <Box>
+      <Stack direction="row-reverse" gap={2}>
         <Button buttonType="primary" onClick={createFirewallFromTemplate}>
           Generate Firewall Now
         </Button>
-      </Box>
+        <Button buttonType="secondary" onClick={onClose}>
+          Cancel
+        </Button>
+      </Stack>
     </Stack>
   );
 };
@@ -176,11 +178,11 @@ const SuccessDialogContent = (
           )}
         </Typography>
       )}
-      <Box>
+      <Stack direction="row-reverse" gap={2}>
         <Button buttonType="primary" onClick={onClose}>
           OK
         </Button>
-      </Box>
+      </Stack>
     </Stack>
   );
 };
@@ -204,7 +206,7 @@ const ErrorDialogContent = (
     <Stack gap={3}>
       <Typography variant="h2">An error occurred</Typography>
       <Typography>{error}</Typography>
-      <Stack direction="row" gap={2}>
+      <Stack direction="row-reverse" gap={2}>
         <Button buttonType="primary" onClick={createFirewallFromTemplate}>
           Retry
         </Button>
