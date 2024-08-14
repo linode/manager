@@ -7,7 +7,7 @@ import {
   interceptCreateBucket,
   interceptDeleteBucket,
   interceptGetBuckets,
-  interceptGetObjectStorageEndpoints,
+  mockGetObjectStorageEndpoints,
 } from 'support/intercepts/object-storage';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
@@ -75,7 +75,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       })
     ).as('getAccount');
 
-    interceptGetObjectStorageEndpoints(mockEndpoints).as(
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
       'getObjectStorageEndpoints'
     );
 

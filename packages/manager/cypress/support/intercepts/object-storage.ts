@@ -484,9 +484,11 @@ export const interceptUpdateBucketAccess = (
 /**
  * Intercepts GET request to get object storage endpoints.
  *
+ * @param endpoints - Object Storage endpoints for which to mock response
+ *
  * @returns Cypress chainable.
  */
-export const interceptGetObjectStorageEndpoints = (
+export const mockGetObjectStorageEndpoints = (
   endpoints: ObjectStorageEndpoint[]
 ): Cypress.Chainable<null> => {
   return cy.intercept(
