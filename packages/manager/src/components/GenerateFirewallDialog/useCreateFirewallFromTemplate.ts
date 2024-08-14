@@ -4,18 +4,15 @@ import { firewallQueries } from 'src/queries/firewalls';
 import { useCreateFirewall } from 'src/queries/firewalls';
 
 import type { DialogState } from './GenerateFirewallDialog';
-import type {
-  CreateFirewallPayload,
-  Firewall,
-  FirewallTemplate,
-} from '@linode/api-v4';
+import type { CreateFirewallPayload, Firewall } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
 export const useCreateFirewallFromTemplate = (options: {
   onFirewallGenerated?: (firewall: Firewall) => void;
   setDialogState: (state: DialogState) => void;
+  templateSlug: string;
 }) => {
-  const { onFirewallGenerated, setDialogState } = options;
+  const { onFirewallGenerated, setDialogState, templateSlug } = options;
   const queryClient = useQueryClient();
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
@@ -24,6 +21,7 @@ export const useCreateFirewallFromTemplate = (options: {
       createFirewallFromTemplate({
         createFirewall,
         queryClient,
+        templateSlug,
         updateProgress: (progress: number) =>
           setDialogState({ progress, step: 'progress' }),
       })
@@ -43,50 +41,41 @@ export const useCreateFirewallFromTemplate = (options: {
   };
 };
 
-const createFirewallFromTemplate = async (handlers: {
+const createFirewallFromTemplate = async (options: {
   createFirewall: (firewall: CreateFirewallPayload) => Promise<Firewall>;
   queryClient: QueryClient;
+  templateSlug: string;
   updateProgress: (progress: number | undefined) => void;
 }): Promise<Firewall> => {
-  const { createFirewall, queryClient, updateProgress } = handlers;
+  const { createFirewall, queryClient, templateSlug, updateProgress } = options;
   updateProgress(0);
 
   // Get firewalls and firewall template in parallel
-  const [template, firewalls] = await Promise.all([
-    getFirewallTemplate(queryClient),
-    queryClient.fetchQuery(firewallQueries.firewalls._ctx.all),
+  const [{ rules }, firewalls] = await Promise.all([
+    queryClient.ensureQueryData(firewallQueries.template(templateSlug)),
+    queryClient.fetchQuery(firewallQueries.firewalls._ctx.all), // must fetch fresh data if generating more than one firewall
   ]);
   updateProgress(80); // this gives the appearance of linear progress
 
   // Determine new firewall name
-  const label = getUniqueFirewallLabel(template, firewalls);
+  const label = getUniqueFirewallLabel(templateSlug, firewalls);
 
   // Create new firewall
-  return await createFirewall({ label, rules: template.rules });
-};
-
-const getFirewallTemplate = async (queryClient: QueryClient) => {
-  const templates = await queryClient.ensureQueryData(
-    firewallQueries.templates
-  );
-  if (templates.length < 1) {
-    throw Error('No firewall templates are available.');
-  }
-  return templates[0];
+  return await createFirewall({ label, rules });
 };
 
 const getUniqueFirewallLabel = (
-  template: FirewallTemplate,
+  templateSlug: string,
   firewalls: Firewall[]
 ) => {
   let iterator = 1;
   const firewallLabelExists = (firewall: Firewall) =>
-    firewall.label === firewallLabelFromSlug(template.slug, iterator);
+    firewall.label === firewallLabelFromSlug(templateSlug, iterator);
   while (firewalls.some(firewallLabelExists)) {
     iterator++;
   }
 
-  return firewallLabelFromSlug(template.slug, iterator);
+  return firewallLabelFromSlug(templateSlug, iterator);
 };
 
 const firewallLabelFromSlug = (slug: string, iterator: number) => {

@@ -6,6 +6,7 @@ import {
   getFirewall,
   getFirewallDevices,
   getFirewalls,
+  getTemplate,
   getTemplates,
   updateFirewall,
   updateFirewallRules,
@@ -78,6 +79,10 @@ export const firewallQueries = createQueryKeys('firewalls', {
     },
     queryKey: null,
   },
+  template: (slug: string) => ({
+    queryFn: () => getTemplate(slug),
+    queryKey: [slug],
+  }),
   templates: {
     queryFn: getAllFirewallTemplates,
     queryKey: null,

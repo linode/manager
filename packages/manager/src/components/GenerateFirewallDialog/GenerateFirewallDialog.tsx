@@ -13,6 +13,8 @@ import { useCreateFirewallFromTemplate } from './useCreateFirewallFromTemplate';
 
 import type { Firewall } from '@linode/api-v4';
 
+const TEMPLATE_SLUG = 'akamai-non-prod';
+
 interface GenerateFirewallDialogProps {
   onClose: () => void;
   onFirewallGenerated?: (firewall: Firewall) => void;
@@ -100,6 +102,7 @@ const PromptDialogContent = (
   const { createFirewallFromTemplate } = useCreateFirewallFromTemplate({
     onFirewallGenerated,
     setDialogState,
+    templateSlug: TEMPLATE_SLUG,
   });
 
   return (
@@ -200,6 +203,7 @@ const ErrorDialogContent = (
   const { createFirewallFromTemplate } = useCreateFirewallFromTemplate({
     onFirewallGenerated,
     setDialogState,
+    templateSlug: TEMPLATE_SLUG,
   });
 
   return (
