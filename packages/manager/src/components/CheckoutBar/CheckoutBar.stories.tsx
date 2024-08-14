@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Box } from 'src/components/Box';
+
 import { CheckoutBar } from './CheckoutBar';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -11,31 +13,31 @@ const meta: Meta<typeof CheckoutBar> = {
 
 type Story = StoryObj<typeof CheckoutBar>;
 
+const Item = ({ children }: any) => (
+  <div style={{ color: 'white', fontStyle: 'italic' }}>{children}</div>
+);
+
 export const Default: Story = {
   args: {
     calculatedPrice: 30.0,
-    children: (
-      <div>
-        <i style={{ color: 'white' }}>Children items can go here!</i>
-      </div>
-    ),
+    children: <Item>Children items can go here!</Item>,
     heading: 'Checkout',
     onDeploy: () => alert('Deploy clicked'),
     submitText: 'Submit',
   },
-  render: (args) => <CheckoutBar {...args} />,
+  render: (args) => (
+    <Box sx={{ margin: '1em 2em' }}>
+      <CheckoutBar {...args} />
+    </Box>
+  ),
 };
 
 export const WithAgreement: Story = {
   args: {
     ...Default.args,
-    agreement: (
-      <div>
-        <i style={{ color: 'white' }}>Agreement item can go here</i>
-      </div>
-    ),
+    agreement: <Item>Agreement item can go here!</Item>,
   },
-  render: (args) => <CheckoutBar {...args} />,
+  render: Default.render,
 };
 
 export const Disabled: Story = {
@@ -43,7 +45,7 @@ export const Disabled: Story = {
     ...Default.args,
     disabled: true,
   },
-  render: (args) => <CheckoutBar {...args} />,
+  render: Default.render,
 };
 
 export const Loading: Story = {
@@ -51,7 +53,7 @@ export const Loading: Story = {
     ...Default.args,
     isMakingRequest: true,
   },
-  render: (args) => <CheckoutBar {...args} />,
+  render: Default.render,
 };
 
 export default meta;
