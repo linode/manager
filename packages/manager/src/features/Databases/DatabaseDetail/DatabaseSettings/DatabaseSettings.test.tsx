@@ -1,10 +1,10 @@
+import { screen } from '@testing-library/react';
 import * as React from 'react';
 
 import { databaseFactory } from 'src/factories/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseSettings from './DatabaseSettings';
-
 describe('DatabaseSettings Component', () => {
   const database = databaseFactory.build();
   it('Should exist and be renderable', () => {

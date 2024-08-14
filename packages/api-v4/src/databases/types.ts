@@ -55,6 +55,7 @@ export interface DatabaseCredentials {
 interface DatabaseHosts {
   primary: string;
   secondary: string;
+  readOnly?: string;
 }
 
 export interface SSLFields {
@@ -152,6 +153,7 @@ export interface BaseDatabase {
    */
   members: Record<string, MemberType>;
   platform?: string;
+  oldest_restore_time?: string;
 }
 
 export interface MySQLDatabase extends BaseDatabase {
