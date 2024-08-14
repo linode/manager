@@ -133,6 +133,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
     );
   }, [vpcs, region, fromLinodeCreate]);
 
+  const defaultVPCValue = fromLinodeConfig ? null : vpcDropdownOptions[0];
+
   const subnetDropdownOptions: DropdownOption[] =
     vpcs
       .find((vpc) => vpc.id === selectedVPCId)
@@ -198,9 +200,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
         <Stack>
           <Typography>{getMainCopyVPC()}</Typography>
           <Autocomplete
-            isOptionEqualToValue={(option, value) => {
-              return option.label === value.label;
-            }}
             onChange={(_, selectedVPC) => {
               handleSelectVPC(selectedVPC?.value || -1);
               // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
@@ -228,11 +227,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 ? vpcDropdownOptions.find(
                     (option) => option.value === selectedVPCId
                   ) || null
-                : null
+                : defaultVPCValue
             }
             autoHighlight
-            clearIcon={null}
-            defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
             disabled={!regionSupportsVPCs}
             errorText={vpcIdError ?? vpcError}
             label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
