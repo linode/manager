@@ -230,6 +230,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 : defaultVPCValue
             }
             autoHighlight
+            clearIcon={null}
             disabled={!regionSupportsVPCs}
             errorText={vpcIdError ?? vpcError}
             label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
