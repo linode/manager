@@ -52,8 +52,8 @@ export const useEventsInfiniteQuery = (
           ...filter,
           '+limit': limit,
           '+order': 'desc',
-          '+order_by': 'created',
-          created: pageParam ? { '+lt': pageParam } : undefined,
+          '+order_by': 'id',
+          id: pageParam ? { '+lt': pageParam } : undefined,
         }
       ),
     {
@@ -62,15 +62,15 @@ export const useEventsInfiniteQuery = (
         if (data.length < limit) {
           return undefined; // No more pages
         }
-        return data[data.length - 1].created;
+        return data[data.length - 1].id;
       },
       staleTime: Infinity,
     }
   );
 
   const events = query.data?.pages.reduce(
-    (allEvents, page) => [...allEvents, ...page.data],
-    [] as Event[]
+    (events, page) => [...events, ...page.data],
+    []
   );
 
   const lastCreated =
