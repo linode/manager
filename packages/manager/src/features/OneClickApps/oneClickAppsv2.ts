@@ -2369,7 +2369,7 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Cloud native application messaging service.',
     website: 'https://nats.io',
   },
-  1329430: {
+  1439640: {
     alt_description: 'Open Source Secrets Manager',
     alt_name: 'Passbolt CE',
     categories: ['Security'],
