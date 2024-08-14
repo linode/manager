@@ -44,7 +44,7 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
     ['events', 'infinite', filter],
     ({ pageParam }) =>
       getEvents(
-        { page: pageParam, page_size: 25 },
+        { page_size: 25 },
         {
           ...filter,
           '+order': 'desc',
