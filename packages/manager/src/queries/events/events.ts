@@ -38,37 +38,45 @@ import type {
  * We are doing this as opposed to page based pagination because we need an accurate way to get
  * the next set of events when the items returned by the server may have shifted.
  */
-export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
+
+export const useEventsInfiniteQuery = (
+  filter: Filter = EVENTS_LIST_FILTER,
+  limit: number = 25
+) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
-    ['events', 'infinite', filter],
+    ['events', 'infinite', filter, limit],
     ({ pageParam }) =>
       getEvents(
         {},
         {
           ...filter,
+          '+limit': limit,
           '+order': 'desc',
-          '+order_by': 'id',
-          id: pageParam ? { '+lt': pageParam } : undefined,
+          '+order_by': 'created',
+          created: pageParam ? { '+lt': pageParam } : undefined,
         }
       ),
     {
       cacheTime: Infinity,
-      getNextPageParam: ({ data, results }) => {
-        if (results === data.length) {
-          return undefined;
+      getNextPageParam: ({ data }) => {
+        if (data.length < limit) {
+          return undefined; // No more pages
         }
-        return data[data.length - 1].id;
+        return data[data.length - 1].created;
       },
       staleTime: Infinity,
     }
   );
 
   const events = query.data?.pages.reduce(
-    (events, page) => [...events, ...page.data],
-    []
+    (allEvents, page) => [...allEvents, ...page.data],
+    [] as Event[]
   );
 
-  return { ...query, events };
+  const lastCreated =
+    events && events.length > 0 ? events[events.length - 1].created : null;
+
+  return { ...query, events, lastCreated };
 };
 
 /**

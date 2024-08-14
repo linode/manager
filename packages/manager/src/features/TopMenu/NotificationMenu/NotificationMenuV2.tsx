@@ -143,9 +143,21 @@ export const NotificationMenuV2 = () => {
             </LinkButton>
           </Box>
           <Divider spacingBottom={0} />
-          {data?.pages[0].data.slice(0, 20).map((event) => (
-            <RenderEventV2 event={event} key={event.id} onClose={handleClose} />
-          ))}
+          {data ? (
+            data.pages[0].data
+              .slice(0, 20)
+              .map((event) => (
+                <RenderEventV2
+                  event={event}
+                  key={event.id}
+                  onClose={handleClose}
+                />
+              ))
+          ) : (
+            <Box pt={2} px={2}>
+              No recent events to display
+            </Box>
+          )}
         </Box>
       </Popover>
     </>
