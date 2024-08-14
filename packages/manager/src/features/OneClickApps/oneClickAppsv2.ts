@@ -825,8 +825,9 @@ export const oneClickApps: Record<number, OCA> = {
     name: 'Secure Your Server',
     related_guides: [
       {
-        href: 'https://www.linode.com/docs/guides/set-up-and-secure/',
-        title: 'Securing your Server',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/secure-your-server/',
+        title: 'Secure Your Server through the Linode Marketplace',
       },
     ],
     summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App.`,
