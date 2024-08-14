@@ -189,5 +189,3 @@ export const FirewallDetail = () => {
     </React.Fragment>
   );
 };
-
-export default FirewallDetail;

@@ -113,8 +113,8 @@ const PromptDialogContent = (
           {dialogCopy.link && (
             <>
               {' '}
-              <Link external to={dialogCopy.link?.url}>
-                {dialogCopy.link?.text}
+              <Link external to={dialogCopy.link.url}>
+                {dialogCopy.link.text}
               </Link>
             </>
           )}
@@ -174,8 +174,8 @@ const SuccessDialogContent = (
           {dialogCopy.link && (
             <>
               {' '}
-              <Link external to={dialogCopy.link?.url}>
-                {dialogCopy.link?.text}
+              <Link external to={dialogCopy.link.url}>
+                {dialogCopy.link.text}
               </Link>
             </>
           )}
