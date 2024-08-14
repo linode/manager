@@ -23,7 +23,33 @@ describe('useIsDatabasesEnabled', () => {
       wrapper: wrapWithTheme,
     });
 
-    await waitFor(() => expect(result.current.isDatabasesEnabled).toBe(true));
+    await waitFor(() => {
+      expect(result.current.isDatabasesEnabled).toBe(true);
+      expect(result.current.isDatabasesV1Enabled).toBe(true);
+      expect(result.current.isDatabasesV2Enabled).toBe(false);
+    });
+  });
+
+  it('should return true for an unrestricted user with the account capability V2', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases V2'],
+    });
+
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { result } = renderHook(() => useIsDatabasesEnabled(), {
+      wrapper: wrapWithTheme,
+    });
+
+    await waitFor(() => {
+      expect(result.current.isDatabasesEnabled).toBe(true);
+      expect(result.current.isDatabasesV1Enabled).toBe(false);
+      expect(result.current.isDatabasesV2Enabled).toBe(true);
+    });
   });
 
   it('should return false for an unrestricted user without the account capability', async () => {

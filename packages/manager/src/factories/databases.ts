@@ -1,10 +1,12 @@
-import {
+import type {
+  ClusterSize,
   Database,
   DatabaseBackup,
   DatabaseEngine,
   DatabaseInstance,
   DatabaseStatus,
   DatabaseType,
+  Engine,
   MySQLReplicationType,
   PostgresReplicationType,
 } from '@linode/api-v4/lib/databases/types';
@@ -35,10 +37,35 @@ export const possiblePostgresReplicationTypes: PostgresReplicationType[] = [
   'asynch',
 ];
 
+export const possibleTypes: string[] = [
+  'g6-nanode-1',
+  'g6-standard-2',
+  'g6-standard-4',
+  'g6-standard-6',
+  'g6-standard-20',
+  'g6-dedicated-32',
+  'g6-dedicated-50',
+  'g6-dedicated-56',
+  'g6-dedicated-64',
+];
+
+export const possibleRegions: string[] = [
+  'ap-south',
+  'ap-southeast',
+  'ap-west',
+  'ca-central',
+  'eu-central',
+  'fr-par',
+  'us-east',
+  'us-iad',
+  'us-ord',
+];
+
 export const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   class: 'standard',
+  disk: Factory.each((i) => i * 20480),
   engines: {
     mongodb: [
       {
@@ -134,32 +161,38 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
     ],
   },
   id: Factory.each((i) => `g6-standard-${i}`),
-  disk: Factory.each((i) => i * 20480),
   label: Factory.each((i) => `Linode ${i} GB`),
   memory: Factory.each((i) => i * 2048),
   vcpus: Factory.each((i) => i * 2),
 });
 
+const adb10 = (i: number) => i % 2 === 0;
+
 export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
   {
-    cluster_size: Factory.each(() => pickRandom([1, 3])),
+    cluster_size: Factory.each((i) =>
+      adb10(i)
+        ? ([1, 3][i % 2] as ClusterSize)
+        : ([1, 2, 3][i % 3] as ClusterSize)
+    ),
     created: '2021-12-09T17:15:12',
-    engine: 'mysql',
+    engine: Factory.each((i) => ['mysql', 'postgresql'][i % 2] as Engine),
     hosts: {
-      primary: 'db-mysql-primary-0.b.linodeb.net',
-      secondary: 'db-mysql-secondary-0.b.linodeb.net',
+      primary: 'db-primary-0.b.linodeb.net',
+      secondary: 'db-secondary-0.b.linodeb.net',
     },
-    id: Factory.each((i) => i),
+    id: Factory.each((i) => (i % 2 ? i.toString() : `a${i}`)),
     instance_uri: '',
-    label: Factory.each((i) => `database-${i}`),
+    label: Factory.each((i) => `example.com-database-${i}`),
     members: {
       '2.2.2.2': 'primary',
     },
-    region: 'us-east',
-    status: Factory.each(() => pickRandom(possibleStatuses)),
-    type: databaseTypeFactory.build().id,
+    platform: Factory.each((i) => (adb10(i) ? 'adb10' : 'adb20')),
+    region: Factory.each((i) => possibleRegions[i % possibleRegions.length]),
+    status: Factory.each((i) => possibleStatuses[i % possibleStatuses.length]),
+    type: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
     updated: '2021-12-16T17:15:12',
-    version: '5.8.13',
+    version: Factory.each((i) => ['8.0.30', '15.7'][i % 2]),
   }
 );
 

@@ -65,7 +65,7 @@ type MemberType = 'primary' | 'failover';
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
 export interface DatabaseInstance {
-  id: number;
+  id: string;
   label: string;
   engine: Engine;
   type: string;
@@ -81,9 +81,11 @@ export interface DatabaseInstance {
    * A key/value object where the key is an IP address and the value is a member type.
    */
   members: Record<string, MemberType>;
+  platform?: string;
 }
 
-export type ClusterSize = 1 | 3;
+export type ClusterSize = 1 | 2 | 3;
+
 type ReadonlyCount = 0 | 2;
 
 export type MySQLReplicationType = 'none' | 'semi_synch' | 'asynch';

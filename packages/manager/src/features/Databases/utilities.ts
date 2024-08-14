@@ -26,8 +26,16 @@ export const useIsDatabasesEnabled = () => {
   const { data: engines } = useDatabaseEnginesQuery(checkRestrictedUser);
 
   if (account) {
+    const isDatabasesV1Enabled = account.capabilities.includes(
+      'Managed Databases'
+    );
+    const isDatabasesV2Enabled = account.capabilities.includes(
+      'Managed Databases V2'
+    );
     return {
-      isDatabasesEnabled: account.capabilities.includes('Managed Databases'),
+      isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
+      isDatabasesV1Enabled,
+      isDatabasesV2Enabled,
     };
   }
 
