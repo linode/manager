@@ -52,9 +52,9 @@ describe('ManageImageRegionsDrawer', () => {
       <ManageImageRegionsForm image={image} onClose={vi.fn()} />
     );
 
-    await findByText('Newark, NJ');
+    await findByText('US, Newark, NJ');
     await findByText('available');
-    await findByText('Place, CA');
+    await findByText('US, Place, CA');
     await findByText('pending replication');
   });
 
@@ -96,7 +96,7 @@ describe('ManageImageRegionsDrawer', () => {
     // Select new region
     await userEvent.click(await findByText('us-west', { exact: false }));
 
-    expect(getByText('Place, CA')).toBeVisible();
+    expect(getByText('US, Place, CA')).toBeVisible();
     expect(getByText('unsaved')).toBeVisible();
 
     // Verify the save button is enabled because changes have been made
@@ -131,8 +131,8 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     // Verify both region labels have been loaded by the API
-    await findByText(region1.label);
-    await findByText(region2.label);
+    await findByText(`US, ${region1.label}`);
+    await findByText(`US, ${region2.label}`);
 
     // Both remove buttons should be enabled
     expect(getByLabelText('Remove us-east')).toBeEnabled();

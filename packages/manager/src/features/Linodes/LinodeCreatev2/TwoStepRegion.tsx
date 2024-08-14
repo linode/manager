@@ -69,7 +69,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
     'distributed'
   );
 
-  const { data: regions } = useRegionsQuery(true);
+  const { data: regions } = useRegionsQuery();
 
   return (
     <Paper>

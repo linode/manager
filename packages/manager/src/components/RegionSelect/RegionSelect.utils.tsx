@@ -5,7 +5,6 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import type {
-  GetRegionLabel,
   GetRegionOptionAvailability,
   RegionFilterValue,
 } from './RegionSelect.types';
@@ -16,14 +15,12 @@ const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
 interface RegionSelectOptionsOptions {
   currentCapability: Capabilities | undefined;
-  isGeckoGAEnabled?: boolean;
   regionFilter?: RegionFilterValue;
   regions: Region[];
 }
 
 export const getRegionOptions = ({
   currentCapability,
-  isGeckoGAEnabled,
   regionFilter,
   regions,
 }: RegionSelectOptionsOptions) => {
@@ -75,9 +72,8 @@ export const getRegionOptions = ({
         return 1;
       }
 
-      // We want to group by label for Gecko GA
-      if (!isGeckoGAEnabled) {
-        // Then we group by country
+      // Group US first
+      if (region1.country === 'us' || region2.country === 'us') {
         if (region1.country < region2.country) {
           return 1;
         }
@@ -156,10 +152,11 @@ export const getIsDistributedRegion = (
   return region?.site_type === 'distributed' || region?.site_type === 'edge';
 };
 
-export const getNewRegionLabel = ({ includeSlug, region }: GetRegionLabel) => {
+export const getNewRegionLabel = (region: Region) => {
   const [city] = region.label.split(', ');
-  if (includeSlug) {
-    return `${region.country.toUpperCase()}, ${city} ${`(${region.id})`}`;
+  // Include state for the US
+  if (region.country === 'us') {
+    return `${region.country.toUpperCase()}, ${region.label}`;
   }
   return `${region.country.toUpperCase()}, ${city}`;
 };
@@ -168,7 +165,7 @@ export const useIsGeckoEnabled = () => {
   const flags = useFlags();
   const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
   const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
-  const { data: regions } = useRegionsQuery(isGeckoGA);
+  const { data: regions } = useRegionsQuery();
 
   const hasDistributedRegionCapability = regions?.some((region: Region) =>
     region.capabilities.includes('Distributed Plans')
