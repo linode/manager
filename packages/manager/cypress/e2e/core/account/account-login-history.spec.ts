@@ -117,8 +117,7 @@ describe('Account login history', () => {
 
   /**
    * - Confirms that a child user can navigate to the Login History page.
-   * - Confirms that a restricted child user cannot see login history data.
-   * - Confirms that a child user sees a notice instead.
+   * - Confirms that a unrestricted child user can see login history data.
    */
   it('Unrestricted child users can view login history', () => {
     const mockProfile = profileFactory.build({
