@@ -1,10 +1,13 @@
-import { Volume } from '@linode/api-v4';
 import { UpdateVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
+import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
+import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
+import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
@@ -14,6 +17,8 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+
+import type { Volume } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -27,6 +32,10 @@ export const EditVolumeDrawer = (props: Props) => {
   const { data: grants } = useGrants();
 
   const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
+
+  const {
+    isBlockStorageEncryptionFeatureEnabled,
+  } = useIsBlockStorageEncryptionFeatureEnabled();
 
   const isReadOnly =
     grants !== undefined &&
@@ -114,6 +123,24 @@ export const EditVolumeDrawer = (props: Props) => {
           name="tags"
           value={values.tags?.map((t) => ({ label: t, value: t })) ?? []}
         />
+        {isBlockStorageEncryptionFeatureEnabled && (
+          <Box
+            sx={{
+              marginLeft: '2px',
+              marginTop: '16px',
+            }}
+            alignItems="center"
+            display="flex"
+            flexDirection="row"
+          >
+            <Checkbox
+              checked={volume?.encryption === 'enabled'}
+              disabled={true}
+              text="Encrypt Volume"
+              toolTipText={BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY}
+            />
+          </Box>
+        )}
         <ActionsPanel
           primaryButtonProps={{
             disabled: isReadOnly || !dirty,
