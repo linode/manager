@@ -226,7 +226,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
               selectedVPCId && selectedVPCId !== -1
                 ? vpcDropdownOptions.find(
                     (option) => option.value === selectedVPCId
-                  ) || null
+                  ) ?? null
                 : defaultVPCValue
             }
             autoHighlight
