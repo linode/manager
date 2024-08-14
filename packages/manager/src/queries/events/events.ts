@@ -64,7 +64,7 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
     },
     queryFn: ({ pageParam }) =>
       getEvents(
-        { page_size: 25 },
+        {},
         {
           ...filter,
           '+limit': LIMIT,
