@@ -218,7 +218,7 @@ export const AccessSelect = React.memo((props: Props) => {
             CORS (Cross Origin Sharing) is not available for endpoint types E2
             and E3.
             <br />
-            <Link to="#">Learn more</Link>
+            <Link to="#">Learn more</Link>.
           </Typography>
         </Notice>
       )}
