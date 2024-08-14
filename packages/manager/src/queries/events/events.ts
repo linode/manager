@@ -54,11 +54,11 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
       ),
     {
       cacheTime: Infinity,
-      getNextPageParam: ({ page, pages }) => {
-        if (page === pages) {
+      getNextPageParam: ({ data, results }) => {
+        if (results === data.length) {
           return undefined;
         }
-        return page + 1;
+        return data[data.length - 1].id;
       },
       staleTime: Infinity,
     }
