@@ -11,7 +11,7 @@ import { GenerateFirewallDialog } from './GenerateFirewallDialog';
 describe('GenerateFirewallButton', () => {
   it('Can successfully generate a firewall', async () => {
     const firewalls = firewallFactory.buildList(2);
-    const firewallTemplates = firewallTemplateFactory.buildList(2);
+    const template = firewallTemplateFactory.build();
     const createFirewallCallback = vi.fn();
     const onClose = vi.fn();
     const onFirewallGenerated = vi.fn();
@@ -20,8 +20,8 @@ describe('GenerateFirewallButton', () => {
       http.get('*/v4beta/networking/firewalls', () => {
         return HttpResponse.json(makeResourcePage(firewalls));
       }),
-      http.get('*/v4beta/networking/firewalls/templates', () => {
-        return HttpResponse.json(makeResourcePage(firewallTemplates));
+      http.get('*/v4beta/networking/firewalls/templates/*', () => {
+        return HttpResponse.json(template);
       }),
       http.post('*/v4beta/networking/firewalls', async ({ request }) => {
         const body = await request.json();
@@ -54,22 +54,22 @@ describe('GenerateFirewallButton', () => {
 
     expect(onFirewallGenerated).toHaveBeenCalledWith(
       expect.objectContaining({
-        label: `${firewallTemplates[0].slug}-1`,
-        rules: firewallTemplates[0].rules,
+        label: `${template.slug}-1`,
+        rules: template.rules,
       })
     );
 
     expect(createFirewallCallback).toHaveBeenCalledWith(
       expect.objectContaining({
-        label: `${firewallTemplates[0].slug}-1`,
-        rules: firewallTemplates[0].rules,
+        label: `${template.slug}-1`,
+        rules: template.rules,
       })
     );
   });
 
   it('Handles errors gracefully', async () => {
     const firewalls = firewallFactory.buildList(2);
-    const firewallTemplates = firewallTemplateFactory.buildList(2);
+    const template = firewallTemplateFactory.build();
     const onClose = vi.fn();
     const onFirewallGenerated = vi.fn();
 
@@ -77,8 +77,8 @@ describe('GenerateFirewallButton', () => {
       http.get('*/v4beta/networking/firewalls', () => {
         return HttpResponse.json(makeResourcePage(firewalls));
       }),
-      http.get('*/v4beta/networking/firewalls/templates', () => {
-        return HttpResponse.json(makeResourcePage(firewallTemplates));
+      http.get('*/v4beta/networking/firewalls/templates/*', () => {
+        return HttpResponse.json(template);
       }),
       http.post('*/v4beta/networking/firewalls', async () => {
         return HttpResponse.json(

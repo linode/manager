@@ -51,14 +51,14 @@ const createFirewallFromTemplate = async (options: {
   updateProgress(0);
 
   // Get firewalls and firewall template in parallel
-  const [{ rules }, firewalls] = await Promise.all([
+  const [{ rules, slug }, firewalls] = await Promise.all([
     queryClient.ensureQueryData(firewallQueries.template(templateSlug)),
     queryClient.fetchQuery(firewallQueries.firewalls._ctx.all), // must fetch fresh data if generating more than one firewall
   ]);
   updateProgress(80); // this gives the appearance of linear progress
 
   // Determine new firewall name
-  const label = getUniqueFirewallLabel(templateSlug, firewalls);
+  const label = getUniqueFirewallLabel(slug, firewalls);
 
   // Create new firewall
   return await createFirewall({ label, rules });
