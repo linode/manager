@@ -365,7 +365,7 @@ describe('open support tickets', () => {
       description: '',
       entityId: '',
       entityInputValue: '',
-      entityType: 'general' as EntityType,
+      entityType: 'linode_id' as EntityType,
       selectedSeverity: undefined,
       summary: 'Account Limit Increase',
       ticketType: 'accountLimit' as TicketType,
@@ -474,7 +474,7 @@ describe('open support tickets', () => {
         cy.findByText('Links to public information are required.');
 
         // Complete the rest of the form.
-        cy.findByLabelText('Total number of entities you need?')
+        cy.findByLabelText('Total number of Linodes you need?')
           .should('be.visible')
           .click()
           .type(mockFormFields.numberOfEntities);
@@ -513,9 +513,13 @@ describe('open support tickets', () => {
     cy.contains(
       `#${mockAccountLimitTicket.id}: ${mockAccountLimitTicket.summary}`
     ).should('be.visible');
-    Object.values(ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP).forEach(
-      (fieldLabel) => {
-        cy.findByText(fieldLabel).should('be.visible');
+    Object.entries(ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP).forEach(
+      ([key, fieldLabel]) => {
+        let _fieldLabel = fieldLabel;
+        if (key === 'useCase' || key === 'numberOfEntities') {
+          _fieldLabel = _fieldLabel.replace('entities', 'Linodes');
+        }
+        cy.findByText(_fieldLabel).should('be.visible');
       }
     );
   });
