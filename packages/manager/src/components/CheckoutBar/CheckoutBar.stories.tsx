@@ -13,7 +13,7 @@ const meta: Meta<typeof CheckoutBar> = {
 
 type Story = StoryObj<typeof CheckoutBar>;
 
-const Item = ({ children }: any) => (
+const Item = ({ children }: { children: React.ReactNode }) => (
   <div style={{ color: 'white', fontStyle: 'italic' }}>{children}</div>
 );
 
