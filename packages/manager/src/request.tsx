@@ -1,11 +1,5 @@
 import { baseRequest } from '@linode/api-v4/lib/request';
-import { APIError } from '@linode/api-v4/lib/types';
-import {
-  AxiosError,
-  AxiosHeaders,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
+import { AxiosHeaders } from 'axios';
 import * as React from 'react';
 
 import { MigrateError } from 'src/components/MigrateError';
@@ -15,9 +9,12 @@ import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 
-import { SupportError } from './components/SupportError';
-import { ApplicationStore } from './store';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
+
+import type { ApplicationStore } from './store';
+import type { Profile } from '@linode/api-v4';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
@@ -103,16 +100,6 @@ export const handleError = (
       },
       replacementText: <MigrateError />,
     },
-    {
-      condition: (e) => {
-        return (
-          (!!e.reason.match(/.*open a support ticket/i) ||
-            !!e.reason.match(/contact Support/i)) &&
-          !e.field
-        );
-      },
-      replacementText: <SupportError errors={errors} />,
-    },
   ]);
 
   // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
@@ -134,44 +121,42 @@ export const getURL = ({ baseURL, url }: AxiosRequestConfig) => {
   return url.replace(baseURL, apiRoot);
 };
 
-// A user's external UUID can be found on the response to /account.
-// Since that endpoint is not available to restricted users, the API also
-// returns it as an HTTP header ("X-Customer-Uuid"). This middleware injects
-// the value of the header to the GET /profile response so it can be added to
-// the Redux store and used throughout the app.
-export const injectEuuidToProfile = (
+// The API returns an HTTP header for all
+// requests made by Akamai users. This middleware injects the value
+// of this header to the GET /profile response so it can be used
+// throughout the app.
+export type ProfileWithAkamaiAccountHeader = Profile & {
+  _akamaiAccount: boolean;
+};
+
+export const injectAkamaiAccountHeader = (
   response: AxiosResponse
 ): AxiosResponse => {
+  const akamaiAccountHeader = 'akamai-internal-account';
   if (isSuccessfulGETProfileResponse(response)) {
-    const xCustomerUuidHeader = getXCustomerUuidHeader(response);
-    if (xCustomerUuidHeader) {
-      const profileWithEuuid = {
-        ...response.data,
-        _euuidFromHttpHeader: xCustomerUuidHeader,
-      };
-
-      return {
-        ...response,
-        data: profileWithEuuid,
-      };
-    }
+    const modifiedData: ProfileWithAkamaiAccountHeader = {
+      ...response.data,
+      _akamaiAccount: akamaiAccountHeader in response.headers,
+    };
+    return {
+      ...response,
+      data: modifiedData,
+    };
   }
   return response;
 };
 
-export const isSuccessfulGETProfileResponse = (response: AxiosResponse) => {
+export const isSuccessfulGETProfileResponse = (
+  response: AxiosResponse
+): response is AxiosResponse<Profile> => {
   const { config, status } = response;
 
   const method = config.method?.toLowerCase();
   const url = config.url?.toLowerCase();
 
-  return method === 'get' && status === 200 && url?.endsWith('/profile');
-};
-
-export const getXCustomerUuidHeader = (
-  response: AxiosResponse
-): string | undefined => {
-  return response.headers['x-customer-uuid'];
+  return (
+    (method === 'get' && status === 200 && url?.endsWith('/profile')) ?? false
+  );
 };
 
 export const setupInterceptors = (store: ApplicationStore) => {
@@ -210,5 +195,5 @@ export const setupInterceptors = (store: ApplicationStore) => {
     (error: AxiosError<LinodeError>) => handleError(error, store)
   );
 
-  baseRequest.interceptors.response.use(injectEuuidToProfile);
+  baseRequest.interceptors.response.use(injectAkamaiAccountHeader);
 };

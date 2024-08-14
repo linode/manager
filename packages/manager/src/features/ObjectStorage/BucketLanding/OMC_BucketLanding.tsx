@@ -1,7 +1,3 @@
-import { Region } from '@linode/api-v4';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -15,17 +11,14 @@ import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
-  BucketError,
   useDeleteBucketWithRegionMutation,
   useObjectStorageBuckets,
-} from 'src/queries/objectStorage';
+} from 'src/queries/object-storage/queries';
+import { isBucketError } from 'src/queries/object-storage/requests';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -38,6 +31,9 @@ import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
 
+import type { APIError, ObjectStorageBucket, Region } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(),
@@ -49,15 +45,6 @@ export const OMC_BucketLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
-  const { account } = useAccountManagement();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabled(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
   const {
     data: regions,
     error: regionErrors,
@@ -66,18 +53,11 @@ export const OMC_BucketLanding = () => {
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    isObjMultiClusterEnabled,
-    regions: regionsSupportingObjectStorage,
-  });
+  } = useObjectStorageBuckets();
 
   const { mutateAsync: deleteBucket } = useDeleteBucketWithRegionMutation();
 
@@ -146,7 +126,7 @@ export const OMC_BucketLanding = () => {
 
   // @TODO OBJ Multicluster - region is defined as an optional field in BucketError. Once the feature is rolled out to production, we could clean this up and remove the filter.
   const unavailableRegions = objectStorageBucketsResponse?.errors
-    ?.map((error: BucketError) => error.region)
+    ?.map((error) => (isBucketError(error) ? error.region : error.endpoint))
     .filter((region): region is Region => region !== undefined);
 
   if (isRestrictedUser) {

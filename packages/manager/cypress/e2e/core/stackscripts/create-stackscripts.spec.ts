@@ -62,10 +62,9 @@ const fillOutStackscriptForm = (
       .type(description);
   }
 
-  cy.get('[data-qa-multi-select="Select an Image"]')
-    .should('be.visible')
-    .click()
-    .type(`${targetImage}{enter}`);
+  cy.findByText('Target Images').click().type(`${targetImage}`);
+
+  cy.findByText(`${targetImage}`).should('be.visible').click();
 
   // Insert a script with invalid UDF data.
   cy.get('[data-qa-textfield-label="Script"]')
@@ -351,22 +350,16 @@ describe('Create stackscripts', () => {
         .click();
 
       // Confirm that expected images are present in "Choose an image" drop-down.
-      cy.findByText('Choose an image').should('be.visible').click();
+      cy.findByPlaceholderText('Choose an image').should('be.visible').click();
 
       imageSamples.forEach((imageSample) => {
         const imageLabel = imageSample.label;
-        const imageSelector = imageSample.sel;
 
-        cy.get(`[data-qa-image-select-item="${imageSelector}"]`)
-          .scrollIntoView()
-          .should('be.visible')
-          .within(() => {
-            cy.findByText(imageLabel).should('be.visible');
-          });
+        cy.findByText(imageLabel).scrollIntoView().should('be.visible');
       });
 
       // Select private image.
-      cy.get(`[data-qa-image-select-item="${privateImage.id}"]`)
+      cy.findByText(privateImage.label)
         .scrollIntoView()
         .should('be.visible')
         .click();

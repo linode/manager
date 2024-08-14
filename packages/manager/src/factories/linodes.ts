@@ -266,9 +266,9 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   label: Factory.each((i) => `linode-${i}`),
   lke_cluster_id: null,
   placement_group: placementGroupFactory.build({
-    placement_group_type: 'anti_affinity:local',
     id: 1,
     label: 'pg-1',
+    placement_group_type: 'anti_affinity:local',
   }),
   region: 'us-east',
   site_type: 'core',

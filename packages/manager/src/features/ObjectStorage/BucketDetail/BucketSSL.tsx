@@ -1,4 +1,4 @@
-import { ObjectStorageBucketSSLRequest } from '@linode/api-v4/lib/object-storage';
+import { CreateObjectStorageBucketSSLPayload } from '@linode/api-v4/lib/object-storage';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -19,7 +19,7 @@ import {
   useBucketSSLDeleteMutation,
   useBucketSSLMutation,
   useBucketSSLQuery,
-} from 'src/queries/objectStorage';
+} from 'src/queries/object-storage/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -85,7 +85,7 @@ const AddCertForm = (props: Props) => {
     bucketName
   );
 
-  const formik = useFormik<ObjectStorageBucketSSLRequest>({
+  const formik = useFormik<CreateObjectStorageBucketSSLPayload>({
     initialValues: {
       certificate: '',
       private_key: '',

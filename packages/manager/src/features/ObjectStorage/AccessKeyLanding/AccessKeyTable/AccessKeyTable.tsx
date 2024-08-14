@@ -1,6 +1,6 @@
 import {
   ObjectStorageKey,
-  ObjAccessKeyRegionsResponse,
+  ObjectStorageKeyRegions,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
@@ -13,7 +13,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { HostNamesDrawer } from '../HostNamesDrawer';
 import { OpenAccessDrawer } from '../types';
@@ -41,12 +41,12 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
   const [showHostNamesDrawer, setShowHostNamesDrawers] = useState<boolean>(
     false
   );
-  const [hostNames, setHostNames] = useState<ObjAccessKeyRegionsResponse[]>([]);
+  const [hostNames, setHostNames] = useState<ObjectStorageKeyRegions[]>([]);
 
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []

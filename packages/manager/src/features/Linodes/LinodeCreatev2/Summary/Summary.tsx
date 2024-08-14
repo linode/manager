@@ -5,6 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Divider } from 'src/components/Divider';
 import { Paper } from 'src/components/Paper';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useImageQuery } from 'src/queries/images';
@@ -55,7 +56,8 @@ export const Summary = () => {
     ],
   });
 
-  const { data: regions } = useRegionsQuery();
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { data: regions } = useRegionsQuery(isGeckoGAEnabled);
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 

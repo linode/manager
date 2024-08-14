@@ -22,22 +22,27 @@ import { withTypes } from 'src/containers/types.container';
 import { withLinodes } from 'src/containers/withLinodes.container';
 import { withMarketplaceApps } from 'src/containers/withMarketplaceApps';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
+import { withSecureVMNoticesEnabled } from 'src/containers/withSecureVMNoticesEnabled.container';
 import withAgreements from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { reportAgreementSigningError } from 'src/queries/account/agreements';
-import { vpcQueries } from 'src/queries/vpcs/vpcs';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import {
+  sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormSubmitEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
+import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
-import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
+import { isEURegion } from 'src/utilities/formatRegion';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -79,11 +84,13 @@ import type { WithTypesProps } from 'src/containers/types.container';
 import type { WithLinodesProps } from 'src/containers/withLinodes.container';
 import type { WithMarketplaceAppsProps } from 'src/containers/withMarketplaceApps';
 import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
+import type { WithSecureVMNoticesEnabledProps } from 'src/containers/withSecureVMNoticesEnabled.container';
 import type { AgreementsProps } from 'src/features/Account/Agreements/withAgreements';
 import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import type { MapState } from 'src/store/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { accountQueries } from 'src/queries/account/queries';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -96,6 +103,7 @@ interface State {
   availableStackScriptImages?: Image[];
   availableUserDefinedFields?: UserDefinedField[];
   backupsEnabled: boolean;
+  checkedFirewallAuthorization: boolean;
   customLabel?: string;
   disabledClasses?: LinodeTypeClass[];
   diskEncryptionEnabled?: boolean;
@@ -117,6 +125,7 @@ interface State {
   selectedVPCId?: number;
   selectedfirewallId?: number;
   showApiAwarenessModal: boolean;
+  showFirewallAuthorization: boolean;
   showGDPRCheckbox: boolean;
   signedAgreement: boolean;
   tags?: Tag[];
@@ -139,7 +148,8 @@ type CombinedProps = CreateType &
   WithQueryClientProps &
   WithMarketplaceAppsProps &
   WithAccountSettingsProps &
-  WithEventsPollingActionProps;
+  WithEventsPollingActionProps &
+  WithSecureVMNoticesEnabledProps;
 
 const defaultState: State = {
   additionalIPv4RangesForVPC: [],
@@ -148,6 +158,7 @@ const defaultState: State = {
   authorized_users: [],
   autoassignIPv4WithinVPCEnabled: true,
   backupsEnabled: false,
+  checkedFirewallAuthorization: false,
   customLabel: undefined,
   disabledClasses: [],
   diskEncryptionEnabled: true,
@@ -169,6 +180,7 @@ const defaultState: State = {
   selectedVPCId: undefined,
   selectedfirewallId: undefined,
   showApiAwarenessModal: false,
+  showFirewallAuthorization: false,
   showGDPRCheckbox: false,
   signedAgreement: false,
   tags: [],
@@ -365,6 +377,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
+  handleFirewallAuthorizationChange = () => {
+    this.setState((prevState) => ({
+      checkedFirewallAuthorization: !prevState.checkedFirewallAuthorization,
+    }));
+  };
+
   handleFirewallChange = (firewallId: number) => {
     this.setState({ selectedfirewallId: firewallId });
   };
@@ -375,7 +393,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
-  handleSubnetChange = (subnetID: number) => {
+  handleSubnetChange = (subnetID: number | undefined) => {
     this.setState((prevState) => ({
       errors: prevState.errors?.filter(
         (error) => error.field !== 'interfaces[0].subnet_id'
@@ -718,6 +736,16 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       }));
     }
 
+    if (
+      this.props.secureVMNoticesEnabled &&
+      this.state.selectedfirewallId === undefined &&
+      !this.state.checkedFirewallAuthorization
+    ) {
+      return this.setState(() => ({
+        showFirewallAuthorization: true,
+      }));
+    }
+
     const request =
       createType === 'fromLinode'
         ? () =>
@@ -738,7 +766,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           signAgreement(agreeData)
             .then(() => {
               this.props.queryClient.setQueryData<Agreements>(
-                ['account', 'agreements'],
+                accountQueries.agreements.queryKey,
                 (prev) => ({
                   ...(prev ?? {}),
                   ...agreeData,
@@ -755,6 +783,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             ? this.props.linodesData?.find((linode) => linode.id == linodeID)
             : undefined,
           payload,
+          secureVMNoticesEnabled: this.props.secureVMNoticesEnabled,
           type: createType,
         });
 
@@ -765,19 +794,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
         /** reset the Events polling */
         this.props.checkForNewEvents();
-
-        // If a VPC was assigned, invalidate the query so that the relevant VPC data
-        // gets displayed in the LinodeEntityDetail
-        if (
-          this.state.selectedVPCId !== undefined &&
-          this.state.selectedVPCId !== -1
-        ) {
-          this.props.queryClient.invalidateQueries(vpcQueries.all.queryKey);
-          this.props.queryClient.invalidateQueries(vpcQueries.paginated._def);
-          this.props.queryClient.invalidateQueries(
-            vpcQueries.vpc(this.state.selectedVPCId).queryKey
-          );
-        }
 
         /** send the user to the Linode detail page */
         this.props.history.push(`/linodes/${response.id}`);
@@ -885,12 +901,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           <LandingHeader
             onDocsClick={() => {
               sendLinodeCreateFlowDocsClickEvent('Getting Started');
-              sendLinodeCreateFormStepEvent({
-                action: 'click',
-                category: 'link',
+              sendLinodeCreateFormInputEvent({
                 createType: (this.params.type as LinodeCreateType) ?? 'OS',
+                interaction: 'click',
                 label: 'Getting Started',
-                version: 'v1',
               });
             }}
             docsLabel="Getting Started"
@@ -900,6 +914,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           <LinodeCreate
             accountBackupsEnabled={
               this.props.accountSettings.data?.backups_enabled ?? false
+            }
+            checkedFirewallAuthorizaton={
+              this.state.checkedFirewallAuthorization
+            }
+            handleFirewallAuthorizationChange={
+              this.handleFirewallAuthorizationChange
             }
             toggleAutoassignIPv4WithinVPCEnabled={
               this.toggleAutoassignIPv4WithinVPCEnabled
@@ -976,12 +996,14 @@ export default withImages(
         withTypes(
           connected(
             withFeatureFlags(
-              withProfile(
-                withAgreements(
-                  withQueryClient(
-                    withAccountSettings(
-                      withMarketplaceApps(
-                        withEventsPollingActions(LinodeCreateContainer)
+              withSecureVMNoticesEnabled(
+                withProfile(
+                  withAgreements(
+                    withQueryClient(
+                      withAccountSettings(
+                        withMarketplaceApps(
+                          withEventsPollingActions(LinodeCreateContainer)
+                        )
                       )
                     )
                   )
@@ -1001,38 +1023,54 @@ const actionsAndLabels = {
   fromImage: { action: 'image', labelPayloadKey: 'image' },
   fromLinode: { action: 'clone', labelPayloadKey: 'type' },
   fromStackScript: { action: 'stackscript', labelPayloadKey: 'stackscript_id' },
-};
+} as const;
 
 const handleAnalytics = (details: {
   label?: string;
   linode?: Linode;
   payload: CreateLinodeRequest;
+  secureVMNoticesEnabled: boolean;
   type: CreateTypes;
 }) => {
-  const { label, linode: linode, payload, type } = details;
+  const {
+    label,
+    linode: linode,
+    payload,
+    secureVMNoticesEnabled,
+    type,
+  } = details;
   const eventInfo = actionsAndLabels[type];
+  // Distinguish the form event create type by tab, which separates 'OS' from 'Image'.
+  const eventCreateType =
+    eventInfo?.action && payload?.image?.includes('linode/')
+      ? 'OS'
+      : capitalize(eventInfo?.action);
   let eventAction = 'unknown';
   let eventLabel = '';
+
+  const secureVMCompliant = secureVMNoticesEnabled
+    ? isNotNullOrUndefined(payload.firewall_id)
+    : undefined;
+
+  const isLinodePoweredOff =
+    linode && eventAction == 'clone' ? linode.status === 'offline' : undefined;
 
   if (eventInfo) {
     eventAction = eventInfo.action;
     const payloadLabel = payload[eventInfo.labelPayloadKey];
-    // Checking if payload label comes back as a number, if so return it as a string, otherwise event won't fire.
-    if (isNaN(payloadLabel)) {
-      eventLabel = payloadLabel;
-    } else {
-      eventLabel = payloadLabel.toString();
-    }
+    eventLabel = String(payloadLabel);
   }
   if (label) {
     eventLabel = label;
   }
 
-  sendCreateLinodeEvent(
-    eventAction,
-    eventLabel,
-    linode && eventAction == 'clone'
-      ? { isLinodePoweredOff: linode.status === 'offline' }
-      : undefined
-  );
+  // Send custom event.
+  sendCreateLinodeEvent(eventAction, eventLabel, {
+    isLinodePoweredOff,
+    secureVMCompliant,
+  });
+  // Send form event.
+  sendLinodeCreateFormSubmitEvent({
+    createType: eventCreateType as LinodeCreateType,
+  });
 };

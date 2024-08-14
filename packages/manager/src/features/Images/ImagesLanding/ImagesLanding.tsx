@@ -28,6 +28,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -43,7 +44,6 @@ import {
   useImagesQuery,
 } from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
@@ -53,7 +53,7 @@ import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
 
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
-import type { ImageStatus } from '@linode/api-v4';
+import type { Filter, ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 const searchQueryKey = 'query';
@@ -118,14 +118,11 @@ export const ImagesLanding = () => {
     'manual'
   );
 
-  const manualImagesFilter = {
+  const manualImagesFilter: Filter = {
     ['+order']: manualImagesOrder,
     ['+order_by']: manualImagesOrderBy,
+    ...(imageLabelFromParam && { label: { '+contains': imageLabelFromParam } }),
   };
-
-  if (imageLabelFromParam) {
-    manualImagesFilter['label'] = { '+contains': imageLabelFromParam };
-  }
 
   const {
     data: manualImages,
@@ -141,6 +138,13 @@ export const ImagesLanding = () => {
       ...manualImagesFilter,
       is_public: false,
       type: 'manual',
+    },
+    {
+      // Refetch custom images every 30 seconds.
+      // We do this because we have no /v4/account/events we can use
+      // to update Image region statuses. We should make the API
+      // team and Images team implement events for this.
+      refetchInterval: 30_000,
     }
   );
 
@@ -163,14 +167,11 @@ export const ImagesLanding = () => {
     'automatic'
   );
 
-  const automaticImagesFilter = {
+  const automaticImagesFilter: Filter = {
     ['+order']: automaticImagesOrder,
     ['+order_by']: automaticImagesOrderBy,
+    ...(imageLabelFromParam && { label: { '+contains': imageLabelFromParam } }),
   };
-
-  if (imageLabelFromParam) {
-    automaticImagesFilter['label'] = { '+contains': imageLabelFromParam };
-  }
 
   const {
     data: automaticImages,
@@ -303,7 +304,9 @@ export const ImagesLanding = () => {
     imageLabel: string,
     imageDescription: string
   ) => {
-    queryClient.invalidateQueries(imageQueries.paginated._def);
+    queryClient.invalidateQueries({
+      queryKey: imageQueries.paginated._def,
+    });
     history.push('/images/create/upload', {
       imageDescription,
       imageLabel,
@@ -311,7 +314,9 @@ export const ImagesLanding = () => {
   };
 
   const onCancelFailedClick = () => {
-    queryClient.invalidateQueries(imageQueries.paginated._def);
+    queryClient.invalidateQueries({
+      queryKey: imageQueries.paginated._def,
+    });
   };
 
   const deployNewLinode = (imageID: string) => {
@@ -381,9 +386,6 @@ export const ImagesLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
       <LandingHeader
-        docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
-        entity="Image"
-        onButtonClick={() => history.push('/images/create')}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -392,6 +394,9 @@ export const ImagesLanding = () => {
           }),
         }}
         disabledCreateButton={isImagesReadOnly}
+        docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
+        entity="Image"
+        onButtonClick={() => history.push('/images/create')}
         title="Images"
       />
       <TextField
@@ -532,6 +537,14 @@ export const ImagesLanding = () => {
               <Hidden smDown>
                 <TableCell>Status</TableCell>
               </Hidden>
+              <TableSortCell
+                active={automaticImagesOrderBy === 'size'}
+                direction={automaticImagesOrder}
+                handleClick={handleAutomaticImagesOrderChange}
+                label="size"
+              >
+                Size
+              </TableSortCell>
               <Hidden smDown>
                 <TableSortCell
                   active={automaticImagesOrderBy === 'created'}
@@ -542,14 +555,6 @@ export const ImagesLanding = () => {
                   Created
                 </TableSortCell>
               </Hidden>
-              <TableSortCell
-                active={automaticImagesOrderBy === 'size'}
-                direction={automaticImagesOrder}
-                handleClick={handleAutomaticImagesOrderChange}
-                label="size"
-              >
-                Size
-              </TableSortCell>
               <Hidden smDown>
                 <TableCell>Expires</TableCell>
               </Hidden>

@@ -26,7 +26,7 @@ export const generatePayload = (
   selectedEntities: TransferState
 ): CreateTransferPayload => {
   const entities = Object.keys(selectedEntities).reduce(
-    (acc, entityType) => {
+    (acc, entityType: keyof TransferState) => {
       return {
         ...acc,
         [entityType]: Object.keys(selectedEntities[entityType]).map(Number),

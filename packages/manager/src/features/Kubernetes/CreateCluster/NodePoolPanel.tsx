@@ -2,7 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
@@ -76,16 +76,12 @@ const Panel = (props: NodePoolPanelProps) => {
 
   const extendedTypes = types.map(extendType);
 
-  const submitForm = (selectedPlanType: string, nodeCount: number) => {
-    /**
-     * Add pool and reset form state.
-     */
+  const addPool = (selectedPlanType: string, nodeCount: number) => {
     addNodePool({
       count: nodeCount,
       id: Math.random(),
       type: selectedPlanType,
     });
-    setSelectedType(undefined);
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
@@ -119,7 +115,7 @@ const Panel = (props: NodePoolPanelProps) => {
           header="Add Node Pools"
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          onAdd={submitForm}
+          onAdd={addPool}
           onSelect={(newType: string) => setSelectedType(newType)}
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes

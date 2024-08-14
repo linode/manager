@@ -7,7 +7,6 @@ export * from './accountOAuth';
 export * from './accountPayment';
 export * from './accountSettings';
 export * from './accountUsers';
-export * from './aclb';
 export * from './betas';
 export * from './billing';
 export * from './config';
@@ -52,6 +51,7 @@ export * from './types';
 export * from './vlans';
 export * from './volume';
 export * from './vpcs';
+export * from './dashboards';
 
 // Convert factory output to our itemsById pattern
 export const normalizeEntities = (entities: any[]) => {

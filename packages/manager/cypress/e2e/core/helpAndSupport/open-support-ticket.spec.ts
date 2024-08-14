@@ -56,7 +56,7 @@ import { mockGetClusters } from 'support/intercepts/lke';
 import { linodeCreatePage } from 'support/ui/pages';
 import { chooseRegion } from 'support/util/regions';
 
-describe('help & support', () => {
+describe('open support tickets', () => {
   after(() => {
     cleanUp(['linodes']);
   });
@@ -422,14 +422,11 @@ describe('help & support', () => {
       .click();
     cy.wait('@createLinode');
 
-    cy.get('[data-qa-error="true"]')
-      .first()
-      .scrollIntoView()
-      .within(() => {
-        cy.contains(ACCOUNT_THING_LIMIT_ERROR);
-        // Navigate to the account limit ticket form.
-        cy.findByText('contact Support').should('be.visible').click();
-      });
+    cy.get('[data-qa-error="true"]').first().scrollIntoView();
+    cy.contains(ACCOUNT_THING_LIMIT_ERROR);
+
+    // Navigate to the account limit ticket form.
+    cy.findByText('contact Support').should('be.visible').click();
 
     // Fill out ticket form.
     ui.dialog

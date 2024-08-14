@@ -142,8 +142,9 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
           >
             <img
               src={`/assets/white/${
-                REUSE_WHITE_ICONS[selectedApp?.logo_url] ||
-                selectedApp?.logo_url
+                REUSE_WHITE_ICONS[
+                  selectedApp?.logo_url as keyof typeof REUSE_WHITE_ICONS
+                ] || selectedApp?.logo_url
               }`}
               alt={`${selectedApp.name} logo`}
               className={classes.image}
@@ -156,7 +157,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                 }),
               }}
               className={classes.appName}
-              data-qa-drawer-title={stackScriptLabel}
+              data-qa-drawer-title={stackScriptLabel.trim()}
               data-testid="app-name"
               variant="h2"
             />

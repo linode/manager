@@ -1,4 +1,3 @@
-import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
 import { update } from 'ramda';
 import * as React from 'react';
 
@@ -18,11 +17,15 @@ import {
 } from './AccessTable.styles';
 
 import type { MODE } from './types';
+import type {
+  ObjectStorageKeyBucketAccess,
+  ObjectStorageKeyBucketAccessPermissions,
+} from '@linode/api-v4/lib/object-storage/types';
 
 export const getUpdatedScopes = (
-  oldScopes: Scope[],
-  newScope: Scope
-): Scope[] => {
+  oldScopes: ObjectStorageKeyBucketAccess[],
+  newScope: ObjectStorageKeyBucketAccess
+): ObjectStorageKeyBucketAccess[] => {
   // Cluster and bucket together form a primary key
   const scopeToUpdate = oldScopes.findIndex(
     (thisScope) =>
@@ -35,17 +38,17 @@ export const getUpdatedScopes = (
   return update(scopeToUpdate, newScope, oldScopes);
 };
 
-export const SCOPES: Record<string, AccessType> = {
+export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
   none: 'none',
   read: 'read_only',
   write: 'read_write',
 };
 
 interface TableProps {
-  bucket_access: Scope[] | null;
+  bucket_access: ObjectStorageKeyBucketAccess[] | null;
   checked: boolean;
   mode: MODE;
-  updateScopes: (newScopes: Scope[]) => void;
+  updateScopes: (newScopes: ObjectStorageKeyBucketAccess[]) => void;
 }
 
 export const AccessTable = React.memo((props: TableProps) => {
@@ -55,12 +58,14 @@ export const AccessTable = React.memo((props: TableProps) => {
     return null;
   }
 
-  const updateSingleScope = (newScope: Scope) => {
+  const updateSingleScope = (newScope: ObjectStorageKeyBucketAccess) => {
     const newScopes = getUpdatedScopes(bucket_access, newScope);
     updateScopes(newScopes);
   };
 
-  const updateAllScopes = (accessType: AccessType) => {
+  const updateAllScopes = (
+    accessType: ObjectStorageKeyBucketAccessPermissions
+  ) => {
     const newScopes = bucket_access.map((thisScope) => ({
       ...thisScope,
       permissions: accessType,
@@ -68,7 +73,9 @@ export const AccessTable = React.memo((props: TableProps) => {
     updateScopes(newScopes);
   };
 
-  const allScopesEqual = (accessType: AccessType) => {
+  const allScopesEqual = (
+    accessType: ObjectStorageKeyBucketAccessPermissions
+  ) => {
     return bucket_access.every(
       (thisScope) => thisScope.permissions === accessType
     );

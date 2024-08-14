@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { ImageSelect } from 'src/features/Images/ImageSelect';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
@@ -10,11 +9,13 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 
+import type { Image } from '@linode/api-v4';
+
 interface Props {
   authorizedUsers: string[];
   imageFieldError?: string;
   linodeId: number;
-  onImageChange: (selected: Item<string>) => void;
+  onImageChange: (selected: Image) => void;
   onPasswordChange: (password: string) => void;
   password: string;
   passwordError?: string;
@@ -38,7 +39,7 @@ export const ImageAndPassword = (props: Props) => {
 
   const { data: imagesData, error: imagesError } = useAllImagesQuery();
   const _imagesError = imagesError
-    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].reason
+    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0]?.reason
     : undefined;
 
   const disabled =
@@ -50,8 +51,7 @@ export const ImageAndPassword = (props: Props) => {
       {disabled && <LinodePermissionsError />}
       <ImageSelect
         disabled={disabled}
-        imageError={_imagesError}
-        imageFieldError={imageFieldError}
+        errorText={imageFieldError ?? _imagesError}
         images={imagesData ?? []}
         onSelect={onImageChange}
       />

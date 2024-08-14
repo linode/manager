@@ -36,7 +36,11 @@ export const LinodesRoutes = () => {
 
   // Hold this feature flag in state so that the user's Linode creation
   // isn't interupted when the flag is toggled.
-  const [isLinodeCreateV2Enabled] = useState(flags.linodeCreateRefactor);
+  const [isLinodeCreateV2EnabledStale] = useState(flags.linodeCreateRefactor);
+
+  const isLinodeCreateV2Enabled = import.meta.env.DEV
+    ? flags.linodeCreateRefactor
+    : isLinodeCreateV2EnabledStale;
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>

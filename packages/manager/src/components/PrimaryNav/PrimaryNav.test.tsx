@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -72,9 +72,9 @@ describe('PrimaryNav', () => {
     expect(databaseNavItem).toBeVisible();
   });
 
-  it('should show ACLB if the feature flag is on, but there is not an account capability', async () => {
+  it('should show Monitor menu item if the user has the account capability', async () => {
     const account = accountFactory.build({
-      capabilities: [],
+      capabilities: ['Akamai Cloud Pulse'],
     });
 
     server.use(
@@ -82,51 +82,20 @@ describe('PrimaryNav', () => {
         return HttpResponse.json(account);
       })
     );
+
+    const flags = {
+      aclp: {
+        beta: false,
+        enabled: true,
+      },
+    };
 
     const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aclb: true },
+      flags,
     });
 
-    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
+    const monitorNavItem = await findByText('Monitor');
 
-    expect(loadbalancerNavItem).toBeVisible();
-  });
-
-  it('should show ACLB if the feature flag is off, but the account has the capability', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Akamai Cloud Load Balancer'],
-    });
-
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
-
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aclb: false },
-    });
-
-    const loadbalancerNavItem = await findByText('Cloud Load Balancers');
-
-    expect(loadbalancerNavItem).toBeVisible();
-  });
-
-  it('should not show ACLB if the feature flag is off and there is no account capability', async () => {
-    const account = accountFactory.build({
-      capabilities: [],
-    });
-
-    server.use(
-      http.get('*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
-
-    const { queryByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags: { aclb: false },
-    });
-
-    expect(queryByText('Cloud Load Balancers')).not.toBeInTheDocument();
+    expect(monitorNavItem).toBeVisible();
   });
 });

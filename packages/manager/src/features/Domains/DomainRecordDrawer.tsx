@@ -22,8 +22,8 @@ import {
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -153,7 +153,7 @@ export class DomainRecordDrawer extends React.Component<
       >
         {otherErrors.length > 0 &&
           otherErrors.map((err, index) => {
-            return <Notice key={index} variant="error" text={err} />;
+            return <Notice key={index} text={err} variant="error" />;
           })}
         {!hasARecords && type === 'NS' && (
           <Notice
@@ -226,17 +226,17 @@ export class DomainRecordDrawer extends React.Component<
     });
 
     return (
-      <Select
+      <Autocomplete
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'Expire Rate',
           },
         }}
-        defaultValue={defaultRate}
-        isClearable={false}
+        disableClearable
         label="Expire Rate"
-        onChange={(e) => this.setExpireSec(e.value)}
+        onChange={(_, selected) => this.setExpireSec(selected?.value)}
         options={rateOptions}
+        value={defaultRate}
       />
     );
   };
@@ -272,23 +272,25 @@ export class DomainRecordDrawer extends React.Component<
         eachOption.value ===
         defaultTo(
           DomainRecordDrawer.defaultFieldsState(this.props)[field],
-          this.state.fields[field]
+          (this.state.fields as EditableDomainFields & EditableRecordFields)[
+            field
+          ]
         )
       );
     });
 
     return (
-      <Select
+      <Autocomplete
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': label,
           },
         }}
-        defaultValue={defaultOption}
-        isClearable={false}
+        disableClearable
         label={label}
-        onChange={(e) => fn(e.value)}
+        onChange={(_, selected) => fn(selected.value)}
         options={MSSelectOptions}
+        value={defaultOption}
       />
     );
   };
@@ -302,9 +304,10 @@ export class DomainRecordDrawer extends React.Component<
     multiline?: boolean;
   }) => {
     const { domain, type } = this.props;
-    const value = this.state.fields[field];
+    const value = (this.state.fields as EditableDomainFields &
+      EditableRecordFields)[field];
     const hasAliasToResolve =
-      value.indexOf('@') >= 0 && shouldResolve(type, field);
+      value && value.indexOf('@') >= 0 && shouldResolve(type, field);
     return (
       <this.TextField
         placeholder={
@@ -330,10 +333,14 @@ export class DomainRecordDrawer extends React.Component<
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           this.updateField(field)(e.target.value)
         }
+        value={
+          (this.state.fields as EditableDomainFields & EditableRecordFields)[
+            field
+          ] as number
+        }
         data-qa-target={label}
         label={label}
         type="number"
-        value={this.state.fields[field]}
         {...rest}
       />
     );
@@ -364,17 +371,17 @@ export class DomainRecordDrawer extends React.Component<
     });
 
     return (
-      <Select
+      <Autocomplete
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'Protocol',
           },
         }}
-        defaultValue={defaultProtocol}
-        isClearable={false}
+        disableClearable
         label="Protocol"
-        onChange={(e) => this.setProtocol(e.value)}
+        onChange={(_, selected) => this.setProtocol(selected.value)}
         options={protocolOptions}
+        value={defaultProtocol}
       />
     );
   };
@@ -414,17 +421,17 @@ export class DomainRecordDrawer extends React.Component<
       );
     });
     return (
-      <Select
+      <Autocomplete
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'caa tag',
           },
         }}
-        defaultValue={defaultTag || tagOptions[0]}
-        isClearable={false}
+        disableClearable
         label="Tag"
-        onChange={(e: Item) => this.setTag(e.value)}
+        onChange={(_, selected) => this.setTag(selected.value)}
         options={tagOptions}
+        value={defaultTag}
       />
     );
   };
@@ -449,8 +456,12 @@ export class DomainRecordDrawer extends React.Component<
         this.updateField(field)(e.target.value)
       }
       value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props)[field],
-        this.state.fields[field]
+        DomainRecordDrawer.defaultFieldsState(this.props)[field] as
+          | number
+          | string,
+        (this.state.fields as EditableDomainFields & EditableRecordFields)[
+          field
+        ] as number | string
       )}
       data-qa-target={label}
       helperText={helperText}
@@ -469,6 +480,7 @@ export class DomainRecordDrawer extends React.Component<
    */
   static defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
     axfr_ips: getInitialIPs(props.axfr_ips),
+    description: '',
     domain: props.domain,
     expire_sec: props.expire_sec ?? 0,
     id: props.id,
@@ -715,7 +727,12 @@ export class DomainRecordDrawer extends React.Component<
   };
 
   types = {
-    // },
+    A: {
+      fields: [],
+    },
+    PTR: {
+      fields: [],
+    },
     AAAA: {
       fields: [
         (idx: number) => (
@@ -727,12 +744,6 @@ export class DomainRecordDrawer extends React.Component<
         (idx: number) => <this.TTLField key={idx} />,
       ],
     },
-    // slave: {
-    //   fields: [
-    //     (idx: number) => <this.NameField label="Hostname" key={idx} />,
-    //     (idx: number) => <this.TargetField label="IP Address" key={idx} />,
-    //     (idx: number) => <this.TTLField label="TTL" key={idx} />,
-    //   ],
     CAA: {
       fields: [
         (idx: number) => (
@@ -841,6 +852,9 @@ export class DomainRecordDrawer extends React.Component<
         (idx: number) => <this.RetryRateField key={idx} />,
         (idx: number) => <this.ExpireField key={idx} />,
       ],
+    },
+    slave: {
+      fields: [],
     },
   };
 }

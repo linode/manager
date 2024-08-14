@@ -1,11 +1,12 @@
-import { getLinode, getStackScript } from '@linode/api-v4';
 import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
@@ -65,10 +66,10 @@ export const useLinodeCreateQueryParams = () => {
     const newParams = new URLSearchParams(rawParams);
 
     for (const key in params) {
-      if (!params[key]) {
+      if (!params[key as keyof LinodeCreateQueryParams]) {
         newParams.delete(key);
       } else {
-        newParams.set(key, params[key]);
+        newParams.set(key, params[key as keyof LinodeCreateQueryParams]!);
       }
     }
 
@@ -143,7 +144,7 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omit(formValues, ['linode']);
+  const values = omit(formValues, ['linode', 'hasSignedEUAgreement']);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
@@ -152,7 +153,7 @@ export const getLinodeCreatePayload = (
     values.metadata = undefined;
   }
 
-  if (values.placement_group?.id === undefined) {
+  if (!values.placement_group?.id) {
     values.placement_group = undefined;
   }
 
@@ -213,7 +214,7 @@ export const getInterfacesPayload = (
   return undefined;
 };
 
-export const defaultInterfaces: InterfacePayload[] = [
+const defaultInterfaces: InterfacePayload[] = [
   {
     ipam_address: '',
     label: '',
@@ -243,6 +244,14 @@ export const defaultInterfaces: InterfacePayload[] = [
  */
 export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
+   * Manually override firewall policy for sensitive users
+   */
+  firewallOverride?: boolean;
+  /**
+   * Whether or not the user has signed the EU agreement
+   */
+  hasSignedEUAgreement?: boolean;
+  /**
    * The currently selected Linode
    */
   linode?: Linode | null;
@@ -255,18 +264,20 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
  * The default values are dependent on the query params present.
  */
 export const defaultValues = async (
+  params: ParsedLinodeCreateQueryParams,
   queryClient: QueryClient
 ): Promise<LinodeCreateFormValues> => {
-  const queryParams = getQueryParamsFromQueryString(window.location.search);
-  const params = getParsedLinodeCreateQueryParams(queryParams);
-
   const stackscriptId = params.stackScriptID ?? params.appID;
 
   const stackscript = stackscriptId
-    ? await getStackScript(stackscriptId)
+    ? await queryClient.ensureQueryData(
+        stackscriptQueries.stackscript(stackscriptId)
+      )
     : null;
 
-  const linode = params.linodeID ? await getLinode(params.linodeID) : null;
+  const linode = params.linodeID
+    ? await queryClient.ensureQueryData(linodeQueries.linode(params.linodeID))
+    : null;
 
   const privateIp =
     linode?.ipv4.some((ipv4) => privateIPRegex.test(ipv4)) ?? false;
@@ -431,6 +442,7 @@ export const getLinodeLabelFromLabelParts = (parts: string[]) => {
 
 interface LinodeCreateAnalyticsEventOptions {
   queryClient: QueryClient;
+  secureVMNoticesEnabled: boolean;
   type: LinodeCreateType;
   values: LinodeCreateFormValues;
 }
@@ -441,40 +453,52 @@ interface LinodeCreateAnalyticsEventOptions {
 export const captureLinodeCreateAnalyticsEvent = async (
   options: LinodeCreateAnalyticsEventOptions
 ) => {
-  const { queryClient, type, values } = options;
+  const { queryClient, secureVMNoticesEnabled, type, values } = options;
+
+  const secureVMCompliant = secureVMNoticesEnabled
+    ? isNotNullOrUndefined(values.firewall_id)
+    : undefined;
 
   if (type === 'Backups' && values.backup_id) {
-    sendCreateLinodeEvent('backup', String(values.backup_id));
+    sendCreateLinodeEvent('backup', String(values.backup_id), {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'Clone Linode' && values.linode) {
     const linodeId = values.linode.id;
-    // @todo use Linode query key factory when it is implemented
-    const linode = await queryClient.ensureQueryData({
-      queryFn: () => getLinode(linodeId),
-      queryKey: ['linodes', 'linode', linodeId, 'details'],
-    });
+
+    const linode = await queryClient.ensureQueryData(
+      linodeQueries.linode(linodeId)
+    );
 
     sendCreateLinodeEvent('clone', values.type, {
       isLinodePoweredOff: linode.status === 'offline',
+      secureVMCompliant,
     });
   }
 
   if (type === 'OS' || type === 'Images') {
-    sendCreateLinodeEvent('image', values.image ?? undefined);
+    sendCreateLinodeEvent('image', values.image ?? undefined, {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'StackScripts' && values.stackscript_id) {
     const stackscript = await queryClient.ensureQueryData(
       stackscriptQueries.stackscript(values.stackscript_id)
     );
-    sendCreateLinodeEvent('stackscript', stackscript.label);
+    sendCreateLinodeEvent('stackscript', stackscript.label, {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'One-Click' && values.stackscript_id) {
     const stackscript = await queryClient.ensureQueryData(
       stackscriptQueries.stackscript(values.stackscript_id)
     );
-    sendCreateLinodeEvent('one-click', stackscript.label);
+    sendCreateLinodeEvent('one-click', stackscript.label, {
+      secureVMCompliant,
+    });
   }
 };

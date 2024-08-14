@@ -12,10 +12,10 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
@@ -54,7 +54,7 @@ export const BucketDetailsDrawer = React.memo(
     const flags = useFlags();
     const { account } = useAccountManagement();
 
-    const isObjMultiClusterEnabled = isFeatureEnabled(
+    const isObjMultiClusterEnabled = isFeatureEnabledV2(
       'Object Storage Access Key Regions',
       Boolean(flags.objMultiCluster),
       account?.capabilities ?? []

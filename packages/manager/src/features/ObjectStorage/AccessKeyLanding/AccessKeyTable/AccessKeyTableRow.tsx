@@ -1,6 +1,6 @@
 import {
   ObjectStorageKey,
-  ObjAccessKeyRegionsResponse,
+  ObjectStorageKeyRegions,
 } from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import React from 'react';
@@ -11,7 +11,7 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { OpenAccessDrawer } from '../types';
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
@@ -20,7 +20,7 @@ import { HostNameTableCell } from './HostNameTableCell';
 type Props = {
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (storageKeyData: ObjectStorageKey) => void;
-  setHostNames: (hostNames: ObjAccessKeyRegionsResponse[]) => void;
+  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
 };
@@ -35,7 +35,7 @@ export const AccessKeyTableRow = ({
   const { account } = useAccountManagement();
   const flags = useFlags();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []

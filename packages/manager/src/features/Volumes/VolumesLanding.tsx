@@ -5,6 +5,7 @@ import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { IconButton } from 'src/components/IconButton';
 import { InputAdornment } from 'src/components/InputAdornment';
@@ -36,7 +37,7 @@ import { VolumeDetailsDrawer } from './VolumeDetailsDrawer';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 import { VolumeTableRow } from './VolumeTableRow';
 
-import type { Volume } from '@linode/api-v4';
+import type { Filter, Volume } from '@linode/api-v4';
 
 const preferenceKey = 'volumes';
 const searchQueryKey = 'query';
@@ -59,14 +60,13 @@ export const VolumesLanding = () => {
     `${preferenceKey}-order`
   );
 
-  const filter = {
+  const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+    ...(volumeLabelFromParam && {
+      label: { '+contains': volumeLabelFromParam },
+    }),
   };
-
-  if (volumeLabelFromParam) {
-    filter['label'] = { '+contains': volumeLabelFromParam };
-  }
 
   const { data: volumes, error, isFetching, isLoading } = useVolumesQuery(
     {
@@ -75,6 +75,11 @@ export const VolumesLanding = () => {
     },
     filter
   );
+
+  const {
+    isBlockStorageEncryptionFeatureEnabled,
+  } = useIsBlockStorageEncryptionFeatureEnabled();
+
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(
     Boolean(location.state?.volume)
@@ -234,6 +239,9 @@ export const VolumesLanding = () => {
               Size
             </TableSortCell>
             <TableCell>Attached To</TableCell>
+            {isBlockStorageEncryptionFeatureEnabled && (
+              <TableCell>Encryption</TableCell>
+            )}
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -253,6 +261,9 @@ export const VolumesLanding = () => {
                 handleResize: () => handleResize(volume),
                 handleUpgrade: () => handleUpgrade(volume),
               }}
+              isBlockStorageEncryptionFeatureEnabled={
+                isBlockStorageEncryptionFeatureEnabled
+              }
               key={volume.id}
               volume={volume}
             />
