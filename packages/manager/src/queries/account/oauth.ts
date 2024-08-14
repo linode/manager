@@ -35,7 +35,9 @@ export const useDeleteOAuthClientMutation = (id: string) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteOAuthClient(id),
     onSuccess() {
-      queryClient.invalidateQueries(accountQueries.oauthClients._def);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.oauthClients._def,
+      });
     },
   });
 };
@@ -49,7 +51,9 @@ export const useCreateOAuthClientMutation = () => {
   return useMutation<OAuthClientWithSecret, APIError[], OAuthClientRequest>({
     mutationFn: createOAuthClient,
     onSuccess() {
-      queryClient.invalidateQueries(accountQueries.oauthClients._def);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.oauthClients._def,
+      });
     },
   });
 };
@@ -59,7 +63,9 @@ export const useUpdateOAuthClientMutation = (id: string) => {
   return useMutation<OAuthClient, APIError[], Partial<OAuthClientRequest>>({
     mutationFn: (data) => updateOAuthClient(id, data),
     onSuccess() {
-      queryClient.invalidateQueries(accountQueries.oauthClients._def);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.oauthClients._def,
+      });
     },
   });
 };
@@ -67,5 +73,7 @@ export const useUpdateOAuthClientMutation = (id: string) => {
 export const oauthClientsEventHandler = ({ queryClient }: EventHandlerData) => {
   // We may over-fetch because on `onSuccess` also invalidates, but this will be
   // good for UX because Cloud will always be up to date
-  queryClient.invalidateQueries(accountQueries.oauthClients._def);
+  queryClient.invalidateQueries({
+    queryKey: accountQueries.oauthClients._def,
+  });
 };

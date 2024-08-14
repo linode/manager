@@ -40,9 +40,15 @@ import type {
  */
 
 export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
-  const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
-    ['events', 'infinite', filter],
-    ({ pageParam }) =>
+  const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
+    cacheTime: Infinity,
+    getNextPageParam: ({ data, results }) => {
+      if (results === data.length) {
+        return undefined;
+      }
+      return data[data.length - 1].id;
+    },
+    queryFn: ({ pageParam }) =>
       getEvents(
         { page_size: 25 },
         {
@@ -52,17 +58,9 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
           id: pageParam ? { '+lt': pageParam } : undefined,
         }
       ),
-    {
-      cacheTime: Infinity,
-      getNextPageParam: ({ data, results }) => {
-        if (results === data.length) {
-          return undefined;
-        }
-        return data[data.length - 1].id;
-      },
-      staleTime: Infinity,
-    }
-  );
+    queryKey: ['events', 'infinite', filter],
+    staleTime: Infinity,
+  });
 
   const events = query.data?.pages.reduce(
     (events, page) => [...events, ...page.data],
@@ -185,7 +183,9 @@ export const useEventsPollingActions = () => {
   const checkForNewEvents = () => {
     // Invalidating the event poller will cause useEventsPoller's `queryFn`
     // to re-run and pull down any new events.
-    queryClient.invalidateQueries(['events', 'poller']);
+    queryClient.invalidateQueries({
+      queryKey: ['events', 'poller'],
+    });
   };
 
   return {

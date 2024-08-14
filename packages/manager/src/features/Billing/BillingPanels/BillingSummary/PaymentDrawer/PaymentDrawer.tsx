@@ -189,7 +189,9 @@ export const PaymentDrawer = (props: Props) => {
           true,
           response.warnings
         );
-        queryClient.invalidateQueries(accountQueries.payments._def);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.payments._def,
+        });
       })
       .catch((errorResponse) => {
         setSubmitting(false);
