@@ -2325,6 +2325,40 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
+  http.get('*/v4/monitor/services', () => {
+    const response = {
+      data: [
+        {
+          label: 'Linodes',
+          value: 'linode',
+        },
+        { label: 'DbaaS', value: 'dbaas' },
+      ],
+    };
+    return HttpResponse.json(response);
+  }),
+  http.post('*/monitor/alerts', async ({ request }) => {
+    const reqBody = await request.json();
+    const response = {
+      data: [
+        {
+          created: '2021-10-16T04:00:00',
+          created_by: 'user1',
+          id: '35892357',
+          notifications: [
+            {
+              notification_id: '42804',
+              template_name: 'notification',
+            },
+          ],
+          reqBody,
+          updated: '2021-10-16T04:00:00',
+          updated_by: 'user2',
+        },
+      ],
+    };
+    return HttpResponse.json(response);
+  }),
   http.get('*/v4/monitor/services/:serviceType/metric-definitions', () => {
     const response = {
       data: [

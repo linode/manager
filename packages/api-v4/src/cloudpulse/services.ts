@@ -1,6 +1,11 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { JWEToken, JWETokenPayLoad, MetricDefinitions } from './types';
+import {
+  JWEToken,
+  JWETokenPayLoad,
+  MetricDefinitions,
+  ServiceTypes,
+} from './types';
 import { ResourcePage as Page } from 'src/types';
 
 export const getMetricDefinitionsByServiceType = (serviceType: string) => {
@@ -14,6 +19,11 @@ export const getMetricDefinitionsByServiceType = (serviceType: string) => {
   );
 };
 
+export const getCloudPulseServiceTypes = () =>
+  Request<ServiceTypes>(
+    setURL(`${API_ROOT}/monitor/services`),
+    setMethod('GET')
+  );
 export const getJWEToken = (data: JWETokenPayLoad, serviceType: string) =>
   Request<JWEToken>(
     setURL(
