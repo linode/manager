@@ -4,6 +4,12 @@ import { CheckoutBar } from './CheckoutBar';
 
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
+type Story = StoryObj<typeof CheckoutBar>;
+
+const Item = ({ children }: { children?: React.ReactNode }) => (
+  <div style={{ color: 'white', fontStyle: 'italic' }}>{children}</div>
+);
+
 const meta: Meta<typeof CheckoutBar> = {
   component: CheckoutBar,
   decorators: [
@@ -15,12 +21,6 @@ const meta: Meta<typeof CheckoutBar> = {
   ],
   title: 'Components/CheckoutBar',
 };
-
-type Story = StoryObj<typeof CheckoutBar>;
-
-const Item = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ color: 'white', fontStyle: 'italic' }}>{children}</div>
-);
 
 export const Default: Story = {
   args: {
@@ -53,6 +53,14 @@ export const Loading: Story = {
   args: {
     ...Default.args,
     isMakingRequest: true,
+  },
+  render: Default.render,
+};
+
+export const WithFooter: Story = {
+  args: {
+    ...Default.args,
+    footer: <Item>Footer element can go here!</Item>,
   },
   render: Default.render,
 };
