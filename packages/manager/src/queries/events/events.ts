@@ -39,18 +39,14 @@ import type {
  * the next set of events when the items returned by the server may have shifted.
  */
 
-export const useEventsInfiniteQuery = (
-  filter: Filter = EVENTS_LIST_FILTER,
-  limit: number = 25
-) => {
+export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>(
-    ['events', 'infinite', filter, limit],
+    ['events', 'infinite', filter],
     ({ pageParam }) =>
       getEvents(
-        {},
+        { page: pageParam, page_size: 25 },
         {
           ...filter,
-          '+limit': limit,
           '+order': 'desc',
           '+order_by': 'id',
           id: pageParam ? { '+lt': pageParam } : undefined,
@@ -58,11 +54,11 @@ export const useEventsInfiniteQuery = (
       ),
     {
       cacheTime: Infinity,
-      getNextPageParam: ({ data }) => {
-        if (data.length < limit) {
-          return undefined; // No more pages
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
         }
-        return data[data.length - 1].id;
+        return page + 1;
       },
       staleTime: Infinity,
     }
@@ -73,10 +69,7 @@ export const useEventsInfiniteQuery = (
     []
   );
 
-  const lastCreated =
-    events && events.length > 0 ? events[events.length - 1].created : null;
-
-  return { ...query, events, lastCreated };
+  return { ...query, events };
 };
 
 /**
