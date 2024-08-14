@@ -9,13 +9,13 @@ import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import { ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP } from './constants';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
+import { getEntityNameFromEntityType } from './ticketUtils';
 
 import type { CustomFields } from './constants';
 import type {
   FormPayloadValues,
   SupportTicketFormFields,
 } from './SupportTicketDialog';
-import { getEntityNameFromEntityType } from './ticketUtils';
 
 export interface AccountLimitCustomFields extends CustomFields {
   linodePlan: string;
@@ -54,14 +54,21 @@ export const SupportTicketAccountLimitFields = ({
   );
   const kubeTypes = extendTypesQueryResult(kubeTypesQuery);
 
+  // Must be in the same order as the fields are displayed in the form.
   const defaultValues = {
+    ...formState.defaultValues,
+    customerName: `${account?.first_name ?? ''} ${account?.last_name ?? ''}`,
+    // eslint-disable-next-line perfectionist/sort-objects
     companyName: account?.company ?? '',
-    customerName: `${account?.first_name} ${account?.last_name}`,
+    numberOfEntities: '',
+    // eslint-disable-next-line perfectionist/sort-objects
     linodePlan:
       linodeType?.label ??
       kubeTypes.map((type) => type.formattedLabel).join(', ') ??
       '',
-    ...formState.defaultValues,
+    useCase: '',
+    // eslint-disable-next-line perfectionist/sort-objects
+    publicInfo: '',
   };
 
   const shouldShowLinodePlanField =

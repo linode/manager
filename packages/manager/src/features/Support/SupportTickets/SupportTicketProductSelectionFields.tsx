@@ -18,6 +18,7 @@ import {
   ENTITY_ID_TO_NAME_MAP,
   ENTITY_MAP,
 } from './constants';
+import { getEntityNameFromEntityType } from './ticketUtils';
 
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type {
@@ -26,7 +27,6 @@ import type {
   TicketType,
 } from './SupportTicketDialog';
 import type { APIError } from '@linode/api-v4';
-import { getEntityNameFromEntityType } from './ticketUtils';
 
 interface Props {
   ticketType?: TicketType;
