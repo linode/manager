@@ -38,6 +38,8 @@ export const NotificationMenuV2 = () => {
   const notificationContext = React.useContext(_notificationContext);
 
   const { data, events } = useEventsInfiniteQuery();
+  const eventsData = data?.pages[0]?.data ?? [];
+
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
@@ -143,8 +145,8 @@ export const NotificationMenuV2 = () => {
             </LinkButton>
           </Box>
           <Divider spacingBottom={0} />
-          {data ? (
-            data.pages[0].data
+          {eventsData.length > 0 ? (
+            eventsData
               .slice(0, 20)
               .map((event) => (
                 <RenderEventV2
