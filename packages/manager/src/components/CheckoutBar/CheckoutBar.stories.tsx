@@ -11,6 +11,9 @@ const Item = ({ children }: { children?: React.ReactNode }) => (
 );
 
 const meta: Meta<typeof CheckoutBar> = {
+  argTypes: {
+    onDeploy: { action: 'onDeploy' },
+  },
   component: CheckoutBar,
   decorators: [
     (Story: StoryFn) => (
@@ -22,6 +25,8 @@ const meta: Meta<typeof CheckoutBar> = {
   title: 'Components/CheckoutBar',
 };
 
+export default meta;
+
 export const Default: Story = {
   args: {
     calculatedPrice: 30.0,
@@ -30,7 +35,6 @@ export const Default: Story = {
     onDeploy: () => alert('Deploy clicked'),
     submitText: 'Submit',
   },
-  render: (args) => <CheckoutBar {...args} />,
 };
 
 export const WithAgreement: Story = {
@@ -38,7 +42,6 @@ export const WithAgreement: Story = {
     ...Default.args,
     agreement: <Item>Agreement item can go here!</Item>,
   },
-  render: Default.render,
 };
 
 export const Disabled: Story = {
@@ -46,7 +49,6 @@ export const Disabled: Story = {
     ...Default.args,
     disabled: true,
   },
-  render: Default.render,
 };
 
 export const Loading: Story = {
@@ -54,7 +56,6 @@ export const Loading: Story = {
     ...Default.args,
     isMakingRequest: true,
   },
-  render: Default.render,
 };
 
 export const WithFooter: Story = {
@@ -62,7 +63,4 @@ export const WithFooter: Story = {
     ...Default.args,
     footer: <Item>Footer element can go here!</Item>,
   },
-  render: Default.render,
 };
-
-export default meta;
