@@ -121,7 +121,7 @@ export const deleteFirewall = (firewallID: number) =>
     )
   );
 
-// FIREWALL RULES
+// #region Firewall Rules
 
 /**
  * getFirewallRules
@@ -161,7 +161,7 @@ export const updateFirewallRules = (firewallID: number, data: FirewallRules) =>
     )
   );
 
-// DEVICES
+// #region Devices
 
 /**
  * getFirewallDevices
@@ -245,7 +245,7 @@ export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
     )
   );
 
-// TEMPLATES
+// #region Templates
 
 /**
  * getTemplates
