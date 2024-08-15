@@ -25,7 +25,7 @@ describe('EditVolumeDrawer', () => {
     );
 
     const { getByLabelText } = renderWithTheme(
-      <EditVolumeDrawer onClose={vi.fn} open={true} volume={volume} />,
+      <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: true },
       }
@@ -49,7 +49,7 @@ describe('EditVolumeDrawer', () => {
     );
 
     const { queryByRole } = renderWithTheme(
-      <EditVolumeDrawer onClose={vi.fn} open={true} volume={volume} />,
+      <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: false },
       }
@@ -70,7 +70,7 @@ describe('EditVolumeDrawer', () => {
     );
 
     const { queryByRole } = renderWithTheme(
-      <EditVolumeDrawer onClose={vi.fn} open={true} volume={volume} />,
+      <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: true },
       }

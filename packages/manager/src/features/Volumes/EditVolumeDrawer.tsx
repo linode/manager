@@ -129,13 +129,10 @@ export const EditVolumeDrawer = (props: Props) => {
               marginLeft: '2px',
               marginTop: '16px',
             }}
-            alignItems="center"
-            display="flex"
-            flexDirection="row"
           >
             <Checkbox
               checked={volume?.encryption === 'enabled'}
-              disabled={true}
+              disabled
               text="Encrypt Volume"
               toolTipText={BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY}
             />
