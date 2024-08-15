@@ -8,6 +8,8 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
+import { objectStorageBucketFactoryGen2 } from 'src/factories';
+
 import type {
   CreateObjectStorageBucketPayload,
   ObjectStorageBucket,
@@ -93,7 +95,12 @@ export const mockCreateBucket = (
   return cy.intercept(
     'POST',
     apiMatcher('object-storage/buckets'),
-    makeResponse(bucket)
+    makeResponse(
+      objectStorageBucketFactoryGen2.build({
+        ...bucket,
+        s3_endpoint: undefined,
+      })
+    )
   );
 };
 

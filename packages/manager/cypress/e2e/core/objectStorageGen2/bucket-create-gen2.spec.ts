@@ -1,14 +1,18 @@
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  interceptCreateBucket,
-  interceptDeleteBucket,
-  interceptGetBuckets,
   mockGetObjectStorageEndpoints,
+  mockGetBuckets,
+  mockDeleteBucket,
+  mockCreateBucket,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
-import { objectStorageEndpointsFactory, accountFactory } from 'src/factories';
+import {
+  accountFactory,
+  objectStorageBucketFactoryGen2,
+  objectStorageEndpointsFactory,
+} from 'src/factories';
 import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 create bucket tests', () => {
@@ -18,38 +22,44 @@ describe('Object Storage Gen2 create bucket tests', () => {
    * Confirms S3 endpoint hostname displayed to differentiate between identical options in the dropdown
    */
   it('can create a bucket with endpoint type 0', () => {
+    const endpointTypeE0 = 'Legacy (E0)';
     const bucketLabel = randomLabel();
-    const bucketRegion = 'Seattle, WA';
-    const bucketCluster = 'us-sea';
+    const bucketRegionSelect = 'US, Seattle, WA';
+    const bucketRegion = 'us-sea';
 
-    interceptGetBuckets().as('getBuckets');
-    interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
-    interceptCreateBucket().as('createBucket');
+    mockGetBuckets([]).as('getBuckets');
+    mockDeleteBucket(bucketLabel, bucketRegion).as('deleteBucket');
+    mockCreateBucket({
+      label: bucketLabel,
+      endpoint_type: 'E0',
+      cors_enabled: true,
+      region: bucketRegion,
+    }).as('createBucket');
 
     const mockEndpoints: ObjectStorageEndpoint[] = [
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E0',
-        region: 'us-sea',
+        region: bucketRegion,
         s3_endpoint: null,
       }),
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E1',
-        region: 'us-sea',
+        region: bucketRegion,
         s3_endpoint: null,
       }),
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E1',
-        region: 'us-sea',
+        region: bucketRegion,
         s3_endpoint: 'us-sea-1.linodeobjects.com',
       }),
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E2',
-        region: 'us-sea',
+        region: bucketRegion,
         s3_endpoint: null,
       }),
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E3',
-        region: 'us-sea',
+        region: bucketRegion,
         s3_endpoint: null,
       }),
     ];
@@ -72,14 +82,19 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     cy.visitWithLogin('/object-storage/buckets/create');
-    cy.wait(['@getFeatureFlags', '@getAccount', '@getObjectStorageEndpoints']);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getBuckets',
+      '@getAccount',
+      '@getObjectStorageEndpoints',
+    ]);
 
     ui.drawer
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${bucketRegion}{enter}`);
+        ui.regionSelect.find().click().type(`${bucketRegionSelect}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -125,6 +140,17 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
+    //wait for the newly 'created' mocked bucket to appear
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      label: bucketLabel,
+      region: bucketRegion,
+      endpoint_type: 'E0',
+      s3_endpoint: undefined,
+    });
+    mockGetBuckets([mockBucket]).as('getBuckets');
+
+    cy.wait(['@getBuckets']);
+
     // Confirm request body has expected data
     cy.wait('@createBucket').then((xhr) => {
       const requestPayload = xhr.request.body;
@@ -135,12 +161,12 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ui.drawer.find().should('not.exist');
 
     // Confirm that bucket is created, initiate deletion for cleanup
-    // TODO: when M3-8304 is complete, confirm endpoint type and endpoint url are visible
+    cy.findByText(endpointTypeE0).should('be.visible');
     cy.findByText(bucketLabel)
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        cy.findByText(bucketRegion).should('be.visible');
+        cy.findByText(bucketRegionSelect).should('be.visible');
         ui.button.findByTitle('Delete').should('be.visible').click();
       });
 
@@ -157,7 +183,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       });
 
     // Confirm bucket gets deleted
-    cy.wait('@deleteBucket').its('response.statusCode').should('eq', 200);
+    mockGetBuckets([]).as('getBuckets');
+    cy.wait(['@deleteBucket', '@getBuckets']);
     cy.findByText(bucketLabel).should('not.exist');
   });
 });
