@@ -56,40 +56,33 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
     cacheTime: Infinity,
     getNextPageParam: (lastPage, allPages) => {
-      // Destructure the data array from the last page
-      const { data } = lastPage;
+      // Get the last event from the current page.
+      const lastEvent = lastPage.data[lastPage.data.length - 1];
 
-      // Get the last event from the current page
-      const lastEvent = data[data.length - 1];
-
-      // If the last page is empty, we've reached the end of the data
       if (!lastEvent) {
         return undefined;
       }
 
-      // Extract the 'created' date from the last event
-      const { created: lastEventDate } = lastEvent;
+      const { created: lastEventDate, id: lastEventId } = lastEvent;
 
-      // Check if we have more than one page
+      // If there are multiple pages, compare the last event of the current page with the previous page.
       if (allPages.length > 1) {
-        // Get the previous page
+        // Retrieve the last event from the previous page for comparison with the current page.
         const previousPage = allPages[allPages.length - 2];
-
-        // Safely get the 'created' date of the last event from the previous page
         const previousLastEvent =
           previousPage.data[previousPage.data.length - 1];
-        const previousLastEventDate = previousLastEvent?.created;
 
-        // If the last event date of the current page matches the last event date of the previous page,
-        // we've reached the end of unique data
-        if (previousLastEventDate === lastEventDate) {
+        // If the last event of the current page matches the previous page, we've reached the end of unique data.
+        if (
+          previousLastEvent?.created === lastEventDate &&
+          previousLastEvent?.id === lastEventId
+        ) {
           return undefined;
         }
       }
 
-      // If we haven't returned undefined, we have more data to fetch
-      // Return the date of the last event as the next page parameter
-      return lastEventDate;
+      // Otherwise, return the last event's date and ID as the next page parameter for the API to fetch subsequent events.
+      return { created: lastEventDate, id: lastEventId };
     },
     queryFn: ({ pageParam }) =>
       getEvents(
@@ -99,9 +92,12 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
           '+limit': LIMIT,
           '+order': 'desc',
           '+order_by': 'created',
-          created: pageParam
-            ? { '+lt': pageParam }
-            : { '+gt': defaultCreatedFilter },
+          ...(pageParam
+            ? {
+                created: { '+lte': pageParam.created },
+                id: { '+lt': pageParam.id },
+              }
+            : { created: { '+gt': defaultCreatedFilter } }),
         }
       ),
     queryKey: ['events', 'infinite', filter],
