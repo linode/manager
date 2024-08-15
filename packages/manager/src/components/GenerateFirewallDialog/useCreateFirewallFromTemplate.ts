@@ -49,6 +49,7 @@ const createFirewallFromTemplate = async (options: {
 }): Promise<Firewall> => {
   const { createFirewall, queryClient, templateSlug, updateProgress } = options;
   updateProgress(0);
+  await new Promise((resolve) => setTimeout(resolve, 0)); // return control to the DOM to update the progress
 
   // Get firewalls and firewall template in parallel
   const [{ rules, slug }, firewalls] = await Promise.all([
