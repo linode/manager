@@ -56,6 +56,7 @@ import ObjectTableContent from './ObjectTableContent';
 
 import type {
   ObjectStorageClusterID,
+  ObjectStorageEndpointTypes,
   ObjectStorageObject,
   ObjectStorageObjectList,
 } from '@linode/api-v4';
@@ -64,8 +65,12 @@ interface MatchParams {
   bucketName: string;
   clusterId: ObjectStorageClusterID;
 }
+interface Props {
+  endpointType: ObjectStorageEndpointTypes;
+}
 
-export const BucketDetail = () => {
+export const BucketDetail = (props: Props) => {
+  const { endpointType } = props;
   /**
    * @note If `Object Storage Access Key Regions` is enabled, clusterId will actually contain
    * the bucket's region id
@@ -473,6 +478,7 @@ export const BucketDetail = () => {
         bucketName={bucketName}
         clusterId={clusterId}
         displayName={selectedObject?.name}
+        endpointType={endpointType}
         lastModified={selectedObject?.last_modified}
         name={selectedObject?.name}
         onClose={closeObjectDetailsDrawer}
