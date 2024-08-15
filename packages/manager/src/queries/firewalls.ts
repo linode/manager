@@ -6,6 +6,8 @@ import {
   getFirewall,
   getFirewallDevices,
   getFirewalls,
+  getTemplate,
+  getTemplates,
   updateFirewall,
   updateFirewallRules,
 } from '@linode/api-v4/lib/firewalls';
@@ -14,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
+import { linodeQueries } from './linodes/linodes';
 import { nodebalancerQueries } from './nodebalancers';
 import { profileQueries } from './profile/profile';
 
@@ -25,11 +28,11 @@ import type {
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
+  FirewallTemplate,
   Params,
   ResourcePage,
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { linodeQueries } from './linodes/linodes';
 
 const getAllFirewallDevices = (
   id: number,
@@ -43,6 +46,9 @@ const getAllFirewallDevices = (
       { ...filter, ...passedFilter }
     )
   )().then((data) => data.data);
+
+const getAllFirewallTemplates = () =>
+  getAll<FirewallTemplate>(getTemplates)().then((data) => data.data);
 
 const getAllFirewallsRequest = () =>
   getAll<Firewall>((passedParams, passedFilter) =>
@@ -71,6 +77,14 @@ export const firewallQueries = createQueryKeys('firewalls', {
         queryKey: [params, filter],
       }),
     },
+    queryKey: null,
+  },
+  template: (slug: string) => ({
+    queryFn: () => getTemplate(slug),
+    queryKey: [slug],
+  }),
+  templates: {
+    queryFn: getAllFirewallTemplates,
     queryKey: null,
   },
 });

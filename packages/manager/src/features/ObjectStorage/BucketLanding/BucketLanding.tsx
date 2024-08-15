@@ -16,6 +16,7 @@ import {
   useDeleteBucketMutation,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
+import { isBucketError } from 'src/queries/object-storage/requests';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
@@ -33,9 +34,9 @@ import type {
   APIError,
   ObjectStorageBucket,
   ObjectStorageCluster,
+  ObjectStorageEndpoint,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { BucketError } from 'src/queries/object-storage/requests';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -120,8 +121,8 @@ export const BucketLanding = () => {
   }, [removeBucketConfirmationDialog]);
 
   const unavailableClusters =
-    objectStorageBucketsResponse?.errors.map(
-      (error: BucketError) => error.cluster
+    objectStorageBucketsResponse?.errors.map((error) =>
+      isBucketError(error) ? error.cluster : error.endpoint
     ) || [];
 
   if (isRestrictedUser) {
@@ -238,6 +239,7 @@ export const BucketLanding = () => {
         bucketLabel={bucketForDetails?.label}
         cluster={bucketForDetails?.cluster}
         created={bucketForDetails?.created}
+        endpointType={bucketForDetails?.endpoint_type}
         hostname={bucketForDetails?.hostname}
         objectsNumber={bucketForDetails?.objects}
         onClose={closeBucketDetailDrawer}
@@ -253,7 +255,7 @@ const RenderEmpty = () => {
 };
 
 interface UnavailableClustersDisplayProps {
-  unavailableClusters: ObjectStorageCluster[];
+  unavailableClusters: (ObjectStorageCluster | ObjectStorageEndpoint)[];
 }
 
 const UnavailableClustersDisplay = React.memo(

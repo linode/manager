@@ -61,6 +61,7 @@ export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
   | 'Akamai Cloud Load Balancer'
+  | 'Akamai Cloud Pulse'
   | 'Block Storage'
   | 'Block Storage Encryption'
   | 'Cloud Firewall'
