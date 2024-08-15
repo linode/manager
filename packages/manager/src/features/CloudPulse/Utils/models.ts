@@ -1,11 +1,5 @@
-import type {
-  DatabaseEngine,
-  DatabaseInstance,
-  DatabaseType,
-  Linode,
-  Volume,
-} from '@linode/api-v4';
-import { QueryFunction, QueryKey } from '@tanstack/react-query';
+import type { DatabaseEngine, DatabaseType } from '@linode/api-v4';
+import type { QueryFunction, QueryKey } from '@tanstack/react-query';
 
 /**
  * The CloudPulseServiceTypeMap has list of filters to be built for different service types like dbaas, linode etc.,The properties here are readonly as it is only for reading and can't be modified in code
