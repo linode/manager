@@ -1,19 +1,14 @@
 import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCreateBucket,
   interceptDeleteBucket,
   interceptGetBuckets,
   mockGetObjectStorageEndpoints,
 } from 'support/intercepts/object-storage';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { objectStorageEndpointsFactory, accountFactory } from 'src/factories';
-import type { Flags } from 'src/featureFlags';
 import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 create bucket tests', () => {
@@ -60,12 +55,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ];
 
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(true),
-      objectStorageGen2: makeFeatureFlagData<Flags['objectStorageGen2']>({
-        enabled: true,
-      }),
+      objMultiCluster: true,
+      objectStorageGen2: { enabled: true },
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetAccount(
       accountFactory.build({
         capabilities: [
@@ -80,12 +72,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     cy.visitWithLogin('/object-storage/buckets/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getObjectStorageEndpoints',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getObjectStorageEndpoints']);
 
     ui.drawer
       .findByTitle('Create Bucket')
