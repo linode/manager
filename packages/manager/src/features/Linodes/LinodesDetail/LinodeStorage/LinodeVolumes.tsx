@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
@@ -72,6 +73,10 @@ export const LinodeVolumes = () => {
     },
     filter
   );
+
+  const {
+    isBlockStorageEncryptionFeatureEnabled,
+  } = useIsBlockStorageEncryptionFeatureEnabled();
 
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(false);
@@ -153,6 +158,9 @@ export const LinodeVolumes = () => {
               handleResize: () => handleResize(volume),
               handleUpgrade: () => null,
             }}
+            isBlockStorageEncryptionFeatureEnabled={
+              isBlockStorageEncryptionFeatureEnabled
+            }
             isDetailsPageRow
             key={volume.id}
             volume={volume}
@@ -215,6 +223,9 @@ export const LinodeVolumes = () => {
             <Hidden xsDown>
               <TableCell>File System Path</TableCell>
             </Hidden>
+            {isBlockStorageEncryptionFeatureEnabled && (
+              <TableCell>Encryption</TableCell>
+            )}
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
