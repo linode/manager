@@ -53,8 +53,12 @@ export const StyledBannerAction = styled(Box, {
   shouldForwardProp: omittedProps(['warning']),
 })<{ warning?: boolean }>(({ theme, warning }) => ({
   color: warning ? theme.bg.mainContentBanner : theme.color.black,
-  paddingRight: theme.spacing(2),
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2),
+    paddingTop: 0,
+  },
   [theme.breakpoints.up('sm')]: {
+    paddingRight: theme.spacing(2),
     textWrap: 'nowrap',
   },
 }));
