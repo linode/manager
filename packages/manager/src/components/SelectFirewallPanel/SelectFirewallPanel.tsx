@@ -7,15 +7,20 @@ import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
+import { useFlags } from 'src/hooks/useFlags';
+import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useFirewallsQuery } from 'src/queries/firewalls';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
 import { Autocomplete } from '../Autocomplete/Autocomplete';
+import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewallDialog';
 import { LinkButton } from '../LinkButton';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 interface Props {
   disabled?: boolean;
@@ -35,22 +40,31 @@ export const SelectFirewallPanel = (props: Props) => {
   } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [isFirewallDialogOpen, setIsFirewallDialogOpen] = React.useState(false);
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
   const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
   );
 
+  const firewallFormEventOptions: LinodeCreateFormEventOptions = {
+    createType: queryParams.type ?? 'OS',
+    headerName: 'Firewall',
+    interaction: 'click',
+    label: 'Firewall',
+  };
+  const flags = useFlags();
+
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const secureVMFirewallBanner =
+    (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
+
   const handleCreateFirewallClick = () => {
     setIsDrawerOpen(true);
     if (isFromLinodeCreate) {
-      sendLinodeCreateFormStepEvent({
-        action: 'click',
-        category: 'button',
-        createType: queryParams.type ?? 'OS',
-        formStepName: 'Firewall Panel',
+      sendLinodeCreateFormInputEvent({
+        ...firewallFormEventOptions,
         label: 'Create Firewall',
-        version: 'v1',
       });
     }
   };
@@ -87,17 +101,39 @@ export const SelectFirewallPanel = (props: Props) => {
       </Typography>
       <Stack>
         {helperText}
+        {secureVMFirewallBanner !== false &&
+          secureVMFirewallBanner.linodeCreate && (
+            <AkamaiBanner
+              action={
+                secureVMFirewallBanner.generateActionText ? (
+                  <LinkButton onClick={() => setIsFirewallDialogOpen(true)}>
+                    {secureVMFirewallBanner.generateActionText}
+                  </LinkButton>
+                ) : undefined
+              }
+              margin={2}
+              {...secureVMFirewallBanner.linodeCreate}
+            />
+          )}
         <Autocomplete
           onChange={(_, selection) => {
             handleFirewallChange(selection?.value ?? -1);
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'select',
-              createType: queryParams.type ?? 'OS',
-              formStepName: 'Firewall Panel',
-              label: 'Assign Firewall',
-              version: 'v1',
-            });
+            // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
+            if (!selection) {
+              sendLinodeCreateFormInputEvent({
+                ...firewallFormEventOptions,
+                interaction: 'clear',
+                subheaderName: 'Assign Firewall',
+                trackOnce: true,
+              });
+            } else {
+              sendLinodeCreateFormInputEvent({
+                ...firewallFormEventOptions,
+                interaction: 'change',
+                subheaderName: 'Assign Firewall',
+                trackOnce: true,
+              });
+            }
           }}
           disabled={disabled}
           errorText={error?.[0].reason}
@@ -118,6 +154,11 @@ export const SelectFirewallPanel = (props: Props) => {
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}
+        />
+        <GenerateFirewallDialog
+          onClose={() => setIsFirewallDialogOpen(false)}
+          onFirewallGenerated={handleFirewallCreated}
+          open={isFirewallDialogOpen}
         />
       </Stack>
     </Paper>

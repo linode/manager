@@ -82,7 +82,7 @@ describe('Linode Create v2 Summary', () => {
       useFormOptions: { defaultValues: { region: region.id } },
     });
 
-    await findByText(region.label);
+    await findByText(`US, ${region.label}`);
   });
 
   it('should render a plan (type) label if a region and type are selected', async () => {

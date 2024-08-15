@@ -61,7 +61,9 @@ export const TwoFactor = (props: TwoFactorProps) => {
    */
   const handleEnableSuccess = (scratchCode: string) => {
     // Refetch Profile with React Query so profile is up to date
-    queryClient.invalidateQueries(profileQueries.profile().queryKey);
+    queryClient.invalidateQueries({
+      queryKey: profileQueries.profile().queryKey,
+    });
     setSuccess('Two-factor authentication has been enabled.');
     setShowQRCode(false);
     setTwoFactorEnabled(true);

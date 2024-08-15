@@ -1,4 +1,5 @@
 import {
+  cancelObjectStorage,
   createBucket,
   deleteBucket,
   deleteBucketWithRegion,
@@ -23,6 +24,7 @@ import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { useAccount } from '../account/account';
 import { accountQueries } from '../account/queries';
+import { updateAccountSettingsData } from '../account/settings';
 import { queryPresets } from '../base';
 import { useRegionsQuery } from '../regions/regions';
 import {
@@ -340,3 +342,20 @@ export const useObjectStorageTypesQuery = (enabled = true) =>
     ...queryPresets.oneTimeFetch,
     enabled,
   });
+
+export const useCancelObjectStorageMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[]>({
+    mutationFn: cancelObjectStorage,
+    onSuccess() {
+      updateAccountSettingsData({ object_storage: 'disabled' }, queryClient);
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.buckets.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKeys._def,
+      });
+    },
+  });
+};

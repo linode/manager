@@ -112,7 +112,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <ObjectList {...props} />
+              <ObjectList {...props} endpointType={endpointType} />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <BucketAccess
