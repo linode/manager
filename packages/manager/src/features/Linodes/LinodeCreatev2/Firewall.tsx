@@ -4,6 +4,7 @@ import { useController, useFormContext } from 'react-hook-form';
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
+import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { Paper } from 'src/components/Paper';
@@ -29,7 +30,6 @@ export const Firewall = () => {
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  // @ts-expect-error TODO Secure VMs: wire up firewall generation dialog
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
 
   const flags = useFlags();
@@ -103,6 +103,11 @@ export const Firewall = () => {
         onClose={() => setIsDrawerOpen(false)}
         onFirewallCreated={(firewall) => field.onChange(firewall.id)}
         open={isDrawerOpen}
+      />
+      <GenerateFirewallDialog
+        onClose={() => setIsGenerateDialogOpen(false)}
+        onFirewallGenerated={(firewall) => onChange(firewall.id)}
+        open={isGenerateDialogOpen}
       />
     </Paper>
   );

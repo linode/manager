@@ -15,6 +15,7 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
 import { Autocomplete } from '../Autocomplete/Autocomplete';
+import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewallDialog';
 import { LinkButton } from '../LinkButton';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
@@ -39,7 +40,6 @@ export const SelectFirewallPanel = (props: Props) => {
   } = props;
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  // @ts-expect-error TODO Secure VMs: wire up firewall generation dialog
   const [isFirewallDialogOpen, setIsFirewallDialogOpen] = React.useState(false);
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -154,6 +154,11 @@ export const SelectFirewallPanel = (props: Props) => {
           onClose={() => setIsDrawerOpen(false)}
           onFirewallCreated={handleFirewallCreated}
           open={isDrawerOpen}
+        />
+        <GenerateFirewallDialog
+          onClose={() => setIsFirewallDialogOpen(false)}
+          onFirewallGenerated={handleFirewallCreated}
+          open={isFirewallDialogOpen}
         />
       </Stack>
     </Paper>

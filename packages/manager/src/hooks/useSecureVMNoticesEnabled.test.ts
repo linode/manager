@@ -5,6 +5,8 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { useSecureVMNoticesEnabled } from './useSecureVMNoticesEnabled';
 
+import type { Flags } from 'src/featureFlags';
+
 describe('useSecureVMNoticesEnabled', () => {
   it('returns true when the header is included', async () => {
     server.use(
@@ -18,7 +20,9 @@ describe('useSecureVMNoticesEnabled', () => {
     const { result } = renderHook(() => useSecureVMNoticesEnabled(), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
-          flags: { secureVmCopy: { bannerLabel: 'Test' } },
+          flags: {
+            secureVmCopy: { bannerLabel: 'Test' } as Flags['secureVmCopy'],
+          },
         }),
     });
 
@@ -39,7 +43,9 @@ describe('useSecureVMNoticesEnabled', () => {
     const { result } = renderHook(() => useSecureVMNoticesEnabled(), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
-          flags: { secureVmCopy: { bannerLabel: 'Test' } },
+          flags: {
+            secureVmCopy: { bannerLabel: 'Test' } as Flags['secureVmCopy'],
+          },
         }),
     });
 
@@ -60,7 +66,7 @@ describe('useSecureVMNoticesEnabled', () => {
     const { result } = renderHook(() => useSecureVMNoticesEnabled(), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
-          flags: { secureVmCopy: {} },
+          flags: { secureVmCopy: {} as Flags['secureVmCopy'] },
         }),
     });
 
@@ -73,7 +79,7 @@ describe('useSecureVMNoticesEnabled', () => {
     const { result } = renderHook(() => useSecureVMNoticesEnabled(), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
-          flags: { secureVmCopy: {} },
+          flags: { secureVmCopy: {} as Flags['secureVmCopy'] },
         }),
     });
 

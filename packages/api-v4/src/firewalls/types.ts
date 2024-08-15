@@ -55,6 +55,11 @@ export interface FirewallDevice {
   entity: FirewallDeviceEntity;
 }
 
+export interface FirewallTemplate {
+  slug: string;
+  rules: FirewallRules;
+}
+
 export interface CreateFirewallPayload {
   label?: string;
   tags?: string[];

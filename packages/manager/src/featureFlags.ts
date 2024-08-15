@@ -199,6 +199,9 @@ interface SecureVMCopy {
   firewallAuthorizationWarning?: string;
   firewallDetails?: BannerContent;
   generateActionText?: string;
+  generateDocsLink: string;
+  generatePrompt?: BannerContent;
+  generateSuccess?: BannerContent;
   linodeCreate?: BannerContent;
 }
 

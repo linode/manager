@@ -4,6 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -58,7 +59,6 @@ const FirewallLanding = () => {
 
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
-  // @ts-expect-error TODO Secure VMs: wire up firewall generation dialog
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
 
   const flags = useFlags();
@@ -203,6 +203,10 @@ const FirewallLanding = () => {
           selectedFirewall={selectedFirewall}
         />
       )}
+      <GenerateFirewallDialog
+        onClose={() => setIsGenerateDialogOpen(false)}
+        open={isGenerateDialogOpen}
+      />
     </React.Fragment>
   );
 };
