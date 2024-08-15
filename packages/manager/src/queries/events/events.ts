@@ -55,12 +55,41 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
 
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
     cacheTime: Infinity,
-    getNextPageParam: ({ data }) => {
-      if (data.length < LIMIT) {
-        // If the page does not have 25 items, we know there is no more data to fetch.
+    getNextPageParam: (lastPage, allPages) => {
+      // Destructure the data array from the last page
+      const { data } = lastPage;
+
+      // Get the last event from the current page
+      const lastEvent = data[data.length - 1];
+
+      // If the last page is empty, we've reached the end of the data
+      if (!lastEvent) {
         return undefined;
       }
-      return data[data.length - 1].created;
+
+      // Extract the 'created' date from the last event
+      const { created: lastEventDate } = lastEvent;
+
+      // Check if we have more than one page
+      if (allPages.length > 1) {
+        // Get the previous page
+        const previousPage = allPages[allPages.length - 2];
+
+        // Safely get the 'created' date of the last event from the previous page
+        const previousLastEvent =
+          previousPage.data[previousPage.data.length - 1];
+        const previousLastEventDate = previousLastEvent?.created;
+
+        // If the last event date of the current page matches the last event date of the previous page,
+        // we've reached the end of unique data
+        if (previousLastEventDate === lastEventDate) {
+          return undefined;
+        }
+      }
+
+      // If we haven't returned undefined, we have more data to fetch
+      // Return the date of the last event as the next page parameter
+      return lastEventDate;
     },
     queryFn: ({ pageParam }) =>
       getEvents(
