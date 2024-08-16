@@ -139,7 +139,7 @@ describe('Event fetching and polling', () => {
         mockGetEvents([mockEvent]).as('getEventsInitialFetches');
         cy.clock();
         cy.visitWithLogin('/');
-        cy.tick(1);
+        cy.tick(10000);
 
         // Wait for Cloud to make its initial 2 requests to the events endpoint
         // before we begin monitoring polling intervals.
@@ -211,7 +211,7 @@ describe('Event fetching and polling', () => {
         mockGetEvents(mockEvents).as('getEventsInitialFetches');
         cy.clock();
         cy.visitWithLogin('/');
-        cy.tick(1);
+        cy.tick(10000);
 
         // Wait for Cloud to make its initial 2 requests to the events endpoint
         // before we begin monitoring polling intervals.
