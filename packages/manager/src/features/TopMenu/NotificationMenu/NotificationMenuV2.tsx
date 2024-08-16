@@ -109,6 +109,7 @@ export const NotificationMenuV2 = () => {
         </IconButton>
       </TopMenuTooltip>
       <Popover
+        data-qa-notification-menu
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',

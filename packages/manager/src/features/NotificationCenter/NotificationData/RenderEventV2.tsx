@@ -44,6 +44,8 @@ export const RenderEventV2 = React.memo((props: RenderEventProps) => {
     <RenderEventStyledBox
       className={unseenEventClass}
       data-testid={event.action}
+      data-qa-event={event.id}
+      data-qa-event-seen={event.seen}
     >
       <RenderEventGravatarV2 username={event.username} />
       <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>

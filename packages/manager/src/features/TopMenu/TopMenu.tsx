@@ -50,7 +50,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           </Typography>
         </Box>
       )}
-      <AppBar>
+      <AppBar data-qa-appbar>
         <Toolbar
           sx={(theme) => ({
             '&.MuiToolbar-root': {
