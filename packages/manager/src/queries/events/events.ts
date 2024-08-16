@@ -258,14 +258,9 @@ export const useMarkEventsAsSeen = () => {
               };
             }
 
-            let foundLatestSeenEvent = false;
-
             for (const page of prev.pages) {
               for (const event of page.data) {
-                if (event.id === eventId) {
-                  foundLatestSeenEvent = true;
-                }
-                if (foundLatestSeenEvent) {
+                if (event.id <= eventId) {
                   event.seen = true;
                 }
               }

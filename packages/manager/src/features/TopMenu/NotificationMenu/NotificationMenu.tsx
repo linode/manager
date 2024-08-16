@@ -19,9 +19,11 @@ import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotificatio
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMarkEventsAsSeen } from 'src/queries/events/events';
-import { ThunkDispatch } from 'src/store/types';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
+import { getHighestEventId } from './utils';
+
+import type { ThunkDispatch } from 'src/store/types';
 
 const StyledChip = styled(Chip)(() => ({
   '& .MuiChip-label': {
@@ -68,9 +70,10 @@ export const NotificationMenu = () => {
 
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
-      // Dismiss seen notifications after the menu has closed.
-      if (eventNotifications.length > 0) {
-        markEventsAsSeen(eventNotifications[0].eventId);
+      if (eventNotifications && eventNotifications.length > 0) {
+        const highestUnseenId = getHighestEventId(eventNotifications);
+
+        markEventsAsSeen(highestUnseenId);
       }
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
