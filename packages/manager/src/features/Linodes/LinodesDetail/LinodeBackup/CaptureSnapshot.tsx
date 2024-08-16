@@ -30,6 +30,7 @@ export const CaptureSnapshot = (props: Props) => {
     error: snapshotError,
     isLoading: isSnapshotLoading,
     mutateAsync: takeSnapshot,
+    reset,
   } = useLinodeBackupSnapshotMutation(linodeId);
 
   const [
@@ -51,6 +52,12 @@ export const CaptureSnapshot = (props: Props) => {
   });
 
   const hasErrorFor = getErrorMap(['label'], snapshotError);
+
+  React.useEffect(() => {
+    if (isSnapshotConfirmationDialogOpen) {
+      reset();
+    }
+  }, [isSnapshotConfirmationDialogOpen, reset]);
 
   return (
     <Paper>
