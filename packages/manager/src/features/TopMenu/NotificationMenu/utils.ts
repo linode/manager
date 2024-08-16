@@ -12,16 +12,33 @@ function isNotificationItem(
   return 'eventId' in item;
 }
 
-export const getHighestEventId = (events: EventOrNotification[]): number =>
-  events.reduce((highestId, event) => {
-    const id = isNotificationItem(event) ? event.eventId ?? 0 : event.id;
-    return Math.max(highestId, id);
-  }, 0);
+export const getHighestEventId = (
+  events: EventOrNotification[]
+): null | number => {
+  let highestId: null | number = null;
 
-// This is an optimization for the NotificationMenuV2 component since we know from the events which are unseen.
-export const getHighestUnseenEventId = (events: Event[]): number =>
-  events.reduce(
-    (highestId, event) =>
-      !event.seen ? Math.max(highestId, event.id) : highestId,
-    0
-  );
+  for (const event of events) {
+    const id = isNotificationItem(event) ? event.eventId ?? null : event.id;
+
+    if (id !== null) {
+      highestId = highestId === null ? id : Math.max(highestId, id);
+    }
+  }
+
+  return highestId;
+};
+
+export const getHighestUnseenEventId = (events: Event[]) => {
+  let highestUnseenEventId: null | number = null;
+
+  for (const event of events) {
+    if (
+      !event.seen &&
+      (highestUnseenEventId === null || event.id > highestUnseenEventId)
+    ) {
+      highestUnseenEventId = event.id;
+    }
+  }
+
+  return highestUnseenEventId;
+};

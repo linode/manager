@@ -5,8 +5,8 @@ import { getHighestEventId, getHighestUnseenEventId } from './utils';
 import type { NotificationItem } from 'src/features/NotificationCenter/NotificationSection';
 
 describe('getHighestEventId', () => {
-  it('should return 0 for an empty array', () => {
-    expect(getHighestEventId([])).toBe(0);
+  it('should return null for an empty array', () => {
+    expect(getHighestEventId([])).toBe(null);
   });
 
   it('should return the highest id of events', () => {
@@ -45,8 +45,8 @@ describe('getHighestUnseenEventId', () => {
     eventFactory.resetSequenceNumber();
   });
 
-  it('should return 0 for an empty array', () => {
-    expect(getHighestUnseenEventId([])).toBe(0);
+  it('should return null for an empty array', () => {
+    expect(getHighestUnseenEventId([])).toBe(null);
   });
 
   it('should return the highest id of unseen events', () => {
@@ -56,11 +56,11 @@ describe('getHighestUnseenEventId', () => {
     expect(getHighestUnseenEventId(mockEvents)).toBe(25);
   });
 
-  it('should return 0 if all events are seen', () => {
+  it('should return null if all events are seen', () => {
     const mockEvents = eventFactory.buildList(25, {
       seen: true,
     });
-    expect(getHighestUnseenEventId(mockEvents)).toBe(0);
+    expect(getHighestUnseenEventId(mockEvents)).toBe(null);
   });
 
   it('should handle a large number of events efficiently', () => {

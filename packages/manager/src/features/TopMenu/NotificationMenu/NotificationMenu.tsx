@@ -72,8 +72,9 @@ export const NotificationMenu = () => {
     if (prevOpen && !notificationContext.menuOpen) {
       if (eventNotifications && eventNotifications.length > 0) {
         const highestUnseenId = getHighestEventId(eventNotifications);
-
-        markEventsAsSeen(highestUnseenId);
+        if (highestUnseenId && highestUnseenId > 0) {
+          markEventsAsSeen(highestUnseenId);
+        }
       }
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
