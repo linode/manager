@@ -38,7 +38,15 @@ export interface CloudPulseServiceTypeFilters {
  */
 export type QueryFunctionType = DatabaseEngine[] | DatabaseType[];
 
-export type QueryFunctionNonArrayType = DatabaseEngine | DatabaseType;
+/**
+ * The non array types of QueryFunctionType like DatabaseEngine|DatabaseType
+ */
+export type QueryFunctionNonArrayType = SingleType<QueryFunctionType>;
+
+/**
+ * This infers the type from the QueryFunctionType and makes it a single object type, and by using this we can maintain only QueryFunctionType and NonArray Types are automatically identified
+ */
+type SingleType<T> = T extends (infer U)[] ? U : never;
 
 /**
  * This interface holds the query function and query key from various factories, like databaseQueries, linodeQueries etc.,
