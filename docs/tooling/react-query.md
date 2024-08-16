@@ -119,7 +119,9 @@ export const useLinodeUpdateMutation = (id: number) => {
     mutationFn: (data) => updateLinode(id, data),
     onSuccess(linode) {
       // Invalidate all paginated pages in the cache.
-      queryClient.invalidateQueries(linodeQueries.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.paginated._def
+      });
       // Because we have the updated Linode, we can manually set the cache for the `useLinode` query.
       queryClient.setQueryData(linodeQueries.linode(id).queryKey, linode);
     },
@@ -132,7 +134,9 @@ export const useDeleteLinodeMutation = (id: number) => {
     mutationFn: () => deleteLinode(id),
     onSuccess() {
       // Invalidate all paginated pages in the cache.
-      queryClient.invalidateQueries(linodeQueries.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.paginated._def
+      });
       // Remove the deleted linode from the cache
       queryClient.removeQueries(linodeQueries.linode(id).queryKey);
     },
@@ -145,7 +149,9 @@ export const useCreateLinodeMutation = () => {
     mutationFn: createLinode,
     onSuccess(linode) {
       // Invalidate all paginated pages in the cache. We don't know what page the new Linode will be on.
-      queryClient.invalidateQueries(linodeQueries.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.paginated._def
+      });
       // Because we have the new Linode, we can manually set the cache for the `useLinode` query.
       queryClient.setQueryData(linodeQueries.linode(id).queryKey, linode);
     },

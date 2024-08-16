@@ -161,7 +161,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         if (profile.data?.restricted) {
-          queryClient.invalidateQueries(profileQueries.grants.queryKey);
+          queryClient.invalidateQueries({
+            queryKey: profileQueries.grants.queryKey,
+          });
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();

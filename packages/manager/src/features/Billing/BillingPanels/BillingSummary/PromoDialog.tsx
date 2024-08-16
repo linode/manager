@@ -51,7 +51,9 @@ const PromoDialog = (props: Props) => {
         enqueueSnackbar('Successfully applied promo to your account.', {
           variant: 'success',
         });
-        queryClient.invalidateQueries(accountQueries.account.queryKey);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.account.queryKey,
+        });
         onClose();
       })
       .catch((error: APIError[]) => {
