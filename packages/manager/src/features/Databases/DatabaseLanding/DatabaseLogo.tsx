@@ -1,31 +1,40 @@
-import React from 'react';
+import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import Logo from 'src/assets/icons/db-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 
-interface BrandingProps {
+import type { Theme } from '@mui/material/styles';
+
+interface Props {
   style?: React.CSSProperties;
 }
 
-export const DatabaseLogo = ({ style }: BrandingProps) => {
+const useStyles = makeStyles()((theme: Theme) => ({
+  betaChip: {
+    backgroundColor: '#727272',
+    color: theme.color.white,
+  },
+  logo: {
+    color: '#32363C',
+    display: 'flex',
+    marginTop: '8px',
+  },
+}));
+
+export const DatabaseLogo = ({ style }: Props) => {
+  const { classes } = useStyles();
   return (
     <Box
       display="flex"
-      id="aBranding"
       justifyContent="center"
       sx={style ? style : { margin: '20px' }}
     >
       <Typography sx={{ display: 'inline-block', textAlign: 'center' }}>
-        <BetaChip
-          sx={() => ({
-            backgroundColor: '#727272',
-            color: '#ffffff',
-          })}
-          component="span"
-        />
-        <span style={{ color: '#32363C', display: 'flex', marginTop: '8px' }}>
+        <BetaChip className={classes.betaChip} component="span" />
+        <span className={classes.logo}>
           Powered by <Logo />
         </span>
       </Typography>

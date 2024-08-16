@@ -222,7 +222,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   ssl_connection: false,
   status: pickRandom(possibleStatuses),
   total_disk_size_gb: 15,
-  type: 'g6-standard-0',
+  type: 'g6-nanode-1',
   updated: '2021-12-16T17:15:12',
   updates: {
     day_of_week: 1,
