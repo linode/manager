@@ -1,3 +1,19 @@
+## [2024-08-19] - v0.124.0
+
+### Added:
+
+- Firewall template endpoints ([#10770](https://github.com/linode/manager/pull/10770))
+
+### Changed:
+
+- Move `getObjectStorageEndpoints` from `/objects.ts` to `/buckets.ts` ([#10744](https://github.com/linode/manager/pull/10744))
+
+### Upcoming Features:
+
+- Add several CloudPulseMetrics types ([#10710](https://github.com/linode/manager/pull/10710))
+- Change JWETokenPayLoad `resource_id` to `resource_ids` ([#10747](https://github.com/linode/manager/pull/10747))
+- Add 'Akamai Cloud Pulse' in AccountCapability type interface ([#10768](https://github.com/linode/manager/pull/10768))
+
 ## [2024-08-05] - v0.123.0
 
 ### Added:
