@@ -145,11 +145,11 @@ export const useObjectStorageBuckets = (enabled = true) => {
       ? allRegions?.filter((r) => r.capabilities.includes('Object Storage'))
       : undefined;
 
-  const queryEnabled = isObjectStorageGen2Enabled
-    ? Boolean(endpoints) && enabled
-    : isObjMultiClusterEnabled
-    ? Boolean(regions) && enabled
-    : Boolean(clusters) && enabled;
+  const queryEnabled =
+    enabled &&
+    ((isObjectStorageGen2Enabled && Boolean(endpoints)) ||
+      (isObjMultiClusterEnabled && Boolean(regions)) ||
+      Boolean(clusters));
 
   const queryFn = isObjectStorageGen2Enabled
     ? () => getAllBucketsFromEndpoints(endpoints)

@@ -10,7 +10,10 @@ import { Typography } from 'src/components/Typography';
 
 import { AccessSelect } from './AccessSelect';
 
-import type { ACLType } from '@linode/api-v4/lib/object-storage';
+import type {
+  ACLType,
+  ObjectStorageEndpointTypes,
+} from '@linode/api-v4/lib/object-storage';
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',
@@ -21,10 +24,11 @@ export const StyledRootContainer = styled(Paper, {
 interface Props {
   bucketName: string;
   clusterId: string;
+  endpointType?: ObjectStorageEndpointTypes;
 }
 
 export const BucketAccess = React.memo((props: Props) => {
-  const { bucketName, clusterId } = props;
+  const { bucketName, clusterId, endpointType } = props;
 
   return (
     <StyledRootContainer>
@@ -38,6 +42,7 @@ export const BucketAccess = React.memo((props: Props) => {
 
           return updateBucketAccess(clusterId, bucketName, payload);
         }}
+        endpointType={endpointType}
         getAccess={() => getBucketAccess(clusterId, bucketName)}
         name={bucketName}
         variant="bucket"
