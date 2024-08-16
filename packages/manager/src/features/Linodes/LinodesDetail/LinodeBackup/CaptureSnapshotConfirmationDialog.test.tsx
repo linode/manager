@@ -69,11 +69,11 @@ describe('CaptureSnapshotConfirmationDialog', () => {
     const { getByText } = renderWithTheme(
       <CaptureSnapshotConfirmationDialog
         {...props}
-        error={'fake error message'}
+        error={'mock error message'}
       />
     );
 
-    const errorMessage = getByText('fake error message');
+    const errorMessage = getByText('mock error message');
     expect(errorMessage).toBeVisible();
   });
 });
