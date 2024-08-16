@@ -5,7 +5,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Typography } from 'src/components/Typography';
 
 interface Props {
-  error?: string;
+  error: string | undefined;
   loading: boolean;
   onClose: () => void;
   onSnapshot: () => void;
