@@ -18,5 +18,10 @@ describe('getReactDocgenTSFileGlobs', () => {
         (file) => file === 'src/features/TopMenu/**/*.{ts,tsx}'
       )
     ).toBe(true);
+    expect(
+      typeScriptFileGlobs.some(
+        (file) => file === 'src/features/Longview/**/*.{ts,tsx}'
+      )
+    ).toBe(false);
   });
 });
