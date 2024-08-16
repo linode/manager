@@ -21,7 +21,6 @@ import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMarkEventsAsSeen } from 'src/queries/events/events';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
-import { getHighestEventId } from './utils';
 
 import type { ThunkDispatch } from 'src/store/types';
 
@@ -70,11 +69,9 @@ export const NotificationMenu = () => {
 
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
-      if (eventNotifications && eventNotifications.length > 0) {
-        const highestUnseenId = getHighestEventId(eventNotifications);
-        if (highestUnseenId && highestUnseenId > 0) {
-          markEventsAsSeen(highestUnseenId);
-        }
+      // Dismiss seen notifications after the menu has closed.
+      if (eventNotifications.length > 0) {
+        markEventsAsSeen(eventNotifications[0].eventId);
       }
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }

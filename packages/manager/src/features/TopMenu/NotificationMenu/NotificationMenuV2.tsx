@@ -29,7 +29,6 @@ import {
 import { rotate360 } from 'src/styles/keyframes';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
-import { getHighestUnseenEventId } from './utils';
 
 export const NotificationMenuV2 = () => {
   const history = useHistory();
@@ -68,11 +67,9 @@ export const NotificationMenuV2 = () => {
 
   React.useEffect(() => {
     if (prevOpen && !notificationContext.menuOpen) {
-      if (events && events.length > 0) {
-        const highestUnseenId = getHighestUnseenEventId(events);
-        if (highestUnseenId && highestUnseenId > 0) {
-          markEventsAsSeen(highestUnseenId);
-        }
+      // Dismiss seen notifications after the menu has closed.
+      if (events && events.length >= 1 && !events[0].seen) {
+        markEventsAsSeen(events[0].id);
       }
       // Dismiss seen notifications after the menu has closed.
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
