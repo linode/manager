@@ -1,3 +1,4 @@
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
 
@@ -24,14 +25,17 @@ export const useIsDatabasesEnabled = () => {
   const checkRestrictedUser = !account;
 
   const { data: engines } = useDatabaseEnginesQuery(checkRestrictedUser);
+  const flags = useFlags();
 
   if (account) {
     const isDatabasesV1Enabled = account.capabilities.includes(
       'Managed Databases'
     );
-    const isDatabasesV2Enabled = account.capabilities.includes(
-      'Managed Databases V2'
-    );
+
+    const isDatabasesV2Enabled =
+      account.capabilities.includes('Managed Databases V2') &&
+      flags.dbaasV2?.enabled;
+
     return {
       isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
       isDatabasesV1Enabled,

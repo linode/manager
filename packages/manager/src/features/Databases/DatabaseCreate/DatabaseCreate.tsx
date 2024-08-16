@@ -452,7 +452,7 @@ const DatabaseCreate = () => {
             },
           ],
           labelOptions: {
-            suffixComponent: flags.databaseBeta ? (
+            suffixComponent: flags.dbaasV2?.beta ? (
               <BetaChip className={classes.chip} component="span" />
             ) : null,
           },
@@ -564,21 +564,6 @@ const DatabaseCreate = () => {
               ))}
             </RadioGroup>
           </FormControl>
-          <Grid md={8} xs={12}>
-            {flags.databaseBeta ? (
-              <Notice className={classes.notice} variant="info">
-                <strong>
-                  Notice: There is no charge for database clusters during beta.
-                </strong>{' '}
-                Database clusters will be subject to charges when the beta
-                period ends on May 2nd, 2022.{' '}
-                <Link to="https://www.linode.com/pricing/#databases">
-                  View pricing
-                </Link>
-                .
-              </Notice>
-            ) : undefined}
-          </Grid>
         </Grid>
         <Divider spacingBottom={12} spacingTop={26} />
         <Grid>

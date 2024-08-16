@@ -108,7 +108,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
-  const { isDatabasesEnabled, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
   const prefetchMarketplace = () => {
     if (!enableMarketplacePrefetch) {
@@ -187,7 +187,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !isDatabasesEnabled,
           href: '/databases',
           icon: <Database />,
-          isBeta: isDatabasesV2Enabled,
+          isBeta: flags.dbaasV2?.beta,
         },
         {
           activeLinks: ['/kubernetes/create'],
@@ -249,7 +249,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       isDatabasesEnabled,
       isManaged,
       allowMarketplacePrefetch,
-      flags.databaseBeta,
+      flags.dbaasV2,
       isPlacementGroupsEnabled,
       flags.placementGroups,
       isACLPEnabled,
