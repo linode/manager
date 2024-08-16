@@ -57,6 +57,8 @@ export const BucketDetailLanding = React.memo((props: Props) => {
   const { endpoint_type: endpointType } =
     bucketsData?.buckets.find(({ label }) => label === bucketName) ?? {};
 
+  const isSSLEnabled = endpointType !== 'E2' && endpointType === 'E3';
+
   const tabs = [
     {
       routeName: `${props.match.url}/objects`,
@@ -66,10 +68,14 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
-    {
-      routeName: `${props.match.url}/ssl`,
-      title: 'SSL/TLS',
-    },
+    ...(!isSSLEnabled
+      ? [
+          {
+            routeName: `${props.match.url}/ssl`,
+            title: 'SSL/TLS',
+          },
+        ]
+      : []),
   ];
 
   const [index, setIndex] = React.useState(
@@ -109,7 +115,11 @@ export const BucketDetailLanding = React.memo((props: Props) => {
               <ObjectList {...props} endpointType={endpointType} />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              <BucketAccess bucketName={bucketName} clusterId={clusterId} />
+              <BucketAccess
+                bucketName={bucketName}
+                clusterId={clusterId}
+                endpointType={endpointType}
+              />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
