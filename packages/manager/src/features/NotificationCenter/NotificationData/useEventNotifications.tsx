@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { useIsTaxIdEnabled } from 'src/features/Account/utils';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
-import { useEventsInfiniteQuery } from 'src/queries/events/events';
+import { useInitialEventsQuery } from 'src/queries/events/events';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
@@ -24,7 +24,7 @@ const defaultUnwantedEvents: EventAction[] = [
 ];
 
 export const useEventNotifications = (): NotificationItem[] => {
-  const { events: fetchedEvents } = useEventsInfiniteQuery();
+  const { events: fetchedEvents } = useInitialEventsQuery();
   const relevantEvents = removeBlocklistedEvents(fetchedEvents);
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const notificationContext = React.useContext(_notificationContext);

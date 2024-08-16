@@ -27,6 +27,47 @@ import type {
 } from '@tanstack/react-query';
 
 /**
+ * This query exists to get the first 7 days of events when you load the app.
+ *
+ * Using the first page of useEventsInfiniteQuery would be ideal, but we are going to try this...
+ *
+ * @note This initial query should match X-Filtering that our poller does. If we want this query
+ * to have a different filter than our poller, we will need to implement filtering in
+ * `updateEventsQueries` like we do for our infinite queries.
+ */
+export const useInitialEventsQuery = () => {
+  /**
+   * We only want to get events from the last 7 days.
+   */
+  const [defaultCreatedFilter] = useState(
+    DateTime.now()
+      .minus({ days: 7 })
+      .setZone('utc')
+      .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
+  );
+
+  const query = useQuery<ResourcePage<Event>, APIError[]>({
+    cacheTime: Infinity,
+    queryFn: () =>
+      getEvents(
+        {},
+        {
+          ...EVENTS_LIST_FILTER,
+          '+order': 'desc',
+          '+order_by': 'id',
+          created: { '+gt': defaultCreatedFilter },
+        }
+      ),
+    queryKey: ['events', 'initial'],
+    staleTime: Infinity,
+  });
+
+  const events = query.data?.data;
+
+  return { ...query, events };
+};
+
+/**
  * Gets an infinitely scrollable list of all Events
  *
  * This query is kept up to date by `useEventsPoller`.
@@ -38,66 +79,23 @@ import type {
  * We are doing this as opposed to page based pagination because we need an accurate way to get
  * the next set of events when the items returned by the server may have shifted.
  */
-
 export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
-  const LIMIT = 25;
-
-  /**
-   * On the first request (when we don't have a `pageParam`) we only want to get events
-   * from the last 7 days.
-   */
-  const [defaultCreatedFilter] = useState(
-    DateTime.now()
-      .minus({ days: 7 })
-      .setZone('utc')
-      .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
-  );
-
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
     cacheTime: Infinity,
-    getNextPageParam: (lastPage, allPages) => {
-      // Get the last event from the current page.
-      const lastEvent = lastPage.data[lastPage.data.length - 1];
-
-      if (!lastEvent) {
+    getNextPageParam: ({ data, results }) => {
+      if (results === data.length) {
         return undefined;
       }
-
-      const { created: lastEventDate, id: lastEventId } = lastEvent;
-
-      // If there are multiple pages, compare the last event of the current page with the previous page.
-      if (allPages.length > 1) {
-        // Retrieve the last event from the previous page for comparison with the current page.
-        const previousPage = allPages[allPages.length - 2];
-        const previousLastEvent =
-          previousPage.data[previousPage.data.length - 1];
-
-        // If the last event of the current page matches the previous page, we've reached the end of unique data.
-        if (
-          previousLastEvent?.created === lastEventDate &&
-          previousLastEvent?.id === lastEventId
-        ) {
-          return undefined;
-        }
-      }
-
-      // Otherwise, return the last event's date and ID as the next page parameter for the API to fetch subsequent events.
-      return { created: lastEventDate, id: lastEventId };
+      return data[data.length - 1].id;
     },
     queryFn: ({ pageParam }) =>
       getEvents(
         {},
         {
           ...filter,
-          '+limit': LIMIT,
           '+order': 'desc',
-          '+order_by': 'created',
-          ...(pageParam
-            ? {
-                created: { '+lte': pageParam.created },
-                id: { '+lt': pageParam.id },
-              }
-            : { created: { '+gt': defaultCreatedFilter } }),
+          '+order_by': 'id',
+          id: pageParam ? { '+lt': pageParam } : undefined,
         }
       ),
     queryKey: ['events', 'infinite', filter],
@@ -149,9 +147,9 @@ export const useEventsPoller = () => {
 
   const queryClient = useQueryClient();
 
-  const { events } = useEventsInfiniteQuery();
+  const { data: initialEvents } = useInitialEventsQuery();
 
-  const hasFetchedInitialEvents = events !== undefined;
+  const hasFetchedInitialEvents = initialEvents !== undefined;
 
   const [mountTimestamp] = useState(
     DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)
@@ -170,15 +168,11 @@ export const useEventsPoller = () => {
       }
     },
     queryFn: () => {
-      const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
+      const data = queryClient.getQueryData<ResourcePage<Event>>([
         'events',
-        'infinite',
-        EVENTS_LIST_FILTER,
+        'initial',
       ]);
-      const events = data?.pages.reduce(
-        (events, page) => [...events, ...page.data],
-        []
-      );
+      const events = data?.data;
       // If the user has events, poll for new events based on the most recent event's created time.
       // If the user has no events, poll events from the time the app mounted.
       const latestEventTime =
@@ -244,37 +238,54 @@ export const useEventsPollingActions = () => {
 export const useMarkEventsAsSeen = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[], number>(
-    (eventId) => markEventSeen(eventId),
-    {
-      onSuccess: (_, eventId) => {
-        queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
-          ['events', 'infinite'],
-          (prev) => {
-            if (!prev) {
-              return {
-                pageParams: [],
-                pages: [],
-              };
-            }
+  return useMutation<{}, APIError[], number>({
+    mutationFn: (eventId) => markEventSeen(eventId),
+    onSuccess: (_, eventId) => {
+      // Update Initial Query
+      queryClient.setQueryData<ResourcePage<Event>>(
+        ['events', 'initial'],
+        (prev) => {
+          if (!prev) {
+            return undefined;
+          }
 
-            for (const page of prev.pages) {
-              for (const event of page.data) {
-                if (event.id <= eventId) {
-                  event.seen = true;
-                }
-              }
+          for (const event of prev.data) {
+            if (event.id <= eventId) {
+              event.seen = true;
             }
+          }
 
+          return prev;
+        }
+      );
+
+      // Update Infinite Queries
+      queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
+        ['events', 'infinite'],
+        (prev) => {
+          if (!prev) {
             return {
-              pageParams: prev?.pageParams ?? [],
-              pages: prev?.pages ?? [],
+              pageParams: [],
+              pages: [],
             };
           }
-        );
-      },
-    }
-  );
+
+          for (const page of prev.pages) {
+            for (const event of page.data) {
+              if (event.id <= eventId) {
+                event.seen = true;
+              }
+            }
+          }
+
+          return {
+            pageParams: prev?.pageParams ?? [],
+            pages: prev?.pages ?? [],
+          };
+        }
+      );
+    },
+  });
 };
 
 /**
@@ -305,6 +316,8 @@ export const updateEventsQueries = (
 
       updateEventsQuery(filteredEvents, queryKey, queryClient);
     });
+
+  updateInitalEventsQuery(events, queryClient);
 };
 
 /**
@@ -366,6 +379,47 @@ export const updateEventsQuery = (
         pageParams: prev.pageParams,
         pages: prev.pages,
       };
+    }
+  );
+};
+
+export const updateInitalEventsQuery = (
+  events: Event[],
+  queryClient: QueryClient
+) => {
+  queryClient.setQueryData<ResourcePage<Event>>(
+    ['events', 'initial'],
+    (prev) => {
+      if (!prev) {
+        return undefined;
+      }
+      const updatedEventIndexes: number[] = [];
+
+      for (let i = 0; i < events.length; i++) {
+        const indexOfEvent = prev.data.findIndex((e) => e.id === events[i].id);
+
+        if (indexOfEvent !== -1) {
+          prev.data[indexOfEvent] = events[i];
+          updatedEventIndexes.push(i);
+        }
+      }
+
+      const newEvents: Event[] = [];
+
+      for (let i = 0; i < events.length; i++) {
+        if (!updatedEventIndexes.includes(i)) {
+          newEvents.push(events[i]);
+        }
+      }
+
+      if (newEvents.length > 0) {
+        // For all events, that remain, append them to the top of the events list
+        prev.data = [...newEvents, ...prev.data];
+
+        prev.results += newEvents.length;
+      }
+
+      return prev;
     }
   );
 };
