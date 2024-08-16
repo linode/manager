@@ -53,12 +53,6 @@ export const CaptureSnapshot = (props: Props) => {
 
   const hasErrorFor = getErrorMap(['label'], snapshotError);
 
-  React.useEffect(() => {
-    if (isSnapshotConfirmationDialogOpen) {
-      reset();
-    }
-  }, [isSnapshotConfirmationDialogOpen, reset]);
-
   return (
     <Paper>
       <Typography data-qa-manual-heading variant="h2">
@@ -95,6 +89,7 @@ export const CaptureSnapshot = (props: Props) => {
         error={hasErrorFor.none}
         loading={isSnapshotLoading}
         onClose={() => setIsSnapshotConfirmationDialogOpen(false)}
+        onExited={() => reset()}
         onSnapshot={() => snapshotForm.handleSubmit()}
         open={isSnapshotConfirmationDialogOpen}
       />

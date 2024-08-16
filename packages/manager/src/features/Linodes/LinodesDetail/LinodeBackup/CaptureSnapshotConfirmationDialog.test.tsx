@@ -9,6 +9,7 @@ const props = {
   error: undefined,
   loading: false,
   onClose: vi.fn(),
+  onExited: vi.fn(),
   onSnapshot: vi.fn(),
   open: true,
 };
@@ -35,6 +36,7 @@ describe('CaptureSnapshotConfirmationDialog', () => {
     expect(title).toBeVisible();
     expect(body).toBeVisible();
   });
+
   it('should send a request to create a snapshot if loading is false', () => {
     const { getByTestId } = renderWithTheme(
       <CaptureSnapshotConfirmationDialog {...props} />
@@ -45,6 +47,7 @@ describe('CaptureSnapshotConfirmationDialog', () => {
     fireEvent.click(takeSnapshotButton);
     expect(props.onSnapshot).toHaveBeenCalled();
   });
+
   it('should not send a request to create a snapshot if loading is true', () => {
     const { getByTestId } = renderWithTheme(
       <CaptureSnapshotConfirmationDialog {...props} loading={true} />
@@ -55,7 +58,8 @@ describe('CaptureSnapshotConfirmationDialog', () => {
     fireEvent.click(takeSnapshotButton);
     expect(props.onSnapshot).not.toHaveBeenCalled();
   });
-  it('should close the dialog', () => {
+
+  it('should close the dialog when the "Cancel" button is clicked', () => {
     const { getByText } = renderWithTheme(
       <CaptureSnapshotConfirmationDialog {...props} />
     );
@@ -65,6 +69,7 @@ describe('CaptureSnapshotConfirmationDialog', () => {
     fireEvent.click(cancelButton);
     expect(props.onClose).toHaveBeenCalled();
   });
+
   it('should render the dialog with an error message', () => {
     const { getByText } = renderWithTheme(
       <CaptureSnapshotConfirmationDialog
