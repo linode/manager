@@ -70,8 +70,18 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
                 Regions/S3 Hostnames
               </StyledLabelCell>
             )}
-            {/* empty cell for kebab menu */}
-            <TableCell />
+            <TableCell
+              sx={{
+                ...(isObjMultiClusterEnabled && {
+                  '&&:last-child': {
+                    paddingRight: '15px',
+                  },
+                }),
+              }}
+              data-qa-header-key
+            >
+              Actions
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

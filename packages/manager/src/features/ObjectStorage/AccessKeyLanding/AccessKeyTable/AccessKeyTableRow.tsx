@@ -1,7 +1,3 @@
-import {
-  ObjectStorageKey,
-  ObjectStorageKeyRegions,
-} from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -13,9 +9,14 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import { OpenAccessDrawer } from '../types';
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
 import { HostNameTableCell } from './HostNameTableCell';
+
+import type { OpenAccessDrawer } from '../types';
+import type {
+  ObjectStorageKey,
+  ObjectStorageKeyRegions,
+} from '@linode/api-v4/lib/object-storage';
 
 type Props = {
   openDrawer: OpenAccessDrawer;
@@ -62,7 +63,15 @@ export const AccessKeyTableRow = ({
         />
       )}
 
-      <TableCell>
+      <TableCell
+        sx={{
+          ...(isObjMultiClusterEnabled && {
+            '&&:last-child': {
+              paddingRight: '15px',
+            },
+          }),
+        }}
+      >
         <AccessKeyActionMenu
           label={storageKeyData.label}
           objectStorageKey={storageKeyData}
