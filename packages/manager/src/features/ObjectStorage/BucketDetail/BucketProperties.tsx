@@ -35,17 +35,12 @@ export const BucketProperties = React.memo((props: Props) => {
 
   const { data: buckets } = useObjectStorageBuckets();
 
-  //   console.log('hey', buckets)
-  //   console.log('c', bucketName, clusterId)
-
   const bucket = buckets?.buckets.find((bucket) => {
     if (isObjMultiClusterEnabled) {
       return bucket.label === bucketName && bucket.region === clusterId;
     }
     return bucket.label === bucketName && bucket.cluster === clusterId;
   });
-
-  //   console.log('test', bucket)
 
   return (
     <>
