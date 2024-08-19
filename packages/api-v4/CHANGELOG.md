@@ -6,7 +6,7 @@
 
 ### Changed:
 
-- Move `getObjectStorageEndpoints` from `/objects.ts` to `/buckets.ts` ([#10744](https://github.com/linode/manager/pull/10744))
+- Move `getObjectStorageEndpoints` from `/objects.ts` to `/buckets.ts` ([#10736](https://github.com/linode/manager/pull/10736))
 
 ### Upcoming Features:
 
