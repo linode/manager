@@ -129,6 +129,8 @@ export const LinodeVolumes = () => {
     return null;
   }
 
+  const numColumns = isBlockStorageEncryptionFeatureEnabled ? 6 : 5; // @TODO BSE: set colSpan for <TableRowEmpty /> to 6 once BSE is fully rolled out
+
   const renderTableContent = () => {
     if (isLoading) {
       return (
@@ -143,7 +145,9 @@ export const LinodeVolumes = () => {
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results === 0) {
-      return <TableRowEmpty colSpan={5} message="No Volumes to display." />;
+      return (
+        <TableRowEmpty colSpan={numColumns} message="No Volumes to display." />
+      );
     } else if (data) {
       return data.data.map((volume) => {
         return (
