@@ -35,51 +35,51 @@ describe('handleAPIErrors', () => {
 
 const subnetMultipleErrorsPerField = [
   {
-    reason: 'not expected error for label',
     field: 'subnets[0].label',
-  },
-  {
-    reason: 'expected error for label',
-    field: 'subnets[0].label',
-  },
-  {
     reason: 'not expected error for label',
-    field: 'subnets[3].label',
   },
   {
+    field: 'subnets[0].label',
     reason: 'expected error for label',
-    field: 'subnets[3].label',
   },
   {
+    field: 'subnets[3].label',
+    reason: 'not expected error for label',
+  },
+  {
+    field: 'subnets[3].label',
+    reason: 'expected error for label',
+  },
+  {
+    field: 'subnets[3].ipv4',
     reason: 'not expected error for ipv4',
-    field: 'subnets[3].ipv4',
   },
   {
-    reason: 'expected error for ipv4',
     field: 'subnets[3].ipv4',
+    reason: 'expected error for ipv4',
   },
 ];
 
 const subnetErrors = [
   {
-    reason: 'Label required',
     field: 'subnets[1].label',
+    reason: 'Label required',
   },
   {
-    reason: 'bad label',
     field: 'subnets[2].label',
+    reason: 'bad label',
   },
   {
-    reason: 'cidr ipv4',
     field: 'subnets[2].ipv4',
+    reason: 'cidr ipv4',
   },
   {
-    reason: 'needs an ip',
     field: 'subnets[4].ipv4',
+    reason: 'needs an ip',
   },
   {
-    reason: 'needs an ipv6',
     field: 'subnets[4].ipv6',
+    reason: 'needs an ipv6',
   },
 ];
 
@@ -93,7 +93,7 @@ describe('handleVpcAndConvertSubnetErrors', () => {
     expect(Object.keys(errors)).toHaveLength(3);
     expect(Object.keys(errors)).toEqual(['1', '2', '4']);
     expect(errors[1]).toEqual({ label: 'Label required' });
-    expect(errors[2]).toEqual({ label: 'bad label', ipv4: 'cidr ipv4' });
+    expect(errors[2]).toEqual({ ipv4: 'cidr ipv4', label: 'bad label' });
     expect(errors[4]).toEqual({ ipv4: 'needs an ip', ipv6: 'needs an ipv6' });
   });
 
@@ -106,8 +106,8 @@ describe('handleVpcAndConvertSubnetErrors', () => {
     expect(Object.keys(errors)).toHaveLength(2);
     expect(errors[0]).toEqual({ label: 'expected error for label' });
     expect(errors[3]).toEqual({
-      label: 'expected error for label',
       ipv4: 'expected error for ipv4',
+      label: 'expected error for label',
     });
   });
 

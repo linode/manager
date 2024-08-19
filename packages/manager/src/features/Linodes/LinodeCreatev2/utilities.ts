@@ -1,4 +1,3 @@
-import { omit } from 'lodash';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
@@ -7,6 +6,7 @@ import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { omitProps } from 'src/utilities/omittedProps';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
@@ -144,7 +144,7 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omit(formValues, ['linode', 'hasSignedEUAgreement']);
+  const values = omitProps(formValues, ['linode', 'hasSignedEUAgreement']);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
