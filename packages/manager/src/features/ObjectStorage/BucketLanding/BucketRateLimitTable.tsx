@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Radio } from 'src/components/Radio/Radio';
 import { Table } from 'src/components/Table';
@@ -18,7 +18,13 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 interface BucketRateLimitTableProps {
   endpointType: ObjectStorageEndpointTypes | undefined;
   onRateLimitChange?: (selectedLimit: string) => void;
-  selectedRateLimit?: string;
+  selectedRateLimit?: null | string;
+}
+
+interface RateLimit {
+  checked: boolean;
+  id: string;
+  values: string[];
 }
 
 const tableHeaders = ['Limits', 'GET', 'PUT', 'LIST', 'DELETE', 'OTHER'];
@@ -47,6 +53,16 @@ const tableData = (endpointType: BucketRateLimitTableProps['endpointType']) => {
 
 export const BucketRateLimitTable = (props: BucketRateLimitTableProps) => {
   const { endpointType, onRateLimitChange, selectedRateLimit } = props;
+  const [rateLimits, setRateLimits] = useState<RateLimit[] | null>(null);
+
+  React.useEffect(() => {
+    const data = tableData(endpointType);
+    setRateLimits(data);
+
+    // Set default/inital value
+    const defaultRateLimit = data.find((rl: any) => rl.checked)?.id || '1';
+    onRateLimitChange?.(defaultRateLimit);
+  }, [endpointType]);
 
   return (
     <Table sx={{ marginBottom: 3 }}>
@@ -69,7 +85,7 @@ export const BucketRateLimitTable = (props: BucketRateLimitTableProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {tableData(endpointType).map((row, rowIndex) => (
+        {rateLimits?.map((row, rowIndex) => (
           <TableRow key={rowIndex}>
             <TableCell>
               <Radio

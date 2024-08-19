@@ -28,7 +28,9 @@ interface Props {
 export const BucketProperties = React.memo((props: Props) => {
   const { bucketName, clusterId, endpointType } = props;
   const [updateRateLimitLoading] = React.useState(false);
-  const [selectedRateLimit, setSelectedRateLimit] = React.useState<string>('1');
+  const [selectedRateLimit, setSelectedRateLimit] = React.useState<
+    null | string
+  >(null);
   const [updateRateLimitSuccess] = React.useState(false);
   const [rateLimitError] = React.useState('');
   const [updateRateLimitError] = React.useState('');
@@ -51,12 +53,6 @@ export const BucketProperties = React.memo((props: Props) => {
     }
     return bucket.label === bucketName && bucket.cluster === clusterId;
   });
-
-  // TODO: OBJGen2 - Handle Get properties (to set default/initial value) once the endpoint
-  // for retrieving Bucket Rate Limits is available.
-  //
-  // React.useEffect(() => {
-  // }, []);
 
   const handleSubmit = () => {
     // TODO: OBJGen2 - Handle Bucket Rate Limit update logic once the endpoint for updating is available.
