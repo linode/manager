@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { Hidden } from 'src/components/Hidden';
 import { Radio } from 'src/components/Radio/Radio';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -24,6 +25,7 @@ interface BucketRateLimitTableProps {
 interface RateLimit {
   checked: boolean;
   id: string;
+  label: string;
   values: string[];
 }
 
@@ -35,12 +37,14 @@ const tableData = (endpointType: BucketRateLimitTableProps['endpointType']) => {
     {
       checked: true,
       id: '1',
+      label: 'Basic',
       values: ['2,000', '500', '100', '200', '400'],
     },
     {
       checked: false,
       id: '2',
-      values: [
+      label: 'High',
+    values: [
         isE3 ? '20,000' : '5,000',
         isE3 ? '2,000' : '1,000',
         isE3 ? '400' : '200',
@@ -59,7 +63,7 @@ export const BucketRateLimitTable = (props: BucketRateLimitTableProps) => {
     const data = tableData(endpointType);
     setRateLimits(data);
 
-    // Set default/inital value
+    // Set default/initial value
     const defaultRateLimit = data.find((rl: any) => rl.checked)?.id || '1';
     onRateLimitChange?.(defaultRateLimit);
   }, [endpointType]);
@@ -94,6 +98,7 @@ export const BucketRateLimitTable = (props: BucketRateLimitTableProps) => {
                 onChange={() => onRateLimitChange?.(row.id)}
                 value={row.id}
               />
+              <Hidden smDown>{row.label}</Hidden>
             </TableCell>
             {row.values.map((value, index) => {
               return (
