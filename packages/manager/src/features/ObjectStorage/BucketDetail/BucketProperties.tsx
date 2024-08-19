@@ -27,6 +27,7 @@ interface Props {
 
 export const BucketProperties = React.memo((props: Props) => {
   const { bucketName, clusterId, endpointType } = props;
+
   const [updateRateLimitLoading] = React.useState(false);
   const [defaultRateLimit, setDefaultRateLimitData] = React.useState<
     null | string
@@ -70,7 +71,7 @@ export const BucketProperties = React.memo((props: Props) => {
         history={history}
         prefix={prefix}
       />
-      <StyledText>{bucket?.hostname}</StyledText>
+      <StyledText>{bucket?.hostname || 'Loading...'}</StyledText>
 
       <StyledRootContainer>
         <Typography variant="h2">Bucket Rate Limits</Typography>
