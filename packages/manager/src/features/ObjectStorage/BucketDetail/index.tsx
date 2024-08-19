@@ -27,6 +27,11 @@ const BucketSSL = React.lazy(() =>
     default: module.BucketSSL,
   }))
 );
+const BucketProperties = React.lazy(() =>
+  import('./BucketProperties').then((module) => ({
+    default: module.BucketProperties,
+  }))
+);
 
 interface MatchProps {
   bucketName: string;
@@ -67,6 +72,10 @@ export const BucketDetailLanding = React.memo((props: Props) => {
     {
       routeName: `${props.match.url}/access`,
       title: 'Access',
+    },
+    {
+      routeName: `${props.match.url}/properties`,
+      title: 'Properties',
     },
     ...(!isSSLEnabled
       ? [
@@ -122,6 +131,9 @@ export const BucketDetailLanding = React.memo((props: Props) => {
               />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
+              <BucketProperties bucketName={bucketName} clusterId={clusterId} />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>
           </TabPanels>
