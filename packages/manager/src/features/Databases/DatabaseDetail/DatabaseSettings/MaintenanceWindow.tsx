@@ -199,7 +199,6 @@ export const MaintenanceWindow = (props: Props) => {
                 defaultValue={daySelectionMap.find(
                   (option) => option.value === 1
                 )}
-                disabled={disabled}
                 onChange={(e) => {
                   setFormTouched(true);
                   setFieldValue('day_of_week', e.value);
@@ -219,6 +218,7 @@ export const MaintenanceWindow = (props: Props) => {
                 value={daySelectionMap.find(
                   (thisOption) => thisOption.value === values.day_of_week
                 )}
+                disabled={disabled}
                 errorText={touched.day_of_week ? errors.day_of_week : undefined}
                 isClearable={false}
                 label="Day of Week"
@@ -235,7 +235,6 @@ export const MaintenanceWindow = (props: Props) => {
                   defaultValue={hourSelectionMap.find(
                     (option) => option.value === 20
                   )}
-                  disabled={disabled}
                   errorText={
                     touched.hour_of_day ? errors.hour_of_day : undefined
                   }
@@ -251,6 +250,7 @@ export const MaintenanceWindow = (props: Props) => {
                   value={hourSelectionMap.find(
                     (thisOption) => thisOption.value === values.hour_of_day
                   )}
+                  disabled={disabled}
                   isClearable={false}
                   label="Time of Day (UTC)"
                   menuPlacement="top"
@@ -356,6 +356,7 @@ export const MaintenanceWindow = (props: Props) => {
           compactX
           disabled={!formTouched || isSubmitting || disabled}
           loading={isSubmitting}
+          title="Save Changes"
           type="submit"
         >
           Save Changes

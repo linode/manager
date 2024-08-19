@@ -59,4 +59,66 @@ describe('Database Backups', () => {
 
     expect(await findByText('No backups to display.')).toBeInTheDocument();
   });
+
+  it('should disable the restore button if disabled = true', async () => {
+    const backups = databaseBackupFactory.buildList(7);
+
+    // Mock the Database because the Backups Details page requires it to be loaded
+    server.use(
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
+      }),
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(databaseFactory.build());
+      }),
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage(backups));
+      })
+    );
+
+    const { findAllByTestId } = renderWithTheme(
+      <DatabaseBackups disabled={true} />
+    );
+    const buttons = await findAllByTestId('Button');
+    let restoreButtonCount = 0;
+
+    buttons.forEach((button: HTMLButtonElement) => {
+      if (button?.textContent?.trim() === 'Restore') {
+        expect(button).toBeDisabled();
+        restoreButtonCount += 1;
+      }
+    });
+    expect(restoreButtonCount).toEqual(7);
+  });
+
+  it('should enable the restore button if disabled = false', async () => {
+    const backups = databaseBackupFactory.buildList(7);
+
+    // Mock the Database because the Backups Details page requires it to be loaded
+    server.use(
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
+      }),
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(databaseFactory.build());
+      }),
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage(backups));
+      })
+    );
+
+    const { findAllByTestId } = renderWithTheme(
+      <DatabaseBackups disabled={false} />
+    );
+    const buttons = await findAllByTestId('Button');
+    let restoreButtonCount = 0;
+
+    buttons.forEach((button: HTMLButtonElement) => {
+      if (button?.textContent?.trim() === 'Restore') {
+        expect(button).toBeEnabled();
+        restoreButtonCount += 1;
+      }
+    });
+    expect(restoreButtonCount).toEqual(7);
+  });
 });
