@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { v4 } from 'uuid';
 
-import { Avatar } from 'src/components/Avatar';
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';

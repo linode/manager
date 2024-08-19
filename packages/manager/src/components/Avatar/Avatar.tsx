@@ -5,6 +5,8 @@ import * as React from 'react';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 
+import { getFontColor, hexToHSL } from './utils';
+
 export const DEFAULT_AVATAR_SIZE = 28;
 
 interface Props {
@@ -24,16 +26,22 @@ export const Avatar = (props: Props) => {
   const { data: preferences } = usePreferences();
   const { data: profile } = useProfile();
 
-  const avatarLetter = profile?.username[0].toUpperCase();
-  const avatarColor = preferences?.avatarColor ?? theme.color.blue;
+  const avatarLetter = profile?.username[0].toUpperCase() ?? '';
+  const avatarHexColor = preferences?.avatarColor ?? theme.color.blue;
+  const avatarHslColor = hexToHSL(avatarHexColor);
+  const avatarLetterColor = avatarHslColor
+    ? `theme.color.${getFontColor(avatarHslColor)}`
+    : theme.color.white;
 
   return (
     <_Avatar
       alt={`Avatar for user ${profile?.email ?? profile?.username ?? ''}`}
       className={className}
-      sx={{ bgcolor: avatarColor, height, width }}
+      sx={{ bgcolor: avatarHexColor, height, width }}
     >
-      <Typography sx={{ fontSize: '3rem' }}>{avatarLetter}</Typography>
+      <Typography sx={{ color: avatarLetterColor, fontSize: '3rem' }}>
+        {avatarLetter}
+      </Typography>
     </_Avatar>
   );
 };
