@@ -55,10 +55,9 @@ const fillOutStackscriptForm = (
       .type(description);
   }
 
-  cy.get('[data-qa-multi-select="Select an Image"]')
-    .should('be.visible')
-    .click()
-    .type(`${targetImage}{enter}`);
+  cy.findByText('Target Images').click().type(targetImage);
+
+  cy.findByText(targetImage).should('be.visible').click();
 
   // Insert a script with invalid UDF data.
   cy.get('[data-qa-textfield-label="Script"]')

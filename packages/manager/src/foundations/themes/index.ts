@@ -5,6 +5,8 @@ import { darkTheme } from 'src/foundations/themes/dark';
 import { lightTheme } from 'src/foundations/themes/light';
 import { deepMerge } from 'src/utilities/deepMerge';
 
+import type { Chart as ChartLight } from '@linode/design-language-system';
+import type { Chart as ChartDark } from '@linode/design-language-system/themes/dark';
 import type { latoWeb } from 'src/foundations/fonts';
 // Types & Interfaces
 import type {
@@ -20,6 +22,10 @@ import type {
 } from 'src/foundations/themes/light';
 
 export type ThemeName = 'dark' | 'light';
+
+type ChartLightTypes = typeof ChartLight;
+type ChartDarkTypes = typeof ChartDark;
+type ChartTypes = MergeTypes<ChartLightTypes, ChartDarkTypes>;
 
 type Fonts = typeof latoWeb;
 
@@ -66,6 +72,7 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg: BgColors;
     borderColors: BorderColors;
+    charts: ChartTypes;
     color: Colors;
     font: Fonts;
     graphs: any;
@@ -84,6 +91,7 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
+    charts: ChartTypes;
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;

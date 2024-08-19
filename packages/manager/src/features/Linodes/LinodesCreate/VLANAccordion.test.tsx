@@ -48,7 +48,6 @@ describe('VLANAccordion Component', () => {
       getByPlaceholderText,
       getByRole,
       getByTestId,
-      getByText,
     } = renderWithTheme(<VLANAccordion {...defaultProps} />, {
       queryClient,
     });
@@ -61,14 +60,10 @@ describe('VLANAccordion Component', () => {
         name: 'Configuration Profile - link opens in a new tab',
       })
     ).toBeVisible();
-    expect(getByText('Create or select a VLAN')).toBeVisible();
-    expect(container.querySelector('#vlan-label-1')).toHaveAttribute(
-      'disabled'
-    );
+    expect(getByPlaceholderText('Create or select a VLAN')).toBeVisible();
+    expect(container.querySelector('#vlan-label-1')).toBeDisabled();
     expect(getByPlaceholderText('192.0.2.0/24')).toBeVisible();
-    expect(container.querySelector('#ipam-input-1')).toHaveAttribute(
-      'disabled'
-    );
+    expect(container.querySelector('#ipam-input-1')).toBeDisabled();
   });
 
   it('enables the input fields when a region is selected', () => {

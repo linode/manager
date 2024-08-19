@@ -31,7 +31,7 @@ export const getIsUDFRequired = (udf: UserDefinedField) =>
 export const getDefaultUDFData = (
   userDefinedFields: UserDefinedField[]
 ): Record<string, string> =>
-  userDefinedFields.reduce((accum, field) => {
+  userDefinedFields.reduce<Record<string, string>>((accum, field) => {
     if (field.default) {
       accum[field.name] = field.default;
     } else {
