@@ -1,9 +1,10 @@
 /**
  * @file Cypress intercepts and mocks for Firewall API requests.
  */
-import type { Firewall } from '@linode/api-v4';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+
+import type { Firewall, FirewallTemplate } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch Firewalls.
@@ -78,5 +79,22 @@ export const interceptUpdateFirewallLinodes = (
   return cy.intercept(
     'POST',
     apiMatcher(`networking/firewalls/${firewallId}/devices`)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch a Firewall template and mocks response.
+ *
+ * @param template - Template with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetTemplate = (
+  template: FirewallTemplate
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('networking/firewalls/templates/*'),
+    template
   );
 };
