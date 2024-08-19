@@ -1,4 +1,3 @@
-import { ObjectStorageKeyRegions } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -8,6 +7,8 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import { CopyAllHostnames } from './CopyAllHostnames';
+
+import type { ObjectStorageKeyRegions } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -30,9 +31,12 @@ export const HostNamesDrawer = (props: Props) => {
         <CopyAllHostnames
           text={
             regions
-              .map(
-                (region) =>
-                  `${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`
+              .map((region) =>
+                region?.endpoint_type
+                  ? `${regionsLookup[region.id]?.label} (${
+                      region.endpoint_type
+                    }): ${region.s3_endpoint}`
+                  : `${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`
               )
               .join('\n') ?? ''
           }
@@ -47,11 +51,21 @@ export const HostNamesDrawer = (props: Props) => {
       >
         {regions.map((region, index) => (
           <CopyableTextField
+            label={
+              region?.endpoint_type
+                ? `${region.id} (${region.endpoint_type}): ${region.s3_endpoint}`
+                : `${region.id}: ${region.s3_endpoint}`
+            }
+            value={
+              region?.endpoint_type
+                ? `${regionsLookup[region.id]?.label} (${
+                    region.endpoint_type
+                  }): ${region.s3_endpoint}`
+                : `${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`
+            }
             hideLabel
             key={index}
-            label={`${region.id}: ${region.s3_endpoint}`}
             sx={{ border: 'none', maxWidth: '100%' }}
-            value={`${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`}
           />
         ))}
       </Box>

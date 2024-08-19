@@ -1,8 +1,3 @@
-import {
-  ObjectStorageKey,
-  ObjectStorageKeyRegions,
-} from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 
@@ -16,8 +11,14 @@ import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { HostNamesDrawer } from '../HostNamesDrawer';
-import { OpenAccessDrawer } from '../types';
 import { AccessKeyTableBody } from './AccessKeyTableBody';
+
+import type { OpenAccessDrawer } from '../types';
+import type {
+  ObjectStorageKey,
+  ObjectStorageKeyRegions,
+} from '@linode/api-v4/lib/object-storage';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface AccessKeyTableProps {
   data: ObjectStorageKey[] | undefined;
