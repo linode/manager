@@ -10,10 +10,15 @@ import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
 
 interface Props {
   backup: DatabaseBackup;
+  disabled?: boolean;
   onRestore: (id: number) => void;
 }
 
-export const BackupTableRow = ({ backup, onRestore }: Props) => {
+export const BackupTableRow = ({
+  backup,
+  disabled = false,
+  onRestore,
+}: Props) => {
   const { created, id } = backup;
 
   return (
@@ -23,7 +28,11 @@ export const BackupTableRow = ({ backup, onRestore }: Props) => {
       </TableCell>
       <TableCell>{parseAPIDate(created).toRelative()}</TableCell>
       <TableCell>
-        <DatabaseBackupActionMenu backup={backup} onRestore={onRestore} />
+        <DatabaseBackupActionMenu
+          backup={backup}
+          disabled={disabled}
+          onRestore={onRestore}
+        />
       </TableCell>
     </TableRow>
   );

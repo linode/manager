@@ -22,7 +22,12 @@ import {
 import RestoreFromBackupDialog from './RestoreFromBackupDialog';
 import { BackupTableRow } from './DatabaseBackupTableRow';
 
-export const DatabaseBackups = () => {
+interface Props {
+  disabled?: boolean;
+}
+
+export const DatabaseBackups = (props: Props) => {
+  const { disabled = false } = props;
   const { databaseId, engine } = useParams<{
     databaseId: string;
     engine: Engine;
@@ -87,6 +92,7 @@ export const DatabaseBackups = () => {
         .map((backup) => (
           <BackupTableRow
             backup={backup}
+            disabled={disabled}
             key={backup.id}
             onRestore={onRestore}
           />

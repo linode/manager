@@ -178,6 +178,7 @@ export interface Grant {
 }
 export type GlobalGrantTypes =
   | 'account_access'
+  | 'add_databases'
   | 'add_domains'
   | 'add_firewalls'
   | 'add_images'

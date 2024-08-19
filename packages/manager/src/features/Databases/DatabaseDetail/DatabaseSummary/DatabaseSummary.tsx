@@ -13,10 +13,11 @@ import ConnectionDetails from './DatabaseSummaryConnectionDetails';
 
 interface Props {
   database: Database;
+  disabled?: boolean;
 }
 
 export const DatabaseSummary: React.FC<Props> = (props) => {
-  const { database } = props;
+  const { database, disabled = false } = props;
 
   const description = (
     <>
@@ -46,7 +47,11 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
         </Grid>
       </Grid>
       <Divider spacingBottom={16} spacingTop={28} />
-      <AccessControls database={database} description={description} />
+      <AccessControls
+        database={database}
+        description={description}
+        disabled={disabled}
+      />
     </Paper>
   );
 };

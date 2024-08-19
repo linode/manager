@@ -14,12 +14,13 @@ const useStyles = makeStyles()(() => ({
 
 interface Props {
   backup: DatabaseBackup;
+  disabled?: boolean;
   onRestore: (id: number) => void;
 }
 
 const DatabaseBackupActionMenu = (props: Props) => {
   const { classes } = useStyles();
-  const { backup, onRestore } = props;
+  const { backup, disabled = false, onRestore } = props;
 
   const actions = [
     {
@@ -33,6 +34,7 @@ const DatabaseBackupActionMenu = (props: Props) => {
       {actions.map((thisAction) => (
         <InlineMenuAction
           actionText={thisAction.title}
+          disabled={disabled}
           key={thisAction.title}
           onClick={thisAction.onClick}
         />

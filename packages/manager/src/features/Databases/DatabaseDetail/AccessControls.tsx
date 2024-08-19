@@ -81,12 +81,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   database: Database;
   description?: JSX.Element;
+  disabled?: boolean;
 }
 
 export const AccessControls = (props: Props) => {
   const {
     database: { allow_list: allowList, engine, id },
     description,
+    disabled = false,
   } = props;
 
   const { classes } = useStyles();
@@ -195,6 +197,7 @@ export const AccessControls = (props: Props) => {
         </div>
         <AddNewLink
           className={classes.addAccessControlBtn}
+          disabled={disabled}
           label="Manage Access Controls"
           onClick={() => setAddAccessControlDrawerOpen(true)}
         />

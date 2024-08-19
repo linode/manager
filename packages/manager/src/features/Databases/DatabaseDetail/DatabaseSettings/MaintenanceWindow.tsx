@@ -64,11 +64,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 interface Props {
   database: Database;
+  disabled?: boolean;
   timezone?: string;
 }
 
 export const MaintenanceWindow = (props: Props) => {
-  const { database, timezone } = props;
+  const { database, disabled = false, timezone } = props;
 
   const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<
     APIError[]
@@ -198,6 +199,7 @@ export const MaintenanceWindow = (props: Props) => {
                 defaultValue={daySelectionMap.find(
                   (option) => option.value === 1
                 )}
+                disabled={disabled}
                 onChange={(e) => {
                   setFormTouched(true);
                   setFieldValue('day_of_week', e.value);
@@ -233,6 +235,7 @@ export const MaintenanceWindow = (props: Props) => {
                   defaultValue={hourSelectionMap.find(
                     (option) => option.value === 20
                   )}
+                  disabled={disabled}
                   errorText={
                     touched.hour_of_day ? errors.hour_of_day : undefined
                   }
@@ -296,6 +299,7 @@ export const MaintenanceWindow = (props: Props) => {
                 );
               }
             }}
+            disabled={disabled}
           >
             <RadioGroup
               style={{ marginBottom: 0, marginTop: 0 }}
@@ -350,7 +354,7 @@ export const MaintenanceWindow = (props: Props) => {
           buttonType="primary"
           className={classes.sectionButton}
           compactX
-          disabled={!formTouched || isSubmitting}
+          disabled={!formTouched || isSubmitting || disabled}
           loading={isSubmitting}
           type="submit"
         >
