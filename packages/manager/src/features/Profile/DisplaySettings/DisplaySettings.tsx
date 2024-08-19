@@ -5,7 +5,9 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { v4 } from 'uuid';
 
+import { Avatar } from 'src/components/Avatar';
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { Link } from 'src/components/Link';
@@ -16,7 +18,9 @@ import { Typography } from 'src/components/Typography';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
+import { getGravatarUrl } from 'src/utilities/gravatar';
 
+import { AvatarColorPickerDialog } from './AvatarColorPickerDialog';
 import { TimezoneForm } from './TimezoneForm';
 
 import type { ApplicationState } from 'src/store';
@@ -33,6 +37,15 @@ export const DisplaySettings = () => {
   const emailRef = React.createRef<HTMLInputElement>();
 
   const isProxyUser = profile?.user_type === 'proxy';
+
+  const hasGravatar = getGravatarUrl(profile?.email ?? '').includes('?d=404')
+    ? false
+    : true;
+
+  const [
+    isColorPickerDialogOpen,
+    setAvatarColorPickerDialogOpen,
+  ] = React.useState(false);
 
   React.useEffect(() => {
     if (location.state?.focusEmail && emailRef.current) {
@@ -89,11 +102,15 @@ export const DisplaySettings = () => {
             }}
             display="flex"
           >
-            <GravatarByEmail
-              email={profile?.email ?? ''}
-              height={88}
-              width={88}
-            />
+            {hasGravatar ? (
+              <GravatarByEmail
+                email={profile?.email ?? ''}
+                height={88}
+                width={88}
+              />
+            ) : (
+              <Avatar height={88} width={88} />
+            )}
             <div>
               <Typography sx={{ fontSize: '1rem' }} variant="h2">
                 Profile photo
@@ -108,12 +125,23 @@ export const DisplaySettings = () => {
                 />
               </Typography>
               <StyledProfileCopy variant="body1">
-                Create, upload, and manage your globally recognized avatar from
-                a single place with Gravatar.
+                {hasGravatar
+                  ? 'Create, upload, and manage your globally recognized avatar from a single place with Gravatar.'
+                  : 'Your profile photo is automatically generated using the first character of your username.'}
               </StyledProfileCopy>
-              <StyledAddImageLink external to="https://en.gravatar.com/">
-                Manage photo
-              </StyledAddImageLink>
+              {!hasGravatar && (
+                <Button
+                  buttonType="outlined"
+                  onClick={() => setAvatarColorPickerDialogOpen(true)}
+                >
+                  Change Avatar Color
+                </Button>
+              )}
+              {hasGravatar && (
+                <StyledAddImageLink external to="https://en.gravatar.com/">
+                  Manage photo
+                </StyledAddImageLink>
+              )}
             </div>
           </Box>
           <Divider />
@@ -155,6 +183,10 @@ export const DisplaySettings = () => {
       />
       <Divider spacingBottom={8} spacingTop={24} />
       <TimezoneForm loggedInAsCustomer={loggedInAsCustomer} />
+      <AvatarColorPickerDialog
+        handleClose={() => setAvatarColorPickerDialogOpen(false)}
+        open={isColorPickerDialogOpen}
+      />
     </Paper>
   );
 };
