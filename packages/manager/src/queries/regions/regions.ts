@@ -1,4 +1,4 @@
-import { getRegionAvailability } from '@linode/api-v4/lib/regions';
+import { getRegion, getRegionAvailability } from '@linode/api-v4/lib/regions';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
@@ -27,13 +27,24 @@ export const regionQueries = createQueryKeys('regions', {
     },
     queryKey: null,
   },
+  region: (regionId: string) => ({
+    queryFn: () => getRegion(regionId),
+    queryKey: [regionId],
+  }),
   regions: {
     queryFn: getAllRegionsRequest,
     queryKey: null,
   },
 });
 
-export const useRegionsQuery = () =>
+export const useRegionQuery = (regionId: string) => {
+  return useQuery<Region, APIError>({
+    ...regionQueries.region(regionId),
+    enabled: Boolean(regionId),
+  });
+};
+
+export const useRegionsQuery = (transformRegionLabel: boolean = false) =>
   useQuery<Region[], APIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,

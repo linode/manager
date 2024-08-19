@@ -14,7 +14,7 @@ import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionQuery, useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
@@ -23,38 +23,27 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
 
-import type { Region } from '@linode/api-v4';
 import type {
   ACLType,
-  ObjectStorageEndpointTypes,
+  ObjectStorageBucket,
 } from '@linode/api-v4/lib/object-storage';
+
 export interface BucketDetailsDrawerProps {
-  bucketLabel?: string;
-  bucketRegion?: Region;
-  cluster?: string;
-  created?: string;
-  endpointType?: ObjectStorageEndpointTypes;
-  hostname?: string;
-  objectsNumber?: number;
   onClose: () => void;
   open: boolean;
-  size?: null | number;
+  selectedBucket: ObjectStorageBucket | undefined;
 }
 
 export const BucketDetailsDrawer = React.memo(
   (props: BucketDetailsDrawerProps) => {
-    const {
-      bucketLabel,
-      bucketRegion,
-      cluster,
-      created,
-      endpointType,
-      hostname,
-      objectsNumber,
-      onClose,
-      open,
-      size,
-    } = props;
+    const { onClose, open, selectedBucket } = props;
+
+    const bucketLabel = selectedBucket?.label;
+    const cluster = selectedBucket?.cluster;
+    const created = selectedBucket?.created;
+    const hostname = selectedBucket?.hostname;
+    const objectsNumber = selectedBucket?.objects;
+    const size = selectedBucket?.size;
 
     const flags = useFlags();
     const { account } = useAccountManagement();
@@ -65,11 +54,14 @@ export const BucketDetailsDrawer = React.memo(
       account?.capabilities ?? []
     );
 
-    // @TODO OBJ Multicluster: Once the feature is rolled out to production, we can clean this up by removing the useObjectStorageClusters and useRegionsQuery, which will not be required at that time.
+    // @TODO OBJGen2 - We could clean this up when OBJ Gen2 is in GA.
     const { data: clusters } = useObjectStorageClusters(
       !isObjMultiClusterEnabled
     );
     const { data: regions } = useRegionsQuery();
+    const { data: currentRegion } = useRegionQuery(
+      selectedBucket?.region ?? ''
+    );
     const { data: profile } = useProfile();
     const actualCluster = clusters?.find((c) => c.id === cluster);
     const region = regions?.find((r) => r.id === actualCluster?.region);
@@ -94,14 +86,9 @@ export const BucketDetailsDrawer = React.memo(
             Created: {formattedCreated}
           </Typography>
         ) : null}
-        {Boolean(endpointType) && (
-          <Typography data-testid="endpointType" variant="subtitle2">
-            Endpoint Type: {endpointType}
-          </Typography>
-        )}
         {isObjMultiClusterEnabled ? (
           <Typography data-testid="cluster" variant="subtitle2">
-            {bucketRegion?.label}
+            {currentRegion?.label}
           </Typography>
         ) : cluster ? (
           <Typography data-testid="cluster" variant="subtitle2">
@@ -128,8 +115,8 @@ export const BucketDetailsDrawer = React.memo(
         {typeof objectsNumber === 'number' ? (
           <Link
             to={`/object-storage/buckets/${
-              isObjMultiClusterEnabled && bucketRegion
-                ? bucketRegion.id
+              isObjMultiClusterEnabled && selectedBucket
+                ? selectedBucket.region
                 : cluster
             }/${bucketLabel}`}
           >
@@ -145,8 +132,8 @@ export const BucketDetailsDrawer = React.memo(
           <AccessSelect
             getAccess={() =>
               getBucketAccess(
-                isObjMultiClusterEnabled && bucketRegion
-                  ? bucketRegion.id
+                isObjMultiClusterEnabled && currentRegion
+                  ? currentRegion.id
                   : cluster,
                 bucketLabel
               )
@@ -158,14 +145,13 @@ export const BucketDetailsDrawer = React.memo(
                 acl === 'custom' ? { cors_enabled } : { acl, cors_enabled };
 
               return updateBucketAccess(
-                isObjMultiClusterEnabled && bucketRegion
-                  ? bucketRegion.id
+                isObjMultiClusterEnabled && currentRegion
+                  ? currentRegion.id
                   : cluster,
                 bucketLabel,
                 payload
               );
             }}
-            endpointType={endpointType}
             name={bucketLabel}
             variant="bucket"
           />
