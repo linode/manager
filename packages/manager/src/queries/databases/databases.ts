@@ -53,8 +53,8 @@ export const databaseQueries = createQueryKeys('databases', {
   }),
   databases: {
     contextQueries: {
-      all: (filter: Filter = {}) => ({
-        queryFn: () => getAllDatabases(filter),
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllDatabases(params, filter),
         queryKey: [filter],
       }),
       paginated: (params: Params, filter: Filter) => ({
@@ -92,9 +92,13 @@ export const useDatabasesQuery = (params: Params, filter: Filter) =>
     refetchInterval: 20000,
   });
 
-export const useAllDatabasesQuery = (enabled: boolean = true) =>
+export const useAllDatabasesQuery = (
+  enabled: boolean = true,
+  params: Params = {},
+  filters: Filter = {}
+) =>
   useQuery<DatabaseInstance[], APIError[]>({
-    ...databaseQueries.databases._ctx.all(),
+    ...databaseQueries.databases._ctx.all(params, filters),
     enabled,
   });
 

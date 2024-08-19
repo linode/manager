@@ -81,7 +81,7 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * This is an optional field, it is required if the type is dynamic for call the respective API to get the filters
    * example, databaseQueries.types, databaseQueries.engines etc., makes use of existing query key and optimises cache
    */
-  apiV4FactoryFunction?: QueryFunctionAndKey;
+  apiV4QueryKey?: QueryFunctionAndKey;
 
   /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected

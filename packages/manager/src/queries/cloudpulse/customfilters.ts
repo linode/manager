@@ -15,7 +15,7 @@ interface CustomFilterQueryProps {
   /**
    * The Built in API-V4 query factory functions like databaseQueries.types, databaseQueries.engines etc., makes use of existing query key and optimises cache
    */
-  apiFactoryFunction: QueryFunctionAndKey;
+  apiV4QueryKey: QueryFunctionAndKey;
   /**
    * This indicates whether or not to enable the query
    */
@@ -46,7 +46,7 @@ interface CustomFilterQueryProps {
 export const useGetCustomFiltersQuery = (
   queryProps: CustomFilterQueryProps
 ) => {
-  const { apiFactoryFunction, enabled, idField, labelField } = queryProps;
+  const { apiV4QueryKey, enabled, idField, labelField } = queryProps;
   return useQuery<
     QueryFunctionType,
     unknown,
@@ -54,8 +54,10 @@ export const useGetCustomFiltersQuery = (
   >({
     // receive filters and  return only id and label
     enabled,
-    ...apiFactoryFunction,
-    select: (filters: QueryFunctionType) => {
+    ...apiV4QueryKey,
+    select: (
+      filters: QueryFunctionType
+    ): CloudPulseServiceTypeFiltersOptions[] => {
       // whatever field we receive, just return id and label
       return filters
         .map(
@@ -66,7 +68,7 @@ export const useGetCustomFiltersQuery = (
             };
           }
         )
-        .filter((value) => value.id.length && value.label.length);
+        .filter(({ id, label }) => id.length && label.length);
     },
   });
 };

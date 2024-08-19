@@ -11,11 +11,15 @@ import type {
   DatabaseInstance,
   DatabaseType,
   Filter,
+  Params,
 } from '@linode/api-v4';
 
-export const getAllDatabases = (passedFilter?: Filter) =>
+export const getAllDatabases = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
   getAll<DatabaseInstance>((params, filter) =>
-    getDatabases(params, { ...filter, ...passedFilter })
+    getDatabases({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
 
 export const getAllDatabaseEngines = () =>
