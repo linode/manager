@@ -48,7 +48,7 @@ export const UpgradeVolumeDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: migrateVolumes,
   } = useVolumesMigrateMutation();
 
@@ -71,7 +71,7 @@ export const UpgradeVolumeDialog = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         label: 'Enter Upgrade Queue',
-        loading: isLoading,
+        loading: isPending,
         onClick: onSubmit,
       }}
       secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

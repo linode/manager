@@ -95,7 +95,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   const isInvalidPrice =
     !objTypes || !transferTypes || isErrorTypes || isErrorTransferTypes;
 
-  const { isLoading, mutateAsync: createBucket } = useCreateBucketMutation();
+  const { isPending, mutateAsync: createBucket } = useCreateBucketMutation();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
@@ -404,7 +404,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
             disabled:
               (showGDPRCheckbox && !state.hasSignedAgreement) || isErrorTypes,
             label: 'Create Bucket',
-            loading: isLoading || Boolean(selectedRegion?.id && isLoadingTypes),
+            loading: isPending || Boolean(selectedRegion?.id && isLoadingTypes),
             tooltipText:
               !isLoadingTypes && isInvalidPrice
                 ? PRICES_RELOAD_ERROR_NOTICE_TEXT

@@ -22,7 +22,7 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: createSSHKey,
   } = useCreateSSHKeyMutation();
 
@@ -90,7 +90,7 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
           primaryButtonProps={{
             'data-testid': 'submit',
             label: 'Add Key',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}

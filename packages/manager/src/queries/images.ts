@@ -59,7 +59,7 @@ export const imageQueries = createQueryKeys('images', {
 export const useImagesQuery = (
   params: Params,
   filters: Filter,
-  options?: UseQueryOptions<ResourcePage<Image>, APIError[]>
+  options?: Partial<UseQueryOptions<ResourcePage<Image>, APIError[]>>
 ) =>
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
