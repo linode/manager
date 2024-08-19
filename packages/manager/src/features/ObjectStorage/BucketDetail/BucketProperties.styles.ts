@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
@@ -27,5 +28,13 @@ export const StyledHelperText = styled(Typography, {
   label: 'StyledHelperText',
 })(({ theme }) => ({
   lineHeight: 1.5,
+  paddingBottom: theme.spacing(),
   paddingTop: theme.spacing(),
+}));
+
+export const StyledActionsPanel = styled(ActionsPanel, {
+  label: 'StyledActionsPanel',
+})(() => ({
+  display: 'flex',
+  justifyContent: 'right',
 }));
