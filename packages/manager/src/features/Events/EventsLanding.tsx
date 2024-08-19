@@ -23,6 +23,8 @@ import {
   StyledTypography,
 } from './EventsLanding.styles';
 
+import type { Filter } from '@linode/api-v4';
+
 interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
   entityId?: number;
@@ -32,7 +34,7 @@ export const EventsLanding = (props: Props) => {
   const { emptyMessage, entityId } = props;
   const flags = useFlags();
 
-  const filter = { ...EVENTS_LIST_FILTER };
+  const filter: Filter = { ...EVENTS_LIST_FILTER };
 
   if (entityId) {
     filter['entity.id'] = entityId;

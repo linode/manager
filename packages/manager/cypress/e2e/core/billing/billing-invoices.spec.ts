@@ -21,7 +21,7 @@ import { chooseRegion, getRegionById } from 'support/util/regions';
  *
  * @param regionId - ID of region for which to get label.
  *
- * @returns Region label in `<label> (<id>)` format.
+ * @returns Region label in `<country>, <label> (<id>)` format.
  */
 const getRegionLabel = (regionId: string) => {
   const region = getRegionById(regionId);

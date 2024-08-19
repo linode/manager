@@ -82,7 +82,9 @@ const AddCreditCardForm = (props: Props) => {
       enqueueSnackbar('Successfully added Credit Card', {
         variant: 'success',
       });
-      queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.paymentMethods.queryKey,
+      });
       onClose();
     } catch (errors) {
       handleAPIErrors(errors, setFieldError, setError);

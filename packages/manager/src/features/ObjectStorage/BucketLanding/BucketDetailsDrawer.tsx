@@ -12,7 +12,7 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
@@ -24,12 +24,16 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { AccessSelect } from '../BucketDetail/AccessSelect';
 
 import type { Region } from '@linode/api-v4';
-import type { ACLType } from '@linode/api-v4/lib/object-storage';
+import type {
+  ACLType,
+  ObjectStorageEndpointTypes,
+} from '@linode/api-v4/lib/object-storage';
 export interface BucketDetailsDrawerProps {
   bucketLabel?: string;
   bucketRegion?: Region;
   cluster?: string;
   created?: string;
+  endpointType?: ObjectStorageEndpointTypes;
   hostname?: string;
   objectsNumber?: number;
   onClose: () => void;
@@ -44,6 +48,7 @@ export const BucketDetailsDrawer = React.memo(
       bucketRegion,
       cluster,
       created,
+      endpointType,
       hostname,
       objectsNumber,
       onClose,
@@ -89,6 +94,11 @@ export const BucketDetailsDrawer = React.memo(
             Created: {formattedCreated}
           </Typography>
         ) : null}
+        {Boolean(endpointType) && (
+          <Typography data-testid="endpointType" variant="subtitle2">
+            Endpoint Type: {endpointType}
+          </Typography>
+        )}
         {isObjMultiClusterEnabled ? (
           <Typography data-testid="cluster" variant="subtitle2">
             {bucketRegion?.label}
@@ -155,6 +165,7 @@ export const BucketDetailsDrawer = React.memo(
                 payload
               );
             }}
+            endpointType={endpointType}
             name={bucketLabel}
             variant="bucket"
           />

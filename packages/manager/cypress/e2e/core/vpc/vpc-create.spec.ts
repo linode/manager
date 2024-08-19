@@ -25,6 +25,7 @@ import {
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';
+import { extendRegion } from 'support/util/regions';
 
 /**
  * Gets the "Add another Subnet" section with the given index.
@@ -44,9 +45,11 @@ describe('VPC create flow', () => {
    * - Confirms that UI redirects to created VPC page after creating a VPC.
    */
   it('can create a VPC', () => {
-    const mockVPCRegion = regionFactory.build({
-      capabilities: ['VPCs'],
-    });
+    const mockVPCRegion = extendRegion(
+      regionFactory.build({
+        capabilities: ['VPCs'],
+      })
+    );
 
     const mockSubnets: Subnet[] = buildArray(3, (index: number) => {
       return subnetFactory.build({
@@ -268,9 +271,11 @@ describe('VPC create flow', () => {
    * - Confirms that Cloud Manager UI responds accordingly when creating a VPC without subnets.
    */
   it('can create a VPC without any subnets', () => {
-    const mockVPCRegion = regionFactory.build({
-      capabilities: ['VPCs'],
-    });
+    const mockVPCRegion = extendRegion(
+      regionFactory.build({
+        capabilities: ['VPCs'],
+      })
+    );
 
     const mockVpc: VPC = vpcFactory.build({
       id: randomNumber(10000, 99999),

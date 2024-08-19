@@ -386,6 +386,8 @@ describe('Object Storage enrollment', () => {
 
     cy.wait('@cancelObjectStorage');
 
+    ui.toast.assertMessage('Object Storage successfully canceled.');
+
     // Confirm that settings page updates to reflect that Object Storage is disabled.
     cy.contains(getStartedNote).should('be.visible');
   });

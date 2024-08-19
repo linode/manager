@@ -129,67 +129,71 @@ export const PlansPanel = (props: PlansPanelProps) => {
     selectedRegionID,
   });
 
-  const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
-    const plansMap: PlanSelectionType[] = plans[plan];
-    const {
-      allDisabledPlans,
-      hasMajorityOfPlansDisabled,
-      plansForThisLinodeTypeClass,
-    } = extractPlansInformation({
-      disableLargestGbPlansFlag: flags.disableLargestGbPlans,
-      disabledClasses,
-      disabledSmallerPlans,
-      plans: plansMap,
-      regionAvailabilities,
-      selectedRegionId: selectedRegionID,
-    });
+  const tabs = Object.keys(plans).map(
+    (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
+      const plansMap: PlanSelectionType[] = plans[plan]!;
+      const {
+        allDisabledPlans,
+        hasMajorityOfPlansDisabled,
+        plansForThisLinodeTypeClass,
+      } = extractPlansInformation({
+        disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+        disabledClasses,
+        disabledSmallerPlans,
+        plans: plansMap,
+        regionAvailabilities,
+        selectedRegionId: selectedRegionID,
+      });
 
-    return {
-      disabled: props.disabledTabs ? props.disabledTabs?.includes(plan) : false,
-      render: () => {
-        return (
-          <>
-            <PlanInformation
-              hideLimitedAvailabilityBanner={
-                showDistributedRegionPlanTable ||
-                !flags.disableLargestGbPlans ||
-                plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
-              }
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
-                plan
-              )}
-              disabledClasses={disabledClasses}
-              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-              hasSelectedRegion={hasSelectedRegion}
-              planType={plan}
-              regionsData={regionsData || []}
-            />
-            {showDistributedRegionPlanTable && (
-              <Notice
-                text="Distributed region pricing is temporarily $0 during the beta period, after which billing will begin."
-                variant="warning"
+      return {
+        disabled: props.disabledTabs
+          ? props.disabledTabs?.includes(plan)
+          : false,
+        render: () => {
+          return (
+            <>
+              <PlanInformation
+                hideLimitedAvailabilityBanner={
+                  showDistributedRegionPlanTable ||
+                  !flags.disableLargestGbPlans ||
+                  plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
+                }
+                isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                  plan
+                )}
+                disabledClasses={disabledClasses}
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                hasSelectedRegion={hasSelectedRegion}
+                planType={plan}
+                regionsData={regionsData || []}
               />
-            )}
-            <PlanContainer
-              allDisabledPlans={allDisabledPlans}
-              currentPlanHeading={currentPlanHeading}
-              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-              isCreate={isCreate}
-              linodeID={linodeID}
-              onSelect={onSelect}
-              planType={plan}
-              plans={plansForThisLinodeTypeClass}
-              selectedId={selectedId}
-              selectedRegionId={selectedRegionID}
-              showLimits={showLimits}
-              wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
-            />
-          </>
-        );
-      },
-      title: planTabInfoContent[plan === 'standard' ? 'shared' : plan]?.title,
-    };
-  });
+              {showDistributedRegionPlanTable && (
+                <Notice
+                  text="Distributed region pricing is temporarily $0 during the beta period, after which billing will begin."
+                  variant="warning"
+                />
+              )}
+              <PlanContainer
+                allDisabledPlans={allDisabledPlans}
+                currentPlanHeading={currentPlanHeading}
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                isCreate={isCreate}
+                linodeID={linodeID}
+                onSelect={onSelect}
+                planType={plan}
+                plans={plansForThisLinodeTypeClass}
+                selectedId={selectedId}
+                selectedRegionId={selectedRegionID}
+                showLimits={showLimits}
+                wholePanelIsDisabled={disabled || isPlanPanelDisabled(plan)}
+              />
+            </>
+          );
+        },
+        title: planTabInfoContent[plan === 'edge' ? 'dedicated' : plan]?.title,
+      };
+    }
+  );
 
   const initialTab = determineInitialPlanCategoryTab(
     types,

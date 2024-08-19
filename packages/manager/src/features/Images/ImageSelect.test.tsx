@@ -1,40 +1,20 @@
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { imageFactory } from 'src/factories/images';
+import { getImageGroup } from 'src/utilities/images';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-vi.mock('src/components/EnhancedSelect/Select');
+import { ImageSelect } from './ImageSelect';
 
-import { ImageSelect, getImagesOptions, groupNameMap } from './ImageSelect';
-
-const images = imageFactory.buildList(10);
-
-const props = {
-  images,
-  onSelect: vi.fn(),
-};
-
-const privateImage1 = imageFactory.build({
-  deprecated: false,
-  is_public: false,
-  type: 'manual',
-});
-
-const recommendedImage1 = imageFactory.build({
+const recommendedImage = imageFactory.build({
   created_by: 'linode',
   deprecated: false,
   id: 'linode/0001',
   type: 'manual',
 });
 
-const recommendedImage2 = imageFactory.build({
-  created_by: 'linode',
-  deprecated: false,
-  id: 'linode/0002',
-  type: 'manual',
-});
-
-const deletedImage1 = imageFactory.build({
+const deletedImage = imageFactory.build({
   created_by: null,
   deprecated: false,
   expiry: '2019-04-09T04:13:37',
@@ -42,51 +22,67 @@ const deletedImage1 = imageFactory.build({
   type: 'automatic',
 });
 
-describe('ImageSelect', () => {
-  describe('getImagesOptions function', () => {
-    it('should return a list of GroupType', () => {
-      const items = getImagesOptions([recommendedImage1, recommendedImage2]);
-      expect(items[0]).toHaveProperty('label', groupNameMap.recommended);
-      expect(items[0].options).toHaveLength(2);
-    });
-
-    it('should handle multiple groups', () => {
-      const items = getImagesOptions([
-        recommendedImage1,
-        recommendedImage2,
-        privateImage1,
-        deletedImage1,
-      ]);
-      expect(items).toHaveLength(3);
-      const deleted = items.find((item) => item.label === groupNameMap.deleted);
-      expect(deleted!.options).toHaveLength(1);
-    });
-
-    it('should properly format GroupType options as RS Item type', () => {
-      const category = getImagesOptions([recommendedImage1])[0];
-      const option = category.options[0];
-      expect(option).toHaveProperty('label', recommendedImage1.label);
-      expect(option).toHaveProperty('value', recommendedImage1.id);
-    });
-
-    it('should handle empty input', () => {
-      expect(getImagesOptions([])).toEqual([]);
-    });
+describe('getImageGroup', () => {
+  it('handles the recommended group', () => {
+    expect(getImageGroup(recommendedImage)).toBe(
+      '64-bit Distributions - Recommended'
+    );
   });
 
-  describe('ImageSelect component', () => {
-    it('should render', () => {
-      const { getByText } = renderWithTheme(<ImageSelect {...props} />);
-      getByText(/image-1(?!\d)/i);
-    });
+  it('handles the deleted image group', () => {
+    expect(getImageGroup(deletedImage)).toBe('Recently Deleted Disks');
+  });
+});
 
-    it('should display an error', () => {
-      const imageError = 'An error';
-      const { getByText } = renderWithTheme(
-        <ImageSelect {...props} imageError={imageError} />
-      );
+describe('ImageSelect', () => {
+  it('should display an error', () => {
+    const { getByText } = renderWithTheme(
+      <ImageSelect
+        errorText="An error"
+        images={imageFactory.buildList(3)}
+        onSelect={vi.fn()}
+      />
+    );
+    expect(getByText('An error')).toBeInTheDocument();
+  });
 
-      getByText(imageError);
-    });
+  it('should call onSelect with the selected value', async () => {
+    const onSelect = vi.fn();
+    const images = [
+      imageFactory.build({ label: 'image-0' }),
+      imageFactory.build({ label: 'image-1' }),
+      imageFactory.build({ label: 'image-2' }),
+    ];
+
+    const { getByLabelText, getByText } = renderWithTheme(
+      <ImageSelect images={images} onSelect={onSelect} />
+    );
+
+    await userEvent.click(getByLabelText('Image'));
+
+    await userEvent.click(getByText('image-1'));
+
+    expect(onSelect).toHaveBeenCalledWith(images[1]);
+  });
+
+  it('should handle any/all', async () => {
+    const onSelect = vi.fn();
+    const images = [
+      imageFactory.build({ label: 'image-0' }),
+      imageFactory.build({ label: 'image-1' }),
+      imageFactory.build({ label: 'image-2' }),
+    ];
+
+    const { getByLabelText, getByText } = renderWithTheme(
+      <ImageSelect anyAllOption images={images} isMulti onSelect={onSelect} />
+    );
+
+    await userEvent.click(getByLabelText('Image'));
+
+    await userEvent.click(getByText('Any/All'));
+
+    expect(onSelect).toHaveBeenCalledWith([
+      expect.objectContaining({ id: 'any/all' }),
+    ]);
   });
 });

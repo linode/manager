@@ -43,7 +43,7 @@ describe('ClusterRow component', () => {
     );
 
     getByText('cluster-1');
-    await findByText('Fake Region, NC');
+    await findByText('US, Fake Region, NC');
   });
 
   it('renders HA chip for highly available clusters and hides chip for non-ha clusters', () => {

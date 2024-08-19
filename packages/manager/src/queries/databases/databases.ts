@@ -128,7 +128,9 @@ export const useCreateDatabaseMutation = () => {
         database
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
     },
   });
 };

@@ -20,7 +20,7 @@ const confirmDeletion = (linodeLabel: string) => {
     .click()
     .type(`${linodeLabel}{enter}`);
   cy.findByText('You searched for ...').should('be.visible');
-  cy.findByText('Sorry, no results for this one').should('be.visible');
+  cy.findByText('Sorry, no results for this one.').should('be.visible');
 };
 
 const deleteLinodeFromActionMenu = (linodeLabel: string) => {

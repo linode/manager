@@ -108,12 +108,14 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
             }) => {
               const { access, ip, port, user } = values.ssh;
 
+              // @ts-expect-error This form intentionally breaks Formik's error type
               const userError = errors['ssh.user'];
 
               // API oddity: IP errors come back as {field: 'ip'} instead of {field: 'ssh.ip'} liked we'd expect.
-              // tslint:disable-next-line
+              // @ts-expect-error This form intentionally breaks Formik's error type
               const ipError = errors['ssh.ip'] || errors['ip'];
 
+              // @ts-expect-error This form intentionally breaks Formik's error type
               const portError = errors['ssh.port'];
 
               return (

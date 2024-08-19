@@ -119,7 +119,7 @@ describe('LinodeSelectTableRow', () => {
       ),
     });
 
-    await findByText(region.label);
+    await findByText(`US, ${region.label}`);
   });
 
   it('should render a Linode plan label', async () => {

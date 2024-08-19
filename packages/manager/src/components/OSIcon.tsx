@@ -21,7 +21,9 @@ interface Props extends BoxProps {
 export const OSIcon = (props: Props) => {
   const { os, ...rest } = props;
 
-  const className = os ? `fl-${OS_ICONS[os] ?? 'tux'}` : `fl-tux`;
+  const className = os
+    ? `fl-${OS_ICONS[os as keyof typeof OS_ICONS] ?? 'tux'}`
+    : `fl-tux`;
 
   return <Box className={className} data-testid="os-icon" {...rest} />;
 };

@@ -1,13 +1,14 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import { defaultTo } from 'ramda';
 import * as React from 'react';
 
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControl } from 'src/components/FormControl';
 import { titlecase } from 'src/features/Linodes/presentation';
-import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
+import { getSelectedDeviceOption } from '../utilities';
+
+import type { Disk } from '@linode/api-v4/lib/linodes';
+import type { Volume } from '@linode/api-v4/lib/volumes';
 export interface ExtendedDisk extends Disk {
   _id: string;
 }
@@ -50,41 +51,46 @@ export const DeviceSelection = (props: Props) => {
   return (
     <div data-testid="device-select">
       {slots.map((slot, idx) => {
-        const deviceList = Object.entries(devices).map(([type, items]) => {
-          const device = titlecase(type);
-          return {
-            label: device,
-            options: (items as any[]).map(({ _id, label }) => {
-              return { label, value: _id };
-            }),
-            value: type,
-          };
-        });
+        const deviceList = Object.entries(devices).reduce(
+          (acc, [type, items]) => {
+            const device = titlecase(type);
+            const options = (items as any[]).map(({ _id, label }) => {
+              return { deviceType: device, label, value: _id };
+            });
+            return [...acc, ...options];
+          },
+          []
+        );
 
         deviceList.unshift({
-          label: '',
-          options: [{ label: 'None', value: null }],
-          value: '',
+          deviceType: '',
+          label: 'None',
+          value: null,
         });
 
-        const selectedDevice = getSelectedOptionFromGroupedOptions(
+        const selectedDevice = getSelectedDeviceOption(
           getSelected(slot),
           deviceList
         );
 
         return counter < idx ? null : (
           <FormControl fullWidth key={slot}>
-            <Select
+            <Autocomplete
               errorText={
                 selectedDevice?.value === diskOrVolumeInErrReason && errorText
                   ? adjustedErrorText(errorText, selectedDevice.label)
                   : undefined
               }
+              isOptionEqualToValue={(option, value) =>
+                option.label === value.label
+              }
+              autoHighlight
+              clearIcon={null}
               disabled={disabled}
-              isClearable={false}
+              groupBy={(option) => option.deviceType}
               label={`/dev/${slot}`}
               noMarginTop
-              onChange={(e: Item<string>) => onChange(slot, e.value)}
+              onChange={(_, selected) => onChange(slot, selected?.value)}
               options={deviceList}
               placeholder={'None'}
               value={selectedDevice}
@@ -94,15 +100,14 @@ export const DeviceSelection = (props: Props) => {
       })}
       {rescue && (
         <FormControl fullWidth>
-          <Select
-            defaultValue={{ label: 'finnix', value: 'finnix' }}
+          <Autocomplete
             disabled
             id="rescueDevice_sdh"
             label="/dev/sdh"
-            name="rescueDevice_sdh"
             noMarginTop
             onChange={() => null}
-            placeholder="Finnix Media"
+            options={[]}
+            value={{ label: 'finnix' }}
           />
         </FormControl>
       )}

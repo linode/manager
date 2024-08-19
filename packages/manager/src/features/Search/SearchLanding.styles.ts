@@ -1,6 +1,7 @@
+import { keyframes } from '@emotion/react';
 import { Stack } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import Error from 'src/assets/icons/error.svg';
 import { H1Header } from 'src/components/H1Header/H1Header';
@@ -25,9 +26,47 @@ export const StyledGrid = styled(Grid, {
   padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
 }));
 
+const blink = keyframes`
+  0%, 50%, 100% {
+    transform: scaleY(0.1);
+  }
+`;
+
+const rotate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+   100% {
+   transform: rotate(360deg);
+  }
+`;
+
+const shake = keyframes`
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25%, 75% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+`;
+
 export const StyledError = styled(Error, {
   label: 'StyledError',
 })(({ theme }) => ({
+  '& path:nth-of-type(4)': {
+    animation: `${blink} 1s`,
+    transformBox: 'fill-box',
+    transformOrigin: 'center',
+  },
+  '& path:nth-of-type(5)': {
+    animation: `${rotate} 3s`,
+    transformBox: 'fill-box',
+    transformOrigin: 'center',
+  },
+  animation: `${shake} 0.5s`,
   color: theme.palette.text.primary,
   height: 60,
   marginBottom: theme.spacing(4),

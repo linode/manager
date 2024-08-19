@@ -1,4 +1,6 @@
 import React from 'react';
+import userEvent from '@testing-library/user-event';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 
 import {
   LinodeConfigInterfaceFactory,
@@ -154,7 +156,12 @@ describe('LinodeConfigDialog', () => {
       onClose: vi.fn(),
     };
 
-    const { findByText, rerender } = renderWithTheme(
+    const {
+      getAllByPlaceholderText,
+      findByText,
+      getByTestId,
+      rerender,
+    } = renderWithTheme(
       <LinodeConfigDialog config={undefined} open={false} {...props} />
     );
 
@@ -167,6 +174,16 @@ describe('LinodeConfigDialog', () => {
         {...props}
       />
     );
+
+    const loadingTestId = 'circle-progress';
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const interfaceSelectMenu = getAllByPlaceholderText('Select an Interface');
+
+    await userEvent.click(interfaceSelectMenu[0]);
 
     await findByText('VPC');
     await findByText('Public Internet');

@@ -63,6 +63,11 @@ interface AclpFlag {
   enabled: boolean;
 }
 
+export interface CloudPulseResourceTypeMapFlag {
+  dimensionKey: string;
+  serviceType: string;
+}
+
 interface gpuV2 {
   planDivider: boolean;
 }
@@ -76,6 +81,8 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 
 export interface Flags {
   aclp: AclpFlag;
+  aclpReadEndpoint: string;
+  aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
   apicliDxToolsAdditions: boolean;
   blockStorageEncryption: boolean;
@@ -104,7 +111,8 @@ export interface Flags {
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
-  referralBannerText: ReferralBannerText;
+  referralBannerText: BannerContent;
+  secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
   soldOutChips: boolean;
   supportTicketSeverity: boolean;
@@ -177,12 +185,24 @@ export interface Provider {
   name: TPAProvider;
 }
 
-interface ReferralBannerText {
+interface BannerContent {
   link?: {
     text: string;
     url: string;
   };
   text: string;
+}
+
+interface SecureVMCopy {
+  bannerLabel?: string;
+  firewallAuthorizationLabel?: string;
+  firewallAuthorizationWarning?: string;
+  firewallDetails?: BannerContent;
+  generateActionText?: string;
+  generateDocsLink: string;
+  generatePrompt?: BannerContent;
+  generateSuccess?: BannerContent;
+  linodeCreate?: BannerContent;
 }
 
 export type ProductInformationBannerLocation =

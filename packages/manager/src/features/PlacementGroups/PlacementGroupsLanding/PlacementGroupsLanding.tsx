@@ -36,7 +36,7 @@ import { getPlacementGroupLinodes } from '../utils';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
-import type { PlacementGroup } from '@linode/api-v4';
+import type { Filter, PlacementGroup } from '@linode/api-v4';
 
 const preferenceKey = 'placement-groups';
 
@@ -55,14 +55,11 @@ export const PlacementGroupsLanding = React.memo(() => {
     `${preferenceKey}-order`
   );
 
-  const filter = {
+  const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+    ...(query && { label: { '+contains': query } }),
   };
-
-  if (query) {
-    filter['label'] = { '+contains': query };
-  }
 
   const {
     data: placementGroups,

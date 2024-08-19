@@ -1,5 +1,4 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { always, cond, groupBy, propOr } from 'ramda';
+import type { Image } from '@linode/api-v4';
 
 const isRecentlyDeleted = (i: Image) =>
   i.created_by === null && i.type === 'automatic';
@@ -9,31 +8,15 @@ const isDeprecated = (i: Image) => i.deprecated === true;
 const isRecommended = (i: Image) => isByLinode(i) && !isDeprecated(i);
 const isOlderImage = (i: Image) => isByLinode(i) && isDeprecated(i);
 
-interface GroupedImages {
-  deleted?: Image[];
-  images?: Image[];
-  older?: Image[];
-  recommended?: Image[];
-}
-
-export let groupImages: (i: Image[]) => GroupedImages;
-// eslint-disable-next-line
-groupImages = groupBy(
-  cond([
-    [isRecentlyDeleted, always('deleted')],
-    [isRecommended, always('recommended')],
-    [isOlderImage, always('older')],
-    [(_) => true, always('images')],
-  ])
-);
-
-export const groupNameMap = {
-  _default: 'Other',
-  deleted: 'Recently Deleted Disks',
-  images: 'Images',
-  older: 'Older Distributions',
-  recommended: '64-bit Distributions - Recommended',
+export const getImageGroup = (image: Image) => {
+  if (isRecentlyDeleted(image)) {
+    return 'Recently Deleted Disks';
+  }
+  if (isRecommended(image)) {
+    return '64-bit Distributions - Recommended';
+  }
+  if (isOlderImage(image)) {
+    return 'Older Distributions';
+  }
+  return 'Images';
 };
-
-export const getDisplayNameForGroup = (key: string) =>
-  propOr('Other', key, groupNameMap);

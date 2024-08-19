@@ -31,6 +31,10 @@ export interface ButtonProps extends _ButtonProps {
    */
   compactY?: boolean;
   /**
+   * Optional test ID
+   */
+  'data-testid'?: string;
+  /**
    * Show a loading indicator
    * @default false
    */

@@ -50,10 +50,12 @@ export const useAccountUserDeleteMutation = (username: string) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>(() => deleteUser(username), {
     onSuccess() {
-      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
-      queryClient.removeQueries(
-        accountQueries.users._ctx.user(username).queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users._ctx.paginated._def,
+      });
+      queryClient.removeQueries({
+        queryKey: accountQueries.users._ctx.user(username).queryKey,
+      });
     },
   });
 };

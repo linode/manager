@@ -12,6 +12,7 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import {
   FirewallOptionItem,
+  FirewallPreset,
   addressOptions,
   firewallOptionItemsShort,
   portPresets,
@@ -83,7 +84,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
   const handleTypeChange = React.useCallback(
-    (item: FirewallOptionItem | null) => {
+    (item: FirewallOptionItem<FirewallPreset | 'custom'> | null) => {
       const selectedType = item?.value;
 
       // If the user re-selects the same preset or selectedType is undefined, don't do anything

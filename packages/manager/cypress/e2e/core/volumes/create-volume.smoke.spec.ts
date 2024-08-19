@@ -24,7 +24,7 @@ import {
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 
-const region = 'Newark, NJ';
+const region = 'US, Newark, NJ';
 
 /**
  * Asserts that a volume is listed and has the expected config information.

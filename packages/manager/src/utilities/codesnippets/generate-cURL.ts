@@ -6,10 +6,10 @@ const headers = [
   '-H "Authorization: Bearer $TOKEN" \\',
 ].join('\n');
 
-export const generateCurlCommand = (data: {}, path: string) => {
+export const generateCurlCommand = (data: any, path: string) => {
   const keys = Object.keys(data);
 
-  const cleanData = {};
+  const cleanData: any = {};
 
   for (const key of keys) {
     if (typeof data[key] === 'string') {

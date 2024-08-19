@@ -18,8 +18,9 @@ import {
   getEventProgress,
   volumeStatusIconMap,
 } from './utils';
-import { ActionHandlers, VolumesActionMenu } from './VolumesActionMenu';
+import { VolumesActionMenu } from './VolumesActionMenu';
 
+import type { ActionHandlers } from './VolumesActionMenu';
 import type { Volume } from '@linode/api-v4';
 
 export const useStyles = makeStyles()({
@@ -31,13 +32,19 @@ export const useStyles = makeStyles()({
 
 interface Props {
   handlers: ActionHandlers;
+  isBlockStorageEncryptionFeatureEnabled?: boolean;
   isDetailsPageRow?: boolean;
   volume: Volume;
 }
 
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
-  const { handlers, isDetailsPageRow, volume } = props;
+  const {
+    handlers,
+    isBlockStorageEncryptionFeatureEnabled,
+    isDetailsPageRow,
+    volume,
+  } = props;
 
   const history = useHistory();
 
@@ -93,6 +100,9 @@ export const VolumeTableRow = React.memo((props: Props) => {
 
   const regionLabel =
     regions?.find((r) => r.id === volume.region)?.label ?? volume.region;
+
+  const encryptionStatus =
+    volume.encryption === 'enabled' ? 'Encrypted' : 'Not Encrypted';
 
   return (
     <TableRow data-qa-volume-cell={volume.id} key={`volume-row-${volume.id}`}>
@@ -150,6 +160,9 @@ export const VolumeTableRow = React.memo((props: Props) => {
             <Typography data-qa-unattached>Unattached</Typography>
           )}
         </TableCell>
+      )}
+      {isBlockStorageEncryptionFeatureEnabled && (
+        <TableCell noWrap>{encryptionStatus}</TableCell>
       )}
       <TableCell actionCell>
         <VolumesActionMenu

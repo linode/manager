@@ -330,7 +330,11 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[id="vpn-password"]').should('have.value', vpnPassword);
 
     // Choose an image
-    cy.findByPlaceholderText('Choose an image').should('be.visible').click();
+    cy.findByPlaceholderText('Choose an image')
+      .should('be.visible')
+      .click()
+      .type(image);
+    ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
     cy.findByText(image).should('be.visible').click();
 

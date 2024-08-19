@@ -69,6 +69,7 @@ export const ENTITY_MAP: Record<string, EntityType> = {
   Kubernetes: 'lkecluster_id',
   Linodes: 'linode_id',
   NodeBalancers: 'nodebalancer_id',
+  VPCs: 'vpc_id',
   Volumes: 'volume_id',
 };
 
@@ -82,6 +83,7 @@ export const ENTITY_ID_TO_NAME_MAP: Record<EntityType, string> = {
   nodebalancer_id: 'NodeBalancer',
   none: '',
   volume_id: 'Volume',
+  vpc_id: 'VPC',
 };
 
 // General custom fields common to multiple custom ticket types.

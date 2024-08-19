@@ -1,16 +1,12 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { imageToItem } from 'src/utilities/imageToItem';
 
 import {
   StyledActionsPanel,
@@ -18,6 +14,9 @@ import {
   StyledNotice,
   StyledTextField,
 } from './StackScriptForm.styles';
+
+import type { Image } from '@linode/api-v4/lib/images';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -42,7 +41,7 @@ interface Props {
   label: TextFieldHandler;
   mode: 'create' | 'edit';
   onCancel: () => void;
-  onSelectChange: (image: Item<string>[]) => void;
+  onSelectChange: (image: Image[]) => void;
   onSubmit: () => void;
   revision: TextFieldHandler;
   script: TextFieldHandler;
@@ -73,7 +72,6 @@ export const StackScriptForm = React.memo((props: Props) => {
   } = props;
 
   const hasErrorFor = getAPIErrorFor(errorResources, errors);
-  const selectedImages = imageToItem(images.selected);
 
   return (
     <Paper sx={(theme) => ({ padding: theme.spacing(2) })}>
@@ -112,13 +110,13 @@ export const StackScriptForm = React.memo((props: Props) => {
             anyAllOption
             data-qa-stackscript-target-select
             disabled={disabled}
-            imageFieldError={hasErrorFor('images')}
+            errorText={hasErrorFor('images')}
             images={images.available}
             isMulti
             label="Target Images"
             onSelect={onSelectChange}
             required
-            value={selectedImages}
+            value={images.selected}
           />
         </StyledGridWithTips>
         <StyledGridWithTips>

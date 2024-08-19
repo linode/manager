@@ -61,6 +61,7 @@ export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
   | 'Akamai Cloud Load Balancer'
+  | 'Akamai Cloud Pulse'
   | 'Block Storage'
   | 'Block Storage Encryption'
   | 'Cloud Firewall'
@@ -182,6 +183,7 @@ export type GlobalGrantTypes =
   | 'add_images'
   | 'add_linodes'
   | 'add_longview'
+  | 'add_databases'
   | 'add_nodebalancers'
   | 'add_stackscripts'
   | 'add_volumes'

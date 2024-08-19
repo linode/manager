@@ -10,7 +10,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Mode, ModeSelect } from 'src/components/ModeSelect/ModeSelect';
@@ -25,6 +24,8 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { ImageAndPassword } from '../LinodeSettings/ImageAndPassword';
+
+import type { Image } from '@linode/api-v4';
 
 type FileSystem = 'ext3' | 'ext4' | 'initrd' | 'raw' | 'swap';
 
@@ -171,8 +172,8 @@ export const CreateDiskDrawer = (props: Props) => {
             imageFieldError={
               formik.touched.image ? formik.errors.image : undefined
             }
-            onImageChange={(selected: Item) =>
-              formik.setFieldValue('image', selected?.value ?? null)
+            onImageChange={(selected: Image) =>
+              formik.setFieldValue('image', selected?.id ?? null)
             }
             onPasswordChange={(root_pass: string) =>
               formik.setFieldValue('root_pass', root_pass)

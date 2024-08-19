@@ -30,6 +30,7 @@ import { mockGetRegions } from 'support/intercepts/regions';
 import { buildArray } from 'support/util/arrays';
 import { ObjectStorageKeyBucketAccess } from '@linode/api-v4';
 import { mockGetAccount } from 'support/intercepts/account';
+import { extendRegion } from 'support/util/regions';
 
 describe('object storage access keys smoke tests', () => {
   /*
@@ -153,18 +154,16 @@ describe('object storage access keys smoke tests', () => {
 
   describe('Object Storage Multicluster feature enabled', () => {
     const mockRegionsObj = buildArray(3, () => {
-      return regionFactory.build({
-        id: `us-${randomString(5)}`,
-        label: `mock-obj-region-${randomString(5)}`,
-        capabilities: ['Object Storage'],
-      });
+      return extendRegion(
+        regionFactory.build({
+          id: `us-${randomString(5)}`,
+          label: `mock-obj-region-${randomString(5)}`,
+          capabilities: ['Object Storage'],
+        })
+      );
     });
 
-    const mockRegionsNoObj = regionFactory.buildList(3, {
-      capabilities: [],
-    });
-
-    const mockRegions = [...mockRegionsObj, ...mockRegionsNoObj];
+    const mockRegions = [...mockRegionsObj];
 
     beforeEach(() => {
       mockGetAccount(
@@ -280,11 +279,13 @@ describe('object storage access keys smoke tests', () => {
      * - Confirms that "Permissions" drawer contains expected scope and permission data.
      */
     it('can create limited access keys with OBJ Multicluster', () => {
-      const mockRegion = regionFactory.build({
-        id: `us-${randomString(5)}`,
-        label: `mock-obj-region-${randomString(5)}`,
-        capabilities: ['Object Storage'],
-      });
+      const mockRegion = extendRegion(
+        regionFactory.build({
+          id: `us-${randomString(5)}`,
+          label: `mock-obj-region-${randomString(5)}`,
+          capabilities: ['Object Storage'],
+        })
+      );
 
       const mockBuckets = objectStorageBucketFactory.buildList(2, {
         region: mockRegion.id,
@@ -420,17 +421,21 @@ describe('object storage access keys smoke tests', () => {
      * - Confirms that access keys landing page automatically updates to reflect edited access key.
      */
     it('can update access keys with OBJ Multicluster', () => {
-      const mockInitialRegion = regionFactory.build({
-        id: `us-${randomString(5)}`,
-        label: `mock-obj-region-${randomString(5)}`,
-        capabilities: ['Object Storage'],
-      });
+      const mockInitialRegion = extendRegion(
+        regionFactory.build({
+          id: `us-${randomString(5)}`,
+          label: `mock-obj-region-${randomString(5)}`,
+          capabilities: ['Object Storage'],
+        })
+      );
 
-      const mockUpdatedRegion = regionFactory.build({
-        id: `us-${randomString(5)}`,
-        label: `mock-obj-region-${randomString(5)}`,
-        capabilities: ['Object Storage'],
-      });
+      const mockUpdatedRegion = extendRegion(
+        regionFactory.build({
+          id: `us-${randomString(5)}`,
+          label: `mock-obj-region-${randomString(5)}`,
+          capabilities: ['Object Storage'],
+        })
+      );
 
       const mockRegions = [mockInitialRegion, mockUpdatedRegion];
 

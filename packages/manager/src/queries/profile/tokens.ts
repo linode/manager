@@ -40,8 +40,10 @@ export const useCreatePersonalAccessTokenMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Token, APIError[], TokenRequest>({
     mutationFn: createPersonalAccessToken,
-    onSuccess: () => {
-      queryClient.invalidateQueries(profileQueries.personalAccessTokens._def);
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.personalAccessTokens._def,
+      });
     },
   });
 };
@@ -50,8 +52,10 @@ export const useUpdatePersonalAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<Token, APIError[], Partial<TokenRequest>>({
     mutationFn: (data) => updatePersonalAccessToken(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(profileQueries.personalAccessTokens._def);
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.personalAccessTokens._def,
+      });
     },
   });
 };
@@ -62,7 +66,9 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(() => {
-        queryClient.invalidateQueries(profileQueries.personalAccessTokens._def);
+        queryClient.invalidateQueries({
+          queryKey: profileQueries.personalAccessTokens._def,
+        });
       }, 1000);
     },
   });
@@ -74,7 +80,10 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(
-        () => queryClient.invalidateQueries(profileQueries.appTokens._def),
+        () =>
+          queryClient.invalidateQueries({
+            queryKey: profileQueries.appTokens._def,
+          }),
         1000
       );
     },
@@ -82,6 +91,10 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
 };
 
 export function tokenEventHandler({ queryClient }: EventHandlerData) {
-  queryClient.invalidateQueries(profileQueries.appTokens._def);
-  queryClient.invalidateQueries(profileQueries.personalAccessTokens._def);
+  queryClient.invalidateQueries({
+    queryKey: profileQueries.appTokens._def,
+  });
+  queryClient.invalidateQueries({
+    queryKey: profileQueries.personalAccessTokens._def,
+  });
 }

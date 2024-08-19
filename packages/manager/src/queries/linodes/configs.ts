@@ -28,9 +28,9 @@ export const useLinodeConfigDeleteMutation = (
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteLinodeConfig(linodeId, configId),
     onSuccess() {
-      queryClient.invalidateQueries(
-        linodeQueries.linode(linodeId)._ctx.configs
-      );
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+      });
     },
   });
 };
@@ -40,9 +40,9 @@ export const useLinodeConfigCreateMutation = (linodeId: number) => {
   return useMutation<Config, APIError[], LinodeConfigCreationData>({
     mutationFn: (data) => createLinodeConfig(linodeId, data),
     onSuccess() {
-      queryClient.invalidateQueries(
-        linodeQueries.linode(linodeId)._ctx.configs
-      );
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+      });
     },
   });
 };
@@ -55,9 +55,9 @@ export const useLinodeConfigUpdateMutation = (
   return useMutation<Config, APIError[], Partial<LinodeConfigCreationData>>({
     mutationFn: (data) => updateLinodeConfig(linodeId, configId, data),
     onSuccess() {
-      queryClient.invalidateQueries(
-        linodeQueries.linode(linodeId)._ctx.configs
-      );
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+      });
     },
   });
 };

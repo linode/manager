@@ -1,11 +1,13 @@
-import {
+import Factory from 'src/factories/factoryProxy';
+
+import type {
   Firewall,
   FirewallDevice,
   FirewallDeviceEntityType,
   FirewallRuleType,
   FirewallRules,
+  FirewallTemplate,
 } from '@linode/api-v4/lib/firewalls/types';
-import Factory from 'src/factories/factoryProxy';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   action: 'DROP',
@@ -55,3 +57,10 @@ export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
   id: Factory.each((i) => i),
   updated: '2020-01-01',
 });
+
+export const firewallTemplateFactory = Factory.Sync.makeFactory<FirewallTemplate>(
+  {
+    rules: firewallRulesFactory.build(),
+    slug: Factory.each((i) => `template-${i}`),
+  }
+);
