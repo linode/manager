@@ -52,7 +52,9 @@ export const BucketProperties = React.memo((props: Props) => {
     return bucket.label === bucketName && bucket.cluster === clusterId;
   });
 
-  // TODO: OBJGen2 - Handle Get properties (to set default/initial value) once the endpoint for retrieving Bucket Rate Limits is available.
+  // TODO: OBJGen2 - Handle Get properties (to set default/initial value) once the endpoint
+  // for retrieving Bucket Rate Limits is available.
+  //
   // React.useEffect(() => {
   // }, []);
 
