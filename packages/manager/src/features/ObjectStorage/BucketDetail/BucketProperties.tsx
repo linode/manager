@@ -2,6 +2,7 @@ import { ObjectStorageEndpointTypes } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
@@ -28,6 +29,9 @@ export const BucketProperties = React.memo((props: Props) => {
   const { bucketName, clusterId, endpointType } = props;
   const [updateRateLimitLoading] = React.useState(false);
   const [selectedRateLimit, setSelectedRateLimit] = React.useState<string>('1');
+  const [updateRateLimitSuccess] = React.useState(false);
+  const [rateLimitError] = React.useState('');
+  const [updateRateLimitError] = React.useState('');
 
   const prefix = getQueryParamFromQueryString(location.search, 'prefix');
   const flags = useFlags();
@@ -56,6 +60,8 @@ export const BucketProperties = React.memo((props: Props) => {
     // TODO: OBJGen2 - Handle update Bucket Rate Limit logic here.
   };
 
+  const errorText = rateLimitError || updateRateLimitError;
+
   return (
     <>
       <BucketBreadcrumb
@@ -67,6 +73,14 @@ export const BucketProperties = React.memo((props: Props) => {
 
       <StyledRootContainer>
         <Typography variant="h2">Bucket Rate Limits</Typography>
+        {updateRateLimitSuccess ? (
+          <Notice
+            text={`Bucket properties updated successfully.`}
+            variant="success"
+          />
+        ) : null}
+
+        {errorText ? <Notice text={errorText} variant="error" /> : null}
         {/* TODO: OBJGen2 - We need to handle link in upcoming PR */}
         <StyledHelperText>
           Specifies the maximum Requests Per Second (RPS) for an Endpoint. To
