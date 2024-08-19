@@ -131,7 +131,11 @@ export const BucketDetailLanding = React.memo((props: Props) => {
               />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
-              <BucketProperties bucketName={bucketName} clusterId={clusterId} />
+              <BucketProperties
+                bucketName={bucketName}
+                clusterId={clusterId}
+                endpointType={endpointType}
+              />
             </SafeTabPanel>
             <SafeTabPanel index={3}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
