@@ -18,6 +18,7 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 interface BucketRateLimitTableProps {
   endpointType: ObjectStorageEndpointTypes | undefined;
+  onDefaultRateLimit?: (defaultLimit: string) => void;
   onRateLimitChange?: (selectedLimit: string) => void;
   selectedRateLimit?: null | string;
 }
@@ -56,15 +57,23 @@ const tableData = (endpointType: BucketRateLimitTableProps['endpointType']) => {
 };
 
 export const BucketRateLimitTable = (props: BucketRateLimitTableProps) => {
-  const { endpointType, onRateLimitChange, selectedRateLimit } = props;
+  const {
+    endpointType,
+    onDefaultRateLimit,
+    onRateLimitChange,
+    selectedRateLimit,
+  } = props;
   const [rateLimits, setRateLimits] = useState<RateLimit[] | null>(null);
 
   React.useEffect(() => {
     const data = tableData(endpointType);
     setRateLimits(data);
 
-    // Set default/initial value
+    // Set Default value.
     const defaultRateLimit = data.find((rl: any) => rl.checked)?.id || '1';
+    onDefaultRateLimit?.(defaultRateLimit);
+
+    // Set Selected value as Default value initially.
     onRateLimitChange?.(defaultRateLimit);
   }, [endpointType]);
 

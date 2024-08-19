@@ -28,6 +28,9 @@ interface Props {
 export const BucketProperties = React.memo((props: Props) => {
   const { bucketName, clusterId, endpointType } = props;
   const [updateRateLimitLoading] = React.useState(false);
+  const [defaultRateLimit, setDefaultRateLimitData] = React.useState<
+    null | string
+  >(null);
   const [selectedRateLimit, setSelectedRateLimit] = React.useState<
     null | string
   >(null);
@@ -79,6 +82,7 @@ export const BucketProperties = React.memo((props: Props) => {
         ) : null}
 
         {errorText ? <Notice text={errorText} variant="error" /> : null}
+
         {/* TODO: OBJGen2 - We need to handle link in upcoming PR */}
         <StyledHelperText>
           Specifies the maximum Requests Per Second (RPS) for an Endpoint. To
@@ -86,7 +90,10 @@ export const BucketProperties = React.memo((props: Props) => {
           Understand <Link to="#">bucket rate limits</Link>.
         </StyledHelperText>
         <BucketRateLimitTable
-          onRateLimitChange={(selectedLimit: string) => {
+          onDefaultRateLimit={(defaultLimit) => {
+            setDefaultRateLimitData(defaultLimit);
+          }}
+          onRateLimitChange={(selectedLimit) => {
             setSelectedRateLimit(selectedLimit);
           }}
           endpointType={endpointType}
@@ -94,7 +101,7 @@ export const BucketProperties = React.memo((props: Props) => {
         />
         <StyledActionsPanel
           primaryButtonProps={{
-            disabled: !selectedRateLimit,
+            disabled: selectedRateLimit === defaultRateLimit,
             label: 'Save',
             loading: updateRateLimitLoading,
             onClick: () => {
