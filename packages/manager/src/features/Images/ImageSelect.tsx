@@ -1,20 +1,17 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { Box } from 'src/components/Box';
-import { clone, propOr } from 'ramda';
 import * as React from 'react';
 
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useAllImagesQuery } from 'src/queries/images';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { groupImages } from 'src/utilities/images';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
+import { imageFactory } from 'src/factories';
+import { getImageGroup } from 'src/utilities/images';
+
+import type { Image } from '@linode/api-v4/lib/images';
 
 interface BaseProps {
   anyAllOption?: boolean;
   disabled?: boolean;
+  errorText?: string;
   helperText?: string;
-  imageError?: string;
-  imageFieldError?: string;
   images: Image[];
   label?: string;
   required?: boolean;
@@ -22,23 +19,22 @@ interface BaseProps {
 
 interface Props extends BaseProps {
   isMulti?: false;
-  onSelect: (selected: Item) => void;
-  value?: Item;
+  onSelect: (image: Image) => void;
+  value?: string;
 }
 
 interface MultiProps extends BaseProps {
   isMulti: true;
-  onSelect: (selected: Item[]) => void;
-  value?: Item[];
+  onSelect: (selected: Image[]) => void;
+  value?: string[];
 }
 
 export const ImageSelect = (props: MultiProps | Props) => {
   const {
     anyAllOption,
     disabled,
+    errorText,
     helperText,
-    imageError,
-    imageFieldError,
     images,
     isMulti,
     label,
@@ -47,33 +43,20 @@ export const ImageSelect = (props: MultiProps | Props) => {
     value,
   } = props;
 
-  const { error, isError, isLoading: imagesLoading } = useAllImagesQuery(
-    {},
-    {}
+  const options = React.useMemo(
+    () => [
+      ...(anyAllOption
+        ? [
+            imageFactory.build({
+              id: 'any/all',
+              label: 'Any/All',
+            }),
+          ]
+        : []),
+      ...images,
+    ],
+    [anyAllOption, images]
   );
-
-  // Check for request errors in RQ
-  const rqError = isError
-    ? getAPIErrorOrDefault(error ?? [], 'Unable to load Images')[0].reason
-    : undefined;
-
-  const renderedImages = React.useMemo(() => getImagesOptions(images), [
-    images,
-  ]);
-
-  const imageSelectOptions = clone(renderedImages);
-
-  if (anyAllOption) {
-    imageSelectOptions.unshift({
-      label: '',
-      options: [
-        {
-          label: 'Any/All',
-          value: 'any/all',
-        },
-      ],
-    });
-  }
 
   return (
     <Box
@@ -83,71 +66,36 @@ export const ImageSelect = (props: MultiProps | Props) => {
         width: '100%',
       }}
     >
-      <Box
-        sx={{
-          width: '415px',
+      <Autocomplete
+        onChange={(event, value) => {
+          if (isMulti && Array.isArray(value)) {
+            onSelect((value ?? []) as Image[]);
+          } else if (!isMulti) {
+            onSelect(value as Image);
+          }
         }}
-      >
-        <Select
-          textFieldProps={{
-            required,
-          }}
-          disabled={disabled || Boolean(imageError)}
-          errorText={imageError || imageFieldError || rqError}
-          id={'image-select'}
-          isLoading={imagesLoading}
-          isMulti={Boolean(isMulti)}
-          label={label || 'Image'}
-          onChange={onSelect}
-          options={imageSelectOptions as any}
-          placeholder="Select an Image"
-          value={value}
-        />
-      </Box>
-      <Box>
-        <TooltipIcon
-          sxTooltipIcon={{
-            transform: 'translateY(50%)',
-          }}
-          status="help"
-          text={helperText || 'Choosing a 64-bit distro is recommended.'}
-        />
-      </Box>
+        textFieldProps={{
+          required,
+          tooltipText: helperText ?? 'Choosing a 64-bit distro is recommended.',
+        }}
+        value={
+          isMulti
+            ? options.filter((o) => value?.includes(o.id)) ?? []
+            : options.find((o) => o.id === value) ?? null
+        }
+        disableCloseOnSelect={false}
+        disableSelectAll
+        disabled={disabled}
+        errorText={errorText}
+        filterSelectedOptions
+        groupBy={getImageGroup}
+        label={label ?? 'Image'}
+        multiple={isMulti}
+        options={options}
+        placeholder="Select an Image"
+      />
     </Box>
   );
 };
-
-export const getImagesOptions = (images: Image[]) => {
-  const groupedImages = groupImages(images);
-  return ['recommended', 'older', 'images', 'deleted'].reduce(
-    (accumulator: GroupType<string>[], category: string) => {
-      if (groupedImages[category]) {
-        return [
-          ...accumulator,
-          {
-            label: getDisplayNameForGroup(category),
-            options: groupedImages[category].map(({ id, label }: Image) => ({
-              label,
-              value: id,
-            })),
-          },
-        ];
-      }
-      return accumulator;
-    },
-    []
-  );
-};
-
-export const groupNameMap = {
-  _default: 'Other',
-  deleted: 'Recently Deleted Disks',
-  images: 'Images',
-  older: 'Older Distributions',
-  recommended: '64-bit Distributions - Recommended',
-};
-
-const getDisplayNameForGroup = (key: string) =>
-  propOr('Other', key, groupNameMap);
 
 export default ImageSelect;

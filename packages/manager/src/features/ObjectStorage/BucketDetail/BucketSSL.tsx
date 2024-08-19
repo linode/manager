@@ -19,7 +19,7 @@ import {
   useBucketSSLDeleteMutation,
   useBucketSSLMutation,
   useBucketSSLQuery,
-} from 'src/queries/objectStorage';
+} from 'src/queries/object-storage/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {

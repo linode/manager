@@ -9,15 +9,8 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccountSettings } from 'src/queries/account/settings';
-import {
-  useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -94,43 +87,12 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   } = props;
 
   const { data: accountSettings } = useAccountSettings();
-  const { account } = useAccountManagement();
-  const flags = useFlags();
-  const { data: regions } = useRegionsQuery();
 
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  const {
-    data: objectStorageClusters,
-    isLoading: areClustersLoading,
-  } = useObjectStorageClusters(!isObjMultiClusterEnabled);
-
-  /*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsError,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    enabled: true,
-    isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled
-      ? regionsSupportingObjectStorage
-      : undefined,
-  });
+  } = useObjectStorageBuckets();
 
   const buckets = objectStorageBucketsResponse?.buckets || [];
 
@@ -202,7 +164,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
       title={title}
       wide={createMode && hasBuckets}
     >
-      {areBucketsLoading || areClustersLoading ? (
+      {areBucketsLoading ? (
         <CircleProgress />
       ) : (
         <Formik

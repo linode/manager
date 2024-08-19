@@ -11,6 +11,7 @@ Cypress.Commands.add('trackPageVisit', { prevSubject: false }, () => {
   const pageLoadId = randomNumber(100000, 999999);
 
   cy.window({ log: false }).then((window) => {
+    // @ts-expect-error not in the cypress type
     window['cypress-visit-id'] = pageLoadId;
   });
 

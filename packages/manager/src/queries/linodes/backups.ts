@@ -22,7 +22,9 @@ export const useLinodeBackupsEnableMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => enableBackups(id),
     onSuccess() {
-      queryClient.invalidateQueries(linodeQueries.linodes);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
       queryClient.invalidateQueries({
         exact: true,
         queryKey: linodeQueries.linode(id).queryKey,
@@ -36,7 +38,9 @@ export const useLinodeBackupsCancelMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => cancelBackups(id),
     onSuccess() {
-      queryClient.invalidateQueries(linodeQueries.linodes);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
       queryClient.invalidateQueries({
         exact: true,
         queryKey: linodeQueries.linode(id).queryKey,
@@ -50,8 +54,12 @@ export const useLinodeBackupSnapshotMutation = (id: number) => {
   return useMutation<{}, APIError[], { label: string }>({
     mutationFn: ({ label }) => takeSnapshot(id, label),
     onSuccess() {
-      queryClient.invalidateQueries(linodeQueries.linodes);
-      queryClient.invalidateQueries(linodeQueries.linode(id)._ctx.backups);
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(id)._ctx.backups.queryKey,
+      });
       queryClient.invalidateQueries({
         exact: true,
         queryKey: linodeQueries.linode(id).queryKey,

@@ -33,20 +33,15 @@ export const regionQueries = createQueryKeys('regions', {
   },
 });
 
-export const useRegionsQuery = (transformRegionLabel: boolean = false) =>
+export const useRegionsQuery = () =>
   useQuery<Region[], APIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,
-    select: (regions: Region[]) => {
-      // Display Country, City instead of City, State
-      if (transformRegionLabel) {
-        return regions.map((region) => ({
-          ...region,
-          label: getNewRegionLabel({ region }),
-        }));
-      }
-      return regions;
-    },
+    select: (regions: Region[]) =>
+      regions.map((region) => ({
+        ...region,
+        label: getNewRegionLabel(region),
+      })),
   });
 
 export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>

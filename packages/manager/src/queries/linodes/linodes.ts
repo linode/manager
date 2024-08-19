@@ -14,6 +14,7 @@ import {
   getLinodeTransfer,
   getLinodeTransferByDate,
   getLinodes,
+  getType,
   linodeBoot,
   linodeReboot,
   linodeShutdown,
@@ -43,6 +44,7 @@ import {
   getAllLinodeConfigs,
   getAllLinodeDisks,
   getAllLinodeKernelsRequest,
+  getAllLinodeTypes,
   getAllLinodesRequest,
 } from './requests';
 
@@ -132,6 +134,19 @@ export const linodeQueries = createQueryKeys('linodes', {
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getLinodes(params, filter),
         queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
+  types: {
+    contextQueries: {
+      all: {
+        queryFn: getAllLinodeTypes,
+        queryKey: null,
+      },
+      type: (id: string) => ({
+        queryFn: () => getType(id),
+        queryKey: [id],
       }),
     },
     queryKey: null,
@@ -237,11 +252,16 @@ export const useDeleteLinodeMutation = (id: number) => {
       // If the linode is assigned to a placement group,
       // we need to invalidate the placement group queries
       if (placementGroupId) {
-        queryClient.invalidateQueries(
-          placementGroupQueries.placementGroup(placementGroupId).queryKey
-        );
-        queryClient.invalidateQueries(placementGroupQueries.all._def);
-        queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.placementGroup(placementGroupId)
+            .queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.all._def,
+        });
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.paginated._def,
+        });
       }
     },
   });
@@ -282,12 +302,17 @@ export const useCreateLinodeMutation = () => {
       // If the Linode is assigned to a placement group on creation,
       // we need to invalidate the placement group queries
       if (variables.placement_group?.id) {
-        queryClient.invalidateQueries(
-          placementGroupQueries.placementGroup(variables.placement_group.id)
-            .queryKey
-        );
-        queryClient.invalidateQueries(placementGroupQueries.all._def);
-        queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.placementGroup(
+            variables.placement_group.id
+          ).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.all._def,
+        });
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.paginated._def,
+        });
       }
 
       // If the Linode is attached to a firewall on creation, invalidate the firewall
@@ -420,12 +445,17 @@ export const useLinodeMigrateMutation = (id: number) => {
       });
 
       if (variables.placement_group?.id) {
-        queryClient.invalidateQueries(
-          placementGroupQueries.placementGroup(variables.placement_group.id)
-            .queryKey
-        );
-        queryClient.invalidateQueries(placementGroupQueries.all._def);
-        queryClient.invalidateQueries(placementGroupQueries.paginated._def);
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.placementGroup(
+            variables.placement_group.id
+          ).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.all._def,
+        });
+        queryClient.invalidateQueries({
+          queryKey: placementGroupQueries.paginated._def,
+        });
       }
     },
   });

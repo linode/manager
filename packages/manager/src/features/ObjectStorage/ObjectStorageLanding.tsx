@@ -18,17 +18,14 @@ import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
-import {
-  useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import { MODE } from './AccessKeyLanding/types';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
+
+import type { MODE } from './AccessKeyLanding/types';
 
 const BucketLanding = React.lazy(() =>
   import('./BucketLanding/BucketLanding').then((module) => ({
@@ -48,13 +45,12 @@ export const ObjectStorageLanding = () => {
     action?: 'create';
     tab?: 'access-keys' | 'buckets';
   }>();
-  const isCreateBucketOpen = tab === 'buckets' && action === 'create';
+
   const {
     _isRestrictedUser,
     account,
     accountSettings,
   } = useAccountManagement();
-
   const flags = useFlags();
 
   const isObjMultiClusterEnabled = isFeatureEnabledV2(
@@ -63,91 +59,65 @@ export const ObjectStorageLanding = () => {
     account?.capabilities ?? []
   );
 
-  const { data: objectStorageClusters } = useObjectStorageClusters(
-    !isObjMultiClusterEnabled
-  );
-
-  const { data: regionsData } = useRegionsQuery();
-
-  const regionsSupportingObjectStorage = regionsData?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  /*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled
-      ? regionsSupportingObjectStorage
-      : undefined,
-  });
+  } = useObjectStorageBuckets();
 
   const userHasNoBucketCreated =
     objectStorageBucketsResponse?.buckets.length === 0;
-  const createOrEditDrawer = useOpenClose();
+
+  const openDrawer = useOpenClose();
 
   const tabs = [
-    {
-      routeName: `/object-storage/buckets`,
-      title: 'Buckets',
-    },
-    {
-      routeName: `/object-storage/access-keys`,
-      title: 'Access Keys',
-    },
+    { routeName: `/object-storage/buckets`, title: 'Buckets' },
+    { routeName: `/object-storage/access-keys`, title: 'Access Keys' },
   ];
 
-  const realTabs = ['buckets', 'access-keys'];
-
-  const openDrawer = (mode: MODE) => {
+  const handleOpenAccessDrawer = (mode: MODE) => {
     setMode(mode);
-    createOrEditDrawer.open();
+    openDrawer.open();
   };
 
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
+  const navToURL = (index: number) => history.push(tabs[index].routeName);
 
-  const objPromotionalOffers = (
-    flags.promotionalOffers ?? []
-  ).filter((promotionalOffer) =>
-    promotionalOffer.features.includes('Object Storage')
-  );
+  const objPromotionalOffers =
+    flags.promotionalOffers?.filter((offer) =>
+      offer.features.includes('Object Storage')
+    ) ?? [];
 
-  // A user needs to explicitly cancel Object Storage in their Account Settings in order to stop
-  // being billed. If they have the service enabled but do not have any buckets, show a warning.
+  // Users must explicitly cancel Object Storage in their Account Settings to avoid being billed.
+  // Display a warning if the service is active but no buckets are present.
   const shouldDisplayBillingNotice =
     !areBucketsLoading &&
     !bucketsErrors &&
     userHasNoBucketCreated &&
     accountSettings?.object_storage === 'active';
 
-  // No need to display header since the it is redundant with the docs and CTA of the empty state
-  // Meanwhile it will still display the header for the access keys tab at all times
   const shouldHideDocsAndCreateButtons =
     !areBucketsLoading && tab === 'buckets' && userHasNoBucketCreated;
 
-  const createButtonText =
-    tab === 'access-keys' ? 'Create Access Key' : 'Create Bucket';
+  const isAccessKeysTab = tab === 'access-keys';
+  const isCreateAction = action === 'create';
+
+  const createButtonText = isAccessKeysTab
+    ? 'Create Access Key'
+    : 'Create Bucket';
 
   const createButtonAction = () => {
-    if (tab === 'access-keys') {
+    if (isAccessKeysTab) {
       setMode('creating');
-
-      return createOrEditDrawer.open();
+      history.replace('/object-storage/access-keys/create');
+      openDrawer.open();
+    } else {
+      history.replace('/object-storage/buckets/create');
     }
-
-    history.replace('/object-storage/buckets/create');
   };
+
+  const tabIndex = tab === 'access-keys' ? 1 : 0;
+  const isCreateBucketOpen = !isAccessKeysTab && isCreateAction;
+  const isCreateAccessKeyOpen = isAccessKeysTab && isCreateAction;
 
   return (
     <React.Fragment>
@@ -162,14 +132,7 @@ export const ObjectStorageLanding = () => {
         shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
         title="Object Storage"
       />
-      <Tabs
-        index={
-          realTabs.findIndex((t) => t === tab) !== -1
-            ? realTabs.findIndex((t) => t === tab)
-            : 0
-        }
-        onChange={navToURL}
-      >
+      <Tabs index={tabIndex} onChange={navToURL}>
         <TabLinkList tabs={tabs} />
 
         {objPromotionalOffers.map((promotionalOffer) => (
@@ -191,11 +154,14 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
-                accessDrawerOpen={createOrEditDrawer.isOpen}
-                closeAccessDrawer={createOrEditDrawer.close}
+                closeAccessDrawer={() => {
+                  openDrawer.close();
+                  history.replace('/object-storage/access-keys');
+                }}
+                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
-                openAccessDrawer={openDrawer}
+                openAccessDrawer={handleOpenAccessDrawer}
               />
             </SafeTabPanel>
           </TabPanels>

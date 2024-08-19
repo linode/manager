@@ -44,10 +44,13 @@ export const CloudPulseAggregateFunction = React.memo(
         onChange={(_: any, selectedAggregateFunc: any) => {
           props.onAggregateFuncChange(selectedAggregateFunc.label);
         }}
+        textFieldProps={{
+          hideLabel: true,
+        }}
         defaultValue={defaultAggregateFunc}
         disableClearable
         fullWidth={false}
-        label=""
+        label="Select an Aggregate Function"
         noMarginTop={true}
         options={availableAggregateFunc}
         sx={{ width: '100%' }}
