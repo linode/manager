@@ -185,7 +185,10 @@ export const DatabaseDetail = () => {
           </SafeTabPanel>
           {flags.databaseResize ? (
             <SafeTabPanel index={2}>
-              <DatabaseResize database={database} />
+              <DatabaseResize
+                database={database}
+                disabled={isDatabasesGrantReadOnly}
+              />
             </SafeTabPanel>
           ) : null}
           <SafeTabPanel index={flags.databaseResize ? 3 : 2}>
