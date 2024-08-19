@@ -81,9 +81,38 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  resource_id: string[];
+  resource_ids: number[];
 }
 
 export interface JWEToken {
   token: string;
+}
+
+export interface CloudPulseMetricsRequest {
+  metric: string;
+  filters?: Filters[];
+  aggregate_function: string;
+  group_by: string;
+  relative_time_duration: TimeDuration;
+  time_granularity: TimeGranularity | undefined;
+  resource_id: number[];
+}
+
+export interface CloudPulseMetricsResponse {
+  data: CloudPulseMetricsResponseData;
+  isPartial: boolean;
+  stats: {
+    series_fetched: number;
+  };
+  status: string;
+}
+
+export interface CloudPulseMetricsResponseData {
+  result: CloudPulseMetricsList[];
+  result_type: string;
+}
+
+export interface CloudPulseMetricsList {
+  metric: { [resourceName: string]: string };
+  values: [number, string][];
 }

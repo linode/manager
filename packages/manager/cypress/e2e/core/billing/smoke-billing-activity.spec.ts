@@ -328,7 +328,7 @@ describe('Billing Activity Feed', () => {
     const timeZonesList = [
       { key: 'America/New_York', human: 'Eastern Time - New York' },
       { key: 'GMT', human: 'Coordinated Universal Time' },
-      { key: 'Asia/Honk_Kong', human: 'Hong Kong Standard Time' },
+      { key: 'Asia/Hong_Kong', human: 'Hong Kong Standard Time' },
     ];
 
     const mockProfile = profileFactory.build();

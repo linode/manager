@@ -41,7 +41,7 @@ describe('Component', () => {
 
   it('should render', async () => {
     const { findByText } = renderWithTheme(<SearchLanding {...props} />);
-    expect(await findByText(/search/));
+    expect(await findByText(/searched/i));
   });
 
   it('should search on mount', async () => {

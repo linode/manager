@@ -23,7 +23,7 @@ export const logTestTagInfo: CypressPlugin = (_on, config) => {
 
       console.table(
         getHumanReadableQueryRules(query).reduce(
-          (acc: {}, cur: string, index: number) => {
+          (acc: any, cur: string, index: number) => {
             acc[index] = cur;
             return acc;
           },

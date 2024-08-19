@@ -9,6 +9,8 @@ import {
   getDefaultUDFData,
 } from './FromAppsContent';
 
+import type { Image } from '@linode/api-v4';
+
 describe('FromAppsContent', () => {
   it('should exist', () => {
     expect(FromAppsContent).toBeDefined();
@@ -34,10 +36,13 @@ describe('getCompatibleImages', () => {
 
   it('should an array of Images compatible with the StackScript', () => {
     const imagesDataArray = imageFactory.buildList(5);
-    const imagesData = imagesDataArray.reduce((acc, imageData) => {
-      acc[imageData.label] = imageData;
-      return acc;
-    }, {});
+    const imagesData = imagesDataArray.reduce<Record<string, Image>>(
+      (acc, imageData) => {
+        acc[imageData.label] = imageData;
+        return acc;
+      },
+      {}
+    );
     const stackScriptImages = Object.keys(imagesData).slice(0, 2);
     const result = getCompatibleImages(imagesData, stackScriptImages);
     expect(result.length).toBe(2);

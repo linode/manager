@@ -1,8 +1,9 @@
-import { Config, Disk } from '@linode/api-v4/lib/linodes';
+import { Config, Devices, Disk } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { DateTime } from 'luxon';
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
+import { isDiskDevice } from '../LinodesDetail/LinodeConfigs/ConfigRow';
 
 /**
  * TYPES
@@ -242,9 +243,10 @@ export const getAssociatedDisks = (
   const disksOnConfig: number[] = [];
 
   // Go through the devices and grab all the disks
-  Object.keys(config.devices).forEach((key) => {
-    if (config.devices[key] && config.devices[key].disk_id) {
-      disksOnConfig.push(config.devices[key].disk_id);
+  Object.keys(config.devices).forEach((key: keyof Devices) => {
+    const device = config.devices[key];
+    if (device && isDiskDevice(device) && device.disk_id) {
+      disksOnConfig.push(device.disk_id);
     }
   });
 

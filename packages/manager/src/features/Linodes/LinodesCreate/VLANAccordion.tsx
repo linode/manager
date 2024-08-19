@@ -1,4 +1,3 @@
-import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
@@ -11,6 +10,8 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 
 import { InterfaceSelect } from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 import { VLANAvailabilityNotice } from './VLANAvailabilityNotice';
+
+import type { Interface } from '@linode/api-v4/lib/linodes';
 
 export interface VLANAccordionProps {
   handleVLANChange: (updatedInterface: Interface) => void;

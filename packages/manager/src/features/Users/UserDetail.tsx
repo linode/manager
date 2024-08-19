@@ -144,9 +144,9 @@ export const UserDetail = () => {
           refreshProfile();
         } else {
           // Invalidate the paginated store
-          queryClient.invalidateQueries(
-            accountQueries.users._ctx.paginated._def
-          );
+          queryClient.invalidateQueries({
+            queryKey: accountQueries.users._ctx.paginated._def,
+          });
           // set the user in the store
           queryClient.setQueryData<User>(
             accountQueries.users._ctx.user(user.username).queryKey,

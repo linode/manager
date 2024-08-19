@@ -157,12 +157,15 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
      * if a UDF field comes back from the API with a "default"
      * value, it means we need to pre-populate the field and form state
      */
-    const defaultUDFData = userDefinedFields.reduce((accum, eachField) => {
-      if (eachField.default) {
-        accum[eachField.name] = eachField.default;
-      }
-      return accum;
-    }, {});
+    const defaultUDFData = userDefinedFields.reduce<Record<string, string>>(
+      (accum, eachField) => {
+        if (eachField.default) {
+          accum[eachField.name] = eachField.default;
+        }
+        return accum;
+      },
+      {}
+    );
 
     this.props.updateStackScript(
       id,

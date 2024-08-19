@@ -11,7 +11,7 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { ApiAwarenessModal } from '../LinodesCreate/ApiAwarenessModal/ApiAwarenessModal';
 import { getLinodeCreatePayload } from './utilities';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormValues } from './utilities';
 
 export const Actions = () => {
   const flags = useFlags();
@@ -24,11 +24,14 @@ export const Actions = () => {
     formState,
     getValues,
     trigger,
-  } = useFormContext<CreateLinodeRequest>();
+  } = useFormContext<LinodeCreateFormValues>();
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
+
+  const disableSubmitButton =
+    isLinodeCreateRestricted || 'firewallOverride' in formState.errors;
 
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
@@ -49,7 +52,7 @@ export const Actions = () => {
       </Button>
       <Button
         buttonType="primary"
-        disabled={isLinodeCreateRestricted}
+        disabled={disableSubmitButton}
         loading={formState.isSubmitting}
         type="submit"
       >

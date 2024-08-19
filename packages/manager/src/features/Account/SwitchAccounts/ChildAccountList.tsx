@@ -40,10 +40,8 @@ export const ChildAccountList = React.memo(
     const filter: Filter = {
       ['+order']: 'asc',
       ['+order_by']: 'company',
+      ...(searchQuery && { company: { '+contains': searchQuery } }),
     };
-    if (searchQuery) {
-      filter['company'] = { '+contains': searchQuery };
-    }
 
     const [
       isSwitchingChildAccounts,

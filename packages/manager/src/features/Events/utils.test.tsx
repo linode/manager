@@ -5,6 +5,7 @@ import {
   formatEventTimeRemaining,
   formatProgressEvent,
   getEventMessage,
+  getEventUsername,
 } from './utils';
 
 import type { Event } from '@linode/api-v4';
@@ -84,6 +85,61 @@ describe('getEventMessage', () => {
     expect(boldedWords).toHaveLength(2);
     expect(boldedWords[0]).toHaveTextContent('not');
     expect(boldedWords[1]).toHaveTextContent('created');
+  });
+});
+
+describe('getEventUsername', () => {
+  it('returns the username if it exists and action is not in ACTIONS_WITHOUT_USERNAMES', () => {
+    const mockEvent: Event = eventFactory.build({
+      action: 'linode_create',
+      entity: {
+        id: 123,
+        label: 'test-linode',
+      },
+      status: 'finished',
+      username: 'test-user',
+    });
+
+    expect(getEventUsername(mockEvent)).toBe('test-user');
+  });
+
+  it('returns "Linode" if the username exists but action is in ACTIONS_WITHOUT_USERNAMES', () => {
+    const mockEvent: Event = eventFactory.build({
+      action: 'community_like',
+      entity: {
+        id: 234,
+        label: '1 user liked your answer to: this question?',
+        url: 'https://google.com/',
+      },
+      status: 'notification',
+      username: 'test-user',
+    });
+
+    expect(getEventUsername(mockEvent)).toBe('Linode');
+  });
+
+  it('returns "Linode" if the username does not exist', () => {
+    const mockEvent: Event = eventFactory.build({
+      status: 'notification',
+      username: null,
+    });
+
+    expect(getEventUsername(mockEvent)).toBe('Linode');
+  });
+
+  it('returns "Linode" if the username does not exist and action is in ACTIONS_WITHOUT_USERNAMES', () => {
+    const mockEvent: Event = eventFactory.build({
+      action: 'community_like',
+      entity: {
+        id: 234,
+        label: '1 user liked your answer to: this question?',
+        url: 'https://google.com/',
+      },
+      status: 'notification',
+      username: null,
+    });
+
+    expect(getEventUsername(mockEvent)).toBe('Linode');
   });
 });
 

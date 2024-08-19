@@ -50,6 +50,7 @@ export const ProcessesGraphs = (props: Props) => {
 
   const name = selectedProcess?.name ?? '';
   const user = selectedProcess?.user ?? '';
+  // @ts-expect-error The types are completely wrong. They don't account for "user"
   const process = processesData.Processes?.[name]?.[user] ?? {};
 
   const cpu = process.cpu ?? [];

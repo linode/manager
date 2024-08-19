@@ -135,7 +135,10 @@ export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
     <Typography
       sx={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }}
     >
-      {planTabInfoContent[planType]?.typography}{' '}
+      {
+        planTabInfoContent[planType as keyof typeof planTabInfoContent]
+          ?.typography
+      }{' '}
       <Link to={docLink}>Learn more</Link> about our {planTypeLabel} plans.
     </Typography>
   ) : null;

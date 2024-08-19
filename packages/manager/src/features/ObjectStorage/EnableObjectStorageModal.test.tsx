@@ -31,8 +31,8 @@ const queryMocks = vi.hoisted(() => ({
   useObjectStorageTypesQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/objectStorage', async () => {
-  const actual = await vi.importActual('src/queries/objectStorage');
+vi.mock('src/queries/object-storage/queries', async () => {
+  const actual = await vi.importActual('src/queries/object-storage/queries');
   return {
     ...actual,
     useObjectStorageTypesQuery: queryMocks.useObjectStorageTypesQuery,

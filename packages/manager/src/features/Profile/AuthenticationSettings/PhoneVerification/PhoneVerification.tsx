@@ -98,7 +98,9 @@ export const PhoneVerification = ({
       );
     } else {
       // Cloud Manager does not know about the country, so lets refetch the user's phone number so we know it's displaying correctly
-      queryClient.invalidateQueries(profileQueries.profile().queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.profile().queryKey,
+      });
     }
 
     // reset form states

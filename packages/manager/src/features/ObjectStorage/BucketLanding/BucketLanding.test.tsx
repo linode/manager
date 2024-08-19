@@ -95,7 +95,7 @@ describe('ObjectStorageLanding', () => {
     renderWithTheme(<BucketLanding />);
 
     await screen.findByText(
-      /^There was an error loading buckets in Fremont, CA/
+      /^There was an error loading buckets in US, Fremont, CA/
     );
   });
 

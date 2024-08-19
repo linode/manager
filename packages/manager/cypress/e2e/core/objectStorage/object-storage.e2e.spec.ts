@@ -175,7 +175,7 @@ describe('object storage end-to-end tests', () => {
     cy.tag('purpose:syntheticTesting');
 
     const bucketLabel = randomLabel();
-    const bucketRegion = 'Atlanta, GA';
+    const bucketRegion = 'US, Atlanta, GA';
     const bucketCluster = 'us-southeast-1';
     const bucketHostname = `${bucketLabel}.${bucketCluster}.linodeobjects.com`;
 

@@ -2,8 +2,8 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Select from 'src/components/EnhancedSelect/Select';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -171,16 +171,17 @@ export const PowerActionsDialog = (props: Props) => {
       ) : null}
       {showConfigSelect && (
         <>
-          <Select
+          <Autocomplete
             value={configOptions.find(
               (option) => option.value === selectedConfigID
             )}
+            autoHighlight
+            disablePortal={false}
             errorText={configsError?.[0].reason}
-            isLoading={configsLoading}
             label="Config"
-            onChange={(option) => setSelectConfigID(option?.value ?? null)}
+            loading={configsLoading}
+            onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
             options={configOptions}
-            overflowPortal
           />
           <FormHelperText>
             If no value is selected, the last booted config will be used.

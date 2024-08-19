@@ -69,7 +69,6 @@ export const RegionSelect = <
 
   const regionOptions = getRegionOptions({
     currentCapability,
-    isGeckoGAEnabled,
     regionFilter,
     regions,
   });

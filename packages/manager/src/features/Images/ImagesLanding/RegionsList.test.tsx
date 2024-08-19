@@ -17,7 +17,7 @@ describe('RegionsList', () => {
 
     // Should initially fallback to region id
     await findByText('us-east');
-    await findByText('Newark, NJ');
+    await findByText('US, Newark, NJ');
   });
 
   it('should allow expanding to view multiple regions', async () => {
@@ -33,7 +33,7 @@ describe('RegionsList', () => {
       />
     );
 
-    await findByText((text) => text.includes('Newark, NJ'));
+    await findByText((text) => text.includes('US, Newark, NJ'));
     const expand = await findByRole('button');
     expect(expand).toHaveTextContent('+1');
 

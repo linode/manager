@@ -7,6 +7,7 @@ import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
 import { useAccountBetasQuery } from 'src/queries/account/betas';
 import { useBetasQuery } from 'src/queries/betas';
 import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
+import { AccountBeta, Beta } from '@linode/api-v4';
 
 const BetasLanding = () => {
   const {
@@ -24,14 +25,17 @@ const BetasLanding = () => {
   const betas = betasRequest?.data ?? [];
 
   const allBetas = [...accountBetas, ...betas];
-  const allBetasMerged = allBetas.reduce((acc, beta) => {
-    if (acc[beta.id]) {
-      acc[beta.id] = Object.assign(beta, acc[beta.id]);
-    } else {
-      acc[beta.id] = beta;
-    }
-    return acc;
-  }, {});
+  const allBetasMerged = allBetas.reduce<Record<string, AccountBeta | Beta>>(
+    (acc, beta) => {
+      if (acc[beta.id]) {
+        acc[beta.id] = Object.assign(beta, acc[beta.id]);
+      } else {
+        acc[beta.id] = beta;
+      }
+      return acc;
+    },
+    {}
+  );
 
   const { active, available, historical } = categorizeBetasByStatus(
     Object.values(allBetasMerged)

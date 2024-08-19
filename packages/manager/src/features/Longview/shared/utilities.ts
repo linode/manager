@@ -253,9 +253,12 @@ export const sumStatsObject = <T extends {}>(
       if (thisObject && typeof thisObject === 'object') {
         Object.keys(thisObject).forEach((thisKey) => {
           if (thisKey in accum) {
-            accum[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
+            (accum as any)[thisKey] = appendStats(
+              (accum as any)[thisKey],
+              (thisObject as any)[thisKey]
+            );
           } else {
-            accum[thisKey] = thisObject[thisKey];
+            (accum as any)[thisKey] = (thisObject as any)[thisKey];
           }
         });
       }

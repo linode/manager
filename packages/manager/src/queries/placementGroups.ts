@@ -92,16 +92,22 @@ export const useCreatePlacementGroup = () => {
 
   return useMutation<PlacementGroup, APIError[], CreatePlacementGroupPayload>({
     mutationFn: createPlacementGroup,
-    onSuccess: (placementGroup) => {
-      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
+    onSuccess(placementGroup) {
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.all._def,
+      });
       queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(placementGroup.id).queryKey,
         placementGroup
       );
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
     },
   });
 };
@@ -111,10 +117,14 @@ export const useMutatePlacementGroup = (id: number) => {
 
   return useMutation<PlacementGroup, APIError[], UpdatePlacementGroupPayload>({
     mutationFn: (data) => updatePlacementGroup(id, data),
-    onSuccess: (placementGroup) => {
-      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
-      queryClient.setQueryData(
+    onSuccess(placementGroup) {
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.all._def,
+      });
+      queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(id).queryKey,
         placementGroup
       );
@@ -127,12 +137,16 @@ export const useDeletePlacementGroup = (id: number) => {
 
   return useMutation<{}, APIError[]>({
     mutationFn: () => deletePlacementGroup(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
-      queryClient.removeQueries(
-        placementGroupQueries.placementGroup(id).queryKey
-      );
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.all._def,
+      });
+      queryClient.removeQueries({
+        queryKey: placementGroupQueries.placementGroup(id).queryKey,
+      });
     },
   });
 };
@@ -147,11 +161,16 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
   >({
     mutationFn: (req) => assignLinodesToPlacementGroup(placementGroupId, req),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
-      queryClient.invalidateQueries(
-        placementGroupQueries.placementGroup(placementGroupId).queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.all._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.placementGroup(placementGroupId)
+          .queryKey,
+      });
 
       queryClient.invalidateQueries(linodeQueries.linodes);
 
@@ -177,11 +196,16 @@ export const useUnassignLinodesFromPlacementGroup = (
     mutationFn: (req) =>
       unassignLinodesFromPlacementGroup(placementGroupId, req),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries(placementGroupQueries.paginated._def);
-      queryClient.invalidateQueries(placementGroupQueries.all._def);
-      queryClient.invalidateQueries(
-        placementGroupQueries.placementGroup(placementGroupId).queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.all._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: placementGroupQueries.placementGroup(placementGroupId)
+          .queryKey,
+      });
 
       queryClient.invalidateQueries(linodeQueries.linodes);
 

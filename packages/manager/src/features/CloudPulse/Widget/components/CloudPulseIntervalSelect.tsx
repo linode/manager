@@ -57,7 +57,7 @@ export const all_interval_options = [
   },
   {
     label: '1 day',
-    unit: 'day',
+    unit: 'days',
     value: 1,
   },
 ];
@@ -119,10 +119,13 @@ export const CloudPulseIntervalSelect = React.memo(
             value: selectedInterval?.value,
           });
         }}
+        textFieldProps={{
+          hideLabel: true,
+        }}
         defaultValue={{ ...default_interval }}
         disableClearable
         fullWidth={false}
-        label=""
+        label="Select an Interval"
         noMarginTop={true}
         options={[autoIntervalOption, ...available_interval_options]}
         sx={{ width: { xs: '100%' } }}

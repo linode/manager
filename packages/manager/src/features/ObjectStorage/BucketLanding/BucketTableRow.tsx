@@ -1,4 +1,3 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -8,7 +7,7 @@ import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getRegionsByRegionId } from 'src/utilities/regions';
@@ -24,6 +23,8 @@ import {
   StyledBucketSizeCell,
 } from './BucketTableRow.styles';
 
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+
 export interface BucketTableRowProps extends ObjectStorageBucket {
   onDetails: () => void;
   onRemove: () => void;
@@ -33,6 +34,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const {
     cluster,
     created,
+    endpoint_type,
     hostname,
     label,
     objects,
@@ -61,6 +63,9 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const clusterRegion = regions?.find((r) => r.id === actualCluster?.region);
 
   const regionsLookup = regions && getRegionsByRegionId(regions);
+
+  const isLegacy = endpoint_type === 'E0';
+  const typeLabel = isLegacy ? 'Legacy' : 'Standard';
 
   return (
     <StyledBucketRow data-qa-bucket-cell={label} key={label}>
@@ -92,6 +97,15 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>
+      {Boolean(endpoint_type) && (
+        <Hidden lgDown>
+          <TableCell>
+            <Typography data-qa-size variant="body1">
+              {typeLabel} ({endpoint_type})
+            </Typography>
+          </TableCell>
+        </Hidden>
+      )}
       <Hidden lgDown>
         <TableCell>
           <DateTimeDisplay data-qa-created value={created} />

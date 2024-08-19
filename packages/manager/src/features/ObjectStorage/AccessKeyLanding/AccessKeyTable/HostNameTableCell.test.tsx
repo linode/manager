@@ -53,7 +53,7 @@ describe('HostNameTableCell', () => {
       />
     );
 
-    const hostname = await findByText('Newark, NJ: alpha.test.com');
+    const hostname = await findByText('US, Newark, NJ: alpha.test.com');
 
     await waitFor(() => expect(hostname).toBeInTheDocument());
   });
@@ -88,7 +88,7 @@ describe('HostNameTableCell', () => {
         storageKeyData={storageKeyData}
       />
     );
-    const hostname = await findByText('Newark, NJ: alpha.test.com');
+    const hostname = await findByText('US, Newark, NJ: alpha.test.com');
     const moreButton = await findByText(/and\s+1\s+more\.\.\./);
     await waitFor(() => expect(hostname).toBeInTheDocument());
 
