@@ -8,7 +8,12 @@ import {
   uploadImage,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -58,7 +63,7 @@ export const useImagesQuery = (
 ) =>
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     ...options,
   });
 

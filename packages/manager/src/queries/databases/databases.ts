@@ -10,7 +10,12 @@ import {
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile/profile';
@@ -87,7 +92,7 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
 export const useDatabasesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
     ...databaseQueries.databases._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     // @TODO Consider removing polling
     refetchInterval: 20000,
   });

@@ -12,6 +12,7 @@ import {
 } from '@linode/api-v4/lib/support';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -32,7 +33,7 @@ const supportQueries = createQueryKeys('support', {
     contextQueries: {
       replies: {
         queryFn: ({ pageParam }) =>
-          getTicketReplies(id, { page: pageParam, page_size: 25 }),
+          getTicketReplies(id, { page: pageParam as number, page_size: 25 }),
         queryKey: null,
       },
     },
@@ -48,7 +49,7 @@ const supportQueries = createQueryKeys('support', {
 export const useSupportTicketsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<SupportTicket>, APIError[]>({
     ...supportQueries.tickets(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useSupportTicketQuery = (id: number) =>
@@ -72,6 +73,7 @@ export const useCreateSupportTicketMutation = () => {
 export const useInfiniteSupportTicketRepliesQuery = (id: number) =>
   useInfiniteQuery<ResourcePage<SupportReply>, APIError[]>({
     ...supportQueries.ticket(id)._ctx.replies,
+    initialPageParam: 1,
     getNextPageParam: ({ page, pages }) => {
       if (page === pages) {
         return undefined;

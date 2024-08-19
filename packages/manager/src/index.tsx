@@ -80,10 +80,7 @@ const Main = () => {
             </Router>
           </React.Suspense>
         </LinodeThemeWrapper>
-        <ReactQueryDevtools
-          initialIsOpen={false}
-          toggleButtonProps={{ style: { marginLeft: '3em' } }}
-        />
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </ReduxStoreProvider>
   );

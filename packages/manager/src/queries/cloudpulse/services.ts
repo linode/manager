@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
 
@@ -27,7 +27,7 @@ export const useCloudPulseJWEtokenQuery = (
   return useQuery<JWEToken, APIError[]>({
     ...queryFactory.token(serviceType, request),
     enabled: runQuery,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
   });
 };
