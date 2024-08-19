@@ -55,7 +55,7 @@ export const databaseQueries = createQueryKeys('databases', {
     contextQueries: {
       all: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getAllDatabases(params, filter),
-        queryKey: [filter],
+        queryKey: [params, filter],
       }),
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getDatabases(params, filter),
