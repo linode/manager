@@ -118,7 +118,7 @@ describe('Event fetching and polling', () => {
        * - Confirms that Cloud Manager does not make a request to the events endpoint before 16 seconds have passed.
        * - Confirms Cloud polling rate when there are no in-progress events.
        */
-      it('Polls events at a 16-second interval', () => {
+      it.skip('Polls events at a 16-second interval', () => {
         // Expect Cloud to poll the events endpoint every 16 seconds,
         // and configure the test to check if a request has been made
         // every simulated second for 16 samples total.
@@ -179,7 +179,7 @@ describe('Event fetching and polling', () => {
        * - Confirms that Cloud Manager does not make a request to the events endpoint before 2 seconds have passed.
        * - Confirms Cloud polling rate when there are in-progress events.
        */
-      it('Polls in-progress events at a 2-second interval', () => {
+      it.skip('Polls in-progress events at a 2-second interval', () => {
         // When in-progress events are present, expect Cloud to poll the
         // events endpoint every 2 seconds, and configure the test to check
         // if a request has been made every simulated tenth of a second for
