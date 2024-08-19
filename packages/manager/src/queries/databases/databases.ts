@@ -95,10 +95,10 @@ export const useDatabasesQuery = (params: Params, filter: Filter) =>
 export const useAllDatabasesQuery = (
   enabled: boolean = true,
   params: Params = {},
-  filters: Filter = {}
+  filter: Filter = {}
 ) =>
   useQuery<DatabaseInstance[], APIError[]>({
-    ...databaseQueries.databases._ctx.all(params, filters),
+    ...databaseQueries.databases._ctx.all(params, filter),
     enabled,
   });
 
