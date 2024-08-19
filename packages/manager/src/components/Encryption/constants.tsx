@@ -98,3 +98,6 @@ export const BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT =
 
 export const BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY =
   'The encryption setting cannot be changed after creation.';
+
+export const BLOCK_STORAGE_CLONING_INHERITANCE_CAVEAT =
+  'Encryption is inherited from the source volume and cannot be changed when cloning volumes.';
