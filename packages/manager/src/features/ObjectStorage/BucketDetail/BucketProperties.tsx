@@ -1,5 +1,6 @@
 import { ObjectStorageEndpointTypes } from '@linode/api-v4';
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -39,6 +40,8 @@ export const BucketProperties = React.memo((props: Props) => {
   const [rateLimitError] = React.useState('');
   const [updateRateLimitError] = React.useState('');
 
+  const location = useLocation();
+  const history = useHistory();
   const prefix = getQueryParamFromQueryString(location.search, 'prefix');
   const flags = useFlags();
   const { data: account } = useAccount();
