@@ -52,12 +52,12 @@ export const BucketProperties = React.memo((props: Props) => {
     return bucket.label === bucketName && bucket.cluster === clusterId;
   });
 
-  // TODO: OBJGen2 - Handle Get Bucket Rate Limit properties here.
+  // TODO: OBJGen2 - Handle Get properties once the endpoint for retrieving Bucket Rate Limits is available.
   // React.useEffect(() => {
   // }, []);
 
   const handleSubmit = () => {
-    // TODO: OBJGen2 - Handle update Bucket Rate Limit logic here.
+    // TODO: OBJGen2 - Handle Bucket Rate Limit update logic once the endpoint for updating is available.
   };
 
   const errorText = rateLimitError || updateRateLimitError;
