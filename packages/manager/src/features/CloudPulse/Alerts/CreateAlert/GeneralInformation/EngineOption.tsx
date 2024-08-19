@@ -4,16 +4,22 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 interface EngineOptionProps {
+  /**
+   * list of engine ptions available
+   */
   engineOptions: any[];
+  /**
+   * name used for the component to set formik field
+   */
   name: string;
 }
 export const EngineOption = (props: EngineOptionProps) => {
   const [selectedDatabase, setDatabase] = React.useState<any>('');
   const formik = useFormikContext();
-  const { engineOptions } = props;
+  const { engineOptions, name } = props;
 
   React.useEffect(() => {
-    formik.setFieldValue(`${props.name}`, selectedDatabase.group);
+    formik.setFieldValue(`${name}`, selectedDatabase.group);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDatabase]);
 

@@ -138,7 +138,7 @@ export interface CreateAlertDefinitionPayload {
       email: string;
     };
   }[];
-  sink_ids: Array<number>;
+  sink_ids: string[];
 }
 export interface MetricCriteria {
   metric: string;
@@ -159,7 +159,7 @@ export interface Alert {
   status: string;
   severity: string;
   service_type: string;
-  resource_ids: Array<string>;
+  resource_ids: string[];
   criteria: MetricCriteria[];
   triggerCondition: {
     criteria_condition: string;
@@ -193,7 +193,7 @@ export interface AvailableMetrics {
   metric_type: string;
   unit: string;
   scrape_interval: string;
-  available_aggregate_functions: Array<string>;
+  available_aggregate_functions: string[];
   dimensions: Dimension[];
 }
 

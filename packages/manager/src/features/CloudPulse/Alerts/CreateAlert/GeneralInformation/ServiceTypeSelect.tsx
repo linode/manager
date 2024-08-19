@@ -5,12 +5,16 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useCloudPulseServices } from 'src/queries/cloudpulse/services';
 
 interface CloudPulseServiceSelectProps {
+  /**
+   * name used for the component to set formik field
+   */
   name: string;
 }
 
 export const CloudPulseServiceSelect = (
   props: CloudPulseServiceSelectProps
 ) => {
+  const { name } = props;
   const { data: serviceOptions } = useCloudPulseServices();
   const formik = useFormikContext();
 
@@ -21,7 +25,7 @@ export const CloudPulseServiceSelect = (
 
   React.useEffect(() => {
     formik.setFieldValue(
-      props.name,
+      name,
       selectedService.value ? selectedService.value : ''
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -37,7 +41,7 @@ export const CloudPulseServiceSelect = (
       }}
       onBlur={(event) => {
         formik.handleBlur(event);
-        formik.setFieldTouched(props.name, true);
+        formik.setFieldTouched(name, true);
       }}
       onChange={(_: any, newValue) => {
         setSelectedService(newValue);

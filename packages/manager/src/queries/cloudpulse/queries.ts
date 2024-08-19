@@ -1,4 +1,5 @@
 import {
+  getCloudPulseServiceTypes,
   getDashboardById,
   getDashboards,
   getJWEToken,
@@ -69,6 +70,10 @@ export const queryFactory = createQueryKeys(key, {
     }
   },
 
+  serviceTypes: (queryKey: string, serviceTypeKey: string) => ({
+    queryFn: () => getCloudPulseServiceTypes(),
+    queryKey: [queryKey, serviceTypeKey],
+  }),
   token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
     queryFn: () => getJWEToken(request, serviceType!),
     queryKey: [serviceType],

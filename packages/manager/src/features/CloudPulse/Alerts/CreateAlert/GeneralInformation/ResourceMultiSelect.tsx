@@ -2,50 +2,62 @@ import { useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { useLinodeResourcesQuery } from 'src/queries/cloudpulse/resources';
+import {
+  useLinodeResourcesQuery,
+  useResourcesQuery,
+} from 'src/queries/cloudpulse/resources';
 interface CloudPulseResourceSelectProps {
+  /**
+   * cluster type selected by the user
+   */
   cluster: boolean;
-  disabled: boolean;
+  /**
+   * name used for the component to set formik field
+   */
   name: string;
+  /**
+   * region selected by the user
+   */
   region: string | undefined;
-  resourceType: string | undefined;
+  /**
+   * service type selected by the user
+   */
+  serviceType: string | undefined;
 }
 
 export const CloudPulseMultiResourceSelect = (
   props: CloudPulseResourceSelectProps
 ) => {
   const resourceOptions: any = {};
-
+  const { cluster, name, region, serviceType } = { ...props };
   const formik = useFormikContext();
   const [selectedResource, setResource] = React.useState<any>([]);
   const filterResourcesByRegion = (resourcesList: any[]) => {
     return resourcesList?.filter((resource: any) => {
-      if (props.region == undefined) {
+      if (region == undefined) {
         return true;
       }
       if (resource.region) {
-        return resource.region === props.region;
+        return resource.region === region;
       } else if (resource.regions) {
-        return resource.regions.includes(props.region);
+        return resource.regions.includes(region);
       } else {
         return false;
       }
     });
   };
-
   const getResourceList = () => {
-    return props.resourceType && resourceOptions[props.resourceType]
-      ? filterResourcesByRegion(resourceOptions[props.resourceType]?.data)
+    return serviceType && resourceOptions[serviceType]
+      ? filterResourcesByRegion(resourceOptions[serviceType]?.data)
       : [];
   };
 
   ({ data: resourceOptions['linode'] } = useLinodeResourcesQuery(
-    props.resourceType === 'linode'
+    serviceType === 'linode'
   ));
-
   React.useEffect(() => {
     formik.setFieldValue(
-      `${props.name}`,
+      `${name}`,
       selectedResource.map((resource: any) => {
         return resource.id.toString() + '';
       })
@@ -56,7 +68,7 @@ export const CloudPulseMultiResourceSelect = (
   React.useEffect(() => {
     setResource([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.region, props.resourceType]);
+  }, [region, serviceType]);
 
   return (
     <Autocomplete
@@ -65,15 +77,14 @@ export const CloudPulseMultiResourceSelect = (
       }}
       onBlur={(event) => {
         formik.handleBlur(event);
-        formik.setFieldTouched(`${props.name}`, true);
+        formik.setFieldTouched(`${name}`, true);
       }}
       onChange={(_: any, resources: any) => {
         setResource(resources);
       }}
       autoHighlight
       clearOnBlur
-      disabled={props.disabled}
-      label={props.cluster ? 'Cluster' : 'Resources'}
+      label={cluster ? 'Cluster' : 'Resources'}
       limitTags={2}
       multiple
       options={getResourceList()}

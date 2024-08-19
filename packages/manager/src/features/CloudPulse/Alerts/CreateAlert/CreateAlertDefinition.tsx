@@ -134,8 +134,6 @@ export const CreateAlertDefinition = React.memo(() => {
     <Box sx={(theme) => ({ color: theme.color.red })}>{props.children}</Box>
   );
 
-  // eslint-disable-next-line no-console
-  console.log(errors);
   return (
     <Paper>
       <Breadcrumb
@@ -190,10 +188,9 @@ export const CreateAlertDefinition = React.memo(() => {
           ) : null}
           <CloudPulseMultiResourceSelect
             cluster={values.service_type === 'dbaas' ? true : false}
-            disabled={false}
             name={'resource_ids'}
             region={values.region ? values.region : ''}
-            resourceType={values.service_type ? values.service_type : ''}
+            serviceType={values.service_type ? values.service_type : ''}
           />
           {formik.touched &&
           formik.touched.resource_ids &&

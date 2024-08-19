@@ -1,4 +1,3 @@
-import { getCloudPulseServiceTypes } from '@linode/api-v4';
 import { useQuery } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
@@ -24,13 +23,9 @@ export const useGetCloudPulseMetricDefinitionsByServiceType = (
 };
 
 export const useCloudPulseServices = () => {
-  return useQuery<ServiceTypes, APIError[]>(
-    [queryKey, serviceTypeKey],
-    () => getCloudPulseServiceTypes(),
-    {
-      enabled: true,
-    }
-  );
+  return useQuery<ServiceTypes, APIError[]>({
+    ...queryFactory.serviceTypes(queryKey, serviceTypeKey),
+  });
 };
 export const useCloudPulseJWEtokenQuery = (
   serviceType: string | undefined,
