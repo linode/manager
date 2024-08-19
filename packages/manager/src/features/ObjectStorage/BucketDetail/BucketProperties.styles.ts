@@ -7,8 +7,11 @@ export const StyledText = styled(Typography, {
   label: 'StyledText',
 })(({ theme }) => ({
   lineHeight: 0.5,
-  paddingLeft: 16,
-  [theme.breakpoints.down('md')]: {
+  paddingLeft: 8,
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: 8,
+  },
+  [theme.breakpoints.down('sm')]: {
     lineHeight: 1,
   },
 }));
