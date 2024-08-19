@@ -5,15 +5,16 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Typography } from 'src/components/Typography';
 
 interface Props {
-  error?: string;
+  error: string | undefined;
   loading: boolean;
   onClose: () => void;
+  onExited: () => void;
   onSnapshot: () => void;
   open: boolean;
 }
 
 export const CaptureSnapshotConfirmationDialog = (props: Props) => {
-  const { error, loading, onClose, onSnapshot, open } = props;
+  const { error, loading, onClose, onExited, onSnapshot, open } = props;
 
   const actions = (
     <ActionsPanel
@@ -37,6 +38,7 @@ export const CaptureSnapshotConfirmationDialog = (props: Props) => {
       actions={actions}
       error={error}
       onClose={onClose}
+      onExited={onExited}
       open={open}
       title="Take a snapshot?"
     >
