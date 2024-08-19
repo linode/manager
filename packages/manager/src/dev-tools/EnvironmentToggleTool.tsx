@@ -55,12 +55,13 @@ export const EnvironmentToggleTool = () => {
 
   const localStorageEnv = storage.devToolsEnv.get();
   const currentEnvLabel = localStorageEnv?.label;
+  const selectedOptionLabel = options[selectedOption].label;
 
   return (
     <Grid container>
       <Grid display="flex" flexWrap="nowrap" xs={12}>
         <DevToolSelect
-          onBlur={(e) => {
+          onChange={(e) => {
             const selectedIndex = options.findIndex(
               (o) => o.label === e.target.value
             );
@@ -89,6 +90,8 @@ export const EnvironmentToggleTool = () => {
               window.location.reload();
             }
           }}
+          className="green"
+          disabled={selectedOptionLabel === currentEnvLabel}
         >
           Refresh
         </button>

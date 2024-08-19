@@ -194,7 +194,6 @@ export const ServiceWorkerTool = () => {
   const presetHandlers = {
     changeBase: (e: React.ChangeEvent<HTMLSelectElement>) => {
       setBaselinePreset(e.target.value as MockPresetBaselineId);
-      saveBaselinePreset(e.target.value as MockPresetBaselineId);
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import React, { useEffect, useRef, useState } from 'react';
 
 import ResizeWindow from 'src/assets/icons/ResizeWindow.svg';
 
@@ -16,7 +16,10 @@ export const Draggable: React.FC<DraggableProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 360 });
+  const [position, setPosition] = useState({
+    x: 40,
+    y: window.innerHeight - 400,
+  });
   const [size, setSize] = useState({ height: 400, width: 600 });
   const [rel, setRel] = useState<{ x: number; y: number } | null>(null);
   const nodeRef = useRef<HTMLDivElement>(null);

@@ -31,6 +31,7 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
     const [isOpen, setIsOpen] = React.useState<boolean>(false);
     const [isDraggable, setIsDraggable] = React.useState<boolean>(false);
     const [view, setView] = React.useState<DevToolsView>('mocks');
+    const devToolsMainRef = React.useRef<HTMLDivElement>(null);
 
     const handleOpenReactQuery = () => {
       setView('react-query');
@@ -50,6 +51,30 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
     const handleGoToPreferences = () => {
       window.location.assign('/profile/settings?preferenceEditor=true');
     };
+
+    React.useEffect(() => {
+      const handleWheel = (e: WheelEvent) => {
+        if (
+          devToolsMainRef.current &&
+          devToolsMainRef.current.contains(e.target as Node)
+        ) {
+          const target = devToolsMainRef.current;
+          const isAtTop = target.scrollTop === 0;
+          const isAtBottom =
+            target.scrollHeight - target.clientHeight <= target.scrollTop + 1;
+
+          if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
+            e.preventDefault();
+          }
+        }
+      };
+
+      window.addEventListener('wheel', handleWheel, { passive: false });
+
+      return () => {
+        window.removeEventListener('wheel', handleWheel);
+      };
+    }, []);
 
     return (
       <Draggable draggable={isDraggable}>
@@ -101,7 +126,7 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                   <button onClick={handleGoToPreferences}>Preferences</button>
                 </div>
               </div>
-              <div className="dev-tools__main">
+              <div className="dev-tools__main" ref={devToolsMainRef}>
                 {view === 'mocks' && (
                   <>
                     <div className="dev-tools__main__column">

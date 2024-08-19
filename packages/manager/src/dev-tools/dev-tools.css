@@ -1,6 +1,6 @@
 .dev-tools {
   --open-height-desktop: 375px;
-  --open-height-mobile: 600px;
+  --open-height-mobile: 400px;
 
   --background-color-closed: rgba(0, 0, 0, 0.55);
   --background-color-opened: rgba(0, 0, 0, 0.85);
@@ -29,6 +29,11 @@
       min-height: 300px;
     }
 
+    .dev-tools__tool__body,
+    .dev-tools__msw__column__body {
+      flex-basis: auto;
+    }
+
     .dev-tools__body {
       border-radius: 0 0 4px 4px;
       height: 100% !important;
@@ -39,12 +44,12 @@
 .dev-tools__draggable-handle {
   position: absolute;
   z-index: 2;
-  right: -32px;
-  top: 36px;
+  left: -30px;
+  top: 35.7px;
   cursor: grab;
   background: #222222;
   border: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px 0 0  4px;
   padding: 4px 4px 2px 4px;
 
   svg {
@@ -114,7 +119,8 @@
   padding: 4px 4px 5px 6px;
   font-family: inherit;
   font-size: 10.5pt;
-  appearance: none
+  appearance: none;
+  outline: none;
 }
 
 .dev-tools__body button {
@@ -139,6 +145,7 @@
     float: right;
   }
 
+
   &.green {
     background: #17cf73;
     color: #080808;
@@ -149,7 +156,7 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-.dev-tools__body button.green:hover {
+.dev-tools__body button:not(:disabled).green:hover {
   background-color: #60e9a4;
   color: #080808;
 
@@ -388,13 +395,6 @@
   font-weight: bold;
 }
 
-.dev-tools__tool__body {
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 0;
-  overflow: auto;
-}
-
 .dev-tools__tool__footer {
   flex-grow: 0;
   flex-shrink: 0;
@@ -474,17 +474,6 @@
   }
 }
 
-.dev-tools__msw__column {
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 0;
-  height: 100%;
-  min-height: 120px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .dev-tools__msw__column__heading {
   flex-basis: 0;
   flex-grow: 0;
@@ -492,14 +481,9 @@
   font-weight: bold;
 }
 
-.dev-tools__msw__column__body {
-  flex-basis: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
-  overflow: auto;
-}
 
-@media only screen and (min-width: 600px) {
+
+@media only screen and (min-width: 1024px) {
   .dev-tools.dev-tools--open .dev-tools__body {
     height: var(--open-height-desktop);
   }
@@ -510,5 +494,30 @@
 
   .dev-tools__msw__extras {
     flex-direction: row;
+  }
+
+  .dev-tools__tool__body {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    overflow: auto;
+  }
+
+  .dev-tools__msw__column {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    height: 100%;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dev-tools__msw__column__body {
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
   }
 }
