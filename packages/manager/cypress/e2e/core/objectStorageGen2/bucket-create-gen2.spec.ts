@@ -6,16 +6,53 @@ import {
   mockDeleteBucket,
   mockCreateBucket,
 } from 'support/intercepts/object-storage';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import {
   accountFactory,
   objectStorageBucketFactoryGen2,
   objectStorageEndpointsFactory,
+  regionFactory,
 } from 'src/factories';
+import { chooseRegion } from 'support/util/regions';
 import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 create bucket tests', () => {
+  // Moved these constants to top of scope - they will likely be used for other obj storage gen2 bucket create tests
+  const mockRegions = regionFactory.buildList(10, {
+    capabilities: ['Object Storage'],
+  });
+  const mockRegion = chooseRegion({ regions: [...mockRegions] });
+
+  const mockEndpoints: ObjectStorageEndpoint[] = [
+    objectStorageEndpointsFactory.build({
+      endpoint_type: 'E0',
+      region: mockRegion.id,
+      s3_endpoint: null,
+    }),
+    objectStorageEndpointsFactory.build({
+      endpoint_type: 'E1',
+      region: mockRegion.id,
+      s3_endpoint: null,
+    }),
+    objectStorageEndpointsFactory.build({
+      endpoint_type: 'E1',
+      region: mockRegion.id,
+      s3_endpoint: 'us-sea-1.linodeobjects.com',
+    }),
+    objectStorageEndpointsFactory.build({
+      endpoint_type: 'E2',
+      region: mockRegion.id,
+      s3_endpoint: null,
+    }),
+    objectStorageEndpointsFactory.build({
+      endpoint_type: 'E3',
+      region: mockRegion.id,
+      s3_endpoint: null,
+    }),
+  ];
+
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E0
    * Confirms all endpoints are displayed regardless if there's multiple of the same type
@@ -24,45 +61,23 @@ describe('Object Storage Gen2 create bucket tests', () => {
   it('can create a bucket with endpoint type 0', () => {
     const endpointTypeE0 = 'Legacy (E0)';
     const bucketLabel = randomLabel();
-    const bucketRegionSelect = 'US, Seattle, WA';
-    const bucketRegion = 'us-sea';
+
+    //wait for the newly 'created' mocked bucket to appear
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      label: bucketLabel,
+      region: mockRegion.id,
+      endpoint_type: 'E0',
+      s3_endpoint: undefined,
+    });
 
     mockGetBuckets([]).as('getBuckets');
-    mockDeleteBucket(bucketLabel, bucketRegion).as('deleteBucket');
+    mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
       label: bucketLabel,
       endpoint_type: 'E0',
       cors_enabled: true,
-      region: bucketRegion,
+      region: mockRegion.id,
     }).as('createBucket');
-
-    const mockEndpoints: ObjectStorageEndpoint[] = [
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E0',
-        region: bucketRegion,
-        s3_endpoint: null,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E1',
-        region: bucketRegion,
-        s3_endpoint: null,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E1',
-        region: bucketRegion,
-        s3_endpoint: 'us-sea-1.linodeobjects.com',
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E2',
-        region: bucketRegion,
-        s3_endpoint: null,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E3',
-        region: bucketRegion,
-        s3_endpoint: null,
-      }),
-    ];
 
     mockAppendFeatureFlags({
       objMultiCluster: true,
@@ -71,6 +86,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetAccount(
       accountFactory.build({
         capabilities: [
+          'Object Storage',
           'Object Storage Endpoint Types',
           'Object Storage Access Key Regions',
         ],
@@ -80,6 +96,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetObjectStorageEndpoints(mockEndpoints).as(
       'getObjectStorageEndpoints'
     );
+
+    mockGetRegions(mockRegions);
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
@@ -94,7 +112,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${bucketRegionSelect}{enter}`);
+        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -140,15 +158,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    //wait for the newly 'created' mocked bucket to appear
-    const mockBucket = objectStorageBucketFactoryGen2.build({
-      label: bucketLabel,
-      region: bucketRegion,
-      endpoint_type: 'E0',
-      s3_endpoint: undefined,
-    });
     mockGetBuckets([mockBucket]).as('getBuckets');
-
     cy.wait(['@getBuckets']);
 
     // Confirm request body has expected data
@@ -166,7 +176,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .should('be.visible')
       .closest('tr')
       .within(() => {
-        cy.findByText(bucketRegionSelect).should('be.visible');
+        cy.findByText(mockRegion.label).should('be.visible');
         ui.button.findByTitle('Delete').should('be.visible').click();
       });
 
