@@ -63,7 +63,6 @@ describe('Database Backups', () => {
   it('should disable the restore button if disabled = true', async () => {
     const backups = databaseBackupFactory.buildList(7);
 
-    // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
       http.get('*/profile', () => {
         return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
@@ -76,25 +75,20 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findAllByTestId } = renderWithTheme(
+    const { findAllByText } = renderWithTheme(
       <DatabaseBackups disabled={true} />
     );
-    const buttons = await findAllByTestId('Button');
-    let restoreButtonCount = 0;
-
-    buttons.forEach((button: HTMLButtonElement) => {
-      if (button?.textContent?.trim() === 'Restore') {
-        expect(button).toBeDisabled();
-        restoreButtonCount += 1;
-      }
+    const buttonSpans = await findAllByText('Restore');
+    expect(buttonSpans.length).toEqual(7);
+    buttonSpans.forEach((span: HTMLSpanElement) => {
+      const button = span.closest('button');
+      expect(button).toBeDisabled();
     });
-    expect(restoreButtonCount).toEqual(7);
   });
 
   it('should enable the restore button if disabled = false', async () => {
     const backups = databaseBackupFactory.buildList(7);
 
-    // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
       http.get('*/profile', () => {
         return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
@@ -107,18 +101,14 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findAllByTestId } = renderWithTheme(
+    const { findAllByText } = renderWithTheme(
       <DatabaseBackups disabled={false} />
     );
-    const buttons = await findAllByTestId('Button');
-    let restoreButtonCount = 0;
-
-    buttons.forEach((button: HTMLButtonElement) => {
-      if (button?.textContent?.trim() === 'Restore') {
-        expect(button).toBeEnabled();
-        restoreButtonCount += 1;
-      }
+    const buttonSpans = await findAllByText('Restore');
+    expect(buttonSpans.length).toEqual(7);
+    buttonSpans.forEach((span: HTMLSpanElement) => {
+      const button = span.closest('button');
+      expect(button).toBeEnabled();
     });
-    expect(restoreButtonCount).toEqual(7);
   });
 });
