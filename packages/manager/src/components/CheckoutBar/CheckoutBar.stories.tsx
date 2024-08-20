@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { Typography } from 'src/components/Typography';
@@ -10,14 +9,8 @@ import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 type Story = StoryObj<typeof CheckoutBar>;
 
 const Item = ({ children }: { children?: React.ReactNode }) => (
-  <StyledItem>{children}</StyledItem>
+  <Typography sx={{ fontStyle: 'italic' }}>{children}</Typography>
 );
-
-const StyledItem = styled(Typography, {
-  label: 'StyledItem',
-})(() => ({
-  fontStyle: 'italic',
-}));
 
 const defaultArgs = {
   calculatedPrice: 30.0,
