@@ -138,7 +138,7 @@ export const LinodeVolumes = () => {
           responsive={{
             3: { xsDown: true },
           }}
-          columns={5}
+          columns={numColumns}
           rows={1}
         />
       );
