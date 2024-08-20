@@ -1,8 +1,10 @@
+import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
+import { replaceNewlinesWithLineBreaks } from 'src/utilities/replaceNewlinesWithLineBreaks';
 
 import { Box } from '../Box';
 import { Stack } from '../Stack';
@@ -30,22 +32,15 @@ interface AkamaiBannerProps {
 export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
   const { action, link, margin, text, warning } = props;
   const flags = useFlags();
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const textWithLineBreaks = text.split('\n').map((text, i, lines) =>
-    i === lines.length - 1 ? (
-      text
-    ) : (
-      <>
-        {text}
-        <br />
-      </>
-    )
-  );
+  const textWithLineBreaks = replaceNewlinesWithLineBreaks(text);
 
   return (
     <StyledBanner
       alignItems="stretch"
-      direction="row"
+      direction={isSmallScreen ? 'column' : 'row'}
       margin={margin}
       warning={warning}
     >
@@ -82,11 +77,14 @@ export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
           })}
           variant="body2"
         >
-          {textWithLineBreaks}{' '}
+          {textWithLineBreaks}
           {link && (
-            <Link external to={link.url}>
-              {link.text}
-            </Link>
+            <>
+              {' '}
+              <Link external to={link.url}>
+                {link.text}
+              </Link>
+            </>
           )}
         </Typography>
       </Box>
