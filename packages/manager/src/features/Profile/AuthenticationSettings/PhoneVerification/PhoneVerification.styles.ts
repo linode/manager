@@ -63,15 +63,15 @@ export const StyledSelect = styled(Autocomplete, {
     color: `${theme.palette.primary.main} !important`,
     opacity: '1 !important',
   },
-  '& .MuiPopper-root-MuiAutocomplete-popper.MuiAutocomplete-popper': {
-    width: '500px',
-  },
+  // '& .MuiPopper-root-MuiAutocomplete-popper.MuiAutocomplete-popper': {
+  //   width: '500px',
+  // },
   '&& .MuiAutocomplete-inputRoot': {
     paddingRight: '0px',
   },
-  '&& .MuiPaper-root .MuiPaper-elevation .MuiPaper-rounded .MuiPaper-elevation1 .MuiAutocomplete-paper': {
-    width: '500px !important',
-  },
+  // '&& .MuiPaper-root .MuiPaper-elevation .MuiPaper-rounded .MuiPaper-elevation1 .MuiAutocomplete-paper': {
+  //   width: '500px !important',
+  // },
   '&& .base-Popper-root .MuiAutocomplete-popper': {
     width: '500px !important',
   },
