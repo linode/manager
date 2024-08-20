@@ -846,7 +846,11 @@ export class LinodeCreate extends React.PureComponent<
           )}
           {generalError && (
             <Notice spacingTop={8} variant="error">
-              <ErrorMessage entityType="linode_id" message={generalError} />
+              <ErrorMessage
+                entityType="linode_id"
+                formPayloadValues={{ type: this.props.selectedTypeID }}
+                message={generalError}
+              />
             </Notice>
           )}
           {userCannotCreateLinode && (
