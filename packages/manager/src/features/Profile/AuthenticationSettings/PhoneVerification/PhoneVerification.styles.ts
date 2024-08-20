@@ -19,13 +19,15 @@ export const StyledPhoneNumberTitle = styled(Typography, {
   marginTop: theme.spacing(1.5),
 }));
 
-export const StyledButtonContainer = styled(Box, {
-  label: 'StyledButtonContainer',
+export const StyledLabel = styled(Typography, {
+  label: 'StyledLabel',
 })(({ theme }) => ({
-  gap: theme.spacing(),
-  [theme.breakpoints.down('md')]: {
-    marginTop: theme.spacing(2),
-  },
+  color: theme.name === 'light' ? '#555' : '#c9cacb',
+  fontSize: '.875rem',
+  lineHeight: '1',
+  marginBottom: '8px',
+  marginTop: theme.spacing(2),
+  padding: 0,
 }));
 
 export const StyledInputContainer = styled(Box, {
@@ -33,7 +35,7 @@ export const StyledInputContainer = styled(Box, {
 })<{ isPhoneInputFocused: boolean }>(({ isPhoneInputFocused, theme }) => ({
   border: theme.name === 'light' ? '1px solid #ccc' : '1px solid #222',
   transition: 'border-color 225ms ease-in-out',
-  width: 'fit-content',
+  width: '370px',
   ...(isPhoneInputFocused &&
     (theme.name === 'light'
       ? {
@@ -44,6 +46,42 @@ export const StyledInputContainer = styled(Box, {
           borderColor: '#3683dc',
           boxShadow: '0 0 2px 1px #222',
         })),
+}));
+
+export const StyledSelect = styled(Autocomplete, {
+  label: 'StyledSelect',
+})(({ theme }) => ({
+  '& .Mui-focused': {
+    borderColor: 'unset',
+    boxShadow: 'none',
+  },
+  '& .MuiAutocomplete-endAdornment': {
+    position: 'static',
+  },
+  '& .MuiInputBase-root': {
+    border: 'unset',
+    color: `${theme.palette.primary.main} !important`,
+    opacity: '1 !important',
+  },
+  '& .MuiPopper-root-MuiAutocomplete-popper.MuiAutocomplete-popper': {
+    width: '500px',
+  },
+  '&& .MuiAutocomplete-inputRoot': {
+    paddingRight: '0px',
+  },
+  '&& .MuiPaper-root .MuiPaper-elevation .MuiPaper-rounded .MuiPaper-elevation1 .MuiAutocomplete-paper': {
+    width: '500px !important',
+  },
+  '&& .base-Popper-root .MuiAutocomplete-popper': {
+    width: '500px !important',
+  },
+  '&:focus': {
+    borderColor: 'unset',
+    boxShadow: 'unset',
+  },
+  border: 'none',
+  font: '20px',
+  height: '34px',
 }));
 
 export const StyledPhoneNumberInput = styled(TextField, {
@@ -58,38 +96,6 @@ export const StyledPhoneNumberInput = styled(TextField, {
     boxShadow: 'unset',
   },
   border: 'unset',
-  minWidth: '300px',
-}));
-
-export const StyledSelect = styled(Autocomplete, {
-  label: 'StyledSelect',
-})(({ theme }) => ({
-  '& .MuiInputBase-input svg': {
-    color: `${theme.palette.primary.main} !important`,
-    opacity: '1 !important',
-  },
-  '&.Mui-focused': {
-    borderColor: 'unset',
-    boxShadow: 'none',
-  },
-  '&:focus': {
-    borderColor: 'unset',
-    boxShadow: 'unset',
-  },
-  border: 'unset',
-  height: '34px',
-  width: '70px !important',
-}));
-
-export const StyledLabel = styled(Typography, {
-  label: 'StyledLabel',
-})(({ theme }) => ({
-  color: theme.name === 'light' ? '#555' : '#c9cacb',
-  fontSize: '.875rem',
-  lineHeight: '1',
-  marginBottom: '8px',
-  marginTop: theme.spacing(2),
-  padding: 0,
 }));
 
 export const StyledFormHelperText = styled(FormHelperText, {
@@ -101,4 +107,13 @@ export const StyledFormHelperText = styled(FormHelperText, {
   left: 5,
   top: 42,
   width: '100%',
+}));
+
+export const StyledButtonContainer = styled(Box, {
+  label: 'StyledButtonContainer',
+})(({ theme }) => ({
+  gap: theme.spacing(),
+  [theme.breakpoints.down('md')]: {
+    marginTop: theme.spacing(2),
+  },
 }));

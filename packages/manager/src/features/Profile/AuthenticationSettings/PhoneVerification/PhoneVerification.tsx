@@ -199,6 +199,7 @@ export const PhoneVerification = ({
           </Typography>
         </StyledCodeSentMessageBox>
       ) : null}
+
       <Box>
         <form
           onSubmit={
@@ -264,20 +265,15 @@ export const PhoneVerification = ({
                     } ${getCountryFlag(country.code)}`,
                     value: country.code,
                   }))}
-                  sx={{
-                    fontSize: '20px',
-                    marginLeft: '-1px !important',
-                    marginTop: '0px !important',
-                    textAlign: 'center',
-                    // width: '500px',
-                  }}
                   textFieldProps={{
                     hideLabel: true,
+                    style: { minWidth: '72px' },
                   }}
                   value={{
                     label: getCountryFlag(sendCodeForm.values.iso_code),
                   }}
                   disableClearable
+                  disablePortal={true}
                   id="iso_code"
                   label="ISO Code"
                   noMarginTop
