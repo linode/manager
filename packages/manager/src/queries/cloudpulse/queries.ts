@@ -6,6 +6,7 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
+import { databaseQueries } from '../databases/databases';
 import { getAllLinodesRequest } from '../linodes/requests';
 import { volumeQueries } from '../volumes/volumes';
 import { fetchCloudPulseMetrics } from './metrics';
@@ -63,6 +64,9 @@ export const queryFactory = createQueryKeys(key, {
         };
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
+
+      case 'dbaas':
+        return databaseQueries.databases._ctx.all(params, filters);
 
       default:
         return volumeQueries.lists._ctx.all(params, filters); // default to volumes
