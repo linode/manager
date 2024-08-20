@@ -365,14 +365,14 @@ describe('open support tickets', () => {
       description: '',
       entityId: '',
       entityInputValue: '',
-      entityType: 'general' as EntityType,
+      entityType: 'linode_id' as EntityType,
       selectedSeverity: undefined,
       summary: 'Account Limit Increase',
       ticketType: 'accountLimit' as TicketType,
-      companyName: mockAccount.company,
       customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
+      companyName: mockAccount.company,
       numberOfEntities: '2',
-      linodePlan: 'Nanode 1 GB',
+      linodePlan: 'Nanode 1GB',
       useCase: randomString(),
       publicInfo: randomString(),
     };
@@ -449,6 +449,13 @@ describe('open support tickets', () => {
           .should('be.visible')
           .should('have.value', mockFormFields.companyName);
 
+        // Confirm plan pre-populates from form payload data.
+        cy.findByLabelText('Which Linode plan do you need access to?', {
+          exact: false,
+        })
+          .should('be.visible')
+          .should('have.value', mockFormFields.linodePlan);
+
         // Confirm helper text and link.
         cy.findByText('Current number of Linodes: 1').should('be.visible');
         cy.findByText('View types of plans')
@@ -467,15 +474,10 @@ describe('open support tickets', () => {
         cy.findByText('Links to public information are required.');
 
         // Complete the rest of the form.
-        cy.findByLabelText('Total number of entities you need?')
+        cy.findByLabelText('Total number of Linodes you need?')
           .should('be.visible')
           .click()
           .type(mockFormFields.numberOfEntities);
-
-        cy.findByLabelText('Which Linode plan do you need access to?')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.linodePlan);
 
         cy.get('[data-qa-ticket-use-case]')
           .should('be.visible')
@@ -511,9 +513,13 @@ describe('open support tickets', () => {
     cy.contains(
       `#${mockAccountLimitTicket.id}: ${mockAccountLimitTicket.summary}`
     ).should('be.visible');
-    Object.values(ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP).forEach(
-      (fieldLabel) => {
-        cy.findByText(fieldLabel).should('be.visible');
+    Object.entries(ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP).forEach(
+      ([key, fieldLabel]) => {
+        let _fieldLabel = fieldLabel;
+        if (key === 'useCase' || key === 'numberOfEntities') {
+          _fieldLabel = _fieldLabel.replace('entities', 'Linodes');
+        }
+        cy.findByText(_fieldLabel).should('be.visible');
       }
     );
   });
