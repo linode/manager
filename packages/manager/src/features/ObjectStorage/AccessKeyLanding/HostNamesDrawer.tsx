@@ -31,13 +31,13 @@ export const HostNamesDrawer = (props: Props) => {
         <CopyAllHostnames
           text={
             regions
-              .map((region) =>
-                region?.endpoint_type
-                  ? `${regionsLookup[region.id]?.label} (${
-                      region.endpoint_type
-                    }): ${region.s3_endpoint}`
-                  : `${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`
-              )
+              .map((region) => {
+                const label = regionsLookup[region.id]?.label;
+                const endpointType = region.endpoint_type
+                  ? ` (${region.endpoint_type})`
+                  : '';
+                return `${label}${endpointType}: ${region.s3_endpoint}`;
+              })
               .join('\n') ?? ''
           }
         />
@@ -49,25 +49,23 @@ export const HostNamesDrawer = (props: Props) => {
           padding: theme.spacing(1),
         })}
       >
-        {regions.map((region, index) => (
-          <CopyableTextField
-            label={
-              region?.endpoint_type
-                ? `${region.id} (${region.endpoint_type}): ${region.s3_endpoint}`
-                : `${region.id}: ${region.s3_endpoint}`
-            }
-            value={
-              region?.endpoint_type
-                ? `${regionsLookup[region.id]?.label} (${
-                    region.endpoint_type
-                  }): ${region.s3_endpoint}`
-                : `${regionsLookup[region.id]?.label}: ${region.s3_endpoint}`
-            }
-            hideLabel
-            key={index}
-            sx={{ border: 'none', maxWidth: '100%' }}
-          />
-        ))}
+        {regions.map((region, index) => {
+          const endpointTypeLabel = region?.endpoint_type
+            ? ` (${region.endpoint_type})`
+            : '';
+
+          return (
+            <CopyableTextField
+              value={`${regionsLookup[region.id]?.label}${endpointTypeLabel}: ${
+                region.s3_endpoint
+              }`}
+              hideLabel
+              key={index}
+              label={`${region.id}${endpointTypeLabel}: ${region.s3_endpoint}`}
+              sx={{ border: 'none', maxWidth: '100%' }}
+            />
+          );
+        })}
       </Box>
     </Drawer>
   );
