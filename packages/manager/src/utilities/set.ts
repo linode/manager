@@ -28,10 +28,7 @@ export function set<T extends object>(
 
   if (
     // ensure that both the path and value will not lead to prototype pollution issues
-    !updatedPath.reduce(
-      (acc, curKey) => acc && isStringPrototypePollutionSafe(curKey.toString()),
-      true
-    ) ||
+    !isValuePrototypePollutionSafe(updatedPath) ||
     !isValuePrototypePollutionSafe(value)
   ) {
     return object;
@@ -42,6 +39,7 @@ export function set<T extends object>(
     const key = updatedPath[i];
     if (!updatingObject[key] || typeof updatingObject[key] !== 'object') {
       const nextKey = updatedPath[i + 1];
+      // this line has to be changed, because "01" should lead to an object's keys, not an array
       updatingObject[key] = Number.isNaN(nextKey) ? {} : [];
     }
 
@@ -56,13 +54,17 @@ export function set<T extends object>(
 
 /**
  * Helper to ensure a value cannot lead to a prototype pollution issue.
- * Note that this is made with the specific use case of checking that some
- * value to be set inside an object is safe.
  *
  * @param value - The value to check
  * @return - If value is safe, returns it; otherwise returns undefined
  */
 export const isValuePrototypePollutionSafe = (value: any): boolean => {
+  if (typeof value === 'string') {
+    return (
+      value !== '__proto__' && value !== 'prototype' && value !== 'constructor'
+    );
+  }
+
   // An array is safe if all of its value are safe
   if (Array.isArray(value) && value.length > 0) {
     return (
@@ -74,21 +76,11 @@ export const isValuePrototypePollutionSafe = (value: any): boolean => {
   // An object (that is not an array) is safe if all of its values and keys are safe
   if (value && !Array.isArray(value) && typeof value === 'object') {
     return (
-      Object.keys(value).reduce(
-        (acc, curKey) => acc && isStringPrototypePollutionSafe(curKey),
-        true
-      ) && isValuePrototypePollutionSafe(Object.values(value))
+      isValuePrototypePollutionSafe(Object.keys(value)) &&
+      isValuePrototypePollutionSafe(Object.values(value))
     );
   }
 
   // If the value we are checking is not an array/object, we assume it to be safe
   return true;
-};
-
-/**
- * Determines if the given string is prototype pollution safe. This assumes the context
- * that the string being passed in is a potential key for some object.
- */
-const isStringPrototypePollutionSafe = (key: string) => {
-  return key !== '__proto__' && key !== 'prototype' && key !== 'constructor';
 };

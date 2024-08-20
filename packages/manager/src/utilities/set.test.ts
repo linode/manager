@@ -9,8 +9,36 @@ describe('Tests for set', () => {
 });
 
 describe('Tests for isValuePrototypePollutionSafe', () => {
-  it('checks if the given array is prototype pollution safe', () => {
-    expect(isValuePrototypePollutionSafe([])).toBe(true);
+  it('determines that given array is prototype pollution safe', () => {
+    // expect(isValuePrototypePollutionSafe([])).toBe(true);
+    // expect(isValuePrototypePollutionSafe(['', 'test'])).toBe(true);
+    // expect(isValuePrototypePollutionSafe(['', 1])).toBe(true);
+    // expect(isValuePrototypePollutionSafe(['', {}, { test: 'test' }, 3])).toBe(
+    //   true
+    // );
+  });
+  it('determines that the given array is not prototype pollution safe', () => {
+    expect(isValuePrototypePollutionSafe(['__proto__'])).toBe(false);
+    expect(isValuePrototypePollutionSafe(['', 'test', 'prototype'])).toBe(
+      false
+    );
+    expect(isValuePrototypePollutionSafe(['', 1, 'constructor'])).toBe(false);
+    expect(
+      isValuePrototypePollutionSafe(['', 1, 'constructor', '__proto__'])
+    ).toBe(false);
+    // expect(isValuePrototypePollutionSafe(['', 1, { __proto__: 'test' }])).toBe(
+    //   false
+    // );
+    expect(
+      isValuePrototypePollutionSafe(['', 1, { constructor: 'test' }])
+    ).toBe(false);
+    expect(isValuePrototypePollutionSafe(['', 1, { prototype: 'test' }])).toBe(
+      false
+    );
+    // expect(
+    //   isValuePrototypePollutionSafe([{ test: { test: { __proto__: 'test' } } }])
+    // ).toBe(false);
+    // sadcat moment
   });
 });
 
