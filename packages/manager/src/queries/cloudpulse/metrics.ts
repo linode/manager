@@ -41,12 +41,14 @@ export const useCloudPulseMetricsQuery = (
         const currentJWEtokenCache:
           | JWEToken
           | undefined = queryClient.getQueryData(
-          queryFactory.token(serviceType, { resource_id: [] }).queryKey
+          queryFactory.token(serviceType, { resource_ids: [] }).queryKey
         );
         if (currentJWEtokenCache?.token === obj.authToken) {
           queryClient.invalidateQueries(
-            queryFactory.token(serviceType, { resource_id: [] }).queryKey,
-            {},
+            {
+              queryKey: queryFactory.token(serviceType, { resource_ids: [] })
+                .queryKey,
+            },
             {
               cancelRefetch: true,
             }

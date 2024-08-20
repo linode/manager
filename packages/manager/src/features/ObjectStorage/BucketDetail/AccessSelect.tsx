@@ -20,11 +20,13 @@ import { copy } from './AccessSelect.data';
 import type {
   ACLType,
   ObjectStorageBucketAccess,
+  ObjectStorageEndpointTypes,
   ObjectStorageObjectACL,
 } from '@linode/api-v4/lib/object-storage';
 import type { Theme } from '@mui/material/styles';
 
 export interface Props {
+  endpointType?: ObjectStorageEndpointTypes;
   getAccess: () => Promise<ObjectStorageBucketAccess | ObjectStorageObjectACL>;
   name: string;
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
@@ -38,7 +40,7 @@ function isUpdateObjectStorageBucketAccessPayload(
 }
 
 export const AccessSelect = React.memo((props: Props) => {
-  const { getAccess, name, updateAccess, variant } = props;
+  const { endpointType, getAccess, name, updateAccess, variant } = props;
   // Access data for this Object (from the API).
   const [aclData, setACLData] = React.useState<ACLType | null>(null);
   const [corsData, setCORSData] = React.useState(true);
@@ -55,6 +57,8 @@ export const AccessSelect = React.memo((props: Props) => {
   // State for dealing with the confirmation modal when selecting read/write.
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
+  const isCorsEnabled =
+    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
 
   React.useEffect(() => {
     setUpdateAccessError('');
@@ -180,7 +184,7 @@ export const AccessSelect = React.memo((props: Props) => {
         ) : null}
       </div>
 
-      {variant === 'bucket' ? (
+      {isCorsEnabled ? (
         <FormControlLabel
           control={
             <Toggle
@@ -194,7 +198,7 @@ export const AccessSelect = React.memo((props: Props) => {
         />
       ) : null}
 
-      {variant === 'bucket' ? (
+      {isCorsEnabled ? (
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
@@ -203,7 +207,19 @@ export const AccessSelect = React.memo((props: Props) => {
           </Link>
           .
         </Typography>
-      ) : null}
+      ) : (
+        // TODO: OBJGen2 - We need to handle link in upcoming PR
+        <Notice spacingBottom={0} spacingTop={16} variant="warning">
+          <Typography
+            sx={(theme) => ({
+              fontFamily: theme.font.bold,
+            })}
+          >
+            CORS (Cross Origin Sharing) is not available for endpoint types E2
+            and E3. <Link to="#">Learn more</Link>.
+          </Typography>
+        </Notice>
+      )}
 
       <ActionsPanel
         primaryButtonProps={{

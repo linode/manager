@@ -93,9 +93,14 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
-export const useKubernetesClustersQuery = (params: Params, filter: Filter) => {
+export const useKubernetesClustersQuery = (
+  params: Params,
+  filter: Filter,
+  enabled = true
+) => {
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>({
     ...kubernetesQueries.lists._ctx.paginated(params, filter),
+    enabled,
     keepPreviousData: true,
   });
 };

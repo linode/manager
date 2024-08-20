@@ -117,7 +117,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
                 acc.push({
                   className: vendor
                     ? // Use Tux as a fallback.
-                      `fl-${OS_ICONS[vendor] ?? 'tux'}`
+                      `fl-${OS_ICONS[vendor as keyof typeof OS_ICONS] ?? 'tux'}`
                     : `fl-tux`,
                   created,
                   isCloudInitCompatible: capabilities?.includes('cloud-init'),

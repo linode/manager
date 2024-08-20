@@ -66,7 +66,7 @@ describe('Third party access tokens', () => {
       .findByTitle(token.label)
       .should('be.visible')
       .within(() => {
-        Object.keys(access).forEach((key) => {
+        Object.keys(access).forEach((key: keyof typeof access) => {
           cy.findByText(key)
             .closest('tr')
             .within(() => {

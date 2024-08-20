@@ -1,8 +1,12 @@
 import { isToday } from 'src/utilities/isToday';
-import { roundTo } from 'src/utilities/roundTo';
 import { getMetrics } from 'src/utilities/statMetrics';
 
 import { COLOR_MAP } from './CloudPulseWidgetColorPalette';
+import {
+  formatToolTip,
+  generateUnitByBaseUnit,
+  transformData,
+} from './unitConversion';
 import {
   convertTimeDurationToStartAndEndTimeRange,
   seriesDataFormatter,
@@ -18,14 +22,137 @@ import type {
   Widgets,
 } from '@linode/api-v4';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
+import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
-export const generateGraphData = (
-  widgetColor: string | undefined,
-  metricsList: CloudPulseMetricsResponse | undefined,
-  status: string | undefined,
-  label: string,
-  unit: string
-) => {
+interface LabelNameOptionsProps {
+  /**
+   * flags received from config
+   */
+  flags: FlagSet;
+
+  /**
+   * label for the graph title
+   */
+  label: string;
+
+  /**
+   * key-value to generate dimension name
+   */
+  metric: { [label: string]: string };
+
+  /**
+   * list of CloudPulseResources available
+   */
+  resources: CloudPulseResources[];
+
+  /**
+   * service type of the selected dashboard
+   */
+  serviceType: string;
+
+  /**
+   * unit of the data
+   */
+  unit: string;
+}
+
+interface graphDataOptionsProps {
+  /**
+   * flags associated with metricsList
+   */
+  flags: FlagSet;
+
+  /**
+   * label for the graph title
+   */
+  label: string;
+
+  /**
+   * data that will be displayed on graph
+   */
+  metricsList: CloudPulseMetricsResponse | undefined;
+
+  /**
+   * list of CloudPulse resources
+   */
+  resources: CloudPulseResources[];
+
+  /**
+   * service type of the selected dashboard
+   */
+  serviceType: string;
+
+  /**
+   * status returned from react query ( loading | error | success)
+   */
+  status: string | undefined;
+
+  /**
+   * unit of the data
+   */
+  unit: string;
+
+  /**
+   * preferred color for the widget's graph
+   */
+  widgetColor: string | undefined;
+}
+
+interface MetricRequestProps {
+  /**
+   * time duration for the metrics data
+   */
+  duration: TimeDuration;
+
+  /**
+   * resource ids selected by user
+   */
+  resourceIds: string[];
+
+  /**
+   * list of CloudPulse resources available
+   */
+  resources: CloudPulseResources[];
+
+  /**
+   * widget filters for metrics data
+   */
+  widget: Widgets;
+}
+
+interface DimensionNameProperties {
+  /**
+   * flag dimension key mapping for service type
+   */
+  flag: CloudPulseResourceTypeMapFlag | undefined;
+
+  /**
+   * metric key-value to generate dimension name
+   */
+  metric: { [label: string]: string };
+
+  /**
+   * resources list of CloudPulseResources available
+   */
+  resources: CloudPulseResources[];
+}
+
+/**
+ *
+ * @returns parameters which will be necessary to populate graph & legends
+ */
+export const generateGraphData = (props: graphDataOptionsProps) => {
+  const {
+    flags,
+    label,
+    metricsList,
+    resources,
+    serviceType,
+    status,
+    unit,
+    widgetColor,
+  } = props;
+
   const dimensions: DataSet[] = [];
   const legendRowsData: LegendRow[] = [];
 
@@ -33,32 +160,44 @@ export const generateGraphData = (
   const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
   let today = false;
 
-  if (status === 'success' && Boolean(metricsList?.data.result.length)) {
-    metricsList!.data.result.forEach(
+  if (status === 'success') {
+    metricsList?.data?.result?.forEach(
       (graphData: CloudPulseMetricsList, index) => {
-        // todo, move it to utils at a widget level
         if (!graphData) {
           return;
         }
+        const transformedData = {
+          metric: graphData.metric,
+          values: transformData(graphData.values, unit),
+        };
         const color = colors[index];
         const { end, start } = convertTimeDurationToStartAndEndTimeRange({
           unit: 'min',
           value: 30,
         }) || {
-          end: graphData.values[graphData.values.length - 1][0],
-          start: graphData.values[0][0],
+          end: transformedData.values[transformedData.values.length - 1][0],
+          start: transformedData.values[0][0],
+        };
+
+        const labelOptions: LabelNameOptionsProps = {
+          flags,
+          label,
+          metric: transformedData.metric,
+          resources,
+          serviceType,
+          unit,
         };
 
         const dimension = {
           backgroundColor: color,
           borderColor: '',
-          data: seriesDataFormatter(graphData.values, start, end),
-          label: `${label} (${unit})`,
+          data: seriesDataFormatter(transformedData.values, start, end),
+          label: getLabelName(labelOptions),
         };
         // construct a legend row with the dimension
         const legendRow = {
           data: getMetrics(dimension.data as number[][]),
-          format: (value: number) => tooltipValueFormatter(value, unit),
+          format: (value: number) => formatToolTip(value, unit),
           legendColor: color,
           legendTitle: dimension.label,
         };
@@ -69,22 +208,37 @@ export const generateGraphData = (
     );
   }
 
-  return { dimensions, legendRowsData, today };
+  return {
+    dimensions,
+    legendRowsData,
+    today,
+    unit: generateMaxUnit(legendRowsData, unit),
+  };
 };
 
-const tooltipValueFormatter = (value: number, unit: string) =>
-  `${roundTo(value)} ${unit}`;
+/**
+ *
+ * @param legendRowsData list of legend rows available for the metric
+ * @param unit base unit of the values
+ * @returns maximum possible rolled up unit based on the unit
+ */
+const generateMaxUnit = (legendRowsData: LegendRow[], unit: string) => {
+  const maxValue = Math.max(
+    0,
+    ...legendRowsData?.map((row) => row?.data.max ?? 0)
+  );
+
+  return generateUnitByBaseUnit(maxValue, unit);
+};
 
 /**
  *
  * @returns a CloudPulseMetricRequest object to be passed as data to metric api call
  */
 export const getCloudPulseMetricRequest = (
-  widget: Widgets,
-  duration: TimeDuration,
-  resources: CloudPulseResources[],
-  resourceIds: string[]
+  props: MetricRequestProps
 ): CloudPulseMetricsRequest => {
+  const { duration, resourceIds, resources, widget } = props;
   return {
     aggregate_function: widget.aggregate_function,
     filters: undefined,
@@ -102,4 +256,70 @@ export const getCloudPulseMetricRequest = (
             value: widget.time_granularity.value,
           },
   };
+};
+
+/**
+ *
+ * @returns generated label name for graph dimension
+ */
+const getLabelName = (props: LabelNameOptionsProps): string => {
+  const { flags, label, metric, resources, serviceType, unit } = props;
+  // aggregated metric, where metric keys will be 0
+  if (!Object.keys(metric).length) {
+    // in this case return widget label and unit
+    return `${label} (${unit})`;
+  }
+
+  const flag = flags?.aclpResourceTypeMap?.find(
+    (obj: CloudPulseResourceTypeMapFlag) => obj.serviceType === serviceType
+  );
+
+  return getDimensionName({ flag, metric, resources });
+};
+
+/**
+ *
+ * @returns generated dimension name based on resources
+ */
+export const getDimensionName = (props: DimensionNameProperties): string => {
+  const { flag, metric, resources } = props;
+  return Object.entries(metric)
+    .map(([key, value]) => {
+      if (key === flag?.dimensionKey) {
+        return mapResourceIdToName(value, resources);
+      }
+
+      return value ?? '';
+    })
+    .filter(Boolean)
+    .join('_');
+};
+
+/**
+ *
+ * @param id resource id that should be searched in resources list
+ * @param resources list of CloudPulseResources available
+ * @returns resource label if id is found, the id if label is not found, and fall back on an empty string with an undefined id
+ */
+export const mapResourceIdToName = (
+  id: string | undefined,
+  resources: CloudPulseResources[]
+): string => {
+  return (
+    resources.find((resourceObj) => resourceObj?.id === id)?.label ?? id ?? ''
+  );
+};
+
+/**
+ *
+ * @param data data set to be checked for empty
+ * @returns true if data is not empty or contains all the null values otherwise false
+ */
+export const isDataEmpty = (data: DataSet[]): boolean => {
+  return data.every(
+    (thisSeries) =>
+      thisSeries.data.length === 0 ||
+      // If we've padded the data, every y value will be null
+      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
+  );
 };

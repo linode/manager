@@ -27,18 +27,18 @@ import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 
-import type { Account, Grant } from '@linode/api-v4/lib/account';
 import type {
+  APIError,
+  Image,
   StackScript,
   StackScriptPayload,
-} from '@linode/api-v4/lib/stackscripts';
-import type { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import type { Account, Grant } from '@linode/api-v4/lib/account';
 import type { QueryClient } from '@tanstack/react-query';
 import type { RouteComponentProps } from 'react-router-dom';
 import type { WithImagesProps } from 'src/containers/images.container';
 import type { WithProfileProps } from 'src/containers/profile.container';
 import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
-import type { SelectImageOption } from 'src/features/Images/ImageSelect';
 
 interface State {
   apiResponse?: StackScript;
@@ -129,8 +129,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     );
   };
 
-  handleChooseImage = (images: SelectImageOption[]) => {
-    const imageList = images.map((image) => image.value);
+  handleChooseImage = (images: Image[]) => {
+    const imageList = images.map((image) => image.id);
 
     const anyAllOptionChosen = imageList.includes('any/all');
 
@@ -161,7 +161,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         if (profile.data?.restricted) {
-          queryClient.invalidateQueries(profileQueries.grants.queryKey);
+          queryClient.invalidateQueries({
+            queryKey: profileQueries.grants.queryKey,
+          });
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();
@@ -435,9 +437,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const hasUnsavedChanges = this.hasUnsavedChanges();
 
     const availableImages = Object.values(_imagesData).filter(
-      (thisImage) =>
-        !this.state.images.includes(thisImage.id) &&
-        !thisImage.label.match(/kube/i)
+      (thisImage) => !thisImage.label.match(/kube/i)
     );
 
     const stackScriptGrants = grants.data?.stackscript;
