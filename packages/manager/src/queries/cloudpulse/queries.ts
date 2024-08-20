@@ -70,10 +70,10 @@ export const queryFactory = createQueryKeys(key, {
     }
   },
 
-  serviceTypes: (queryKey: string, serviceTypeKey: string) => ({
+  serviceTypes: {
     queryFn: () => getCloudPulseServiceTypes(),
-    queryKey: [queryKey, serviceTypeKey],
-  }),
+    queryKey: null,
+  },
   token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
     queryFn: () => getJWEToken(request, serviceType!),
     queryKey: [serviceType],

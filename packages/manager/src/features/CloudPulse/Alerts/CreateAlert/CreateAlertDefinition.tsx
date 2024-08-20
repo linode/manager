@@ -41,7 +41,6 @@ export const initialValues: CreateAlertDefinitionPayload = {
   ],
   engineOption: '',
   name: '',
-  notifications: [],
   region: '',
   resource_ids: [],
   service_type: '',
@@ -152,12 +151,11 @@ export const CreateAlertDefinition = React.memo(() => {
           )}
           <Typography variant="h2">1. General Information</Typography>
           <TextField
-            // errorText="Name error"
             label="Name"
             name={'name'}
             onBlur={handleBlur}
             onChange={handleChange}
-            value={values.name ? values.name : ''}
+            value={values.name ?? ''}
           />
           {formik.touched && formik.touched.name && errors.name ? (
             <ErrorMessage component={CustomErrorMessage} name="name" />
@@ -168,7 +166,7 @@ export const CreateAlertDefinition = React.memo(() => {
             onBlur={handleBlur}
             onChange={handleChange}
             optional
-            value={values.description ? values.description : ''}
+            value={values.description ?? ''}
           />
           <CloudPulseServiceSelect name={'service_type'} />
           {formik.touched &&
@@ -178,7 +176,7 @@ export const CreateAlertDefinition = React.memo(() => {
           ) : null}
           {formik.values.service_type === 'dbaas' && (
             <EngineOption
-              engineOptions={engineOptions ? engineOptions : []}
+              engineOptions={engineOptions ?? []}
               name={'engineOption'}
             />
           )}
@@ -187,10 +185,10 @@ export const CreateAlertDefinition = React.memo(() => {
             <ErrorMessage component={CustomErrorMessage} name="region" />
           ) : null}
           <CloudPulseMultiResourceSelect
-            cluster={values.service_type === 'dbaas' ? true : false}
+            cluster={values.service_type === 'dbaas'}
             name={'resource_ids'}
-            region={values.region ? values.region : ''}
-            serviceType={values.service_type ? values.service_type : ''}
+            region={values.region ?? ''}
+            serviceType={values.service_type ?? ''}
           />
           {formik.touched &&
           formik.touched.resource_ids &&

@@ -126,18 +126,7 @@ export interface CreateAlertDefinitionPayload {
   resource_ids: string[];
   severity: string;
   criteria: MetricCriteria[];
-  triggerCondition: {
-    criteria_condition: string;
-    polling_interval_seconds: string;
-    evaluation_period_seconds: string;
-    trigger_occurrences: number;
-  };
-  notifications: {
-    notification_type: string;
-    content: {
-      email: string;
-    };
-  }[];
+  triggerCondition: TriggerCondition;
   sink_ids: string[];
 }
 export interface MetricCriteria {
@@ -152,6 +141,12 @@ export interface MetricCriteria {
   }[];
 }
 
+export interface TriggerCondition {
+  criteria_condition: string;
+  polling_interval_seconds: string;
+  evaluation_period_seconds: string;
+  trigger_occurrences: number;
+}
 export interface Alert {
   id: number;
   name: string;
@@ -161,12 +156,7 @@ export interface Alert {
   service_type: string;
   resource_ids: string[];
   criteria: MetricCriteria[];
-  triggerCondition: {
-    criteria_condition: string;
-    polling_interval_seconds: string;
-    evaluation_period_seconds: string;
-    trigger_occurrences: number;
-  };
+  triggerCondition: TriggerCondition;
   notification: {
     notification_id: string;
     template_name: string;
@@ -176,6 +166,7 @@ export interface Alert {
   created: string;
   updated: string;
 }
+
 
 export interface ServiceTypes {
   data: Services[];

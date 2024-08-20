@@ -2,10 +2,7 @@ import { useFormikContext } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import {
-  useLinodeResourcesQuery,
-  useResourcesQuery,
-} from 'src/queries/cloudpulse/resources';
+import { useLinodeResourcesQuery } from 'src/queries/cloudpulse/resources';
 interface CloudPulseResourceSelectProps {
   /**
    * cluster type selected by the user
@@ -48,7 +45,7 @@ export const CloudPulseMultiResourceSelect = (
   };
   const getResourceList = () => {
     return serviceType && resourceOptions[serviceType]
-      ? filterResourcesByRegion(resourceOptions[serviceType]?.data)
+      ? filterResourcesByRegion(resourceOptions[serviceType]?.data) ?? []
       : [];
   };
 
@@ -84,12 +81,14 @@ export const CloudPulseMultiResourceSelect = (
       }}
       autoHighlight
       clearOnBlur
+      data-testid="resource-select"
+      disabled={!Boolean(region && serviceType)}
       label={cluster ? 'Cluster' : 'Resources'}
       limitTags={2}
       multiple
       options={getResourceList()}
-      placeholder="Select"
-      value={selectedResource ? selectedResource : null}
+      placeholder="Select Resources"
+      value={selectedResource}
     />
   );
 };

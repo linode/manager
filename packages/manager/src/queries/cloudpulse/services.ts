@@ -10,8 +10,6 @@ import type {
   ServiceTypes,
 } from '@linode/api-v4';
 
-const queryKey = 'cloudpulse-services';
-const serviceTypeKey = 'service-types';
 export const useGetCloudPulseMetricDefinitionsByServiceType = (
   serviceType: string | undefined,
   enabled: boolean
@@ -24,7 +22,7 @@ export const useGetCloudPulseMetricDefinitionsByServiceType = (
 
 export const useCloudPulseServices = () => {
   return useQuery<ServiceTypes, APIError[]>({
-    ...queryFactory.serviceTypes(queryKey, serviceTypeKey),
+    ...queryFactory.serviceTypes,
   });
 };
 export const useCloudPulseJWEtokenQuery = (

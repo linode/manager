@@ -33,8 +33,8 @@ export const CloudPulseRegionSelect = React.memo(
           fullWidth
           label="Region"
           noMarginTop
-          regions={regions ? regions : []}
-          value={values ? values.value : null}
+          regions={regions ?? []}
+          value={values.value ?? null}
         />
       </Box>
     );

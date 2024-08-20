@@ -5,7 +5,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 interface EngineOptionProps {
   /**
-   * list of engine ptions available
+   * list of engine options available
    */
   engineOptions: any[];
   /**
@@ -14,7 +14,10 @@ interface EngineOptionProps {
   name: string;
 }
 export const EngineOption = (props: EngineOptionProps) => {
-  const [selectedDatabase, setDatabase] = React.useState<any>('');
+  const [selectedDatabase, setDatabase] = React.useState<any>({
+    group: '',
+    label: '',
+  });
   const formik = useFormikContext();
   const { engineOptions, name } = props;
 
@@ -28,10 +31,10 @@ export const EngineOption = (props: EngineOptionProps) => {
       return [];
     }
     return (
-      engineOptions &&
-      engineOptions.map((option) => {
-        return { group: option.engine, label: option.id };
-      })
+      engineOptions?.map((option) => ({
+        group: option.engine,
+        label: option.id,
+      })) ?? []
     );
   };
 
@@ -40,11 +43,12 @@ export const EngineOption = (props: EngineOptionProps) => {
       onChange={(_: any, newValue, reason) =>
         reason === 'selectOption' && setDatabase(newValue)
       }
+      data-testid="engine-options"
       groupBy={(option) => option.group}
       isOptionEqualToValue={(option, value) => option.label === value.label}
       label="Engine Options"
       options={getEnginesList()}
-      value={selectedDatabase ? selectedDatabase : null}
+      value={selectedDatabase ?? null}
     />
   );
 };

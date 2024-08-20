@@ -32,7 +32,7 @@ export const CloudPulseServiceSelect = (
   }, [selectedService]);
 
   const getServicesList = () => {
-    return serviceOptions ? serviceOptions.data : [];
+    return serviceOptions?.data ?? [];
   };
   return (
     <Autocomplete
