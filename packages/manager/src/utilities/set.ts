@@ -22,14 +22,14 @@ export function set<T extends object>(
   }
 
   // if the path is not an array, convert it to an array format
-  const updatedPath: PropertyName[] = Array.isArray(path)
-    ? path
+  const updatedPath: string[] = Array.isArray(path)
+    ? path.map((key) => key.toString())
     : path.toString().match(/[^.[\]]+/g) ?? [];
 
   if (
     // ensure that both the path and value will not lead to prototype pollution issues
     !updatedPath.reduce(
-      (acc, curKey) => acc && isStringPrototypePollutionSafe(curKey.toString()),
+      (acc, curKey) => acc && isStringPrototypePollutionSafe(curKey),
       true
     ) ||
     !isValuePrototypePollutionSafe(value)
@@ -37,9 +37,19 @@ export function set<T extends object>(
     return object;
   }
 
-  for (let i = 0; i < updatedPath.length - 1; i++) {
-    // oh boy
-  }
+  // let updatingObject = object;
+  // for (let i = 0; i < updatedPath.length - 1; i++) {
+  //   const key = updatedPath[i];
+  //   if (updatingObject[key as keyof {}] && typeof updatingObject[key as keyof {}] === 'object') {
+  //     updatingObject = updatingObject[key as keyof {}];
+  //   } else {
+  //     const nextKey = updatedPath[i + 1];
+  //     updatingObject[key as keyof {}]  = []; // or {}
+  //     updatingObject = updatingObject[key as keyof {}];
+  //   }
+  // }
+  // // set value after reaching end of the path
+  // updatingObject[updatedPath[updatedPath.length - 1] as keyof {}] = value;
 
   return object;
 }
