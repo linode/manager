@@ -57,6 +57,8 @@ export const AccessSelect = React.memo((props: Props) => {
   // State for dealing with the confirmation modal when selecting read/write.
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
+  const isCorsEnabled =
+    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
 
   React.useEffect(() => {
     setUpdateAccessError('');
@@ -141,9 +143,6 @@ export const AccessSelect = React.memo((props: Props) => {
     ? 'CORS Enabled'
     : 'CORS Disabled';
 
-  const isCorsEnabled =
-    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
-
   const selectedOption =
     _options.find((thisOption) => thisOption.value === selectedACL) ??
     _options.find((thisOption) => thisOption.value === 'private');
@@ -208,7 +207,19 @@ export const AccessSelect = React.memo((props: Props) => {
           </Link>
           .
         </Typography>
-      ) : null}
+      ) : (
+        // TODO: OBJGen2 - We need to handle link in upcoming PR
+        <Notice spacingBottom={0} spacingTop={16} variant="warning">
+          <Typography
+            sx={(theme) => ({
+              fontFamily: theme.font.bold,
+            })}
+          >
+            CORS (Cross Origin Sharing) is not available for endpoint types E2
+            and E3. <Link to="#">Learn more</Link>.
+          </Typography>
+        </Notice>
+      )}
 
       <ActionsPanel
         primaryButtonProps={{
