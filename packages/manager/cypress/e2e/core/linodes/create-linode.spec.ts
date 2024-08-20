@@ -352,7 +352,7 @@ describe('Create Linode', () => {
    * - Confirms error message can show up during Linode create flow.
    * - Confirms Linode can be created after retry.
    */
-  it('unexpected error show up during Linode create flow', () => {
+  it('shows unexpected error during Linode create flow', () => {
     const linodeRegion = chooseRegion({
       capabilities: ['Linodes'],
     });
