@@ -38,14 +38,14 @@ const tableData = (endpointType: BucketRateLimitTableProps['endpointType']) => {
     {
       checked: true,
       id: '1',
-      label: 'Basic',
-      values: ['2,000', '500', '100', '200', '400'],
+        label: 'Basic',
+        values: ['2,000', '500', '100', '200', '400'],
     },
     {
       checked: false,
       id: '2',
-      label: 'High',
-    values: [
+        label: 'High',
+      values: [
         isE3 ? '20,000' : '5,000',
         isE3 ? '2,000' : '1,000',
         isE3 ? '400' : '200',
