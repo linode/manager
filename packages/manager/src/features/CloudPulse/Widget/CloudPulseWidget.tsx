@@ -23,6 +23,7 @@ import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect'
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
 import { ZoomIcon } from './components/Zoomer';
 
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
   AvailableMetrics,
@@ -32,8 +33,14 @@ import type {
 import type { Widgets } from '@linode/api-v4';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { Metrics } from 'src/utilities/statMetrics';
+import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
 
 export interface CloudPulseWidgetProperties {
+  /**
+   * Apart from above explicit filters, any additional filters for metrics endpoint will go here
+   */
+  additionalFilters?: CloudPulseMetricsAdditionalFilters[];
+
   /**
    * Aria label for this widget
    */
@@ -98,6 +105,11 @@ export interface CloudPulseWidgetProperties {
    * this comes from dashboard, has inbuilt metrics, agg_func,group_by,filters,gridsize etc , also helpful in publishing any changes
    */
   widget: Widgets;
+}
+
+export interface CloudPulseMetricsAdditionalFilters {
+  filterKey: string;
+  filterValue: FilterValueType;
 }
 
 export interface LegendRow {
@@ -228,12 +240,15 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     status,
   } = useCloudPulseMetricsQuery(
     serviceType,
-    getCloudPulseMetricRequest({
-      duration,
-      resourceIds,
-      resources,
-      widget,
-    }),
+    {
+      ...getCloudPulseMetricRequest({
+        duration,
+        resourceIds,
+        resources,
+        widget,
+      }),
+      filters: constructAdditionalRequestFilters(props.additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+    },
     {
       authToken,
       isFlags: Boolean(flags),

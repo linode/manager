@@ -21,7 +21,10 @@ import {
   getIntervalIndex,
 } from '../Widget/components/CloudPulseIntervalSelect';
 
-import type { CloudPulseWidgetProperties } from '../Widget/CloudPulseWidget';
+import type {
+  CloudPulseMetricsAdditionalFilters,
+  CloudPulseWidgetProperties,
+} from '../Widget/CloudPulseWidget';
 import type {
   AvailableMetrics,
   Dashboard,
@@ -31,6 +34,11 @@ import type {
 } from '@linode/api-v4';
 
 export interface DashboardProperties {
+  /**
+   * Apart from above explicit filters, any additional filters for metrics endpoint will go here
+   */
+  additionalFilters?: CloudPulseMetricsAdditionalFilters[];
+
   /**
    * Id of the selected dashboard
    */
@@ -69,6 +77,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     manualRefreshTimeStamp,
     resources,
     savePref,
+    additionalFilters,
   } = props;
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
@@ -81,6 +90,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     widget: Widgets
   ): CloudPulseWidgetProperties => {
     const graphProp: CloudPulseWidgetProperties = {
+      additionalFilters,
       ariaLabel: widget.label,
       authToken: '',
       availableMetrics: undefined,

@@ -7,7 +7,10 @@ import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/Sta
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { REGION, RESOURCE_ID } from '../Utils/constants';
-import { checkIfAllMandatoryFiltersAreSelected } from '../Utils/FilterBuilder';
+import {
+  checkIfAllMandatoryFiltersAreSelected,
+  getFiltersForMetricsCallFromCustomSelect,
+} from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { useLoadUserPreferences } from '../Utils/UserPreference';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
@@ -97,6 +100,10 @@ export const CloudPulseDashboardLanding = () => {
 
     return (
       <CloudPulseDashboard
+        additionalFilters={getFiltersForMetricsCallFromCustomSelect(
+          filterValue,
+          dashboard.service_type
+        )}
         region={
           typeof filterValue[REGION] === 'string'
             ? (filterValue[REGION] as string)

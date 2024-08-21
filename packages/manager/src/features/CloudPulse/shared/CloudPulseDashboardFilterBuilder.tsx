@@ -16,6 +16,7 @@ import {
   RESOURCE_ID,
 } from '../Utils/constants';
 import {
+  getCustomSelectProperties,
   getRegionProperties,
   getResourcesProperties,
 } from '../Utils/FilterBuilder';
@@ -111,6 +112,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       [emitFilterChangeByFilterKey]
     );
 
+    const handleCustomSelectChange = React.useCallback(
+      (filterKey: string, value: FilterValueType) => {
+        emitFilterChangeByFilterKey(filterKey, value);
+      },
+      [emitFilterChangeByFilterKey]
+    );
+
     const getProps = React.useCallback(
       (config: CloudPulseServiceTypeFilters) => {
         if (config.configuration.filterKey === REGION) {
@@ -129,13 +137,22 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             handleResourceChange
           );
         } else {
-          return {};
+          return getCustomSelectProperties(
+            {
+              config,
+              dashboard,
+              dependentFilters: dependentFilterReference.current,
+              isServiceAnalyticsIntegration,
+            },
+            handleCustomSelectChange
+          );
         }
       },
       [
         dashboard,
         handleRegionChange,
         handleResourceChange,
+        handleCustomSelectChange,
         isServiceAnalyticsIntegration,
       ]
     );
@@ -168,7 +185,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         .map((filter, index) => (
           <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
             {RenderComponent({
-              componentKey: filter.configuration.filterKey,
+              componentKey:
+                filter.configuration.type !== undefined
+                  ? 'customSelect'
+                  : filter.configuration.filterKey,
               componentProps: { ...getProps(filter) },
               key: index + filter.configuration.filterKey,
             })}

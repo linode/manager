@@ -2,6 +2,7 @@ import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
+import { CloudPulseCustomSelect, type CloudPulseCustomSelectProps } from './CloudPulseCustomSelect';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 import { CloudPulseTimeRangeSelect } from './CloudPulseTimeRangeSelect';
@@ -14,6 +15,7 @@ import type { MemoExoticComponent } from 'react';
 export interface CloudPulseComponentRendererProps {
   componentKey: string;
   componentProps:
+    | CloudPulseCustomSelectProps
     | CloudPulseRegionSelectProps
     | CloudPulseResourcesSelectProps
     | CloudPulseTimeRangeSelectProps;
@@ -23,12 +25,14 @@ export interface CloudPulseComponentRendererProps {
 const Components: {
   [key: string]: MemoExoticComponent<
     React.ComponentType<
+      | CloudPulseCustomSelectProps
       | CloudPulseRegionSelectProps
       | CloudPulseResourcesSelectProps
       | CloudPulseTimeRangeSelectProps
     >
   >;
 } = {
+  customSelect: CloudPulseCustomSelect,
   region: CloudPulseRegionSelect,
   relative_time_duration: CloudPulseTimeRangeSelect,
   resource_id: CloudPulseResourcesSelect,
