@@ -132,10 +132,9 @@ export const BucketDetailsDrawer = React.memo(
             {pluralize('object', 'objects', objects)}
           </Link>
         )}
-        {typeof size === 'number' ||
-          (typeof objects === 'number' && (
-            <Divider spacingBottom={16} spacingTop={16} />
-          ))}
+        {(typeof size === 'number' || typeof objects === 'number') && (
+          <Divider spacingBottom={16} spacingTop={16} />
+        )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
          to getBucketAccess and updateBucketAccess.  */}
         {cluster && label && (
