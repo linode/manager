@@ -48,7 +48,7 @@ export const useRegionQuery = (regionId: string) => {
   });
 };
 
-export const useRegionsQuery = (transformRegionLabel: boolean = false) =>
+export const useRegionsQuery = () =>
   useQuery<Region[], APIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,
