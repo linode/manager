@@ -6,12 +6,14 @@ import {
   generateNeqFilter,
   generatePollingFilter,
   getExistingEventDataForPollingFilterGenerator,
+  getMinimumDateToPollFrom,
   isEventRelevantToLinode,
   isEventRelevantToLinodeAsSecondaryEntity,
   isInProgressEvent,
   isPrimaryEntity,
   isSecondaryEntity,
 } from './event.helpers';
+import { DateTime } from 'luxon';
 
 describe('isInProgressEvent', () => {
   it('should return true', () => {
@@ -291,5 +293,36 @@ describe('getExistingEventDataForPollingFilterGenerator', () => {
 
     expect(eventsThatAlreadyHappenedAtTheFilterTime).toHaveLength(0);
     expect(inProgressEvents).toHaveLength(1);
+  });
+});
+
+describe('getMinimumDateToPollFrom', () => {
+  it('should return the mounted timestamp if there are no events', () => {
+    const mountDateTime = DateTime.now();
+    expect(getMinimumDateToPollFrom(mountDateTime, [])).toBe(mountDateTime);
+  });
+  it('should return the mounted timestamp if events are undefined', () => {
+    const mountDateTime = DateTime.now();
+    expect(getMinimumDateToPollFrom(mountDateTime, undefined)).toBe(
+      mountDateTime
+    );
+  });
+  it('should return the mounted timestamp if the first event happened before the app was mounted', () => {
+    const mountDateTime = DateTime.fromISO('2024-08-21T15:00:00', {
+      zone: 'utc',
+    });
+    const events = [eventFactory.build({ created: '2024-08-21T14:00:00' })];
+
+    expect(getMinimumDateToPollFrom(mountDateTime, events)).toBe(mountDateTime);
+  });
+  it('should return the created DateTime of the first event if the first event is created after the app is mounted', () => {
+    const mountDateTime = DateTime.fromISO('2024-08-21T15:00:00', {
+      zone: 'utc',
+    });
+    const events = [eventFactory.build({ created: '2024-08-21T16:00:00' })];
+
+    expect(getMinimumDateToPollFrom(mountDateTime, events)).toStrictEqual(
+      DateTime.fromISO('2024-08-21T16:00:00', { zone: 'utc' })
+    );
   });
 });
