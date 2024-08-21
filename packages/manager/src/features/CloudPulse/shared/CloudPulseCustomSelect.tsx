@@ -178,14 +178,10 @@ export const CloudPulseCustomSelect = React.memo(
 
     // check for input prop errors
     if (
-      CloudPulseSelectTypes.static === type &&
-      (!options || options.length === 0)
+      (CloudPulseSelectTypes.static === type &&
+      (!options || options.length === 0)) || (CloudPulseSelectTypes.dynamic === type && !apiV4QueryKey)
     ) {
-      staticErrorText = 'Pass predefined options for static select type';
-    }
-
-    if (CloudPulseSelectTypes.dynamic === type && !apiV4QueryKey) {
-      staticErrorText = 'Pass API Factory for dynamic select type';
+      staticErrorText = 'Pass pass either options or API query key';
     }
 
     const isAutoCompleteDisabled  = disabled || ((isLoading || isError) && type === CloudPulseSelectTypes.dynamic) ||
