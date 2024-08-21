@@ -1,4 +1,4 @@
-import { RELATIVE_TIME_DURATION } from './constants';
+import { RELATIVE_TIME_DURATION, RESOURCE_ID, RESOURCES } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes, type CloudPulseServiceTypeFilters } from './models';
 
@@ -89,10 +89,9 @@ export const getResourcesProperties = (
 };
 
 /**
- * This function returns a CloudPulseCustomSelectProps based on the filter config and selected filters
- * @param props - The cloudpulse filter properties selected so far
- * @param handleCustomSelectChange - The call back function when a filter change happens
- * @returns {CloudPulseCustomSelectProps} - Returns a property compatible for CloudPulseCustomSelect Component
+ * @param props The cloudpulse filter properties selected so far
+ * @param handleCustomSelectChange The call back function when a filter change happens
+ * @returns {CloudPulseCustomSelectProps} Returns a property compatible for CloudPulseCustomSelect Component
  */
 export const getCustomSelectProperties = (
   props: CloudPulseFilterProperties,
@@ -130,6 +129,7 @@ export const getCustomSelectProperties = (
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
+    clearDependentSelections: getDependantFiltersByFilterKey(filterKey, dashboard),
   };
 };
 
@@ -268,17 +268,16 @@ export const getFiltersForMetricsCallFromCustomSelect = (
   const serviceTypeConfig = FILTER_CONFIG.get(serviceType);
 
   // If configuration exists, filter and map it to the desired CloudPulseMetricsAdditionalFilters format
-  return serviceTypeConfig
-    ? serviceTypeConfig.filters
+  return serviceTypeConfig?.filters
         .filter(({ configuration }) =>
           configuration.isFilterable && !configuration.isMetricsFilter &&
-          selectedFilters.hasOwnProperty(configuration.filterKey)
+          selectedFilters[configuration.filterKey]
         )
         .map(({ configuration }) => ({
           filterKey: configuration.filterKey,
           filterValue: selectedFilters[configuration.filterKey],
         }))
-    : [];
+    ?? [];
 };
 
 /**
@@ -303,3 +302,28 @@ export const constructAdditionalRequestFilters = (
   }
   return filters;
 };
+
+/**
+ * 
+ * @param filterKey The filterKey of the actual filter
+ * @param dashboard The selected dashboard from the global filter view
+ * @returns The filterKeys that needs to be removed from the preferences
+ */
+const getDependantFiltersByFilterKey =
+  (filterKey: string, dashboard: Dashboard): string[] => {
+    const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
+
+    if (!serviceTypeConfig) {
+      return [];
+    }
+
+    return serviceTypeConfig.filters
+      .filter((filter) =>
+        filter?.configuration?.dependency?.includes(filterKey)
+      )
+      .map(({configuration}) =>
+        configuration.filterKey === RESOURCE_ID
+          ? RESOURCES
+          : configuration.filterKey
+      );
+  };

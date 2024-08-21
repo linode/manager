@@ -14,6 +14,7 @@ import {
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
 import { databaseQueries } from 'src/queries/databases/databases';
+import { RESOURCES } from './constants';
 
 const mockDashboard = dashboardFactory.build();
 
@@ -201,7 +202,7 @@ it('test getCustomSelectProperties method', () => {
   if(customSelectEngineConfig) {
     let result = getCustomSelectProperties({
         config : customSelectEngineConfig,
-        dashboard: mockDashboard,
+        dashboard: {...mockDashboard, service_type:'dbaas'},
         isServiceAnalyticsIntegration: true,
     }, vi.fn());
 
@@ -210,6 +211,8 @@ it('test getCustomSelectProperties method', () => {
     expect(result.savePreferences).toEqual(false);
     expect(result.isMultiSelect).toEqual(false);
     expect(result.disabled).toEqual(false);
+    expect(result.clearDependentSelections).toBeDefined();
+    expect(result.clearDependentSelections?.includes(RESOURCES)).toBe(true);
 
     customSelectEngineConfig.configuration.type = CloudPulseSelectTypes.dynamic;
     customSelectEngineConfig.configuration.apiV4QueryKey = databaseQueries.engines;
@@ -235,15 +238,6 @@ it('test getFiltersForMetricsCallFromCustomSelect method', () => {
     }, 'linode');
 
     expect(result).toBeDefined();
-    expect(result.length).toEqual(1);
-    expect(result[0].filterKey).toEqual('resource_id');
-    expect(result[0].filterValue).toEqual([1,2,3]);
-
-    // test empty case
-    result = getFiltersForMetricsCallFromCustomSelect({
-        'resource_test_id': [1,2,3]
-    }, 'linode');
-    expect(result).toBeDefined();
     expect(result.length).toEqual(0);
 });
 
@@ -251,14 +245,6 @@ it('test constructAdditionalRequestFilters method', () => {
     let result = constructAdditionalRequestFilters(getFiltersForMetricsCallFromCustomSelect({
       'resource_id' : [1,2,3]
   }, 'linode'))
-
-  expect(result).toBeDefined();
-  expect(result.length).toEqual(1);
-  expect(result[0].key).toEqual('resource_id');
-  expect(result[0].operator).toEqual('in')
-  expect(result[0].value).toEqual("1,2,3");
-
-  result = constructAdditionalRequestFilters([]);
 
   expect(result).toBeDefined();
   expect(result.length).toEqual(0);

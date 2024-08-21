@@ -102,26 +102,25 @@ export const getDefaultSelectionsFromPreferencesAndPublishSelectionChanges = (
     return initialSelection;
   }
 
-  if (isMultiSelect) {
-    // Handle multiple selections
-    const selectedValues = options.filter(({ id }) =>
-      (Array.isArray(defaultValue) ? defaultValue : [defaultValue]).includes(
-        String(id)
-      )
-    );
-    handleSelectionChange(
-      filterKey,
-      selectedValues.map(({ id }) => id)
-    );
-    return selectedValues;
-  }
+  const selectedValues = options.filter(({ id }) =>
+    (Array.isArray(defaultValue) ? defaultValue : [defaultValue]).includes(
+      String(id)
+    )
+  );
 
-  // Handle single selection
-  const selectedValue = options.find(({ id }) => id === defaultValue);
-  if (selectedValue) {
-    handleSelectionChange(filterKey, selectedValue.id);
-  }
-  return selectedValue;
+  handleSelectionChange(
+    filterKey,
+    selectedValues && selectedValues.length > 0
+      ? isMultiSelect
+        ? selectedValues.map(({ id }) => id)
+        : selectedValues[0].id
+      : undefined // if this is multiselect, return list of ids, otherwise return single id
+  );
+  return selectedValues && selectedValues.length > 0
+    ? isMultiSelect
+      ? selectedValues
+      : selectedValues[0]
+    : undefined;
 };
 
 /**
@@ -131,7 +130,10 @@ export const getDefaultSelectionsFromPreferencesAndPublishSelectionChanges = (
 
 export const callSelectionChangeAndUpdateGlobalFilters = (
   selectionChangeProps: CloudPulseCustomSelectionChangeProps
-) => {
+):
+  | CloudPulseServiceTypeFiltersOptions
+  | CloudPulseServiceTypeFiltersOptions[]
+  | null => {
   const {
     clearSelections,
     filterKey,
@@ -140,40 +142,36 @@ export const callSelectionChangeAndUpdateGlobalFilters = (
   } = selectionChangeProps;
 
   let { value } = selectionChangeProps;
-  if (Array.isArray(value)) {
-    // in multi select case, it will be an array, apply maxselections if provided
-    if (maxSelections && value.length > maxSelections) {
-      value = value.slice(0, maxSelections);
-    }
 
-    // pubish the selection change
-    handleSelectionChange(
-      filterKey,
-      value.map(({ id }) => id.toString())
+  if (Array.isArray(value) && maxSelections && value.length > maxSelections) {
+    value = value.slice(0, maxSelections);
+  }
+
+  // pubish the selection change
+  handleSelectionChange(
+    filterKey,
+    value
+      ? Array.isArray(value)
+        ? value.map(({ id }) => String(id)) // if array publish list of ids, else only id
+        : String(value.id)
+      : undefined
+  );
+
+  // update the preferences
+  updateGlobalFilterPreference({
+    [filterKey]: value
+      ? Array.isArray(value)
+        ? value.map(({ id }) => String(id)) // if array publish list of ids, else only id
+        : String(value.id)
+      : undefined,
+  });
+
+  // update the clear selections in the preference
+  if (clearSelections) {
+    clearSelections.forEach((selection) =>
+      updateGlobalFilterPreference({ [selection]: undefined })
     );
-
-    // update the preferences
-    updateGlobalFilterPreference({
-      [filterKey]: value.map(({ id }) => id.toString()),
-    });
-
-    // update the clear selections in the preference
-    if (clearSelections) {
-      clearSelections.forEach((selection) =>
-        updateGlobalFilterPreference({ [selection]: undefined })
-      );
-    }
-  } else {
-    // in case of non multi select, just publish the changes and update the preferences
-    handleSelectionChange(filterKey, value ? value.id.toString() : undefined);
-    updateGlobalFilterPreference({
-      [filterKey]: value ? value.id.toString() : null,
-    });
   }
 
-  if (!value) {
-    updateGlobalFilterPreference({
-      [filterKey]: null,
-    });
-  }
+  return value;
 };

@@ -36,9 +36,9 @@ export interface CloudPulseCustomSelectProps {
   apiV4QueryKey?: QueryFunctionAndKey;
 
   /**
-   * The selections to be cleared on some filter updates
+   * The dependent selections to be cleared on this filter update
    */
-  clearSelections?: string[];
+  clearDependentSelections?: string[];
 
   /**
    * This property says, whether or not to disable the selection component
@@ -108,7 +108,7 @@ export const CloudPulseCustomSelect = React.memo(
       apiResponseIdField,
       apiResponseLabelField,
       apiV4QueryKey,
-      clearSelections,
+      clearDependentSelections,
       disabled,
       filterKey,
       handleSelectionChange,
@@ -164,14 +164,14 @@ export const CloudPulseCustomSelect = React.memo(
         | CloudPulseServiceTypeFiltersOptions[]
         | null
     ) => {
-      callSelectionChangeAndUpdateGlobalFilters({
-        clearSelections: clearSelections ?? [],
+      const filterdValue = callSelectionChangeAndUpdateGlobalFilters({
+        clearSelections: clearDependentSelections ?? [],
         filterKey,
         handleSelectionChange,
         maxSelections,
         value,
       });
-      setResource(Array.isArray(value) ? [...value] : value ?? undefined);
+      setResource(Array.isArray(filterdValue) ? [...filterdValue] : filterdValue ?? undefined);
     };
 
     let staticErrorText = '';
@@ -185,15 +185,17 @@ export const CloudPulseCustomSelect = React.memo(
     }
 
     if (CloudPulseSelectTypes.dynamic === type && !apiV4QueryKey) {
-      staticErrorText = 'Pass API Url for dynamic select type';
+      staticErrorText = 'Pass API Factory for dynamic select type';
     }
+
+    const isAutoCompleteDisabled  = disabled || ((isLoading || isError) && type === CloudPulseSelectTypes.dynamic) ||
+    (!queriedResources && !(options && options.length)) ||
+    staticErrorText.length > 0;
 
     return (
       <Autocomplete
         disabled={
-          ((isLoading || isError) && type === CloudPulseSelectTypes.dynamic) ||
-          (!queriedResources && !(options && options.length)) ||
-          staticErrorText.length > 0
+          isAutoCompleteDisabled
         }
         errorText={
           staticErrorText.length > 0
@@ -210,13 +212,11 @@ export const CloudPulseCustomSelect = React.memo(
         textFieldProps={{
           hideLabel: true,
         }}
-        
-        getOptionLabel={(option) => option.label ?? ''}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label="Select a Value"
         multiple={isMultiSelect}
         onChange={handleChange}
-        placeholder={placeholder ? placeholder : 'Select a Value'}
+        placeholder={placeholder ?? 'Select a Value'}
         value={selectedResource ? selectedResource : isMultiSelect ? [] : null}
       />
     );
