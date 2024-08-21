@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 
-import { Hidden } from 'src/components/Hidden';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -8,6 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 
+import type { UpdateBucketRateLimitPayload } from '../BucketDetail/BucketProperties';
 import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 /**
@@ -18,20 +20,10 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 interface BucketRateLimitTableProps {
   endpointType: ObjectStorageEndpointTypes | undefined;
-  onDefaultRateLimit?: (defaultLimit: string) => void;
-  onRateLimitChange?: (selectedLimit: string) => void;
-  selectedRateLimit?: null | string;
-}
-
-interface RateLimit {
-  checked: boolean;
-  id: string;
-  label: string;
-  values: string[];
 }
 
 const tableHeaders = ['Limits', 'GET', 'PUT', 'LIST', 'DELETE', 'OTHER'];
-const tableData = (endpointType: BucketRateLimitTableProps['endpointType']) => {
+const tableData = ({ endpointType }: BucketRateLimitTableProps) => {
   const isE3 = endpointType === 'E3';
 
   return [
@@ -56,26 +48,19 @@ const tableData = (endpointType: BucketRateLimitTableProps['endpointType']) => {
   ];
 };
 
-export const BucketRateLimitTable = (props: BucketRateLimitTableProps) => {
-  const {
+export const BucketRateLimitTable = ({
+  endpointType,
+}: BucketRateLimitTableProps) => {
+  const { control } = useFormContext<UpdateBucketRateLimitPayload>();
+  const { field } = useController({
+    control,
+    name: 'rateLimit',
+  });
+  const rateLimitValue = useWatch({ control, name: 'rateLimit' });
+
+  const rateLimits = React.useMemo(() => tableData({ endpointType }), [
     endpointType,
-    onDefaultRateLimit,
-    onRateLimitChange,
-    selectedRateLimit,
-  } = props;
-  const [rateLimits, setRateLimits] = useState<RateLimit[] | null>(null);
-
-  React.useEffect(() => {
-    const data = tableData(endpointType);
-    setRateLimits(data);
-
-    // Set Default value.
-    const defaultRateLimit = data.find((rl: any) => rl.checked)?.id || '1';
-    onDefaultRateLimit?.(defaultRateLimit);
-
-    // Set Selected value as Default value initially.
-    onRateLimitChange?.(defaultRateLimit);
-  }, [endpointType]);
+  ]);
 
   return (
     <Table sx={{ marginBottom: 3 }}>
@@ -101,13 +86,17 @@ export const BucketRateLimitTable = (props: BucketRateLimitTableProps) => {
         {rateLimits?.map((row, rowIndex) => (
           <TableRow key={rowIndex}>
             <TableCell>
-              <Radio
-                checked={selectedRateLimit === row.id}
-                name="limit-selection"
-                onChange={() => onRateLimitChange?.(row.id)}
-                value={row.id}
+              <FormControlLabel
+                control={
+                  <Radio
+                    checked={rateLimitValue === row.id}
+                    disabled
+                    onChange={() => field.onChange(row.id)}
+                    value={row.id}
+                  />
+                }
+                label={row.label}
               />
-              <Hidden smDown>{row.label}</Hidden>
             </TableCell>
             {row.values.map((value, index) => {
               return (

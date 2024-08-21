@@ -1,5 +1,5 @@
-import { ObjectStorageEndpointTypes } from '@linode/api-v4';
 import * as React from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
@@ -20,25 +20,31 @@ import {
   StyledText,
 } from './BucketProperties.styles';
 
+import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
+
 interface Props {
   bucketName: string;
   clusterId: string;
   endpointType?: ObjectStorageEndpointTypes;
 }
 
+export interface UpdateBucketRateLimitPayload {
+  rateLimit: string;
+}
+
 export const BucketProperties = React.memo((props: Props) => {
   const { bucketName, clusterId, endpointType } = props;
 
-  const [updateRateLimitLoading] = React.useState(false);
-  const [defaultRateLimit, setDefaultRateLimitData] = React.useState<
-    null | string
-  >(null);
-  const [selectedRateLimit, setSelectedRateLimit] = React.useState<
-    null | string
-  >(null);
-  const [updateRateLimitSuccess] = React.useState(false);
-  const [rateLimitError] = React.useState('');
-  const [updateRateLimitError] = React.useState('');
+  const form = useForm<UpdateBucketRateLimitPayload>({
+    defaultValues: {
+      rateLimit: '1',
+    },
+  });
+
+  const {
+    formState: { errors, isDirty, isSubmitting },
+    handleSubmit,
+  } = form;
 
   const location = useLocation();
   const history = useHistory();
@@ -61,14 +67,13 @@ export const BucketProperties = React.memo((props: Props) => {
     return bucket.label === bucketName && bucket.cluster === clusterId;
   });
 
-  const handleSubmit = () => {
+  const onSubmit = () => {
     // TODO: OBJGen2 - Handle Bucket Rate Limit update logic once the endpoint for updating is available.
+    // The 'data' argument is expected -> data: UpdateBucketRateLimitPayload
   };
 
-  const errorText = rateLimitError || updateRateLimitError;
-
   return (
-    <>
+    <FormProvider {...form}>
       <BucketBreadcrumb
         bucketName={bucketName}
         history={history}
@@ -78,14 +83,10 @@ export const BucketProperties = React.memo((props: Props) => {
 
       <StyledRootContainer>
         <Typography variant="h2">Bucket Rate Limits</Typography>
-        {updateRateLimitSuccess ? (
-          <Notice
-            text={`Bucket properties updated successfully.`}
-            variant="success"
-          />
-        ) : null}
 
-        {errorText ? <Notice text={errorText} variant="error" /> : null}
+        {errors.root?.message ? (
+          <Notice text={errors.root?.message} variant="error" />
+        ) : null}
 
         {/* TODO: OBJGen2 - We need to handle link in upcoming PR */}
         <StyledHelperText>
@@ -93,28 +94,20 @@ export const BucketProperties = React.memo((props: Props) => {
           increase it to High, open a <Link to="#">support ticket</Link>.
           Understand <Link to="#">bucket rate limits</Link>.
         </StyledHelperText>
-        <BucketRateLimitTable
-          onDefaultRateLimit={(defaultLimit) => {
-            setDefaultRateLimitData(defaultLimit);
-          }}
-          onRateLimitChange={(selectedLimit) => {
-            setSelectedRateLimit(selectedLimit);
-          }}
-          endpointType={endpointType}
-          selectedRateLimit={selectedRateLimit}
-        />
-        <StyledActionsPanel
-          primaryButtonProps={{
-            disabled: selectedRateLimit === defaultRateLimit,
-            label: 'Save',
-            loading: updateRateLimitLoading,
-            onClick: () => {
-              handleSubmit();
-            },
-          }}
-          style={{ padding: 0 }}
-        />
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <BucketRateLimitTable endpointType={endpointType} />
+          <StyledActionsPanel
+            primaryButtonProps={{
+              disabled: !isDirty,
+              label: 'Save',
+              loading: isSubmitting,
+              type: 'submit',
+            }}
+            style={{ padding: 0 }}
+          />
+        </form>
       </StyledRootContainer>
-    </>
+    </FormProvider>
   );
 });
