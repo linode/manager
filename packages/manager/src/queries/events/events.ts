@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';

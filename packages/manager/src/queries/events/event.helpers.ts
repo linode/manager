@@ -1,7 +1,8 @@
+import { DateTime } from 'luxon';
+
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 
 import type { Event, EventAction, Filter } from '@linode/api-v4';
-import { DateTime } from 'luxon';
 
 export const isInProgressEvent = (event: Event) => {
   if (event.percent_complete === null) {
