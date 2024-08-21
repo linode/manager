@@ -113,8 +113,6 @@ export const useEventsPoller = () => {
 
   const [mountTimestamp] = useState(DateTime.now().setZone('utc'));
 
-  // .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
-
   useQuery({
     enabled: hasFetchedInitialEvents,
     onSuccess(events) {
