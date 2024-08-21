@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { objectStorageEndpointsFactory } from 'src/factories';
@@ -33,18 +33,12 @@ describe('OMC_CreateBucketDrawer', () => {
       },
     });
 
-    const header = getByTestId('drawer-title');
-    expect(header).toBeVisible();
-    const label = getByText('Label');
-    expect(label).toBeVisible();
-    const region = getByText('Region');
-    expect(region).toBeVisible();
-    const cancelButton = getByText('Cancel');
-    expect(cancelButton).toBeVisible();
-    const createButton = getByTestId('create-bucket-button');
-    expect(createButton).toBeVisible();
-    const endpointType = queryByText('Object Storage Endpoint Type');
-    expect(endpointType).not.toBeInTheDocument();
+    expect(getByTestId('drawer-title')).toBeVisible();
+    expect(getByText('Label')).toBeVisible();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('Cancel')).toBeVisible();
+    expect(getByTestId('create-bucket-button')).toBeVisible();
+    expect(queryByText('Object Storage Endpoint Type')).not.toBeInTheDocument();
   });
 
   it('should display the endpoint selector if endpoints exist', async () => {
@@ -62,7 +56,7 @@ describe('OMC_CreateBucketDrawer', () => {
       })
     );
 
-    const { findByText } = renderWithThemeAndHookFormContext({
+    const { getByText } = renderWithThemeAndHookFormContext({
       component: <OMC_CreateBucketDrawer {...props} />,
       options: {
         flags: {
@@ -72,8 +66,9 @@ describe('OMC_CreateBucketDrawer', () => {
       },
     });
 
-    const endpointType = await findByText('Object Storage Endpoint Type');
-    expect(endpointType).toBeVisible();
+    await waitFor(() => {
+      expect(getByText('Object Storage Endpoint Type')).toBeVisible();
+    });
   });
 
   it('should close the drawer', () => {
