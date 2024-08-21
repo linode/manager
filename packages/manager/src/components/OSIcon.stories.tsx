@@ -22,7 +22,7 @@ export const Alpine: StoryObj<typeof OSIcon> = {
 
 const meta: Meta<typeof OSIcon> = {
   component: OSIcon,
-  title: 'Components/OS Icon',
+  title: 'Icons/OS Icon',
 };
 
 export default meta;
