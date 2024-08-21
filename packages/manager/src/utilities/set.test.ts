@@ -94,6 +94,21 @@ describe('Tests for set', () => {
       expect(_set(object, 'test[-01]', 'test3')).toEqual({
         test: { '-01': 'test3', '01': { '02': 'test2', test1: 'test' } },
       });
+      expect(_set(object, 'test[   02]', 'test4')).toEqual({
+        test: {
+          '   02': 'test4',
+          '-01': 'test3',
+          '01': { '02': 'test2', test1: 'test' },
+        },
+      });
+      expect(_set(object, 'test[00]', 'test5')).toEqual({
+        test: {
+          '   02': 'test4',
+          '-01': 'test3',
+          '00': 'test5',
+          '01': { '02': 'test2', test1: 'test' },
+        },
+      });
     });
 
     it('considers numbers as keys if they are not used as indexes or if there is an already existing object', () => {

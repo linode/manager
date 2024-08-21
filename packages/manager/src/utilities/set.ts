@@ -36,8 +36,7 @@ export function set<T extends object>(
     const key = updatedPath[i];
     if (!updatingObject[key] || typeof updatingObject[key] !== 'object') {
       const nextKey = updatedPath[i + 1];
-      // this line has to be changed, because "01" should lead to an object's keys, not an array
-      updatingObject[key] = Number.isNaN(nextKey) ? {} : [];
+      updatingObject[key] = isValidIndex(nextKey) ? [] : {};
     }
 
     updatingObject = updatingObject[key];
@@ -74,6 +73,31 @@ export const isKeyPrototypePollutionSafe = (value: PropertyPath): boolean => {
   return true;
 };
 
-export const determinePath = (path: PropertyPath): PropertyName[] => {
+/**
+ * Determines the path to set some value at, converting any string paths
+ * into array format.
+ *
+ * @param path - The path to check
+ * @returns - The path to set a value, in array format
+ */
+const determinePath = (path: PropertyPath): PropertyName[] => {
   return Array.isArray(path) ? path : path.toString().match(/[^.[\]]+/g) ?? [];
+};
+
+/**
+ * Determines if the given value can be considered a valid index for an array.
+ * For example, 0, 1, 2 are all valid index.
+ * -1, 01, -01, 00, '1 1' are not.
+ *
+ * @param value - The value to check
+ *
+ * @returns - Returns boolean
+ */
+const isValidIndex = (value: PropertyName) => {
+  const convertedValue = value.toString();
+
+  return (
+    /^\d+$/.test(convertedValue) && // must be all digits
+    (convertedValue.length < 2 || !convertedValue.startsWith('0')) // must not start with 0 (unless it is 0 only)
+  );
 };
