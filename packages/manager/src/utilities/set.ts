@@ -22,14 +22,11 @@ export function set<T extends object>(
   }
 
   // if the path is not an array, convert it to an array format
-  const updatedPath: PropertyName[] = Array.isArray(path)
-    ? path
-    : path.toString().match(/[^.[\]]+/g) ?? [];
+  const updatedPath = determinePath(path);
 
   if (
     // ensure that both the path and value will not lead to prototype pollution issues
-    !isValuePrototypePollutionSafe(updatedPath) ||
-    !isValuePrototypePollutionSafe(value)
+    !isKeyPrototypePollutionSafe(updatedPath)
   ) {
     return object;
   }
@@ -58,7 +55,7 @@ export function set<T extends object>(
  * @param value - The value to check
  * @return - If value is safe, returns it; otherwise returns undefined
  */
-export const isValuePrototypePollutionSafe = (value: any): boolean => {
+export const isKeyPrototypePollutionSafe = (value: PropertyPath): boolean => {
   if (typeof value === 'string') {
     return (
       value !== '__proto__' && value !== 'prototype' && value !== 'constructor'
@@ -68,19 +65,15 @@ export const isValuePrototypePollutionSafe = (value: any): boolean => {
   // An array is safe if all of its value are safe
   if (Array.isArray(value) && value.length > 0) {
     return (
-      isValuePrototypePollutionSafe(value[0]) &&
-      isValuePrototypePollutionSafe(value.splice(1))
-    );
-  }
-
-  // An object (that is not an array) is safe if all of its values and keys are safe
-  if (value && !Array.isArray(value) && typeof value === 'object') {
-    return (
-      isValuePrototypePollutionSafe(Object.keys(value)) &&
-      isValuePrototypePollutionSafe(Object.values(value))
+      isKeyPrototypePollutionSafe(value[0]) &&
+      isKeyPrototypePollutionSafe(value.splice(1))
     );
   }
 
   // If the value we are checking is not an array/object, we assume it to be safe
   return true;
+};
+
+export const determinePath = (path: PropertyPath): PropertyName[] => {
+  return Array.isArray(path) ? path : path.toString().match(/[^.[\]]+/g) ?? [];
 };
