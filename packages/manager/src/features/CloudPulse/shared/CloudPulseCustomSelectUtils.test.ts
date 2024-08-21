@@ -6,7 +6,9 @@ import {
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
 
 const queryMocks = vi.hoisted(() => ({
-  getUserPreferenceObject: vi.fn().mockReturnValue({}),
+  getUserPreferenceObject: vi.fn().mockReturnValue({
+    test: '1',
+  }),
 }));
 
 vi.mock('../Utils/UserPreference', async () => {
@@ -58,9 +60,6 @@ it('test callSelectionChangeAndUpdateGlobalFilters method for multiple selection
 
 it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method for single selection', () => {
   const handleSelectionChange = vi.fn();
-  queryMocks.getUserPreferenceObject.mockReturnValue({
-    test: '1',
-  });
 
   const options: CloudPulseServiceTypeFiltersOptions[] = [
     {
@@ -97,6 +96,7 @@ it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method fo
 
 it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method for multi selection', () => {
   const handleSelectionChange = vi.fn();
+
   queryMocks.getUserPreferenceObject.mockReturnValue({
     test: '1',
   });
