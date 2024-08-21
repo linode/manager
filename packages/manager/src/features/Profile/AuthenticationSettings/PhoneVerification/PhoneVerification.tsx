@@ -265,6 +265,11 @@ export const PhoneVerification = ({
                     } ${getCountryFlag(country.code)}`,
                     value: country.code,
                   }))}
+                  sxPopperComponent={{
+                    marginLeft: '213px !important',
+                    marginTop: '0px !important',
+                    width: '500px !important',
+                  }}
                   textFieldProps={{
                     hideLabel: true,
                     style: { minWidth: '72px' },
