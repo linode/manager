@@ -83,6 +83,7 @@ describe('renders the component with the right data', () => {
       ],
     });
     const region = regionFactory.build({
+      country: 'br',
       id: 'br-gru',
       label: 'Sao Paulo, BR',
     });
@@ -114,10 +115,10 @@ describe('renders the component with the right data', () => {
     expect(getByText('Monthly Network Transfer')).toBeInTheDocument();
     expect(await findByText('test-linode (83.8 GB - 1%)')).toBeInTheDocument();
     expect(
-      await findByText('Sao Paulo, BR Transfer Used (500 GB - 4%)')
+      await findByText('BR, Sao Paulo Transfer Used (500 GB - 4%)')
     ).toBeInTheDocument();
     expect(
-      await findByText('Sao Paulo, BR Transfer Remaining (14500 GB)')
+      await findByText('BR, Sao Paulo Transfer Remaining (14500 GB)')
     ).toBeInTheDocument();
   });
 });

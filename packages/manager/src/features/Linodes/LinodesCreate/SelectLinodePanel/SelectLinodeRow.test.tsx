@@ -53,7 +53,7 @@ describe('SelectLinodeRow', () => {
     getByText('Running');
     await findByText('Debian 10');
     await findByText('Linode 1 GB');
-    await findByText('Newark, NJ');
+    await findByText('US, Newark, NJ');
 
     const selectButton = getAllByRole('button')[0];
     fireEvent.click(selectButton);
@@ -99,7 +99,7 @@ describe('SelectLinodeRow', () => {
     getByText('Offline');
     await findByText('Debian 10');
     await findByText('Linode 1 GB');
-    await findByText('Newark, NJ');
+    await findByText('US, Newark, NJ');
 
     expect(queryByText('Power Off')).not.toBeInTheDocument();
   });
@@ -138,7 +138,7 @@ describe('SelectLinodeRow', () => {
     getByText('Running');
     await findByText('Debian 10');
     await findByText('Linode 1 GB');
-    await findByText('Newark, NJ');
+    await findByText('US, Newark, NJ');
 
     expect(queryByText('Power Off')).not.toBeInTheDocument();
   });

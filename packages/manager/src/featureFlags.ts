@@ -63,7 +63,7 @@ interface AclpFlag {
   enabled: boolean;
 }
 
-interface CloudPulseResourceTypeMapFlag {
+export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   serviceType: string;
 }
@@ -111,7 +111,8 @@ export interface Flags {
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
-  referralBannerText: ReferralBannerText;
+  referralBannerText: BannerContent;
+  secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
   soldOutChips: boolean;
   supportTicketSeverity: boolean;
@@ -184,12 +185,24 @@ export interface Provider {
   name: TPAProvider;
 }
 
-interface ReferralBannerText {
+interface BannerContent {
   link?: {
     text: string;
     url: string;
   };
   text: string;
+}
+
+interface SecureVMCopy {
+  bannerLabel?: string;
+  firewallAuthorizationLabel?: string;
+  firewallAuthorizationWarning?: string;
+  firewallDetails?: BannerContent;
+  generateActionText?: string;
+  generateDocsLink: string;
+  generatePrompt?: BannerContent;
+  generateSuccess?: BannerContent;
+  linodeCreate?: BannerContent;
 }
 
 export type ProductInformationBannerLocation =

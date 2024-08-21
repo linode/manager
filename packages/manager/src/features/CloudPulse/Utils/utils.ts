@@ -1,6 +1,7 @@
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import type { TimeDuration } from '@linode/api-v4';
 import type {
@@ -22,10 +23,11 @@ export const useIsACLPEnabled = (): {
     return { isACLPEnabled: false };
   }
 
-  const hasAccountCapability = account?.capabilities?.includes('CloudPulse');
-  const isFeatureFlagEnabled = flags.aclp?.enabled;
-
-  const isACLPEnabled = Boolean(hasAccountCapability && isFeatureFlagEnabled);
+  const isACLPEnabled = isFeatureEnabledV2(
+    'Akamai Cloud Pulse',
+    Boolean(flags.aclp?.enabled),
+    account?.capabilities ?? []
+  );
 
   return { isACLPEnabled };
 };
@@ -88,7 +90,7 @@ export const convertTimeDurationToStartAndEndTimeRange = (
  * @returns formatted data based on the time range between @startTime & @endTime
  */
 export const seriesDataFormatter = (
-  data: [number, string][],
+  data: [number, number][],
   startTime: number,
   endTime: number
 ): [number, null | number][] => {

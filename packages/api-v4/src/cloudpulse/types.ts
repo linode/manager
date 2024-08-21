@@ -44,13 +44,21 @@ export interface Filters {
   value: string;
 }
 
+// Define the type for filter values
+type FilterValue =
+  | number
+  | string
+  | string[]
+  | number[]
+  | WidgetFilterValue
+  | undefined;
+
+type WidgetFilterValue = { [key: string]: AclpWidget };
+
 export interface AclpConfig {
-  dashboardId: number;
-  interval: string;
-  region: string;
-  resources: string[];
-  timeDuration: string;
-  widgets: { [label: string]: AclpWidget };
+  // we maintain only the filters selected in the preferences for latest selected dashboard
+  [key: string]: FilterValue;
+  widgets?: WidgetFilterValue;
 }
 
 export interface AclpWidget {
@@ -81,7 +89,7 @@ export interface Dimension {
 }
 
 export interface JWETokenPayLoad {
-  resource_id: number[];
+  resource_ids: number[];
 }
 
 export interface JWEToken {

@@ -6,12 +6,14 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
+  ENTITY_ID_TO_NAME_MAP,
   SMTP_FIELD_NAME_TO_LABEL_MAP,
   TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP,
 } from './constants';
 
 import type {
   AllSupportTicketFormFields,
+  EntityType,
   SupportTicketFormFields,
   TicketType,
 } from './SupportTicketDialog';
@@ -105,9 +107,33 @@ export const formatDescription = (
       if (ticketType === 'smtp') {
         label = SMTP_FIELD_NAME_TO_LABEL_MAP[key];
       } else if (ticketType === 'accountLimit') {
-        label = ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP[key];
+        // Use the specific entity type in the form labels to match what is displayed to the user.
+        if (key === 'numberOfEntities' || key === 'useCase') {
+          label = ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP[key].replace(
+            'entities',
+            getEntityNameFromEntityType(values.entityType, true)
+          );
+        } else {
+          label = ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP[key];
+        }
       }
       return `**${label}**\n${value ? value : 'No response'}`;
     })
     .join('\n\n');
+};
+
+/**
+ * getEntityNameFromEntityType
+ *
+ * @param entityType - the entity type submitted with the support ticket; ends in '_id'
+ * @param isPlural - if true, pluralize the entity name; defaults to false
+ * @returns human readable entity name, singular or plural; falls back on generic 'entity'
+ */
+export const getEntityNameFromEntityType = (
+  entityType: EntityType,
+  isPlural = false
+) => {
+  return entityType !== 'general' && entityType !== 'none'
+    ? `${ENTITY_ID_TO_NAME_MAP[entityType]}${isPlural ? 's' : ''}`
+    : `${isPlural ? 'entities' : 'entity'}`;
 };

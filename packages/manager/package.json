@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.125.0",
+  "version": "1.126.0",
   "private": true,
   "type": "module",
   "bugs": {
@@ -55,7 +55,6 @@
     "markdown-it": "^12.3.2",
     "md5": "^2.2.1",
     "notistack": "^3.0.1",
-    "patch-package": "^7.0.0",
     "qrcode.react": "^0.8.0",
     "ramda": "~0.25.0",
     "react": "^18.2.0",
@@ -82,12 +81,10 @@
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
     "@xterm/xterm": "^5.5.0",
-    "@xterm/addon-fit": "^0.10.0",
     "yup": "^0.32.9",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "postinstall": "patch-package",
     "start": "concurrently --raw \"vite\" \"tsc --watch --preserveWatchOutput\"",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
     "start:ci": "yarn serve ./build -p 3000 -s --cors",

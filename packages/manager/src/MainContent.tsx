@@ -8,8 +8,8 @@ import { Box } from 'src/components/Box';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import { NotFound } from 'src/components/NotFound';
-import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
+import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
@@ -29,6 +29,7 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
+import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
@@ -230,9 +231,7 @@ export const MainContent = () => {
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
-  const showCloudPulse = Boolean(flags.aclp?.enabled);
-  // the followed comment is for later use, the showCloudPulse will be removed and isACLPEnabled will be used
-  // const { isACLPEnabled } = useIsACLPEnabled();
+  const { isACLPEnabled } = useIsACLPEnabled();
 
   /**
    * this is the case where the user has successfully completed signup
@@ -361,7 +360,7 @@ export const MainContent = () => {
                             <Route component={BetaRoutes} path="/betas" />
                           )}
                           <Route component={VPC} path="/vpcs" />
-                          {showCloudPulse && (
+                          {isACLPEnabled && (
                             <Route
                               component={CloudPulse}
                               path="/monitor/cloudpulse"

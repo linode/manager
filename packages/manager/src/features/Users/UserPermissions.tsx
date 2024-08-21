@@ -1,4 +1,5 @@
 import {
+  GlobalGrantTypes,
   Grant,
   GrantLevel,
   GrantType,
@@ -67,7 +68,7 @@ interface Props {
 
 interface TabInfo {
   showTabs: boolean;
-  tabs: string[];
+  tabs: GrantType[];
 }
 
 interface State {
@@ -84,7 +85,7 @@ interface State {
   setAllPerm: 'null' | 'read_only' | 'read_write';
   /* Large Account Support */
   showTabs?: boolean;
-  tabs?: string[];
+  tabs?: GrantType[];
   userType: null | string;
 }
 
@@ -144,7 +145,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
   };
 
-  entityIsAll = (entity: string, value: GrantLevel): boolean => {
+  entityIsAll = (entity: GrantType, value: GrantLevel): boolean => {
     const { grants } = this.state;
     if (!(grants && grants[entity])) {
       return false;
@@ -261,7 +262,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
   };
 
-  globalBooleanPerms = [
+  globalBooleanPerms: GlobalGrantTypes[] = [
     'add_databases',
     'add_domains',
     'add_firewalls',
@@ -296,9 +297,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             restricted: user.restricted,
           });
           // refresh the data on /account/users so it is accurate
-          this.props.queryClient.invalidateQueries(
-            accountQueries.users._ctx.paginated._def
-          );
+          this.props.queryClient.invalidateQueries({
+            queryKey: accountQueries.users._ctx.paginated._def,
+          });
           // Update the user directly in the cache
           this.props.queryClient.setQueryData<User>(
             accountQueries.users._ctx.user(user.username).queryKey,
@@ -478,8 +479,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderGlobalPerm = (perm: string, checked: boolean) => {
-    const permDescriptionMap = {
+  renderGlobalPerm = (perm: GlobalGrantTypes, checked: boolean) => {
+    const permDescriptionMap: Partial<Record<GlobalGrantTypes, string>> = {
       add_databases: 'Can add Databases to this account ($)',
       add_domains: 'Can add Domains using the DNS Manager',
       add_firewalls: 'Can add Firewalls to this account',
@@ -687,7 +688,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     );
   };
 
-  savePermsType = (type: string) => () => {
+  savePermsType = (type: keyof Grants) => () => {
     this.setState({ errors: undefined });
     const { clearNewUser, currentUsername } = this.props;
     const { grants } = this.state;
@@ -809,7 +810,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     });
   };
 
-  setGrantTo = (entity: string, idx: number, value: GrantLevel) => () => {
+  setGrantTo = (entity: GrantType, idx: number, value: GrantLevel) => () => {
     const { grants } = this.state;
     if (!(grants && grants[entity])) {
       return;
