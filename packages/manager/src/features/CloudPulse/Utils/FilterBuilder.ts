@@ -271,7 +271,7 @@ export const getFiltersForMetricsCallFromCustomSelect = (
   return serviceTypeConfig
     ? serviceTypeConfig.filters
         .filter(({ configuration }) =>
-          configuration.isFilterable &&
+          configuration.isFilterable && !configuration.isMetricsFilter &&
           selectedFilters.hasOwnProperty(configuration.filterKey)
         )
         .map(({ configuration }) => ({
