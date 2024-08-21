@@ -38,8 +38,16 @@ export const BucketDetailsDrawer = React.memo(
   (props: BucketDetailsDrawerProps) => {
     const { onClose, open, selectedBucket } = props;
 
-    const { cluster, created, hostname, label, objects, region, size } =
-      selectedBucket ?? {};
+    const {
+      cluster,
+      created,
+      endpoint_type,
+      hostname,
+      label,
+      objects,
+      region,
+      size,
+    } = selectedBucket ?? {};
 
     const flags = useFlags();
     const { account } = useAccountManagement();
@@ -83,6 +91,11 @@ export const BucketDetailsDrawer = React.memo(
         {formattedCreated && (
           <Typography data-testid="createdTime" variant="subtitle2">
             Created: {formattedCreated}
+          </Typography>
+        )}
+        {Boolean(endpoint_type) && (
+          <Typography data-testid="endpointType" variant="subtitle2">
+            Endpoint Type: {endpoint_type}
           </Typography>
         )}
         {isObjMultiClusterEnabled ? (
