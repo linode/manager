@@ -15,6 +15,7 @@ import {
   mockGetFirewalls,
   mockCreateFirewall,
   mockGetTemplate,
+  mockCreateFirewallError,
 } from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
@@ -36,7 +37,7 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that Firewall is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
-  it.skip('can assign existing Firewall during Linode Create flow', () => {
+  it('can assign existing Firewall during Linode Create flow', () => {
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -101,7 +102,7 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that Firewall is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
-  it.skip('can assign new Firewall during Linode Create flow', () => {
+  it('can assign new Firewall during Linode Create flow', () => {
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -264,7 +265,7 @@ describe('Create Linode with Firewall', () => {
         cy.findByText('Complete!');
         cy.findByText('OK').should('be.visible').should('be.enabled').click();
       });
-    cy.wait('@getFirewall');
+    cy.wait('@createFirewall');
 
     ui.autocompletePopper
       .findByTitle(mockFirewall.label)
@@ -295,5 +296,63 @@ describe('Create Linode with Firewall', () => {
     cy.url().should('endWith', `/linodes/${mockLinode.id}`);
     // Confirm toast notification should appear on Linode create.
     ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
+  });
+
+  /*
+   * - Mocks the internal header to enable the Generate Compliant Firewall banner.
+   * - Mocks an error response to the Create Firewall call.
+   */
+  it('displays errors encountered while trying to generate a compliant firewall', () => {
+    cy.intercept(
+      {
+        middleware: true,
+        url: /\/v4(?:beta)?\/.*/,
+      },
+      (req) => {
+        // Re-add internal-only header
+        req.on('response', (res) => {
+          res.headers['akamai-internal-account'] = '*';
+        });
+      }
+    );
+
+    const mockFirewall = firewallFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+    });
+
+    const mockTemplate = firewallTemplateFactory.build({
+      slug: 'akamai-non-prod',
+    });
+
+    const mockError = 'Mock error';
+
+    mockGetFirewalls([mockFirewall]).as('getFirewall');
+    mockGetTemplate(mockTemplate).as('getTemplate');
+    mockCreateFirewallError(mockError).as('createFirewall');
+
+    cy.visitWithLogin('/linodes/create');
+
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled');
+
+    cy.findByText('Generate Compliant Firewall').should('be.visible').click();
+
+    ui.dialog
+      .findByTitle('Generate an Akamai Compliant Firewall')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Generate Firewall Now')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.findByText('Generating Firewall');
+        cy.findByText(mockError);
+        cy.findByText('Retry').should('be.visible').should('be.enabled');
+        cy.findByText('Close').should('be.visible').should('be.enabled');
+      });
+    cy.wait('@createFirewall');
   });
 });

@@ -1,6 +1,7 @@
 /**
  * @file Cypress intercepts and mocks for Firewall API requests.
  */
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
@@ -43,6 +44,25 @@ export const mockCreateFirewall = (
   firewall: Firewall
 ): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher('networking/firewalls*'), firewall);
+};
+
+/**
+ * Intercepts POST request to create a Firewall and mocks an error response.
+ *
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateFirewallError = (
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`networking/firewalls*`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
 };
 
 /**
