@@ -41,6 +41,10 @@ export const useRegionQuery = (regionId: string) => {
   return useQuery<Region, APIError>({
     ...regionQueries.region(regionId),
     enabled: Boolean(regionId),
+    select: (region) => ({
+      ...region,
+      label: getNewRegionLabel(region),
+    }),
   });
 };
 
