@@ -9,7 +9,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import ABranding from 'src/features/Databases/ABranding';
+import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { usePagination } from 'src/hooks/usePagination';
 import { useInProgressEvents } from 'src/queries/events/events';
@@ -131,7 +131,7 @@ const DatabaseLandingTable = ({
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      {isADatabases && <ABranding />}
+      {isADatabases && <DatabaseLogo />}
     </>
   );
 };

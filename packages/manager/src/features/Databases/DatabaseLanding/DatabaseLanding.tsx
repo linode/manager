@@ -11,6 +11,8 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
+import { DatabaseClusterInfoBanner } from 'src/features/GlobalNotifications/DatabaseClusterInfoBanner';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -38,7 +40,7 @@ const DatabaseLanding = () => {
   const account = useAccount();
 
   const { data: types, isLoading: isTypeLoading } = useDatabaseTypesQuery();
-
+  const { isDatabasesV2Enabled } = useIsDatabasesEnabled();
   const {
     handleOrderChange: aDatabaseHandleOrderChange,
     order: aDatabaseOrder,
@@ -76,11 +78,10 @@ const DatabaseLanding = () => {
     filter
   );
 
-  // TODO change platform value when it's ready
   const aDatabases: DatabaseInstance[] = [];
   const bDatabases: DatabaseInstance[] = [];
   data?.data.forEach((database: DatabaseInstance) => {
-    return database.platform === 'adb'
+    return database.platform === 'adb20'
       ? aDatabases?.push(database)
       : bDatabases?.push(database);
   });
@@ -99,12 +100,12 @@ const DatabaseLanding = () => {
     return <CircleProgress />;
   }
 
-  // TODO Update if necessary after agreement
-  const isDisplayFlowA = account.data?.capabilities.includes(
-    'Managed Databases Beta'
-  );
+  const showTabs = isDatabasesV2Enabled && bDatabases.length !== 0;
 
-  if (isDisplayFlowA && aDatabases.length === 0) {
+  const showEmpty =
+    isDatabasesV2Enabled && aDatabases.length === 0 && bDatabases.length === 0;
+
+  if (showEmpty) {
     return <DatabaseEmptyState />;
   }
 
@@ -124,12 +125,13 @@ const DatabaseLanding = () => {
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
+      <DatabaseClusterInfoBanner />
       <Box sx={{ marginTop: '15px' }}>
-        {!isDisplayFlowA ? (
+        {showTabs ? (
           <Tabs>
             <TabList>
               <Tab>Legacy Database Clusters</Tab>
-              <Tab>Aiven Database Clusters</Tab>
+              <Tab>New Database Clusters</Tab>
             </TabList>
             <TabPanels>
               <SafeTabPanel index={0}>
@@ -155,11 +157,15 @@ const DatabaseLanding = () => {
           </Tabs>
         ) : (
           <DatabaseLandingTable
-            data={aDatabases}
-            handleOrderChange={aDatabaseHandleOrderChange}
-            isADatabases={true}
-            order={aDatabaseOrder}
-            orderBy={aDatabaseOrderBy}
+            handleOrderChange={
+              isDatabasesV2Enabled
+                ? aDatabaseHandleOrderChange
+                : bDatabaseHandleOrderChange
+            }
+            data={isDatabasesV2Enabled ? aDatabases : bDatabases}
+            isADatabases={isDatabasesV2Enabled}
+            order={isDatabasesV2Enabled ? aDatabaseOrder : bDatabaseOrder}
+            orderBy={isDatabasesV2Enabled ? aDatabaseOrderBy : bDatabaseOrderBy}
             types={types}
           />
         )}

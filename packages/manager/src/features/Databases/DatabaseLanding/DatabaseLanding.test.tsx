@@ -107,7 +107,9 @@ describe('Database Table', () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />);
+    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
+      flags: { dbaasV2: { beta: true, enabled: true } },
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -118,25 +120,27 @@ describe('Database Table', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render tabs with a and b databases ', async () => {
+  it('should render tabs with legace and new databases ', async () => {
     server.use(
       http.get('*/databases/instances', () => {
-        const databases = databaseInstanceFactory.buildList(1, {
-          platform: 'db',
+        const databases = databaseInstanceFactory.buildList(5, {
           status: 'active',
         });
+
         return HttpResponse.json(makeResourcePage(databases));
       })
     );
 
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />);
+    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
+      flags: { dbaasV2: { beta: true, enabled: true } },
+    });
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const aDatabasesTab = screen.getByText('Aiven Database Clusters');
+    const aDatabasesTab = screen.getByText('New Database Clusters');
     const bDatabasesTab = screen.getByText('Legacy Database Clusters');
 
     expect(aDatabasesTab).toBeInTheDocument();
@@ -146,24 +150,26 @@ describe('Database Table', () => {
   it('should render branding in a databases tab ', async () => {
     server.use(
       http.get('*/databases/instances', () => {
-        const databases = databaseInstanceFactory.buildList(1, {
+        const databases = databaseInstanceFactory.buildList(5, {
           status: 'active',
         });
         return HttpResponse.json(makeResourcePage(databases));
       })
     );
 
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />);
+    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
+      flags: { dbaasV2: { beta: true, enabled: true } },
+    });
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const aivenTab = screen.getByText('Aiven Database Clusters');
-    fireEvent.click(aivenTab);
+    const newDatabaseTab = screen.getByText('New Database Clusters');
+    fireEvent.click(newDatabaseTab);
 
-    expect(document.getElementById('aBranding')).toBeInTheDocument();
+    expect(screen.getByText('Powered by')).toBeInTheDocument();
   });
 });
 

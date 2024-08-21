@@ -45,7 +45,7 @@ export const DatabaseStatusDisplay = (props: Props) => {
     displayedStatus = (
       <>
         <StatusIcon status="other" />
-        <Typography variant="body1" sx={{ display: 'inline-block' }}>
+        <Typography sx={{ display: 'inline-block' }} variant="body1">
           {`Resizing ${progress ? `(${progress}%)` : '(0%)'}`}
         </Typography>
       </>
