@@ -140,8 +140,6 @@ export const CloudPulseCustomSelect = React.memo(
       labelField: apiResponseLabelField ? apiResponseLabelField : 'label',
     });
 
-    let staticErrorText = '';
-
     React.useEffect(() => {
       if (!selectedResource) {        
         setResource(
@@ -176,6 +174,8 @@ export const CloudPulseCustomSelect = React.memo(
       setResource(Array.isArray(value) ? [...value] : value ?? undefined);
     };
 
+    let staticErrorText = '';
+
     // check for input prop errors
     if (
       CloudPulseSelectTypes.static === type &&
@@ -204,12 +204,13 @@ export const CloudPulseCustomSelect = React.memo(
         }
         options={
           type === CloudPulseSelectTypes.static
-            ? options || []
-            : queriedResources || []
+            ? options ?? []
+            : queriedResources ?? []
         }
         textFieldProps={{
           hideLabel: true,
         }}
+        
         getOptionLabel={(option) => option.label ?? ''}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label="Select a Value"

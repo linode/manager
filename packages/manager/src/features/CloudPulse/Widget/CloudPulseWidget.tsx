@@ -137,6 +137,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     serviceType,
     timeStamp,
     unit,
+    additionalFilters,
   } = props;
 
   const flags = useFlags();
@@ -247,7 +248,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         resources,
         widget,
       }),
-      filters: constructAdditionalRequestFilters(props.additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
     },
     {
       authToken,
