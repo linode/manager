@@ -116,7 +116,7 @@ export const getDefaultSelectionsFromPreferencesAndPublishSelectionChanges = (
         : selectedValues[0].id
       : undefined // if this is multiselect, return list of ids, otherwise return single id
   );
-  return selectedValues && selectedValues.length > 0
+  return selectedValues?.length
     ? isMultiSelect
       ? selectedValues
       : selectedValues[0]

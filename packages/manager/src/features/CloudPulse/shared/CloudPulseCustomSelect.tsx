@@ -16,7 +16,7 @@ import type {
 } from '../Utils/models';
 
 /**
- * This is the properties requires for CloudPulseCustomSelect Components
+ * These are the properties requires for CloudPulseCustomSelect Components
  *
  */
 export interface CloudPulseCustomSelectProps {
@@ -132,9 +132,7 @@ export const CloudPulseCustomSelect = React.memo(
       isLoading,
     } = useGetCustomFiltersQuery({
       apiV4QueryKey,
-      enabled:
-        apiV4QueryKey !== undefined &&
-        (disabled !== undefined ? !disabled : true),
+      enabled:Boolean(apiV4QueryKey && !disabled),
       filter: {},
       idField: apiResponseIdField ? apiResponseIdField : 'id',
       labelField: apiResponseLabelField ? apiResponseLabelField : 'label',
@@ -215,7 +213,7 @@ export const CloudPulseCustomSelect = React.memo(
         multiple={isMultiSelect}
         onChange={handleChange}
         placeholder={placeholder ?? 'Select a Value'}
-        value={selectedResource ? selectedResource : isMultiSelect ? [] : null}
+        value={ selectedResource ?? (isMultiSelect ? [] : null) }
       />
     );
   },
