@@ -14,11 +14,9 @@ import {
   StyledNotice,
   StyledTextField,
 } from './StackScriptForm.styles';
-import { imageToImageOptions } from './utils';
 
 import type { Image } from '@linode/api-v4/lib/images';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { SelectImageOption } from 'src/features/Images/ImageSelect';
 
 interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -43,7 +41,7 @@ interface Props {
   label: TextFieldHandler;
   mode: 'create' | 'edit';
   onCancel: () => void;
-  onSelectChange: (image: SelectImageOption[]) => void;
+  onSelectChange: (image: Image[]) => void;
   onSubmit: () => void;
   revision: TextFieldHandler;
   script: TextFieldHandler;
@@ -74,7 +72,6 @@ export const StackScriptForm = React.memo((props: Props) => {
   } = props;
 
   const hasErrorFor = getAPIErrorFor(errorResources, errors);
-  const selectedImages = imageToImageOptions(images.selected);
 
   return (
     <Paper sx={(theme) => ({ padding: theme.spacing(2) })}>
@@ -113,13 +110,13 @@ export const StackScriptForm = React.memo((props: Props) => {
             anyAllOption
             data-qa-stackscript-target-select
             disabled={disabled}
-            imageFieldError={hasErrorFor('images')}
+            errorText={hasErrorFor('images')}
             images={images.available}
             isMulti
             label="Target Images"
             onSelect={onSelectChange}
             required
-            value={selectedImages}
+            value={images.selected}
           />
         </StyledGridWithTips>
         <StyledGridWithTips>

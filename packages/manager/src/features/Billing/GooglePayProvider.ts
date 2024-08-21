@@ -114,7 +114,9 @@ export const gPay = async (
       nonce,
       usd: transactionInfo.totalPrice as string,
     });
-    queryClient.invalidateQueries(accountQueries.payments._def);
+    queryClient.invalidateQueries({
+      queryKey: accountQueries.payments._def,
+    });
     const message = {
       text: `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
       variant: 'success' as VariantType,
@@ -128,7 +130,9 @@ export const gPay = async (
       is_default: true,
       type: 'payment_method_nonce',
     });
-    queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
+    queryClient.invalidateQueries({
+      queryKey: accountQueries.paymentMethods.queryKey,
+    });
     setMessage({
       text: 'Successfully added Google Pay',
       variant: 'success',

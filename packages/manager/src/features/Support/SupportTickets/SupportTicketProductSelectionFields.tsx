@@ -11,12 +11,14 @@ import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
+import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 
 import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
   ENTITY_ID_TO_NAME_MAP,
   ENTITY_MAP,
 } from './constants';
+import { getEntityNameFromEntityType } from './ticketUtils';
 
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type {
@@ -85,6 +87,12 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     isLoading: volumesLoading,
   } = useAllVolumesQuery({}, {}, entityType === 'volume_id');
 
+  const {
+    data: vpcs,
+    error: vpcsError,
+    isLoading: vpcsLoading,
+  } = useAllVPCsQuery(entityType === 'vpc_id');
+
   const getEntityOptions = (): { label: string; value: number }[] => {
     const reactQueryEntityDataMap = {
       database_id: databases,
@@ -94,7 +102,12 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
       lkecluster_id: clusters,
       nodebalancer_id: nodebalancers,
       volume_id: volumes,
+      vpc_id: vpcs,
     };
+
+    if (entityType === 'none' || entityType === 'general') {
+      return [];
+    }
 
     if (!reactQueryEntityDataMap[entityType]) {
       return [];
@@ -130,6 +143,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     nodebalancer_id: nodebalancersLoading,
     none: false,
     volume_id: volumesLoading,
+    vpc_id: vpcsLoading,
   };
 
   const errorMap: Record<EntityType, APIError[] | null> = {
@@ -142,6 +156,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     nodebalancer_id: nodebalancersError,
     none: null,
     volume_id: volumesError,
+    vpc_id: vpcsError,
   };
 
   const entityOptions = getEntityOptions();
@@ -169,10 +184,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     return eachTopic.value === entityType;
   });
 
-  const _entityType =
-    entityType !== 'general' && entityType !== 'none'
-      ? `${ENTITY_ID_TO_NAME_MAP[entityType]}s`
-      : 'entities';
+  const _entityType = getEntityNameFromEntityType(entityType, true);
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -181,10 +193,13 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
         <Controller
           render={({ field, fieldState }) => (
             <TextField
+              label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities.replace(
+                'entities',
+                _entityType
+              )}
               data-qa-ticket-number-of-entities
               errorText={fieldState.error?.message}
               helperText={`Current number of ${_entityType}: ${entityOptions.length}`}
-              label={ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP.numberOfEntities}
               name="numberOfEntities"
               onChange={field.onChange}
               placeholder={`Enter total number of ${_entityType}`}

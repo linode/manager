@@ -46,7 +46,7 @@ describe('PlacementGroupPanel', () => {
     });
 
     const placementGroupSelect = await findByText(
-      `Placement Groups in ${region.label} (${region.id})`
+      `Placement Groups in US, ${region.label} (${region.id})`
     );
 
     expect(placementGroupSelect).toBeVisible();

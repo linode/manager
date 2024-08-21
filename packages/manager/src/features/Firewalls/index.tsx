@@ -9,7 +9,11 @@ const FirewallLanding = React.lazy(
   () => import('./FirewallLanding/FirewallLanding')
 );
 
-const FirewallDetail = React.lazy(() => import('./FirewallDetail'));
+const FirewallDetail = React.lazy(() =>
+  import('./FirewallDetail').then((module) => ({
+    default: module.FirewallDetail,
+  }))
+);
 
 const Firewall = () => {
   const { path } = useRouteMatch();

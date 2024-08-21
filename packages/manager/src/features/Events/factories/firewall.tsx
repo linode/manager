@@ -41,7 +41,9 @@ export const firewall: PartialEventMap<'firewall'> = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+          secondaryFirewallEntityNameMap[
+            e.secondary_entity.type as FirewallDeviceEntityType
+          ];
         return (
           <>
             {secondaryEntityName} <EventLink event={e} to="secondaryEntity" />{' '}
@@ -62,7 +64,9 @@ export const firewall: PartialEventMap<'firewall'> = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+          secondaryFirewallEntityNameMap[
+            e.secondary_entity.type as FirewallDeviceEntityType
+          ];
         return (
           <>
             {secondaryEntityName} <EventLink event={e} to="secondaryEntity" />{' '}

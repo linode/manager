@@ -1,9 +1,3 @@
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster,
-} from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -17,18 +11,14 @@ import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
-  BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
+} from 'src/queries/object-storage/queries';
+import { isBucketError } from 'src/queries/object-storage/requests';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -39,6 +29,14 @@ import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
+
+import type {
+  APIError,
+  ObjectStorageBucket,
+  ObjectStorageCluster,
+  ObjectStorageEndpoint,
+} from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
@@ -51,44 +49,11 @@ export const BucketLanding = () => {
 
   const isRestrictedUser = profile?.restricted;
 
-  const { account } = useAccountManagement();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
-  const { data: regions } = useRegionsQuery();
-
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  const {
-    data: objectStorageClusters,
-    error: clustersErrors,
-    isLoading: areClustersLoading,
-  } = useObjectStorageClusters(!isObjMultiClusterEnabled);
-
-  /*
-   @TODO OBJ Multicluster:'region' will become required, and the
-   'cluster' field will be deprecated once the feature is fully rolled out in production.
-   As part of the process of cleaning up after the 'objMultiCluster' feature flag, we will
-   remove 'cluster' and retain 'regions'.
-  */
   const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets({
-    clusters: isObjMultiClusterEnabled ? undefined : objectStorageClusters,
-    isObjMultiClusterEnabled,
-    regions: isObjMultiClusterEnabled
-      ? regionsSupportingObjectStorage
-      : undefined,
-  });
+  } = useObjectStorageBuckets();
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
 
@@ -156,15 +121,15 @@ export const BucketLanding = () => {
   }, [removeBucketConfirmationDialog]);
 
   const unavailableClusters =
-    objectStorageBucketsResponse?.errors.map(
-      (error: BucketError) => error.cluster
+    objectStorageBucketsResponse?.errors.map((error) =>
+      isBucketError(error) ? error.cluster : error.endpoint
     ) || [];
 
   if (isRestrictedUser) {
     return <RenderEmpty />;
   }
 
-  if (clustersErrors || bucketsErrors) {
+  if (bucketsErrors) {
     return (
       <ErrorState
         data-qa-error-state
@@ -173,11 +138,7 @@ export const BucketLanding = () => {
     );
   }
 
-  if (
-    areClustersLoading ||
-    areBucketsLoading ||
-    objectStorageBucketsResponse === undefined
-  ) {
+  if (areBucketsLoading || objectStorageBucketsResponse === undefined) {
     return <CircleProgress />;
   }
 
@@ -278,6 +239,7 @@ export const BucketLanding = () => {
         bucketLabel={bucketForDetails?.label}
         cluster={bucketForDetails?.cluster}
         created={bucketForDetails?.created}
+        endpointType={bucketForDetails?.endpoint_type}
         hostname={bucketForDetails?.hostname}
         objectsNumber={bucketForDetails?.objects}
         onClose={closeBucketDetailDrawer}
@@ -293,7 +255,7 @@ const RenderEmpty = () => {
 };
 
 interface UnavailableClustersDisplayProps {
-  unavailableClusters: ObjectStorageCluster[];
+  unavailableClusters: (ObjectStorageCluster | ObjectStorageEndpoint)[];
 }
 
 const UnavailableClustersDisplay = React.memo(
