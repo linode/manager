@@ -58,10 +58,6 @@ export const BucketRateLimitTable = ({
   });
   const rateLimitValue = useWatch({ control, name: 'rateLimit' });
 
-  const rateLimits = React.useMemo(() => tableData({ endpointType }), [
-    endpointType,
-  ]);
-
   return (
     <Table sx={{ marginBottom: 3 }}>
       <TableHead>
@@ -83,7 +79,7 @@ export const BucketRateLimitTable = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {rateLimits?.map((row, rowIndex) => (
+        {tableData({ endpointType }).map((row, rowIndex) => (
           <TableRow key={rowIndex}>
             <TableCell>
               <FormControlLabel
