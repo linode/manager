@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
@@ -16,6 +16,7 @@ import {
   doesEventMatchAPIFilter,
   generatePollingFilter,
   getExistingEventDataForPollingFilterGenerator,
+  getMinimumDateToPollFrom,
   isInProgressEvent,
 } from 'src/queries/events/event.helpers';
 
@@ -110,9 +111,9 @@ export const useEventsPoller = () => {
 
   const hasFetchedInitialEvents = events !== undefined;
 
-  const mountTimestamp = useRef(
-    DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)
-  );
+  const [mountTimestamp] = useState(DateTime.now().setZone('utc'));
+
+  // .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
 
   useQuery({
     enabled: hasFetchedInitialEvents,
@@ -136,12 +137,11 @@ export const useEventsPoller = () => {
         (events, page) => [...events, ...page.data],
         []
       );
-      // If the user has events, poll for new events based on the most recent event's created time.
-      // If the user has no events, poll events from the time the app mounted.
-      const latestEventTime =
-        events && events.length > 0
-          ? events[0].created
-          : mountTimestamp.current;
+
+      const latestEventTime = getMinimumDateToPollFrom(
+        mountTimestamp,
+        events
+      ).toFormat(ISO_DATETIME_NO_TZ_FORMAT);
 
       const {
         eventsThatAlreadyHappenedAtTheFilterTime,

@@ -1,6 +1,7 @@
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 
 import type { Event, EventAction, Filter } from '@linode/api-v4';
+import { DateTime } from 'luxon';
 
 export const isInProgressEvent = (event: Event) => {
   if (event.percent_complete === null) {
@@ -182,4 +183,30 @@ export const getExistingEventDataForPollingFilterGenerator = (
     },
     { eventsThatAlreadyHappenedAtTheFilterTime: [], inProgressEvents: [] }
   );
+};
+
+export const getMinimumDateToPollFrom = (
+  mountDate: DateTime,
+  events: Event[] | undefined
+) => {
+  // If no events have been fetched OR the user does not have any events,
+  // poll events from the time the app was mouted.
+  if (!events || events.length === 0) {
+    return mountDate;
+  }
+
+  // The first event in our cache should be the user's event with the highest ID at all times.
+  // @note This does not necessarily it has the most recent "created" date
+  const firstEvent = events[0];
+  const firstEventCreatedDate = DateTime.fromISO(firstEvent.created, {
+    zone: 'utc',
+  });
+
+  if (firstEventCreatedDate < mountDate) {
+    // If the user's "top" event (event with the highest ID) happened before the app was mounted,
+    // use the mount date to ensure Cloud Manager only fetches new events.
+    return mountDate;
+  }
+
+  return firstEventCreatedDate;
 };
