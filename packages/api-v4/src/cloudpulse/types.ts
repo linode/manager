@@ -125,10 +125,10 @@ export interface CloudPulseMetricsList {
   values: [number, string][];
 }
 
-export interface ServiceType {
+export interface ServiceTypes {
   service_type: string;
 }
 
 export interface ServiceTypesList {
-  data: ServiceType[];
+  data: ServiceTypes[];
 }

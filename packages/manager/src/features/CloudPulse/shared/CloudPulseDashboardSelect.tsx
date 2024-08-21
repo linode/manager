@@ -6,7 +6,7 @@ import { Typography } from 'src/components/Typography';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
-import { DASHBOARD_ID, REGION, RESOURCES } from '../Utils/constants';
+import { DASHBOARD_ID } from '../Utils/constants';
 import {
   getUserPreferenceObject,
   updateGlobalFilterPreference,
@@ -90,8 +90,6 @@ export const CloudPulseDashboardSelect = React.memo(
         onChange={(_: any, dashboard: Dashboard) => {
           updateGlobalFilterPreference({
             [DASHBOARD_ID]: dashboard?.id,
-            [REGION]: undefined,
-            [RESOURCES]: undefined,
           });
           setSelectedDashboard(dashboard);
           props.handleDashboardChange(dashboard);

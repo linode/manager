@@ -7,7 +7,7 @@ import type {
   APIError,
   Dashboard,
   ResourcePage,
-  ServiceType,
+  ServiceTypes,
   ServiceTypesList,
   TimeDuration,
 } from '@linode/api-v4';
@@ -125,7 +125,7 @@ export const formattedServiceTypes = (
   if (rawServiceTypes == undefined || rawServiceTypes.data.length == 0) {
     return [];
   }
-  return rawServiceTypes.data.map((obj: ServiceType) => obj.service_type);
+  return rawServiceTypes.data.map((obj: ServiceTypes) => obj.service_type);
 };
 
 /**
