@@ -10,7 +10,7 @@ import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { VncScreenHandle } from 'react-vnc';
 
-interface Props extends LinodeLishData {
+interface Props extends Omit<LinodeLishData, 'weblish_url'> {
   linode: Linode;
   refreshToken: () => Promise<void>;
 }

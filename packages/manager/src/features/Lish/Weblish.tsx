@@ -1,5 +1,4 @@
 /* eslint-disable scanjs-rules/call_addEventListener */
-import { FitAddon } from '@xterm/addon-fit';
 import { Terminal } from '@xterm/xterm';
 import * as React from 'react';
 
@@ -9,7 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 
-interface Props extends LinodeLishData {
+interface Props extends Pick<LinodeLishData, 'weblish_url' | 'ws_protocols'> {
   linode: Linode;
   refreshToken: () => Promise<void>;
 }
@@ -20,8 +19,6 @@ interface State {
 }
 
 export class Weblish extends React.Component<Props, State> {
-  fitAddon: FitAddon;
-
   mounted: boolean = false;
   socket: WebSocket;
 
@@ -110,25 +107,16 @@ export class Weblish extends React.Component<Props, State> {
     const { group, label } = linode;
 
     this.terminal = new Terminal({
+      cols: 120,
       cursorBlink: true,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+      rows: 40,
       screenReaderMode: true,
     });
-
-    this.fitAddon = new FitAddon();
-    this.terminal.loadAddon(this.fitAddon);
 
     this.terminal.onData((data: string) => this.socket.send(data));
     const terminalDiv = document.getElementById('terminal');
     this.terminal.open(terminalDiv as HTMLElement);
-
-    window.onresize = () => {
-      this.fitAddon.fit();
-    };
-
-    setInterval(() => {
-      this.fitAddon.fit();
-    }, 2000);
 
     this.terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 
