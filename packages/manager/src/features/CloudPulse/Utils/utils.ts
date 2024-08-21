@@ -122,7 +122,7 @@ export const seriesDataFormatter = (
 export const formattedServiceTypes = (
   rawServiceTypes: ServiceTypesList | undefined
 ): string[] => {
-  if (rawServiceTypes == undefined || rawServiceTypes.data.length == 0) {
+  if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
     return [];
   }
   return rawServiceTypes.data.map((obj: ServiceTypes) => obj.service_type);
