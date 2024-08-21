@@ -59,8 +59,6 @@ A few notable directories in the root level of the manager package:
   - end-to-end tests
 - **/e2e**
   - old end-to-end tests [deprecated]
-- **/patches**
-  - patches applied to dependencies via patch-package
 - **/public**
   - assets, fonts, HTML, and third-party JS
 - **/scripts**
