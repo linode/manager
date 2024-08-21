@@ -115,8 +115,9 @@ export const BucketDetailsDrawer = React.memo(
             <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
           </StyledLinkContainer>
         )}
-        {formattedCreated ||
-          (cluster && <Divider spacingBottom={16} spacingTop={16} />)}
+        {(formattedCreated || cluster) && (
+          <Divider spacingBottom={16} spacingTop={16} />
+        )}
         {typeof size === 'number' && (
           <Typography variant="subtitle2">
             {readableBytes(size).formatted}
