@@ -182,7 +182,7 @@ export const LinodeVolumes = () => {
           disabled={isLinodesGrantReadOnly}
           onClick={handleCreateVolume}
         >
-          Create Volume
+          Add Volume
         </Button>
       </Paper>
       <Table>
