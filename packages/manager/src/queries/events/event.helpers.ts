@@ -196,7 +196,7 @@ export const getMinimumDateToPollFrom = (
   }
 
   // The first event in our cache should be the user's event with the highest ID at all times.
-  // @note This does not necessarily it has the most recent "created" date
+  // This does not necessarily mean the event has the most recent "created" date
   const firstEvent = events[0];
   const firstEventCreatedDate = DateTime.fromISO(firstEvent.created, {
     zone: 'utc',
