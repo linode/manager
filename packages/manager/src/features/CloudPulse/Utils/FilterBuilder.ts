@@ -311,7 +311,7 @@ export const constructAdditionalRequestFilters = (
  */
 const getDependantFiltersByFilterKey =
   (filterKey: string, dashboard: Dashboard): string[] => {
-    const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type!);
+    const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
 
     if (!serviceTypeConfig) {
       return [];

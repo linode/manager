@@ -192,17 +192,19 @@ export const CloudPulseCustomSelect = React.memo(
     (!queriedResources && !(options && options.length)) ||
     staticErrorText.length > 0;
 
+    staticErrorText = staticErrorText.length > 0
+    ? staticErrorText
+    : isError
+    ? 'Error while loading from API'
+    : '';
+
     return (
       <Autocomplete
         disabled={
           isAutoCompleteDisabled
         }
         errorText={
-          staticErrorText.length > 0
-            ? staticErrorText
-            : isError
-            ? 'Error while loading from API'
-            : ''
+          staticErrorText
         }
         options={
           type === CloudPulseSelectTypes.static
