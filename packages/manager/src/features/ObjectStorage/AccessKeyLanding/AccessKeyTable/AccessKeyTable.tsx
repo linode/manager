@@ -1,9 +1,7 @@
-import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -11,6 +9,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { HostNamesDrawer } from '../HostNamesDrawer';
+import { StyledLabelCell, StyledLastColumnCell } from './AccessKeyTable.styles';
 import { AccessKeyTableBody } from './AccessKeyTableBody';
 
 import type { OpenAccessDrawer } from '../types';
@@ -70,18 +69,12 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
                 Regions/S3 Hostnames
               </StyledLabelCell>
             )}
-            <TableCell
-              sx={{
-                ...(isObjMultiClusterEnabled && {
-                  '&&:last-child': {
-                    paddingRight: '15px',
-                  },
-                }),
-              }}
+            <StyledLastColumnCell
+              addPaddingRight={isObjMultiClusterEnabled}
               data-qa-header-key
             >
               Actions
-            </TableCell>
+            </StyledLastColumnCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -107,7 +100,3 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     </>
   );
 };
-
-const StyledLabelCell = styled(TableCell)(() => ({
-  width: '35%',
-}));

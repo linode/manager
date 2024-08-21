@@ -10,6 +10,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
+import { StyledLastColumnCell } from './AccessKeyTable.styles';
 import { HostNameTableCell } from './HostNameTableCell';
 
 import type { OpenAccessDrawer } from '../types';
@@ -63,22 +64,14 @@ export const AccessKeyTableRow = ({
         />
       )}
 
-      <TableCell
-        sx={{
-          ...(isObjMultiClusterEnabled && {
-            '&&:last-child': {
-              paddingRight: '15px',
-            },
-          }),
-        }}
-      >
+      <StyledLastColumnCell addPaddingRight={isObjMultiClusterEnabled}>
         <AccessKeyActionMenu
           label={storageKeyData.label}
           objectStorageKey={storageKeyData}
           openDrawer={openDrawer}
           openRevokeDialog={openRevokeDialog}
         />
-      </TableCell>
+      </StyledLastColumnCell>
     </TableRow>
   );
 };
