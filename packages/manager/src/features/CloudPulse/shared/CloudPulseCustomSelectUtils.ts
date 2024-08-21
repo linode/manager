@@ -147,23 +147,18 @@ export const callSelectionChangeAndUpdateGlobalFilters = (
     value = value.slice(0, maxSelections);
   }
 
+  const result = value
+    ? Array.isArray(value)
+      ? value.map(({ id }) => String(id)) // if array publish list of ids, else only id
+      : String(value.id)
+    : undefined;
+
   // pubish the selection change
-  handleSelectionChange(
-    filterKey,
-    value
-      ? Array.isArray(value)
-        ? value.map(({ id }) => String(id)) // if array publish list of ids, else only id
-        : String(value.id)
-      : undefined
-  );
+  handleSelectionChange(filterKey, result);
 
   // update the preferences
   updateGlobalFilterPreference({
-    [filterKey]: value
-      ? Array.isArray(value)
-        ? value.map(({ id }) => String(id)) // if array publish list of ids, else only id
-        : String(value.id)
-      : undefined,
+    [filterKey]: result,
   });
 
   // update the clear selections in the preference
