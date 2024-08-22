@@ -1,6 +1,6 @@
 import {
-  callSelectionChangeAndUpdateGlobalFilters,
-  getDefaultSelectionsFromPreferencesAndPublishSelectionChanges,
+  handleCustomSelectionChange,
+  getInitialDefaultSelections,
 } from './CloudPulseCustomSelectUtils';
 
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
@@ -25,7 +25,7 @@ it('test callSelectionChangeAndUpdateGlobalFilters method for single selection',
     label: 'Test',
   };
   const handleSelectionChange = vi.fn();
-  const result = callSelectionChangeAndUpdateGlobalFilters({
+  const result = handleCustomSelectionChange({
     clearSelections: [],
     filterKey: 'test',
     handleSelectionChange,
@@ -45,7 +45,7 @@ it('test callSelectionChangeAndUpdateGlobalFilters method for multiple selection
     },
   ];
   const handleSelectionChange = vi.fn();
-  const result = callSelectionChangeAndUpdateGlobalFilters({
+  const result = handleCustomSelectionChange({
     clearSelections: [],
     filterKey: 'test',
     handleSelectionChange,
@@ -68,7 +68,7 @@ it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method fo
     },
   ];
 
-  let result = getDefaultSelectionsFromPreferencesAndPublishSelectionChanges({
+  let result = getInitialDefaultSelections({
     filterKey: 'test',
     handleSelectionChange,
     isMultiSelect: false,
@@ -83,7 +83,7 @@ it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method fo
     test: '2',
   });
 
-  result = getDefaultSelectionsFromPreferencesAndPublishSelectionChanges({
+  result = getInitialDefaultSelections({
     filterKey: 'test',
     handleSelectionChange,
     isMultiSelect: false,
@@ -108,7 +108,7 @@ it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method fo
     },
   ];
 
-  let result = getDefaultSelectionsFromPreferencesAndPublishSelectionChanges({
+  let result = getInitialDefaultSelections({
     filterKey: 'test',
     handleSelectionChange,
     isMultiSelect: true,
@@ -123,7 +123,7 @@ it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method fo
     test: '2',
   });
 
-  result = getDefaultSelectionsFromPreferencesAndPublishSelectionChanges({
+  result = getInitialDefaultSelections({
     filterKey: 'test',
     handleSelectionChange,
     isMultiSelect: false,

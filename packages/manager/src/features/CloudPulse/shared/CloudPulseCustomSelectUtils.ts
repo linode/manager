@@ -71,7 +71,7 @@ interface CloudPulseCustomSelectionChangeProps {
  * @param defaultSelectionProps - The props needed for getting the default selections
  * @returns
  */
-export const getDefaultSelectionsFromPreferencesAndPublishSelectionChanges = (
+export const getInitialDefaultSelections = (
   defaultSelectionProps: CloudPulseCustomSelectDefaultValueProps
 ):
   | CloudPulseServiceTypeFiltersOptions
@@ -128,7 +128,7 @@ export const getDefaultSelectionsFromPreferencesAndPublishSelectionChanges = (
  * @param selectionChangeProps - The props needed for selecting the new filter and updating the global preferences
  */
 
-export const callSelectionChangeAndUpdateGlobalFilters = (
+export const handleCustomSelectionChange = (
   selectionChangeProps: CloudPulseCustomSelectionChangeProps
 ):
   | CloudPulseServiceTypeFiltersOptions

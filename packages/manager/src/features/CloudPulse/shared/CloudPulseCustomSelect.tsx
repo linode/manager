@@ -5,8 +5,8 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useGetCustomFiltersQuery } from 'src/queries/cloudpulse/customfilters';
 
 import {
-  callSelectionChangeAndUpdateGlobalFilters,
-  getDefaultSelectionsFromPreferencesAndPublishSelectionChanges,
+  handleCustomSelectionChange,
+  getInitialDefaultSelections,
 } from './CloudPulseCustomSelectUtils';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -141,7 +141,7 @@ export const CloudPulseCustomSelect = React.memo(
     React.useEffect(() => {
       if (!selectedResource) {        
         setResource(
-          getDefaultSelectionsFromPreferencesAndPublishSelectionChanges(
+          getInitialDefaultSelections(
             {
               filterKey,
               handleSelectionChange,
@@ -162,14 +162,14 @@ export const CloudPulseCustomSelect = React.memo(
         | CloudPulseServiceTypeFiltersOptions[]
         | null
     ) => {
-      const filterdValue = callSelectionChangeAndUpdateGlobalFilters({
+      const filteredValue = handleCustomSelectionChange({
         clearSelections: clearDependentSelections ?? [],
         filterKey,
         handleSelectionChange,
         maxSelections,
         value,
       });
-      setResource(Array.isArray(filterdValue) ? [...filterdValue] : filterdValue ?? undefined);
+      setResource(Array.isArray(filteredValue) ? [...filteredValue] : filteredValue ?? undefined);
     };
 
     let staticErrorText = '';
@@ -179,7 +179,7 @@ export const CloudPulseCustomSelect = React.memo(
       (CloudPulseSelectTypes.static === type &&
       (!options || options.length === 0)) || (CloudPulseSelectTypes.dynamic === type && !apiV4QueryKey)
     ) {
-      staticErrorText = 'Pass pass either options or API query key';
+      staticErrorText = 'Pass either options or API query key';
     }
 
     const isAutoCompleteDisabled  = disabled || ((isLoading || isError) && type === CloudPulseSelectTypes.dynamic) ||
