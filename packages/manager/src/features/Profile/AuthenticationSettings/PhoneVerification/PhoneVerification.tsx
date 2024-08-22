@@ -268,9 +268,12 @@ export const PhoneVerification = ({
                     value: country.code,
                   }))}
                   sxPopperComponent={{
-                    marginLeft: '213px !important',
-                    marginTop: '0px !important',
-                    width: '500px !important',
+                    '& .MuiPaper-root.MuiAutocomplete-paper': {
+                      maxHeight: '285px',
+                      overflow: 'hidden',
+                      textWrap: 'nowrap',
+                      width: 'fit-content',
+                    },
                   }}
                   textFieldProps={{
                     hideLabel: true,
