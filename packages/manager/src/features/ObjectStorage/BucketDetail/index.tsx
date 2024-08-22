@@ -73,10 +73,14 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
-    {
-      routeName: `${props.match.url}/properties`,
-      title: 'Properties',
-    },
+    ...(flags.objectStorageGen2
+      ? [
+          {
+            routeName: `${props.match.url}/properties`,
+            title: 'Properties',
+          },
+        ]
+      : []),
     ...(!isSSLEnabled
       ? [
           {
@@ -130,14 +134,16 @@ export const BucketDetailLanding = React.memo((props: Props) => {
                 endpointType={endpointType}
               />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <BucketProperties
-                bucketName={bucketName}
-                clusterId={clusterId}
-                endpointType={endpointType}
-              />
-            </SafeTabPanel>
-            <SafeTabPanel index={3}>
+            {flags.objectStorageGen2 && (
+              <SafeTabPanel index={2}>
+                <BucketProperties
+                  bucketName={bucketName}
+                  clusterId={clusterId}
+                  endpointType={endpointType}
+                />
+              </SafeTabPanel>
+            )}
+            <SafeTabPanel index={tabs.length - 1}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>
           </TabPanels>
