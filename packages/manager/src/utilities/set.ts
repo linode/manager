@@ -35,8 +35,10 @@ export function set<T extends object>(
   }
 
   let updatingObject: any = object;
+  // if we haven't reached the last key, traverse through object,
   for (let i = 0; i < updatedPath.length - 1; i++) {
     const key = updatedPath[i];
+    // we set object[key] to be [] or {} depending on the next key
     if (!updatingObject[key] || typeof updatingObject[key] !== 'object') {
       const nextKey = updatedPath[i + 1];
       updatingObject[key] = isValidIndex(nextKey) ? [] : {};
@@ -82,7 +84,7 @@ const determinePath = (path: PropertyPath): PropertyName[] => {
 
 /**
  * Determines if the given value can be considered a valid index for an array.
- * For example, 0, 1, 2 are all valid index.
+ * For example, 0, 1, 2 are all valid indexes.
  * -1, 01, -01, 00, '1 1' are not.
  *
  * @param value - The value to check

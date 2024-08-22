@@ -48,19 +48,23 @@ describe('Tests for set', () => {
       set(object2, ['a', 'b', '1'], 'b1');
       expect(object).toEqual({ a: { b: [undefined, 'b1'] } });
       expect(object2).toEqual(object);
+      set(object, 'a.b.0', 5);
+      set(object2, ['a', 'b', 0], 5);
+      expect(object).toEqual({ a: { b: [5, 'b1'] } });
+      expect(object2).toEqual(object);
 
       // If path is an array, indexes can be passed in as a string or as a number
       set(object, 'a.b.2', 'b2');
       set(object2, ['a', 'b', 2], 'b2');
       expect(object).toEqual({
-        a: { b: [undefined, 'b1', 'b2'] },
+        a: { b: [5, 'b1', 'b2'] },
       });
       expect(object2).toEqual(object);
 
       set(object, 'a.b.3.c', 'c');
       set(object2, ['a', 'b', 3, 'c'], 'c');
       expect(object).toEqual({
-        a: { b: [undefined, 'b1', 'b2', { c: 'c' }] },
+        a: { b: [5, 'b1', 'b2', { c: 'c' }] },
       });
       expect(object2).toEqual(object);
     });
@@ -275,7 +279,6 @@ describe('Tests for set', () => {
 
     it('is not considered prototype pollution if array paths do not have standalone prototype pollution keys', () => {
       const object = {};
-      // prototype pollution key separated by .
       let settedObject = set(object, ['test__proto__test'], 1);
       expect(object).toBe(settedObject);
       expect(object).toEqual({ test__proto__test: 1 });
