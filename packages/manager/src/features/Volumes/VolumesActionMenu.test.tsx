@@ -16,6 +16,7 @@ const props: Props = {
     handleDetach: vi.fn(),
     handleDetails: vi.fn(),
     handleEdit: vi.fn(),
+    handleManageTags: vi.fn(),
     handleResize: vi.fn(),
     handleUpgrade: vi.fn(),
   },

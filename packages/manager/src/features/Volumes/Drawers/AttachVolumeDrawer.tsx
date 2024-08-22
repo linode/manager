@@ -18,7 +18,7 @@ import { useGrants } from 'src/queries/profile/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
-import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
+import { ConfigSelect } from '../VolumeDrawer/ConfigSelect';
 
 import type { Volume } from '@linode/api-v4';
 

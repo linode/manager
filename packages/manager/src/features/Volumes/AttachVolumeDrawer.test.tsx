@@ -5,7 +5,7 @@ import { accountFactory, volumeFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AttachVolumeDrawer } from './AttachVolumeDrawer';
+import { AttachVolumeDrawer } from './Drawers/AttachVolumeDrawer';
 
 const accountEndpoint = '*/v4/account';
 const encryptionLabelText = 'Encrypt Volume';

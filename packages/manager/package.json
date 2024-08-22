@@ -92,6 +92,7 @@
     "build:analyze": "bunx vite-bundle-visualizer",
     "precommit": "lint-staged && yarn typecheck",
     "test": "vitest run",
+    "test:ui": "vitest --ui",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",
