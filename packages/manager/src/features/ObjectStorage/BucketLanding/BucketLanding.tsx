@@ -60,22 +60,19 @@ export const BucketLanding = () => {
   const { classes } = useStyles();
 
   const removeBucketConfirmationDialog = useOpenClose();
-  const [bucketToRemove, setBucketToRemove] = React.useState<
-    ObjectStorageBucket | undefined
-  >(undefined);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
   const [
     bucketDetailDrawerOpen,
     setBucketDetailDrawerOpen,
   ] = React.useState<boolean>(false);
-  const [bucketForDetails, setBucketForDetails] = React.useState<
+  const [selectedBucket, setSelectedBucket] = React.useState<
     ObjectStorageBucket | undefined
   >(undefined);
 
   const handleClickDetails = (bucket: ObjectStorageBucket) => {
     setBucketDetailDrawerOpen(true);
-    setBucketForDetails(bucket);
+    setSelectedBucket(bucket);
   };
 
   const closeBucketDetailDrawer = () => {
@@ -83,21 +80,21 @@ export const BucketLanding = () => {
   };
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
-    setBucketToRemove(bucket);
+    setSelectedBucket(bucket);
     setError(undefined);
     removeBucketConfirmationDialog.open();
   };
 
   const removeBucket = () => {
     // This shouldn't happen, but just in case (and to get TS to quit complaining...)
-    if (!bucketToRemove) {
+    if (!selectedBucket) {
       return;
     }
 
     setError(undefined);
     setIsLoading(true);
 
-    const { cluster, label } = bucketToRemove;
+    const { cluster, label } = selectedBucket;
 
     deleteBucket({ cluster, label })
       .then(() => {
@@ -156,7 +153,7 @@ export const BucketLanding = () => {
   }
 
   const totalUsage = sumBucketUsage(objectStorageBucketsResponse.buckets);
-  const bucketLabel = bucketToRemove ? bucketToRemove.label : '';
+  const bucketLabel = selectedBucket ? selectedBucket.label : '';
 
   return (
     <React.Fragment>
@@ -236,15 +233,9 @@ export const BucketLanding = () => {
         )}
       </TypeToConfirmDialog>
       <BucketDetailsDrawer
-        bucketLabel={bucketForDetails?.label}
-        cluster={bucketForDetails?.cluster}
-        created={bucketForDetails?.created}
-        endpointType={bucketForDetails?.endpoint_type}
-        hostname={bucketForDetails?.hostname}
-        objectsNumber={bucketForDetails?.objects}
         onClose={closeBucketDetailDrawer}
         open={bucketDetailDrawerOpen}
-        size={bucketForDetails?.size}
+        selectedBucket={selectedBucket}
       />
     </React.Fragment>
   );
