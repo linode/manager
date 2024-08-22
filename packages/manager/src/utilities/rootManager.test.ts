@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 
-import { handleRoot, rootInstances } from './rootManager';
+import { getRoot, rootInstances } from './rootManager';
 
 vi.mock('react-dom/client', () => ({
   createRoot: vi.fn().mockImplementation((container) => ({
@@ -9,7 +9,7 @@ vi.mock('react-dom/client', () => ({
   })),
 }));
 
-describe('handleRoot', () => {
+describe('getRoot', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     rootInstances.clear();
@@ -17,7 +17,7 @@ describe('handleRoot', () => {
 
   it('should create a new root for a new container', () => {
     const container = document.createElement('div');
-    const root = handleRoot(container);
+    const root = getRoot(container);
 
     expect(createRoot).toHaveBeenCalledWith(container);
     expect(rootInstances.get(container)).toBe(root);
@@ -26,9 +26,9 @@ describe('handleRoot', () => {
 
   it('should return the existing root for an existing container', () => {
     const container = document.createElement('div');
-    // Call handleRoot twice with the same container
-    const firstCallRoot = handleRoot(container);
-    const secondCallRoot = handleRoot(container);
+    // Call getRoot twice with the same container
+    const firstCallRoot = getRoot(container);
+    const secondCallRoot = getRoot(container);
 
     // createRoot should only have been called once
     expect(createRoot).toHaveBeenCalledTimes(1);

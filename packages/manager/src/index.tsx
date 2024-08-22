@@ -18,7 +18,7 @@ import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { queryClientFactory } from './queries/base';
-import { handleRoot } from './utilities/rootManager';
+import { getRoot } from './utilities/rootManager';
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -91,7 +91,7 @@ async function loadApp() {
 
   const container = document.getElementById('root');
   if (container) {
-    const root = handleRoot(container);
+    const root = getRoot(container);
     root.render(<Main />);
   }
 }

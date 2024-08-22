@@ -6,7 +6,7 @@ import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { handleRoot } from 'src/utilities/rootManager';
+import { getRoot } from 'src/utilities/rootManager';
 
 import { Draggable } from './components/Draggable';
 import './dev-tools.css';
@@ -164,7 +164,7 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
       return newRoot;
     })();
 
-  const root = handleRoot(devToolsRoot);
+  const root = getRoot(devToolsRoot);
   root.render(
     <Provider store={store}>
       <DevTools />
