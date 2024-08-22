@@ -162,6 +162,37 @@ describe('Tests for set', () => {
         }
       );
     });
+
+    // it will take an incredible amount of effort to get set to this level of finesse
+    it.skip('sets the value for nonstandard paths', () => {
+      expect(_set({}, 'test..test', 'testing')).toEqual({
+        test: { '': { test: 'testing' } },
+      });
+      expect(_set({}, 'test.[.test]', 'testing 2')).toEqual({
+        test: { test: 'testing 2' },
+      });
+      expect(_set({}, 'test.[te[st]', 'testing 3')).toEqual({
+        test: { te: { st: 'testing 3' } },
+      });
+      expect(_set({}, 'test.]test', 'testing 4')).toEqual({
+        test: { test: 'testing 4' },
+      });
+      expect(_set({}, 'test.[]', 'testing 5')).toEqual({
+        test: { '': { '': 'testing 5' } },
+      });
+      expect(_set({}, '[].test', 'testing 6')).toEqual({
+        '': { test: 'testing 6' },
+      });
+      expect(_set({}, '.', 'testing 7')).toEqual({
+        '': { '': 'testing 7' },
+      });
+      expect(_set({}, '[', 'testing 8')).toEqual({
+        '[': 'testing 8',
+      });
+      expect(_set({}, ']', 'testing 9')).toEqual({
+        ']': 'testing 9',
+      });
+    });
   });
 
   describe('Ensuring safety against prototype pollution and that the passed in and returned object are the same', () => {
