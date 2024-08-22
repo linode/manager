@@ -102,6 +102,7 @@ import type {
   CreateObjectStorageKeyPayload,
   FirewallStatus,
   NotificationType,
+  ObjectStorageEndpointTypes,
   SecurityQuestionsPayload,
   TokenRequest,
   UpdateImageRegionsPayload,
@@ -970,9 +971,13 @@ export const handlers = [
     const pageSize = Number(url.searchParams.get('page_size') || 25);
 
     const randomBucketNumber = getRandomWholeNumber(1, 500);
+    const randomEndpointType = `E${Math.floor(
+      Math.random() * 4
+    )}` as ObjectStorageEndpointTypes;
 
     const buckets = objectStorageBucketFactoryGen2.buildList(1, {
       cluster: `${region}-1`,
+      endpoint_type: randomEndpointType,
       hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
       label: `obj-bucket-${randomBucketNumber}`,
       region,
