@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AccessSelect, Props } from './AccessSelect';
+import { AccessSelect } from './AccessSelect';
+
+import type { Props } from './AccessSelect';
 
 vi.mock('src/components/EnhancedSelect/Select');
 
@@ -12,14 +14,18 @@ const mockGetAccess = vi.fn();
 const mockUpdateAccess = vi.fn();
 
 const props: Props = {
-  getAccess: mockGetAccess.mockResolvedValue({ acl: 'private' }),
+  endpointType: 'E1',
+  getAccess: mockGetAccess.mockResolvedValue({
+    acl: 'private',
+    cors_enabled: true,
+  }),
   name: 'my-object-name',
   updateAccess: mockUpdateAccess.mockResolvedValue({}),
-  variant: 'object',
+  variant: 'bucket',
 };
 
 describe('AccessSelect', () => {
-  it('shows the access', async () => {
+  it('shows the access and CORS toggle for bucket variant', async () => {
     renderWithTheme(<AccessSelect {...props} />);
     const aclSelect = screen.getByRole('combobox');
 
@@ -39,9 +45,14 @@ describe('AccessSelect', () => {
       'aria-selected',
       'true'
     );
+
+    expect(screen.getByLabelText('CORS Enabled')).toBeInTheDocument();
+    expect(
+      screen.getByRole('checkbox', { name: 'CORS Enabled' })
+    ).toBeChecked();
   });
 
-  it('updates the access and submits the appropriate value', async () => {
+  it('updates the access and CORS settings and submits the appropriate values', async () => {
     renderWithTheme(<AccessSelect {...props} />);
 
     const aclSelect = screen.getByRole('combobox');
@@ -52,20 +63,48 @@ describe('AccessSelect', () => {
       expect(aclSelect).toHaveValue('Private');
     });
 
+    const corsToggle = screen.getByRole('checkbox', { name: 'CORS Enabled' });
+
+    // Verify initial state
+    expect(corsToggle).toBeChecked();
+
     act(() => {
       fireEvent.click(aclSelect);
       fireEvent.change(aclSelect, { target: { value: 'Authenticated Read' } });
     });
 
-    expect(aclSelect).toHaveValue('Authenticated Read');
     userEvent.click(screen.getByText('Authenticated Read'));
+    userEvent.click(corsToggle);
 
     await waitFor(() => {
       expect(screen.getByRole('combobox')).toHaveValue('Authenticated Read');
+      expect(corsToggle).not.toBeChecked();
       expect(saveButton).toBeEnabled();
     });
 
     fireEvent.click(saveButton);
+    expect(mockUpdateAccess).toHaveBeenCalledWith('authenticated-read', false);
+
+    // Test toggling CORS back on
+    userEvent.click(corsToggle);
+
+    await waitFor(() => {
+      expect(corsToggle).toBeChecked();
+    });
+
+    fireEvent.click(saveButton);
     expect(mockUpdateAccess).toHaveBeenCalledWith('authenticated-read', true);
+  });
+
+  it('does not show CORS toggle for E2 and E3 endpoint types', async () => {
+    renderWithTheme(<AccessSelect {...props} endpointType="E2" />);
+    await waitFor(() => {
+      expect(screen.queryByLabelText('CORS Enabled')).not.toBeInTheDocument();
+    });
+
+    renderWithTheme(<AccessSelect {...props} endpointType="E3" />);
+    await waitFor(() => {
+      expect(screen.queryByLabelText('CORS Enabled')).not.toBeInTheDocument();
+    });
   });
 });
