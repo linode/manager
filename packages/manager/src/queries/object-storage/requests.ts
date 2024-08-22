@@ -18,6 +18,9 @@ import type {
   Region,
 } from '@linode/api-v4';
 
+/**
+ * @deprecated This will be replaced with `getAllObjectStorageEndpoints` when OBJ Gen2 is in GA.
+ */
 export const getAllObjectStorageClusters = () =>
   getAll<ObjectStorageCluster>(() => getClusters())().then((data) => data.data);
 

@@ -109,6 +109,10 @@ export const useObjectStorageEndpoints = (enabled = true) => {
   });
 };
 
+/**
+ *
+ * @deprecated This will be replaced by useObjectStorageEndpoints
+ */
 export const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>({
     ...objectStorageQueries.clusters,
