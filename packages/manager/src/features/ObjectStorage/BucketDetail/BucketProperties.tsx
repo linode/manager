@@ -6,10 +6,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
-import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { BucketRateLimitTable } from '../BucketLanding/BucketRateLimitTable';
@@ -50,21 +47,10 @@ export const BucketProperties = React.memo((props: Props) => {
   const location = useLocation();
   const history = useHistory();
   const prefix = getQueryParamFromQueryString(location.search, 'prefix');
-  const flags = useFlags();
-  const { data: account } = useAccount();
 
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { data: bucketsData } = useObjectStorageBuckets();
 
-  const { data: buckets } = useObjectStorageBuckets();
-
-  const bucket = buckets?.buckets.find((bucket) => {
-    if (isObjMultiClusterEnabled) {
-      return bucket.label === bucketName && bucket.region === clusterId;
-    }
+  const bucket = bucketsData?.buckets.find((bucket) => {
     return bucket.label === bucketName && bucket.cluster === clusterId;
   });
 
