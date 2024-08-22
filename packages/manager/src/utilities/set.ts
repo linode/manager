@@ -3,8 +3,9 @@ type PropertyPath = PropertyName | readonly PropertyName[];
 
 /**
  * Helper to set the given value at the given path of the given object.
- * This util is a direct replacement for `set` from lodash, with additional
- * checks to protect against prototype pollution.
+ * This util serves as a replacement for `set` from lodash, with additional checks
+ * to protect against prototype pollution. It is not (yet) a perfect replacement (see
+ * skipped test examples in set.test.ts), but does handle current CM use cases.
  *
  * @param object — The object to modify.
  * @param path — The path of the property to set.
@@ -16,7 +17,7 @@ export function set<T extends object>(
   path: PropertyPath,
   value: any
 ): T {
-  // ensure that object is actually an object
+  // ensure that object is actually a non-array object
   if (!object || Array.isArray(object) || typeof object !== 'object') {
     return object;
   }
@@ -26,7 +27,9 @@ export function set<T extends object>(
 
   if (
     // ensure that both the path and value will not lead to prototype pollution issues
-    !isPrototypePollutionSafe(updatedPath)
+    // and that there is actually a path to set
+    !isPrototypePollutionSafe(updatedPath) ||
+    updatedPath.length === 0
   ) {
     return object;
   }
@@ -56,11 +59,10 @@ export function set<T extends object>(
  */
 export const isPrototypePollutionSafe = (path: PropertyName[]): boolean => {
   return path.reduce((safeSoFar, val) => {
-    let isCurKeySafe = true;
-    if (typeof val === 'string') {
-      isCurKeySafe =
-        val !== '__proto__' && val !== 'prototype' && val !== 'constructor';
-    }
+    const isCurKeySafe =
+      typeof val === 'string'
+        ? val !== '__proto__' && val !== 'prototype' && val !== 'constructor'
+        : true;
     return safeSoFar && isCurKeySafe;
   }, true);
 };
@@ -73,7 +75,9 @@ export const isPrototypePollutionSafe = (path: PropertyName[]): boolean => {
  * @returns - The path to set a value, in array format
  */
 const determinePath = (path: PropertyPath): PropertyName[] => {
-  return Array.isArray(path) ? path : path.toString().match(/[^.[\]]+/g) ?? [];
+  return Array.isArray(path)
+    ? path
+    : path.toString().match(/[^.[\]]+/g) ?? [''];
 };
 
 /**

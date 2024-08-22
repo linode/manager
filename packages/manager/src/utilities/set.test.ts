@@ -1,5 +1,3 @@
-import _set from 'lodash.set';
-
 import { isPrototypePollutionSafe, set } from './set';
 
 // todo: as i debug get rid of calls to _set
@@ -22,20 +20,20 @@ describe('Tests for set', () => {
       const object2 = {};
 
       // the given paths are equivalent in string vs array format
-      _set(object, 'a.b.c', 'c');
-      _set(object2, ['a', 'b', 'c'], 'c');
+      set(object, 'a.b.c', 'c');
+      set(object2, ['a', 'b', 'c'], 'c');
       expect(object).toEqual({ a: { b: { c: 'c' } } });
       expect(object2).toEqual(object);
 
-      _set(object, 'a.b.d', 'd');
-      _set(object2, ['a', 'b', 'd'], 'd');
+      set(object, 'a.b.d', 'd');
+      set(object2, ['a', 'b', 'd'], 'd');
       expect(object).toEqual({
         a: { b: { c: 'c', d: 'd' } },
       });
       expect(object2).toEqual(object);
 
-      _set(object, 'e[f][g]', 'g');
-      _set(object2, ['e', 'f', 'g'], 'g');
+      set(object, 'e[f][g]', 'g');
+      set(object2, ['e', 'f', 'g'], 'g');
       expect(object).toEqual({
         a: { b: { c: 'c', d: 'd' } },
         e: { f: { g: 'g' } },
@@ -48,21 +46,21 @@ describe('Tests for set', () => {
       const object2 = {};
 
       // the given paths are equivalent in string vs array format
-      _set(object, 'a.b.1', 'b1');
-      _set(object2, ['a', 'b', '1'], 'b1');
+      set(object, 'a.b.1', 'b1');
+      set(object2, ['a', 'b', '1'], 'b1');
       expect(object).toEqual({ a: { b: [undefined, 'b1'] } });
       expect(object2).toEqual(object);
 
       // If path is an array, indexes can be passed in as a string or as a number
-      _set(object, 'a.b.2', 'b2');
-      _set(object2, ['a', 'b', 2], 'b2');
+      set(object, 'a.b.2', 'b2');
+      set(object2, ['a', 'b', 2], 'b2');
       expect(object).toEqual({
         a: { b: [undefined, 'b1', 'b2'] },
       });
       expect(object2).toEqual(object);
 
-      _set(object, 'a.b.3.c', 'c');
-      _set(object2, ['a', 'b', 3, 'c'], 'c');
+      set(object, 'a.b.3.c', 'c');
+      set(object2, ['a', 'b', 3, 'c'], 'c');
       expect(object).toEqual({
         a: { b: [undefined, 'b1', 'b2', { c: 'c' }] },
       });
@@ -70,38 +68,36 @@ describe('Tests for set', () => {
     });
 
     it('creates an empty key', () => {
-      expect(_set({}, '', 'empty string')).toEqual({ '': 'empty string' });
+      expect(set({}, '', 'empty string')).toEqual({ '': 'empty string' });
       expect(set({}, [''], 'empty string for array')).toEqual({
         '': 'empty string for array',
       });
     });
 
-    it('creates an undefined key', () => {
-      const undefinedKey = {};
-      _set(undefinedKey, [], 'undefined');
-      expect(undefinedKey).toEqual({});
+    it('does not set anything if no path is given', () => {
+      expect(set({}, [], 'should not set')).toEqual({});
     });
 
     it('only considers valid indexes for setting array values', () => {
       const object = {};
 
-      expect(_set(object, 'test[01].test1', 'test')).toEqual({
+      expect(set(object, 'test[01].test1', 'test')).toEqual({
         test: { '01': { test1: 'test' } },
       });
-      expect(_set(object, 'test[01].[02]', 'test2')).toEqual({
+      expect(set(object, 'test[01].[02]', 'test2')).toEqual({
         test: { '01': { '02': 'test2', test1: 'test' } },
       });
-      expect(_set(object, 'test[-01]', 'test3')).toEqual({
+      expect(set(object, 'test[-01]', 'test3')).toEqual({
         test: { '-01': 'test3', '01': { '02': 'test2', test1: 'test' } },
       });
-      expect(_set(object, 'test[   02]', 'test4')).toEqual({
+      expect(set(object, 'test[   02]', 'test4')).toEqual({
         test: {
           '   02': 'test4',
           '-01': 'test3',
           '01': { '02': 'test2', test1: 'test' },
         },
       });
-      expect(_set(object, 'test[00]', 'test5')).toEqual({
+      expect(set(object, 'test[00]', 'test5')).toEqual({
         test: {
           '   02': 'test4',
           '-01': 'test3',
@@ -119,22 +115,22 @@ describe('Tests for set', () => {
       set(object, [2], '2');
       expect(object).toEqual({ 1: 'test', 2: '2' });
 
-      expect(_set({ test: { test1: 'test' } }, 'test.1', 'test2')).toEqual({
+      expect(set({ test: { test1: 'test' } }, 'test.1', 'test2')).toEqual({
         test: { '1': 'test2', test1: 'test' },
       });
     });
 
     it('treats later numbers as indexes (if they are valid indexes)', () => {
-      const obj1 = _set({}, '1[1]', 'test');
+      const obj1 = set({}, '1[1]', 'test');
       expect(obj1).toEqual({ 1: [undefined, 'test'] });
 
-      const obj2 = _set({}, '1.2', 'test');
+      const obj2 = set({}, '1.2', 'test');
       expect(obj2).toEqual({ 1: [undefined, undefined, 'test'] });
 
-      const obj3 = _set({}, [3, 1], 'test');
+      const obj3 = set({}, [3, 1], 'test');
       expect(obj3).toEqual({ 3: [undefined, 'test'] });
 
-      const obj4 = _set({}, [1, 1, 2], 'test');
+      const obj4 = set({}, [1, 1, 2], 'test');
       expect(obj4).toEqual({ 1: [undefined, [undefined, undefined, 'test']] });
     });
 
@@ -153,44 +149,45 @@ describe('Tests for set', () => {
       expect(set(alreadyExisting, ['test'], 'changed again')).toEqual({
         test: 'changed again',
       });
-      expect(_set(alreadyExisting, ['test', 'test2'], 'changed x3')).toEqual({
+      expect(set(alreadyExisting, ['test', 'test2'], 'changed x3')).toEqual({
         test: { test2: 'changed x3' },
       });
-      expect(_set(alreadyExisting, 'test[test2][test3]', 'changed x4')).toEqual(
-        {
-          test: { test2: { test3: 'changed x4' } },
-        }
-      );
+      expect(set(alreadyExisting, 'test[test2][test3]', 'changed x4')).toEqual({
+        test: { test2: { test3: 'changed x4' } },
+      });
+    });
+
+    it('sets the value for nonstandard paths', () => {
+      expect(set({}, 'test.[.test]', 'testing 2')).toEqual({
+        test: { test: 'testing 2' },
+      });
+      expect(set({}, 'test.[te[st]', 'testing 3')).toEqual({
+        test: { te: { st: 'testing 3' } },
+      });
+      expect(set({}, 'test.]test', 'testing 4')).toEqual({
+        test: { test: 'testing 4' },
+      });
     });
 
     // it will take an incredible amount of effort to get set to this level of finesse
-    it.skip('sets the value for nonstandard paths', () => {
-      expect(_set({}, 'test..test', 'testing')).toEqual({
-        test: { '': { test: 'testing' } },
-      });
-      expect(_set({}, 'test.[.test]', 'testing 2')).toEqual({
-        test: { test: 'testing 2' },
-      });
-      expect(_set({}, 'test.[te[st]', 'testing 3')).toEqual({
-        test: { te: { st: 'testing 3' } },
-      });
-      expect(_set({}, 'test.]test', 'testing 4')).toEqual({
-        test: { test: 'testing 4' },
-      });
-      expect(_set({}, 'test.[]', 'testing 5')).toEqual({
+    it.skip('sets the value for non standard paths - not working currently', () => {
+      expect(set({}, 'test.[]', 'testing 5')).toEqual({
         test: { '': { '': 'testing 5' } },
       });
-      expect(_set({}, '[].test', 'testing 6')).toEqual({
+      expect(set({}, '[].test', 'testing 6')).toEqual({
         '': { test: 'testing 6' },
       });
-      expect(_set({}, '.', 'testing 7')).toEqual({
+      expect(set({}, '.', 'testing 7')).toEqual({
         '': { '': 'testing 7' },
       });
-      expect(_set({}, '[', 'testing 8')).toEqual({
+      expect(set({}, '[', 'testing 8')).toEqual({
         '[': 'testing 8',
       });
-      expect(_set({}, ']', 'testing 9')).toEqual({
+      expect(set({}, ']', 'testing 9')).toEqual({
         ']': 'testing 9',
+      });
+      expect(set({}, 'test..test', 'testing')).toEqual({
+        test: { '': { test: 'testing' } },
       });
     });
   });
