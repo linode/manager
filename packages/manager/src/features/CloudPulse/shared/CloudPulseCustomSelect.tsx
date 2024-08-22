@@ -31,7 +31,7 @@ export interface CloudPulseCustomSelectProps {
   apiResponseLabelField?: string;
 
   /**
-   * The api URL which contains the list of filters, passed when the select type is dynamic
+   * The api query key factory which contains the queries to fetch the list of filters, passed when the select type is dynamic
    */
   apiV4QueryKey?: QueryFunctionAndKey;
 

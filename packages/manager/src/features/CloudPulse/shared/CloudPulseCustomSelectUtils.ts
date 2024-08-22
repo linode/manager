@@ -69,7 +69,6 @@ interface CloudPulseCustomSelectionChangeProps {
 /**
  * This function returns the default selections based on the user preference and options listed
  * @param defaultSelectionProps - The props needed for getting the default selections
- * @returns
  */
 export const getInitialDefaultSelections = (
   defaultSelectionProps: CloudPulseCustomSelectDefaultValueProps
