@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-08-22] - v1.126.1
+
+### Fix:
+
+- Re-enable CORS for Legacy/Gen1 Endpoints ([#10812](https://github.com/linode/manager/pull/10812))
+
 ## [2024-08-19] - v1.126.0
 
 ### Added:
