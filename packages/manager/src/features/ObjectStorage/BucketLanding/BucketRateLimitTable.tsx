@@ -1,5 +1,5 @@
 import React from 'react';
-import { useController, useFormContext, useWatch } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
@@ -56,7 +56,6 @@ export const BucketRateLimitTable = ({
     control,
     name: 'rateLimit',
   });
-  const rateLimitValue = useWatch({ control, name: 'rateLimit' });
 
   return (
     <Table sx={{ marginBottom: 3 }}>
@@ -85,7 +84,7 @@ export const BucketRateLimitTable = ({
               <FormControlLabel
                 control={
                   <Radio
-                    checked={rateLimitValue === row.id}
+                    checked={field.value === row.id}
                     disabled
                     onChange={() => field.onChange(row.id)}
                     value={row.id}
