@@ -1,6 +1,6 @@
 import _set from 'lodash.set';
 
-import { isKeyPrototypePollutionSafe, set } from './set';
+import { isPrototypePollutionSafe, set } from './set';
 
 // todo: as i debug get rid of calls to _set
 
@@ -308,21 +308,19 @@ describe('Tests for set', () => {
   });
 });
 
-describe('Tests for isKeyPrototypePollutionSafe', () => {
+describe('Tests for isPrototypePollutionSafe', () => {
   it('determines that given array is prototype pollution safe', () => {
-    expect(isKeyPrototypePollutionSafe([])).toBe(true);
-    expect(isKeyPrototypePollutionSafe(['', 'test'])).toBe(true);
-    expect(isKeyPrototypePollutionSafe(['', 1])).toBe(true);
+    expect(isPrototypePollutionSafe([])).toBe(true);
+    expect(isPrototypePollutionSafe(['', 'test'])).toBe(true);
+    expect(isPrototypePollutionSafe(['', 1])).toBe(true);
   });
 
   it('determines that the given array is not prototype pollution safe', () => {
-    expect(isKeyPrototypePollutionSafe(['__proto__'])).toBe(false);
-    expect(isKeyPrototypePollutionSafe(['', 'test', 'prototype'])).toBe(false);
-    expect(isKeyPrototypePollutionSafe(['', 1, 'constructor'])).toBe(false);
-    expect(
-      isKeyPrototypePollutionSafe(['', 1, 'constructor', '__proto__'])
-    ).toBe(false);
+    expect(isPrototypePollutionSafe(['__proto__'])).toBe(false);
+    expect(isPrototypePollutionSafe(['', 'test', 'prototype'])).toBe(false);
+    expect(isPrototypePollutionSafe(['', 1, 'constructor'])).toBe(false);
+    expect(isPrototypePollutionSafe(['', 1, 'constructor', '__proto__'])).toBe(
+      false
+    );
   });
 });
-
-// there will definitely be (A LOT) more tests

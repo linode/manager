@@ -26,7 +26,7 @@ export function set<T extends object>(
 
   if (
     // ensure that both the path and value will not lead to prototype pollution issues
-    !isKeyPrototypePollutionSafe(updatedPath)
+    !isPrototypePollutionSafe(updatedPath)
   ) {
     return object;
   }
@@ -49,28 +49,20 @@ export function set<T extends object>(
 }
 
 /**
- * Helper to ensure a value cannot lead to a prototype pollution issue.
+ * Helper to ensure a path cannot lead to a prototype pollution issue.
  *
- * @param value - The value to check
+ * @param path - The path to check
  * @return - If value is safe, returns it; otherwise returns undefined
  */
-export const isKeyPrototypePollutionSafe = (value: PropertyPath): boolean => {
-  if (typeof value === 'string') {
-    return (
-      value !== '__proto__' && value !== 'prototype' && value !== 'constructor'
-    );
-  }
-
-  // An array is safe if all of its value are safe
-  if (Array.isArray(value) && value.length > 0) {
-    return (
-      isKeyPrototypePollutionSafe(value[0]) &&
-      isKeyPrototypePollutionSafe(value.splice(1))
-    );
-  }
-
-  // If the value we are checking is not an array/object, we assume it to be safe
-  return true;
+export const isPrototypePollutionSafe = (path: PropertyName[]): boolean => {
+  return path.reduce((safeSoFar, val) => {
+    let isCurKeySafe = true;
+    if (typeof val === 'string') {
+      isCurKeySafe =
+        val !== '__proto__' && val !== 'prototype' && val !== 'constructor';
+    }
+    return safeSoFar && isCurKeySafe;
+  }, true);
 };
 
 /**
