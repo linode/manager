@@ -4,6 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
+import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
@@ -91,7 +92,7 @@ export const BucketProperties = React.memo((props: Props) => {
         {/* TODO: OBJGen2 - We need to handle link in upcoming PR */}
         <StyledHelperText>
           Specifies the maximum Requests Per Second (RPS) for an Endpoint. To
-          increase it to High, open a <Link to="#">support ticket</Link>.
+          increase it to High, <SupportLink text="open a support ticket" />.
           Understand <Link to="#">bucket rate limits</Link>.
         </StyledHelperText>
 
