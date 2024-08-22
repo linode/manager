@@ -1,21 +1,25 @@
-import { authenticate } from 'support/api/authentication';
+import type { StackScript } from '@linode/api-v4';
+import { Profile, getImages, getProfile } from '@linode/api-v4';
+
 import { stackScriptFactory } from 'src/factories';
+import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
+import { formatDate } from 'src/utilities/formatDate';
+
+import { authenticate } from 'support/api/authentication';
+import { interceptCreateLinode } from 'support/intercepts/linodes';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 import {
   interceptGetStackScripts,
-  mockGetStackScripts,
   mockGetStackScript,
+  mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
+import { depaginate } from 'support/util/paginate';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { cleanUp } from 'support/util/cleanup';
-import { interceptCreateLinode } from 'support/intercepts/linodes';
-import { getProfile } from '@linode/api-v4';
-import { Profile } from '@linode/api-v4';
-import { formatDate } from '@src/utilities/formatDate';
 
-import type { StackScript } from '@linode/api-v4';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
+import type { Image } from '@linode/api-v4';
 
 const mockStackScripts: StackScript[] = [
   stackScriptFactory.build({
@@ -187,37 +191,71 @@ describe('Community Stackscripts integration tests', () => {
    */
   it('pagination works with infinite scrolling', () => {
     interceptGetStackScripts().as('getStackScripts');
-    cy.visitWithLogin('/stackscripts/community');
-    cy.wait('@getStackScripts');
 
-    // Confirm that empty state is not shown.
-    cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
-    cy.findByText('Automate deployment scripts').should('not.exist');
+    // Fetch all public Images to later use while filtering StackScripts.
+    cy.defer(() =>
+      depaginate((page) => getImages({ page }, { is_public: true }))
+    ).then((publicImages: Image[]) => {
+      cy.visitWithLogin('/stackscripts/community');
+      cy.wait('@getStackScripts');
 
-    // Confirm that scrolling to the bottom of the StackScripts list causes
-    // pagination to occur automatically. Perform this check 3 times.
-    for (let i = 0; i < 3; i += 1) {
-      cy.findByLabelText('List of StackScripts')
-        .should('be.visible')
-        .within(() => {
-          // Scroll to the bottom of the StackScripts list, confirm Cloud fetches StackScripts,
-          // then confirm that list updates with the new StackScripts shown.
-          cy.get('tr').last().scrollIntoView();
-          cy.wait('@getStackScripts').then((xhr) => {
-            const stackScripts = xhr.response?.body['data'] as
-              | StackScript[]
-              | undefined;
-            if (!stackScripts) {
-              throw new Error(
-                'Unexpected response received when fetching StackScripts'
+      // Confirm that empty state is not shown.
+      cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
+      cy.findByText('Automate deployment scripts').should('not.exist');
+
+      // Confirm that scrolling to the bottom of the StackScripts list causes
+      // pagination to occur automatically. Perform this check 3 times.
+      for (let i = 0; i < 3; i += 1) {
+        cy.findByLabelText('List of StackScripts')
+          .should('be.visible')
+          .within(() => {
+            // Scroll to the bottom of the StackScripts list, confirm Cloud fetches StackScripts,
+            // then confirm that list updates with the new StackScripts shown.
+            cy.get('tr').last().scrollIntoView();
+            cy.wait('@getStackScripts').then((xhr) => {
+              const stackScripts = xhr.response?.body['data'] as
+                | StackScript[]
+                | undefined;
+
+              if (!stackScripts) {
+                throw new Error(
+                  'Unexpected response received when fetching StackScripts'
+                );
+              }
+
+              // Cloud Manager hides certain StackScripts from the landing page (although they can
+              // still be found via search). It does this if either condition is met:
+              //
+              // - The StackScript is only compatible with deprecated Images
+              // - The StackScript is only compatible with LKE Images
+              //
+              // As a consequence, we can't use the API response directly to assert
+              // that content is shown in the list. We need to apply identical filters
+              // to the response first, then assert the content using that data.
+              const filteredStackScripts = stackScripts.filter(
+                (stackScript: StackScript) => {
+                  const hasNonDeprecatedImages = stackScript.images.some(
+                    (stackScriptImage) => {
+                      return !!publicImages.find(
+                        (publicImage) => publicImage.id === stackScriptImage
+                      );
+                    }
+                  );
+
+                  const usesKubeImage = stackScript.images.some(
+                    (stackScriptImage) => isLinodeKubeImageId(stackScriptImage)
+                  );
+                  return hasNonDeprecatedImages && !usesKubeImage;
+                }
               );
-            }
-            cy.contains(
-              `${stackScripts[0].username} / ${stackScripts[0].label}`
-            ).should('be.visible');
+
+              cy.contains(
+                `${filteredStackScripts[0].username} / ${filteredStackScripts[0].label}`
+              ).should('be.visible');
+            });
           });
-        });
-    }
+      }
+    });
   });
 
   /*
