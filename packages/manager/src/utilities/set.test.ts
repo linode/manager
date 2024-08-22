@@ -1,6 +1,10 @@
 import { isPrototypePollutionSafe, set } from './set';
 
 describe('Tests for set', () => {
+  it("returns the passed in 'object' as is if it's not actually a (non array) object", () => {
+    expect(set([], 'path not needed', 3)).toEqual([]);
+  });
+
   describe('Correctly setting the value at the given path', () => {
     it('sets the value for a simple path for both string and array paths', () => {
       const object = {};
@@ -48,7 +52,7 @@ describe('Tests for set', () => {
       set(object2, ['a', 'b', '1'], 'b1');
       expect(object).toEqual({ a: { b: [undefined, 'b1'] } });
       expect(object2).toEqual(object);
-      set(object, 'a.b.0', 5);
+      set(object, 'a.b[0]', 5);
       set(object2, ['a', 'b', 0], 5);
       expect(object).toEqual({ a: { b: [5, 'b1'] } });
       expect(object2).toEqual(object);
@@ -61,7 +65,7 @@ describe('Tests for set', () => {
       });
       expect(object2).toEqual(object);
 
-      set(object, 'a.b.3.c', 'c');
+      set(object, 'a.b[3].c', 'c');
       set(object2, ['a', 'b', 3, 'c'], 'c');
       expect(object).toEqual({
         a: { b: [5, 'b1', 'b2', { c: 'c' }] },
@@ -69,7 +73,7 @@ describe('Tests for set', () => {
       expect(object2).toEqual(object);
     });
 
-    it('creates an empty key', () => {
+    it('creates an empty string key', () => {
       expect(set({}, '', 'empty string')).toEqual({ '': 'empty string' });
       expect(set({}, [''], 'empty string for array')).toEqual({
         '': 'empty string for array',
@@ -117,7 +121,7 @@ describe('Tests for set', () => {
       set(object, [2], '2');
       expect(object).toEqual({ 1: 'test', 2: '2' });
 
-      expect(set({ test: { test1: 'test' } }, 'test.1', 'test2')).toEqual({
+      expect(set({ test: { test1: 'test' } }, 'test[1]', 'test2')).toEqual({
         test: { '1': 'test2', test1: 'test' },
       });
     });
@@ -136,11 +140,17 @@ describe('Tests for set', () => {
       expect(obj4).toEqual({ 1: [undefined, [undefined, undefined, 'test']] });
     });
 
-    it('can uses symbols as keys', () => {
-      // do these count as symbols or strings here though... I was trying '\@', but eslint changed it to below
+    it('can use symbols as keys', () => {
       const object = {};
-      expect(set(object, '%', 'test')).toEqual({ '%': 'test' });
-      expect(set(object, ['@'], '2')).toEqual({ '%': 'test', '@': '2' });
+      const symbolTest = Symbol('test');
+      expect(set(object, symbolTest, 'test')).toEqual({
+        [symbolTest]: 'test',
+      });
+      const symbolAt = Symbol('@');
+      expect(set(object, [symbolAt], '2')).toEqual({
+        [symbolAt]: '2',
+        [symbolTest]: 'test',
+      });
     });
 
     it('sets the value at an already existing key', () => {

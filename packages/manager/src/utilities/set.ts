@@ -35,10 +35,10 @@ export function set<T extends object>(
   }
 
   let updatingObject: any = object;
-  // if we haven't reached the last key, traverse through object,
+  // if we haven't reached the last key, traverse through object and
   for (let i = 0; i < updatedPath.length - 1; i++) {
     const key = updatedPath[i];
-    // we set object[key] to be [] or {} depending on the next key
+    // set object[key] to be [] or {} depending on the next key
     if (!updatingObject[key] || typeof updatingObject[key] !== 'object') {
       const nextKey = updatedPath[i + 1];
       updatingObject[key] = isValidIndex(nextKey) ? [] : {};
@@ -47,14 +47,20 @@ export function set<T extends object>(
     updatingObject = updatingObject[key];
   }
 
-  // set value after reaching end of the path
+  // set value after reaching end of path
   updatingObject[updatedPath[updatedPath.length - 1]] = value;
 
   return object;
 }
 
 /**
- * Helper to ensure a path cannot lead to a prototype pollution issue.
+ * -------------------------------------------------------------------------
+ * Helper functions for set
+ * -------------------------------------------------------------------------
+ */
+
+/**
+ * Ensures a path cannot lead to a prototype pollution issue.
  *
  * @param path - The path to check
  * @return - If value is safe, returns it; otherwise returns undefined
@@ -77,13 +83,17 @@ export const isPrototypePollutionSafe = (path: PropertyName[]): boolean => {
  * @returns - The path to set a value, in array format
  */
 const determinePath = (path: PropertyPath): PropertyName[] => {
-  return Array.isArray(path)
-    ? path
-    : path.toString().match(/[^.[\]]+/g) ?? [''];
+  if (Array.isArray(path)) {
+    return path;
+  }
+
+  return typeof path === 'string'
+    ? path.toString().match(/[^.[\]]+/g) ?? ['']
+    : ([path] as PropertyName[]);
 };
 
 /**
- * Determines if the given value can be considered a valid index for an array.
+ * Determines if the given value can be considered a valid index for an array/string.
  * For example, 0, 1, 2 are all valid indexes.
  * -1, 01, -01, 00, '1 1' are not.
  *
