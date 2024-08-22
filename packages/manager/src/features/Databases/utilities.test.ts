@@ -8,7 +8,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { useIsDatabasesEnabled } from './utilities';
 
 describe('useIsDatabasesEnabled', () => {
-  it('should return true for an unrestricted user with the account capability', async () => {
+  it('should return true for an unrestricted user with the account capability V1', async () => {
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
     });
@@ -20,7 +20,10 @@ describe('useIsDatabasesEnabled', () => {
     );
 
     const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: wrapWithTheme,
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { dbaasV2: { beta: false, enabled: false } },
+        }),
     });
 
     await waitFor(() => {
@@ -42,7 +45,10 @@ describe('useIsDatabasesEnabled', () => {
     );
 
     const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: wrapWithTheme,
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { dbaasV2: { beta: true, enabled: true } },
+        }),
     });
 
     await waitFor(() => {
