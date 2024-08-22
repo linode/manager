@@ -6,7 +6,7 @@ import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TimeZoneForm, formatOffset } from './TimeZoneForm';
+import { TimezoneForm, formatOffset } from './TimezoneForm';
 
 const queryClient = queryClientFactory();
 
@@ -23,7 +23,7 @@ describe('Timezone change form', () => {
 
   it('should render input label', async () => {
     const { getByTestId, getByText } = renderWithTheme(
-      <TimeZoneForm loggedInAsCustomer={true} />,
+      <TimezoneForm loggedInAsCustomer={true} />,
       { queryClient }
     );
 
@@ -36,7 +36,7 @@ describe('Timezone change form', () => {
 
   it('should show a message if an admin is logged in as a customer', () => {
     const { getByTestId } = renderWithTheme(
-      <TimeZoneForm loggedInAsCustomer={true} />,
+      <TimezoneForm loggedInAsCustomer={true} />,
       { queryClient }
     );
 
@@ -45,7 +45,7 @@ describe('Timezone change form', () => {
 
   it('should not show a message if the user is logged in normally', () => {
     const { queryByTestId } = renderWithTheme(
-      <TimeZoneForm loggedInAsCustomer={false} />,
+      <TimezoneForm loggedInAsCustomer={false} />,
       { queryClient }
     );
 
@@ -54,7 +54,7 @@ describe('Timezone change form', () => {
 
   it("should include text with the user's current time zone", async () => {
     const { getByText } = renderWithTheme(
-      <TimeZoneForm loggedInAsCustomer={true} />,
+      <TimezoneForm loggedInAsCustomer={true} />,
       { queryClient }
     );
 

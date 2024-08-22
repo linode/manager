@@ -17,7 +17,7 @@ import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
-import { TimeZoneForm } from './TimeZoneForm';
+import { TimezoneForm } from './TimezoneForm';
 
 import type { ApplicationState } from 'src/store';
 
@@ -154,7 +154,7 @@ export const DisplaySettings = () => {
         type="email"
       />
       <Divider spacingBottom={8} spacingTop={24} />
-      <TimeZoneForm loggedInAsCustomer={loggedInAsCustomer} />
+      <TimezoneForm loggedInAsCustomer={loggedInAsCustomer} />
     </Paper>
   );
 };

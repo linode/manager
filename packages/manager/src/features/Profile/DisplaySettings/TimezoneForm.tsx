@@ -15,18 +15,18 @@ interface Props {
   loggedInAsCustomer: boolean;
 }
 
-interface TimeZone {
+interface Timezone {
   label: string;
   name: string;
   offset: number;
 }
 
-interface TimeZoneOption {
+interface TimezoneOption {
   label: string;
   value: string;
 }
 
-export const formatOffset = ({ label, offset }: TimeZone) => {
+export const formatOffset = ({ label, offset }: Timezone) => {
   const minutes = (Math.abs(offset) % 60).toLocaleString(undefined, {
     minimumIntegerDigits: 2,
     useGrouping: false,
@@ -37,46 +37,46 @@ export const formatOffset = ({ label, offset }: TimeZone) => {
   return `\(GMT ${isPositive}${hours}:${minutes}\) ${label}`;
 };
 
-const renderTimeZonesList = () => {
+const renderTimezonesList = () => {
   return timezones
     .map((tz) => ({ ...tz, offset: DateTime.now().setZone(tz.name).offset }))
     .sort((a, b) => a.offset - b.offset)
-    .map((tz: TimeZone) => {
+    .map((tz: Timezone) => {
       const label = formatOffset(tz);
       return { label, value: tz.name };
     });
 };
 
-const timeZoneList: TimeZoneOption[] = renderTimeZonesList();
+const timezoneList: TimezoneOption[] = renderTimezonesList();
 
-export const TimeZoneForm = (props: Props) => {
+export const TimezoneForm = (props: Props) => {
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const { error, isLoading, mutateAsync: updateProfile } = useMutateProfile();
-  const [timeZoneValue, setTimeZoneValue] = React.useState<null | string>(null);
-  const timeZone = profile?.timezone ?? '';
+  const [timezoneValue, setTimezoneValue] = React.useState<null | string>(null);
+  const timezone = profile?.timezone ?? '';
 
-  const handleTimeZoneChange = (timezone: string) => {
-    setTimeZoneValue(timezone);
+  const handleTimezoneChange = (timezone: string) => {
+    setTimezoneValue(timezone);
   };
 
   const onSubmit = () => {
-    if (timeZoneValue === null) {
+    if (timezoneValue === null) {
       return;
     }
 
-    updateProfile({ timezone: timeZoneValue }).then(() => {
+    updateProfile({ timezone: timezoneValue }).then(() => {
       enqueueSnackbar('Successfully updated timezone', { variant: 'success' });
     });
   };
 
-  const defaultTimeZone = timeZoneList.find((eachZone) => {
-    return eachZone.value === timeZone;
+  const defaultTimezone = timezoneList.find((eachZone) => {
+    return eachZone.value === timezone;
   });
 
   const disabled =
-    timeZoneValue === null || defaultTimeZone?.value === timeZoneValue;
+    timezoneValue === null || defaultTimezone?.value === timezoneValue;
 
   if (!profile) {
     return <CircleProgress />;
@@ -88,31 +88,31 @@ export const TimeZoneForm = (props: Props) => {
         <StyledLoggedInAsCustomerNotice data-testid="admin-notice">
           <Typography variant="h2">
             While you are logged in as a customer, all times, dates, and graphs
-            will be displayed in your browser&rsquo;s time zone ({timeZone}).
+            will be displayed in your browser&rsquo;s timezone ({timezone}).
           </Typography>
         </StyledLoggedInAsCustomerNotice>
       ) : null}
       <StyledRootContainer>
         <Stack>
           <Autocomplete
-            value={timeZoneList.find(
-              (option) => option.value === timeZoneValue
+            value={timezoneList.find(
+              (option) => option.value === timezoneValue
             )}
             data-qa-tz-select
-            defaultValue={defaultTimeZone}
+            defaultValue={defaultTimezone}
             disableClearable
             errorText={error?.[0].reason}
-            label="Time Zone"
-            onChange={(_, option) => handleTimeZoneChange(option.value)}
-            options={timeZoneList}
-            placeholder="Choose a Time Zone"
+            label="Timezone"
+            onChange={(_, option) => handleTimezoneChange(option.value)}
+            options={timezoneList}
+            placeholder="Choose a Timezone"
             sx={{ width: '416px' }}
           />
         </Stack>
         <ActionsPanel
           primaryButtonProps={{
             disabled,
-            label: 'Update Time Zone',
+            label: 'Update Timezone',
             loading: isLoading,
             onClick: onSubmit,
             sx: {
