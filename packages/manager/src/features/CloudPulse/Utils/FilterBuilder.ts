@@ -259,7 +259,7 @@ export const checkIfAllMandatoryFiltersAreSelected = (
  * @param serviceType The serviceType assosicated with the dashboard like linode, dbaas etc.,
  * @returns Constructs and returns the metrics call filters based on selected filters and service type
  */
-export const getFiltersForMetricsCallFromCustomSelect = (
+export const getMetricsCallCustomFilters = (
   selectedFilters: {
     [key: string]: FilterValueType;
   },

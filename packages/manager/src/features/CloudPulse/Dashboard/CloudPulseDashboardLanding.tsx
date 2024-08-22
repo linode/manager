@@ -9,7 +9,7 @@ import { GlobalFilters } from '../Overview/GlobalFilters';
 import { REGION, RESOURCE_ID } from '../Utils/constants';
 import {
   checkIfAllMandatoryFiltersAreSelected,
-  getFiltersForMetricsCallFromCustomSelect,
+  getMetricsCallCustomFilters,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { useLoadUserPreferences } from '../Utils/UserPreference';
@@ -100,7 +100,7 @@ export const CloudPulseDashboardLanding = () => {
 
     return (
       <CloudPulseDashboard
-        additionalFilters={getFiltersForMetricsCallFromCustomSelect(
+        additionalFilters={getMetricsCallCustomFilters(
           filterValue,
           dashboard.service_type
         )}

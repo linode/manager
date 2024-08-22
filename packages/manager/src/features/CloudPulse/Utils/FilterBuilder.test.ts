@@ -6,7 +6,7 @@ import {
   checkIfWeNeedToDisableFilterByFilterKey,
   constructAdditionalRequestFilters,
   getCustomSelectProperties,
-  getFiltersForMetricsCallFromCustomSelect,
+  getMetricsCallCustomFilters,
   getRegionProperties,
   getResourcesProperties,
   getTimeDurationProperties,
@@ -233,7 +233,7 @@ it('test getCustomSelectProperties method', () => {
 });
 
 it('test getFiltersForMetricsCallFromCustomSelect method', () => {
-    let result = getFiltersForMetricsCallFromCustomSelect({
+    let result = getMetricsCallCustomFilters({
         'resource_id' : [1,2,3]
     }, 'linode');
 
@@ -242,7 +242,7 @@ it('test getFiltersForMetricsCallFromCustomSelect method', () => {
 });
 
 it('test constructAdditionalRequestFilters method', () => {
-    let result = constructAdditionalRequestFilters(getFiltersForMetricsCallFromCustomSelect({
+    let result = constructAdditionalRequestFilters(getMetricsCallCustomFilters({
       'resource_id' : [1,2,3]
   }, 'linode'))
 
