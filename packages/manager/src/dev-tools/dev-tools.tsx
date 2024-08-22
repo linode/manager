@@ -55,6 +55,10 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
     React.useEffect(() => {
       // Prevent scrolling of the window when scrolling start/end of the dev tools
       // Particularly useful when in draggable mode
+      if (!isDraggable) {
+        return;
+      }
+
       const handleWheel = (e: WheelEvent) => {
         if (!devToolsMainRef.current?.contains(e.target as Node)) {
           return;
