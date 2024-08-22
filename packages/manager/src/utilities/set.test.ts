@@ -1,7 +1,5 @@
 import { isPrototypePollutionSafe, set } from './set';
 
-// todo: as i debug get rid of calls to _set
-
 describe('Tests for set', () => {
   describe('Correctly setting the value at the given path', () => {
     it('sets the value for a simple path for both string and array paths', () => {
@@ -286,21 +284,22 @@ describe('Tests for set', () => {
       expect(object).toBe(settedObject);
       expect(object).toEqual({ '__proto__.test': 1, test__proto__test: 1 });
 
-      // this will fail -- array paths not working yet
       settedObject = set(object, ['constructortest', 'test'], 1);
-      // expect(object).toBe(settedObject);
-      // expect(object).toEqual({
-      //   constructortest: { test: 1 },
-      //   test__proto__test: 1,
-      // });
+      expect(object).toBe(settedObject);
+      expect(object).toEqual({
+        '__proto__.test': 1,
+        constructortest: { test: 1 },
+        test__proto__test: 1,
+      });
 
-      // settedObject = set(object, ['testprototype'], 1);
-      // expect(object).toBe(settedObject);
-      // expect(object).toEqual({
-      //   constructortest: { test: 1 },
-      //   test__proto__test: 1,
-      //   testprototype: 1,
-      // });
+      settedObject = set(object, ['testprototype'], 1);
+      expect(object).toBe(settedObject);
+      expect(object).toEqual({
+        '__proto__.test': 1,
+        constructortest: { test: 1 },
+        test__proto__test: 1,
+        testprototype: 1,
+      });
     });
   });
 });
