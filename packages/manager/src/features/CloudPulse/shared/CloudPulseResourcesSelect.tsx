@@ -93,7 +93,7 @@ export const CloudPulseResourcesSelect = React.memo(
           InputProps: {
             sx: {
               maxHeight: '55px',
-              overflow: 'scroll',
+              overflow: 'auto',
             },
           },
           hideLabel: true,
