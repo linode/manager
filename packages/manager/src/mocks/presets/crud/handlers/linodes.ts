@@ -17,7 +17,7 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import { mswDB } from '../indexedDB';
+import { mswDB } from '../../../indexedDB';
 
 import type {
   Config,

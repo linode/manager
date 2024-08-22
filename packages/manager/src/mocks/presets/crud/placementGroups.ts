@@ -4,7 +4,7 @@ import {
   getPlacementGroups,
   placementGroupLinodeAssignment,
   updatePlacementGroup,
-} from 'src/mocks/handlers/placementGroup-handlers';
+} from 'src/mocks/presets/crud/handlers/placementGroups';
 
 import type { MockPresetCrud } from 'src/mocks/types';
 

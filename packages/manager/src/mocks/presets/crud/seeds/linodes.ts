@@ -1,7 +1,7 @@
 import { getSeedsCountMap } from 'src/dev-tools/utils';
 import { configFactory, linodeFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
-import { seedWithUniqueIds } from 'src/mocks/seeds/utils';
+import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
 import type { Config } from '@linode/api-v4';
 import type { MockSeeder, MockState } from 'src/mocks/types';

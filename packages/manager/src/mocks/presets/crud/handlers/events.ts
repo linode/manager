@@ -1,17 +1,17 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { mswDB } from '../indexedDB';
+import { mswDB } from '../../../indexedDB';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
   makeResponse,
-} from '../utilities/response';
+} from '../../../utilities/response';
 
 import type {
   APIErrorResponse,
   APIPaginatedResponse,
-} from '../utilities/response';
+} from '../../../utilities/response';
 import type { Event } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';

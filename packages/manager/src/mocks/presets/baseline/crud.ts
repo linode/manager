@@ -1,8 +1,11 @@
-import { getEvents, updateEvents } from 'src/mocks/handlers/event-handlers';
-import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes-crud';
+import {
+  getEvents,
+  updateEvents,
+} from 'src/mocks/presets/crud/handlers/events';
+import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes';
 
-import { placementGroupsCrudPreset } from '../crud/placementGroups-crud';
-import { volumeCrudPreset } from '../crud/volumes-crud';
+import { placementGroupsCrudPreset } from '../crud/placementGroups';
+import { volumeCrudPreset } from '../crud/volumes';
 
 import type { MockPresetBaseline } from 'src/mocks/types';
 

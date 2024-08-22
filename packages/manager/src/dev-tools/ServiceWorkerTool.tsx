@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Tooltip } from 'src/components/Tooltip';
 import { mswDB } from 'src/mocks/indexedDB';
 import { extraMockPresets } from 'src/mocks/presets';
-import { dbSeeders } from 'src/mocks/seeds';
-import { removeSeeds } from 'src/mocks/seeds/utils';
+import { dbSeeders } from 'src/mocks/presets/crud/seeds';
+import { removeSeeds } from 'src/mocks/presets/crud/seeds/utils';
 
 import { BaselinePresetOptions } from './components/BaselinePresetOptions';
 import { DevToolSelect } from './components/DevToolSelect';

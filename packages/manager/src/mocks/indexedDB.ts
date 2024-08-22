@@ -1,4 +1,4 @@
-import { hasId } from './seeds/utils';
+import { hasId } from './presets/crud/seeds/utils';
 
 import type { MockState } from './types';
 

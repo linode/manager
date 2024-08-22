@@ -1,18 +1,18 @@
-import { baselineAccountActivationPreset } from './baseline/baseline-account-review';
-import { baselineApiMaintenanceModePreset } from './baseline/baseline-api-maintenance-mode';
-import { baselineApiOfflinePreset } from './baseline/baseline-api-offline';
-import { baselineApiUnstablePreset } from './baseline/baseline-api-unstable';
-import { baselineCrudPreset } from './baseline/baseline-crud';
-import { baselineLegacyPreset } from './baseline/baseline-legacy';
-import { baselineNoMocksPreset } from './baseline/baseline-no-mocks';
-import { childAccountPreset } from './extra/account/child-account';
-import { managedDisabledPreset } from './extra/account/managed-disabled';
-import { managedEnabledPreset } from './extra/account/managed-enabled';
-import { parentAccountPreset } from './extra/account/parent-account';
+import { baselineAccountActivationPreset } from './baseline/accountReview';
+import { baselineApiMaintenanceModePreset } from './baseline/apiMaintenanceMode';
+import { baselineApiOfflinePreset } from './baseline/apiOffline';
+import { baselineApiUnstablePreset } from './baseline/apiUnstable';
+import { baselineCrudPreset } from './baseline/crud';
+import { baselineLegacyPreset } from './baseline/legacy';
+import { baselineNoMocksPreset } from './baseline/noMocks';
+import { childAccountPreset } from './extra/account/childAccount';
+import { managedDisabledPreset } from './extra/account/managedDisabled';
+import { managedEnabledPreset } from './extra/account/managedEnabled';
+import { parentAccountPreset } from './extra/account/parentAccount';
 import { apiResponseTimePreset } from './extra/api/api';
 import { coreAndDistributedRegionsPreset } from './extra/regions/coreAndDistributed';
 import { coreOnlyRegionsPreset } from './extra/regions/coreOnly';
-import { legacyRegionsPreset } from './extra/regions/legacy-regions';
+import { legacyRegionsPreset } from './extra/regions/legacyRegions';
 
 import type { MockPresetBaseline, MockPresetExtra } from '../types';
 

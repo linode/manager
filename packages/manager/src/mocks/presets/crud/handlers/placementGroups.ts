@@ -8,7 +8,7 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import { queueEvents } from '../utilities/events';
+import { queueEvents } from '../../../utilities/events';
 
 import type {
   AssignLinodesToPlacementGroupPayload,

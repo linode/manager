@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { getStateSeederGroups } from 'src/mocks/mockState';
-import { dbSeeders } from 'src/mocks/seeds';
+import { dbSeeders } from 'src/mocks/presets/crud/seeds';
 
 interface SeedOptionsProps {
   disabled: boolean;

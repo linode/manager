@@ -3,7 +3,7 @@ import {
   deleteVolumes,
   getVolumes,
   updateVolumes,
-} from 'src/mocks/handlers/volume-handlers';
+} from 'src/mocks/presets/crud/handlers/volumes';
 
 import type { MockPresetCrud } from 'src/mocks/types';
 

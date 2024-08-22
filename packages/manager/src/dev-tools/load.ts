@@ -3,7 +3,7 @@ import { mswDB } from 'src/mocks/indexedDB';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { createInitialMockStore, emptyStore } from 'src/mocks/mockState';
 import { allMockPresets, defaultBaselineMockPreset } from 'src/mocks/presets';
-import { dbSeeders } from 'src/mocks/seeds';
+import { dbSeeders } from 'src/mocks/presets/crud/seeds';
 
 import {
   getBaselinePreset,

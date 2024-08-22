@@ -10,7 +10,7 @@ import {
   getLinodes,
   shutDownLinode,
   updateLinode,
-} from 'src/mocks/handlers/linode-handlers';
+} from 'src/mocks/presets/crud/handlers/linodes';
 
 import type { MockPresetCrud } from 'src/mocks/types';
 
