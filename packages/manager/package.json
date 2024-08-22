@@ -30,7 +30,7 @@
     "@tanstack/react-query": "4.36.1",
     "@tanstack/react-query-devtools": "4.36.1",
     "algoliasearch": "^4.14.3",
-    "axios": "~1.6.8",
+    "axios": "~1.7.4",
     "braintree-web": "^3.92.2",
     "chart.js": "~2.9.4",
     "copy-to-clipboard": "^3.0.8",
