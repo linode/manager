@@ -92,8 +92,12 @@ export const BucketProperties = React.memo((props: Props) => {
         {/* TODO: OBJGen2 - We need to handle link in upcoming PR */}
         <StyledHelperText>
           Specifies the maximum Requests Per Second (RPS) for an Endpoint. To
-          increase it to High, <SupportLink text="open a support ticket" />.
-          Understand <Link to="#">bucket rate limits</Link>.
+          increase it to High,{' '}
+          <SupportLink
+            text="open a support ticket"
+            title="Request to Increase Bucket Rate Limits"
+          />
+          . Understand <Link to="#">bucket rate limits</Link>.
         </StyledHelperText>
 
         <form onSubmit={handleSubmit(onSubmit)}>
