@@ -76,6 +76,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   chip: {
+    marginLeft: 6,
     marginTop: 4,
   },
   createBtn: {
