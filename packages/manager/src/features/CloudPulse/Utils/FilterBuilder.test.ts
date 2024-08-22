@@ -193,7 +193,7 @@ it('test checkIfAllMandatoryFiltersAreSelected method', () => {
 });
 
 it('test getCustomSelectProperties method', () => {
-  let customSelectEngineConfig = dbaasConfig?.filters.find(
+  const customSelectEngineConfig = dbaasConfig?.filters.find(
     (filterObj) => filterObj.name === 'DB Engine'
   );
 
@@ -233,7 +233,7 @@ it('test getCustomSelectProperties method', () => {
 });
 
 it('test getFiltersForMetricsCallFromCustomSelect method', () => {
-    let result = getMetricsCallCustomFilters({
+    const result = getMetricsCallCustomFilters({
         'resource_id' : [1,2,3]
     }, 'linode');
 
@@ -242,7 +242,7 @@ it('test getFiltersForMetricsCallFromCustomSelect method', () => {
 });
 
 it('test constructAdditionalRequestFilters method', () => {
-    let result = constructAdditionalRequestFilters(getMetricsCallCustomFilters({
+    const result = constructAdditionalRequestFilters(getMetricsCallCustomFilters({
       'resource_id' : [1,2,3]
   }, 'linode'))
 
