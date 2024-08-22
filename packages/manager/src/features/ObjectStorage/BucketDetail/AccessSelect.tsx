@@ -142,7 +142,9 @@ export const AccessSelect = React.memo((props: Props) => {
     : 'CORS Disabled';
 
   const isCorsEnabled =
-    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
+    (variant === 'bucket' || variant === 'object') &&
+    endpointType !== 'E2' &&
+    endpointType !== 'E3';
 
   const selectedOption =
     _options.find((thisOption) => thisOption.value === selectedACL) ??
