@@ -37,4 +37,5 @@ export const StyledActionsPanel = styled(ActionsPanel, {
 })(() => ({
   display: 'flex',
   justifyContent: 'right',
+  padding: 0,
 }));

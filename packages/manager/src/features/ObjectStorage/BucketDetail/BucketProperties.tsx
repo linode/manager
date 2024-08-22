@@ -104,7 +104,6 @@ export const BucketProperties = React.memo((props: Props) => {
               loading: isSubmitting,
               type: 'submit',
             }}
-            style={{ padding: 0 }}
           />
         </form>
       </StyledRootContainer>
