@@ -22,9 +22,9 @@ describe('BucketRateLimitTable', () => {
     expect(rows).toHaveLength(3);
 
     // if endpoint type is not E3, table data should not contain value 20,000
-    const limitValue5000 = getByText('5000');
+    const limitValue5000 = getByText('5,000');
     expect(limitValue5000).toBeVisible();
-    const limitValue20000 = queryByText('20000');
+    const limitValue20000 = queryByText('20,000');
     expect(limitValue20000).not.toBeInTheDocument();
   });
 
@@ -39,9 +39,9 @@ describe('BucketRateLimitTable', () => {
     expect(rows).toHaveLength(3);
 
     // if endpoint type is E3, table data should contain value 20,000
-    const limitValue20000 = getByText('20000');
+    const limitValue20000 = getByText('20,000');
     expect(limitValue20000).toBeVisible();
-    const limitValue5000 = queryByText('5000');
+    const limitValue5000 = queryByText('5,000');
     expect(limitValue5000).not.toBeInTheDocument();
   });
 });
