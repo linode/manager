@@ -90,6 +90,12 @@ export const CloudPulseResourcesSelect = React.memo(
           handleResourcesSelection(resourceSelections);
         }}
         textFieldProps={{
+          InputProps: {
+            sx: {
+              maxHeight: '55px',
+              overflow: 'auto',
+            },
+          },
           hideLabel: true,
         }}
         autoHighlight
