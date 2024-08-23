@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account/types';
+// TODO eventMessagesV2: delete when flag is removed
 import { partition } from 'ramda';
 import * as React from 'react';
 
@@ -8,9 +8,11 @@ import { useEventsInfiniteQuery } from 'src/queries/events/events';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
-import { NotificationItem } from '../NotificationSection';
 import { RenderEvent } from './RenderEvent';
 import RenderProgressEvent from './RenderProgressEvent';
+
+import type { NotificationItem } from '../NotificationSection';
+import type { Event, EventAction } from '@linode/api-v4/lib/account/types';
 
 const defaultUnwantedEvents: EventAction[] = [
   'account_update',
@@ -21,40 +23,42 @@ const defaultUnwantedEvents: EventAction[] = [
   'volume_update',
 ];
 
-export const useEventNotifications = (givenEvents?: Event[]) => {
-  const events = removeBlocklistedEvents(
-    givenEvents ?? useEventsInfiniteQuery().events
-  );
+export const useEventNotifications = (): NotificationItem[] => {
+  const { events: fetchedEvents } = useEventsInfiniteQuery();
+  const relevantEvents = removeBlocklistedEvents(fetchedEvents);
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
   const notificationContext = React.useContext(_notificationContext);
 
   // TODO: TaxId - This entire function can be removed when we cleanup tax id feature flags
-  const unwantedEvents = React.useMemo(() => {
-    const events = [...defaultUnwantedEvents];
+  const unwantedEventTypes = React.useMemo(() => {
+    const eventTypes = [...defaultUnwantedEvents];
     if (!isTaxIdEnabled) {
-      events.push('tax_id_invalid');
+      eventTypes.push('tax_id_invalid');
     }
-    return events;
+    return eventTypes;
   }, [isTaxIdEnabled]);
 
-  const _events = events.filter(
-    (thisEvent) => !unwantedEvents.includes(thisEvent.action)
+  const filteredEvents = relevantEvents.filter(
+    (event) => !unwantedEventTypes.includes(event.action)
   );
 
-  const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
+  const [inProgressEvents, completedEvents] = partition<Event>(
+    isInProgressEvent,
+    filteredEvents
+  );
 
-  const allEvents = [
-    ...inProgress.map((thisEvent) =>
-      formatProgressEventForDisplay(thisEvent, notificationContext.closeMenu)
+  const allNotificationItems = [
+    ...inProgressEvents.map((event) =>
+      formatProgressEventForDisplay(event, notificationContext.closeMenu)
     ),
-    ...completed.map((thisEvent) =>
-      formatEventForDisplay(thisEvent, notificationContext.closeMenu)
+    ...completedEvents.map((event) =>
+      formatEventForDisplay(event, notificationContext.closeMenu)
     ),
   ];
 
-  return allEvents.filter((thisAction) =>
-    Boolean(thisAction.body)
-  ) as NotificationItem[];
+  return allNotificationItems.filter((notification) =>
+    Boolean(notification.body)
+  );
 };
 
 const formatEventForDisplay = (

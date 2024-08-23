@@ -1,4 +1,4 @@
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 import type { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { PriceType } from '@linode/api-v4/src/types';
@@ -173,6 +173,43 @@ export const volumeTypeFactory = Factory.Sync.makeFactory<PriceType>({
   transfer: 0,
 });
 
+export const lkeStandardAvailabilityTypeFactory = Factory.Sync.makeFactory<PriceType>(
+  {
+    id: 'lke-sa',
+    label: 'LKE Standard Availability',
+    price: {
+      hourly: 0.0,
+      monthly: 0.0,
+    },
+    region_prices: [],
+    transfer: 0,
+  }
+);
+
+export const lkeHighAvailabilityTypeFactory = Factory.Sync.makeFactory<PriceType>(
+  {
+    id: 'lke-ha',
+    label: 'LKE High Availability',
+    price: {
+      hourly: 0.09,
+      monthly: 60.0,
+    },
+    region_prices: [
+      {
+        hourly: 0.108,
+        id: 'id-cgk',
+        monthly: 72.0,
+      },
+      {
+        hourly: 0.126,
+        id: 'br-gru',
+        monthly: 84.0,
+      },
+    ],
+    transfer: 0,
+  }
+);
+
 export const objectStorageTypeFactory = Factory.Sync.makeFactory<PriceType>({
   id: 'objectstorage',
   label: 'Object Storage',
@@ -211,6 +248,43 @@ export const objectStorageOverageTypeFactory = Factory.Sync.makeFactory<PriceTyp
       },
       {
         hourly: 0.028,
+        id: 'br-gru',
+        monthly: null,
+      },
+    ],
+    transfer: 0,
+  }
+);
+
+export const distributedNetworkTransferPriceTypeFactory = Factory.Sync.makeFactory<PriceType>(
+  {
+    id: 'distributed_network_transfer',
+    label: 'Distributed Network Transfer',
+    price: {
+      hourly: 0.01,
+      monthly: null,
+    },
+    region_prices: [],
+    transfer: 0,
+  }
+);
+
+export const networkTransferPriceTypeFactory = Factory.Sync.makeFactory<PriceType>(
+  {
+    id: 'network_transfer',
+    label: 'Network Transfer',
+    price: {
+      hourly: 0.005,
+      monthly: null,
+    },
+    region_prices: [
+      {
+        hourly: 0.015,
+        id: 'id-cgk',
+        monthly: null,
+      },
+      {
+        hourly: 0.007,
         id: 'br-gru',
         monthly: null,
       },

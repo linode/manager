@@ -1,6 +1,4 @@
-import { NodeBalancer } from '@linode/api-v4';
 import { useTheme } from '@mui/material';
-import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -16,11 +14,12 @@ import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
 } from 'src/queries/firewalls';
-import { queryKey } from 'src/queries/nodebalancers';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
+import type { NodeBalancer } from '@linode/api-v4';
 
 interface Props {
   helperText: string;
@@ -35,9 +34,8 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
-  const queryClient = useQueryClient();
 
-  const { data, error, isLoading } = useAllFirewallsQuery();
+  const { data, error, isLoading } = useAllFirewallsQuery(open);
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
 
@@ -73,12 +71,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
         enqueueSnackbar(`NodeBalancer ${label} successfully added`, {
           variant: 'success',
         });
-        queryClient.invalidateQueries([
-          queryKey,
-          'nodebalancer',
-          id,
-          'firewalls',
-        ]);
         return;
       }
       failedNodebalancers.push(selectedNodebalancers[index]);

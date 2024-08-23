@@ -31,9 +31,22 @@ export const queryPresets = {
   },
 };
 
-export const queryClientFactory = () => {
+/**
+ * Creates and returns a new TanStack Query query client instance.
+ *
+ * Allows the query client behavior to be configured by specifying a preset. The
+ * 'longLived' preset is most suitable for production use, while 'oneTimeFetch' is
+ * preferred for tests.
+ *
+ * @param preset - Optional query preset for client. Either 'longLived' or 'oneTimeFetch'.
+ *
+ * @returns New `QueryClient` instance.
+ */
+export const queryClientFactory = (
+  preset: 'longLived' | 'oneTimeFetch' = 'oneTimeFetch'
+) => {
   return new QueryClient({
-    defaultOptions: { queries: queryPresets.longLived },
+    defaultOptions: { queries: queryPresets[preset] },
   });
 };
 
@@ -56,17 +69,21 @@ export type ItemsByID<T> = Record<string, T>;
  *
  */
 
-export const listToItemsByID = <E extends {}[]>(
-  entityList: E,
+export const listToItemsByID = <E extends { [id: number | string]: any }>(
+  entityList: E[],
   indexer: string = 'id'
 ) => {
-  return entityList.reduce(
+  return entityList.reduce<Record<string, E>>(
     (map, item) => ({ ...map, [item[indexer]]: item }),
     {}
   );
 };
 
-export const mutationHandlers = <T, V, E = APIError[]>(
+export const mutationHandlers = <
+  T,
+  V extends Record<string, any>,
+  E = APIError[]
+>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
@@ -76,7 +93,7 @@ export const mutationHandlers = <T, V, E = APIError[]>(
       // Update the query data to include the newly updated Entity.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
-        [variables[indexer]]: updatedEntity,
+        [variables[indexer as keyof V]]: updatedEntity,
       }));
     },
   };
@@ -96,7 +113,11 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-export const creationHandlers = <T, V, E = APIError[]>(
+export const creationHandlers = <
+  T extends Record<string, any>,
+  V,
+  E = APIError[]
+>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
@@ -112,7 +133,11 @@ export const creationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-export const deletionHandlers = <T, V, E = APIError[]>(
+export const deletionHandlers = <
+  T,
+  V extends Record<string, any>,
+  E = APIError[]
+>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient

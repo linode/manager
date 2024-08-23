@@ -7,13 +7,12 @@ import {
 } from 'src/factories';
 
 import {
-  affinityTypeOptions,
-  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
   getMaxPGsPerCustomer,
   getPlacementGroupLinodes,
   hasPlacementGroupReachedCapacity,
   hasRegionReachedPlacementGroupCapacity,
+  placementGroupTypeOptions,
   useIsPlacementGroupsEnabled,
 } from './utils';
 
@@ -55,7 +54,7 @@ const initialLinodeData = [
 
 describe('affinityTypeOptions', () => {
   it('returns an array of objects with label and value properties', () => {
-    expect(affinityTypeOptions).toEqual(
+    expect(placementGroupTypeOptions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           label: expect.any(String),
@@ -125,16 +124,6 @@ describe('getLinodesFromAllPlacementGroups', () => {
 
   it('returns an empty array if no placement groups are provided', () => {
     expect(getLinodesFromAllPlacementGroups(undefined)).toEqual([]);
-  });
-});
-
-describe('getAffinityTypeEnforcement', () => {
-  it('returns "Strict" if `is_strict` is true', () => {
-    expect(getAffinityTypeEnforcement(true)).toBe('Strict');
-  });
-
-  it('returns "Flexible" if `is_strict` is false', () => {
-    expect(getAffinityTypeEnforcement(false)).toBe('Flexible');
   });
 });
 

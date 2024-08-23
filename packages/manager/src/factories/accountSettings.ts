@@ -1,5 +1,5 @@
 import { AccountSettings } from '@linode/api-v4/lib/account/types';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 export const accountSettingsFactory = Factory.Sync.makeFactory<AccountSettings>(
   {

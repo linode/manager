@@ -2,7 +2,7 @@
  * @file End-to-end tests for Object Storage Access Key operations.
  */
 
-import { objectStorageBucketFactory } from 'src/factories/objectStorage';
+import { createObjectStorageBucketFactoryLegacy } from 'src/factories/objectStorage';
 import { authenticate } from 'support/api/authentication';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
 import {
@@ -17,6 +17,8 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { mockGetAccount } from 'support/intercepts/account';
+import { accountFactory } from 'src/factories';
 
 authenticate();
 describe('object storage access key end-to-end tests', () => {
@@ -37,6 +39,7 @@ describe('object storage access key end-to-end tests', () => {
     interceptGetAccessKeys().as('getKeys');
     interceptCreateAccessKey().as('createKey');
 
+    mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
       objMultiCluster: makeFeatureFlagData(false),
     });
@@ -117,7 +120,7 @@ describe('object storage access key end-to-end tests', () => {
   it('can create an access key with limited access - e2e', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-east-1';
-    const bucketRequest = objectStorageBucketFactory.build({
+    const bucketRequest = createObjectStorageBucketFactoryLegacy.build({
       label: bucketLabel,
       cluster: bucketCluster,
       // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
@@ -126,11 +129,12 @@ describe('object storage access key end-to-end tests', () => {
 
     // Create a bucket before creating access key.
     cy.defer(
-      createBucket(bucketRequest),
+      () => createBucket(bucketRequest),
       'creating Object Storage bucket'
     ).then(() => {
       const keyLabel = randomLabel();
 
+      mockGetAccount(accountFactory.build({ capabilities: [] }));
       mockAppendFeatureFlags({
         objMultiCluster: makeFeatureFlagData(false),
       });

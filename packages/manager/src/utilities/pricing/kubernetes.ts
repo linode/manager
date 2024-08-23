@@ -1,6 +1,7 @@
+import { getLinodeRegionPrice } from './linodes';
+
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4/lib';
 import type { ExtendedType } from 'src/utilities/extendType';
-import { getLinodeRegionPrice } from './linodes';
 
 interface MonthlyPriceOptions {
   count: number;

@@ -1,12 +1,4 @@
 import {
-  CreateKubeClusterPayload,
-  CreateNodePoolData,
-  KubeNodePoolResponse,
-  KubernetesCluster,
-  KubernetesDashboardResponse,
-  KubernetesEndpointResponse,
-  KubernetesVersion,
-  UpdateNodePoolData,
   createKubernetesCluster,
   createNodePool,
   deleteKubernetesCluster,
@@ -16,6 +8,7 @@ import {
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
+  getKubernetesTypes,
   getKubernetesVersions,
   getNodePools,
   recycleAllNodes,
@@ -25,12 +18,6 @@ import {
   updateKubernetesCluster,
   updateNodePool,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -38,6 +25,24 @@ import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
 import { profileQueries } from './profile/profile';
+
+import type {
+  CreateKubeClusterPayload,
+  CreateNodePoolData,
+  KubeNodePoolResponse,
+  KubernetesCluster,
+  KubernetesDashboardResponse,
+  KubernetesEndpointResponse,
+  KubernetesVersion,
+  UpdateNodePoolData,
+} from '@linode/api-v4';
+import type {
+  APIError,
+  Filter,
+  Params,
+  PriceType,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 
 export const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({
@@ -78,15 +83,24 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
     },
     queryKey: null,
   },
+  types: {
+    queryFn: () => getAllKubernetesTypes(),
+    queryKey: null,
+  },
   versions: {
     queryFn: () => getAllKubernetesVersions(),
     queryKey: null,
   },
 });
 
-export const useKubernetesClustersQuery = (params: Params, filter: Filter) => {
+export const useKubernetesClustersQuery = (
+  params: Params,
+  filter: Filter,
+  enabled = true
+) => {
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>({
     ...kubernetesQueries.lists._ctx.paginated(params, filter),
+    enabled,
     keepPreviousData: true,
   });
 };
@@ -312,3 +326,14 @@ const getAllAPIEndpointsForCluster = (clusterId: number) =>
   getAll<KubernetesEndpointResponse>((params, filters) =>
     getKubernetesClusterEndpoints(clusterId, params, filters)
   )().then((data) => data.data);
+
+const getAllKubernetesTypes = () =>
+  getAll<PriceType>((params) => getKubernetesTypes(params))().then(
+    (results) => results.data
+  );
+
+export const useKubernetesTypesQuery = () =>
+  useQuery<PriceType[], APIError[]>({
+    ...queryPresets.oneTimeFetch,
+    ...kubernetesQueries.types,
+  });

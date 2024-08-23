@@ -1,18 +1,21 @@
-import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
+import { Box } from 'src/components/Box';
+import { StyledActionButton } from 'src/components/Button/StyledActionButton';
 import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Paper } from 'src/components/Paper';
+import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
+import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
+import { Stack } from 'src/components/Stack';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
+import { Typography } from 'src/components/Typography';
+import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
@@ -24,6 +27,9 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
+
+import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionRow: {
@@ -42,21 +48,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
       height: 14,
       marginLeft: 4,
     },
+    alignItems: 'center',
+    display: 'flex',
   },
   deleteClusterBtn: {
-    paddingRight: '0px',
     [theme.breakpoints.up('md')]: {
       paddingRight: '8px',
     },
-  },
-  mainGridContainer: {
-    position: 'relative',
-  },
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2.5)} ${theme.spacing(1)} ${theme.spacing(
-      2.5
-    )} ${theme.spacing(3)}`,
   },
   tags: {
     // Tags Panel wrapper
@@ -89,10 +87,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
       // Tags Panel wrapper
       '& > div:last-child': {
         display: 'flex',
-        flexWrap: 'wrap',
         justifyContent: 'flex-end',
       },
     },
+    width: '100%',
   },
 }));
 
@@ -100,10 +98,14 @@ interface Props {
   cluster: KubernetesCluster;
 }
 
-export const KubeSummaryPanel = (props: Props) => {
+export const KubeSummaryPanel = React.memo((props: Props) => {
   const { cluster } = props;
+
   const { classes } = useStyles();
+  const theme = useTheme();
+
   const { enqueueSnackbar } = useSnackbar();
+
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
@@ -152,67 +154,98 @@ export const KubeSummaryPanel = (props: Props) => {
     });
   };
 
+  const sxSpacing = {
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(1),
+  };
+
+  const sxMainGridContainer = {
+    paddingBottom: theme.spacing(2.5),
+    paddingTop: theme.spacing(2),
+    position: 'relative',
+  };
+
   return (
-    <>
-      <Paper className={classes.root}>
-        <Grid className={classes.mainGridContainer} container spacing={2}>
-          <KubeClusterSpecs cluster={cluster} />
-          <Grid container direction="column" lg={4} xs={12}>
-            <KubeConfigDisplay
-              clusterId={cluster.id}
-              clusterLabel={cluster.label}
-              handleOpenDrawer={handleOpenDrawer}
-              isResettingKubeConfig={isResettingKubeConfig}
-              setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
-            />
-          </Grid>
+    <Stack sx={{ marginBottom: theme.spacing(3) }}>
+      <EntityDetail
+        body={
           <Grid
             container
-            direction="column"
-            justifyContent="space-between"
-            lg={5}
-            xs={12}
+            spacing={2}
+            sx={{ ...sxSpacing, ...sxMainGridContainer }}
           >
-            <Grid className={classes.actionRow}>
-              {cluster.control_plane.high_availability && (
-                <Chip
-                  label="HA CLUSTER"
-                  size="small"
-                  sx={(theme) => ({ borderColor: theme.color.green })}
-                  variant="outlined"
+            <KubeClusterSpecs cluster={cluster} />
+            <Grid container direction="column" lg={4} xs={12}>
+              <KubeConfigDisplay
+                clusterId={cluster.id}
+                clusterLabel={cluster.label}
+                handleOpenDrawer={handleOpenDrawer}
+                isResettingKubeConfig={isResettingKubeConfig}
+                setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
+              />
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              justifyContent="space-between"
+              lg={5}
+              xs={12}
+            >
+              <Grid className={classes.actionRow}>
+                {cluster.control_plane.high_availability && (
+                  <Chip
+                    label="HA CLUSTER"
+                    size="small"
+                    sx={(theme) => ({ borderColor: theme.color.green })}
+                    variant="outlined"
+                  />
+                )}
+              </Grid>
+              <Grid className={classes.tags}>
+                <TagCell
+                  disabled={isClusterReadOnly}
+                  entityLabel={cluster.label}
+                  tags={cluster.tags}
+                  updateTags={handleUpdateTags}
+                  view="inline"
                 />
-              )}
-              <Button
+              </Grid>
+            </Grid>
+          </Grid>
+        }
+        header={
+          <EntityHeader>
+            <Box
+              sx={{
+                ...sxSpacing,
+                paddingBottom: theme.spacing(),
+                paddingTop: theme.spacing(),
+              }}
+            >
+              <Typography variant="h2">Summary</Typography>
+            </Box>
+            <Box display="flex" justifyContent="end">
+              <StyledActionButton
                 onClick={() => {
                   window.open(dashboard?.url, '_blank');
                 }}
-                buttonType="secondary"
                 className={classes.dashboard}
-                compactY
                 disabled={Boolean(dashboardError) || !dashboard}
               >
                 Kubernetes Dashboard
                 <OpenInNewIcon />
-              </Button>
-              <Button
-                buttonType="secondary"
+              </StyledActionButton>
+              <StyledActionButton
                 className={classes.deleteClusterBtn}
-                compactY
                 onClick={() => setIsDeleteDialogOpen(true)}
               >
                 Delete Cluster
-              </Button>
-            </Grid>
-            <Grid className={classes.tags}>
-              <TagCell
-                disabled={isClusterReadOnly}
-                tags={cluster.tags}
-                updateTags={handleUpdateTags}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Paper>
+              </StyledActionButton>
+            </Box>
+          </EntityHeader>
+        }
+        noBodyBottomBorder
+      />
 
       <KubeConfigDrawer
         closeDrawer={() => setDrawerOpen(false)}
@@ -256,8 +289,6 @@ export const KubeSummaryPanel = (props: Props) => {
         will no longer be able to access this cluster via your previous
         Kubeconfig file. This action cannot be undone.
       </ConfirmationDialog>
-    </>
+    </Stack>
   );
-};
-
-export default React.memo(KubeSummaryPanel);
+});

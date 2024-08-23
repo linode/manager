@@ -1,10 +1,4 @@
 import {
-  CloneDomainPayload,
-  CreateDomainPayload,
-  Domain,
-  DomainRecord,
-  ImportZonePayload,
-  UpdateDomainPayload,
   cloneDomain,
   createDomain,
   deleteDomain,
@@ -13,87 +7,156 @@ import {
   getDomains,
   importZone,
   updateDomain,
-} from '@linode/api-v4/lib/domains';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { profileQueries } from './profile/profile';
 
-export const queryKey = 'domains';
+import type {
+  APIError,
+  CloneDomainPayload,
+  CreateDomainPayload,
+  Domain,
+  DomainRecord,
+  Filter,
+  ImportZonePayload,
+  Params,
+  ResourcePage,
+  UpdateDomainPayload,
+} from '@linode/api-v4';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
-export const useDomainsQuery = (params: Params, filter: Filter) =>
-  useQuery<ResourcePage<Domain>, APIError[]>(
-    [queryKey, 'paginated', params, filter],
-    () => getDomains(params, filter),
-    { keepPreviousData: true }
+export const getAllDomains = () =>
+  getAll<Domain>((params) => getDomains(params))().then((data) => data.data);
+
+const getAllDomainRecords = (domainId: number) =>
+  getAll<DomainRecord>((params) => getDomainRecords(domainId, params))().then(
+    ({ data }) => data
   );
 
+const domainQueries = createQueryKeys('domains', {
+  domain: (id: number) => ({
+    contextQueries: {
+      records: {
+        queryFn: () => getAllDomainRecords(id),
+        queryKey: null,
+      },
+    },
+    queryFn: () => getDomain(id),
+    queryKey: [id],
+  }),
+  domains: {
+    contextQueries: {
+      all: {
+        queryFn: getAllDomains,
+        queryKey: null,
+      },
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getDomains(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
+});
+
+export const useDomainsQuery = (params: Params, filter: Filter) =>
+  useQuery<ResourcePage<Domain>, APIError[]>({
+    ...domainQueries.domains._ctx.paginated(params, filter),
+    keepPreviousData: true,
+  });
+
 export const useAllDomainsQuery = (enabled: boolean = false) =>
-  useQuery<Domain[], APIError[]>([queryKey, 'all'], getAllDomains, {
+  useQuery<Domain[], APIError[]>({
+    ...domainQueries.domains._ctx.all,
     enabled,
   });
 
 export const useDomainQuery = (id: number) =>
-  useQuery<Domain, APIError[]>([queryKey, 'domain', id], () => getDomain(id));
+  useQuery<Domain, APIError[]>(domainQueries.domain(id));
 
 export const useDomainRecordsQuery = (id: number) =>
-  useQuery<DomainRecord[], APIError[]>(
-    [queryKey, 'domain', id, 'records'],
-    () => getAllDomainRecords(id)
-  );
+  useQuery<DomainRecord[], APIError[]>(domainQueries.domain(id)._ctx.records);
 
 export const useCreateDomainMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
-    onSuccess: (domain) => {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
+  return useMutation<Domain, APIError[], CreateDomainPayload>({
+    mutationFn: createDomain,
+    onSuccess(domain) {
+      // Invalidate paginated lists
+      queryClient.invalidateQueries({
+        queryKey: domainQueries.domains.queryKey,
+      });
+
+      // Set Domain in cache
+      queryClient.setQueryData(
+        domainQueries.domain(domain.id).queryKey,
+        domain
+      );
+
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
     },
   });
 };
 
 export const useCloneDomainMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], CloneDomainPayload>(
-    (data) => cloneDomain(id, data),
-    {
-      onSuccess: (domain) => {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
-      },
-    }
-  );
+  return useMutation<Domain, APIError[], CloneDomainPayload>({
+    mutationFn: (data) => cloneDomain(id, data),
+    onSuccess(domain) {
+      // Invalidate paginated lists
+      queryClient.invalidateQueries({
+        queryKey: domainQueries.domains.queryKey,
+      });
+
+      // Set Domain in cache
+      queryClient.setQueryData(
+        domainQueries.domain(domain.id).queryKey,
+        domain
+      );
+    },
+  });
 };
 
 export const useImportZoneMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], ImportZonePayload>(
-    (data) => importZone(data),
-    {
-      onSuccess: (domain) => {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
-      },
-    }
-  );
+  return useMutation<Domain, APIError[], ImportZonePayload>({
+    mutationFn: importZone,
+    onSuccess(domain) {
+      // Invalidate paginated lists
+      queryClient.invalidateQueries({
+        queryKey: domainQueries.domains.queryKey,
+      });
+
+      // Set Domain in cache
+      queryClient.setQueryData(
+        domainQueries.domain(domain.id).queryKey,
+        domain
+      );
+    },
+  });
 };
 
 export const useDeleteDomainMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteDomain(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries([queryKey, 'paginated']);
-      queryClient.removeQueries([queryKey, 'domain', id]);
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteDomain(id),
+    onSuccess() {
+      // Invalidate paginated lists
+      queryClient.invalidateQueries({
+        queryKey: domainQueries.domains.queryKey,
+      });
+
+      // Remove domain (and its sub-queries) from the cache
+      queryClient.removeQueries({
+        queryKey: domainQueries.domain(id).queryKey,
+      });
     },
   });
 };
@@ -104,33 +167,48 @@ interface UpdateDomainPayloadWithId extends UpdateDomainPayload {
 
 export const useUpdateDomainMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<Domain, APIError[], UpdateDomainPayloadWithId>(
-    (data) => {
-      const { id, ...rest } = data;
-      return updateDomain(id, rest);
+  return useMutation<Domain, APIError[], UpdateDomainPayloadWithId>({
+    mutationFn: ({ id, ...data }) => updateDomain(id, data),
+    onSuccess(domain) {
+      // Invalidate paginated lists
+      queryClient.invalidateQueries({
+        queryKey: domainQueries.domains.queryKey,
+      });
+
+      // Update domain in cache
+      queryClient.setQueryData<Domain>(
+        domainQueries.domain(domain.id).queryKey,
+        domain
+      );
     },
-    {
-      onSuccess: (domain) => {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-        queryClient.setQueryData<Domain>(
-          [queryKey, 'domain', domain.id],
-          domain
-        );
-      },
-    }
-  );
+  });
 };
 
-export const domainEventsHandler = ({ queryClient }: EventHandlerData) => {
-  // Invalidation is agressive beacuse it will invalidate on every domain event, but
-  // it is worth it for the UX benefits. We can fine tune this later if we need to.
-  queryClient.invalidateQueries([queryKey]);
+export const domainEventsHandler = ({
+  event,
+  invalidateQueries,
+}: EventHandlerData) => {
+  const domainId = event.entity?.id;
+
+  if (!domainId) {
+    return;
+  }
+
+  if (event.action.startsWith('domain_record')) {
+    // Invalidate the domain's records because they may have changed
+    invalidateQueries({
+      queryKey: domainQueries.domain(domainId)._ctx.records.queryKey,
+    });
+  } else {
+    // Invalidate paginated lists
+    invalidateQueries({
+      queryKey: domainQueries.domains.queryKey,
+    });
+
+    // Invalidate the domain's details
+    invalidateQueries({
+      exact: true,
+      queryKey: domainQueries.domain(domainId).queryKey,
+    });
+  }
 };
-
-export const getAllDomains = () =>
-  getAll<Domain>((params) => getDomains(params))().then((data) => data.data);
-
-const getAllDomainRecords = (domainId: number) =>
-  getAll<DomainRecord>((params) => getDomainRecords(domainId, params))().then(
-    ({ data }) => data
-  );

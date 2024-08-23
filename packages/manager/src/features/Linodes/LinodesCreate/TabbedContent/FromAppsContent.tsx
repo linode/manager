@@ -94,12 +94,15 @@ export const getCompatibleImages = (
   );
 
 export const getDefaultUDFData = (userDefinedFields: UserDefinedField[]) => {
-  return userDefinedFields.reduce((accum, eachField) => {
-    if (eachField.default) {
-      accum[eachField.name] = eachField.default;
-    }
-    return accum;
-  }, {});
+  return userDefinedFields.reduce<Record<string, string>>(
+    (accum, eachField) => {
+      if (eachField.default) {
+        accum[eachField.name] = eachField.default;
+      }
+      return accum;
+    },
+    {}
+  );
 };
 
 export const handleSelectStackScript = (
@@ -189,7 +192,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <StyledGrid>
-          <Paper>
+          <Paper sx={{ borderBottom: 0 }}>
             <Typography variant="h2">Select an App</Typography>
             <StyledSearchFilterBox>
               <StyledSearchBox>
@@ -289,7 +292,7 @@ export class FromAppsContent extends React.Component<CombinedProps, State> {
         <AppDetailDrawer
           onClose={this.closeDrawer}
           open={this.state.detailDrawerOpen}
-          stackScriptLabel={this.state.selectedScriptForDrawer}
+          stackScriptLabel={this.state.selectedScriptForDrawer.trim()}
         />
       </React.Fragment>
     );

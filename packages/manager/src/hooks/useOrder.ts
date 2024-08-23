@@ -7,8 +7,10 @@ import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
-import { OrderSet } from 'src/types/ManagerPreferences';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+
+import type { OrderSet } from 'src/types/ManagerPreferences';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 export type Order = 'asc' | 'desc';
 
@@ -34,12 +36,14 @@ export const useOrder = (
   const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
   const history = useHistory();
-  const params = getQueryParamsFromQueryString(location.search);
+  const params = getQueryParamsFromQueryString<BaseQueryParams>(
+    location.search
+  );
 
   const initialOrder = getInitialValuesFromUserPreferences(
     preferenceKey || '',
     preferences || {},
-    params as Record<string, string>,
+    params,
     initial?.orderBy,
     initial?.order,
     prefix

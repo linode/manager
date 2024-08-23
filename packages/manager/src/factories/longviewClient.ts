@@ -1,5 +1,5 @@
 import { Apps, LongviewClient } from '@linode/api-v4/lib/longview';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 export const longviewAppsFactory = Factory.Sync.makeFactory<Apps>({
   apache: false,

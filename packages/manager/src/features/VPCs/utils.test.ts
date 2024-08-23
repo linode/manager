@@ -50,7 +50,7 @@ describe('getUniqueLinodesFromSubnets', () => {
     expect(getUniqueLinodesFromSubnets(subnets0)).toBe(0);
     expect(getUniqueLinodesFromSubnets(subnets1)).toBe(4);
     expect(getUniqueLinodesFromSubnets(subnets2)).toBe(2);
-    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(7);
+    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(6);
   });
 });
 
@@ -60,15 +60,15 @@ describe('getSubnetInterfaceFromConfigs', () => {
     const singleConfig = linodeConfigFactory.build({ interfaces });
     const configs = [linodeConfigFactory.build(), singleConfig];
 
-    const subnetInterface1 = getSubnetInterfaceFromConfigs(configs, 1);
+    const subnetInterface1 = getSubnetInterfaceFromConfigs(configs, 2);
     expect(subnetInterface1).toEqual(interfaces[0]);
-    const subnetInterface2 = getSubnetInterfaceFromConfigs(configs, 2);
+    const subnetInterface2 = getSubnetInterfaceFromConfigs(configs, 3);
     expect(subnetInterface2).toEqual(interfaces[1]);
-    const subnetInterface3 = getSubnetInterfaceFromConfigs(configs, 3);
+    const subnetInterface3 = getSubnetInterfaceFromConfigs(configs, 4);
     expect(subnetInterface3).toEqual(interfaces[2]);
-    const subnetInterface4 = getSubnetInterfaceFromConfigs(configs, 4);
+    const subnetInterface4 = getSubnetInterfaceFromConfigs(configs, 5);
     expect(subnetInterface4).toEqual(interfaces[3]);
-    const subnetInterface5 = getSubnetInterfaceFromConfigs(configs, 5);
+    const subnetInterface5 = getSubnetInterfaceFromConfigs(configs, 6);
     expect(subnetInterface5).toEqual(interfaces[4]);
   });
 

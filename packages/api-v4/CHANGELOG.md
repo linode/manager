@@ -1,5 +1,85 @@
-## [2024-05-28] - v0.118.0
+## [2024-08-19] - v0.124.0
 
+### Added:
+
+- Firewall template endpoints ([#10770](https://github.com/linode/manager/pull/10770))
+
+### Changed:
+
+- Move `getObjectStorageEndpoints` from `/objects.ts` to `/buckets.ts` ([#10736](https://github.com/linode/manager/pull/10736))
+
+### Upcoming Features:
+
+- Add several CloudPulseMetrics types ([#10710](https://github.com/linode/manager/pull/10710))
+- Change JWETokenPayLoad `resource_id` to `resource_ids` ([#10747](https://github.com/linode/manager/pull/10747))
+- Add 'Akamai Cloud Pulse' in AccountCapability type interface ([#10768](https://github.com/linode/manager/pull/10768))
+
+## [2024-08-05] - v0.123.0
+
+### Added:
+
+- `site_type` to the linode instance type ([#10714](https://github.com/linode/manager/pull/10714))
+
+### Changed:
+
+- Update Object Storage types with more descriptive names ([#10686](https://github.com/linode/manager/pull/10686))
+- Support null values in `Interface` type ([#10690](https://github.com/linode/manager/pull/10690))
+- Linode, Volume, and VolumeRequestPayload interfaces and VolumeStatus, AccountCapability, and Capabilities types to reflect Block Storage Encryption changes ([#10716](https://github.com/linode/manager/pull/10716))
+
+### Upcoming Features:
+
+- Add MetricDefinitions, Dimension, JWETokenPayload, JWEToken and metricDefinitions, dashboard by id and jwe token api calls ([#10676](https://github.com/linode/manager/pull/10676))
+- Add new /v4/object-storage/endpoints endpoint ([#10677](https://github.com/linode/manager/pull/10677))
+
+## [2024-07-22] - v0.122.0
+
+### Changed:
+
+- Breaking: change Placement Group `affinity_type` to `placement_group_type` ([#10651](https://github.com/linode/manager/pull/10651))
+- Breaking: change Placement Group `is_strict` to `placement_group_policy` ([#10651](https://github.com/linode/manager/pull/10651))
+- Use new "lish" API instead of "lish_token" ([#10656](https://github.com/linode/manager/pull/10656))
+
+### Upcoming Features:
+
+- Add ACLG Config and Widget to CloudPulse types ([#10625](https://github.com/linode/manager/pull/10625))
+
+## [2024-07-08] - v0.121.0
+
+### Changed:
+
+- Update `updateImageRegions` to accept `UpdateImageRegionsPayload` instead of `regions: string[]` ([#10617](https://github.com/linode/manager/pull/10617))
+
+### Upcoming Features:
+
+- Added types needed for DashboardSelect component ([#10589](https://github.com/linode/manager/pull/10589))
+
+## [2024-06-24] - v0.120.0
+
+### Added:
+
+- New endpoint for LKE HA types used in pricing ([#10505](https://github.com/linode/manager/pull/10505))
+- UpdateImagePayload type ([#10514](https://github.com/linode/manager/pull/10514))
+- New endpoint for `network-transfer/prices` ([#10566](https://github.com/linode/manager/pull/10566))
+
+## [2024-06-10] - v0.119.0
+
+### Added:
+
+- `tags` field in `Image` type ([#10466](https://github.com/linode/manager/pull/10466))
+- New endpoint for `object-storage/types` ([#10468](https://github.com/linode/manager/pull/10468))
+- `members` to `DatabaseInstance` and `Database` types ([#10503](https://github.com/linode/manager/pull/10503))
+- New event `tax_id_invalid` for account tax id ([#10512](https://github.com/linode/manager/pull/10512))
+
+### Changed:
+
+- Update return type of `updateDatabase` to be `Database` ([#10503](https://github.com/linode/manager/pull/10503))
+- Add lke_cluster_id to Linode interface ([#10537](https://github.com/linode/manager/pull/10537))
+
+### Upcoming Features:
+
+- Update images endpoints to reflect the image service API spec ([#10541](https://github.com/linode/manager/pull/10541))
+
+## [2024-05-28] - v0.118.0
 
 ### Added:
 
@@ -9,9 +89,7 @@
 
 - Add Disk Encryption to AccountCapability type and region Capabilities type ([#10462](https://github.com/linode/manager/pull/10462))
 
-
 ## [2024-05-13] - v0.117.0
-
 
 ### Added:
 
@@ -27,16 +105,13 @@
 
 - Update Placement Group event types ([#10420](https://github.com/linode/manager/pull/10420))
 
-
 ## [2024-05-06] - v0.116.0
-
 
 ### Added:
 
 - 'edge' Linode type class ([#10441](https://github.com/linode/manager/pull/10441))
 
 ## [2024-04-29] - v0.115.0
-
 
 ### Added:
 

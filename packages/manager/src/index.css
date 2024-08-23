@@ -305,10 +305,6 @@ button::-moz-focus-inner {
   }
 }
 
-.fade-in-table {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
 @keyframes pulse {
   to {
     background-color: hsla(40, 100%, 55%, 0);
@@ -319,10 +315,6 @@ button::-moz-focus-inner {
 .no-transition *::before,
 .no-transition *::after {
   transition: none !important;
-}
-
-.terminal {
-  padding: 24px;
 }
 
 .overflow-hidden {

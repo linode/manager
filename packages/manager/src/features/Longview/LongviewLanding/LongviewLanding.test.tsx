@@ -1,4 +1,3 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -11,12 +10,14 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   LongviewClients,
-  LongviewClientsCombinedProps,
   filterLongviewClientsByQuery,
   sortClientsBy,
   sortFunc,
 } from './LongviewClients';
 import { LongviewLanding } from './LongviewLanding';
+
+import type { LongviewClientsCombinedProps } from './LongviewClients';
+import type { LongviewClient } from '@linode/api-v4/lib/longview';
 
 afterEach(() => {
   vi.clearAllMocks();
@@ -54,7 +55,7 @@ const props: LongviewClientsCombinedProps = {
 describe('Utility Functions', () => {
   it('should properly filter longview clients by query', () => {
     expect(filterLongviewClientsByQuery('client-1', clients, {})).toEqual([
-      clients[1],
+      clients[0],
     ]),
       expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
         clients

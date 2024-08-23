@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -45,6 +44,7 @@ import { CautionNotice } from './CautionNotice';
 import { ConfigureForm } from './ConfigureForm';
 
 import type { PlacementGroup } from '@linode/api-v4';
+import type { Event } from '@linode/api-v4/lib/account';
 
 interface Props {
   linodeId: number | undefined;
@@ -98,9 +98,9 @@ export const MigrateLinode = React.memo((props: Props) => {
   const { data: regionsData } = useRegionsQuery();
   const flags = useFlags();
 
-  const [selectedRegion, handleSelectRegion] = React.useState<null | string>(
-    null
-  );
+  const [selectedRegion, handleSelectRegion] = React.useState<
+    string | undefined
+  >();
   const [
     placementGroupSelection,
     setPlacementGroupSelection,
@@ -116,7 +116,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     agreements,
     profile,
     regions: regionsData,
-    selectedRegionId: selectedRegion ?? '',
+    selectedRegionId: selectedRegion,
   });
 
   React.useEffect(() => {
@@ -129,7 +129,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     if (open) {
       reset();
       setConfirmed(false);
-      handleSelectRegion(null);
+      handleSelectRegion(undefined);
     }
   }, [open]);
 

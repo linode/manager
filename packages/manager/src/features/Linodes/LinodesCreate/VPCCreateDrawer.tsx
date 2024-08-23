@@ -10,10 +10,6 @@ import { CannotCreateVPCNotice } from 'src/features/VPCs/VPCCreate/FormComponent
 import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
 import { VPCTopSectionContent } from 'src/features/VPCs/VPCCreate/FormComponents/VPCTopSectionContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-
-import type { LinodeCreateType } from './types';
 
 interface Props {
   handleSelectVPC: (vpcId: number) => void;
@@ -25,7 +21,6 @@ interface Props {
 export const VPCCreateDrawer = (props: Props) => {
   const theme = useTheme();
   const { handleSelectVPC, onClose, open, selectedRegion } = props;
-  const queryParams = getQueryParamsFromQueryString(location.search);
 
   const {
     formik,
@@ -82,15 +77,6 @@ export const VPCCreateDrawer = (props: Props) => {
               label: 'Create VPC',
               loading: isLoadingCreateVPC,
               onClick: () => {
-                sendLinodeCreateFormStepEvent({
-                  action: 'click',
-                  category: 'button',
-                  createType:
-                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
-                  formStepName: 'Create VPC Drawer',
-                  label: 'Create VPC',
-                  version: 'v1',
-                });
                 onCreateVPC();
               },
             }}

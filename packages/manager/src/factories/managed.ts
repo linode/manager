@@ -9,7 +9,7 @@ import {
   ManagedServiceMonitor,
   ManagedStats,
 } from '@linode/api-v4/lib/managed/types';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 export const contactFactory = Factory.Sync.makeFactory<ManagedContact>({
   email: Factory.each((i) => `john.doe.${i}@example.com`),

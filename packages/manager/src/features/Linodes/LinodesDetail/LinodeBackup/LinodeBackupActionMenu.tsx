@@ -1,7 +1,9 @@
-import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+
+import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   backup: LinodeBackup;
@@ -11,7 +13,7 @@ interface Props {
 }
 
 export const LinodeBackupActionMenu = (props: Props) => {
-  const { disabled, onDeploy, onRestore } = props;
+  const { backup, disabled, onDeploy, onRestore } = props;
   const disabledProps = {
     disabled,
     tooltip: disabled
@@ -39,7 +41,7 @@ export const LinodeBackupActionMenu = (props: Props) => {
   return (
     <ActionMenu
       actionsList={actions}
-      ariaLabel={`Action menu for Backup ${props.backup.label}`}
+      ariaLabel={`Action menu for Backup ${backup.label}`}
     />
   );
 };

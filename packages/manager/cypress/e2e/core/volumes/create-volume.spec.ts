@@ -27,6 +27,8 @@ describe('volume create flow', () => {
    * - Confirms that volume is listed correctly on volumes landing page.
    */
   it('creates an unattached volume', () => {
+    cy.tag('purpose:syntheticTesting');
+
     const region = chooseRegion();
     const volume = {
       label: randomLabel(),
@@ -86,7 +88,7 @@ describe('volume create flow', () => {
       regionLabel: region.label,
     };
 
-    cy.defer(createTestLinode(linodeRequest), 'creating Linode').then(
+    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
       (linode) => {
         interceptCreateVolume().as('createVolume');
 
@@ -151,7 +153,7 @@ describe('volume create flow', () => {
       booted: false,
     });
 
-    cy.defer(createTestLinode(linodeRequest), 'creating Linode').then(
+    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
       (linode: Linode) => {
         const volume = {
           label: randomLabel(),

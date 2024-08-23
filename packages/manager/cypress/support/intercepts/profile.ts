@@ -13,9 +13,9 @@ import type {
   Profile,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
-  SSHKey,
   Token,
   UserPreferences,
+  SSHKey,
 } from '@linode/api-v4';
 
 /**
@@ -421,16 +421,66 @@ export const mockGetSSHKey = (sshKey: SSHKey): Cypress.Chainable<null> => {
 };
 
 /**
- * Intercepts POST request to create an SSH key and mocks the response.
+ * Intercepts POST request to create an SSH key.
  *
- * @param sshKey - SSH key object with which to mock response.
+ * @returns Cypress chainable.
+ */
+export const interceptCreateSSHKey = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`profile/sshkeys*`));
+};
+
+/**
+ * Intercepts POST request to create an SSH key and mocks response.
+ *
+ * @param sshKey - An SSH key with which to create.
  *
  * @returns Cypress chainable.
  */
 export const mockCreateSSHKey = (sshKey: SSHKey): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`profile/sshkeys`), sshKey);
+};
+
+/**
+ * Intercepts POST request to create an SSH key and mocks an API error response.
+ *
+ * @param errorMessage - Error message to include in mock error response.
+ * @param status - HTTP status for mock error response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateSSHKeyError = (
+  errorMessage: string,
+  status: number = 400
+): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher('/profile/sshkeys'),
-    makeResponse(sshKey)
+    apiMatcher('profile/sshkeys'),
+    makeErrorResponse(errorMessage, status)
   );
+};
+
+/**
+ * Intercepts PUT request to update an SSH key and mocks response.
+ *
+ * @param sshKeyId - The SSH key ID to update
+ * @param sshKey - An SSH key with which to update.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateSSHKey = (
+  sshKeyId: number,
+  sshKey: SSHKey
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher(`profile/sshkeys/${sshKeyId}`), sshKey);
+};
+
+/**
+ * Intercepts DELETE request to delete an SSH key and mocks response.
+ *
+ * @param sshKeyId - The SSH key ID to delete
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteSSHKey = (sshKeyId: number): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', apiMatcher(`profile/sshkeys/${sshKeyId}`), {});
 };

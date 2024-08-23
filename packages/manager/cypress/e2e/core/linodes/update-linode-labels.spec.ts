@@ -11,7 +11,7 @@ describe('update linode label', () => {
   });
 
   it('updates a linode label from details page', () => {
-    cy.defer(createTestLinode({ booted: true })).then((linode) => {
+    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
       const newLinodeLabel = randomLabel();
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.contains('RUNNING').should('be.visible');
@@ -28,7 +28,7 @@ describe('update linode label', () => {
   });
 
   it('updates a linode label from the "Settings" tab', () => {
-    cy.defer(createTestLinode({ booted: true })).then((linode) => {
+    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
       const newLinodeLabel = randomLabel();
       cy.visitWithLogin(`/linodes/${linode.id}`);
       cy.contains('RUNNING').should('be.visible');

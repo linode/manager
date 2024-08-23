@@ -52,7 +52,7 @@ export const TransferHistory = React.memo((props: Props) => {
     data: stats,
     error: statsError,
     isLoading: statsLoading,
-  } = useLinodeStatsByDate(linodeID, year, month, true, linodeCreated);
+  } = useLinodeStatsByDate(linodeID, year, month, true);
 
   const { data: transfer } = useLinodeTransferByDate(
     linodeID,

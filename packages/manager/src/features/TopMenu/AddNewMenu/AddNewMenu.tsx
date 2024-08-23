@@ -18,16 +18,13 @@ import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import LoadBalancerIcon from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import PlacementGroupsIcon from 'src/assets/icons/entityIcons/placement-groups.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
 interface LinkProps {
@@ -45,7 +42,6 @@ export const AddNewMenu = () => {
   const open = Boolean(anchorEl);
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
-  const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -68,14 +64,6 @@ export const AddNewMenu = () => {
       entity: 'Volume',
       icon: VolumeIcon,
       link: '/volumes/create',
-    },
-    {
-      // TODO ACLB: Replace with ACLB copy when available
-      description: 'Ensure your services are highly available',
-      entity: 'Cloud Load Balancer',
-      hide: !isACLBEnabled,
-      icon: LoadBalancerIcon,
-      link: '/loadbalancers/create',
     },
     {
       description: 'Ensure your services are highly available',
@@ -181,16 +169,7 @@ export const AddNewMenu = () => {
         {links.map(
           (link, i) =>
             !link.hide && [
-              i !== 0 && <Divider spacingBottom={0} spacingTop={0} />,
               <MenuItem
-                sx={{
-                  '&:hover': {
-                    // This MUI Menu gets special colors compared
-                    // to a standard menu such as the NodeBalancer Config Node Mode select menu
-                    backgroundColor: theme.bg.app,
-                  },
-                  paddingY: 1.5,
-                }}
                 component={Link}
                 key={link.entity}
                 onClick={handleClose}
@@ -202,19 +181,10 @@ export const AddNewMenu = () => {
                 }}
               >
                 <ListItemIcon>
-                  <link.icon
-                    color={theme.palette.text.primary}
-                    height={20}
-                    width={20}
-                  />
+                  <link.icon height={20} width={20} />
                 </ListItemIcon>
                 <Stack>
-                  <Typography
-                    color={theme.textColors.linkActiveLight}
-                    variant="h3"
-                  >
-                    {link.entity}
-                  </Typography>
+                  <Typography variant="h3">{link.entity}</Typography>
                   <Typography>{link.description}</Typography>
                 </Stack>
               </MenuItem>,

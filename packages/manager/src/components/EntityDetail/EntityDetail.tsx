@@ -1,13 +1,14 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { omittedProps } from '../../utilities/omittedProps';
 
 export interface EntityDetailProps {
   body?: JSX.Element;
-  footer: JSX.Element;
+  footer?: JSX.Element;
   header: JSX.Element;
+  noBodyBottomBorder?: boolean;
 }
 
 /**
@@ -18,22 +19,38 @@ export interface EntityDetailProps {
  * Provide a Header, Body, and Footer and this component provides the proper positioning for each.
  */
 export const EntityDetail = (props: EntityDetailProps) => {
-  const { body, footer, header } = props;
+  const { body, footer, header, noBodyBottomBorder } = props;
 
   return (
     <>
       {header}
-      {body !== undefined && <GridBody xs={12}>{body}</GridBody>}
-      <GridFooter body={body} xs={12}>
-        {footer}
-      </GridFooter>
+      {body !== undefined && (
+        <GridBody
+          footer={footer}
+          noBodyBottomBorder={noBodyBottomBorder}
+          xs={12}
+        >
+          {body}
+        </GridBody>
+      )}
+      {footer !== undefined && (
+        <GridFooter body={body} xs={12}>
+          {footer}
+        </GridFooter>
+      )}
     </>
   );
 };
 
-const GridBody = styled(Grid)(({ theme }) => ({
+const GridBody = styled(Grid, {
+  label: 'EntityDetailGridBody',
+  shouldForwardProp: omittedProps(['footer', 'noBodyBottomBorder']),
+})<Partial<EntityDetailProps>>(({ theme, ...props }) => ({
   backgroundColor: theme.bg.bgPaper,
-  borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+  borderBottom:
+    props.footer === undefined && props.noBodyBottomBorder
+      ? undefined
+      : `1px solid ${theme.borderColors.borderTable}`, // @TODO LKE-E: This conditional can be removed when/if the footer is introduced in M3-8348
   borderTop: `1px solid ${theme.borderColors.borderTable}`,
   paddingBottom: theme.spacing(),
   paddingRight: theme.spacing(),

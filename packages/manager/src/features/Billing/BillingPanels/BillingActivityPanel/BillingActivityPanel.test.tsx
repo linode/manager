@@ -5,11 +5,13 @@ import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import BillingActivityPanel, {
+import {
+  BillingActivityPanel,
   getCutoffFromDateRange,
   invoiceToActivityFeedItem,
   makeFilter,
   paymentToActivityFeedItem,
+  transactionDateOptions,
 } from './BillingActivityPanel';
 vi.mock('../../../../utilities/getUserTimezone');
 
@@ -63,21 +65,21 @@ describe('BillingActivityPanel', () => {
       <BillingActivityPanel />
     );
     await waitFor(() => {
-      getByText('Invoice #0');
       getByText('Invoice #1');
-      getByTestId(`payment-0`);
+      getByText('Invoice #2');
       getByTestId(`payment-1`);
+      getByTestId(`payment-2`);
     });
   });
 
   it('should filter by item type', async () => {
-    const { queryAllByTestId, queryByTestId, queryByText } = renderWithTheme(
+    const { getByLabelText, queryByTestId, queryByText } = renderWithTheme(
       <BillingActivityPanel />
     );
 
     // Test selecting "Invoices"
     await waitFor(() => {
-      const transactionTypeSelect = queryAllByTestId('select')?.[0];
+      const transactionTypeSelect = getByLabelText('Transaction Types');
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'invoice' },
       });
@@ -86,7 +88,7 @@ describe('BillingActivityPanel', () => {
 
     // Test selecting "Payments"
     await waitFor(() => {
-      const transactionTypeSelect = queryAllByTestId('select')?.[0];
+      const transactionTypeSelect = getByLabelText('Transaction Types');
       fireEvent.change(transactionTypeSelect, {
         target: { value: 'payment' },
       });
@@ -95,12 +97,12 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by transaction date', async () => {
-    const { queryAllByTestId, queryByTestId, queryByText } = renderWithTheme(
+    const { getByLabelText, queryByTestId, queryByText } = renderWithTheme(
       <BillingActivityPanel />
     );
 
     await waitFor(() => {
-      const transactionDateSelect = queryAllByTestId('select')?.[1];
+      const transactionDateSelect = getByLabelText('Transaction Dates');
       fireEvent.change(transactionDateSelect, {
         target: { value: '30 Days' },
       });
@@ -110,11 +112,11 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should display transaction selection components with defaults', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel />);
-    await waitFor(() => {
-      getByText('All Transaction Types');
-      getByText('90 Days');
-    });
+    const { getByLabelText } = renderWithTheme(<BillingActivityPanel />);
+    const transactionTypeSelect = getByLabelText('Transaction Types');
+    expect(transactionTypeSelect).toHaveValue('All Transaction Types');
+    const transactionDateSelect = getByLabelText('Transaction Dates');
+    expect(transactionDateSelect).toHaveValue('6 Months');
   });
 
   it('should display "Account active since"', async () => {
@@ -173,22 +175,29 @@ describe('paymentToActivityFeedItem', () => {
         throw new Error('Invalid test date');
       }
 
-      expect(getCutoffFromDateRange('30 Days', testDateISO)).toBe(
-        testDate.minus({ days: 30 }).toISO()
-      );
-      expect(getCutoffFromDateRange('60 Days', testDateISO)).toBe(
-        testDate.minus({ days: 60 }).toISO()
-      );
-      expect(getCutoffFromDateRange('90 Days', testDateISO)).toBe(
-        testDate.minus({ days: 90 }).toISO()
-      );
-      expect(getCutoffFromDateRange('6 Months', testDateISO)).toBe(
-        testDate.minus({ months: 6 }).toISO()
-      );
-      expect(getCutoffFromDateRange('12 Months', testDateISO)).toBe(
-        testDate.minus({ months: 12 }).toISO()
-      );
-      expect(getCutoffFromDateRange('All Time', testDateISO)).toBeNull();
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[0], testDateISO)
+      ).toBe(testDate.minus({ days: 30 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[1], testDateISO)
+      ).toBe(testDate.minus({ days: 60 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[2], testDateISO)
+      ).toBe(testDate.minus({ days: 90 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[3], testDateISO)
+      ).toBe(testDate.minus({ months: 6 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[4], testDateISO)
+      ).toBe(testDate.minus({ months: 12 }).toISO());
+
+      expect(
+        getCutoffFromDateRange(transactionDateOptions[5], testDateISO)
+      ).toBeNull();
     });
   });
 

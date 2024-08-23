@@ -9,23 +9,39 @@ import { ui } from 'support/ui';
  */
 export const linodeCreatePage = {
   /**
-   * Sets the Linode's label.
-   *
-   * @param linodeLabel - Linode label to set.
+   * Checks the Linode's backups.
    */
-  setLabel: (linodeLabel: string) => {
-    cy.findByLabelText('Linode Label').type(`{selectall}{del}${linodeLabel}`);
+  checkBackups: () => {
+    // eslint-disable-next-line sonarjs/no-duplicate-string
+    cy.get('[data-testid="backups"]').should('be.visible').click();
   },
 
   /**
-   * Sets the Linode's root password.
-   *
-   * @param linodePassword - Root password to set.
+   * Checks the EU agreements.
    */
-  setRootPassword: (linodePassword: string) => {
-    cy.findByLabelText('Root Password').as('rootPasswordField').click();
+  checkEUAgreements: () => {
+    cy.get('body').then(($body) => {
+      if ($body.find('div[data-testid="eu-agreement-checkbox"]').length > 0) {
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.findAllByText('EU Standard Contractual Clauses', {
+          exact: false,
+        }).should('be.visible');
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.get('[data-testid="eu-agreement-checkbox"]')
+          .within(() => {
+            // eslint-disable-next-line cypress/unsafe-to-chain-command
+            cy.get('[id="gdpr-checkbox"]').click();
+          })
+          .click();
+      }
+    });
+  },
 
-    cy.get('@rootPasswordField').type(linodePassword, { log: false });
+  /**
+   * Checks the Linode's private IPs.
+   */
+  checkPrivateIPs: () => {
+    cy.findByText('Private IP').should('be.visible').closest('label').click();
   },
 
   /**
@@ -34,7 +50,7 @@ export const linodeCreatePage = {
    * @param imageName - Name of Image to select.
    */
   selectImage: (imageName: string) => {
-    cy.findByText('Choose a Distribution')
+    cy.findByText('Choose an OS')
       .closest('[data-qa-paper]')
       .within(() => {
         ui.autocomplete.find().click();
@@ -44,15 +60,6 @@ export const linodeCreatePage = {
           .should('be.visible')
           .click();
       });
-  },
-
-  /**
-   * Select the Region with the given ID.
-   *
-   * @param regionId - ID of Region to select.
-   */
-  selectRegionById: (regionId: string) => {
-    ui.regionSelect.find().click().type(`${regionId}{enter}`);
   },
 
   /**
@@ -90,5 +97,34 @@ export const linodeCreatePage = {
 
       cy.get('@selectionCard').click();
     });
+  },
+
+  /**
+   * Select the Region with the given ID.
+   *
+   * @param regionId - ID of Region to select.
+   */
+  selectRegionById: (regionId: string) => {
+    ui.regionSelect.find().click().type(`${regionId}{enter}`);
+  },
+
+  /**
+   * Sets the Linode's label.
+   *
+   * @param linodeLabel - Linode label to set.
+   */
+  setLabel: (linodeLabel: string) => {
+    cy.findByLabelText('Linode Label').type(`{selectall}{del}${linodeLabel}`);
+  },
+
+  /**
+   * Sets the Linode's root password.
+   *
+   * @param linodePassword - Root password to set.
+   */
+  setRootPassword: (linodePassword: string) => {
+    cy.findByLabelText('Root Password').as('rootPasswordField').click();
+
+    cy.get('@rootPasswordField').type(linodePassword, { log: false });
   },
 };

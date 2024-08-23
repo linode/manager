@@ -1,17 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CreateImagePayload } from '@linode/api-v4';
 import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
-import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/DiskEncryption/constants';
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/DiskEncryption/utils';
+import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -22,6 +21,7 @@ import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -31,10 +31,20 @@ import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+
+import type { CreateImagePayload } from '@linode/api-v4';
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 export const CreateImageTab = () => {
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    null
+  const location = useLocation();
+
+  const queryParams = React.useMemo(
+    () =>
+      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+        location.search
+      ),
+    [location.search]
   );
 
   const {
@@ -43,8 +53,12 @@ export const CreateImageTab = () => {
     handleSubmit,
     resetField,
     setError,
+    setValue,
     watch,
   } = useForm<CreateImagePayload>({
+    defaultValues: {
+      disk_id: +queryParams.selectedDisk,
+    },
     mode: 'onBlur',
     resolver: yupResolver(createImageSchema),
   });
@@ -89,6 +103,15 @@ export const CreateImageTab = () => {
     }
   });
 
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
+    queryParams.selectedLinode ? +queryParams.selectedLinode : null
+  );
+
+  const { data: selectedLinode } = useLinodeQuery(
+    selectedLinodeId ?? -1,
+    selectedLinodeId !== null
+  );
+
   const {
     data: disks,
     error: disksError,
@@ -99,35 +122,64 @@ export const CreateImageTab = () => {
   const selectedDisk =
     disks?.find((disk) => disk.id === selectedDiskId) ?? null;
 
+  React.useEffect(() => {
+    if (formState.touchedFields.label) {
+      return;
+    }
+    if (selectedLinode) {
+      setValue('label', `${selectedLinode.label}-${selectedDisk?.label ?? ''}`);
+    } else {
+      resetField('label');
+    }
+  }, [
+    selectedLinode,
+    selectedDisk,
+    formState.touchedFields.label,
+    setValue,
+    resetField,
+  ]);
+
   const isRawDisk = selectedDisk?.filesystem === 'raw';
+
+  const { data: regionsData } = useRegionsQuery();
+
+  const linodeIsInDistributedRegion = getIsDistributedRegion(
+    regionsData ?? [],
+    selectedLinode?.region ?? ''
+  );
 
   /*
     We only want to display the notice about disk encryption if:
     1. the Disk Encryption feature is enabled
+    2. a linode is selected
     2. the selected linode is not in an Edge region
   */
-  const { data: regionsData } = useRegionsQuery();
+  const showDiskEncryptionWarning =
+    isDiskEncryptionFeatureEnabled &&
+    selectedLinodeId !== null &&
+    !linodeIsInDistributedRegion;
 
-  const { data: linode } = useLinodeQuery(
-    selectedLinodeId ?? -1,
-    Boolean(selectedLinodeId) && isDiskEncryptionFeatureEnabled
-  );
-
-  const linodeIsInDistributedRegion = getIsDistributedRegion(
-    regionsData ?? [],
-    linode?.region ?? ''
-  );
+  const linodeSelectHelperText = grants?.linode.some(
+    (grant) => grant.permissions === 'read_only'
+  )
+    ? 'You can only create Images from Linodes you have read/write access to.'
+    : undefined;
 
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2}>
+        {isImageCreateRestricted && (
+          <Notice
+            text={getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'Images',
+            })}
+            important
+            variant="error"
+          />
+        )}
         <Paper>
-          {isImageCreateRestricted && (
-            <Notice
-              text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-              variant="error"
-            />
-          )}
           {formState.errors.root?.message && (
             <Notice
               spacingBottom={8}
@@ -135,7 +187,7 @@ export const CreateImageTab = () => {
               variant="error"
             />
           )}
-          <Stack spacing={1}>
+          <Stack spacing={2}>
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
               By default, Linode images are limited to 6144 MB of data per disk.
@@ -153,6 +205,12 @@ export const CreateImageTab = () => {
               created from a raw disk or a disk that&rsquo;s formatted using a
               custom file system.
             </Typography>
+            {linodeIsInDistributedRegion && (
+              <Notice variant="info">
+                This Linode is in a distributed compute region. Images captured
+                from this Linode will be stored in the closest core site.
+              </Notice>
+            )}
             <LinodeSelect
               getOptionDisabled={
                 grants
@@ -164,13 +222,6 @@ export const CreateImageTab = () => {
                       )
                   : undefined
               }
-              helperText={
-                grants?.linode.some(
-                  (grant) => grant.permissions === 'read_only'
-                )
-                  ? 'You can only create Images from Linodes you have read/write access to.'
-                  : undefined
-              }
               onSelectionChange={(linode) => {
                 setSelectedLinodeId(linode?.id ?? null);
                 if (linode === null) {
@@ -178,21 +229,18 @@ export const CreateImageTab = () => {
                 }
               }}
               disabled={isImageCreateRestricted}
+              helperText={linodeSelectHelperText}
               noMarginTop
               required
               value={selectedLinodeId}
             />
-            {isDiskEncryptionFeatureEnabled &&
-              !linodeIsInDistributedRegion &&
-              selectedLinodeId !== null && (
-                <Notice variant="warning">
-                  <Typography
-                    sx={(theme) => ({ fontFamily: theme.font.normal })}
-                  >
-                    {DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
-                  </Typography>
-                </Notice>
-              )}
+            {showDiskEncryptionWarning && (
+              <Notice variant="warning">
+                <Typography sx={(theme) => ({ fontFamily: theme.font.normal })}>
+                  {DISK_ENCRYPTION_IMAGES_CAVEAT_COPY}
+                </Typography>
+              </Notice>
+            )}
             <Controller
               render={({ field, fieldState }) => (
                 <Autocomplete
@@ -235,7 +283,7 @@ export const CreateImageTab = () => {
           </Stack>
         </Paper>
         <Paper>
-          <Stack spacing={1}>
+          <Stack spacing={2}>
             <Typography variant="h2">Image Details</Typography>
             <Controller
               render={({ field, fieldState }) => (
@@ -267,9 +315,9 @@ export const CreateImageTab = () => {
                         <TooltipIcon
                           text={
                             <Typography>
-                              Many Linode supported distributions are compatible
-                              with cloud-init by default, or you may have
-                              installed cloud-init.{' '}
+                              Many Linode supported operating systems are
+                              compatible with cloud-init by default, or you may
+                              have installed cloud-init.{' '}
                               <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
                                 Learn more.
                               </Link>

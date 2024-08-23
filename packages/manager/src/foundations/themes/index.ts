@@ -1,20 +1,31 @@
 import { createTheme } from '@mui/material/styles';
 
-import { latoWeb } from 'src/foundations/fonts';
 // Themes & Brands
 import { darkTheme } from 'src/foundations/themes/dark';
-// Types & Interfaces
-import { customDarkModeOptions } from 'src/foundations/themes/dark';
 import { lightTheme } from 'src/foundations/themes/light';
-import {
+import { deepMerge } from 'src/utilities/deepMerge';
+
+import type { Chart as ChartLight } from '@linode/design-language-system';
+import type { Chart as ChartDark } from '@linode/design-language-system/themes/dark';
+import type { latoWeb } from 'src/foundations/fonts';
+// Types & Interfaces
+import type {
+  customDarkModeOptions,
+  notificationToast as notificationToastDark,
+} from 'src/foundations/themes/dark';
+import type {
   bg,
   borderColors,
   color,
+  notificationToast,
   textColors,
 } from 'src/foundations/themes/light';
-import { deepMerge } from 'src/utilities/deepMerge';
 
 export type ThemeName = 'dark' | 'light';
+
+type ChartLightTypes = typeof ChartLight;
+type ChartDarkTypes = typeof ChartDark;
+type ChartTypes = MergeTypes<ChartLightTypes, ChartDarkTypes>;
 
 type Fonts = typeof latoWeb;
 
@@ -38,8 +49,14 @@ type TextColors = MergeTypes<LightModeTextColors, DarkModeTextColors>;
 
 type LightModeBorderColors = typeof borderColors;
 type DarkModeBorderColors = typeof customDarkModeOptions.borderColors;
-
 type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
+
+type LightNotificationToast = typeof notificationToast;
+type DarkNotificationToast = typeof notificationToastDark;
+type NotificationToast = MergeTypes<
+  LightNotificationToast,
+  DarkNotificationToast
+>;
 
 /**
  * Augmenting the Theme and ThemeOptions.
@@ -55,10 +72,13 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg: BgColors;
     borderColors: BorderColors;
+    charts: ChartTypes;
     color: Colors;
     font: Fonts;
     graphs: any;
+    inputStyles: any;
     name: ThemeName;
+    notificationToast: NotificationToast;
     textColors: TextColors;
     visually: any;
   }
@@ -71,10 +91,13 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
+    charts: ChartTypes;
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
+    inputStyles?: any;
     name: ThemeName;
+    notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
     visually?: any;
   }

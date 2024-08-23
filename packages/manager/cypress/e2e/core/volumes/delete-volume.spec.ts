@@ -34,7 +34,7 @@ describe('volume delete flow', () => {
       region: chooseRegion().id,
     });
 
-    cy.defer(createVolume(volumeRequest), 'creating volume').then(
+    cy.defer(() => createVolume(volumeRequest), 'creating volume').then(
       (volume: Volume) => {
         interceptDeleteVolume(volume.id).as('deleteVolume');
         cy.visitWithLogin('/volumes', {

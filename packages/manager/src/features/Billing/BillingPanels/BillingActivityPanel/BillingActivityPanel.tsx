@@ -1,18 +1,14 @@
-import {
-  Invoice,
-  InvoiceItem,
-  Payment,
-  getInvoiceItems,
-} from '@linode/api-v4/lib/account';
-import { Theme } from '@mui/material/styles';
+import { getInvoiceItems } from '@linode/api-v4/lib/account';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
@@ -47,9 +43,16 @@ import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
 
+import type { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
+import type { Theme } from '@mui/material/styles';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
-    marginRight: theme.spacing(1.25),
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: theme.spacing(2),
+    },
   },
   dateColumn: {
     width: '25%',
@@ -57,16 +60,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   descriptionColumn: {
     width: '25%',
   },
-  flexContainer: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-  },
   headerContainer: {
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
     display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'space-between',
     [theme.breakpoints.down('sm')]: {
       alignItems: 'flex-start',
@@ -75,9 +70,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   headerLeft: {
     display: 'flex',
-    flexGrow: 2,
-    marginLeft: 10,
-    paddingLeft: 20,
+    flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 0,
     },
@@ -87,20 +80,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 5,
+    paddingRight: 20,
     [theme.breakpoints.down('sm')]: {
       alignItems: 'flex-start',
       flexDirection: 'column',
-      marginLeft: 15,
-      paddingLeft: 0,
     },
-  },
-  headline: {
-    fontSize: '1rem',
-    lineHeight: '1.5rem',
-    marginBottom: 8,
-    marginLeft: 15,
-    marginTop: 8,
   },
   pdfDownloadColumn: {
     '& > .loading': {
@@ -111,9 +95,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   pdfError: {
     color: theme.color.red,
   },
-  root: {
-    padding: '8px 0',
-  },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
       textAlign: 'right',
@@ -121,6 +102,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   transactionDate: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(1),
+    },
     width: 130,
   },
   transactionType: {
@@ -137,21 +121,29 @@ interface ActivityFeedItem {
   type: 'invoice' | 'payment';
 }
 
-type TransactionTypes = 'all' | ActivityFeedItem['type'];
-const transactionTypeOptions: Item<TransactionTypes>[] = [
+interface TransactionTypeOptions {
+  label: string;
+  value: 'all' | 'invoice' | 'payment';
+}
+
+const transactionTypeOptions: TransactionTypeOptions[] = [
   { label: 'Invoices', value: 'invoice' },
   { label: 'Payments', value: 'payment' },
   { label: 'All Transaction Types', value: 'all' },
 ];
 
-type DateRange =
-  | '6 Months'
-  | '12 Months'
-  | '30 Days'
-  | '60 Days'
-  | '90 Days'
-  | 'All Time';
-const transactionDateOptions: Item<DateRange>[] = [
+interface TransactionDateOptions {
+  label: string;
+  value:
+    | '6 Months'
+    | '12 Months'
+    | '30 Days'
+    | '60 Days'
+    | '90 Days'
+    | 'All Time';
+}
+
+export const transactionDateOptions: TransactionDateOptions[] = [
   { label: '30 Days', value: '30 Days' },
   { label: '60 Days', value: '60 Days' },
   { label: '90 Days', value: '90 Days' },
@@ -159,8 +151,6 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: '12 Months', value: '12 Months' },
   { label: 'All Time', value: 'All Time' },
 ];
-
-const defaultDateRange: DateRange = '6 Months';
 
 const AkamaiBillingInvoiceText = (
   <Typography>
@@ -182,30 +172,26 @@ export interface Props {
   accountActiveSince?: string;
 }
 
-export const BillingActivityPanel = (props: Props) => {
+export const BillingActivityPanel = React.memo((props: Props) => {
   const { accountActiveSince } = props;
-
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
-
   const isAkamaiCustomer = account?.billing_source === 'akamai';
-
   const { classes } = useStyles();
   const flags = useFlags();
-
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
   const [
     selectedTransactionType,
     setSelectedTransactionType,
-  ] = React.useState<TransactionTypes>('all');
+  ] = React.useState<TransactionTypeOptions>(transactionTypeOptions[2]);
 
   const [
     selectedTransactionDate,
     setSelectedTransactionDate,
-  ] = React.useState<DateRange>(defaultDateRange);
+  ] = React.useState<TransactionDateOptions>(transactionDateOptions[3]);
 
   const endDate = getCutoffFromDateRange(selectedTransactionDate);
   const filter = makeFilter(endDate);
@@ -299,25 +285,6 @@ export const BillingActivityPanel = (props: Props) => {
     [payments, flags, account, pdfErrors]
   );
 
-  // Handlers for <Select /> components.
-  const handleTransactionTypeChange = React.useCallback(
-    (item: Item<TransactionTypes>) => {
-      setSelectedTransactionType(item.value);
-      pdfErrors.clear();
-      pdfLoading.clear();
-    },
-    [pdfErrors, pdfLoading]
-  );
-
-  const handleTransactionDateChange = React.useCallback(
-    (item: Item<DateRange>) => {
-      setSelectedTransactionDate(item.value);
-      pdfErrors.clear();
-      pdfLoading.clear();
-    },
-    [pdfErrors, pdfLoading]
-  );
-
   // Combine Invoices and Payments
   const combinedData = React.useMemo(
     () => [
@@ -330,76 +297,83 @@ export const BillingActivityPanel = (props: Props) => {
   // Filter on transaction type
   const filteredData = React.useMemo(() => {
     return combinedData.filter(
-      (thisBillingItem) => thisBillingItem.type === selectedTransactionType
+      (thisBillingItem) =>
+        thisBillingItem.type === selectedTransactionType.value
     );
   }, [selectedTransactionType, combinedData]);
 
   return (
-    <Grid xs={12} data-qa-billing-activity-panel>
-      <div className={classes.root}>
-        <div className={classes.headerContainer}>
-          <Typography className={classes.headline} variant="h2">
-            {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
-          </Typography>
-          {isAkamaiCustomer ? (
-            <div className={classes.headerLeft}>
+    <Grid data-qa-billing-activity-panel xs={12}>
+      <Paper variant="outlined">
+        <StyledBillingAndPaymentHistoryHeader
+          className={classes.headerContainer}
+        >
+          <div>
+            <Typography
+              sx={{
+                fontSize: '1rem',
+                lineHeight: '1.5rem',
+              }}
+              variant="h2"
+            >
+              {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
+            </Typography>
+            {accountActiveSince ? (
+              <Typography className={classes.activeSince} variant="body1">
+                Account active since{' '}
+                {formatDate(accountActiveSince, {
+                  displayTime: false,
+                  timezone: profile?.timezone,
+                })}
+              </Typography>
+            ) : null}
+            {isAkamaiCustomer ? (
               <TextTooltip
                 displayText="Usage History may not reflect finalized invoice"
-                sxTypography={{ paddingLeft: '4px' }}
+                placement="right-end"
                 tooltipText={AkamaiBillingInvoiceText}
               />
-            </div>
-          ) : null}
-          <div className={classes.headerRight}>
-            {accountActiveSince && (
-              <div className={classes.flexContainer}>
-                <Typography className={classes.activeSince} variant="body1">
-                  Account active since{' '}
-                  {formatDate(accountActiveSince, {
-                    displayTime: false,
-                    timezone: profile?.timezone,
-                  })}
-                </Typography>
-              </div>
-            )}
-            <div className={classes.flexContainer}>
-              <Select
-                value={
-                  transactionTypeOptions.find(
-                    (thisOption) => thisOption.value === selectedTransactionType
-                  ) || null
-                }
-                className={classes.transactionType}
-                hideLabel
-                inline
-                isClearable={false}
-                isSearchable={false}
-                label="Transaction Types"
-                onChange={handleTransactionTypeChange}
-                options={transactionTypeOptions}
-                small
-              />
-              <Select
-                value={
-                  transactionDateOptions.find(
-                    (thisOption) => thisOption.value === selectedTransactionDate
-                  ) || null
-                }
-                className={classes.transactionDate}
-                hideLabel
-                inline
-                isClearable={false}
-                isSearchable={false}
-                label="Transaction Dates"
-                onChange={handleTransactionDateChange}
-                options={transactionDateOptions}
-                small
-              />
-            </div>
+            ) : null}
           </div>
-        </div>
+          <div className={classes.headerRight}>
+            <Autocomplete
+              onChange={(_, item) => {
+                setSelectedTransactionType(item);
+                pdfErrors.clear();
+                pdfLoading.clear();
+              }}
+              value={transactionTypeOptions.find(
+                (option) => option.value === selectedTransactionType.value
+              )}
+              className={classes.transactionType}
+              disableClearable
+              label="Transaction Types"
+              noMarginTop
+              options={transactionTypeOptions}
+            />
+            <Autocomplete
+              onChange={(_, item) => {
+                setSelectedTransactionDate(item);
+                pdfErrors.clear();
+                pdfLoading.clear();
+              }}
+              value={transactionDateOptions.find(
+                (option) => option.value === selectedTransactionDate.value
+              )}
+              className={classes.transactionDate}
+              disableClearable
+              label="Transaction Dates"
+              noMarginTop
+              options={transactionDateOptions}
+            />
+          </div>
+        </StyledBillingAndPaymentHistoryHeader>
         <OrderBy
-          data={selectedTransactionType === 'all' ? combinedData : filteredData}
+          data={
+            selectedTransactionType.value === 'all'
+              ? combinedData
+              : filteredData
+          }
           order={'desc'}
           orderBy={'date'}
         >
@@ -484,10 +458,18 @@ export const BillingActivityPanel = (props: Props) => {
             </Paginate>
           )}
         </OrderBy>
-      </div>
+      </Paper>
     </Grid>
   );
-};
+});
+
+const StyledBillingAndPaymentHistoryHeader = styled('div', {
+  name: 'BillingAndPaymentHistoryHeader',
+})(({ theme }) => ({
+  border: theme.name === 'dark' ? `1px solid ${theme.borderColors.divider}` : 0,
+  borderBottom: 0,
+  padding: `15px 0px 15px 20px`,
+}));
 
 // =============================================================================
 // <ActivityFeedItem />
@@ -593,10 +575,10 @@ export const paymentToActivityFeedItem = (
  * @returns ISO format beginning of the range date
  */
 export const getCutoffFromDateRange = (
-  range: DateRange,
+  range: TransactionDateOptions,
   currentDatetime?: string
 ): null | string => {
-  if (range === 'All Time') {
+  if (range === transactionDateOptions[5]) {
     return null;
   }
 
@@ -604,19 +586,19 @@ export const getCutoffFromDateRange = (
 
   let outputDate: DateTime;
   switch (range) {
-    case '30 Days':
+    case transactionDateOptions[0]:
       outputDate = date.minus({ days: 30 });
       break;
-    case '60 Days':
+    case transactionDateOptions[1]:
       outputDate = date.minus({ days: 60 });
       break;
-    case '90 Days':
+    case transactionDateOptions[2]:
       outputDate = date.minus({ days: 90 });
       break;
-    case '6 Months':
+    case transactionDateOptions[3]:
       outputDate = date.minus({ months: 6 });
       break;
-    case '12 Months':
+    case transactionDateOptions[4]:
       outputDate = date.minus({ months: 12 });
       break;
     default:
@@ -643,5 +625,3 @@ export const makeFilter = (endDate: null | string) => {
 
   return filter;
 };
-
-export default React.memo(BillingActivityPanel);

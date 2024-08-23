@@ -6,6 +6,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { sxDistributedRegionIcon } from 'src/components/RegionSelect/RegionSelect.styles';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
@@ -41,7 +42,7 @@ interface Props {
   handleSelectRegion: (id: string) => void;
   helperText?: string;
   linodeType: Linode['type'];
-  selectedRegion: null | string;
+  selectedRegion: string | undefined;
 }
 
 export type MigratePricePanelType = 'current' | 'new';
@@ -148,6 +149,8 @@ export const ConfigureForm = React.memo((props: Props) => {
     currentActualRegion?.site_type === 'distributed' ||
     currentActualRegion?.site_type === 'edge';
 
+  const { isGeckoBetaEnabled } = useIsGeckoEnabled();
+
   return (
     <StyledPaper>
       <Typography variant="h3">Configure Migration</Typography>
@@ -159,7 +162,7 @@ export const ConfigureForm = React.memo((props: Props) => {
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
-            {linodeIsInDistributedRegion && (
+            {isGeckoBetaEnabled && linodeIsInDistributedRegion && (
               <TooltipIcon
                 icon={<DistributedRegion />}
                 status="other"
@@ -190,10 +193,11 @@ export const ConfigureForm = React.memo((props: Props) => {
               helperText,
             }}
             currentCapability="Linodes"
+            disableClearable
             errorText={errorText}
-            handleSelection={handleSelectRegion}
             label="New Region"
-            selectedId={selectedRegion}
+            onChange={(e, region) => handleSelectRegion(region.id)}
+            value={selectedRegion}
           />
           {shouldDisplayPriceComparison && selectedRegion && (
             <MigrationPricing

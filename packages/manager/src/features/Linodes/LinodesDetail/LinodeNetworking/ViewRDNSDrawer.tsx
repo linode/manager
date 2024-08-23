@@ -1,13 +1,14 @@
-import { IPRange } from '@linode/api-v4/lib/networking';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
 import { Typography } from 'src/components/Typography';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useAllIPsQuery } from 'src/queries/linodes/networking';
+import { useAllIPsQuery } from 'src/queries/networking/networking';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';
+
+import type { IPRange } from '@linode/api-v4';
 
 interface Props {
   linodeId: number;

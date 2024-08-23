@@ -32,7 +32,7 @@ describe('Capture Machine Images', () => {
     });
 
     cy.defer(
-      createTestLinode(linodePayload, { waitForBoot: true }),
+      () => createTestLinode(linodePayload, { waitForBoot: true }),
       'creating and booting Linode'
     ).then(([linode, disk]: [Linode, Disk]) => {
       cy.visitWithLogin('/images/create/disk');

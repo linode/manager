@@ -122,7 +122,8 @@ export const StyledTable = styled(Table, { label: 'StyledTable' })(
       whiteSpace: 'nowrap',
     },
     '& th': {
-      backgroundColor: theme.bg.app,
+      backgroundColor:
+        theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
       borderBottom: `1px solid ${theme.bg.bgPaper}`,
       color: theme.textColors.textAccessTable,
       fontFamily: theme.font.bold,
@@ -136,6 +137,7 @@ export const StyledTable = styled(Table, { label: 'StyledTable' })(
     '& tr': {
       height: 32,
     },
+    border: 'none',
     tableLayout: 'fixed',
   })
 );

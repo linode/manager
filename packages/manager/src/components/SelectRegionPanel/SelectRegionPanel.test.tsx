@@ -1,18 +1,17 @@
-import { Capabilities } from '@linode/api-v4';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { regionFactory } from 'src/factories';
+import { imageFactory, regionFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SelectRegionPanel } from './SelectRegionPanel';
 
+import type { Capabilities } from '@linode/api-v4';
+
 const pricingMocks = vi.hoisted(() => ({
   isLinodeTypeDifferentPriceInSelectedRegion: vi.fn().mockReturnValue(false),
-}));
-
-const queryParamMocks = vi.hoisted(() => ({
-  getQueryParamFromQueryString: vi.fn().mockReturnValue({}),
-  getQueryParamsFromQueryString: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/utilities/pricing/linodes', () => ({
@@ -20,21 +19,9 @@ vi.mock('src/utilities/pricing/linodes', () => ({
     pricingMocks.isLinodeTypeDifferentPriceInSelectedRegion,
 }));
 
-vi.mock('src/utilities/queryParams', () => ({
-  getQueryParamFromQueryString: queryParamMocks.getQueryParamFromQueryString,
-  getQueryParamsFromQueryString: queryParamMocks.getQueryParamsFromQueryString,
-}));
-
 const createPath = '/linodes/create';
 
 describe('SelectRegionPanel on the Clone Flow', () => {
-  beforeEach(() => {
-    queryParamMocks.getQueryParamsFromQueryString.mockReturnValue({
-      regionID: 'us-east',
-      type: 'Clone+Linode',
-    });
-  });
-
   const regions = [...regionFactory.buildList(3)];
   const mockedProps = {
     currentCapability: 'Linodes' as Capabilities,
@@ -92,7 +79,9 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       <SelectRegionPanel {...mockedProps} selectedId="us-east" />,
       {
         MemoryRouter: {
-          initialEntries: [createPath],
+          initialEntries: [
+            '/linodes/create?regionID=us-east&type=Clone+Linode',
+          ],
         },
       }
     );
@@ -110,7 +99,9 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       <SelectRegionPanel {...mockedProps} selectedId="us-west" />,
       {
         MemoryRouter: {
-          initialEntries: [createPath],
+          initialEntries: [
+            '/linodes/create?regionID=us-east&type=Clone+Linode',
+          ],
         },
       }
     );
@@ -129,7 +120,9 @@ describe('SelectRegionPanel on the Clone Flow', () => {
       <SelectRegionPanel {...mockedProps} selectedId="br-gru" />,
       {
         MemoryRouter: {
-          initialEntries: [createPath],
+          initialEntries: [
+            '/linodes/create?regionID=us-east&type=Clone+Linode',
+          ],
         },
       }
     );
@@ -138,5 +131,52 @@ describe('SelectRegionPanel on the Clone Flow', () => {
     expect(warnings).toHaveLength(2);
     expect(getByTestId('cross-data-center-notice')).toBeInTheDocument();
     expect(getByTestId('different-price-structure-notice')).toBeInTheDocument();
+  });
+
+  it('should disable distributed regions if the selected image does not have the `distributed-sites` capability', async () => {
+    const image = imageFactory.build({ capabilities: [] });
+
+    const distributedRegion = regionFactory.build({
+      capabilities: ['Linodes'],
+      site_type: 'distributed',
+    });
+    const coreRegion = regionFactory.build({
+      capabilities: ['Linodes'],
+      site_type: 'core',
+    });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(
+          makeResourcePage([coreRegion, distributedRegion])
+        );
+      }),
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage([image]));
+      })
+    );
+
+    const { findByText, getByLabelText } = renderWithTheme(
+      <SelectRegionPanel
+        currentCapability="Linodes"
+        handleSelection={vi.fn()}
+        selectedImageId={image.id}
+      />,
+      {
+        MemoryRouter: { initialEntries: ['/linodes/create?type=Images'] },
+      }
+    );
+
+    const regionSelect = getByLabelText('Region');
+
+    await userEvent.click(regionSelect);
+
+    const distributedRegionOption = await findByText(distributedRegion.id, {
+      exact: false,
+    });
+
+    expect(distributedRegionOption.closest('li')?.textContent).toContain(
+      'The selected image cannot be deployed to a distributed region.'
+    );
   });
 });

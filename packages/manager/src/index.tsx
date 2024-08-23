@@ -21,7 +21,7 @@ import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { queryClientFactory } from './queries/base';
 
-const queryClient = queryClientFactory();
+const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
 
 setupInterceptors(store);

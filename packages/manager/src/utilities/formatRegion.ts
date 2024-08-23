@@ -2,9 +2,9 @@ import {
   CONTINENT_CODE_TO_CONTINENT,
   COUNTRY_CODE_TO_CONTINENT_CODE,
 } from '@linode/api-v4';
-import { Region } from '@linode/api-v4';
 
 import type { Agreements, Country, Profile } from '@linode/api-v4';
+import type { Region } from '@linode/api-v4';
 
 interface GDPRConfiguration {
   /** The user's agreements */
@@ -14,7 +14,7 @@ interface GDPRConfiguration {
   /** The list of regions */
   regions: Region[] | undefined;
   /** The ID of the selected region (e.g. 'eu-west') */
-  selectedRegionId: string;
+  selectedRegionId: string | undefined;
 }
 
 export const getRegionCountryGroup = (region: Region | undefined) => {
@@ -23,7 +23,9 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
   }
 
   const continentCode =
-    COUNTRY_CODE_TO_CONTINENT_CODE[region.country.toUpperCase() as Country];
+    COUNTRY_CODE_TO_CONTINENT_CODE[
+      region.country.toUpperCase() as Uppercase<Country>
+    ];
 
   return continentCode
     ? CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other'
@@ -32,14 +34,14 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
 
 export const getSelectedRegion = (
   regions: Region[],
-  selectedRegionId: string
+  selectedRegionId: string | undefined
 ): Region | undefined => {
   return regions.find((thisRegion) => selectedRegionId === thisRegion.id);
 };
 
 export const getSelectedRegionGroup = (
   regions: Region[],
-  selectedRegionId: string
+  selectedRegionId: string | undefined
 ): string | undefined => {
   const selectedRegion = getSelectedRegion(regions, selectedRegionId);
 

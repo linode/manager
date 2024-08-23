@@ -1,10 +1,9 @@
-import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
+import { useLinodeTransfer } from 'src/queries/linodes/stats';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
@@ -28,11 +27,7 @@ export const NetworkTransfer = React.memo((props: Props) => {
   const { linodeId, linodeLabel, linodeRegionId, linodeType } = props;
   const theme = useTheme();
 
-  const linodeTransfer = useAPIRequest(
-    () => getLinodeTransfer(linodeId),
-    { billable: 0, quota: 0, region_transfers: [], used: 0 },
-    [linodeId]
-  );
+  const linodeTransfer = useLinodeTransfer(linodeId);
   const regions = useRegionsQuery();
   const { data: type } = useTypeQuery(linodeType || '', Boolean(linodeType));
   const {
@@ -58,7 +53,7 @@ export const NetworkTransfer = React.memo((props: Props) => {
   const totalUsedInGB = dynamicDCPoolData.used;
   const accountQuotaInGB = dynamicDCPoolData.quota;
   const error = Boolean(linodeTransfer.error || accountTransferError);
-  const loading = linodeTransfer.loading || accountTransferLoading;
+  const loading = linodeTransfer.isLoading || accountTransferLoading;
   const isDynamicPricingDC = isLinodeInDynamicPricingDC(linodeRegionId, type);
 
   return (

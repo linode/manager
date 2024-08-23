@@ -4,6 +4,7 @@ import React from 'react';
 import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
@@ -13,34 +14,37 @@ import {
   StyledListItem,
   sxDistributedRegionIcon,
 } from './RegionSelect.styles';
-import { RegionSelectOption } from './RegionSelect.types';
 
+import type { DisableRegionOption } from './RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 
-type Props = {
-  displayDistributedRegionIcon?: boolean;
-  option: RegionSelectOption;
+interface Props {
+  disabledOptions?: DisableRegionOption;
   props: React.HTMLAttributes<HTMLLIElement>;
+  region: Region;
   selected?: boolean;
-};
+}
 
 export const RegionOption = ({
-  displayDistributedRegionIcon,
-  option,
+  disabledOptions,
   props,
+  region,
   selected,
 }: Props) => {
   const { className, onClick } = props;
-  const { data, disabledProps, label, value } = option;
-  const isRegionDisabled = Boolean(disabledProps?.disabled);
-  const isRegionDisabledReason = disabledProps?.reason;
+  const isRegionDisabled = Boolean(disabledOptions);
+  const isRegionDisabledReason = disabledOptions?.reason;
+  const { isGeckoBetaEnabled, isGeckoGAEnabled } = useIsGeckoEnabled();
+  const displayDistributedRegionIcon =
+    isGeckoBetaEnabled && region.site_type === 'distributed';
 
   return (
     <Tooltip
       PopperProps={{
         sx: {
           '& .MuiTooltip-tooltip': {
-            minWidth: disabledProps?.tooltipWidth ?? 215,
+            minWidth: disabledOptions?.tooltipWidth ?? 215,
           },
         },
       }}
@@ -53,14 +57,13 @@ export const RegionOption = ({
       enterDelay={200}
       enterNextDelay={200}
       enterTouchDelay={200}
-      key={value}
     >
       <StyledListItem
         {...props}
         componentsProps={{
           root: {
-            'data-qa-option': value,
-            'data-testid': value,
+            'data-qa-option': region.id,
+            'data-testid': region.id,
           } as ListItemComponentsPropsOverrides,
         }}
         onClick={(e) =>
@@ -73,9 +76,9 @@ export const RegionOption = ({
         <>
           <Box alignItems="center" display="flex" flexGrow={1}>
             <StyledFlagContainer>
-              <Flag country={data.country} />
+              <Flag country={region.country} />
             </StyledFlagContainer>
-            {label}
+            {isGeckoGAEnabled ? region.label : `${region.label} (${region.id})`}
             {displayDistributedRegionIcon && (
               <Box sx={visuallyHidden}>
                 &nbsp;(This region is a distributed region.)
@@ -85,7 +88,8 @@ export const RegionOption = ({
               <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
             )}
           </Box>
-          {selected && <SelectedIcon visible={selected} />}
+          {isGeckoGAEnabled && `(${region.id})`}
+          {selected && <SelectedIcon visible />}
           {displayDistributedRegionIcon && (
             <TooltipIcon
               icon={<DistributedRegion />}

@@ -1,11 +1,13 @@
 import React from 'react';
 
 import { imageFactory, linodeTypeFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { AddonsPanel, AddonsPanelProps } from './AddonsPanel';
+import { AddonsPanel } from './AddonsPanel';
+
+import type { AddonsPanelProps } from './AddonsPanel';
 
 const type = linodeTypeFactory.build({
   addons: {
@@ -64,12 +66,13 @@ const props: AddonsPanelProps = {
       label: 'test_instance',
       lke_cluster_id: null,
       placement_group: {
-        affinity_type: 'anti_affinity:local',
         id: 1,
-        is_strict: true,
         label: 'test',
+        placement_group_policy: 'strict',
+        placement_group_type: 'anti_affinity:local',
       },
       region: 'us-central',
+      site_type: 'core',
       specs: {
         disk: 51200,
         gpus: 0,
@@ -110,12 +113,13 @@ const props: AddonsPanelProps = {
       label: 'debian-ca-central',
       lke_cluster_id: null,
       placement_group: {
-        affinity_type: 'anti_affinity:local',
         id: 1,
-        is_strict: true,
         label: 'test',
+        placement_group_policy: 'strict',
+        placement_group_type: 'anti_affinity:local',
       },
       region: 'ca-central',
+      site_type: 'core',
       specs: {
         disk: 25600,
         gpus: 0,
@@ -155,12 +159,13 @@ const props: AddonsPanelProps = {
       label: 'almalinux-us-west',
       lke_cluster_id: null,
       placement_group: {
-        affinity_type: 'anti_affinity:local',
         id: 1,
-        is_strict: true,
         label: 'test',
+        placement_group_policy: 'strict',
+        placement_group_type: 'anti_affinity:local',
       },
       region: 'us-west',
+      site_type: 'core',
       specs: {
         disk: 25600,
         gpus: 0,

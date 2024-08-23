@@ -2,7 +2,7 @@ import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
   onBlur: (e: any) => void;
   onChange: (value: string) => void;
   required?: boolean;
-  selectedCluster: string;
+  selectedCluster: string | undefined;
 }
 
 export const ClusterSelect: React.FC<Props> = (props) => {
@@ -46,16 +46,16 @@ export const ClusterSelect: React.FC<Props> = (props) => {
     <RegionSelect
       currentCapability="Object Storage"
       data-qa-select-cluster
+      disableClearable
       disabled={disabled}
       errorText={errorText}
-      handleSelection={(id) => onChange(id)}
-      isClearable={false}
       label="Region"
       onBlur={onBlur}
+      onChange={(e, region) => onChange(region.id)}
       placeholder="Select a Region"
       regions={regionOptions ?? []}
       required={required}
-      selectedId={selectedCluster}
+      value={selectedCluster ?? undefined}
     />
   );
 };

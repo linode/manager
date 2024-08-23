@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useLinodeUpdateMutation } from 'src/queries/linodes/linodes';
 import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -16,22 +17,6 @@ import {
   sxLastListItem,
   sxListItemFirstChild,
 } from './LinodeEntityDetail.styles';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-
-import type { Linode } from '@linode/api-v4/lib/linodes/types';
-import type { TypographyProps } from 'src/components/Typography';
-
-interface LinodeEntityDetailProps {
-  id: number;
-  isSummaryView?: boolean;
-  linode: Linode;
-  openTagDrawer: (tags: string[]) => void;
-  variant?: TypographyProps['variant'];
-}
-
-export interface Props extends LinodeEntityDetailProps {
-  handlers: LinodeHandlers;
-}
 
 interface FooterProps {
   isLinodesGrantReadOnly: boolean;
@@ -41,7 +26,6 @@ interface FooterProps {
   linodePlan: null | string;
   linodeRegionDisplay: null | string;
   linodeTags: string[];
-  openTagDrawer: () => void;
 }
 
 export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
@@ -53,11 +37,16 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     isLinodesGrantReadOnly,
     linodeCreated,
     linodeId,
+    linodeLabel,
     linodePlan,
     linodeRegionDisplay,
     linodeTags,
-    openTagDrawer,
   } = props;
+
+  const isReadOnlyAccountAccess = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'account_access',
+    permittedGrantLevel: 'read_write',
+  });
 
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(linodeId);
 
@@ -157,10 +146,11 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
           sx={{
             width: '100%',
           }}
-          disabled={isLinodesGrantReadOnly}
-          listAllTags={openTagDrawer}
+          disabled={isLinodesGrantReadOnly || isReadOnlyAccountAccess}
+          entityLabel={linodeLabel}
           tags={linodeTags}
           updateTags={updateTags}
+          view="inline"
         />
       </Grid>
     </Grid>

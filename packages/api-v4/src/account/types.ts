@@ -61,17 +61,21 @@ export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
   | 'Akamai Cloud Load Balancer'
-  | 'CloudPulse'
+  | 'Akamai Cloud Pulse'
   | 'Block Storage'
+  | 'Block Storage Encryption'
   | 'Cloud Firewall'
+  | 'CloudPulse'
   | 'Disk Encryption'
   | 'Kubernetes'
   | 'Linodes'
   | 'LKE HA Control Planes'
   | 'Machine Images'
   | 'Managed Databases'
+  | 'Managed Databases V2'
   | 'NodeBalancers'
   | 'Object Storage Access Key Regions'
+  | 'Object Storage Endpoint Types'
   | 'Object Storage'
   | 'Placement Group'
   | 'Support Ticket Severity'
@@ -180,6 +184,7 @@ export type GlobalGrantTypes =
   | 'add_images'
   | 'add_linodes'
   | 'add_longview'
+  | 'add_databases'
   | 'add_nodebalancers'
   | 'add_stackscripts'
   | 'add_volumes'
@@ -257,7 +262,8 @@ export type NotificationType =
   | 'promotion'
   | 'user_email_bounce'
   | 'volume_migration_scheduled'
-  | 'volume_migration_imminent';
+  | 'volume_migration_imminent'
+  | 'tax_id_invalid';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -433,6 +439,7 @@ export const EventActionKeys = [
   'tag_create',
   'tag_delete',
   'tax_id_invalid',
+  'tax_id_valid',
   'tfa_disabled',
   'tfa_enabled',
   'ticket_attachment_upload',

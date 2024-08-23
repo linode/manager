@@ -4,7 +4,7 @@ import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sortByString } from 'src/utilities/sort-by';
 
-import type { RegionSelectOption } from 'src/components/RegionSelect/RegionSelect.types';
+import type { Region } from '@linode/api-v4';
 
 interface Props {
   disabled?: boolean;
@@ -15,7 +15,7 @@ interface Props {
   selectedRegion: string[];
 }
 
-const sortRegionOptions = (a: RegionSelectOption, b: RegionSelectOption) => {
+const sortRegionOptions = (a: Region, b: Region) => {
   return sortByString(a.label, b.label, 'asc');
 };
 
@@ -29,15 +29,15 @@ export const AccessKeyRegions = (props: Props) => {
 
   return (
     <RegionMultiSelect
-      handleSelection={(ids) => {
-        onChange(ids);
-      }}
+      placeholder={
+        selectedRegion.length > 0 ? '' : 'Select regions or type to search'
+      }
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
       isClearable={false}
       label="Regions"
-      placeholder="Select Regions or type to search"
+      onChange={onChange}
       regions={regions ?? []}
       required={required}
       selectedIds={selectedRegion}

@@ -23,21 +23,28 @@ import { randomLabel, randomNumber } from 'support/util/random';
 import type { Linode, Region } from '@linode/api-v4';
 import { chooseRegions } from 'support/util/regions';
 import { createTestLinode } from 'support/util/linodes';
+import { extendRegion } from 'support/util/regions';
 
-const mockRegions: Region[] = [
+const mockDallas = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     id: 'us-central',
     status: 'ok',
     label: 'Dallas, TX',
-  }),
+  })
+);
+
+const mockLondon = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'uk',
     id: 'eu-west',
     status: 'ok',
     label: 'London, UK',
-  }),
+  })
+);
+
+const mockSingapore = extendRegion(
   regionFactory.build({
     capabilities: [
       'Linodes',
@@ -49,8 +56,10 @@ const mockRegions: Region[] = [
     id: 'ap-south',
     status: 'ok',
     label: 'Singapore, SG',
-  }),
-];
+  })
+);
+
+const mockRegions: Region[] = [mockDallas, mockLondon, mockSingapore];
 
 // Migration notes and warnings that are shown to the user.
 // We want to confirm that these are displayed so that users are not surprised
@@ -93,7 +102,7 @@ describe('Migrate Linode With Firewall', () => {
 
     cy.visitWithLogin(`/linodes/${mockLinode.id}/migrate`);
     cy.wait(['@getLinode', '@getRegions']);
-    cy.findByText('Dallas, TX').should('be.visible');
+    cy.findByText(mockDallas.label).should('be.visible');
 
     ui.dialog
       .findByTitle(`Migrate Linode ${mockLinode.label} to another region`)
@@ -115,9 +124,11 @@ describe('Migrate Linode With Firewall', () => {
         cy.findByText('Accept').should('be.visible').click();
 
         // Select migration region.
-        cy.findByText(`North America: Dallas, TX`).should('be.visible');
+        cy.findByText(`North America: ${mockDallas.label}`).should(
+          'be.visible'
+        );
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel('Singapore, SG').click();
+        ui.regionSelect.findItemByRegionLabel(mockSingapore.label).click();
 
         ui.button
           .findByTitle('Enter Migration Queue')
@@ -144,7 +155,7 @@ describe('Migrate Linode With Firewall', () => {
     interceptGetFirewalls().as('getFirewalls');
 
     // Create a Linode, then navigate to the Firewalls landing page.
-    cy.defer(
+    cy.defer(() =>
       createTestLinode(linodePayload, { securityMethod: 'powered_off' })
     ).then((linode: Linode) => {
       interceptMigrateLinode(linode.id).as('migrateLinode');

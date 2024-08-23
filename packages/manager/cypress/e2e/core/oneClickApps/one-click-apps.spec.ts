@@ -49,14 +49,16 @@ describe('OneClick Apps (OCA)', () => {
       // Check the content of the OCA listing
       cy.findByTestId('one-click-apps-container').within(() => {
         // Check that all sections are present (note: New apps can be empty so not asserting its presence)
-        cy.findByTestId('Popular apps').should('exist');
-        cy.findByTestId('All apps').should('exist');
+        cy.findByText('Popular apps').should('be.visible');
+        cy.findByText('All apps').should('be.visible');
 
         trimmedApps.forEach((stackScript) => {
           const { decodedLabel, label } = handleAppLabel(stackScript);
 
           // Check that every OCA is listed with the correct label
-          cy.get(`[data-qa-select-card-heading="${label}"]`).should('exist');
+          cy.get(`[data-qa-select-card-heading="${label.trim()}"]`).should(
+            'exist'
+          );
 
           // Check that every OCA has a drawer match
           // This validates the regex in `mapStackScriptLabelToOCA`
@@ -76,7 +78,7 @@ describe('OneClick Apps (OCA)', () => {
       const candidateLabel = handleAppLabel(trimmedApps[0]).label;
 
       const stackScriptCandidate = cy
-        .get(`[data-qa-selection-card-info="${candidateLabel}"]`)
+        .get(`[data-qa-selection-card-info="${candidateLabel.trim()}"]`)
         .first();
       stackScriptCandidate.should('exist').click();
 
@@ -92,7 +94,7 @@ describe('OneClick Apps (OCA)', () => {
       }
 
       ui.drawer
-        .findByTitle(trimmedApps[0].label)
+        .findByTitle(trimmedApps[0].label.trim())
         .should('be.visible')
         .within(() => {
           containsVisible(app.description);
@@ -113,9 +115,9 @@ describe('OneClick Apps (OCA)', () => {
           'have.length.below',
           initialNumberOfApps
         );
-        cy.get(`[data-qa-selection-card-info="${candidateLabel}"]`).should(
-          'be.visible'
-        );
+        cy.get(
+          `[data-qa-selection-card-info="${candidateLabel.trim()}"]`
+        ).should('be.visible');
       });
     });
   });
@@ -162,12 +164,13 @@ describe('OneClick Apps (OCA)', () => {
     const password = randomString(16);
     const image = 'linode/ubuntu22.04';
     const rootPassword = randomString(16);
-    const region = chooseRegion();
+    const region = chooseRegion({ capabilities: ['Vlans'] });
     const linodeLabel = randomLabel();
     const levelName = 'Get the enderman!';
 
     mockGetStackScripts([stackScripts]).as('getStackScripts');
     mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(false),
       oneClickApps: makeFeatureFlagData({
         401709: 'E2E Test App',
       }),
@@ -181,7 +184,7 @@ describe('OneClick Apps (OCA)', () => {
 
     cy.findByTestId('one-click-apps-container').within(() => {
       // Since it is mock data we can assert the New App section is present
-      cy.findByTestId('New apps').should('exist');
+      cy.findByText('New apps').should('be.visible');
 
       // Check that the app is listed and select it
       cy.get('[data-qa-selection-card="true"]').should('have.length', 3);

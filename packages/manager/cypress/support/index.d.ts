@@ -1,9 +1,14 @@
 import type { mount } from 'cypress/react18';
 import { Labelable } from './commands';
 import type { LinodeVisitOptions } from './login.ts';
+import type { TestTag } from 'support/util/tag';
 
 declare global {
   namespace Cypress {
+    interface Cypress {
+      mocha: Mocha;
+    }
+
     interface Chainable {
       /**
        * Custom command to select DOM element by data-cy attribute.
@@ -17,7 +22,7 @@ declare global {
        * @example cy.defer(new Promise('value')).then((val) => {...})
        */
       defer<T>(
-        promise: Promise<T>,
+        promiseGenerator: () => Promise<T>,
         labelOrOptions?:
           | Partial<Cypress.Loggable & Cypress.Timeoutable & Labelable>
           | string
@@ -64,11 +69,32 @@ declare global {
       expectNewPageVisit(alias: string): Chainable<>;
 
       /**
+       * Sets tags for the current runnable.
+       *
+       * Alias for `tag()` in `support/util/tag.ts`.
+       *
+       * @param tags - Tags to set for test or runnable.
+       */
+      tag(...tags: TestTag[]): void;
+
+      /**
+       * Adds tags for the given runnable.
+       *
+       * If tags have already been set (e.g. using a hook), this method will add
+       * the given tags in addition the tags that have already been set.
+       *
+       * Alias for `addTag()` in `support/util/tag.ts`.
+       *
+       * @param tags - Test tags.
+       */
+      addTag(...tags: TestTag[]): void;
+
+      /**
        * Internal Cypress command to retrieve test state.
        *
        * @param state - Cypress internal state to retrieve.
        */
-      state(state: string): any;
+      state(state?: string): any;
 
       /**
        * Mount a React component via `cypress/react`.

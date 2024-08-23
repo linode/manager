@@ -1,12 +1,8 @@
 import {
-  ObjectStorageKey,
-  ObjectStorageKeyRequest,
-  UpdateObjectStorageKeyRequest,
   createObjectStorageKeys,
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
-import { FormikBag, FormikHelpers } from 'formik';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -18,8 +14,8 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountSettings } from 'src/queries/account/settings';
-import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { useObjectStorageAccessKeys } from 'src/queries/object-storage/queries';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
@@ -31,8 +27,15 @@ import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
 import { RevokeAccessKeyDialog } from './RevokeAccessKeyDialog';
-import { MODE, OpenAccessDrawer } from './types';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
+
+import type { MODE, OpenAccessDrawer } from './types';
+import type {
+  CreateObjectStorageKeyPayload,
+  ObjectStorageKey,
+  UpdateObjectStorageKeyPayload,
+} from '@linode/api-v4/lib/object-storage';
+import type { FormikBag, FormikHelpers } from 'formik';
 
 interface Props {
   accessDrawerOpen: boolean;
@@ -42,7 +45,7 @@ interface Props {
   openAccessDrawer: (mode: MODE) => void;
 }
 
-export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
+export type FormikProps = FormikBag<Props, CreateObjectStorageKeyPayload>;
 
 export const AccessKeyLanding = (props: Props) => {
   const {
@@ -85,23 +88,22 @@ export const AccessKeyLanding = (props: Props) => {
 
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
-  const viewPermissionsDrawer = useOpenClose();
   const flags = useFlags();
   const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
   );
 
   const handleCreateKey = (
-    values: ObjectStorageKeyRequest,
+    values: CreateObjectStorageKeyPayload,
     {
       setErrors,
       setStatus,
       setSubmitting,
-    }: FormikHelpers<ObjectStorageKeyRequest>
+    }: FormikHelpers<CreateObjectStorageKeyPayload>
   ) => {
     // Clear out status (used for general errors)
     setStatus(null);
@@ -156,12 +158,12 @@ export const AccessKeyLanding = (props: Props) => {
   };
 
   const handleEditKey = (
-    values: UpdateObjectStorageKeyRequest,
+    values: UpdateObjectStorageKeyPayload,
     {
       setErrors,
       setStatus,
       setSubmitting,
-    }: FormikHelpers<UpdateObjectStorageKeyRequest>
+    }: FormikHelpers<UpdateObjectStorageKeyPayload>
   ) => {
     // This shouldn't happen, but just in case.
     if (!keyToEdit) {
@@ -249,13 +251,8 @@ export const AccessKeyLanding = (props: Props) => {
     objectStorageKey: ObjectStorageKey | null = null
   ) => {
     setKeyToEdit(objectStorageKey);
-    switch (mode) {
-      case 'creating':
-      case 'editing':
-        openAccessDrawer(mode);
-        break;
-      case 'viewing':
-        viewPermissionsDrawer.open();
+    if (mode !== 'creating') {
+      openAccessDrawer(mode);
     }
   };
 
@@ -311,8 +308,8 @@ export const AccessKeyLanding = (props: Props) => {
 
       <ViewPermissionsDrawer
         objectStorageKey={keyToEdit}
-        onClose={viewPermissionsDrawer.close}
-        open={viewPermissionsDrawer.isOpen}
+        onClose={closeAccessDrawer}
+        open={mode === 'viewing' && accessDrawerOpen}
       />
       <SecretTokenDialog
         objectStorageKey={keyToDisplay}

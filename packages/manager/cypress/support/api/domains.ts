@@ -1,16 +1,14 @@
-import {
-  Domain,
-  deleteDomain,
-  getDomains,
-  CreateDomainPayload,
-} from '@linode/api-v4';
-import { createDomainPayloadFactory } from 'src/factories';
+import { deleteDomain, getDomains } from '@linode/api-v4';
 import { isTestLabel } from 'support/api/common';
 import { oauthToken, pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 import { randomDomainName } from 'support/util/random';
 
+import { createDomainPayloadFactory } from 'src/factories';
+
 import { apiCheckErrors } from './common';
+
+import type { CreateDomainPayload, Domain } from '@linode/api-v4';
 
 /**
  * Deletes all domains which are prefixed with the test entity prefix.

@@ -1,12 +1,10 @@
-import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
-import { SubnetFieldState } from 'src/utilities/subnets';
 
 import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
 import { MultipleSubnetInput } from '../MultipleSubnetInput';
@@ -15,7 +13,10 @@ import {
   StyledHeaderTypography,
 } from './VPCCreateForm.styles';
 
+import type { APIError } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { SubnetFieldState } from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;
@@ -30,7 +31,9 @@ export const SubnetContent = (props: Props) => {
 
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
 
   return (
     <>
@@ -42,14 +45,12 @@ export const SubnetContent = (props: Props) => {
         <Link
           onClick={() =>
             isFromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'link',
-              createType:
-                (queryParams.type as LinodeCreateType) ?? 'Distributions',
-              formStepName: 'VPC Subnets',
+            sendLinodeCreateFormInputEvent({
+              createType: (queryParams.type as LinodeCreateType) ?? 'OS',
+              headerName: 'Create VPC',
+              interaction: 'click',
               label: 'Learn more',
-              version: 'v1',
+              subheaderName: 'Subnets',
             })
           }
           to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/"

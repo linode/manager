@@ -125,7 +125,8 @@ describe('Create Linode with VPCs', () => {
 
     // Confirm redirect to new Linode.
     cy.url().should('endWith', `/linodes/${mockLinode.id}`);
-    // TODO Confirm whether toast notification should appear on Linode create.
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
   });
 
   /*
@@ -236,7 +237,8 @@ describe('Create Linode with VPCs', () => {
     });
 
     cy.url().should('endWith', `/linodes/${mockLinode.id}`);
-    // TODO Confirm whether toast notification should appear on Linode create.
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${mockLinode.label} is being created.`);
   });
 
   /*

@@ -1,5 +1,3 @@
-import Paper from '@mui/material/Paper';
-import TableContainer from '@mui/material/TableContainer';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -25,25 +23,23 @@ export const CollapsibleTable = (props: Props) => {
   const { TableItems, TableRowEmpty, TableRowHead } = props;
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead data-qa-table-row="collapsible-table-headers-row">
-          {TableRowHead}
-        </TableHead>
-        <TableBody>
-          {TableItems.length === 0 && TableRowEmpty}
-          {TableItems.map((item) => {
-            return (
-              <CollapsibleRow
-                InnerTable={item.InnerTable}
-                OuterTableCells={item.OuterTableCells}
-                key={item.id}
-                label={item.label}
-              />
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Table aria-label="collapsible table">
+      <TableHead data-qa-table-row="collapsible-table-headers-row">
+        {TableRowHead}
+      </TableHead>
+      <TableBody>
+        {TableItems.length === 0 && TableRowEmpty}
+        {TableItems.map((item) => {
+          return (
+            <CollapsibleRow
+              InnerTable={item.InnerTable}
+              OuterTableCells={item.OuterTableCells}
+              key={item.id}
+              label={item.label}
+            />
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 };

@@ -1,9 +1,14 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import {
+  DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY,
+  DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY,
+} from 'src/components/Encryption/constants';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -15,15 +20,19 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useProfile } from 'src/queries/profile/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
 import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
+
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 interface ClusterDialogState {
   loading: boolean;
@@ -84,13 +93,22 @@ export const KubernetesLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data, error, isLoading } = useKubernetesClustersQuery(
+  const { data: profile } = useProfile();
+
+  const isRestricted = profile?.restricted ?? false;
+
+  const { data, error, isFetching } = useKubernetesClustersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter
+    filter,
+    !isRestricted
   );
+
+  const {
+    isDiskEncryptionFeatureEnabled,
+  } = useIsDiskEncryptionFeatureEnabled();
 
   const openUpgradeDialog = (
     clusterID: number,
@@ -138,17 +156,28 @@ export const KubernetesLanding = () => {
     );
   }
 
-  if (isLoading) {
+  if (isFetching) {
     return <CircleProgress />;
   }
 
-  if (data?.results === 0) {
-    return <KubernetesEmptyState />;
+  if (isRestricted || data?.results === 0) {
+    return <KubernetesEmptyState isRestricted={isRestricted} />;
   }
 
   return (
     <>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
+      {isDiskEncryptionFeatureEnabled && (
+        <DismissibleBanner
+          preferenceKey={DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_BANNER_KEY}
+          sx={{ margin: '1rem 0 1rem 0' }}
+          variant="info"
+        >
+          <Typography>
+            {DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY}
+          </Typography>
+        </DismissibleBanner>
+      )}
       <LandingHeader
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
         entity="Cluster"

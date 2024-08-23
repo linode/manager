@@ -53,16 +53,16 @@ const StyledDiv = styled(Box, {
   transition: theme.transitions.create(['color']),
   width: '16px',
   ...(props.status === 'active' && {
-    backgroundColor: theme.color.teal,
+    backgroundColor: theme.palette.success.dark,
   }),
   ...(props.status === 'inactive' && {
     backgroundColor: theme.color.grey8,
   }),
   ...(props.status === 'error' && {
-    backgroundColor: theme.color.red,
+    backgroundColor: theme.palette.error.dark,
   }),
   ...(!['active', 'error', 'inactive'].includes(props.status) && {
-    backgroundColor: theme.color.orange,
+    backgroundColor: theme.palette.warning.dark,
   }),
   ...(props.pulse && {
     animation: 'pulse 1.5s ease-in-out infinite',

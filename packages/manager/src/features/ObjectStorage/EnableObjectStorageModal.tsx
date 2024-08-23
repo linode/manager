@@ -1,4 +1,3 @@
-import { Region } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -7,12 +6,14 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useObjectStorageTypesQuery } from 'src/queries/objectStorage';
+import { useObjectStorageTypesQuery } from 'src/queries/object-storage/queries';
 import {
   PRICES_RELOAD_ERROR_NOTICE_TEXT,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
+
+import type { Region } from '@linode/api-v4';
 
 export const OBJ_STORAGE_STORAGE_AMT = '250 GB';
 export const OBJ_STORAGE_NETWORK_TRANSFER_AMT = '1 TB';
@@ -26,10 +27,7 @@ export interface EnableObjectStorageProps {
 export const EnableObjectStorageModal = React.memo(
   (props: EnableObjectStorageProps) => {
     const { handleSubmit, onClose, open, regionId } = props;
-
-    const { data: types, isError, isLoading } = useObjectStorageTypesQuery(
-      Boolean(regionId)
-    );
+    const { data: types, isError, isLoading } = useObjectStorageTypesQuery();
 
     const isInvalidPrice = Boolean(regionId) && (!types || isError);
 

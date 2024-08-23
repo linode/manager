@@ -2,13 +2,18 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories/vpcs';
-import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  resizeScreenSize,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
 
 import { VPCRow } from './VPCRow';
 
 describe('VPC Table Row', () => {
   it('should render a VPC row', () => {
     const vpc = vpcFactory.build();
+    resizeScreenSize(1600);
 
     const { getAllByText, getByText } = renderWithTheme(
       wrapWithTableBody(

@@ -36,7 +36,7 @@ import { getPlacementGroupLinodes } from '../utils';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
-import type { PlacementGroup } from '@linode/api-v4';
+import type { Filter, PlacementGroup } from '@linode/api-v4';
 
 const preferenceKey = 'placement-groups';
 
@@ -55,14 +55,11 @@ export const PlacementGroupsLanding = React.memo(() => {
     `${preferenceKey}-order`
   );
 
-  const filter = {
+  const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+    ...(query && { label: { '+contains': query } }),
   };
-
-  if (query) {
-    filter['label'] = { '+contains': query };
-  }
 
   const {
     data: placementGroups,
@@ -215,23 +212,23 @@ export const PlacementGroupsLanding = React.memo(() => {
             </TableSortCell>
             <Hidden smDown>
               <TableSortCell
-                active={orderBy === 'affinity_type'}
+                active={orderBy === 'placement_group_type'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="affinity_type"
+                label="placement_group_type"
               >
-                Affinity Type
+                Placement Group Type
               </TableSortCell>
             </Hidden>
             <Hidden smDown>
               <TableSortCell
-                active={orderBy === 'is_strict'}
+                active={orderBy === 'placement_group_policy'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="is_strict"
+                label="placement_group_policy"
                 sx={{ width: '20%' }}
               >
-                Affinity Type Enforcement
+                Placement Group Policy
               </TableSortCell>
             </Hidden>
             <TableCell>Linodes</TableCell>

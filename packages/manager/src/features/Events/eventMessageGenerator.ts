@@ -75,7 +75,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   community_like: {
     notification: (e) =>
       e.entity?.label
-        ? `A post on "${e.entity.label}" has been liked.`
+        ? `${e.entity.label}`
         : `There has been a like on your community post.`,
   },
   community_mention: {
@@ -87,7 +87,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   community_question_reply: {
     notification: (e) =>
       e.entity?.label
-        ? `There has been a reply to your thread "${e.entity.label}".`
+        ? `There has been a reply to your thread: ${e.entity.label}.`
         : `There has been a reply to your thread.`,
   },
   credit_card_updated: {
@@ -297,7 +297,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+          secondaryFirewallEntityNameMap[
+            e.secondary_entity.type as FirewallDeviceEntityType
+          ];
         return `${secondaryEntityName} ${
           e.secondary_entity?.label
         } has been added to Firewall ${e.entity?.label ?? ''}.`;
@@ -309,7 +311,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => {
       if (e.secondary_entity?.type) {
         const secondaryEntityName =
-          secondaryFirewallEntityNameMap[e.secondary_entity.type];
+          secondaryFirewallEntityNameMap[
+            e.secondary_entity.type as FirewallDeviceEntityType
+          ];
         return `${secondaryEntityName} ${
           e.secondary_entity?.label
         } has been removed from Firewall ${e.entity?.label ?? ''}.`;
@@ -864,6 +868,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   tax_id_invalid: {
     notification: (e) => `Tax Identification Number format is invalid.`,
+  },
+  tax_id_valid: {
+    notification: (e) => `Tax Identification Number has been verified.`,
   },
   tfa_disabled: {
     notification: (e) => `Two-factor authentication has been disabled.`,

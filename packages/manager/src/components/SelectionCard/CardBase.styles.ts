@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import type { CardBaseProps } from './CardBase';
 
@@ -18,15 +18,25 @@ export const CardBaseGrid = styled(Grid, {
     width: 5,
   },
   '&:hover': {
-    backgroundColor: props.checked ? theme.bg.lightBlue2 : theme.bg.main,
+    backgroundColor: props.checked
+      ? theme.name === 'dark'
+        ? `rgba(0, 49, 77, .2)`
+        : `rgba(1, 116, 188, .2)`
+      : theme.bg.interactionBgPrimary,
     borderColor: props.checked
       ? theme.palette.primary.main
-      : theme.color.border2,
+      : theme.borderColors.borderHover,
   },
   alignItems: 'center',
-  backgroundColor: props.checked ? theme.bg.lightBlue2 : theme.bg.offWhite,
+  backgroundColor: props.checked
+    ? theme.name === 'dark'
+      ? `rgba(0, 49, 77, .2)`
+      : `rgba(1, 116, 188, .2)`
+    : theme.bg.interactionBgPrimary,
   border: `1px solid ${theme.bg.main}`,
-  borderColor: props.checked ? theme.palette.primary.main : undefined,
+  borderColor: props.checked
+    ? theme.palette.primary.main
+    : theme.borderColors.divider,
   height: '100%',
   margin: 0,
   minHeight: 60,

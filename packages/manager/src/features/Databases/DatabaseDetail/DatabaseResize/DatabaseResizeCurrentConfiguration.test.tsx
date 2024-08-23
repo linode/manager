@@ -28,7 +28,7 @@ describe('database current configuration section', () => {
     const standardTypes = [
       databaseTypeFactory.build({
         class: 'nanode',
-        id: 'g6-standard-0',
+        id: 'g6-nanode-1',
         label: `Nanode 1 GB`,
         memory: 1024,
       }),
@@ -57,7 +57,7 @@ describe('database current configuration section', () => {
     getByText('Nodes');
 
     getByText('Region');
-    getByText('Newark, NJ');
+    getByText('US, Newark, NJ');
 
     getByText('RAM');
     getByText('1 GB');

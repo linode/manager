@@ -1,5 +1,5 @@
 import { Grant, Grants } from '@linode/api-v4/lib/account';
-import * as Factory from 'factory.ts';
+import Factory from 'src/factories/factoryProxy';
 
 export const grantFactory = Factory.Sync.makeFactory<Grant>({
   id: Factory.each((i) => i),
@@ -31,6 +31,7 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
   ],
   global: {
     account_access: 'read_write',
+    add_databases: true,
     add_domains: true,
     add_firewalls: true,
     add_images: true,

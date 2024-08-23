@@ -1,20 +1,14 @@
-import { Region } from '@linode/api-v4';
-import {
-  CreateKubeClusterPayload,
-  CreateNodePoolData,
-  KubeNodePoolResponse,
-} from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
@@ -34,6 +28,7 @@ import {
 } from 'src/queries/account/agreements';
 import {
   useCreateKubernetesClusterMutation,
+  useKubernetesTypesQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -42,11 +37,9 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import {
-  DOCS_LINK_LABEL_DC_PRICING,
-  LKE_HA_PRICE,
-} from 'src/utilities/pricing/constants';
-import { getDCSpecificPrice } from 'src/utilities/pricing/dynamicPricing';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
@@ -58,12 +51,21 @@ import {
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
+import type {
+  CreateKubeClusterPayload,
+  CreateNodePoolData,
+  KubeNodePoolResponse,
+} from '@linode/api-v4/lib/kubernetes';
+import type { APIError } from '@linode/api-v4/lib/types';
+
 export const CreateCluster = () => {
   const { classes } = useStyles();
-  const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
+  const [selectedRegionId, setSelectedRegionId] = React.useState<
+    string | undefined
+  >();
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
-  const [version, setVersion] = React.useState<Item<string> | undefined>();
+  const [version, setVersion] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
@@ -75,6 +77,16 @@ export const CreateCluster = () => {
   const history = useHistory();
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
+
+  const {
+    data: kubernetesHighAvailabilityTypesData,
+    isError: isErrorKubernetesTypes,
+    isLoading: isLoadingKubernetesTypes,
+  } = useKubernetesTypesQuery();
+
+  const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
+    (type) => type.id === 'lke-ha'
+  );
 
   const {
     data: allTypes,
@@ -101,7 +113,7 @@ export const CreateCluster = () => {
 
   React.useEffect(() => {
     if (versions.length > 0) {
-      setVersion(getLatestVersion(versions));
+      setVersion(getLatestVersion(versions).value);
     }
   }, [versionData]);
 
@@ -109,7 +121,6 @@ export const CreateCluster = () => {
     const { push } = history;
     setErrors(undefined);
     setSubmitting(true);
-    const k8s_version = version ? version.value : undefined;
 
     // Only type and count to the API.
     const node_pools = nodePools.map(
@@ -118,10 +129,10 @@ export const CreateCluster = () => {
 
     const payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability ?? false },
-      k8s_version,
+      k8s_version: version,
       label,
       node_pools,
-      region: selectedRegionID,
+      region: selectedRegionId,
     };
 
     createKubernetesCluster(payload)
@@ -164,23 +175,17 @@ export const CreateCluster = () => {
     setLabel(newLabel ? newLabel : undefined);
   };
 
-  /**
-   * @param regionId - region selection or null if no selection made
-   * @returns dynamically calculated high availability price by region
-   */
-  const getHighAvailabilityPrice = (regionId: Region['id'] | null) => {
-    const dcSpecificPrice = regionId
-      ? getDCSpecificPrice({ basePrice: LKE_HA_PRICE, regionId })
-      : undefined;
-    return dcSpecificPrice ? parseFloat(dcSpecificPrice) : undefined;
-  };
+  const highAvailabilityPrice = getDCSpecificPriceByType({
+    regionId: selectedRegionId,
+    type: lkeHAType,
+  });
 
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
   );
 
-  const selectedId = selectedRegionID || null;
+  const generalError = errorMap.none;
 
   const {
     hasSelectedRegion,
@@ -188,7 +193,7 @@ export const CreateCluster = () => {
     isSelectedRegionEligibleForPlan,
   } = plansNoticesUtils({
     regionsData,
-    selectedRegionID,
+    selectedRegionID: selectedRegionId,
   });
 
   if (typesError || regionsError || versionLoadError) {
@@ -205,7 +210,15 @@ export const CreateCluster = () => {
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
-        {errorMap.none && <Notice text={errorMap.none} variant="error" />}
+        {generalError && (
+          <Notice variant="error">
+            <ErrorMessage
+              entityType="lkecluster_id"
+              formPayloadValues={{ node_pools: nodePools }}
+              message={generalError}
+            />
+          </Notice>
+        )}
         <Paper data-qa-label-header>
           <TextField
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -220,17 +233,16 @@ export const CreateCluster = () => {
           <StyledRegionSelectStack>
             <Stack>
               <RegionSelect
-                handleSelection={(regionID: string) =>
-                  setSelectedRegionID(regionID)
-                }
                 textFieldProps={{
                   helperText: <RegionHelperText mb={2} />,
                   helperTextPosition: 'top',
                 }}
                 currentCapability="Kubernetes"
+                disableClearable
                 errorText={errorMap.region}
+                onChange={(e, region) => setSelectedRegionId(region.id)}
                 regions={regionsData}
-                selectedId={selectedId}
+                value={selectedRegionId}
               />
             </Stack>
             <StyledDocsLinkContainer>
@@ -241,22 +253,29 @@ export const CreateCluster = () => {
             </StyledDocsLinkContainer>
           </StyledRegionSelectStack>
           <Divider sx={{ marginTop: 4 }} />
-          <Select
-            onChange={(selected: Item<string>) => {
-              setVersion(selected);
+          <Autocomplete
+            onChange={(_, selected) => {
+              setVersion(selected?.value);
             }}
+            disableClearable={!!version}
             errorText={errorMap.k8s_version}
-            isClearable={false}
             label="Kubernetes Version"
             options={versions}
             placeholder={' '}
-            value={version || null}
+            value={versions.find((v) => v.value === version) ?? null}
           />
           <Divider sx={{ marginTop: 4 }} />
           {showHighAvailability ? (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
-                highAvailabilityPrice={getHighAvailabilityPrice(selectedId)}
+                highAvailabilityPrice={
+                  isErrorKubernetesTypes || !highAvailabilityPrice
+                    ? UNKNOWN_PRICE
+                    : highAvailabilityPrice
+                }
+                isErrorKubernetesTypes={isErrorKubernetesTypes}
+                isLoadingKubernetesTypes={isLoadingKubernetesTypes}
+                selectedRegionId={selectedRegionId}
                 setHighAvailability={setHighAvailability}
               />
             </Box>
@@ -277,7 +296,7 @@ export const CreateCluster = () => {
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
-            selectedRegionId={selectedRegionID}
+            selectedRegionId={selectedRegionId}
             types={typesData || []}
             typesLoading={typesLoading}
           />
@@ -288,10 +307,15 @@ export const CreateCluster = () => {
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
+          highAvailabilityPrice={
+            isErrorKubernetesTypes || !highAvailabilityPrice
+              ? UNKNOWN_PRICE
+              : highAvailabilityPrice
+          }
           updateFor={[
             hasAgreed,
             highAvailability,
-            selectedRegionID,
+            selectedRegionId,
             nodePools,
             submitting,
             typesData,
@@ -303,9 +327,8 @@ export const CreateCluster = () => {
           createCluster={createCluster}
           hasAgreed={hasAgreed}
           highAvailability={highAvailability}
-          highAvailabilityPrice={getHighAvailabilityPrice(selectedId)}
           pools={nodePools}
-          region={selectedRegionID}
+          region={selectedRegionId}
           regionsData={regionsData}
           removePool={removePool}
           showHighAvailability={showHighAvailability}

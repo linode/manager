@@ -1,4 +1,3 @@
-import { AccountCapability } from '@linode/api-v4';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -16,7 +15,9 @@ import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { LinodeEntityDetail } from './LinodeEntityDetail';
 import { getSubnetsString } from './LinodeEntityDetailBody';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
+
+import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
+import type { AccountCapability } from '@linode/api-v4';
 
 const queryClient = queryClientFactory();
 
@@ -41,9 +42,9 @@ describe('Linode Entity Detail', () => {
     };
   });
 
-  vi.mock('src/components/DiskEncryption/utils.ts', async () => {
+  vi.mock('src/components/Encryption/utils.ts', async () => {
     const actual = await vi.importActual<any>(
-      'src/components/DiskEncryption/utils.ts'
+      'src/components/Encryption/utils.ts'
     );
     return {
       ...actual,
@@ -83,12 +84,7 @@ describe('Linode Entity Detail', () => {
     );
 
     const { queryByTestId } = renderWithTheme(
-      <LinodeEntityDetail
-        handlers={handlers}
-        id={5}
-        linode={linode}
-        openTagDrawer={vi.fn()}
-      />
+      <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
     );
 
     await waitFor(() => {
@@ -112,12 +108,7 @@ describe('Linode Entity Detail', () => {
     );
 
     const { getByTestId } = renderWithTheme(
-      <LinodeEntityDetail
-        handlers={handlers}
-        id={10}
-        linode={linode}
-        openTagDrawer={vi.fn()}
-      />,
+      <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />,
       {
         queryClient,
       }
@@ -132,12 +123,7 @@ describe('Linode Entity Detail', () => {
   it('should not display the encryption status of the linode if the account lacks the capability or the feature flag is off', () => {
     // situation where isDiskEncryptionFeatureEnabled === false
     const { queryByTestId } = renderWithTheme(
-      <LinodeEntityDetail
-        handlers={handlers}
-        id={10}
-        linode={linode}
-        openTagDrawer={vi.fn()}
-      />
+      <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
     );
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 
@@ -152,12 +138,7 @@ describe('Linode Entity Detail', () => {
     });
 
     const { queryByTestId } = renderWithTheme(
-      <LinodeEntityDetail
-        handlers={handlers}
-        id={10}
-        linode={linode}
-        openTagDrawer={vi.fn()}
-      />
+      <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
     );
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 

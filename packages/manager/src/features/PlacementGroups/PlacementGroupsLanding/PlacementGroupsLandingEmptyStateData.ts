@@ -11,7 +11,7 @@ import type {
 
 export const headers: ResourcesHeaders = {
   description:
-    'Control the physical placement or distribution of Linode instances within a data center or availability zone.',
+    'Control the physical placement of compute instances within a compute region.',
   subtitle: '',
   title: PLACEMENT_GROUP_LABEL,
 };

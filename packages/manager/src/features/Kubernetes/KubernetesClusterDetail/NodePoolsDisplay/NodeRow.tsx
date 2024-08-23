@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -12,6 +11,8 @@ import { useInProgressEvents } from 'src/queries/events/events';
 
 import NodeActionMenu from './NodeActionMenu';
 import { StyledCopyTooltip, StyledTableRow } from './NodeTable.styles';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface NodeRow {
   instanceId?: number;
@@ -100,7 +101,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           </>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell noWrap>
         {linodeError ? (
           <Typography
             sx={(theme) => ({

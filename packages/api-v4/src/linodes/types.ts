@@ -1,4 +1,4 @@
-import type { Region } from '../regions';
+import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
 import type { PlacementGroupPayload } from '../placement-groups/types';
@@ -19,6 +19,7 @@ export interface Linode {
   id: number;
   alerts: LinodeAlerts;
   backups: LinodeBackups;
+  bs_encryption_supported?: boolean; // @TODO BSE: Remove optionality once BSE is fully rolled out
   created: string;
   disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
   region: string;
@@ -36,6 +37,7 @@ export interface Linode {
   specs: LinodeSpecs;
   watchdog_enabled: boolean;
   tags: string[];
+  site_type: RegionSite;
 }
 
 export interface LinodeAlerts {
@@ -157,12 +159,12 @@ export type LinodeStatus =
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
 export interface ConfigInterfaceIPv4 {
-  vpc?: string;
-  nat_1_1?: string;
+  vpc?: string | null;
+  nat_1_1?: string | null;
 }
 
 export interface ConfigInterfaceIPv6 {
-  vpc?: string;
+  vpc?: string | null;
 }
 
 export interface Interface {
@@ -525,4 +527,11 @@ export interface DeleteLinodeConfigInterfacePayload {
   linodeId: number;
   configId: number;
   interfaceId: number;
+}
+
+export interface LinodeLishData {
+  weblish_url: string;
+  glish_url: string;
+  monitor_url: string;
+  ws_protocols: string[];
 }

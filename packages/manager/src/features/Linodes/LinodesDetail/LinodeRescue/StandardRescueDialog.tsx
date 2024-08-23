@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
@@ -19,17 +18,19 @@ import {
 } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
-import {
-  DevicesAsStrings,
-  createDevicesFromStrings,
-} from 'src/utilities/createDevicesFromStrings';
+import { createDevicesFromStrings } from 'src/utilities/createDevicesFromStrings';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
-import { DeviceSelection, ExtendedDisk } from './DeviceSelection';
+import { DeviceSelection } from './DeviceSelection';
 import { RescueDescription } from './RescueDescription';
+
+import type { ExtendedDisk } from './DeviceSelection';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 
 interface Props {
   linodeId: number | undefined;
+  linodeLabel: string | undefined;
   onClose: () => void;
   open: boolean;
 }
@@ -75,7 +76,7 @@ export const getDefaultDeviceMapAndCounter = (
 };
 
 export const StandardRescueDialog = (props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeId, linodeLabel, onClose, open } = props;
 
   const theme = useTheme();
 
@@ -202,7 +203,7 @@ export const StandardRescueDialog = (props: Props) => {
       fullWidth
       maxWidth="md"
       open={open}
-      title={`Rescue Linode ${linode?.label ?? ''}`}
+      title={`Rescue Linode ${linodeLabel ?? ''}`}
     >
       {APIError && <Notice text={APIError} variant="error" />}
       {disksError ? (

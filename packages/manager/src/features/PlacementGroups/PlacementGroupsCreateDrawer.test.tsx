@@ -38,20 +38,20 @@ describe('PlacementGroupsCreateDrawer', () => {
 
     expect(getByLabelText('Label')).toBeEnabled();
     expect(getByLabelText('Region')).toBeEnabled();
-    expect(getByLabelText('Affinity Type')).toBeEnabled();
-    expect(getByText('Affinity Type Enforcement')).toBeInTheDocument();
+    expect(getByLabelText('Placement Group Type')).toBeEnabled();
+    expect(getByText('Placement Group Policy')).toBeInTheDocument();
 
     const radioInputs = getAllByRole('radio');
     expect(radioInputs).toHaveLength(2);
     expect(radioInputs[0]).toBeChecked();
   });
 
-  it('Affinity Type select should have the correct options', async () => {
+  it('Placement Group Type select should have the correct options', async () => {
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
 
-    const inputElement = getByPlaceholderText('Select an Affinity Type');
+    const inputElement = getByPlaceholderText('Select an Placement Group Type');
     fireEvent.focus(inputElement);
 
     fireEvent.change(inputElement, { target: { value: 'Affinity' } });
@@ -75,7 +75,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     );
 
     await waitFor(() => {
-      expect(getByText('Newark, NJ (us-east)')).toBeInTheDocument();
+      expect(getByText('US, Newark, NJ (us-east)')).toBeInTheDocument();
     });
   });
 
@@ -97,7 +97,7 @@ describe('PlacementGroupsCreateDrawer', () => {
       target: { value: 'Newark, NJ (us-east)' },
     });
     await waitFor(() => {
-      const selectedRegionOption = getByText('Newark, NJ (us-east)');
+      const selectedRegionOption = getByText('US, Newark, NJ (us-east)');
       fireEvent.click(selectedRegionOption);
     });
 
@@ -107,8 +107,8 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(
         queryMocks.useCreatePlacementGroup().mutateAsync
       ).toHaveBeenCalledWith({
-        affinity_type: 'anti_affinity:local',
-        is_strict: true,
+        placement_group_type: 'anti_affinity:local',
+        placement_group_policy: 'strict',
         label: 'my-label',
         region: 'us-east',
       });
@@ -119,7 +119,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [placementGroupFactory.build({ region: 'us-west' })],
     });
-    const regionWithoutCapacity = 'Fremont, CA (us-west)';
+    const regionWithoutCapacity = 'US, Fremont, CA (us-west)';
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );

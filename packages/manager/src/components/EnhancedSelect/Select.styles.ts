@@ -1,5 +1,6 @@
-import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
+
+import type { Theme } from '@mui/material/styles';
 
 // TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
 export const useStyles = makeStyles()((theme: Theme) => ({
@@ -224,6 +225,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
         },
       },
       width: '100%',
+    },
+    '& .select-placeholder': {
+      color: theme.color.grey1,
     },
     '& [class*="MuiFormHelperText-error"]': {
       paddingBottom: theme.spacing(1),

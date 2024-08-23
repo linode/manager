@@ -53,17 +53,6 @@ export const priceIncreaseMap = {
   'id-cgk': 0.2, // Jakarta
 };
 
-export const objectStoragePriceIncreaseMap = {
-  'br-gru': {
-    storage_overage: 0.028,
-    transfer_overage: 0.007,
-  },
-  'id-cgk': {
-    storage_overage: 0.024,
-    transfer_overage: 0.015,
-  },
-};
-
 /**
  * This function is used to calculate the dynamic pricing for a given entity, based on potential region increased costs.
  * @example
@@ -81,13 +70,16 @@ export const getDCSpecificPrice = ({
     return undefined;
   }
 
-  const increaseFactor = priceIncreaseMap[regionId] as number | undefined;
+  if (regionId in priceIncreaseMap) {
+    const increaseFactor =
+      priceIncreaseMap[regionId as keyof typeof priceIncreaseMap];
 
-  if (increaseFactor !== undefined) {
-    // If increaseFactor is defined, it means the region has a price increase and we should apply it.
-    const increase = basePrice * increaseFactor;
+    if (increaseFactor !== undefined) {
+      // If increaseFactor is defined, it means the region has a price increase and we should apply it.
+      const increase = basePrice * increaseFactor;
 
-    return (basePrice + increase).toFixed(2);
+      return (basePrice + increase).toFixed(2);
+    }
   }
 
   return basePrice.toFixed(2);

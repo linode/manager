@@ -1,46 +1,30 @@
 /* eslint-disable no-unused-expressions */
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
-import { VncScreen, VncScreenHandle } from 'react-vnc';
+import { VncScreen } from 'react-vnc';
 
+import { Box } from 'src/components/Box';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { StyledCircleProgress } from 'src/features/Lish/Lish';
 
-import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
-
-const useStyles = makeStyles()(() => ({
-  container: {
-    '& canvas': {
-      display: 'block',
-      margin: 'auto',
-    },
-  },
-  errorState: {
-    '& *': {
-      color: '#f4f4f4 !important',
-    },
-  },
-}));
+import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { VncScreenHandle } from 'react-vnc';
 
 interface Props {
   linode: Linode;
   refreshToken: () => Promise<void>;
-  token: string;
 }
+
+type CombinedProps = Props & Omit<LinodeLishData, 'weblish_url'>;
 
 let monitor: WebSocket;
 
-const Glish = (props: Props) => {
-  const { classes } = useStyles();
-  const { linode, refreshToken, token } = props;
+const Glish = (props: CombinedProps) => {
+  const { glish_url, linode, monitor_url, refreshToken, ws_protocols } = props;
   const ref = React.useRef<VncScreenHandle>(null);
-  const region = linode.region;
   const [powered, setPowered] = React.useState(linode.status === 'running');
 
   React.useEffect(() => {
-    resizeViewPort(1080, 840);
-
     // Every 5 seconds, ping for the status?
     const monitorInterval = setInterval(() => {
       if (monitor.readyState === monitor.OPEN) {
@@ -69,7 +53,7 @@ const Glish = (props: Props) => {
     // If the Lish token (from props) ever changes, we need to reconnect the monitor websocket
     connectMonitor();
     ref.current?.connect();
-  }, [token]);
+  }, [glish_url, monitor_url, ws_protocols]);
 
   const handlePaste = (event: ClipboardEvent) => {
     event.preventDefault();
@@ -93,9 +77,7 @@ const Glish = (props: Props) => {
       monitor.close();
     }
 
-    const url = `${getLishSchemeAndHostname(region)}:8080/${token}/monitor`;
-
-    monitor = new WebSocket(url);
+    monitor = new WebSocket(monitor_url, ws_protocols);
 
     // eslint-disable-next-line scanjs-rules/call_addEventListener
     monitor.addEventListener('message', (ev) => {
@@ -124,19 +106,32 @@ const Glish = (props: Props) => {
 
   if (!powered) {
     return (
-      <div className={classes.errorState}>
-        <ErrorState errorText="Please power on your Linode to use Glish" />
-      </div>
+      <ErrorState
+        errorText="Please power on your Linode to use Glish"
+        typographySx={(theme) => ({ color: theme.palette.common.white })}
+      />
     );
   }
 
+  const rfbOptions = { wsProtocols: ws_protocols };
+
   return (
     <VncScreen
+      loadingUI={
+        <Box p={8} position="absolute" top="0" width="100%">
+          <CircleProgress />
+        </Box>
+      }
+      style={{
+        height: 'calc(100vh - 60px)',
+        padding: 8,
+      }}
       autoConnect={false}
-      loadingUI={<StyledCircleProgress />}
       ref={ref}
+      rfbOptions={rfbOptions}
+      scaleViewport
       showDotCursor
-      url={`${getLishSchemeAndHostname(region)}:8080/${token}`}
+      url={glish_url}
     />
   );
 };

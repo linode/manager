@@ -5,7 +5,10 @@ import {
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
 
-import { getTotalClusterMemoryCPUAndStorage } from './kubeUtils';
+import {
+  getLatestVersion,
+  getTotalClusterMemoryCPUAndStorage,
+} from './kubeUtils';
 
 describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
@@ -62,6 +65,41 @@ describe('helper functions', () => {
         RAM: 0,
         Storage: 0,
       });
+    });
+  });
+  describe('getLatestVersion', () => {
+    it('should return the correct latest version from a list of versions', () => {
+      const versions = [
+        { label: '1.00', value: '1.00' },
+        { label: '1.10', value: '1.10' },
+        { label: '2.00', value: '2.00' },
+      ];
+      const result = getLatestVersion(versions);
+      expect(result).toEqual({ label: '2.00', value: '2.00' });
+    });
+
+    it('should handle latest version minor version correctly', () => {
+      const versions = [
+        { label: '1.22', value: '1.22' },
+        { label: '1.23', value: '1.23' },
+        { label: '1.30', value: '1.30' },
+      ];
+      const result = getLatestVersion(versions);
+      expect(result).toEqual({ label: '1.30', value: '1.30' });
+    });
+    it('should handle latest patch version correctly', () => {
+      const versions = [
+        { label: '1.22', value: '1.30' },
+        { label: '1.23', value: '1.15' },
+        { label: '1.30', value: '1.50.1' },
+        { label: '1.30', value: '1.50' },
+      ];
+      const result = getLatestVersion(versions);
+      expect(result).toEqual({ label: '1.50.1', value: '1.50.1' });
+    });
+    it('should return default fallback value when called with empty versions', () => {
+      const result = getLatestVersion([]);
+      expect(result).toEqual({ label: '', value: '' });
     });
   });
 });

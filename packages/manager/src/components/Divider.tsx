@@ -24,13 +24,6 @@ const StyledDivider = styled(_Divider, {
     'dark',
   ]),
 })<DividerProps>(({ theme, ...props }) => ({
-  borderColor: props.dark
-    ? theme.color.border2
-    : props.light
-    ? theme.name === 'light'
-      ? '#e3e5e8'
-      : '#2e3238'
-    : '',
   marginBottom: props.spacingBottom,
   marginTop: props.spacingTop,
 }));

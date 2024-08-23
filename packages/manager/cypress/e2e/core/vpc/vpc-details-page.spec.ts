@@ -8,13 +8,8 @@ import {
   mockEditSubnet,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { subnetFactory, vpcFactory } from '@src/factories';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import type { VPC } from '@linode/api-v4';
 import { getRegionById } from 'support/util/regions';
 import { ui } from 'support/ui';
@@ -40,16 +35,12 @@ describe('VPC details page', () => {
 
     const vpcRegion = getRegionById(mockVPC.region);
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetVPC(mockVPC).as('getVPC');
     mockUpdateVPC(mockVPC.id, mockVPCUpdated).as('updateVPC');
     mockDeleteVPC(mockVPC.id).as('deleteVPC');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC']);
+    cy.wait('@getVPC');
 
     // Confirm that VPC details are displayed.
     cy.findByText(mockVPC.label).should('be.visible');
@@ -121,86 +112,17 @@ describe('VPC details page', () => {
   });
 
   /**
-   * - Confirms Subnets section and table is shown on the VPC details page
-   * - Confirms UI flow when deleting a subnet from a VPC's detail page
+   * - Confirms UI flow when creating a subnet on a VPC's detail page.
+   * - Confirms UI flow for editing a subnet.
+   * - Confirms Subnets section and table is shown on the VPC details page.
+   * - Confirms UI flow when deleting a subnet from a VPC's detail page.
    */
-  it('can delete a subnet from the VPC details page', () => {
+  it('can create, edit, and delete a subnet from the VPC details page', () => {
+    // create a subnet
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
       label: randomLabel(),
       linodes: [],
-    });
-    const mockVPC = vpcFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      subnets: [mockSubnet],
-    });
-
-    const mockVPCAfterSubnetDeletion = vpcFactory.build({
-      ...mockVPC,
-      subnets: [],
-    });
-
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-
-    mockGetVPC(mockVPC).as('getVPC');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
-    mockDeleteSubnet(mockVPC.id, mockSubnet.id).as('deleteSubnet');
-
-    cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC', '@getSubnets']);
-
-    // confirm that vpc and subnet details get displayed
-    cy.findByText(mockVPC.label).should('be.visible');
-    cy.findByText('Subnets (1)').should('be.visible');
-    cy.findByText(mockSubnet.label).should('be.visible');
-
-    // confirm that subnet can be deleted and that page reflects changes
-    ui.actionMenu
-      .findByTitle(`Action menu for Subnet ${mockSubnet.label}`)
-      .should('be.visible')
-      .click();
-    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
-
-    mockGetVPC(mockVPCAfterSubnetDeletion).as('getVPC');
-    mockGetSubnets(mockVPC.id, []).as('getSubnets');
-
-    ui.dialog
-      .findByTitle(`Delete Subnet ${mockSubnet.label}`)
-      .should('be.visible')
-      .within(() => {
-        cy.findByLabelText('Subnet Label')
-          .should('be.visible')
-          .click()
-          .type(mockSubnet.label);
-
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    cy.wait(['@deleteSubnet', '@getVPC', '@getSubnets']);
-
-    // confirm that user should still be on VPC's detail page
-    // confirm there are no remaining subnets
-    cy.url().should('endWith', `/${mockVPC.id}`);
-    cy.findByText('Subnets (0)');
-    cy.findByText('No Subnets are assigned.');
-    cy.findByText(mockSubnet.label).should('not.exist');
-  });
-
-  /**
-   * - Confirms UI flow when creating a subnet on a VPC's detail page.
-   */
-  it('can create a subnet', () => {
-    const mockSubnet = subnetFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
     });
 
     const mockVPC = vpcFactory.build({
@@ -213,17 +135,12 @@ describe('VPC details page', () => {
       subnets: [mockSubnet],
     });
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-
     mockGetVPC(mockVPC).as('getVPC');
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetSubnets(mockVPC.id, []).as('getSubnets');
     mockCreateSubnet(mockVPC.id).as('createSubnet');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC', '@getSubnets']);
+    cy.wait(['@getVPC', '@getSubnets']);
 
     // confirm that vpc and subnet details get displayed
     cy.findByText(mockVPC.label).should('be.visible');
@@ -256,22 +173,8 @@ describe('VPC details page', () => {
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockSubnet.label).should('be.visible');
-  });
 
-  /**
-   * - Confirms UI flow for editing a subnet
-   */
-  it('can edit a subnet', () => {
-    const mockSubnet = subnetFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-    });
-    const mockVPC = vpcFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      subnets: [mockSubnet],
-    });
-
+    // edit a subnet
     const mockEditedSubnet = subnetFactory.build({
       ...mockSubnet,
       label: randomLabel(),
@@ -281,22 +184,6 @@ describe('VPC details page', () => {
       ...mockVPC,
       subnets: [mockEditedSubnet],
     });
-
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-
-    mockGetVPC(mockVPC).as('getVPC');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
-
-    cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getVPC', '@getSubnets']);
-
-    // confirm that vpc and subnet details get displayed
-    cy.findByText(mockVPC.label).should('be.visible');
-    cy.findByText('Subnets (1)').should('be.visible');
-    cy.findByText(mockSubnet.label).should('be.visible');
 
     // confirm that subnet can be edited and that page reflects changes
     mockEditSubnet(mockVPC.id, mockEditedSubnet.id, mockEditedSubnet).as(
@@ -336,5 +223,47 @@ describe('VPC details page', () => {
     cy.findByText(mockVPC.label).should('be.visible');
     cy.findByText('Subnets (1)').should('be.visible');
     cy.findByText(mockEditedSubnet.label).should('be.visible');
+
+    // delete a subnet
+    const mockVPCAfterSubnetDeletion = vpcFactory.build({
+      ...mockVPC,
+      subnets: [],
+    });
+    mockDeleteSubnet(mockVPC.id, mockEditedSubnet.id).as('deleteSubnet');
+
+    // confirm that subnet can be deleted and that page reflects changes
+    ui.actionMenu
+      .findByTitle(`Action menu for Subnet ${mockEditedSubnet.label}`)
+      .should('be.visible')
+      .click();
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    mockGetVPC(mockVPCAfterSubnetDeletion).as('getVPC');
+    mockGetSubnets(mockVPC.id, []).as('getSubnets');
+
+    ui.dialog
+      .findByTitle(`Delete Subnet ${mockEditedSubnet.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Subnet Label')
+          .should('be.visible')
+          .click()
+          .type(mockEditedSubnet.label);
+
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@deleteSubnet', '@getVPC', '@getSubnets']);
+
+    // confirm that user should still be on VPC's detail page
+    // confirm there are no remaining subnets
+    cy.url().should('endWith', `/${mockVPC.id}`);
+    cy.findByText('Subnets (0)');
+    cy.findByText('No Subnets are assigned.');
+    cy.findByText(mockEditedSubnet.label).should('not.exist');
   });
 });

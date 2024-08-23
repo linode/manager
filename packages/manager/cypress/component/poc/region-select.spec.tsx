@@ -21,8 +21,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={[region]}
             currentCapability="Object Storage"
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />,
           theme
         );
@@ -46,8 +46,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={[region]}
             currentCapability="Object Storage"
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />,
           theme
         );
@@ -72,8 +72,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={[region]}
             currentCapability="Object Storage"
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />,
           theme
         );
@@ -101,8 +101,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={[region]}
             currentCapability="Object Storage"
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />
         </>,
         theme
@@ -134,8 +134,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={regions}
             currentCapability={undefined}
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />,
           theme
         );
@@ -167,8 +167,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={regions}
             currentCapability={undefined}
-            selectedId={regionToPreselect.id}
-            handleSelection={() => {}}
+            value={regionToPreselect.id}
+            onChange={() => {}}
           />,
           theme
         );
@@ -226,8 +226,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={regions}
             currentCapability="Object Storage"
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />,
           theme,
           {
@@ -261,8 +261,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={regions}
             currentCapability="Object Storage"
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />,
           theme
         );
@@ -291,8 +291,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={regions}
             currentCapability={undefined}
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />,
           theme
         );
@@ -321,8 +321,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={regions}
             currentCapability={undefined}
-            selectedId={null}
-            handleSelection={() => {}}
+            value={undefined}
+            onChange={() => {}}
           />,
           theme
         );
@@ -334,8 +334,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={regions}
             currentCapability={undefined}
-            selectedId={selectedRegion.id}
-            handleSelection={() => {}}
+            value={selectedRegion.id}
+            onChange={() => {}}
           />,
           theme
         );
@@ -347,8 +347,8 @@ describeComponent('RegionSelect', (theme) => {
           <RegionSelect
             regions={regions}
             currentCapability={undefined}
-            selectedId={selectedRegion.id}
-            handleSelection={() => {}}
+            value={selectedRegion.id}
+            onChange={() => {}}
           />,
           theme
         );

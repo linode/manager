@@ -1,24 +1,15 @@
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   ACLType,
-  ObjectStorageClusterID,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage';
 import { FormikProps } from 'formik';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 
-export const generateObjectUrl = (
-  clusterId: ObjectStorageClusterID,
-  bucketName: string,
-  objectName: string
-) => {
-  const path = `${bucketName}.${clusterId}.${OBJECT_STORAGE_ROOT}/${objectName}`;
-  return {
-    absolute: 'https://' + path,
-    path,
-  };
+export const generateObjectUrl = (hostname: string, objectName: string) => {
+  return `https://${hostname}/${objectName}`;
 };
 
 // Objects ending with a / and having a size of 0 are often used to represent
@@ -147,8 +138,14 @@ export const confirmObjectStorage = async <T extends {}>(
     // on fields that have been touched (handleSubmit() does this
     // implicitly).
     Object.keys(validationErrors).forEach((key) => {
-      formikProps.setFieldTouched(key, validationErrors[key]);
-      formikProps.setFieldError(key, validationErrors[key]);
+      formikProps.setFieldTouched(
+        key,
+        Boolean(validationErrors[key as keyof T])
+      );
+      formikProps.setFieldError(
+        key,
+        validationErrors[key as keyof T] as string
+      );
     });
   } else {
     openConfirmationDialog();

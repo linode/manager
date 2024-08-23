@@ -2,10 +2,7 @@ import type { Linode, Region } from '@linode/api-v4';
 import { accountFactory, linodeFactory, regionFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
@@ -61,7 +58,7 @@ describe('create image (e2e)', () => {
     const disk = 'Alpine 3.19 Disk';
 
     cy.defer(
-      createTestLinode({ image }, { waitForDisks: true }),
+      () => createTestLinode({ image }, { waitForDisks: true }),
       'create linode'
     ).then((linode: Linode) => {
       cy.visitWithLogin('/images/create');
@@ -94,6 +91,7 @@ describe('create image (e2e)', () => {
       cy.findByLabelText('Label')
         .should('be.enabled')
         .should('be.visible')
+        .clear()
         .type(label);
 
       // Give the Image a description
@@ -131,7 +129,6 @@ describe('create image (e2e)', () => {
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
@@ -144,13 +141,7 @@ describe('create image (e2e)', () => {
 
     // intercept request
     cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getLinodes',
-      '@getRegions',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getLinodes', '@getRegions']);
 
     // Find the Linode select and open it
     cy.findByLabelText('Linode')
@@ -175,7 +166,6 @@ describe('create image (e2e)', () => {
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
@@ -188,13 +178,7 @@ describe('create image (e2e)', () => {
 
     // intercept request
     cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getLinodes',
-      '@getRegions',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getLinodes', '@getRegions']);
 
     // Find the Linode select and open it
     cy.findByLabelText('Linode')
@@ -219,7 +203,6 @@ describe('create image (e2e)', () => {
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
@@ -233,13 +216,7 @@ describe('create image (e2e)', () => {
 
     // intercept request
     cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getRegions',
-      '@getLinodes',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getRegions', '@getLinodes']);
 
     // Find the Linode select and open it
     cy.findByLabelText('Linode')

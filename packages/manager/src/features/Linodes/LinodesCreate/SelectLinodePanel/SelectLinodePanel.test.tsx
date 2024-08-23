@@ -72,7 +72,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
     fireEvent.click(radioInput);
 
     expect(mockOnSelect).toHaveBeenCalledWith(
-      0,
+      1,
       defaultProps.linodes[0].type,
       defaultProps.linodes[0].specs.disk
     );
@@ -115,7 +115,7 @@ describe('SelectLinodePanel (table, desktop)', () => {
     setupMocks();
 
     const { container, findAllByRole } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} selectedLinodeID={0} />
+      <SelectLinodePanel {...defaultProps} selectedLinodeID={1} />
     );
 
     expect(
@@ -171,7 +171,7 @@ describe('SelectLinodePanel (cards, mobile)', () => {
     fireEvent.click(selectionCard);
 
     expect(mockOnSelect).toHaveBeenCalledWith(
-      0,
+      1,
       defaultProps.linodes[0].type,
       defaultProps.linodes[0].specs.disk
     );
@@ -201,7 +201,7 @@ describe('SelectLinodePanel (cards, mobile)', () => {
     setupMocks();
 
     const { container } = renderWithTheme(
-      <SelectLinodePanel {...defaultProps} selectedLinodeID={0} />
+      <SelectLinodePanel {...defaultProps} selectedLinodeID={1} />
     );
 
     expect(

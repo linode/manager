@@ -1,10 +1,10 @@
-import { Config } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import Select from 'src/components/EnhancedSelect/Select';
+import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
@@ -12,10 +12,11 @@ import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 import {
   useBootLinodeMutation,
-  useLinodeQuery,
   useRebootLinodeMutation,
   useShutdownLinodeMutation,
 } from 'src/queries/linodes/linodes';
+
+import type { Config } from '@linode/api-v4/lib/linodes';
 
 export type Action = 'Power Off' | 'Power On' | 'Reboot';
 
@@ -23,6 +24,7 @@ interface Props {
   action: Action;
   isOpen: boolean;
   linodeId: number | undefined;
+  linodeLabel?: string | undefined;
   onClose: () => void;
 }
 
@@ -38,13 +40,8 @@ export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
 export const PowerActionsDialog = (props: Props) => {
-  const { action, isOpen, linodeId, onClose } = props;
+  const { action, isOpen, linodeId, linodeLabel, onClose } = props;
   const theme = useTheme();
-
-  const { data: linode } = useLinodeQuery(
-    linodeId ?? -1,
-    linodeId !== undefined && isOpen
-  );
 
   const {
     data: configs,
@@ -112,6 +109,7 @@ export const PowerActionsDialog = (props: Props) => {
       const mutateAsync = mutationMap[action as 'Power Off'];
       await mutateAsync();
     }
+    setSelectConfigID(null);
     checkForNewEvents();
     onClose();
   };
@@ -126,6 +124,11 @@ export const PowerActionsDialog = (props: Props) => {
       label: config.label,
       value: config.id,
     })) ?? [];
+
+  const handleOnClose = () => {
+    setSelectConfigID(null);
+    onClose();
+  };
 
   return (
     <ConfirmationDialog
@@ -146,9 +149,9 @@ export const PowerActionsDialog = (props: Props) => {
         },
       }}
       error={error?.[0].reason}
-      onClose={onClose}
+      onClose={handleOnClose}
       open={isOpen}
-      title={`${action} Linode ${linode?.label ?? ''}?`}
+      title={`${action} Linode ${linodeLabel ?? ''}?`}
     >
       {isPowerOnAction ? (
         <Typography
@@ -167,15 +170,23 @@ export const PowerActionsDialog = (props: Props) => {
         </Typography>
       ) : null}
       {showConfigSelect && (
-        <Select
-          errorText={configsError?.[0].reason}
-          isLoading={configsLoading}
-          label="Config"
-          onChange={(o) => setSelectConfigID(o === null ? null : o.value)}
-          options={configOptions}
-          overflowPortal
-          value={configOptions.find((o) => o.value === selectedConfigID)}
-        />
+        <>
+          <Autocomplete
+            value={configOptions.find(
+              (option) => option.value === selectedConfigID
+            )}
+            autoHighlight
+            disablePortal={false}
+            errorText={configsError?.[0].reason}
+            label="Config"
+            loading={configsLoading}
+            onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
+            options={configOptions}
+          />
+          <FormHelperText>
+            If no value is selected, the last booted config will be used.
+          </FormHelperText>
+        </>
       )}
       {props.action === 'Power Off' && (
         <span>

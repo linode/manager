@@ -2,20 +2,47 @@
  * @file Cypress intercepts and mocks for Cloud Manager Linode operations.
  */
 
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
+import { linodeVlanNoInternetConfig } from 'support/util/linodes';
 
-import type { Disk, Linode, LinodeType, Kernel, Volume } from '@linode/api-v4';
-import { makeErrorResponse } from 'support/util/errors';
+import type { Disk, Kernel, Linode, LinodeType, Volume } from '@linode/api-v4';
 
 /**
  * Intercepts POST request to create a Linode.
  *
+ * The outgoing request payload is modified to create a Linode without access
+ * to the internet.
+ *
  * @returns Cypress chainable.
  */
 export const interceptCreateLinode = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('linode/instances'));
+  return cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
+    req.body = {
+      ...req.body,
+      interfaces: linodeVlanNoInternetConfig,
+    };
+  });
+};
+
+/** Intercepts POST request to create a Linode and mocks an error response.
+ *
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeAccountLimitError = (
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('linode/instances'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
 };
 
 /**
@@ -30,6 +57,24 @@ export const mockCreateLinode = (linode: Linode): Cypress.Chainable<null> => {
     'POST',
     apiMatcher('linode/instances'),
     makeResponse(linode)
+  );
+};
+
+/** Intercepts POST request to create a Linode and mocks an error response.
+ *
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateLinodeError = (
+  errorMessage: string,
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('linode/instances'),
+    makeErrorResponse(errorMessage, statusCode)
   );
 };
 
@@ -208,6 +253,19 @@ export const mockRebootLinodeIntoRescueModeError = (
     apiMatcher(`linode/instances/${linodeId}/rescue`),
     makeErrorResponse(errorMessage, statusCode)
   );
+};
+
+/**
+ * Intercepts GET request to retrieve a Linode's Disks
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetLinodeDisks = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}/disks*`));
 };
 
 /**

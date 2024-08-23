@@ -23,10 +23,10 @@ import {
   useLinodeQuery,
 } from 'src/queries/linodes/linodes';
 import {
-  useAllDetailedIPv6RangesQuery,
   useLinodeIPsQuery,
   useLinodeShareIPMutation,
 } from 'src/queries/linodes/networking';
+import { useAllDetailedIPv6RangesQuery } from 'src/queries/networking/networking';
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
@@ -105,27 +105,30 @@ const IPSharingPanel = (props: Props) => {
     linodeID: number,
     linodes: Linode[]
   ): Record<number, string> => {
-    const choiceLabels = linodes.reduce((previousValue, currentValue) => {
-      // Filter out the current Linode
-      if (currentValue.id === linodeID) {
-        return previousValue;
-      }
+    const choiceLabels = linodes.reduce<Record<string, string>>(
+      (previousValue, currentValue) => {
+        // Filter out the current Linode
+        if (currentValue.id === linodeID) {
+          return previousValue;
+        }
 
-      currentValue.ipv4.forEach((ip) => {
-        previousValue[ip] = currentValue.label;
-      });
-
-      if (flags.ipv6Sharing) {
-        availableRangesMap?.[currentValue.id]?.forEach((range: string) => {
-          previousValue[range] = currentValue.label;
-          updateIPToLinodeID({
-            [range]: [...(ipToLinodeID?.[range] ?? []), currentValue.id],
-          });
+        currentValue.ipv4.forEach((ip) => {
+          previousValue[ip] = currentValue.label;
         });
-      }
 
-      return previousValue;
-    }, {});
+        if (flags.ipv6Sharing) {
+          availableRangesMap?.[currentValue.id]?.forEach((range: string) => {
+            previousValue[range] = currentValue.label;
+            updateIPToLinodeID({
+              [range]: [...(ipToLinodeID?.[range] ?? []), currentValue.id],
+            });
+          });
+        }
+
+        return previousValue;
+      },
+      {}
+    );
 
     linodeSharedIPs.forEach((range) => {
       if (!choiceLabels.hasOwnProperty(range)) {
@@ -136,7 +139,7 @@ const IPSharingPanel = (props: Props) => {
     return choiceLabels;
   };
 
-  let ipToLinodeID = {};
+  let ipToLinodeID: Record<string, number[]> = {};
 
   const updateIPToLinodeID = (newData: Record<string, number[]>) => {
     ipToLinodeID = { ...ipToLinodeID, ...newData };
@@ -185,7 +188,7 @@ const IPSharingPanel = (props: Props) => {
   };
 
   const onSubmit = () => {
-    const groupedUnsharedRanges = {};
+    const groupedUnsharedRanges: Record<number | string, string[]> = {};
     const finalIPs: string[] = uniq(
       ipsToShare.reduce((previousValue, currentValue) => {
         if (currentValue === undefined || currentValue === null) {
@@ -407,15 +410,18 @@ const IPSharingPanel = (props: Props) => {
 const formatAvailableRanges = (
   availableRanges: IPRangeInformation[]
 ): AvailableRangesMap => {
-  return availableRanges.reduce((previousValue, currentValue) => {
-    // use the first entry in linodes as we're only dealing with ranges unassociated with this
-    // Linode, so we just use whatever the first Linode is to later get the label for this range
-    previousValue[currentValue.linodes[0]] = [
-      ...(previousValue?.[currentValue.linodes[0]] ?? []),
-      `${currentValue.range}/${currentValue.prefix}`,
-    ];
-    return previousValue;
-  }, {});
+  return availableRanges.reduce<Record<number, string[]>>(
+    (previousValue, currentValue) => {
+      // use the first entry in linodes as we're only dealing with ranges unassociated with this
+      // Linode, so we just use whatever the first Linode is to later get the label for this range
+      previousValue[currentValue.linodes[0]] = [
+        ...(previousValue?.[currentValue.linodes[0]] ?? []),
+        `${currentValue.range}/${currentValue.prefix}`,
+      ];
+      return previousValue;
+    },
+    {}
+  );
 };
 
 interface WrapperProps {

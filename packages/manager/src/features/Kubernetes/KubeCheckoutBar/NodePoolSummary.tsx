@@ -1,7 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
@@ -55,7 +55,7 @@ export interface Props {
   updateNodeCount: (count: number) => void;
 }
 
-export const NodePoolSummary: React.FC<Props> = (props) => {
+export const NodePoolSummary = React.memo((props: Props) => {
   const { classes } = useStyles();
   const { nodeCount, onRemove, poolType, price, updateNodeCount } = props;
 
@@ -109,6 +109,4 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
       </Box>
     </>
   );
-};
-
-export default React.memo(NodePoolSummary);
+});

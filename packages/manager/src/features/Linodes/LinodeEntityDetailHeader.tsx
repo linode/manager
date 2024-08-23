@@ -1,8 +1,5 @@
-import { Config } from '@linode/api-v4/lib';
-import { LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -12,20 +9,20 @@ import { Hidden } from 'src/components/Hidden';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { TypographyProps } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
-import { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import { getLinodeIconStatus } from './LinodesLanding/utils';
 
+import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
+import type { Config, LinodeBackups } from '@linode/api-v4';
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
+import type { TypographyProps } from 'src/components/Typography';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -67,7 +64,6 @@ export const LinodeEntityDetailHeader = (
   props: LinodeEntityDetailHeaderProps
 ) => {
   const theme = useTheme();
-  const queryClient = useQueryClient();
 
   const {
     backups,
@@ -108,19 +104,6 @@ export const LinodeEntityDetailHeader = (
       )
     );
 
-  // If the Linode is running, we want to check the active status of its interfaces to determine whether it needs to
-  // be rebooted or not. So, we need to invalidate the linode configs query to get the most up to date information.
-  React.useEffect(() => {
-    if (isRunning) {
-      queryClient.invalidateQueries([
-        linodesQueryKey,
-        'linode',
-        linodeId,
-        'configs',
-      ]);
-    }
-  }, [linodeId, isRunning, queryClient]);
-
   const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
     : linodeStatus.replace('_', ' ').toUpperCase();
@@ -134,10 +117,21 @@ export const LinodeEntityDetailHeader = (
     formattedTransitionText !== formattedStatus;
 
   const sxActionItem = {
-    '&:hover': {
-      backgroundColor: theme.color.blue,
-      color: '#fff',
+    '&:focus': {
+      color: theme.color.white,
     },
+    '&:hover': {
+      '&[aria-disabled="true"]': {
+        color: theme.color.disabledText,
+      },
+
+      color: theme.color.white,
+    },
+    '&[aria-disabled="true"]': {
+      background: 'transparent',
+      color: theme.color.disabledText,
+    },
+    background: 'transparent',
     color: theme.textColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '0.875rem',
@@ -197,14 +191,14 @@ export const LinodeEntityDetailHeader = (
             onClick={() =>
               handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
-            buttonType="secondary"
+            buttonType="primary"
             disabled={!(isRunning || isOffline) || isLinodesGrantReadOnly}
             sx={sxActionItem}
           >
             {isRunning ? 'Power Off' : 'Power On'}
           </Button>
           <Button
-            buttonType="secondary"
+            buttonType="primary"
             disabled={isOffline || isLinodesGrantReadOnly}
             onClick={() => handlers.onOpenPowerDialog('Reboot')}
             sx={sxActionItem}
@@ -215,7 +209,7 @@ export const LinodeEntityDetailHeader = (
             onClick={() => {
               handleConsoleButtonClick(linodeId);
             }}
-            buttonType="secondary"
+            buttonType="primary"
             disabled={isLinodesGrantReadOnly}
             sx={sxActionItem}
           >

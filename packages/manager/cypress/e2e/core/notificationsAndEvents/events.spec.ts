@@ -75,6 +75,8 @@ const eventActions: RecPartial<EventAction>[] = [
   'subnet_create',
   'subnet_delete',
   'subnet_update',
+  'tax_id_invalid',
+  'tax_id_valid',
   'tfa_disabled',
   'tfa_enabled',
   'user_ssh_key_add',
@@ -133,6 +135,8 @@ describe('verify notification types and icons', () => {
         });
       }
       containsClick('View all events');
+      // Clicking "View all events" navigates to Events page at /events
+      cy.url().should('endWith', '/events');
       events.forEach((event) => {
         const text = [`${event.message}`, `${event.entity?.label}`];
         const regex = new RegExp(`${text.join('|')}`, 'g');

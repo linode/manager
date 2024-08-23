@@ -1,4 +1,3 @@
-import { Capabilities } from '@linode/api-v4/lib/regions';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -6,15 +5,20 @@ import { useLocation } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { TwoStepRegionSelect } from 'src/components/RegionSelect/TwoStepRegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
+import { getDisabledRegions } from 'src/features/Linodes/LinodeCreatev2/Region.utils';
 import { CROSS_DATA_CENTER_CLONE_WARNING } from 'src/features/Linodes/LinodesCreate/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormStartEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
@@ -25,22 +29,25 @@ import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { Box } from '../Box';
 import { DocsLink } from '../DocsLink/DocsLink';
 import { Link } from '../Link';
-import { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
 
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { RegionSelectProps } from '../RegionSelect/RegionSelect.types';
+import type { Capabilities } from '@linode/api-v4/lib/regions';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
-interface SelectRegionPanelProps {
-  RegionSelectProps?: Partial<RegionSelectProps>;
+export interface SelectRegionPanelProps {
+  RegionSelectProps?: Partial<RegionSelectProps<true>>;
   currentCapability: Capabilities;
   disabled?: boolean;
   error?: string;
   handleSelection: (id: string) => void;
   helperText?: string;
   selectedId?: string;
+  selectedImageId?: string;
   /**
    * Include a `selectedLinodeTypeId` so we can tell if the region selection will have an affect on price
    */
   selectedLinodeTypeId?: string;
+  updateTypeID?: (key: string) => void;
 }
 
 export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
@@ -52,13 +59,20 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     handleSelection,
     helperText,
     selectedId,
+    selectedImageId,
     selectedLinodeTypeId,
+    updateTypeID,
   } = props;
 
   const flags = useFlags();
   const location = useLocation();
   const theme = useTheme();
-  const params = getQueryParamsFromQueryString(location.search);
+  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
+
+  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+
   const { data: regions } = useRegionsQuery();
 
   const isCloning = /clone/i.test(params.type);
@@ -67,6 +81,11 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   const { data: type } = useTypeQuery(
     selectedLinodeTypeId ?? '',
     Boolean(selectedLinodeTypeId)
+  );
+
+  const { data: image } = useImageQuery(
+    selectedImageId ?? '',
+    Boolean(selectedImageId)
   );
 
   const currentLinodeRegion = params.regionID;
@@ -83,9 +102,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     });
 
   const hideDistributedRegions =
-    !flags.gecko2?.enabled ||
-    flags.gecko2?.ga ||
-    !isDistributedRegionSupported(params.type as LinodeCreateType);
+    !flags.gecko2?.enabled || !isDistributedRegionSupported(params.type);
 
   const showDistributedRegionIconHelperText = Boolean(
     !hideDistributedRegions &&
@@ -97,9 +114,27 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
       )
   );
 
+  const disabledRegions = getDisabledRegions({
+    linodeCreateTab: params.type,
+    regions: regions ?? [],
+    selectedImage: image,
+  });
+
   if (regions?.length === 0) {
     return null;
   }
+
+  const handleRegionSelection = (regionId: string) => {
+    handleSelection(regionId);
+    // Reset plan selection on region change to prevent creation of an edge plan in a core region and vice versa
+    if (updateTypeID) {
+      updateTypeID('');
+    }
+    // Begin tracking the Linode Create form - fires once per page view, configured in AA backend.
+    sendLinodeCreateFormStartEvent({
+      createType: params.type ?? 'OS',
+    });
+  };
 
   return (
     <Paper
@@ -119,21 +154,22 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
         <DocsLink
           onClick={() =>
             isFromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'link',
-              createType: (params.type as LinodeCreateType) ?? 'Distributions',
+            sendLinodeCreateFormInputEvent({
+              createType: params.type ?? 'OS',
+              headerName: 'Region',
+              interaction: 'click',
               label: DOCS_LINK_LABEL_DC_PRICING,
-              version: 'v1',
             })
           }
           href="https://www.linode.com/pricing"
           label={DOCS_LINK_LABEL_DC_PRICING}
         />
       </Box>
-      <RegionHelperText
-        onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
-      />
+      {!isGeckoGAEnabled && (
+        <RegionHelperText
+          onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
+        />
+      )}
       {showCrossDataCenterCloneWarning ? (
         <Notice
           dataTestId="cross-data-center-notice"
@@ -146,20 +182,50 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      <RegionSelect
-        currentCapability={currentCapability}
-        disabled={disabled}
-        errorText={error}
-        handleSelection={handleSelection}
-        helperText={helperText}
-        regionFilter={hideDistributedRegions ? 'core' : undefined}
-        regions={regions ?? []}
-        selectedId={selectedId || null}
-        showDistributedRegionIconHelperText={
-          showDistributedRegionIconHelperText
-        }
-        {...RegionSelectProps}
-      />
+      {isGeckoGAEnabled && isDistributedRegionSupported(params.type) ? (
+        <TwoStepRegionSelect
+          showDistributedRegionIconHelperText={
+            showDistributedRegionIconHelperText
+          }
+          currentCapability={currentCapability}
+          disabled={disabled}
+          disabledRegions={disabledRegions}
+          errorText={error}
+          handleSelection={handleRegionSelection}
+          helperText={helperText}
+          regionFilter={hideDistributedRegions ? 'core' : undefined}
+          regions={regions ?? []}
+          value={selectedId}
+          {...RegionSelectProps}
+        />
+      ) : (
+        <RegionSelect
+          onChange={(e, region) => {
+            handleSelection(region.id);
+            sendLinodeCreateFormStartEvent({
+              createType: params.type ?? 'OS',
+            });
+          }}
+          regionFilter={
+            // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+            hideDistributedRegions && params.type !== 'Images'
+              ? 'core'
+              : undefined
+          }
+          showDistributedRegionIconHelperText={
+            showDistributedRegionIconHelperText
+          }
+          currentCapability={currentCapability}
+          disableClearable
+          disabled={disabled}
+          disabledRegions={disabledRegions}
+          errorText={error}
+          helperText={helperText}
+          regions={regions ?? []}
+          value={selectedId}
+          {...RegionSelectProps}
+        />
+      )}
       {showClonePriceWarning && (
         <Notice
           dataTestId="different-price-structure-notice"

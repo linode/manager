@@ -35,7 +35,7 @@ describeRegions('Can update Linodes', (region) => {
    */
   it('can update a Linode label', () => {
     cy.defer(
-      createTestLinode(makeLinodePayload(region.id, true)),
+      () => createTestLinode(makeLinodePayload(region.id, true)),
       'creating Linode'
     ).then((linode: Linode) => {
       const newLabel = randomLabel();
@@ -104,7 +104,7 @@ describeRegions('Can update Linodes', (region) => {
       return [linode, disks[0]];
     };
 
-    cy.defer(createLinodeAndGetDisk(), 'creating Linode').then(
+    cy.defer(() => createLinodeAndGetDisk(), 'creating Linode').then(
       ([linode, disk]: [Linode, Disk]) => {
         // Navigate to Linode details page.
         interceptGetLinodeDetails(linode.id).as('getLinode');

@@ -69,6 +69,7 @@ export const TextTooltip = (props: TextTooltipProps) => {
       data-qa-tooltip={dataQaTooltip}
       enterTouchDelay={0}
       placement={placement ? placement : 'bottom'}
+      tabIndex={0}
       title={tooltipText}
     >
       <Typography component="span" sx={sxTypography} variant={variant}>
@@ -81,10 +82,13 @@ export const TextTooltip = (props: TextTooltipProps) => {
 const StyledRootTooltip = styled(Tooltip, {
   label: 'StyledRootTooltip',
 })(({ theme }) => ({
+  '&:hover': {
+    color: theme.textColors.linkHover,
+  },
   borderRadius: 4,
-  color: theme.palette.primary.main,
+  color: theme.textColors.linkActiveLight,
   cursor: 'pointer',
   position: 'relative',
-  textDecoration: `underline dotted ${theme.palette.primary.main}`,
+  textDecoration: `underline dotted ${theme.textColors.linkActiveLight}`,
   textUnderlineOffset: 4,
 }));

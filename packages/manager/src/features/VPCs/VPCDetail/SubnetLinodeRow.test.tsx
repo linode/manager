@@ -68,7 +68,7 @@ describe('SubnetLinodeRow', () => {
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           linodeId={linodeFactory1.id}
-          subnetId={0}
+          subnetId={1}
         />
       )
     );

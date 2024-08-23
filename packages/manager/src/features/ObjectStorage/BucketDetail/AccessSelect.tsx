@@ -1,5 +1,4 @@
-import { ACLType } from '@linode/api-v4/lib/object-storage';
-import { Theme, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -18,20 +17,30 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { bucketACLOptions, objectACLOptions } from '../utilities';
 import { copy } from './AccessSelect.data';
 
-interface AccessPayload {
-  acl: ACLType;
-  cors_enabled?: boolean;
-}
+import type {
+  ACLType,
+  ObjectStorageBucketAccess,
+  ObjectStorageEndpointTypes,
+  ObjectStorageObjectACL,
+} from '@linode/api-v4/lib/object-storage';
+import type { Theme } from '@mui/material/styles';
 
 export interface Props {
-  getAccess: () => Promise<AccessPayload>;
+  endpointType?: ObjectStorageEndpointTypes;
+  getAccess: () => Promise<ObjectStorageBucketAccess | ObjectStorageObjectACL>;
   name: string;
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
   variant: 'bucket' | 'object';
 }
 
+function isUpdateObjectStorageBucketAccessPayload(
+  response: ObjectStorageBucketAccess | ObjectStorageObjectACL
+): response is ObjectStorageBucketAccess {
+  return 'cors_enabled' in response;
+}
+
 export const AccessSelect = React.memo((props: Props) => {
-  const { getAccess, name, updateAccess, variant } = props;
+  const { endpointType, getAccess, name, updateAccess, variant } = props;
   // Access data for this Object (from the API).
   const [aclData, setACLData] = React.useState<ACLType | null>(null);
   const [corsData, setCORSData] = React.useState(true);
@@ -40,7 +49,7 @@ export const AccessSelect = React.memo((props: Props) => {
   // The ACL Option currently selected in the <EnhancedSelect /> component.
   const [selectedACL, setSelectedACL] = React.useState<ACLType | null>(null);
   // The CORS Option currently selected in the <Toggle /> component.
-  const [selectedCORSOption, setSelectedCORSOption] = React.useState(true);
+  const [selectedCORSOption, setSelectedCORSOption] = React.useState(true); // TODO: OBJGen2 - We need to handle this in upcoming PR
   // State for submitting access options.
   const [updateAccessLoading, setUpdateAccessLoading] = React.useState(false);
   const [updateAccessError, setUpdateAccessError] = React.useState('');
@@ -48,6 +57,10 @@ export const AccessSelect = React.memo((props: Props) => {
   // State for dealing with the confirmation modal when selecting read/write.
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
+  const isCorsAvailable =
+    (variant === 'bucket' || variant === 'object') &&
+    endpointType !== 'E2' &&
+    endpointType !== 'E3';
 
   React.useEffect(() => {
     setUpdateAccessError('');
@@ -55,17 +68,21 @@ export const AccessSelect = React.memo((props: Props) => {
     setUpdateAccessSuccess(false);
     setAccessLoading(true);
     getAccess()
-      .then(({ acl, cors_enabled }) => {
+      .then((response) => {
         setAccessLoading(false);
+        const { acl } = response;
         // Don't show "public-read-write" for Objects here; use "custom" instead
         // since "public-read-write" Objects are basically the same as "public-read".
         const _acl =
           variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
         setACLData(_acl);
         setSelectedACL(_acl);
-        if (typeof cors_enabled !== 'undefined') {
-          setCORSData(cors_enabled);
-          setSelectedCORSOption(cors_enabled);
+        if (isUpdateObjectStorageBucketAccessPayload(response)) {
+          const { cors_enabled } = response;
+          if (typeof cors_enabled === 'boolean') {
+            setCORSData(cors_enabled);
+            setSelectedCORSOption(cors_enabled);
+          }
         }
       })
       .catch((err) => {
@@ -169,7 +186,7 @@ export const AccessSelect = React.memo((props: Props) => {
         ) : null}
       </div>
 
-      {variant === 'bucket' ? (
+      {isCorsAvailable ? (
         <FormControlLabel
           control={
             <Toggle
@@ -183,7 +200,7 @@ export const AccessSelect = React.memo((props: Props) => {
         />
       ) : null}
 
-      {variant === 'bucket' ? (
+      {isCorsAvailable ? (
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
@@ -192,7 +209,19 @@ export const AccessSelect = React.memo((props: Props) => {
           </Link>
           .
         </Typography>
-      ) : null}
+      ) : (
+        // TODO: OBJGen2 - We need to handle link in upcoming PR
+        <Notice spacingBottom={0} spacingTop={16} variant="warning">
+          <Typography
+            sx={(theme) => ({
+              fontFamily: theme.font.bold,
+            })}
+          >
+            CORS (Cross Origin Sharing) is not available for endpoint types E2
+            and E3. <Link to="#">Learn more</Link>.
+          </Typography>
+        </Notice>
+      )}
 
       <ActionsPanel
         primaryButtonProps={{

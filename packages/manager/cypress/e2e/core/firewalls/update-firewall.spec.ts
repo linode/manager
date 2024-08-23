@@ -77,10 +77,9 @@ const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
     .should('be.visible')
     .within(() => {
       const port = rule.ports ? rule.ports : '22';
-      cy.get('[data-qa-enhanced-select="Select a rule preset..."]').type(
-        portPresetMap[port] + '{enter}'
+      cy.findByPlaceholderText('Select a rule preset...').type(
+        portPresetMap[port as keyof typeof portPresetMap] + '{enter}'
       );
-
       const label = rule.label ? rule.label : 'test-label';
       const description = rule.description
         ? rule.description
@@ -196,7 +195,7 @@ describe('update firewall', () => {
     });
 
     cy.defer(
-      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
       'creating Linode and firewall'
     ).then(([linode, firewall]) => {
       cy.visitWithLogin('/firewalls');
@@ -324,7 +323,7 @@ describe('update firewall', () => {
     });
 
     cy.defer(
-      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
       'creating Linode and firewall'
     ).then(([_linode, firewall]) => {
       cy.visitWithLogin('/firewalls');
@@ -420,7 +419,7 @@ describe('update firewall', () => {
     const newFirewallLabel = randomLabel();
 
     cy.defer(
-      createLinodeAndFirewall(linodeRequest, firewallRequest),
+      () => createLinodeAndFirewall(linodeRequest, firewallRequest),
       'creating Linode and firewall'
     ).then(([_linode, firewall]) => {
       cy.visitWithLogin('/firewalls');
