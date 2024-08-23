@@ -40,14 +40,14 @@ describe('CheckoutBar', () => {
       <CheckoutBar
         {...defaultArgs}
         footer={<div>Footer element can go here!</div>}
-      ></CheckoutBar>
+      />
     );
     expect(getByText('Footer element can go here!')).toBeInTheDocument();
   });
 
   it('should disable submit button and show loading icon if isMakingRequest is true', () => {
     const { getByTestId } = renderWithTheme(
-      <CheckoutBar {...defaultArgs} isMakingRequest={true}></CheckoutBar>
+      <CheckoutBar {...defaultArgs} isMakingRequest={true} />
     );
 
     expect(getByTestId('Button')).toBeDisabled();
@@ -56,7 +56,7 @@ describe('CheckoutBar', () => {
 
   it("should disable submit button and show 'Submit' text if disabled prop is set", () => {
     const { getByTestId } = renderWithTheme(
-      <CheckoutBar {...defaultArgs} disabled></CheckoutBar>
+      <CheckoutBar {...defaultArgs} disabled />
     );
 
     const button = getByTestId('Button');
