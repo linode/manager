@@ -26,7 +26,7 @@ export function set<T extends object>(
   const updatedPath = determinePath(path);
 
   if (
-    // ensure that both the path and value will not lead to prototype pollution issues
+    // ensure that the path will not lead to prototype pollution issues
     // and that there is actually a path to set
     !isPrototypePollutionSafe(updatedPath) ||
     updatedPath.length === 0
@@ -60,10 +60,27 @@ export function set<T extends object>(
  */
 
 /**
+ * Determines the path to set some value at, converting any string paths
+ * into array format.
+ *
+ * @param path - The path to check
+ * @returns - The path to set a value at, in array format
+ */
+export const determinePath = (path: PropertyPath): PropertyName[] => {
+  if (Array.isArray(path)) {
+    return path;
+  }
+
+  return typeof path === 'string'
+    ? path.toString().match(/[^.[\]]+/g) ?? ['']
+    : ([path] as PropertyName[]);
+};
+
+/**
  * Ensures a path cannot lead to a prototype pollution issue.
  *
  * @param path - The path to check
- * @return - If value is safe, returns it; otherwise returns undefined
+ * @return - boolean depending on whether the path is safe or not
  */
 export const isPrototypePollutionSafe = (path: PropertyName[]): boolean => {
   return path.reduce((safeSoFar, val) => {
@@ -76,32 +93,15 @@ export const isPrototypePollutionSafe = (path: PropertyName[]): boolean => {
 };
 
 /**
- * Determines the path to set some value at, converting any string paths
- * into array format.
- *
- * @param path - The path to check
- * @returns - The path to set a value, in array format
- */
-const determinePath = (path: PropertyPath): PropertyName[] => {
-  if (Array.isArray(path)) {
-    return path;
-  }
-
-  return typeof path === 'string'
-    ? path.toString().match(/[^.[\]]+/g) ?? ['']
-    : ([path] as PropertyName[]);
-};
-
-/**
  * Determines if the given value can be considered a valid index for an array/string.
  * For example, 0, 1, 2 are all valid indexes.
  * -1, 01, -01, 00, '1 1' are not.
  *
  * @param value - The value to check
  *
- * @returns - Returns boolean
+ * @returns - Returns boolean depending on if value is a valid index or not
  */
-const isValidIndex = (value: PropertyName) => {
+export const isValidIndex = (value: PropertyName) => {
   const convertedValue = value.toString();
 
   return (

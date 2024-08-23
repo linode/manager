@@ -1,4 +1,9 @@
-import { isPrototypePollutionSafe, set } from './set';
+import {
+  determinePath,
+  isPrototypePollutionSafe,
+  isValidIndex,
+  set,
+} from './set';
 
 describe('Tests for set', () => {
   it("returns the passed in 'object' as is if it's not actually a (non array) object", () => {
@@ -113,7 +118,7 @@ describe('Tests for set', () => {
       });
     });
 
-    it('considers numbers as keys if they are not used as indexes or if there is an already existing object', () => {
+    it('considers numbers as keys if they are not followed by another number or if there is an already existing object', () => {
       const object = {};
       set(object, 1, 'test');
       expect(object).toEqual({ 1: 'test' });
@@ -126,7 +131,7 @@ describe('Tests for set', () => {
       });
     });
 
-    it('treats later numbers as indexes (if they are valid indexes)', () => {
+    it('treats numbers as array indexes if they precede some previous key (if they are valid indexes)', () => {
       const obj1 = set({}, '1[1]', 'test');
       expect(obj1).toEqual({ 1: [undefined, 'test'] });
 
@@ -153,7 +158,7 @@ describe('Tests for set', () => {
       });
     });
 
-    it('sets the value at an already existing key', () => {
+    it('can replace the value at an already existing key', () => {
       const alreadyExisting = { test: 'test' };
       expect(set(alreadyExisting, 'test', 'changed')).toEqual({
         test: 'changed',
@@ -317,6 +322,30 @@ describe('Tests for set', () => {
   });
 });
 
+describe('Tests for determinePath', () => {
+  const symbol = Symbol();
+  it('returns array paths as is', () => {
+    expect(determinePath([])).toEqual([]);
+    expect(determinePath([symbol, '1', 1])).toEqual([symbol, '1', 1]);
+  });
+
+  it('determines string paths, parsing them as needed', () => {
+    expect(determinePath('')).toEqual(['']);
+    expect(determinePath('test')).toEqual(['test']);
+    expect(determinePath('test.test')).toEqual(['test', 'test']);
+    expect(determinePath('test[1]')).toEqual(['test', '1']);
+    expect(determinePath('a.b[1]')).toEqual(['a', 'b', '1']);
+    expect(determinePath('a.b[1].c')).toEqual(['a', 'b', '1', 'c']);
+    expect(determinePath('a.__proto__.c')).toEqual(['a', '__proto__', 'c']);
+    expect(determinePath('a.__proto__[2]')).toEqual(['a', '__proto__', '2']);
+  });
+
+  it('returns symbol and number paths inside an array', () => {
+    expect(determinePath(symbol)).toEqual([symbol]);
+    expect(determinePath(1)).toEqual([1]);
+  });
+});
+
 describe('Tests for isPrototypePollutionSafe', () => {
   it('determines that given array is prototype pollution safe', () => {
     expect(isPrototypePollutionSafe([])).toBe(true);
@@ -331,5 +360,32 @@ describe('Tests for isPrototypePollutionSafe', () => {
     expect(isPrototypePollutionSafe(['', 1, 'constructor', '__proto__'])).toBe(
       false
     );
+  });
+});
+
+describe('Tests for isValidIndex', () => {
+  it('is a valid index', () => {
+    expect(isValidIndex(0)).toBe(true);
+    expect(isValidIndex(1)).toBe(true);
+    expect(isValidIndex('0')).toBe(true);
+    expect(isValidIndex('0')).toBe(true);
+    expect(isValidIndex(2432)).toBe(true);
+    expect(isValidIndex('2432')).toBe(true);
+  });
+
+  it('is not a valid index', () => {
+    expect(isValidIndex(Symbol(1))).toBe(false);
+    expect(isValidIndex(-1)).toBe(false);
+    expect(isValidIndex('00')).toBe(false);
+    expect(isValidIndex('abcd')).toBe(false);
+    expect(isValidIndex('-1')).toBe(false);
+    expect(isValidIndex('01')).toBe(false);
+    expect(isValidIndex('-01')).toBe(false);
+    expect(isValidIndex('00001')).toBe(false);
+    expect(isValidIndex('1 1')).toBe(false);
+    expect(isValidIndex('1 ')).toBe(false);
+    expect(isValidIndex(' 1 ')).toBe(false);
+    expect(isValidIndex(' 1')).toBe(false);
+    expect(isValidIndex('abcd')).toBe(false);
   });
 });
