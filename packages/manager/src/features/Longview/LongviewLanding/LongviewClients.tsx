@@ -204,12 +204,12 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
       <StyledHeadingGrid container spacing={2}>
         <StyledSearchbarGrid>
           <DebouncedSearchTextField
+            clearable
             debounceTime={250}
             hideLabel
             label="Filter by client label or hostname"
             onSearch={handleSearch}
             placeholder="Filter by client label or hostname"
-            value={query}
           />
         </StyledSearchbarGrid>
         <StyledSortSelectGrid>
