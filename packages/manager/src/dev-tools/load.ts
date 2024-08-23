@@ -138,5 +138,5 @@ export async function loadDevTools(
  *
  * Define `REACT_APP_ENABLE_DEV_TOOLS` to explicitly enable or disable dev tools
  */
-export const shouldEnableDevTools =
+export const shouldLoadDevTools =
   ENABLE_DEV_TOOLS !== undefined ? ENABLE_DEV_TOOLS : import.meta.env.DEV;

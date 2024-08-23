@@ -14,7 +14,7 @@ import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import NullComponent from './components/NullComponent';
-import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
+import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { queryClientFactory } from './queries/base';
@@ -85,7 +85,7 @@ const Main = () => {
 };
 
 async function loadApp() {
-  if (shouldEnableDevTools) {
+  if (shouldLoadDevTools) {
     await loadDevTools(store, queryClient);
   }
 

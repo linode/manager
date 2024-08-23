@@ -55,7 +55,7 @@ export const EnvironmentToggleTool = () => {
 
   const localStorageEnv = storage.devToolsEnv.get();
   const currentEnvLabel = localStorageEnv?.label;
-  const selectedOptionLabel = options[selectedOption].label;
+  const selectedOptionLabel = options[selectedOption]?.label;
 
   return (
     <Grid container>
