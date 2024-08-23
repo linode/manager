@@ -18,12 +18,8 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  * It is required to have the `enabled` key if using a JSON object for on/off featured flags.
  * This requirement is both documented here and in our Docs since we don't have a way to enforce types from Launch Darkly objects.
  */
-const options: { desc?: string; flag: keyof Flags; label: string }[] = [
-  {
-    desc: 'Enable CloudPulse monitoring feature',
-    flag: 'aclp',
-    label: 'CloudPulse',
-  },
+const options: { flag: keyof Flags; label: string }[] = [
+  { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'eventMessagesV2', label: 'Event Messages V2' },
@@ -61,7 +57,7 @@ const renderFlagItems = (
           onChange={(e) => onCheck(e, option.flag)}
           type="checkbox"
         />
-        <span title={option.desc || option.label}>{option.label}</span>
+        <span title={option.label}>{option.label}</span>
       </li>
     );
   });

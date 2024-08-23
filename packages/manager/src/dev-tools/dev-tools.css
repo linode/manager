@@ -134,6 +134,7 @@
   font-size: 10.5pt;
   font-family: inherit;
   transition: background-color 0.2s;
+  white-space: nowrap;
 
   &.small {
     padding: 2px 8px 4px 8px;

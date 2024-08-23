@@ -65,7 +65,7 @@ The application treats these as _real_ network requests and will behave as thoug
 
 ## Dev Tools & MSW
 
-To enable the MSW, open the Local Dev Tools (development only, by clicking the 🛠️ icon in the lower left of your screen). You will be presented with a variety of options to facilitate local development. Click the "Enable MSW" to get started, then choose a Base Preset:
+To enable the MSW, open the Local Dev Tools (development only, by clicking the 🛠️ icon in the lower left of your screen). You will be presented with a variety of options to facilitate local development. Click the "Enable MSW" checkbox to get started, then choose a Base Preset:
 - "**Preset Mocking**": Will give you the ability to use predefined mock types, available in the "Presets" column underneath. Those presets return static data for commonly used non-dynamic data, and a parameter to customize the API's response time.
 - "**CRUD**": The primary mocking mode for Cloud Manager. This mode is an API-like mocking behavior, storing and persisting mock data in the `indexDB` browser storage (`Developer Tools > Application > IndexedDB > MockDB`). Two features are available while using this mode:
   - **`mockState`**: the data a user inputs via Cloud Manager UI. When a handler is defined (`src/mocks/handlers/handler.ts`), it will be stored in the corresponding content type and persist in local storage, unless reset in dev tools or cleared manually.

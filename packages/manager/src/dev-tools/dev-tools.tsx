@@ -128,7 +128,9 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                   </button>
                 </div>
                 <div>
-                  <button onClick={handleGoToPreferences}>Preferences</button>
+                  <button onClick={handleGoToPreferences}>
+                    Go to Preferences
+                  </button>
                 </div>
               </div>
               <div className="dev-tools__main" ref={devToolsMainRef}>
