@@ -1,18 +1,19 @@
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CheckoutBar } from './CheckoutBar';
+import { CheckoutBar, CheckoutBarProps } from './CheckoutBar';
+
+const defaultArgs: CheckoutBarProps = {
+  calculatedPrice: 30.0,
+  children: <div>Child items can go here!</div>,
+  heading: 'Checkout',
+  onDeploy: vi.fn(),
+  submitText: 'Submit',
+};
 
 describe('CheckoutBar', () => {
-  const defaultArgs = {
-    calculatedPrice: 30.0,
-    children: <div>Child items can go here!</div>,
-    heading: 'Checkout',
-    onDeploy: () => alert('Deploy clicked'),
-    submitText: 'Submit',
-  };
-
   it('should render heading, children, and submit button', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <CheckoutBar {...defaultArgs} />
@@ -42,6 +43,7 @@ describe('CheckoutBar', () => {
         footer={<div>Footer element can go here!</div>}
       />
     );
+
     expect(getByText('Footer element can go here!')).toBeInTheDocument();
   });
 
@@ -62,5 +64,14 @@ describe('CheckoutBar', () => {
     const button = getByTestId('Button');
     expect(button).toBeDisabled();
     expect(button).toHaveTextContent('Submit');
+  });
+
+  it('should call onDeploy when the submit button is not disabled', () => {
+    const { getByText } = renderWithTheme(<CheckoutBar {...defaultArgs} />);
+
+    const button = getByText('Submit');
+    expect(button).not.toBeDisabled();
+    fireEvent.click(button);
+    expect(defaultArgs.onDeploy).toHaveBeenCalled();
   });
 });
