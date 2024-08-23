@@ -10,7 +10,7 @@ import { TableRow } from 'src/components/TableRow';
 
 import { FolderActionMenu } from './FolderActionMenu';
 
-interface Props {
+export interface Props {
   displayName: string;
   folderName: string;
   handleClickDelete: (objectName: string) => void;
@@ -28,7 +28,10 @@ export const FolderTableRow = (props: Props) => {
             <EntityIcon size={22} variant="folder" />
           </StyledIconWrapper>
           <Grid>
-            <Link className="secondaryLink" to={`?prefix=${folderName}`}>
+            <Link
+              className="secondaryLink"
+              to={`?prefix=${encodeURIComponent(folderName)}`}
+            >
               {displayName}
             </Link>
           </Grid>
