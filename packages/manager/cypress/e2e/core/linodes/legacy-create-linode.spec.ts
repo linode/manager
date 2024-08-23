@@ -56,32 +56,42 @@ import {
   checkboxTestId,
   headerTestId,
 } from 'src/components/Encryption/Encryption';
+import { extendRegion } from 'support/util/regions';
 
 import type { Config, VLAN, Disk, Region } from '@linode/api-v4';
+import type { ExtendedRegion } from 'support/util/regions';
 
-const mockRegions: Region[] = [
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    country: 'uk',
-    id: 'eu-west',
-    label: 'London, UK',
-  }),
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    country: 'sg',
-    id: 'ap-south',
-    label: 'Singapore, SG',
-  }),
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    id: 'us-east',
-    label: 'Newark, NJ',
-  }),
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    id: 'us-central',
-    label: 'Dallas, TX',
-  }),
+const mockRegions: ExtendedRegion[] = [
+  extendRegion(
+    regionFactory.build({
+      capabilities: ['Linodes'],
+      country: 'uk',
+      id: 'eu-west',
+      label: 'London, UK',
+    })
+  ),
+  extendRegion(
+    regionFactory.build({
+      capabilities: ['Linodes'],
+      country: 'sg',
+      id: 'ap-south',
+      label: 'Singapore, SG',
+    })
+  ),
+  extendRegion(
+    regionFactory.build({
+      capabilities: ['Linodes'],
+      id: 'us-east',
+      label: 'Newark, NJ',
+    })
+  ),
+  extendRegion(
+    regionFactory.build({
+      capabilities: ['Linodes'],
+      id: 'us-central',
+      label: 'Dallas, TX',
+    })
+  ),
 ];
 
 authenticate();
@@ -142,7 +152,7 @@ describe('create linode', () => {
     // Confirm that the selected region is displayed in the input field.
     cy.get('[data-testid="textfield-input"]').should(
       'have.value',
-      'London, UK (eu-west)'
+      'UK, London (eu-west)'
     );
 
     // Confirm that selecting a valid region updates the Plan Selection panel.
