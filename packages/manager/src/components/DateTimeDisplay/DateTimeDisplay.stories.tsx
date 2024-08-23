@@ -24,7 +24,7 @@ const meta: Meta<typeof DateTimeDisplay> = {
     },
   },
   component: DateTimeDisplay,
-  title: 'Components/Typography/Date Time Display',
+  title: 'Foundations/Typography/Date Time Display',
 };
 
 export default meta;

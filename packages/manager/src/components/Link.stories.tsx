@@ -130,7 +130,7 @@ const meta: Meta<LinkProps> = {
     to: '/internal-link',
   },
   component: Link,
-  title: 'Components/Link',
+  title: 'Foundations/Link',
 };
 
 export default meta;

@@ -71,6 +71,6 @@ const meta: Meta<TabsProps> = {
     onChange: () => null,
   },
   component: Tabs,
-  title: 'Components/Tabs',
+  title: 'Foundations/Tabs',
 };
 export default meta;

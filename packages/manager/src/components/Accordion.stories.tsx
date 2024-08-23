@@ -5,7 +5,7 @@ import { Accordion } from './Accordion';
 
 const meta: Meta<typeof Accordion> = {
   component: Accordion,
-  title: 'Components/Accordion',
+  title: 'Foundations/Accordion',
 };
 
 type Story = StoryObj<typeof Accordion>;

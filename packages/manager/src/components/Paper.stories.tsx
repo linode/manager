@@ -5,7 +5,7 @@ import { Paper } from './Paper';
 
 const meta: Meta<typeof Paper> = {
   component: Paper,
-  title: 'Components/Paper',
+  title: 'Foundations/Paper',
 };
 
 type Story = StoryObj<typeof Paper>;
