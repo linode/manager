@@ -1,9 +1,7 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
+import { wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import {
   FolderTableRow,
@@ -20,13 +18,7 @@ describe('FolderTableRow', () => {
     };
 
     const { getByRole } = render(
-      wrapWithTheme(
-        <Table>
-          <TableBody>
-            <FolderTableRow {...specialCharsProps} />
-          </TableBody>
-        </Table>
-      )
+      wrapWithTableBody(<FolderTableRow {...specialCharsProps} />)
     );
 
     expect(getByRole('link')).toHaveAttribute(
