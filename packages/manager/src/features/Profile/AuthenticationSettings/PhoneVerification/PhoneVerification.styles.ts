@@ -68,8 +68,6 @@ export const StyledSelect = styled(Autocomplete, {
     boxShadow: 'unset',
   },
   border: 'none',
-  font: '20px',
-  height: '34px',
 }));
 
 export const StyledPhoneNumberInput = styled(TextField, {
