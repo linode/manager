@@ -317,7 +317,7 @@ export const updateEventsQueries = (
       updateEventsQuery(filteredEvents, queryKey, queryClient);
     });
 
-  updateInitalEventsQuery(events, queryClient);
+  updateInitialEventsQuery(events, queryClient);
 };
 
 /**
@@ -383,7 +383,7 @@ export const updateEventsQuery = (
   );
 };
 
-export const updateInitalEventsQuery = (
+export const updateInitialEventsQuery = (
   events: Event[],
   queryClient: QueryClient
 ) => {
