@@ -7,12 +7,12 @@ import { TableBody } from 'src/components/TableBody';
 
 import {
   FolderTableRow,
-  Props,
+  FolderTableRowProps,
 } from 'src/features/ObjectStorage/BucketDetail/FolderTableRow';
 
 describe('FolderTableRow', () => {
   it('renders a link with URI-encoded special characters', () => {
-    const specialCharsProps: Props = {
+    const specialCharsProps: FolderTableRowProps = {
       displayName: 'folder-with-special-chars...',
       folderName: 'folder-with-special-chars <>#%+{}|^[]`;?:@=&$',
       handleClickDelete: () => {},
