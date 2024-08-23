@@ -4,6 +4,8 @@ import { mockGetVolumes } from 'support/intercepts/volumes';
 
 describe('Event Handlers', () => {
   it('invokes event handlers when new events are polled and makes the correct number of requests', () => {
+    // See https://github.com/linode/manager/pull/10824
+
     mockGetEvents([]).as('getEvents');
     mockGetVolumes([]).as('getInitialVolumes');
 
