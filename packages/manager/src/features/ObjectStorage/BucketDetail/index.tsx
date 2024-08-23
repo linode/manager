@@ -73,7 +73,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
-    ...(flags.objectStorageGen2
+    ...(flags.objectStorageGen2?.enabled
       ? [
           {
             routeName: `${props.match.url}/properties`,
@@ -134,7 +134,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
                 endpointType={endpointType}
               />
             </SafeTabPanel>
-            {flags.objectStorageGen2 && (
+            {flags.objectStorageGen2?.enabled && (
               <SafeTabPanel index={2}>
                 <BucketProperties
                   bucketName={bucketName}
