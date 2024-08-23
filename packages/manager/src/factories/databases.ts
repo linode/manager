@@ -1,3 +1,8 @@
+import { v4 } from 'uuid';
+
+import Factory from 'src/factories/factoryProxy';
+import { pickRandom, randomDate } from 'src/utilities/random';
+
 import type {
   ClusterSize,
   Database,
@@ -10,10 +15,6 @@ import type {
   MySQLReplicationType,
   PostgresReplicationType,
 } from '@linode/api-v4/lib/databases/types';
-import Factory from 'src/factories/factoryProxy';
-import { v4 } from 'uuid';
-
-import { pickRandom, randomDate } from 'src/utilities/random';
 
 // These are not all of the possible statuses, but these are some common ones.
 export const possibleStatuses: DatabaseStatus[] = [
@@ -181,7 +182,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
       primary: 'db-primary-0.b.linodeb.net',
       secondary: 'db-secondary-0.b.linodeb.net',
     },
-    id: Factory.each((i) => (i % 2 ? i.toString() : `a${i}`)),
+    id: Factory.each((i) => i),
     instance_uri: '',
     label: Factory.each((i) => `example.com-database-${i}`),
     members: {

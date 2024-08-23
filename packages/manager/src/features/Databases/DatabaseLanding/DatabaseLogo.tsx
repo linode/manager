@@ -41,5 +41,3 @@ export const DatabaseLogo = ({ style }: Props) => {
     </Box>
   );
 };
-
-export default DatabaseLogo;
