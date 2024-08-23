@@ -134,8 +134,8 @@ export const CloudPulseCustomSelect = React.memo(
       apiV4QueryKey,
       enabled:Boolean(apiV4QueryKey && !disabled),
       filter: {},
-      idField: apiResponseIdField ? apiResponseIdField : 'id',
-      labelField: apiResponseLabelField ? apiResponseLabelField : 'label',
+      idField: apiResponseIdField ?? 'id',
+      labelField: apiResponseLabelField ?? 'label',
     });
 
     React.useEffect(() => {
