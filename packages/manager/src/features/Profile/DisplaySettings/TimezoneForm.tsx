@@ -102,6 +102,7 @@ export const TimezoneForm = (props: Props) => {
             value={timezoneList.find(
               (option) => option.value === timezoneValue
             )}
+            autoHighlight
             data-qa-tz-select
             defaultValue={defaultTimezone}
             disableClearable
