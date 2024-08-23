@@ -39,7 +39,7 @@ import '../../../public/fonts/fonts.css';
  * @param jsx - React Component to mount.
  * @param theme - Cloud Manager theme to apply. Defaults to `light`.
  */
-const mountWithTheme = (
+export const mountWithTheme = (
   jsx: React.ReactNode,
   theme: ThemeName = 'light',
   flags: any = {}
