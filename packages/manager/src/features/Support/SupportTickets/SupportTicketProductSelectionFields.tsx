@@ -92,7 +92,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     isLoading: vpcsLoading,
   } = useAllVPCsQuery(entityType === 'vpc_id');
 
-  const getEntityOptions = (): { label: string; value: number | string }[] => {
+  const getEntityOptions = (): { label: string; value: number }[] => {
     const reactQueryEntityDataMap = {
       database_id: databases,
       domain_id: domains,
@@ -124,7 +124,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
 
     return (
       reactQueryEntityDataMap[entityType]?.map(
-        ({ id, label }: { id: number | string; label: string }) => ({
+        ({ id, label }: { id: number; label: string }) => ({
           label,
           value: id,
         })
