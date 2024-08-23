@@ -1,4 +1,5 @@
 import {
+  getCloudPulseServiceTypes,
   getDashboardById,
   getDashboards,
   getJWEToken,
@@ -27,8 +28,12 @@ export const queryFactory = createQueryKeys(key, {
   }),
   lists: {
     contextQueries: {
-      dashboards: {
-        queryFn: getDashboards,
+      dashboards: (serviceType: string) => ({
+        queryFn: () => getDashboards(serviceType),
+        queryKey: [serviceType],
+      }),
+      serviceTypes: {
+        queryFn: getCloudPulseServiceTypes,
         queryKey: null,
       },
     },

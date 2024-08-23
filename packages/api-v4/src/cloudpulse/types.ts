@@ -103,7 +103,7 @@ export interface CloudPulseMetricsRequest {
   group_by: string;
   relative_time_duration: TimeDuration;
   time_granularity: TimeGranularity | undefined;
-  resource_id: number[];
+  resource_ids: number[];
 }
 
 export interface CloudPulseMetricsResponse {
@@ -123,4 +123,12 @@ export interface CloudPulseMetricsResponseData {
 export interface CloudPulseMetricsList {
   metric: { [resourceName: string]: string };
   values: [number, string][];
+}
+
+export interface ServiceTypes {
+  service_type: string;
+}
+
+export interface ServiceTypesList {
+  data: ServiceTypes[];
 }
