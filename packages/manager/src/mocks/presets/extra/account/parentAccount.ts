@@ -47,6 +47,6 @@ export const parentAccountPreset: MockPresetExtra = {
     type: 'select',
   },
   handlers: [mockParentAccount],
-  id: 'parent-child-account:parent',
+  id: 'account:parent',
   label: 'Parent Account User',
 };

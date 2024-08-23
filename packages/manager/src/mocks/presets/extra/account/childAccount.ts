@@ -44,6 +44,6 @@ export const childAccountPreset: MockPresetExtra = {
   desc: 'Mock a Parent/Child child account proxy user',
   group: { id: 'Account', type: 'select' },
   handlers: [mockChildAccount],
-  id: 'parent-child-account:child-proxy',
+  id: 'account:child-proxy',
   label: 'Child Account Proxy User',
 };

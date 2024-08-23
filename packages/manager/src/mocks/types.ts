@@ -49,11 +49,11 @@ export type MockPresetExtraGroup = {
   type: 'checkbox' | 'select';
 };
 export type MockPresetExtraId =
+  | 'account:child-proxy'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
+  | 'account:parent'
   | 'api:response-time'
-  | 'parent-child-account:child-proxy'
-  | 'parent-child-account:parent'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
   | 'regions:legacy';
