@@ -22,6 +22,7 @@ import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
+import { BucketRateLimitTable } from './BucketRateLimitTable';
 
 import type {
   ACLType,
@@ -73,6 +74,8 @@ export const BucketDetailsDrawer = React.memo(
     );
 
     let formattedCreated;
+    const showBucketRateLimitTable =
+      endpoint_type === 'E2' || endpoint_type === 'E3';
 
     try {
       if (created) {
@@ -138,6 +141,22 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
          to getBucketAccess and updateBucketAccess.  */}
+        {
+          <>
+            <Typography data-testid="createdTime" variant="h3">
+              Bucket Rate Limits
+            </Typography>
+            {showBucketRateLimitTable ? (
+              <BucketRateLimitTable endpointType={endpoint_type} />
+            ) : (
+              <Typography>
+                This endpoint type supports up to 750 Reqeusts Per Second(RPS).{' '}
+                <Link to="#">Understand bucket rate limits</Link>.
+              </Typography>
+            )}
+          </>
+        }
+        {<Divider spacingBottom={16} spacingTop={16} />}
         {cluster && label && (
           <AccessSelect
             getAccess={() =>
