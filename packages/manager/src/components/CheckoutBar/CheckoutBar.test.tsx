@@ -3,7 +3,9 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CheckoutBar, CheckoutBarProps } from './CheckoutBar';
+import { CheckoutBar } from './CheckoutBar';
+
+import type { CheckoutBarProps } from './CheckoutBar';
 
 const defaultArgs: CheckoutBarProps = {
   calculatedPrice: 30.0,
