@@ -140,20 +140,19 @@ export const LinodeSelectTable = (props: Props) => {
         <Notice text={fieldState.error?.message} variant="error" />
       )}
       <DebouncedSearchTextField
-        customValue={{
-          onChange: (value) => {
-            if (preselectedLinodeId) {
-              setPreselectedLinodeId(undefined);
-            }
-            setQuery(value ?? '');
-          },
-          value: preselectedLinodeId ? field.value?.label ?? '' : query,
+        onSearch={(value) => {
+          if (preselectedLinodeId) {
+            setPreselectedLinodeId(undefined);
+          }
+          setQuery(value);
         }}
         clearable
+        debounceTime={250}
         hideLabel
         isSearching={isFetching}
         label="Search"
         placeholder="Search"
+        value={query}
       />
       <Box>
         {matchesMdUp ? (
