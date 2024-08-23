@@ -40,12 +40,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
     Linode | undefined
   >();
 
-  const handleSearch = React.useCallback((value: string) => {
-    if (searchText !== value) {
-      setSearchText(value);
-    }
-  }, []);
-
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
   }
@@ -91,17 +85,19 @@ export const PlacementGroupsLinodes = (props: Props) => {
     '/unassign'
   );
 
-  // Define the search function with useCallback to prevent unnecessary recreations
-
   return (
     <Stack spacing={2}>
       <Grid container justifyContent="space-between">
         <Grid flexGrow={1} sm={6} sx={{ mb: 1 }} xs={12}>
           <DebouncedSearchTextField
+            onSearch={(value) => {
+              if (searchText !== value) {
+                setSearchText(value);
+              }
+            }}
             debounceTime={250}
             hideLabel
             label="Search Linodes"
-            onSearch={handleSearch}
             placeholder="Search Linodes"
             value={searchText}
           />

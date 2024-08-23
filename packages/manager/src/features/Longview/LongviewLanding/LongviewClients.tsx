@@ -173,12 +173,6 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
     newClientLoading,
   } = props;
 
-  const handleSearch = React.useCallback((newQuery: string) => {
-    if (query !== newQuery) {
-      setQuery(newQuery);
-    }
-  }, []);
-
   const handleSortKeyChange = (selected: SortOption) => {
     setSortKey(selected.value);
   };
@@ -206,10 +200,14 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
       <StyledHeadingGrid container spacing={2}>
         <StyledSearchbarGrid>
           <DebouncedSearchTextField
+            onSearch={(newQuery) => {
+              if (query !== newQuery) {
+                setQuery(newQuery);
+              }
+            }}
             debounceTime={250}
             hideLabel
             label="Filter by client label or hostname"
-            onSearch={handleSearch}
             placeholder="Filter by client label or hostname"
             value={query}
           />
