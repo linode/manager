@@ -7,10 +7,10 @@ import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const databaseEventsHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: databaseQueries.databases.queryKey,
     });
 
@@ -35,7 +35,7 @@ export const databaseEventsHandler = ({
         );
       }
 
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: databaseQueries.database(engine as Engine, event.entity.id)
           .queryKey,
       });
