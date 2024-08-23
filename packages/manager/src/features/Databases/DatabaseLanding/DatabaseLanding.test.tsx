@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
@@ -120,7 +120,7 @@ describe('Database Table', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render tabs with legace and new databases ', async () => {
+  it('should render tabs with legacy and new databases ', async () => {
     server.use(
       http.get('*/databases/instances', () => {
         const databases = databaseInstanceFactory.buildList(5, {
@@ -147,7 +147,7 @@ describe('Database Table', () => {
     expect(bDatabasesTab).toBeInTheDocument();
   });
 
-  it('should render branding in a databases tab ', async () => {
+  it('should render logo in a databases tab ', async () => {
     server.use(
       http.get('*/databases/instances', () => {
         const databases = databaseInstanceFactory.buildList(5, {
@@ -170,6 +170,42 @@ describe('Database Table', () => {
     fireEvent.click(newDatabaseTab);
 
     expect(screen.getByText('Powered by')).toBeInTheDocument();
+  });
+
+  it('should render a single legacy database table without logo ', async () => {
+    server.use(
+      http.get('*/databases/instances', () => {
+        const databases = databaseInstanceFactory.buildList(5, {
+          status: 'active',
+        });
+        return HttpResponse.json(makeResourcePage(databases));
+      })
+    );
+
+    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
+      flags: { dbaasV2: { beta: false, enabled: false } },
+    });
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const tables = screen.getAllByRole('table');
+    expect(tables).toHaveLength(1);
+
+    const table = tables[0];
+
+    const headers = within(table).getAllByRole('columnheader');
+    expect(
+      headers.some((header) => header.textContent === 'Configuration')
+    ).toBe(true);
+    expect(headers.some((header) => header.textContent === 'Nodes')).toBe(
+      false
+    );
+
+    expect(screen.queryByText('Legacy Database Clusters')).toBeNull();
+    expect(screen.queryByText('New Database Clusters')).toBeNull();
+    expect(screen.queryByText('Powered by')).toBeNull();
   });
 });
 

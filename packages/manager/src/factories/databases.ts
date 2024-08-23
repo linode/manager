@@ -184,7 +184,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
       primary: 'db-primary-0.b.linodeb.net',
       secondary: 'db-secondary-0.b.linodeb.net',
     },
-    id: Factory.each((i) => (i % 2 ? i.toString() : `a${i}`)),
+    id: Factory.each((i) => i),
     instance_uri: '',
     label: Factory.each((i) => `example.com-database-${i}`),
     members: {

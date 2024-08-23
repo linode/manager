@@ -33,7 +33,8 @@ const preferenceKey = 'databases';
 
 const DatabaseLanding = () => {
   const history = useHistory();
-  const pagination = usePagination(1, preferenceKey);
+  const aDatabasesPagination = usePagination(1, preferenceKey, 'a');
+  const bDatabasesPagination = usePagination(1, preferenceKey, 'b');
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
@@ -41,6 +42,7 @@ const DatabaseLanding = () => {
 
   const { data: types, isLoading: isTypeLoading } = useDatabaseTypesQuery();
   const { isDatabasesV2Enabled } = useIsDatabasesEnabled();
+
   const {
     handleOrderChange: aDatabaseHandleOrderChange,
     order: aDatabaseOrder,
@@ -50,7 +52,25 @@ const DatabaseLanding = () => {
       order: 'desc',
       orderBy: 'label',
     },
-    `${preferenceKey}-order`
+    `a-${preferenceKey}-order`
+  );
+
+  const aDatabasesFilter = {
+    ['+contains']: 'adb20',
+    ['+order']: aDatabaseOrder,
+    ['+order_by']: aDatabaseOrderBy,
+  };
+
+  const {
+    data: aDatabases,
+    error: aDatabasesError,
+    isLoading: aDatabasesIsLoading,
+  } = useDatabasesQuery(
+    {
+      page: aDatabasesPagination.page,
+      page_size: aDatabasesPagination.pageSize,
+    },
+    aDatabasesFilter
   );
 
   const {
@@ -62,30 +82,28 @@ const DatabaseLanding = () => {
       order: 'desc',
       orderBy: 'label',
     },
-    `${preferenceKey}-order`
+    `b-${preferenceKey}-order`
   );
 
-  const filter = {
-    ['+order']: aDatabaseOrder,
-    ['+order_by']: aDatabaseOrderBy,
+  const bDatabasesFilter = {
+    ['+contains']: 'adb10',
+    ['+order']: bDatabaseOrder,
+    ['+order_by']: bDatabaseOrderBy,
   };
 
-  const { data, error, isLoading } = useDatabasesQuery(
+  const {
+    data: bDatabases,
+    error: bDatabasesError,
+    isLoading: bDatabasesIsLoading,
+  } = useDatabasesQuery(
     {
-      page: pagination.page,
-      page_size: pagination.pageSize,
+      page: bDatabasesPagination.page,
+      page_size: bDatabasesPagination.pageSize,
     },
-    filter
+    bDatabasesFilter
   );
 
-  const aDatabases: DatabaseInstance[] = [];
-  const bDatabases: DatabaseInstance[] = [];
-  data?.data.forEach((database: DatabaseInstance) => {
-    return database.platform === 'adb20'
-      ? aDatabases?.push(database)
-      : bDatabases?.push(database);
-  });
-
+  const error = aDatabasesError || bDatabasesError;
   if (error) {
     return (
       <ErrorState
@@ -96,14 +114,14 @@ const DatabaseLanding = () => {
     );
   }
 
-  if (isLoading || isTypeLoading) {
+  if (aDatabasesIsLoading || bDatabasesIsLoading || isTypeLoading) {
     return <CircleProgress />;
   }
 
-  const showTabs = isDatabasesV2Enabled && bDatabases.length !== 0;
+  const showTabs = isDatabasesV2Enabled && bDatabases.data.length !== 0;
 
   const showEmpty =
-    isDatabasesV2Enabled && aDatabases.length === 0 && bDatabases.length === 0;
+    aDatabases.data.length === 0 && bDatabases.data.length === 0;
 
   if (showEmpty) {
     return <DatabaseEmptyState />;
@@ -125,7 +143,7 @@ const DatabaseLanding = () => {
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
-      <DatabaseClusterInfoBanner />
+      {showTabs && <DatabaseClusterInfoBanner />}
       <Box sx={{ marginTop: '15px' }}>
         {showTabs ? (
           <Tabs>
@@ -136,7 +154,7 @@ const DatabaseLanding = () => {
             <TabPanels>
               <SafeTabPanel index={0}>
                 <DatabaseLandingTable
-                  data={bDatabases}
+                  data={bDatabases.data}
                   handleOrderChange={bDatabaseHandleOrderChange}
                   order={bDatabaseOrder}
                   orderBy={bDatabaseOrderBy}
@@ -145,7 +163,7 @@ const DatabaseLanding = () => {
               </SafeTabPanel>
               <SafeTabPanel index={1}>
                 <DatabaseLandingTable
-                  data={aDatabases}
+                  data={aDatabases.data}
                   handleOrderChange={aDatabaseHandleOrderChange}
                   isADatabases={true}
                   order={aDatabaseOrder}
@@ -162,7 +180,7 @@ const DatabaseLanding = () => {
                 ? aDatabaseHandleOrderChange
                 : bDatabaseHandleOrderChange
             }
-            data={isDatabasesV2Enabled ? aDatabases : bDatabases}
+            data={isDatabasesV2Enabled ? aDatabases.data : bDatabases.data}
             isADatabases={isDatabasesV2Enabled}
             order={isDatabasesV2Enabled ? aDatabaseOrder : bDatabaseOrder}
             orderBy={isDatabasesV2Enabled ? aDatabaseOrderBy : bDatabaseOrderBy}

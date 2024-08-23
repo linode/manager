@@ -15,11 +15,9 @@ import type {
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
-  branding: (
-    <DatabaseLogo style={{ marginBottom: '20px', marginTop: '-10px' }} />
-  ),
   description:
     "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution.",
+  logo: <DatabaseLogo sx={{ marginBottom: '20px', marginTop: '-10px' }} />,
   subtitle: 'Fully managed cloud database clusters',
   title: 'Databases',
 };

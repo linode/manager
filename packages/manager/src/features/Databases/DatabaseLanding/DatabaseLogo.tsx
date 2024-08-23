@@ -25,7 +25,7 @@ export const DatabaseLogo = ({ sx }: Props) => {
             backgroundColor:
               theme.palette.mode === 'light'
                 ? theme.color.label
-                : theme.color.grey4,
+                : theme.color.grey7,
             color:
               theme.palette.mode === 'light' ? theme.color.white : 'primary',
           }}
@@ -37,6 +37,7 @@ export const DatabaseLogo = ({ sx }: Props) => {
             display: 'flex',
             marginTop: '8px',
           }}
+          component="span"
         >
           Powered by &nbsp;
           {theme.palette.mode === 'light' ? <Logo /> : <LogoWhite />}

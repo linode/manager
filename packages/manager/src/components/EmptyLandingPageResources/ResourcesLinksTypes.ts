@@ -10,8 +10,8 @@ export interface linkAnalyticsEvent {
 }
 
 export interface ResourcesHeaders {
-  branding?: React.ReactNode;
   description: string;
+  logo?: React.ReactNode;
   subtitle: string;
   title: string;
 }

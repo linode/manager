@@ -65,7 +65,7 @@ type MemberType = 'primary' | 'failover';
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
 export interface DatabaseInstance {
-  id: string;
+  id: number;
   label: string;
   engine: Engine;
   type: string;

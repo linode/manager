@@ -39,8 +39,8 @@ const DatabaseLandingTable = ({
   types,
 }: Props) => {
   const { data: events } = useInProgressEvents();
-
-  const pagination = usePagination(1, preferenceKey);
+  const dbPlatformType = isADatabases ? 'a' : 'b';
+  const pagination = usePagination(1, preferenceKey, dbPlatformType);
 
   return (
     <>
@@ -115,7 +115,7 @@ const DatabaseLandingTable = ({
             <TableRowEmpty
               message={
                 isADatabases
-                  ? 'You don’t have any Aiven Database Clusters created yet. Click Create Database Cluster to do create one.'
+                  ? 'You don’t have any Aiven Database Clusters created yet. Click Create Database Cluster to create one.'
                   : ''
               }
               colSpan={7}
