@@ -112,7 +112,7 @@ const LinodesLandingWrapper = React.memo(() => {
 const generateLinodesXFilter = (regionFilter: RegionFilter | undefined) => {
   if (regionFilter === 'core' || regionFilter === 'distributed') {
     return {
-      site_type: { '+contains': regionFilter },
+      site_type: regionFilter,
     };
   }
   return {};
