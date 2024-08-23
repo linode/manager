@@ -24,7 +24,7 @@ const meta: Meta<typeof Currency> = {
     },
   },
   component: Currency,
-  title: 'Components/Typography/Currency',
+  title: 'Foundations/Typography/Currency',
 };
 
 export default meta;
