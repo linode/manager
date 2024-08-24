@@ -2276,7 +2276,7 @@ export const handlers = [
           service_type: 'linode'
         }),
         dashboardFactory.build({
-          label: 'Dbaas Dashboard',
+          label: 'DBaaS Dashboard',
           service_type: 'dbaas'
         })
       ],

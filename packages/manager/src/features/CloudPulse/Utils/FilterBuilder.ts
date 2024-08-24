@@ -90,7 +90,7 @@ export const getResourcesProperties = (
 
 /**
  * @param props The cloudpulse filter properties selected so far
- * @param handleCustomSelectChange The call back function when a filter change happens
+ * @param handleCustomSelectChange The callback function when a filter change happens
  * @returns {CloudPulseCustomSelectProps} Returns a property compatible for CloudPulseCustomSelect Component
  */
 export const getCustomSelectProperties = (
@@ -129,7 +129,7 @@ export const getCustomSelectProperties = (
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
-    clearDependentSelections: getDependantFiltersByFilterKey(filterKey, dashboard),
+    clearDependentSelections: getDependentFiltersByFilterKey(filterKey, dashboard),
   };
 };
 
@@ -309,7 +309,7 @@ export const constructAdditionalRequestFilters = (
  * @param dashboard The selected dashboard from the global filter view
  * @returns The filterKeys that needs to be removed from the preferences
  */
-const getDependantFiltersByFilterKey =
+const getDependentFiltersByFilterKey =
   (filterKey: string, dashboard: Dashboard): string[] => {
     const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
 

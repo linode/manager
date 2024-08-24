@@ -20,7 +20,7 @@ interface CloudPulseCustomSelectDefaultValueProps {
   handleSelectionChange: (filterKey: string, value: FilterValueType) => void;
 
   /**
-   * This indicates whether we need multiselect for the component or not
+   * Indicates whether we need multiselect for the component or not
    */
   isMultiSelect: boolean;
 
@@ -30,7 +30,7 @@ interface CloudPulseCustomSelectDefaultValueProps {
   options: CloudPulseServiceTypeFiltersOptions[];
 
   /**
-   * This indicates whether we need to save preferences or not
+   * Indicates whether we need to save preferences or not
    */
   savePreferences: boolean;
 }
@@ -152,7 +152,7 @@ export const handleCustomSelectionChange = (
       : String(value.id)
     : undefined;
 
-  // pubish the selection change
+  // publish the selection change
   handleSelectionChange(filterKey, result);
 
   // update the preferences
