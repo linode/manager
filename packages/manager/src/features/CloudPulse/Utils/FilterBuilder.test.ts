@@ -1,5 +1,7 @@
 import { dashboardFactory } from 'src/factories';
+import { databaseQueries } from 'src/queries/databases/databases';
 
+import { RESOURCES } from './constants';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -13,8 +15,6 @@ import {
 } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
-import { databaseQueries } from 'src/queries/databases/databases';
-import { RESOURCES } from './constants';
 
 const mockDashboard = dashboardFactory.build();
 
@@ -199,12 +199,15 @@ it('test getCustomSelectProperties method', () => {
 
   expect(customSelectEngineConfig).toBeDefined();
 
-  if(customSelectEngineConfig) {
-    let result = getCustomSelectProperties({
-        config : customSelectEngineConfig,
-        dashboard: {...mockDashboard, service_type:'dbaas'},
+  if (customSelectEngineConfig) {
+    let result = getCustomSelectProperties(
+      {
+        config: customSelectEngineConfig,
+        dashboard: { ...mockDashboard, service_type: 'dbaas' },
         isServiceAnalyticsIntegration: true,
-    }, vi.fn());
+      },
+      vi.fn()
+    );
 
     expect(result.options).toBeDefined();
     expect(result.options?.length).toEqual(2);
@@ -215,15 +218,19 @@ it('test getCustomSelectProperties method', () => {
     expect(result.clearDependentSelections?.includes(RESOURCES)).toBe(true);
 
     customSelectEngineConfig.configuration.type = CloudPulseSelectTypes.dynamic;
-    customSelectEngineConfig.configuration.apiV4QueryKey = databaseQueries.engines;
+    customSelectEngineConfig.configuration.apiV4QueryKey =
+      databaseQueries.engines;
     customSelectEngineConfig.configuration.isMultiSelect = true;
     customSelectEngineConfig.configuration.options = undefined;
 
-    result = getCustomSelectProperties({
-      config : customSelectEngineConfig,
-      dashboard: mockDashboard,
-      isServiceAnalyticsIntegration: true,
-  }, vi.fn());
+    result = getCustomSelectProperties(
+      {
+        config: customSelectEngineConfig,
+        dashboard: mockDashboard,
+        isServiceAnalyticsIntegration: true,
+      },
+      vi.fn()
+    );
 
     expect(result.apiV4QueryKey).toEqual(databaseQueries.engines);
     expect(result.type).toEqual(CloudPulseSelectTypes.dynamic);
@@ -233,18 +240,26 @@ it('test getCustomSelectProperties method', () => {
 });
 
 it('test getFiltersForMetricsCallFromCustomSelect method', () => {
-    const result = getMetricsCallCustomFilters({
-        'resource_id' : [1,2,3]
-    }, 'linode');
+  const result = getMetricsCallCustomFilters(
+    {
+      resource_id: [1, 2, 3],
+    },
+    'linode'
+  );
 
-    expect(result).toBeDefined();
-    expect(result.length).toEqual(0);
+  expect(result).toBeDefined();
+  expect(result.length).toEqual(0);
 });
 
 it('test constructAdditionalRequestFilters method', () => {
-    const result = constructAdditionalRequestFilters(getMetricsCallCustomFilters({
-      'resource_id' : [1,2,3]
-  }, 'linode'))
+  const result = constructAdditionalRequestFilters(
+    getMetricsCallCustomFilters(
+      {
+        resource_id: [1, 2, 3],
+      },
+      'linode'
+    )
+  );
 
   expect(result).toBeDefined();
   expect(result.length).toEqual(0);

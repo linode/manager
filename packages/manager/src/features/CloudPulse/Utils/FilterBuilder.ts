@@ -1,6 +1,6 @@
 import { RELATIVE_TIME_DURATION, RESOURCE_ID, RESOURCES } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
-import { CloudPulseSelectTypes, type CloudPulseServiceTypeFilters } from './models';
+import { CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
@@ -10,8 +10,9 @@ import type {
   CloudPulseResourcesSelectProps,
 } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
+import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
+import type { CloudPulseServiceTypeFilters } from './models';
 import type { Dashboard, Filter, Filters, TimeDuration } from '@linode/api-v4';
-import { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -113,6 +114,10 @@ export const getCustomSelectProperties = (
     apiResponseIdField: apiIdField,
     apiResponseLabelField: apiLabelField,
     apiV4QueryKey,
+    clearDependentSelections: getDependentFiltersByFilterKey(
+      filterKey,
+      dashboard
+    ),
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
@@ -129,7 +134,6 @@ export const getCustomSelectProperties = (
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
-    clearDependentSelections: getDependentFiltersByFilterKey(filterKey, dashboard),
   };
 };
 
@@ -268,16 +272,19 @@ export const getMetricsCallCustomFilters = (
   const serviceTypeConfig = FILTER_CONFIG.get(serviceType);
 
   // If configuration exists, filter and map it to the desired CloudPulseMetricsAdditionalFilters format
-  return serviceTypeConfig?.filters
-        .filter(({ configuration }) =>
-          configuration.isFilterable && !configuration.isMetricsFilter &&
+  return (
+    serviceTypeConfig?.filters
+      .filter(
+        ({ configuration }) =>
+          configuration.isFilterable &&
+          !configuration.isMetricsFilter &&
           selectedFilters[configuration.filterKey]
-        )
-        .map(({ configuration }) => ({
-          filterKey: configuration.filterKey,
-          filterValue: selectedFilters[configuration.filterKey],
-        }))
-    ?? [];
+      )
+      .map(({ configuration }) => ({
+        filterKey: configuration.filterKey,
+        filterValue: selectedFilters[configuration.filterKey],
+      })) ?? []
+  );
 };
 
 /**
@@ -304,26 +311,26 @@ export const constructAdditionalRequestFilters = (
 };
 
 /**
- * 
+ *
  * @param filterKey The filterKey of the actual filter
  * @param dashboard The selected dashboard from the global filter view
  * @returns The filterKeys that needs to be removed from the preferences
  */
-const getDependentFiltersByFilterKey =
-  (filterKey: string, dashboard: Dashboard): string[] => {
-    const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
+const getDependentFiltersByFilterKey = (
+  filterKey: string,
+  dashboard: Dashboard
+): string[] => {
+  const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
 
-    if (!serviceTypeConfig) {
-      return [];
-    }
+  if (!serviceTypeConfig) {
+    return [];
+  }
 
-    return serviceTypeConfig.filters
-      .filter((filter) =>
-        filter?.configuration?.dependency?.includes(filterKey)
-      )
-      .map(({configuration}) =>
-        configuration.filterKey === RESOURCE_ID
-          ? RESOURCES
-          : configuration.filterKey
-      );
-  };
+  return serviceTypeConfig.filters
+    .filter((filter) => filter?.configuration?.dependency?.includes(filterKey))
+    .map(({ configuration }) =>
+      configuration.filterKey === RESOURCE_ID
+        ? RESOURCES
+        : configuration.filterKey
+    );
+};

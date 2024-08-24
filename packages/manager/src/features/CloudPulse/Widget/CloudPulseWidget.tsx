@@ -12,6 +12,7 @@ import {
   getCloudPulseMetricRequest,
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
+import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
 import { convertValueToUnit, formatToolTip } from '../Utils/unitConversion';
 import {
   getUserPreferenceObject,
@@ -25,15 +26,14 @@ import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { Widgets } from '@linode/api-v4';
 import type {
   AvailableMetrics,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
-import type { Widgets } from '@linode/api-v4';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { Metrics } from 'src/utilities/statMetrics';
-import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -127,6 +127,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
   const {
+    additionalFilters,
     ariaLabel,
     authToken,
     availableMetrics,
@@ -137,7 +138,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     serviceType,
     timeStamp,
     unit,
-    additionalFilters,
   } = props;
 
   const flags = useFlags();

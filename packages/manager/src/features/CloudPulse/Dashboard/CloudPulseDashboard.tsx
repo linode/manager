@@ -72,12 +72,12 @@ export interface DashboardProperties {
 
 export const CloudPulseDashboard = (props: DashboardProperties) => {
   const {
+    additionalFilters,
     dashboardId,
     duration,
     manualRefreshTimeStamp,
     resources,
     savePref,
-    additionalFilters,
   } = props;
 
   const getJweTokenPayload = (): JWETokenPayLoad => {

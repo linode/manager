@@ -2,11 +2,12 @@ import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
-import { CloudPulseCustomSelect, type CloudPulseCustomSelectProps } from './CloudPulseCustomSelect';
+import { CloudPulseCustomSelect } from './CloudPulseCustomSelect';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 import { CloudPulseTimeRangeSelect } from './CloudPulseTimeRangeSelect';
 
+import type { CloudPulseCustomSelectProps } from './CloudPulseCustomSelect';
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { CloudPulseResourcesSelectProps } from './CloudPulseResourcesSelect';
 import type { CloudPulseTimeRangeSelectProps } from './CloudPulseTimeRangeSelect';

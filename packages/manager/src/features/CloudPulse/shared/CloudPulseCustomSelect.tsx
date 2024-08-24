@@ -5,8 +5,8 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useGetCustomFiltersQuery } from 'src/queries/cloudpulse/customfilters';
 
 import {
-  handleCustomSelectionChange,
   getInitialDefaultSelections,
+  handleCustomSelectionChange,
 } from './CloudPulseCustomSelectUtils';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -132,24 +132,22 @@ export const CloudPulseCustomSelect = React.memo(
       isLoading,
     } = useGetCustomFiltersQuery({
       apiV4QueryKey,
-      enabled:Boolean(apiV4QueryKey && !disabled),
+      enabled: Boolean(apiV4QueryKey && !disabled),
       filter: {},
       idField: apiResponseIdField ?? 'id',
       labelField: apiResponseLabelField ?? 'label',
     });
 
     React.useEffect(() => {
-      if (!selectedResource) {        
+      if (!selectedResource) {
         setResource(
-          getInitialDefaultSelections(
-            {
-              filterKey,
-              handleSelectionChange,
-              isMultiSelect: isMultiSelect ?? false,
-              options: options ?? [],
-              savePreferences: savePreferences ?? false,
-            }
-          )
+          getInitialDefaultSelections({
+            filterKey,
+            handleSelectionChange,
+            isMultiSelect: isMultiSelect ?? false,
+            options: options ?? [],
+            savePreferences: savePreferences ?? false,
+          })
         );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,7 +167,11 @@ export const CloudPulseCustomSelect = React.memo(
         maxSelections,
         value,
       });
-      setResource(Array.isArray(filteredValue) ? [...filteredValue] : filteredValue ?? undefined);
+      setResource(
+        Array.isArray(filteredValue)
+          ? [...filteredValue]
+          : filteredValue ?? undefined
+      );
     };
 
     let staticErrorText = '';
@@ -177,29 +179,27 @@ export const CloudPulseCustomSelect = React.memo(
     // check for input prop errors
     if (
       (CloudPulseSelectTypes.static === type &&
-      (!options || options.length === 0)) || (CloudPulseSelectTypes.dynamic === type && !apiV4QueryKey)
+        (!options || options.length === 0)) ||
+      (CloudPulseSelectTypes.dynamic === type && !apiV4QueryKey)
     ) {
       staticErrorText = 'Pass either options or API query key';
     }
 
-    const isAutoCompleteDisabled  = disabled || ((isLoading || isError) && type === CloudPulseSelectTypes.dynamic) ||
-    (!queriedResources && !(options && options.length)) ||
-    staticErrorText.length > 0;
+    const isAutoCompleteDisabled =
+      disabled ||
+      ((isLoading || isError) && type === CloudPulseSelectTypes.dynamic) ||
+      (!queriedResources && !(options && options.length)) ||
+      staticErrorText.length > 0;
 
-    staticErrorText = staticErrorText.length > 0
-    ? staticErrorText
-    : isError
-    ? 'Error while loading from API'
-    : '';
+    staticErrorText =
+      staticErrorText.length > 0
+        ? staticErrorText
+        : isError
+        ? 'Error while loading from API'
+        : '';
 
     return (
       <Autocomplete
-        disabled={
-          isAutoCompleteDisabled
-        }
-        errorText={
-          staticErrorText
-        }
         options={
           type === CloudPulseSelectTypes.static
             ? options ?? []
@@ -208,12 +208,14 @@ export const CloudPulseCustomSelect = React.memo(
         textFieldProps={{
           hideLabel: true,
         }}
+        disabled={isAutoCompleteDisabled}
+        errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label="Select a Value"
         multiple={isMultiSelect}
         onChange={handleChange}
         placeholder={placeholder ?? 'Select a Value'}
-        value={ selectedResource ?? (isMultiSelect ? [] : null) }
+        value={selectedResource ?? (isMultiSelect ? [] : null)}
       />
     );
   },
