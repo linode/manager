@@ -19,7 +19,7 @@ vi.mock('../Utils/UserPreference', async () => {
   };
 });
 
-it('test callSelectionChangeAndUpdateGlobalFilters method for single selection', () => {
+it('test handleCustomSelectionChange method for single selection', () => {
   const selectedValue: CloudPulseServiceTypeFiltersOptions = {
     id: '1',
     label: 'Test',
@@ -37,7 +37,7 @@ it('test callSelectionChangeAndUpdateGlobalFilters method for single selection',
   expect(handleSelectionChange).toBeCalledTimes(1);
 });
 
-it('test callSelectionChangeAndUpdateGlobalFilters method for multiple selection', () => {
+it('test handleCustomSelectionChange method for multiple selection', () => {
   const selectedValue: CloudPulseServiceTypeFiltersOptions[] = [
     {
       id: '1',
@@ -58,7 +58,7 @@ it('test callSelectionChangeAndUpdateGlobalFilters method for multiple selection
   expect(handleSelectionChange).toBeCalledTimes(1);
 });
 
-it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method for single selection', () => {
+it('test getInitialDefaultSelections method for single selection', () => {
   const handleSelectionChange = vi.fn();
 
   const options: CloudPulseServiceTypeFiltersOptions[] = [
@@ -94,7 +94,7 @@ it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method fo
   expect(handleSelectionChange).toBeCalledTimes(2);
 });
 
-it('test getDefaultSelectionsFromPreferencesAndPublishSelectionChanges method for multi selection', () => {
+it('test getInitialDefaultSelections method for multi selection', () => {
   const handleSelectionChange = vi.fn();
 
   queryMocks.getUserPreferenceObject.mockReturnValue({
