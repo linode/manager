@@ -20,7 +20,6 @@ import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEven
 
 import { useLinodeCreateQueryParams } from './utilities';
 
-import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { LinodeCreateFormValues } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
@@ -76,7 +75,7 @@ export const Firewall = () => {
           <Link
             onClick={() =>
               sendLinodeCreateFormInputEvent({
-                createType: (params.type as LinodeCreateType) ?? 'OS',
+                createType: params.type ?? 'OS',
                 headerName: 'Firewall',
                 interaction: 'click',
                 label: 'Learn more',
