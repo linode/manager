@@ -89,6 +89,9 @@ export const BLOCK_STORAGE_CHOOSE_REGION_COPY =
 
 export const BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY = `Volume encryption is not available in the selected region. ${BLOCK_STORAGE_CHOOSE_REGION_COPY}`;
 
+export const BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY =
+  'This Linode requires a client library update and will need to be rebooted prior to attaching an encrypted volume.';
+
 // Caveats
 export const BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT =
   'Please note encryption overhead may impact your volume IOPS performance negatively. This may compound when multiple encryption-enabled volumes are attached to the same Linode.';
