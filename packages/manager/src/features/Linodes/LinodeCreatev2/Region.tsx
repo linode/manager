@@ -240,13 +240,6 @@ export const Region = () => {
         </Notice>
       )}
       <RegionSelect
-        onChange={(e, region) => {
-          onChange(region);
-          // Begin tracking the Linode Create form.
-          sendLinodeCreateFormStartEvent({
-            createType: params.type ?? 'OS',
-          });
-        }}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
           hideDistributedRegions && params.type !== 'Images'
@@ -261,6 +254,7 @@ export const Region = () => {
         disabled={isLinodeCreateRestricted}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
+        onChange={(e, region) => onChange(region)}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}

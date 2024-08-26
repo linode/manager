@@ -123,7 +123,7 @@ export const LinodeCreatev2 = () => {
       });
 
       sendLinodeCreateFormSubmitEvent({
-        createType: params.type,
+        createType: params.type ?? 'OS',
       });
 
       if (values.hasSignedEUAgreement) {
