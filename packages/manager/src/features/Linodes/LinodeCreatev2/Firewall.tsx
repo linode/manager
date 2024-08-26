@@ -49,7 +49,7 @@ export const Firewall = () => {
     if (firewallId !== undefined) {
       clearErrors('firewallOverride');
     }
-    field.onChange(firewallId ?? null);
+    field.onChange(firewallId);
   };
 
   return (

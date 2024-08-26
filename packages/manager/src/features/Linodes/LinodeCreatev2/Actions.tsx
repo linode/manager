@@ -45,7 +45,11 @@ export const Actions = () => {
 
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-      <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
+      <Button
+        buttonType="outlined"
+        disabled={disableSubmitButton}
+        onClick={onOpenAPIAwareness}
+      >
         {isDxToolsAdditionsEnabled
           ? 'View Code Snippets'
           : 'Create using command line'}
