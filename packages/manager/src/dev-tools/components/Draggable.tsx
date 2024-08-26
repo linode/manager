@@ -10,10 +10,7 @@ interface DraggableProps {
   draggable: boolean;
 }
 
-export const Draggable: React.FC<DraggableProps> = ({
-  children,
-  draggable,
-}) => {
+export const Draggable = ({ children, draggable }: DraggableProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [position, setPosition] = useState({
