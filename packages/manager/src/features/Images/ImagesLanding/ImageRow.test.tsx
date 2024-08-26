@@ -43,8 +43,7 @@ describe('Image Table Row', () => {
     // Check to see if the row rendered some data
     getByText(image.label);
     getAllByText('Ready');
-    getAllByText((text) => text.includes(image.regions[0].region));
-    getAllByText('+1');
+    expect(getByText('2 Regions')).toBeVisible();
     getAllByText('Cloud-init, Distributed');
     expect(getAllByText('1500 MB').length).toBe(2);
     getAllByText(image.id);
@@ -54,7 +53,7 @@ describe('Image Table Row', () => {
     await userEvent.click(actionMenu);
 
     getByText('Edit');
-    getByText('Manage Regions');
+    getByText('Manage Replicas');
     getByText('Deploy to New Linode');
     getByText('Rebuild an Existing Linode');
     getByText('Delete');
@@ -74,7 +73,7 @@ describe('Image Table Row', () => {
     await userEvent.click(getByText('Edit'));
     expect(handlers.onEdit).toBeCalledWith(image);
 
-    await userEvent.click(getByText('Manage Regions'));
+    await userEvent.click(getByText('Manage Replicas'));
     expect(handlers.onManageRegions).toBeCalledWith(image);
 
     await userEvent.click(getByText('Deploy to New Linode'));

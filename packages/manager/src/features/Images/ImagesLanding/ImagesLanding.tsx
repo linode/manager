@@ -450,7 +450,7 @@ export const ImagesLanding = () => {
               {multiRegionsEnabled && (
                 <>
                   <Hidden smDown>
-                    <TableCell>Region(s)</TableCell>
+                    <TableCell>Replicated in</TableCell>
                   </Hidden>
                   <Hidden smDown>
                     <TableCell>Compatibility</TableCell>
@@ -463,11 +463,11 @@ export const ImagesLanding = () => {
                 handleClick={handleManualImagesOrderChange}
                 label="size"
               >
-                Size
+                Original Image
               </TableSortCell>
               {multiRegionsEnabled && (
                 <Hidden mdDown>
-                  <TableCell>Total Size</TableCell>
+                  <TableCell>All Replicas</TableCell>
                 </Hidden>
               )}
               <Hidden mdDown>
@@ -600,7 +600,7 @@ export const ImagesLanding = () => {
       <Drawer
         onClose={() => setIsManageRegionsDrawerOpen(false)}
         open={isManageRegionsDrawerOpen}
-        title={`Manage Regions for ${selectedImage?.label}`}
+        title={`Manage Replicas for ${selectedImage?.label}`}
       >
         <ManageImageRegionsForm
           image={selectedImage}

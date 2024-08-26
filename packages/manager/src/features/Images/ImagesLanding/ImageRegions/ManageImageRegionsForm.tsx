@@ -116,7 +116,7 @@ export const ManageImageRegionsForm = (props: Props) => {
             shouldValidate: true,
           })
         }
-        currentCapability={undefined}
+        currentCapability="Object Storage" // Images use Object Storage as the storage backend
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         label="Add Regions"
@@ -126,7 +126,7 @@ export const ManageImageRegionsForm = (props: Props) => {
         selectedIds={values.regions}
       />
       <Typography sx={{ mb: 1, mt: 2 }}>
-        Image will be available in these regions ({values.regions.length})
+        Images will be replicated in these regions ({values.regions.length})
       </Typography>
       <Paper
         sx={(theme) => ({
