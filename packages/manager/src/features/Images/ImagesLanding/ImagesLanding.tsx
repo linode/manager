@@ -464,7 +464,7 @@ export const ImagesLanding = () => {
                 handleClick={handleManualImagesOrderChange}
                 label="size"
               >
-                Original Image
+                {multiRegionsEnabled ? 'Original Image' : 'Size'}
               </TableSortCell>
               {multiRegionsEnabled && (
                 <Hidden mdDown>
