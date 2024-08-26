@@ -6,7 +6,7 @@ import {
 } from 'support/intercepts/images';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import type { Image } from '@linode/api-v4';
+import type { Image, Region } from '@linode/api-v4';
 import { extendRegion } from 'support/util/regions';
 
 describe('Manage Image Regions', () => {
@@ -15,10 +15,14 @@ describe('Manage Image Regions', () => {
    * and removes one existing region (region 1).
    */
   it("updates an Image's regions", () => {
-    const region1 = extendRegion(regionFactory.build({ site_type: 'core' }));
-    const region2 = extendRegion(regionFactory.build({ site_type: 'core' }));
-    const region3 = extendRegion(regionFactory.build({ site_type: 'core' }));
-    const region4 = extendRegion(regionFactory.build({ site_type: 'core' }));
+    const regionOptions: Partial<Region> = {
+      site_type: 'core',
+      capabilities: ['Object Storage'],
+    };
+    const region1 = extendRegion(regionFactory.build(regionOptions));
+    const region2 = extendRegion(regionFactory.build(regionOptions));
+    const region3 = extendRegion(regionFactory.build(regionOptions));
+    const region4 = extendRegion(regionFactory.build(regionOptions));
 
     const image = imageFactory.build({
       size: 50,
@@ -46,11 +50,11 @@ describe('Manage Image Regions', () => {
         // Verify capabilities are rendered
         cy.findByText('Distributed').should('be.visible');
 
-        // Verify the first region is rendered
-        cy.findByText(region1.label + ',').should('be.visible');
-
-        // Click the "+1"
-        cy.findByText('+1').should('be.visible').should('be.enabled').click();
+        // Verify the number of regions is rendered and click it
+        cy.findByText(`${image.regions.length} Regions`)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
     // Verify the Manage Replicas drawer opens and contains basic content
@@ -192,13 +196,11 @@ describe('Manage Image Regions', () => {
         // Verify the new size is shown
         cy.findByText('150 MB');
 
-        // Verify the first region is rendered
-        cy.findByText(region2.label + ',').should('be.visible');
-
-        cy.findByText('+2').should('be.visible').should('be.enabled');
-
-        // Verify the regions count is now "+2" and open the drawer
-        cy.findByText('+2').should('be.visible').should('be.enabled').click();
+        // Verify the new number of regions is shown and click it
+        cy.findByText(`${updatedImage.regions.length} Regions`)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
     ui.drawer

@@ -126,7 +126,7 @@ export const ManageImageRegionsForm = (props: Props) => {
         selectedIds={values.regions}
       />
       <Typography sx={{ mb: 1, mt: 2 }}>
-        Images will be replicated in these regions ({values.regions.length})
+        Image will be replicated in these regions ({values.regions.length})
       </Typography>
       <Paper
         sx={(theme) => ({
