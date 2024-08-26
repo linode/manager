@@ -1,30 +1,61 @@
-import { formatTimeRemaining } from './RenderProgressEvent';
+import * as React from 'react';
 
-describe('Pending Actions', () => {
-  describe('formatTimeRemaining helper', () => {
-    it('should return null for invalid input', () => {
-      expect(formatTimeRemaining(4959348 as any)).toBe(null);
-      expect(formatTimeRemaining('')).toBe(null);
-      expect(formatTimeRemaining('1 hour')).toBe(null);
-      expect(formatTimeRemaining('08:34')).toBe(null);
+import { eventFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { RenderEvent } from './RenderEvent';
+
+describe('RenderEvent', () => {
+  it('should render a finished event with the proper data', () => {
+    const event = eventFactory.build({
+      action: 'linode_create',
+      entity: {
+        id: 123,
+        label: 'test-linode',
+      },
+      status: 'finished',
     });
 
-    it('should return a short duration as minutes remaining', () => {
-      expect(formatTimeRemaining('00:15:00')).toMatch('15 minutes remaining');
+    const { getByTestId, getByText } = renderWithTheme(
+      <RenderEvent event={event} onClose={() => vi.fn()} />
+    );
+
+    expect(
+      getByTestId('linode_create').textContent?.match(
+        /Linode test-linode has been created./
+      )
+    );
+    expect(
+      getByText(/Started 1 second ago | prod-test-001/)
+    ).toBeInTheDocument();
+  });
+
+  it('should redner an in progress event with the proper data', () => {
+    const event = eventFactory.build({
+      action: 'linode_create',
+      entity: {
+        id: 123,
+        label: 'test-linode',
+      },
+      percent_complete: 50,
+      status: 'started',
     });
 
-    it('should round to the nearest minute', () => {
-      expect(formatTimeRemaining('00:08:28')).toMatch('8 minutes remaining');
-      expect(formatTimeRemaining('00:08:31')).toMatch('9 minutes remaining');
-    });
+    const { getByTestId, getByText } = renderWithTheme(
+      <RenderEvent event={event} onClose={() => vi.fn()} />
+    );
 
-    it('should return a long duration as hours remaining', () => {
-      expect(formatTimeRemaining('2:15:00')).toMatch('2 hours remaining');
-    });
-
-    it('should round to the nearest hour', () => {
-      expect(formatTimeRemaining('7:40:28')).toMatch('8 hours remaining');
-      expect(formatTimeRemaining('7:19:28')).toMatch('7 hours remaining');
-    });
+    expect(
+      getByTestId('linode_create').textContent?.match(
+        /Linode test-linode is being created./
+      )
+    );
+    expect(
+      getByText(/Started 1 second ago | prod-test-001/)
+    ).toBeInTheDocument();
+    expect(getByTestId('linear-progress')).toHaveAttribute(
+      'aria-valuenow',
+      '50'
+    );
   });
 });
