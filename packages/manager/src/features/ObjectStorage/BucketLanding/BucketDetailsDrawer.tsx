@@ -150,7 +150,7 @@ export const BucketDetailsDrawer = React.memo(
               <BucketRateLimitTable endpointType={endpoint_type} />
             ) : (
               <Typography>
-                This endpoint type supports up to 750 Reqeusts Per Second(RPS).{' '}
+                This endpoint type supports up to 750 Requests Per Second(RPS).{' '}
                 <Link to="#">Understand bucket rate limits</Link>.
               </Typography>
             )}
