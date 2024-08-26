@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -61,7 +61,15 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     [handleAnyFilterChange]
   );
 
-  const handleGlobalRefresh = React.useCallback(() => {}, []);
+  const handleGlobalRefresh = React.useCallback(
+    (dashboardObj?: Dashboard) => {
+      if (!dashboardObj) {
+        return;
+      }
+      handleAnyFilterChange('timestamp', Date.now());
+    },
+    [handleAnyFilterChange]
+  );
 
   return (
     <Grid container gap={1}>
@@ -86,17 +94,16 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             hideLabel
             label="Select Time Range"
           />
-          <Tooltip arrow enterDelay={500} placement="top" title="Refresh">
-            <IconButton
-              sx={{
-                marginBlockEnd: 'auto',
-              }}
-              onClick={handleGlobalRefresh}
-              size="small"
-            >
-              <StyledReload />
-            </IconButton>
-          </Tooltip>
+          <IconButton
+            sx={{
+              marginBlockEnd: 'auto',
+            }}
+            disabled={!selectedDashboard}
+            onClick={() => handleGlobalRefresh(selectedDashboard)}
+            size="small"
+          >
+            <StyledReload />
+          </IconButton>
         </Grid>
       </Grid>
       <Grid item xs={12}>

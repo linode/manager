@@ -59,7 +59,7 @@ export const CloudPulseDashboardSelect = React.memo(
 
     const errorText: string = getErrorText();
 
-    const placeHolder = 'Select a Dashboard';
+    const placeHolder = 'Select Dashboard';
 
     // sorts dashboards by service type. Required due to unexpected autocomplete grouping behaviour
     const getSortedDashboardsList = (options: Dashboard[]): Dashboard[] => {

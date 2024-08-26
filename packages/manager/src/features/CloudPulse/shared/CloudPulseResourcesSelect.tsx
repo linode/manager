@@ -58,7 +58,7 @@ export const CloudPulseResourcesSelect = React.memo(
     React.useEffect(() => {
       const saveResources = getUserPreferenceObject()?.resources;
       const defaultResources = Array.isArray(saveResources)
-        ? Array.of(saveResources).map((resourceId) => String(resourceId))
+        ? saveResources.map((resourceId) => String(resourceId))
         : undefined;
       if (resources) {
         if (defaultResources) {

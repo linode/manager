@@ -93,6 +93,11 @@ interface graphDataOptionsProps {
   unit: string;
 
   /**
+   * widget chart type
+   */
+  widgetChartType: string;
+
+  /**
    * preferred color for the widget's graph
    */
   widgetColor: string | undefined;
@@ -150,6 +155,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
     serviceType,
     status,
     unit,
+    widgetChartType,
     widgetColor,
   } = props;
 
@@ -190,8 +196,9 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
 
         const dimension = {
           backgroundColor: color,
-          borderColor: '',
+          borderColor: color,
           data: seriesDataFormatter(transformedData.values, start, end),
+          fill: widgetChartType === 'area' ? true : false,
           label: getLabelName(labelOptions),
         };
         // construct a legend row with the dimension
@@ -306,7 +313,9 @@ export const mapResourceIdToName = (
   resources: CloudPulseResources[]
 ): string => {
   return (
-    resources.find((resourceObj) => resourceObj?.id === id)?.label ?? id ?? ''
+    resources.find((resourceObj) => String(resourceObj.id) === id)?.label ??
+    id ??
+    ''
   );
 };
 
