@@ -22,6 +22,7 @@ import {
 } from 'src/queries/linodes/linodes';
 import {
   sendLinodeCreateFormErrorEvent,
+  sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -204,6 +205,13 @@ export const LinodeCreatev2 = () => {
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
+        onDocsClick={() =>
+          sendLinodeCreateFormInputEvent({
+            createType: params.type ?? 'OS',
+            interaction: 'click',
+            label: 'Getting Started',
+          })
+        }
         docsLabel="Getting Started"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"
