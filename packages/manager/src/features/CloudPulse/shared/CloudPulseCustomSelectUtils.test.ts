@@ -1,6 +1,6 @@
 import {
-  handleCustomSelectionChange,
   getInitialDefaultSelections,
+  handleCustomSelectionChange,
 } from './CloudPulseCustomSelectUtils';
 
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
