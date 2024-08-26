@@ -21,8 +21,14 @@ export interface AggregateFunctionProperties {
 
 export const CloudPulseAggregateFunction = React.memo(
   (props: AggregateFunctionProperties) => {
+    const {
+      availableAggregateFunctions,
+      defaultAggregateFunction,
+      onAggregateFuncChange,
+    } = props;
+
     // Convert list of availableAggregateFunc into a proper response structure accepted by Autocomplete component
-    const availableAggregateFunc = props.availableAggregateFunctions?.map(
+    const availableAggregateFunc = availableAggregateFunctions?.map(
       (aggrFunc) => {
         return {
           label: aggrFunc,
@@ -30,11 +36,15 @@ export const CloudPulseAggregateFunction = React.memo(
         };
       }
     );
-
-    const defaultAggregateFunc =
+    const defaultValue =
       availableAggregateFunc.find(
-        (obj) => obj.label === props.defaultAggregateFunction
-      ) || props.availableAggregateFunctions[0];
+        (obj) => obj.label === defaultAggregateFunction
+      ) || availableAggregateFunctions[0];
+
+    const [
+      selectedAggregateFunction,
+      setSelectedAggregateFunction,
+    ] = React.useState(defaultValue);
 
     return (
       <Autocomplete
@@ -42,18 +52,19 @@ export const CloudPulseAggregateFunction = React.memo(
           return option.label == value.label;
         }}
         onChange={(_: any, selectedAggregateFunc: any) => {
-          props.onAggregateFuncChange(selectedAggregateFunc.label);
+          setSelectedAggregateFunction(selectedAggregateFunc);
+          onAggregateFuncChange(selectedAggregateFunc.label);
         }}
         textFieldProps={{
           hideLabel: true,
         }}
-        defaultValue={defaultAggregateFunc}
         disableClearable
         fullWidth={false}
         label="Select an Aggregate Function"
         noMarginTop={true}
         options={availableAggregateFunc}
         sx={{ width: '100%' }}
+        value={selectedAggregateFunction}
       />
     );
   }

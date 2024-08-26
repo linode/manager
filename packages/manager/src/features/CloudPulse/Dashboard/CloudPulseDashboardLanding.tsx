@@ -2,7 +2,6 @@ import { Grid, Paper } from '@mui/material';
 import * as React from 'react';
 
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
@@ -12,7 +11,6 @@ import {
   getMetricsCallCustomFilters,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
-import { useLoadUserPreferences } from '../Utils/UserPreference';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
@@ -23,7 +21,6 @@ export const CloudPulseDashboardLanding = () => {
   const [filterValue, setFilterValue] = React.useState<{
     [key: string]: FilterValueType;
   }>({});
-
   const [timeDuration, setTimeDuration] = React.useState<TimeDuration>();
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
@@ -41,16 +38,14 @@ export const CloudPulseDashboardLanding = () => {
   const onDashboardChange = React.useCallback((dashboardObj: Dashboard) => {
     setDashboard(dashboardObj);
     setFilterValue({}); // clear the filter values on dashboard change
-  }, []);
 
+  }, []);
   const onTimeDurationChange = React.useCallback(
     (timeDurationObj: TimeDuration) => {
       setTimeDuration(timeDurationObj);
     },
     []
   );
-
-  const { isLoading } = useLoadUserPreferences();
 
   /**
    * Takes an error message as input and renders a placeholder with the error message
@@ -120,11 +115,6 @@ export const CloudPulseDashboardLanding = () => {
       />
     );
   };
-
-  if (isLoading) {
-    return <CircleProgress />;
-  }
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>

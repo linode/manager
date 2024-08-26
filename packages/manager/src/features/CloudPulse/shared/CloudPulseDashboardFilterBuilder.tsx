@@ -25,7 +25,7 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
-import type { Dashboard } from '@linode/api-v4';
+import type { AclpConfig, Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
   /**
@@ -43,6 +43,8 @@ export interface CloudPulseDashboardFilterBuilderProps {
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
    */
   isServiceAnalyticsIntegration: boolean;
+  preferences: AclpConfig;
+  updatePreferences: (data: {}) => void;
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
@@ -51,6 +53,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       dashboard,
       emitFilterChange,
       isServiceAnalyticsIntegration,
+      preferences,
+      updatePreferences,
     } = props;
 
     const [, setDependentFilters] = React.useState<{
@@ -123,7 +127,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (config: CloudPulseServiceTypeFilters) => {
         if (config.configuration.filterKey === REGION) {
           return getRegionProperties(
-            { config, dashboard, isServiceAnalyticsIntegration },
+            {
+              config,
+              dashboard,
+              isServiceAnalyticsIntegration,
+              preferences,
+              updatePreferences,
+            },
             handleRegionChange
           );
         } else if (config.configuration.filterKey === RESOURCE_ID) {
@@ -133,6 +143,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
+              preferences,
+              updatePreferences,
             },
             handleResourceChange
           );
@@ -154,6 +166,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleResourceChange,
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
+        preferences,
+        updatePreferences,
       ]
     );
 

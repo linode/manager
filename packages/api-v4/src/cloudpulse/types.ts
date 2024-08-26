@@ -44,8 +44,7 @@ export interface Filters {
   value: string;
 }
 
-// Define the type for filter values
-type FilterValue =
+export type FilterValue =
   | number
   | string
   | string[]
@@ -56,7 +55,6 @@ type FilterValue =
 type WidgetFilterValue = { [key: string]: AclpWidget };
 
 export interface AclpConfig {
-  // we maintain only the filters selected in the preferences for latest selected dashboard
   [key: string]: FilterValue;
   widgets?: WidgetFilterValue;
 }
