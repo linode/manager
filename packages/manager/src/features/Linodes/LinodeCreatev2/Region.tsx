@@ -20,6 +20,7 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
+import { sendLinodeCreateFormStartEvent } from 'src/utilities/analytics/formEventAnalytics';
 import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
@@ -150,6 +151,11 @@ export const Region = () => {
 
       setValue('label', label);
     }
+
+    // Begin tracking the Linode Create form - fires once per page view, configured in AA backend.
+    sendLinodeCreateFormStartEvent({
+      createType: params.type ?? 'OS',
+    });
   };
 
   const showCrossDataCenterCloneWarning =
@@ -223,6 +229,13 @@ export const Region = () => {
         </Notice>
       )}
       <RegionSelect
+        onChange={(e, region) => {
+          onChange(region);
+          // Begin tracking the Linode Create form - fires once per page view, configured in AA backend.
+          sendLinodeCreateFormStartEvent({
+            createType: params.type ?? 'OS',
+          });
+        }}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
           hideDistributedRegions && params.type !== 'Images'
@@ -237,7 +250,6 @@ export const Region = () => {
         disabled={isLinodeCreateRestricted}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
-        onChange={(e, region) => onChange(region)}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}

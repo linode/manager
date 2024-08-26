@@ -19,13 +19,16 @@ import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { inputMaxWidth } from 'src/foundations/themes/light';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery, useVPCsQuery } from 'src/queries/vpcs/vpcs';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import { REGION_CAVEAT_HELPER_TEXT } from '../../LinodesCreate/constants';
 import { VPCCreateDrawer } from '../../LinodesCreate/VPCCreateDrawer';
+import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
@@ -72,13 +75,30 @@ export const VPC = () => {
       ? 'Allow Linode to communicate in an isolated environment.'
       : 'Assign this Linode to an existing VPC.';
 
+  const { params } = useLinodeCreateQueryParams();
+
+  const vpcFormEventOptions: LinodeCreateFormEventOptions = {
+    createType: params.type ?? 'OS',
+    headerName: 'VPC',
+    interaction: 'click',
+    label: 'VPC',
+  };
+
   return (
     <Paper data-testid="vpc-panel">
       <Stack spacing={2}>
         <Typography variant="h2">VPC</Typography>
         <Typography>
           {copy}{' '}
-          <Link to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/">
+          <Link
+            onClick={() =>
+              sendLinodeCreateFormInputEvent({
+                ...vpcFormEventOptions,
+                label: 'Learn more',
+              })
+            }
+            to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
+          >
             Learn more.
           </Link>
         </Typography>
@@ -91,6 +111,25 @@ export const VPC = () => {
                     ? 'VPC is not available in the selected region.'
                     : undefined
                 }
+                onChange={(e, vpc) => {
+                  field.onChange(vpc?.id ?? null);
+                  // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
+                  if (!vpc?.id) {
+                    sendLinodeCreateFormInputEvent({
+                      ...vpcFormEventOptions,
+                      interaction: 'clear',
+                      subheaderName: 'Assign VPC',
+                      trackOnce: true,
+                    });
+                  } else {
+                    sendLinodeCreateFormInputEvent({
+                      ...vpcFormEventOptions,
+                      interaction: 'change',
+                      subheaderName: 'Assign VPC',
+                      trackOnce: true,
+                    });
+                  }
+                }}
                 textFieldProps={{
                   sx: (theme) => ({
                     [theme.breakpoints.up('sm')]: { minWidth: inputMaxWidth },
@@ -103,7 +142,6 @@ export const VPC = () => {
                 label="Assign VPC"
                 noMarginTop
                 onBlur={field.onBlur}
-                onChange={(e, vpc) => field.onChange(vpc?.id ?? null)}
                 placeholder="None"
                 value={field.value ?? null}
               />
@@ -113,7 +151,15 @@ export const VPC = () => {
           />
           {regionId && regionSupportsVPCs && (
             <Box>
-              <LinkButton onClick={() => setIsCreateDrawerOpen(true)}>
+              <LinkButton
+                onClick={() => {
+                  setIsCreateDrawerOpen(true);
+                  sendLinodeCreateFormInputEvent({
+                    ...vpcFormEventOptions,
+                    label: 'Create VPC',
+                  });
+                }}
+              >
                 Create VPC
               </LinkButton>
             </Box>
