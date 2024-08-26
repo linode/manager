@@ -59,8 +59,16 @@ describe('ManageImageRegionsDrawer', () => {
   });
 
   it('should render a status of "unsaved" when a new region is selected', async () => {
-    const region1 = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
-    const region2 = regionFactory.build({ id: 'us-west', label: 'Place, CA' });
+    const region1 = regionFactory.build({
+      capabilities: ['Object Storage'],
+      id: 'us-east',
+      label: 'Newark, NJ',
+    });
+    const region2 = regionFactory.build({
+      capabilities: ['Object Storage'],
+      id: 'us-west',
+      label: 'Place, CA',
+    });
 
     const image = imageFactory.build({
       regions: [
