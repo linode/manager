@@ -43,12 +43,10 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
       region: region.id,
       ipv4: linode_2.ipv4[1],
     });
+    const regionName = getRegionById(nodeBal.region).label;
 
     // catch request
     interceptCreateNodeBalancer().as('createNodeBalancer');
-
-    const regionName = getRegionById(nodeBal.region).label;
-
     cy.visitWithLogin('/nodebalancers/create');
     cy.get('[id="nodebalancer-label"]')
       .should('be.visible')
@@ -134,11 +132,10 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
       region: region.id,
       ipv4: linode_2.ipv4[1],
     });
-
-    // Catch request
-    interceptCreateNodeBalancer().as('createNodeBalancer');
-
     const regionName = getRegionById(nodeBal.region).label;
+
+    // catch request
+    interceptCreateNodeBalancer().as('createNodeBalancer');
 
     cy.visitWithLogin('/nodebalancers/create');
     cy.get('[id="nodebalancer-label"]')
