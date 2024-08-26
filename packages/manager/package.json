@@ -218,6 +218,7 @@
   "browserslist": [
     ">1%",
     "last 4 versions",
-    "Firefox ESR"
+    "Firefox ESR",
+    "not dead"
   ]
 }
