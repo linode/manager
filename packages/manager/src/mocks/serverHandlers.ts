@@ -2272,13 +2272,13 @@ export const handlers = [
     const response = {
       data: [
         dashboardFactory.build({
-          label:'Linode Dashboard',
-          service_type: 'linode'
+          label: 'Linode Dashboard',
+          service_type: 'linode',
         }),
         dashboardFactory.build({
           label: 'DBaaS Dashboard',
-          service_type: 'dbaas'
-        })
+          service_type: 'dbaas',
+        }),
       ],
     };
 
