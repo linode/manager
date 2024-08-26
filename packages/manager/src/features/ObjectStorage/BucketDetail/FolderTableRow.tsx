@@ -6,10 +6,9 @@ import { Link } from 'react-router-dom';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
+import { TableRow, TableRowProps } from 'src/components/TableRow';
 
 import { FolderActionMenu } from './FolderActionMenu';
-import { TableRowProps } from '@mui/material';
 
 export interface FolderTableRowProps extends TableRowProps {
   displayName: string;
