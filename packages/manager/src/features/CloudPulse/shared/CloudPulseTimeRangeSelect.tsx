@@ -20,7 +20,9 @@ export interface CloudPulseTimeRangeSelectProps
     savePref?: boolean
   ) => void;
   placeholder?: string;
+  preferences?: AclpConfig;
   savePreferences?: boolean;
+  updatePreferences?: (data: {}) => void;
 }
 
 const PAST_7_DAYS = 'Last 7 Days';

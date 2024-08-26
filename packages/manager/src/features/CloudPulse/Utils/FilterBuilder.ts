@@ -62,8 +62,10 @@ export const getRegionProperties = (
     defaultValue: preferences?.[REGION],
     handleRegionChange,
     placeholder,
+    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
+    updatePreferences,
   };
 };
 
@@ -101,8 +103,10 @@ export const getResourcesProperties = (
     ),
     handleResourcesSelection: handleResourceChange,
     placeholder,
+    preferences,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
+    updatePreferences,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
   };
 };
@@ -190,7 +194,9 @@ export const getTimeDurationProperties = (
     defaultValue: timeDuration,
     handleStatsChange: handleTimeRangeChange,
     placeholder,
+    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
+    updatePreferences,
   };
 };
 

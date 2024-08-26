@@ -3,18 +3,24 @@ import * as React from 'react';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import type { Dashboard, FilterValue } from '@linode/api-v4';
+import type { AclpConfig, Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
   handleRegionChange: (region: string | undefined, savePref?: boolean) => void;
   placeholder?: string;
+  preferences: AclpConfig;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
+  updatePreferences: (data: {}) => void;
 }
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
+    // const {
+    //   preferences,
+    //   updateGlobalFilterPreference: updatePreferences,
+    // } = useAclpPreference();
     const { data: regions } = useRegionsQuery();
 
     const {

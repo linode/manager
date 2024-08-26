@@ -259,6 +259,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   }
 
   const metricsApiCallError = error?.[0]?.reason;
+
   return (
     <Grid item lg={widget.size} xs={12}>
       <Paper>
