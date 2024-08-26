@@ -113,7 +113,6 @@ export const VPC = () => {
                 }
                 onChange={(e, vpc) => {
                   field.onChange(vpc?.id ?? null);
-                  // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
                   if (!vpc?.id) {
                     sendLinodeCreateFormInputEvent({
                       ...vpcFormEventOptions,

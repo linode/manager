@@ -152,7 +152,7 @@ export const Region = () => {
       setValue('label', label);
     }
 
-    // Begin tracking the Linode Create form - fires once per page view, configured in AA backend.
+    // Begin tracking the Linode Create form.
     sendLinodeCreateFormStartEvent({
       createType: params.type ?? 'OS',
     });
@@ -231,7 +231,7 @@ export const Region = () => {
       <RegionSelect
         onChange={(e, region) => {
           onChange(region);
-          // Begin tracking the Linode Create form - fires once per page view, configured in AA backend.
+          // Begin tracking the Linode Create form.
           sendLinodeCreateFormStartEvent({
             createType: params.type ?? 'OS',
           });
