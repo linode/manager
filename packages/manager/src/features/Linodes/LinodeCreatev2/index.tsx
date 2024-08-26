@@ -2,7 +2,7 @@ import { isEmpty } from '@linode/api-v4';
 import * as Sentry from '@sentry/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -20,6 +20,10 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import {
+  sendLinodeCreateFormErrorEvent,
+  sendLinodeCreateFormSubmitEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
@@ -54,7 +58,7 @@ import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
 import type { LinodeCreateFormValues } from './utilities';
-import type { SubmitHandler } from 'react-hook-form';
+import type { FieldErrors, SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
@@ -117,6 +121,10 @@ export const LinodeCreatev2 = () => {
         values,
       });
 
+      sendLinodeCreateFormSubmitEvent({
+        createType: params.type,
+      });
+
       if (values.hasSignedEUAgreement) {
         updateAccountAgreements({
           eu_model: true,
@@ -134,6 +142,38 @@ export const LinodeCreatev2 = () => {
     }
   };
 
+  const handleAnalyticsFormError = useCallback(
+    (errors: FieldErrors<LinodeCreateFormValues>) => {
+      let errorString = '';
+
+      if (!errors) {
+        return;
+      }
+
+      if (errors.region) {
+        errorString += errors.region.message;
+      }
+      if (errors.type) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.type.message
+        }`;
+      }
+      if (errors.root_pass) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.root_pass.message
+        }`;
+      }
+      if (errors.root) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.root.message
+        }`;
+      }
+
+      sendLinodeCreateFormErrorEvent(errorString, params.type ?? 'OS');
+    },
+    [params.type]
+  );
+
   const previousSubmitCount = useRef<number>(0);
 
   useEffect(() => {
@@ -142,9 +182,10 @@ export const LinodeCreatev2 = () => {
       form.formState.submitCount > previousSubmitCount.current
     ) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
+      handleAnalyticsFormError(form.formState.errors);
     }
     previousSubmitCount.current = form.formState.submitCount;
-  }, [form.formState]);
+  }, [form.formState, handleAnalyticsFormError]);
 
   /**
    * Add a Sentry tag when Linode Create v2 is mounted
