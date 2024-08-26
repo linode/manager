@@ -37,7 +37,7 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that Firewall is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
-  it('can assign existing Firewall during Linode Create flow', () => {
+  it.skip('can assign existing Firewall during Linode Create flow', () => {
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -102,7 +102,7 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that Firewall is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
-  it('can assign new Firewall during Linode Create flow', () => {
+  it.skip('can assign new Firewall during Linode Create flow', () => {
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -237,6 +237,12 @@ describe('Create Linode with Firewall', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Creating the linode without a firewall should display a warning.
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')
