@@ -57,8 +57,10 @@ export const AccessSelect = React.memo((props: Props) => {
   // State for dealing with the confirmation modal when selecting read/write.
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
-  const isCorsEnabled =
-    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
+  const isCorsAvailable =
+    (variant === 'bucket' || variant === 'object') &&
+    endpointType !== 'E2' &&
+    endpointType !== 'E3';
 
   React.useEffect(() => {
     setUpdateAccessError('');
@@ -184,7 +186,7 @@ export const AccessSelect = React.memo((props: Props) => {
         ) : null}
       </div>
 
-      {isCorsEnabled ? (
+      {isCorsAvailable ? (
         <FormControlLabel
           control={
             <Toggle
@@ -198,7 +200,7 @@ export const AccessSelect = React.memo((props: Props) => {
         />
       ) : null}
 
-      {isCorsEnabled ? (
+      {isCorsAvailable ? (
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
