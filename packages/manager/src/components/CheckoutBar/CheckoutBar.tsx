@@ -11,7 +11,7 @@ import {
   SxTypography,
 } from './styles';
 
-interface CheckoutBarProps {
+export interface CheckoutBarProps {
   /**
    * JSX element to be displayed as an agreement section.
    */
