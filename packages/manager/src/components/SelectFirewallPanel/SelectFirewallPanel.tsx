@@ -25,9 +25,9 @@ import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types
 interface Props {
   disabled?: boolean;
   entityType: FirewallDeviceEntityType | undefined;
-  handleFirewallChange: (firewallID: number) => void;
+  handleFirewallChange: (firewallID: number | undefined) => void;
   helperText: JSX.Element;
-  selectedFirewallId: number;
+  selectedFirewallId: number | undefined;
 }
 
 export const SelectFirewallPanel = (props: Props) => {
@@ -82,7 +82,7 @@ export const SelectFirewallPanel = (props: Props) => {
   }));
 
   const selectedFirewall =
-    selectedFirewallId !== -1
+    selectedFirewallId !== undefined
       ? firewallsDropdownOptions.find(
           (option) => option.value === selectedFirewallId
         ) || null
@@ -117,7 +117,7 @@ export const SelectFirewallPanel = (props: Props) => {
           )}
         <Autocomplete
           onChange={(_, selection) => {
-            handleFirewallChange(selection?.value ?? -1);
+            handleFirewallChange(selection?.value);
             // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
             if (!selection) {
               sendLinodeCreateFormInputEvent({
