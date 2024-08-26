@@ -2,9 +2,9 @@ import { createTestLinode } from 'support/util/linodes';
 import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
-import { mockGetVPC } from 'support/intercepts/vpc';
+import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
-import { getRegionById } from 'support/util/regions';
+import { chooseRegion, getRegionById } from 'support/util/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import {
   interceptRebootLinode,
@@ -32,10 +32,15 @@ import {
   VLANFactory,
   LinodeConfigInterfaceFactory,
   LinodeConfigInterfaceFactoryWithVPC,
+  subnetFactory,
 } from '@src/factories';
-import { randomNumber, randomLabel } from 'support/util/random';
+import { randomNumber, randomLabel, randomIp } from 'support/util/random';
 import { fetchAllKernels, findKernelById } from 'support/util/kernels';
-import { NOT_NATTED_HELPER_TEXT } from 'src/features/VPCs/constants';
+import {
+  LINODE_UNREACHABLE_HELPER_TEXT,
+  NATTED_PUBLIC_IP_HELPER_TEXT,
+  NOT_NATTED_HELPER_TEXT,
+} from 'src/features/VPCs/constants';
 
 import type { CreateTestLinodeOptions } from 'support/util/linodes';
 import type {
@@ -654,6 +659,149 @@ describe('Linode Config management', () => {
         );
         cy.contains('eth0 – Public Internet').should('be.visible');
         cy.contains(`eth2 – VPC: ${mockVPC.label}`).should('be.visible');
+      });
+
+      cy.findByText('REBOOT NEEDED').should('be.visible');
+    });
+
+    /*
+     * - Tests Linode config edit and VPC interface assignment UI flows using mock API data.
+     * - When the user sets primary interface to eth0, sets eth0 to "Public Internet", and sets eth1 to "VPC", confirm that correct notice appears.
+     * - When the user sets primary interface to eth0, sets eth0 to "Public Internet", sets eth1 to "VPC", and checks "Assign a public IPv4 address for this Linode", confirm that correct notice appears.
+     * - Confirms that "REBOOT NEEDED" status indicator appears upon creating VPC config.
+     */
+    it('Creates a new config using non-recommended settings and confirm the informational notices', () => {
+      const region = chooseRegion({ capabilities: ['VPCs'] });
+      const mockLinode = linodeFactory.build({
+        id: randomNumber(),
+        label: randomLabel(),
+        region: region.id,
+      });
+      const mockSubnet = subnetFactory.build({
+        id: randomNumber(),
+        label: randomLabel(),
+        linodes: [],
+        ipv4: `${randomIp()}/0`,
+      });
+      const mockVPC = vpcFactory.build({
+        id: randomNumber(),
+        label: randomLabel(),
+        region: region.id,
+        subnets: [mockSubnet],
+      });
+
+      // Mock config with public internet eth0, VPC eth1 and no other interfaces.
+      const mockConfigWithVpc: Config = {
+        ...mockConfig,
+        interfaces: [
+          LinodeConfigInterfaceFactory.build({
+            ipam_address: null,
+            purpose: 'public',
+            label: null,
+          }),
+          LinodeConfigInterfaceFactoryWithVPC.build({
+            vpc_id: mockVPC.id,
+            active: false,
+            label: null,
+          }),
+        ],
+      };
+
+      // Mock a Linode with no existing configs, then visit its details page.
+      mockGetLinodeKernel(mockKernel.id, mockKernel);
+      mockGetLinodeKernels([mockKernel]);
+      mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+      mockGetLinodeDisks(mockLinode.id, []).as('getDisks');
+      mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
+      mockGetLinodeConfigs(mockLinode.id, []).as('getConfigs');
+      mockGetVPC(mockVPC).as('getVPC');
+      mockGetVPCs([mockVPC]).as('getVPCs');
+
+      cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
+      cy.wait(['@getConfigs', '@getDisks', '@getLinode', '@getVolumes']);
+
+      // Confirm that there are no configurations displayed.
+      cy.findByLabelText('List of Configurations').within(() => {
+        cy.findByText('No data to display.').should('be.visible');
+      });
+
+      // Mock requests to create new config and re-fetch configs.
+      mockCreateLinodeConfigs(mockLinode.id, mockConfigWithVpc).as(
+        'createLinodeConfig'
+      );
+      mockGetLinodeConfigs(mockLinode.id, [mockConfigWithVpc]).as(
+        'getLinodeConfigs'
+      );
+
+      // Create new config.
+      cy.findByText('Add Configuration').click();
+      ui.dialog
+        .findByTitle('Add Configuration')
+        .should('be.visible')
+        .within(() => {
+          cy.get('#label').type(`${mockConfigWithVpc.label}`);
+
+          // Sets eth0 to "Public Internet", and sets eth1 to "VPC"
+          cy.get('[data-qa-textfield-label="eth0"]')
+            .scrollIntoView()
+            .click()
+            .type('Public Internet');
+          ui.select
+            .findItemByText('Public Internet')
+            .should('be.visible')
+            .click();
+          cy.get('[data-qa-textfield-label="eth1"]')
+            .scrollIntoView()
+            .click()
+            .type('VPC');
+          ui.select.findItemByText('VPC').should('be.visible').click();
+          // Confirm that internet access warning is displayed.
+          cy.findByText(LINODE_UNREACHABLE_HELPER_TEXT).should('be.visible');
+
+          // Sets eth0 to "Public Internet", and sets eth1 to "VPC",
+          // and checks "Assign a public IPv4 address for this Linode"
+          cy.get('[data-qa-textfield-label="VPC"]')
+            .scrollIntoView()
+            .click()
+            .type(`${mockVPC.label}`);
+          ui.select
+            .findItemByText(`${mockVPC.label}`)
+            .should('be.visible')
+            .click();
+          cy.get('[data-qa-textfield-label="Subnet"]')
+            .scrollIntoView()
+            .click()
+            .type(`${mockSubnet.label}`);
+          ui.select
+            .findItemByText(`${mockSubnet.label}`)
+            .should('be.visible')
+            .click();
+          cy.findByText('Assign a public IPv4 address for this Linode')
+            .should('be.visible')
+            .click();
+          // Confirm that internet access warning is displayed.
+          cy.findByText(NATTED_PUBLIC_IP_HELPER_TEXT)
+            .scrollIntoView()
+            .should('be.visible');
+
+          ui.buttonGroup
+            .findButtonByTitle('Add Configuration')
+            .scrollIntoView()
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@createLinodeConfig', '@getLinodeConfigs', '@getVPC']);
+
+      // Confirm that Public Internet assigned to eth0, VPC to eth1,
+      // and that "REBOOT NEEDED" status message is shown.
+      cy.findByLabelText('List of Configurations').within(() => {
+        cy.contains(`${mockConfig.label} – ${mockKernel.label}`).should(
+          'be.visible'
+        );
+        cy.contains('eth0 – Public Internet').should('be.visible');
+        cy.contains(`eth1 – VPC: ${mockVPC.label}`).should('be.visible');
       });
 
       cy.findByText('REBOOT NEEDED').should('be.visible');
