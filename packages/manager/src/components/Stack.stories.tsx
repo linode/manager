@@ -55,7 +55,7 @@ export const WithDivider: StoryObj<typeof Stack> = {
 
 const meta: Meta<typeof Stack> = {
   component: Stack,
-  title: 'Components/Stack',
+  title: 'Foundations/Stack',
 };
 
 export default meta;

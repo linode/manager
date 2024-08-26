@@ -68,15 +68,17 @@ export const useStackScriptsInfiniteQuery = (
 
 export const stackScriptEventHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   // Keep the infinite store up to date
-  queryClient.invalidateQueries(stackscriptQueries.infinite._def);
+  invalidateQueries({
+    queryKey: stackscriptQueries.infinite._def,
+  });
 
   // If the event has a StackScript entity attached, invalidate it
   if (event.entity?.id) {
-    queryClient.invalidateQueries(
-      stackscriptQueries.stackscript(event.entity.id).queryKey
-    );
+    invalidateQueries({
+      queryKey: stackscriptQueries.stackscript(event.entity.id).queryKey,
+    });
   }
 };

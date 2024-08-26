@@ -152,9 +152,13 @@ export const useCreateSSHKeyMutation = () => {
   return useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>({
     mutationFn: createSSHKey,
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.sshKeys._def);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.sshKeys._def,
+      });
       // also invalidate the /account/users data because that endpoint returns some SSH key data
-      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users._ctx.paginated._def,
+      });
     },
   });
 };
@@ -164,9 +168,13 @@ export const useUpdateSSHKeyMutation = (id: number) => {
   return useMutation<SSHKey, APIError[], { label: string }>({
     mutationFn: (data) => updateSSHKey(id, data),
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.sshKeys._def);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.sshKeys._def,
+      });
       // also invalidate the /account/users data because that endpoint returns some SSH key data
-      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users._ctx.paginated._def,
+      });
     },
   });
 };
@@ -176,20 +184,28 @@ export const useDeleteSSHKeyMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteSSHKey(id),
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.sshKeys._def);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.sshKeys._def,
+      });
       // also invalidate the /account/users data because that endpoint returns some SSH key data
-      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users._ctx.paginated._def,
+      });
     },
   });
 };
 
-export const sshKeyEventHandler = (event: EventHandlerData) => {
+export const sshKeyEventHandler = ({ invalidateQueries }: EventHandlerData) => {
   // This event handler is a bit agressive and will over-fetch, but UX will
   // be great because this will ensure Cloud has up to date data all the time.
 
-  event.queryClient.invalidateQueries(profileQueries.sshKeys._def);
+  invalidateQueries({
+    queryKey: profileQueries.sshKeys._def,
+  });
   // also invalidate the /account/users data because that endpoint returns some SSH key data
-  event.queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
+  invalidateQueries({
+    queryKey: accountQueries.users._ctx.paginated._def,
+  });
 };
 
 export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
@@ -203,7 +219,9 @@ export const useRevokeTrustedDeviceMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteTrustedDevice(id),
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.trustedDevices._def);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.trustedDevices._def,
+      });
     },
   });
 };
@@ -213,9 +231,13 @@ export const useDisableTwoFactorMutation = () => {
   return useMutation<{}, APIError[]>({
     mutationFn: disableTwoFactor,
     onSuccess() {
-      queryClient.invalidateQueries(profileQueries.profile().queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.profile().queryKey,
+      });
       // also invalidate the /account/users data because that endpoint returns 2FA status for each user
-      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users._ctx.paginated._def,
+      });
     },
   });
 };

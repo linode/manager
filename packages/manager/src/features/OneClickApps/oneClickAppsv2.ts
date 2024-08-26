@@ -825,8 +825,9 @@ export const oneClickApps: Record<number, OCA> = {
     name: 'Secure Your Server',
     related_guides: [
       {
-        href: 'https://www.linode.com/docs/guides/set-up-and-secure/',
-        title: 'Securing your Server',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/secure-your-server/',
+        title: 'Secure Your Server through the Linode Marketplace',
       },
     ],
     summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App.`,
@@ -2369,22 +2370,23 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Cloud native application messaging service.',
     website: 'https://nats.io',
   },
-  1329430: {
-    alt_description: 'Password Manager',
-    alt_name: 'Passbolt',
+  1439640: {
+    alt_description: 'Open Source Secrets Manager',
+    alt_name: 'Passbolt CE',
     categories: ['Security'],
     colors: {
       end: 'D40101',
       start: '171717',
     },
-    description: `Passbolt is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
+    description: `Passbolt Community Edition is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
     logo_url: 'passbolt.svg',
-    name: 'Passbolt',
+    name: 'Passbolt Community Edition',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
-        title: 'Deploy Passbolt through the Linode Marketplace',
+        title:
+          'Deploy Passbolt Community Edition through the Linode Marketplace',
       },
     ],
     summary: 'Open-source password manager for teams and businesses.',

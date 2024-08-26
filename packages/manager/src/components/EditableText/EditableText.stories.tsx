@@ -44,7 +44,7 @@ export const WithSuffix: Story = {
 
 const meta: Meta<typeof EditableText> = {
   component: EditableText,
-  title: 'Components/Editable Text',
+  title: 'Components/Input/Editable Text',
 };
 
 export default meta;

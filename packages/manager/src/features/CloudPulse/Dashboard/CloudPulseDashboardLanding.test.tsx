@@ -2,6 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { dashboardFactory } from 'src/factories';
+import * as utils from 'src/features/CloudPulse/Utils/utils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseDashboardLanding } from './CloudPulseDashboardLanding';
@@ -30,18 +31,21 @@ vi.mock('src/queries/cloudpulse/dashboards', async () => {
     useCloudPulseDashboardsQuery: queryMocks.useCloudPulseDashboardsQuery,
   };
 });
+const mockDashboard = dashboardFactory.build();
 
 queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
   data: {
-    data: dashboardFactory.buildList(1, {
-      label: dashboardLabel,
-      service_type: 'test',
-    }),
+    data: mockDashboard,
   },
   error: false,
   isLoading: false,
 });
 
+vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+  data: [mockDashboard],
+  error: '',
+  isLoading: false,
+});
 describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if dashboard not selected', () => {
     const screen = renderWithTheme(<CloudPulseDashboardLanding />);
@@ -66,14 +70,6 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     expect(
       screen.getByRole('option', { name: dashboardLabel })
     ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('option', { name: dashboardLabel }));
-
-    expect(
-      screen.getByText(
-        "No Filters Configured for selected dashboard's service type"
-      )
-    ).toBeDefined();
   });
 
   it('should render error placeholder if some dashboard is select and filters are not selected', () => {

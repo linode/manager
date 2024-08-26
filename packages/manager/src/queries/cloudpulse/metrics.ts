@@ -45,8 +45,10 @@ export const useCloudPulseMetricsQuery = (
         );
         if (currentJWEtokenCache?.token === obj.authToken) {
           queryClient.invalidateQueries(
-            queryFactory.token(serviceType, { resource_ids: [] }).queryKey,
-            {},
+            {
+              queryKey: queryFactory.token(serviceType, { resource_ids: [] })
+                .queryKey,
+            },
             {
               cancelRefetch: true,
             }
@@ -69,6 +71,7 @@ export const fetchCloudPulseMetrics = (
   const config: AxiosRequestConfig = {
     data: requestData,
     headers: {
+      'Authentication-Type': 'jwe',
       Authorization: `Bearer ${token}`,
     },
     method: 'POST',

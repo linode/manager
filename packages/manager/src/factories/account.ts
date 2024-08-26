@@ -37,6 +37,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   balance_uninvoiced: 0.0,
   billing_source: 'linode',
   capabilities: [
+    'Akamai Cloud Pulse',
     'Block Storage',
     'Cloud Firewall',
     'Disk Encryption',
@@ -44,7 +45,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'Linodes',
     'LKE HA Control Planes',
     'Machine Images',
-    'Managed Databases',
+    'Managed Databases V2',
     'NodeBalancers',
     'Object Storage Access Key Regions',
     'Object Storage Endpoint Types',

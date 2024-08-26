@@ -18,7 +18,7 @@ import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -28,6 +28,7 @@ import { REGION_CAVEAT_HELPER_TEXT } from './constants';
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface VPCPanelProps {
@@ -94,15 +95,22 @@ export const VPCPanel = (props: VPCPanelProps) => {
   );
 
   const { data: vpcsData, error, isLoading } = useAllVPCsQuery();
-  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
-    location.search
-  );
 
   React.useEffect(() => {
     if (subnetError || vpcIPv4Error) {
       scrollErrorIntoView(ERROR_GROUP_STRING);
     }
   }, [subnetError, vpcIPv4Error]);
+
+  const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+    location.search
+  );
+  const vpcFormEventOptions: LinodeCreateFormEventOptions = {
+    createType: params.type ?? 'OS',
+    headerName: 'VPC',
+    interaction: 'click',
+    label: 'VPC',
+  };
 
   const vpcs = vpcsData ?? [];
 
@@ -124,6 +132,8 @@ export const VPCPanel = (props: VPCPanelProps) => {
       fromLinodeCreate ? [{ label: 'None', value: -1 }] : []
     );
   }, [vpcs, region, fromLinodeCreate]);
+
+  const defaultVPCValue = fromLinodeConfig ? null : vpcDropdownOptions[0];
 
   const subnetDropdownOptions: DropdownOption[] =
     vpcs
@@ -152,13 +162,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
         <Link
           onClick={() =>
             fromLinodeCreate &&
-            sendLinodeCreateFormStepEvent({
-              action: 'click',
-              category: 'link',
-              createType: params.type ?? 'OS',
-              formStepName: 'VPC Panel',
+            sendLinodeCreateFormInputEvent({
+              ...vpcFormEventOptions,
               label: 'Learn more',
-              version: 'v1',
             })
           }
           to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
@@ -194,19 +200,24 @@ export const VPCPanel = (props: VPCPanelProps) => {
         <Stack>
           <Typography>{getMainCopyVPC()}</Typography>
           <Autocomplete
-            isOptionEqualToValue={(option, value) => {
-              return option.label === value.label;
-            }}
             onChange={(_, selectedVPC) => {
               handleSelectVPC(selectedVPC?.value || -1);
-              sendLinodeCreateFormStepEvent({
-                action: 'click',
-                category: 'select',
-                createType: params.type ?? 'OS',
-                formStepName: 'VPC Panel',
-                label: 'Assign VPC',
-                version: 'v1',
-              });
+              // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
+              if (selectedVPC?.label === 'None') {
+                sendLinodeCreateFormInputEvent({
+                  ...vpcFormEventOptions,
+                  interaction: 'clear',
+                  subheaderName: 'Assign VPC',
+                  trackOnce: true,
+                });
+              } else {
+                sendLinodeCreateFormInputEvent({
+                  ...vpcFormEventOptions,
+                  interaction: 'change',
+                  subheaderName: 'Assign VPC',
+                  trackOnce: true,
+                });
+              }
             }}
             textFieldProps={{
               tooltipText: REGION_CAVEAT_HELPER_TEXT,
@@ -215,12 +226,11 @@ export const VPCPanel = (props: VPCPanelProps) => {
               selectedVPCId && selectedVPCId !== -1
                 ? vpcDropdownOptions.find(
                     (option) => option.value === selectedVPCId
-                  )
-                : null
+                  ) ?? null
+                : defaultVPCValue
             }
             autoHighlight
             clearIcon={null}
-            defaultValue={fromLinodeConfig ? null : vpcDropdownOptions[0]} // If we're in the Config dialog, there is no "None" option at index 0
             disabled={!regionSupportsVPCs}
             errorText={vpcIdError ?? vpcError}
             label={from === 'linodeCreate' ? 'Assign VPC' : 'VPC'}
@@ -243,13 +253,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 <LinkButton
                   onClick={() => {
                     setIsVPCCreateDrawerOpen(true);
-                    sendLinodeCreateFormStepEvent({
-                      action: 'click',
-                      category: 'button',
-                      createType: params.type ?? 'OS',
-                      formStepName: 'VPC Panel',
+                    sendLinodeCreateFormInputEvent({
+                      ...vpcFormEventOptions,
                       label: 'Create VPC',
-                      version: 'v1',
                     });
                   }}
                 >

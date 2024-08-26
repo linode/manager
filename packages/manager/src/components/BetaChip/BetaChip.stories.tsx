@@ -12,6 +12,6 @@ export const Default: StoryObj<BetaChipProps> = {
 const meta: Meta<BetaChipProps> = {
   args: { color: 'default' },
   component: BetaChip,
-  title: 'Components/Chip/BetaChip',
+  title: 'Foundations/Chip/BetaChip',
 };
 export default meta;

@@ -30,7 +30,9 @@ export const ComplianceUpdateModal = () => {
       .then(() => {
         complianceModelContext.close();
         // Re-request notifications so the GDPR notification goes away.
-        queryClient.invalidateQueries(accountQueries.notifications.queryKey);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.notifications.queryKey,
+        });
       })
       .catch((err) => {
         const errorMessage = getErrorStringOrDefault(

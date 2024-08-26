@@ -1,4 +1,5 @@
 import {
+  cancelObjectStorage,
   createBucket,
   deleteBucket,
   deleteBucketWithRegion,
@@ -23,10 +24,12 @@ import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { useAccount } from '../account/account';
 import { accountQueries } from '../account/queries';
+import { updateAccountSettingsData } from '../account/settings';
 import { queryPresets } from '../base';
 import { useRegionsQuery } from '../regions/regions';
 import {
   getAllBucketsFromClusters,
+  getAllBucketsFromEndpoints,
   getAllBucketsFromRegions,
   getAllObjectStorageClusters,
   getAllObjectStorageEndpoints,
@@ -34,7 +37,7 @@ import {
 } from './requests';
 import { prefixToQueryKey } from './utilities';
 
-import type { BucketsResponse } from './requests';
+import type { BucketsResponse, BucketsResponseType } from './requests';
 import type {
   APIError,
   CreateObjectStorageBucketPayload,
@@ -106,6 +109,10 @@ export const useObjectStorageEndpoints = (enabled = true) => {
   });
 };
 
+/**
+ *
+ * @deprecated This will be replaced by useObjectStorageEndpoints
+ */
 export const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>({
     ...objectStorageQueries.clusters,
@@ -116,6 +123,7 @@ export const useObjectStorageClusters = (enabled: boolean = true) =>
 export const useObjectStorageBuckets = (enabled = true) => {
   const flags = useFlags();
   const { data: account } = useAccount();
+  const { data: allRegions } = useRegionsQuery();
 
   const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
@@ -123,22 +131,42 @@ export const useObjectStorageBuckets = (enabled = true) => {
     account?.capabilities ?? []
   );
 
-  const { data: allRegions } = useRegionsQuery();
-  const { data: clusters } = useObjectStorageClusters(
-    enabled && !isObjMultiClusterEnabled
+  const isObjectStorageGen2Enabled = isFeatureEnabledV2(
+    'Object Storage Endpoint Types',
+    Boolean(flags.objectStorageGen2?.enabled),
+    account?.capabilities ?? []
   );
 
-  const regions = allRegions?.filter((r) =>
-    r.capabilities.includes('Object Storage')
-  );
+  const endpointsQueryEnabled = enabled && isObjectStorageGen2Enabled;
+  const clustersQueryEnabled = enabled && !isObjMultiClusterEnabled;
 
-  return useQuery<BucketsResponse, APIError[]>({
-    enabled: isObjMultiClusterEnabled
-      ? regions !== undefined && enabled
-      : clusters !== undefined && enabled,
-    queryFn: isObjMultiClusterEnabled
-      ? () => getAllBucketsFromRegions(regions)
-      : () => getAllBucketsFromClusters(clusters),
+  // Endpoints contain all the regions that support Object Storage.
+  const { data: endpoints } = useObjectStorageEndpoints(endpointsQueryEnabled);
+  const { data: clusters } = useObjectStorageClusters(clustersQueryEnabled);
+
+  const regions =
+    isObjMultiClusterEnabled && !isObjectStorageGen2Enabled
+      ? allRegions?.filter((r) => r.capabilities.includes('Object Storage'))
+      : undefined;
+
+  const queryEnabled =
+    enabled &&
+    ((isObjectStorageGen2Enabled && Boolean(endpoints)) ||
+      (isObjMultiClusterEnabled && Boolean(regions)) ||
+      Boolean(clusters));
+
+  const queryFn = isObjectStorageGen2Enabled
+    ? () => getAllBucketsFromEndpoints(endpoints)
+    : isObjMultiClusterEnabled
+    ? () => getAllBucketsFromRegions(regions)
+    : () => getAllBucketsFromClusters(clusters);
+
+  return useQuery<
+    BucketsResponseType<typeof isObjectStorageGen2Enabled>,
+    APIError[]
+  >({
+    enabled: queryEnabled,
+    queryFn,
     queryKey: objectStorageQueries.buckets.queryKey,
     retry: false,
   });
@@ -318,3 +346,20 @@ export const useObjectStorageTypesQuery = (enabled = true) =>
     ...queryPresets.oneTimeFetch,
     enabled,
   });
+
+export const useCancelObjectStorageMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[]>({
+    mutationFn: cancelObjectStorage,
+    onSuccess() {
+      updateAccountSettingsData({ object_storage: 'disabled' }, queryClient);
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.buckets.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKeys._def,
+      });
+    },
+  });
+};

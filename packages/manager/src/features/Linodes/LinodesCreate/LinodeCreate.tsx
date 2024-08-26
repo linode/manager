@@ -7,13 +7,16 @@ import { connect } from 'react-redux';
 import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
+import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { Box } from 'src/components/Box';
+import { Checkbox } from 'src/components/Checkbox';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DetailsPanel } from 'src/components/DetailsPanel/DetailsPanel';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
@@ -45,8 +48,7 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 import {
   sendLinodeCreateFormErrorEvent,
-  sendLinodeCreateFormStepEvent,
-  sendLinodeCreateFormSubmitEvent,
+  sendLinodeCreateFormInputEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -117,10 +119,12 @@ export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
+  checkedFirewallAuthorizaton: boolean;
   createType: CreateTypes;
   diskEncryptionEnabled: boolean;
   firewallId?: number;
   handleAgreementChange: () => void;
+  handleFirewallAuthorizationChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
   handlePlacementGroupChange: (placementGroup: PlacementGroup | null) => void;
@@ -142,6 +146,7 @@ export interface LinodeCreateProps {
   setBackupID: (id: number) => void;
   setSelectedVPC: (vpcID: number) => void;
   showApiAwarenessModal: boolean;
+  showFirewallAuthorization: boolean;
   showGDPRCheckbox: boolean;
   showGeneralError?: boolean;
   signedAgreement: boolean;
@@ -216,8 +221,6 @@ export class LinodeCreate extends React.PureComponent<
 > {
   createLinode = () => {
     const payload = this.getPayload();
-    const { selectedTab } = this.state;
-    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
 
     try {
       CreateLinodeSchema.validateSync(payload, {
@@ -230,11 +233,6 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
-    sendLinodeCreateFormSubmitEvent(
-      'Create Linode',
-      selectedTabName ?? 'OS',
-      'v1'
-    );
   };
 
   createLinodeFormRef = React.createRef<HTMLFormElement>();
@@ -402,31 +400,24 @@ export class LinodeCreate extends React.PureComponent<
   ) => {
     const { selectedTab } = this.state;
     const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+    let errorString = '';
 
     if (!errorMap) {
       return;
     }
     if (errorMap.region) {
-      sendLinodeCreateFormErrorEvent(
-        'Region not selected',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += errorMap.region;
     }
     if (errorMap.type) {
-      sendLinodeCreateFormErrorEvent(
-        'Plan not selected',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += `${errorString.length > 0 ? `|` : ''}${errorMap.type}`;
     }
     if (errorMap.root_pass) {
-      sendLinodeCreateFormErrorEvent(
-        'Password not created',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += `${errorString.length > 0 ? `|` : ''}${
+        errorMap.root_pass
+      }`;
     }
+
+    sendLinodeCreateFormErrorEvent(errorString, selectedTabName ?? 'OS');
   };
 
   handleClickCreateUsingCommandLine = (
@@ -451,6 +442,13 @@ export class LinodeCreate extends React.PureComponent<
         : [],
       type: this.props.selectedTypeID ?? '',
     };
+    sendLinodeCreateFormInputEvent({
+      createType: 'OS',
+      interaction: 'click',
+      label: isDxToolsAdditionsEnabled
+        ? 'View Code Snippets'
+        : 'Create Using Command Line',
+    });
     sendApiAwarenessClickEvent(
       'Button',
       isDxToolsAdditionsEnabled
@@ -461,8 +459,6 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   handleTabChange = (index: number) => {
-    const prevTabIndex = this.state.selectedTab;
-
     this.props.resetCreationState();
 
     /** set the tab in redux state */
@@ -474,18 +470,6 @@ export class LinodeCreate extends React.PureComponent<
       planKey: v4(),
       selectedTab: index,
     });
-
-    // Do not fire the form event if a user is not switching to a different tab.
-    // Prevents a double-firing on Marketplace because we manually handle the tab change.
-    if (prevTabIndex !== index) {
-      sendLinodeCreateFormStepEvent({
-        action: 'click',
-        category: 'tab',
-        createType: (this.tabs[prevTabIndex].title as LinodeCreateType) ?? 'OS',
-        label: `${this.tabs[index].title} Tab`,
-        version: 'v1',
-      });
-    }
   };
 
   mounted: boolean = false;
@@ -618,10 +602,12 @@ export class LinodeCreate extends React.PureComponent<
     const {
       account,
       accountBackupsEnabled,
+      checkedFirewallAuthorizaton,
       errors,
       flags,
       formIsSubmitting,
       handleAgreementChange,
+      handleFirewallAuthorizationChange,
       handlePlacementGroupChange,
       handleShowApiAwarenessModal,
       imageDisplayInfo,
@@ -638,6 +624,7 @@ export class LinodeCreate extends React.PureComponent<
       regionsLoading,
       selectedRegionID,
       showApiAwarenessModal,
+      showFirewallAuthorization,
       showGDPRCheckbox,
       showGeneralError,
       signedAgreement,
@@ -846,6 +833,11 @@ export class LinodeCreate extends React.PureComponent<
         getIsDistributedRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
+    const secureVMViolation =
+      showFirewallAuthorization &&
+      !checkedFirewallAuthorizaton &&
+      this.props.firewallId === undefined;
+
     return (
       <StyledForm ref={this.createLinodeFormRef}>
         <Grid className="py0">
@@ -854,7 +846,11 @@ export class LinodeCreate extends React.PureComponent<
           )}
           {generalError && (
             <Notice spacingTop={8} variant="error">
-              <ErrorMessage entityType="linode_id" message={generalError} />
+              <ErrorMessage
+                entityType="linode_id"
+                formPayloadValues={{ type: this.props.selectedTypeID }}
+                message={generalError}
+              />
             </Notice>
           )}
           {userCannotCreateLinode && (
@@ -1003,14 +999,13 @@ export class LinodeCreate extends React.PureComponent<
                 <DocsLink
                   onClick={() => {
                     sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
-                    sendLinodeCreateFormStepEvent({
-                      action: 'click',
-                      category: 'link',
+                    sendLinodeCreateFormInputEvent({
                       createType:
                         (this.tabs[selectedTab].title as LinodeCreateType) ??
                         'OS',
                       label: 'Choosing a Plan',
-                      version: 'v1',
+                      headerName: 'Linode Plan',
+                      interaction: 'click',
                     });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
@@ -1106,15 +1101,13 @@ export class LinodeCreate extends React.PureComponent<
                   and outbound network traffic.{' '}
                   <Link
                     onClick={() =>
-                      sendLinodeCreateFormStepEvent({
-                        action: 'click',
-                        category: 'link',
+                      sendLinodeCreateFormInputEvent({
                         createType:
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'OS',
-                        formStepName: 'Firewall Panel',
+                        headerName: 'Firewall',
                         label: 'Learn more',
-                        version: 'v1',
+                        interaction: 'click',
                       })
                     }
                     to={FIREWALL_GET_STARTED_LINK}
@@ -1183,6 +1176,26 @@ export class LinodeCreate extends React.PureComponent<
                   onChange={handleAgreementChange}
                 />
               ) : null}
+              {showFirewallAuthorization &&
+              this.props.firewallId === undefined &&
+              flags.secureVmCopy?.firewallAuthorizationWarning ? (
+                <AkamaiBanner
+                  action={
+                    <Typography color="inherit">
+                      <FormControlLabel
+                        checked={checkedFirewallAuthorizaton}
+                        className="error-for-scroll"
+                        control={<Checkbox />}
+                        disableTypography
+                        label={flags.secureVmCopy.firewallAuthorizationLabel}
+                        onChange={handleFirewallAuthorizationChange}
+                      />
+                    </Typography>
+                  }
+                  text={flags.secureVmCopy.firewallAuthorizationWarning}
+                  warning
+                />
+              ) : null}
             </StyledMessageDiv>
           </Box>
           <StyledButtonGroupBox
@@ -1194,7 +1207,8 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showGDPRCheckbox && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement) ||
+                secureVMViolation
               }
               onClick={() =>
                 this.handleClickCreateUsingCommandLine(
@@ -1212,7 +1226,8 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showGDPRCheckbox && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement) ||
+                secureVMViolation
               }
               buttonType="primary"
               data-qa-deploy-linode

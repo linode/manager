@@ -90,6 +90,7 @@ export interface Flags {
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
+  dbaasV2: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   eventMessagesV2: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
@@ -111,7 +112,8 @@ export interface Flags {
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
-  referralBannerText: ReferralBannerText;
+  referralBannerText: BannerContent;
+  secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
   soldOutChips: boolean;
   supportTicketSeverity: boolean;
@@ -184,12 +186,24 @@ export interface Provider {
   name: TPAProvider;
 }
 
-interface ReferralBannerText {
+interface BannerContent {
   link?: {
     text: string;
     url: string;
   };
   text: string;
+}
+
+interface SecureVMCopy {
+  bannerLabel?: string;
+  firewallAuthorizationLabel?: string;
+  firewallAuthorizationWarning?: string;
+  firewallDetails?: BannerContent;
+  generateActionText?: string;
+  generateDocsLink: string;
+  generatePrompt?: BannerContent;
+  generateSuccess?: BannerContent;
+  linodeCreate?: BannerContent;
 }
 
 export type ProductInformationBannerLocation =
