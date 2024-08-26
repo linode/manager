@@ -143,7 +143,7 @@ export const BucketDetailsDrawer = React.memo(
          to getBucketAccess and updateBucketAccess.  */}
         {
           <>
-            <Typography data-testid="createdTime" variant="h3">
+            <Typography data-testid="bucketRateLimit" variant="h3">
               Bucket Rate Limits
             </Typography>
             {showBucketRateLimitTable ? (
