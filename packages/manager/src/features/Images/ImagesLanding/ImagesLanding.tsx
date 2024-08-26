@@ -430,7 +430,8 @@ export const ImagesLanding = () => {
           <Typography variant="h3">Custom Images</Typography>
           <Typography className={classes.imageTableSubheader}>
             These are images you manually uploaded or captured from an existing
-            Linode disk.
+            compute instance disk. You can deploy an image to a compute instance
+            in any region.
           </Typography>
         </div>
         <Table>
