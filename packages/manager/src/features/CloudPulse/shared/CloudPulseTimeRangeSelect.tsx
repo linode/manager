@@ -56,7 +56,8 @@ export const CloudPulseTimeRangeSelect = React.memo(
         handleStatsChange(getTimeDurationFromTimeRange(item.value));
       }
       setSelectedTimeRange(item);
-    }, [handleStatsChange, getDefaultValue]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // need to execute only once, during mounting of this component
 
     const handleChange = (item: Item<Labels, Labels>) => {
       updateGlobalFilterPreference({

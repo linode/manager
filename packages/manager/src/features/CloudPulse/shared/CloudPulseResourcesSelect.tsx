@@ -94,6 +94,9 @@ export const CloudPulseResourcesSelect = React.memo(
             sx: {
               maxHeight: '55px',
               overflow: 'auto',
+              svg: {
+                color: '#c2c2ca',
+              },
             },
           },
           hideLabel: true,
