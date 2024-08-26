@@ -20,100 +20,11 @@ interface WeightedRunnerSpecs {
 }
 
 /**
- * Reads a test weights file at the given path and returns its data.
+ * Divides a run between separate Cypress processes.
  *
- * Weights data is sorted from highest to lowest weight.
- *
- * @param weightsFilepath - Path to weights file.
- *
- * @throws If `weightsFilepath` does not exist or is not readable.
- * @throws If weights data is invalid.
- *
- * @returns Spec weights data.
+ * Optionally, a test weights file may be specified to optimize test distribution
+ * among runners.
  */
-const readTestWeightsFile = (weightsFilepath: string): SpecWeights => {
-  const weightsContents = readFileSync(resolve(weightsFilepath), 'utf-8');
-  const weightsData = JSON.parse(weightsContents) as SpecWeights;
-  specWeightsSchema.validateSync(weightsData);
-
-  // Sort spec weights from highest weight to lowest.
-  weightsData.weights.sort((a, b) => b.weight - a.weight);
-
-  return weightsData;
-};
-
-/**
- * Returns an array of `SpecWeight` objects for each spec file with corresponding weight data.
- *
- * @param allSpecs - String of spec filepaths for this run.
- * @param specWeights - Spec weights data.
- *
- * @returns Array of `SpecWeight` objects for each spec file that has weight data.
- */
-const getWeightedSpecs = (
-  allSpecs: string[],
-  specWeights: SpecWeights
-): SpecWeight[] => {
-  return allSpecs
-    .map((specPath: string): SpecWeight | undefined => {
-      return specWeights.weights.find(
-        (specWeight) => specWeight.filepath === specPath
-      );
-    })
-    .filter((specWeight): specWeight is SpecWeight => !!specWeight);
-};
-
-/**
- * Returns an array of spec filepaths for each spec file that does not have weight data.
- *
- * @param allSpecs - String of spec filepaths for this run.
- * @param specWeights - Spec weights data.
- *
- * @returns Array of spec filepaths for each spec file that does not have corresponding weight data.
- */
-const getUnweightedSpecs = (
-  allSpecs: string[],
-  specWeights: SpecWeights
-): string[] => {
-  return allSpecs.filter((specPath: string) => {
-    return !specWeights.weights.find(
-      (specWeight) => specWeight.filepath === specPath
-    );
-  });
-};
-
-/**
- * Returns weighted specs for a single runner in a split run.
- *
- * @param runnerIndex - Index of the runner for which to retrieve specs.
- * @param totalRunners - Total number of runners.
- * @param weightedSpecs - Weighted spec data from which to retrieve specs.
- *
- * @returns Weighted specs for runner with index `runnerIndex`.
- */
-const getWeightedRunnerSpecs = (
-  runnerIndex: number,
-  totalRunners: number,
-  weightedSpecs: SpecWeight[]
-): WeightedRunnerSpecs => {
-  const weightSimulationResults: {
-    specs: string[];
-    weight: number;
-  }[] = Array.from({ length: totalRunners }, () => ({
-    specs: [],
-    weight: 0,
-  }));
-
-  weightedSpecs.forEach((weightedSpec) => {
-    // Ensure lowest weighed runner is at index 0.
-    weightSimulationResults.sort((a, b) => a.weight - b.weight);
-    weightSimulationResults[0].specs.push(weightedSpec.filepath);
-    weightSimulationResults[0].weight += weightedSpec.weight;
-  });
-
-  return weightSimulationResults[runnerIndex - 1];
-};
-
 export const splitCypressRun: CypressPlugin = (_on, config) => {
   const {
     CY_TEST_SPLIT_RUN: splitRunEnabled,
@@ -242,4 +153,99 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
   });
 
   return config;
+};
+
+/**
+ * Reads a test weights file at the given path and returns its data.
+ *
+ * Weights data is sorted from highest to lowest weight.
+ *
+ * @param weightsFilepath - Path to weights file.
+ *
+ * @throws If `weightsFilepath` does not exist or is not readable.
+ * @throws If weights data is invalid.
+ *
+ * @returns Spec weights data.
+ */
+const readTestWeightsFile = (weightsFilepath: string): SpecWeights => {
+  const weightsContents = readFileSync(resolve(weightsFilepath), 'utf-8');
+  const weightsData = JSON.parse(weightsContents) as SpecWeights;
+  specWeightsSchema.validateSync(weightsData);
+
+  // Sort spec weights from highest weight to lowest.
+  weightsData.weights.sort((a, b) => b.weight - a.weight);
+
+  return weightsData;
+};
+
+/**
+ * Returns an array of `SpecWeight` objects for each spec file with corresponding weight data.
+ *
+ * @param allSpecs - String of spec filepaths for this run.
+ * @param specWeights - Spec weights data.
+ *
+ * @returns Array of `SpecWeight` objects for each spec file that has weight data.
+ */
+const getWeightedSpecs = (
+  allSpecs: string[],
+  specWeights: SpecWeights
+): SpecWeight[] => {
+  return allSpecs
+    .map((specPath: string): SpecWeight | undefined => {
+      return specWeights.weights.find(
+        (specWeight) => specWeight.filepath === specPath
+      );
+    })
+    .filter((specWeight): specWeight is SpecWeight => !!specWeight);
+};
+
+/**
+ * Returns an array of spec filepaths for each spec file that does not have weight data.
+ *
+ * @param allSpecs - String of spec filepaths for this run.
+ * @param specWeights - Spec weights data.
+ *
+ * @returns Array of spec filepaths for each spec file that does not have corresponding weight data.
+ */
+const getUnweightedSpecs = (
+  allSpecs: string[],
+  specWeights: SpecWeights
+): string[] => {
+  return allSpecs.filter((specPath: string) => {
+    return !specWeights.weights.find(
+      (specWeight) => specWeight.filepath === specPath
+    );
+  });
+};
+
+/**
+ * Returns weighted specs for a single runner in a split run.
+ *
+ * @param runnerIndex - Index of the runner for which to retrieve specs.
+ * @param totalRunners - Total number of runners.
+ * @param weightedSpecs - Weighted spec data from which to retrieve specs.
+ *
+ * @returns Weighted specs for runner with index `runnerIndex`.
+ */
+const getWeightedRunnerSpecs = (
+  runnerIndex: number,
+  totalRunners: number,
+  weightedSpecs: SpecWeight[]
+): WeightedRunnerSpecs => {
+  const weightSimulationResults: {
+    specs: string[];
+    weight: number;
+  }[] = Array.from({ length: totalRunners }, () => ({
+    specs: [],
+    weight: 0,
+  }));
+
+  weightedSpecs.forEach((weightedSpec) => {
+    // Ensure lowest weighed runner is at index 0.
+    weightSimulationResults.sort((a, b) => a.weight - b.weight);
+    weightSimulationResults[0].specs.push(weightedSpec.filepath);
+    weightSimulationResults[0].weight += weightedSpec.weight;
+  });
+
+  return weightSimulationResults[runnerIndex - 1];
 };
