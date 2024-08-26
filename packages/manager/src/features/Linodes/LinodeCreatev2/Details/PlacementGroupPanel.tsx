@@ -31,7 +31,6 @@ export const PlacementGroupPanel = () => {
     <PlacementGroupsDetailPanel
       handlePlacementGroupChange={(placementGroup) => {
         field.onChange(placementGroup?.id);
-        // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
         if (!placementGroup?.id) {
           sendLinodeCreateFormInputEvent({
             ...placementGroupFormEventOptions,

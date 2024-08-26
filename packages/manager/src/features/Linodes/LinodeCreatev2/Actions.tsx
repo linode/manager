@@ -6,6 +6,7 @@ import { Button } from 'src/components/Button/Button';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { ApiAwarenessModal } from '../LinodesCreate/ApiAwarenessModal/ApiAwarenessModal';
@@ -35,6 +36,13 @@ export const Actions = () => {
 
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
+    sendLinodeCreateFormInputEvent({
+      createType: 'OS',
+      interaction: 'click',
+      label: isDxToolsAdditionsEnabled
+        ? 'View Code Snippets'
+        : 'Create Using Command Line',
+    });
     if (await trigger()) {
       // If validation is successful, we open the dialog.
       setIsAPIAwarenessModalOpen(true);

@@ -7,7 +7,10 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllTypes } from 'src/queries/types';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { extendType } from 'src/utilities/extendType';
+
+import { useLinodeCreateQueryParams } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
@@ -22,6 +25,7 @@ export const Plan = () => {
 
   const { data: regions } = useRegionsQuery();
   const { data: types } = useAllTypes();
+  const { params } = useLinodeCreateQueryParams();
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -33,6 +37,12 @@ export const Plan = () => {
         <DocsLink
           onClick={() => {
             sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
+            sendLinodeCreateFormInputEvent({
+              createType: params.type ?? 'OS',
+              headerName: 'Linode Plan',
+              interaction: 'click',
+              label: 'Choosing a Plan',
+            });
           }}
           href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
           label="Choosing a Plan"

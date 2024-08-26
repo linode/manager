@@ -104,7 +104,7 @@ export const Firewall = () => {
         <Stack spacing={1.5}>
           <Autocomplete
             onChange={(e, firewall) => {
-              onChange(firewall?.id); // Track clearing and changing the value once per page view, configured by inputValue in AA backend.
+              onChange(firewall?.id);
               if (!firewall?.id) {
                 sendLinodeCreateFormInputEvent({
                   ...firewallFormEventOptions,

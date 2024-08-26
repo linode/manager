@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
@@ -13,16 +14,16 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+
+import { useLinodeCreateQueryParams } from './utilities';
 
 import type { Region as RegionType } from '@linode/api-v4';
 import type {
   RegionFilterValue,
   RegionSelectProps,
 } from 'src/components/RegionSelect/RegionSelect.types';
-import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
-import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { useLinodeCreateQueryParams } from './utilities';
 
 interface GeographicalAreaOption {
   label: string;
@@ -79,9 +80,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
   return (
     <Paper>
       <Box display="flex" justifyContent="space-between" mb={1}>
-        <Typography data-qa-tp="Region" variant="h2">
-          Region
-        </Typography>
+        <Typography variant="h2">Region</Typography>
         <DocsLink
           onClick={() =>
             sendLinodeCreateFormInputEvent({
