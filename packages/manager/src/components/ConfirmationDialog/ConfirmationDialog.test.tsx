@@ -24,7 +24,7 @@ describe('Confirmation Dialog', () => {
     expect(getByTestId('CloseIcon')).toBeVisible();
   });
 
-  it('renders the dialog children if it is provided', () => {
+  it("renders the dialog's children if they are provided", () => {
     const { getByText } = renderWithTheme(
       <ConfirmationDialog {...props}>
         <div>Confirmation dialog children</div>
