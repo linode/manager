@@ -19,6 +19,10 @@ import type {
   RegionFilterValue,
   RegionSelectProps,
 } from 'src/components/RegionSelect/RegionSelect.types';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
+import { useLinodeCreateQueryParams } from './utilities';
 
 interface GeographicalAreaOption {
   label: string;
@@ -70,10 +74,27 @@ export const TwoStepRegion = (props: CombinedProps) => {
   );
 
   const { data: regions } = useRegionsQuery();
+  const { params } = useLinodeCreateQueryParams();
 
   return (
     <Paper>
-      <Typography variant="h2">Region</Typography>
+      <Box display="flex" justifyContent="space-between" mb={1}>
+        <Typography data-qa-tp="Region" variant="h2">
+          Region
+        </Typography>
+        <DocsLink
+          onClick={() =>
+            sendLinodeCreateFormInputEvent({
+              createType: params.type ?? 'OS',
+              headerName: 'Region',
+              interaction: 'click',
+              label: DOCS_LINK_LABEL_DC_PRICING,
+            })
+          }
+          href="https://www.linode.com/pricing"
+          label={DOCS_LINK_LABEL_DC_PRICING}
+        />
+      </Box>
       <Tabs>
         <TabList>
           <Tab>Core</Tab>
