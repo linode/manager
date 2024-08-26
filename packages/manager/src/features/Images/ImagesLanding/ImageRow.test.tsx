@@ -21,6 +21,8 @@ describe('Image Table Row', () => {
       { region: 'us-east', status: 'available' },
       { region: 'us-southeast', status: 'pending' },
     ],
+    size: 300,
+    total_size: 600,
   });
 
   const handlers: Handlers = {
@@ -41,11 +43,14 @@ describe('Image Table Row', () => {
     );
 
     // Check to see if the row rendered some data
+
+    expect(getByText('2 Regions')).toBeVisible();
+    expect(getByText('300 MB')).toBeVisible();
+    expect(getByText('600 MB')).toBeVisible();
+
     getByText(image.label);
     getAllByText('Ready');
-    expect(getByText('2 Regions')).toBeVisible();
     getAllByText('Cloud-init, Distributed');
-    expect(getAllByText('1500 MB').length).toBe(2);
     getAllByText(image.id);
 
     // Open action menu
