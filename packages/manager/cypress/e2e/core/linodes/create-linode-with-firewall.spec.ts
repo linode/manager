@@ -37,7 +37,7 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that Firewall is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
-  it.skip('can assign existing Firewall during Linode Create flow', () => {
+  it('can assign existing Firewall during Linode Create flow', () => {
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -102,7 +102,7 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that Firewall is reflected in create summary section.
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
-  it.skip('can assign new Firewall during Linode Create flow', () => {
+  it('can assign new Firewall during Linode Create flow', () => {
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -273,10 +273,7 @@ describe('Create Linode with Firewall', () => {
       });
     cy.wait('@createFirewall');
 
-    ui.autocompletePopper
-      .findByTitle(mockFirewall.label)
-      .should('be.visible')
-      .click();
+    cy.findByText(mockFirewall.label).should('be.visible');
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]')
