@@ -87,6 +87,9 @@ export const BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION = (
 export const BLOCK_STORAGE_CHOOSE_REGION_COPY =
   'Select a region to use Volume encryption.';
 
+export const BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_LINODE_REGION_COPY =
+  "Volume encryption is not available in this Linode's region.";
+
 export const BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY = `Volume encryption is not available in the selected region. ${BLOCK_STORAGE_CHOOSE_REGION_COPY}`;
 
 export const BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY =

@@ -1,5 +1,3 @@
-import { Linode } from '@linode/api-v4';
-import { Grant } from '@linode/api-v4/lib/account';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -17,6 +15,9 @@ import {
 
 import { ConfigSelect } from './ConfigSelect';
 import { VolumeSelect } from './VolumeSelect';
+
+import type { Linode } from '@linode/api-v4';
+import type { Grant } from '@linode/api-v4/lib/account';
 
 interface Props {
   linode: Linode;

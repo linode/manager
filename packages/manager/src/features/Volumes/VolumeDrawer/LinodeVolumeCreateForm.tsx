@@ -8,6 +8,7 @@ import { Box } from 'src/components/Box';
 import {
   BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION,
   BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
+  BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_LINODE_REGION_COPY,
   BLOCK_STORAGE_USER_SIDE_ENCRYPTION_CAVEAT,
 } from 'src/components/Encryption/constants';
 import { Encryption } from 'src/components/Encryption/Encryption';
@@ -47,8 +48,10 @@ import type {
 
 interface Props {
   linode: Linode;
+  linodeSupportsBlockStorageEncryption: boolean | undefined;
   onClose: () => void;
   openDetails: (volume: Volume) => void;
+  setClientLibraryCopyVisible: (visible: boolean) => void;
 }
 
 interface FormState {
@@ -72,7 +75,13 @@ const initialValues: FormState = {
 };
 
 export const LinodeVolumeCreateForm = (props: Props) => {
-  const { linode, onClose, openDetails } = props;
+  const {
+    linode,
+    linodeSupportsBlockStorageEncryption,
+    onClose,
+    openDetails,
+    setClientLibraryCopyVisible,
+  } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -96,8 +105,10 @@ export const LinodeVolumeCreateForm = (props: Props) => {
   ) => {
     if (encryption === 'enabled') {
       setFieldValue('encryption', 'disabled');
+      setClientLibraryCopyVisible(false);
     } else {
       setFieldValue('encryption', 'enabled');
+      setClientLibraryCopyVisible(true);
     }
   };
 
@@ -256,6 +267,9 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       {isBlockStorageEncryptionFeatureEnabled && (
         <Box paddingTop={2}>
           <Encryption
+            disabledReason={
+              BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_LINODE_REGION_COPY
+            }
             notices={
               values.encryption === 'enabled'
                 ? [
@@ -265,7 +279,7 @@ export const LinodeVolumeCreateForm = (props: Props) => {
                 : []
             }
             descriptionCopy={BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION}
-            disabled={false} // Linode region does not support Volume Encryption
+            disabled={!regionSupportsBlockStorageEncryption}
             entityType="Volume"
             isEncryptEntityChecked={values.encryption === 'enabled'}
             onChange={() => toggleVolumeEncryptionEnabled(values.encryption)}
@@ -279,7 +293,11 @@ export const LinodeVolumeCreateForm = (props: Props) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          disabled: isVolumesGrantReadOnly || isInvalidPrice,
+          disabled:
+            isVolumesGrantReadOnly ||
+            isInvalidPrice ||
+            (!linodeSupportsBlockStorageEncryption &&
+              values.encryption === 'enabled'),
           label: 'Create Volume',
           loading: isSubmitting,
           tooltipText:

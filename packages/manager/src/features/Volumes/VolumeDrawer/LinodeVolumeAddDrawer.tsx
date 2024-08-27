@@ -1,11 +1,16 @@
-import { Linode, Volume } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
+import { BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY } from 'src/components/Encryption/constants';
+import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { Notice } from 'src/components/Notice/Notice';
+import { Typography } from 'src/components/Typography';
 
 import { LinodeVolumeAttachForm } from './LinodeVolumeAttachForm';
 import { LinodeVolumeCreateForm } from './LinodeVolumeCreateForm';
 import { ModeSelection } from './ModeSelection';
+
+import type { Linode, Volume } from '@linode/api-v4';
 
 interface Props {
   linode: Linode;
@@ -18,6 +23,18 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
   const { linode, onClose, open, openDetails } = props;
 
   const [mode, setMode] = React.useState<'attach' | 'create'>('create');
+  const [
+    clientLibraryCopyVisible,
+    setClientLibraryCopyVisible,
+  ] = React.useState(false);
+
+  const {
+    isBlockStorageEncryptionFeatureEnabled,
+  } = useIsBlockStorageEncryptionFeatureEnabled();
+
+  const linodeSupportsBlockStorageEncryption = linode.capabilities?.includes(
+    'blockstorage_encryption'
+  );
 
   return (
     <Drawer
@@ -30,10 +47,25 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
       open={open}
     >
       <ModeSelection mode={mode} onChange={setMode} />
+      {isBlockStorageEncryptionFeatureEnabled &&
+        !linodeSupportsBlockStorageEncryption &&
+        clientLibraryCopyVisible && (
+          <Notice variant="warning">
+            <Typography>
+              {BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY}
+            </Typography>
+          </Notice>
+        )}
       {mode === 'attach' ? (
         <LinodeVolumeAttachForm linode={linode} onClose={onClose} />
       ) : (
         <LinodeVolumeCreateForm
+          linodeSupportsBlockStorageEncryption={
+            linodeSupportsBlockStorageEncryption
+          }
+          setClientLibraryCopyVisible={(visible: boolean) =>
+            setClientLibraryCopyVisible(visible)
+          }
           linode={linode}
           onClose={onClose}
           openDetails={openDetails}
