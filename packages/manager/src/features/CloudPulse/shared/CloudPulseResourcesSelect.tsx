@@ -56,7 +56,10 @@ export const CloudPulseResourcesSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      const defaultResources = getUserPreferenceObject()?.resources;
+      const saveResources = getUserPreferenceObject()?.resources;
+      const defaultResources = Array.isArray(saveResources)
+        ? Array.of(saveResources).map((resourceId) => String(resourceId))
+        : undefined;
       if (resources) {
         if (defaultResources) {
           const resource = getResourcesList().filter((resource) =>
@@ -87,6 +90,12 @@ export const CloudPulseResourcesSelect = React.memo(
           handleResourcesSelection(resourceSelections);
         }}
         textFieldProps={{
+          InputProps: {
+            sx: {
+              maxHeight: '55px',
+              overflow: 'auto',
+            },
+          },
           hideLabel: true,
         }}
         autoHighlight

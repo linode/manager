@@ -10,7 +10,7 @@ import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 const meta: Meta<typeof EntityIcon> = {
   args: { variant: 'linode' },
   component: EntityIcon,
-  title: 'Components/EntityIcon',
+  title: 'Icons/EntityIcon',
 };
 
 export default meta;

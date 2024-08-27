@@ -13,7 +13,10 @@ import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import { interceptCreateLinode } from 'support/intercepts/linodes';
+import {
+  interceptCreateLinode,
+  mockCreateLinodeError,
+} from 'support/intercepts/linodes';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { interceptGetProfile } from 'support/intercepts/profile';
 import { Region, VLAN, Config, Disk } from '@linode/api-v4';
@@ -159,7 +162,10 @@ describe('Create Linode', () => {
             username = xhr.response?.body.username;
           });
 
-          // TODO Confirm whether or not toast notification should appear here.
+          // Confirm toast notification should appear on Linode create.
+          ui.toast.assertMessage(
+            `Your Linode ${linodeLabel} is being created.`
+          );
           cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
             'be.visible'
           );
@@ -340,5 +346,57 @@ describe('Create Linode', () => {
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     fbtVisible(linodeLabel);
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
+  });
+
+  /*
+   * - Confirms error message can show up during Linode create flow.
+   * - Confirms Linode can be created after retry.
+   */
+  it('shows unexpected error during Linode create flow', () => {
+    const linodeRegion = chooseRegion({
+      capabilities: ['Linodes'],
+    });
+    const linodeLabel = randomLabel();
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: linodeLabel,
+      region: linodeRegion.id,
+    });
+    const createLinodeErrorMessage =
+      'An error has occurred during Linode creation flow';
+
+    mockCreateLinodeError(createLinodeErrorMessage).as('createLinodeError');
+    cy.visitWithLogin('/linodes/create');
+
+    // Set Linode label, OS, plan type, password, etc.
+    linodeCreatePage.setLabel(linodeLabel);
+    linodeCreatePage.selectImage('Debian 11');
+    linodeCreatePage.selectRegionById(linodeRegion.id);
+    linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
+    linodeCreatePage.setRootPassword(randomString(32));
+
+    // Create Linode by clicking the button.
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.wait('@createLinodeError');
+
+    // Confirm the createLinodeErrorMessage show up on the web page.
+    cy.findByText(`${createLinodeErrorMessage}`).should('be.visible');
+
+    // Retry to create a Linode.
+    mockCreateLinode(mockLinode).as('createLinode');
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.wait('@createLinode');
+    // Confirm toast notification should appear on Linode create.
+    ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
+    // Confirm the createLinodeErrorMessage disappears.
+    cy.findByText(`${createLinodeErrorMessage}`).should('not.exist');
   });
 });
