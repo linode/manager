@@ -41,42 +41,47 @@ describe('OMC_CreateBucketDrawer', () => {
     expect(queryByText('Object Storage Endpoint Type')).not.toBeInTheDocument();
   });
 
-  it('should display the endpoint selector if endpoints exist', async () => {
-    server.use(
-      http.get('*/v4/object-storage/endpoints', () => {
-        return HttpResponse.json(
-          makeResourcePage([
-            objectStorageEndpointsFactory.build({
-              endpoint_type: 'E0',
-              region: 'us-sea',
-              s3_endpoint: null,
-            }),
-          ])
-        );
-      })
-    );
+  it(
+    'should display the endpoint selector if endpoints exist',
+    server.boundary(async () => {
+      server.use(
+        http.get('*/v4/object-storage/endpoints', () => {
+          return HttpResponse.json(
+            makeResourcePage([
+              objectStorageEndpointsFactory.build({
+                endpoint_type: 'E0',
+                region: 'us-sea',
+                s3_endpoint: null,
+              }),
+            ])
+          );
+        })
+      );
 
-    const { getByText, queryByText } = renderWithThemeAndHookFormContext({
-      component: <OMC_CreateBucketDrawer {...props} />,
-      options: {
-        flags: {
-          objMultiCluster: true,
-          objectStorageGen2: { enabled: true },
+      const { getByText, queryByText } = renderWithThemeAndHookFormContext({
+        component: <OMC_CreateBucketDrawer {...props} />,
+        options: {
+          flags: {
+            objMultiCluster: true,
+            objectStorageGen2: { enabled: true },
+          },
         },
-      },
-    });
+      });
 
-    expect(queryByText('Object Storage Endpoint Type')).not.toBeInTheDocument();
+      expect(
+        queryByText('Object Storage Endpoint Type')
+      ).not.toBeInTheDocument();
 
-    await waitFor(() => {
-      expect(getByText('Object Storage Endpoint Type')).toBeInTheDocument();
-    });
+      await waitFor(() => {
+        expect(getByText('Object Storage Endpoint Type')).toBeInTheDocument();
+      });
 
-    // Additional verification after waitFor
-    const endpointTypeElement = getByText('Object Storage Endpoint Type');
-    expect(endpointTypeElement).toBeVisible();
-    expect(endpointTypeElement.tagName).toBe('LABEL');
-  });
+      // Additional verification after waitFor
+      const endpointTypeElement = getByText('Object Storage Endpoint Type');
+      expect(endpointTypeElement).toBeVisible();
+      expect(endpointTypeElement.tagName).toBe('LABEL');
+    })
+  );
 
   it('should close the drawer', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
