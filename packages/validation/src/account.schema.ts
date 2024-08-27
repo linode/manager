@@ -42,7 +42,7 @@ export const CreditCardSchema = object({
     .min(13, 'Credit card number must be between 13 and 23 characters.')
     .max(23, 'Credit card number must be between 13 and 23 characters.'),
   expiry_year: number()
-    .test('length', 'Expiration year must be 2 or 4 digits.', (value) =>
+    .test('length', 'Expiration year must be 2 or 4 digits.', (value: number) =>
       [2, 4].includes(String(value).length)
     )
     .required('Expiration year is required.')
