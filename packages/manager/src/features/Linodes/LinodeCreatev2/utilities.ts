@@ -1,10 +1,12 @@
 import { omit } from 'lodash';
+import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
 import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -20,6 +22,7 @@ import type {
   Linode,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
+import type { FieldErrors } from 'react-hook-form';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -505,4 +508,45 @@ export const captureLinodeCreateAnalyticsEvent = async (
       secureVMCompliant,
     });
   }
+};
+
+/**
+ * Custom hook to send a Adobe Analytics form error event with error messages in the Linode Create flow.
+ */
+export const useHandleLinodeCreateAnalyticsFormError = (
+  createType: LinodeCreateType
+) => {
+  const handleLinodeCreateAnalyticsFormError = useCallback(
+    (errors: FieldErrors<LinodeCreateFormValues>) => {
+      let errorString = '';
+
+      if (!errors) {
+        return;
+      }
+
+      if (errors.region) {
+        errorString += errors.region.message;
+      }
+      if (errors.type) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.type.message
+        }`;
+      }
+      if (errors.root_pass) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.root_pass.message
+        }`;
+      }
+      if (errors.root) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.root.message
+        }`;
+      }
+
+      sendLinodeCreateFormErrorEvent(errorString, createType);
+    },
+    [createType]
+  );
+
+  return { handleLinodeCreateAnalyticsFormError };
 };
