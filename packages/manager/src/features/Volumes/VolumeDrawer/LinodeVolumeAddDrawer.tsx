@@ -36,6 +36,11 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
     'blockstorage_encryption'
   );
 
+  const toggleMode = (mode: 'attach' | 'create') => {
+    setMode(mode);
+    setClientLibraryCopyVisible(false);
+  };
+
   return (
     <Drawer
       title={
@@ -46,7 +51,7 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
       onClose={onClose}
       open={open}
     >
-      <ModeSelection mode={mode} onChange={setMode} />
+      <ModeSelection mode={mode} onChange={toggleMode} />
       {isBlockStorageEncryptionFeatureEnabled &&
         !linodeSupportsBlockStorageEncryption &&
         clientLibraryCopyVisible && (
