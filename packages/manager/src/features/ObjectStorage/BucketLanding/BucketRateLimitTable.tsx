@@ -20,22 +20,26 @@ interface BucketRateLimitTableProps {
 }
 
 const tableHeaders = ['Limits', 'GET', 'PUT', 'LIST', 'DELETE', 'OTHER'];
-const tableData = ({ endpointType }: BucketRateLimitTableProps) => [
-  {
-    checked: true,
-    values: ['1000', '000', '000', '000', '000'],
-  },
-  {
-    checked: false,
-    values: [
-      endpointType === 'E3' ? '20000' : '5000',
-      '000',
-      '000',
-      '000',
-      '000',
-    ],
-  },
-];
+const tableData = ({ endpointType }: BucketRateLimitTableProps) => {
+  const isE3 = endpointType === 'E3';
+
+  return [
+    {
+      checked: true,
+      values: ['2,000', '500', '100', '200', '400'],
+    },
+    {
+      checked: false,
+      values: [
+        isE3 ? '20,000' : '5,000',
+        isE3 ? '2,000' : '1,000',
+        isE3 ? '400' : '200',
+        isE3 ? '400' : '200',
+        isE3 ? '1,000' : '800',
+      ],
+    },
+  ];
+};
 
 export const BucketRateLimitTable = ({
   endpointType,

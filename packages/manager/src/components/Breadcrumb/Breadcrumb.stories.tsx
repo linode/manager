@@ -6,7 +6,7 @@ import { Breadcrumb } from './Breadcrumb';
 
 const meta: Meta<typeof Breadcrumb> = {
   component: Breadcrumb,
-  title: 'Components/Breadcrumb',
+  title: 'Foundations/Breadcrumb',
 };
 
 type Story = StoryObj<typeof Breadcrumb>;

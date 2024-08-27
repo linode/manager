@@ -4,7 +4,7 @@ import {
   JWEToken,
   JWETokenPayLoad,
   MetricDefinitions,
-  ServiceTypes,
+  ServiceTypesList,
 } from './types';
 import { ResourcePage as Page } from 'src/types';
 
@@ -19,11 +19,6 @@ export const getMetricDefinitionsByServiceType = (serviceType: string) => {
   );
 };
 
-export const getCloudPulseServiceTypes = () =>
-  Request<ServiceTypes>(
-    setURL(`${API_ROOT}/monitor/services`),
-    setMethod('GET')
-  );
 export const getJWEToken = (data: JWETokenPayLoad, serviceType: string) =>
   Request<JWEToken>(
     setURL(
@@ -31,4 +26,11 @@ export const getJWEToken = (data: JWETokenPayLoad, serviceType: string) =>
     ),
     setMethod('POST'),
     setData(data)
+  );
+
+// Returns the list of service types available
+export const getCloudPulseServiceTypes = () =>
+  Request<ServiceTypesList>(
+    setURL(`${API_ROOT}/monitor/services`),
+    setMethod('GET')
   );

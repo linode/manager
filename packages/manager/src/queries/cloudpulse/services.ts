@@ -7,7 +7,7 @@ import type {
   JWEToken,
   JWETokenPayLoad,
   MetricDefinitions,
-  ServiceTypes,
+  ServiceTypesList,
 } from '@linode/api-v4';
 
 export const useGetCloudPulseMetricDefinitionsByServiceType = (
@@ -20,11 +20,6 @@ export const useGetCloudPulseMetricDefinitionsByServiceType = (
   });
 };
 
-export const useCloudPulseServices = () => {
-  return useQuery<ServiceTypes, APIError[]>({
-    ...queryFactory.serviceTypes,
-  });
-};
 export const useCloudPulseJWEtokenQuery = (
   serviceType: string | undefined,
   request: JWETokenPayLoad,
@@ -35,5 +30,12 @@ export const useCloudPulseJWEtokenQuery = (
     enabled: runQuery,
     keepPreviousData: true,
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useCloudPulseServiceTypes = (enabled: boolean) => {
+  return useQuery<ServiceTypesList, APIError[]>({
+    ...queryFactory.lists._ctx.serviceTypes,
+    enabled,
   });
 };

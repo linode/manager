@@ -17,6 +17,9 @@ import { chooseRegion } from 'support/util/regions';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+import { interceptGetAllImages } from 'support/intercepts/images';
+import type { Image } from '@linode/api-v4';
+import { getFilteredImagesForImageSelect } from 'src/components/ImageSelectv2/utilities';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -289,24 +292,10 @@ describe('Create stackscripts', () => {
 
     const linodeLabel = randomLabel();
 
-    /*
-     * Arbitrarily-chosen images to check in order to confirm that "Any/All"
-     * StackScripts allow any image to be selected.
-     */
-    const imageSamples = [
-      { label: 'AlmaLinux 9', sel: 'linode/almalinux9' },
-      { label: 'Alpine 3.19', sel: 'linode/alpine3.19' },
-      { label: 'Arch Linux', sel: 'linode/arch' },
-      { label: 'CentOS Stream 9', sel: 'linode/centos-stream9' },
-      { label: 'Debian 12', sel: 'linode/debian12' },
-      { label: 'Fedora 40', sel: 'linode/fedora40' },
-      { label: 'Rocky Linux 9', sel: 'linode/rocky9' },
-      { label: 'Ubuntu 24.04 LTS', sel: 'linode/ubuntu24.04' },
-    ];
-
     interceptCreateStackScript().as('createStackScript');
     interceptGetStackScripts().as('getStackScripts');
     interceptCreateLinode().as('createLinode');
+    interceptGetAllImages().as('getAllImages');
 
     cy.defer(createLinodeAndImage, {
       label: 'creating Linode and Image',
@@ -331,31 +320,50 @@ describe('Create stackscripts', () => {
       cy.wait('@createStackScript');
       cy.url().should('endWith', '/stackscripts/account');
 
-      cy.wait('@getStackScripts');
-      cy.findByText(stackscriptLabel)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          cy.findByText(stackscriptDesc).should('be.visible');
-          cy.findByText(stackscriptImage).should('be.visible');
+      cy.wait('@getAllImages').then((res) => {
+        // Fetch Images from response data and filter out Kubernetes images.
+        const imageData = res.response?.body.data;
+        const filteredImageData = getFilteredImagesForImageSelect(
+          imageData,
+          'public'
+        );
+
+        cy.wait('@getStackScripts');
+        cy.findByText(stackscriptLabel)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            cy.findByText(stackscriptDesc).should('be.visible');
+            cy.findByText(stackscriptImage).should('be.visible');
+          });
+
+        // Navigate to StackScript details page and click deploy Linode button.
+        cy.findByText(stackscriptLabel).should('be.visible').click();
+
+        ui.button
+          .findByTitle('Deploy New Linode')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm that expected images are present in "Choose an image" drop-down.
+        cy.findByPlaceholderText('Choose an image')
+          .should('be.visible')
+          .click();
+
+        /*
+         * Arbitrarily-chosen images to check in order to confirm that "Any/All"
+         * StackScripts allow any image to be selected.
+         *
+         */
+        filteredImageData?.forEach((imageSample: Image) => {
+          const imageLabel = imageSample.label;
+          cy.findAllByText(imageLabel)
+            .last()
+            .scrollIntoView()
+            .should('exist')
+            .should('be.visible');
         });
-
-      // Navigate to StackScript details page and click deploy Linode button.
-      cy.findByText(stackscriptLabel).should('be.visible').click();
-
-      ui.button
-        .findByTitle('Deploy New Linode')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-
-      // Confirm that expected images are present in "Choose an image" drop-down.
-      cy.findByPlaceholderText('Choose an image').should('be.visible').click();
-
-      imageSamples.forEach((imageSample) => {
-        const imageLabel = imageSample.label;
-
-        cy.findByText(imageLabel).scrollIntoView().should('be.visible');
       });
 
       // Select private image.
