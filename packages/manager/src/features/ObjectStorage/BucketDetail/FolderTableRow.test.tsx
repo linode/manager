@@ -3,10 +3,8 @@ import * as React from 'react';
 
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 
-import {
-  FolderTableRow,
-  FolderTableRowProps,
-} from 'src/features/ObjectStorage/BucketDetail/FolderTableRow';
+import { FolderTableRow } from 'src/features/ObjectStorage/BucketDetail/FolderTableRow';
+import type { FolderTableRowProps } from 'src/features/ObjectStorage/BucketDetail/FolderTableRow'`;
 
 describe('FolderTableRow', () => {
   it('renders a link with URI-encoded special characters', () => {
