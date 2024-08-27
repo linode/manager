@@ -71,8 +71,6 @@ export const CloudPulseDashboardSelect = React.memo(
     React.useEffect(() => {
       // only call this code when the component is rendered initially
       if (dashboardsList.length > 0 && selectedDashboard === undefined) {
-        // const dashboardId = preferences.dashboardId;
-
         if (defaultValue) {
           const dashboard = dashboardsList.find(
             (obj: Dashboard) => obj.id === defaultValue
