@@ -43,7 +43,7 @@ export const set = (obj: object, path: string, value: any): object => {
     return obj;
   }
 
-  parts.reduce((acc: any, part: string, index: number) => {
+  parts.reduce((acc: Record<string, unknown>, part: string, index: number) => {
     if (index === parts.length - 1) {
       // Last part, set the value
       acc[part] = value;
