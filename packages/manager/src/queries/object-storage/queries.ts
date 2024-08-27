@@ -1,4 +1,5 @@
 import {
+  cancelObjectStorage,
   createBucket,
   deleteBucket,
   deleteBucketWithRegion,
@@ -23,6 +24,7 @@ import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { useAccount } from '../account/account';
 import { accountQueries } from '../account/queries';
+import { updateAccountSettingsData } from '../account/settings';
 import { queryPresets } from '../base';
 import { useRegionsQuery } from '../regions/regions';
 import {
@@ -107,6 +109,10 @@ export const useObjectStorageEndpoints = (enabled = true) => {
   });
 };
 
+/**
+ *
+ * @deprecated This will be replaced by useObjectStorageEndpoints
+ */
 export const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>({
     ...objectStorageQueries.clusters,
@@ -143,11 +149,11 @@ export const useObjectStorageBuckets = (enabled = true) => {
       ? allRegions?.filter((r) => r.capabilities.includes('Object Storage'))
       : undefined;
 
-  const queryEnabled = isObjectStorageGen2Enabled
-    ? Boolean(endpoints) && enabled
-    : isObjMultiClusterEnabled
-    ? Boolean(regions) && enabled
-    : Boolean(clusters) && enabled;
+  const queryEnabled =
+    enabled &&
+    ((isObjectStorageGen2Enabled && Boolean(endpoints)) ||
+      (isObjMultiClusterEnabled && Boolean(regions)) ||
+      Boolean(clusters));
 
   const queryFn = isObjectStorageGen2Enabled
     ? () => getAllBucketsFromEndpoints(endpoints)
@@ -340,3 +346,20 @@ export const useObjectStorageTypesQuery = (enabled = true) =>
     ...queryPresets.oneTimeFetch,
     enabled,
   });
+
+export const useCancelObjectStorageMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<{}, APIError[]>({
+    mutationFn: cancelObjectStorage,
+    onSuccess() {
+      updateAccountSettingsData({ object_storage: 'disabled' }, queryClient);
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.buckets.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKeys._def,
+      });
+    },
+  });
+};

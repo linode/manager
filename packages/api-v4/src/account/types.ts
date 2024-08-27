@@ -72,6 +72,7 @@ export type AccountCapability =
   | 'LKE HA Control Planes'
   | 'Machine Images'
   | 'Managed Databases'
+  | 'Managed Databases V2'
   | 'NodeBalancers'
   | 'Object Storage Access Key Regions'
   | 'Object Storage Endpoint Types'

@@ -16,10 +16,14 @@ import { supportTicketEventHandler } from 'src/queries/support';
 import { volumeEventsHandler } from 'src/queries/volumes/events';
 
 import type { Event } from '@linode/api-v4';
-import type { QueryClient } from '@tanstack/react-query';
+import type {
+  InvalidateQueryFilters,
+  QueryClient,
+} from '@tanstack/react-query';
 
 export interface EventHandlerData {
   event: Event;
+  invalidateQueries: (filters: InvalidateQueryFilters) => Promise<void>;
   queryClient: QueryClient;
 }
 
@@ -91,6 +95,16 @@ export const eventHandlers: {
 export const useEventHandlers = () => {
   const queryClient = useQueryClient();
 
+  /*
+   * We wrap invalidateQueries because we need to enforce some options.
+   *
+   * We set `cancelRefetch` to `false` because it ensures no refetch will
+   * be made if there is already a request running. This is important for
+   * event handlers because they are envoked once for every event polled.
+   */
+  const invalidateQueries = (filters: InvalidateQueryFilters) =>
+    queryClient.invalidateQueries(filters, { cancelRefetch: false });
+
   /**
    * Given an event, this function finds the corresponding
    * event handler and invokes it.
@@ -98,7 +112,7 @@ export const useEventHandlers = () => {
   const handleEvent = (event: Event) => {
     for (const eventHandler of eventHandlers) {
       if (eventHandler.filter(event)) {
-        eventHandler.handler({ event, queryClient });
+        eventHandler.handler({ event, invalidateQueries, queryClient });
         return;
       }
     }

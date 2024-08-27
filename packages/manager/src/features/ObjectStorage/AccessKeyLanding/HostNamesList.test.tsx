@@ -33,7 +33,7 @@ describe('HostNamesList', () => {
     renderWithTheme(<HostNamesList objectStorageKey={mockObjectStorageKey} />);
 
     const copyButton = await screen.findByLabelText(
-      'Copy Fake Region, NC: http://example.com to clipboard'
+      'Copy US, Fake Region, NC: http://example.com to clipboard'
     );
     expect(copyButton).toBeInTheDocument();
   });

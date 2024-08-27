@@ -30,6 +30,15 @@ export const interceptUploadImage = (): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to retrieve all images.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetAllImages = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('images*'));
+};
+
+/**
  * Intercepts GET request to retrieve all images and mocks response.
  *
  * @param images - Array of Image objects with which to mock response.

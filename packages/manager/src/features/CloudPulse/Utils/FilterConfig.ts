@@ -55,7 +55,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
     {
       configuration: {
-        filterKey: 'dbEngine',
+        filterKey: 'engine',
         filterType: 'string',
         isFilterable: false, // isFilterable -- this determines whethere you need to pass it metrics api
         isMetricsFilter: false, // if it is false, it will go as a part of filter params, else global filter
@@ -92,7 +92,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        dependency: ['region', 'dbEngine'],
+        dependency: ['region', 'engine'],
         filterKey: 'resource_id',
         filterType: 'string',
         isFilterable: true,
