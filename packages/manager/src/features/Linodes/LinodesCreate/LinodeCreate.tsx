@@ -1176,16 +1176,15 @@ export class LinodeCreate extends React.PureComponent<
               flags.secureVmCopy?.firewallAuthorizationWarning ? (
                 <AkamaiBanner
                   action={
-                    <Typography color="inherit">
-                      <FormControlLabel
-                        checked={checkedFirewallAuthorization}
-                        className="error-for-scroll"
-                        control={<Checkbox />}
-                        disableTypography
-                        label={flags.secureVmCopy.firewallAuthorizationLabel}
-                        onChange={handleFirewallAuthorizationChange}
-                      />
-                    </Typography>
+                    <FormControlLabel
+                      checked={checkedFirewallAuthorization}
+                      className="error-for-scroll"
+                      control={<Checkbox />}
+                      disableTypography
+                      label={flags.secureVmCopy.firewallAuthorizationLabel}
+                      onChange={handleFirewallAuthorizationChange}
+                      sx={{ fontSize: 14 }}
+                    />
                   }
                   text={flags.secureVmCopy.firewallAuthorizationWarning}
                   warning

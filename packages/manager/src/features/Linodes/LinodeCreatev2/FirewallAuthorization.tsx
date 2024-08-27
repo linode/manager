@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -29,19 +28,18 @@ export const FirewallAuthorization = () => {
   return (
     <AkamaiBanner
       action={
-        <Typography color="inherit">
-          <FormControlLabel
-            label={
-              flags.secureVmCopy?.firewallAuthorizationLabel ??
-              'I am authorized to create a Linode without a firewall'
-            }
-            checked={field.value ?? false}
-            className="error-for-scroll"
-            control={<Checkbox />}
-            disableTypography
-            onChange={field.onChange}
-          />
-        </Typography>
+        <FormControlLabel
+          label={
+            flags.secureVmCopy?.firewallAuthorizationLabel ??
+            'I am authorized to create a Linode without a firewall'
+          }
+          checked={field.value ?? false}
+          className="error-for-scroll"
+          control={<Checkbox />}
+          disableTypography
+          onChange={field.onChange}
+          sx={{ fontSize: 14 }}
+        />
       }
       text={
         flags.secureVmCopy?.firewallAuthorizationWarning ??
