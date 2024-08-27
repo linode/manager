@@ -1,10 +1,3 @@
-import { Profile } from '@linode/api-v4';
-import {
-  Notification,
-  NotificationSeverity,
-  NotificationType,
-} from '@linode/api-v4/lib/account';
-import { Region } from '@linode/api-v4/lib/regions';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
@@ -22,9 +15,17 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationContext as _notificationContext } from '../NotificationContext';
-import { NotificationItem } from '../NotificationSection';
-import RenderNotification from './RenderNotification';
+import RenderNotification from './Notification';
 import { checkIfMaintenanceNotification } from './notificationUtils';
+
+import type { NotificationItem } from '../NotificationSection';
+import type { Profile } from '@linode/api-v4';
+import type {
+  Notification,
+  NotificationSeverity,
+  NotificationType,
+} from '@linode/api-v4/lib/account';
+import type { Region } from '@linode/api-v4/lib/regions';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;

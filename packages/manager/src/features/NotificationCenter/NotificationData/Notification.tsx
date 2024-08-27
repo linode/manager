@@ -1,4 +1,3 @@
-import { NotificationType } from '@linode/api-v4/lib/account';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import { styled, useTheme } from '@mui/material/styles';
@@ -10,7 +9,8 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import { ExtendedNotification } from './useFormattedNotifications';
+import type { ExtendedNotification } from './useFormattedNotifications';
+import type { NotificationType } from '@linode/api-v4/lib/account';
 
 interface Props {
   notification: ExtendedNotification;

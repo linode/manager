@@ -15,7 +15,7 @@ import {
   notificationContext as _notificationContext,
   menuButtonId,
 } from 'src/features/NotificationCenter/NotificationContext';
-import { RenderEvent } from 'src/features/NotificationCenter/NotificationData/RenderEvent';
+import { NotificationEvent } from 'src/features/NotificationCenter/NotificationData/NotificationEvent';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/NotificationData/useFormattedNotifications';
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
@@ -71,7 +71,14 @@ export const NotificationMenu = () => {
       }
       dismissNotifications(notifications ?? [], { prefix: 'notificationMenu' });
     }
-  }, [notificationContext.menuOpen]);
+  }, [
+    notificationContext.menuOpen,
+    events,
+    notifications,
+    markEventsAsSeen,
+    dismissNotifications,
+    prevOpen,
+  ]);
 
   const id = notificationContext.menuOpen ? 'notifications-popover' : undefined;
 
@@ -144,7 +151,11 @@ export const NotificationMenu = () => {
           </Box>
           <Divider spacingBottom={0} />
           {data?.pages[0].data.slice(0, 20).map((event) => (
-            <RenderEvent event={event} key={event.id} onClose={handleClose} />
+            <NotificationEvent
+              event={event}
+              key={event.id}
+              onClose={handleClose}
+            />
           ))}
         </Box>
       </Popover>

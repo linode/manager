@@ -6,7 +6,7 @@ import { GravatarByUsername } from 'src/components/GravatarByUsername';
 
 import type { Theme } from '@mui/material/styles';
 
-export const RenderEventStyledBox = styled(Box, {
+export const NotificationEventStyledBox = styled(Box, {
   label: 'StyledBox',
 })(({ theme }) => ({
   '&:hover': {
@@ -22,7 +22,7 @@ export const RenderEventStyledBox = styled(Box, {
   width: '100%',
 }));
 
-export const RenderEventGravatar = styled(GravatarByUsername, {
+export const NotificationEventGravatar = styled(GravatarByUsername, {
   label: 'StyledGravatarByUsername',
 })(() => ({
   height: 32,
@@ -31,7 +31,7 @@ export const RenderEventGravatar = styled(GravatarByUsername, {
   width: 32,
 }));
 
-export const useRenderEventStyles = makeStyles()((theme: Theme) => ({
+export const notificationEventStyles = makeStyles()((theme: Theme) => ({
   bar: {
     marginTop: theme.spacing(),
   },

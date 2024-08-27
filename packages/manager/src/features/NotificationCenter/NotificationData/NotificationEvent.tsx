@@ -10,21 +10,21 @@ import {
 } from 'src/features/Events/utils';
 
 import {
-  RenderEventGravatar,
-  RenderEventStyledBox,
-  useRenderEventStyles,
-} from './RenderEvent.styles';
+  notificationEventStyles,
+  NotificationEventGravatar,
+  NotificationEventStyledBox,
+} from './NotificationEvent.styles';
 
 import type { Event } from '@linode/api-v4/lib/account/types';
 
-interface RenderEventProps {
+interface NotificationEventProps {
   event: Event;
   onClose: () => void;
 }
 
-export const RenderEvent = React.memo((props: RenderEventProps) => {
+export const NotificationEvent = React.memo((props: NotificationEventProps) => {
   const { event } = props;
-  const { classes, cx } = useRenderEventStyles();
+  const { classes, cx } = notificationEventStyles();
   const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
   const message = getEventMessage(event);
   const username = getEventUsername(event);
@@ -41,11 +41,11 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
   const { progressEventDisplay, showProgress } = formatProgressEvent(event);
 
   return (
-    <RenderEventStyledBox
+    <NotificationEventStyledBox
       className={unseenEventClass}
       data-testid={event.action}
     >
-      <RenderEventGravatar username={event.username} />
+      <NotificationEventGravatar username={event.username} />
       <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
         {message}
         {showProgress && (
@@ -61,6 +61,6 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
           {progressEventDisplay} | {username}
         </Typography>
       </Box>
-    </RenderEventStyledBox>
+    </NotificationEventStyledBox>
   );
 });
