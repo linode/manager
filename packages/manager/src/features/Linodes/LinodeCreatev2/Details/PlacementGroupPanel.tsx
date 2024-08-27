@@ -37,9 +37,7 @@ export const PlacementGroupPanel = () => {
             interaction: 'clear',
           });
         } else {
-          sendLinodeCreateFormInputEvent({
-            ...placementGroupFormEventOptions,
-          });
+          sendLinodeCreateFormInputEvent(placementGroupFormEventOptions);
         }
       }}
       selectedPlacementGroupId={field.value ?? null}

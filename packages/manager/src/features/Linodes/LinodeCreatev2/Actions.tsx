@@ -10,12 +10,17 @@ import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEven
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { ApiAwarenessModal } from '../LinodesCreate/ApiAwarenessModal/ApiAwarenessModal';
-import { getLinodeCreatePayload } from './utilities';
+import {
+  getLinodeCreatePayload,
+  useLinodeCreateQueryParams,
+} from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
 
 export const Actions = () => {
   const flags = useFlags();
+
+  const { params } = useLinodeCreateQueryParams();
 
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
@@ -37,7 +42,7 @@ export const Actions = () => {
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
     sendLinodeCreateFormInputEvent({
-      createType: 'OS',
+      createType: params.type ?? 'OS',
       interaction: 'click',
       label: isDxToolsAdditionsEnabled
         ? 'View Code Snippets'
