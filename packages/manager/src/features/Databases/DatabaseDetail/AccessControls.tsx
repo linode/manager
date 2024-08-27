@@ -165,6 +165,7 @@ export const AccessControls = (props: Props) => {
                 <InlineMenuAction
                   actionText="Remove"
                   className={classes.removeButton}
+                  disabled={disabled}
                   onClick={() => handleClickRemove(accessControl)}
                 />
               </TableCell>
