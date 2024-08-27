@@ -189,7 +189,7 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const databases = databaseInstanceFactory.buildList(5);
+    const databases = databaseInstanceFactory.buildList(9);
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
@@ -2272,7 +2272,14 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/v4/monitor/services/linode/dashboards', () => {
+  http.get('*/v4/monitor/services', () => {
+    const response = {
+      data: [{ service_type: 'linode' }],
+    };
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/v4/monitor/services/:serviceType/dashboards', () => {
     const response = {
       data: [
         {
