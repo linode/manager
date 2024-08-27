@@ -25,8 +25,9 @@ export const backup: PartialEventMap<'backups'> = {
         Backup could <strong>not</strong> be <strong>restored</strong> for{' '}
         {e.entity!.label}.{' '}
         <Link to="https://www.linode.com/docs/products/storage/backups/#limits-and-considerations">
-          Learn more about limits and considerations.
+          Learn more about limits and considerations
         </Link>
+        .
       </>
     ),
     finished: (e) => (

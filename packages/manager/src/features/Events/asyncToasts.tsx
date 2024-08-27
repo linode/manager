@@ -20,6 +20,37 @@ type Toasts = {
   [key in EventAction]?: Toast;
 };
 
+const createToastBoth = (
+  options: {
+    invertVariant?: boolean;
+    persistFailure?: boolean;
+    persistSuccess?: boolean;
+  } = {}
+): Toast => ({
+  failure: {
+    message: (e) => getEventMessage(e),
+    persist: options.persistFailure || false,
+  },
+  invertVariant: options.invertVariant || false,
+  success: {
+    message: (e: any) => getEventMessage(e),
+    persist: options.persistSuccess || false,
+  },
+});
+
+const createToastFailureOnly = (
+  options: {
+    invertVariant?: boolean;
+    persistFailure?: boolean;
+  } = {}
+): Toast => ({
+  failure: {
+    message: (e) => getEventMessage(e),
+    persist: options.persistFailure || false,
+  },
+  invertVariant: options.invertVariant || false,
+});
+
 /**
  * This constant defines toast notifications that will be displayed
  * when our events polling system gets a new event.
@@ -30,107 +61,25 @@ type Toasts = {
  * Toasts for that can be handled at the time of making the PUT request.
  */
 export const toasts: Toasts = {
-  backups_restore: {
-    failure: {
-      message: (e) => getEventMessage(e),
-      persist: true,
-    },
-  },
-  disk_delete: {
-    failure: {
-      message: (e) => getEventMessage(e),
-    },
-    success: {
-      message: (e) => getEventMessage(e),
-    },
-  },
-  disk_imagize: {
-    failure: {
-      message: (e) => getEventMessage(e),
-      persist: true,
-    },
-    success: {
-      message: (e) => getEventMessage(e),
-    },
-  },
-  disk_resize: {
-    failure: {
-      message: (e) => getEventMessage(e),
-      persist: true,
-    },
-    success: {
-      message: (e) => getEventMessage(e),
-    },
-  },
-  image_delete: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  image_upload: {
-    failure: {
-      message: (e) => getEventMessage(e),
-      persist: true,
-    },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  linode_clone: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: {
-      message: (e) => getEventMessage(e),
-    },
-  },
-  linode_migrate: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  linode_migrate_datacenter: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  linode_resize: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  linode_snapshot: {
-    failure: {
-      message: (e) => getEventMessage(e),
-      persist: true,
-    },
-  },
-  longviewclient_create: {
-    failure: {
-      message: (e) => getEventMessage(e),
-    },
-    success: {
-      message: (e) => getEventMessage(e),
-    },
-  },
-  tax_id_invalid: {
-    failure: { message: (e) => getEventMessage(e) },
+  backups_restore: createToastFailureOnly({ persistFailure: true }),
+  disk_delete: createToastBoth(),
+  disk_imagize: createToastBoth({ persistFailure: true }),
+  disk_resize: createToastBoth({ persistFailure: true }),
+  image_delete: createToastBoth(),
+  image_upload: createToastBoth({ persistFailure: true }),
+  linode_clone: createToastBoth(),
+  linode_migrate: createToastBoth(),
+  linode_migrate_datacenter: createToastBoth(),
+  linode_resize: createToastBoth(),
+  linode_snapshot: createToastFailureOnly({ persistFailure: true }),
+  longviewclient_create: createToastBoth(),
+  tax_id_invalid: createToastBoth({
     invertVariant: true,
-    success: {
-      message: (e) => getEventMessage(e),
-      persist: true,
-    },
-  },
-  volume_attach: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  volume_create: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  volume_delete: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  volume_detach: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
-  volume_migrate: {
-    failure: { message: (e) => getEventMessage(e) },
-    success: { message: (e) => getEventMessage(e) },
-  },
+    persistSuccess: true,
+  }),
+  volume_attach: createToastBoth(),
+  volume_create: createToastBoth(),
+  volume_delete: createToastBoth(),
+  volume_detach: createToastBoth(),
+  volume_migrate: createToastBoth(),
 };

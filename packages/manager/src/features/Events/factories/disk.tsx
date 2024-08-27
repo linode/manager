@@ -112,7 +112,7 @@ export const disk: PartialEventMap<'disk'> = {
         Image <EventLink event={e} to="secondaryEntity" /> could{' '}
         <strong>not</strong> be <strong>created</strong>.{' '}
         <Link to="https://www.linode.com/docs/products/tools/images/#technical-specifications">
-          Learn more about image technical specifications.
+          Learn more about image technical specifications
         </Link>
         .
       </>
