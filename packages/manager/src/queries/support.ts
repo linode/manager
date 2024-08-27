@@ -112,7 +112,7 @@ export const useSupportTicketCloseMutation = (id: number) => {
 
 export const supportTicketEventHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   /**
    * Ticket events have entities that look like this:
@@ -126,13 +126,13 @@ export const supportTicketEventHandler = ({
    */
 
   // Invalidate paginated support tickets
-  queryClient.invalidateQueries({
+  invalidateQueries({
     queryKey: supportQueries.tickets._def,
   });
 
   if (event.entity) {
     // If there is an entity associated with the event, invalidate that ticket
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: supportQueries.ticket(event.entity.id).queryKey,
     });
   }
