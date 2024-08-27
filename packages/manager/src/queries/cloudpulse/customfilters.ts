@@ -15,7 +15,7 @@ interface CustomFilterQueryProps {
   /**
    * The Built in API-V4 query factory functions like databaseQueries.types, databaseQueries.engines etc., makes use of existing query key and optimises cache
    */
-  apiV4QueryKey: QueryFunctionAndKey;
+  apiV4QueryKey?: QueryFunctionAndKey;
   /**
    * This indicates whether or not to enable the query
    */
@@ -53,8 +53,8 @@ export const useGetCustomFiltersQuery = (
     CloudPulseServiceTypeFiltersOptions[]
   >({
     // receive filters and  return only id and label
-    enabled,
-    ...apiV4QueryKey,
+    enabled: enabled && apiV4QueryKey !== undefined,
+    ...(apiV4QueryKey ?? {}),
     select: (
       filters: QueryFunctionType
     ): CloudPulseServiceTypeFiltersOptions[] => {

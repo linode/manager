@@ -1,15 +1,18 @@
-import { RELATIVE_TIME_DURATION } from './constants';
+import { RELATIVE_TIME_DURATION, RESOURCE_ID, RESOURCES } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
+import { CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
   CloudPulseResourcesSelectProps,
 } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
+import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { CloudPulseServiceTypeFilters } from './models';
-import type { Dashboard, Filter, TimeDuration } from '@linode/api-v4';
+import type { Dashboard, Filter, Filters, TimeDuration } from '@linode/api-v4';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -83,6 +86,54 @@ export const getResourcesProperties = (
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
+  };
+};
+
+/**
+ * @param props The cloudpulse filter properties selected so far
+ * @param handleCustomSelectChange The callback function when a filter change happens
+ * @returns {CloudPulseCustomSelectProps} Returns a property compatible for CloudPulseCustomSelect Component
+ */
+export const getCustomSelectProperties = (
+  props: CloudPulseFilterProperties,
+  handleCustomSelectChange: (filterKey: string, value: FilterValueType) => void
+): CloudPulseCustomSelectProps => {
+  const {
+    apiIdField,
+    apiLabelField,
+    apiV4QueryKey,
+    filterKey,
+    filterType,
+    isMultiSelect,
+    maxSelections,
+    options,
+    placeholder,
+  } = props.config.configuration;
+  const { dashboard, dependentFilters, isServiceAnalyticsIntegration } = props;
+  return {
+    apiResponseIdField: apiIdField,
+    apiResponseLabelField: apiLabelField,
+    apiV4QueryKey,
+    clearDependentSelections: getDependentFiltersByFilterKey(
+      filterKey,
+      dashboard
+    ),
+    disabled: checkIfWeNeedToDisableFilterByFilterKey(
+      filterKey,
+      dependentFilters ?? {},
+      dashboard
+    ),
+    filterKey,
+    filterType,
+    handleSelectionChange: handleCustomSelectChange,
+    isMultiSelect,
+    maxSelections,
+    options,
+    placeholder,
+    savePreferences: !isServiceAnalyticsIntegration,
+    type: options
+      ? CloudPulseSelectTypes.static
+      : CloudPulseSelectTypes.dynamic,
   };
 };
 
@@ -205,4 +256,81 @@ export const checkIfAllMandatoryFiltersAreSelected = (
     const value = filterValue[filterKey];
     return value !== undefined && (!Array.isArray(value) || value.length > 0);
   });
+};
+
+/**
+ * @param selectedFilters The selected filters from the global filters view from custom select component
+ * @param serviceType The serviceType assosicated with the dashboard like linode, dbaas etc.,
+ * @returns Constructs and returns the metrics call filters based on selected filters and service type
+ */
+export const getMetricsCallCustomFilters = (
+  selectedFilters: {
+    [key: string]: FilterValueType;
+  },
+  serviceType: string
+): CloudPulseMetricsAdditionalFilters[] => {
+  const serviceTypeConfig = FILTER_CONFIG.get(serviceType);
+
+  // If configuration exists, filter and map it to the desired CloudPulseMetricsAdditionalFilters format
+  return (
+    serviceTypeConfig?.filters
+      .filter(
+        ({ configuration }) =>
+          configuration.isFilterable &&
+          !configuration.isMetricsFilter &&
+          selectedFilters[configuration.filterKey]
+      )
+      .map(({ configuration }) => ({
+        filterKey: configuration.filterKey,
+        filterValue: selectedFilters[configuration.filterKey],
+      })) ?? []
+  );
+};
+
+/**
+ * @param additionalFilters The additional filters selected from custom select components
+ * @returns The list of filters for the metric API call, based the additional custom select components
+ */
+export const constructAdditionalRequestFilters = (
+  additionalFilters: CloudPulseMetricsAdditionalFilters[]
+): Filters[] => {
+  const filters: Filters[] = [];
+  for (const filter of additionalFilters) {
+    if (filter) {
+      // push to the filters
+      filters.push({
+        key: filter.filterKey,
+        operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
+        value: Array.isArray(filter.filterValue)
+          ? Array.of(filter.filterValue).join(',')
+          : String(filter.filterValue),
+      });
+    }
+  }
+  return filters;
+};
+
+/**
+ *
+ * @param filterKey The filterKey of the actual filter
+ * @param dashboard The selected dashboard from the global filter view
+ * @returns The filterKeys that needs to be removed from the preferences
+ */
+const getDependentFiltersByFilterKey = (
+  filterKey: string,
+  dashboard: Dashboard
+): string[] => {
+  const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
+
+  if (!serviceTypeConfig) {
+    return [];
+  }
+
+  return serviceTypeConfig.filters
+    .filter((filter) => filter?.configuration?.dependency?.includes(filterKey))
+    .map(({ configuration }) =>
+      configuration.filterKey === RESOURCE_ID
+        ? RESOURCES
+        : configuration.filterKey
+    );
 };
