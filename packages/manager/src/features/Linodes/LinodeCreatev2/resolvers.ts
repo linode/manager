@@ -4,6 +4,7 @@ import { CreateLinodeSchema } from '@linode/validation';
 import { accountQueries } from 'src/queries/account/queries';
 import { regionQueries } from 'src/queries/regions/regions';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
+import { isNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import {
   CreateLinodeFromBackupSchema,
@@ -67,7 +68,7 @@ export const getLinodeCreateResolver = (
     const secureVMViolation =
       context?.secureVMNoticesEnabled &&
       !values.firewallOverride &&
-      !values.firewall_id;
+      isNullOrUndefined(values.firewall_id);
 
     if (secureVMViolation) {
       (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {

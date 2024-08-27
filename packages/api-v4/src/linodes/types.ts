@@ -452,7 +452,7 @@ export interface CreateLinodeRequest {
   /**
    * The `id` of the Firewall to attach this Linode to upon creation.
    */
-  firewall_id?: number;
+  firewall_id?: number | null;
   /**
    * An object that assigns this the Linode to a placement group upon creation.
    */
