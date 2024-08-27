@@ -1,23 +1,16 @@
 import {
-  AttachVolumePayload,
-  CloneVolumePayload,
-  ResizeVolumePayload,
-  UpdateVolumeRequest,
-  Volume,
-  VolumeRequestPayload,
   attachVolume,
   cloneVolume,
   createVolume,
   deleteVolume,
   detachVolume,
   getLinodeVolumes,
+  getVolume,
   getVolumes,
   migrateVolumes,
   resizeVolume,
   updateVolume,
 } from '@linode/api-v4';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { Filter, Params, PriceType } from '@linode/api-v4/src/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   useInfiniteQuery,
@@ -30,6 +23,17 @@ import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile/profile';
 import { getAllVolumeTypes, getAllVolumes } from './requests';
+
+import type {
+  AttachVolumePayload,
+  CloneVolumePayload,
+  ResizeVolumePayload,
+  UpdateVolumeRequest,
+  Volume,
+  VolumeRequestPayload,
+} from '@linode/api-v4';
+import type { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import type { Filter, Params, PriceType } from '@linode/api-v4/src/types';
 
 export const volumeQueries = createQueryKeys('volumes', {
   linode: (linodeId: number) => ({
@@ -63,7 +67,18 @@ export const volumeQueries = createQueryKeys('volumes', {
     queryFn: getAllVolumeTypes,
     queryKey: null,
   },
+  volume: (id: number) => ({
+    queryFn: () => getVolume(id),
+    queryKey: [id],
+  }),
 });
+
+export const useVolumeQuery = (id: number, enabled = true) => {
+  return useQuery<Volume, APIError[]>({
+    ...volumeQueries.volume(id),
+    enabled,
+  });
+};
 
 export const useVolumesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Volume>, APIError[]>({

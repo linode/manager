@@ -62,7 +62,13 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
           </Notice>
         )}
       {mode === 'attach' ? (
-        <LinodeVolumeAttachForm linode={linode} onClose={onClose} />
+        <LinodeVolumeAttachForm
+          setClientLibraryCopyVisible={(visible: boolean) =>
+            setClientLibraryCopyVisible(visible)
+          }
+          linode={linode}
+          onClose={onClose}
+        />
       ) : (
         <LinodeVolumeCreateForm
           linodeSupportsBlockStorageEncryption={

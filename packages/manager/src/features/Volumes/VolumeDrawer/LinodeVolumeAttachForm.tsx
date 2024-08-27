@@ -7,7 +7,10 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile/profile';
-import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
+import {
+  useAttachVolumeMutation,
+  useVolumeQuery,
+} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -23,6 +26,7 @@ interface Props {
   linode: Linode;
   onClose: () => void;
   readOnly?: boolean;
+  setClientLibraryCopyVisible: (visible: boolean) => void;
 }
 
 /**
@@ -41,7 +45,7 @@ const AttachVolumeValidationSchema = object({
 const initialValues = { config_id: -1, volume_id: -1 };
 
 export const LinodeVolumeAttachForm = (props: Props) => {
-  const { linode, onClose } = props;
+  const { linode, onClose, setClientLibraryCopyVisible } = props;
 
   const { data: grants } = useGrants();
 
@@ -93,6 +97,16 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     },
     validationSchema: AttachVolumeValidationSchema,
   });
+
+  const { data: volume } = useVolumeQuery(values.volume_id);
+
+  React.useEffect(() => {
+    // When the volume is encrypted but the linode requires a client library update, we want to show the client library copy
+    setClientLibraryCopyVisible(
+      volume?.encryption === 'enabled' &&
+        !linode.capabilities?.includes('blockstorage_encryption')
+    );
+  }, [volume]);
 
   return (
     <form onSubmit={handleSubmit}>
