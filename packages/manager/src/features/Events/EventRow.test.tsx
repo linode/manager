@@ -1,4 +1,3 @@
-// TODO eventMessagesV2: rename to EventRow.test.tsx when flag is removed
 import * as React from 'react';
 
 import { eventFactory } from 'src/factories';
@@ -12,7 +11,7 @@ import { EventRow } from './EventRow';
 
 import type { Event } from '@linode/api-v4/lib/account';
 
-describe('EventRowV2', () => {
+describe('EventRow', () => {
   const mockEvent: Event = eventFactory.build({
     action: 'tfa_enabled',
     status: 'notification',

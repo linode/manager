@@ -10,7 +10,7 @@ import {
 } from 'src/features/Events/utils';
 
 import {
-  RenderEventGravatarV2,
+  RenderEventGravatar,
   RenderEventStyledBox,
   useRenderEventStyles,
 } from './RenderEvent.styles';
@@ -25,7 +25,7 @@ interface RenderEventProps {
 export const RenderEvent = React.memo((props: RenderEventProps) => {
   const { event } = props;
   const { classes, cx } = useRenderEventStyles();
-  const unseenEventClass = cx({ [classes.unseenEventV2]: !event.seen });
+  const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
   const message = getEventMessage(event);
   const username = getEventUsername(event);
 
@@ -45,7 +45,7 @@ export const RenderEvent = React.memo((props: RenderEventProps) => {
       className={unseenEventClass}
       data-testid={event.action}
     >
-      <RenderEventGravatarV2 username={event.username} />
+      <RenderEventGravatar username={event.username} />
       <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
         {message}
         {showProgress && (

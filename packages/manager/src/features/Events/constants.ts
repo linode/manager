@@ -1,4 +1,4 @@
-import type { Event } from '@linode/api-v4';
+import type { Event, EventAction } from '@linode/api-v4';
 
 export const ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS: Event['action'][] = [
   'linode_resize',
@@ -22,6 +22,19 @@ export const ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS: Event['action'][] = [
   'image_upload',
   'volume_migrate',
   'database_resize',
+];
+
+export const ACTIONS_WITHOUT_USERNAMES: EventAction[] = [
+  'entity_transfer_accept',
+  'entity_transfer_accept_recipient',
+  'entity_transfer_cancel',
+  'entity_transfer_create',
+  'entity_transfer_fail',
+  'entity_transfer_stale',
+  'lassie_reboot',
+  'community_like',
+  'community_mention',
+  'community_question_reply',
 ];
 
 /**

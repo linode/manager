@@ -1,4 +1,3 @@
-// TODO eventMessagesV2: cleanup unused non V2 components when flag is removed
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
@@ -26,13 +25,6 @@ export const RenderEventStyledBox = styled(Box, {
 export const RenderEventGravatar = styled(GravatarByUsername, {
   label: 'StyledGravatarByUsername',
 })(() => ({
-  height: 40,
-  minWidth: 40,
-}));
-
-export const RenderEventGravatarV2 = styled(GravatarByUsername, {
-  label: 'StyledGravatarByUsername',
-})(() => ({
   height: 32,
   marginTop: 2,
   minWidth: 32,
@@ -44,10 +36,6 @@ export const useRenderEventStyles = makeStyles()((theme: Theme) => ({
     marginTop: theme.spacing(),
   },
   unseenEvent: {
-    color: theme.textColors.headlineStatic,
-    textDecoration: 'none',
-  },
-  unseenEventV2: {
     '&:after': {
       backgroundColor: theme.palette.primary.main,
       content: '""',

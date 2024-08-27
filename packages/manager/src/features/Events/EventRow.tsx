@@ -1,4 +1,3 @@
-// TODO eventMessagesV2: rename to EventRow.tsx when flag is removed
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
