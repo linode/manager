@@ -16,11 +16,7 @@ export const getDashboards = (serviceType: string) =>
 
 export const getDashboardById = (dashboardId: number) =>
   Request<Dashboard>(
-    setURL(
-      `https://blr-lhv95n.bangalore.corp.akamai.com:9000/v4beta/monitor/dashboards/${encodeURIComponent(
-        dashboardId
-      )}`
-    ),
+    setURL(`${API_ROOT}/monitor/dashboards/${encodeURIComponent(dashboardId)}`),
     setMethod('GET'),
     setHeaders({
       Authorization: 'Bearer vagrant',
