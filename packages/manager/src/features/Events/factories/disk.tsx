@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { sendLinodeDiskEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { EventLink } from '../EventLink';
 
@@ -140,7 +141,16 @@ export const disk: PartialEventMap<'disk'> = {
       <>
         A disk on Linode <EventLink event={e} to="entity" /> could{' '}
         <strong>not</strong> be <strong>resized</strong>.{' '}
-        <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/">
+        <Link
+          onClick={() => {
+            sendLinodeDiskEvent(
+              'Resize',
+              'Click:link',
+              'Disk resize failed toast'
+            );
+          }}
+          to="https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/"
+        >
           Learn more
         </Link>
       </>
