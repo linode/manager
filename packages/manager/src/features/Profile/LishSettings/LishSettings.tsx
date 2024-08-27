@@ -19,7 +19,11 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import type { Profile } from '@linode/api-v4/lib/profile';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Item } from 'src/components/EnhancedSelect/Select';
+
+export interface LishAuthOption<T = string, L = string> {
+  label: L;
+  value: T;
+}
 
 export const LishSettings = () => {
   const theme = useTheme();
@@ -31,7 +35,7 @@ export const LishSettings = () => {
   const thirdPartyEnabled = profile?.authentication_type !== 'password';
 
   const [lishAuthMethod, setLishAuthMethod] = React.useState<
-    Profile['lish_auth_method'] | undefined
+    Profile['lish_auth_method'] | string
   >(profile?.lish_auth_method || 'password_keys');
 
   const [authorizedKeys, setAuthorizedKeys] = React.useState<string[]>(
@@ -111,9 +115,6 @@ export const LishSettings = () => {
       });
   };
 
-  const onListAuthMethodChange = (e: Item<Profile['lish_auth_method']>) =>
-    setLishAuthMethod(e.value);
-
   const onPublicKeyChange = (idx: number) => (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -148,12 +149,15 @@ export const LishSettings = () => {
                   },
                   tooltipText,
                 }}
+                value={modeOptions.find(
+                  (option) => option.value === lishAuthMethod
+                )}
                 defaultValue={defaultMode}
                 disableClearable
                 errorText={authMethodError}
                 id="mode-select"
                 label="Authentication Mode"
-                onChange={onListAuthMethodChange as any}
+                onChange={(_, item) => setLishAuthMethod(item.value)}
                 options={modeOptions}
               />
             </FormControl>

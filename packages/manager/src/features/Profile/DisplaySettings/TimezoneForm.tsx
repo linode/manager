@@ -21,9 +21,9 @@ interface Timezone {
   offset: number;
 }
 
-interface TimezoneOption {
-  label: string;
-  value: string;
+export interface TimezoneOption<T = string, L = string> {
+  label: L;
+  value: T;
 }
 
 export const formatOffset = ({ label, offset }: Timezone) => {
@@ -37,7 +37,7 @@ export const formatOffset = ({ label, offset }: Timezone) => {
   return `\(GMT ${isPositive}${hours}:${minutes}\) ${label}`;
 };
 
-const renderTimezonesList = () => {
+const renderTimezonesList = (): TimezoneOption<string>[] => {
   return timezones
     .map((tz) => ({ ...tz, offset: DateTime.now().setZone(tz.name).offset }))
     .sort((a, b) => a.offset - b.offset)
@@ -47,26 +47,28 @@ const renderTimezonesList = () => {
     });
 };
 
-const timezoneList: TimezoneOption[] = renderTimezonesList();
+const timezoneList = renderTimezonesList();
 
 export const TimezoneForm = (props: Props) => {
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const { error, isLoading, mutateAsync: updateProfile } = useMutateProfile();
-  const [timezoneValue, setTimezoneValue] = React.useState<null | string>(null);
+  const [timezoneValue, setTimezoneValue] = React.useState<
+    TimezoneOption<string> | string
+  >('');
   const timezone = profile?.timezone ?? '';
 
-  const handleTimezoneChange = (timezone: string) => {
+  const handleTimezoneChange = (timezone: TimezoneOption<string>) => {
     setTimezoneValue(timezone);
   };
 
   const onSubmit = () => {
-    if (timezoneValue === null) {
+    if (timezoneValue === '') {
       return;
     }
 
-    updateProfile({ timezone: timezoneValue }).then(() => {
+    updateProfile({ timezone: String(timezoneValue) }).then(() => {
       enqueueSnackbar('Successfully updated timezone', { variant: 'success' });
     });
   };
@@ -76,7 +78,7 @@ export const TimezoneForm = (props: Props) => {
   });
 
   const disabled =
-    timezoneValue === null || defaultTimezone?.value === timezoneValue;
+    timezoneValue === '' || defaultTimezone?.value === timezoneValue;
 
   if (!profile) {
     return <CircleProgress />;
@@ -108,7 +110,7 @@ export const TimezoneForm = (props: Props) => {
             disableClearable
             errorText={error?.[0].reason}
             label="Timezone"
-            onChange={(_, option) => handleTimezoneChange(option.value)}
+            onChange={(_, option) => handleTimezoneChange(option)}
             options={timezoneList}
             placeholder="Choose a Timezone"
             sx={{ width: '416px' }}

@@ -93,7 +93,7 @@ const setSecurityQuestionAnswer = (
   answer: string
 ) => {
   getSecurityQuestion(questionNumber).within(() => {
-    cy.get('[data-qa-enhanced-select]')
+    cy.findByLabelText(`Question ${questionNumber}`)
       .should('be.visible')
       .click()
       .type(`${question}{enter}`);
