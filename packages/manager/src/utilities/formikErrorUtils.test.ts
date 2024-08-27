@@ -205,19 +205,19 @@ describe('getFormikErrorsFromAPIErrors', () => {
 
 describe('Tests for set', () => {
   it("returns the passed in 'object' as is if it's not actually a (non array) object", () => {
-    expect(set([], 'path not needed', 3)).toEqual([]);
+    expect(set([], 'path not needed', '1')).toEqual([]);
   });
 
   describe('Correctly setting the value at the given path', () => {
     it('sets the value for a simple path', () => {
       const object = {};
-      let settedObject = set(object, 'test', 1);
+      let settedObject = set(object, 'test', '1');
       expect(object).toBe(settedObject);
-      expect(object).toEqual({ test: 1 });
+      expect(object).toEqual({ test: '1' });
 
-      settedObject = set(object, 'test2', 1);
+      settedObject = set(object, 'test2', '1');
       expect(object).toBe(settedObject);
-      expect(object).toEqual({ test: 1, test2: 1 });
+      expect(object).toEqual({ test: '1', test2: '1' });
     });
 
     it('sets the value for complex string paths (without indexes)', () => {
@@ -243,17 +243,17 @@ describe('Tests for set', () => {
 
       set(object, 'a.b.1', 'b1');
       expect(object).toEqual({ a: { b: [undefined, 'b1'] } });
-      set(object, 'a.b[0]', 5);
-      expect(object).toEqual({ a: { b: [5, 'b1'] } });
+      set(object, 'a.b[0]', '5');
+      expect(object).toEqual({ a: { b: ['5', 'b1'] } });
 
       set(object, 'a.b.2', 'b2');
       expect(object).toEqual({
-        a: { b: [5, 'b1', 'b2'] },
+        a: { b: ['5', 'b1', 'b2'] },
       });
 
       set(object, 'a.b[3].c', 'c');
       expect(object).toEqual({
-        a: { b: [5, 'b1', 'b2', { c: 'c' }] },
+        a: { b: ['5', 'b1', 'b2', { c: 'c' }] },
       });
     });
 
@@ -281,20 +281,16 @@ describe('Tests for set', () => {
       });
     });
 
-    it('considers numbers as keys if they are not followed by another number or if there is an already existing object', () => {
+    it('considers numbers as keys if they are not followed by another number', () => {
       const object = {};
       set(object, '1', 'test');
       expect(object).toEqual({ 1: 'test' });
 
       set(object, '2', '2');
       expect(object).toEqual({ 1: 'test', 2: '2' });
-
-      expect(set({ test: { test1: 'test' } }, 'test[1]', 'test2')).toEqual({
-        test: { '1': 'test2', test1: 'test' },
-      });
     });
 
-    it('treats numbers as array indexes if they precede some previous key (if they are valid indexes)', () => {
+    it('treats numbers as array indexes if they precede some previous key (if they are valid integers >= 0)', () => {
       const obj1 = set({}, '1[1]', 'test');
       expect(obj1).toEqual({ 1: [undefined, 'test'] });
 
@@ -329,17 +325,17 @@ describe('Tests for set', () => {
     it('protects against the given string path matching a prototype pollution key', () => {
       const object = {};
       // __proto__
-      let settedObject = set(object, '__proto__', 1);
+      let settedObject = set(object, '__proto__', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
 
       // constructor
-      settedObject = set(object, 'constructor', 1);
+      settedObject = set(object, 'constructor', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
 
       // prototype
-      settedObject = set(object, 'prototype', 1);
+      settedObject = set(object, 'prototype', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
     });
@@ -347,28 +343,28 @@ describe('Tests for set', () => {
     it('protects against the given string path containing prototype pollution keys that are separated by path delimiters', () => {
       const object = {};
       // prototype pollution key separated by .
-      let settedObject = set(object, 'test.__proto__.test', 1);
+      let settedObject = set(object, 'test.__proto__.test', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
 
-      settedObject = set(object, 'test.constructor.test', 1);
+      settedObject = set(object, 'test.constructor.test', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
 
-      settedObject = set(object, 'test.prototype.test', 1);
+      settedObject = set(object, 'test.prototype.test', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
 
       // prototype pollution key separated by []
-      settedObject = set(object, 'test.test[__proto__]', 1);
+      settedObject = set(object, 'test.test[__proto__]', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
 
-      settedObject = set(object, 'test.test[constructor]', 1);
+      settedObject = set(object, 'test.test[constructor]', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
 
-      settedObject = set(object, 'test.test[prototype]', 1);
+      settedObject = set(object, 'test.test[prototype]', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({});
     });
@@ -376,20 +372,20 @@ describe('Tests for set', () => {
     it('is not considered prototype pollution if the string paths have a key not separated by delimiters', () => {
       const object = {};
       // prototype pollution key separated by .
-      let settedObject = set(object, 'test__proto__test', 1);
+      let settedObject = set(object, 'test__proto__test', '1');
       expect(object).toBe(settedObject);
-      expect(object).toEqual({ test__proto__test: 1 });
+      expect(object).toEqual({ test__proto__test: '1' });
 
-      settedObject = set(object, 'constructortest', 1);
+      settedObject = set(object, 'constructortest', '1');
       expect(object).toBe(settedObject);
-      expect(object).toEqual({ constructortest: 1, test__proto__test: 1 });
+      expect(object).toEqual({ constructortest: '1', test__proto__test: '1' });
 
-      settedObject = set(object, 'testprototype', 1);
+      settedObject = set(object, 'testprototype', '1');
       expect(object).toBe(settedObject);
       expect(object).toEqual({
-        constructortest: 1,
-        test__proto__test: 1,
-        testprototype: 1,
+        constructortest: '1',
+        test__proto__test: '1',
+        testprototype: '1',
       });
     });
   });

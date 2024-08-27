@@ -35,7 +35,11 @@ const onlyDigitsRegex = /^\d+$/;
  * @param value — The value to set.
  * @return — Returns object.
  */
-export const set = (obj: object, path: string, value: any): object => {
+export const set = <T>(
+  obj: FormikErrors<T>,
+  path: string,
+  value: string
+): FormikErrors<T> => {
   const parts = path.split(/\.|\[|\]/).filter(Boolean);
 
   // ensure that obj is not an array and that the path is prototype pollution safe
