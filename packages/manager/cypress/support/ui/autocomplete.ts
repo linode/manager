@@ -32,11 +32,17 @@ export const autocompletePopper = {
     title: string,
     options?: SelectorMatcherOptions
   ): Cypress.Chainable => {
-    return cy
-      .document()
-      .its('body')
-      .find('[data-qa-autocomplete-popper]')
-      .findByText(title, options);
+    return (
+      cy
+        .document()
+        .its('body')
+        .find('[data-qa-autocomplete-popper]')
+        .findByText(title, options)
+        // Scroll to the desired item before yielding.
+        // Apply a negative top offset to account for cases where the desired
+        // item may be obscured by the drop-down sticky category heading.
+        .scrollIntoView({ offset: { left: 0, top: -45 } })
+    );
   },
 };
 
