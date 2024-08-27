@@ -45,11 +45,7 @@ export const Actions = () => {
 
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-      <Button
-        buttonType="outlined"
-        disabled={disableSubmitButton}
-        onClick={onOpenAPIAwareness}
-      >
+      <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
         {isDxToolsAdditionsEnabled
           ? 'View Code Snippets'
           : 'Create using command line'}
@@ -67,6 +63,17 @@ export const Actions = () => {
         onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(structuredClone(getValues()))}
       />
+      <pre>
+        {JSON.stringify(
+          {
+            disableSubmitButton,
+            formState: formState.errors,
+            isLinodeCreateRestricted,
+          },
+          null,
+          2
+        )}
+      </pre>
     </Box>
   );
 };
