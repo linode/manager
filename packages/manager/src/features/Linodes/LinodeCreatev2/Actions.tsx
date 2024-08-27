@@ -63,17 +63,6 @@ export const Actions = () => {
         onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(structuredClone(getValues()))}
       />
-      <pre>
-        {JSON.stringify(
-          {
-            disableSubmitButton,
-            formState: formState.errors,
-            isLinodeCreateRestricted,
-          },
-          null,
-          2
-        )}
-      </pre>
     </Box>
   );
 };
