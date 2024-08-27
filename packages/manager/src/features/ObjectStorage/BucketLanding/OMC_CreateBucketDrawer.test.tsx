@@ -56,7 +56,7 @@ describe('OMC_CreateBucketDrawer', () => {
       })
     );
 
-    const { getByText } = renderWithThemeAndHookFormContext({
+    const { getByText, queryByText } = renderWithThemeAndHookFormContext({
       component: <OMC_CreateBucketDrawer {...props} />,
       options: {
         flags: {
@@ -66,9 +66,16 @@ describe('OMC_CreateBucketDrawer', () => {
       },
     });
 
+    expect(queryByText('Object Storage Endpoint Type')).not.toBeInTheDocument();
+
     await waitFor(() => {
-      expect(getByText('Object Storage Endpoint Type')).toBeVisible();
+      expect(getByText('Object Storage Endpoint Type')).toBeInTheDocument();
     });
+
+    // Additional verification after waitFor
+    const endpointTypeElement = getByText('Object Storage Endpoint Type');
+    expect(endpointTypeElement).toBeVisible();
+    expect(endpointTypeElement.tagName).toBe('LABEL');
   });
 
   it('should close the drawer', () => {
