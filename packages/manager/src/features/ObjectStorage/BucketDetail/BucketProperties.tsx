@@ -6,7 +6,6 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { BucketRateLimitTable } from '../BucketLanding/BucketRateLimitTable';
@@ -18,12 +17,10 @@ import {
   StyledText,
 } from './BucketProperties.styles';
 
-import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
+import type { ObjectStorageBucket } from '@linode/api-v4';
 
 interface Props {
-  bucketName: string;
-  clusterId: string;
-  endpointType?: ObjectStorageEndpointTypes;
+  bucket: ObjectStorageBucket;
 }
 
 export interface UpdateBucketRateLimitPayload {
@@ -31,7 +28,8 @@ export interface UpdateBucketRateLimitPayload {
 }
 
 export const BucketProperties = React.memo((props: Props) => {
-  const { bucketName, clusterId, endpointType } = props;
+  const { bucket } = props;
+  const { endpoint_type, hostname, label } = bucket;
 
   const form = useForm<UpdateBucketRateLimitPayload>({
     defaultValues: {
@@ -48,12 +46,6 @@ export const BucketProperties = React.memo((props: Props) => {
   const history = useHistory();
   const prefix = getQueryParamFromQueryString(location.search, 'prefix');
 
-  const { data: bucketsData } = useObjectStorageBuckets();
-
-  const bucket = bucketsData?.buckets.find((bucket) => {
-    return bucket.label === bucketName && bucket.cluster === clusterId;
-  });
-
   const onSubmit = () => {
     // TODO: OBJGen2 - Handle Bucket Rate Limit update logic once the endpoint for updating is available.
     // The 'data' argument is expected -> data: UpdateBucketRateLimitPayload
@@ -61,12 +53,8 @@ export const BucketProperties = React.memo((props: Props) => {
 
   return (
     <FormProvider {...form}>
-      <BucketBreadcrumb
-        bucketName={bucketName}
-        history={history}
-        prefix={prefix}
-      />
-      <StyledText>{bucket?.hostname || 'Loading...'}</StyledText>
+      <BucketBreadcrumb bucketName={label} history={history} prefix={prefix} />
+      <StyledText>{hostname || 'Loading...'}</StyledText>
 
       <StyledRootContainer>
         <Typography variant="h2">Bucket Rate Limits</Typography>
@@ -87,7 +75,7 @@ export const BucketProperties = React.memo((props: Props) => {
         </StyledHelperText>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <BucketRateLimitTable endpointType={endpointType} />
+          <BucketRateLimitTable endpointType={endpoint_type} />
           <StyledActionsPanel
             primaryButtonProps={{
               disabled: !isDirty,

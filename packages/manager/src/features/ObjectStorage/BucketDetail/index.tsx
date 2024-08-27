@@ -59,10 +59,11 @@ export const BucketDetailLanding = React.memo((props: Props) => {
   };
   const { bucketName, clusterId } = props.match.params;
 
-  const { endpoint_type: endpointType } =
-    bucketsData?.buckets.find(({ label }) => label === bucketName) ?? {};
+  const bucket = bucketsData?.buckets.find(({ label }) => label === bucketName);
 
-  const isSSLEnabled = endpointType !== 'E2' && endpointType === 'E3';
+  const { endpoint_type } = bucket ?? {};
+
+  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type === 'E3';
 
   const tabs = [
     {
@@ -125,22 +126,18 @@ export const BucketDetailLanding = React.memo((props: Props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <ObjectList {...props} endpointType={endpointType} />
+              <ObjectList {...props} endpointType={endpoint_type} />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <BucketAccess
                 bucketName={bucketName}
                 clusterId={clusterId}
-                endpointType={endpointType}
+                endpointType={endpoint_type}
               />
             </SafeTabPanel>
-            {flags.objectStorageGen2?.enabled && (
+            {flags.objectStorageGen2?.enabled && bucket && (
               <SafeTabPanel index={2}>
-                <BucketProperties
-                  bucketName={bucketName}
-                  clusterId={clusterId}
-                  endpointType={endpointType}
-                />
+                <BucketProperties bucket={bucket} />
               </SafeTabPanel>
             )}
             <SafeTabPanel index={tabs.length - 1}>
