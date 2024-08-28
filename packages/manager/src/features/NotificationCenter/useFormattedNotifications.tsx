@@ -14,24 +14,27 @@ import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { notificationContext as _notificationContext } from '../NotificationContext';
-import RenderNotification from './Notification';
-import { checkIfMaintenanceNotification } from './notificationUtils';
+import { notificationContext as _notificationContext } from './NotificationContext';
+import {
+  adjustSeverity,
+  checkIfMaintenanceNotification,
+  formatNotificationForDisplay,
+  isEUModelContractNotification,
+} from './utils';
 
-import type { NotificationItem } from '../NotificationSection';
-import type { Profile } from '@linode/api-v4';
+import type { NotificationCenterItem } from './NotificationCenter';
 import type {
   Notification,
-  NotificationSeverity,
   NotificationType,
-} from '@linode/api-v4/lib/account';
-import type { Region } from '@linode/api-v4/lib/regions';
+  Profile,
+  Region,
+} from '@linode/api-v4';
 
-export interface ExtendedNotification extends Notification {
+export interface FormattedNotificationProps extends Notification {
   jsx?: JSX.Element;
 }
 
-export const useFormattedNotifications = (): NotificationItem[] => {
+export const useFormattedNotifications = (): NotificationCenterItem[] => {
   const notificationContext = React.useContext(_notificationContext);
   const {
     dismissNotifications,
@@ -40,7 +43,6 @@ export const useFormattedNotifications = (): NotificationItem[] => {
 
   const { data: regions } = useRegionsQuery();
   const { data: profile } = useProfile();
-
   const { data: notifications } = useNotificationsQuery();
 
   const volumeMigrationScheduledIsPresent = notifications?.some(
@@ -81,7 +83,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
       message:
         'You have pending volume migrations. Check the maintenance page for more details.',
       severity: 'major',
-      type: 'volume_migration_scheduled' as NotificationType,
+      type: 'volume_migration_scheduled',
       until: null,
       when: null,
     });
@@ -109,7 +111,8 @@ export const useFormattedNotifications = (): NotificationItem[] => {
  * the contents of notification.message get changed, or JSX is generated and added to the notification object, etc.
  *
  * Specific types of notifications that are altered here: ticket_abuse, ticket_important, maintenance, maintenance_scheduled,
- * migration_pending, outage
+ * migration_pending, outage.
+ *
  * @param notification
  * @param onClose
  */
@@ -118,7 +121,7 @@ const interceptNotification = (
   onClose: () => void,
   regions: Region[],
   profile: Profile | undefined
-): ExtendedNotification => {
+): FormattedNotificationProps => {
   // Ticket interceptions
   if (notification.type === 'ticket_abuse') {
     return {
@@ -359,31 +362,7 @@ const StyledLink = styled(Link)<Pick<Notification, 'severity'>>(
   })
 );
 
-const formatNotificationForDisplay = (
-  notification: Notification,
-  idx: number,
-  onClose: () => void,
-  shouldIncludeInCount: boolean = true
-): NotificationItem => ({
-  body: <RenderNotification notification={notification} onClose={onClose} />,
-  countInTotal: shouldIncludeInCount,
-  eventId: -1,
-  id: `notification-${idx}`,
-});
-
-// For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
-export const adjustSeverity = ({
-  severity,
-  type,
-}: Notification): NotificationSeverity => {
-  if (checkIfMaintenanceNotification(type)) {
-    return 'major';
-  }
-
-  return severity;
-};
-
-const ComplianceNotification: React.FC<{}> = () => {
+const ComplianceNotification = () => {
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
   return (
@@ -398,11 +377,5 @@ const ComplianceNotification: React.FC<{}> = () => {
         Review compliance update.
       </StyledLinkButton>
     </Typography>
-  );
-};
-
-export const isEUModelContractNotification = (notification: Notification) => {
-  return (
-    notification.type === 'notice' && /eu-model/gi.test(notification.message)
   );
 };

@@ -1,25 +1,24 @@
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
-import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import type { ExtendedNotification } from './useFormattedNotifications';
-import type { NotificationType } from '@linode/api-v4/lib/account';
+import { StyledLink } from './NotificationCenter.styles';
+import { getEntityLinks } from './utils';
 
-interface Props {
-  notification: ExtendedNotification;
+import type { FormattedNotificationProps } from './useFormattedNotifications';
+
+export interface ExtendedNotificationProps {
+  notification: FormattedNotificationProps;
   onClose: () => void;
 }
 
-export type CombinedProps = Props;
-
-export const RenderNotification: React.FC<Props> = (props) => {
+export const ExtendedNotification = (props: ExtendedNotificationProps) => {
   const theme = useTheme();
   const { notification, onClose } = props;
 
@@ -107,28 +106,3 @@ export const RenderNotification: React.FC<Props> = (props) => {
     </>
   );
 };
-
-const StyledLink = styled(Link)<Partial<Props>>(({ theme, ...props }) => ({
-  ...(props.notification?.severity === 'critical' && {
-    '&:hover': {
-      textDecoration: `${theme.color.red} underline`,
-    },
-    color: `${theme.color.red} !important`,
-  }),
-}));
-
-const getEntityLinks = (
-  notificationType?: NotificationType,
-  entityType?: string,
-  id?: number
-) => {
-  // Handle specific notification types
-  if (notificationType === 'ticket_abuse') {
-    return `/support/tickets/${id}`;
-  }
-
-  // The only entity.type we currently expect and can handle for is "linode"
-  return entityType === 'linode' ? `/linodes/${id}` : null;
-};
-
-export default React.memo(RenderNotification);

@@ -10,10 +10,10 @@ import {
 } from 'src/features/Events/utils';
 
 import {
-  notificationEventStyles,
   NotificationEventGravatar,
   NotificationEventStyledBox,
-} from './NotificationEvent.styles';
+  notificationEventStyles,
+} from './NotificationCenter.styles';
 
 import type { Event } from '@linode/api-v4/lib/account/types';
 
