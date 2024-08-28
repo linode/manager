@@ -57,7 +57,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     });
 
     const onFilterChange = React.useCallback(
-      (filterKey: string, value: any) => {
+      (filterKey: string, value: FilterValueType) => {
         setFilterValue((prev) => ({ ...prev, [filterKey]: value }));
       },
       []
