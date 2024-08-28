@@ -1,5 +1,6 @@
 import { updateUser } from '@linode/api-v4/lib/account';
 import { styled, useTheme } from '@mui/material/styles';
+import { useState } from 'react';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -38,9 +39,21 @@ export const DisplaySettings = () => {
 
   const isProxyUser = profile?.user_type === 'proxy';
 
-  const hasGravatar = getGravatarUrl(profile?.email ?? '').includes('?d=404')
-    ? false
-    : true;
+  const [hasGravatar, setHasGravatar] = useState(false);
+  const checkForGravatar = async (url: string) => {
+    try {
+      const response = await fetch(url);
+
+      if (response.status === 200) {
+        setHasGravatar(true);
+      }
+      if (response.status === 404) {
+        setHasGravatar(false);
+      }
+    } catch (error) {
+      // The fetch to Gravatar failed. Event won't be logged.
+    }
+  };
 
   const [
     isColorPickerDialogOpen,
@@ -53,6 +66,11 @@ export const DisplaySettings = () => {
       emailRef.current.scrollIntoView();
     }
   }, [emailRef, location.state]);
+
+  React.useEffect(() => {
+    const url = getGravatarUrl(profile?.email ?? '');
+    checkForGravatar(url);
+  }, [profile]);
 
   // Used as React keys to force-rerender forms.
   const [emailResetToken, setEmailResetToken] = React.useState(v4());
