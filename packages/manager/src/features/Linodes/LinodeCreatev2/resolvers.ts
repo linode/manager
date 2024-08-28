@@ -13,14 +13,17 @@ import {
 import { getLinodeCreatePayload } from './utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
-import type { LinodeCreateFormValues } from './utilities';
+import type {
+  LinodeCreateFormContext,
+  LinodeCreateFormValues,
+} from './utilities';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors, Resolver } from 'react-hook-form';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
   queryClient: QueryClient
-): Resolver<LinodeCreateFormValues, { secureVMNoticesEnabled: boolean }> => {
+): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
   return async (values, context, options) => {
     const transformedValues = getLinodeCreatePayload(structuredClone(values));
@@ -46,7 +49,7 @@ export const getLinodeCreateResolver = (
       getRegionCountryGroup(selectedRegion)
     );
 
-    if (hasSelectedAnEURegion) {
+    if (hasSelectedAnEURegion && !context?.profile?.restricted) {
       const agreements = await queryClient.ensureQueryData(
         accountQueries.agreements
       );
