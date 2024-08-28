@@ -87,7 +87,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     if (isError) {
       return (
         <ErrorState
-          errorText={`Error while loading Dashboard with Id -${dashboardId}`}
+          errorText={`Error while loading Dashboard with Id - ${dashboardId}`}
         />
       );
     }

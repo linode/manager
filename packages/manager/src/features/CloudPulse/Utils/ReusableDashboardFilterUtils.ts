@@ -53,7 +53,7 @@ export const getDashboardProperties = (
 };
 
 /**
- * @param props The props required for constructing the dashboard properties
+ * @param props The props required for checking the mandatory filter selection
  * @returns True if all mandatory filters are selected for a given service type , else false
  */
 export const checkMandatoryFiltersSelected = (
@@ -127,7 +127,7 @@ export const checkIfFilterNeededInMetricsCall = (
 };
 
 /**
- * @param props The props required for constructing the dashboard properties
+ * @param props The props required for building the dimension filters
  * @returns Array of additional filters to be passed in the metrics api call
  */
 export const constructDimensionFilters = (

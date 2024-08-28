@@ -48,7 +48,7 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
     );
 
     expect(
-      screen.getByText('Error while loading Dashboard with Id -1')
+      screen.getByText('Error while loading Dashboard with Id - 1')
     ).toBeDefined();
   });
 
