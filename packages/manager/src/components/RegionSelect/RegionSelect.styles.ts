@@ -45,24 +45,26 @@ export const sxDistributedRegionIcon = {
 
 export const StyledDistributedRegionBox = styled(Box, {
   label: 'StyledDistributedRegionBox',
-})(({ theme }) => ({
+  shouldForwardProp: (prop) => prop != 'errorText',
+})<{ errorText: string }>(({ errorText, theme }) => ({
   '& svg': {
     height: 21,
     marginLeft: 8,
     marginRight: 8,
     width: 24,
   },
-  alignSelf: 'end',
+  alignSelf: errorText.length > 0 ? 'center' : 'end',
   color: 'inherit',
   display: 'flex',
-  marginLeft: 8,
-  padding: '8px 0',
+  marginTop: errorText.length > 0 ? 21 : 0,
+  padding: 8,
   [theme.breakpoints.down('md')]: {
     '& svg': {
       marginLeft: 0,
     },
     alignSelf: 'start',
-    marginLeft: 0,
+    marginTop: 0,
+    paddingLeft: 0,
   },
 }));
 
