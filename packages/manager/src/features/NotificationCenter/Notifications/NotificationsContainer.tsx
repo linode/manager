@@ -14,14 +14,6 @@ import {
 import { useFormattedNotifications } from '../useFormattedNotifications';
 import { Notifications } from './Notifications';
 
-export interface NotificationsItem {
-  body: JSX.Element | string;
-  countInTotal: boolean;
-  eventId: number;
-  id: string;
-  showProgress?: boolean;
-}
-
 interface NotificationContainerProps {
   count?: number;
   loading?: boolean;

@@ -11,14 +11,9 @@ import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { StyledLink } from '../NotificationCenter.styles';
 import { getEntityLinks } from '../utils';
 
-import type { FormattedNotificationProps } from '../useFormattedNotifications';
+import type { NotificationMessageProps } from '../types';
 
-export interface ExtendedNotificationProps {
-  notification: FormattedNotificationProps;
-  onClose: () => void;
-}
-
-export const ExtendedNotification = (props: ExtendedNotificationProps) => {
+export const NotificationMessage = (props: NotificationMessageProps) => {
   const theme = useTheme();
   const { notification, onClose } = props;
 

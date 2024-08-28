@@ -8,7 +8,7 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-import type { ExtendedNotificationProps } from './Notifications/ExtendedNotification';
+import type { NotificationMessageProps } from './types';
 import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles()((theme: Theme) => ({
@@ -34,7 +34,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const StyledLink = styled(Link)<Partial<ExtendedNotificationProps>>(
+export const StyledLink = styled(Link)<Partial<NotificationMessageProps>>(
   ({ theme, ...props }) => ({
     ...(props.notification?.severity === 'critical' && {
       '&:hover': {

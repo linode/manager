@@ -1,18 +1,13 @@
-import * as React from 'react';
-
-import { ExtendedNotification } from './Notifications/ExtendedNotification';
-
-import type { NotificationsItem } from './Notifications/NotificationsContainer';
 import type {
   Notification,
   NotificationSeverity,
   NotificationType,
 } from '@linode/api-v4';
 
-export const maintenanceNotificationTypes = [
+export const maintenanceNotificationTypes: Partial<NotificationType>[] = [
   'maintenance',
   'maintenance_scheduled',
-];
+] as const;
 
 export const checkIfMaintenanceNotification = (type: NotificationType) => {
   return maintenanceNotificationTypes.includes(type);
@@ -24,7 +19,8 @@ export const isEUModelContractNotification = (notification: Notification) => {
   );
 };
 
-// For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
+// For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns.
+// If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
 export const adjustSeverity = ({
   severity,
   type,
@@ -35,18 +31,6 @@ export const adjustSeverity = ({
 
   return severity;
 };
-
-export const formatNotificationForDisplay = (
-  notification: Notification,
-  idx: number,
-  onClose: () => void,
-  shouldIncludeInCount: boolean = true
-): NotificationsItem => ({
-  body: <ExtendedNotification notification={notification} onClose={onClose} />,
-  countInTotal: shouldIncludeInCount,
-  eventId: -1,
-  id: `notification-${idx}`,
-});
 
 export const getEntityLinks = (
   notificationType?: NotificationType,

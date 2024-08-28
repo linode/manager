@@ -3,7 +3,7 @@ import * as React from 'react';
 import { eventFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NotificationCenterEvent } from './Events/NotificationCenterEvent';
+import { NotificationCenterEvent } from './NotificationCenterEvent';
 
 describe('NotificationEvent', () => {
   it('should render a finished event with the proper data', () => {

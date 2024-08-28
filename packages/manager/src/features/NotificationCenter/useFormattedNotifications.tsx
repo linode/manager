@@ -15,14 +15,14 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationCenterContext as _notificationContext } from './NotificationCenterContext';
+import { NotificationMessage } from './Notifications/NotificationMessage';
 import {
   adjustSeverity,
   checkIfMaintenanceNotification,
-  formatNotificationForDisplay,
   isEUModelContractNotification,
 } from './utils';
 
-import type { NotificationsItem } from './Notifications/NotificationsContainer';
+import type { FormattedNotificationProps, NotificationsItem } from './types';
 import type {
   Notification,
   NotificationType,
@@ -30,9 +30,17 @@ import type {
   Region,
 } from '@linode/api-v4';
 
-export interface FormattedNotificationProps extends Notification {
-  jsx?: JSX.Element;
-}
+const formatNotificationForDisplay = (
+  notification: Notification,
+  idx: number,
+  onClose: () => void,
+  shouldIncludeInCount: boolean = true
+): NotificationsItem => ({
+  body: <NotificationMessage notification={notification} onClose={onClose} />,
+  countInTotal: shouldIncludeInCount,
+  eventId: -1,
+  id: `notification-${idx}`,
+});
 
 export const useFormattedNotifications = (): NotificationsItem[] => {
   const notificationContext = React.useContext(_notificationContext);

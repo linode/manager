@@ -12,7 +12,7 @@ import {
   StyledNotificationCenterItem,
 } from '../NotificationCenter.styles';
 
-import type { NotificationsItem } from './NotificationsContainer';
+import type { NotificationsItem } from '../types';
 
 interface BodyProps {
   content: NotificationsItem[];
