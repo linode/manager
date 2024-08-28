@@ -1,5 +1,4 @@
 import React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Radio } from 'src/components/Radio/Radio';
@@ -11,6 +10,7 @@ import { TableRow } from 'src/components/TableRow';
 
 import type { UpdateBucketRateLimitPayload } from '../BucketDetail/BucketProperties';
 import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
+import type { ControllerRenderProps } from 'react-hook-form';
 
 /**
  * TODO: This component is currently using static data until
@@ -20,6 +20,7 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 interface BucketRateLimitTableProps {
   endpointType: ObjectStorageEndpointTypes | undefined;
+  field?: ControllerRenderProps<UpdateBucketRateLimitPayload, 'rateLimit'>;
 }
 
 const tableHeaders = ['Limits', 'GET', 'PUT', 'LIST', 'DELETE', 'OTHER'];
@@ -50,13 +51,8 @@ const tableData = ({ endpointType }: BucketRateLimitTableProps) => {
 
 export const BucketRateLimitTable = ({
   endpointType,
+  field,
 }: BucketRateLimitTableProps) => {
-  const { control } = useFormContext<UpdateBucketRateLimitPayload>();
-  const { field } = useController({
-    control,
-    name: 'rateLimit',
-  });
-
   return (
     <Table data-testid="bucket-rate-limit-table" sx={{ marginBottom: 3 }}>
       <TableHead>
@@ -81,17 +77,27 @@ export const BucketRateLimitTable = ({
         {tableData({ endpointType }).map((row, rowIndex) => (
           <TableRow key={rowIndex}>
             <TableCell>
-              <FormControlLabel
-                control={
-                  <Radio
-                    checked={field.value === row.id}
-                    disabled
-                    onChange={() => field.onChange(row.id)}
-                    value={row.id}
-                  />
-                }
-                label={row.label}
-              />
+              {field ? (
+                <FormControlLabel
+                  control={
+                    <Radio
+                      checked={field.value === row.id}
+                      disabled
+                      onChange={() => field.onChange(row.id)}
+                      value={row.id}
+                    />
+                  }
+                  label={row.label}
+                />
+              ) : (
+                <Radio
+                  checked={row.checked}
+                  disabled
+                  name="limit-selection"
+                  onChange={() => {}}
+                  value="2"
+                />
+              )}
             </TableCell>
             {row.values.map((value, index) => {
               return (

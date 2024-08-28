@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useController } from 'react-hook-form';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -35,6 +36,12 @@ export const BucketProperties = React.memo((props: Props) => {
     defaultValues: {
       rateLimit: '1',
     },
+  });
+
+  const { control } = form;
+  const { field } = useController({
+    control,
+    name: 'rateLimit',
   });
 
   const {
@@ -75,7 +82,7 @@ export const BucketProperties = React.memo((props: Props) => {
         </StyledHelperText>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <BucketRateLimitTable endpointType={endpoint_type} />
+          <BucketRateLimitTable endpointType={endpoint_type} field={field} />
           <StyledActionsPanel
             primaryButtonProps={{
               disabled: !isDirty,

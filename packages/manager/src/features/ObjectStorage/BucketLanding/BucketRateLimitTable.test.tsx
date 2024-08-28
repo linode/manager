@@ -4,9 +4,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketRateLimitTable } from './BucketRateLimitTable';
 
-// recent bucket rate limit changes cause these tests to fail + bug when opening up Create Bucket drawer.
-// commenting out these tests for now + will investigate in a separate PR (need to investigate further)
-describe.skip('BucketRateLimitTable', () => {
+describe('BucketRateLimitTable', () => {
   it('should render a BucketRateLimitTable', () => {
     const { getAllByRole, getByText, queryByText } = renderWithTheme(
       <BucketRateLimitTable endpointType="E2" />
