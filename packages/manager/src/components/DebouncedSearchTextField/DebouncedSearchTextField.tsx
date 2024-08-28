@@ -65,7 +65,7 @@ export const DebouncedSearchTextField = React.memo(
         return () => clearTimeout(timeout);
       }
       return undefined;
-    }, [debounceTime, onSearch, textFieldValue]);
+    }, [debounceTime, textFieldValue]);
 
     return (
       <TextField

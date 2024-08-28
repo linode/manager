@@ -117,13 +117,6 @@ export const PlacementGroupsLanding = React.memo(() => {
     history.push(`/placement-groups/delete/${placementGroup.id}`);
   };
 
-  // Define the search function with useCallback to prevent unnecessary recreations
-  const handleSearch = React.useCallback((value: string) => {
-    if (query !== value) {
-      setQuery(value);
-    }
-  }, []);
-
   const onClosePlacementGroupDrawer = () => {
     history.push('/placement-groups');
   };
@@ -200,7 +193,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         debounceTime={250}
         hideLabel
         label="Search"
-        onSearch={handleSearch}
+        onSearch={setQuery}
         placeholder="Search Placement Groups"
         sx={{ mb: 4 }}
         value={query}
