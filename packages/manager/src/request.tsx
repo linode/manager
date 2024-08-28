@@ -2,7 +2,6 @@ import { baseRequest } from '@linode/api-v4/lib/request';
 import { AxiosHeaders } from 'axios';
 import * as React from 'react';
 
-import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
@@ -41,8 +40,6 @@ export const handleError = (
     store.dispatch(handleLogout());
   }
 
-  const config = error.response?.config;
-  const url = config?.url ?? '';
   const status: number = error.response?.status ?? 0;
   const errors: APIError[] = error.response?.data?.errors ?? [
     { reason: DEFAULT_ERROR_MESSAGE },
@@ -90,15 +87,6 @@ export const handleError = (
           }
         />
       ),
-    },
-    {
-      condition: (e) => {
-        return (
-          !!e.reason.match(/migrations are currently disabled/i) &&
-          !!url.match(/migrate/i)
-        );
-      },
-      replacementText: <MigrateError />,
     },
   ]);
 

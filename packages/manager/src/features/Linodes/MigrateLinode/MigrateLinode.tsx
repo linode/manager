@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -234,7 +235,11 @@ export const MigrateLinode = React.memo((props: Props) => {
       open={open}
       title={`Migrate Linode ${linode.label ?? ''} to another region`}
     >
-      {error && <Notice text={error?.[0].reason} variant="error" />}
+      {error && (
+        <Notice variant="error">
+          <ErrorMessage message={error[0].reason} />
+        </Notice>
+      )}
       <Typography sx={{ marginTop: theme.spacing(2) }} variant="h2">
         {newLabel}
       </Typography>

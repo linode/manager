@@ -13,7 +13,7 @@ import type {
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 interface SupportTicketGeneralErrorProps {
-  entityType: EntityType;
+  entityType?: EntityType;
   formPayloadValues?: FormPayloadValues;
   generalError: string;
 }
@@ -53,7 +53,7 @@ export const SupportTicketGeneralError = (
               ticketType={
                 isAccountLimitSupportTicket ? 'accountLimit' : 'general'
               }
-              entity={{ id: undefined, type: entityType }}
+              entity={entityType && { id: undefined, type: entityType }}
               formPayloadValues={formPayloadValues}
               key={`${substring}-${idx}`}
             />
