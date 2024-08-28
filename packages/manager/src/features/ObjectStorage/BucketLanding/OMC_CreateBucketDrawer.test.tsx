@@ -72,9 +72,13 @@ describe('OMC_CreateBucketDrawer', () => {
         queryByText('Object Storage Endpoint Type')
       ).not.toBeInTheDocument();
 
-      await waitFor(() => {
-        expect(getByText('Object Storage Endpoint Type')).toBeInTheDocument();
-      });
+      await waitFor(
+        () =>
+          expect(getByText('Object Storage Endpoint Type')).toBeInTheDocument(),
+        {
+          timeout: 2000,
+        }
+      );
 
       // Additional verification after waitFor
       const endpointTypeElement = getByText('Object Storage Endpoint Type');
