@@ -44,7 +44,7 @@ export const PricePanel = ({ currentSize, regionId, value }: Props) => {
   }
 
   return (
-    <Box marginTop={4}>
+    <Box marginTop={2}>
       <DisplayPrice interval="mo" price={price ? Number(price) : '--.--'} />
     </Box>
   );

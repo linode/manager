@@ -1,11 +1,14 @@
 import { omit } from 'lodash';
+import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
 import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
@@ -19,6 +22,7 @@ import type {
   Linode,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
+import type { FieldErrors } from 'react-hook-form';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -65,10 +69,10 @@ export const useLinodeCreateQueryParams = () => {
     const newParams = new URLSearchParams(rawParams);
 
     for (const key in params) {
-      if (!params[key]) {
+      if (!params[key as keyof LinodeCreateQueryParams]) {
         newParams.delete(key);
       } else {
-        newParams.set(key, params[key]);
+        newParams.set(key, params[key as keyof LinodeCreateQueryParams]!);
       }
     }
 
@@ -242,6 +246,10 @@ const defaultInterfaces: InterfacePayload[] = [
  * removes them from the payload before it is sent to the API.
  */
 export interface LinodeCreateFormValues extends CreateLinodeRequest {
+  /**
+   * Manually override firewall policy for sensitive users
+   */
+  firewallOverride?: boolean;
   /**
    * Whether or not the user has signed the EU agreement
    */
@@ -437,6 +445,7 @@ export const getLinodeLabelFromLabelParts = (parts: string[]) => {
 
 interface LinodeCreateAnalyticsEventOptions {
   queryClient: QueryClient;
+  secureVMNoticesEnabled: boolean;
   type: LinodeCreateType;
   values: LinodeCreateFormValues;
 }
@@ -447,10 +456,16 @@ interface LinodeCreateAnalyticsEventOptions {
 export const captureLinodeCreateAnalyticsEvent = async (
   options: LinodeCreateAnalyticsEventOptions
 ) => {
-  const { queryClient, type, values } = options;
+  const { queryClient, secureVMNoticesEnabled, type, values } = options;
+
+  const secureVMCompliant = secureVMNoticesEnabled
+    ? isNotNullOrUndefined(values.firewall_id)
+    : undefined;
 
   if (type === 'Backups' && values.backup_id) {
-    sendCreateLinodeEvent('backup', String(values.backup_id));
+    sendCreateLinodeEvent('backup', String(values.backup_id), {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'Clone Linode' && values.linode) {
@@ -462,24 +477,72 @@ export const captureLinodeCreateAnalyticsEvent = async (
 
     sendCreateLinodeEvent('clone', values.type, {
       isLinodePoweredOff: linode.status === 'offline',
+      secureVMCompliant,
     });
   }
 
   if (type === 'OS' || type === 'Images') {
-    sendCreateLinodeEvent('image', values.image ?? undefined);
+    sendCreateLinodeEvent('image', values.image ?? undefined, {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'StackScripts' && values.stackscript_id) {
     const stackscript = await queryClient.ensureQueryData(
       stackscriptQueries.stackscript(values.stackscript_id)
     );
-    sendCreateLinodeEvent('stackscript', stackscript.label);
+    sendCreateLinodeEvent('stackscript', stackscript.label, {
+      secureVMCompliant,
+    });
   }
 
   if (type === 'One-Click' && values.stackscript_id) {
     const stackscript = await queryClient.ensureQueryData(
       stackscriptQueries.stackscript(values.stackscript_id)
     );
-    sendCreateLinodeEvent('one-click', stackscript.label);
+    sendCreateLinodeEvent('one-click', stackscript.label, {
+      secureVMCompliant,
+    });
   }
+};
+
+/**
+ * Custom hook to send a Adobe Analytics form error event with error messages in the Linode Create flow.
+ */
+export const useHandleLinodeCreateAnalyticsFormError = (
+  createType: LinodeCreateType
+) => {
+  const handleLinodeCreateAnalyticsFormError = useCallback(
+    (errors: FieldErrors<LinodeCreateFormValues>) => {
+      let errorString = '';
+
+      if (!errors) {
+        return;
+      }
+
+      if (errors.region) {
+        errorString += errors.region.message;
+      }
+      if (errors.type) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.type.message
+        }`;
+      }
+      if (errors.root_pass) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.root_pass.message
+        }`;
+      }
+      if (errors.root) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.root.message
+        }`;
+      }
+
+      sendLinodeCreateFormErrorEvent(errorString, createType);
+    },
+    [createType]
+  );
+
+  return { handleLinodeCreateAnalyticsFormError };
 };

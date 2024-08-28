@@ -26,7 +26,9 @@ export const separateResultsByEntity = (
   searchResults.forEach((result) => {
     // EntityTypes are singular; we'd like the resulting keys to be plural
     const pluralizedEntityType = result.entityType + 's';
-    separatedResults[pluralizedEntityType].push(result);
+    separatedResults[
+      pluralizedEntityType as keyof typeof separatedResults
+    ].push(result);
   });
   return separatedResults;
 };

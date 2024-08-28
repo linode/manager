@@ -13,13 +13,12 @@ import {
   when,
 } from 'ramda';
 import * as React from 'react';
-import { debounce } from 'throttle-debounce';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
-import Select from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { usePrevious } from 'src/hooks/usePrevious';
@@ -35,7 +34,6 @@ import { useAllIPv6RangesQuery } from 'src/queries/networking/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError, IPRange } from '@linode/api-v4';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   linodeId: number;
@@ -126,7 +124,6 @@ export const IPTransfer = (props: Props) => {
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
-  const [searchText, setSearchText] = React.useState('');
 
   React.useEffect(() => {
     // Not using onReset here because we don't want to reset the IPs.
@@ -135,12 +132,6 @@ export const IPTransfer = (props: Props) => {
     setSuccessMessage('');
   }, [open]);
 
-  const handleInputChange = React.useRef(
-    debounce(500, false, (_searchText: string) => {
-      setSearchText(_searchText);
-    })
-  ).current;
-
   const {
     data: allLinodes,
     error: linodesError,
@@ -148,7 +139,6 @@ export const IPTransfer = (props: Props) => {
   } = useAllLinodesQuery(
     {},
     {
-      label: { '+contains': searchText ? searchText : undefined },
       region: linode?.region,
     },
     open // only run the query if the modal is open
@@ -162,8 +152,11 @@ export const IPTransfer = (props: Props) => {
 
   const linodes = (allLinodes ?? []).filter((l) => l.id !== linodeId);
 
-  const onModeChange = (ip: string) => (e: Item) => {
-    const mode = e.value as Mode;
+  const onModeChange = (ip: string) => (
+    event: React.SyntheticEvent<Element, Event>,
+    selected: { label: string; value: string }
+  ) => {
+    const mode = (selected?.value as Mode) || 'none';
     const firstLinode = linodes[0];
 
     const newState = compose<any, any, any, any, any>(
@@ -207,9 +200,12 @@ export const IPTransfer = (props: Props) => {
     setIPs((currentState) => newState(currentState));
   };
 
-  const onSelectedLinodeChange = (ip: string) => (e: Item) => {
+  const onSelectedLinodeChange = (ip: string) => (
+    event: React.SyntheticEvent,
+    selected: { label: string; value: number }
+  ) => {
     const newState = compose<any, any, any>(
-      setSelectedLinodeID(ip, e.value),
+      setSelectedLinodeID(ip, selected.value),
       /**
        * When mode is swapping;
        *  Update the selectedLinodesIPs (since the Linode has changed, the available IPs certainly have)
@@ -221,7 +217,7 @@ export const IPTransfer = (props: Props) => {
         compose(
           /** We need to find and return the newly selected Linode's IPs. */
           updateSelectedLinodesIPs(ip, () => {
-            const linode = linodes.find((l) => l.id === Number(e.value));
+            const linode = linodes.find((l) => l.id === Number(selected.value));
             if (linode) {
               const linodeIPv6Ranges = getLinodeIPv6Ranges(
                 ipv6RangesData,
@@ -234,7 +230,7 @@ export const IPTransfer = (props: Props) => {
 
           /** We need to find the selected Linode's IPs and return the first. */
           updateSelectedIP(ip, () => {
-            const linode = linodes.find((l) => l.id === Number(e.value));
+            const linode = linodes.find((l) => l.id === Number(selected.value));
             if (linode) {
               return linode.ipv4[0];
             }
@@ -246,8 +242,11 @@ export const IPTransfer = (props: Props) => {
     setIPs((currentState) => newState(currentState));
   };
 
-  const onSelectedIPChange = (ip: string) => (e: Item<string>) => {
-    setIPs(setSelectedIP(ip, e.value));
+  const onSelectedIPChange = (ip: string) => (
+    event: React.SyntheticEvent,
+    selected: { label: string; value: string }
+  ) => {
+    setIPs(setSelectedIP(ip, selected.value));
   };
 
   const renderRow = (
@@ -297,11 +296,16 @@ export const IPTransfer = (props: Props) => {
           </Typography>
         </Grid>
         <StyledAutoGrid md={3} xs={12}>
-          <Select
+          <Autocomplete
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
             textFieldProps={{
               dataAttrs: {
                 'data-qa-ip-transfer-action-menu': state.mode,
               },
+              disabled: readOnly,
+              hideLabel: true,
             }}
             value={
               state.mode === 'none'
@@ -310,14 +314,13 @@ export const IPTransfer = (props: Props) => {
                     (eachAction) => eachAction.value === state.mode
                   )
             }
-            disabled={readOnly}
-            hideLabel
-            isClearable={false}
-            label={`Select Action for IP Address ${state.sourceIP}`}
+            autoHighlight
+            clearIcon={null}
+            disablePortal={false}
+            label="Select Action"
             noMarginTop
             onChange={onModeChange(state.sourceIP)}
             options={actionsList}
-            overflowPortal
             placeholder="Select Action"
           />
         </StyledAutoGrid>
@@ -338,23 +341,23 @@ export const IPTransfer = (props: Props) => {
 
     return (
       <StyledAutoGrid md={3} xs={12}>
-        <Select
+        <Autocomplete
           textFieldProps={{
             dataAttrs: {
               'data-qa-linode-select': true,
             },
+            hideLabel: true,
           }}
+          autoHighlight
+          disableClearable
           disabled={readOnly || linodes.length === 1}
           errorText={linodesError?.[0].reason}
-          hideLabel
-          isClearable={false}
-          isLoading={isLoading || ipv6RangesLoading}
           label="Select Linode"
+          loading={isLoading || ipv6RangesLoading}
           noMarginTop
           onChange={onSelectedLinodeChange(sourceIP)}
-          onInputChange={handleInputChange}
           options={linodeList}
-          overflowPortal
+          placeholder="Select Linode"
           value={defaultLinode}
         />
       </StyledAutoGrid>
@@ -372,20 +375,21 @@ export const IPTransfer = (props: Props) => {
 
     return (
       <StyledAutoGrid md={3} xs={12}>
-        <Select
+        <Autocomplete
           textFieldProps={{
             dataAttrs: {
               'data-qa-swap-ip-action-menu': true,
             },
+            hideLabel: true,
           }}
+          autoHighlight
+          disableClearable
+          disablePortal={false}
           disabled={readOnly}
-          hideLabel
-          isClearable={false}
           label="Select IP Address"
           noMarginTop
           onChange={onSelectedIPChange(sourceIP)}
           options={IPList}
-          overflowPortal
           value={defaultIP}
         />
       </StyledAutoGrid>
@@ -401,7 +405,7 @@ export const IPTransfer = (props: Props) => {
      */
     if (!equals(previousIPAddresses, ipAddresses)) {
       setIPs(
-        ipAddresses.reduce((acc, ip) => {
+        ipAddresses.reduce<IPRowState>((acc, ip) => {
           acc[ip] = defaultState(ip, linodeId);
           return acc;
         }, {})
@@ -502,7 +506,7 @@ export const IPTransfer = (props: Props) => {
             variant="error"
           />
         ) : null}
-        {(isLoading || ipv6RangesLoading) && searchText === '' ? (
+        {isLoading || ipv6RangesLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <CircleProgress size="sm" />
           </div>
@@ -542,7 +546,7 @@ export const IPTransfer = (props: Props) => {
             >
               <Divider />
             </Grid>
-            {linodes.length === 0 && searchText === '' ? (
+            {linodes.length === 0 ? (
               <Typography
                 sx={{
                   color: theme.color.grey1,

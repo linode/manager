@@ -16,6 +16,7 @@ import {
   contactFactory,
   credentialFactory,
   creditPaymentResponseFactory,
+  dashboardFactory,
   databaseBackupFactory,
   databaseEngineFactory,
   databaseFactory,
@@ -28,7 +29,6 @@ import {
   eventFactory,
   firewallDeviceFactory,
   firewallFactory,
-  objectStorageEndpointsFactory,
   imageFactory,
   incidentResponseFactory,
   invoiceFactory,
@@ -63,6 +63,7 @@ import {
   notificationFactory,
   objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
+  objectStorageEndpointsFactory,
   objectStorageKeyFactory,
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
@@ -94,9 +95,15 @@ import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
+const getRandomWholeNumber = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
 import type {
+  AccountMaintenance,
   CreateObjectStorageKeyPayload,
+  FirewallStatus,
   NotificationType,
+  ObjectStorageEndpointTypes,
   SecurityQuestionsPayload,
   TokenRequest,
   UpdateImageRegionsPayload,
@@ -183,7 +190,7 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const databases = databaseInstanceFactory.buildList(5);
+    const databases = databaseInstanceFactory.buildList(9);
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
@@ -789,13 +796,16 @@ export const handlers = [
     const firewall = firewallFactory.build();
     return HttpResponse.json(firewall);
   }),
-  http.put('*/v4beta/networking/firewalls/:firewallId', async ({ request }) => {
-    const body = await request.json();
-    const firewall = firewallFactory.build({
-      status: body?.['status'] ?? 'disabled',
-    });
-    return HttpResponse.json(firewall);
-  }),
+  http.put<{}, { status: FirewallStatus }>(
+    '*/v4beta/networking/firewalls/:firewallId',
+    async ({ request }) => {
+      const body = await request.json();
+      const firewall = firewallFactory.build({
+        status: body?.['status'] ?? 'disabled',
+      });
+      return HttpResponse.json(firewall);
+    }
+  ),
   // http.post('*/account/agreements', () => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
   // }),
@@ -843,8 +853,44 @@ export const handlers = [
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
   http.get('*/v4/object-storage/endpoints', ({}) => {
-    const endpoint = objectStorageEndpointsFactory.build();
-    return HttpResponse.json(endpoint);
+    const endpoints = [
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E0',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E1',
+        region: 'us-sea',
+        s3_endpoint: 'us-sea-1.linodeobjects.com',
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E1',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-east',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-mia',
+        s3_endpoint: 'us-mia-1.linodeobjects.com',
+      }),
+    ];
+    return HttpResponse.json(makeResourcePage(endpoints));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
@@ -925,10 +971,16 @@ export const handlers = [
     const page = Number(url.searchParams.get('page') || 1);
     const pageSize = Number(url.searchParams.get('page_size') || 25);
 
+    const randomBucketNumber = getRandomWholeNumber(1, 500);
+    const randomEndpointType = `E${Math.floor(
+      Math.random() * 4
+    )}` as ObjectStorageEndpointTypes;
+
     const buckets = objectStorageBucketFactoryGen2.buildList(1, {
       cluster: `${region}-1`,
-      hostname: `obj-bucket-1.${region}.linodeobjects.com`,
-      label: `obj-bucket-1`,
+      endpoint_type: randomEndpointType,
+      hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+      label: `obj-bucket-${randomBucketNumber}`,
       region,
     });
 
@@ -1234,8 +1286,8 @@ export const handlers = [
 
     if (request.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
-        const statusA = a[headers['+order_by']];
-        const statusB = b[headers['+order_by']];
+        const statusA = a[headers['+order_by'] as keyof AccountMaintenance];
+        const statusB = b[headers['+order_by'] as keyof AccountMaintenance];
 
         if (statusA < statusB) {
           return -1;
@@ -1333,8 +1385,12 @@ export const handlers = [
       }
 
       filteredAccountUsers.sort((a, b) => {
-        const statusA = a[headers['+order_by']];
-        const statusB = b[headers['+order_by']];
+        const statusA = a[headers['+order_by'] as keyof User];
+        const statusB = b[headers['+order_by'] as keyof User];
+
+        if (!statusA || !statusB) {
+          return 0;
+        }
 
         if (statusA < statusB) {
           return -1;
@@ -1908,11 +1964,14 @@ export const handlers = [
   http.post('*/networking/vlans', () => {
     return HttpResponse.json({});
   }),
-  http.post('*/networking/ipv6/ranges', async ({ request }) => {
-    const body = await request.json();
-    const range = body?.['prefix_length'];
-    return HttpResponse.json({ range, route_target: '2001:DB8::0000' });
-  }),
+  http.post<{}, { prefix_length: number }>(
+    '*/networking/ipv6/ranges',
+    async ({ request }) => {
+      const body = await request.json();
+      const range = body?.['prefix_length'];
+      return HttpResponse.json({ range, route_target: '2001:DB8::0000' });
+    }
+  ),
   http.post('*/networking/ips/assign', () => {
     return HttpResponse.json({});
   }),
@@ -2214,59 +2273,24 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/v4/monitor/services/linode/dashboards', () => {
+  http.get('*/v4/monitor/services', () => {
+    const response = {
+      data: [{ service_type: 'linode' }],
+    };
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/v4/monitor/services/:serviceType/dashboards', () => {
     const response = {
       data: [
-        {
-          created: '2024-04-29T17:09:29',
-          id: 1,
-          label: 'Linode Service I/O Statistics',
+        dashboardFactory.build({
+          label: 'Linode Dashboard',
           service_type: 'linode',
-          type: 'standard',
-          updated: null,
-          widgets: [
-            {
-              aggregate_function: 'avg',
-              chart_type: 'area',
-              color: 'blue',
-              label: 'CPU utilization',
-              metric: 'system_cpu_utilization_percent',
-              size: 12,
-              unit: '%',
-              y_label: 'system_cpu_utilization_ratio',
-            },
-            {
-              aggregate_function: 'avg',
-              chart_type: 'area',
-              color: 'red',
-              label: 'Memory Usage',
-              metric: 'system_memory_usage_by_resource',
-              size: 12,
-              unit: 'Bytes',
-              y_label: 'system_memory_usage_bytes',
-            },
-            {
-              aggregate_function: 'avg',
-              chart_type: 'area',
-              color: 'green',
-              label: 'Network Traffic',
-              metric: 'system_network_io_by_resource',
-              size: 6,
-              unit: 'Bytes',
-              y_label: 'system_network_io_bytes_total',
-            },
-            {
-              aggregate_function: 'avg',
-              chart_type: 'area',
-              color: 'yellow',
-              label: 'Disk I/O',
-              metric: 'system_disk_OPS_total',
-              size: 6,
-              unit: 'OPS',
-              y_label: 'system_disk_operations_total',
-            },
-          ],
-        },
+        }),
+        dashboardFactory.build({
+          label: 'DBaaS Dashboard',
+          service_type: 'dbaas',
+        }),
       ],
     };
 
@@ -2449,6 +2473,41 @@ export const handlers = [
         },
       ],
     };
+    return HttpResponse.json(response);
+  }),
+  http.post('*/monitor/services/:serviceType/metrics', () => {
+    const response = {
+      data: {
+        result: [
+          {
+            metric: {},
+            values: [
+              [1721854379, '0.2744841110560275'],
+              [1721857979, '0.2980357104166823'],
+              [1721861579, '0.3290476561287732'],
+              [1721865179, '0.32148793964961897'],
+              [1721868779, '0.3269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.3237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.25839295774934357'],
+              [1721890379, '0.26863082415681144'],
+              [1721893979, '0.26126998689934394'],
+              [1721897579, '0.26164641539434685'],
+            ],
+          },
+        ],
+        resultType: 'matrix',
+      },
+      isPartial: false,
+      stats: {
+        executionTimeMsec: 23,
+        seriesFetched: '14',
+      },
+      status: 'success',
+    };
+
     return HttpResponse.json(response);
   }),
   ...entityTransfers,

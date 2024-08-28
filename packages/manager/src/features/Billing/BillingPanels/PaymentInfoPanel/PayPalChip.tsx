@@ -115,7 +115,9 @@ export const PayPalChip = (props: Props) => {
       type: 'payment_method_nonce',
     })
       .then(() => {
-        queryClient.invalidateQueries(accountQueries.paymentMethods.queryKey);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.paymentMethods.queryKey,
+        });
 
         onClose();
 

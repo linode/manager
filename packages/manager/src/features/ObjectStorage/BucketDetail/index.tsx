@@ -1,6 +1,5 @@
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { RouteComponentProps, matchPath } from 'react-router-dom';
+import { matchPath } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
@@ -9,10 +8,16 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { BucketAccess } from './BucketAccess';
 
+import type { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import type { ComponentType, LazyExoticComponent } from 'react';
+import type { RouteComponentProps } from 'react-router-dom';
 
 const ObjectList: LazyExoticComponent<ComponentType<any>> = React.lazy(() =>
   import('./BucketDetail').then((module) => ({ default: module.BucketDetail }))
@@ -20,6 +25,11 @@ const ObjectList: LazyExoticComponent<ComponentType<any>> = React.lazy(() =>
 const BucketSSL = React.lazy(() =>
   import('./BucketSSL').then((module) => ({
     default: module.BucketSSL,
+  }))
+);
+const BucketProperties = React.lazy(() =>
+  import('./BucketProperties').then((module) => ({
+    default: module.BucketProperties,
   }))
 );
 
@@ -31,10 +41,29 @@ interface MatchProps {
 type Props = RouteComponentProps<MatchProps>;
 
 export const BucketDetailLanding = React.memo((props: Props) => {
+  const { data: account } = useAccount();
+  const flags = useFlags();
+
+  const isObjectStorageGen2Enabled = isFeatureEnabledV2(
+    'Object Storage Endpoint Types',
+    Boolean(flags.objectStorageGen2?.enabled),
+    account?.capabilities ?? []
+  );
+
+  const { data: bucketsData } = useObjectStorageBuckets(
+    isObjectStorageGen2Enabled
+  );
+
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
   const { bucketName, clusterId } = props.match.params;
+
+  const bucket = bucketsData?.buckets.find(({ label }) => label === bucketName);
+
+  const { endpoint_type } = bucket ?? {};
+
+  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type === 'E3';
 
   const tabs = [
     {
@@ -45,10 +74,22 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
-    {
-      routeName: `${props.match.url}/ssl`,
-      title: 'SSL/TLS',
-    },
+    ...(flags.objectStorageGen2?.enabled
+      ? [
+          {
+            routeName: `${props.match.url}/properties`,
+            title: 'Properties',
+          },
+        ]
+      : []),
+    ...(!isSSLEnabled
+      ? [
+          {
+            routeName: `${props.match.url}/ssl`,
+            title: 'SSL/TLS',
+          },
+        ]
+      : []),
   ];
 
   const [index, setIndex] = React.useState(
@@ -85,12 +126,21 @@ export const BucketDetailLanding = React.memo((props: Props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <ObjectList {...props} />
+              <ObjectList {...props} endpointType={endpoint_type} />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              <BucketAccess bucketName={bucketName} clusterId={clusterId} />
+              <BucketAccess
+                bucketName={bucketName}
+                clusterId={clusterId}
+                endpointType={endpoint_type}
+              />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
+            {flags.objectStorageGen2?.enabled && bucket && (
+              <SafeTabPanel index={2}>
+                <BucketProperties bucket={bucket} />
+              </SafeTabPanel>
+            )}
+            <SafeTabPanel index={tabs.length - 1}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>
           </TabPanels>
