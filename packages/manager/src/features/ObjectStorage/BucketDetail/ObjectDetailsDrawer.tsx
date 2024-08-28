@@ -103,6 +103,7 @@ export const ObjectDetailsDrawer = React.memo(
               updateAccess={(acl: ACLType) =>
                 updateObjectACL(clusterId, bucketName, name, acl)
               }
+              endpointType={endpointType}
               name={name}
               variant="object"
             />

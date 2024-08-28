@@ -66,6 +66,6 @@ export const WithDeleteButton: StoryObj<ChipProps> = {
 const meta: Meta<ChipProps> = {
   args: { label: 'Chip', onDelete: undefined },
   component: Chip,
-  title: 'Components/Chip',
+  title: 'Foundations/Chip',
 };
 export default meta;

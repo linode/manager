@@ -17,7 +17,7 @@ const meta: Meta<typeof InlineMenuAction> = {
     tooltipAnalyticsEvent: action('tooltipAnalyticsEvent'),
   },
   component: InlineMenuAction,
-  title: 'Components/InlineMenuAction',
+  title: 'Components/Action Menu/InlineMenuAction',
 };
 
 export default meta;

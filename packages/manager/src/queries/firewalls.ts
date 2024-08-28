@@ -408,6 +408,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
 export const firewallEventsHandler = ({
   event,
+  invalidateQueries,
   queryClient,
 }: EventHandlerData) => {
   if (!event.entity) {
@@ -418,7 +419,7 @@ export const firewallEventsHandler = ({
   switch (event.action) {
     case 'firewall_delete':
       // Invalidate firewall lists
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
 
@@ -428,7 +429,7 @@ export const firewallEventsHandler = ({
       });
     case 'firewall_create':
       // Invalidate firewall lists
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
     case 'firewall_device_add':
@@ -438,13 +439,9 @@ export const firewallEventsHandler = ({
 
       // If a Linode is added or removed as a firewall device, invalidate it's firewalls
       if (event.secondary_entity && event.secondary_entity.type === 'linode') {
-        queryClient.invalidateQueries({
-          queryKey: [
-            'linodes',
-            'linode',
-            event.secondary_entity.id,
-            'firewalls',
-          ],
+        invalidateQueries({
+          queryKey: linodeQueries.linode(event.secondary_entity.id)._ctx
+            .firewalls.queryKey,
         });
       }
 
@@ -453,23 +450,19 @@ export const firewallEventsHandler = ({
         event.secondary_entity &&
         event.secondary_entity.type === 'nodebalancer'
       ) {
-        queryClient.invalidateQueries({
-          queryKey: [
-            'nodebalancers',
-            'nodebalancer',
-            event.secondary_entity.id,
-            'firewalls',
-          ],
+        invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(event.secondary_entity.id)
+            ._ctx.firewalls.queryKey,
         });
       }
 
       // Invalidate the firewall
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewall(event.entity.id).queryKey,
       });
 
       // Invalidate firewall lists
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
     case 'firewall_disable':
@@ -477,11 +470,11 @@ export const firewallEventsHandler = ({
     case 'firewall_rules_update':
     case 'firewall_update':
       // invalidate the firewall
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewall(event.entity.id).queryKey,
       });
       // Invalidate firewall lists
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
   }
