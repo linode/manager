@@ -132,15 +132,17 @@ export const DisplaySettings = () => {
             <div>
               <Typography sx={{ fontSize: '1rem' }} variant="h2">
                 Profile photo
-                <StyledTooltipIcon
-                  sxTooltipIcon={{
-                    marginLeft: '6px',
-                    marginTop: '-2px',
-                    padding: 0,
-                  }}
-                  status="help"
-                  text={tooltipIconText}
-                />
+                {hasGravatar && (
+                  <StyledTooltipIcon
+                    sxTooltipIcon={{
+                      marginLeft: '6px',
+                      marginTop: '-2px',
+                      padding: 0,
+                    }}
+                    status="help"
+                    text={tooltipIconText}
+                  />
+                )}
               </Typography>
               <StyledProfileCopy variant="body1">
                 {hasGravatar
