@@ -19,7 +19,7 @@ import { Typography } from 'src/components/Typography';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
-import { getGravatarUrl } from 'src/utilities/gravatar';
+import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 import { AvatarColorPickerDialog } from './AvatarColorPickerDialog';
 import { TimezoneForm } from './TimezoneForm';
@@ -40,20 +40,9 @@ export const DisplaySettings = () => {
   const isProxyUser = profile?.user_type === 'proxy';
 
   const [hasGravatar, setHasGravatar] = useState(false);
-  const checkForGravatar = async (url: string) => {
-    try {
-      const response = await fetch(url);
-
-      if (response.status === 200) {
-        setHasGravatar(true);
-      }
-      if (response.status === 404) {
-        setHasGravatar(false);
-      }
-    } catch (error) {
-      // The fetch to Gravatar failed. Event won't be logged.
-    }
-  };
+  checkForGravatar(getGravatarUrl(profile?.email ?? '')).then((res: boolean) =>
+    setHasGravatar(res)
+  );
 
   const [
     isColorPickerDialogOpen,
@@ -66,11 +55,6 @@ export const DisplaySettings = () => {
       emailRef.current.scrollIntoView();
     }
   }, [emailRef, location.state]);
-
-  React.useEffect(() => {
-    const url = getGravatarUrl(profile?.email ?? '');
-    checkForGravatar(url);
-  }, [profile]);
 
   // Used as React keys to force-rerender forms.
   const [emailResetToken, setEmailResetToken] = React.useState(v4());

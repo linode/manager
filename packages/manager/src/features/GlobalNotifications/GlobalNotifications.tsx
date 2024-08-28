@@ -87,7 +87,7 @@ export const GlobalNotifications = () => {
       Object.keys(flags.taxCollectionBanner).length > 0 ? (
         <TaxCollectionBanner />
       ) : null}
-      <GravatarSunsetBanner />
+      <GravatarSunsetBanner email={profile?.email ?? ''} />
     </>
   );
 };
