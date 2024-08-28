@@ -12,7 +12,7 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
-    checkIfFilterBuilderNeeded,
+  checkIfFilterBuilderNeeded,
   checkMandatoryFiltersSelected,
   getDashboardProperties,
 } from '../Utils/ReusableDashboardFilterUtils';
@@ -22,7 +22,7 @@ import type { FilterValueType } from './CloudPulseDashboardLanding';
 import type { TimeDuration } from '@linode/api-v4';
 
 /**
- * These properties are required for rendering this reusable component
+ * These properties are required for rendering the component
  */
 export interface CloudPulseDashboardWithFiltersProp {
   /**
@@ -52,9 +52,9 @@ export const CloudPulseDashboardWithFilters = React.memo(
     });
 
     const StyledPlaceholder = styled(Placeholder, {
-        label: 'StyledPlaceholder',
+      label: 'StyledPlaceholder',
     })({
-        flex: 'auto',
+      flex: 'auto',
     });
 
     const onFilterChange = React.useCallback(
@@ -71,18 +71,18 @@ export const CloudPulseDashboardWithFilters = React.memo(
       []
     );
 
-    const renderPlaceHolder = React.useCallback((subtitle: string) => {
-        return (
-            <Paper>
-                <StyledPlaceholder
-                    icon={CloudPulseIcon}
-                    isEntity
-                    subtitle={subtitle}
-                    title=""
-                />
-            </Paper>
-        );
-    }, []);
+    const renderPlaceHolder = (subtitle: string) => {
+      return (
+        <Paper>
+          <StyledPlaceholder
+            icon={CloudPulseIcon}
+            isEntity
+            subtitle={subtitle}
+            title=""
+          />
+        </Paper>
+      );
+    };
 
     if (isError) {
       return (
@@ -106,10 +106,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
 
     const isFilterBuilderNeeded = checkIfFilterBuilderNeeded(dashboard);
     const isMandatoryFiltersSelected = checkMandatoryFiltersSelected({
-        dashboardObj: dashboard,
-        filterValue,
-        resource,
-        timeDuration,
+      dashboardObj: dashboard,
+      filterValue,
+      resource,
+      timeDuration,
     });
 
     return (
@@ -142,36 +142,29 @@ export const CloudPulseDashboardWithFilters = React.memo(
                   <CloudPulseDashboardFilterBuilder
                     dashboard={dashboard}
                     emitFilterChange={onFilterChange}
-                    isServiceAnalyticsIntegration={true}                    
+                    isServiceAnalyticsIntegration={true}
                   />
                 )}
                 <Grid item xs={12}>
-                    <Divider />
+                  <Divider />
                 </Grid>
-              </Grid>              
+              </Grid>
             </Paper>
           </Grid>
         </Grid>
-        {isMandatoryFiltersSelected ? (<CloudPulseDashboard
+        {isMandatoryFiltersSelected ? (
+          <CloudPulseDashboard
             {...getDashboardProperties({
-                dashboardObj: dashboard,
-                filterValue,
-                resource,
-                timeDuration,
+              dashboardObj: dashboard,
+              filterValue,
+              resource,
+              timeDuration,
             })}
-            />) : (renderPlaceHolder('Mandatory Filters not Selected')) }
+          />
+        ) : (
+          renderPlaceHolder('Mandatory Filters not Selected')
+        )}
       </>
     );
-  },
-  compareProps
+  }
 );
-
-function compareProps(
-  oldProps: CloudPulseDashboardWithFiltersProp,
-  newProps: CloudPulseDashboardWithFiltersProp
-) {
-  return (
-    oldProps.dashboardId === newProps.dashboardId &&
-    oldProps.resource === newProps.resource
-  );
-}

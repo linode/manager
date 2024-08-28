@@ -35,10 +35,6 @@ export const getDashboardProperties = (
   props: ReusableDashboardFilterUtilProps
 ): DashboardProperties => {
   const { dashboardObj, filterValue, resource, timeDuration } = props;
-  const timeDurationObj: TimeDuration = {
-    unit: 'min',
-    value: 30,
-  };
   return {
     additionalFilters: constructDimensionFilters({
       dashboardObj,
@@ -46,7 +42,7 @@ export const getDashboardProperties = (
       resource,
     }),
     dashboardId: dashboardObj.id,
-    duration: timeDuration ?? timeDurationObj,
+    duration: timeDuration ?? { unit: 'min', value: 30 },
     resources: [String(resource)],
     savePref: false,
   };
