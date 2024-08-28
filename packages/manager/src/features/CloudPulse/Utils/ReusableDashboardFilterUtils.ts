@@ -157,6 +157,6 @@ export const checkIfFilterBuilderNeeded = (dashboard?: Dashboard): boolean => {
   }
 
   return serviceTypeConfig.filters.some(
-    (filterObj) => filterObj.configuration.neededInServicePage
+    ({ configuration }) => configuration.neededInServicePage
   );
 };
