@@ -33,9 +33,10 @@ export const StyledLabel = styled(Typography, {
 export const StyledInputContainer = styled(Box, {
   label: 'StyledInputContainer',
 })<{ isPhoneInputFocused: boolean }>(({ isPhoneInputFocused, theme }) => ({
+  backgroundColor: theme.name === 'dark' ? '#343438' : undefined,
   border: theme.name === 'light' ? '1px solid #ccc' : '1px solid #222',
   transition: 'border-color 225ms ease-in-out',
-  width: '370px',
+  width: 'fit-content',
   ...(isPhoneInputFocused &&
     (theme.name === 'light'
       ? {
@@ -48,26 +49,26 @@ export const StyledInputContainer = styled(Box, {
         })),
 }));
 
-export const StyledSelect = styled(Autocomplete, {
-  label: 'StyledSelect',
+export const StyledISOCodeSelect = styled(Autocomplete, {
+  label: 'StyledISOCodeSelect',
 })(({ theme }) => ({
-  '& .Mui-focused': {
+  '& .MuiAutocomplete-inputRoot': {
+    border: 'unset',
+  },
+  '&& .MuiInputBase-root svg': {
+    color: `${theme.palette.primary.main}`,
+    opacity: '1',
+  },
+  '&.Mui-focused': {
     borderColor: 'unset',
     boxShadow: 'none',
-  },
-  '& .MuiAutocomplete-inputRoot': {
-    border: 'none',
-  },
-  '& .MuiInputBase-root svg': {
-    border: 'unset',
-    color: `${theme.palette.primary.main} !important`,
-    opacity: '1 !important',
   },
   '&:focus': {
     borderColor: 'unset',
     boxShadow: 'unset',
   },
-  border: 'none',
+  height: '34px',
+  width: '70px !important',
 }));
 
 export const StyledPhoneNumberInput = styled(TextField, {
@@ -82,6 +83,7 @@ export const StyledPhoneNumberInput = styled(TextField, {
     boxShadow: 'unset',
   },
   border: 'unset',
+  minWidth: '300px',
 }));
 
 export const StyledFormHelperText = styled(FormHelperText, {

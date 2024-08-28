@@ -24,11 +24,11 @@ import {
   StyledButtonContainer,
   StyledCodeSentMessageBox,
   StyledFormHelperText,
+  StyledISOCodeSelect,
   StyledInputContainer,
   StyledLabel,
   StyledPhoneNumberInput,
   StyledPhoneNumberTitle,
-  StyledSelect,
 } from './PhoneVerification.styles';
 
 import type {
@@ -257,7 +257,7 @@ export const PhoneVerification = ({
                 display="flex"
                 isPhoneInputFocused={isPhoneInputFocused}
               >
-                <StyledSelect
+                <StyledISOCodeSelect
                   onChange={(_, item: SelectPhoneVerificationOption) => {
                     sendCodeForm.setFieldValue('iso_code', item.value);
                   }}
@@ -269,6 +269,7 @@ export const PhoneVerification = ({
                   }))}
                   sxPopperComponent={{
                     '& .MuiPaper-root.MuiAutocomplete-paper': {
+                      border: '1px solid #3683dc',
                       maxHeight: '285px',
                       overflow: 'hidden',
                       textWrap: 'nowrap',
@@ -277,18 +278,22 @@ export const PhoneVerification = ({
                   }}
                   textFieldProps={{
                     hideLabel: true,
-                    style: { minWidth: '72px' },
+                    style: {
+                      border: 'none',
+                      minWidth: '72px',
+                    },
                   }}
                   value={{
                     label: getCountryFlag(sendCodeForm.values.iso_code),
                   }}
+                  autoHighlight
                   disableClearable
                   disablePortal={true}
                   id="iso_code"
                   label="ISO Code"
-                  noMarginTop
                   onBlur={() => setIsPhoneInputFocused(false)}
                   onFocus={() => setIsPhoneInputFocused(true)}
+                  placeholder=""
                 />
                 <StyledPhoneNumberInput
                   InputProps={{
