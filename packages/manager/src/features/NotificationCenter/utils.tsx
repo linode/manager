@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { ExtendedNotification } from './ExtendedNotification';
+import { ExtendedNotification } from './Notifications/ExtendedNotification';
 
-import type { NotificationCenterItem } from './NotificationCenter';
+import type { NotificationsItem } from './Notifications/NotificationsContainer';
 import type {
   Notification,
   NotificationSeverity,
@@ -41,7 +41,7 @@ export const formatNotificationForDisplay = (
   idx: number,
   onClose: () => void,
   shouldIncludeInCount: boolean = true
-): NotificationCenterItem => ({
+): NotificationsItem => ({
   body: <ExtendedNotification notification={notification} onClose={onClose} />,
   countInTotal: shouldIncludeInCount,
   eventId: -1,

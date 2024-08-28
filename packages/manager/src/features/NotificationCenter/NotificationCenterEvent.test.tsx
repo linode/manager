@@ -3,7 +3,7 @@ import * as React from 'react';
 import { eventFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NotificationEvent } from './NotificationEvent';
+import { NotificationCenterEvent } from './Events/NotificationCenterEvent';
 
 describe('NotificationEvent', () => {
   it('should render a finished event with the proper data', () => {
@@ -17,7 +17,7 @@ describe('NotificationEvent', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <NotificationEvent event={event} onClose={() => vi.fn()} />
+      <NotificationCenterEvent event={event} onClose={() => vi.fn()} />
     );
 
     expect(
@@ -42,7 +42,7 @@ describe('NotificationEvent', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <NotificationEvent event={event} onClose={() => vi.fn()} />
+      <NotificationCenterEvent event={event} onClose={() => vi.fn()} />
     );
 
     expect(

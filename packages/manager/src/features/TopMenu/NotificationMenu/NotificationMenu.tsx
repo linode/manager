@@ -11,12 +11,12 @@ import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { LinkButton } from 'src/components/LinkButton';
 import { Typography } from 'src/components/Typography';
-import { NotificationCenter } from 'src/features/NotificationCenter/NotificationCenter';
+import { NotificationCenterEvent } from 'src/features/NotificationCenter/Events/NotificationCenterEvent';
 import {
-  notificationContext as _notificationContext,
+  notificationCenterContext as _notificationContext,
   menuButtonId,
-} from 'src/features/NotificationCenter/NotificationContext';
-import { NotificationEvent } from 'src/features/NotificationCenter/NotificationEvent';
+} from 'src/features/NotificationCenter/NotificationCenterContext';
+import { NotificationsContainer } from 'src/features/NotificationCenter/Notifications/NotificationsContainer';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/useFormattedNotifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { usePrevious } from 'src/hooks/usePrevious';
@@ -136,7 +136,7 @@ export const NotificationMenu = () => {
         onClose={handleClose}
         open={notificationContext.menuOpen}
       >
-        <NotificationCenter />
+        <NotificationsContainer />
         <Box>
           <Box display="flex" justifyContent="space-between" px={2}>
             <Typography variant="h3">Events</Typography>
@@ -151,7 +151,7 @@ export const NotificationMenu = () => {
           </Box>
           <Divider spacingBottom={0} />
           {data?.pages[0].data.slice(0, 20).map((event) => (
-            <NotificationEvent
+            <NotificationCenterEvent
               event={event}
               key={event.id}
               onClose={handleClose}

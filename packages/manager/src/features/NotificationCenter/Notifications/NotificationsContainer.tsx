@@ -6,12 +6,15 @@ import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import { NotificationCenterContent } from './NotificatioCenterContent';
-import { useStyles } from './NotificationCenter.styles';
-import { StyledHeader, StyledRootContainer } from './NotificationCenter.styles';
-import { useFormattedNotifications } from './useFormattedNotifications';
+import { useStyles } from '../NotificationCenter.styles';
+import {
+  StyledHeader,
+  StyledRootContainer,
+} from '../NotificationCenter.styles';
+import { useFormattedNotifications } from '../useFormattedNotifications';
+import { Notifications } from './Notifications';
 
-export interface NotificationCenterItem {
+export interface NotificationsItem {
   body: JSX.Element | string;
   countInTotal: boolean;
   eventId: number;
@@ -19,7 +22,7 @@ export interface NotificationCenterItem {
   showProgress?: boolean;
 }
 
-interface NotificationCenterProps {
+interface NotificationContainerProps {
   count?: number;
   loading?: boolean;
   onCloseNotificationCenter?: () => void;
@@ -27,7 +30,7 @@ interface NotificationCenterProps {
   showMoreText?: string;
 }
 
-export const NotificationCenter = (props: NotificationCenterProps) => {
+export const NotificationsContainer = (props: NotificationContainerProps) => {
   const { classes, cx } = useStyles();
   const notifications = useFormattedNotifications();
   const header = 'Notifications';
@@ -72,7 +75,7 @@ export const NotificationCenter = (props: NotificationCenterProps) => {
                 </strong>
               )}
             </StyledHeader>
-            <NotificationCenterContent
+            <Notifications
               content={notifications}
               count={_count}
               emptyMessage={emptyMessage}
@@ -91,7 +94,7 @@ export const NotificationCenter = (props: NotificationCenterProps) => {
           defaultExpanded={true}
           heading={header}
         >
-          <NotificationCenterContent
+          <Notifications
             content={notifications}
             count={_count}
             emptyMessage={emptyMessage}

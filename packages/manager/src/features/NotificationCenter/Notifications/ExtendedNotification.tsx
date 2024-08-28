@@ -8,10 +8,10 @@ import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import { StyledLink } from './NotificationCenter.styles';
-import { getEntityLinks } from './utils';
+import { StyledLink } from '../NotificationCenter.styles';
+import { getEntityLinks } from '../utils';
 
-import type { FormattedNotificationProps } from './useFormattedNotifications';
+import type { FormattedNotificationProps } from '../useFormattedNotifications';
 
 export interface ExtendedNotificationProps {
   notification: FormattedNotificationProps;

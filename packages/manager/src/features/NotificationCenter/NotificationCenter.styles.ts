@@ -8,7 +8,7 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-import type { ExtendedNotificationProps } from './ExtendedNotification';
+import type { ExtendedNotificationProps } from './Notifications/ExtendedNotification';
 import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles()((theme: Theme) => ({

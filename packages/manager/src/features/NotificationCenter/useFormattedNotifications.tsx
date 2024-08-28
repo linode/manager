@@ -14,7 +14,7 @@ import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { notificationContext as _notificationContext } from './NotificationContext';
+import { notificationCenterContext as _notificationContext } from './NotificationCenterContext';
 import {
   adjustSeverity,
   checkIfMaintenanceNotification,
@@ -22,7 +22,7 @@ import {
   isEUModelContractNotification,
 } from './utils';
 
-import type { NotificationCenterItem } from './NotificationCenter';
+import type { NotificationsItem } from './Notifications/NotificationsContainer';
 import type {
   Notification,
   NotificationType,
@@ -34,7 +34,7 @@ export interface FormattedNotificationProps extends Notification {
   jsx?: JSX.Element;
 }
 
-export const useFormattedNotifications = (): NotificationCenterItem[] => {
+export const useFormattedNotifications = (): NotificationsItem[] => {
   const notificationContext = React.useContext(_notificationContext);
   const {
     dismissNotifications,

@@ -3,26 +3,26 @@ import React from 'react';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';
 
-import { useStyles } from './NotificationCenter.styles';
+import { useStyles } from '../NotificationCenter.styles';
 import {
   StyledCaret,
   StyledEmptyMessage,
   StyledLToggleContainer,
   StyledLoadingContainer,
   StyledNotificationCenterItem,
-} from './NotificationCenter.styles';
+} from '../NotificationCenter.styles';
 
-import type { NotificationCenterItem } from './NotificationCenter';
+import type { NotificationsItem } from './NotificationsContainer';
 
 interface BodyProps {
-  content: NotificationCenterItem[];
+  content: NotificationsItem[];
   count: number;
   emptyMessage?: string;
-  header: string;
+  header: 'Events' | 'Notifications';
   loading: boolean;
 }
 
-export const NotificationCenterContent = React.memo((props: BodyProps) => {
+export const Notifications = React.memo((props: BodyProps) => {
   const { classes, cx } = useStyles();
   const { content, count, emptyMessage, header, loading } = props;
   const [showAll, setShowAll] = React.useState(false);
@@ -37,16 +37,29 @@ export const NotificationCenterContent = React.memo((props: BodyProps) => {
 
   const _content = showAll ? content : content.slice(0, count);
 
-  return _content.length > 0 ? (
-    // eslint-disable-next-line
+  if (_content.length === 0 && header === 'Notifications') {
+    return null;
+  }
+
+  if (_content.length === 0 && header === 'Events') {
+    return (
+      <StyledEmptyMessage variant="body1">
+        {emptyMessage
+          ? emptyMessage
+          : `You have no ${header.toLocaleLowerCase()}.`}
+      </StyledEmptyMessage>
+    );
+  }
+
+  return (
     <>
-      {_content.map((thisItem) => (
+      {_content.map((notificationCenterItem) => (
         <StyledNotificationCenterItem
           data-testid="notification-item"
           header={props.header}
-          key={`notification-row-${thisItem.id}`}
+          key={`notification-row-${notificationCenterItem.id}`}
         >
-          {thisItem.body}
+          {notificationCenterItem.body}
         </StyledNotificationCenterItem>
       ))}
       {content.length > count ? (
@@ -71,11 +84,5 @@ export const NotificationCenterContent = React.memo((props: BodyProps) => {
         </StyledLToggleContainer>
       ) : null}
     </>
-  ) : header === 'Events' ? (
-    <StyledEmptyMessage variant="body1">
-      {emptyMessage
-        ? emptyMessage
-        : `You have no ${header.toLocaleLowerCase()}.`}
-    </StyledEmptyMessage>
-  ) : null;
+  );
 });
