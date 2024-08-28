@@ -148,7 +148,11 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omit(formValues, ['linode', 'hasSignedEUAgreement']);
+  const values = omit(formValues, [
+    'linode',
+    'hasSignedEUAgreement',
+    'firewallOverride',
+  ]);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
