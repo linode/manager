@@ -20,6 +20,10 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import {
+  sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormSubmitEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
@@ -48,6 +52,7 @@ import {
   getLinodeCreatePayload,
   getTabIndex,
   tabs,
+  useHandleLinodeCreateAnalyticsFormError,
   useLinodeCreateQueryParams,
 } from './utilities';
 import { VLAN } from './VLAN';
@@ -77,6 +82,10 @@ export const LinodeCreatev2 = () => {
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+
+  const {
+    handleLinodeCreateAnalyticsFormError,
+  } = useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -117,6 +126,10 @@ export const LinodeCreatev2 = () => {
         values,
       });
 
+      sendLinodeCreateFormSubmitEvent({
+        createType: params.type ?? 'OS',
+      });
+
       if (values.hasSignedEUAgreement) {
         updateAccountAgreements({
           eu_model: true,
@@ -142,9 +155,10 @@ export const LinodeCreatev2 = () => {
       form.formState.submitCount > previousSubmitCount.current
     ) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
+      handleLinodeCreateAnalyticsFormError(form.formState.errors);
     }
     previousSubmitCount.current = form.formState.submitCount;
-  }, [form.formState]);
+  }, [form.formState, handleLinodeCreateAnalyticsFormError]);
 
   /**
    * Add a Sentry tag when Linode Create v2 is mounted
@@ -163,6 +177,13 @@ export const LinodeCreatev2 = () => {
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
+        onDocsClick={() =>
+          sendLinodeCreateFormInputEvent({
+            createType: params.type ?? 'OS',
+            interaction: 'click',
+            label: 'Getting Started',
+          })
+        }
         docsLabel="Getting Started"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"

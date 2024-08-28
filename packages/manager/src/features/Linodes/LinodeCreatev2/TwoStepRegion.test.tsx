@@ -1,20 +1,26 @@
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { TwoStepRegion } from './TwoStepRegion';
 
 describe('TwoStepRegion', () => {
-  it('should render a heading', () => {
-    const { getAllByText } = renderWithThemeAndHookFormContext({
+  it('should render a heading and docs link', () => {
+    const { getAllByText, getByText } = renderWithThemeAndHookFormContext({
       component: <TwoStepRegion onChange={vi.fn()} />,
     });
 
     const heading = getAllByText('Region')[0];
+    const link = getByText(DOCS_LINK_LABEL_DC_PRICING);
 
     expect(heading).toBeVisible();
     expect(heading.tagName).toBe('H2');
+
+    expect(link).toBeVisible();
+    expect(link).toHaveRole('link');
+    expect(link).toHaveAttribute('href', 'https://www.linode.com/pricing');
   });
 
   it('should render two tabs, Core and Distributed', () => {
