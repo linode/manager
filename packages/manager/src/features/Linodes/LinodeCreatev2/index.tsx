@@ -20,6 +20,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import { useProfile } from 'src/queries/profile/profile';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormSubmitEvent,
@@ -58,18 +59,21 @@ import {
 import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
-import type { LinodeCreateFormValues } from './utilities';
+import type {
+  LinodeCreateFormContext,
+  LinodeCreateFormValues,
+} from './utilities';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const { data: profile } = useProfile();
 
   const queryClient = useQueryClient();
 
-  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
-
-  const form = useForm<LinodeCreateFormValues>({
-    context: { secureVMNoticesEnabled },
+  const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
+    context: { profile, secureVMNoticesEnabled },
     defaultValues: () => defaultValues(params, queryClient),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
