@@ -1,12 +1,9 @@
 import { baseRequest } from '@linode/api-v4/lib/request';
 import { AxiosHeaders } from 'axios';
-import * as React from 'react';
 
-import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
-import { interceptErrors } from 'src/utilities/interceptAPIError';
 
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
@@ -66,32 +63,8 @@ export const handleError = (
     );
   }
 
-  /** AxiosError contains the original POST data as stringified JSON */
-  let requestData;
-  try {
-    requestData = JSON.parse(error.config?.data ?? '');
-  } catch {
-    requestData = {};
-  }
-  const requestedLinodeType = requestData?.type ?? '';
-
-  const interceptedErrors = interceptErrors(errors, [
-    {
-      condition: (e) => !!e.reason.match(/verification is required/i),
-      replacementText: (
-        <VerificationError
-          title={
-            requestedLinodeType.match(/gpu/i)
-              ? 'GPU Request'
-              : 'Verification Request'
-          }
-        />
-      ),
-    },
-  ]);
-
   // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
-  return Promise.reject(interceptedErrors);
+  return Promise.reject(errors);
 };
 
 export const getURL = ({ baseURL, url }: AxiosRequestConfig) => {
