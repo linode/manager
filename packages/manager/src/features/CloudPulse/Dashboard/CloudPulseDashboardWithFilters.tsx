@@ -154,7 +154,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
                     isServiceAnalyticsIntegration={true}                    
                   />
                 )}
-              </Grid>
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+              </Grid>              
             </Paper>
           </Grid>
         </Grid>
