@@ -1,11 +1,11 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -156,6 +156,14 @@ export const NodeBalancerConfigPanel = (
     return eachAlg.value === algorithm;
   });
 
+  const algorithmHelperTextMap = {
+    leastconn:
+      'Least connections assigns connections to the backend with the least connections.',
+    roundrobin:
+      'Round robin distributes connection requests to backend servers in weighted circular order.',
+    source: "Source uses the client's IPv4 address",
+  };
+
   const sessionOptions = [
     { label: 'None', value: 'none' },
     { label: 'Table', value: 'table' },
@@ -203,10 +211,10 @@ export const NodeBalancerConfigPanel = (
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
             autoHighlight
+            disableClearable
             disabled={disabled}
             errorText={errorMap.protocol}
             id={`protocol-${configIdx}`}
-            disableClearable
             label="Protocol"
             noMarginTop
             onChange={onProtocolChange}
@@ -252,6 +260,9 @@ export const NodeBalancerConfigPanel = (
         {tcpSelected && (
           <Grid md={6} xs={12}>
             <Autocomplete
+              onChange={(_, selected) => {
+                props.onProxyProtocolChange(selected.value);
+              }}
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-proxy-protocol-select': true,
@@ -259,15 +270,12 @@ export const NodeBalancerConfigPanel = (
                 },
               }}
               autoHighlight
+              disableClearable
               disabled={disabled}
               errorText={errorMap.proxy_protocol}
               id={`proxy-protocol-${configIdx}`}
-              disableClearable
               label="Proxy Protocol"
               noMarginTop
-              onChange={(_, selected) => {
-                props.onProxyProtocolChange(selected.value);
-              }}
               options={proxyProtocolOptions}
               size="small"
               value={selectedProxyProtocol || proxyProtocolOptions[0]}
@@ -286,6 +294,9 @@ export const NodeBalancerConfigPanel = (
 
         <Grid md={tcpSelected ? 6 : 3} xs={6}>
           <Autocomplete
+            onChange={(_, selected) => {
+              props.onAlgorithmChange(selected.value);
+            }}
             textFieldProps={{
               dataAttrs: {
                 'data-qa-algorithm-select': true,
@@ -293,28 +304,24 @@ export const NodeBalancerConfigPanel = (
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
             autoHighlight
+            disableClearable
             disabled={disabled}
             errorText={errorMap.algorithm}
             id={`algorithm-${configIdx}`}
-            disableClearable
             label="Algorithm"
             noMarginTop
-            onChange={(_, selected) => {
-              props.onAlgorithmChange(selected.value);
-            }}
             options={algOptions}
             size="small"
             value={defaultAlg || algOptions[0]}
           />
-          <FormHelperText>
-            Roundrobin. Least connections assigns connections to the backend
-            with the least connections. Source uses the client&rsquo;s IPv4
-            address
-          </FormHelperText>
+          <FormHelperText>{algorithmHelperTextMap[algorithm]}</FormHelperText>
         </Grid>
 
         <Grid md={3} xs={6}>
           <Autocomplete
+            onChange={(_, selected) => {
+              props.onSessionStickinessChange(selected.value);
+            }}
             textFieldProps={{
               dataAttrs: {
                 'data-qa-session-stickiness-select': true,
@@ -322,15 +329,12 @@ export const NodeBalancerConfigPanel = (
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
             autoHighlight
+            disableClearable
             disabled={disabled}
             errorText={errorMap.stickiness}
             id={`session-stickiness-${configIdx}`}
-            disableClearable
             label="Session Stickiness"
             noMarginTop
-            onChange={(_, selected) => {
-              props.onSessionStickinessChange(selected.value);
-            }}
             options={sessionOptions}
             size="small"
             value={defaultSession || sessionOptions[1]}
