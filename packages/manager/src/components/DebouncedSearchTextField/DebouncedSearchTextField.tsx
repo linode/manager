@@ -18,15 +18,6 @@ export interface DebouncedSearchProps extends TextFieldProps {
    */
   clearable?: boolean;
   /**
-   * Including this prop will disable this field from being self-managed.
-   * The user must then manage the state of the text field and provide a
-   * value and change handler.
-   */
-  customValue?: {
-    onChange: (newValue: string | undefined) => void;
-    value: string | undefined;
-  };
-  /**
    * Interval in milliseconds of time that passes before search queries are accepted.
    * @default 400
    */
@@ -51,7 +42,6 @@ export const DebouncedSearchTextField = React.memo(
       InputProps,
       className,
       clearable,
-      customValue,
       debounceTime,
       defaultValue,
       hideLabel,
@@ -62,11 +52,9 @@ export const DebouncedSearchTextField = React.memo(
       ...restOfTextFieldProps
     } = props;
 
-    // Manage the textfield state if customValue is not provided
-    const managedValue = React.useState<string | undefined>();
-    const [textFieldValue, setTextFieldValue] = customValue
-      ? [customValue.value, customValue.onChange]
-      : managedValue;
+    const [textFieldValue, setTextFieldValue] = React.useState<
+      string | undefined
+    >();
 
     React.useEffect(() => {
       if (textFieldValue != undefined) {
