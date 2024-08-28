@@ -21,6 +21,12 @@ import type { NodeBalancerConfigPanelProps } from './types';
 import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 
 const DATA_NODE = 'data-node-idx';
+export const ROUND_ROBIN_ALGORITHM_HELPER_TEXT =
+  'Round robin distributes connection requests to backend servers in weighted circular order.';
+export const LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT =
+  'Least connections assigns connections to the backend with the least connections.';
+export const SOURCE_ALGORITHM_HELPER_TEXT =
+  "Source uses the client's IPv4 address.";
 
 export const NodeBalancerConfigPanel = (
   props: NodeBalancerConfigPanelProps
@@ -156,12 +162,10 @@ export const NodeBalancerConfigPanel = (
     return eachAlg.value === algorithm;
   });
 
-  const algorithmHelperTextMap = {
-    leastconn:
-      'Least connections assigns connections to the backend with the least connections.',
-    roundrobin:
-      'Round robin distributes connection requests to backend servers in weighted circular order.',
-    source: "Source uses the client's IPv4 address",
+  const algorithmHelperText = {
+    leastconn: LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
+    roundrobin: ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
+    source: SOURCE_ALGORITHM_HELPER_TEXT,
   };
 
   const sessionOptions = [
@@ -200,7 +204,7 @@ export const NodeBalancerConfigPanel = (
             type="number"
             value={port || ''}
           />
-          <FormHelperText>Listen on this port</FormHelperText>
+          <FormHelperText>Listen on this port.</FormHelperText>
         </Grid>
         <Grid md={3} xs={6}>
           <Autocomplete
@@ -229,6 +233,7 @@ export const NodeBalancerConfigPanel = (
             <Grid md={5} sm={6} xs={12}>
               <TextField
                 data-qa-cert-field
+                data-testid="ssl-certificate"
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.ssl_cert}
@@ -243,6 +248,7 @@ export const NodeBalancerConfigPanel = (
             <Grid md={5} sm={6} xs={12}>
               <TextField
                 data-qa-private-key-field
+                data-testid="private-key"
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.ssl_key}
@@ -314,7 +320,7 @@ export const NodeBalancerConfigPanel = (
             size="small"
             value={defaultAlg || algOptions[0]}
           />
-          <FormHelperText>{algorithmHelperTextMap[algorithm]}</FormHelperText>
+          <FormHelperText>{algorithmHelperText[algorithm]}</FormHelperText>
         </Grid>
 
         <Grid md={3} xs={6}>
@@ -340,7 +346,7 @@ export const NodeBalancerConfigPanel = (
             value={defaultSession || sessionOptions[1]}
           />
           <FormHelperText>
-            Route subsequent requests from the client to the same backend
+            Route subsequent requests from the client to the same backend.
           </FormHelperText>
         </Grid>
         <Grid xs={12}>
