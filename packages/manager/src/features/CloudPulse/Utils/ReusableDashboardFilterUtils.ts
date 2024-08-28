@@ -57,12 +57,13 @@ export const checkMandatoryFiltersSelected = (
 ): boolean => {
   const { dashboardObj, filterValue, resource, timeDuration } = props;
   const serviceTypeConfig = FILTER_CONFIG.get(dashboardObj.service_type);
-  if (!timeDuration || !resource) {
-    return false;
-  }
 
   if (!serviceTypeConfig) {
     return true;
+  }
+
+  if (!timeDuration || !resource) {
+    return false;
   }
 
   return serviceTypeConfig
