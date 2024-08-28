@@ -58,7 +58,7 @@ export const BucketRateLimitTable = ({
   });
 
   return (
-    <Table sx={{ marginBottom: 3 }}>
+    <Table data-testid="bucket-rate-limit-table" sx={{ marginBottom: 3 }}>
       <TableHead>
         <TableRow>
           {tableHeaders.map((header, index) => {
