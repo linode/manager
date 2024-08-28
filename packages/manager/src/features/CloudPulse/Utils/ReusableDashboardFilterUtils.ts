@@ -143,3 +143,23 @@ export const constructDimensionFilters = (
       filterValue: filterValue[key],
     }));
 };
+
+/**
+ * @param dashboard The dashboard that needs to be rendered
+ * @returns True if some filter is needed in service provider page, else false
+ */
+export const checkIfFilterBuilderNeeded = (dashboard?: Dashboard): boolean => {
+  if (!dashboard) {
+    return false;
+  }
+
+  const serviceTypeConfig = FILTER_CONFIG.get(dashboard.service_type);
+
+  if (!serviceTypeConfig) {
+    return false;
+  }
+
+  return serviceTypeConfig.filters.some(
+    (filterObj) => filterObj.configuration.neededInServicePage
+  );
+};

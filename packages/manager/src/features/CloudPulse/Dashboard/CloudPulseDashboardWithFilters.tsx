@@ -12,6 +12,7 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
+    checkIfFilterBuilderNeeded,
   checkMandatoryFiltersSelected,
   getDashboardProperties,
 } from '../Utils/ReusableDashboardFilterUtils';
@@ -70,16 +71,6 @@ export const CloudPulseDashboardWithFilters = React.memo(
       []
     );
 
-    const checkIfFilterBuilderNeeded = React.useCallback(() => {
-      if (!dashboard) {
-        return false;
-      }
-
-      return FILTER_CONFIG.get(dashboard?.service_type)?.filters.some(
-        (filterObj) => filterObj.configuration.neededInServicePage
-      );
-    }, [dashboard]);
-
     const renderPlaceHolder = React.useCallback((subtitle: string) => {
         return (
             <Paper>
@@ -113,7 +104,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
       );
     }
 
-    const isFilterBuilderNeeded = checkIfFilterBuilderNeeded();
+    const isFilterBuilderNeeded = checkIfFilterBuilderNeeded(dashboard);
     const isMandatoryFiltersSelected = checkMandatoryFiltersSelected({
         dashboardObj: dashboard,
         filterValue,
