@@ -8,6 +8,10 @@ export const CreateBucketSchema = object()
       label: string()
         .required('Label is required.')
         .matches(/^\S*$/, 'Label must not contain spaces.')
+        .matches(
+          /^[a-z0-9.-]*$/,
+          'Label must consist only of lowercase letters, numbers, . (period), and - (dash).'
+        )
         .min(3, 'Label must be between 3 and 63 characters.')
         .max(63, 'Label must be between 3 and 63 characters.')
         .test(
