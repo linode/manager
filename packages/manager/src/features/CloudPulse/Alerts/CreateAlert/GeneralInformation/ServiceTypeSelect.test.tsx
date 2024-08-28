@@ -7,14 +7,14 @@ import { initialValues } from '../CreateAlertDefinition';
 import { CloudPulseServiceSelect } from './ServiceTypeSelect';
 
 const queryMocks = vi.hoisted(() => ({
-  useCloudPulseServices: vi.fn().mockReturnValue({}),
+  useCloudPulseServiceTypes: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/cloudpulse/services', async () => {
-  const actual = await vi.importActual('src/queries/cloudpulse/resources');
+  const actual = await vi.importActual('src/queries/cloudpulse/services');
   return {
     ...actual,
-    useCloudPulseServices: queryMocks.useCloudPulseServices,
+    useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
   };
 });
 
@@ -38,15 +38,9 @@ describe('ServiceTypeSelect component tests', () => {
   });
 
   it('should render service types happy path', (_) => {
-    queryMocks.useCloudPulseServices.mockReturnValue({
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
       data: {
-        data: [
-          {
-            label: 'Linodes',
-            value: 'linode',
-          },
-          { label: 'DbaaS', value: 'dbaas' },
-        ],
+        data: [{ service_type: 'linode' }, { service_type: 'dbaas' }],
       },
       isError: false,
       isLoading: false,
@@ -59,26 +53,20 @@ describe('ServiceTypeSelect component tests', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(
       screen.getByRole('option', {
-        name: 'Linodes',
+        name: 'linode',
       })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('option', {
-        name: 'DbaaS',
+        name: 'dbaas',
       })
     ).toBeInTheDocument();
   });
 
   it('should be able to select a service type', () => {
-    queryMocks.useCloudPulseServices.mockReturnValue({
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
       data: {
-        data: [
-          {
-            label: 'Linodes',
-            value: 'linode',
-          },
-          { label: 'DbaaS', value: 'dbaas' },
-        ],
+        data: [{ service_type: 'linode' }, { service_type: 'dbaas' }],
       },
       isError: false,
       isLoading: false,
@@ -89,7 +77,7 @@ describe('ServiceTypeSelect component tests', () => {
       onSubmit: handleOnSubmit,
     });
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'Linodes' }));
-    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Linodes');
+    fireEvent.click(screen.getByRole('option', { name: 'linode' }));
+    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'linode');
   });
 });

@@ -14,30 +14,25 @@ import { Button } from 'src/components/Button/Button';
 import { Paper } from 'src/components/Paper';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { AlertDefinitionLanding } from './AlertDefinitionLanding';
 
 const AlertsLanding = React.memo(() => {
+  const flags = useFlags();
   const { path } = useRouteMatch();
   const history = useHistory();
   const tabs = [
-    // These commented routes are for further scope of the alert service
-    // {
-    //   routeName: `${path}/activity`,
-    //   title: 'Recent activity',
-    // },
     {
+      accessible: flags.aclpAlerting?.alertDefinitions,
       routeName: `${path}/definitions`,
       title: 'Definitions',
     },
-    // {
-    //   routeName: `${path}/notification`,
-    //   title: 'Notification Channel',
-    // },
   ];
+  const accessibleTabs = tabs.filter((tab) => tab.accessible);
   const location = useLocation();
   const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
+    history.push(accessibleTabs[index].routeName);
   };
   const matches = (p: string) => {
     return Boolean(matchPath(location.pathname, { exact: false, path: p }));
@@ -45,10 +40,7 @@ const AlertsLanding = React.memo(() => {
   return (
     <Paper>
       <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
+        index={accessibleTabs.findIndex((tab) => matches(tab.routeName))}
         onChange={navToURL}
         style={{ width: '100%' }}
       >
@@ -61,14 +53,19 @@ const AlertsLanding = React.memo(() => {
             width: '100%',
           }}
         >
-          <TabLinkList tabs={tabs} />
+          <TabLinkList tabs={accessibleTabs} />
           {location.pathname === `${path}/definitions` ? (
             <Button
               onClick={(_) => {
                 history.push(`${path}/definitions/create`);
               }}
+              sx={{
+                fontSize: '1.5em',
+                paddingBottom: 1,
+                transform: 'scale(0.75)',
+                transformOrigin: 'center',
+              }}
               buttonType="primary"
-              sx={{ marginRight: 2 }}
               variant="contained"
             >
               Create
@@ -76,20 +73,11 @@ const AlertsLanding = React.memo(() => {
           ) : null}
         </Box>
         <Switch>
-          {/* <Route
-            component={RecentActivity}
-            path={'/monitor/cloudpulse/alerts/activity'}
-          /> */}
           <Route
             component={() => <AlertDefinitionLanding />}
             path={'/monitor/cloudpulse/alerts/definitions'}
           />
-          {/* <Route
-            component={Notify}
-            path={'/monitor/cloudpulse/alerts/notification'}
-          /> */}
           <Redirect
-            // exact
             from="/monitor/cloudpulse/alerts"
             to="/monitor/cloudpulse/alerts/definitions"
           />

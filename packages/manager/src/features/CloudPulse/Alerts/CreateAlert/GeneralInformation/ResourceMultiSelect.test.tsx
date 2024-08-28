@@ -8,14 +8,14 @@ import { initialValues } from '../CreateAlertDefinition';
 import { CloudPulseMultiResourceSelect } from './ResourceMultiSelect';
 
 const queryMocks = vi.hoisted(() => ({
-  useLinodeResourcesQuery: vi.fn().mockReturnValue({}),
+  useResourcesQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/cloudpulse/resources', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/resources');
   return {
     ...actual,
-    useLinodeResourcesQuery: queryMocks.useLinodeResourcesQuery,
+    useResourcesQuery: queryMocks.useResourcesQuery,
   };
 });
 
@@ -24,7 +24,7 @@ const SELECT_ALL = 'Select All';
 const ARIA_SELECTED = 'aria-selected';
 describe('ResourceMultiSelect component tests', () => {
   it('should render disabled component if the props are undefined or regions and service type does not have any values', () => {
-    queryMocks.useLinodeResourcesQuery.mockReturnValue({
+    queryMocks.useResourcesQuery.mockReturnValue({
       data: linodeFactory.buildList(2),
       isError: false,
       isLoading: false,
@@ -46,8 +46,8 @@ describe('ResourceMultiSelect component tests', () => {
     expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
   });
   it('should render resources happy path', () => {
-    queryMocks.useLinodeResourcesQuery.mockReturnValue({
-      data: { data: linodeFactory.buildList(2) },
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -77,8 +77,8 @@ describe('ResourceMultiSelect component tests', () => {
     ).toBeInTheDocument();
   });
   it('should be able to select all resources', () => {
-    queryMocks.useLinodeResourcesQuery.mockReturnValue({
-      data: { data: linodeFactory.buildList(2) },
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -109,8 +109,8 @@ describe('ResourceMultiSelect component tests', () => {
     ).toHaveAttribute(ARIA_SELECTED, 'true');
   });
   it('should be able to deselect the selected resources', () => {
-    queryMocks.useLinodeResourcesQuery.mockReturnValue({
-      data: { data: linodeFactory.buildList(2) },
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
       isError: false,
       isLoading: false,
       status: 'success',
@@ -143,8 +143,8 @@ describe('ResourceMultiSelect component tests', () => {
   });
 
   it('should select multiple resources', () => {
-    queryMocks.useLinodeResourcesQuery.mockReturnValue({
-      data: { data: linodeFactory.buildList(3) },
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(3),
       isError: false,
       isLoading: false,
       status: 'success',

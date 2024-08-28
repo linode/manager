@@ -2274,7 +2274,7 @@ export const handlers = [
   }),
   http.get('*/v4/monitor/services', () => {
     const response = {
-      data: [{ service_type: 'linode' }],
+      data: [{ service_type: 'linode' }, { service_type: 'dbaas' }],
     };
 
     return HttpResponse.json(response);
@@ -2335,18 +2335,6 @@ export const handlers = [
       ],
     };
 
-    return HttpResponse.json(response);
-  }),
-  http.get('*/v4/monitor/services', () => {
-    const response = {
-      data: [
-        {
-          label: 'Linodes',
-          value: 'linode',
-        },
-        { label: 'DbaaS', value: 'dbaas' },
-      ],
-    };
     return HttpResponse.json(response);
   }),
   http.post('*/monitor/alerts', async ({ request }) => {

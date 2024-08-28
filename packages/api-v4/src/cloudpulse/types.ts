@@ -175,13 +175,6 @@ export interface Alert {
   updated: string;
 }
 
-
-export interface ServiceTypes {
-  data: Services[];
-}
-export interface Services {
-  service_type: string;
-}
 export interface MetricDefinitions {
   data: AvailableMetrics[];
 }
