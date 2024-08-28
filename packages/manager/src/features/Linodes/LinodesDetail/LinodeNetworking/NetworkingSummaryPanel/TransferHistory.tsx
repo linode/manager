@@ -180,7 +180,7 @@ export const TransferHistory = React.memo((props: Props) => {
   return (
     // Allow `tabIndex` on `<div>` because it represents an interactive element.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-    <div aria-label={graphAriaLabel} role="graphics-document" tabIndex={0}>
+    (<div aria-label={graphAriaLabel} role="graphics-document" tabIndex={0}>
       <Box
         alignItems="center"
         borderBottom={`1px solid ${theme.color.grey6}`}
@@ -232,7 +232,7 @@ export const TransferHistory = React.memo((props: Props) => {
         </Box>
       </Box>
       {renderStatsGraph()}
-    </div>
+    </div>)
   );
 });
 

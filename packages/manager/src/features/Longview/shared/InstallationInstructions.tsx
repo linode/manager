@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -19,7 +19,7 @@ export const InstallationInstructions = React.memo((props: Props) => {
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
-    <Grid container spacing={2}>
+    (<Grid container spacing={2}>
       <Grid>
         <Typography>
           Before this client can gather data, you need to install the Longview
@@ -28,7 +28,7 @@ export const InstallationInstructions = React.memo((props: Props) => {
           receiving data.
         </Typography>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <StyledContainerGrid spacing={2}>
           <Grid sx={{ padding: '8px' }}>
             <CopyTooltip text={command} />
@@ -47,14 +47,14 @@ export const InstallationInstructions = React.memo((props: Props) => {
           </Grid>
         </StyledContainerGrid>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <Typography>
           This should work for most installations, but if you have issues,
           please consult our troubleshooting guide and manual installation
           instructions (API key required):
         </Typography>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <Grid container spacing={2}>
           <StyledInstructionGrid>
             <Typography>
@@ -83,6 +83,6 @@ export const InstallationInstructions = React.memo((props: Props) => {
           </StyledInstructionGrid>
         </Grid>
       </Grid>
-    </Grid>
+    </Grid>)
   );
 });

@@ -12,7 +12,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { QueryClient } from '@tanstack/react-query';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
@@ -502,7 +502,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <Grid className="py0" key={perm} sm={6} xs={12}>
+      (<Grid
+        className="py0"
+        key={perm}
+        size={{
+          sm: 6,
+          xs: 12
+        }}>
         <FormControlLabel
           control={
             <Toggle
@@ -516,7 +522,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           })}
           label={permDescriptionMap[perm]}
         />
-      </Grid>
+      </Grid>)
     );
   };
 

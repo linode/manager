@@ -86,7 +86,7 @@ export const FromLinodeContent = (props: CombinedProps) => {
 
   return (
     // eslint-disable-next-line
-    <React.Fragment>
+    (<React.Fragment>
       {linodesData && linodesData.length === 0 ? (
         <StyledGrid>
           <Paper>
@@ -124,6 +124,6 @@ export const FromLinodeContent = (props: CombinedProps) => {
           />
         </StyledGrid>
       )}
-    </React.Fragment>
+    </React.Fragment>)
   );
 };

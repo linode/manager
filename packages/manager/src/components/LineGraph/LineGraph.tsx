@@ -368,7 +368,7 @@ export const LineGraph = (props: LineGraphProps) => {
     // Screen readers read from top to bottom, so the legend should be read before the data tables, esp considering their size
     // and the fact that the legend can filter them.
     // Meanwhile the CSS uses column-reverse to visually retain the original order
-    <StyledWrapper data-testid="linegraph-wrapper" tabIndex={tabIndex ?? 0}>
+    (<StyledWrapper data-testid="linegraph-wrapper" tabIndex={tabIndex ?? 0}>
       {legendRendered && legendRows && (
         <StyledContainer>
           <StyledTable
@@ -488,7 +488,7 @@ export const LineGraph = (props: LineGraphProps) => {
           hiddenDatasets={hiddenDatasets}
         />
       )}
-    </StyledWrapper>
+    </StyledWrapper>)
   );
 };
 

@@ -1,4 +1,4 @@
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
+import Grid, { Grid2Props } from '@mui/material/Grid2';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 

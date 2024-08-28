@@ -1,6 +1,6 @@
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
@@ -55,7 +55,7 @@ export const AttachFileListItem = (props: Props) => {
     file.errors && file.errors.length ? file.errors[0].reason : undefined;
 
   return (
-    <Grid container spacing={2}>
+    (<Grid container spacing={2}>
       <Grid>
         <TextField
           InputProps={{
@@ -86,13 +86,13 @@ export const AttachFileListItem = (props: Props) => {
         />
       </Grid>
       {file.uploading && (
-        <Grid xs={12}>
+        <Grid size={12}>
           <LinearProgress
             className={classes.uploadProgress}
             variant="indeterminate"
           />
         </Grid>
       )}
-    </Grid>
+    </Grid>)
   );
 };

@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -45,11 +45,11 @@ const sxGridItem = {
 export const Default: Story = {
   render: (args) => (
     <Grid container spacing={2}>
-      <Grid sx={{ ...sxGridItem, marginBottom: '20px' }} xs="auto">
+      <Grid sx={{ ...sxGridItem, marginBottom: '20px' }} size="auto">
         <EntityIcon {...args} />
       </Grid>
       <Grid container spacing={2}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <StyledLabel fontSize="1.5rem">All Variants</StyledLabel>
         </Grid>
         {variantList.map((variant, idx) => {

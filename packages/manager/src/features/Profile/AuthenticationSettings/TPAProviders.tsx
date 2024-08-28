@@ -1,5 +1,5 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -61,104 +61,108 @@ export const TPAProviders = (props: Props) => {
     setDialogOpen(true);
   };
 
-  return (
-    <>
-      <StyledRootContainer>
-        <Typography variant="h3">Login Method</Typography>
-        <StyledCopy>
-          You can use your Cloud Manager credentials or another provider such as
-          Google or GitHub to log in to your Cloud Manager account. More
-          information is available in{' '}
-          <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
-            How to Enable Third Party Authentication on Your User Account
-          </Link>
-          . We strongly recommend setting up Two-Factor Authentication (2FA).
-        </StyledCopy>
-        <StyledProvidersListGrid container spacing={2}>
-          {providersIncludingLinode.map((thisProvider) => {
-            const ProviderIcon = icons[thisProvider.name];
-            const isProviderEnabled = props.authType === thisProvider.name;
+  return (<>
+    <StyledRootContainer>
+      <Typography variant="h3">Login Method</Typography>
+      <StyledCopy>
+        You can use your Cloud Manager credentials or another provider such as
+        Google or GitHub to log in to your Cloud Manager account. More
+        information is available in{' '}
+        <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
+          How to Enable Third Party Authentication on Your User Account
+        </Link>
+        . We strongly recommend setting up Two-Factor Authentication (2FA).
+      </StyledCopy>
+      <StyledProvidersListGrid container spacing={2}>
+        {providersIncludingLinode.map((thisProvider) => {
+          const ProviderIcon = icons[thisProvider.name];
+          const isProviderEnabled = props.authType === thisProvider.name;
 
-            return (
-              <Grid key={thisProvider.displayName} md={4} sm={6} xs={12}>
-                <StyledButton
-                  onClick={() => {
-                    handleProviderChange(thisProvider.name);
-                  }}
-                  data-testid={`Button-${thisProvider.displayName}`}
-                  disabled={isProviderEnabled}
-                  isButtonEnabled={isProviderEnabled}
+          return (
+            (<Grid
+              key={thisProvider.displayName}
+              size={{
+                md: 4,
+                sm: 6,
+                xs: 12
+              }}>
+              <StyledButton
+                onClick={() => {
+                  handleProviderChange(thisProvider.name);
+                }}
+                data-testid={`Button-${thisProvider.displayName}`}
+                disabled={isProviderEnabled}
+                isButtonEnabled={isProviderEnabled}
+              >
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  sx={{ width: '100%' }}
                 >
                   <Box
                     alignItems="center"
                     display="flex"
                     flexDirection="row"
-                    justifyContent="space-between"
-                    sx={{ width: '100%' }}
+                    flexGrow={1}
                   >
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      flexDirection="row"
-                      flexGrow={1}
-                    >
-                      <ProviderIcon
-                        style={{
-                          color: '#939598',
-                          height: 32,
-                          marginRight: theme.spacing(2),
-                          width: 32,
-                        }}
-                      />
-                      {thisProvider.displayName}
-                      {isProviderEnabled ? (
-                        <StyledEnabledText
-                          data-testid={`Enabled-${thisProvider.displayName}`}
-                        >
-                          (Enabled)
-                        </StyledEnabledText>
-                      ) : null}
-                    </Box>
-                    {isProviderEnabled ? <EnabledIcon /> : null}
+                    <ProviderIcon
+                      style={{
+                        color: '#939598',
+                        height: 32,
+                        marginRight: theme.spacing(2),
+                        width: 32,
+                      }}
+                    />
+                    {thisProvider.displayName}
+                    {isProviderEnabled ? (
+                      <StyledEnabledText
+                        data-testid={`Enabled-${thisProvider.displayName}`}
+                      >
+                        (Enabled)
+                      </StyledEnabledText>
+                    ) : null}
                   </Box>
-                </StyledButton>
-              </Grid>
-            );
-          })}
-        </StyledProvidersListGrid>
-        {isThirdPartyAuthEnabled ? (
-          <div data-testid={`Notice-${currentProvider.displayName}`}>
-            <Divider spacingBottom={16} spacingTop={24} />
-            <Typography variant="h3">
-              {currentProvider.displayName} Authentication
-            </Typography>
-            <StyledNotice spacingBottom={16} spacingTop={16} variant="warning">
-              Your login credentials are currently managed via{' '}
-              {currentProvider.displayName}.
-            </StyledNotice>
-            <StyledCopy variant="body1">
-              If you need to reset your password or set up Two-Factor
-              Authentication (2FA), please visit the{' '}
-              <Link external to={currentProvider.href}>
-                {`${currentProvider.displayName}` + ` website`}
-              </Link>
-              .
-            </StyledCopy>
-            <StyledCopy style={{ marginBottom: 8 }} variant="body1">
-              To disable {currentProvider.displayName} authentication and log in
-              using your Cloud Manager credentials, click the Cloud Manager
-              button above. We&rsquo;ll send you an e-mail with instructions on
-              how to reset your password.
-            </StyledCopy>
-          </div>
-        ) : null}
-      </StyledRootContainer>
-      <TPADialog
-        currentProvider={currentProvider}
-        newProvider={newProvider}
-        onClose={() => setDialogOpen(false)}
-        open={isDialogOpen}
-      />
-    </>
-  );
+                  {isProviderEnabled ? <EnabledIcon /> : null}
+                </Box>
+              </StyledButton>
+            </Grid>)
+          );
+        })}
+      </StyledProvidersListGrid>
+      {isThirdPartyAuthEnabled ? (
+        <div data-testid={`Notice-${currentProvider.displayName}`}>
+          <Divider spacingBottom={16} spacingTop={24} />
+          <Typography variant="h3">
+            {currentProvider.displayName} Authentication
+          </Typography>
+          <StyledNotice spacingBottom={16} spacingTop={16} variant="warning">
+            Your login credentials are currently managed via{' '}
+            {currentProvider.displayName}.
+          </StyledNotice>
+          <StyledCopy variant="body1">
+            If you need to reset your password or set up Two-Factor
+            Authentication (2FA), please visit the{' '}
+            <Link external to={currentProvider.href}>
+              {`${currentProvider.displayName}` + ` website`}
+            </Link>
+            .
+          </StyledCopy>
+          <StyledCopy style={{ marginBottom: 8 }} variant="body1">
+            To disable {currentProvider.displayName} authentication and log in
+            using your Cloud Manager credentials, click the Cloud Manager
+            button above. We&rsquo;ll send you an e-mail with instructions on
+            how to reset your password.
+          </StyledCopy>
+        </div>
+      ) : null}
+    </StyledRootContainer>
+    <TPADialog
+      currentProvider={currentProvider}
+      newProvider={newProvider}
+      onClose={() => setDialogOpen(false)}
+      open={isDialogOpen}
+    />
+  </>);
 };

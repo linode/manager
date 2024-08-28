@@ -1,5 +1,5 @@
 import { Database } from '@linode/api-v4/lib/databases/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
@@ -36,18 +36,26 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
   );
 
   return (
-    <Paper>
+    (<Paper>
       <Grid container spacing={2}>
-        <Grid md={4} sm={12}>
+        <Grid
+          size={{
+            md: 4,
+            sm: 12
+          }}>
           <ClusterConfiguration database={database} />
         </Grid>
-        <Grid md={8} sm={12}>
+        <Grid
+          size={{
+            md: 8,
+            sm: 12
+          }}>
           <ConnectionDetails database={database} />
         </Grid>
       </Grid>
       <Divider spacingBottom={16} spacingTop={28} />
       <AccessControls database={database} description={description} />
-    </Paper>
+    </Paper>)
   );
 };
 

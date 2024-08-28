@@ -1,6 +1,6 @@
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';

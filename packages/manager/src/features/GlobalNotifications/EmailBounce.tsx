@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';
@@ -128,9 +128,14 @@ const EmailBounceNotification = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important spacing={2} variant="warning">
+    (<Notice important spacing={2} variant="warning">
       <Grid alignItems="center" container>
-        <Grid lg={8} md={6} xs={12}>
+        <Grid
+          size={{
+            lg: 8,
+            md: 6,
+            xs: 12
+          }}>
           {text}
         </Grid>
         <StyledGrid container lg={4} md={6} xs={12}>
@@ -154,6 +159,6 @@ const EmailBounceNotification = React.memo((props: Props) => {
           </Button>
         </StyledGrid>
       </Grid>
-    </Notice>
+    </Notice>)
   );
 });

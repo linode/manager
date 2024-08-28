@@ -39,7 +39,7 @@ export const SSHAccessTableContent = (props: SSHAccessTableContentProps) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {linodeSettings.map(
         (linodeSetting: ManagedLinodeSetting, idx: number) => (
           <SSHAccessRow
@@ -49,7 +49,7 @@ export const SSHAccessTableContent = (props: SSHAccessTableContentProps) => {
           />
         )
       )}
-    </>
+    </>)
   );
 };
 

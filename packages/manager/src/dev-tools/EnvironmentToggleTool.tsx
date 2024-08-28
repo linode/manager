@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { storage } from 'src/utilities/storage';
@@ -55,11 +55,11 @@ export const EnvironmentToggleTool = () => {
   const currentEnvLabel = localStorageEnv?.label;
 
   return (
-    <Grid container>
-      <Grid xs={12}>
+    (<Grid container>
+      <Grid size={12}>
         <h4 style={{ marginBottom: 8, marginTop: 0 }}>Environment</h4>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <select
           onBlur={(e) => {
             const selectedIndex = options.findIndex(
@@ -94,6 +94,6 @@ export const EnvironmentToggleTool = () => {
           Refresh
         </button>
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };

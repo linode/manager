@@ -37,9 +37,7 @@ export const withMarketplaceApps = <Props>(
   const allowedApps = Object.keys({ ...oneClickApps, ...newApps });
 
   const filteredApps = (data ?? []).filter((script) => {
-    return (
-      !script.label.match(/helpers/i) && allowedApps.includes(String(script.id))
-    );
+    return (!script.label.match(/helpers/i) && allowedApps.includes(String(script.id)));
   });
   const trimmedApps = filteredApps.map((stackscript) =>
     trimOneClickFromLabel(stackscript)

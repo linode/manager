@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -86,7 +86,7 @@ export const KubernetesPlanContainer = (
   ]);
 
   return (
-    <Grid container spacing={2}>
+    (<Grid container spacing={2}>
       <Hidden mdUp>
         {shouldDisplayNoRegionSelectedMessage ? (
           <Notice
@@ -101,7 +101,11 @@ export const KubernetesPlanContainer = (
         )}
       </Hidden>
       <Hidden mdDown>
-        <Grid lg={12} xs={12}>
+        <Grid
+          size={{
+            lg: 12,
+            xs: 12
+          }}>
           <Table aria-label="List of Linode Plans" spacingBottom={16}>
             <TableHead>
               <TableRow>
@@ -137,6 +141,6 @@ export const KubernetesPlanContainer = (
           </Table>
         </Grid>
       </Hidden>
-    </Grid>
+    </Grid>)
   );
 };

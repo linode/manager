@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -76,9 +76,14 @@ export const PopularPosts = () => {
   };
 
   return (
-    <Paper className={classes.root} variant="outlined">
+    (<Paper className={classes.root} variant="outlined">
       <Grid container>
-        <Grid data-qa-documentation-link sm={6} xs={12}>
+        <Grid
+          data-qa-documentation-link
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <Typography className={classes.postTitle} variant="h3">
             Most Popular Documentation:
           </Typography>
@@ -87,15 +92,16 @@ export const PopularPosts = () => {
         <Grid
           className={classes.withSeparator}
           data-qa-community-link
-          sm={6}
-          xs={12}
-        >
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <Typography className={classes.postTitle} variant="h3">
             Most Popular Community Posts:
           </Typography>
           {renderPopularForumPosts()}
         </Grid>
       </Grid>
-    </Paper>
+    </Paper>)
   );
 };

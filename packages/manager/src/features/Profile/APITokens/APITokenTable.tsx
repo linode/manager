@@ -1,5 +1,5 @@
 import { Token } from '@linode/api-v4/lib/profile';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';

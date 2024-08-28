@@ -1,7 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import _Drawer, { DrawerProps } from '@mui/material/Drawer';
 import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 

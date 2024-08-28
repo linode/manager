@@ -1,7 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
@@ -292,21 +292,26 @@ const IPSharingPanel = (props: Props) => {
   const errorMap = getErrorMap([], errors);
   const generalError = errorMap.none;
   return (
-    <Dialog fullWidth onClose={handleClose} open={open} title="IP Sharing">
+    (<Dialog fullWidth onClose={handleClose} open={open} title="IP Sharing">
       <DialogContent loading={isLoading}>
         <>
           {generalError && (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Notice text={generalError} variant="error" />
             </Grid>
           )}
           {successMessage && (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Notice text={successMessage} variant="success" />
             </Grid>
           )}
           <Grid container>
-            <Grid lg={8} sm={12} xl={6}>
+            <Grid
+              size={{
+                lg: 8,
+                sm: 12,
+                xl: 6
+              }}>
               {flags.ipv6Sharing ? (
                 <Notice variant="warning">
                   <Typography sx={{ fontSize: '0.875rem' }}>
@@ -329,7 +334,7 @@ const IPSharingPanel = (props: Props) => {
                 sharing.
               </Typography>
             </Grid>
-            <Grid xs={12}>
+            <Grid size={12}>
               <Grid container>
                 <Grid
                   sx={{
@@ -403,7 +408,7 @@ const IPSharingPanel = (props: Props) => {
           onClick: onReset,
         }}
       />
-    </Dialog>
+    </Dialog>)
   );
 };
 
@@ -445,11 +450,11 @@ interface RowProps {
 export const IPRow: React.FC<RowProps> = React.memo((props) => {
   const { ip } = props;
   return (
-    <Grid container key={ip} spacing={2}>
-      <Grid xs={12}>
+    (<Grid container key={ip} spacing={2}>
+      <Grid size={12}>
         <Divider spacingBottom={0} />
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <TextField
           sx={{ marginTop: 0, width: '100%' }}
           disabled
@@ -458,7 +463,7 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
           value={ip}
         />
       </Grid>
-    </Grid>
+    </Grid>)
   );
 });
 
@@ -496,11 +501,15 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   });
 
   return (
-    <Grid container key={idx} spacing={2}>
-      <Grid xs={12}>
+    (<Grid container key={idx} spacing={2}>
+      <Grid size={12}>
         <Divider spacingBottom={0} />
       </Grid>
-      <Grid sm={10} xs={12}>
+      <Grid
+        size={{
+          sm: 10,
+          xs: 12
+        }}>
         <StyledSelect
           textFieldProps={{
             dataAttrs: {
@@ -521,11 +530,13 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       </Grid>
       {handleDelete ? (
         <Grid
-          sm={2}
           sx={{
             [theme.breakpoints.down('sm')]: {
               width: '100%',
             },
+          }}
+          size={{
+            sm: 2
           }}
         >
           <Button
@@ -543,7 +554,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
           </Button>
         </Grid>
       ) : null}
-    </Grid>
+    </Grid>)
   );
 });
 

@@ -152,7 +152,7 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {data.map((bucket, index) => (
         <BucketTableRow
           {...bucket}
@@ -161,6 +161,6 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
           onRemove={() => onRemove(bucket)}
         />
       ))}
-    </>
+    </>)
   );
 };

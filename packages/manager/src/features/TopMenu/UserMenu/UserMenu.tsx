@@ -3,7 +3,7 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Theme, styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -160,7 +160,7 @@ export const UserMenu = React.memo(() => {
     }
 
     return (
-      <Grid key={link.display} xs={12}>
+      (<Grid key={link.display} size={12}>
         <Link
           data-testid={`menu-item-${link.display}`}
           onClick={handleClose}
@@ -169,7 +169,7 @@ export const UserMenu = React.memo(() => {
         >
           {link.display}
         </Link>
-      </Grid>
+      </Grid>)
     );
   };
 
@@ -196,145 +196,143 @@ export const UserMenu = React.memo(() => {
     setIsDrawerOpen(true);
   };
 
-  return (
-    <>
-      <Tooltip
-        disableTouchListener
-        enterDelay={500}
-        leaveDelay={0}
-        title="Profile & Account"
+  return (<>
+    <Tooltip
+      disableTouchListener
+      enterDelay={500}
+      leaveDelay={0}
+      title="Profile & Account"
+    >
+      <Button
+        startIcon={
+          isProxyUser ? (
+            <GravatarForProxy />
+          ) : (
+            <GravatarByEmail email={profile?.email ?? ''} />
+          )
+        }
+        sx={(theme) => ({
+          backgroundColor: open ? theme.bg.app : undefined,
+          height: '50px',
+          minWidth: 'unset',
+          textTransform: 'none',
+        })}
+        aria-describedby={id}
+        data-testid="nav-group-profile"
+        disableRipple
+        endIcon={getEndIcon()}
+        onClick={handleClick}
       >
-        <Button
-          startIcon={
-            isProxyUser ? (
-              <GravatarForProxy />
-            ) : (
-              <GravatarByEmail email={profile?.email ?? ''} />
-            )
-          }
-          sx={(theme) => ({
-            backgroundColor: open ? theme.bg.app : undefined,
-            height: '50px',
-            minWidth: 'unset',
-            textTransform: 'none',
-          })}
-          aria-describedby={id}
-          data-testid="nav-group-profile"
-          disableRipple
-          endIcon={getEndIcon()}
-          onClick={handleClick}
-        >
-          <Hidden mdDown>
-            <Stack alignItems={'flex-start'}>
+        <Hidden mdDown>
+          <Stack alignItems={'flex-start'}>
+            <Typography
+              sx={{
+                fontSize: companyNameOrEmail ? '0.775rem' : '0.875rem',
+              }}
+            >
+              {userName}
+            </Typography>
+            {companyNameOrEmail && (
               <Typography
-                sx={{
-                  fontSize: companyNameOrEmail ? '0.775rem' : '0.875rem',
-                }}
+                sx={(theme) => ({
+                  fontFamily: theme.font.bold,
+                  fontSize: '0.875rem',
+                })}
               >
-                {userName}
+                {companyNameOrEmail}
               </Typography>
-              {companyNameOrEmail && (
-                <Typography
-                  sx={(theme) => ({
-                    fontFamily: theme.font.bold,
-                    fontSize: '0.875rem',
-                  })}
-                >
-                  {companyNameOrEmail}
-                </Typography>
+            )}
+          </Stack>
+        </Hidden>
+      </Button>
+    </Tooltip>
+    <Popover
+      anchorOrigin={{
+        horizontal: 'right',
+        vertical: 'bottom',
+      }}
+      slotProps={{
+        paper: {
+          sx: {
+            paddingX: 2.5,
+            paddingY: 2,
+          },
+        },
+      }}
+      anchorEl={anchorEl}
+      data-testid={id}
+      id={id}
+      marginThreshold={0}
+      onClose={handleClose}
+      open={open}
+      // When the Switch Account drawer is open, hide the user menu popover so it's not covering the drawer.
+      sx={{ zIndex: isDrawerOpen ? 0 : 1 }}
+    >
+      <Stack data-qa-user-menu minWidth={250} spacing={2}>
+        {canSwitchBetweenParentOrProxyAccount && (
+          <Typography>Current account:</Typography>
+        )}
+        <Typography
+          color={(theme) => theme.textColors.headlineStatic}
+          fontSize="1.1rem"
+        >
+          <strong>
+            {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
+              ? companyNameOrEmail
+              : userName}
+          </strong>
+        </Typography>
+        {canSwitchBetweenParentOrProxyAccount && (
+          <SwitchAccountButton
+            onClick={() => {
+              sendSwitchAccountEvent('User Menu');
+              handleAccountSwitch();
+            }}
+            buttonType="outlined"
+            data-testid="switch-account-button"
+          />
+        )}
+        <Box>
+          <Heading>My Profile</Heading>
+          <Divider color="#9ea4ae" />
+          <Grid columnSpacing={2} container rowSpacing={1}>
+            <Grid container direction="column" wrap="nowrap" size={6}>
+              {profileLinks.slice(0, 4).map(renderLink)}
+            </Grid>
+            <Grid container direction="column" wrap="nowrap" size={6}>
+              {profileLinks.slice(4).map(renderLink)}
+            </Grid>
+          </Grid>
+        </Box>
+        {hasAccountAccess && (
+          <Box>
+            <Heading>Account</Heading>
+            <Divider color="#9ea4ae" />
+            <Stack mt={1} spacing={1.5}>
+              {accountLinks.map((menuLink) =>
+                menuLink.hide ? null : (
+                  <Link
+                    data-testid={`menu-item-${menuLink.display}`}
+                    key={menuLink.display}
+                    onClick={handleClose}
+                    style={{ fontSize: '0.875rem' }}
+                    to={menuLink.href}
+                  >
+                    {menuLink.display}
+                  </Link>
+                )
               )}
             </Stack>
-          </Hidden>
-        </Button>
-      </Tooltip>
-      <Popover
-        anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
-        }}
-        slotProps={{
-          paper: {
-            sx: {
-              paddingX: 2.5,
-              paddingY: 2,
-            },
-          },
-        }}
-        anchorEl={anchorEl}
-        data-testid={id}
-        id={id}
-        marginThreshold={0}
-        onClose={handleClose}
-        open={open}
-        // When the Switch Account drawer is open, hide the user menu popover so it's not covering the drawer.
-        sx={{ zIndex: isDrawerOpen ? 0 : 1 }}
-      >
-        <Stack data-qa-user-menu minWidth={250} spacing={2}>
-          {canSwitchBetweenParentOrProxyAccount && (
-            <Typography>Current account:</Typography>
-          )}
-          <Typography
-            color={(theme) => theme.textColors.headlineStatic}
-            fontSize="1.1rem"
-          >
-            <strong>
-              {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
-                ? companyNameOrEmail
-                : userName}
-            </strong>
-          </Typography>
-          {canSwitchBetweenParentOrProxyAccount && (
-            <SwitchAccountButton
-              onClick={() => {
-                sendSwitchAccountEvent('User Menu');
-                handleAccountSwitch();
-              }}
-              buttonType="outlined"
-              data-testid="switch-account-button"
-            />
-          )}
-          <Box>
-            <Heading>My Profile</Heading>
-            <Divider color="#9ea4ae" />
-            <Grid columnSpacing={2} container rowSpacing={1}>
-              <Grid container direction="column" wrap="nowrap" xs={6}>
-                {profileLinks.slice(0, 4).map(renderLink)}
-              </Grid>
-              <Grid container direction="column" wrap="nowrap" xs={6}>
-                {profileLinks.slice(4).map(renderLink)}
-              </Grid>
-            </Grid>
           </Box>
-          {hasAccountAccess && (
-            <Box>
-              <Heading>Account</Heading>
-              <Divider color="#9ea4ae" />
-              <Stack mt={1} spacing={1.5}>
-                {accountLinks.map((menuLink) =>
-                  menuLink.hide ? null : (
-                    <Link
-                      data-testid={`menu-item-${menuLink.display}`}
-                      key={menuLink.display}
-                      onClick={handleClose}
-                      style={{ fontSize: '0.875rem' }}
-                      to={menuLink.href}
-                    >
-                      {menuLink.display}
-                    </Link>
-                  )
-                )}
-              </Stack>
-            </Box>
-          )}
-        </Stack>
-      </Popover>
-      <SwitchAccountDrawer
-        onClose={() => setIsDrawerOpen(false)}
-        open={isDrawerOpen}
-        userType={profile?.user_type}
-      />
-    </>
-  );
+        )}
+      </Stack>
+    </Popover>
+    <SwitchAccountDrawer
+      onClose={() => setIsDrawerOpen(false)}
+      open={isDrawerOpen}
+      userType={profile?.user_type}
+    />
+  </>);
 });
 
 const Heading = styled(Typography)(({ theme }) => ({

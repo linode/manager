@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -47,7 +47,7 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
   };
 
   return (
-    <Grid
+    (<Grid
       sx={{
         margin: 0,
         minHeight: '40px',
@@ -86,13 +86,13 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
             />
           </Grid>
           {subText && !isEditing && (
-            <Grid className="py0 px0" xs={12}>
+            <Grid className="py0 px0" size={12}>
               <Typography variant="body1">{subText}</Typography>
             </Grid>
           )}
         </Grid>
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };
 

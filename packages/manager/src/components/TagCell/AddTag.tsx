@@ -62,12 +62,12 @@ export const AddTag = (props: AddTagProps) => {
   };
 
   return (
-    <Autocomplete
+    (<Autocomplete
       noOptionsText={
         inputValue.length === 0 ? (
           'No tags to choose from. Type to create a new tag.'
         ) : (
-          <i>{`"${inputValue}" already added`}</i> // Will display create option unless that tag is already added
+          (<i>{`"${inputValue}" already added`}</i>) // Will display create option unless that tag is already added
         )
       }
       onBlur={() => {
@@ -93,6 +93,6 @@ export const AddTag = (props: AddTagProps) => {
       placeholder="Create or Select a Tag"
       sx={{ width: '100%' }}
       textFieldProps={{ autoFocus: true, hideLabel: true }}
-    />
+    />)
   );
 };

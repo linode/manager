@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';

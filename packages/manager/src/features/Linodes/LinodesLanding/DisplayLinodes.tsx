@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -97,7 +97,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
   return (
-    <Paginate
+    (<Paginate
       data={data}
       page={queryPage}
       // If there are more Linodes with maintenance than the current page size, show the minimum
@@ -130,7 +130,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
           someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
         };
         return (
-          <React.Fragment>
+          (<React.Fragment>
             {display === 'list' && (
               <TableWrapper
                 {...tableWrapperProps}
@@ -146,7 +146,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             )}
             {display === 'grid' && (
               <>
-                <Grid className={'px0'} xs={12}>
+                <Grid className={'px0'} size={12}>
                   <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
                     <div
                       className="visually-hidden"
@@ -189,7 +189,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                 <Component showHead {...componentProps} />
               </>
             )}
-            <Grid xs={12}>
+            <Grid size={12}>
               {
                 <PaginationFooter
                   count={data.length}
@@ -203,9 +203,9 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                 />
               }
             </Grid>
-          </React.Fragment>
+          </React.Fragment>)
         );
       }}
-    </Paginate>
+    </Paginate>)
   );
 });

@@ -1,6 +1,6 @@
 import { SupportTicket } from '@linode/api-v4/lib/support/types';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -47,12 +47,12 @@ export const TicketStatus = (props: Props) => {
   };
 
   return (
-    <Paper
+    (<Paper
       data-qa-ticket-status
       sx={(theme) => ({ p: `${theme.spacing()} ${theme.spacing(2)}` })}
     >
       <Stack direction="row">
-        <Grid alignItems="center" container direction="row" xs>
+        <Grid alignItems="center" container direction="row" size="grow">
           <StyledStatusIcon
             ariaLabel={`Ticket status is ${status}`}
             status={status === 'closed' ? 'inactive' : 'active'}
@@ -76,7 +76,7 @@ export const TicketStatus = (props: Props) => {
           </Stack>
         )}
       </Stack>
-    </Paper>
+    </Paper>)
   );
 };
 

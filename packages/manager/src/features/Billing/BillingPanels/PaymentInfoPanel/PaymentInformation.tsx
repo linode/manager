@@ -1,6 +1,6 @@
 import { PaymentMethod, deletePaymentMethod } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -99,7 +99,11 @@ const PaymentInformation = (props: Props) => {
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
   return (
-    <Grid md={6} xs={12}>
+    (<Grid
+      size={{
+        md: 6,
+        xs: 12
+      }}>
       <BillingPaper data-qa-billing-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Payment Methods</Typography>
@@ -152,7 +156,7 @@ const PaymentInformation = (props: Props) => {
           paymentMethod={deletePaymentMethodSelection}
         />
       </BillingPaper>
-    </Grid>
+    </Grid>)
   );
 };
 

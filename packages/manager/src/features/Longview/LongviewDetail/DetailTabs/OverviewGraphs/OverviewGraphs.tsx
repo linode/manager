@@ -1,6 +1,6 @@
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import { Paper } from 'src/components/Paper';
 import { isToday as _isToday } from 'src/utilities/isToday';
@@ -50,7 +50,7 @@ export const OverviewGraphs = (props: Props) => {
   };
 
   return (
-    <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
+    (<Grid container sx={{ ...itemSpacing, padding: '8px' }}>
       <StyledGrid xs={12}>
         <Grid sx={{ ...itemSpacing }}>
           <StyledTypography variant="h2">
@@ -75,7 +75,7 @@ export const OverviewGraphs = (props: Props) => {
         </Grid>
       </StyledGrid>
       <Grid sx={{ ...itemSpacing }} />
-      <Grid sx={{ ...itemSpacing }} xs={12}>
+      <Grid sx={{ ...itemSpacing }} size={12}>
         <Paper
           sx={{
             marginBottom: `calc(${theme.spacing(1)} + 3px)`,
@@ -89,25 +89,50 @@ export const OverviewGraphs = (props: Props) => {
             justifyContent="space-between"
             spacing={4}
           >
-            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+            <Grid
+              sx={{ ...itemSpacing }}
+              size={{
+                sm: 6,
+                xs: 12
+              }}>
               <CPUGraph {...graphProps} />
             </Grid>
-            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+            <Grid
+              sx={{ ...itemSpacing }}
+              size={{
+                sm: 6,
+                xs: 12
+              }}>
               <MemoryGraph {...graphProps} />
             </Grid>
-            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+            <Grid
+              sx={{ ...itemSpacing }}
+              size={{
+                sm: 6,
+                xs: 12
+              }}>
               <NetworkGraph {...graphProps} />
             </Grid>
-            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+            <Grid
+              sx={{ ...itemSpacing }}
+              size={{
+                sm: 6,
+                xs: 12
+              }}>
               <DiskGraph {...graphProps} />
             </Grid>
-            <Grid sx={{ ...itemSpacing }} sm={6} xs={12}>
+            <Grid
+              sx={{ ...itemSpacing }}
+              size={{
+                sm: 6,
+                xs: 12
+              }}>
               <LoadGraph {...graphProps} />
             </Grid>
           </Grid>
         </Paper>
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };
 

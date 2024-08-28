@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -147,9 +147,20 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   };
 
   return (
-    <Grid container direction="row" lg={3} spacing={0} xs={12}>
-      <Grid lg={6}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
-      <Grid lg={6}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
-    </Grid>
+    (<Grid
+      container
+      direction="row"
+      spacing={0}
+      size={{
+        lg: 3,
+        xs: 12
+      }}>
+      <Grid size={{
+        lg: 6
+      }}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
+      <Grid size={{
+        lg: 6
+      }}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
+    </Grid>)
   );
 });

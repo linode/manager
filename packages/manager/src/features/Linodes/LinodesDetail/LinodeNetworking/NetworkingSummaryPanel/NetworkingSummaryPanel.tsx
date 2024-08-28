@@ -1,5 +1,5 @@
 import { styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Paper } from 'src/components/Paper';
@@ -28,17 +28,22 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
     isGeckoGAEnabled && linode.site_type === 'distributed';
 
   return (
-    <Paper>
+    (<Paper>
       <Grid container spacing={4} sx={{ flexGrow: 1 }}>
         {hideNetworkTransfer ? null : ( // Distributed compute instances have no transfer pool
-          <Grid md={2.5} sm={6} xs={12}>
+          (<Grid
+            size={{
+              md: 2.5,
+              sm: 6,
+              xs: 12
+            }}>
             <NetworkTransfer
               linodeId={linode.id}
               linodeLabel={linode.label}
               linodeRegionId={linode.region}
               linodeType={linode.type}
             />
-          </Grid>
+          </Grid>)
         )}
         <Grid
           sx={{
@@ -46,10 +51,11 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
               order: 3,
             },
           }}
-          md
-          sm
-          xs={12}
-        >
+          size={{
+            md: "grow",
+            sm: "grow",
+            xs: 12
+          }}>
           <TransferHistory
             linodeCreated={linode.created}
             linodeID={linode.id}
@@ -66,7 +72,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
           <DNSResolvers region={linode.region} />
         </StyledDnsResolverGrid>
       </Grid>
-    </Paper>
+    </Paper>)
   );
 });
 

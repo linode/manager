@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { OrderByProps } from 'src/components/OrderBy';
@@ -34,8 +34,8 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
   } = props;
 
   return (
-    <Grid className="m0" container spacing={0} style={{ width: '100%' }}>
-      <Grid className="p0" xs={12}>
+    (<Grid className="m0" container spacing={0} style={{ width: '100%' }}>
+      <Grid className="p0" size={12}>
         <Table
           aria-label="List of Linodes"
           colCount={5}
@@ -56,7 +56,7 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
           {props.children}
         </Table>
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };
 

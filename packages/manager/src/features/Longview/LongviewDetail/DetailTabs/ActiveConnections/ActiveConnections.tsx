@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
@@ -29,7 +29,11 @@ export const ActiveConnections = (props: TableProps) => {
   const theme = useTheme();
 
   return (
-    <Grid md={4} xs={12}>
+    (<Grid
+      size={{
+        md: 4,
+        xs: 12
+      }}>
       <Typography
         sx={{
           [theme.breakpoints.down('lg')]: {
@@ -46,7 +50,7 @@ export const ActiveConnections = (props: TableProps) => {
         connectionsError={connectionsError}
         connectionsLoading={connectionsLoading}
       />
-    </Grid>
+    </Grid>)
   );
 };
 

@@ -1,6 +1,6 @@
 import Close from '@mui/icons-material/Close';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -66,11 +66,11 @@ export const SubnetNode = (props: Props) => {
     : isRemovable;
 
   return (
-    <Grid key={idx} sx={{ maxWidth: 460 }}>
+    (<Grid key={idx} sx={{ maxWidth: 460 }}>
       <Grid container direction="row" spacing={2}>
         <Grid
           sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
-          xs={showRemoveButton ? 11 : 12}
+          size={showRemoveButton ? 11 : 12}
         >
           <Stack>
             <TextField
@@ -103,14 +103,14 @@ export const SubnetNode = (props: Props) => {
           </Stack>
         </Grid>
         {showRemoveButton && (
-          <Grid xs={1}>
+          <Grid size={1}>
             <StyledButton aria-label="Remove Subnet" onClick={removeSubnet}>
               <Close data-testid={`delete-subnet-${idx}`} />
             </StyledButton>
           </Grid>
         )}
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };
 

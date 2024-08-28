@@ -1,6 +1,6 @@
 import { PaymentMethod } from '@linode/api-v4';
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { Breakpoint } from '@mui/material/styles';
 import * as React from 'react';
@@ -158,112 +158,117 @@ export const BillingSummary = (props: BillingSummaryProps) => {
       ? 'Accrued charges shown are an approximation and may not exactly reflect your post-tax invoice.'
       : 'Our billing cycle ends on the last day of the month. You may be invoiced before the end of the cycle if your balance exceeds your credit limit.';
 
-  return (
-    <>
-      <Grid container margin={0} spacing={2} xs={12}>
-        <Grid {...gridDimensions} sm={6}>
-          <BillingPaper variant="outlined">
-            <Typography variant="h3">Account Balance</Typography>
-            <Divider />
-            <Box
-              alignItems="center"
-              display="flex"
-              justifyContent="space-between"
-              marginTop="12px"
+  return (<>
+    <Grid container margin={0} spacing={2} size={12}>
+      <Grid {...gridDimensions} size={{
+        sm: 6
+      }}>
+        <BillingPaper variant="outlined">
+          <Typography variant="h3">Account Balance</Typography>
+          <Divider />
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+            marginTop="12px"
+          >
+            <Typography
+              data-testid="account-balance-text"
+              style={{ marginRight: 8 }}
+              sx={sxBalance}
+              variant={balance === 0 ? 'body1' : 'h3'}
             >
-              <Typography
-                data-testid="account-balance-text"
-                style={{ marginRight: 8 }}
-                sx={sxBalance}
-                variant={balance === 0 ? 'body1' : 'h3'}
-              >
-                {accountBalanceText}
-              </Typography>
-              <Typography sx={sxBalance} variant="h3">
-                <Currency
-                  dataAttrs={{ 'data-testid': 'account-balance-value' }}
-                  quantity={Math.abs(balance)}
-                />
-              </Typography>
-            </Box>
-            {!readOnlyAccountAccess ? balanceJSX : null}
-            {showAddPromoLink ? (
-              <Typography
-                sx={{
-                  marginTop: theme.spacing(),
-                }}
-              >
-                <Button
-                  sx={{
-                    ...theme.applyLinkStyles,
-                  }}
-                  onClick={openPromoDialog}
-                >
-                  Add a promo code
-                </Button>
-              </Typography>
-            ) : null}
-          </BillingPaper>
-        </Grid>
-        {promotions && promotions?.length > 0 ? (
-          <Grid md={4} sm={6} xs={12}>
-            <BillingPaper variant="outlined">
-              <Typography variant="h3">Promotions</Typography>
-
-              <Divider />
-              <div style={{ maxHeight: 300, overflowY: 'auto' }}>
-                {promotions?.map((promo) => (
-                  <PromoDisplay
-                    key={`${promo.summary}-${promo.expire_dt}`}
-                    {...promo}
-                  />
-                ))}
-              </div>
-            </BillingPaper>
-          </Grid>
-        ) : null}
-        <Grid {...gridDimensions}>
-          <BillingPaper variant="outlined">
-            <Box alignItems="center" display="flex">
-              <Typography variant="h3">Accrued Charges</Typography>
-              <TooltipIcon
-                status="help"
-                sxTooltipIcon={{ padding: '0 8px' }}
-                text={accruedChargesHelperText}
+              {accountBalanceText}
+            </Typography>
+            <Typography sx={sxBalance} variant="h3">
+              <Currency
+                dataAttrs={{ 'data-testid': 'account-balance-value' }}
+                quantity={Math.abs(balance)}
               />
-            </Box>
-            <Divider />
-            <Box
-              alignItems="center"
-              display="flex"
-              justifyContent="space-between"
-              marginTop="12px"
+            </Typography>
+          </Box>
+          {!readOnlyAccountAccess ? balanceJSX : null}
+          {showAddPromoLink ? (
+            <Typography
+              sx={{
+                marginTop: theme.spacing(),
+              }}
             >
-              <Typography>Since last invoice</Typography>
-              <Typography
+              <Button
                 sx={{
-                  color: theme.palette.text.primary,
+                  ...theme.applyLinkStyles,
                 }}
-                variant="h3"
+                onClick={openPromoDialog}
               >
-                <Currency
-                  dataAttrs={{ 'data-testid': 'accrued-charges-value' }}
-                  quantity={balanceUninvoiced}
+                Add a promo code
+              </Button>
+            </Typography>
+          ) : null}
+        </BillingPaper>
+      </Grid>
+      {promotions && promotions?.length > 0 ? (
+        <Grid
+          size={{
+            md: 4,
+            sm: 6,
+            xs: 12
+          }}>
+          <BillingPaper variant="outlined">
+            <Typography variant="h3">Promotions</Typography>
+
+            <Divider />
+            <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+              {promotions?.map((promo) => (
+                <PromoDisplay
+                  key={`${promo.summary}-${promo.expire_dt}`}
+                  {...promo}
                 />
-              </Typography>
-            </Box>
+              ))}
+            </div>
           </BillingPaper>
         </Grid>
+      ) : null}
+      <Grid {...gridDimensions}>
+        <BillingPaper variant="outlined">
+          <Box alignItems="center" display="flex">
+            <Typography variant="h3">Accrued Charges</Typography>
+            <TooltipIcon
+              status="help"
+              sxTooltipIcon={{ padding: '0 8px' }}
+              text={accruedChargesHelperText}
+            />
+          </Box>
+          <Divider />
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+            marginTop="12px"
+          >
+            <Typography>Since last invoice</Typography>
+            <Typography
+              sx={{
+                color: theme.palette.text.primary,
+              }}
+              variant="h3"
+            >
+              <Currency
+                dataAttrs={{ 'data-testid': 'accrued-charges-value' }}
+                quantity={balanceUninvoiced}
+              />
+            </Typography>
+          </Box>
+        </BillingPaper>
       </Grid>
-      <PaymentDrawer
-        onClose={closePaymentDrawer}
-        open={paymentDrawerOpen}
-        paymentMethods={paymentMethods}
-        selectedPaymentMethod={selectedPaymentMethod}
-      />
-      <PromoDialog onClose={closePromoDialog} open={isPromoDialogOpen} />
-    </>
-  );
+    </Grid>
+    <PaymentDrawer
+      onClose={closePaymentDrawer}
+      open={paymentDrawerOpen}
+      paymentMethods={paymentMethods}
+      selectedPaymentMethod={selectedPaymentMethod}
+    />
+    <PromoDialog onClose={closePromoDialog} open={isPromoDialogOpen} />
+  </>);
 };
 
 export default React.memo(BillingSummary);

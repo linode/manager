@@ -2,7 +2,7 @@ import { addPaymentMethod } from '@linode/api-v4/lib';
 import { CreditCardSchema } from '@linode/validation';
 import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
 import { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik, yupToFormErrors } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -162,14 +162,14 @@ const AddCreditCardForm = (props: Props) => {
     disabled || !values.card_number || !values.cvv || !values.expiry_month;
 
   return (
-    <form onSubmit={handleSubmit}>
+    (<form onSubmit={handleSubmit}>
       {error && (
-        <Grid className={classes.error} xs={12}>
+        <Grid className={classes.error} size={12}>
           <Notice text={error} variant="error" />
         </Grid>
       )}
       <Grid container spacing={1}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <TextField
             InputProps={{
               inputComponent: creditCardField,
@@ -183,7 +183,11 @@ const AddCreditCardForm = (props: Props) => {
             value={values.card_number}
           />
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <TextField
             error={
               (touched.expiry_month || touched.expiry_year) &&
@@ -202,7 +206,11 @@ const AddCreditCardForm = (props: Props) => {
             placeholder="MM/YY"
           />
         </Grid>
-        <Grid sm={6} xs={12}>
+        <Grid
+          size={{
+            sm: 6,
+            xs: 12
+          }}>
           <TextField
             disabled={disableInput}
             error={touched.cvv && Boolean(errors.cvv)}
@@ -228,7 +236,7 @@ const AddCreditCardForm = (props: Props) => {
         }}
         style={{ marginTop: 0 }}
       />
-    </form>
+    </form>)
   );
 };
 

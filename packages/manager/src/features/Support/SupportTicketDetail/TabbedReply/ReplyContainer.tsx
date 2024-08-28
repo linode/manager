@@ -1,6 +1,6 @@
 import { SupportReply, uploadAttachment } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { lensPath, set } from 'ramda';

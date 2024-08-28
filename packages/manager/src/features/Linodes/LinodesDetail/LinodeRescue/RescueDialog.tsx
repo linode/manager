@@ -43,11 +43,11 @@ export const RescueDialog = (props: Props) => {
     />
   ) : (
     /** For normal Linodes, load the standard rescue dialog. */
-    <StandardRescueDialog
+    (<StandardRescueDialog
       linodeId={linodeId}
       linodeLabel={linodeLabel}
       onClose={onClose}
       open={open}
-    />
+    />)
   );
 };

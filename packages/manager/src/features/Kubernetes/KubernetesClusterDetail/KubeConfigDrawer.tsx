@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';

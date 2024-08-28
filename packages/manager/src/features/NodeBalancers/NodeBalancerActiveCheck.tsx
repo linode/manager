@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -87,14 +87,18 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
   });
 
   return (
-    <Grid md={6} xs={12}>
+    (<Grid
+      size={{
+        md: 6,
+        xs: 12
+      }}>
       <Grid container spacing={2} sx={{ padding: 1 }}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Typography data-qa-active-checks-header variant="h2">
             Active Health Checks
           </Typography>
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Autocomplete
             textFieldProps={{
               dataAttrs: {
@@ -123,7 +127,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
         </Grid>
         {healthCheckType !== 'none' && (
           <Grid container>
-            <Grid xs={12}>
+            <Grid size={12}>
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Interval',
@@ -144,7 +148,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 Seconds between health check probes
               </FormHelperText>
             </Grid>
-            <Grid xs={12}>
+            <Grid size={12}>
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Timeout',
@@ -166,7 +170,11 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 Must be less than check_interval.
               </FormHelperText>
             </Grid>
-            <Grid lg={6} xs={12}>
+            <Grid
+              size={{
+                lg: 6,
+                xs: 12
+              }}>
               <TextField
                 InputProps={{
                   'aria-label': 'Active Health Check Attempts',
@@ -186,7 +194,11 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               </FormHelperText>
             </Grid>
             {['http', 'http_body'].includes(healthCheckType) && (
-              <Grid lg={6} xs={12}>
+              <Grid
+                size={{
+                  lg: 6,
+                  xs: 12
+                }}>
                 <TextField
                   disabled={disabled}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -199,7 +211,11 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               </Grid>
             )}
             {healthCheckType === 'http_body' && (
-              <Grid md={12} xs={12}>
+              <Grid
+                size={{
+                  md: 12,
+                  xs: 12
+                }}>
                 <TextField
                   disabled={disabled}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -214,6 +230,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
           </Grid>
         )}
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };

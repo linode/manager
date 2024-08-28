@@ -1,6 +1,6 @@
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 
@@ -40,7 +40,7 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
   const icons = addIconsToAttachments(attachments);
 
   return (
-    <Grid
+    (<Grid
       sx={(theme) => ({
         marginLeft: theme.spacing(6),
         marginTop: theme.spacing(),
@@ -65,7 +65,7 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
         />
         {attachments.length > 5 && (
           // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-          <div
+          (<div
             data-qa-attachment-toggle
             onClick={toggle}
             role="button"
@@ -83,9 +83,9 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
                 icons={icons}
               />
             </ShowMoreExpansion>
-          </div>
+          </div>)
         )}
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };

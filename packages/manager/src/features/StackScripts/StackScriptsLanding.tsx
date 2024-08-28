@@ -1,5 +1,5 @@
 import { Image } from '@linode/api-v4';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -29,7 +29,7 @@ export const StackScriptsLanding = () => {
   };
 
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DocumentTitleSegment segment="StackScripts" />
       {!!history.location.state && !!history.location.state.successMessage ? (
         <Notice
@@ -48,7 +48,7 @@ export const StackScriptsLanding = () => {
         {_loading ? (
           <CircleProgress />
         ) : (
-          <Grid className="p0" xs={12}>
+          <Grid className="p0" size={12}>
             <StackScriptPanel
               history={history}
               location={history.location}
@@ -58,7 +58,7 @@ export const StackScriptsLanding = () => {
           </Grid>
         )}
       </Grid>
-    </React.Fragment>
+    </React.Fragment>)
   );
 };
 

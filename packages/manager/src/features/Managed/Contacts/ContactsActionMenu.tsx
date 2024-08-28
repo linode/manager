@@ -30,7 +30,7 @@ export const ContactsActionMenu = (props: ContactsActionMenuProps) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {actions.map((action) => {
         return (
           <InlineMenuAction
@@ -40,7 +40,7 @@ export const ContactsActionMenu = (props: ContactsActionMenuProps) => {
           />
         );
       })}
-    </>
+    </>)
   );
 };
 

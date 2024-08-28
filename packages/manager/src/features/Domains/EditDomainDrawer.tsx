@@ -121,7 +121,7 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   const disabled = !canEdit;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Domain">
+    (<Drawer onClose={onClose} open={open} title="Edit Domain">
       {!canEdit && (
         <Notice variant="error">
           You do not have permission to modify this Domain.
@@ -181,13 +181,13 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
             />
             {isEditingSecondaryDomain && (
               // Only when editing
-              <MultipleIPInput
+              (<MultipleIPInput
                 error={errorMap.axfr_ips}
                 helperText={helperText}
                 ips={formik.values?.axfr_ips?.map(stringToExtendedIP) ?? []}
                 onChange={handleTransferInput}
                 title="Domain Transfer IPs"
-              />
+              />)
             )}
           </React.Fragment>
         )}
@@ -220,6 +220,6 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
           }}
         />
       </form>
-    </Drawer>
+    </Drawer>)
   );
 };

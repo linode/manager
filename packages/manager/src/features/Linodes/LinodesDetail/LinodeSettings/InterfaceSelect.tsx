@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
@@ -308,16 +308,28 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           container
           spacing={isSmallBp ? 0 : 4}
         >
-          <Grid sm={6} xs={12}>
+          <Grid
+            size={{
+              sm: 6,
+              xs: 12
+            }}>
             {jsxSelectVLAN}
           </Grid>
-          <Grid sm={6} xs={12}>
+          <Grid
+            size={{
+              sm: 6,
+              xs: 12
+            }}>
             {jsxIPAMForVLAN}
           </Grid>
         </Grid>
       </Grid>
     ) : (
-      <Grid sm={6} xs={12}>
+      <Grid
+        size={{
+          sm: 6,
+          xs: 12
+        }}>
         <Stack>
           {jsxSelectVLAN}
           {jsxIPAMForVLAN}
@@ -344,7 +356,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     );
 
   return (
-    <Grid container>
+    (<Grid container>
       {fromAddonsPanel ? null : (
         <>
           <Grid width={'100%'}>
@@ -352,7 +364,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
               <Notice text={errors.primaryError} variant="error" />
             )}
           </Grid>
-          <Grid xs={isSmallBp ? 12 : 6}>
+          <Grid size={isSmallBp ? 12 : 6}>
             <Autocomplete
               options={
                 // Do not display "None" as an option for eth0 (must be Public Internet, VLAN, or VPC).
@@ -382,7 +394,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
         regionHasVLANs !== false &&
         enclosingJSXForVLANFields(jsxSelectVLAN, jsxIPAMForVLAN)}
       {purpose === 'vpc' && regionHasVPCs !== false && (
-        <Grid xs={isSmallBp ? 12 : 6}>
+        <Grid size={isSmallBp ? 12 : 6}>
           <VPCPanel
             toggleAssignPublicIPv4Address={() =>
               handleIPv4Input(
@@ -412,7 +424,6 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           />
         </Grid>
       )}
-
       {!fromAddonsPanel && (
         <Divider
           sx={{
@@ -423,7 +434,7 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
           }}
         />
       )}
-    </Grid>
+    </Grid>)
   );
 };
 

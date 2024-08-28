@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';

@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
@@ -74,11 +74,11 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   };
 
   return (
-    <Grid container>
-      <Grid xs={12}>
+    (<Grid container>
+      <Grid size={12}>
         <h4 style={{ marginBottom: 8, marginTop: 0 }}>Feature Flags</h4>
       </Grid>
-      <Grid xs={12}>
+      <Grid size={12}>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {options.map((thisOption) => {
             const flagValue = flags[thisOption.flag];
@@ -110,6 +110,6 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
           </button>
         </div>
       </Grid>
-    </Grid>
+    </Grid>)
   );
 });

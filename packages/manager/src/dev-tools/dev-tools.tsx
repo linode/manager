@@ -1,5 +1,5 @@
 import Handyman from '@mui/icons-material/Handyman';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -18,28 +18,42 @@ import { ThemeSelector } from './ThemeSelector';
 function install(store: ApplicationStore) {
   function DevTools() {
     return (
-      <div className={isMSWEnabled ? 'mswEnabled' : ''} id="dev-tools">
+      (<div className={isMSWEnabled ? 'mswEnabled' : ''} id="dev-tools">
         <div>
           <Handyman />
         </div>
         <Grid className="tools" container spacing={2}>
-          <Grid sm={2} xs={4}>
+          <Grid
+            size={{
+              sm: 2,
+              xs: 4
+            }}>
             <FeatureFlagTool />
           </Grid>
           {import.meta.env.DEV && (
-            <Grid md={3} sm={5} xs={4}>
+            <Grid
+              size={{
+                md: 3,
+                sm: 5,
+                xs: 4
+              }}>
               <EnvironmentToggleTool />
             </Grid>
           )}
           {!isProductionBuild || ENABLE_DEV_TOOLS ? (
-            <Grid md={3} sm={5} xs={4}>
+            <Grid
+              size={{
+                md: 3,
+                sm: 5,
+                xs: 4
+              }}>
               <MockDataTool />
               <ThemeSelector />
               <Preferences />
             </Grid>
           ) : null}
         </Grid>
-      </div>
+      </div>)
     );
   }
 

@@ -1,6 +1,6 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import { Theme, styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';

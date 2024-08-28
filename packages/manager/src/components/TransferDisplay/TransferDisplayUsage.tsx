@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -22,44 +22,42 @@ export const TransferDisplayUsage = React.memo(
     // Don't display usage, quota, or bar percent if the network transfer pool is empty (e.g. account has no resources).
     const isEmptyPool = quota === 0;
 
-    return (
-      <>
-        {!isEmptyPool && (
-          <BarPercent max={100} rounded value={Math.ceil(pullUsagePct)} />
-        )}
-        <Grid
-          container
-          justifyContent="space-between"
-          spacing={2}
-          sx={{ marginBottom: 0, marginTop: (theme) => theme.spacing(0.5) }}
-        >
-          <Grid style={{ marginRight: 10 }}>
-            {!isEmptyPool ? (
-              <Typography fontSize={theme.typography.h3.fontSize}>
-                {used} GB Used ({formatPoolUsagePct(pullUsagePct)})
-              </Typography>
-            ) : (
-              <Typography>
-                Your monthly network transfer will be shown when you create a
-                resource.
-              </Typography>
-            )}
-          </Grid>
-          <Grid>
-            {!isEmptyPool && (
-              <Typography fontSize={theme.typography.h3.fontSize}>
-                {quota >= used ? (
-                  <span>{quota - used} GB Available</span>
-                ) : (
-                  <span>
-                    {(quota - used).toString().replace(/\-/, '')} GB Over Quota
-                  </span>
-                )}
-              </Typography>
-            )}
-          </Grid>
+    return (<>
+      {!isEmptyPool && (
+        <BarPercent max={100} rounded value={Math.ceil(pullUsagePct)} />
+      )}
+      <Grid
+        container
+        justifyContent="space-between"
+        spacing={2}
+        sx={{ marginBottom: 0, marginTop: (theme) => theme.spacing(0.5) }}
+      >
+        <Grid style={{ marginRight: 10 }}>
+          {!isEmptyPool ? (
+            <Typography fontSize={theme.typography.h3.fontSize}>
+              {used} GB Used ({formatPoolUsagePct(pullUsagePct)})
+            </Typography>
+          ) : (
+            <Typography>
+              Your monthly network transfer will be shown when you create a
+              resource.
+            </Typography>
+          )}
         </Grid>
-      </>
-    );
+        <Grid>
+          {!isEmptyPool && (
+            <Typography fontSize={theme.typography.h3.fontSize}>
+              {quota >= used ? (
+                <span>{quota - used} GB Available</span>
+              ) : (
+                <span>
+                  {(quota - used).toString().replace(/\-/, '')} GB Over Quota
+                </span>
+              )}
+            </Typography>
+          )}
+        </Grid>
+      </Grid>
+    </>);
   }
 );

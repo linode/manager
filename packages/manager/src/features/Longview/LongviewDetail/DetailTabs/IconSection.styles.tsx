@@ -1,5 +1,5 @@
 import { styled, SxProps } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from '@mui/material/Grid2/Grid2';
 import { IconTextLink } from 'src/components/IconTextLink/IconTextLink';
 
 const sxGrid: SxProps = {

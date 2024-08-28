@@ -1,6 +1,6 @@
 import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { useFormik } from 'formik';
@@ -115,7 +115,7 @@ export const AutoscalePoolDialog = (props: Props) => {
       : undefined;
 
   return (
-    <ConfirmationDialog
+    (<ConfirmationDialog
       actions={
         <ActionsPanel
           primaryButtonProps={{
@@ -215,7 +215,7 @@ export const AutoscalePoolDialog = (props: Props) => {
               value={values.max}
             />
           </Grid>
-          <Grid style={{ padding: '0 8px' }} xs={12}>
+          <Grid style={{ padding: '0 8px' }} size={12}>
             {errors.min ? (
               <Typography className={classes.errorText}>
                 {errors.min}
@@ -229,6 +229,6 @@ export const AutoscalePoolDialog = (props: Props) => {
           </Grid>
         </Grid>
       </form>
-    </ConfirmationDialog>
+    </ConfirmationDialog>)
   );
 };

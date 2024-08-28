@@ -93,10 +93,7 @@ export const handleError = (
     },
     {
       condition: (e) => {
-        return (
-          !!e.reason.match(/migrations are currently disabled/i) &&
-          !!url.match(/migrate/i)
-        );
+        return (!!e.reason.match(/migrations are currently disabled/i) && !!url.match(/migrate/i));
       },
       replacementText: <MigrateError />,
     },

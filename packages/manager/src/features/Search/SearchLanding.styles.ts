@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react';
 import { Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import Error from 'src/assets/icons/error.svg';
 import { H1Header } from 'src/components/H1Header/H1Header';

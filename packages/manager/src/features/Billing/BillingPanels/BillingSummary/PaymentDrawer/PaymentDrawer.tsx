@@ -1,7 +1,7 @@
 import { PaymentMethod } from '@linode/api-v4';
 import { makePayment } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -236,7 +236,7 @@ export const PaymentDrawer = (props: Props) => {
   }
 
   return (
-    <Drawer onClose={onClose} open={open} title="Make a Payment">
+    (<Drawer onClose={onClose} open={open} title="Make a Payment">
       <Stack spacing={2}>
         {isReadOnly && (
           <Notice
@@ -340,7 +340,11 @@ export const PaymentDrawer = (props: Props) => {
               </Typography>
             </Grid>
             <Grid container spacing={2}>
-              <Grid sm={6} xs={9}>
+              <Grid
+                size={{
+                  sm: 6,
+                  xs: 9
+                }}>
                 <PayPalErrorBoundary renderError={renderError}>
                   <PayPalButton
                     disabled={isProcessing}
@@ -352,7 +356,11 @@ export const PaymentDrawer = (props: Props) => {
                   />
                 </PayPalErrorBoundary>
               </Grid>
-              <Grid sm={6} xs={9}>
+              <Grid
+                size={{
+                  sm: 6,
+                  xs: 9
+                }}>
                 <GooglePayButton
                   transactionInfo={{
                     countryCode: 'US',
@@ -379,7 +387,7 @@ export const PaymentDrawer = (props: Props) => {
         open={dialogOpen}
         usd={usd}
       />
-    </Drawer>
+    </Drawer>)
   );
 };
 

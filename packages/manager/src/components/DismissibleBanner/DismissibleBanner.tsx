@@ -1,5 +1,5 @@
 import Close from '@mui/icons-material/Close';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { SxProps } from '@mui/system';
 import * as React from 'react';
 

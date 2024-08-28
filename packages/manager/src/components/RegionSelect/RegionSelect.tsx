@@ -117,7 +117,7 @@ export const RegionSelect = <
   }, [isGeckoBetaEnabled, isGeckoGAEnabled, selectedRegion]);
 
   return (
-    <StyledAutocompleteContainer sx={{ width }}>
+    (<StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
         getOptionLabel={(region) =>
           isGeckoGAEnabled ? region.label : `${region.label} (${region.id})`
@@ -167,7 +167,7 @@ export const RegionSelect = <
         value={selectedRegion as Region}
       />
       {showDistributedRegionIconHelperText && ( // @TODO Gecko Beta: Add docs link
-        <StyledDistributedRegionBox>
+        (<StyledDistributedRegionBox>
           <DistributedRegion />
           <Typography
             data-testid="region-select-distributed-region-text"
@@ -183,8 +183,8 @@ export const RegionSelect = <
             </Link>
             .
           </Typography>
-        </StyledDistributedRegionBox>
+        </StyledDistributedRegionBox>)
       )}
-    </StyledAutocompleteContainer>
+    </StyledAutocompleteContainer>)
   );
 };

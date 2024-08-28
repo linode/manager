@@ -149,122 +149,113 @@ export const AccessSelect = React.memo((props: Props) => {
     _options.find((thisOption) => thisOption.value === selectedACL) ??
     _options.find((thisOption) => thisOption.value === 'private');
 
-  return (
-    <>
-      {updateAccessSuccess ? (
-        <Notice
-          text={`${label} access updated successfully.`}
-          variant="success"
-        />
-      ) : null}
-
-      {errorText ? <Notice text={errorText} variant="error" /> : null}
-
-      <Autocomplete
-        onChange={(_, selected) => {
-          if (selected) {
-            setUpdateAccessSuccess(false);
-            setUpdateAccessError('');
-            setSelectedACL(selected.value as ACLType);
-          }
-        }}
-        data-testid="acl-select"
-        disableClearable
-        disabled={Boolean(accessError) || accessLoading}
-        label="Access Control List (ACL)"
-        loading={accessLoading}
-        options={!accessLoading ? _options : []}
-        placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
-        value={!accessLoading ? selectedOption : undefined}
+  return (<>
+    {updateAccessSuccess ? (
+      <Notice
+        text={`${label} access updated successfully.`}
+        variant="success"
       />
-
-      <div style={{ marginTop: 8, minHeight: 16 }}>
-        {aclLabel && aclCopy ? (
-          <Typography>
-            {aclLabel}: {aclCopy}
-          </Typography>
-        ) : null}
-      </div>
-
-      {isCorsAvailable ? (
-        <FormControlLabel
-          control={
-            <Toggle
-              checked={selectedCORSOption}
-              disabled={accessLoading}
-              onChange={() => setSelectedCORSOption((prev) => !prev)}
-            />
-          }
-          label={CORSLabel}
-          style={{ display: 'block', marginTop: 16 }}
-        />
-      ) : null}
-
-      {isCorsAvailable ? (
+    ) : null}
+    {errorText ? <Notice text={errorText} variant="error" /> : null}
+    <Autocomplete
+      onChange={(_, selected) => {
+        if (selected) {
+          setUpdateAccessSuccess(false);
+          setUpdateAccessError('');
+          setSelectedACL(selected.value as ACLType);
+        }
+      }}
+      data-testid="acl-select"
+      disableClearable
+      disabled={Boolean(accessError) || accessLoading}
+      label="Access Control List (ACL)"
+      loading={accessLoading}
+      options={!accessLoading ? _options : []}
+      placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
+      value={!accessLoading ? selectedOption : undefined}
+    />
+    <div style={{ marginTop: 8, minHeight: 16 }}>
+      {aclLabel && aclCopy ? (
         <Typography>
-          Whether Cross-Origin Resource Sharing is enabled for all origins. For
-          more fine-grained control of CORS, please use another{' '}
-          <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
-            S3-compatible tool
-          </Link>
-          .
+          {aclLabel}: {aclCopy}
         </Typography>
-      ) : (
-        // TODO: OBJGen2 - We need to handle link in upcoming PR
-        <Notice spacingBottom={0} spacingTop={16} variant="warning">
-          <Typography
-            sx={(theme) => ({
-              fontFamily: theme.font.bold,
-            })}
-          >
-            CORS (Cross Origin Sharing) is not available for endpoint types E2
-            and E3. <Link to="#">Learn more</Link>.
-          </Typography>
-        </Notice>
-      )}
-
-      <ActionsPanel
-        primaryButtonProps={{
-          disabled: aclData === selectedACL && corsData === selectedCORSOption,
-          label: 'Save',
-          loading: updateAccessLoading,
-          onClick: () => {
-            // This isn't really a sane option: open a dialog for confirmation.
-            if (selectedACL === 'public-read-write') {
-              openDialog();
-            } else {
-              handleSubmit();
-            }
-          },
-          sx: (theme: Theme) => ({
-            marginTop: theme.spacing(3),
-          }),
-        }}
-        style={{ padding: 0 }}
-      />
-
-      <ConfirmationDialog
-        actions={() => (
-          <ActionsPanel
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: closeDialog,
-            }}
-            primaryButtonProps={{ label: 'Confirm', onClick: handleSubmit }}
-            style={{ padding: 0 }}
+      ) : null}
+    </div>
+    {isCorsAvailable ? (
+      <FormControlLabel
+        control={
+          <Toggle
+            checked={selectedCORSOption}
+            disabled={accessLoading}
+            onChange={() => setSelectedCORSOption((prev) => !prev)}
           />
-        )}
-        onClose={closeDialog}
-        open={isOpen}
-        title={`Confirm ${label} Access`}
-      >
-        Are you sure you want to set access for {name} to Public Read/Write?
-        Everyone will be able to list, create, overwrite, and delete Objects in
-        this Bucket. <strong>This is not recommended.</strong>
-      </ConfirmationDialog>
-    </>
-  );
+        }
+        label={CORSLabel}
+        style={{ display: 'block', marginTop: 16 }}
+      />
+    ) : null}
+    {isCorsAvailable ? (
+      <Typography>
+        Whether Cross-Origin Resource Sharing is enabled for all origins. For
+        more fine-grained control of CORS, please use another{' '}
+        <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
+          S3-compatible tool
+        </Link>
+        .
+      </Typography>
+    ) : (
+      // TODO: OBJGen2 - We need to handle link in upcoming PR
+      (<Notice spacingBottom={0} spacingTop={16} variant="warning">
+        <Typography
+          sx={(theme) => ({
+            fontFamily: theme.font.bold,
+          })}
+        >
+          CORS (Cross Origin Sharing) is not available for endpoint types E2
+          and E3. <Link to="#">Learn more</Link>.
+        </Typography>
+      </Notice>)
+    )}
+    <ActionsPanel
+      primaryButtonProps={{
+        disabled: aclData === selectedACL && corsData === selectedCORSOption,
+        label: 'Save',
+        loading: updateAccessLoading,
+        onClick: () => {
+          // This isn't really a sane option: open a dialog for confirmation.
+          if (selectedACL === 'public-read-write') {
+            openDialog();
+          } else {
+            handleSubmit();
+          }
+        },
+        sx: (theme: Theme) => ({
+          marginTop: theme.spacing(3),
+        }),
+      }}
+      style={{ padding: 0 }}
+    />
+    <ConfirmationDialog
+      actions={() => (
+        <ActionsPanel
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: closeDialog,
+          }}
+          primaryButtonProps={{ label: 'Confirm', onClick: handleSubmit }}
+          style={{ padding: 0 }}
+        />
+      )}
+      onClose={closeDialog}
+      open={isOpen}
+      title={`Confirm ${label} Access`}
+    >
+      Are you sure you want to set access for {name} to Public Read/Write?
+      Everyone will be able to list, create, overwrite, and delete Objects in
+      this Bucket. <strong>This is not recommended.</strong>
+    </ConfirmationDialog>
+  </>);
 });
 
 export const StyledSubmitButton = styled(Button, {

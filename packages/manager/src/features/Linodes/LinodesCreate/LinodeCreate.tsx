@@ -1,6 +1,6 @@
 import { restoreBackup } from '@linode/api-v4/lib/linodes';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -839,7 +839,7 @@ export class LinodeCreate extends React.PureComponent<
       this.props.firewallId === undefined;
 
     return (
-      <StyledForm ref={this.createLinodeFormRef}>
+      (<StyledForm ref={this.createLinodeFormRef}>
         <Grid className="py0">
           {hasErrorFor.none && !!showGeneralError && (
             <Notice spacingTop={8} text={hasErrorFor.none} variant="error" />
@@ -1167,7 +1167,7 @@ export class LinodeCreate extends React.PureComponent<
           >
             <StyledMessageDiv showGDPRCheckbox={!!showGDPRCheckbox}>
               <SMTPRestrictionText>
-                {({ text }) => <Grid xs={12}>{text}</Grid>}
+                {({ text }) => <Grid size={12}>{text}</Grid>}
               </SMTPRestrictionText>
               {showGDPRCheckbox ? (
                 <EUAgreementCheckbox
@@ -1243,7 +1243,7 @@ export class LinodeCreate extends React.PureComponent<
             />
           </StyledButtonGroupBox>
         </Grid>
-      </StyledForm>
+      </StyledForm>)
     );
   }
 }

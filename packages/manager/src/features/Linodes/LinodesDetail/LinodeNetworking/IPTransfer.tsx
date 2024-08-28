@@ -1,5 +1,5 @@
 import { styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import {
   both,
   compose,
@@ -260,7 +260,7 @@ export const IPTransfer = (props: Props) => {
     ];
 
     return (
-      <Grid
+      (<Grid
         sx={{
           [theme.breakpoints.down('md')]: {
             backgroundColor: theme.color.grey5,
@@ -270,16 +270,17 @@ export const IPTransfer = (props: Props) => {
         container
         key={state.sourceIP}
         spacing={2}
-        xs={12}
+        size={12}
       >
         <Grid
           sx={{
             alignItems: 'center',
             display: 'flex',
           }}
-          md={3}
-          xs={12}
-        >
+          size={{
+            md: 3,
+            xs: 12
+          }}>
           <Typography>
             <Typography
               sx={{
@@ -326,7 +327,7 @@ export const IPTransfer = (props: Props) => {
         </StyledAutoGrid>
         {renderLinodeSelect && renderLinodeSelect(state as Move)}
         {renderIPSelect && renderIPSelect(state as Swap)}
-      </Grid>
+      </Grid>)
     );
   };
 
@@ -477,20 +478,25 @@ export const IPTransfer = (props: Props) => {
   };
 
   return (
-    <Dialog fullWidth onClose={onClose} open={open} title="IP Transfer">
+    (<Dialog fullWidth onClose={onClose} open={open} title="IP Transfer">
       {error && (
-        <Grid xs={12}>
+        <Grid size={12}>
           {error.map(({ reason }, idx) => (
             <Notice key={idx} text={reason} variant="error" />
           ))}
         </Grid>
       )}
       {successMessage && (
-        <Grid xs={12}>
+        <Grid size={12}>
           <Notice text={successMessage} variant="success" />
         </Grid>
       )}
-      <Grid lg={8} sm={12} xl={6}>
+      <Grid
+        size={{
+          lg: 8,
+          sm: 12,
+          xl: 6
+        }}>
         <Typography sx={{ marginBottom: theme.spacing(2) }}>
           If you have two Linodes in the same data center, you can use the IP
           transfer feature to switch their IP addresses. This could be useful in
@@ -499,7 +505,7 @@ export const IPTransfer = (props: Props) => {
           the DNS records.
         </Typography>
       </Grid>
-      <Grid container xs={12}>
+      <Grid container size={12}>
         {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
           <Notice
             text={'There was an error loading IPv6 Ranges'}
@@ -512,7 +518,7 @@ export const IPTransfer = (props: Props) => {
           </div>
         ) : (
           <>
-            <Grid container xs={12}>
+            <Grid container size={12}>
               <Grid
                 sx={{
                   [theme.breakpoints.down('md')]: {
@@ -520,9 +526,10 @@ export const IPTransfer = (props: Props) => {
                   },
                 }}
                 data-qa-transfer-ip-label
-                sm={3}
-                xs={12}
-              >
+                size={{
+                  sm: 3,
+                  xs: 12
+                }}>
                 <Typography>IP Address</Typography>
               </Grid>
               <Grid
@@ -542,7 +549,7 @@ export const IPTransfer = (props: Props) => {
                   visibility: 'hidden',
                 },
               }}
-              xs={12}
+              size={12}
             >
               <Divider />
             </Grid>
@@ -557,14 +564,14 @@ export const IPTransfer = (props: Props) => {
                 with which to transfer IPs.
               </Typography>
             ) : (
-              <Grid spacing={2} xs={12}>
+              <Grid spacing={2} size={12}>
                 {Object.values(ips).map(ipRow)}
               </Grid>
             )}
           </>
         )}
       </Grid>
-      <Grid container justifyContent="flex-end" xs={12}>
+      <Grid container justifyContent="flex-end" size={12}>
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'ip-transfer-save',
@@ -581,7 +588,7 @@ export const IPTransfer = (props: Props) => {
           }}
         />
       </Grid>
-    </Dialog>
+    </Dialog>)
   );
 };
 

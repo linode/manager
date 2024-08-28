@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -41,103 +41,103 @@ export const AlertSection = (props: Props) => {
     value,
   } = props;
 
-  return (
-    <>
+  return (<>
+    <Grid
+      sx={{
+        '&:last-of-type': {
+          marginBottom: 0,
+        },
+        '&:last-of-type + hr': {
+          display: 'none',
+        },
+        alignItems: 'flex-start',
+        flex: 1,
+        marginBottom: theme.spacing(2),
+      }}
+      container
+      data-qa-alerts-panel
+      spacing={2}
+    >
       <Grid
         sx={{
-          '&:last-of-type': {
-            marginBottom: 0,
-          },
-          '&:last-of-type + hr': {
-            display: 'none',
-          },
-          alignItems: 'flex-start',
-          flex: 1,
-          marginBottom: theme.spacing(2),
+          display: 'flex',
+          flexDirection: 'column',
         }}
-        container
-        data-qa-alerts-panel
-        spacing={2}
-      >
-        <Grid
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          lg={7}
-          md={9}
-          xs={12}
-        >
-          <Box>
-            <FormControlLabel
-              control={
-                <Toggle
-                  checked={state}
-                  disabled={readOnly}
-                  onChange={onStateChange}
-                />
-              }
-              sx={{
-                '& > span:last-child': {
-                  ...theme.typography.h3,
-                },
-                '.MuiFormControlLabel-label': {
-                  paddingLeft: '12px',
-                },
-              }}
-              data-qa-alert={title}
-              label={title}
-            />
-          </Box>
-          <Box
+        size={{
+          lg: 7,
+          md: 9,
+          xs: 12
+        }}>
+        <Box>
+          <FormControlLabel
+            control={
+              <Toggle
+                checked={state}
+                disabled={readOnly}
+                onChange={onStateChange}
+              />
+            }
             sx={{
-              paddingLeft: '70px',
-              [theme.breakpoints.down('md')]: {
-                marginTop: '-12px',
+              '& > span:last-child': {
+                ...theme.typography.h3,
+              },
+              '.MuiFormControlLabel-label': {
+                paddingLeft: '12px',
               },
             }}
-          >
-            <Typography>{copy}</Typography>
-          </Box>
-        </Grid>
-        <Grid
+            data-qa-alert={title}
+            label={title}
+          />
+        </Box>
+        <Box
           sx={{
-            paddingBottom: '0',
-            paddingTop: '0',
+            paddingLeft: '70px',
             [theme.breakpoints.down('md')]: {
-              paddingLeft: '78px',
+              marginTop: '-12px',
             },
           }}
-          lg={5}
-          md={3}
-          xs={12}
         >
-          <TextField
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">{endAdornment}</InputAdornment>
-              ),
-            }}
-            sx={{
-              '.MuiInput-root': {
-                animation: `${fadeIn} .3s ease-in-out forwards`,
-                marginTop: 0,
-                maxWidth: 150,
-              },
-            }}
-            disabled={!state || readOnly}
-            error={Boolean(error)}
-            errorText={error}
-            label={textTitle}
-            max={Infinity}
-            min={0}
-            onChange={onValueChange}
-            type="number"
-            value={value}
-          />
-        </Grid>
+          <Typography>{copy}</Typography>
+        </Box>
       </Grid>
-      <Divider />
-    </>
-  );
+      <Grid
+        sx={{
+          paddingBottom: '0',
+          paddingTop: '0',
+          [theme.breakpoints.down('md')]: {
+            paddingLeft: '78px',
+          },
+        }}
+        size={{
+          lg: 5,
+          md: 3,
+          xs: 12
+        }}>
+        <TextField
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">{endAdornment}</InputAdornment>
+            ),
+          }}
+          sx={{
+            '.MuiInput-root': {
+              animation: `${fadeIn} .3s ease-in-out forwards`,
+              marginTop: 0,
+              maxWidth: 150,
+            },
+          }}
+          disabled={!state || readOnly}
+          error={Boolean(error)}
+          errorText={error}
+          label={textTitle}
+          max={Infinity}
+          min={0}
+          onChange={onValueChange}
+          type="number"
+          value={value}
+        />
+      </Grid>
+    </Grid>
+    <Divider />
+  </>);
 };

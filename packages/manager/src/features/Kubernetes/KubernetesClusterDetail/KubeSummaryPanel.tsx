@@ -1,6 +1,6 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -166,7 +166,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   };
 
   return (
-    <Stack sx={{ marginBottom: theme.spacing(3) }}>
+    (<Stack sx={{ marginBottom: theme.spacing(3) }}>
       <EntityDetail
         body={
           <Grid
@@ -175,7 +175,13 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             sx={{ ...sxSpacing, ...sxMainGridContainer }}
           >
             <KubeClusterSpecs cluster={cluster} />
-            <Grid container direction="column" lg={4} xs={12}>
+            <Grid
+              container
+              direction="column"
+              size={{
+                lg: 4,
+                xs: 12
+              }}>
               <KubeConfigDisplay
                 clusterId={cluster.id}
                 clusterLabel={cluster.label}
@@ -188,9 +194,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               container
               direction="column"
               justifyContent="space-between"
-              lg={5}
-              xs={12}
-            >
+              size={{
+                lg: 5,
+                xs: 12
+              }}>
               <Grid className={classes.actionRow}>
                 {cluster.control_plane.high_availability && (
                   <Chip
@@ -246,7 +253,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         }
         noBodyBottomBorder
       />
-
       <KubeConfigDrawer
         closeDrawer={() => setDrawerOpen(false)}
         clusterId={cluster.id}
@@ -289,6 +295,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         will no longer be able to access this cluster via your previous
         Kubeconfig file. This action cannot be undone.
       </ConfirmationDialog>
-    </Stack>
+    </Stack>)
   );
 });

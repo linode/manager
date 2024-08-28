@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -76,10 +76,10 @@ export const NodeBalancerConfigNode = React.memo(
     );
 
     return (
-      <React.Fragment>
-        <Grid data-qa-node sx={{ padding: 1 }} xs={12}>
+      (<React.Fragment>
+        <Grid data-qa-node sx={{ padding: 1 }} size={12}>
           {idx !== 0 && (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Divider
                 style={{
                   marginBottom: 24,
@@ -100,10 +100,11 @@ export const NodeBalancerConfigNode = React.memo(
                   marginTop: 0,
                 },
               }}
-              lg={forEdit ? 2 : 4}
-              sm={forEdit ? 4 : 6}
-              xs={12}
-            >
+              size={{
+                lg: forEdit ? 2 : 4,
+                sm: forEdit ? 4 : 6,
+                xs: 12
+              }}>
               <TextField
                 data-qa-backend-ip-label
                 disabled={disabled}
@@ -117,7 +118,12 @@ export const NodeBalancerConfigNode = React.memo(
               />
             </Grid>
             {node.status && (
-              <Grid lg={2} sm={4} xs={6}>
+              <Grid
+                size={{
+                  lg: 2,
+                  sm: 4,
+                  xs: 6
+                }}>
                 <StyledStatusHeader data-qa-active-checks-header variant="h3">
                   Status
                 </StyledStatusHeader>
@@ -130,9 +136,14 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
-        <Grid sx={{ padding: 1 }} xs={12}>
+        <Grid sx={{ padding: 1 }} size={12}>
           <Grid container data-qa-node key={idx} spacing={2}>
-            <Grid lg={forEdit ? 2 : 4} sm={3} xs={12}>
+            <Grid
+              size={{
+                lg: forEdit ? 2 : 4,
+                sm: 3,
+                xs: 12
+              }}>
               <ConfigNodeIPSelect
                 textfieldProps={{
                   dataAttrs: {
@@ -148,7 +159,12 @@ export const NodeBalancerConfigNode = React.memo(
                 selectedRegion={nodeBalancerRegion}
               />
             </Grid>
-            <Grid lg={2} sm={3} xs={6}>
+            <Grid
+              size={{
+                lg: 2,
+                sm: 3,
+                xs: 6
+              }}>
               <TextField
                 data-qa-backend-ip-port
                 disabled={disabled}
@@ -162,7 +178,12 @@ export const NodeBalancerConfigNode = React.memo(
                 value={node.port}
               />
             </Grid>
-            <Grid lg={2} sm={3} xs={6}>
+            <Grid
+              size={{
+                lg: 2,
+                sm: 3,
+                xs: 6
+              }}>
               <TextField
                 data-qa-backend-ip-weight
                 disabled={disabled}
@@ -177,7 +198,12 @@ export const NodeBalancerConfigNode = React.memo(
               />
             </Grid>
             {forEdit && (
-              <Grid lg={2} sm={3} xs={6}>
+              <Grid
+                size={{
+                  lg: 2,
+                  sm: 3,
+                  xs: 6
+                }}>
                 <Autocomplete
                   value={modeOptions.find(
                     (option) => option.value === node.mode
@@ -201,7 +227,7 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
-      </React.Fragment>
+      </React.Fragment>)
     );
   }
 );

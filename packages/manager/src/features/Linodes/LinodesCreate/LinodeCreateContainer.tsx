@@ -2,7 +2,7 @@ import { signAgreement } from '@linode/api-v4/lib/account';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { vpcsValidateIP } from '@linode/validation';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';

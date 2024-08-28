@@ -1,5 +1,5 @@
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';

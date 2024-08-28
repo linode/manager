@@ -7,7 +7,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -124,15 +124,20 @@ export const InvoiceDetail = () => {
   };
 
   return (
-    <Paper
+    (<Paper
       sx={{
         padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
       }}
     >
       <Grid container rowGap={2}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
-            <Grid sm={4} sx={sxGrid} xs={12}>
+            <Grid
+              sx={sxGrid}
+              size={{
+                sm: 4,
+                xs: 12
+              }}>
               <Link
                 accessibleAriaLabel="Back to Billing"
                 data-qa-back-to-billing
@@ -168,8 +173,10 @@ export const InvoiceDetail = () => {
             </Grid>
             <Grid
               data-qa-printable-invoice
-              sm
               sx={{ ...sxGrid, justifyContent: 'flex-end' }}
+              size={{
+                sm: "grow"
+              }}
             >
               {account && invoice && items && (
                 <>
@@ -191,7 +198,9 @@ export const InvoiceDetail = () => {
                 </>
               )}
             </Grid>
-            <Grid sm="auto">
+            <Grid size={{
+              sm: "auto"
+            }}>
               {invoice && (
                 <Typography data-qa-total={invoice.total} variant="h2">
                   Total:{' '}
@@ -204,7 +213,7 @@ export const InvoiceDetail = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           {pdfGenerationError && (
             <Notice variant="error">Failed generating PDF.</Notice>
           )}
@@ -215,7 +224,7 @@ export const InvoiceDetail = () => {
             shouldShowRegion={shouldShowRegion}
           />
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           {invoice && (
             <Box
               sx={{
@@ -268,6 +277,6 @@ export const InvoiceDetail = () => {
           )}
         </Grid>
       </Grid>
-    </Paper>
+    </Paper>)
   );
 };

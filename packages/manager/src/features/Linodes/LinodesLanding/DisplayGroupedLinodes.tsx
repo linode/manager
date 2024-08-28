@@ -1,5 +1,5 @@
 import { Config } from '@linode/api-v4/lib/linodes';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
 
@@ -94,115 +94,113 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   }, 0);
 
   if (display === 'grid') {
-    return (
-      <>
-        <Grid className={'px0'} xs={12}>
-          <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
-            <div className="visually-hidden" id={displayViewDescriptionId}>
-              Currently in {linodeViewPreference} view
-            </div>
-            <Tooltip placement="top" title="List view">
-              <StyledToggleButton
-                aria-describedby={displayViewDescriptionId}
-                aria-label="Toggle display"
-                disableRipple
-                isActive={linodesAreGrouped}
-                onClick={toggleLinodeView}
-                size="large"
-              >
-                <GridView />
-              </StyledToggleButton>
-            </Tooltip>
+    return (<>
+      <Grid className={'px0'} size={12}>
+        <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
+          <div className="visually-hidden" id={displayViewDescriptionId}>
+            Currently in {linodeViewPreference} view
+          </div>
+          <Tooltip placement="top" title="List view">
+            <StyledToggleButton
+              aria-describedby={displayViewDescriptionId}
+              aria-label="Toggle display"
+              disableRipple
+              isActive={linodesAreGrouped}
+              onClick={toggleLinodeView}
+              size="large"
+            >
+              <GridView />
+            </StyledToggleButton>
+          </Tooltip>
 
-            <div className="visually-hidden" id={groupByDescriptionId}>
-              {linodesAreGrouped
-                ? 'group by tag is currently enabled'
-                : 'group by tag is currently disabled'}
-            </div>
-            <Tooltip placement="top-end" title="Ungroup by tag">
-              <StyledToggleButton
-                aria-describedby={groupByDescriptionId}
-                aria-label={`Toggle group by tag`}
-                disableRipple
-                isActive={linodesAreGrouped}
-                onClick={toggleGroupLinodes}
-                size="large"
-              >
-                <GroupByTag />
-              </StyledToggleButton>
-            </Tooltip>
-          </StyledControlHeader>
-        </Grid>
-        {orderedGroupedLinodes.length === 0 ? (
-          <Typography style={{ textAlign: 'center' }}>
-            No items to display.
-          </Typography>
-        ) : null}
-        {orderedGroupedLinodes.map(([tag, linodes]) => {
-          return (
-            <Box data-qa-tag-header={tag} key={tag} sx={{ marginBottom: 2 }}>
-              <Grid container>
-                <Grid xs={12}>
-                  <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
-                </Grid>
+          <div className="visually-hidden" id={groupByDescriptionId}>
+            {linodesAreGrouped
+              ? 'group by tag is currently enabled'
+              : 'group by tag is currently disabled'}
+          </div>
+          <Tooltip placement="top-end" title="Ungroup by tag">
+            <StyledToggleButton
+              aria-describedby={groupByDescriptionId}
+              aria-label={`Toggle group by tag`}
+              disableRipple
+              isActive={linodesAreGrouped}
+              onClick={toggleGroupLinodes}
+              size="large"
+            >
+              <GroupByTag />
+            </StyledToggleButton>
+          </Tooltip>
+        </StyledControlHeader>
+      </Grid>
+      {orderedGroupedLinodes.length === 0 ? (
+        <Typography style={{ textAlign: 'center' }}>
+          No items to display.
+        </Typography>
+      ) : null}
+      {orderedGroupedLinodes.map(([tag, linodes]) => {
+        return (
+          (<Box data-qa-tag-header={tag} key={tag} sx={{ marginBottom: 2 }}>
+            <Grid container>
+              <Grid size={12}>
+                <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
               </Grid>
-              <Paginate
-                // page size needed to show ALL Linodes with maintenance.
-                pageSize={
-                  numberOfLinodesWithMaintenance > infinitePageSize
-                    ? getMinimumPageSizeForNumberOfItems(
-                        numberOfLinodesWithMaintenance
-                      )
-                    : infinitePageSize
-                }
-                // If there are more Linodes with maintenance than the current page size, show the minimum
-                data={linodes}
-                pageSizeSetter={setInfinitePageSize}
-              >
-                {({
+            </Grid>
+            <Paginate
+              // page size needed to show ALL Linodes with maintenance.
+              pageSize={
+                numberOfLinodesWithMaintenance > infinitePageSize
+                  ? getMinimumPageSizeForNumberOfItems(
+                      numberOfLinodesWithMaintenance
+                    )
+                  : infinitePageSize
+              }
+              // If there are more Linodes with maintenance than the current page size, show the minimum
+              data={linodes}
+              pageSizeSetter={setInfinitePageSize}
+            >
+              {({
+                count,
+                data: paginatedData,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize,
+              }) => {
+                const finalProps = {
+                  ...rest,
                   count,
                   data: paginatedData,
+                  handleOrderChange,
                   handlePageChange,
                   handlePageSizeChange,
+                  isVLAN,
+                  order,
+                  orderBy,
                   page,
                   pageSize,
-                }) => {
-                  const finalProps = {
-                    ...rest,
-                    count,
-                    data: paginatedData,
-                    handleOrderChange,
-                    handlePageChange,
-                    handlePageSizeChange,
-                    isVLAN,
-                    order,
-                    orderBy,
-                    page,
-                    pageSize,
-                  };
-                  return (
-                    <React.Fragment>
-                      <Component {...finalProps} />
-                      <Grid xs={12}>
-                        <PaginationFooter
-                          count={count}
-                          eventCategory={'linodes landing'}
-                          handlePageChange={handlePageChange}
-                          handleSizeChange={handlePageSizeChange}
-                          page={page}
-                          pageSize={pageSize}
-                          showAll
-                        />
-                      </Grid>
-                    </React.Fragment>
-                  );
-                }}
-              </Paginate>
-            </Box>
-          );
-        })}
-      </>
-    );
+                };
+                return (
+                  (<React.Fragment>
+                    <Component {...finalProps} />
+                    <Grid size={12}>
+                      <PaginationFooter
+                        count={count}
+                        eventCategory={'linodes landing'}
+                        handlePageChange={handlePageChange}
+                        handleSizeChange={handlePageSizeChange}
+                        page={page}
+                        pageSize={pageSize}
+                        showAll
+                      />
+                    </Grid>
+                  </React.Fragment>)
+                );
+              }}
+            </Paginate>
+          </Box>)
+        );
+      })}
+    </>);
   }
 
   if (display === 'list') {

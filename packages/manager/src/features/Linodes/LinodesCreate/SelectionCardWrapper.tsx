@@ -1,5 +1,5 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

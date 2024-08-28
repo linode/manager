@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -36,7 +36,7 @@ export const AbuseTicketBanner = () => {
   const isViewingTicket = location.pathname.match(href);
 
   return (
-    <Grid xs={12}>
+    (<Grid size={12}>
       <DismissibleBanner
         options={{
           expiry: DateTime.utc().plus({ days: 7 }).toISO(),
@@ -61,7 +61,7 @@ export const AbuseTicketBanner = () => {
           ) : null}
         </Typography>
       </DismissibleBanner>
-    </Grid>
+    </Grid>)
   );
 };
 

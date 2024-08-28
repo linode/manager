@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 

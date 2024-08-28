@@ -1,5 +1,5 @@
 import { CreateObjectStorageBucketSSLPayload } from '@linode/api-v4/lib/object-storage';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';

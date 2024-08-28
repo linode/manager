@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -152,7 +152,11 @@ const ContactInformation = (props: Props) => {
   };
 
   return (
-    <Grid md={6} xs={12}>
+    (<Grid
+      size={{
+        md: 6,
+        xs: 12
+      }}>
       <BillingPaper data-qa-contact-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>
@@ -264,7 +268,7 @@ const ContactInformation = (props: Props) => {
         focusEmail={focusEmail}
         open={editContactDrawerOpen}
       />
-    </Grid>
+    </Grid>)
   );
 };
 

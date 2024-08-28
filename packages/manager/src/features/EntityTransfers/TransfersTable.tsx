@@ -80,114 +80,112 @@ export const TransfersTable = React.memo((props: Props) => {
     setDetailsDialogOpen(true);
   };
 
-  return (
-    <>
-      <StyledDiv>
-        <Accordion
-          defaultExpanded={transfersCount > 0}
-          heading={`${capitalize(transferType)} Service Transfers`}
-        >
-          <StyledTable>
-            <TableHead>
-              <TableRow>
-                <TableCell key="transfer-token-table-header-token">
-                  Token
-                </TableCell>
-                {transferTypeIsPending || transferTypeIsSent ? (
-                  <Hidden mdDown>
-                    <TableCell key="transfer-token-table-header-created">
-                      Created
-                    </TableCell>
-                  </Hidden>
-                ) : (
+  return (<>
+    <StyledDiv>
+      <Accordion
+        defaultExpanded={transfersCount > 0}
+        heading={`${capitalize(transferType)} Service Transfers`}
+      >
+        <StyledTable>
+          <TableHead>
+            <TableRow>
+              <TableCell key="transfer-token-table-header-token">
+                Token
+              </TableCell>
+              {transferTypeIsPending || transferTypeIsSent ? (
+                <Hidden mdDown>
                   <TableCell key="transfer-token-table-header-created">
                     Created
                   </TableCell>
-                )}
-                {transferTypeIsPending ? (
-                  <>
-                    <Hidden smDown>
-                      <TableCell key="transfer-token-table-header-entities">
-                        Services
-                      </TableCell>
-                    </Hidden>
-                    <TableCell key="transfer-token-table-header-expiry">
-                      Expiry
-                    </TableCell>
-                    {/*  Empty column header for action column */}
-                    <TableCell />
-                  </>
-                ) : transferTypeIsSent ? (
-                  <>
+                </Hidden>
+              ) : (
+                <TableCell key="transfer-token-table-header-created">
+                  Created
+                </TableCell>
+              )}
+              {transferTypeIsPending ? (
+                <>
+                  <Hidden smDown>
                     <TableCell key="transfer-token-table-header-entities">
                       Services
                     </TableCell>
-                    <TableCell key="transfer-token-table-header-status">
-                      Status
-                    </TableCell>
-                  </>
-                ) : (
+                  </Hidden>
+                  <TableCell key="transfer-token-table-header-expiry">
+                    Expiry
+                  </TableCell>
+                  {/*  Empty column header for action column */}
+                  <TableCell />
+                </>
+              ) : transferTypeIsSent ? (
+                <>
                   <TableCell key="transfer-token-table-header-entities">
                     Services
                   </TableCell>
-                )}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableContentWrapper
-                loadingProps={{
-                  columns: 3,
-                  responsive: {
-                    // @TODO do this
-                  },
-                }}
-                error={error ?? undefined}
-                length={transfers?.length ?? 0}
-                loading={isLoading}
-              >
-                {transfers?.map((transfer, idx) => (
-                  <RenderTransferRow
-                    handleCancelPendingTransferClick={
-                      handleCancelPendingTransferClick
-                    }
-                    created={transfer.created}
-                    entities={transfer.entities}
-                    expiry={transfer.expiry}
-                    handleTokenClick={handleTokenClick}
-                    key={`${transferType}-${idx}`}
-                    status={transfer.status}
-                    token={transfer.token}
-                    transferType={transferType}
-                  />
-                ))}
-              </TableContentWrapper>
-            </TableBody>
-          </StyledTable>
-          <PaginationFooter
-            count={results}
-            eventCategory="Service Transfer Table"
-            handlePageChange={handlePageChange}
-            handleSizeChange={handlePageSizeChange}
-            page={page}
-            pageSize={pageSize}
-          />
-        </Accordion>
-        {transferTypeIsPending ? (
-          // Only Pending Transfers can be canceled.
-          <ConfirmTransferCancelDialog
-            entities={currentEntities}
-            onClose={closeCancelPendingDialog}
-            open={cancelPendingDialogOpen}
-            token={tokenBeingCanceled}
-          />
-        ) : null}
-      </StyledDiv>
-      <TransferDetailsDialog
-        entities={currentEntities}
-        isOpen={detailsDialogOpen}
-        onClose={() => setDetailsDialogOpen(false)}
-        token={currentToken}
-      />
-    </>
-  );
+                  <TableCell key="transfer-token-table-header-status">
+                    Status
+                  </TableCell>
+                </>
+              ) : (
+                <TableCell key="transfer-token-table-header-entities">
+                  Services
+                </TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableContentWrapper
+              loadingProps={{
+                columns: 3,
+                responsive: {
+                  // @TODO do this
+                },
+              }}
+              error={error ?? undefined}
+              length={transfers?.length ?? 0}
+              loading={isLoading}
+            >
+              {transfers?.map((transfer, idx) => (
+                <RenderTransferRow
+                  handleCancelPendingTransferClick={
+                    handleCancelPendingTransferClick
+                  }
+                  created={transfer.created}
+                  entities={transfer.entities}
+                  expiry={transfer.expiry}
+                  handleTokenClick={handleTokenClick}
+                  key={`${transferType}-${idx}`}
+                  status={transfer.status}
+                  token={transfer.token}
+                  transferType={transferType}
+                />
+              ))}
+            </TableContentWrapper>
+          </TableBody>
+        </StyledTable>
+        <PaginationFooter
+          count={results}
+          eventCategory="Service Transfer Table"
+          handlePageChange={handlePageChange}
+          handleSizeChange={handlePageSizeChange}
+          page={page}
+          pageSize={pageSize}
+        />
+      </Accordion>
+      {transferTypeIsPending ? (
+        // Only Pending Transfers can be canceled.
+        (<ConfirmTransferCancelDialog
+          entities={currentEntities}
+          onClose={closeCancelPendingDialog}
+          open={cancelPendingDialogOpen}
+          token={tokenBeingCanceled}
+        />)
+      ) : null}
+    </StyledDiv>
+    <TransferDetailsDialog
+      entities={currentEntities}
+      isOpen={detailsDialogOpen}
+      onClose={() => setDetailsDialogOpen(false)}
+      token={currentToken}
+    />
+  </>);
 });

@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -173,7 +173,14 @@ export const ColorPalette = () => {
 
   const createSwatch = (color: string, alias: string) => {
     return (
-      <Grid className={classes.swatchWrapper} key={alias} md={4} sm={6} xs={12}>
+      (<Grid
+        className={classes.swatchWrapper}
+        key={alias}
+        size={{
+          md: 4,
+          sm: 6,
+          xs: 12
+        }}>
         <div
           className={classes.swatch}
           style={{ backgroundColor: color }}
@@ -183,19 +190,17 @@ export const ColorPalette = () => {
           <br />
           <span className={classes.color}>{color}</span>
         </Typography>
-      </Grid>
+      </Grid>)
     );
   };
 
   const renderColor = (heading: string, colors: Color[]) => {
-    return (
-      <>
-        <Grid xs={12}>
-          <Typography variant="h2">{heading}</Typography>
-        </Grid>
-        {colors.map((color) => createSwatch(color.color, color.alias))}
-      </>
-    );
+    return (<>
+      <Grid size={12}>
+        <Typography variant="h2">{heading}</Typography>
+      </Grid>
+      {colors.map((color) => createSwatch(color.color, color.alias))}
+    </>);
   };
 
   return (

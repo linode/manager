@@ -5,7 +5,7 @@ import {
   ServiceType,
 } from '@linode/api-v4/lib/managed';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Formik } from 'formik';
 import { pickBy } from 'ramda';
 import * as React from 'react';
@@ -115,7 +115,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
   const initialValues = { ...emptyInitialValues, ..._monitor };
 
   return (
-    <Drawer onClose={onClose} open={open} title={titleMap[mode]}>
+    (<Drawer onClose={onClose} open={open} title={titleMap[mode]}>
       <Formik
         initialValues={initialValues}
         onSubmit={onSubmit}
@@ -181,7 +181,11 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
               />
 
               <Grid container spacing={2}>
-                <Grid sm={6} xs={12}>
+                <Grid
+                  size={{
+                    sm: 6,
+                    xs: 12
+                  }}>
                   <Select
                     onChange={(item: Item<ServiceType>) =>
                       setFieldValue('service_type', item.value)
@@ -199,7 +203,11 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
                     value={getValueFromItem(values.service_type, typeOptions)}
                   />
                 </Grid>
-                <Grid sm={6} xs={12}>
+                <Grid
+                  size={{
+                    sm: 6,
+                    xs: 12
+                  }}>
                   <TextField
                     InputProps={{
                       endAdornment: (
@@ -295,7 +303,7 @@ const MonitorDrawer = (props: MonitorDrawerProps) => {
           </>
         )}
       </Formik>
-    </Drawer>
+    </Drawer>)
   );
 };
 

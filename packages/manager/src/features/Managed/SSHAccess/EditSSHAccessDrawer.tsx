@@ -1,5 +1,5 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Formik, FormikHelpers } from 'formik';
 import * as React from 'react';
 

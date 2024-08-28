@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -33,7 +33,7 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
   };
 
   return (
-    <Grid
+    (<Grid
       sx={{
         display: 'grid',
         gridTemplateAreas: `
@@ -55,7 +55,7 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
           paddingBottom: 0,
           paddingTop: 0,
         }}
-        xs={12}
+        size={12}
       >
         <Typography>
           <strong>DNS Resolvers</strong>
@@ -66,7 +66,7 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
           gridArea: 'two',
           paddingRight: theme.spacing(2),
         }}
-        xs="auto"
+        size="auto"
       >
         {renderIPResolvers(v4Resolvers)}
       </Grid>
@@ -75,10 +75,10 @@ export const DNSResolvers = React.memo((props: DNSResolversProps) => {
           gridArea: 'three',
           paddingLeft: theme.spacing(2),
         }}
-        xs="auto"
+        size="auto"
       >
         {renderIPResolvers(v6Resolvers)}
       </Grid>
-    </Grid>
+    </Grid>)
   );
 });

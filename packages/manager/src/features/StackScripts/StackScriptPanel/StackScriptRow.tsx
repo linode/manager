@@ -78,7 +78,7 @@ export const StackScriptRow = (props: Props) => {
   };
 
   return (
-    <StyledTableRow data-qa-table-row={label}>
+    (<StyledTableRow data-qa-table-row={label}>
       <StyledTitleTableCell data-qa-stackscript-title>
         {renderLabel()}
       </StyledTitleTableCell>
@@ -96,11 +96,11 @@ export const StackScriptRow = (props: Props) => {
         </StyledImagesTableCell>
       </Hidden>
       {communityStackScript ? null : ( // We hide the "Status" column in the "Community StackScripts" tab of the StackScripts landing page since all of those are public.
-        <Hidden lgDown>
+        (<Hidden lgDown>
           <TableCell data-qa-stackscript-status>
             {isPublic ? 'Public' : 'Private'}
           </TableCell>
-        </Hidden>
+        </Hidden>)
       )}
       <StyledRowTableCell actionCell>
         <StackScriptActionMenu
@@ -115,6 +115,6 @@ export const StackScriptRow = (props: Props) => {
           triggerMakePublic={triggerMakePublic}
         />
       </StyledRowTableCell>
-    </StyledTableRow>
+    </StyledTableRow>)
   );
 };

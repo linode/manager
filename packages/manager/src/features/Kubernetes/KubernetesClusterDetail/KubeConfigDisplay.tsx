@@ -1,5 +1,5 @@
 import { Box } from 'src/components/Box';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
@@ -128,64 +128,62 @@ export const KubeConfigDisplay = (props: Props) => {
     );
   };
 
-  return (
-    <>
-      <Grid xs={12}>
-        <Typography className={classes.label}>
-          Kubernetes API Endpoint:
-        </Typography>
-        <Typography>
-          {renderEndpoint(
-            getEndpointToDisplay(
-              endpoints?.map((endpoint) => endpoint.endpoint) ?? []
-            ),
-            endpointsLoading,
-            endpointsError?.[0].reason
-          )}
-        </Typography>
-      </Grid>
-      <Grid xs={12}>
-        <Typography className={classes.label} style={{ marginTop: 8 }}>
-          Kubeconfig:
-        </Typography>
-        <div className={classes.kubeconfigElements}>
-          <Box
-            className={classes.kubeconfigElement}
-            onClick={downloadKubeConfig}
+  return (<>
+    <Grid size={12}>
+      <Typography className={classes.label}>
+        Kubernetes API Endpoint:
+      </Typography>
+      <Typography>
+        {renderEndpoint(
+          getEndpointToDisplay(
+            endpoints?.map((endpoint) => endpoint.endpoint) ?? []
+          ),
+          endpointsLoading,
+          endpointsError?.[0].reason
+        )}
+      </Typography>
+    </Grid>
+    <Grid size={12}>
+      <Typography className={classes.label} style={{ marginTop: 8 }}>
+        Kubeconfig:
+      </Typography>
+      <div className={classes.kubeconfigElements}>
+        <Box
+          className={classes.kubeconfigElement}
+          onClick={downloadKubeConfig}
+        >
+          <DownloadIcon
+            className={classes.kubeconfigIcons}
+            style={{ marginLeft: 0 }}
+          />
+          <Typography className={classes.kubeconfigFileText}>
+            {`${clusterLabel}-kubeconfig.yaml`}
+          </Typography>
+        </Box>
+        <Box className={classes.kubeconfigElement} onClick={handleOpenDrawer}>
+          <DetailsIcon className={classes.kubeconfigIcons} />
+          <Typography className={classes.kubeconfigFileText}>View</Typography>
+        </Box>
+        <Box
+          className={classes.kubeconfigElement}
+          onClick={() => setResetKubeConfigDialogOpen(true)}
+        >
+          <ResetIcon
+            className={cx({
+              [classes.disabled]: isResettingKubeConfig,
+              [classes.kubeconfigIcons]: true,
+            })}
+          />
+          <Typography
+            className={cx({
+              [classes.disabled]: isResettingKubeConfig,
+              [classes.kubeconfigFileText]: true,
+            })}
           >
-            <DownloadIcon
-              className={classes.kubeconfigIcons}
-              style={{ marginLeft: 0 }}
-            />
-            <Typography className={classes.kubeconfigFileText}>
-              {`${clusterLabel}-kubeconfig.yaml`}
-            </Typography>
-          </Box>
-          <Box className={classes.kubeconfigElement} onClick={handleOpenDrawer}>
-            <DetailsIcon className={classes.kubeconfigIcons} />
-            <Typography className={classes.kubeconfigFileText}>View</Typography>
-          </Box>
-          <Box
-            className={classes.kubeconfigElement}
-            onClick={() => setResetKubeConfigDialogOpen(true)}
-          >
-            <ResetIcon
-              className={cx({
-                [classes.disabled]: isResettingKubeConfig,
-                [classes.kubeconfigIcons]: true,
-              })}
-            />
-            <Typography
-              className={cx({
-                [classes.disabled]: isResettingKubeConfig,
-                [classes.kubeconfigFileText]: true,
-              })}
-            >
-              Reset
-            </Typography>
-          </Box>
-        </div>
-      </Grid>
-    </>
-  );
+            Reset
+          </Typography>
+        </Box>
+      </div>
+    </Grid>
+  </>);
 };

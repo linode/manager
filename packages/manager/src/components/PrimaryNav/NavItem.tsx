@@ -50,7 +50,7 @@ export const NavItem = React.memo((props: Props) => {
      href takes priority here. So if an href and onClick
      are provided, the onClick will not be applied
     */
-    <React.Fragment>
+    (<React.Fragment>
       {href ? (
         <Link
           className={linkClasses(href)}
@@ -91,6 +91,6 @@ export const NavItem = React.memo((props: Props) => {
         </Tooltip>
       )}
       <Divider className={props.dividerClasses} />
-    </React.Fragment>
+    </React.Fragment>)
   );
 });

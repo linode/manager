@@ -1,5 +1,5 @@
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';

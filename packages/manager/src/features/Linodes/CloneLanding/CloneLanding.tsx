@@ -1,6 +1,6 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { castDraft } from 'immer';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
@@ -268,7 +268,7 @@ export const CloneLanding = () => {
   );
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DocumentTitleSegment segment="Clone" />
       <MutationNotification linodeId={linodeId} />
       <Notifications />
@@ -279,7 +279,11 @@ export const CloneLanding = () => {
           justifyContent="space-between"
           sx={{ marginTop: theme.spacing(1) }}
         >
-          <Grid md={7} xs={12}>
+          <Grid
+            size={{
+              md: 7,
+              xs: 12
+            }}>
             <Paper sx={{ padding: 0 }}>
               <Typography
                 aria-level={2}
@@ -334,7 +338,11 @@ export const CloneLanding = () => {
               </Tabs>
             </Paper>
           </Grid>
-          <Grid md={4} xs={12}>
+          <Grid
+            size={{
+              md: 4,
+              xs: 12
+            }}>
             <Details
               selectedConfigs={attachAssociatedDisksToConfigs(
                 selectedConfigs,
@@ -344,15 +352,15 @@ export const CloneLanding = () => {
               selectedDisks={disksInState.filter((disk) => {
                 return (
                   // This disk has been individually selected ...
-                  state.diskSelection[disk.id].isSelected && // ... AND it's associated configs are NOT selected
-                  intersection(
+                  (// ... AND it's associated configs are NOT selected
+                  state.diskSelection[disk.id].isSelected && intersection(
                     pathOr(
                       [],
                       [disk.id, 'associatedConfigIds'],
                       state.diskSelection
                     ),
                     selectedConfigIds
-                  ).length === 0
+                  ).length === 0)
                 );
               })}
               // If a selected disk is associated with a selected config, we
@@ -373,6 +381,6 @@ export const CloneLanding = () => {
           </Grid>
         </Grid>
       </Paper>
-    </React.Fragment>
+    </React.Fragment>)
   );
 };

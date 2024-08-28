@@ -18,7 +18,7 @@ export const ListView = (props: RenderLinodesProps) => {
 
   return (
     // eslint-disable-next-line
-    <>
+    (<>
       {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
       {data.map((linode, idx: number) => (
         <LinodeRow
@@ -60,6 +60,6 @@ export const ListView = (props: RenderLinodesProps) => {
           watchdog_enabled={linode.watchdog_enabled}
         />
       ))}
-    </>
+    </>)
   );
 };

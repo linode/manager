@@ -1,5 +1,5 @@
 import { styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -254,7 +254,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
   };
 
   return (
-    <Grid container sx={{ margin: 0, width: '100%' }}>
+    (<Grid container sx={{ margin: 0, width: '100%' }}>
       <Grid
         sx={{
           display: 'flex',
@@ -263,7 +263,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
           marginTop: theme.spacing(),
           padding: 0,
         }}
-        xs={12}
+        size={12}
       >
         <StyledSelect
           defaultValue={options[0]}
@@ -288,7 +288,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
           }}
           container
           spacing={4}
-          xs={12}
+          size={12}
         >
           <StyledGrid xs={12}>
             <StatsPanel
@@ -311,7 +311,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
         xAxisTickFormat={xAxisTickFormat}
         {...chartProps}
       />
-    </Grid>
+    </Grid>)
   );
 };
 
