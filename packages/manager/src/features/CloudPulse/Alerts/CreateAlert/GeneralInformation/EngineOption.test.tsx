@@ -15,7 +15,12 @@ describe('EngineOption component tests', () => {
       getByLabelText,
       getByTestId,
     } = renderWithThemeAndFormik(
-      <EngineOption engineOptions={engineOptions} name={'engineOption'} />,
+      <EngineOption
+        engineOptions={engineOptions}
+        isError={false}
+        isLoading={false}
+        name={'engineOption'}
+      />,
       { initialValues, onSubmit: handleOnSubmit }
     );
     expect(getByLabelText('Engine Options')).toBeInTheDocument();
@@ -23,7 +28,12 @@ describe('EngineOption component tests', () => {
   });
   it('should render the options happy path', () => {
     renderWithThemeAndFormik(
-      <EngineOption engineOptions={engineOptions} name={'engineOption'} />,
+      <EngineOption
+        engineOptions={engineOptions}
+        isError={true}
+        isLoading={true}
+        name={'engineOption'}
+      />,
       { initialValues, onSubmit: handleOnSubmit }
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
@@ -32,7 +42,12 @@ describe('EngineOption component tests', () => {
   });
   it('should be able to select an option', () => {
     renderWithThemeAndFormik(
-      <EngineOption engineOptions={engineOptions} name={'engineOption'} />,
+      <EngineOption
+        engineOptions={engineOptions}
+        isError={true}
+        isLoading={true}
+        name={'engineOption'}
+      />,
       { initialValues, onSubmit: handleOnSubmit }
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
