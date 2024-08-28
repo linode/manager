@@ -152,7 +152,7 @@ export const LinodeSelectTable = (props: Props) => {
         isSearching={isFetching}
         label="Search"
         placeholder="Search"
-        value={query}
+        value={preselectedLinodeId ? field.value?.label ?? '' : query}
       />
       <Box>
         {matchesMdUp ? (

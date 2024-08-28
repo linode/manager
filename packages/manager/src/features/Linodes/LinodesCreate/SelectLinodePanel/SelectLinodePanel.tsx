@@ -150,7 +150,7 @@ export const SelectLinodePanel = (props: Props) => {
                   expand={true}
                   hideLabel
                   label=""
-                  onSearch={(value) => setUserSearchText(value)}
+                  onSearch={setUserSearchText}
                   placeholder="Search"
                   value={searchText}
                 />
