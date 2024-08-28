@@ -163,7 +163,7 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
       },
     ],
   },
-  id: Factory.each((i) => `g6-standard-${i}`),
+  id: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
   label: Factory.each((i) => `Linode ${i} GB`),
   memory: Factory.each((i) => i * 2048),
   vcpus: Factory.each((i) => i * 2),
