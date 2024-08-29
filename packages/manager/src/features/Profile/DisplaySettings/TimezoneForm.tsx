@@ -7,9 +7,11 @@ import timezones from 'src/assets/timezones/timezones';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Typography } from 'src/components/Typography';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
+
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   loggedInAsCustomer: boolean;
@@ -48,7 +50,7 @@ export const TimezoneForm = (props: Props) => {
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const { error, isLoading, mutateAsync: updateProfile } = useMutateProfile();
+  const { error, isPending, mutateAsync: updateProfile } = useMutateProfile();
   const [value, setValue] = React.useState<Item<string> | null>(null);
   const timezone = profile?.timezone ?? '';
 
@@ -111,7 +113,7 @@ export const TimezoneForm = (props: Props) => {
           primaryButtonProps={{
             disabled,
             label: 'Update Timezone',
-            loading: isLoading,
+            loading: isPending,
             onClick: onSubmit,
             sx: {
               margin: '0',

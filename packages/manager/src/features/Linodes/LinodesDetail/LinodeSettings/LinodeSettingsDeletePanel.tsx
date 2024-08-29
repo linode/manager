@@ -22,7 +22,7 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
   const { data: linode } = useLinodeQuery(linodeId);
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteLinode,
   } = useDeleteLinodeMutation(linodeId);
 
@@ -63,7 +63,7 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
         }}
         errors={error}
         label={'Linode Label'}
-        loading={isLoading}
+        loading={isPending}
         onClick={onDelete}
         onClose={() => setOpen(false)}
         open={open}

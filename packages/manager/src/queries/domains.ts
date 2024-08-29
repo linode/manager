@@ -9,7 +9,12 @@ import {
   updateDomain,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -66,7 +71,7 @@ const domainQueries = createQueryKeys('domains', {
 export const useDomainsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Domain>, APIError[]>({
     ...domainQueries.domains._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useAllDomainsQuery = (enabled: boolean = false) =>

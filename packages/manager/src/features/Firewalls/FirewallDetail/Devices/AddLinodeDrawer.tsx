@@ -1,4 +1,3 @@
-import { Linode } from '@linode/api-v4';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -18,6 +17,8 @@ import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
+import type { Linode } from '@linode/api-v4';
 
 interface Props {
   helperText: string;
@@ -43,7 +44,7 @@ export const AddLinodeDrawer = (props: Props) => {
   const theme = useTheme();
 
   const {
-    isLoading: addDeviceIsLoading,
+    isPending: addDeviceIsLoading,
     mutateAsync: addDevice,
   } = useAddFirewallDeviceMutation(Number(id));
 
