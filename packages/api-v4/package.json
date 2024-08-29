@@ -67,7 +67,7 @@
     "lint-staged": "^15.2.9",
     "prettier": "~2.2.1",
     "tsup": "^8.2.4",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.5"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
