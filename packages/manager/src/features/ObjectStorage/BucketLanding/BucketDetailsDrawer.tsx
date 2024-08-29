@@ -9,6 +9,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
+import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -76,8 +77,7 @@ export const BucketDetailsDrawer = React.memo(
     );
 
     let formattedCreated;
-    const showBucketRateLimitTable =
-      endpoint_type === 'E2' || endpoint_type === 'E3';
+    const isGen2EndpointType = endpoint_type === 'E2' || endpoint_type === 'E3';
 
     // TODO: OBJGen2 - Handle Bucket Rate Limit update logic once the endpoint for updating is available.
     const form = useForm<UpdateBucketRateLimitPayload>({
@@ -153,17 +153,24 @@ export const BucketDetailsDrawer = React.memo(
          to getBucketAccess and updateBucketAccess.  */}
           {
             <>
-              <Typography data-testid="bucketRateLimit" variant="h3">
-                Bucket Rate Limits
-              </Typography>
-              {showBucketRateLimitTable ? (
-                <BucketRateLimitTable endpointType={endpoint_type} />
-              ) : (
-                <Typography>
-                  This endpoint type supports up to 750 Requests Per
-                  Second(RPS). <Link to="#">Understand bucket rate limits</Link>
-                  .
+              <FormLabel>
+                <Typography
+                  data-testid="bucketRateLimit"
+                  marginBottom={1}
+                  marginTop={2}
+                  variant="inherit"
+                >
+                  Bucket Rate Limits
                 </Typography>
+              </FormLabel>
+              <Typography marginBottom={isGen2EndpointType ? 2 : 3}>
+                {isGen2EndpointType
+                  ? 'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. '
+                  : 'This endpoint type supports up to 750 Requests Per Second (RPS). '}
+                Understand <Link to="#">bucket rate limits</Link>.
+              </Typography>
+              {isGen2EndpointType && (
+                <BucketRateLimitTable endpointType={endpoint_type} />
               )}
             </>
           }
