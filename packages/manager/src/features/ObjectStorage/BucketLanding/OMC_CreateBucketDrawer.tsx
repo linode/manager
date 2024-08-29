@@ -361,6 +361,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
             />
             {Boolean(endpoints) && selectedEndpointOption && (
               <BucketRateLimitTable
+                typographyProps={{
+                  marginTop: 1,
+                  variant: 'inherit',
+                }}
                 endpointType={selectedEndpointOption?.endpoint_type}
               />
             )}

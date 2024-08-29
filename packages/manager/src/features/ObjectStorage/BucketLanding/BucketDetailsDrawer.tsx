@@ -146,7 +146,13 @@ export const BucketDetailsDrawer = React.memo(
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
          to getBucketAccess and updateBucketAccess.  */}
         {isObjectStorageGen2Enabled && (
-          <BucketRateLimitTable endpointType={endpoint_type} />
+          <BucketRateLimitTable
+            typographyProps={{
+              marginTop: 1,
+              variant: 'inherit',
+            }}
+            endpointType={endpoint_type}
+          />
         )}
         {<Divider spacingBottom={16} spacingTop={16} />}
         {cluster && label && (
