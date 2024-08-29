@@ -148,7 +148,9 @@ describe('linode storage tab', () => {
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.findByText('Deleting', { exact: false }).should('be.visible');
       ui.button.findByTitle('Add a Disk').should('be.enabled');
-      ui.toast.assertMessage(`Disk ${diskName} successfully deleted.`);
+      ui.toast.assertMessage(
+        `Disk ${diskName} on Linode ${linode.label} has been deleted.`
+      );
       cy.findByLabelText('List of Disks').within(() => {
         cy.contains(diskName).should('not.exist');
       });
@@ -209,7 +211,9 @@ describe('linode storage tab', () => {
       cy.wait('@resizeDisk').its('response.statusCode').should('eq', 200);
       ui.toast.assertMessage('Disk queued for resizing.');
       // cy.findByText('Resizing', { exact: false }).should('be.visible');
-      ui.toast.assertMessage(`Disk ${diskName} successfully resized.`);
+      ui.toast.assertMessage(
+        `A disk on Linode ${linode.label} has been resized.`
+      );
     });
   });
 });
