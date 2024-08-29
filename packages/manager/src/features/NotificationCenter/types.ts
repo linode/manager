@@ -1,6 +1,6 @@
 import type { Notification } from '@linode/api-v4';
 
-export interface NotificationsItem {
+export interface NotificationCenterNotificationsItem {
   body: JSX.Element | string;
   countInTotal: boolean;
   eventId: number;
@@ -12,7 +12,7 @@ export interface FormattedNotificationProps extends Notification {
   jsx?: JSX.Element;
 }
 
-export interface NotificationMessageProps {
+export interface NotificationCenterNotificationMessageProps {
   notification: FormattedNotificationProps;
   onClose: () => void;
 }

@@ -11,9 +11,11 @@ import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { StyledLink } from '../NotificationCenter.styles';
 import { getEntityLinks } from '../utils';
 
-import type { NotificationMessageProps } from '../types';
+import type { NotificationCenterNotificationMessageProps } from '../types';
 
-export const NotificationMessage = (props: NotificationMessageProps) => {
+export const NotificationCenterNotificationMessage = (
+  props: NotificationCenterNotificationMessageProps
+) => {
   const theme = useTheme();
   const { notification, onClose } = props;
 
@@ -71,7 +73,7 @@ export const NotificationMessage = (props: NotificationMessageProps) => {
                 sx={{
                   fill: theme.color.red,
                 }}
-                data-test-id={severity + 'Icon'}
+                data-test-id={`${severity}Icon`}
               />
             ) : null}
             {severity === 'major' ? (

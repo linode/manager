@@ -15,14 +15,17 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationCenterContext as _notificationContext } from './NotificationCenterContext';
-import { NotificationMessage } from './Notifications/NotificationMessage';
+import { NotificationCenterNotificationMessage } from './Notifications/NotificationCenterNotificationMessage';
 import {
   adjustSeverity,
   checkIfMaintenanceNotification,
   isEUModelContractNotification,
 } from './utils';
 
-import type { FormattedNotificationProps, NotificationsItem } from './types';
+import type {
+  FormattedNotificationProps,
+  NotificationCenterNotificationsItem,
+} from './types';
 import type {
   Notification,
   NotificationType,
@@ -35,14 +38,19 @@ const formatNotificationForDisplay = (
   idx: number,
   onClose: () => void,
   shouldIncludeInCount: boolean = true
-): NotificationsItem => ({
-  body: <NotificationMessage notification={notification} onClose={onClose} />,
+): NotificationCenterNotificationsItem => ({
+  body: (
+    <NotificationCenterNotificationMessage
+      notification={notification}
+      onClose={onClose}
+    />
+  ),
   countInTotal: shouldIncludeInCount,
   eventId: -1,
   id: `notification-${idx}`,
 });
 
-export const useFormattedNotifications = (): NotificationsItem[] => {
+export const useFormattedNotifications = (): NotificationCenterNotificationsItem[] => {
   const notificationContext = React.useContext(_notificationContext);
   const {
     dismissNotifications,

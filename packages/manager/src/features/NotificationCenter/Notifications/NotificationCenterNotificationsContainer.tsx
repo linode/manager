@@ -12,9 +12,9 @@ import {
   StyledRootContainer,
 } from '../NotificationCenter.styles';
 import { useFormattedNotifications } from '../useFormattedNotifications';
-import { Notifications } from './Notifications';
+import { NotificationCenterNotifications } from './NotificationCenterNotifications';
 
-interface NotificationContainerProps {
+interface NotificationCenterNotificationsContainerProps {
   count?: number;
   loading?: boolean;
   onCloseNotificationCenter?: () => void;
@@ -22,7 +22,9 @@ interface NotificationContainerProps {
   showMoreText?: string;
 }
 
-export const NotificationsContainer = (props: NotificationContainerProps) => {
+export const NotificationCenterNotificationsContainer = (
+  props: NotificationCenterNotificationsContainerProps
+) => {
   const { classes, cx } = useStyles();
   const notifications = useFormattedNotifications();
   const header = 'Notifications';
@@ -67,7 +69,7 @@ export const NotificationsContainer = (props: NotificationContainerProps) => {
                 </strong>
               )}
             </StyledHeader>
-            <Notifications
+            <NotificationCenterNotifications
               content={notifications}
               count={_count}
               emptyMessage={emptyMessage}
@@ -86,7 +88,7 @@ export const NotificationsContainer = (props: NotificationContainerProps) => {
           defaultExpanded={true}
           heading={header}
         >
-          <Notifications
+          <NotificationCenterNotifications
             content={notifications}
             count={_count}
             emptyMessage={emptyMessage}

@@ -16,7 +16,7 @@ import {
   notificationCenterContext as _notificationContext,
   menuButtonId,
 } from 'src/features/NotificationCenter/NotificationCenterContext';
-import { NotificationsContainer } from 'src/features/NotificationCenter/Notifications/NotificationsContainer';
+import { NotificationCenterNotificationsContainer } from 'src/features/NotificationCenter/Notifications/NotificationCenterNotificationsContainer';
 import { useFormattedNotifications } from 'src/features/NotificationCenter/useFormattedNotifications';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { usePrevious } from 'src/hooks/usePrevious';
@@ -136,7 +136,7 @@ export const NotificationMenu = () => {
         onClose={handleClose}
         open={notificationContext.menuOpen}
       >
-        <NotificationsContainer />
+        <NotificationCenterNotificationsContainer />
         <Box>
           <Box display="flex" justifyContent="space-between" px={2}>
             <Typography variant="h3">Events</Typography>
