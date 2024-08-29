@@ -1,3 +1,10 @@
+## [2024-09-03] - v0.52.0
+
+
+### Fixed:
+
+- Lack of `label` error validation for letter casing and symbols when creating Object Storage bucket ([#10842](https://github.com/linode/manager/pull/10842), [#10847](https://github.com/linode/manager/pull/10847))
+
 ## [2024-08-05] - v0.51.0
 
 

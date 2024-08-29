@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.124.0",
+  "version": "y",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
