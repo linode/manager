@@ -136,7 +136,6 @@ describe('CloudPulseCustomSelect component tests', () => {
     expect(screen.getByPlaceholderText(testFilter)).toBeDefined();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
-    fireEvent.click(screen.getByText('Test1'));
     expect(screen.getAllByText('Test1').length).toEqual(2); // here it should be 2
     expect(screen.getAllByText('Test2').length).toEqual(1); // since we didn't select this option it should be 1
     fireEvent.click(screen.getByText('Test2'));

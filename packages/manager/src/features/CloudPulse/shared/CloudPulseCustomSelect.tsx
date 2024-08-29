@@ -145,13 +145,17 @@ export const CloudPulseCustomSelect = React.memo(
             filterKey,
             handleSelectionChange,
             isMultiSelect: isMultiSelect ?? false,
-            options: options ?? [],
+            options: options
+              ? options
+              : queriedResources
+              ? queriedResources
+              : [],
             savePreferences: savePreferences ?? false,
           })
         );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [savePreferences, options, apiV4QueryKey]); // only execute this use efffect one time or if savePreferences or options or dataApiUrl changes
+    }, [savePreferences, options, apiV4QueryKey, queriedResources]); // only execute this use efffect one time or if savePreferences or options or dataApiUrl changes
 
     const handleChange = (
       _: React.SyntheticEvent,
