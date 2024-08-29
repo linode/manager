@@ -203,7 +203,7 @@ export const LineGraph = (props: LineGraphProps) => {
       legend: {
         display: _nativeLegend,
         onClick: (_e, legendItem) => {
-          if (legendItem && legendItem.datasetIndex) {
+          if (legendItem && legendItem.datasetIndex!==undefined) {
             handleLegendClick(legendItem.datasetIndex); // when we click on native legend, also call the handle legend click function
           }
         },
