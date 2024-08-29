@@ -11,6 +11,7 @@ export const DEFAULT_AVATAR_SIZE = 28;
 
 interface Props {
   className?: string;
+  color?: string;
   height?: number;
   width?: number;
 }
@@ -18,6 +19,7 @@ interface Props {
 export const Avatar = (props: Props) => {
   const {
     className,
+    color,
     height = DEFAULT_AVATAR_SIZE,
     width = DEFAULT_AVATAR_SIZE,
   } = props;
@@ -38,7 +40,7 @@ export const Avatar = (props: Props) => {
     <_Avatar
       alt={`Avatar for user ${profile?.email ?? profile?.username ?? ''}`}
       className={className}
-      sx={{ bgcolor: avatarHexColor, height, width }}
+      sx={{ bgcolor: color ?? avatarHexColor, height, width }}
     >
       <Typography sx={{ color: avatarLetterColor, fontSize: '3rem' }}>
         {avatarLetter}

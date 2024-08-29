@@ -1,11 +1,12 @@
 import { Typography } from '@mui/material';
 import React from 'react';
 import { useState } from 'react';
-import { debounce } from 'throttle-debounce';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { ColorPicker } from 'src/components/ColorPicker';
 import { Dialog } from 'src/components/Dialog/Dialog';
+import { Stack } from 'src/components/Stack';
 import {
   useMutatePreferences,
   usePreferences,
@@ -19,26 +20,31 @@ interface Props {
 export const AvatarColorPickerDialog = (props: Props) => {
   const { handleClose, open } = props;
 
-  const [avatarColor, setAvatarColor] = useState();
+  const [avatarColor, setAvatarColor] = useState<string>();
 
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const debouncedSetAvatarColor = React.useCallback(
-    debounce(250, false, (color) => setAvatarColor(color)),
-    [setAvatarColor]
-  );
-
   return (
     <Dialog onClose={handleClose} open={open} title="Change Avatar Color">
-      <Typography>Select a custom background color for your avatar.</Typography>
-      <ColorPicker
-        defaultColor={preferences?.avatarColor}
-        handleColorChange={(color: string) => debouncedSetAvatarColor(color)}
-        inputStyles={{ marginTop: '12px' }}
-        label="Avatar background color picker"
-        labelStyles={{ marginLeft: 0 }}
-      />
+      <Stack alignItems={'baseline'} display={'flex'} flexDirection={'row'}>
+        <Typography sx={{ paddingRight: 1 }}>
+          Select a background color for your avatar:
+        </Typography>
+        <ColorPicker
+          defaultColor={preferences?.avatarColor}
+          handleColorChange={(color: string) => setAvatarColor(color)}
+          label="Avatar background color picker"
+        />
+      </Stack>
+      <Stack
+        display={'flex'}
+        flexDirection={'row'}
+        justifyContent={'center'}
+        sx={{ paddingY: 2 }}
+      >
+        <Avatar color={avatarColor} height={88} width={88} />
+      </Stack>
 
       <ActionsPanel
         primaryButtonProps={{
