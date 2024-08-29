@@ -1,5 +1,5 @@
-import { Grid } from '@mui/material';
 import { IconButton } from '@mui/material';
+import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,11 +9,11 @@ import { Divider } from 'src/components/Divider';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { REFRESH } from '../Utils/constants';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 import type { WithStartAndEnd } from 'src/features/Longview/request.types';
-import { REFRESH } from '../Utils/constants';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filterKey: string, filterValue: FilterValueType): void;
@@ -35,7 +35,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleDashboardChange,
     handleTimeDurationChange,
   } = props;
-
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
