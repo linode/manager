@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
@@ -47,7 +47,7 @@ export const useInitialEventsQuery = () => {
   );
 
   const query = useQuery<ResourcePage<Event>, APIError[]>({
-    cacheTime: Infinity,
+    gcTime: Infinity,
     queryFn: () =>
       getEvents(
         {},
@@ -81,13 +81,14 @@ export const useInitialEventsQuery = () => {
  */
 export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
-    cacheTime: Infinity,
+    gcTime: Infinity,
     getNextPageParam: ({ data, results }) => {
       if (results === data.length) {
         return undefined;
       }
       return data[data.length - 1].id;
     },
+    initialPageParam: undefined,
     queryFn: ({ pageParam }) =>
       getEvents(
         {},
@@ -155,18 +156,9 @@ export const useEventsPoller = () => {
     DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)
   );
 
-  useQuery({
+  const { data: events } = useQuery({
     enabled: hasFetchedInitialEvents,
-    onSuccess(events) {
-      if (events.length > 0) {
-        updateEventsQueries(events, queryClient);
 
-        for (const event of events) {
-          handleGlobalToast(event);
-          handleEvent(event);
-        }
-      }
-    },
     queryFn: () => {
       const data = queryClient.getQueryData<ResourcePage<Event>>([
         'events',
@@ -195,14 +187,25 @@ export const useEventsPoller = () => {
       return getEvents({}, filter).then((data) => data.data);
     },
     queryKey: ['events', 'poller'],
-    refetchInterval: (data) => {
-      const hasInProgressEvents = data?.some(isInProgressEvent);
+    refetchInterval: (query) => {
+      const hasInProgressEvents = query.state.data?.some(isInProgressEvent);
       if (hasInProgressEvents) {
         return POLLING_INTERVALS.IN_PROGRESS;
       }
       return POLLING_INTERVALS.DEFAULT;
     },
   });
+
+  useEffect(() => {
+    if (events && events.length > 0) {
+      updateEventsQueries(events, queryClient);
+
+      for (const event of events) {
+        handleGlobalToast(event);
+        handleEvent(event);
+      }
+    }
+  }, [events]);
 
   return null;
 };
@@ -261,7 +264,7 @@ export const useMarkEventsAsSeen = () => {
 
       // Update Infinite Queries
       queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
-        ['events', 'infinite'],
+        { queryKey: ['events', 'infinite'] },
         (prev) => {
           if (!prev) {
             return {
@@ -301,7 +304,7 @@ export const updateEventsQueries = (
 ) => {
   queryClient
     .getQueryCache()
-    .findAll(['events', 'infinite'])
+    .findAll({ queryKey: ['events', 'infinite'] })
     .forEach(({ queryKey }) => {
       const apiFilter = queryKey[queryKey.length - 1] as Filter | undefined;
 
