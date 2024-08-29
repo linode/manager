@@ -1,31 +1,38 @@
 import { useTheme } from '@mui/material';
 import React, { useState } from 'react';
 
-import { usePreferences } from 'src/queries/profile/preferences';
-
-import type { SxProps } from '@mui/material';
+import type { CSSProperties } from 'react';
 
 interface Props {
+  defaultColor?: string;
   handleColorChange: (color: string) => void;
   hideLabel?: boolean; // TODO: visually hidden
+  inputStyles?: CSSProperties;
   label: string;
-  sx?: SxProps;
+  labelStyles?: CSSProperties;
 }
 
 export const ColorPicker = (props: Props) => {
-  const { handleColorChange, label } = props;
+  const {
+    defaultColor,
+    handleColorChange,
+    inputStyles,
+    label,
+    labelStyles,
+  } = props;
 
-  const { data: preferences } = usePreferences();
   const theme = useTheme();
-
-  // TODO: figure out why default isn't working
-  const [color, setColor] = useState(
-    preferences?.avatarColor ?? theme.color.blue
+  const [color, setColor] = useState<string>(
+    defaultColor ?? theme.palette.primary.dark
   );
 
   return (
     <>
-      <label htmlFor="color-picker" style={{ marginRight: '10px' }}>
+      <label
+        className="visually-hidden"
+        htmlFor="color-picker"
+        style={labelStyles}
+      >
         {label}
       </label>
       <input
@@ -35,7 +42,9 @@ export const ColorPicker = (props: Props) => {
         }}
         color={color}
         id="color-picker"
+        style={inputStyles}
         type="color"
+        value={color}
       />
     </>
   );

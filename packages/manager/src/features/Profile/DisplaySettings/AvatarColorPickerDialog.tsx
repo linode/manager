@@ -6,7 +6,10 @@ import { debounce } from 'throttle-debounce';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ColorPicker } from 'src/components/ColorPicker';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { useMutatePreferences } from 'src/queries/profile/preferences';
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 
 interface Props {
   handleClose: () => void;
@@ -18,6 +21,7 @@ export const AvatarColorPickerDialog = (props: Props) => {
 
   const [avatarColor, setAvatarColor] = useState();
 
+  const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const debouncedSetAvatarColor = React.useCallback(
@@ -27,11 +31,13 @@ export const AvatarColorPickerDialog = (props: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open} title="Change Avatar Color">
-      <Typography>Select a custom color for your avatar.</Typography>
+      <Typography>Select a custom background color for your avatar.</Typography>
       <ColorPicker
+        defaultColor={preferences?.avatarColor}
         handleColorChange={(color: string) => debouncedSetAvatarColor(color)}
-        // sxProps={{ marginTop: '12px' }} //TODO: get working
-        label="" // TODO: visually hidden
+        inputStyles={{ marginTop: '12px' }}
+        label="Avatar background color picker"
+        labelStyles={{ marginLeft: 0 }}
       />
 
       <ActionsPanel
@@ -41,26 +47,18 @@ export const AvatarColorPickerDialog = (props: Props) => {
             if (avatarColor) {
               updatePreferences({
                 avatarColor,
-              }).catch(
-                () =>
-                  /** swallow the error */
-                  null
-              );
+              }).catch(() => {});
             }
             handleClose();
           },
         }}
         secondaryButtonProps={{
-          compactX: true,
           'data-testid': 'close-button',
           label: 'Close',
           onClick: handleClose,
         }}
         sx={{
           display: 'flex',
-          marginTop: '18px !important',
-          paddingBottom: 0,
-          paddingTop: 0,
         }}
       />
     </Dialog>
