@@ -1,64 +1,40 @@
-export type HSL = { h: number; l: number; s: number };
-export type AvatarFontColor = 'black' | 'white';
+export type RGB = { b: number; g: number; r: number };
 
-export function getFontColor(hslColor: HSL): AvatarFontColor {
-  if (hslColor.l <= 25 || hslColor.s <= 50) {
-    return 'white';
+export function getFontColor(rgbColor: RGB): string {
+  const whiteHex = '#000000';
+  const blackHex = '#FFFFFF';
+  const blackTextContrastRatio = getContrastRatio(hexToRGB(whiteHex), rgbColor);
+  const whiteTextContrastRatio = getContrastRatio(hexToRGB(blackHex), rgbColor);
+
+  if (whiteTextContrastRatio > blackTextContrastRatio) {
+    return blackHex;
   } else {
-    return 'black';
+    return whiteHex;
   }
 }
 
-// Credit to https://www.jameslmilner.com/posts/converting-rgb-hex-hsl-colors/.
-export function hexToHSL(
-  hex: string
-): { h: number; l: number; s: number } | undefined {
-  const _hex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-
-  if (!_hex) {
-    return;
-  }
-
-  const rHex = parseInt(_hex[1], 16);
-  const gHex = parseInt(_hex[2], 16);
-  const bHex = parseInt(_hex[3], 16);
-
-  const r = rHex / 255;
-  const g = gHex / 255;
-  const b = bHex / 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-
-  let h = (max + min) / 2;
-  let s = h;
-  let l = h;
-
-  if (max === min) {
-    // Achromatic
-    return { h: 0, l, s: 0 };
-  }
-
-  const d = max - min;
-  s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-  switch (max) {
-    case r:
-      h = (g - b) / d + (g < b ? 6 : 0);
-      break;
-    case g:
-      h = (b - r) / d + 2;
-      break;
-    case b:
-      h = (r - g) / d + 4;
-      break;
-  }
-  h /= 6;
-
-  s = s * 100;
-  s = Math.round(s);
-  l = l * 100;
-  l = Math.round(l);
-  h = Math.round(360 * h);
-
-  return { h, l, s };
+function getContrastRatio(color1: RGB, color2: RGB): number {
+  const luminance1 = 0.2126 * color1.r + 0.7152 * color1.g + 0.0722 * color1.b;
+  const luminance2 = 0.2126 * color2.r + 0.7152 * color2.g + 0.0722 * color2.b;
+  return (
+    (Math.max(luminance1, luminance2) + 0.05) /
+    (Math.min(luminance1, luminance2) + 0.05)
+  );
 }
+
+// https://decipher.dev/30-seconds-of-typescript/docs/hexToRGB/
+export const hexToRGB = (hex: string) => {
+  hex = hex.startsWith('#') ? hex.slice(1) : hex;
+  if (hex.length === 3) {
+    hex = Array.from(hex).reduce((str, x) => str + x + x, '');
+  }
+  const values = hex
+    .split(/([a-z0-9]{2,2})/)
+    .filter(Boolean)
+    .map((x) => parseInt(x, 16));
+  return {
+    b: values[2],
+    g: values[1],
+    r: values[0],
+  };
+};

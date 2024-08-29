@@ -5,7 +5,7 @@ import * as React from 'react';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 
-import { getFontColor, hexToHSL } from './utils';
+import { getFontColor, hexToRGB } from './utils';
 
 export const DEFAULT_AVATAR_SIZE = 28;
 
@@ -29,9 +29,9 @@ export const Avatar = (props: Props) => {
 
   const avatarLetter = profile?.username[0].toUpperCase() ?? '';
   const avatarHexColor = preferences?.avatarColor ?? theme.palette.primary.dark;
-  const avatarHslColor = hexToHSL(avatarHexColor);
-  const avatarLetterColor = avatarHslColor
-    ? `theme.palette.common.${getFontColor(avatarHslColor)}`
+  const avatarRGBColor = hexToRGB(avatarHexColor);
+  const avatarLetterColor = avatarRGBColor
+    ? getFontColor(avatarRGBColor)
     : theme.palette.common.white;
 
   return (
