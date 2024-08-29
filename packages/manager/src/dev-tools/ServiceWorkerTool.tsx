@@ -48,7 +48,6 @@ export const ServiceWorkerTool = () => {
   const loadedSeeders = getSeeders(dbSeeders);
   const loadedSeedsCountMap = getSeedsCountMap();
   const loadedPresetsMap = getExtraPresetsMap();
-  const isCrudPreset = loadedBaselinePreset === 'baseline:crud';
   const [
     baselinePreset,
     setBaselinePreset,
@@ -63,6 +62,9 @@ export const ServiceWorkerTool = () => {
   const [seedsCountMap, setSeedsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedSeedsCountMap);
+  const isCrudPreset =
+    loadedBaselinePreset === 'baseline:crud' ||
+    baselinePreset === 'baseline:crud';
 
   const [saveState, setSaveState] = React.useState<ServiceWorkerSaveState>({
     hasSaved: false,
@@ -306,10 +308,15 @@ export const ServiceWorkerTool = () => {
             }`}
           >
             <div className="dev-tools__msw__column">
-              <div className="dev-tools__msw__column__heading">
+              <div
+                className={`dev-tools__msw__column__heading ${
+                  !isCrudPreset ? 'disabled' : ''
+                }`}
+              >
                 Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
                 <button
                   className="small right-align"
+                  disabled={!isMSWEnabled || !isCrudPreset}
                   onClick={() => seederHandlers.removeAll()}
                 >
                   Remove all seeds

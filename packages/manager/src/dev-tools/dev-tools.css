@@ -154,25 +154,25 @@
   }
 }
 
-.dev-tools__body button:hover {
+.dev-tools__body .dev-tools__content button:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.dev-tools__body button:not(:disabled).green:hover {
+.dev-tools__body .dev-tools__content button:not(:disabled).green:hover {
   background-color: #60e9a4;
   color: #080808;
 
 }
 
-.dev-tools__body button:disabled,
-.dev-tools__body button:disabled:active {
+.dev-tools__body .dev-tools__content button:disabled,
+.dev-tools__body .dev-tools__content button:disabled:active {
   background: transparent;
   cursor: not-allowed;
   border-color: rgba(255, 255, 255, 0.3);
   color: rgba(255, 255, 255, 0.25);
 }
 
-.dev-tools__segmented-button button:not(:only-child) {
+.dev-tools__segmented-button .dev-tools__content button:not(:only-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: 0;
@@ -190,7 +190,7 @@
   }
 }
 
-.dev-tools__segmented-button button:first-child:not(:only-child) {
+.dev-tools__segmented-button .dev-tools__content button:first-child:not(:only-child) {
   border-top-left-radius: 1000px;
   border-bottom-left-radius: 1000px;
   border-top-right-radius: 0;
@@ -200,7 +200,7 @@
   padding-left: 24px;
 }
 
-.dev-tools__segmented-button button:last-child:not(:only-child) {
+.dev-tools__segmented-button .dev-tools__content button:last-child:not(:only-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: 1000px;
@@ -217,7 +217,7 @@
   justify-content: end;
 }
 
-.dev-tools__body button.toggle-button.toggle-button--on {
+.dev-tools__body .dev-tools__content button.toggle-button.toggle-button--on {
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid white;
   border-right: 2px solid white;
@@ -231,7 +231,7 @@
   text-shadow: 0px -1px 0px black;
 }
 
-.dev-tools__body button:active {
+.dev-tools__body .dev-tools__content button:active {
   background: rgb(50, 50, 50);
   border-color: rgba(255, 255, 255, 0.65);
 }
@@ -481,6 +481,10 @@
   flex-grow: 0;
   flex-shrink: 0;
   font-weight: bold;
+
+  &.disabled {
+    opacity: 0.5;
+  }
 }
 
 
