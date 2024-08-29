@@ -4,6 +4,7 @@ import {
 } from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
@@ -27,6 +28,7 @@ import { BucketRateLimitTable } from './BucketRateLimitTable';
 import type {
   ACLType,
   ObjectStorageBucket,
+  UpdateBucketRateLimitPayload,
 } from '@linode/api-v4/lib/object-storage';
 
 export interface BucketDetailsDrawerProps {
@@ -77,6 +79,13 @@ export const BucketDetailsDrawer = React.memo(
     const showBucketRateLimitTable =
       endpoint_type === 'E2' || endpoint_type === 'E3';
 
+    // TODO: OBJGen2 - Handle Bucket Rate Limit update logic once the endpoint for updating is available.
+    const form = useForm<UpdateBucketRateLimitPayload>({
+      defaultValues: {
+        rateLimit: '1',
+      },
+    });
+
     try {
       if (created) {
         formattedCreated = formatDate(created, {
@@ -86,106 +95,109 @@ export const BucketDetailsDrawer = React.memo(
     } catch {}
 
     return (
-      <Drawer
-        onClose={onClose}
-        open={open}
-        title={truncateMiddle(label ?? 'Bucket Detail')}
-      >
-        {formattedCreated && (
-          <Typography data-testid="createdTime" variant="subtitle2">
-            Created: {formattedCreated}
-          </Typography>
-        )}
-        {Boolean(endpoint_type) && (
-          <Typography data-testid="endpointType" variant="subtitle2">
-            Endpoint Type: {endpoint_type}
-          </Typography>
-        )}
-        {isObjMultiClusterEnabled ? (
-          <Typography data-testid="cluster" variant="subtitle2">
-            {currentRegion?.label}
-          </Typography>
-        ) : cluster ? (
-          <Typography data-testid="cluster" variant="subtitle2">
-            {regionFromCluster?.label ?? cluster}
-          </Typography>
-        ) : null}
-        {hostname && (
-          <StyledLinkContainer>
-            <Link external to={`https://${hostname}`}>
-              {truncateMiddle(hostname, 50)}
-            </Link>
-            <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
-          </StyledLinkContainer>
-        )}
-        {(formattedCreated || cluster) && (
-          <Divider spacingBottom={16} spacingTop={16} />
-        )}
-        {typeof size === 'number' && (
-          <Typography variant="subtitle2">
-            {readableBytes(size).formatted}
-          </Typography>
-        )}
-        {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled. */}
-        {typeof objects === 'number' && (
-          <Link
-            to={`/object-storage/buckets/${
-              isObjMultiClusterEnabled && selectedBucket ? region : cluster
-            }/${label}`}
-          >
-            {pluralize('object', 'objects', objects)}
-          </Link>
-        )}
-        {(typeof size === 'number' || typeof objects === 'number') && (
-          <Divider spacingBottom={16} spacingTop={16} />
-        )}
-        {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
-         to getBucketAccess and updateBucketAccess.  */}
-        {
-          <>
-            <Typography data-testid="bucketRateLimit" variant="h3">
-              Bucket Rate Limits
+      <FormProvider {...form}>
+        <Drawer
+          onClose={onClose}
+          open={open}
+          title={truncateMiddle(label ?? 'Bucket Detail')}
+        >
+          {formattedCreated && (
+            <Typography data-testid="createdTime" variant="subtitle2">
+              Created: {formattedCreated}
             </Typography>
-            {showBucketRateLimitTable ? (
-              <BucketRateLimitTable endpointType={endpoint_type} />
-            ) : (
-              <Typography>
-                This endpoint type supports up to 750 Requests Per Second(RPS).{' '}
-                <Link to="#">Understand bucket rate limits</Link>.
+          )}
+          {Boolean(endpoint_type) && (
+            <Typography data-testid="endpointType" variant="subtitle2">
+              Endpoint Type: {endpoint_type}
+            </Typography>
+          )}
+          {isObjMultiClusterEnabled ? (
+            <Typography data-testid="cluster" variant="subtitle2">
+              {currentRegion?.label}
+            </Typography>
+          ) : cluster ? (
+            <Typography data-testid="cluster" variant="subtitle2">
+              {regionFromCluster?.label ?? cluster}
+            </Typography>
+          ) : null}
+          {hostname && (
+            <StyledLinkContainer>
+              <Link external to={`https://${hostname}`}>
+                {truncateMiddle(hostname, 50)}
+              </Link>
+              <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
+            </StyledLinkContainer>
+          )}
+          {(formattedCreated || cluster) && (
+            <Divider spacingBottom={16} spacingTop={16} />
+          )}
+          {typeof size === 'number' && (
+            <Typography variant="subtitle2">
+              {readableBytes(size).formatted}
+            </Typography>
+          )}
+          {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled. */}
+          {typeof objects === 'number' && (
+            <Link
+              to={`/object-storage/buckets/${
+                isObjMultiClusterEnabled && selectedBucket ? region : cluster
+              }/${label}`}
+            >
+              {pluralize('object', 'objects', objects)}
+            </Link>
+          )}
+          {(typeof size === 'number' || typeof objects === 'number') && (
+            <Divider spacingBottom={16} spacingTop={16} />
+          )}
+          {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
+         to getBucketAccess and updateBucketAccess.  */}
+          {
+            <>
+              <Typography data-testid="bucketRateLimit" variant="h3">
+                Bucket Rate Limits
               </Typography>
-            )}
-          </>
-        }
-        {<Divider spacingBottom={16} spacingTop={16} />}
-        {cluster && label && (
-          <AccessSelect
-            getAccess={() =>
-              getBucketAccess(
-                isObjMultiClusterEnabled && currentRegion
-                  ? currentRegion.id
-                  : cluster,
-                label
-              )
-            }
-            updateAccess={(acl: ACLType, cors_enabled: boolean) => {
-              // Don't send the ACL with the payload if it's "custom", since it's
-              // not valid (though it's a valid return type).
-              const payload =
-                acl === 'custom' ? { cors_enabled } : { acl, cors_enabled };
+              {showBucketRateLimitTable ? (
+                <BucketRateLimitTable endpointType={endpoint_type} />
+              ) : (
+                <Typography>
+                  This endpoint type supports up to 750 Requests Per
+                  Second(RPS). <Link to="#">Understand bucket rate limits</Link>
+                  .
+                </Typography>
+              )}
+            </>
+          }
+          {<Divider spacingBottom={16} spacingTop={16} />}
+          {cluster && label && (
+            <AccessSelect
+              getAccess={() =>
+                getBucketAccess(
+                  isObjMultiClusterEnabled && currentRegion
+                    ? currentRegion.id
+                    : cluster,
+                  label
+                )
+              }
+              updateAccess={(acl: ACLType, cors_enabled: boolean) => {
+                // Don't send the ACL with the payload if it's "custom", since it's
+                // not valid (though it's a valid return type).
+                const payload =
+                  acl === 'custom' ? { cors_enabled } : { acl, cors_enabled };
 
-              return updateBucketAccess(
-                isObjMultiClusterEnabled && currentRegion
-                  ? currentRegion.id
-                  : cluster,
-                label,
-                payload
-              );
-            }}
-            name={label}
-            variant="bucket"
-          />
-        )}
-      </Drawer>
+                return updateBucketAccess(
+                  isObjMultiClusterEnabled && currentRegion
+                    ? currentRegion.id
+                    : cluster,
+                  label,
+                  payload
+                );
+              }}
+              name={label}
+              variant="bucket"
+            />
+          )}
+        </Drawer>
+      </FormProvider>
     );
   }
 );

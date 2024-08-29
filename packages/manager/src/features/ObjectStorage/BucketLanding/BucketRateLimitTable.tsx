@@ -9,8 +9,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 
-import type { UpdateBucketRateLimitPayload } from '../BucketDetail/BucketProperties';
-import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
+import type {
+  ObjectStorageEndpointTypes,
+  UpdateBucketRateLimitPayload,
+} from '@linode/api-v4';
 
 /**
  * TODO: This component is currently using static data until
@@ -19,7 +21,7 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
  */
 
 interface BucketRateLimitTableProps {
-  endpointType: ObjectStorageEndpointTypes | undefined;
+  endpointType?: ObjectStorageEndpointTypes;
 }
 
 const tableHeaders = ['Limits', 'GET', 'PUT', 'LIST', 'DELETE', 'OTHER'];

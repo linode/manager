@@ -17,14 +17,13 @@ import {
   StyledText,
 } from './BucketProperties.styles';
 
-import type { ObjectStorageBucket } from '@linode/api-v4';
+import type {
+  ObjectStorageBucket,
+  UpdateBucketRateLimitPayload,
+} from '@linode/api-v4';
 
 interface Props {
   bucket: ObjectStorageBucket;
-}
-
-export interface UpdateBucketRateLimitPayload {
-  rateLimit: string;
 }
 
 export const BucketProperties = React.memo((props: Props) => {
