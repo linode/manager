@@ -167,7 +167,7 @@ export const RegionSelect = <
         value={selectedRegion as Region}
       />
       {showDistributedRegionIconHelperText && ( // @TODO Gecko Beta: Add docs link
-        <StyledDistributedRegionBox errorText={errorText ?? ''}>
+        <StyledDistributedRegionBox centerChildren={Boolean(errorText)}>
           <DistributedRegion />
           <Typography
             data-testid="region-select-distributed-region-text"
