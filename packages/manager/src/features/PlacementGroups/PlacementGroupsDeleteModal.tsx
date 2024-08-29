@@ -43,7 +43,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error: deletePlacementError,
-    isLoading: deletePlacementLoading,
+    isPending: deletePlacementLoading,
     mutateAsync: deletePlacementGroup,
     reset: resetDeletePlacementGroup,
   } = useDeletePlacementGroup(selectedPlacementGroup?.id ?? -1);

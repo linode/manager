@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
@@ -40,13 +40,14 @@ import type {
  */
 export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
-    cacheTime: Infinity,
+    gcTime: Infinity,
     getNextPageParam: ({ data, results }) => {
       if (results === data.length) {
         return undefined;
       }
       return data[data.length - 1].id;
     },
+    initialPageParam: undefined,
     queryFn: ({ pageParam }) =>
       getEvents(
         {},
@@ -114,18 +115,8 @@ export const useEventsPoller = () => {
     DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)
   );
 
-  useQuery({
+  const { data: polledEvents } = useQuery({
     enabled: hasFetchedInitialEvents,
-    onSuccess(events) {
-      if (events.length > 0) {
-        updateEventsQueries(events, queryClient);
-
-        for (const event of events) {
-          handleGlobalToast(event);
-          handleEvent(event);
-        }
-      }
-    },
     queryFn: () => {
       const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
         'events',
@@ -160,14 +151,25 @@ export const useEventsPoller = () => {
       return getEvents({}, filter).then((data) => data.data);
     },
     queryKey: ['events', 'poller'],
-    refetchInterval: (data) => {
-      const hasInProgressEvents = data?.some(isInProgressEvent);
+    refetchInterval: (query) => {
+      const hasInProgressEvents = query.state.data?.some(isInProgressEvent);
       if (hasInProgressEvents) {
         return POLLING_INTERVALS.IN_PROGRESS;
       }
       return POLLING_INTERVALS.DEFAULT;
     },
   });
+
+  useEffect(() => {
+    if (polledEvents && polledEvents.length > 0) {
+      updateEventsQueries(polledEvents, queryClient);
+
+      for (const event of polledEvents) {
+        handleGlobalToast(event);
+        handleEvent(event);
+      }
+    }
+  }, [polledEvents]);
 
   return null;
 };
@@ -203,42 +205,40 @@ export const useEventsPollingActions = () => {
 export const useMarkEventsAsSeen = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[], number>(
-    (eventId) => markEventSeen(eventId),
-    {
-      onSuccess: (_, eventId) => {
-        queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
-          ['events', 'infinite'],
-          (prev) => {
-            if (!prev) {
-              return {
-                pageParams: [],
-                pages: [],
-              };
-            }
-
-            let foundLatestSeenEvent = false;
-
-            for (const page of prev.pages) {
-              for (const event of page.data) {
-                if (event.id === eventId) {
-                  foundLatestSeenEvent = true;
-                }
-                if (foundLatestSeenEvent) {
-                  event.seen = true;
-                }
-              }
-            }
-
+  return useMutation<{}, APIError[], number>({
+    mutationFn: (eventId) => markEventSeen(eventId),
+    onSuccess: (_, eventId) => {
+      queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
+        { queryKey: ['events', 'infinite'] },
+        (prev) => {
+          if (!prev) {
             return {
-              pageParams: prev?.pageParams ?? [],
-              pages: prev?.pages ?? [],
+              pageParams: [],
+              pages: [],
             };
           }
-        );
-      },
-    }
-  );
+
+          let foundLatestSeenEvent = false;
+
+          for (const page of prev.pages) {
+            for (const event of page.data) {
+              if (event.id === eventId) {
+                foundLatestSeenEvent = true;
+              }
+              if (foundLatestSeenEvent) {
+                event.seen = true;
+              }
+            }
+          }
+
+          return {
+            pageParams: prev?.pageParams ?? [],
+            pages: prev?.pages ?? [],
+          };
+        }
+      );
+    },
+  });
 };
 
 /**
@@ -254,7 +254,7 @@ export const updateEventsQueries = (
 ) => {
   queryClient
     .getQueryCache()
-    .findAll(['events', 'infinite'])
+    .findAll({ queryKey: ['events', 'infinite'] })
     .forEach(({ queryKey }) => {
       const apiFilter = queryKey[queryKey.length - 1] as Filter | undefined;
 
