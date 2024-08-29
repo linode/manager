@@ -119,7 +119,7 @@ describe('NodeBalancerConfigPanel', () => {
     expect(queryByLabelText('Proxy Protocol')).not.toBeInTheDocument();
   });
 
-  it('renders the Node Balancer Config panel when selected protocol is HTTPS', () => {
+  it('renders form fields specific to the HTTPS protocol', () => {
     const { getByTestId, queryByLabelText } = renderWithTheme(
       <NodeBalancerConfigPanel {...props} protocol="https" />
     );
@@ -129,7 +129,7 @@ describe('NodeBalancerConfigPanel', () => {
     expect(queryByLabelText('Proxy Protocol')).not.toBeInTheDocument();
   });
 
-  it('renders the Node Balancer Config panel when selected protocol is TCP', () => {
+  it('renders form fields specific to the TCP protocol', () => {
     const { getByLabelText, queryByTestId } = renderWithTheme(
       <NodeBalancerConfigPanel {...props} protocol="tcp" />
     );
@@ -139,7 +139,7 @@ describe('NodeBalancerConfigPanel', () => {
     expect(queryByTestId('private-key')).not.toBeInTheDocument();
   });
 
-  it('renders the Node Balancer Config panel when Active Health Check Type is TCP Connection', () => {
+  it('renders fields specific to the Active Health Check type of TCP Connection', () => {
     const { getByLabelText, queryByTestId } = renderWithTheme(
       <NodeBalancerConfigPanel {...props} healthCheckType="connection" />
     );
@@ -151,7 +151,7 @@ describe('NodeBalancerConfigPanel', () => {
     expect(queryByTestId('http-body')).not.toBeInTheDocument();
   });
 
-  it('renders the Node Balancer Config panel when Active Health Check Type is HTTP Status', () => {
+  it('renders fields specific to the Active Health Check type of HTTP Status', () => {
     const { getByLabelText, getByTestId, queryByTestId } = renderWithTheme(
       <NodeBalancerConfigPanel {...props} healthCheckType="http" />
     );
@@ -163,7 +163,7 @@ describe('NodeBalancerConfigPanel', () => {
     expect(queryByTestId('http-body')).not.toBeInTheDocument();
   });
 
-  it('renders the Node Balancer Config panel when Active Health Check Type is HTTP Body', () => {
+  it('renders fields specific to the Active Health Check type of HTTP Body', () => {
     const { getByLabelText, getByTestId } = renderWithTheme(
       <NodeBalancerConfigPanel {...props} healthCheckType="http_body" />
     );
