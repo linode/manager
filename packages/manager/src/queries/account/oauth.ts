@@ -75,10 +75,12 @@ export const useUpdateOAuthClientMutation = (id: string) => {
   });
 };
 
-export const oauthClientsEventHandler = ({ queryClient }: EventHandlerData) => {
+export const oauthClientsEventHandler = ({
+  invalidateQueries,
+}: EventHandlerData) => {
   // We may over-fetch because on `onSuccess` also invalidates, but this will be
   // good for UX because Cloud will always be up to date
-  queryClient.invalidateQueries({
+  invalidateQueries({
     queryKey: accountQueries.oauthClients._def,
   });
 };

@@ -191,7 +191,7 @@ export const useUpdateDomainMutation = () => {
 
 export const domainEventsHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   const domainId = event.entity?.id;
 
@@ -201,17 +201,17 @@ export const domainEventsHandler = ({
 
   if (event.action.startsWith('domain_record')) {
     // Invalidate the domain's records because they may have changed
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: domainQueries.domain(domainId)._ctx.records.queryKey,
     });
   } else {
     // Invalidate paginated lists
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: domainQueries.domains.queryKey,
     });
 
     // Invalidate the domain's details
-    queryClient.invalidateQueries({
+    invalidateQueries({
       exact: true,
       queryKey: domainQueries.domain(domainId).queryKey,
     });

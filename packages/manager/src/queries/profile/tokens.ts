@@ -98,11 +98,11 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
   });
 };
 
-export function tokenEventHandler({ queryClient }: EventHandlerData) {
-  queryClient.invalidateQueries({
+export function tokenEventHandler({ invalidateQueries }: EventHandlerData) {
+  invalidateQueries({
     queryKey: profileQueries.appTokens._def,
   });
-  queryClient.invalidateQueries({
+  invalidateQueries({
     queryKey: profileQueries.personalAccessTokens._def,
   });
 }

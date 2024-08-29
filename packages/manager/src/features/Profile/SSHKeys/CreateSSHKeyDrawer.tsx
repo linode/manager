@@ -65,7 +65,13 @@ export const CreateSSHKeyDrawer = React.memo(({ onClose, open }: Props) => {
   );
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Add SSH Key">
+    <Drawer
+      onClose={handleClose}
+      open={open}
+      // Adding zIndex value so that the SSH drawer is not hidden behind the Rebuild Linode dialog, which prevented users from adding an SSH key
+      sx={{ zIndex: 1300 }}
+      title="Add SSH Key"
+    >
       {generalError && <Notice text={generalError} variant="error" />}
       <form onSubmit={formik.handleSubmit}>
         <TextField

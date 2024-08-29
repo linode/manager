@@ -179,13 +179,13 @@ export const useUpdateImageRegionsMutation = (imageId: string) => {
 
 export const imageEventsHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: imageQueries.all._def,
     });
-    queryClient.invalidateQueries({ queryKey: imageQueries.paginated._def });
+    invalidateQueries({ queryKey: imageQueries.paginated._def });
 
     if (event.entity) {
       /*
@@ -199,7 +199,7 @@ export const imageEventsHandler = ({
        */
 
       const imageId = `private/${event.entity.id}`;
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: imageQueries.image(imageId).queryKey,
       });
     }

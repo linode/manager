@@ -29,9 +29,12 @@ export const useAllAccountPayments = (
   });
 };
 
-export const taxIdEventHandler = ({ event, queryClient }: EventHandlerData) => {
+export const taxIdEventHandler = ({
+  event,
+  invalidateQueries,
+}: EventHandlerData) => {
   if (event.action === 'tax_id_invalid' || event.action === 'tax_id_valid') {
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: accountQueries.notifications.queryKey,
     });
   }
