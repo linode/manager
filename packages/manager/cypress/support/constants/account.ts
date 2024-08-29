@@ -29,3 +29,23 @@ export const loginHelperText =
  * Empty state message that appears when there is no item in the login history table.
  */
 export const loginEmptyStateMessageText = 'No account logins';
+
+/**
+ * Downloaded mantainance detail CSV name.
+ */
+export const maintenanceCsvName = (state: string, date: string) => {
+  return `${state}-maintenance-${date}.csv`;
+};
+
+/**
+ * Column labels in mantainance CSV file.
+ */
+export const maintenanceCsvLabels = [
+  'Date',
+  'Entity Label',
+  'Entity Type',
+  'Entity ID',
+  'Reason',
+  'Status',
+  'Type',
+];

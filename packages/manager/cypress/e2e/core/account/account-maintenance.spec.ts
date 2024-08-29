@@ -1,6 +1,16 @@
 import { mockGetMaintenance } from 'support/intercepts/account';
 import { accountMaintenanceFactory } from 'src/factories';
+import { readDownload } from 'support/util/downloads';
+import {
+  maintenanceCsvName,
+  maintenanceCsvLabels,
+} from 'support/constants/account';
+import { formatDate } from 'src/utilities/formatDate';
+import { getProfile } from '@linode/api-v4';
+import { Profile } from '@linode/api-v4';
+import { authenticate } from 'support/api/authentication';
 
+authenticate();
 describe('Maintenance', () => {
   /*
    * - Confirm user can navigate to account maintenance page via user menu.
@@ -32,6 +42,7 @@ describe('Maintenance', () => {
    * - When there is completed maintenance, it is shown in the table with expected details.
    * - Confirm "Download CSV" button for pending maintenance visible and enabled.
    * - Confirm "Download CSV" button for completed maintenance visible and enabled.
+   * - Confirm the CSV contains the expected contents.
    */
   it('confirm maintenance details in the tables', () => {
     const pendingMaintenanceNumber = 2;
@@ -118,12 +129,32 @@ describe('Maintenance', () => {
         });
       });
 
-    // Confirm download buttons work
-    cy.get('button')
-      .filter(':contains("Download CSV")')
-      .should('be.visible')
-      .should('be.enabled')
-      .click({ multiple: true });
-    // TODO Need to add assertions to confirm CSV contains the expected contents on first trial (M3-8393)
+    // Confirm download buttons work.
+    // TODO: There is an issue that it will download an empty CSV file (has labels but no data)
+    // for the fist button click.
+    for (let count = 0; count < 2; count++) {
+      cy.get('button')
+        .filter(':contains("Download CSV")')
+        .should('be.visible')
+        .should('be.enabled')
+        .click({ multiple: true });
+    }
+
+    // Assertions to confirm CSV contains the expected contents.
+    cy.defer(() => getProfile()).then((profile: Profile) => {
+      const date = formatDate(Date.now(), {
+        timezone: profile.timezone,
+        displayTime: false,
+      });
+      const pendingCsvFile = readDownload(maintenanceCsvName('pending', date));
+      const completedCsvFile = readDownload(
+        maintenanceCsvName('completed', date)
+      );
+      // Confirm each column header exists in the CSV files.
+      maintenanceCsvLabels.forEach((label) => {
+        pendingCsvFile.should('contain', label);
+        completedCsvFile.should('contain', label);
+      });
+    });
   });
 });
