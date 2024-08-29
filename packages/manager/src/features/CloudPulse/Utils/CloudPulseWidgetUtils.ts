@@ -198,7 +198,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
           backgroundColor: color,
           borderColor: color,
           data: seriesDataFormatter(transformedData.values, start, end),
-          fill: widgetChartType === 'area' ? true : false,
+          fill: widgetChartType === 'area',
           label: getLabelName(labelOptions),
         };
         // construct a legend row with the dimension
