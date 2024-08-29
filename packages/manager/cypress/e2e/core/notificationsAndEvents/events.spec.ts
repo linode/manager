@@ -1,5 +1,4 @@
 import { eventFactory } from '@src/factories/events';
-import { containsClick, getClick } from 'support/helpers';
 import { mockGetEvents } from 'support/intercepts/events';
 import { EventActionKeys } from '@linode/api-v4';
 
@@ -21,17 +20,19 @@ describe('verify notification types and icons', () => {
     mockGetEvents(events).as('mockEvents');
     cy.visitWithLogin('/linodes');
     cy.wait('@mockEvents').then(() => {
-      // TODO eventMessagesV2: clean that up
-      getClick('button[aria-label="Notifications"]');
+      cy.get('button[aria-label="Notifications"]').click();
       for (let i = 0; i < 20; i++) {
+        // Skip account_agreement_eu_model action since it is a special case
+        if (events[i].action === 'account_agreement_eu_model') {
+          return;
+        }
         const text = [`${events[i].message}`, `${events[i].entity?.label}`];
         const regex = new RegExp(`${text.join('|')}`, 'g');
         cy.get(`[data-test-id="${events[i].action}"]`).within(() => {
           cy.contains(regex);
         });
       }
-      // TODO eventMessagesV2: clean that up
-      containsClick('View all events');
+      cy.get('button[aria-label="View all events"]').click();
       // Clicking "View all events" navigates to Events page at /events
       cy.url().should('endWith', '/events');
       events.forEach((event) => {

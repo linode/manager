@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NotificationCenterEvent } from './NotificationCenterEvent';
 
-describe('NotificationEvent', () => {
+describe('NotificationCenterEvent', () => {
   it('should render a finished event with the proper data', () => {
     const event = eventFactory.build({
       action: 'linode_create',
