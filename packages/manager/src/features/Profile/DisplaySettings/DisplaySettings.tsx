@@ -133,18 +133,17 @@ export const DisplaySettings = () => {
                   ? 'Create, upload, and manage your globally recognized avatar from a single place with Gravatar.'
                   : 'Your profile photo is automatically generated using the first character of your username.'}
               </StyledProfileCopy>
-              {!hasGravatar && (
+              {hasGravatar ? (
+                <StyledAddImageLink external to="https://en.gravatar.com/">
+                  Manage photo
+                </StyledAddImageLink>
+              ) : (
                 <Button
                   buttonType="outlined"
                   onClick={() => setAvatarColorPickerDialogOpen(true)}
                 >
                   Change Avatar Color
                 </Button>
-              )}
-              {hasGravatar && (
-                <StyledAddImageLink external to="https://en.gravatar.com/">
-                  Manage photo
-                </StyledAddImageLink>
               )}
             </div>
           </Box>

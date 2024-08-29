@@ -23,15 +23,16 @@ export const Avatar = (props: Props) => {
   } = props;
 
   const theme = useTheme();
+
   const { data: preferences } = usePreferences();
   const { data: profile } = useProfile();
 
   const avatarLetter = profile?.username[0].toUpperCase() ?? '';
-  const avatarHexColor = preferences?.avatarColor ?? theme.color.blue;
+  const avatarHexColor = preferences?.avatarColor ?? theme.palette.primary.dark;
   const avatarHslColor = hexToHSL(avatarHexColor);
   const avatarLetterColor = avatarHslColor
-    ? `theme.color.${getFontColor(avatarHslColor)}`
-    : theme.color.white;
+    ? `theme.palette.common.${getFontColor(avatarHslColor)}`
+    : theme.palette.common.white;
 
   return (
     <_Avatar
