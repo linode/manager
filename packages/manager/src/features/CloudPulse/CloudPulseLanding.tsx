@@ -10,7 +10,7 @@ export const CloudPulseLanding = () => {
     <>
       <LandingHeader
         breadcrumbProps={{ pathname: '/Akamai Cloud Pulse' }}
-        docsLabel="Getting Started"
+        docsLabel="Docs"
         docsLink="https://www.linode.com/docs/"
       />
       <React.Suspense fallback={<SuspenseLoader />}>
