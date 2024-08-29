@@ -167,11 +167,11 @@ const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
   }
 
   if (label === PAST_7_DAYS) {
-    return { unit: 'day', value: 7 };
+    return { unit: 'days', value: 7 };
   }
 
   if (label === PAST_30_DAYS) {
-    return { unit: 'day', value: 30 };
+    return { unit: 'days', value: 30 };
   }
 
   return { unit: 'min', value: 30 };
