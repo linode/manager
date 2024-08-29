@@ -141,7 +141,7 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
          to getBucketAccess and updateBucketAccess.  */}
-        {
+        {Boolean(endpoint_type) && (
           <>
             <Typography data-testid="bucketRateLimit" variant="h3">
               Bucket Rate Limits
@@ -154,9 +154,9 @@ export const BucketDetailsDrawer = React.memo(
                 <Link to="#">Understand bucket rate limits</Link>.
               </Typography>
             )}
+            <Divider spacingBottom={16} spacingTop={16} />
           </>
-        }
-        {<Divider spacingBottom={16} spacingTop={16} />}
+        )}
         {cluster && label && (
           <AccessSelect
             getAccess={() =>
@@ -181,6 +181,7 @@ export const BucketDetailsDrawer = React.memo(
                 payload
               );
             }}
+            endpointType={endpoint_type}
             name={label}
             variant="bucket"
           />
