@@ -17,7 +17,7 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 import type { TypographyProps } from 'src/components/Typography';
 
 /**
- * TODO: This component is currently using static data until
+ * TODO: [IMPORTANT NOTE]: This component is currently using static data until
  * and API endpoint is available to return rate limits for
  * each endpoint type.
  */
@@ -114,7 +114,6 @@ export const BucketRateLimitTable = ({
                   <FormControlLabel
                     control={
                       <Radio
-                        // TODO: OBJGen2 - This will be handled once we receive API for bucket rates
                         checked={rowIndex === 0}
                         disabled
                         onChange={() => null}
