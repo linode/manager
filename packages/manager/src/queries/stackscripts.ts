@@ -24,7 +24,7 @@ export const getAllOCAsRequest = (passedParams: Params = {}) =>
 export const stackscriptQueries = createQueryKeys('stackscripts', {
   infinite: (filter: Filter = {}) => ({
     queryFn: ({ pageParam }) =>
-      getStackScripts({ page: pageParam, page_size: 25 }, filter),
+      getStackScripts({ page: pageParam as number, page_size: 25 }, filter),
     queryKey: [filter],
   }),
   marketplace: {
@@ -64,6 +64,7 @@ export const useStackScriptsInfiniteQuery = (
       }
       return page + 1;
     },
+    initialPageParam: 1,
   });
 
 export const stackScriptEventHandler = ({

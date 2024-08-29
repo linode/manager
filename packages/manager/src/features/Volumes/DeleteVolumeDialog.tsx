@@ -1,10 +1,11 @@
-import { Volume } from '@linode/api-v4';
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useDeleteVolumeMutation } from 'src/queries/volumes/volumes';
+
+import type { Volume } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -17,7 +18,7 @@ export const DeleteVolumeDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteVolume,
   } = useDeleteVolumeMutation();
 
@@ -39,7 +40,7 @@ export const DeleteVolumeDialog = (props: Props) => {
         type: 'Volume',
       }}
       label="Volume Label"
-      loading={isLoading}
+      loading={isPending}
       onClick={onDelete}
       onClose={onClose}
       open={open}

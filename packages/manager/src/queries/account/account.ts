@@ -41,7 +41,8 @@ export const useMutateAccount = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { isTaxIdEnabled } = useIsTaxIdEnabled();
 
-  return useMutation<Account, APIError[], Partial<Account>>(updateAccountInfo, {
+  return useMutation<Account, APIError[], Partial<Account>>({
+    mutationFn: updateAccountInfo,
     onSuccess(account) {
       queryClient.setQueryData<Account | undefined>(
         accountQueries.account.queryKey,
@@ -89,13 +90,13 @@ export const useChildAccountsInfiniteQuery = (options: RequestOptions) => {
       }
       return page + 1;
     },
-    keepPreviousData: true,
+    initialPageParam: 1,
     ...accountQueries.childAccounts(options),
   });
 };
 
 export const useCreateChildAccountPersonalAccessTokenMutation = () =>
-  useMutation<Token, APIError[], ChildAccountPayload>(
-    ({ euuid, headers }: ChildAccountPayload) =>
-      createChildAccountPersonalAccessToken({ euuid, headers })
-  );
+  useMutation<Token, APIError[], ChildAccountPayload>({
+    mutationFn: ({ euuid, headers }: ChildAccountPayload) =>
+      createChildAccountPersonalAccessToken({ euuid, headers }),
+  });

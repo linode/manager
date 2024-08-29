@@ -12,7 +12,12 @@ import {
   updateFirewallRules,
 } from '@linode/api-v4/lib/firewalls';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -101,7 +106,7 @@ export const useAddFirewallDeviceMutation = (id: number) => {
     onSuccess(firewallDevice) {
       // Append the new entity to the Firewall object in the paginated store
       queryClient.setQueriesData<ResourcePage<Firewall>>(
-        firewallQueries.firewalls._ctx.paginated._def,
+        { queryKey: firewallQueries.firewalls._ctx.paginated._def },
         (page) => {
           if (!page) {
             return undefined;
@@ -236,7 +241,7 @@ export const useRemoveFirewallDeviceMutation = (
 export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Firewall>, APIError[]>({
     ...firewallQueries.firewalls._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -346,7 +351,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
       // Update the Firewall object in the paginated store
       queryClient.setQueriesData<ResourcePage<Firewall>>(
-        firewallQueries.firewalls._ctx.paginated._def,
+        { queryKey: firewallQueries.firewalls._ctx.paginated._def },
         (page) => {
           if (!page) {
             return undefined;

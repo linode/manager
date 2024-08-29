@@ -26,7 +26,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const deviceType = device?.entity.type;
 
-  const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
+  const { error, isPending, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
     device?.id ?? -1
   );
@@ -93,7 +93,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: primaryButtonText,
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

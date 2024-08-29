@@ -724,7 +724,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           });
 
           // Update the user's grants directly in the cache
-          this.props.queryClient.setQueriesData<Grants>(
+          this.props.queryClient.setQueryData<Grants>(
             accountQueries.users._ctx.user(currentUsername)._ctx.grants
               .queryKey,
             grantsResponse

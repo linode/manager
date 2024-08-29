@@ -86,7 +86,7 @@ const Lish = () => {
     await refetch();
   };
 
-  if (isLoading) {
+  if (isLoading || !linode || !data) {
     return <CircleProgress />;
   }
 

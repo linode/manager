@@ -5,7 +5,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
@@ -25,7 +25,7 @@ export const useAllAccountMaintenanceQuery = (
 export const useAccountMaintenanceQuery = (params: Params, filter: Filter) => {
   return useQuery<ResourcePage<AccountMaintenance>, APIError[]>({
     ...accountQueries.maintenance._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     refetchInterval: 20000,
     refetchOnWindowFocus: 'always',
   });

@@ -27,7 +27,7 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
@@ -57,7 +57,7 @@ export const LinodeSettingsLabelPanel = (props: Props) => {
             'data-testid': 'label-save',
             disabled: isReadOnly || !formik.dirty,
             label: 'Save',
-            loading: isLoading,
+            loading: isPending,
             onClick: () => formik.handleSubmit(),
           }}
         />

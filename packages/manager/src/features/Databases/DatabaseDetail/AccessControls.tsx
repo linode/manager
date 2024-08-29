@@ -1,6 +1,3 @@
-import { Database } from '@linode/api-v4/lib/databases';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -15,9 +12,13 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
+import { stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
+
+import type { APIError, Database } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {
@@ -107,7 +108,7 @@ export const AccessControls = (props: Props) => {
   const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
 
   const {
-    isLoading: databaseUpdating,
+    isPending: databaseUpdating,
     mutateAsync: updateDatabase,
   } = useDatabaseMutation(engine, id);
 

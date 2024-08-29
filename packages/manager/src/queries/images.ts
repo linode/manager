@@ -8,7 +8,12 @@ import {
   uploadImage,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -54,11 +59,11 @@ export const imageQueries = createQueryKeys('images', {
 export const useImagesQuery = (
   params: Params,
   filters: Filter,
-  options?: UseQueryOptions<ResourcePage<Image>, APIError[]>
+  options?: Partial<UseQueryOptions<ResourcePage<Image>, APIError[]>>
 ) =>
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     ...options,
   });
 

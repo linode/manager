@@ -20,7 +20,7 @@ export const CancelBackupsDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: cancelBackups,
   } = useLinodeBackupsCancelMutation(linodeId);
 
@@ -43,7 +43,7 @@ export const CancelBackupsDialog = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'confirm-cancel',
             label: 'Cancel Backups',
-            loading: isLoading,
+            loading: isPending,
             onClick: onCancelBackups,
           }}
           secondaryButtonProps={{

@@ -45,7 +45,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateIP,
     reset,
   } = useLinodeIPMutation();
@@ -111,7 +111,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'submit',
             label: 'Save',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{

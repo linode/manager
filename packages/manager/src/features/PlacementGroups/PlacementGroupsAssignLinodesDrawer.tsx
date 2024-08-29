@@ -56,7 +56,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     region,
   });
   const {
-    isLoading,
+    isPending,
     mutateAsync: assignLinodes,
   } = useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
@@ -176,7 +176,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
                 setSelectedLinode(value);
               }}
               checkIsOptionEqualToValue
-              disabled={hasReachedCapacity || isLoading}
+              disabled={hasReachedCapacity || isPending}
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
               placeholder="Select Linode or type to search"
