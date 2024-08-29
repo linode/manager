@@ -6,7 +6,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
-import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
@@ -236,11 +235,6 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     );
   }, [filteredEndpointOptions, watch]);
 
-  const isGen2EndpointType =
-    selectedEndpointOption &&
-    selectedEndpointOption.endpoint_type !== 'E0' &&
-    selectedEndpointOption.endpoint_type !== 'E1';
-
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
@@ -334,7 +328,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           name="region"
         />
         {selectedRegion?.id && <OveragePricing regionId={selectedRegion.id} />}
-        {Boolean(endpoints) && (
+        {Boolean(endpoints) && selectedRegion && (
           <>
             <Controller
               render={({ field }) => (
@@ -365,24 +359,9 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
               control={control}
               name="endpoint_type"
             />
-            {selectedEndpointOption && (
-              <>
-                <FormLabel>
-                  <Typography marginBottom={1} marginTop={2} variant="inherit">
-                    Bucket Rate Limits
-                  </Typography>
-                </FormLabel>
-                <Typography marginBottom={isGen2EndpointType ? 2 : 3}>
-                  {isGen2EndpointType
-                    ? 'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. '
-                    : 'This endpoint type supports up to 750 Requests Per Second (RPS). '}
-                  Understand <Link to="#">bucket rate limits</Link>.
-                </Typography>
-              </>
-            )}
-            {isGen2EndpointType && (
+            {Boolean(endpoints) && selectedEndpointOption && (
               <BucketRateLimitTable
-                endpointType={selectedEndpointOption.endpoint_type}
+                endpointType={selectedEndpointOption?.endpoint_type}
               />
             )}
           </>

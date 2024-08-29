@@ -215,8 +215,3 @@ export interface ObjectStorageBucketAccess {
   cors_enabled: boolean | null;
   cors_xml: string | null;
 }
-
-// TODO: This will need to be updated once we have the actual shape of the API response
-export interface UpdateBucketRateLimitPayload {
-  rateLimit: string;
-}
