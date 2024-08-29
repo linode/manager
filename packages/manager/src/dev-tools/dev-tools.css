@@ -45,7 +45,7 @@
   position: absolute;
   z-index: 2;
   left: -30px;
-  top: 35.7px;
+  top: 35px;
   cursor: grab;
   background: #222222;
   border: none;
@@ -123,7 +123,8 @@
   outline: none;
 }
 
-.dev-tools__body button {
+ /* avoid overriding TanStack React Query Devtools styles */
+.dev-tools__body button:not(.tsqd-parent-container button) {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 1000px;
@@ -521,4 +522,11 @@
     flex-shrink: 1;
     overflow: auto;
   }
+}
+
+/* TanStack React Query Devtools */
+.tsqd-main-panel {
+  height: 100% !important;
+  width: 100% !important;
+  position: relative !important;
 }

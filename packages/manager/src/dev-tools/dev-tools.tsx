@@ -1,8 +1,9 @@
 import CloseIcon from '@mui/icons-material/Close';
 import Handyman from '@mui/icons-material/Handyman';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { styled } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 import { Provider } from 'react-redux';
 
@@ -145,13 +146,13 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                   </>
                 )}
                 {view === 'react-query' && (
-                  <QueryClientProvider client={queryClient}>
-                    <ReactQueryDevtoolsPanel
-                      onDragStart={() => {}}
-                      setIsOpen={() => {}}
-                      style={reactQueryDevtoolsStyle}
-                    />
-                  </QueryClientProvider>
+                  <StyledReactQueryDevtoolsContainer
+                    style={reactQueryDevtoolsStyle}
+                  >
+                    <QueryClientProvider client={queryClient}>
+                      <ReactQueryDevtools initialIsOpen={true} />
+                    </QueryClientProvider>
+                  </StyledReactQueryDevtoolsContainer>
                 )}
               </div>
             </div>
@@ -177,3 +178,9 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
     </Provider>
   );
 };
+
+const StyledReactQueryDevtoolsContainer = styled('div')({
+  border: '1px solid rgba(255, 255, 255, 0.25)',
+  height: '100%',
+  width: '100%',
+});
