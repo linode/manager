@@ -187,7 +187,6 @@ export const Region = () => {
     );
 
   const disabledRegions = getDisabledRegions({
-    linodeCreateTab: params.type,
     regions: regions ?? [],
     selectedImage: image,
   });

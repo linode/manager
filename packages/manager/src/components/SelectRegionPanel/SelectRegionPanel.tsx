@@ -115,7 +115,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   );
 
   const disabledRegions = getDisabledRegions({
-    linodeCreateTab: params.type,
     regions: regions ?? [],
     selectedImage: image,
   });
