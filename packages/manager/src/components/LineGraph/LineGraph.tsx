@@ -202,9 +202,9 @@ export const LineGraph = (props: LineGraphProps) => {
       },
       legend: {
         display: _nativeLegend,
-        onClick: (e, legendItem) => {
-          if (legendItem) {
-            handleLegendClick(legendItem.datasetIndex!);
+        onClick: (_e, legendItem) => {
+          if (legendItem && legendItem.datasetIndex) {
+            handleLegendClick(legendItem.datasetIndex); // when we click on native legend, also call the handle legend click function
           }
         },
         position: _nativeLegend ? 'bottom' : undefined,
