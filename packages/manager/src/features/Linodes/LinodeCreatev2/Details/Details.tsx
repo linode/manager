@@ -1,4 +1,3 @@
-import { CreateLinodeRequest } from '@linode/api-v4';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -11,6 +10,8 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 
 import { useLinodeCreateQueryParams } from '../utilities';
 import { PlacementGroupPanel } from './PlacementGroupPanel';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const Details = () => {
   const { control } = useFormContext<CreateLinodeRequest>();

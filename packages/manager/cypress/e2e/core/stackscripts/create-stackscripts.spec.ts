@@ -5,6 +5,7 @@ import {
   pollLinodeDiskSize,
 } from 'support/util/polling';
 import { randomLabel, randomString, randomPhrase } from 'support/util/random';
+import { interceptGetAccountAvailability } from 'support/intercepts/account';
 import {
   interceptCreateStackScript,
   interceptGetStackScripts,
@@ -13,7 +14,7 @@ import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { createLinodeRequestFactory } from 'src/factories';
 import { createImage, getLinodeDisks, resizeLinodeDisk } from '@linode/api-v4';
-import { chooseRegion } from 'support/util/regions';
+import { chooseRegion, getRegionByLabel } from 'support/util/regions';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
@@ -34,6 +35,20 @@ const stackScriptErrorNoShebang =
 // StackScript error that is expected to appear when UDFs with non-alphanumeric names are supplied.
 const stackScriptErrorUdfAlphanumeric =
   'UDF names can only contain alphanumeric and underscore characters.';
+
+/**
+ * Sets the StackScript field's value programmatically rather than via simulated typing.
+ *
+ * Cypress's typing operation is slow for long strings, so we can save several
+ * seconds by setting the value directly, then simulating a couple keystrokes.
+ *
+ * @param script - Script contents to input.
+ */
+const inputStackScript = (script: string) => {
+  cy.get('[data-qa-textfield-label="Script"]').should('be.visible').click();
+
+  cy.focused().invoke('val', script).type(' {backspace}');
+};
 
 /**
  * Fills out the StackScript creation form.
@@ -69,11 +84,8 @@ const fillOutStackscriptForm = (
 
   cy.findByText(`${targetImage}`).should('be.visible').click();
 
-  // Insert a script with invalid UDF data.
-  cy.get('[data-qa-textfield-label="Script"]')
-    .should('be.visible')
-    .click()
-    .type(script);
+  // Insert a script.
+  inputStackScript(script);
 };
 
 /**
@@ -87,9 +99,14 @@ const fillOutStackscriptForm = (
  */
 const fillOutLinodeForm = (label: string, regionName: string) => {
   const password = randomString(32);
+  const region = getRegionByLabel(regionName);
 
   ui.regionSelect.find().click();
-  ui.regionSelect.findItemByRegionLabel(regionName).click();
+  ui.regionSelect
+    .findItemByRegionLabel(regionName)
+    .should('be.visible')
+    .click();
+  ui.regionSelect.find().should('have.value', `${region.label} (${region.id})`);
 
   cy.findByText('Linode Label')
     .should('be.visible')
@@ -176,6 +193,7 @@ describe('Create stackscripts', () => {
     interceptCreateStackScript().as('createStackScript');
     interceptGetStackScripts().as('getStackScripts');
     interceptCreateLinode().as('createLinode');
+    interceptGetAccountAvailability().as('getAvailability');
 
     cy.visitWithLogin('/stackscripts/create');
 
@@ -199,11 +217,7 @@ describe('Create stackscripts', () => {
     cy.findByText(stackScriptErrorNoShebang).should('be.visible');
 
     cy.fixture(stackscriptUdfInvalidPath).then((stackScriptUdfInvalid) => {
-      cy.get('[data-qa-textfield-label="Script"]')
-        .should('be.visible')
-        .click()
-        .type('{selectall}{backspace}')
-        .type(stackScriptUdfInvalid);
+      inputStackScript(stackScriptUdfInvalid);
     });
 
     ui.buttonGroup
@@ -217,11 +231,7 @@ describe('Create stackscripts', () => {
 
     // Insert a script with valid UDF data and submit StackScript create form.
     cy.fixture(stackscriptUdfPath).then((stackScriptUdf) => {
-      cy.get('[data-qa-textfield-label="Script"]')
-        .should('be.visible')
-        .click()
-        .type('{selectall}{backspace}')
-        .type(stackScriptUdf);
+      inputStackScript(stackScriptUdf);
     });
 
     ui.buttonGroup
@@ -252,6 +262,9 @@ describe('Create stackscripts', () => {
       .should('be.enabled')
       .click();
 
+    // Wait for availability to be retrieved before interacting with form.
+    cy.wait('@getAvailability');
+
     // Fill out Linode creation form, confirm UDF fields behave as expected.
     fillOutLinodeForm(linodeLabel, linodeRegion.label);
 
@@ -276,7 +289,10 @@ describe('Create stackscripts', () => {
 
     // Confirm that Linode has been created and is provisioning.
     cy.findByText(linodeLabel).should('be.visible');
-    cy.findByText('PROVISIONING').should('be.visible');
+
+    // In rare cases, the Linode can provision quicker than this assertion happens,
+    // so we want to account for cases where it's already booting or even running.
+    cy.findByText(/(PROVISIONING|BOOTING|RUNNING)/).should('be.visible');
   });
 
   /*
