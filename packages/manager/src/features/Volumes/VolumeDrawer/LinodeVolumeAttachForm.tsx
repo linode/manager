@@ -100,12 +100,13 @@ export const LinodeVolumeAttachForm = (props: Props) => {
 
   const { data: volume } = useVolumeQuery(values.volume_id);
 
+  const linodeRequiresClientLibraryUpdate =
+    volume?.encryption === 'enabled' &&
+    Boolean(!linode.capabilities?.includes('blockstorage_encryption'));
+
   React.useEffect(() => {
     // When the volume is encrypted but the linode requires a client library update, we want to show the client library copy
-    setClientLibraryCopyVisible(
-      volume?.encryption === 'enabled' &&
-        Boolean(!linode.capabilities?.includes('blockstorage_encryption'))
-    );
+    setClientLibraryCopyVisible(linodeRequiresClientLibraryUpdate);
   }, [volume]);
 
   return (
@@ -140,7 +141,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          disabled: isReadOnly,
+          disabled: isReadOnly || linodeRequiresClientLibraryUpdate,
           label: 'Attach Volume',
           loading: isSubmitting,
           type: 'submit',
