@@ -139,7 +139,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     unit,
     widget: widgetProp,
   } = props;
-
   const flags = useFlags();
 
   /**
@@ -206,19 +205,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     []
   );
-  // Update the widget preference if already not present in the preferences
-  React.useEffect(() => {
-    if (savePref) {
-      const widgets = preferences.widgets;
-      if (!widgets || !widgets[widget.label]) {
-        updatePreferences(widget.label, {
-          [AGGREGATE_FUNCTION]: widget.aggregate_function,
-          [SIZE]: widget.size,
-          [TIME_GRANULARITY]: widget.time_granularity,
-        });
-      }
-    }
-  }, []);
 
   /**
    *

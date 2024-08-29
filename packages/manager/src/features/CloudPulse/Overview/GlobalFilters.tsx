@@ -37,7 +37,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     (timerDuration: TimeDuration) => {
       handleTimeDurationChange(timerDuration);
     },
-    [handleTimeDurationChange]
+    []
   );
 
   const onDashboardChange = React.useCallback(
@@ -45,14 +45,14 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       setSelectedDashboard(dashboard);
       handleDashboardChange(dashboard);
     },
-    [handleDashboardChange]
+    []
   );
 
   const emitFilterChange = React.useCallback(
     (filterKey: string, value: FilterValueType) => {
       handleAnyFilterChange(filterKey, value);
     },
-    [handleAnyFilterChange]
+    []
   );
 
   const handleGlobalRefresh = React.useCallback(() => {}, []);
