@@ -6,7 +6,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
 
 import { GlobalFilters } from '../Overview/GlobalFilters';
-import { REGION, RESOURCE_ID } from '../Utils/constants';
+import { REFRESH, REGION, RESOURCE_ID } from '../Utils/constants';
 import {
   checkIfAllMandatoryFiltersAreSelected,
   getMetricsCallCustomFilters,
@@ -105,9 +105,8 @@ export const CloudPulseDashboardLanding = () => {
           dashboard.service_type
         )}
         manualRefreshTimeStamp={
-          filterValue['timestamp'] &&
-          typeof filterValue['timestamp'] === 'number'
-            ? filterValue['timestamp']
+          filterValue[REFRESH] && typeof filterValue[REFRESH] === 'number'
+            ? filterValue[REFRESH]
             : undefined
         }
         region={

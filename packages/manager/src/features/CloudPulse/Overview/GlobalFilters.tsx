@@ -13,6 +13,7 @@ import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 import type { WithStartAndEnd } from 'src/features/Longview/request.types';
+import { REFRESH } from '../Utils/constants';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filterKey: string, filterValue: FilterValueType): void;
@@ -66,7 +67,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       if (!dashboardObj) {
         return;
       }
-      handleAnyFilterChange('timestamp', Date.now());
+      handleAnyFilterChange(REFRESH, Date.now());
     },
     [handleAnyFilterChange]
   );
