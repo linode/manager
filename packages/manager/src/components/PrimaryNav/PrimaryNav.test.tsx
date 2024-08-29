@@ -54,7 +54,7 @@ describe('PrimaryNav', () => {
     expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
 
-  it('should show Databases menu item if the user has the account capability', async () => {
+  it('should show Databases menu item if the user has the account capability V1', async () => {
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
     });
@@ -65,11 +65,99 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
+    const flags = {
+      dbaasV2: {
+        beta: true,
+        enabled: true,
+      },
+    };
+
+    const { findByTestId, findByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
 
     const databaseNavItem = await findByText('Databases');
+    let betaChip: any;
+    try {
+      betaChip = await findByTestId('betaChip');
+    } catch (e) {
+      betaChip = null;
+    }
 
     expect(databaseNavItem).toBeVisible();
+    expect(betaChip).toBeNull();
+  });
+
+  it('should show Databases menu item if the user has the account capability V2 Beta', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases V2'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags = {
+      dbaasV2: {
+        beta: true,
+        enabled: true,
+      },
+    };
+
+    const { findByTestId, findByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const databaseNavItem = await findByText('Databases');
+    const betaChip = await findByTestId('betaChip');
+
+    expect(databaseNavItem).toBeVisible();
+    expect(betaChip).toBeVisible();
+  });
+
+  it('should show Databases menu item if the user has the account capability V2', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases V2'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const flags = {
+      dbaasV2: {
+        beta: false,
+        enabled: true,
+      },
+    };
+
+    const { findByTestId, findByText } = renderWithTheme(
+      <PrimaryNav {...props} />,
+      {
+        flags,
+      }
+    );
+
+    const databaseNavItem = await findByText('Databases');
+    let betaChip: any;
+    try {
+      betaChip = await findByTestId('betaChip');
+    } catch (e) {
+      betaChip = null;
+    }
+
+    expect(databaseNavItem).toBeVisible();
+    expect(betaChip).toBeNull();
   });
 
   it('should show Monitor menu item if the user has the account capability', async () => {

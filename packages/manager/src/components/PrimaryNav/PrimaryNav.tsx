@@ -108,7 +108,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const prefetchMarketplace = () => {
     if (!enableMarketplacePrefetch) {
@@ -187,7 +187,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !isDatabasesEnabled,
           href: '/databases',
           icon: <Database />,
-          isBeta: flags.dbaasV2?.beta,
+          isBeta: isDatabasesV2Beta,
         },
         {
           activeLinks: ['/kubernetes/create'],
@@ -247,9 +247,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       isDatabasesEnabled,
+      isDatabasesV2Beta,
       isManaged,
       allowMarketplacePrefetch,
-      flags.dbaasV2,
       isPlacementGroupsEnabled,
       flags.placementGroups,
       isACLPEnabled,
