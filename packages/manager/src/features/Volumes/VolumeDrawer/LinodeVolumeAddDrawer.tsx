@@ -32,8 +32,8 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
 
-  const linodeSupportsBlockStorageEncryption = linode.capabilities?.includes(
-    'blockstorage_encryption'
+  const linodeSupportsBlockStorageEncryption = Boolean(
+    linode.capabilities?.includes('blockstorage_encryption')
   );
 
   const toggleMode = (mode: 'attach' | 'create') => {

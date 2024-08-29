@@ -104,7 +104,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     // When the volume is encrypted but the linode requires a client library update, we want to show the client library copy
     setClientLibraryCopyVisible(
       volume?.encryption === 'enabled' &&
-        !linode.capabilities?.includes('blockstorage_encryption')
+        Boolean(!linode.capabilities?.includes('blockstorage_encryption'))
     );
   }, [volume]);
 
@@ -123,6 +123,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
       <VolumeSelect
         disabled={isReadOnly}
         error={touched.volume_id ? errors.volume_id : undefined}
+        name="volume_id"
         onBlur={handleBlur}
         onChange={(v) => setFieldValue('volume_id', v)}
         region={linode.region}

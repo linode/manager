@@ -255,6 +255,7 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   alerts: linodeAlertsFactory.build(),
   backups: linodeBackupsFactory.build(),
+  capabilities: [],
   created: '2020-01-01',
   disk_encryption: 'enabled',
   group: '',
