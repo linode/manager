@@ -241,7 +241,7 @@ describe('NodeBalancerConfigPanel', () => {
     expect(props.removeNode).toHaveBeenCalled();
   });
 
-  it('deletes the confirguration panel', () => {
+  it('deletes the configuration panel', () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerConfigPanel {...props} />
     );
