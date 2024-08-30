@@ -51,12 +51,6 @@ export const CloudPulseDashboardWithFilters = React.memo(
       value: 30,
     });
 
-    const StyledPlaceholder = styled(Placeholder, {
-      label: 'StyledPlaceholder',
-    })({
-      flex: 'auto',
-    });
-
     const onFilterChange = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
         setFilterValue((prev) => ({ ...prev, [filterKey]: value }));
@@ -114,44 +108,42 @@ export const CloudPulseDashboardWithFilters = React.memo(
 
     return (
       <>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Paper>
-              <Grid container gap={1}>
-                <Grid
-                  container
-                  item
-                  justifyContent="flex-end"
-                  mt={2}
-                  px={2}
-                  rowGap={2}
-                  xs={12}
-                >
-                  <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
-                    <CloudPulseTimeRangeSelect
-                      disabled={!dashboard}
-                      handleStatsChange={handleTimeRangeChange}
-                      savePreferences={true}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid item xs={12}>
-                  <Divider />
-                </Grid>
-                {isFilterBuilderNeeded && (
-                  <CloudPulseDashboardFilterBuilder
-                    dashboard={dashboard}
-                    emitFilterChange={onFilterChange}
-                    isServiceAnalyticsIntegration={true}
-                  />
-                )}
-                <Grid item xs={12}>
-                  <Divider />
-                </Grid>
-              </Grid>
-            </Paper>
+        <Paper>
+          <Grid
+            justifyContent={{
+              md: 'flex-end',
+              sm: 'flex-start',
+            }}
+            columnSpacing={2}
+            container
+            display={'flex'}
+            item
+            maxHeight={'120px'}
+            mb={1}
+            overflow={'auto'}
+            px={2}
+            py={1}
+            rowGap={2}
+            xs={12}
+          >
+            <Grid item md={4} sm={6} xs={12}>
+              <CloudPulseTimeRangeSelect
+                disabled={!dashboard}
+                handleStatsChange={handleTimeRangeChange}
+                savePreferences={true}
+              />
+            </Grid>
           </Grid>
-        </Grid>
+          <Divider />
+          {isFilterBuilderNeeded && (
+            <CloudPulseDashboardFilterBuilder
+              dashboard={dashboard}
+              emitFilterChange={onFilterChange}
+              isServiceAnalyticsIntegration={true}
+            />
+          )}
+          {isFilterBuilderNeeded && <Divider />}
+        </Paper>
         {isMandatoryFiltersSelected ? (
           <CloudPulseDashboard
             {...getDashboardProperties({
@@ -168,3 +160,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
     );
   }
 );
+
+// keeping it here to avoid recreating
+const StyledPlaceholder = styled(Placeholder, {
+  label: 'StyledPlaceholder',
+})({
+  flex: 'auto',
+});
