@@ -138,7 +138,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
     <>
       <LandingHeader title="Sign Up" />
       <Paper>
-        {isLoading ? (
+        {isLoading || !beta ? (
           <CircleProgress />
         ) : (
           <Stack>
