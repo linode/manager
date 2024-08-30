@@ -77,32 +77,37 @@ export const disk: PartialEventMap<'disk'> = {
   disk_duplicate: {
     failed: (e) => (
       <>
-        Disk on Linode <EventLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>duplicated</strong>.
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>duplicated</strong>.
       </>
     ),
     finished: (e) => (
       <>
-        Disk on Linode <EventLink event={e} to="entity" /> has been{' '}
-        <strong>duplicated</strong>.
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> has been <strong>duplicated</strong>
+        .
       </>
     ),
     notification: (e) => (
       <>
-        Disk on Linode <EventLink event={e} to="entity" /> has been{' '}
-        <strong>duplicated</strong>.
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> has been <strong>duplicated</strong>
+        .
       </>
     ),
     scheduled: (e) => (
       <>
-        Disk on Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>duplicated</strong>.
       </>
     ),
     started: (e) => (
       <>
-        Disk on Linode <EventLink event={e} to="entity" /> is being{' '}
-        <strong>duplicated</strong>.
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> is being <strong>duplicated</strong>
+        .
       </>
     ),
   },
@@ -139,8 +144,9 @@ export const disk: PartialEventMap<'disk'> = {
   disk_resize: {
     failed: (e) => (
       <>
-        A disk on Linode <EventLink event={e} to="entity" /> could{' '}
-        <strong>not</strong> be <strong>resized</strong>.{' '}
+        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
+        <strong>resized</strong>.{' '}
         <Link
           onClick={() => {
             sendLinodeDiskEvent(
@@ -155,29 +161,29 @@ export const disk: PartialEventMap<'disk'> = {
         </Link>
       </>
     ),
-
     finished: (e) => (
       <>
-        A disk on Linode <EventLink event={e} to="entity" /> has been{' '}
-        <strong>resized</strong>.
+        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> has been <strong>resized</strong>.
       </>
     ),
     notification: (e) => (
       <>
-        A disk on Linode <EventLink event={e} to="entity" /> has been{' '}
-        <strong>resized</strong>.
+        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> has been <strong>resized</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        A disk on Linode <EventLink event={e} to="entity" /> is scheduled to be{' '}
+        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>resized</strong>.
       </>
     ),
     started: (e) => (
       <>
-        A disk on Linode <EventLink event={e} to="entity" /> is being{' '}
-        <strong>resized</strong>.
+        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        <EventLink event={e} to="entity" /> is being <strong>resized</strong>.
       </>
     ),
   },
