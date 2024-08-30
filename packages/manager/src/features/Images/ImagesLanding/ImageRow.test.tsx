@@ -45,8 +45,8 @@ describe('Image Table Row', () => {
     // Check to see if the row rendered some data
 
     expect(getByText('2 Regions')).toBeVisible();
-    expect(getByText('300 MB')).toBeVisible();
-    expect(getByText('600 MB')).toBeVisible();
+    expect(getByText('0.29 GB')).toBeVisible(); // 300 / 1024 = 0.292
+    expect(getByText('0.59 GB')).toBeVisible(); // 600 / 1024 = 0.585
 
     getByText(image.label);
     getAllByText('Ready');

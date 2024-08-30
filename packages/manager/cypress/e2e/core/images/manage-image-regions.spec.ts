@@ -45,7 +45,7 @@ describe('Manage Image Regions', () => {
       .closest('tr')
       .within(() => {
         // Verify total size is rendered
-        cy.findByText(`${image.total_size} MB`).should('be.visible');
+        cy.findByText(`0.1 GB`).should('be.visible'); // 100 / 1024 = 0.09765
 
         // Verify capabilities are rendered
         cy.findByText('Distributed').should('be.visible');
@@ -194,7 +194,7 @@ describe('Manage Image Regions', () => {
       .closest('tr')
       .within(() => {
         // Verify the new size is shown
-        cy.findByText('150 MB');
+        cy.findByText('0.15 GB'); // 150 / 2014 = 0.1464
 
         // Verify the new number of regions is shown and click it
         cy.findByText(`${updatedImage.regions.length} Regions`)

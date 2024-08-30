@@ -9,7 +9,7 @@ import { useProfile } from 'src/queries/profile/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import { convertStorageUnit } from 'src/utilities/unitConversions';
 
 import { ImagesActionMenu } from './ImagesActionMenu';
 
@@ -75,7 +75,14 @@ export const ImageRow = (props: Props) => {
     eventStatus: string | undefined
   ) => {
     if (status === 'available' || eventStatus === 'finished') {
-      return convertMegabytesTo(size).replace('.00', '');
+      const sizeInGB = convertStorageUnit('MB', size, 'GB');
+
+      const formattedSizeInGB = Intl.NumberFormat('en-US', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 0,
+      }).format(sizeInGB);
+
+      return `${formattedSizeInGB} GB`;
     } else if (isFailed) {
       return 'N/A';
     } else {
