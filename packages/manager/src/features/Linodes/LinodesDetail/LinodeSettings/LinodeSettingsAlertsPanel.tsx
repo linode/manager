@@ -29,7 +29,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
@@ -216,7 +216,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           'data-testid': 'alerts-save',
           disabled: isReadOnly || !formik.dirty,
           label: 'Save',
-          loading: isLoading,
+          loading: isPending,
           onClick: () => formik.handleSubmit(),
         }}
       />

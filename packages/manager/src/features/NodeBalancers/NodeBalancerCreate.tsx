@@ -114,7 +114,7 @@ const NodeBalancerCreate = () => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
@@ -687,7 +687,7 @@ const NodeBalancerCreate = () => {
           }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          loading={isLoading}
+          loading={isPending}
           onClick={onCreate}
           tooltipText={isInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >

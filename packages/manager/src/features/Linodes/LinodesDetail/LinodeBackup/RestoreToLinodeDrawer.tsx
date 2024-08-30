@@ -47,7 +47,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: restoreBackup,
     reset: resetMutation,
   } = useLinodeBackupRestoreMutation();
@@ -155,7 +155,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'restore-submit',
             label: 'Restore',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{

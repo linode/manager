@@ -119,10 +119,10 @@ export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
-  checkedFirewallAuthorizaton: boolean;
+  checkedFirewallAuthorization: boolean;
   createType: CreateTypes;
   diskEncryptionEnabled: boolean;
-  firewallId?: number;
+  firewallId: number | undefined;
   handleAgreementChange: () => void;
   handleFirewallAuthorizationChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
@@ -297,8 +297,7 @@ export class LinodeCreate extends React.PureComponent<
         isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
           ? diskEncryptionPayload
           : undefined,
-      firewall_id:
-        this.props.firewallId !== -1 ? this.props.firewallId : undefined,
+      firewall_id: this.props.firewallId,
       image: this.props.selectedImageID,
       label: this.props.label,
       placement_group:
@@ -602,7 +601,7 @@ export class LinodeCreate extends React.PureComponent<
     const {
       account,
       accountBackupsEnabled,
-      checkedFirewallAuthorizaton,
+      checkedFirewallAuthorization,
       errors,
       flags,
       formIsSubmitting,
@@ -793,11 +792,7 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    if (
-      this.props.firewallId !== null &&
-      this.props.firewallId !== undefined &&
-      this.props.firewallId !== -1
-    ) {
+    if (this.props.firewallId !== undefined) {
       displaySections.push({
         title: 'Firewall Assigned',
       });
@@ -835,8 +830,8 @@ export class LinodeCreate extends React.PureComponent<
 
     const secureVMViolation =
       showFirewallAuthorization &&
-      !checkedFirewallAuthorizaton &&
-      this.props.firewallId === undefined;
+      this.props.firewallId === undefined &&
+      !checkedFirewallAuthorization;
 
     return (
       <StyledForm ref={this.createLinodeFormRef}>
@@ -1003,9 +998,9 @@ export class LinodeCreate extends React.PureComponent<
                       createType:
                         (this.tabs[selectedTab].title as LinodeCreateType) ??
                         'OS',
-                      label: 'Choosing a Plan',
                       headerName: 'Linode Plan',
                       interaction: 'click',
+                      label: 'Choosing a Plan',
                     });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
@@ -1106,8 +1101,8 @@ export class LinodeCreate extends React.PureComponent<
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'OS',
                         headerName: 'Firewall',
-                        label: 'Learn more',
                         interaction: 'click',
+                        label: 'Learn more',
                       })
                     }
                     to={FIREWALL_GET_STARTED_LINK}
@@ -1120,7 +1115,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled={userCannotCreateLinode}
               entityType="linode"
               handleFirewallChange={this.props.handleFirewallChange}
-              selectedFirewallId={this.props.firewallId || -1}
+              selectedFirewallId={this.props.firewallId}
             />
           )}
           <AddonsPanel
@@ -1181,16 +1176,15 @@ export class LinodeCreate extends React.PureComponent<
               flags.secureVmCopy?.firewallAuthorizationWarning ? (
                 <AkamaiBanner
                   action={
-                    <Typography color="inherit">
-                      <FormControlLabel
-                        checked={checkedFirewallAuthorizaton}
-                        className="error-for-scroll"
-                        control={<Checkbox />}
-                        disableTypography
-                        label={flags.secureVmCopy.firewallAuthorizationLabel}
-                        onChange={handleFirewallAuthorizationChange}
-                      />
-                    </Typography>
+                    <FormControlLabel
+                      checked={checkedFirewallAuthorization}
+                      className="error-for-scroll"
+                      control={<Checkbox />}
+                      disableTypography
+                      label={flags.secureVmCopy.firewallAuthorizationLabel}
+                      onChange={handleFirewallAuthorizationChange}
+                      sx={{ fontSize: 14 }}
+                    />
                   }
                   text={flags.secureVmCopy.firewallAuthorizationWarning}
                   warning
