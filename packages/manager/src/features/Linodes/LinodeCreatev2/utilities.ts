@@ -1,4 +1,3 @@
-import { omit } from 'lodash';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -9,6 +8,7 @@ import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalyt
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { omitProps } from 'src/utilities/omittedProps';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
@@ -148,7 +148,7 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omit(formValues, [
+  const values = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
