@@ -66,6 +66,7 @@ x-e2e-env:
 x-e2e-volumes:
   &default-volumes
   - ./.git:/home/node/app/.git
+  - ./cache:./home/node/app/cache
   - ./packages/manager:/home/node/app/packages/manager
   - ./packages/validation:/home/node/app/packages/validation
   - ./packages/api-v4:/home/node/app/packages/api-v4
