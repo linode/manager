@@ -1,8 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
@@ -16,10 +14,11 @@ import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import NullComponent from './components/NullComponent';
-import { loadDevTools, shouldEnableDevTools } from './dev-tools/load';
+import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { queryClientFactory } from './queries/base';
+import { getRoot } from './utilities/rootManager';
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -80,21 +79,21 @@ const Main = () => {
             </Router>
           </React.Suspense>
         </LinodeThemeWrapper>
-        <ReactQueryDevtools />
       </QueryClientProvider>
     </ReduxStoreProvider>
   );
 };
 
 async function loadApp() {
-  if (shouldEnableDevTools) {
-    // If devtools are enabled, load them before we load the main app.
-    // This ensures the MSW is setup before we start making API calls.
-    await loadDevTools(store);
+  if (shouldLoadDevTools) {
+    await loadDevTools(store, queryClient);
   }
+
   const container = document.getElementById('root');
-  const root = createRoot(container!);
-  root.render(<Main />);
+  if (container) {
+    const root = getRoot(container);
+    root.render(<Main />);
+  }
 }
 
 loadApp();

@@ -1,3 +1,11 @@
+/**
+ * @deprecated
+ *
+ * This mocking mode is being phased out.
+ * It remains available in out DEV tools for convenience and backward compatibility, it is however discouraged to add new handlers to it.
+ *
+ * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
+ */
 import { DateTime } from 'luxon';
 import { HttpResponse, http } from 'msw';
 
