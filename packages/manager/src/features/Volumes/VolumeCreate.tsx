@@ -11,6 +11,7 @@ import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   BLOCK_STORAGE_CHOOSE_REGION_COPY,
+  BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY,
   BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION,
   BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
   BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
@@ -58,6 +59,8 @@ import { SizeField } from './VolumeDrawer/SizeField';
 import type { VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Theme } from '@mui/material/styles';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { Stack } from 'src/components/Stack';
 
 export const SIZE_FIELD_WIDTH = 160;
 
@@ -240,6 +243,15 @@ export const VolumeCreate = () => {
 
   const { config_id, linode_id } = values;
 
+  const { data: linode } = useLinodeQuery(
+    linode_id ?? -1,
+    isBlockStorageEncryptionFeatureEnabled
+  );
+
+  const linodeSupportsBlockStorageEncryption = Boolean(
+    linode?.capabilities?.includes('blockstorage_encryption')
+  );
+
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
   const { showGDPRCheckbox } = getGDPRDetails({
@@ -282,6 +294,11 @@ export const VolumeCreate = () => {
       setFieldValue('encryption', 'enabled');
     }
   };
+
+  const shouldDisplayClientLibraryCopy =
+    isBlockStorageEncryptionFeatureEnabled &&
+    values.linode_id !== null &&
+    !linodeSupportsBlockStorageEncryption;
 
   return (
     <>
@@ -363,47 +380,58 @@ export const VolumeCreate = () => {
               )}
             </Box>
             <Box
-              alignItems="flex-end"
+              alignItems={
+                shouldDisplayClientLibraryCopy ? 'flex-start' : 'flex-end'
+              }
               className={classes.linodeConfigSelectWrapper}
               display="flex"
             >
-              <Box
-                alignItems="flex-end"
-                className={classes.linodeSelect}
-                display="flex"
-              >
-                <LinodeSelect
-                  optionsFilter={(linode: Linode) => {
-                    const linodeRegion = linode.region;
-                    const valuesRegion = values.region;
+              <Stack>
+                <Box
+                  alignItems="flex-end"
+                  className={classes.linodeSelect}
+                  display="flex"
+                >
+                  <LinodeSelect
+                    optionsFilter={(linode: Linode) => {
+                      const linodeRegion = linode.region;
+                      const valuesRegion = values.region;
 
-                    /** When values.region is empty, all Linodes with
-                     * block storage support will be displayed, regardless
-                     * of their region. However, if a region is selected,
-                     * only Linodes from the chosen region with block storage
-                     * support will be shown. */
-                    return isNilOrEmpty(valuesRegion)
-                      ? regionsWithBlockStorage.includes(linodeRegion)
-                      : regionsWithBlockStorage.includes(linodeRegion) &&
-                          linodeRegion === valuesRegion;
-                  }}
-                  sx={{
-                    [theme.breakpoints.down('sm')]: {
-                      width: 320,
-                    },
-                    width: '400px',
-                  }}
-                  clearable
-                  disabled={doesNotHavePermission}
-                  errorText={linodeError}
-                  onBlur={handleBlur}
-                  onSelectionChange={handleLinodeChange}
-                  value={values.linode_id}
-                />
-                {renderSelectTooltip(
-                  'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
+                      /** When values.region is empty, all Linodes with
+                       * block storage support will be displayed, regardless
+                       * of their region. However, if a region is selected,
+                       * only Linodes from the chosen region with block storage
+                       * support will be shown. */
+                      return isNilOrEmpty(valuesRegion)
+                        ? regionsWithBlockStorage.includes(linodeRegion)
+                        : regionsWithBlockStorage.includes(linodeRegion) &&
+                            linodeRegion === valuesRegion;
+                    }}
+                    sx={{
+                      [theme.breakpoints.down('sm')]: {
+                        width: 320,
+                      },
+                      width: '400px',
+                    }}
+                    clearable
+                    disabled={doesNotHavePermission}
+                    errorText={linodeError}
+                    onBlur={handleBlur}
+                    onSelectionChange={handleLinodeChange}
+                    value={values.linode_id}
+                  />
+                  {renderSelectTooltip(
+                    'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
+                  )}
+                </Box>
+                {shouldDisplayClientLibraryCopy && (
+                  <Notice spacingBottom={0} spacingTop={16} variant="warning">
+                    <Typography maxWidth="416px">
+                      {BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY}
+                    </Typography>
+                  </Notice>
                 )}
-              </Box>
+              </Stack>
               <ConfigSelect
                 disabled={doesNotHavePermission || config_id === null}
                 error={touched.config_id ? errors.config_id : undefined}
