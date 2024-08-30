@@ -14,8 +14,9 @@ import { fetchAccount } from './cypress/support/plugins/fetch-account';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { splitCypressRun } from './cypress/support/plugins/split-run';
 import { enableJunitReport } from './cypress/support/plugins/junit-report';
-import cypressViteConfig from './cypress/vite.config';
+import { generateTestWeights } from './cypress/support/plugins/generate-weights';
 import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
+import cypressViteConfig from './cypress/vite.config';
 
 /**
  * Exports a Cypress configuration object.
@@ -85,6 +86,7 @@ export default defineConfig({
         logTestTagInfo,
         splitCypressRun,
         enableJunitReport,
+        generateTestWeights,
       ]);
     },
   },

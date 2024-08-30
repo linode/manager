@@ -696,3 +696,12 @@ export const mockGetMaintenance = (
     }
   });
 };
+
+/**
+ * Intercepts GET request to fetch account region availability.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetAccountAvailability = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account/availability*'));
+};

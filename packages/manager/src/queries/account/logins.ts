@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { accountQueries } from './queries';
 
@@ -13,5 +13,5 @@ import type {
 export const useAccountLoginsQuery = (params?: Params, filter?: Filter) =>
   useQuery<ResourcePage<AccountLogin>, APIError[]>({
     ...accountQueries.logins(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });

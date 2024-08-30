@@ -1,4 +1,3 @@
-import { OAuthClientRequest } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -12,6 +11,8 @@ import { TextField } from 'src/components/TextField';
 import { useCreateOAuthClientMutation } from 'src/queries/account/oauth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
+import type { OAuthClientRequest } from '@linode/api-v4';
+
 interface Props {
   onClose: () => void;
   open: boolean;
@@ -23,7 +24,7 @@ export const CreateOAuthClientDrawer = ({
   open,
   showSecret,
 }: Props) => {
-  const { error, isLoading, mutateAsync } = useCreateOAuthClientMutation();
+  const { error, isPending, mutateAsync } = useCreateOAuthClientMutation();
 
   const formik = useFormik<OAuthClientRequest>({
     initialValues: {
@@ -86,7 +87,7 @@ export const CreateOAuthClientDrawer = ({
         <ActionsPanel
           primaryButtonProps={{
             label: 'Create',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

@@ -20,7 +20,7 @@ export const ObjectStorageSettings = () => {
 
   const {
     error,
-    isLoading: isCancelLoading,
+    isPending: isCancelLoading,
     mutateAsync: cancelObjectStorage,
     reset,
   } = useCancelObjectStorageMutation();
