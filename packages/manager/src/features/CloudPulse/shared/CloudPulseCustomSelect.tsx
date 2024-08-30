@@ -145,11 +145,7 @@ export const CloudPulseCustomSelect = React.memo(
             filterKey,
             handleSelectionChange,
             isMultiSelect: isMultiSelect ?? false,
-            options: options
-              ? options
-              : queriedResources
-              ? queriedResources
-              : [],
+            options: options || queriedResources || [],
             savePreferences: savePreferences ?? false,
           })
         );
