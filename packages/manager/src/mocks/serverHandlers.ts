@@ -13,14 +13,10 @@ import {
   accountTransferFactory,
   appTokenFactory,
   betaFactory,
-  certificateFactory,
-  configurationFactory,
-  configurationsEndpointHealthFactory,
   contactFactory,
-  createRouteFactory,
-  createServiceTargetFactory,
   credentialFactory,
   creditPaymentResponseFactory,
+  dashboardFactory,
   databaseBackupFactory,
   databaseEngineFactory,
   databaseFactory,
@@ -49,8 +45,6 @@ import {
   linodeTypeFactory,
   lkeHighAvailabilityTypeFactory,
   lkeStandardAvailabilityTypeFactory,
-  loadbalancerEndpointHealthFactory,
-  loadbalancerFactory,
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
@@ -67,8 +61,9 @@ import {
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationFactory,
-  objectStorageBucketFactory,
+  objectStorageBucketFactoryGen2,
   objectStorageClusterFactory,
+  objectStorageEndpointsFactory,
   objectStorageKeyFactory,
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
@@ -81,10 +76,7 @@ import {
   profileFactory,
   promoFactory,
   regionAvailabilityFactory,
-  routeFactory,
   securityQuestionsFactory,
-  serviceTargetFactory,
-  serviceTargetsEndpointHealthFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -99,12 +91,19 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
+import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
+const getRandomWholeNumber = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
 import type {
+  AccountMaintenance,
   CreateObjectStorageKeyPayload,
+  FirewallStatus,
   NotificationType,
+  ObjectStorageEndpointTypes,
   SecurityQuestionsPayload,
   TokenRequest,
   UpdateImageRegionsPayload,
@@ -191,7 +190,7 @@ const entityTransfers = [
 
 const databases = [
   http.get('*/databases/instances', () => {
-    const databases = databaseInstanceFactory.buildList(5);
+    const databases = databaseInstanceFactory.buildList(9);
     return HttpResponse.json(makeResourcePage(databases));
   }),
 
@@ -305,165 +304,6 @@ const databases = [
   ),
 
   http.delete('*/databases/mysql/instances/:databaseId', () => {
-    return HttpResponse.json({});
-  }),
-];
-
-const aclb = [
-  // Configurations
-  http.get('*/v4beta/aclb/:id/configurations', () => {
-    const configurations = configurationFactory.buildList(3);
-    return HttpResponse.json(makeResourcePage(configurations));
-  }),
-  http.get('*/v4beta/aclb/:id/endpoints-health', ({ params }) => {
-    const health = loadbalancerEndpointHealthFactory.build({
-      id: Number(params.id),
-    });
-    return HttpResponse.json(health);
-  }),
-  http.get(
-    '*/v4beta/aclb/:id/configurations/endpoints-health',
-    ({ params }) => {
-      const health = configurationsEndpointHealthFactory.build({
-        id: Number(params.id),
-      });
-      return HttpResponse.json(health);
-    }
-  ),
-  http.get(
-    '*/v4beta/aclb/:id/service-targets/endpoints-health',
-    ({ params }) => {
-      const health = serviceTargetsEndpointHealthFactory.build({
-        id: Number(params.id),
-      });
-      return HttpResponse.json(health);
-    }
-  ),
-  http.get('*/v4beta/aclb/:id/configurations/:configId', () => {
-    return HttpResponse.json(configurationFactory.build());
-  }),
-  http.post('*/v4beta/aclb/:id/configurations', () => {
-    return HttpResponse.json(configurationFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/configurations/:configId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.configId);
-      const body = reqBody as any;
-      return HttpResponse.json(configurationFactory.build({ id, ...body }));
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/configurations/:configId', () => {
-    return HttpResponse.json({});
-  }),
-  // Load Balancers
-  http.get('*/v4beta/aclb', () => {
-    return HttpResponse.json(
-      makeResourcePage(loadbalancerFactory.buildList(3))
-    );
-  }),
-  http.get('*/v4beta/aclb/:loadbalancerId', ({ params }) => {
-    return HttpResponse.json(
-      loadbalancerFactory.build({
-        id: Number(params.loadbalancerId),
-        label: `aclb-${params.loadbalancerId}`,
-      })
-    );
-  }),
-  http.post('*/v4beta/aclb', () => {
-    return HttpResponse.json(loadbalancerFactory.build());
-  }),
-  http.put('*/v4beta/aclb/:id', async ({ params, request }) => {
-    const reqBody = await request.json();
-    const id = Number(params.id);
-    const body = reqBody as any;
-    // The payload to update a loadbalancer is not the same as the payload to create a loadbalancer
-    // In one instance we have a list of entrypoints objects, in the other we have a list of entrypoints ids
-    // TODO: ACLB - figure out if this is still accurate
-    return HttpResponse.json(loadbalancerFactory.build({ id, ...body }));
-  }),
-  http.delete('*/v4beta/aclb/:id', () => {
-    return HttpResponse.json({});
-  }),
-  // Routes
-  http.get('*/v4beta/aclb/:id/routes', ({ request }) => {
-    const headers = JSON.parse(request.headers.get('x-filter') || '{}');
-    if (headers['+or']) {
-      return HttpResponse.json(
-        makeResourcePage(routeFactory.buildList(headers['+or'].length))
-      );
-    }
-    return HttpResponse.json(makeResourcePage(routeFactory.buildList(5)));
-  }),
-  http.post('*/v4beta/aclb/:id/routes', () => {
-    return HttpResponse.json(createRouteFactory.buildList(4));
-  }),
-  http.put('*/v4beta/aclb/:id/routes/:routeId', async ({ params, request }) => {
-    const reqBody = await request.json();
-    const id = Number(params.routeId);
-    const body = reqBody as any;
-    return HttpResponse.json(createRouteFactory.build({ id, ...body }));
-  }),
-  http.delete('*/v4beta/aclb/:id/routes/:routeId', () => {
-    return HttpResponse.json({});
-  }),
-  // Service Targets
-  http.get('*/v4beta/aclb/:id/service-targets', () => {
-    return HttpResponse.json(
-      makeResourcePage(serviceTargetFactory.buildList(5))
-    );
-  }),
-  http.post('*/v4beta/aclb/:id/service-targets', () => {
-    return HttpResponse.json(createServiceTargetFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/service-targets/:serviceTargetId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.serviceTargetId);
-      const body = reqBody as any;
-      return HttpResponse.json(
-        createServiceTargetFactory.build({ id, ...body })
-      );
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/service-targets/:serviceTargetId', () => {
-    return HttpResponse.json({});
-  }),
-  // Certificates
-  http.get('*/v4beta/aclb/:id/certificates', () => {
-    const tlsCertificate = certificateFactory.build({
-      label: 'tls-certificate',
-      type: 'downstream',
-    });
-    const certificates = certificateFactory.buildList(3);
-    return HttpResponse.json(
-      makeResourcePage([tlsCertificate, ...certificates])
-    );
-  }),
-  http.get(
-    '*/v4beta/aclb/:id/certificates/:certId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.certId);
-      const body = reqBody as any;
-      return HttpResponse.json(certificateFactory.build({ id, ...body }));
-    }
-  ),
-  http.post('*/v4beta/aclb/:id/certificates', () => {
-    return HttpResponse.json(certificateFactory.build());
-  }),
-  http.put(
-    '*/v4beta/aclb/:id/certificates/:certId',
-    async ({ params, request }) => {
-      const reqBody = await request.json();
-      const id = Number(params.certId);
-      const body = reqBody as any;
-      return HttpResponse.json(certificateFactory.build({ id, ...body }));
-    }
-  ),
-  http.delete('*/v4beta/aclb/:id/certificates/:certId', () => {
     return HttpResponse.json({});
   }),
 ];
@@ -610,7 +450,7 @@ export const handlers = [
   }),
   http.get<{ id: string }>('*/v4/images/:id', ({ params }) => {
     const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-images'],
+      capabilities: ['cloud-init', 'distributed-sites'],
       id: 'private/distributed-image',
       label: 'distributed-image',
       regions: [{ region: 'us-east', status: 'available' }],
@@ -666,7 +506,7 @@ export const handlers = [
     });
     const publicImages = imageFactory.buildList(4, { is_public: true });
     const distributedImage = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-images'],
+      capabilities: ['cloud-init', 'distributed-sites'],
       id: 'private/distributed-image',
       label: 'distributed-image',
       regions: [{ region: 'us-east', status: 'available' }],
@@ -846,6 +686,10 @@ export const handlers = [
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
   }),
+  http.get('*/linode/kernels', async () => {
+    const kernels = LinodeKernelFactory.buildList(10);
+    return HttpResponse.json(makeResourcePage(kernels));
+  }),
   http.delete('*/instances/*', async () => {
     return HttpResponse.json({});
   }),
@@ -952,13 +796,16 @@ export const handlers = [
     const firewall = firewallFactory.build();
     return HttpResponse.json(firewall);
   }),
-  http.put('*/v4beta/networking/firewalls/:firewallId', async ({ request }) => {
-    const body = await request.json();
-    const firewall = firewallFactory.build({
-      status: body?.['status'] ?? 'disabled',
-    });
-    return HttpResponse.json(firewall);
-  }),
+  http.put<{}, { status: FirewallStatus }>(
+    '*/v4beta/networking/firewalls/:firewallId',
+    async ({ request }) => {
+      const body = await request.json();
+      const firewall = firewallFactory.build({
+        status: body?.['status'] ?? 'disabled',
+      });
+      return HttpResponse.json(firewall);
+    }
+  ),
   // http.post('*/account/agreements', () => {
   //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
   // }),
@@ -1004,6 +851,46 @@ export const handlers = [
       objectStorageOverageTypeFactory.build(),
     ];
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
+  }),
+  http.get('*/v4/object-storage/endpoints', ({}) => {
+    const endpoints = [
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E0',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E1',
+        region: 'us-sea',
+        s3_endpoint: 'us-sea-1.linodeobjects.com',
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E1',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-sea',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-east',
+        s3_endpoint: null,
+      }),
+      objectStorageEndpointsFactory.build({
+        endpoint_type: 'E3',
+        region: 'us-mia',
+        s3_endpoint: 'us-mia-1.linodeobjects.com',
+      }),
+    ];
+    return HttpResponse.json(makeResourcePage(endpoints));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
@@ -1080,14 +967,20 @@ export const handlers = [
 
     const region = params.region as string;
 
-    objectStorageBucketFactory.resetSequenceNumber();
+    objectStorageBucketFactoryGen2.resetSequenceNumber();
     const page = Number(url.searchParams.get('page') || 1);
     const pageSize = Number(url.searchParams.get('page_size') || 25);
 
-    const buckets = objectStorageBucketFactory.buildList(1, {
+    const randomBucketNumber = getRandomWholeNumber(1, 500);
+    const randomEndpointType = `E${Math.floor(
+      Math.random() * 4
+    )}` as ObjectStorageEndpointTypes;
+
+    const buckets = objectStorageBucketFactoryGen2.buildList(1, {
       cluster: `${region}-1`,
-      hostname: `obj-bucket-1.${region}.linodeobjects.com`,
-      label: `obj-bucket-1`,
+      endpoint_type: randomEndpointType,
+      hostname: `obj-bucket-${randomBucketNumber}.${region}.linodeobjects.com`,
+      label: `obj-bucket-${randomBucketNumber}`,
       region,
     });
 
@@ -1102,11 +995,11 @@ export const handlers = [
     });
   }),
   http.get('*/object-storage/buckets', () => {
-    const buckets = objectStorageBucketFactory.buildList(10);
+    const buckets = objectStorageBucketFactoryGen2.buildList(10);
     return HttpResponse.json(makeResourcePage(buckets));
   }),
   http.post('*/object-storage/buckets', () => {
-    return HttpResponse.json(objectStorageBucketFactory.build());
+    return HttpResponse.json(objectStorageBucketFactoryGen2.build());
   }),
   http.get('*object-storage/clusters', () => {
     const jakartaCluster = objectStorageClusterFactory.build({
@@ -1393,8 +1286,8 @@ export const handlers = [
 
     if (request.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
-        const statusA = a[headers['+order_by']];
-        const statusB = b[headers['+order_by']];
+        const statusA = a[headers['+order_by'] as keyof AccountMaintenance];
+        const statusB = b[headers['+order_by'] as keyof AccountMaintenance];
 
         if (statusA < statusB) {
           return -1;
@@ -1492,8 +1385,12 @@ export const handlers = [
       }
 
       filteredAccountUsers.sort((a, b) => {
-        const statusA = a[headers['+order_by']];
-        const statusB = b[headers['+order_by']];
+        const statusA = a[headers['+order_by'] as keyof User];
+        const statusB = b[headers['+order_by'] as keyof User];
+
+        if (!statusA || !statusB) {
+          return 0;
+        }
 
         if (statusA < statusB) {
           return -1;
@@ -2067,11 +1964,14 @@ export const handlers = [
   http.post('*/networking/vlans', () => {
     return HttpResponse.json({});
   }),
-  http.post('*/networking/ipv6/ranges', async ({ request }) => {
-    const body = await request.json();
-    const range = body?.['prefix_length'];
-    return HttpResponse.json({ range, route_target: '2001:DB8::0000' });
-  }),
+  http.post<{}, { prefix_length: number }>(
+    '*/networking/ipv6/ranges',
+    async ({ request }) => {
+      const body = await request.json();
+      const range = body?.['prefix_length'];
+      return HttpResponse.json({ range, route_target: '2001:DB8::0000' });
+    }
+  ),
   http.post('*/networking/ips/assign', () => {
     return HttpResponse.json({});
   }),
@@ -2373,59 +2273,24 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/v4/monitor/services/linode/dashboards', () => {
+  http.get('*/v4/monitor/services', () => {
+    const response = {
+      data: [{ service_type: 'linode' }],
+    };
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/v4/monitor/services/:serviceType/dashboards', () => {
     const response = {
       data: [
-        {
-          created: '2024-04-29T17:09:29',
-          id: 1,
-          label: 'Linode Service I/O Statistics',
+        dashboardFactory.build({
+          label: 'Linode Dashboard',
           service_type: 'linode',
-          type: 'standard',
-          updated: null,
-          widgets: [
-            {
-              aggregate_function: 'avg',
-              chart_type: 'area',
-              color: 'blue',
-              label: 'CPU utilization',
-              metric: 'system_cpu_utilization_percent',
-              size: 12,
-              unit: '%',
-              y_label: 'system_cpu_utilization_ratio',
-            },
-            {
-              aggregate_function: 'avg',
-              chart_type: 'area',
-              color: 'red',
-              label: 'Memory Usage',
-              metric: 'system_memory_usage_by_resource',
-              size: 12,
-              unit: 'Bytes',
-              y_label: 'system_memory_usage_bytes',
-            },
-            {
-              aggregate_function: 'avg',
-              chart_type: 'area',
-              color: 'green',
-              label: 'Network Traffic',
-              metric: 'system_network_io_by_resource',
-              size: 6,
-              unit: 'Bytes',
-              y_label: 'system_network_io_bytes_total',
-            },
-            {
-              aggregate_function: 'avg',
-              chart_type: 'area',
-              color: 'yellow',
-              label: 'Disk I/O',
-              metric: 'system_disk_OPS_total',
-              size: 6,
-              unit: 'OPS',
-              y_label: 'system_disk_operations_total',
-            },
-          ],
-        },
+        }),
+        dashboardFactory.build({
+          label: 'DBaaS Dashboard',
+          service_type: 'dbaas',
+        }),
       ],
     };
 
@@ -2610,9 +2475,43 @@ export const handlers = [
     };
     return HttpResponse.json(response);
   }),
+  http.post('*/monitor/services/:serviceType/metrics', () => {
+    const response = {
+      data: {
+        result: [
+          {
+            metric: {},
+            values: [
+              [1721854379, '0.2744841110560275'],
+              [1721857979, '0.2980357104166823'],
+              [1721861579, '0.3290476561287732'],
+              [1721865179, '0.32148793964961897'],
+              [1721868779, '0.3269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.3237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.25839295774934357'],
+              [1721890379, '0.26863082415681144'],
+              [1721893979, '0.26126998689934394'],
+              [1721897579, '0.26164641539434685'],
+            ],
+          },
+        ],
+        resultType: 'matrix',
+      },
+      isPartial: false,
+      stats: {
+        executionTimeMsec: 23,
+        seriesFetched: '14',
+      },
+      status: 'success',
+    };
+
+    return HttpResponse.json(response);
+  }),
   ...entityTransfers,
   ...statusPage,
   ...databases,
-  ...aclb,
   ...vpc,
 ];

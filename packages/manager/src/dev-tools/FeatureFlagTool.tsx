@@ -19,8 +19,6 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  * This requirement is both documented here and in our Docs since we don't have a way to enforce types from Launch Darkly objects.
  */
 const options: { flag: keyof Flags; label: string }[] = [
-  { flag: 'aclb', label: 'ACLB' },
-  { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
@@ -34,6 +32,8 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'placementGroups', label: 'Placement Groups' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
+  { flag: 'dbaasV2', label: 'Databases V2 Beta' },
+  { flag: 'databaseResize', label: 'Database Resize' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

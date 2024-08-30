@@ -11,6 +11,7 @@ import { makeResponse } from 'support/util/response';
 import type {
   Account,
   AccountLogin,
+  AccountMaintenance,
   AccountSettings,
   Agreements,
   CancelAccount,
@@ -33,6 +34,15 @@ import type {
  */
 export const mockGetAccount = (account: Account): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('account'), makeResponse(account));
+};
+
+/**
+ * Intercepts GET request to fetch account.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetAccount = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account'));
 };
 
 /**
@@ -645,4 +655,35 @@ export const mockGetAccountLogins = (
  */
 export const interceptGetNetworkUtilization = (): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('account/transfer'));
+};
+
+/**
+ * Intercepts GET request to fetch the account maintenance and mocks the response.
+ *
+ * @param accountMaintenance - Account Maintenance objects with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetMaintenance = (
+  accountPendingMaintenance: AccountMaintenance[],
+  accountCompletedMaintenance: AccountMaintenance[]
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`account/maintenance*`), (req) => {
+    const filters = getFilters(req);
+
+    if (filters?.['status'] === 'completed') {
+      req.reply(paginateResponse(accountCompletedMaintenance));
+    } else {
+      req.reply(paginateResponse(accountPendingMaintenance));
+    }
+  });
+};
+
+/**
+ * Intercepts GET request to fetch account region availability.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetAccountAvailability = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account/availability*'));
 };

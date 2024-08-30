@@ -9,17 +9,12 @@ import {
   linodeFactory,
   regionFactory,
 } from '@src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreateVPCError,
   mockCreateVPC,
   mockGetSubnets,
 } from 'support/intercepts/vpc';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   randomLabel,
   randomPhrase,
@@ -30,6 +25,7 @@ import {
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';
+import { extendRegion } from 'support/util/regions';
 
 /**
  * Gets the "Add another Subnet" section with the given index.
@@ -49,9 +45,11 @@ describe('VPC create flow', () => {
    * - Confirms that UI redirects to created VPC page after creating a VPC.
    */
   it('can create a VPC', () => {
-    const mockVPCRegion = regionFactory.build({
-      capabilities: ['VPCs'],
-    });
+    const mockVPCRegion = extendRegion(
+      regionFactory.build({
+        capabilities: ['VPCs'],
+      })
+    );
 
     const mockSubnets: Subnet[] = buildArray(3, (index: number) => {
       return subnetFactory.build({
@@ -77,15 +75,10 @@ describe('VPC create flow', () => {
     const vpcCreationErrorMessage = 'An unknown error has occurred.';
     const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets(mockSubnets);
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     cy.visitWithLogin('/vpcs/create');
-    cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
+    cy.wait('@getRegions');
 
     ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
 
@@ -278,9 +271,11 @@ describe('VPC create flow', () => {
    * - Confirms that Cloud Manager UI responds accordingly when creating a VPC without subnets.
    */
   it('can create a VPC without any subnets', () => {
-    const mockVPCRegion = regionFactory.build({
-      capabilities: ['VPCs'],
-    });
+    const mockVPCRegion = extendRegion(
+      regionFactory.build({
+        capabilities: ['VPCs'],
+      })
+    );
 
     const mockVpc: VPC = vpcFactory.build({
       id: randomNumber(10000, 99999),
@@ -292,15 +287,10 @@ describe('VPC create flow', () => {
 
     const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets([]);
 
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientstream');
-
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     cy.visitWithLogin('/vpcs/create');
-    cy.wait(['@getFeatureFlags', '@getClientstream', '@getRegions']);
+    cy.wait('@getRegions');
 
     ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
 

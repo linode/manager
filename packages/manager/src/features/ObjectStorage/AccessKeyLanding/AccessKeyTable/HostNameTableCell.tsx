@@ -3,7 +3,6 @@ import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableCell } from 'src/components/TableCell';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
@@ -24,10 +23,7 @@ export const HostNameTableCell = ({
   setShowHostNamesDrawers,
   storageKeyData,
 }: Props) => {
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regionsData } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regionsData } = useRegionsQuery();
 
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
@@ -38,10 +34,12 @@ export const HostNameTableCell = ({
   }
   const label = regionsLookup[storageKeyData.regions[0].id]?.label;
   const s3Endpoint = storageKeyData?.regions[0]?.s3_endpoint;
+  const endpointType = storageKeyData?.regions[0]?.endpoint_type;
 
   return (
     <TableCell>
-      {label}: {s3Endpoint}
+      {label}
+      {endpointType && ` (${endpointType})`}: {s3Endpoint}&nbsp;
       {storageKeyData?.regions?.length === 1 && (
         <StyledCopyIcon text={s3Endpoint} />
       )}

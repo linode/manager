@@ -5,6 +5,7 @@ import {
   pollLinodeDiskSize,
 } from 'support/util/polling';
 import { randomLabel, randomString, randomPhrase } from 'support/util/random';
+import { interceptGetAccountAvailability } from 'support/intercepts/account';
 import {
   interceptCreateStackScript,
   interceptGetStackScripts,
@@ -13,10 +14,13 @@ import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { createLinodeRequestFactory } from 'src/factories';
 import { createImage, getLinodeDisks, resizeLinodeDisk } from '@linode/api-v4';
-import { chooseRegion } from 'support/util/regions';
+import { chooseRegion, getRegionByLabel } from 'support/util/regions';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+import { interceptGetAllImages } from 'support/intercepts/images';
+import type { Image } from '@linode/api-v4';
+import { getFilteredImagesForImageSelect } from 'src/components/ImageSelectv2/utilities';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -31,6 +35,20 @@ const stackScriptErrorNoShebang =
 // StackScript error that is expected to appear when UDFs with non-alphanumeric names are supplied.
 const stackScriptErrorUdfAlphanumeric =
   'UDF names can only contain alphanumeric and underscore characters.';
+
+/**
+ * Sets the StackScript field's value programmatically rather than via simulated typing.
+ *
+ * Cypress's typing operation is slow for long strings, so we can save several
+ * seconds by setting the value directly, then simulating a couple keystrokes.
+ *
+ * @param script - Script contents to input.
+ */
+const inputStackScript = (script: string) => {
+  cy.get('[data-qa-textfield-label="Script"]').should('be.visible').click();
+
+  cy.focused().invoke('val', script).type(' {backspace}');
+};
 
 /**
  * Fills out the StackScript creation form.
@@ -62,16 +80,12 @@ const fillOutStackscriptForm = (
       .type(description);
   }
 
-  cy.get('[data-qa-multi-select="Select an Image"]')
-    .should('be.visible')
-    .click()
-    .type(`${targetImage}{enter}`);
+  cy.findByText('Target Images').click().type(`${targetImage}`);
 
-  // Insert a script with invalid UDF data.
-  cy.get('[data-qa-textfield-label="Script"]')
-    .should('be.visible')
-    .click()
-    .type(script);
+  cy.findByText(`${targetImage}`).should('be.visible').click();
+
+  // Insert a script.
+  inputStackScript(script);
 };
 
 /**
@@ -85,9 +99,14 @@ const fillOutStackscriptForm = (
  */
 const fillOutLinodeForm = (label: string, regionName: string) => {
   const password = randomString(32);
+  const region = getRegionByLabel(regionName);
 
   ui.regionSelect.find().click();
-  ui.regionSelect.findItemByRegionLabel(regionName).click();
+  ui.regionSelect
+    .findItemByRegionLabel(regionName)
+    .should('be.visible')
+    .click();
+  ui.regionSelect.find().should('have.value', `${region.label} (${region.id})`);
 
   cy.findByText('Linode Label')
     .should('be.visible')
@@ -174,6 +193,7 @@ describe('Create stackscripts', () => {
     interceptCreateStackScript().as('createStackScript');
     interceptGetStackScripts().as('getStackScripts');
     interceptCreateLinode().as('createLinode');
+    interceptGetAccountAvailability().as('getAvailability');
 
     cy.visitWithLogin('/stackscripts/create');
 
@@ -197,11 +217,7 @@ describe('Create stackscripts', () => {
     cy.findByText(stackScriptErrorNoShebang).should('be.visible');
 
     cy.fixture(stackscriptUdfInvalidPath).then((stackScriptUdfInvalid) => {
-      cy.get('[data-qa-textfield-label="Script"]')
-        .should('be.visible')
-        .click()
-        .type('{selectall}{backspace}')
-        .type(stackScriptUdfInvalid);
+      inputStackScript(stackScriptUdfInvalid);
     });
 
     ui.buttonGroup
@@ -215,11 +231,7 @@ describe('Create stackscripts', () => {
 
     // Insert a script with valid UDF data and submit StackScript create form.
     cy.fixture(stackscriptUdfPath).then((stackScriptUdf) => {
-      cy.get('[data-qa-textfield-label="Script"]')
-        .should('be.visible')
-        .click()
-        .type('{selectall}{backspace}')
-        .type(stackScriptUdf);
+      inputStackScript(stackScriptUdf);
     });
 
     ui.buttonGroup
@@ -250,6 +262,9 @@ describe('Create stackscripts', () => {
       .should('be.enabled')
       .click();
 
+    // Wait for availability to be retrieved before interacting with form.
+    cy.wait('@getAvailability');
+
     // Fill out Linode creation form, confirm UDF fields behave as expected.
     fillOutLinodeForm(linodeLabel, linodeRegion.label);
 
@@ -274,7 +289,10 @@ describe('Create stackscripts', () => {
 
     // Confirm that Linode has been created and is provisioning.
     cy.findByText(linodeLabel).should('be.visible');
-    cy.findByText('PROVISIONING').should('be.visible');
+
+    // In rare cases, the Linode can provision quicker than this assertion happens,
+    // so we want to account for cases where it's already booting or even running.
+    cy.findByText(/(PROVISIONING|BOOTING|RUNNING)/).should('be.visible');
   });
 
   /*
@@ -290,24 +308,10 @@ describe('Create stackscripts', () => {
 
     const linodeLabel = randomLabel();
 
-    /*
-     * Arbitrarily-chosen images to check in order to confirm that "Any/All"
-     * StackScripts allow any image to be selected.
-     */
-    const imageSamples = [
-      { label: 'AlmaLinux 9', sel: 'linode/almalinux9' },
-      { label: 'Alpine 3.19', sel: 'linode/alpine3.19' },
-      { label: 'Arch Linux', sel: 'linode/arch' },
-      { label: 'CentOS Stream 9', sel: 'linode/centos-stream9' },
-      { label: 'Debian 12', sel: 'linode/debian12' },
-      { label: 'Fedora 40', sel: 'linode/fedora40' },
-      { label: 'Rocky Linux 9', sel: 'linode/rocky9' },
-      { label: 'Ubuntu 24.04 LTS', sel: 'linode/ubuntu24.04' },
-    ];
-
     interceptCreateStackScript().as('createStackScript');
     interceptGetStackScripts().as('getStackScripts');
     interceptCreateLinode().as('createLinode');
+    interceptGetAllImages().as('getAllImages');
 
     cy.defer(createLinodeAndImage, {
       label: 'creating Linode and Image',
@@ -332,31 +336,50 @@ describe('Create stackscripts', () => {
       cy.wait('@createStackScript');
       cy.url().should('endWith', '/stackscripts/account');
 
-      cy.wait('@getStackScripts');
-      cy.findByText(stackscriptLabel)
-        .should('be.visible')
-        .closest('tr')
-        .within(() => {
-          cy.findByText(stackscriptDesc).should('be.visible');
-          cy.findByText(stackscriptImage).should('be.visible');
+      cy.wait('@getAllImages').then((res) => {
+        // Fetch Images from response data and filter out Kubernetes images.
+        const imageData = res.response?.body.data;
+        const filteredImageData = getFilteredImagesForImageSelect(
+          imageData,
+          'public'
+        );
+
+        cy.wait('@getStackScripts');
+        cy.findByText(stackscriptLabel)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            cy.findByText(stackscriptDesc).should('be.visible');
+            cy.findByText(stackscriptImage).should('be.visible');
+          });
+
+        // Navigate to StackScript details page and click deploy Linode button.
+        cy.findByText(stackscriptLabel).should('be.visible').click();
+
+        ui.button
+          .findByTitle('Deploy New Linode')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm that expected images are present in "Choose an image" drop-down.
+        cy.findByPlaceholderText('Choose an image')
+          .should('be.visible')
+          .click();
+
+        /*
+         * Arbitrarily-chosen images to check in order to confirm that "Any/All"
+         * StackScripts allow any image to be selected.
+         *
+         */
+        filteredImageData?.forEach((imageSample: Image) => {
+          const imageLabel = imageSample.label;
+          cy.findAllByText(imageLabel)
+            .last()
+            .scrollIntoView()
+            .should('exist')
+            .should('be.visible');
         });
-
-      // Navigate to StackScript details page and click deploy Linode button.
-      cy.findByText(stackscriptLabel).should('be.visible').click();
-
-      ui.button
-        .findByTitle('Deploy New Linode')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-
-      // Confirm that expected images are present in "Choose an image" drop-down.
-      cy.findByPlaceholderText('Choose an image').should('be.visible').click();
-
-      imageSamples.forEach((imageSample) => {
-        const imageLabel = imageSample.label;
-
-        cy.findByText(imageLabel).scrollIntoView().should('be.visible');
       });
 
       // Select private image.

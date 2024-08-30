@@ -1,11 +1,9 @@
+import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-
-import type { Region } from '@linode/api-v4/lib/regions';
 
 interface Props {
   disabled?: boolean;
@@ -13,7 +11,7 @@ interface Props {
   onBlur: (e: any) => void;
   onChange: (value: string) => void;
   required?: boolean;
-  selectedCluster: string;
+  selectedCluster: string | undefined;
 }
 
 export const ClusterSelect: React.FC<Props> = (props) => {
@@ -27,10 +25,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
   } = props;
 
   const { data: clusters, error: clustersError } = useObjectStorageClusters();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const regionOptions = clusters?.reduce<Region[]>((acc, cluster) => {
     const region = regions?.find((r) => r.id === cluster.region);
@@ -60,7 +55,7 @@ export const ClusterSelect: React.FC<Props> = (props) => {
       placeholder="Select a Region"
       regions={regionOptions ?? []}
       required={required}
-      value={selectedCluster}
+      value={selectedCluster ?? undefined}
     />
   );
 };

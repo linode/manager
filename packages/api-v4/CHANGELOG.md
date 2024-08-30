@@ -1,3 +1,53 @@
+## [2024-09-03] - v0.125.0
+
+
+### Added:
+
+- Managed Databases V2 capability and types ([#10786](https://github.com/linode/manager/pull/10786))
+
+### Changed:
+
+- Deprecate `getClusters` ([#10801](https://github.com/linode/manager/pull/10801))
+
+### Upcoming Features:
+
+- Update `AclpConfig` type ([#10769](https://github.com/linode/manager/pull/10769))
+- Add service types and `getCloudPulseServiceTypes` request ([#10805](https://github.com/linode/manager/pull/10805))
+
+
+## [2024-08-19] - v0.124.0
+
+### Added:
+
+- Firewall template endpoints ([#10770](https://github.com/linode/manager/pull/10770))
+
+### Changed:
+
+- Move `getObjectStorageEndpoints` from `/objects.ts` to `/buckets.ts` ([#10736](https://github.com/linode/manager/pull/10736))
+
+### Upcoming Features:
+
+- Add several CloudPulseMetrics types ([#10710](https://github.com/linode/manager/pull/10710))
+- Change JWETokenPayLoad `resource_id` to `resource_ids` ([#10747](https://github.com/linode/manager/pull/10747))
+- Add 'Akamai Cloud Pulse' in AccountCapability type interface ([#10768](https://github.com/linode/manager/pull/10768))
+
+## [2024-08-05] - v0.123.0
+
+### Added:
+
+- `site_type` to the linode instance type ([#10714](https://github.com/linode/manager/pull/10714))
+
+### Changed:
+
+- Update Object Storage types with more descriptive names ([#10686](https://github.com/linode/manager/pull/10686))
+- Support null values in `Interface` type ([#10690](https://github.com/linode/manager/pull/10690))
+- Linode, Volume, and VolumeRequestPayload interfaces and VolumeStatus, AccountCapability, and Capabilities types to reflect Block Storage Encryption changes ([#10716](https://github.com/linode/manager/pull/10716))
+
+### Upcoming Features:
+
+- Add MetricDefinitions, Dimension, JWETokenPayload, JWEToken and metricDefinitions, dashboard by id and jwe token api calls ([#10676](https://github.com/linode/manager/pull/10676))
+- Add new /v4/object-storage/endpoints endpoint ([#10677](https://github.com/linode/manager/pull/10677))
+
 ## [2024-07-22] - v0.122.0
 
 ### Changed:

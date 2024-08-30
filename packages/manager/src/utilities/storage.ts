@@ -1,8 +1,9 @@
-import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
-
 import { shouldEnableDevTools } from 'src/dev-tools/load';
 
-const localStorageCache = {};
+import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
+import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+
+const localStorageCache: Record<string, any> = {};
 
 export const getStorage = (key: string, fallback?: any) => {
   if (localStorageCache[key]) {
@@ -61,11 +62,6 @@ interface AuthGetAndSet {
   set: (value: string) => void;
 }
 
-interface SupportText {
-  description: string;
-  title: string;
-}
-
 interface TicketReply {
   text: string;
   ticketId: number;
@@ -82,6 +78,17 @@ export interface DevToolsEnv {
   label: string;
   loginRoot: string;
 }
+
+// We declare and export here to ensure it is available in the test environment, avoiding test failures.
+export const supportTicketStorageDefaults: SupportTicketFormFields = {
+  description: '',
+  entityId: '',
+  entityInputValue: '',
+  entityType: 'general',
+  selectedSeverity: undefined,
+  summary: '',
+  ticketType: 'general',
+};
 
 export interface Storage {
   BackupsCtaDismissed: {
@@ -110,9 +117,9 @@ export interface Storage {
     get: () => StackScriptData;
     set: (s: StackScriptData) => void;
   };
-  supportText: {
-    get: () => SupportText;
-    set: (v: SupportText) => void;
+  supportTicket: {
+    get: () => SupportTicketFormFields;
+    set: (v: SupportTicketFormFields) => void;
   };
   ticketReply: {
     get: () => TicketReply;
@@ -184,8 +191,8 @@ export const storage: Storage = {
       }),
     set: (s) => setStorage(STACKSCRIPT, JSON.stringify(s)),
   },
-  supportText: {
-    get: () => getStorage(SUPPORT, { description: '', title: '' }),
+  supportTicket: {
+    get: () => getStorage(SUPPORT, supportTicketStorageDefaults),
     set: (v) => setStorage(SUPPORT, JSON.stringify(v)),
   },
   ticketReply: {
@@ -202,7 +209,7 @@ export const {
   BackupsCtaDismissed,
   authentication,
   stackScriptInProgress,
-  supportText,
+  supportTicket,
   ticketReply,
 } = storage;
 

@@ -55,33 +55,43 @@ import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   checkboxTestId,
   headerTestId,
-} from 'src/components/DiskEncryption/DiskEncryption';
+} from 'src/components/Encryption/Encryption';
+import { extendRegion } from 'support/util/regions';
 
 import type { Config, VLAN, Disk, Region } from '@linode/api-v4';
+import type { ExtendedRegion } from 'support/util/regions';
 
-const mockRegions: Region[] = [
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    country: 'uk',
-    id: 'eu-west',
-    label: 'London, UK',
-  }),
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    country: 'sg',
-    id: 'ap-south',
-    label: 'Singapore, SG',
-  }),
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    id: 'us-east',
-    label: 'Newark, NJ',
-  }),
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    id: 'us-central',
-    label: 'Dallas, TX',
-  }),
+const mockRegions: ExtendedRegion[] = [
+  extendRegion(
+    regionFactory.build({
+      capabilities: ['Linodes'],
+      country: 'uk',
+      id: 'eu-west',
+      label: 'London, UK',
+    })
+  ),
+  extendRegion(
+    regionFactory.build({
+      capabilities: ['Linodes'],
+      country: 'sg',
+      id: 'ap-south',
+      label: 'Singapore, SG',
+    })
+  ),
+  extendRegion(
+    regionFactory.build({
+      capabilities: ['Linodes'],
+      id: 'us-east',
+      label: 'Newark, NJ',
+    })
+  ),
+  extendRegion(
+    regionFactory.build({
+      capabilities: ['Linodes'],
+      id: 'us-central',
+      label: 'Dallas, TX',
+    })
+  ),
 ];
 
 authenticate();
@@ -93,8 +103,8 @@ describe('create linode', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeCreateRefactor: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     });
-    mockGetFeatureFlagClientstream();
   });
 
   /*
@@ -142,7 +152,7 @@ describe('create linode', () => {
     // Confirm that the selected region is displayed in the input field.
     cy.get('[data-testid="textfield-input"]').should(
       'have.value',
-      'London, UK (eu-west)'
+      'UK, London (eu-west)'
     );
 
     // Confirm that selecting a valid region updates the Plan Selection panel.
@@ -368,17 +378,11 @@ describe('create linode', () => {
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);
     mockGetLinodeType(dcPricingMockLinodeTypes[1]);
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
-
-    mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
-    }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     mockGetRegions([mockNoVPCRegion]).as('getRegions');
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getLinodeTypes', '@getClientStream', '@getFeatureFlags']);
+    cy.wait('@getLinodeTypes');
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
@@ -417,6 +421,7 @@ describe('create linode', () => {
       id: randomNumber(),
       region: 'us-southeast',
       subnets: [mockSubnet],
+      label: randomLabel(),
     });
     const mockVPCRegion = regionFactory.build({
       id: region.id,
@@ -469,7 +474,7 @@ describe('create linode', () => {
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
     mockAppendFeatureFlags({
-      vpc: makeFeatureFlagData(true),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream().as('getClientStream');
 
@@ -485,12 +490,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait([
-      '@getLinodeTypes',
-      '@getClientStream',
-      '@getFeatureFlags',
-      '@getVPCs',
-    ]);
+    cy.wait(['@getLinodeTypes', '@getVPCs']);
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
@@ -508,6 +508,7 @@ describe('create linode', () => {
       cy.findByLabelText('Assign VPC')
         .should('be.visible')
         .focus()
+        .clear()
         .type(`${mockVPC.label}{downArrow}{enter}`);
       // select subnet
       cy.findByPlaceholderText('Select Subnet')
@@ -540,8 +541,8 @@ describe('create linode', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock account response
     const mockAccount = accountFactory.build({
@@ -552,7 +553,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getAccount']);
+    cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
     cy.get(`[data-testid=${headerTestId}]`).should('not.exist');
@@ -562,8 +563,8 @@ describe('create linode', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: makeFeatureFlagData(true),
+      apicliDxToolsAdditions: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock account response
     const mockAccount = accountFactory.build({
@@ -585,7 +586,7 @@ describe('create linode', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getClientStream', '@getAccount']);
+    cy.wait(['@getFeatureFlags', '@getAccount']);
 
     // Check if section is visible
     cy.get(`[data-testid="${headerTestId}"]`).should('exist');

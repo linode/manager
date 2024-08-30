@@ -6,6 +6,8 @@ import {
   getFirewall,
   getFirewallDevices,
   getFirewalls,
+  getTemplate,
+  getTemplates,
   updateFirewall,
   updateFirewallRules,
 } from '@linode/api-v4/lib/firewalls';
@@ -14,6 +16,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
+import { linodeQueries } from './linodes/linodes';
 import { nodebalancerQueries } from './nodebalancers';
 import { profileQueries } from './profile/profile';
 
@@ -25,11 +28,11 @@ import type {
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
+  FirewallTemplate,
   Params,
   ResourcePage,
 } from '@linode/api-v4';
 import type { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { linodeQueries } from './linodes/linodes';
 
 const getAllFirewallDevices = (
   id: number,
@@ -43,6 +46,9 @@ const getAllFirewallDevices = (
       { ...filter, ...passedFilter }
     )
   )().then((data) => data.data);
+
+const getAllFirewallTemplates = () =>
+  getAll<FirewallTemplate>(getTemplates)().then((data) => data.data);
 
 const getAllFirewallsRequest = () =>
   getAll<Firewall>((passedParams, passedFilter) =>
@@ -71,6 +77,14 @@ export const firewallQueries = createQueryKeys('firewalls', {
         queryKey: [params, filter],
       }),
     },
+    queryKey: null,
+  },
+  template: (slug: string) => ({
+    queryFn: () => getTemplate(slug),
+    queryKey: [slug],
+  }),
+  templates: {
+    queryFn: getAllFirewallTemplates,
     queryKey: null,
   },
 });
@@ -394,6 +408,7 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
 export const firewallEventsHandler = ({
   event,
+  invalidateQueries,
   queryClient,
 }: EventHandlerData) => {
   if (!event.entity) {
@@ -404,7 +419,7 @@ export const firewallEventsHandler = ({
   switch (event.action) {
     case 'firewall_delete':
       // Invalidate firewall lists
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
 
@@ -414,7 +429,7 @@ export const firewallEventsHandler = ({
       });
     case 'firewall_create':
       // Invalidate firewall lists
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
     case 'firewall_device_add':
@@ -424,13 +439,9 @@ export const firewallEventsHandler = ({
 
       // If a Linode is added or removed as a firewall device, invalidate it's firewalls
       if (event.secondary_entity && event.secondary_entity.type === 'linode') {
-        queryClient.invalidateQueries({
-          queryKey: [
-            'linodes',
-            'linode',
-            event.secondary_entity.id,
-            'firewalls',
-          ],
+        invalidateQueries({
+          queryKey: linodeQueries.linode(event.secondary_entity.id)._ctx
+            .firewalls.queryKey,
         });
       }
 
@@ -439,23 +450,19 @@ export const firewallEventsHandler = ({
         event.secondary_entity &&
         event.secondary_entity.type === 'nodebalancer'
       ) {
-        queryClient.invalidateQueries({
-          queryKey: [
-            'nodebalancers',
-            'nodebalancer',
-            event.secondary_entity.id,
-            'firewalls',
-          ],
+        invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(event.secondary_entity.id)
+            ._ctx.firewalls.queryKey,
         });
       }
 
       // Invalidate the firewall
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewall(event.entity.id).queryKey,
       });
 
       // Invalidate firewall lists
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
     case 'firewall_disable':
@@ -463,11 +470,11 @@ export const firewallEventsHandler = ({
     case 'firewall_rules_update':
     case 'firewall_update':
       // invalidate the firewall
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewall(event.entity.id).queryKey,
       });
       // Invalidate firewall lists
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: firewallQueries.firewalls.queryKey,
       });
   }

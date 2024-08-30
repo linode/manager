@@ -7,13 +7,16 @@ import { connect } from 'react-redux';
 import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
+import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { Box } from 'src/components/Box';
+import { Checkbox } from 'src/components/Checkbox';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DetailsPanel } from 'src/components/DetailsPanel/DetailsPanel';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
@@ -45,8 +48,7 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 import {
   sendLinodeCreateFormErrorEvent,
-  sendLinodeCreateFormStepEvent,
-  sendLinodeCreateFormSubmitEvent,
+  sendLinodeCreateFormInputEvent,
 } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -92,10 +94,11 @@ import type {
 import type { PlacementGroup } from '@linode/api-v4';
 import type {
   CreateLinodePlacementGroupPayload,
+  CreateLinodeRequest,
   EncryptionStatus,
   InterfacePayload,
   PriceObject,
-} from '@linode/api-v4/lib/linodes';
+} from '@linode/api-v4';
 import type { Tag } from '@linode/api-v4/lib/tags/types';
 import type { MapDispatchToProps } from 'react-redux';
 import type { RouteComponentProps } from 'react-router-dom';
@@ -116,16 +119,18 @@ export interface LinodeCreateProps {
   assignPublicIPv4Address: boolean;
   autoassignIPv4WithinVPC: boolean;
   checkValidation: LinodeCreateValidation;
+  checkedFirewallAuthorization: boolean;
   createType: CreateTypes;
   diskEncryptionEnabled: boolean;
-  firewallId?: number;
+  firewallId: number | undefined;
   handleAgreementChange: () => void;
+  handleFirewallAuthorizationChange: () => void;
   handleFirewallChange: (firewallId: number) => void;
   handleIPv4RangesForVPC: (ranges: ExtendedIP[]) => void;
   handlePlacementGroupChange: (placementGroup: PlacementGroup | null) => void;
   handleShowApiAwarenessModal: () => void;
   handleSubmitForm: HandleSubmit;
-  handleSubnetChange: (subnetId: number) => void;
+  handleSubnetChange: (subnetId: number | undefined) => void;
   handleVLANChange: (updatedInterface: InterfacePayload) => void;
   handleVPCIPv4Change: (IPv4: string) => void;
   history: any;
@@ -141,6 +146,7 @@ export interface LinodeCreateProps {
   setBackupID: (id: number) => void;
   setSelectedVPC: (vpcID: number) => void;
   showApiAwarenessModal: boolean;
+  showFirewallAuthorization: boolean;
   showGDPRCheckbox: boolean;
   showGeneralError?: boolean;
   signedAgreement: boolean;
@@ -215,8 +221,6 @@ export class LinodeCreate extends React.PureComponent<
 > {
   createLinode = () => {
     const payload = this.getPayload();
-    const { selectedTab } = this.state;
-    const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
 
     try {
       CreateLinodeSchema.validateSync(payload, {
@@ -229,11 +233,6 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
-    sendLinodeCreateFormSubmitEvent(
-      'Create Linode',
-      selectedTabName ?? 'OS',
-      'v1'
-    );
   };
 
   createLinodeFormRef = React.createRef<HTMLFormElement>();
@@ -289,7 +288,7 @@ export class LinodeCreate extends React.PureComponent<
     // eslint-disable-next-line sonarjs/no-unused-collection
     const interfaces: InterfacePayload[] = [];
 
-    const payload = {
+    const payload: CreateLinodeRequest = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
       backups_enabled: this.props.backupsEnabled,
@@ -298,8 +297,7 @@ export class LinodeCreate extends React.PureComponent<
         isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
           ? diskEncryptionPayload
           : undefined,
-      firewall_id:
-        this.props.firewallId !== -1 ? this.props.firewallId : undefined,
+      firewall_id: this.props.firewallId,
       image: this.props.selectedImageID,
       label: this.props.label,
       placement_group:
@@ -401,34 +399,29 @@ export class LinodeCreate extends React.PureComponent<
   ) => {
     const { selectedTab } = this.state;
     const selectedTabName = this.tabs[selectedTab].title as LinodeCreateType;
+    let errorString = '';
 
     if (!errorMap) {
       return;
     }
     if (errorMap.region) {
-      sendLinodeCreateFormErrorEvent(
-        'Region not selected',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += errorMap.region;
     }
     if (errorMap.type) {
-      sendLinodeCreateFormErrorEvent(
-        'Plan not selected',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += `${errorString.length > 0 ? `|` : ''}${errorMap.type}`;
     }
     if (errorMap.root_pass) {
-      sendLinodeCreateFormErrorEvent(
-        'Password not created',
-        selectedTabName ?? 'OS',
-        'v1'
-      );
+      errorString += `${errorString.length > 0 ? `|` : ''}${
+        errorMap.root_pass
+      }`;
     }
+
+    sendLinodeCreateFormErrorEvent(errorString, selectedTabName ?? 'OS');
   };
 
-  handleClickCreateUsingCommandLine = () => {
+  handleClickCreateUsingCommandLine = (
+    isDxToolsAdditionsEnabled: boolean | undefined
+  ) => {
     const payload = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
@@ -448,13 +441,23 @@ export class LinodeCreate extends React.PureComponent<
         : [],
       type: this.props.selectedTypeID ?? '',
     };
-    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
+    sendLinodeCreateFormInputEvent({
+      createType: 'OS',
+      interaction: 'click',
+      label: isDxToolsAdditionsEnabled
+        ? 'View Code Snippets'
+        : 'Create Using Command Line',
+    });
+    sendApiAwarenessClickEvent(
+      'Button',
+      isDxToolsAdditionsEnabled
+        ? 'View Code Snippets'
+        : 'Create Using Command Line'
+    );
     this.props.checkValidation(payload);
   };
 
   handleTabChange = (index: number) => {
-    const prevTabIndex = this.state.selectedTab;
-
     this.props.resetCreationState();
 
     /** set the tab in redux state */
@@ -466,18 +469,6 @@ export class LinodeCreate extends React.PureComponent<
       planKey: v4(),
       selectedTab: index,
     });
-
-    // Do not fire the form event if a user is not switching to a different tab.
-    // Prevents a double-firing on Marketplace because we manually handle the tab change.
-    if (prevTabIndex !== index) {
-      sendLinodeCreateFormStepEvent({
-        action: 'click',
-        category: 'tab',
-        createType: (this.tabs[prevTabIndex].title as LinodeCreateType) ?? 'OS',
-        label: `${this.tabs[index].title} Tab`,
-        version: 'v1',
-      });
-    }
   };
 
   mounted: boolean = false;
@@ -610,10 +601,12 @@ export class LinodeCreate extends React.PureComponent<
     const {
       account,
       accountBackupsEnabled,
+      checkedFirewallAuthorization,
       errors,
       flags,
       formIsSubmitting,
       handleAgreementChange,
+      handleFirewallAuthorizationChange,
       handlePlacementGroupChange,
       handleShowApiAwarenessModal,
       imageDisplayInfo,
@@ -630,6 +623,7 @@ export class LinodeCreate extends React.PureComponent<
       regionsLoading,
       selectedRegionID,
       showApiAwarenessModal,
+      showFirewallAuthorization,
       showGDPRCheckbox,
       showGeneralError,
       signedAgreement,
@@ -647,6 +641,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const hasErrorFor = getErrorMap(errorMap, errors);
     const generalError = getErrorMap(errorMap, errors).none;
+    const isDxToolsAdditionsEnabled = this.props.flags?.apicliDxToolsAdditions;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
@@ -797,11 +792,7 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    if (
-      this.props.firewallId !== null &&
-      this.props.firewallId !== undefined &&
-      this.props.firewallId !== -1
-    ) {
+    if (this.props.firewallId !== undefined) {
       displaySections.push({
         title: 'Firewall Assigned',
       });
@@ -837,6 +828,11 @@ export class LinodeCreate extends React.PureComponent<
         getIsDistributedRegion(regionsData, this.props.selectedRegionID ?? '')
     );
 
+    const secureVMViolation =
+      showFirewallAuthorization &&
+      this.props.firewallId === undefined &&
+      !checkedFirewallAuthorization;
+
     return (
       <StyledForm ref={this.createLinodeFormRef}>
         <Grid className="py0">
@@ -845,7 +841,11 @@ export class LinodeCreate extends React.PureComponent<
           )}
           {generalError && (
             <Notice spacingTop={8} variant="error">
-              <ErrorMessage entityType="linode_id" message={generalError} />
+              <ErrorMessage
+                entityType="linode_id"
+                formPayloadValues={{ type: this.props.selectedTypeID }}
+                message={generalError}
+              />
             </Notice>
           )}
           {userCannotCreateLinode && (
@@ -994,14 +994,13 @@ export class LinodeCreate extends React.PureComponent<
                 <DocsLink
                   onClick={() => {
                     sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
-                    sendLinodeCreateFormStepEvent({
-                      action: 'click',
-                      category: 'link',
+                    sendLinodeCreateFormInputEvent({
                       createType:
                         (this.tabs[selectedTab].title as LinodeCreateType) ??
                         'OS',
+                      headerName: 'Linode Plan',
+                      interaction: 'click',
                       label: 'Choosing a Plan',
-                      version: 'v1',
                     });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
@@ -1097,15 +1096,13 @@ export class LinodeCreate extends React.PureComponent<
                   and outbound network traffic.{' '}
                   <Link
                     onClick={() =>
-                      sendLinodeCreateFormStepEvent({
-                        action: 'click',
-                        category: 'link',
+                      sendLinodeCreateFormInputEvent({
                         createType:
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'OS',
-                        formStepName: 'Firewall Panel',
+                        headerName: 'Firewall',
+                        interaction: 'click',
                         label: 'Learn more',
-                        version: 'v1',
                       })
                     }
                     to={FIREWALL_GET_STARTED_LINK}
@@ -1118,7 +1115,7 @@ export class LinodeCreate extends React.PureComponent<
               disabled={userCannotCreateLinode}
               entityType="linode"
               handleFirewallChange={this.props.handleFirewallChange}
-              selectedFirewallId={this.props.firewallId || -1}
+              selectedFirewallId={this.props.firewallId}
             />
           )}
           <AddonsPanel
@@ -1174,6 +1171,25 @@ export class LinodeCreate extends React.PureComponent<
                   onChange={handleAgreementChange}
                 />
               ) : null}
+              {showFirewallAuthorization &&
+              this.props.firewallId === undefined &&
+              flags.secureVmCopy?.firewallAuthorizationWarning ? (
+                <AkamaiBanner
+                  action={
+                    <FormControlLabel
+                      checked={checkedFirewallAuthorization}
+                      className="error-for-scroll"
+                      control={<Checkbox />}
+                      disableTypography
+                      label={flags.secureVmCopy.firewallAuthorizationLabel}
+                      onChange={handleFirewallAuthorizationChange}
+                      sx={{ fontSize: 14 }}
+                    />
+                  }
+                  text={flags.secureVmCopy.firewallAuthorizationWarning}
+                  warning
+                />
+              ) : null}
             </StyledMessageDiv>
           </Box>
           <StyledButtonGroupBox
@@ -1185,19 +1201,27 @@ export class LinodeCreate extends React.PureComponent<
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showGDPRCheckbox && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement) ||
+                secureVMViolation
+              }
+              onClick={() =>
+                this.handleClickCreateUsingCommandLine(
+                  isDxToolsAdditionsEnabled
+                )
               }
               buttonType="outlined"
               data-qa-api-cli-linode
-              onClick={this.handleClickCreateUsingCommandLine}
             >
-              Create using command line
+              {isDxToolsAdditionsEnabled
+                ? 'View Code Snippets'
+                : 'Create using command line'}
             </StyledCreateButton>
             <StyledCreateButton
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
-                (showGDPRCheckbox && !signedAgreement)
+                (showGDPRCheckbox && !signedAgreement) ||
+                secureVMViolation
               }
               buttonType="primary"
               data-qa-deploy-linode

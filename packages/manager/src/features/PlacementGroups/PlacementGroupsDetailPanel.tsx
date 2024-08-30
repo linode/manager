@@ -6,7 +6,6 @@ import { Button } from 'src/components/Button/Button';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
@@ -15,6 +14,7 @@ import { hasRegionReachedPlacementGroupCapacity } from 'src/features/PlacementGr
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
 import {
   NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE,
@@ -43,10 +43,7 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
       region: selectedRegionId,
     },
   });
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const [
     isCreatePlacementGroupDrawerOpen,
@@ -153,6 +150,15 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
               allPlacementGroups: allPlacementGroupsInRegion,
               region: selectedRegion,
             })}
+            onClick={() => {
+              setIsCreatePlacementGroupDrawerOpen(true);
+              sendLinodeCreateFormInputEvent({
+                createType: 'OS',
+                headerName: 'Details',
+                interaction: 'click',
+                label: 'Create Placement Group',
+              });
+            }}
             sx={(theme) => ({
               fontFamily: theme.font.normal,
               fontSize: '0.875rem',
@@ -162,7 +168,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
             sxEndIcon={{
               color: theme.color.grey4,
             }}
-            onClick={() => setIsCreatePlacementGroupDrawerOpen(true)}
             tooltipText="This region has reached its Placement Group capacity."
             variant="text"
           >

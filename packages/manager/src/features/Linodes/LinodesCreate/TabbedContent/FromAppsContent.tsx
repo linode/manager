@@ -94,12 +94,15 @@ export const getCompatibleImages = (
   );
 
 export const getDefaultUDFData = (userDefinedFields: UserDefinedField[]) => {
-  return userDefinedFields.reduce((accum, eachField) => {
-    if (eachField.default) {
-      accum[eachField.name] = eachField.default;
-    }
-    return accum;
-  }, {});
+  return userDefinedFields.reduce<Record<string, string>>(
+    (accum, eachField) => {
+      if (eachField.default) {
+        accum[eachField.name] = eachField.default;
+      }
+      return accum;
+    },
+    {}
+  );
 };
 
 export const handleSelectStackScript = (

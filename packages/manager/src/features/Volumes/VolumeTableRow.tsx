@@ -5,7 +5,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -33,20 +32,23 @@ export const useStyles = makeStyles()({
 
 interface Props {
   handlers: ActionHandlers;
+  isBlockStorageEncryptionFeatureEnabled?: boolean;
   isDetailsPageRow?: boolean;
   volume: Volume;
 }
 
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
-  const { handlers, isDetailsPageRow, volume } = props;
+  const {
+    handlers,
+    isBlockStorageEncryptionFeatureEnabled,
+    isDetailsPageRow,
+    volume,
+  } = props;
 
   const history = useHistory();
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
   const { data: notifications } = useNotificationsQuery();
   const { data: inProgressEvents } = useInProgressEvents();
 
@@ -99,6 +101,9 @@ export const VolumeTableRow = React.memo((props: Props) => {
   const regionLabel =
     regions?.find((r) => r.id === volume.region)?.label ?? volume.region;
 
+  const encryptionStatus =
+    volume.encryption === 'enabled' ? 'Encrypted' : 'Not Encrypted';
+
   return (
     <TableRow data-qa-volume-cell={volume.id} key={`volume-row-${volume.id}`}>
       <TableCell data-qa-volume-cell-label={volume.label}>
@@ -136,7 +141,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
       )}
       <TableCell data-qa-volume-size>{volume.size} GB</TableCell>
       {!isVolumesLanding && (
-        <Hidden smDown>
+        <Hidden xsDown>
           <TableCell className={classes.volumePath} data-qa-fs-path>
             {volume.filesystem_path}
           </TableCell>
@@ -155,6 +160,9 @@ export const VolumeTableRow = React.memo((props: Props) => {
             <Typography data-qa-unattached>Unattached</Typography>
           )}
         </TableCell>
+      )}
+      {isBlockStorageEncryptionFeatureEnabled && (
+        <TableCell noWrap>{encryptionStatus}</TableCell>
       )}
       <TableCell actionCell>
         <VolumesActionMenu

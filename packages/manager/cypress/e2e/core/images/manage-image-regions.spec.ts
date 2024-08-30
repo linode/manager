@@ -7,6 +7,7 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import type { Image } from '@linode/api-v4';
+import { extendRegion } from 'support/util/regions';
 
 describe('Manage Image Regions', () => {
   /**
@@ -14,15 +15,15 @@ describe('Manage Image Regions', () => {
    * and removes one existing region (region 1).
    */
   it("updates an Image's regions", () => {
-    const region1 = regionFactory.build({ site_type: 'core' });
-    const region2 = regionFactory.build({ site_type: 'core' });
-    const region3 = regionFactory.build({ site_type: 'core' });
-    const region4 = regionFactory.build({ site_type: 'core' });
+    const region1 = extendRegion(regionFactory.build({ site_type: 'core' }));
+    const region2 = extendRegion(regionFactory.build({ site_type: 'core' }));
+    const region3 = extendRegion(regionFactory.build({ site_type: 'core' }));
+    const region4 = extendRegion(regionFactory.build({ site_type: 'core' }));
 
     const image = imageFactory.build({
       size: 50,
       total_size: 100,
-      capabilities: ['distributed-images'],
+      capabilities: ['distributed-sites'],
       regions: [
         { region: region1.id, status: 'available' },
         { region: region2.id, status: 'available' },

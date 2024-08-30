@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { REGION, RESOURCES } from '../Utils/constants';
@@ -14,15 +13,16 @@ import type { Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   handleRegionChange: (region: string | undefined) => void;
+  placeholder?: string;
+  savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
 }
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
-    const { isGeckoGAEnabled } = useIsGeckoEnabled();
-    const { data: regions } = useRegionsQuery({
-      transformRegionLabel: isGeckoGAEnabled,
-    });
+    const { data: regions } = useRegionsQuery();
+
+    const { handleRegionChange, placeholder, selectedDashboard } = props;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
 
@@ -33,15 +33,15 @@ export const CloudPulseRegionSelect = React.memo(
       if (regions) {
         if (defaultRegion) {
           const region = regions.find((obj) => obj.id === defaultRegion)?.id;
-          props.handleRegionChange(region);
+          handleRegionChange(region);
           setSelectedRegion(region);
         } else {
           setSelectedRegion(undefined);
-          props.handleRegionChange(undefined);
+          handleRegionChange(undefined);
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [regions, props.selectedDashboard]);
+    }, [regions, selectedDashboard]);
 
     return (
       <RegionSelect
@@ -51,15 +51,18 @@ export const CloudPulseRegionSelect = React.memo(
             [RESOURCES]: undefined,
           });
           setSelectedRegion(region?.id);
-          props.handleRegionChange(region?.id);
+          handleRegionChange(region?.id);
+        }}
+        textFieldProps={{
+          hideLabel: true,
         }}
         currentCapability={undefined}
         data-testid="region-select"
         disableClearable={false}
-        disabled={!props.selectedDashboard || !regions}
+        disabled={!selectedDashboard || !regions}
         fullWidth
-        label=""
-        noMarginTop
+        label="Select a Region"
+        placeholder={placeholder ?? 'Select Region'}
         regions={regions ? regions : []}
         value={selectedRegion}
       />

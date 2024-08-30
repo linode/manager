@@ -1,7 +1,6 @@
 import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -9,8 +8,11 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
+import { useMarketplaceApps } from './utilities';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appName: {
@@ -65,8 +67,10 @@ interface Props {
 export const AppDetailDrawerv2 = (props: Props) => {
   const { onClose, open, stackScriptId } = props;
   const { classes } = useStyles();
+  const { apps } = useMarketplaceApps();
 
-  const selectedApp = stackScriptId ? oneClickApps[stackScriptId] : null;
+  const selectedApp = apps.find((app) => app.stackscript.id === stackScriptId)
+    ?.details;
 
   const gradient = {
     backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${selectedApp?.colors.start}, #${selectedApp?.colors.end})`,
@@ -104,8 +108,9 @@ export const AppDetailDrawerv2 = (props: Props) => {
           >
             <img
               src={`/assets/white/${
-                REUSE_WHITE_ICONS[selectedApp?.logo_url] ||
-                selectedApp?.logo_url
+                REUSE_WHITE_ICONS[
+                  selectedApp?.logo_url as keyof typeof REUSE_WHITE_ICONS
+                ] || selectedApp?.logo_url
               }`}
               alt={`${selectedApp.name} logo`}
               className={classes.image}

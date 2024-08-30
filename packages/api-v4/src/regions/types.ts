@@ -3,6 +3,7 @@ import { COUNTRY_CODE_TO_CONTINENT_CODE } from './constants';
 export type Capabilities =
   | 'Bare Metal'
   | 'Block Storage'
+  | 'Block Storage Encryption'
   | 'Block Storage Migrations'
   | 'Cloud Firewall'
   | 'Disk Encryption'
@@ -11,6 +12,7 @@ export type Capabilities =
   | 'Kubernetes'
   | 'Linodes'
   | 'Managed Databases'
+  | 'Managed Databases V2'
   | 'Metadata'
   | 'NodeBalancers'
   | 'Object Storage'

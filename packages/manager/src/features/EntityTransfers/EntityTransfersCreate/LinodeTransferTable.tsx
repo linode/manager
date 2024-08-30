@@ -1,9 +1,10 @@
-import { useTheme } from '@mui/material';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SelectableTableRow } from 'src/components/SelectableTableRow/SelectableTableRow';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
@@ -14,10 +15,7 @@ import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import { TransferTable } from './TransferTable';
-
-import type { Entity, TransferEntity } from './transferReducer';
-import type { Linode } from '@linode/api-v4/lib/linodes';
-import type { Theme } from '@mui/material/styles';
+import { Entity, TransferEntity } from './transferReducer';
 
 interface Props {
   handleRemove: (linodesToRemove: string[]) => void;
@@ -112,10 +110,7 @@ const LinodeRow = (props: RowProps) => {
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
   const displayType = type?.formattedLabel ?? linode.type;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
   const region = regions?.find((r) => r.id === linode.region);
   const displayRegion = region?.label ?? linode.region;
   return (

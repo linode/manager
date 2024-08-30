@@ -4,6 +4,7 @@ import { CreateLinodeSchema } from '@linode/validation';
 import { accountQueries } from 'src/queries/account/queries';
 import { regionQueries } from 'src/queries/regions/regions';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
+import { isNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import {
   CreateLinodeFromBackupSchema,
@@ -13,22 +14,19 @@ import {
 import { getLinodeCreatePayload } from './utilities';
 
 import type { LinodeCreateType } from '../LinodesCreate/types';
-import type { LinodeCreateFormValues } from './utilities';
+import type {
+  LinodeCreateFormContext,
+  LinodeCreateFormValues,
+} from './utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { Resolver } from 'react-hook-form';
+import type { FieldErrors, Resolver } from 'react-hook-form';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
   queryClient: QueryClient
-) => {
+): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
-
-  // eslint-disable-next-line sonarjs/prefer-immediate-return
-  const resolver: Resolver<LinodeCreateFormValues> = async (
-    values,
-    context,
-    options
-  ) => {
+  return async (values, context, options) => {
     const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
     const { errors } = await yupResolver(
@@ -38,7 +36,7 @@ export const getLinodeCreateResolver = (
     )(transformedValues, context, options);
 
     if (tab === 'Clone Linode' && !values.linode) {
-      errors['linode'] = {
+      (errors as FieldErrors<LinodeCreateFormValues>)['linode'] = {
         message: 'You must select a Linode to clone from.',
         type: 'validate',
       };
@@ -52,7 +50,7 @@ export const getLinodeCreateResolver = (
       getRegionCountryGroup(selectedRegion)
     );
 
-    if (hasSelectedAnEURegion) {
+    if (hasSelectedAnEURegion && !context?.profile?.restricted) {
       const agreements = await queryClient.ensureQueryData(
         accountQueries.agreements
       );
@@ -60,12 +58,25 @@ export const getLinodeCreateResolver = (
       const hasSignedEUAgreement = agreements.eu_model;
 
       if (!hasSignedEUAgreement && !values.hasSignedEUAgreement) {
-        errors['hasSignedEUAgreement'] = {
+        (errors as FieldErrors<LinodeCreateFormValues>)[
+          'hasSignedEUAgreement'
+        ] = {
           message:
             'You must agree to the EU agreement to deploy to this region.',
           type: 'validate',
         };
       }
+    }
+
+    const secureVMViolation =
+      context?.secureVMNoticesEnabled &&
+      !values.firewallOverride &&
+      isNullOrUndefined(values.firewall_id);
+
+    if (secureVMViolation) {
+      (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
+        type: 'validate',
+      };
     }
 
     if (errors) {
@@ -74,8 +85,6 @@ export const getLinodeCreateResolver = (
 
     return { errors: {}, values };
   };
-
-  return resolver;
 };
 
 export const linodeCreateResolvers = {

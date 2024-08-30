@@ -6,7 +6,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -64,7 +63,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   const handleFieldChange = (field: string, value: string) => {
     form.setFieldValue(field, value);
-    if (form.errors[field]) {
+    if (form.errors[field as keyof UpdateVPCPayloadWithNone]) {
       form.setFieldError(field, undefined);
     }
   };
@@ -87,10 +86,7 @@ export const VPCEditDrawer = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regionsData, error: regionsError } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regionsData, error: regionsError } = useRegionsQuery();
 
   return (
     <Drawer onClose={onClose} open={open} title="Edit VPC">

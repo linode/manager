@@ -149,6 +149,10 @@ describe('Object Storage enrollment', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
+        cy.findByLabelText('Label (required)')
+          .should('be.visible')
+          .type(randomLabel());
+
         // Select a region with special pricing structure.
         ui.regionSelect.find().click().type('Jakarta, ID{enter}');
 
@@ -381,6 +385,8 @@ describe('Object Storage enrollment', () => {
       });
 
     cy.wait('@cancelObjectStorage');
+
+    ui.toast.assertMessage('Object Storage successfully canceled.');
 
     // Confirm that settings page updates to reflect that Object Storage is disabled.
     cy.contains(getStartedNote).should('be.visible');

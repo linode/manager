@@ -13,7 +13,6 @@ export const oneClickApps: Record<number, OCA> = {
     ...oneClickAppFactory.build({
       name: 'E2E Test App',
     }),
-    isNew: true,
   },
   401697: {
     alt_description: 'Popular website content management system.',
@@ -826,8 +825,9 @@ export const oneClickApps: Record<number, OCA> = {
     name: 'Secure Your Server',
     related_guides: [
       {
-        href: 'https://www.linode.com/docs/guides/set-up-and-secure/',
-        title: 'Securing your Server',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/secure-your-server/',
+        title: 'Secure Your Server through the Linode Marketplace',
       },
     ],
     summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App.`,
@@ -2370,22 +2370,23 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Cloud native application messaging service.',
     website: 'https://nats.io',
   },
-  1329430: {
-    alt_description: 'Password Manager',
-    alt_name: 'Passbolt',
+  1439640: {
+    alt_description: 'Open Source Secrets Manager',
+    alt_name: 'Passbolt CE',
     categories: ['Security'],
     colors: {
       end: 'D40101',
       start: '171717',
     },
-    description: `Passbolt is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
+    description: `Passbolt Community Edition is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
     logo_url: 'passbolt.svg',
-    name: 'Passbolt',
+    name: 'Passbolt Community Edition',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
-        title: 'Deploy Passbolt through the Linode Marketplace',
+        title:
+          'Deploy Passbolt Community Edition through the Linode Marketplace',
       },
     ],
     summary: 'Open-source password manager for teams and businesses.',
@@ -2457,6 +2458,29 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Open source network filesystem.',
     website: 'https://www.gluster.org/',
   },
+  1350845: {
+    alt_description:
+      'Linearly scalable, fault tolerant, open source NoSQL distributed database.',
+    alt_name: 'NoSQL database cluster',
+    categories: ['Databases'],
+    colors: {
+      end: '1486B1',
+      start: '85A355',
+    },
+    description: `Distributed, masterless, replicating NoSQL database cluster.`,
+    isNew: true,
+    logo_url: 'apachecassandra.svg',
+    name: 'Apache Cassandra Cluster',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-cassandra-cluster/',
+        title: 'Deploy Apache Cassandra Cluster through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open source NoSQL database cluster.',
+    website: 'https://cassandra.apache.org/doc/latest/',
+  },
   1366191: {
     alt_description:
       'Highly available, five-node enterprise NoSQL database cluster.',
@@ -2467,7 +2491,6 @@ export const oneClickApps: Record<number, OCA> = {
       start: '333333',
     },
     description: `Couchbase Enterprise Server is a high-performance NoSQL database, built for scale. Couchbase Server is designed with memory-first architecture, built-in cache and workload isolation.`,
-    isNew: true,
     logo_url: 'couchbase.svg',
     name: 'Couchbase Cluster',
     related_guides: [
@@ -2490,7 +2513,6 @@ export const oneClickApps: Record<number, OCA> = {
       start: '00C7D4',
     },
     description: `Apache Kafka supports a wide range of applications from log aggregation to real-time analytics. Kafka provides a foundation for building data pipelines, event-driven architectures, or stream processing applications.`,
-    isNew: true,
     logo_url: 'apachekafka.svg',
     name: 'Apache Kafka Cluster',
     related_guides: [
@@ -2503,28 +2525,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Open source data streaming.',
     website: 'https://kafka.apache.org/',
   },
-  1350845: {
-    alt_description:
-      'Linearly scalable, fault tolerant, open source NoSQL distributed database.',
-    alt_name: 'NoSQL database cluster',
-    categories: ['Databases'],
-    colors: {
-      end: '1486B1',
-      start: '85A355',
-    },
-    description: `Distributed, masterless, replicating NoSQL database cluster.`,
-    logo_url: 'apachecassandra.svg',
-    name: 'Apache Cassandra Cluster',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-cassandra-cluster/',
-        title: 'Deploy Apache Cassandra Cluster through the Linode Marketplace',
-      },
-    ],
-    summary: 'Open source NoSQL database cluster.',
-    website: 'https://cassandra.apache.org/doc/latest/',
-  },
   1403815: {
     alt_description: 'Open Source key/value datastore.',
     alt_name: 'Caching and message queue database',
@@ -2534,6 +2534,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'AAAAAA',
     },
     description: `High performance, BSD license key/value database.`,
+    isNew: true,
     logo_url: 'valkey.svg',
     name: 'Valkey',
     related_guides: [
@@ -2555,6 +2556,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: 'FFBA01',
     },
     description: `OSI approved open source secrets platform.`,
+    isNew: true,
     logo_url: 'openbao.svg',
     name: 'OpenBao',
     related_guides: [
@@ -2576,6 +2578,7 @@ export const oneClickApps: Record<number, OCA> = {
       start: '9D29FB',
     },
     description: `Time series database supporting native query and visualization.`,
+    isNew: true,
     logo_url: 'influxdb.svg',
     name: 'InfluxDB',
     related_guides: [

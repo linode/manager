@@ -21,15 +21,15 @@ import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import {
-  prefixToQueryKey,
-  queryKey,
-  updateBucket,
-  useObjectBucketDetailsInfiniteQuery,
+  objectStorageQueries,
+  useObjectBucketObjectsInfiniteQuery,
   useObjectStorageBuckets,
-  useObjectStorageClusters,
-} from 'src/queries/objectStorage';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+} from 'src/queries/object-storage/queries';
+import {
+  fetchBucketAndUpdateCache,
+  prefixToQueryKey,
+} from 'src/queries/object-storage/utilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
@@ -56,16 +56,21 @@ import ObjectTableContent from './ObjectTableContent';
 
 import type {
   ObjectStorageClusterID,
+  ObjectStorageEndpointTypes,
   ObjectStorageObject,
   ObjectStorageObjectList,
-} from '@linode/api-v4/lib/object-storage';
+} from '@linode/api-v4';
 
 interface MatchParams {
   bucketName: string;
   clusterId: ObjectStorageClusterID;
 }
+interface Props {
+  endpointType: ObjectStorageEndpointTypes;
+}
 
-export const BucketDetail = () => {
+export const BucketDetail = (props: Props) => {
+  const { endpointType } = props;
   /**
    * @note If `Object Storage Access Key Regions` is enabled, clusterId will actually contain
    * the bucket's region id
@@ -84,24 +89,13 @@ export const BucketDetail = () => {
   const flags = useFlags();
   const { data: account } = useAccount();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
   );
 
-  const { data: regions } = useRegionsQuery();
-
-  const regionsSupportingObjectStorage = regions?.filter((region) =>
-    region.capabilities.includes('Object Storage')
-  );
-
-  const { data: clusters } = useObjectStorageClusters();
-  const { data: buckets } = useObjectStorageBuckets({
-    clusters,
-    isObjMultiClusterEnabled,
-    regions: regionsSupportingObjectStorage,
-  });
+  const { data: buckets } = useObjectStorageBuckets();
 
   const bucket = buckets?.buckets.find((bucket) => {
     if (isObjMultiClusterEnabled) {
@@ -118,7 +112,7 @@ export const BucketDetail = () => {
     isFetching,
     isFetchingNextPage,
     isLoading,
-  } = useObjectBucketDetailsInfiniteQuery(clusterId, bucketName, prefix);
+  } = useObjectBucketObjectsInfiniteQuery(clusterId, bucketName, prefix);
   const [
     isCreateFolderDrawerOpen,
     setIsCreateFolderDrawerOpen,
@@ -176,9 +170,9 @@ export const BucketDetail = () => {
   // If a user deletes many objects in a short amount of time,
   // we don't want to fetch for every delete action. Debounce
   // the updateBucket call by 3 seconds.
-  const debouncedUpdateBucket = debounce(3000, false, () =>
-    updateBucket(clusterId, bucketName, queryClient)
-  );
+  const debouncedUpdateBucket = debounce(3000, false, () => {
+    fetchBucketAndUpdateCache(clusterId, bucketName, queryClient);
+  });
 
   const deleteObject = async () => {
     if (!objectToDelete) {
@@ -243,7 +237,11 @@ export const BucketDetail = () => {
       pageParams: string[];
       pages: ObjectStorageObjectList[];
     }>(
-      [queryKey, clusterId, bucketName, 'objects', ...prefixToQueryKey(prefix)],
+      [
+        ...objectStorageQueries.bucket(clusterId, bucketName)._ctx.objects
+          .queryKey,
+        ...prefixToQueryKey(prefix),
+      ],
       (data) => ({
         pageParams: data?.pageParams || [],
         pages,
@@ -340,12 +338,13 @@ export const BucketDetail = () => {
       if (page.data.find((object) => object.name === folder.name)) {
         // If a folder already exists in the store, invalidate that store for that specific
         // prefix. Due to how invalidateQueries works, all subdirectories also get invalidated.
-        queryClient.invalidateQueries([
-          queryKey,
-          clusterId,
-          bucketName,
-          ...`${prefix}${objectName}`.split('/'),
-        ]);
+        queryClient.invalidateQueries({
+          queryKey: [
+            ...objectStorageQueries.bucket(clusterId, bucketName)._ctx.objects
+              .queryKey,
+            ...`${prefix}${objectName}`.split('/'),
+          ],
+        });
         return;
       }
     }
@@ -479,6 +478,7 @@ export const BucketDetail = () => {
         bucketName={bucketName}
         clusterId={clusterId}
         displayName={selectedObject?.name}
+        endpointType={endpointType}
         lastModified={selectedObject?.last_modified}
         name={selectedObject?.name}
         onClose={closeObjectDetailsDrawer}

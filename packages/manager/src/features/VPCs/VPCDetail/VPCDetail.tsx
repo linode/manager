@@ -11,20 +11,19 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery } from 'src/queries/vpcs/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
-import { REBOOT_LINODE_WARNING_VPCDETAILS } from '../constants';
-import { getUniqueLinodesFromSubnets } from '../utils';
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
+import { REBOOT_LINODE_WARNING_VPCDETAILS } from '../constants';
+import { getUniqueLinodesFromSubnets } from '../utils';
 import {
   StyledActionButton,
-  StyledBox,
   StyledDescriptionBox,
+  StyledBox,
   StyledSummaryBox,
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
@@ -35,10 +34,7 @@ const VPCDetail = () => {
   const theme = useTheme();
 
   const { data: vpc, error, isLoading } = useVPCQuery(+vpcId);
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
   const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);

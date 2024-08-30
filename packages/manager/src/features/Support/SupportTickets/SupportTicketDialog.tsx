@@ -3,6 +3,7 @@ import { uploadAttachment } from '@linode/api-v4/lib/support';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
@@ -14,10 +15,11 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useCreateSupportTicketMutation } from 'src/queries/support';
+import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { reduceAsync } from 'src/utilities/reduceAsync';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
-import { storage } from 'src/utilities/storage';
+import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
 import { MarkdownReference } from '../SupportTicketDetail/TabbedReply/MarkdownReference';
@@ -39,7 +41,9 @@ import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
 import type { SMTPCustomFields } from './SupportTicketSMTPFields';
+import type { CreateKubeClusterPayload } from '@linode/api-v4';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
+import type { CreateLinodeRequest } from '@linode/api-v4/src/linodes/types';
 import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 
@@ -82,13 +86,18 @@ export type EntityType =
   | 'lkecluster_id'
   | 'nodebalancer_id'
   | 'none'
-  | 'volume_id';
+  | 'volume_id'
+  | 'vpc_id';
 
 export type TicketType = 'accountLimit' | 'general' | 'smtp';
 
 export type AllSupportTicketFormFields = SupportTicketFormFields &
   SMTPCustomFields &
   AccountLimitCustomFields;
+
+export type FormPayloadValues =
+  | Partial<CreateKubeClusterPayload>
+  | Partial<CreateLinodeRequest>;
 
 export interface TicketTypeData {
   dialogTitle: string;
@@ -144,37 +153,53 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
+  const location = useLocation<any>();
+  const stateParams = location.state;
+
+  // Collect prefilled data from props or Link parameters.
+  const _prefilledDescription: string =
+    prefilledDescription ?? stateParams?.description ?? undefined;
+  const _prefilledEntity: EntityForTicketDetails =
+    prefilledEntity ?? stateParams?.entity ?? undefined;
+  const _prefilledTitle: string =
+    prefilledTitle ?? stateParams?.title ?? undefined;
+  const prefilledFormPayloadValues: FormPayloadValues =
+    stateParams?.formPayloadValues ?? undefined;
+  const _prefilledTicketType: TicketType =
+    prefilledTicketType ?? stateParams?.ticketType ?? undefined;
+
+  // Use the prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
+  const newPrefilledTitle = _prefilledTitle
+    ? _prefilledTitle
+    : _prefilledTicketType && TICKET_TYPE_MAP[_prefilledTicketType]
+    ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
+    : undefined;
+
   const formContainerRef = React.useRef<HTMLFormElement>(null);
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
-  const valuesFromStorage = storage.supportText.get();
-
-  // Use a prefilled title if one is given, otherwise, use any default prefill titles by ticket type, if extant.
-  const _prefilledTitle = prefilledTitle
-    ? prefilledTitle
-    : prefilledTicketType && TICKET_TYPE_MAP[prefilledTicketType]
-    ? TICKET_TYPE_MAP[prefilledTicketType].ticketTitle
-    : undefined;
+  const valuesFromStorage = storage.supportTicket.get();
 
   // Ticket information
   const form = useForm<SupportTicketFormFields>({
     defaultValues: {
       description: getInitialValue(
-        prefilledDescription,
+        _prefilledDescription,
         valuesFromStorage.description
       ),
-      entityId: prefilledEntity?.id ? String(prefilledEntity.id) : '',
+      entityId: _prefilledEntity?.id ? String(_prefilledEntity.id) : '',
       entityInputValue: '',
-      entityType: prefilledEntity?.type ?? 'general',
-      summary: getInitialValue(_prefilledTitle, valuesFromStorage.title),
-      ticketType: prefilledTicketType ?? 'general',
+      entityType: _prefilledEntity?.type ?? 'general',
+      summary: getInitialValue(newPrefilledTitle, valuesFromStorage.summary),
+      ticketType: _prefilledTicketType ?? 'general',
     },
-    resolver: yupResolver(SCHEMA_MAP[prefilledTicketType ?? 'general']),
+    resolver: yupResolver(SCHEMA_MAP[_prefilledTicketType ?? 'general']),
   });
 
   const {
     description,
+    entityId,
     entityType,
     selectedSeverity,
     summary,
@@ -195,17 +220,22 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   }, [open]);
 
-  const saveText = (_title: string, _description: string) => {
-    storage.supportText.set({ description: _description, title: _title });
+  /**
+   * Store 'general' support ticket data in local storage if it exists.
+   * Specific fields from other ticket types (e.g. smtp) will not be saved since the general form will render via 'Open New Ticket'.
+   */
+  const saveFormData = (values: SupportTicketFormFields) => {
+    storage.supportTicket.set(values);
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
+  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
+    .current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
-    debouncedSave(summary, description);
-  }, [summary, description]);
+    debouncedSave(form.getValues());
+  }, [summary, description, entityId, entityType, selectedSeverity]);
 
   /**
    * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
@@ -215,9 +245,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     form.reset({
       ...form.formState.defaultValues,
       description: clearValues ? '' : valuesFromStorage.description,
-      entityId: '',
-      entityType: 'general',
-      summary: clearValues ? '' : valuesFromStorage.title,
+      entityId: clearValues ? '' : valuesFromStorage.entityId,
+      entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
+      entityType: clearValues ? 'general' : valuesFromStorage.entityType,
+      selectedSeverity: clearValues
+        ? undefined
+        : valuesFromStorage.selectedSeverity,
+      summary: clearValues ? '' : valuesFromStorage.summary,
       ticketType: 'general',
     });
   };
@@ -227,20 +261,22 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     setFiles([]);
 
     if (clearValues) {
-      saveText('', '');
+      saveFormData(supportTicketStorageDefaults);
     }
   };
 
   const handleClose = () => {
-    props.onClose();
-    if (ticketType === 'smtp') {
+    if (ticketType !== 'general') {
       window.setTimeout(() => resetDrawer(true), 500);
     }
+    props.onClose();
+    sendSupportTicketExitEvent('Close');
   };
 
   const handleCancel = () => {
     props.onClose();
     window.setTimeout(() => resetDrawer(true), 500);
+    sendSupportTicketExitEvent('Cancel');
   };
 
   const updateFiles = (newFiles: FileAttachment[]) => {
@@ -444,7 +480,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
             </>
           )}
           {ticketType === 'smtp' && <SupportTicketSMTPFields />}
-          {ticketType === 'accountLimit' && <SupportTicketAccountLimitFields />}
+          {ticketType === 'accountLimit' && (
+            <SupportTicketAccountLimitFields
+              prefilledFormPayloadValues={prefilledFormPayloadValues}
+            />
+          )}
           {(!ticketType || ticketType === 'general') && (
             <>
               {props.hideProductSelection ? null : (

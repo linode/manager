@@ -62,7 +62,6 @@ import type { Theme } from '@mui/material/styles';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -77,6 +76,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   chip: {
+    marginLeft: 6,
     marginTop: 4,
   },
   createBtn: {
@@ -138,6 +138,7 @@ const engineIcons = {
   mongodb: <MongoDBIcon height="24" width="24" />,
   mysql: <MySQLIcon height="24" width="24" />,
   postgresql: <PostgreSQLIcon height="24" width="24" />,
+  redis: null,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
@@ -194,15 +195,12 @@ const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const flags = useFlags();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
 
   const {
     data: regionsData,
     error: regionsError,
     isLoading: regionsLoading,
-  } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  } = useRegionsQuery();
 
   const {
     data: engines,
@@ -410,7 +408,7 @@ const DatabaseCreate = () => {
       return;
     }
 
-    const engineType = values.engine.split('/')[0];
+    const engineType = values.engine.split('/')[0] as Engine;
 
     setNodePricing({
       multi: type.engines[engineType].find(
@@ -455,7 +453,7 @@ const DatabaseCreate = () => {
             },
           ],
           labelOptions: {
-            suffixComponent: flags.databaseBeta ? (
+            suffixComponent: flags.dbaasV2?.beta ? (
               <BetaChip className={classes.chip} component="span" />
             ) : null,
           },
@@ -567,21 +565,6 @@ const DatabaseCreate = () => {
               ))}
             </RadioGroup>
           </FormControl>
-          <Grid md={8} xs={12}>
-            {flags.databaseBeta ? (
-              <Notice className={classes.notice} variant="info">
-                <strong>
-                  Notice: There is no charge for database clusters during beta.
-                </strong>{' '}
-                Database clusters will be subject to charges when the beta
-                period ends on May 2nd, 2022.{' '}
-                <Link to="https://www.linode.com/pricing/#databases">
-                  View pricing
-                </Link>
-                .
-              </Notice>
-            ) : undefined}
-          </Grid>
         </Grid>
         <Divider spacingBottom={12} spacingTop={26} />
         <Grid>

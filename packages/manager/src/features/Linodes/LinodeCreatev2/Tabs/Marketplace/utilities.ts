@@ -1,7 +1,9 @@
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
+import { useFlags } from 'src/hooks/useFlags';
+import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import type { StackScript } from '@linode/api-v4';
-import type { AppCategory } from 'src/features/OneClickApps/types';
+import type { AppCategory, OCA } from 'src/features/OneClickApps/types';
 
 /**
  * Get all categories from our marketplace apps list so
@@ -24,40 +26,40 @@ export const categoryOptions = uniqueCategories.map((category) => ({
  * Returns an array of Marketplace app sections given an array
  * of Marketplace app StackScripts
  */
-export const getAppSections = (stackscripts: StackScript[]) => {
+export const getAppSections = (apps: MarketplaceApp[]) => {
   // To check if an app is 'new', we check our own 'oneClickApps' list for the 'isNew' value
-  const newApps = stackscripts.filter(
-    (stackscript) => oneClickApps[stackscript.id]?.isNew
-  );
+  const newApps = apps.filter((app) => app.details.isNew);
 
   // Items are ordered by popularity already, take the first 10
-  const popularApps = stackscripts.slice(0, 10);
+  const popularApps = apps.slice(0, 10);
 
   // In the all apps section, show everything in alphabetical order
-  const allApps = [...stackscripts].sort((a, b) =>
-    a.label.toLowerCase().localeCompare(b.label.toLowerCase())
+  const allApps = [...apps].sort((a, b) =>
+    a.stackscript.label
+      .toLowerCase()
+      .localeCompare(b.stackscript.label.toLowerCase())
   );
 
   return [
     {
-      stackscripts: newApps,
+      apps: newApps,
       title: 'New apps',
     },
     {
-      stackscripts: popularApps,
+      apps: popularApps,
       title: 'Popular apps',
     },
     {
-      stackscripts: allApps,
+      apps: allApps,
       title: 'All apps',
     },
   ];
 };
 
-interface FilterdAppsOptions {
+interface FilteredAppsOptions {
+  apps: MarketplaceApp[];
   category: AppCategory | undefined;
   query: string;
-  stackscripts: StackScript[];
 }
 
 /**
@@ -69,23 +71,23 @@ interface FilterdAppsOptions {
  *
  * @returns Stackscripts that have been filtered based on the options passed
  */
-export const getFilteredApps = (options: FilterdAppsOptions) => {
-  const { category, query, stackscripts } = options;
+export const getFilteredApps = (options: FilteredAppsOptions) => {
+  const { apps, category, query } = options;
 
-  return stackscripts.filter((stackscript) => {
+  return apps.filter((app) => {
     if (query && category) {
       return (
-        getDoesStackScriptMatchQuery(query, stackscript) &&
-        getDoesStackScriptMatchCategory(category, stackscript)
+        getDoesMarketplaceAppMatchQuery(query, app) &&
+        getDoesMarketplaceAppMatchCategory(category, app)
       );
     }
 
     if (query) {
-      return getDoesStackScriptMatchQuery(query, stackscript);
+      return getDoesMarketplaceAppMatchQuery(query, app);
     }
 
     if (category) {
-      return getDoesStackScriptMatchCategory(category, stackscript);
+      return getDoesMarketplaceAppMatchCategory(category, app);
     }
 
     return true;
@@ -99,12 +101,10 @@ export const getFilteredApps = (options: FilterdAppsOptions) => {
  * @param stackscript the StackScript to compare aginst
  * @returns true if the StackScript matches the given query
  */
-const getDoesStackScriptMatchQuery = (
+const getDoesMarketplaceAppMatchQuery = (
   query: string,
-  stackscript: StackScript
+  app: MarketplaceApp
 ) => {
-  const appDetails = oneClickApps[stackscript.id];
-
   const queryWords = query
     .replace(/[,.-]/g, '')
     .trim()
@@ -112,12 +112,12 @@ const getDoesStackScriptMatchQuery = (
     .split(' ');
 
   const searchableAppFields = [
-    String(stackscript.id),
-    stackscript.label,
-    appDetails.name,
-    appDetails.alt_name,
-    appDetails.alt_description,
-    ...appDetails.categories,
+    String(app.stackscript.id),
+    app.stackscript.label,
+    app.details.name,
+    app.details.alt_name,
+    app.details.alt_description,
+    ...app.details.categories,
   ];
 
   return searchableAppFields.some((field) =>
@@ -129,12 +129,53 @@ const getDoesStackScriptMatchQuery = (
  * Checks if the given StackScript has a category
  *
  * @param category The category to check for
- * @param stackscript The StackScript to compare aginst
- * @returns true if the given StackScript has the given category
+ * @param app The Marketplace app to compare against
+ * @returns true if the given app has the given category
  */
-const getDoesStackScriptMatchCategory = (
+const getDoesMarketplaceAppMatchCategory = (
   category: AppCategory,
-  stackscript: StackScript
+  app: MarketplaceApp
 ) => {
-  return oneClickApps[stackscript.id].categories.includes(category);
+  return app.details.categories.includes(category);
+};
+
+export interface MarketplaceApp {
+  details: OCA;
+  stackscript: StackScript;
+}
+
+export const useMarketplaceApps = () => {
+  const query = useMarketplaceAppsQuery(true);
+  const flags = useFlags();
+
+  const stackscripts = query.data ?? [];
+
+  const apps: MarketplaceApp[] = [];
+
+  for (const stackscript of stackscripts) {
+    const override = flags.marketplaceAppOverrides?.find(
+      (override) => override.stackscriptId === stackscript.id
+    );
+
+    const baseAppDetails = oneClickApps[stackscript.id];
+
+    if (override === undefined && baseAppDetails) {
+      // If the StackScript has no overrides, just add it to the apps array.
+      apps.push({ details: baseAppDetails, stackscript });
+    }
+
+    if (override?.details === null) {
+      // If the feature flag explicitly specifies `null`, it means we don't want it to show,
+      // so we skip it.
+      continue;
+    }
+
+    if (override?.details) {
+      const details = { ...baseAppDetails, ...override.details };
+
+      apps.push({ details, stackscript });
+    }
+  }
+
+  return { apps, ...query };
 };

@@ -1,11 +1,19 @@
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
+import { DateTime } from 'luxon';
 import React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import { LineGraph } from 'src/components/LineGraph/LineGraph';
+import { useFlags } from 'src/hooks/useFlags';
+import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
 
+import {
+  generateGraphData,
+  getCloudPulseMetricRequest,
+} from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
+import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
+import { convertValueToUnit, formatToolTip } from '../Utils/unitConversion';
 import {
   getUserPreferenceObject,
   updateWidgetPreference,
@@ -13,17 +21,26 @@ import {
 import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
+import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
 import { ZoomIcon } from './components/Zoomer';
 
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { Widgets } from '@linode/api-v4';
 import type {
   AvailableMetrics,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
-import type { Widgets } from '@linode/api-v4';
+import type { DataSet } from 'src/components/LineGraph/LineGraph';
+import type { Metrics } from 'src/utilities/statMetrics';
 
 export interface CloudPulseWidgetProperties {
+  /**
+   * Apart from above explicit filters, any additional filters for metrics endpoint will go here
+   */
+  additionalFilters?: CloudPulseMetricsAdditionalFilters[];
+
   /**
    * Aria label for this widget
    */
@@ -90,17 +107,40 @@ export interface CloudPulseWidgetProperties {
   widget: Widgets;
 }
 
+export interface CloudPulseMetricsAdditionalFilters {
+  filterKey: string;
+  filterValue: FilterValueType;
+}
+
+export interface LegendRow {
+  data: Metrics;
+  format: (value: number) => {};
+  legendColor: string;
+  legendTitle: string;
+}
+
 export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { data: profile } = useProfile();
 
-  const timezone = profile?.timezone ?? 'US/Eastern';
+  const timezone = profile?.timezone ?? DateTime.local().zoneName;
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
-  const { availableMetrics, savePref } = props;
+  const {
+    additionalFilters,
+    ariaLabel,
+    authToken,
+    availableMetrics,
+    duration,
+    resourceIds,
+    resources,
+    savePref,
+    serviceType,
+    timeStamp,
+    unit,
+  } = props;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [today, _] = React.useState<boolean>(false); // Temporarily disabled eslint for this line. Will be removed in future PRs
+  const flags = useFlags();
 
   /**
    *
@@ -113,7 +153,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       });
     }
 
-    setWidget((currentWidget) => {
+    setWidget((currentWidget: Widgets) => {
       return {
         ...currentWidget,
         size: zoomInValue ? 12 : 6,
@@ -135,7 +175,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           });
         }
 
-        setWidget((currentWidget) => {
+        setWidget((currentWidget: Widgets) => {
           return {
             ...currentWidget,
             aggregate_function: aggregateValue,
@@ -155,7 +195,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       if (
         !widget.time_granularity ||
         intervalValue.unit !== widget.time_granularity.unit ||
-        intervalValue.value !== widget.time_duration.value
+        intervalValue.value !== widget.time_granularity.value
       ) {
         if (savePref) {
           updateWidgetPreference(widget.label, {
@@ -163,7 +203,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           });
         }
 
-        setWidget((currentWidget) => {
+        setWidget((currentWidget: Widgets) => {
           return {
             ...currentWidget,
             time_granularity: { ...intervalValue },
@@ -187,6 +227,61 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     }
   }, []);
 
+  /**
+   *
+   * @param value number value for the tool tip
+   * @param unit string unit for the tool tip
+   * @returns formatted string using @value & @unit
+   */
+
+  const {
+    data: metricsList,
+    error,
+    isLoading,
+    status,
+  } = useCloudPulseMetricsQuery(
+    serviceType,
+    {
+      ...getCloudPulseMetricRequest({
+        duration,
+        resourceIds,
+        resources,
+        widget,
+      }),
+      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+    },
+    {
+      authToken,
+      isFlags: Boolean(flags),
+      label: widget.label,
+      timeStamp,
+      url: flags.aclpReadEndpoint!,
+    }
+  );
+
+  let data: DataSet[] = [];
+
+  let legendRows: LegendRow[] = [];
+  let today: boolean = false;
+
+  let currentUnit = unit;
+  if (!isLoading && metricsList) {
+    const generatedData = generateGraphData({
+      flags,
+      label: widget.label,
+      metricsList,
+      resources,
+      serviceType,
+      status,
+      unit,
+      widgetColor: widget.color,
+    });
+
+    data = generatedData.dimensions;
+    legendRows = generatedData.legendRowsData;
+    today = generatedData.today;
+    currentUnit = generatedData.unit;
+  }
   return (
     <Grid item lg={widget.size} xs={12}>
       <Paper>
@@ -204,6 +299,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               variant="h1"
             >
               {convertStringToCamelCasesWithSpaces(widget.label)}{' '}
+              {!isLoading &&
+                `(${currentUnit}${unit.endsWith('ps') ? '/s' : ''})`}
             </Typography>
             <Stack
               alignItems={'center'}
@@ -238,9 +335,27 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             </Stack>
           </Stack>
           <Divider />
-          <Box p={2}>
-            <LineGraph data={[]} showToday={today} timezone={timezone} />
-          </Box>
+
+          <CloudPulseLineGraph
+            error={
+              status === 'error'
+                ? error?.[0]?.reason ?? 'Error while rendering graph'
+                : undefined
+            }
+            legendRows={
+              legendRows && legendRows.length > 0 ? legendRows : undefined
+            }
+            ariaLabel={ariaLabel ? ariaLabel : ''}
+            data={data}
+            formatData={(data: number) => convertValueToUnit(data, currentUnit)}
+            formatTooltip={(value: number) => formatToolTip(value, unit)}
+            gridSize={widget.size}
+            loading={isLoading}
+            nativeLegend
+            showToday={today}
+            timezone={timezone}
+            title={widget.label}
+          />
         </Stack>
       </Paper>
     </Grid>

@@ -33,6 +33,26 @@ Examples
 - `sendMarketplaceSearchEvent` fires when selecting a category from the dropdown (`label` is predefined) and clicking the search field (a generic `label` is used).
 - `sendBucketCreateEvent` sends the region of the bucket, but does not send the bucket label.
 
+## Writing Form Events
+
+Form events differ from custom events because they track user's journey through a flow and, optionally, branching flows. Form events live in `src/utilities/analytics/formEventAnalytics.ts`. Try to write and export custom events in this file if possible, and import them in the component(s) where they are used.
+
+When tracking a new form flow, work with UX to:
+
+- Determine a `formName` to use across the flow
+- Determine what elements of the form to track
+- Follow our naming conventions (use our util: `getFormattedStringFromFormEventOptions`)
+
+These are the form events we use:
+
+- `formStart`: To track the beginning of the form at the designated element
+- `formInput`: To track any form interaction (click, change, clear) that is not another type of form event; this event is **not** limited to form input fields
+- `formStep`: To track the successful completion of a **branching** flow (e.g. submitting in a drawer within a Create page)
+- `formSubmit`: To track the successful completion of the **main** flow
+- `formError`: To track the unsuccessful completion of the main flow with the errors encountered by the user
+
+See the `LinodeCreateForm` form events as an example.
+
 ## Locally Testing Page Views & Custom Events and/or Troubleshooting
 
 1. Set the `REACT_APP_ADOBE_ANALYTICS_URL` environment variable in `.env`.

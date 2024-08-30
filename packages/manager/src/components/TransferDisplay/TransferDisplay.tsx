@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -27,10 +26,7 @@ export const TransferDisplay = React.memo(({ spacingTop }: Props) => {
     isError,
     isLoading,
   } = useAccountNetworkTransfer();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
-  const { data: regions } = useRegionsQuery({
-    transformRegionLabel: isGeckoGAEnabled,
-  });
+  const { data: regions } = useRegionsQuery();
 
   const generalPoolUsagePct = calculatePoolUsagePct(generalPoolUsage);
   const regionTransferPools = getRegionTransferPools(generalPoolUsage, regions);

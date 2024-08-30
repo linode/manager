@@ -4,7 +4,7 @@ import { isPast } from 'src/utilities/isPast';
 
 import { ExcludedScope } from './CreateAPITokenDrawer';
 
-export type Permission = [string, number];
+export type Permission = [keyof typeof basePermNameMap, number];
 
 export const basePerms = [
   'account',
@@ -105,7 +105,7 @@ export const scopeStringToPermTuples = (
     const [perm, level] = scopeStr.split(':');
     return {
       ...map,
-      [perm]: levelMap[level],
+      [perm]: levelMap[level as keyof typeof levelMap],
     };
   }, defaultScopeMap(basePerms, isCreateFlow));
 

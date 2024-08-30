@@ -86,8 +86,10 @@ describe('Region', () => {
     await userEvent.click(select);
 
     for (const region of regions) {
-      // eslint-disable-next-line no-await-in-loop
-      expect(await findByText(`${region.label} (${region.id})`)).toBeVisible();
+      expect(
+        // eslint-disable-next-line no-await-in-loop
+        await findByText(`US, ${region.label} (${region.id})`)
+      ).toBeVisible();
     }
   });
 
@@ -129,7 +131,9 @@ describe('Region', () => {
 
     await userEvent.click(select);
 
-    await userEvent.click(await findByText(`${regionB.label} (${regionB.id})`));
+    await userEvent.click(
+      await findByText(`US, ${regionB.label} (${regionB.id})`)
+    );
 
     await findByText('The selected region has a different price structure.');
   });
@@ -166,7 +170,9 @@ describe('Region', () => {
 
     await userEvent.click(select);
 
-    await userEvent.click(await findByText(`${regionB.label} (${regionB.id})`));
+    await userEvent.click(
+      await findByText(`US, ${regionB.label} (${regionB.id})`)
+    );
 
     expect(
       getByText(
@@ -175,7 +181,7 @@ describe('Region', () => {
     ).toBeVisible();
   });
 
-  it('should disable distributed regions if the selected image does not have the `distributed-images` capability', async () => {
+  it('should disable distributed regions if the selected image does not have the `distributed-sites` capability', async () => {
     const image = imageFactory.build({ capabilities: [] });
 
     const distributedRegion = regionFactory.build({

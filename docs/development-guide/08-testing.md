@@ -199,23 +199,26 @@ These environment variables are used by Cloud Manager's UI tests to override reg
 | `CY_TEST_REGION`     | ID of region to test (as used by Linode APIv4). | `us-east` | Unset; regions are selected at random |
 
 ###### Run Splitting
-These environment variables facilitate splitting the Cypress run between multiple runners without the use of any third party services. This can be useful for improving Cypress test performance in some circumstances.
+These environment variables facilitate splitting the Cypress run between multiple runners without the use of any third party services. This can be useful for improving Cypress test performance in some circumstances. For additional performance gains, an optional test weights file can be specified using `CY_TEST_SPLIT_RUN_WEIGHTS` (see `CY_TEST_GENWEIGHTS` to generate test weights).
 
-| Environment Variable      | Description                                | Example        | Default                    |
-|---------------------------|--------------------------------------------|----------------|----------------------------|
-| `CY_TEST_SPLIT_RUN`       | Enable run splitting                       | `1`            | Unset; disabled by default |
-| `CY_TEST_SPLIT_RUN_INDEX` | Numeric index for each Cypress test runner | `1`, `2`, etc. | Unset                      |
-| `CY_TEST_SPLIT_RUN_TOTAL` | Total number of runners for the tests      | `2`            | Unset                      |
+| Environment Variable        | Description                                | Example          | Default                    |
+|-----------------------------|--------------------------------------------|------------------|----------------------------|
+| `CY_TEST_SPLIT_RUN`         | Enable run splitting                       | `1`              | Unset; disabled by default |
+| `CY_TEST_SPLIT_RUN_INDEX`   | Numeric index for each Cypress test runner | `1`, `2`, etc.   | Unset                      |
+| `CY_TEST_SPLIT_RUN_TOTAL`   | Total number of runners for the tests      | `2`              | Unset                      |
+| `CY_TEST_SPLIT_RUN_WEIGHTS` | Path to test weights file                  | `./weights.json` | Unset; disabled by default |
 
 ###### Development, Logging, and Reporting
 Environment variables related to Cypress logging and reporting, as well as report generation.
 
-| Environment Variable            | Description                                   | Example   | Default                    |
-|---------------------------------|-----------------------------------------------|-----------|----------------------------|
-| `CY_TEST_USER_REPORT`           | Log test account information when tests begin | `1`       | Unset; disabled by default |
-| `CY_TEST_JUNIT_REPORT`          | Enable JUnit reporting                        | `1`       | Unset; disabled by default |
-| `CY_TEST_DISABLE_FILE_WATCHING` | Disable file watching in Cypress UI           | `1`       | Unset; disabled by default |
-| `CY_TEST_FAIL_ON_MANAGED`       | Fail affected tests when Managed is enabled   | `1`       | Unset; disabled by default |
+| Environment Variable            | Description                                        | Example          | Default                    |
+|---------------------------------|----------------------------------------------------|------------------|----------------------------|
+| `CY_TEST_USER_REPORT`           | Log test account information when tests begin      | `1`              | Unset; disabled by default |
+| `CY_TEST_JUNIT_REPORT`          | Enable JUnit reporting                             | `1`              | Unset; disabled by default |
+| `CY_TEST_DISABLE_FILE_WATCHING` | Disable file watching in Cypress UI                | `1`              | Unset; disabled by default |
+| `CY_TEST_DISABLE_RETRIES`       | Disable test retries on failure in CI              | `1`              | Unset; disabled by default |
+| `CY_TEST_FAIL_ON_MANAGED`       | Fail affected tests when Managed is enabled        | `1`              | Unset; disabled by default |
+| `CY_TEST_GENWEIGHTS`            | Generate and output test weights to the given path | `./weights.json` | Unset; disabled by default |
 
 ### Writing End-to-End Tests
 

@@ -8,9 +8,13 @@ import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
+import { objectStorageBucketFactoryGen2 } from 'src/factories';
+
 import type {
+  CreateObjectStorageBucketPayload,
   ObjectStorageBucket,
   ObjectStorageCluster,
+  ObjectStorageEndpoint,
   ObjectStorageKey,
 } from '@linode/api-v4';
 
@@ -86,12 +90,17 @@ export const interceptCreateBucket = (): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockCreateBucket = (
-  bucket: ObjectStorageBucket
+  bucket: CreateObjectStorageBucketPayload
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
     apiMatcher('object-storage/buckets'),
-    makeResponse(bucket)
+    makeResponse(
+      objectStorageBucketFactoryGen2.build({
+        ...bucket,
+        s3_endpoint: undefined,
+      })
+    )
   );
 };
 
@@ -476,5 +485,22 @@ export const interceptUpdateBucketAccess = (
   return cy.intercept(
     'PUT',
     apiMatcher(`object-storage/buckets/${cluster}/${label}/access`)
+  );
+};
+
+/**
+ * Intercepts GET request to get object storage endpoints.
+ *
+ * @param endpoints - Object Storage endpoints for which to mock response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetObjectStorageEndpoints = (
+  endpoints: ObjectStorageEndpoint[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/endpoints*`),
+    paginateResponse(endpoints)
   );
 };

@@ -1,4 +1,4 @@
-import type { Doc } from './features/OneClickApps/types';
+import type { Doc, OCA } from './features/OneClickApps/types';
 import type { TPAProvider } from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from 'src/components/Notice/Notice';
 
@@ -63,6 +63,11 @@ interface AclpFlag {
   enabled: boolean;
 }
 
+export interface CloudPulseResourceTypeMapFlag {
+  dimensionKey: string;
+  serviceType: string;
+}
+
 interface gpuV2 {
   planDivider: boolean;
 }
@@ -75,15 +80,17 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 }
 
 export interface Flags {
-  aclb: boolean;
-  aclbFullCreateFlow: boolean;
   aclp: AclpFlag;
+  aclpReadEndpoint: string;
+  aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
+  apicliDxToolsAdditions: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
+  dbaasV2: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   eventMessagesV2: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release
@@ -95,6 +102,7 @@ export interface Flags {
   linodeCreateWithFirewall: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
+  marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
@@ -104,7 +112,8 @@ export interface Flags {
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
-  referralBannerText: ReferralBannerText;
+  referralBannerText: BannerContent;
+  secureVmCopy: SecureVMCopy;
   selfServeBetas: boolean;
   soldOutChips: boolean;
   supportTicketSeverity: boolean;
@@ -113,6 +122,22 @@ export interface Flags {
   taxId: BaseFeatureFlag;
   taxes: Taxes;
   tpaProviders: Provider[];
+}
+
+interface MarketplaceAppOverride {
+  /**
+   * Define app details that should be overwritten
+   *
+   * If you are adding an app that is not already defined in "oneClickAppsv2.ts",
+   * you *must* include all required OCA properties or Cloud Manager could crash.
+   *
+   * Pass `null` to hide the marketplace app
+   */
+  details: Partial<OCA> | null;
+  /**
+   * The ID of the StackScript that powers this Marketplace app
+   */
+  stackscriptId: number;
 }
 
 type PromotionalOfferFeature =
@@ -161,12 +186,24 @@ export interface Provider {
   name: TPAProvider;
 }
 
-interface ReferralBannerText {
+interface BannerContent {
   link?: {
     text: string;
     url: string;
   };
   text: string;
+}
+
+interface SecureVMCopy {
+  bannerLabel?: string;
+  firewallAuthorizationLabel?: string;
+  firewallAuthorizationWarning?: string;
+  firewallDetails?: BannerContent;
+  generateActionText?: string;
+  generateDocsLink: string;
+  generatePrompt?: BannerContent;
+  generateSuccess?: BannerContent;
+  linodeCreate?: BannerContent;
 }
 
 export type ProductInformationBannerLocation =

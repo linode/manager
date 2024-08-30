@@ -1,4 +1,4 @@
-import { getRegionAvailability } from '@linode/api-v4/lib/regions';
+import { getRegion, getRegionAvailability } from '@linode/api-v4/lib/regions';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
@@ -12,11 +12,6 @@ import {
 
 import type { Region, RegionAvailability } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
-
-interface TransformRegionLabelOptions {
-  includeSlug?: boolean;
-  transformRegionLabel?: boolean;
-}
 
 export const regionQueries = createQueryKeys('regions', {
   availability: {
@@ -32,31 +27,36 @@ export const regionQueries = createQueryKeys('regions', {
     },
     queryKey: null,
   },
+  region: (regionId: string) => ({
+    queryFn: () => getRegion(regionId),
+    queryKey: [regionId],
+  }),
   regions: {
     queryFn: getAllRegionsRequest,
     queryKey: null,
   },
 });
 
-export const useRegionsQuery = (
-  options: Partial<TransformRegionLabelOptions> = {}
-) =>
+export const useRegionQuery = (regionId: string) => {
+  return useQuery<Region, APIError>({
+    ...regionQueries.region(regionId),
+    enabled: Boolean(regionId),
+    select: (region) => ({
+      ...region,
+      label: getNewRegionLabel(region),
+    }),
+  });
+};
+
+export const useRegionsQuery = () =>
   useQuery<Region[], APIError[]>({
     ...regionQueries.regions,
     ...queryPresets.longLived,
-    select: (regions: Region[]) => {
-      // Display Country, City instead of City, State
-      if (options.transformRegionLabel) {
-        return regions.map((region) => ({
-          ...region,
-          label: getNewRegionLabel({
-            includeSlug: options.includeSlug,
-            region,
-          }),
-        }));
-      }
-      return regions;
-    },
+    select: (regions: Region[]) =>
+      regions.map((region) => ({
+        ...region,
+        label: getNewRegionLabel(region),
+      })),
   });
 
 export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>

@@ -2,6 +2,7 @@ import {
   Action,
   Badge,
   Button,
+  Chart,
   Color,
   Dropdown,
   Interaction,
@@ -57,6 +58,7 @@ export const customDarkModeOptions = {
     borderTypography: Color.Neutrals[80],
     divider: Color.Neutrals[80],
   },
+  charts: { ...Chart },
   color: {
     black: Color.Neutrals.White,
     blueDTwhite: Color.Neutrals.White,
@@ -197,6 +199,7 @@ export const darkTheme: ThemeOptions = {
   bg: customDarkModeOptions.bg,
   borderColors: customDarkModeOptions.borderColors,
   breakpoints,
+  charts: customDarkModeOptions.charts,
   color: customDarkModeOptions.color,
   components: {
     MuiAppBar: {
@@ -358,34 +361,34 @@ export const darkTheme: ThemeOptions = {
           color: Color.Brand[100],
         },
         colorError: {
-          backgroundColor: Badge.Bold.Red.Background,
-          color: Badge.Bold.Red.Text,
+          backgroundColor: Badge.Negative.Background,
+          color: Badge.Negative.Text,
         },
         colorInfo: {
-          backgroundColor: Badge.Bold.Ultramarine.Background,
-          color: Badge.Bold.Ultramarine.Text,
+          backgroundColor: Badge.Informative.Background,
+          color: Badge.Informative.Text,
         },
         colorPrimary: {
-          backgroundColor: Badge.Bold.Ultramarine.Background,
-          color: Badge.Bold.Ultramarine.Text,
+          backgroundColor: Badge.Informative.Background,
+          color: Badge.Informative.Text,
         },
         colorSecondary: {
           '&.MuiChip-clickable': {
             '&:hover': {
-              backgroundColor: Badge.Bold.Ultramarine.Background,
-              color: Badge.Bold.Ultramarine.Text,
+              backgroundColor: Badge.Informative.Background,
+              color: Badge.Informative.Text,
             },
           },
-          backgroundColor: Badge.Bold.Ultramarine.Background,
-          color: Badge.Bold.Ultramarine.Text,
+          backgroundColor: Badge.Informative.Background,
+          color: Badge.Informative.Text,
         },
         colorSuccess: {
-          backgroundColor: Badge.Bold.Green.Background,
-          color: Badge.Bold.Green.Text,
+          backgroundColor: Badge.Positive.Background,
+          color: Badge.Positive.Text,
         },
         colorWarning: {
-          backgroundColor: Badge.Bold.Amber.Background,
-          color: Badge.Bold.Amber.Text,
+          backgroundColor: Badge.Warning.Background,
+          color: Badge.Warning.Text,
         },
         outlined: {
           '& .MuiChip-label': {
