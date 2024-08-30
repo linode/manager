@@ -48,6 +48,9 @@ export const fetchAccount: CypressPlugin = async (_on, config) => {
     } catch (e) {
       // TODO Error message.
       console.error(`Failed to read account cache file at ${accountCachePath}`);
+      if ('message' in e) {
+        console.error(e.message);
+      }
       return undefined;
     }
 
