@@ -4,11 +4,15 @@
 
 import { profileFactory } from 'src/factories/profile';
 import { accountFactory } from 'src/factories/account';
+import { linodeFactory } from 'src/factories/linodes';
+import { chooseRegion } from 'support/util/regions';
+import { Linode } from '@linode/api-v4';
 import {
   mockGetAccount,
   mockEnableLinodeManaged,
   mockEnableLinodeManagedError,
 } from 'support/intercepts/account';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   linodeEnabledMessageText,
   linodeManagedStateMessageText,
@@ -26,20 +30,29 @@ describe('Account Linode Managed', () => {
    * - Confirms that user is told about the Managed price.
    * - Confirms that Cloud Manager displays the Managed state.
    */
-  it('users can enable Linode Managed', () => {
+  it.only('users can enable Linode Managed', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-user',
       restricted: false,
     });
+    const mockLinodes = new Array(4).fill(null).map(
+      (item: null, index: number): Linode => {
+        return linodeFactory.build({
+          label: `Linode ${index}`,
+          region: chooseRegion().id,
+        });
+      }
+    );
 
+    mockGetLinodes(mockLinodes).as('getLinodes');
     mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
     mockEnableLinodeManaged().as('enableLinodeManaged');
 
     // Navigate to Account Settings page, click "Add Linode Managed" button.
     visitUrlWithManagedDisabled('/account/settings');
-    cy.wait(['@getAccount', '@getProfile']);
+    cy.wait(['@getAccount', '@getProfile', '@getLinodes']);
 
     ui.button
       .findByTitle('Add Linode Managed')
@@ -55,7 +68,9 @@ describe('Account Linode Managed', () => {
           .invoke('text')
           .then((text) => {
             console.log(`h6 text: ${text.trim()}`);
-            expect(text.trim()).to.equal(linodeEnabledMessageText);
+            expect(text.trim()).to.equal(
+              linodeEnabledMessageText(mockLinodes.length)
+            );
           });
 
         // Confirm that submit button is enabled.
@@ -107,8 +122,7 @@ describe('Account Linode Managed', () => {
         cy.get('h6')
           .invoke('text')
           .then((text) => {
-            console.log(`h6 text: ${text.trim()}`);
-            expect(text.trim()).to.equal(linodeEnabledMessageText);
+            expect(text.trim()).to.equal(linodeEnabledMessageText(0));
           });
 
         // Confirm that submit button is enabled.
@@ -154,15 +168,14 @@ describe('Account Linode Managed', () => {
     cy.url().should('endWith', '/support/tickets');
 
     // Confirm that title and category are related to cancelling Linode Managed.
-    cy.get('input[id="title"]')
-      .invoke('val')
-      .then((title) => {
-        expect(title).to.equal('Cancel Linode Managed');
-      });
-    cy.get('input[role="combobox"]')
-      .invoke('val')
-      .then((category) => {
-        expect(category).to.equal('General/Account/Billing');
-      });
+    cy.findByLabelText('Title (required)').should(
+      'have.value',
+      'Cancel Linode Managed'
+    );
+
+    cy.findByLabelText('What is this regarding?').should(
+      'have.value',
+      'General/Account/Billing'
+    );
   });
 });

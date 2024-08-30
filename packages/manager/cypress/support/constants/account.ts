@@ -37,10 +37,13 @@ export const loginHelperText =
 export const loginEmptyStateMessageText = 'No account logins';
 
 /**
- * Warining message that appears when users is trying to enable Linode Managed.
+ * Warning message that appears when users is trying to enable Linode Managed.
  */
-export const linodeEnabledMessageText =
-  'Linode Managed costs an additional $100 per month per Linode.  You currently have 0 Linodes, so Managed will increase your projected monthly bill by $0.';
+export const linodeEnabledMessageText = (count: number): string => {
+  return `Linode Managed costs an additional $100 per month per Linode.  You currently have ${count} Linodes, so Managed will increase your projected monthly bill by $${
+    100 * count
+  }.`;
+};
 
 /**
  * Message that tells the Linode Managed is enabled.
