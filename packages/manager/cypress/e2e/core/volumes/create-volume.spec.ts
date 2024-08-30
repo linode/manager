@@ -6,6 +6,7 @@ import { cleanUp } from 'support/util/cleanup';
 import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
 import {
   interceptCreateVolume,
+  mockGetVolume,
   mockGetVolumes,
 } from 'support/intercepts/volumes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
@@ -195,6 +196,7 @@ describe('volume create flow', () => {
       (linode: Linode) => {
         linode.capabilities?.map((capability) => cy.log(capability));
         mockGetVolumes([volume]).as('getVolumes');
+        mockGetVolume(volume);
 
         cy.visitWithLogin(`/linodes/${linode.id}/storage`);
         cy.wait(['@getFeatureFlags', '@getAccount']);
@@ -212,8 +214,6 @@ describe('volume create flow', () => {
         cy.get('[data-qa-radio="Attach Existing Volume"]').click();
         cy.wait(['@getVolumes']);
         cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
-
-        cy.log(volume.encryption ?? 'vol encryption disabled');
 
         // Ensure notice is displayed in "Attach Existing Volume" view when an encrypted volume is selected
         cy.findByPlaceholderText('Select a Volume')
