@@ -30,13 +30,13 @@ describe('Account Linode Managed', () => {
    * - Confirms that user is told about the Managed price.
    * - Confirms that Cloud Manager displays the Managed state.
    */
-  it.only('users can enable Linode Managed', () => {
+  it('users can enable Linode Managed', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-user',
       restricted: false,
     });
-    const mockLinodes = new Array(4).fill(null).map(
+    const mockLinodes = new Array(5).fill(null).map(
       (item: null, index: number): Linode => {
         return linodeFactory.build({
           label: `Linode ${index}`,
@@ -93,7 +93,7 @@ describe('Account Linode Managed', () => {
    * - Confirms Cloud Manager behavior when a restricted user attempts to enable Linode Managed.
    * - Confirms that API error response message is displayed in confirmation dialog.
    */
-  it('restricted users cannot cancel account', () => {
+  it('restricted users cannot enable Managed', () => {
     const mockAccount = accountFactory.build();
     const mockProfile = profileFactory.build({
       username: 'mock-restricted-user',
@@ -101,6 +101,7 @@ describe('Account Linode Managed', () => {
     });
     const errorMessage = 'Unauthorized';
 
+    mockGetLinodes([]);
     mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
     mockEnableLinodeManagedError(errorMessage, 403).as('enableLinodeManaged');
@@ -124,17 +125,14 @@ describe('Account Linode Managed', () => {
           .then((text) => {
             expect(text.trim()).to.equal(linodeEnabledMessageText(0));
           });
-
         // Confirm that submit button is enabled.
         ui.button
           .findByTitle('Add Linode Managed')
           .should('be.visible')
           .should('be.enabled')
           .click();
-
         cy.wait('@enableLinodeManaged');
-
-        // Confirm that Cloud Manager displays a notice about Linod managed is enabled.
+        // Confirm that Cloud Manager displays a notice about Linode managed is unauthorized.
         cy.findByText(errorMessage, { exact: false }).should('be.visible');
       });
   });
