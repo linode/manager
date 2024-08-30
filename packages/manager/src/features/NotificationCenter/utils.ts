@@ -19,8 +19,10 @@ export const isEUModelContractNotification = (notification: Notification) => {
   );
 };
 
-// For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns.
-// If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
+/**
+ * For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns.
+ * If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
+ */
 export const adjustSeverity = ({
   severity,
   type,
