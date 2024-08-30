@@ -3,16 +3,16 @@ import { getEventMessage } from './utils';
 import type { Event, EventAction } from '@linode/api-v4';
 
 interface ToastMessage {
+  /**
+   * If true, the toast will be displayed with an error variant.
+   */
+  invertVariant?: boolean;
   message: ((event: Event) => JSX.Element | null | string | undefined) | string;
   persist?: boolean;
 }
 
 interface Toast {
   failure?: ToastMessage;
-  /**
-   * If true, the toast will be displayed with an error variant.
-   */
-  invertVariant?: boolean;
   success?: ToastMessage;
 }
 
@@ -20,36 +20,45 @@ type Toasts = {
   [key in EventAction]?: Toast;
 };
 
-const createToastBoth = (
-  options: {
-    invertVariant?: boolean;
-    persistFailure?: boolean;
-    persistSuccess?: boolean;
-  } = {}
-): Toast => ({
-  failure: {
-    message: (e) => getEventMessage(e),
-    persist: options.persistFailure || false,
-  },
-  invertVariant: options.invertVariant || false,
-  success: {
-    message: (e: any) => getEventMessage(e),
-    persist: options.persistSuccess || false,
-  },
-});
+interface ToastOption {
+  invertVariant?: boolean;
+  persist?: boolean;
+}
 
-const createToastFailureOnly = (
-  options: {
-    invertVariant?: boolean;
-    persistFailure?: boolean;
-  } = {}
-): Toast => ({
-  failure: {
-    message: (e) => getEventMessage(e),
-    persist: options.persistFailure || false,
-  },
-  invertVariant: options.invertVariant || false,
-});
+interface ToastOptions {
+  failure?: ToastOption | boolean;
+  success?: ToastOption | boolean;
+}
+
+const createToast = (options: ToastOptions) => {
+  const toastConfig: Toast = {};
+
+  if (options.failure) {
+    toastConfig.failure = {
+      invertVariant:
+        typeof options.failure !== 'boolean'
+          ? options.failure.invertVariant
+          : false,
+      message: (e) => getEventMessage(e),
+      persist:
+        typeof options.failure !== 'boolean' ? options.failure.persist : false,
+    };
+  }
+
+  if (options.success) {
+    toastConfig.success = {
+      invertVariant:
+        typeof options.success !== 'boolean'
+          ? options.success.invertVariant
+          : false,
+      message: (e) => getEventMessage(e),
+      persist:
+        typeof options.success !== 'boolean' ? options.success.persist : false,
+    };
+  }
+
+  return toastConfig;
+};
 
 /**
  * This constant defines toast notifications that will be displayed
@@ -61,25 +70,25 @@ const createToastFailureOnly = (
  * Toasts for that can be handled at the time of making the PUT request.
  */
 export const toasts: Toasts = {
-  backups_restore: createToastFailureOnly({ persistFailure: true }),
-  disk_delete: createToastBoth(),
-  disk_imagize: createToastBoth({ persistFailure: true }),
-  disk_resize: createToastBoth({ persistFailure: true }),
-  image_delete: createToastBoth(),
-  image_upload: createToastBoth({ persistFailure: true }),
-  linode_clone: createToastBoth(),
-  linode_migrate: createToastBoth(),
-  linode_migrate_datacenter: createToastBoth(),
-  linode_resize: createToastBoth(),
-  linode_snapshot: createToastFailureOnly({ persistFailure: true }),
-  longviewclient_create: createToastBoth(),
-  tax_id_invalid: createToastBoth({
-    invertVariant: true,
-    persistSuccess: true,
+  backups_restore: createToast({ failure: { persist: true } }),
+  disk_delete: createToast({ failure: false, success: true }),
+  disk_imagize: createToast({ failure: { persist: true }, success: true }),
+  disk_resize: createToast({ failure: { persist: true }, success: true }),
+  image_delete: createToast({ failure: true, success: true }),
+  image_upload: createToast({ failure: { persist: true }, success: true }),
+  linode_clone: createToast({ failure: true, success: true }),
+  linode_migrate: createToast({ failure: true, success: true }),
+  linode_migrate_datacenter: createToast({ failure: true, success: true }),
+  linode_resize: createToast({ failure: true, success: true }),
+  linode_snapshot: createToast({ failure: { persist: true } }),
+  longviewclient_create: createToast({ failure: true, success: true }),
+  tax_id_invalid: createToast({
+    failure: { invertVariant: true },
+    success: { invertVariant: true, persist: true },
   }),
-  volume_attach: createToastBoth(),
-  volume_create: createToastBoth(),
-  volume_delete: createToastBoth(),
-  volume_detach: createToastBoth(),
-  volume_migrate: createToastBoth(),
+  volume_attach: createToast({ failure: true, success: true }),
+  volume_create: createToast({ failure: true, success: true }),
+  volume_delete: createToast({ failure: true, success: true }),
+  volume_detach: createToast({ failure: true, success: true }),
+  volume_migrate: createToast({ failure: true, success: true }),
 };

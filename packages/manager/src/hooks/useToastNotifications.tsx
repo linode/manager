@@ -30,25 +30,25 @@ export const useToastNotifications = (): {
     const isSuccessEvent = ['finished', 'notification'].includes(event.status);
 
     if (isSuccessEvent && toastInfo.success) {
-      const { message, persist } = toastInfo.success;
+      const { invertVariant, message, persist } = toastInfo.success;
       const successMessage = getToastMessage(message, event);
 
       if (successMessage) {
         enqueueSnackbar(successMessage, {
           persist: persist ?? false,
-          variant: toastInfo.invertVariant ? 'error' : 'success',
+          variant: invertVariant ? 'error' : 'success',
         });
       }
     }
 
     if (event.status === 'failed' && toastInfo.failure) {
-      const { message, persist } = toastInfo.failure;
+      const { invertVariant, message, persist } = toastInfo.failure;
       const failureMessage = getToastMessage(message, event);
 
       if (failureMessage) {
         enqueueSnackbar(failureMessage, {
           persist: persist ?? false,
-          variant: toastInfo.invertVariant ? 'success' : 'error',
+          variant: invertVariant ? 'success' : 'error',
         });
       }
     }
