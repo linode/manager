@@ -136,13 +136,15 @@ export const CloudPulseDashboardWithFilters = React.memo(
           </Grid>
           <Divider />
           {isFilterBuilderNeeded && (
-            <CloudPulseDashboardFilterBuilder
-              dashboard={dashboard}
-              emitFilterChange={onFilterChange}
-              isServiceAnalyticsIntegration={true}
-            />
+            <>
+              <CloudPulseDashboardFilterBuilder
+                dashboard={dashboard}
+                emitFilterChange={onFilterChange}
+                isServiceAnalyticsIntegration={true}
+              />
+              <Divider />
+            </>
           )}
-          {isFilterBuilderNeeded && <Divider />}
         </Paper>
         {isMandatoryFiltersSelected ? (
           <CloudPulseDashboard
