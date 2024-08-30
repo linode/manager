@@ -202,8 +202,8 @@ describe('volume create flow', () => {
         cy.visitWithLogin(`/linodes/${linode.id}/storage`);
         cy.wait(['@getFeatureFlags', '@getAccount']);
 
-        // Click "Create Volume" button
-        cy.findByText('Create Volume').click();
+        // Click "Add Volume" button
+        cy.findByText('Add Volume').click();
 
         cy.get('[data-qa-drawer="true"]').within(() => {
           cy.get('[data-qa-checked]').should('be.visible').click();
