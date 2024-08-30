@@ -212,7 +212,7 @@ describe('linode storage tab', () => {
       ui.toast.assertMessage('Disk queued for resizing.');
       // cy.findByText('Resizing', { exact: false }).should('be.visible');
       ui.toast.assertMessage(
-        `A disk on Linode ${linode.label} has been resized.`
+        `A disk ${diskName} on Linode ${linode.label} has been resized.`
       );
     });
   });
