@@ -61,7 +61,6 @@ import {
 import { UserPermissionsEntitySection } from './UserPermissionsEntitySection';
 interface Props {
   accountUsername?: string;
-  clearNewUser: () => void;
   currentUsername?: string;
   queryClient: QueryClient;
 }
@@ -429,7 +428,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const isProxyUser = this.state.userType === 'proxy';
 
     return (
-      <Box sx={{ marginTop: (theme) => theme.spacing(4) }}>
+      <Box>
         {generalError && (
           <Notice spacingTop={8} text={generalError} variant="error" />
         )}
@@ -690,7 +689,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   savePermsType = (type: keyof Grants) => () => {
     this.setState({ errors: undefined });
-    const { clearNewUser, currentUsername } = this.props;
+    const { currentUsername } = this.props;
     const { grants } = this.state;
     if (!currentUsername || !(grants && grants[type])) {
       return this.setState({
@@ -701,8 +700,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         ],
       });
     }
-
-    clearNewUser();
 
     if (type === 'global') {
       this.setState({ isSavingGlobal: true });
