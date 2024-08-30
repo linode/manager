@@ -19,7 +19,7 @@ export const RecycleNodeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, mutateAsync } = useRecycleNodeMutation(
+  const { error, isPending, mutateAsync } = useRecycleNodeMutation(
     clusterId,
     nodeId
   );
@@ -36,7 +36,7 @@ export const RecycleNodeDialog = (props: Props) => {
       primaryButtonProps={{
         'data-testid': 'confirm',
         label: 'Recycle',
-        loading: isLoading,
+        loading: isPending,
         onClick: onSubmit,
       }}
       secondaryButtonProps={{

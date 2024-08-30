@@ -87,7 +87,7 @@ export const MigrateLinode = React.memo((props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: migrateLinode,
     reset,
   } = useLinodeMigrateMutation(linodeId ?? -1);
@@ -294,7 +294,7 @@ export const MigrateLinode = React.memo((props: Props) => {
             },
           }}
           buttonType="primary"
-          loading={isLoading}
+          loading={isPending}
           onClick={handleMigrate}
         >
           Enter Migration Queue

@@ -25,7 +25,7 @@ export const CreateFolderDrawer = (props: Props) => {
     prefix,
   } = props;
 
-  const { error, isLoading, mutateAsync } = useCreateObjectUrlMutation(
+  const { error, isPending, mutateAsync } = useCreateObjectUrlMutation(
     clusterId,
     bucketName
   );
@@ -88,7 +88,7 @@ export const CreateFolderDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Create',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

@@ -80,7 +80,7 @@ export const AddNodePoolDrawer = (props: Props) => {
   const { data: types } = useAllTypes(open);
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
 
@@ -186,7 +186,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          isSubmitting={isLoading}
+          isSubmitting={isPending}
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}
@@ -237,7 +237,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             primaryButtonProps={{
               disabled: !selectedTypeInfo || hasInvalidPrice,
               label: 'Add pool',
-              loading: isLoading,
+              loading: isPending,
               onClick: handleAdd,
             }}
           />

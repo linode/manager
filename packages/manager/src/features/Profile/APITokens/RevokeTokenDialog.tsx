@@ -1,4 +1,3 @@
-import { Token } from '@linode/api-v4/lib/profile/types';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
@@ -10,7 +9,8 @@ import {
   useRevokePersonalAccessTokenMutation,
 } from 'src/queries/profile/tokens';
 
-import { APITokenType } from './APITokenTable';
+import type { APITokenType } from './APITokenTable';
+import type { Token } from '@linode/api-v4';
 
 export interface Props {
   onClose: () => void;
@@ -27,7 +27,7 @@ export const RevokeTokenDialog = ({ onClose, open, token, type }: Props) => {
 
   const useRevokeQuery = queryMap[type];
 
-  const { error, isLoading, mutateAsync } = useRevokeQuery(token?.id ?? -1);
+  const { error, isPending, mutateAsync } = useRevokeQuery(token?.id ?? -1);
   const { enqueueSnackbar } = useSnackbar();
 
   const onRevoke = () => {
@@ -46,7 +46,7 @@ export const RevokeTokenDialog = ({ onClose, open, token, type }: Props) => {
           primaryButtonProps={{
             'data-testid': 'revoke-button',
             label: 'Revoke',
-            loading: isLoading,
+            loading: isPending,
             onClick: onRevoke,
           }}
           secondaryButtonProps={{

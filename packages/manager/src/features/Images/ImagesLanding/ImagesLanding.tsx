@@ -373,8 +373,8 @@ export const ImagesLanding = () => {
   }
 
   if (
-    manualImages.results === 0 &&
-    automaticImages.results === 0 &&
+    manualImages?.results === 0 &&
+    automaticImages?.results === 0 &&
     !imageLabelFromParam
   ) {
     return <ImagesLandingEmptyState />;
@@ -489,13 +489,13 @@ export const ImagesLanding = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {manualImages.results === 0 && (
+            {manualImages?.results === 0 && (
               <TableRowEmpty
                 colSpan={9}
                 message={`No Custom Images to display.`}
               />
             )}
-            {manualImages.data.map((manualImage) => (
+            {manualImages?.data.map((manualImage) => (
               <ImageRow
                 event={manualImagesEvents[manualImage.id]}
                 handlers={handlers}
@@ -562,13 +562,13 @@ export const ImagesLanding = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {automaticImages.results === 0 && (
+            {automaticImages?.results === 0 && (
               <TableRowEmpty
                 colSpan={6}
                 message={`No Recovery Images to display.`}
               />
             )}
-            {automaticImages.data.map((automaticImage) => (
+            {automaticImages?.data.map((automaticImage) => (
               <ImageRow
                 event={automaticImagesEvents[automaticImage.id]}
                 handlers={handlers}

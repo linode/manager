@@ -22,7 +22,7 @@ export const RecycleNodePoolDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, mutateAsync } = useRecycleNodePoolMutation(
+  const { error, isPending, mutateAsync } = useRecycleNodePoolMutation(
     clusterId,
     nodePoolId
   );
@@ -41,7 +41,7 @@ export const RecycleNodePoolDialog = (props: Props) => {
       primaryButtonProps={{
         'data-testid': 'confirm',
         label: 'Recycle Pool Nodes',
-        loading: isLoading,
+        loading: isPending,
         onClick: onRecycle,
       }}
       secondaryButtonProps={{
