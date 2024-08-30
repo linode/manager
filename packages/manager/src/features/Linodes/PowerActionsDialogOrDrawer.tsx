@@ -54,19 +54,19 @@ export const PowerActionsDialog = (props: Props) => {
 
   const {
     error: bootError,
-    isLoading: isBooting,
+    isPending: isBooting,
     mutateAsync: bootLinode,
   } = useBootLinodeMutation(linodeId ?? -1, configs);
 
   const {
     error: rebootError,
-    isLoading: isRebooting,
+    isPending: isRebooting,
     mutateAsync: rebootLinode,
   } = useRebootLinodeMutation(linodeId ?? -1, configs);
 
   const {
     error: shutdownError,
-    isLoading: isShuttingDown,
+    isPending: isShuttingDown,
     mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
 

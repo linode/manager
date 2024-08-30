@@ -3,7 +3,6 @@ import { createTestLinode } from 'support/util/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
-import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
 import {
   interceptCreateVolume,
   mockGetVolume,
@@ -64,16 +63,16 @@ describe('volume create flow', () => {
     });
 
     // Fill out and submit volume create form.
-    containsClick('Label').type(volume.label);
-    containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
+    cy.contains('Label').click().type(volume.label);
+    cy.contains('Size').click().type(`{selectall}{backspace}${volume.size}`);
     ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 
-    fbtClick('Create Volume');
+    cy.findByText('Create Volume').click();
     cy.wait('@createVolume');
 
     // Validate volume configuration drawer opens, then close it.
-    fbtVisible('Volume scheduled for creation.');
-    getClick('[data-qa-close-drawer="true"]');
+    cy.findByText('Volume scheduled for creation.').should('be.visible');
+    cy.get('[data-qa-close-drawer="true"]').click();
 
     // Confirm that volume is listed on landing page with expected configuration.
     cy.findByText(volume.label)
@@ -117,8 +116,10 @@ describe('volume create flow', () => {
         });
 
         // Fill out and submit volume create form.
-        containsClick('Label').type(volume.label);
-        containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
+        cy.contains('Label').click().type(volume.label);
+        cy.contains('Size')
+          .click()
+          .type(`{selectall}{backspace}${volume.size}`);
         ui.regionSelect.find().click().type(`${volume.region}{enter}`);
 
         cy.findByLabelText('Linode')
@@ -131,12 +132,12 @@ describe('volume create flow', () => {
           .should('be.visible')
           .click();
 
-        fbtClick('Create Volume');
+        cy.findByText('Create Volume').click();
         cy.wait('@createVolume');
 
         // Confirm volume configuration drawer opens, then close it.
-        fbtVisible('Volume scheduled for creation.');
-        getClick('[data-qa-close-drawer="true"]');
+        cy.findByText('Volume scheduled for creation.').should('be.visible');
+        cy.get('[data-qa-close-drawer="true"]').click();
 
         // Confirm that volume is listed on landing page with expected configuration.
         cy.findByText(volume.label)
@@ -153,8 +154,8 @@ describe('volume create flow', () => {
         cy.findByText(volume.label)
           .closest('tr')
           .within(() => {
-            fbtVisible(volume.label);
-            fbtVisible(`${volume.size} GB`);
+            cy.findByText(volume.label).should('be.visible');
+            cy.findByText(`${volume.size} GB`).should('be.visible');
           });
       }
     );
@@ -254,27 +255,29 @@ describe('volume create flow', () => {
           localStorageOverrides: pageSizeOverride,
         });
 
-        // Click "Create Volume" button, fill out and submit volume create drawer form.
-        fbtClick('Create Volume');
+        // Click "Add Volume" button, fill out and submit volume create drawer form.
+        cy.findByText('Add Volume').click();
         cy.get('[data-qa-drawer="true"]').within(() => {
-          fbtVisible(`Create Volume for ${linode.label}`);
-          containsClick('Create and Attach Volume');
-          containsClick('Label').type(volume.label);
-          containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
-          fbtClick('Create Volume');
+          cy.findByText(`Create Volume for ${linode.label}`).should(
+            'be.visible'
+          );
+          cy.contains('Create and Attach Volume').click();
+          cy.contains('Label').click().type(volume.label);
+          cy.contains('Size').type(`{selectall}{backspace}${volume.size}`);
+          cy.findByText('Create Volume').click();
         });
 
         // Confirm volume configuration drawer opens, then close it.
         cy.get('[data-qa-drawer="true"]').within(() => {
-          getClick('[data-qa-close-drawer="true"]');
+          cy.get('[data-qa-close-drawer="true"]').click();
         });
 
         // Confirm that volume is listed on Linode 'Storage' details page.
         cy.findByText(volume.label)
           .closest('tr')
           .within(() => {
-            fbtVisible(volume.label);
-            fbtVisible(`${volume.size} GB`);
+            cy.findByText(volume.label).should('be.visible');
+            cy.findByText(`${volume.size} GB`).should('be.visible');
           });
 
         // Confirm that volume is listed on landing page with expected configuration.

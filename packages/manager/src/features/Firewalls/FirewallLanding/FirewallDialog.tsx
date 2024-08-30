@@ -28,12 +28,12 @@ export const FirewallDialog = React.memo((props: Props) => {
 
   const {
     error: updateError,
-    isLoading: isUpdating,
+    isPending: isUpdating,
     mutateAsync: updateFirewall,
   } = useMutateFirewall(selectedFirewall.id);
   const {
     error: deleteError,
-    isLoading: isDeleting,
+    isPending: isDeleting,
     mutateAsync: deleteFirewall,
   } = useDeleteFirewall(selectedFirewall.id);
 

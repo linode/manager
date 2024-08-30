@@ -29,7 +29,7 @@ describe('LinodeVolumeAddDrawer', () => {
         linode={linode}
         onClose={vi.fn}
         open
-        openDetails={vi.fn}
+        openDetails={() => vi.fn}
       />,
       {
         flags: { blockStorageEncryption: true },

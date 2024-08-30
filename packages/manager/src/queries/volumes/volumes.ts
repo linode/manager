@@ -13,6 +13,7 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -53,7 +54,7 @@ export const volumeQueries = createQueryKeys('volumes', {
       }),
       infinite: (filter: Filter = {}) => ({
         queryFn: ({ pageParam }) =>
-          getVolumes({ page: pageParam, page_size: 25 }, filter),
+          getVolumes({ page: pageParam as number, page_size: 25 }, filter),
         queryKey: [filter],
       }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
@@ -83,7 +84,7 @@ export const useVolumeQuery = (id: number, enabled = true) => {
 export const useVolumesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.lists._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useVolumeTypesQuery = () =>
@@ -101,6 +102,7 @@ export const useInfiniteVolumesQuery = (filter: Filter) =>
       }
       return page + 1;
     },
+    initialPageParam: 1,
   });
 
 export const useAllVolumesQuery = (
@@ -122,7 +124,7 @@ export const useLinodeVolumesQuery = (
   useQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.linode(linodeId)._ctx.volumes(params, filter),
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 interface ResizeVolumePayloadWithId extends ResizeVolumePayload {

@@ -1,4 +1,3 @@
-import set from 'lodash.set';
 import { reverse } from 'ramda';
 
 import { getAPIErrorOrDefault } from './errorUtils';
@@ -21,6 +20,67 @@ export const getFormikErrorsFromAPIErrors = <T>(
     }
     return acc;
   }, {});
+};
+
+// regex used in the below set function
+const onlyDigitsRegex = /^\d+$/;
+
+/**
+ * Helper for getFormikErrorsFromAPIErrors, sets the given value at a specified path of the given object.
+ * Note that while we are using this function in place of lodash's set, it is not an exact replacement.
+ * This method both mutates the passed in object and returns it.
+ *
+ * @param object — The object to modify.
+ * @param path — The path of the property to set.
+ * @param value — The value to set.
+ * @return — Returns object.
+ */
+export const set = <T>(
+  obj: FormikErrors<T>,
+  path: string,
+  value: string
+): FormikErrors<T> => {
+  const parts = path.split(/\.|\[|\]/).filter(Boolean);
+
+  // ensure that obj is not an array and that the path is prototype pollution safe
+  if (Array.isArray(obj) || !isPrototypePollutionSafe(parts)) {
+    return obj;
+  }
+
+  parts.reduce((acc: Record<string, unknown>, part: string, index: number) => {
+    if (index === parts.length - 1) {
+      // Last part, set the value
+      acc[part] = value;
+    } else if (part.match(onlyDigitsRegex)) {
+      // Handle array indices
+      const arrayIndex = parseInt(part, 10);
+      acc[arrayIndex] =
+        acc[arrayIndex] ?? (parts[index + 1].match(onlyDigitsRegex) ? [] : {});
+    } else {
+      // Handle nested objects
+      const potentialNextVal = parts[index + 1].match(onlyDigitsRegex)
+        ? []
+        : {};
+      acc[part] = typeof acc[part] === 'object' ? acc[part] : potentialNextVal;
+    }
+    return acc[part];
+  }, obj);
+
+  return obj;
+};
+
+/**
+ * Ensures a path cannot lead to a prototype pollution issue.
+ *
+ * @param path - The path to check
+ * @return - boolean depending on whether the path is safe or not
+ */
+const isPrototypePollutionSafe = (path: string[]): boolean => {
+  return path.reduce((safeSoFar, val) => {
+    const isCurKeySafe =
+      val !== '__proto__' && val !== 'prototype' && val !== 'constructor';
+    return safeSoFar && isCurKeySafe;
+  }, true);
 };
 
 export const handleFieldErrors = (
