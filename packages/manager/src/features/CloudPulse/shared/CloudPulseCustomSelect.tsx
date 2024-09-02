@@ -97,6 +97,8 @@ export interface CloudPulseCustomSelectProps {
    */
   placeholder?: string;
 
+  preferences?: AclpConfig;
+
   /**
    * This property controls whether to save the preferences or not
    */
@@ -106,6 +108,8 @@ export interface CloudPulseCustomSelectProps {
    * The cloud pulse select types, it can be static or dynamic depending on the use case
    */
   type: CloudPulseSelectTypes;
+
+  updatePreferences?: (data: {}) => void;
 }
 
 export enum CloudPulseSelectTypes {
@@ -128,8 +132,10 @@ export const CloudPulseCustomSelect = React.memo(
       maxSelections,
       options,
       placeholder,
+      preferences,
       savePreferences,
       type,
+      updatePreferences,
     } = props;
 
     const [selectedResource, setResource] = React.useState<
@@ -159,6 +165,7 @@ export const CloudPulseCustomSelect = React.memo(
             handleSelectionChange,
             isMultiSelect: isMultiSelect ?? false,
             options: options || queriedResources || [],
+            preferences,
             savePreferences: savePreferences ?? false,
           })
         );

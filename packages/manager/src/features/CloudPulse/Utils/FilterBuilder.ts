@@ -163,10 +163,12 @@ export const getCustomSelectProperties = (
     maxSelections,
     options,
     placeholder,
+    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
+    updatePreferences,
   };
 };
 
