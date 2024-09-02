@@ -29,7 +29,7 @@ export const UpgradeVolumesDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: migrateVolumes,
   } = useVolumesMigrateMutation();
 
@@ -58,7 +58,7 @@ export const UpgradeVolumesDialog = (props: Props) => {
       <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
-      <Button buttonType="primary" loading={isLoading} onClick={onSubmit}>
+      <Button buttonType="primary" loading={isPending} onClick={onSubmit}>
         Enter Upgrade Queue
       </Button>
     </Stack>

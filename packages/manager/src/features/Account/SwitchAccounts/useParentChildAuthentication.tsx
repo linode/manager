@@ -20,7 +20,7 @@ export const useParentChildAuthentication = () => {
 
   const {
     error: createTokenError,
-    isLoading: createTokenLoading,
+    isPending: createTokenLoading,
     mutateAsync: createProxyToken,
   } = useCreateChildAccountPersonalAccessTokenMutation();
 

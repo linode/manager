@@ -20,9 +20,9 @@ import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 interface Props {
   disabled?: boolean;
   entityType: FirewallDeviceEntityType | undefined;
-  handleFirewallChange: (firewallID: number) => void;
+  handleFirewallChange: (firewallID: number | undefined) => void;
   helperText: JSX.Element;
-  selectedFirewallId: number;
+  selectedFirewallId: number | undefined;
 }
 
 export const SelectFirewallPanel = (props: Props) => {
@@ -60,7 +60,7 @@ export const SelectFirewallPanel = (props: Props) => {
   }));
 
   const selectedFirewall =
-    selectedFirewallId !== -1
+    selectedFirewallId !== undefined
       ? firewallsDropdownOptions.find(
           (option) => option.value === selectedFirewallId
         ) || null
@@ -94,14 +94,12 @@ export const SelectFirewallPanel = (props: Props) => {
             />
           )}
         <Autocomplete
-          onChange={(_, selection) =>
-            handleFirewallChange(selection?.value ?? -1)
-          }
           disabled={disabled}
           errorText={error?.[0].reason}
           label="Assign Firewall"
           loading={isLoading}
           noOptionsText="No Firewalls available"
+          onChange={(_, selection) => handleFirewallChange(selection?.value)}
           options={firewallsDropdownOptions}
           placeholder={'None'}
           value={selectedFirewall}

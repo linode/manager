@@ -17,7 +17,7 @@ export const VPCDeleteDialog = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteVPC,
     reset,
   } = useDeleteVPCMutation(id ?? -1);
@@ -51,7 +51,7 @@ export const VPCDeleteDialog = (props: Props) => {
       }}
       errors={error}
       label="VPC Label"
-      loading={isLoading}
+      loading={isPending}
       onClick={onDeleteVPC}
       onClose={onClose}
       open={open}
