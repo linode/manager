@@ -239,7 +239,7 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
     expect(screen.getByText('103 objects')).toBeInTheDocument();
   });
 
-  it('doesnt show the CORS switch for E2 and E3 buckets', async () => {
+  it("doesn't show the CORS switch for E2 and E3 buckets", async () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
@@ -261,7 +261,7 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
   });
 
   it('renders the Bucket Rate Limit Table for E2 and E3 buckets', async () => {
-    const { getAllByRole } = renderWithThemeAndHookFormContext({
+    const { getByTestId } = renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
           onClose={mockOnClose}
@@ -274,8 +274,8 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
       },
     });
 
-    const rows = getAllByRole('row');
-    expect(rows).toHaveLength(3);
+    const rateLimitTable = getByTestId('bucket-rate-limit-table');
+    expect(rateLimitTable).toBeVisible();
   });
 
   it('renders the Bucket Rate Limit Text for E0 and E1 buckets', async () => {

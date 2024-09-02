@@ -60,5 +60,6 @@ describe('BucketTable', () => {
       />
     );
     expect(getByText('Endpoint Type')).toBeVisible();
+    expect(getByText('Standard (E3)')).toBeVisible();
   });
 });
