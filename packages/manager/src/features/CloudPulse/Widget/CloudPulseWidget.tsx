@@ -321,14 +321,14 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               {Boolean(
                 availableMetrics?.available_aggregate_functions?.length
               ) && (
-                <CloudPulseAggregateFunction
-                  availableAggregateFunctions={
-                    availableMetrics!.available_aggregate_functions
-                  }
-                  defaultAggregateFunction={widget?.aggregate_function}
-                  onAggregateFuncChange={handleAggregateFunctionChange}
-                />
-              )}
+                  <CloudPulseAggregateFunction
+                    availableAggregateFunctions={
+                      availableMetrics!.available_aggregate_functions
+                    }
+                    defaultAggregateFunction={widget?.aggregate_function}
+                    onAggregateFuncChange={handleAggregateFunctionChange}
+                  />
+                )}
               <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
@@ -341,7 +341,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
           <CloudPulseLineGraph
             error={
-              status === 'error' && error?.[0].reason !== jweTokenExpiryError // show the error only if the error is not related to token expiration
+              status === 'error' && error?.[0]?.reason !== jweTokenExpiryError // show the error only if the error is not related to token expiration
                 ? error?.[0]?.reason ?? 'Error while rendering graph'
                 : undefined
             }
@@ -353,7 +353,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             formatData={(data: number) => convertValueToUnit(data, currentUnit)}
             formatTooltip={(value: number) => formatToolTip(value, unit)}
             gridSize={widget.size}
-            loading={isLoading || error?.[0].reason === jweTokenExpiryError} // keep loading until we fetch the refresh token
+            loading={isLoading || error?.[0]?.reason === jweTokenExpiryError} // keep loading until we fetch the refresh token
             nativeLegend
             showToday={today}
             timezone={timezone}
