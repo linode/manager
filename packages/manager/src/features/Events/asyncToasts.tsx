@@ -34,32 +34,21 @@ interface ToastOptions {
 export const createToast = (options: ToastOptions) => {
   const toastConfig: Toast = {};
 
-  if (options.failure) {
-    toastConfig.failure = {
+  const getToastMessage = (option: ToastOption | boolean): ToastMessage => {
+    return {
       invertVariant:
-        typeof options.failure !== 'boolean'
-          ? Boolean(options.failure.invertVariant)
-          : false,
+        typeof option !== 'boolean' ? Boolean(option.invertVariant) : false,
       message: (e) => getEventMessage(e),
-      persist:
-        typeof options.failure !== 'boolean'
-          ? Boolean(options.failure.persist)
-          : false,
+      persist: typeof option !== 'boolean' ? Boolean(option.persist) : false,
     };
+  };
+
+  if (options.failure) {
+    toastConfig.failure = getToastMessage(options.failure);
   }
 
   if (options.success) {
-    toastConfig.success = {
-      invertVariant:
-        typeof options.success !== 'boolean'
-          ? Boolean(options.success.invertVariant)
-          : false,
-      message: (e) => getEventMessage(e),
-      persist:
-        typeof options.success !== 'boolean'
-          ? Boolean(options.success.persist)
-          : false,
-    };
+    toastConfig.success = getToastMessage(options.success);
   }
 
   return toastConfig;
