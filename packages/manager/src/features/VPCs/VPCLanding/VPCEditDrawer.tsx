@@ -38,7 +38,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateVPC,
     reset,
   } = useUpdateVPCMutation(vpc?.id ?? -1);
@@ -132,7 +132,7 @@ export const VPCEditDrawer = (props: Props) => {
             'data-testid': 'save-button',
             disabled: !form.dirty || readOnly,
             label: 'Save',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

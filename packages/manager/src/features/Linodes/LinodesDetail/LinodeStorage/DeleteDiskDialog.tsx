@@ -18,7 +18,7 @@ export const DeleteDiskDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteDisk,
     reset,
   } = useLinodeDeleteDiskMutation(linodeId, disk?.id ?? -1);
@@ -41,7 +41,7 @@ export const DeleteDiskDialog = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'confirm-delete',
             label: 'Delete',
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

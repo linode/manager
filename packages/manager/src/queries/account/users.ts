@@ -1,5 +1,10 @@
 import { deleteUser } from '@linode/api-v4/lib/account';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { useProfile } from 'src/queries/profile/profile';
 
@@ -28,7 +33,7 @@ export const useAccountUsers = ({
   return useQuery<ResourcePage<User>, APIError[]>({
     ...accountQueries.users._ctx.paginated(params, filters),
     enabled: enabled && !profile?.restricted,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -48,7 +53,8 @@ export const useAccountUserGrants = (username: string) => {
 
 export const useAccountUserDeleteMutation = (username: string) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteUser(username), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteUser(username),
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: accountQueries.users._ctx.paginated._def,

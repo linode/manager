@@ -78,7 +78,7 @@ export const LinodeResize = (props: Props) => {
 
   const {
     error: resizeError,
-    isLoading,
+    isPending,
     mutateAsync: resizeLinode,
   } = useLinodeResizeMutation(linodeId ?? -1);
 
@@ -326,7 +326,7 @@ export const LinodeResize = (props: Props) => {
               }
               buttonType="primary"
               data-qa-resize
-              loading={isLoading}
+              loading={isPending}
               type="submit"
             >
               Resize Linode
