@@ -4,7 +4,8 @@ import type { Event, EventAction } from '@linode/api-v4';
 
 interface ToastMessage {
   /**
-   * If true, the toast will be displayed with an error variant.
+   * If true, the toast will be displayed with an error variant for success messages \
+   * or a success variant for error messages.
    */
   invertVariant?: boolean;
   message: ((event: Event) => JSX.Element | null | string | undefined) | string;
@@ -25,10 +26,17 @@ interface ToastOption {
   persist?: boolean;
 }
 
-interface ToastOptions {
+interface ToastOptionsBase {
   failure?: ToastOption | boolean;
   success?: ToastOption | boolean;
 }
+
+/**
+ * To ensure that at least one of failure or success is provided while keeping both optional.
+ */
+type ToastOptions =
+  | (ToastOptionsBase & { failure: ToastOption | boolean })
+  | (ToastOptionsBase & { success: ToastOption | boolean });
 
 const createToast = (options: ToastOptions) => {
   const toastConfig: Toast = {};
