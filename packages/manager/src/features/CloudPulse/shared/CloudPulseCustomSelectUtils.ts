@@ -1,10 +1,6 @@
-import {
-  getUserPreferenceObject,
-  updateGlobalFilterPreference,
-} from '../Utils/UserPreference';
-
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
+import type { AclpConfig } from '@linode/api-v4';
 
 /**
  * The interface for selecting the default value from the user preferences
@@ -29,10 +25,13 @@ interface CloudPulseCustomSelectDefaultValueProps {
    */
   options: CloudPulseServiceTypeFiltersOptions[];
 
+  preferences?: AclpConfig;
+
   /**
    * Indicates whether we need to save preferences or not
    */
-  savePreferences: boolean;
+  savePreferences?: boolean;
+  updatePreferences?: (data: {}) => void;
 }
 
 /**
@@ -56,6 +55,11 @@ interface CloudPulseCustomSelectionChangeProps {
    * The maximum number of selections that needs to be allowed
    */
   maxSelections?: number;
+
+  preferences?: AclpConfig;
+  savePreferences?: boolean;
+
+  updatePreferences?: (data: {}) => void;
 
   /**
    * The listed options in the custom select component
@@ -81,12 +85,11 @@ export const getInitialDefaultSelections = (
     handleSelectionChange,
     isMultiSelect,
     options,
+    preferences,
     savePreferences,
   } = defaultSelectionProps;
 
-  const defaultValue = savePreferences
-    ? getUserPreferenceObject()[filterKey]
-    : undefined;
+  const defaultValue = savePreferences ? preferences?.[filterKey] : undefined;
   if (!options || options.length === 0) {
     return isMultiSelect ? [] : undefined;
   }
@@ -138,6 +141,8 @@ export const handleCustomSelectionChange = (
     filterKey,
     handleSelectionChange,
     maxSelections,
+    savePreferences,
+    updatePreferences,
   } = selectionChangeProps;
 
   let { value } = selectionChangeProps;
@@ -156,14 +161,16 @@ export const handleCustomSelectionChange = (
   handleSelectionChange(filterKey, result);
 
   // update the preferences
-  updateGlobalFilterPreference({
-    [filterKey]: result,
-  });
+  if (savePreferences && updatePreferences) {
+    updatePreferences({
+      [filterKey]: result,
+    });
+  }
 
   // update the clear selections in the preference
-  if (clearSelections) {
+  if (clearSelections && savePreferences && updatePreferences) {
     clearSelections.forEach((selection) =>
-      updateGlobalFilterPreference({ [selection]: undefined })
+      updatePreferences({ [selection]: undefined })
     );
   }
 

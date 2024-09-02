@@ -14,6 +14,7 @@ import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
 } from '../Utils/models';
+import type { AclpConfig } from '@linode/api-v4';
 
 /**
  * These are the properties requires for CloudPulseCustomSelect Components
@@ -86,6 +87,8 @@ export interface CloudPulseCustomSelectProps {
    */
   placeholder?: string;
 
+  preferences?: AclpConfig;
+
   /**
    * This property controls whether to save the preferences or not
    */
@@ -95,6 +98,8 @@ export interface CloudPulseCustomSelectProps {
    * The cloud pulse select types, it can be static or dynamic depending on the use case
    */
   type: CloudPulseSelectTypes;
+
+  updatePreferences?: (data: {}) => void;
 }
 
 export enum CloudPulseSelectTypes {
@@ -116,8 +121,10 @@ export const CloudPulseCustomSelect = React.memo(
       maxSelections,
       options,
       placeholder,
+      preferences,
       savePreferences,
       type,
+      updatePreferences,
     } = props;
 
     const [selectedResource, setResource] = React.useState<
@@ -146,6 +153,7 @@ export const CloudPulseCustomSelect = React.memo(
             handleSelectionChange,
             isMultiSelect: isMultiSelect ?? false,
             options: options ?? [],
+            preferences,
             savePreferences: savePreferences ?? false,
           })
         );
@@ -165,6 +173,8 @@ export const CloudPulseCustomSelect = React.memo(
         filterKey,
         handleSelectionChange,
         maxSelections,
+        savePreferences,
+        updatePreferences,
         value,
       });
       setResource(

@@ -155,6 +155,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
+              preferences,
+              updatePreferences,
             },
             handleCustomSelectChange
           );
