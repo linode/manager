@@ -29,6 +29,7 @@ export const GroupByTagToggle = React.memo((props: GroupByTagToggleProps) => {
         <StyledToggleButton
           aria-describedby={groupByDescriptionId}
           aria-label={`Toggle group by tag`}
+          data-testid="group-by-tag"
           disableRipple
           // See https://github.com/linode/manager/pull/6653 for more details
           disabled={isLargeAccount}
