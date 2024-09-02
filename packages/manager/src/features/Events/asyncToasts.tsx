@@ -26,30 +26,25 @@ interface ToastOption {
   persist?: boolean;
 }
 
-interface ToastOptionsBase {
+interface ToastOptions {
   failure?: ToastOption | boolean;
   success?: ToastOption | boolean;
 }
 
-/**
- * To ensure that at least one of failure or success is provided while keeping both optional.
- */
-type ToastOptions =
-  | (ToastOptionsBase & { failure: ToastOption | boolean })
-  | (ToastOptionsBase & { success: ToastOption | boolean });
-
-const createToast = (options: ToastOptions) => {
+export const createToast = (options: ToastOptions) => {
   const toastConfig: Toast = {};
 
   if (options.failure) {
     toastConfig.failure = {
       invertVariant:
         typeof options.failure !== 'boolean'
-          ? options.failure.invertVariant
+          ? Boolean(options.failure.invertVariant)
           : false,
       message: (e) => getEventMessage(e),
       persist:
-        typeof options.failure !== 'boolean' ? options.failure.persist : false,
+        typeof options.failure !== 'boolean'
+          ? Boolean(options.failure.persist)
+          : false,
     };
   }
 
@@ -57,11 +52,13 @@ const createToast = (options: ToastOptions) => {
     toastConfig.success = {
       invertVariant:
         typeof options.success !== 'boolean'
-          ? options.success.invertVariant
+          ? Boolean(options.success.invertVariant)
           : false,
       message: (e) => getEventMessage(e),
       persist:
-        typeof options.success !== 'boolean' ? options.success.persist : false,
+        typeof options.success !== 'boolean'
+          ? Boolean(options.success.persist)
+          : false,
     };
   }
 
@@ -91,7 +88,7 @@ export const toasts: Toasts = {
   linode_snapshot: createToast({ failure: { persist: true } }),
   longviewclient_create: createToast({ failure: true, success: true }),
   tax_id_invalid: createToast({
-    failure: { invertVariant: true },
+    failure: true,
     success: { invertVariant: true, persist: true },
   }),
   volume_attach: createToast({ failure: true, success: true }),
