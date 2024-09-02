@@ -21,11 +21,11 @@ export interface CloudPulseResourcesSelectProps {
     savePref?: boolean
   ) => void;
   placeholder?: string;
-  preferences: AclpConfig;
+  preferences?: AclpConfig;
   region?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
-  updatePreferences: (data: {}) => void;
+  updatePreferences?: (data: {}) => void;
   xFilter?: Filter;
 }
 

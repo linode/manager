@@ -194,7 +194,6 @@ export const getTimeDurationProperties = (
     defaultValue: timeDuration,
     handleStatsChange: handleTimeRangeChange,
     placeholder,
-    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     updatePreferences,
   };

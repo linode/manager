@@ -20,7 +20,6 @@ export interface CloudPulseTimeRangeSelectProps
     savePref?: boolean
   ) => void;
   placeholder?: string;
-  preferences?: AclpConfig;
   savePreferences?: boolean;
   updatePreferences?: (data: {}) => void;
 }

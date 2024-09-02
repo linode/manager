@@ -9,18 +9,14 @@ export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
   handleRegionChange: (region: string | undefined, savePref?: boolean) => void;
   placeholder?: string;
-  preferences: AclpConfig;
+  preferences?: AclpConfig;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
-  updatePreferences: (data: {}) => void;
+  updatePreferences?: (data: {}) => void;
 }
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
-    // const {
-    //   preferences,
-    //   updateGlobalFilterPreference: updatePreferences,
-    // } = useAclpPreference();
     const { data: regions } = useRegionsQuery();
 
     const {

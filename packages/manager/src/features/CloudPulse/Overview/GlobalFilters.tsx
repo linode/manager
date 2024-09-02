@@ -27,6 +27,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleDashboardChange,
     handleTimeDurationChange,
   } = props;
+
   const {
     preferences,
     updateGlobalFilterPreference: updatePreferences,
