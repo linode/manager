@@ -38,7 +38,7 @@ describe('Volume action menu', () => {
 
     await userEvent.click(actionMenuButton);
 
-    for (const action of ['Show Config', 'Edit']) {
+    for (const action of ['Show Config', 'Edit', 'Manage Tags', 'Resize']) {
       expect(getByText(action)).toBeVisible();
     }
   });

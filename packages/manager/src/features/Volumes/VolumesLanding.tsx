@@ -1,33 +1,17 @@
-import { useVolumeQuery, useVolumesQuery } from '@linode/queries';
 import {
-  CircleProgress,
-  CloseIcon,
-  ErrorState,
-  IconButton,
-  InputAdornment,
-  Notice,
-  TextField,
-} from '@linode/ui';
+  useGroupedVolumesQuery,
+  useMutatePreferences,
+  usePreferences,
+  useVolumeQuery,
+  useVolumesQuery,
+} from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { debounce } from 'throttle-debounce';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableSortCell } from 'src/components/TableSortCell';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   VOLUME_TABLE_DEFAULT_ORDER,
   VOLUME_TABLE_DEFAULT_ORDER_BY,
@@ -44,14 +28,12 @@ import { EditVolumeDrawer } from './Drawers/EditVolumeDrawer';
 import { ManageTagsDrawer } from './Drawers/ManageTagsDrawer';
 import { ResizeVolumeDrawer } from './Drawers/ResizeVolumeDrawer';
 import { VolumeDetailsDrawer } from './Drawers/VolumeDetailsDrawer';
+import { VolumesHeader } from './VolumesHeader';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
-import { VolumeTableRow } from './VolumeTableRow';
+import { VolumesTable } from './VolumesTable';
 
-import type { Filter, Volume } from '@linode/api-v4';
-import type {
-  VolumeAction,
-  VolumesSearchParams,
-} from 'src/routes/volumes/index';
+import type { Filter } from '@linode/api-v4';
+import type { VolumesSearchParams } from 'src/routes/volumes/index';
 
 export const VolumesLanding = () => {
   const navigate = useNavigate();
@@ -67,12 +49,14 @@ export const VolumesLanding = () => {
       query: search.query,
     }),
   });
-  const isRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_volumes',
-  });
-  const { query } = search;
 
-  const { _isRestrictedUser } = useAccountManagement();
+  const { data: groupedByTags } = usePreferences(
+    (preferences) => preferences?.volumes_group_by_tag
+  );
+
+  const { mutateAsync: updateUserPreferences } = useMutatePreferences();
+
+  const { query } = search;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -106,43 +90,24 @@ export const VolumesLanding = () => {
     filter
   );
 
-  const { isBlockStorageEncryptionFeatureEnabled } =
-    useIsBlockStorageEncryptionFeatureEnabled();
+  const {
+    data: groupedVolumes,
+    error: groupedError,
+    isFetching: groupedIsFetching,
+    isLoading: groupedIsLoading,
+  } = useGroupedVolumesQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
 
   const {
     data: selectedVolume,
     isFetching: isFetchingVolume,
     error: selectedVolumeError,
   } = useVolumeQuery(Number(params.volumeId), !!params.volumeId);
-
-  const handleVolumeAction = (action: VolumeAction, volume: Volume) => {
-    navigate({
-      params: { action, volumeId: volume.id },
-      search: (prev) => prev,
-      to: `/volumes/$volumeId/$action`,
-    });
-  };
-
-  const resetSearch = () => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        query: undefined,
-      }),
-      to: '/volumes',
-    });
-  };
-
-  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        page: undefined,
-        query: e.target.value || undefined,
-      }),
-      to: '/volumes',
-    });
-  };
 
   const navigateToVolumes = () => {
     navigate({
@@ -151,7 +116,7 @@ export const VolumesLanding = () => {
     });
   };
 
-  if (isLoading) {
+  if (isLoading || groupedIsLoading) {
     return <CircleProgress />;
   }
 
@@ -165,130 +130,38 @@ export const VolumesLanding = () => {
     );
   }
 
+  if (groupedError) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(groupedError, 'Error loading your volumes.')[0]
+            .reason
+        }
+      />
+    );
+  }
+
   if (volumes?.results === 0 && !query) {
     return <VolumesLandingEmptyState />;
   }
 
   return (
     <>
-      <DocumentTitleSegment segment="Volumes" />
-      {_isRestrictedUser && (
-        <Notice
-          text={getRestrictedResourceText({
-            action: ['create', 'edit'],
-            resourceType: 'Volumes',
-            isSingular: false,
-          })}
-          variant="warning"
-        />
-      )}
-      <LandingHeader
-        breadcrumbProps={{
-          pathname: 'Volumes',
-          removeCrumbX: 1,
-        }}
-        buttonDataAttrs={{
-          tooltipText: getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Volumes',
-          }),
-        }}
-        disabledCreateButton={isRestricted}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
-        entity="Volume"
-        onButtonClick={() => navigate({ to: '/volumes/create' })}
-        spacingBottom={16}
-        title="Volumes"
+      <VolumesHeader
+        isFetching={groupedByTags ? groupedIsFetching : isFetching}
+        searchQueryKey={query}
       />
-      <TextField
-        hideLabel
-        InputProps={{
-          endAdornment: query && (
-            <InputAdornment position="end">
-              {isFetching && <CircleProgress size="sm" />}
 
-              <IconButton
-                aria-label="Clear"
-                data-testid="clear-volumes-search"
-                onClick={resetSearch}
-                size="small"
-              >
-                <CloseIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-          sx: { mb: 3 },
-        }}
-        label="Search"
-        onChange={debounce(400, (e) => {
-          onSearch(e);
-        })}
-        placeholder="Search Volumes"
-        value={query ?? ''}
+      <VolumesTable
+        groupedByTags={!!groupedByTags}
+        handleOrderChange={handleOrderChange}
+        order={order}
+        orderBy={orderBy}
+        pagination={pagination}
+        updateUserPreferences={updateUserPreferences}
+        volumes={groupedByTags ? groupedVolumes : volumes}
       />
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
-            >
-              Label
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
-            <TableCell>Region</TableCell>
-            <TableSortCell
-              active={orderBy === 'size'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="size"
-            >
-              Size
-            </TableSortCell>
-            <TableCell>Attached To</TableCell>
-            {isBlockStorageEncryptionFeatureEnabled && (
-              <TableCell>Encryption</TableCell>
-            )}
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {volumes?.data.length === 0 && (
-            <TableRowEmpty colSpan={6} message="No volume found" />
-          )}
-          {volumes?.data.map((volume) => (
-            <VolumeTableRow
-              handlers={{
-                handleAttach: () => handleVolumeAction('attach', volume),
-                handleClone: () => handleVolumeAction('clone', volume),
-                handleDelete: () => handleVolumeAction('delete', volume),
-                handleDetach: () => handleVolumeAction('detach', volume),
-                handleDetails: () => handleVolumeAction('details', volume),
-                handleEdit: () => handleVolumeAction('edit', volume),
-                handleManageTags: () =>
-                  handleVolumeAction('manage-tags', volume),
-                handleResize: () => handleVolumeAction('resize', volume),
-                handleUpgrade: () => handleVolumeAction('upgrade', volume),
-              }}
-              isBlockStorageEncryptionFeatureEnabled={
-                isBlockStorageEncryptionFeatureEnabled
-              }
-              key={volume.id}
-              volume={volume}
-            />
-          ))}
-        </TableBody>
-      </Table>
+
       <PaginationFooter
         count={volumes?.results ?? 0}
         eventCategory="Volumes Table"
@@ -297,6 +170,7 @@ export const VolumesLanding = () => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
+
       <AttachVolumeDrawer
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
