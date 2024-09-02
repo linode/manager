@@ -321,14 +321,14 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               {Boolean(
                 availableMetrics?.available_aggregate_functions?.length
               ) && (
-                  <CloudPulseAggregateFunction
-                    availableAggregateFunctions={
-                      availableMetrics!.available_aggregate_functions
-                    }
-                    defaultAggregateFunction={widget?.aggregate_function}
-                    onAggregateFuncChange={handleAggregateFunctionChange}
-                  />
-                )}
+                <CloudPulseAggregateFunction
+                  availableAggregateFunctions={
+                    availableMetrics!.available_aggregate_functions
+                  }
+                  defaultAggregateFunction={widget?.aggregate_function}
+                  onAggregateFuncChange={handleAggregateFunctionChange}
+                />
+              )}
               <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
