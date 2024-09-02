@@ -10,24 +10,21 @@ import type { AclpConfig, Dashboard } from '@linode/api-v4';
 export interface CloudPulseRegionSelectProps {
   handleRegionChange: (region: string | undefined) => void;
   placeholder?: string;
-  preferences: AclpConfig;
+  preferences?: AclpConfig;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
-  updatePreferences: (data: {}) => void;
+  updatePreferences?: (data: {}) => void;
 }
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
-    // const {
-    //   preferences,
-    //   updateGlobalFilterPreference: updatePreferences,
-    // } = useAclpPreference();
     const { data: regions } = useRegionsQuery();
 
     const {
       handleRegionChange,
       placeholder,
       preferences,
+      savePreferences,
       selectedDashboard,
       updatePreferences,
     } = props;
@@ -36,9 +33,9 @@ export const CloudPulseRegionSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      const defaultRegion = preferences.region;
+      const defaultRegion = preferences?.region;
 
-      if (regions) {
+      if (regions && savePreferences) {
         if (defaultRegion) {
           const region = regions.find((obj) => obj.id === defaultRegion)?.id;
           handleRegionChange(region);
@@ -54,10 +51,12 @@ export const CloudPulseRegionSelect = React.memo(
     return (
       <RegionSelect
         onChange={(_, region) => {
-          updatePreferences({
-            [REGION]: region?.id,
-            [RESOURCES]: undefined,
-          });
+          if (savePreferences && updatePreferences) {
+            updatePreferences({
+              [REGION]: region?.id,
+              [RESOURCES]: undefined,
+            });
+          }
           setSelectedRegion(region?.id);
           handleRegionChange(region?.id);
         }}
@@ -75,5 +74,9 @@ export const CloudPulseRegionSelect = React.memo(
         value={selectedRegion}
       />
     );
-  }
+  },
+  (
+    oldProps: CloudPulseRegionSelectProps,
+    newProps: CloudPulseRegionSelectProps
+  ) => oldProps.selectedDashboard?.id === newProps.selectedDashboard?.id
 );

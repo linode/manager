@@ -18,11 +18,11 @@ export interface CloudPulseResourcesSelectProps {
   disabled?: boolean;
   handleResourcesSelection: (resources: CloudPulseResources[]) => void;
   placeholder?: string;
-  preferences: AclpConfig;
+  preferences?: AclpConfig;
   region?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
-  updatePreferences: (data: {}) => void;
+  updatePreferences?: (data: {}) => void;
   xFilter?: Filter;
 }
 
@@ -35,6 +35,7 @@ export const CloudPulseResourcesSelect = React.memo(
       preferences,
       region,
       resourceType,
+      savePreferences,
       updatePreferences,
       xFilter,
     } = props;
@@ -48,7 +49,7 @@ export const CloudPulseResourcesSelect = React.memo(
 
     const [selectedResources, setSelectedResources] = React.useState<
       CloudPulseResources[]
-    >([]);
+    >();
 
     const getResourcesList = (): CloudPulseResources[] => {
       return resources && resources.length > 0 ? resources : [];
@@ -56,8 +57,8 @@ export const CloudPulseResourcesSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      const defaultValue = preferences.resources;
-      if (resources) {
+      const defaultValue = preferences?.resources;
+      if (resources && savePreferences && !selectedResources) {
         if (defaultValue && Array.isArray(defaultValue)) {
           const defaultResources = defaultValue.map((resource) =>
             String(resource)
@@ -72,20 +73,23 @@ export const CloudPulseResourcesSelect = React.memo(
           setSelectedResources([]);
           handleResourcesSelection([]);
         }
-      } else {
+      } else if (selectedResources) {
+        handleResourcesSelection([]);
         setSelectedResources([]);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resources, region, resourceType, xFilter]);
+    }, [resources]);
 
     return (
       <Autocomplete
         onChange={(_: any, resourceSelections: CloudPulseResources[]) => {
-          updatePreferences({
-            [RESOURCES]: resourceSelections.map((resource: { id: string }) =>
-              String(resource.id)
-            ),
-          });
+          if (savePreferences && updatePreferences) {
+            updatePreferences({
+              [RESOURCES]: resourceSelections.map((resource: { id: string }) =>
+                String(resource.id)
+              ),
+            });
+          }
           setSelectedResources(resourceSelections);
           handleResourcesSelection(resourceSelections);
         }}
@@ -108,7 +112,7 @@ export const CloudPulseResourcesSelect = React.memo(
         multiple
         options={getResourcesList()}
         placeholder={placeholder ? placeholder : 'Select Resources'}
-        value={selectedResources}
+        value={selectedResources ?? []}
       />
     );
   },

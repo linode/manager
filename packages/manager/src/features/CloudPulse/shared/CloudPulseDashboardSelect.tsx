@@ -12,17 +12,23 @@ import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
 import type { Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
-  defaultValue: number | undefined;
+  defaultValue?: number;
   handleDashboardChange: (
     dashboard: Dashboard | undefined,
     isDefault?: boolean
   ) => void;
-  updatePreferences: (data: {}) => void;
+  savePreferences?: boolean;
+  updatePreferences?: (data: {}) => void;
 }
 
 export const CloudPulseDashboardSelect = React.memo(
   (props: CloudPulseDashboardSelectProps) => {
-    const { defaultValue, handleDashboardChange, updatePreferences } = props;
+    const {
+      defaultValue,
+      handleDashboardChange,
+      savePreferences,
+      updatePreferences,
+    } = props;
 
     const {
       data: serviceTypesList,
@@ -70,7 +76,11 @@ export const CloudPulseDashboardSelect = React.memo(
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
       // only call this code when the component is rendered initially
-      if (dashboardsList.length > 0 && selectedDashboard === undefined) {
+      if (
+        savePreferences &&
+        dashboardsList.length > 0 &&
+        selectedDashboard === undefined
+      ) {
         if (defaultValue) {
           const dashboard = dashboardsList.find(
             (obj: Dashboard) => obj.id === defaultValue
@@ -86,9 +96,11 @@ export const CloudPulseDashboardSelect = React.memo(
     return (
       <Autocomplete
         onChange={(_: any, dashboard: Dashboard) => {
-          updatePreferences({
-            [DASHBOARD_ID]: dashboard?.id,
-          });
+          if (savePreferences && updatePreferences) {
+            updatePreferences({
+              [DASHBOARD_ID]: dashboard?.id,
+            });
+          }
           setSelectedDashboard(dashboard);
           handleDashboardChange(dashboard);
         }}
@@ -121,5 +133,6 @@ export const CloudPulseDashboardSelect = React.memo(
         value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component
       />
     );
-  }
+  },
+  () => true
 );

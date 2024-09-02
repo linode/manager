@@ -15,9 +15,9 @@ export interface CloudPulseTimeRangeSelectProps
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
   > {
+  defaultValue?: string;
   handleStatsChange?: (timeDuration: TimeDuration) => void;
   placeholder?: string;
-  preferences?: AclpConfig;
   savePreferences?: boolean;
   updatePreferences?: (data: {}) => void;
 }
@@ -37,16 +37,18 @@ export type Labels =
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
     const {
+      defaultValue,
       handleStatsChange,
       placeholder,
-      preferences,
       savePreferences,
       updatePreferences,
     } = props;
     const options = generateSelectOptions();
 
     const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
-      const defaultValue = preferences?.timeDuration;
+      if (!savePreferences) {
+        return options[0];
+      }
       return options.find((o) => o.label === defaultValue) || options[0];
     }, []);
     const [selectedTimeRange, setSelectedTimeRange] = React.useState<

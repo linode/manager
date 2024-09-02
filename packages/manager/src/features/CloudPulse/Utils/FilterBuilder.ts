@@ -26,8 +26,8 @@ interface CloudPulseFilterProperties {
     [key: string]: FilterValueType;
   };
   isServiceAnalyticsIntegration: boolean;
-  preferences: AclpConfig;
-  updatePreferences: (data: {}) => void;
+  preferences?: AclpConfig;
+  updatePreferences?: (data: {}) => void;
 }
 
 interface CloudPulseMandatoryFilterCheckProps {
@@ -173,10 +173,13 @@ export const getTimeDurationProperties = (
     preferences,
     updatePreferences,
   } = props;
+
+  const timeDuration = preferences?.timeDuration;
   return {
+    defaultValue:
+      timeDuration !== undefined ? (timeDuration as string) : undefined,
     handleStatsChange: handleTimeRangeChange,
     placeholder,
-    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     updatePreferences,
   };

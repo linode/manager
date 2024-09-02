@@ -43,8 +43,8 @@ export interface CloudPulseDashboardFilterBuilderProps {
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
    */
   isServiceAnalyticsIntegration: boolean;
-  preferences: AclpConfig;
-  updatePreferences: (data: {}) => void;
+  preferences?: AclpConfig;
+  updatePreferences?: (data: {}) => void;
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
