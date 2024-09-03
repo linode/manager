@@ -1,29 +1,32 @@
 import React from 'react';
 
+import { MigrateError } from './MigrateError';
 import { SupportTicketGeneralError } from './SupportTicketGeneralError';
 import { Typography } from './Typography';
 
-import type {
-  EntityType,
-  FormPayloadValues,
-} from 'src/features/Support/SupportTickets/SupportTicketDialog';
+import type { EntityForTicketDetails } from './SupportLink/SupportLink';
+import type { FormPayloadValues } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 interface Props {
-  entityType: EntityType;
+  entity?: EntityForTicketDetails;
   formPayloadValues?: FormPayloadValues;
   message: string;
 }
 
+export const migrationsDisabledRegex = /migrations are currently disabled/i;
 export const supportTextRegex = /(open a support ticket|contact Support)/i;
 
 export const ErrorMessage = (props: Props) => {
-  const { entityType, formPayloadValues, message } = props;
-  const isSupportTicketError = supportTextRegex.test(message);
+  const { entity, formPayloadValues, message } = props;
 
-  if (isSupportTicketError) {
+  if (migrationsDisabledRegex.test(message)) {
+    return <MigrateError entity={entity} />;
+  }
+
+  if (supportTextRegex.test(message)) {
     return (
       <SupportTicketGeneralError
-        entityType={entityType}
+        entity={entity}
         formPayloadValues={formPayloadValues}
         generalError={message}
       />

@@ -213,7 +213,7 @@ export const CreateCluster = () => {
         {generalError && (
           <Notice variant="error">
             <ErrorMessage
-              entityType="lkecluster_id"
+              entity={{ type: 'lkecluster_id' }}
               formPayloadValues={{ node_pools: nodePools }}
               message={generalError}
             />

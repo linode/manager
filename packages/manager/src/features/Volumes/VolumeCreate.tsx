@@ -325,7 +325,7 @@ export const VolumeCreate = () => {
             </Typography>
             {error && (
               <Notice spacingBottom={0} spacingTop={12} variant="error">
-                <ErrorMessage entityType="volume_id" message={error} />
+                <ErrorMessage entity={{ type: 'volume_id' }} message={error} />
               </Notice>
             )}
             <TextField

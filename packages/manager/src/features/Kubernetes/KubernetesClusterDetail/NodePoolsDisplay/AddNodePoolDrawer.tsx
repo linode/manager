@@ -165,7 +165,7 @@ export const AddNodePoolDrawer = (props: Props) => {
       {error && (
         <Notice spacingBottom={0} spacingTop={12} variant="error">
           <ErrorMessage
-            entityType="lkecluster_id"
+            entity={{ type: 'lkecluster_id' }}
             message={error?.[0].reason}
           />
         </Notice>
