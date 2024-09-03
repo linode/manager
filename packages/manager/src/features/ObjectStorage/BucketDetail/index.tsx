@@ -27,6 +27,11 @@ const BucketSSL = React.lazy(() =>
     default: module.BucketSSL,
   }))
 );
+const BucketProperties = React.lazy(() =>
+  import('./BucketProperties').then((module) => ({
+    default: module.BucketProperties,
+  }))
+);
 
 interface MatchProps {
   bucketName: string;
@@ -54,8 +59,11 @@ export const BucketDetailLanding = React.memo((props: Props) => {
   };
   const { bucketName, clusterId } = props.match.params;
 
-  const { endpoint_type: endpointType } =
-    bucketsData?.buckets.find(({ label }) => label === bucketName) ?? {};
+  const bucket = bucketsData?.buckets.find(({ label }) => label === bucketName);
+
+  const { endpoint_type } = bucket ?? {};
+
+  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type === 'E3';
 
   const tabs = [
     {
@@ -66,10 +74,22 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
-    {
-      routeName: `${props.match.url}/ssl`,
-      title: 'SSL/TLS',
-    },
+    ...(flags.objectStorageGen2?.enabled
+      ? [
+          {
+            routeName: `${props.match.url}/properties`,
+            title: 'Properties',
+          },
+        ]
+      : []),
+    ...(!isSSLEnabled
+      ? [
+          {
+            routeName: `${props.match.url}/ssl`,
+            title: 'SSL/TLS',
+          },
+        ]
+      : []),
   ];
 
   const [index, setIndex] = React.useState(
@@ -106,12 +126,21 @@ export const BucketDetailLanding = React.memo((props: Props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <ObjectList {...props} endpointType={endpointType} />
+              <ObjectList {...props} endpointType={endpoint_type} />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              <BucketAccess bucketName={bucketName} clusterId={clusterId} />
+              <BucketAccess
+                bucketName={bucketName}
+                clusterId={clusterId}
+                endpointType={endpoint_type}
+              />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
+            {flags.objectStorageGen2?.enabled && bucket && (
+              <SafeTabPanel index={2}>
+                <BucketProperties bucket={bucket} />
+              </SafeTabPanel>
+            )}
+            <SafeTabPanel index={tabs.length - 1}>
               <BucketSSL bucketName={bucketName} clusterId={clusterId} />
             </SafeTabPanel>
           </TabPanels>

@@ -4,9 +4,13 @@ import { Dashboard } from './types';
 import { API_ROOT } from 'src/constants';
 
 // Returns the list of all the dashboards available
-export const getDashboards = () =>
+export const getDashboards = (serviceType: string) =>
   Request<ResourcePage<Dashboard>>(
-    setURL(`${API_ROOT}/monitor/services/linode/dashboards`),
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(
+        serviceType
+      )}/dashboards`
+    ),
     setMethod('GET')
   );
 
