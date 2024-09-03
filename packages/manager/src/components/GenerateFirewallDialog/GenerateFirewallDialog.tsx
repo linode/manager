@@ -212,7 +212,7 @@ const ErrorDialogContent = (
     <Stack gap={3}>
       <Typography variant="h2">An error occurred</Typography>
       <Notice variant="error">
-        <ErrorMessage entityType="firewall_id" message={error} />
+        <ErrorMessage entity={{ type: 'firewall_id' }} message={error} />
       </Notice>
       <Stack direction="row-reverse" gap={2}>
         <Button buttonType="primary" onClick={createFirewallFromTemplate}>

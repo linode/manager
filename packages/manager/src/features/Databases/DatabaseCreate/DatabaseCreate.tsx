@@ -464,7 +464,10 @@ const DatabaseCreate = () => {
       <Paper>
         {createError && (
           <Notice variant="error">
-            <ErrorMessage entityType="database_id" message={createError} />
+            <ErrorMessage
+              entity={{ type: 'database_id' }}
+              message={createError}
+            />
           </Notice>
         )}
         <Grid>

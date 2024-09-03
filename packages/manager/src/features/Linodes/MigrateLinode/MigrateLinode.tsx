@@ -237,7 +237,10 @@ export const MigrateLinode = React.memo((props: Props) => {
     >
       {error && (
         <Notice variant="error">
-          <ErrorMessage message={error[0].reason} />
+          <ErrorMessage
+            entity={{ id: linode.id, type: 'linode_id' }}
+            message={error[0].reason}
+          />
         </Notice>
       )}
       <Typography sx={{ marginTop: theme.spacing(2) }} variant="h2">

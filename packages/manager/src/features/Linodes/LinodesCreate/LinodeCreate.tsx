@@ -847,7 +847,7 @@ export class LinodeCreate extends React.PureComponent<
           {generalError && (
             <Notice spacingTop={8} variant="error">
               <ErrorMessage
-                entityType="linode_id"
+                entity={{ type: 'linode_id' }}
                 formPayloadValues={{ type: this.props.selectedTypeID }}
                 message={generalError}
               />
@@ -1003,9 +1003,9 @@ export class LinodeCreate extends React.PureComponent<
                       createType:
                         (this.tabs[selectedTab].title as LinodeCreateType) ??
                         'OS',
-                      label: 'Choosing a Plan',
                       headerName: 'Linode Plan',
                       interaction: 'click',
+                      label: 'Choosing a Plan',
                     });
                   }}
                   href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
@@ -1106,8 +1106,8 @@ export class LinodeCreate extends React.PureComponent<
                           (this.tabs[selectedTab].title as LinodeCreateType) ??
                           'OS',
                         headerName: 'Firewall',
-                        label: 'Learn more',
                         interaction: 'click',
+                        label: 'Learn more',
                       })
                     }
                     to={FIREWALL_GET_STARTED_LINK}
