@@ -49,16 +49,12 @@ export const handleGeneralErrors = (
 
   const _apiErrors = getAPIErrorOrDefault(apiErrors, defaultMessage);
 
-  const generalError =
-    typeof _apiErrors[0].reason !== 'string'
-      ? _apiErrors[0].reason
-      : _apiErrors
-          .reduce(
-            (result, { field, reason }) =>
-              field ? result : [...result, reason],
-            []
-          )
-          .join(',');
+  const generalError = _apiErrors
+    .reduce(
+      (result, { field, reason }) => (field ? result : [...result, reason]),
+      []
+    )
+    .join(',');
 
   if (!isNilOrEmpty(generalError)) {
     return callback(generalError);
