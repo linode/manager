@@ -3,9 +3,9 @@ import * as React from 'react';
 import { eventFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { RenderEventV2 } from './RenderEventV2';
+import { NotificationCenterEvent } from './NotificationCenterEvent';
 
-describe('RenderEventV2', () => {
+describe('NotificationCenterEvent', () => {
   it('should render a finished event with the proper data', () => {
     const event = eventFactory.build({
       action: 'linode_create',
@@ -17,7 +17,7 @@ describe('RenderEventV2', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <RenderEventV2 event={event} onClose={() => vi.fn()} />
+      <NotificationCenterEvent event={event} onClose={() => vi.fn()} />
     );
 
     expect(
@@ -42,7 +42,7 @@ describe('RenderEventV2', () => {
     });
 
     const { getByTestId, getByText } = renderWithTheme(
-      <RenderEventV2 event={event} onClose={() => vi.fn()} />
+      <NotificationCenterEvent event={event} onClose={() => vi.fn()} />
     );
 
     expect(
