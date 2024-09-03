@@ -1,3 +1,14 @@
+## [2024-09-03] - v0.52.0
+
+
+### Fixed:
+
+- Lack of `label` error validation for letter casing and symbols when creating Object Storage bucket ([#10842](https://github.com/linode/manager/pull/10842), [#10847](https://github.com/linode/manager/pull/10847))
+
+### Changed:
+
+- Increase block storage max volume size to 16TB ([#10865](https://github.com/linode/manager/pull/10865))
+
 ## [2024-08-05] - v0.51.0
 
 
@@ -26,7 +37,7 @@
 ### Changed:
 
 - Breaking: change Placement Group `is_strict` to `placement_group_policy` and `affinity_type` to `placement_group_type` ([#10651](https://github.com/linode/manager/pull/10651))
-  
+
 ## [2024-07-08] - v0.49.0
 
 ### Added:

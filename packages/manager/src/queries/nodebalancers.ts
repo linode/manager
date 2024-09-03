@@ -303,7 +303,7 @@ export const useNodeBalancerTypesQuery = () =>
 
 export const nodebalancerEventHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   const nodebalancerId = event.entity?.id;
 
@@ -319,7 +319,7 @@ export const nodebalancerEventHandler = ({
 
   if (event.action.startsWith('nodebalancer_config')) {
     // If the event is about a NodeBalancer's configs, just invalidate the configs
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: nodebalancerQueries.nodebalancer(nodebalancerId)._ctx
         .configurations.queryKey,
     });
@@ -327,13 +327,13 @@ export const nodebalancerEventHandler = ({
     // If we've made it here, the event is about a NodeBalancer
 
     // Invalidate the specific NodeBalancer
-    queryClient.invalidateQueries({
+    invalidateQueries({
       exact: true,
       queryKey: nodebalancerQueries.nodebalancer(nodebalancerId).queryKey,
     });
 
     // Invalidate all paginated lists
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: nodebalancerQueries.nodebalancers.queryKey,
     });
   }

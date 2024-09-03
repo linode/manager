@@ -27,7 +27,7 @@ const meta: Meta<RadioProps> = {
       </Box>
     ),
   ],
-  title: 'Components/Radio',
+  title: 'Foundations/Radio',
 };
 
 type Story = StoryObj<RadioProps>;

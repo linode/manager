@@ -16,7 +16,7 @@ const meta: Meta<DocsLinkProps> = {
     label: 'Custom Doc Link Label',
   },
   component: DocsLink,
-  title: 'Components/Link/DocsLink',
+  title: 'Foundations/Link/DocsLink',
 };
 
 export default meta;

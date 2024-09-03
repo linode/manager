@@ -90,6 +90,7 @@ export interface Flags {
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
+  dbaasV2: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   eventMessagesV2: boolean;
   gecko: boolean; // @TODO gecko: delete this after next release

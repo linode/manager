@@ -6,7 +6,7 @@ import { HideShowText } from './HideShowText';
 
 const meta: Meta<typeof HideShowText> = {
   component: HideShowText,
-  title: 'Components/Hide Show Text',
+  title: 'Components/Input/Hide Show Text',
 };
 
 type Story = StoryObj<typeof HideShowText>;

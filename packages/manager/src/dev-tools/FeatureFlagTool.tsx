@@ -32,6 +32,8 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'placementGroups', label: 'Placement Groups' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
+  { flag: 'dbaasV2', label: 'Databases V2 Beta' },
+  { flag: 'databaseResize', label: 'Database Resize' },
 ];
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {

@@ -1,34 +1,13 @@
-import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import { Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  actions: {
-    '& button': {
-      marginBottom: 0,
-    },
-    justifyContent: 'flex-end',
-  },
-  dialogContent: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  error: {
-    color: '#C44742',
-    marginTop: theme.spacing(2),
-  },
-  root: {
-    '& .MuiDialogTitle-root': {
-      marginBottom: 10,
-    },
-  },
-}));
+import type { DialogProps } from '@mui/material/Dialog';
 
 export interface ConfirmationDialogProps extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
@@ -48,8 +27,6 @@ export interface ConfirmationDialogProps extends DialogProps {
  *
  */
 export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
-  const { classes } = useStyles();
-
   const {
     actions,
     children,
@@ -61,7 +38,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   } = props;
 
   return (
-    <Dialog
+    <StyledDialog
       {...dialogProps}
       TransitionProps={{
         ...dialogProps.TransitionProps,
@@ -73,26 +50,52 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
         }
       }}
       PaperProps={{ role: undefined }}
-      className={classes.root}
       data-qa-dialog
       data-qa-drawer
       data-testid="drawer"
       role="dialog"
     >
       <DialogTitle onClose={onClose} title={title} />
-      <DialogContent className={classes.dialogContent} data-qa-dialog-content>
+      <StyledDialogContent data-qa-dialog-content>
         {children}
-        {error && (
-          <DialogContentText className={`${classes.error} error-for-scroll`}>
-            {error}
-          </DialogContentText>
-        )}
-      </DialogContent>
-      <DialogActions className={classes.actions}>
+        {error && <StyledErrorText>{error}</StyledErrorText>}
+      </StyledDialogContent>
+      <StyledDialogActions>
         {actions && typeof actions === 'function'
           ? actions(dialogProps)
           : actions}
-      </DialogActions>
-    </Dialog>
+      </StyledDialogActions>
+    </StyledDialog>
   );
 };
+
+const StyledDialog = styled(Dialog, {
+  label: 'StyledDialog',
+})({
+  '& .MuiDialogTitle-root': {
+    marginBottom: '10px',
+  },
+});
+
+const StyledDialogActions = styled(DialogActions, {
+  label: 'StyledDialogActions',
+})({
+  '& button': {
+    marginBottom: 0,
+  },
+  justifyContent: 'flex-end',
+});
+
+const StyledDialogContent = styled(DialogContent, {
+  label: 'StyledDialogContent',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const StyledErrorText = styled(DialogContentText, {
+  label: 'StyledErrorText',
+})(({ theme }) => ({
+  color: theme.palette.error.dark,
+  marginTop: theme.spacing(2),
+}));

@@ -31,7 +31,7 @@ const meta: Meta<typeof EnhancedNumberInput> = {
   },
   args: {},
   component: EnhancedNumberInput,
-  title: 'Components/EnhancedNumberInput',
+  title: 'Components/Input/EnhancedNumberInput',
 };
 
 export default meta;

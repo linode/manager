@@ -187,7 +187,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !isDatabasesEnabled,
           href: '/databases',
           icon: <Database />,
-          isBeta: flags.databaseBeta,
+          isBeta: flags.dbaasV2?.beta,
         },
         {
           activeLinks: ['/kubernetes/create'],
@@ -249,7 +249,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       isDatabasesEnabled,
       isManaged,
       allowMarketplacePrefetch,
-      flags.databaseBeta,
+      flags.dbaasV2,
       isPlacementGroupsEnabled,
       flags.placementGroups,
       isACLPEnabled,

@@ -20,6 +20,11 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
 } from 'src/queries/linodes/linodes';
+import { useProfile } from 'src/queries/profile/profile';
+import {
+  sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormSubmitEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
 import { Actions } from './Actions';
@@ -48,23 +53,27 @@ import {
   getLinodeCreatePayload,
   getTabIndex,
   tabs,
+  useHandleLinodeCreateAnalyticsFormError,
   useLinodeCreateQueryParams,
 } from './utilities';
 import { VLAN } from './VLAN';
 import { VPC } from './VPC/VPC';
 
-import type { LinodeCreateFormValues } from './utilities';
+import type {
+  LinodeCreateFormContext,
+  LinodeCreateFormValues,
+} from './utilities';
 import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreatev2 = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const { data: profile } = useProfile();
 
   const queryClient = useQueryClient();
 
-  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
-
-  const form = useForm<LinodeCreateFormValues>({
-    context: { secureVMNoticesEnabled },
+  const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
+    context: { profile, secureVMNoticesEnabled },
     defaultValues: () => defaultValues(params, queryClient),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
@@ -77,6 +86,10 @@ export const LinodeCreatev2 = () => {
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+
+  const {
+    handleLinodeCreateAnalyticsFormError,
+  } = useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -117,6 +130,10 @@ export const LinodeCreatev2 = () => {
         values,
       });
 
+      sendLinodeCreateFormSubmitEvent({
+        createType: params.type ?? 'OS',
+      });
+
       if (values.hasSignedEUAgreement) {
         updateAccountAgreements({
           eu_model: true,
@@ -142,9 +159,10 @@ export const LinodeCreatev2 = () => {
       form.formState.submitCount > previousSubmitCount.current
     ) {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
+      handleLinodeCreateAnalyticsFormError(form.formState.errors);
     }
     previousSubmitCount.current = form.formState.submitCount;
-  }, [form.formState]);
+  }, [form.formState, handleLinodeCreateAnalyticsFormError]);
 
   /**
    * Add a Sentry tag when Linode Create v2 is mounted
@@ -163,6 +181,13 @@ export const LinodeCreatev2 = () => {
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
+        onDocsClick={() =>
+          sendLinodeCreateFormInputEvent({
+            createType: params.type ?? 'OS',
+            interaction: 'click',
+            label: 'Getting Started',
+          })
+        }
         docsLabel="Getting Started"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         title="Create"

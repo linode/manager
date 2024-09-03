@@ -12,7 +12,7 @@ const meta: Meta<typeof StyledTagButton> = {
     onClick: () => null,
   },
   component: StyledTagButton,
-  title: 'Components/TagButton',
+  title: 'Components/Tags/TagButton',
 };
 
 export default meta;

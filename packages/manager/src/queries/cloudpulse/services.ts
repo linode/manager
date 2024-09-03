@@ -7,6 +7,7 @@ import type {
   JWEToken,
   JWETokenPayLoad,
   MetricDefinitions,
+  ServiceTypesList,
 } from '@linode/api-v4';
 
 export const useGetCloudPulseMetricDefinitionsByServiceType = (
@@ -29,5 +30,12 @@ export const useCloudPulseJWEtokenQuery = (
     enabled: runQuery,
     keepPreviousData: true,
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useCloudPulseServiceTypes = (enabled: boolean) => {
+  return useQuery<ServiceTypesList, APIError[]>({
+    ...queryFactory.lists._ctx.serviceTypes,
+    enabled,
   });
 };

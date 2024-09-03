@@ -11,17 +11,51 @@ import {
   SxTypography,
 } from './styles';
 
-interface CheckoutBarProps {
+export interface CheckoutBarProps {
+  /**
+   * JSX element to be displayed as an agreement section.
+   */
   agreement?: JSX.Element;
+  /**
+   * Calculated price to be displayed.
+   */
   calculatedPrice?: number;
+  /**
+   * JSX element for additional content to be rendered within the component.
+   */
   children?: JSX.Element;
+  /**
+   * Boolean to disable the `CheckoutBar` component, making it non-interactive.
+   * @default false
+   */
   disabled?: boolean;
+  /**
+   * JSX element to be displayed as a footer.
+   */
   footer?: JSX.Element;
+  /**
+   * The heading text to be displayed in the `CheckoutBar`.
+   */
   heading: string;
+  /**
+   * Boolean indicating if a request is currently being processed.
+   */
   isMakingRequest?: boolean;
+  /**
+   * Callback function to be called when the deploy action is triggered.
+   */
   onDeploy: () => void;
+  /**
+   * Helper text to be displayed alongside the price.
+   */
   priceHelperText?: string;
+  /**
+   * Text to describe the price selection.
+   */
   priceSelectionText?: string;
+  /**
+   * Text for the submit button.
+   */
   submitText?: string;
 }
 

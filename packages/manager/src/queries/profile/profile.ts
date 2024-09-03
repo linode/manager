@@ -195,15 +195,15 @@ export const useDeleteSSHKeyMutation = (id: number) => {
   });
 };
 
-export const sshKeyEventHandler = (event: EventHandlerData) => {
+export const sshKeyEventHandler = ({ invalidateQueries }: EventHandlerData) => {
   // This event handler is a bit agressive and will over-fetch, but UX will
   // be great because this will ensure Cloud has up to date data all the time.
 
-  event.queryClient.invalidateQueries({
+  invalidateQueries({
     queryKey: profileQueries.sshKeys._def,
   });
   // also invalidate the /account/users data because that endpoint returns some SSH key data
-  event.queryClient.invalidateQueries({
+  invalidateQueries({
     queryKey: accountQueries.users._ctx.paginated._def,
   });
 };

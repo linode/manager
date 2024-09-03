@@ -124,7 +124,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
       region: '',
       s3_endpoint: undefined,
     },
-    mode: 'onChange',
+    mode: 'onBlur',
     resolver: yupResolver(CreateBucketSchema),
   });
 

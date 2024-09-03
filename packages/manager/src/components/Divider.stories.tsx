@@ -5,7 +5,7 @@ import { Divider } from 'src/components/Divider';
 
 const meta: Meta<typeof Divider> = {
   component: Divider,
-  title: 'Components/Divider',
+  title: 'Foundations/Divider',
 };
 
 type Story = StoryObj<typeof Divider>;
