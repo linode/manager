@@ -65,15 +65,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
       []
     );
 
-    const renderPlaceHolder = (subtitle: string) => {
+    const renderPlaceHolder = (title: string) => {
       return (
         <Paper>
-          <StyledPlaceholder
-            icon={CloudPulseIcon}
-            isEntity
-            subtitle={subtitle}
-            title=""
-          />
+          <StyledPlaceholder icon={CloudPulseIcon} isEntity title={title} />
         </Paper>
       );
     };
