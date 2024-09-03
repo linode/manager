@@ -12,6 +12,7 @@ export type Capabilities =
   | 'Kubernetes'
   | 'Linodes'
   | 'Managed Databases'
+  | 'Managed Databases V2'
   | 'Metadata'
   | 'NodeBalancers'
   | 'Object Storage'

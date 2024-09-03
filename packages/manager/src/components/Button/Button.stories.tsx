@@ -35,7 +35,7 @@ const meta: Meta<typeof Button> = {
     tooltipText: '',
   },
   component: Button,
-  title: 'Components/Button',
+  title: 'Foundations/Button',
 };
 
 export default meta;

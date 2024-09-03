@@ -1,4 +1,3 @@
-import { LinodeBackup, PriceObject } from '@linode/api-v4/lib/linodes';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -23,12 +22,14 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
-import { BackupTableRow } from './BackupTableRow';
 import { BackupsPlaceholder } from './BackupsPlaceholder';
+import { BackupTableRow } from './BackupTableRow';
 import { CancelBackupsDialog } from './CancelBackupsDialog';
 import { CaptureSnapshot } from './CaptureSnapshot';
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 import { ScheduleSettings } from './ScheduleSettings';
+
+import type { LinodeBackup, PriceObject } from '@linode/api-v4/lib/linodes';
 
 export const LinodeBackups = () => {
   const { linodeId } = useParams<{ linodeId: string }>();

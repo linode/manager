@@ -12,6 +12,7 @@ import {
   getCloudPulseMetricRequest,
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
+import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
 import { convertValueToUnit, formatToolTip } from '../Utils/unitConversion';
 import {
   getUserPreferenceObject,
@@ -23,17 +24,23 @@ import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect'
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
 import { ZoomIcon } from './components/Zoomer';
 
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { Widgets } from '@linode/api-v4';
 import type {
   AvailableMetrics,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
-import type { Widgets } from '@linode/api-v4';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { Metrics } from 'src/utilities/statMetrics';
 
 export interface CloudPulseWidgetProperties {
+  /**
+   * Apart from above explicit filters, any additional filters for metrics endpoint will go here
+   */
+  additionalFilters?: CloudPulseMetricsAdditionalFilters[];
+
   /**
    * Aria label for this widget
    */
@@ -100,6 +107,11 @@ export interface CloudPulseWidgetProperties {
   widget: Widgets;
 }
 
+export interface CloudPulseMetricsAdditionalFilters {
+  filterKey: string;
+  filterValue: FilterValueType;
+}
+
 export interface LegendRow {
   data: Metrics;
   format: (value: number) => {};
@@ -115,6 +127,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
   const {
+    additionalFilters,
     ariaLabel,
     authToken,
     availableMetrics,
@@ -228,12 +241,15 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     status,
   } = useCloudPulseMetricsQuery(
     serviceType,
-    getCloudPulseMetricRequest({
-      duration,
-      resourceIds,
-      resources,
-      widget,
-    }),
+    {
+      ...getCloudPulseMetricRequest({
+        duration,
+        resourceIds,
+        resources,
+        widget,
+      }),
+      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+    },
     {
       authToken,
       isFlags: Boolean(flags),

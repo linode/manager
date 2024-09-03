@@ -25,6 +25,7 @@ import { withSecureVMNoticesEnabled } from 'src/containers/withSecureVMNoticesEn
 import withAgreements from 'src/features/Account/Agreements/withAgreements';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { reportAgreementSigningError } from 'src/queries/account/agreements';
+import { accountQueries } from 'src/queries/account/queries';
 import {
   sendCreateLinodeEvent,
   sendLinodeCreateFlowDocsClickEvent,
@@ -36,11 +37,11 @@ import {
 import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   getGDPRDetails,
   getSelectedRegionGroup,
 } from 'src/utilities/formatRegion';
-import { isEURegion } from 'src/utilities/formatRegion';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
@@ -89,7 +90,6 @@ import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import type { MapState } from 'src/store/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { accountQueries } from 'src/queries/account/queries';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -371,7 +371,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
-  handleFirewallChange = (firewallId: number) => {
+  handleFirewallChange = (firewallId: number | undefined) => {
     this.setState({ selectedfirewallId: firewallId });
   };
 
@@ -902,9 +902,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           <LinodeCreate
             accountBackupsEnabled={
               this.props.accountSettings.data?.backups_enabled ?? false
-            }
-            checkedFirewallAuthorizaton={
-              this.state.checkedFirewallAuthorization
             }
             handleFirewallAuthorizationChange={
               this.handleFirewallAuthorizationChange

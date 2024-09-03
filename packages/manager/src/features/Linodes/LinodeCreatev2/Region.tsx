@@ -21,6 +21,10 @@ import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
+  sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormStartEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
+import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
 } from 'src/utilities/pricing/constants';
@@ -150,6 +154,11 @@ export const Region = () => {
 
       setValue('label', label);
     }
+
+    // Begin tracking the Linode Create form.
+    sendLinodeCreateFormStartEvent({
+      createType: params.type ?? 'OS',
+    });
   };
 
   const showCrossDataCenterCloneWarning =
@@ -210,6 +219,14 @@ export const Region = () => {
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
+          onClick={() =>
+            sendLinodeCreateFormInputEvent({
+              createType: params.type ?? 'OS',
+              headerName: 'Region',
+              interaction: 'click',
+              label: DOCS_LINK_LABEL_DC_PRICING,
+            })
+          }
           href="https://www.linode.com/pricing"
           label={DOCS_LINK_LABEL_DC_PRICING}
         />

@@ -16,7 +16,7 @@ const meta: Meta<ToggleProps> = {
     disabled: false,
   },
   component: Toggle,
-  title: 'Components/Toggle',
+  title: 'Foundations/Toggle',
 };
 
 export default meta;

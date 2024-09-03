@@ -3,6 +3,8 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
+import { DASHBOARD_ID, TIME_DURATION } from './constants';
+
 import type { AclpConfig, AclpWidget } from '@linode/api-v4';
 
 let userPreference: AclpConfig;
@@ -42,7 +44,13 @@ export const updateGlobalFilterPreference = (data: {}) => {
   if (!userPreference) {
     userPreference = {} as AclpConfig;
   }
-  userPreference = { ...userPreference, ...data };
+  const keys = Object.keys(data);
+
+  if (keys.includes(DASHBOARD_ID)) {
+    userPreference = { ...data, [TIME_DURATION]: userPreference.timeDuration };
+  } else {
+    userPreference = { ...userPreference, ...data };
+  }
 
   debounce(userPreference);
 };

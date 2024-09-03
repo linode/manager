@@ -245,7 +245,7 @@ export const getCloudPulseMetricRequest = (
     group_by: widget.group_by,
     metric: widget.metric,
     relative_time_duration: duration ?? widget.time_duration,
-    resource_id: resources
+    resource_ids: resources
       ? resourceIds.map((obj) => parseInt(obj, 10))
       : widget.resource_id.map((obj) => parseInt(obj, 10)),
     time_granularity:

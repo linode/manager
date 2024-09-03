@@ -1,3 +1,6 @@
+import type { DatabaseEngine, DatabaseType } from '@linode/api-v4';
+import type { QueryFunction, QueryKey } from '@tanstack/react-query';
+
 /**
  * The CloudPulseServiceTypeMap has list of filters to be built for different service types like dbaas, linode etc.,The properties here are readonly as it is only for reading and can't be modified in code
  */
@@ -31,6 +34,36 @@ export interface CloudPulseServiceTypeFilters {
 }
 
 /**
+ * As of now, the list of possible custom filters are engine, database type, this union type will be expanded if we start enhancing our custom select config
+ */
+export type QueryFunctionType = DatabaseEngine[] | DatabaseType[];
+
+/**
+ * The non array types of QueryFunctionType like DatabaseEngine|DatabaseType
+ */
+export type QueryFunctionNonArrayType = SingleType<QueryFunctionType>;
+
+/**
+ * This infers the type from the QueryFunctionType and makes it a single object type, and by using this we can maintain only QueryFunctionType and NonArray Types are automatically identified
+ */
+type SingleType<T> = T extends (infer U)[] ? U : never;
+
+/**
+ * This interface holds the query function and query key from various factories, like databaseQueries, linodeQueries etc.,
+ */
+export interface QueryFunctionAndKey {
+  /**
+   * The query function that contains actual function that calls API like getDatabaseEngines, getDatabaseTypes etc.,
+   */
+  queryFn: QueryFunction<Awaited<QueryFunctionType>>;
+
+  /**
+   * The actual query key defined in the factory
+   */
+  queryKey: QueryKey;
+}
+
+/**
  * CloudPulseServiceTypeFiltersConfiguration is the actual configuration of the filter component
  */
 export interface CloudPulseServiceTypeFiltersConfiguration {
@@ -46,8 +79,9 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
 
   /**
    * This is an optional field, it is required if the type is dynamic for call the respective API to get the filters
+   * example, databaseQueries.types, databaseQueries.engines etc., makes use of existing query key and optimises cache
    */
-  apiUrl?: string;
+  apiV4QueryKey?: QueryFunctionAndKey;
 
   /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected

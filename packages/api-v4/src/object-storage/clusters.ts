@@ -4,9 +4,9 @@ import { Filter, Params, ResourcePage as Page } from '../types';
 import { ObjectStorageCluster } from './types';
 
 /**
- * getClusters
- *
- * Gets a list of available clusters
+ * @deprecated This method returns legacy clusterId values representing regions
+ * used in older API versions. It is maintained for backward compatibility only.
+ * Please use the "getRegions" endpoint instead for up-to-date information.
  */
 export const getClusters = (params?: Params, filters?: Filter) =>
   Request<Page<ObjectStorageCluster>>(
