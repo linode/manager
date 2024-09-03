@@ -141,7 +141,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
       )}
       <TableCell data-qa-volume-size>{volume.size} GB</TableCell>
       {!isVolumesLanding && (
-        <Hidden smDown>
+        <Hidden xsDown>
           <TableCell className={classes.volumePath} data-qa-fs-path>
             {volume.filesystem_path}
           </TableCell>

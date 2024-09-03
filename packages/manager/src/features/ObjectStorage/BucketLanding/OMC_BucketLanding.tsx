@@ -18,12 +18,10 @@ import {
 } from 'src/queries/object-storage/queries';
 import { isBucketError } from 'src/queries/object-storage/requests';
 import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { getRegionsByRegionId } from 'src/utilities/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { CancelNotice } from '../CancelNotice';
@@ -46,14 +44,6 @@ export const OMC_BucketLanding = () => {
   const isRestrictedUser = profile?.restricted;
 
   const {
-    data: regions,
-    error: regionErrors,
-    isLoading: areRegionsLoading,
-  } = useRegionsQuery();
-
-  const regionsLookup = regions && getRegionsByRegionId(regions);
-
-  const {
     data: objectStorageBucketsResponse,
     error: bucketsErrors,
     isLoading: areBucketsLoading,
@@ -64,22 +54,21 @@ export const OMC_BucketLanding = () => {
   const { classes } = useStyles();
 
   const removeBucketConfirmationDialog = useOpenClose();
-  const [bucketToRemove, setBucketToRemove] = React.useState<
-    ObjectStorageBucket | undefined
-  >(undefined);
+
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
   const [
     bucketDetailDrawerOpen,
     setBucketDetailDrawerOpen,
   ] = React.useState<boolean>(false);
-  const [bucketForDetails, setBucketForDetails] = React.useState<
+
+  const [selectedBucket, setSelectedBucket] = React.useState<
     ObjectStorageBucket | undefined
   >(undefined);
 
   const handleClickDetails = (bucket: ObjectStorageBucket) => {
     setBucketDetailDrawerOpen(true);
-    setBucketForDetails(bucket);
+    setSelectedBucket(bucket);
   };
 
   const closeBucketDetailDrawer = () => {
@@ -87,33 +76,30 @@ export const OMC_BucketLanding = () => {
   };
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
-    setBucketToRemove(bucket);
+    setSelectedBucket(bucket);
     setError(undefined);
     removeBucketConfirmationDialog.open();
   };
 
   const removeBucket = async () => {
     // This shouldn't happen, but just in case (and to get TS to quit complaining...)
-    if (!bucketToRemove) {
+    if (!selectedBucket) {
       return;
     }
 
     setError(undefined);
     setIsLoading(true);
 
-    const { label, region } = bucketToRemove;
+    const { label, region } = selectedBucket;
+
     if (region) {
       try {
         await deleteBucket({ label, region });
         removeBucketConfirmationDialog.close();
         setIsLoading(false);
-
-        // @analytics
         sendDeleteBucketEvent(region);
       } catch (e) {
-        // @analytics
         sendDeleteBucketFailedEvent(region);
-
         setIsLoading(false);
         setError(e);
       }
@@ -124,7 +110,7 @@ export const OMC_BucketLanding = () => {
     removeBucketConfirmationDialog.close();
   }, [removeBucketConfirmationDialog]);
 
-  // @TODO OBJ Multicluster - region is defined as an optional field in BucketError. Once the feature is rolled out to production, we could clean this up and remove the filter.
+  // @TODO OBJGen2 - We could clean this up when OBJ Gen2 is in GA.
   const unavailableRegions = objectStorageBucketsResponse?.errors
     ?.map((error) => (isBucketError(error) ? error.region : error.endpoint))
     .filter((region): region is Region => region !== undefined);
@@ -133,7 +119,7 @@ export const OMC_BucketLanding = () => {
     return <RenderEmpty />;
   }
 
-  if (regionErrors || bucketsErrors) {
+  if (bucketsErrors) {
     return (
       <ErrorState
         data-qa-error-state
@@ -142,11 +128,7 @@ export const OMC_BucketLanding = () => {
     );
   }
 
-  if (
-    areRegionsLoading ||
-    areBucketsLoading ||
-    objectStorageBucketsResponse === undefined
-  ) {
+  if (areBucketsLoading || objectStorageBucketsResponse === undefined) {
     return <CircleProgress />;
   }
 
@@ -161,8 +143,9 @@ export const OMC_BucketLanding = () => {
     );
   }
 
-  const totalUsage = sumBucketUsage(objectStorageBucketsResponse.buckets);
-  const bucketLabel = bucketToRemove ? bucketToRemove.label : '';
+  const buckets = objectStorageBucketsResponse.buckets;
+  const totalUsage = sumBucketUsage(buckets);
+  const bucketLabel = selectedBucket ? selectedBucket.label : '';
 
   return (
     <React.Fragment>
@@ -171,11 +154,7 @@ export const OMC_BucketLanding = () => {
         <UnavailableRegionsDisplay unavailableRegions={unavailableRegions} />
       )}
       <Grid xs={12}>
-        <OrderBy
-          data={objectStorageBucketsResponse.buckets}
-          order={'asc'}
-          orderBy={'label'}
-        >
+        <OrderBy data={buckets} order={'asc'} orderBy={'label'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
             const bucketTableProps = {
               data: orderedData,
@@ -189,7 +168,7 @@ export const OMC_BucketLanding = () => {
           }}
         </OrderBy>
         {/* If there's more than one Bucket, display the total usage. */}
-        {objectStorageBucketsResponse.buckets.length > 1 ? (
+        {buckets.length > 1 ? (
           <Typography
             style={{ marginTop: 18, textAlign: 'center', width: '100%' }}
             variant="body1"
@@ -197,9 +176,7 @@ export const OMC_BucketLanding = () => {
             Total storage used: {readableBytes(totalUsage).formatted}
           </Typography>
         ) : null}
-        <TransferDisplay
-          spacingTop={objectStorageBucketsResponse.buckets.length > 1 ? 8 : 18}
-        />
+        <TransferDisplay spacingTop={buckets.length > 1 ? 8 : 18} />
       </Grid>
       <TypeToConfirmDialog
         entity={{
@@ -237,20 +214,12 @@ export const OMC_BucketLanding = () => {
         {/* If the user is attempting to delete their last Bucket, remind them
           that they will still be billed unless they cancel Object Storage in
           Account Settings. */}
-        {objectStorageBucketsResponse?.buckets.length === 1 && (
-          <CancelNotice className={classes.copy} />
-        )}
+        {buckets.length === 1 && <CancelNotice className={classes.copy} />}
       </TypeToConfirmDialog>
       <BucketDetailsDrawer
-        bucketLabel={bucketForDetails?.label}
-        bucketRegion={regionsLookup?.[bucketForDetails?.region ?? '']}
-        cluster={bucketForDetails?.cluster}
-        created={bucketForDetails?.created}
-        hostname={bucketForDetails?.hostname}
-        objectsNumber={bucketForDetails?.objects}
         onClose={closeBucketDetailDrawer}
         open={bucketDetailDrawerOpen}
-        size={bucketForDetails?.size}
+        selectedBucket={selectedBucket}
       />
     </React.Fragment>
   );
