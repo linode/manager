@@ -59,6 +59,12 @@ export const BucketDetailsDrawer = React.memo(
       account?.capabilities ?? []
     );
 
+    const isObjectStorageGen2Enabled = isFeatureEnabledV2(
+      'Object Storage Endpoint Types',
+      Boolean(flags.objectStorageGen2?.enabled),
+      account?.capabilities ?? []
+    );
+
     // @TODO OBJGen2 - We could clean this up when OBJ Gen2 is in GA.
     const { data: clusters } = useObjectStorageClusters(
       !isObjMultiClusterEnabled
@@ -141,7 +147,7 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
          to getBucketAccess and updateBucketAccess.  */}
-        {
+        {isObjectStorageGen2Enabled && (
           <>
             <Typography data-testid="bucketRateLimit" variant="h3">
               Bucket Rate Limits
@@ -154,9 +160,9 @@ export const BucketDetailsDrawer = React.memo(
                 <Link to="#">Understand bucket rate limits</Link>.
               </Typography>
             )}
+            <Divider spacingBottom={16} spacingTop={16} />
           </>
-        }
-        {<Divider spacingBottom={16} spacingTop={16} />}
+        )}
         {cluster && label && (
           <AccessSelect
             getAccess={() =>
