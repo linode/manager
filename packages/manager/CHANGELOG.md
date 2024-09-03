@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Move manual snapshot error message from Linode Backups page to snapshot confirmation dialog ([#10791](https://github.com/linode/manager/pull/10791))
 - "Create Volume" button text to "Add Volume" ([#10808](https://github.com/linode/manager/pull/10808))
 - Storybook navigation bar organization ([#10809](https://github.com/linode/manager/pull/10809))
+- Increase block storage max volume size to 16TB ([#10865](https://github.com/linode/manager/pull/10865))
 
 ### Fixed:
 

@@ -88,7 +88,7 @@ export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm';
 export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
 export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-export const MAX_VOLUME_SIZE = 10240;
+export const MAX_VOLUME_SIZE = 16384;
 
 /**
  * As per the current support polocy
