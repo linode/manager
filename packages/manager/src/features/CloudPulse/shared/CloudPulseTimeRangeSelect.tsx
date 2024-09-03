@@ -4,7 +4,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { TIME_DURATION } from '../Utils/constants';
 
-import type { AclpConfig, TimeDuration } from '@linode/api-v4';
+import type { TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
   Item,
