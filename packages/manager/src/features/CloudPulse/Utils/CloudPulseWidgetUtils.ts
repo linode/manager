@@ -312,11 +312,10 @@ export const mapResourceIdToName = (
   id: string | undefined,
   resources: CloudPulseResources[]
 ): string => {
-  return (
-    resources.find((resourceObj) => String(resourceObj.id) === id)?.label ??
-    id ??
-    ''
+  const resourcesObj = resources.find(
+    (resourceObj) => String(resourceObj.id) === id
   );
+  return resourcesObj?.label ?? id ?? '';
 };
 
 /**

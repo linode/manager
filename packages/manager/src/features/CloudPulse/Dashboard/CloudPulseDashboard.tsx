@@ -243,16 +243,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     );
   };
 
-  const renderPlaceHolder = (subtitle: string) => {
+  const renderPlaceHolder = (title: string) => {
     return (
       <Grid item xs>
         <Paper>
-          <Placeholder
-            icon={CloudPulseIcon}
-            isEntity
-            subtitle={subtitle}
-            title=""
-          />
+          <Placeholder icon={CloudPulseIcon} isEntity title={title} />
         </Paper>
       </Grid>
     );
