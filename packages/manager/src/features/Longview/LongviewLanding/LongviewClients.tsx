@@ -210,6 +210,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
             label="Filter by client label or hostname"
             onSearch={handleSearch}
             placeholder="Filter by client label or hostname"
+            value={query}
           />
         </StyledSearchbarGrid>
         <StyledSortSelectGrid>
