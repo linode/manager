@@ -66,26 +66,24 @@ export const checkMandatoryFiltersSelected = (
     return false;
   }
 
-  return serviceTypeConfig
-    ? serviceTypeConfig.filters.every(({ configuration }) => {
-        const { filterKey, neededInServicePage } = configuration;
+  return serviceTypeConfig.filters.every(({ configuration }) => {
+    const { filterKey, neededInServicePage } = configuration;
 
-        // If the filter is not needed, skip it
-        if (!neededInServicePage) {
-          return true;
-        }
+    // If the filter is not needed, skip it
+    if (!neededInServicePage) {
+      return true;
+    }
 
-        const filterValueForKey = filterValue[filterKey];
+    const filterValueForKey = filterValue[filterKey];
 
-        // Check if the filter value is defined and has a valid selection
-        return (
-          filterValueForKey !== undefined &&
-          (Array.isArray(filterValueForKey)
-            ? Boolean(filterValueForKey.length)
-            : true)
-        );
-      })
-    : true;
+    // Check if the filter value is defined and has a valid selection
+    return (
+      filterValueForKey !== undefined &&
+      (Array.isArray(filterValueForKey)
+        ? Boolean(filterValueForKey.length)
+        : true)
+    );
+  });
 };
 
 /**
@@ -104,10 +102,6 @@ export const checkIfFilterNeededInMetricsCall = (
   }
 
   return serviceTypeConfig.filters.some((filter) => {
-    if (!filter) {
-      return false;
-    }
-
     const { configuration } = filter;
     const {
       filterKey: configFilterKey,

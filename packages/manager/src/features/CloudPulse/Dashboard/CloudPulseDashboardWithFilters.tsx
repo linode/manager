@@ -21,9 +21,6 @@ import { CloudPulseDashboard } from './CloudPulseDashboard';
 import type { FilterValueType } from './CloudPulseDashboardLanding';
 import type { TimeDuration } from '@linode/api-v4';
 
-/**
- * These properties are required for rendering the component
- */
 export interface CloudPulseDashboardWithFiltersProp {
   /**
    * The id of the dashboard that needs to be rendered
