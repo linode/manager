@@ -5,20 +5,6 @@ import {
 
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
 
-const queryMocks = vi.hoisted(() => ({
-  getUserPreferenceObject: vi.fn().mockReturnValue({
-    test: '1',
-  }),
-}));
-
-vi.mock('../Utils/UserPreference', async () => {
-  const actual = await vi.importActual('../Utils/UserPreference');
-  return {
-    ...actual,
-    getUserPreferenceObject: queryMocks.getUserPreferenceObject,
-  };
-});
-
 it('test handleCustomSelectionChange method for single selection', () => {
   const selectedValue: CloudPulseServiceTypeFiltersOptions = {
     id: '1',
@@ -73,22 +59,27 @@ it('test getInitialDefaultSelections method for single selection', () => {
     handleSelectionChange,
     isMultiSelect: false,
     options,
+    preferences: {
+      test: '1',
+    },
     savePreferences: true,
+    updatePreferences: (_: {}) => {},
   });
 
   expect(Array.isArray(result)).toBe(false);
   expect(result).toEqual(options[0]);
   expect(handleSelectionChange).toBeCalledTimes(1);
-  queryMocks.getUserPreferenceObject.mockReturnValue({
-    test: '2',
-  });
 
   result = getInitialDefaultSelections({
     filterKey: 'test',
     handleSelectionChange,
     isMultiSelect: false,
     options,
+    preferences: {
+      test: '2',
+    },
     savePreferences: true,
+    updatePreferences: (_: {}) => {},
   });
   expect(result).toEqual(undefined);
   expect(handleSelectionChange).toBeCalledTimes(2);
@@ -96,10 +87,6 @@ it('test getInitialDefaultSelections method for single selection', () => {
 
 it('test getInitialDefaultSelections method for multi selection', () => {
   const handleSelectionChange = vi.fn();
-
-  queryMocks.getUserPreferenceObject.mockReturnValue({
-    test: '1',
-  });
 
   const options: CloudPulseServiceTypeFiltersOptions[] = [
     {
@@ -113,22 +100,27 @@ it('test getInitialDefaultSelections method for multi selection', () => {
     handleSelectionChange,
     isMultiSelect: true,
     options,
+    preferences: {
+      test: '1',
+    },
     savePreferences: true,
+    updatePreferences: (_: {}) => {},
   });
 
   expect(Array.isArray(result)).toBe(true);
   expect(result).toEqual(options);
   expect(handleSelectionChange).toBeCalledTimes(1);
-  queryMocks.getUserPreferenceObject.mockReturnValue({
-    test: '2',
-  });
 
   result = getInitialDefaultSelections({
     filterKey: 'test',
     handleSelectionChange,
     isMultiSelect: false,
     options,
+    preferences: {
+      test: '2',
+    },
     savePreferences: true,
+    updatePreferences: (_: {}) => {},
   });
   expect(result).toEqual(undefined);
   expect(handleSelectionChange).toBeCalledTimes(2);
