@@ -51,6 +51,7 @@ export const RegionSelect = <
     helperText,
     label,
     onChange,
+    placeholder,
     regionFilter,
     regions,
     required,
@@ -163,7 +164,7 @@ export const RegionSelect = <
         noOptionsText="No results"
         onChange={onChange}
         options={regionOptions}
-        placeholder="Select a Region"
+        placeholder={placeholder ?? 'Select a Region'}
         value={selectedRegion as Region}
       />
       {showDistributedRegionIconHelperText && ( // @TODO Gecko Beta: Add docs link
