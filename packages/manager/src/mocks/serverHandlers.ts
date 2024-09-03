@@ -2273,14 +2273,14 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/v4/monitor/services', () => {
+  http.get('*/monitor/services', () => {
     const response = {
       data: [{ service_type: 'linode' }],
     };
 
     return HttpResponse.json(response);
   }),
-  http.get('*/v4/monitor/services/:serviceType/dashboards', () => {
+  http.get('*/monitor/services/:serviceType/dashboards', () => {
     const response = {
       data: [
         dashboardFactory.build({
@@ -2296,7 +2296,7 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.get('*/v4/monitor/services/:serviceType/metric-definitions', () => {
+  http.get('*/monitor/services/:serviceType/metric-definitions', () => {
     const response = {
       data: [
         {
@@ -2415,14 +2415,14 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.post('*/v4/monitor/services/:serviceType/token', () => {
+  http.post('*/monitor/services/:serviceType/token', () => {
     const response = {
       token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
     };
     return HttpResponse.json(response);
   }),
 
-  http.get('*/v4/monitor/dashboards/:id', () => {
+  http.get('*/monitor/dashboards/:id', () => {
     const response = {
       created: '2024-04-29T17:09:29',
       id: 1,
