@@ -61,7 +61,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add “Encrypt Volume” checkbox in Edit Volume drawer ([#10787](https://github.com/linode/manager/pull/10787))
 - Update Bucket Rate Limits ([#10790](https://github.com/linode/manager/pull/10790))
 - Add "Encryption" column to Linode Volumes table ([#10793](https://github.com/linode/manager/pull/10793))
-- Add bucket management Properties Tab for Object Storage Gen2 ([#10795](https://github.com/linode/manager/pull/10795))
+- Add bucket management Properties Tab for Object Storage Gen2 ([#10797](https://github.com/linode/manager/pull/10797))
 - Display Endpoint Type alongside each endpoint hostname in Regions Column & Hostnames Drawers ([#10796](https://github.com/linode/manager/pull/10796))
 - Add useRegionQuery and cleanup bucket landing page ([#10801](https://github.com/linode/manager/pull/10801))
 - Add 'Encrypt Volume' checkbox to Clone Volume drawer ([#10803](https://github.com/linode/manager/pull/10803))
