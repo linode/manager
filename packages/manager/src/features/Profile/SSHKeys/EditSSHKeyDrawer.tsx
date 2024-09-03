@@ -1,8 +1,7 @@
-import { SSHKey } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
-import { useEffect } from 'react';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -10,6 +9,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useUpdateSSHKeyMutation } from 'src/queries/profile/profile';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+
+import type { SSHKey } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -21,7 +22,7 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateSSHKey,
     reset,
   } = useUpdateSSHKeyMutation(sshKey?.id ?? -1);
@@ -75,7 +76,7 @@ const EditSSHKeyDrawer = ({ onClose, open, sshKey }: Props) => {
             'data-testid': 'submit',
             disabled: !formik.dirty,
             label: 'Save',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

@@ -1,4 +1,3 @@
-import { omit } from 'lodash';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -9,6 +8,7 @@ import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalyt
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { omitProps } from 'src/utilities/omittedProps';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { utoa } from '../LinodesCreate/utilities';
@@ -20,6 +20,7 @@ import type {
   CreateLinodeRequest,
   InterfacePayload,
   Linode,
+  Profile,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
@@ -147,7 +148,11 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omit(formValues, ['linode', 'hasSignedEUAgreement']);
+  const values = omitProps(formValues, [
+    'linode',
+    'hasSignedEUAgreement',
+    'firewallOverride',
+  ]);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
@@ -258,6 +263,18 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    * The currently selected Linode
    */
   linode?: Linode | null;
+}
+
+export interface LinodeCreateFormContext {
+  /**
+   * Profile data is used in the Linode Create v2 resolver because
+   * restricted users are subject to different validation.
+   */
+  profile: Profile | undefined;
+  /**
+   * Used for dispaying warnings to internal Akamai employees.
+   */
+  secureVMNoticesEnabled: boolean;
 }
 
 /**

@@ -1,5 +1,3 @@
-import { ModifySubnetPayload } from '@linode/api-v4/lib/vpcs/types';
-import { Subnet } from '@linode/api-v4/lib/vpcs/types';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -10,6 +8,8 @@ import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useUpdateSubnetMutation } from 'src/queries/vpcs/vpcs';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -26,7 +26,7 @@ export const SubnetEditDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateSubnet,
     reset,
   } = useUpdateSubnetMutation(vpcId, subnet?.id ?? -1);
@@ -92,7 +92,7 @@ export const SubnetEditDrawer = (props: Props) => {
             'data-testid': 'save-button',
             disabled: !form.dirty,
             label: 'Save',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
