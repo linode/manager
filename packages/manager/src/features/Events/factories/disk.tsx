@@ -144,7 +144,7 @@ export const disk: PartialEventMap<'disk'> = {
   disk_resize: {
     failed: (e) => (
       <>
-        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
         <EventLink event={e} to="entity" /> could <strong>not</strong> be{' '}
         <strong>resized</strong>.{' '}
         <Link
@@ -163,26 +163,26 @@ export const disk: PartialEventMap<'disk'> = {
     ),
     finished: (e) => (
       <>
-        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
         <EventLink event={e} to="entity" /> has been <strong>resized</strong>.
       </>
     ),
     notification: (e) => (
       <>
-        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
         <EventLink event={e} to="entity" /> has been <strong>resized</strong>.
       </>
     ),
     scheduled: (e) => (
       <>
-        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
         <EventLink event={e} to="entity" /> is scheduled to be{' '}
         <strong>resized</strong>.
       </>
     ),
     started: (e) => (
       <>
-        A disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
+        Disk <EventLink event={e} to="secondaryEntity" /> on Linode{' '}
         <EventLink event={e} to="entity" /> is being <strong>resized</strong>.
       </>
     ),

@@ -187,7 +187,7 @@ describe('resize linode', () => {
 
       // Wait until the disk resize is done.
       ui.toast.assertMessage(
-        `A disk ${diskName} on Linode ${linode.label} has been resized.`
+        `Disk ${diskName} on Linode ${linode.label} has been resized.`
       );
 
       interceptLinodeResize(linode.id).as('linodeResize');
