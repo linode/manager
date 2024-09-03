@@ -90,7 +90,13 @@ export const useMutateProfile = () => {
   const queryClient = useQueryClient();
   return useMutation<Profile, APIError[], Partial<Profile>>({
     mutationFn: updateProfile,
-    onSuccess: (newData) => updateProfileData(newData, queryClient),
+    onSuccess(newData) {
+      updateProfileData(newData, queryClient);
+
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users.queryKey,
+      });
+    },
   });
 };
 
