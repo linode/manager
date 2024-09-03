@@ -12,20 +12,28 @@ import AlertsLanding from './Alerts/AlertLanding/AlertsLanding';
 import { CloudPulseDashboardLanding } from './Dashboard/CloudPulseDashboardLanding';
 
 import type { RouteComponentProps } from 'react-router-dom';
+import { useFlags } from 'src/hooks/useFlags';
 type Props = RouteComponentProps<{}>;
 
 export const CloudPulseTabs = React.memo((props: Props) => {
+  const flags = useFlags();
   const tabs = [
     {
+      accessibile: true,
       routeName: `${props.match.url}/dashboards`,
       title: 'Dashboards',
     },
     {
+      accessibile:
+        flags.aclpAlerting?.alertDefinitions ||
+        flags.aclpAlerting?.recentActivity ||
+        flags.aclpAlerting?.notificationChannels,
       routeName: `${props.match.url}/alerts`,
       title: 'Alerts',
     },
   ];
 
+  const accessibleTabs = tabs.filter((tab) => tab.accessibile);
   const matches = (p: string) => {
     return Boolean(
       matchPath(props.location.pathname, { exact: false, path: p })
@@ -33,18 +41,18 @@ export const CloudPulseTabs = React.memo((props: Props) => {
   };
 
   const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+    props.history.push(accessibleTabs[index].routeName);
   };
 
   return (
     <StyledTabs
       index={Math.max(
-        tabs.findIndex((tab) => matches(tab.routeName)),
+        accessibleTabs.findIndex((tab) => matches(tab.routeName)),
         0
       )}
       onChange={navToURL}
     >
-      <TabLinkList tabs={tabs} />
+      <TabLinkList tabs={accessibleTabs} />
 
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>

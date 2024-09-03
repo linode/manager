@@ -126,11 +126,11 @@ export interface CloudPulseMetricsList {
 }
 
 export interface CreateAlertDefinitionPayload {
-  name: string | null;
-  region: string | null;
-  description?: string | null;
-  service_type: string | null;
-  engineOption: string | null;
+  name: string;
+  region: string;
+  description?: string;
+  service_type: string;
+  engineOption: string;
   resource_ids: string[];
   severity: string;
   criteria: MetricCriteria[];
