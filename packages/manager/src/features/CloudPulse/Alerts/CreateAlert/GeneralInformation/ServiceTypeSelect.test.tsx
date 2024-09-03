@@ -53,12 +53,12 @@ describe('ServiceTypeSelect component tests', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(
       screen.getByRole('option', {
-        name: 'linode',
+        name: 'LINODE',
       })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('option', {
-        name: 'dbaas',
+        name: 'DBAAS',
       })
     ).toBeInTheDocument();
   });
@@ -77,7 +77,7 @@ describe('ServiceTypeSelect component tests', () => {
       onSubmit: handleOnSubmit,
     });
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'linode' }));
-    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'linode');
+    fireEvent.click(screen.getByRole('option', { name: 'LINODE' }));
+    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'LINODE');
   });
 });

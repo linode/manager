@@ -7,12 +7,12 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 // import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useFlags } from 'src/hooks/useFlags';
 
 import AlertsLanding from './Alerts/AlertLanding/AlertsLanding';
 import { CloudPulseDashboardLanding } from './Dashboard/CloudPulseDashboardLanding';
 
 import type { RouteComponentProps } from 'react-router-dom';
-import { useFlags } from 'src/hooks/useFlags';
 type Props = RouteComponentProps<{}>;
 
 export const CloudPulseTabs = React.memo((props: Props) => {
