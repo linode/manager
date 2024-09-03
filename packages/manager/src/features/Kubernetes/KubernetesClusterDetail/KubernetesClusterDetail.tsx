@@ -83,15 +83,21 @@ export const KubernetesClusterDetail = () => {
           currentVersion={cluster?.k8s_version}
         />
       </Grid>
-      <LandingHeader
-        docsLabel="Docs"
-        docsLink="https://otomi.io/docs/get-started/overview"
-        removeCrumbX={[1, 2, 3]}
-        title="Application platform for LKE"
-      />
-      <Grid>
-        <APLSummaryPanel cluster={cluster} />
-      </Grid>
+
+      {cluster.apl_enabled && (
+        <>
+          <LandingHeader
+            docsLabel="Docs"
+            docsLink="https://otomi.io/docs/get-started/overview"
+            removeCrumbX={[1, 2, 3]}
+            title="Application platform for LKE"
+          />
+          <Grid>
+            <APLSummaryPanel cluster={cluster} />
+          </Grid>
+        </>
+      )}
+
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },

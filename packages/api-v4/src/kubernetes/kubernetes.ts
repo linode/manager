@@ -1,5 +1,5 @@
 import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -38,7 +38,7 @@ export const getKubernetesClusters = (params?: Params, filters?: Filter) =>
 export const getKubernetesCluster = (clusterID: number) =>
   Request<KubernetesCluster>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
+    setURL(`${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
   );
 
 /**
@@ -46,12 +46,15 @@ export const getKubernetesCluster = (clusterID: number) =>
  *
  * Create a new cluster.
  */
-export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
-  Request<KubernetesCluster>(
+export const createKubernetesCluster = (data: CreateKubeClusterPayload) => {
+  const apiRoot = data.apl_enabled ? BETA_API_ROOT : API_ROOT;
+
+  return Request<KubernetesCluster>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/lke/clusters`),
+    setURL(`${apiRoot}/lke/clusters`),
     setData(data, createKubeClusterSchema)
   );
+};
 
 /**
  * updateKubernetesCluster

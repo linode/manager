@@ -10,6 +10,7 @@ export interface KubernetesCluster {
   id: number;
   tags: string[];
   control_plane: ControlPlaneOptions;
+  apl_enabled?: boolean;
 }
 
 export interface KubeNodePoolResponse {
