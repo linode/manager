@@ -8,6 +8,7 @@
 ### Changed:
 
 - Deprecate `getClusters` ([#10801](https://github.com/linode/manager/pull/10801))
+- Increase block storage max volume size to 16TB ([#10865](https://github.com/linode/manager/pull/10865))
 
 ### Upcoming Features:
 
