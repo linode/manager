@@ -21,7 +21,7 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
     error,
     mutateAsync: deleteUser,
     reset,
-    isLoading,
+    isPending,
   } = useAccountUserDeleteMutation(username);
 
   const onClose = () => {
@@ -46,7 +46,7 @@ export const UserDeleteConfirmationDialog = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Delete',
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

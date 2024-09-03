@@ -1,6 +1,4 @@
 import React from 'react';
-import userEvent from '@testing-library/user-event';
-import { waitForElementToBeRemoved } from '@testing-library/react';
 
 import {
   LinodeConfigInterfaceFactory,
@@ -14,8 +12,8 @@ import {
 import 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
 import { unrecommendedConfigNoticeSelector } from './LinodeConfigDialog';
+import { LinodeConfigDialog, padList } from './LinodeConfigDialog';
 
 import type { MemoryLimit } from './LinodeConfigDialog';
 
@@ -156,12 +154,7 @@ describe('LinodeConfigDialog', () => {
       onClose: vi.fn(),
     };
 
-    const {
-      getAllByPlaceholderText,
-      findByText,
-      getByTestId,
-      rerender,
-    } = renderWithTheme(
+    const { findByDisplayValue, rerender } = renderWithTheme(
       <LinodeConfigDialog config={undefined} open={false} {...props} />
     );
 
@@ -175,17 +168,7 @@ describe('LinodeConfigDialog', () => {
       />
     );
 
-    const loadingTestId = 'circle-progress';
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const interfaceSelectMenu = getAllByPlaceholderText('Select an Interface');
-
-    await userEvent.click(interfaceSelectMenu[0]);
-
-    await findByText('VPC');
-    await findByText('Public Internet');
+    await findByDisplayValue('VPC');
+    await findByDisplayValue('Public Internet');
   });
 });

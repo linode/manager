@@ -16,7 +16,7 @@ export const DisableTwoFactorDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: disableTwoFactor,
     reset,
   } = useDisableTwoFactorMutation();
@@ -38,7 +38,7 @@ export const DisableTwoFactorDialog = (props: Props) => {
       primaryButtonProps={{
         'data-testid': 'submit',
         label: 'Disable Two-factor Authentication',
-        loading: isLoading,
+        loading: isPending,
         onClick: handleDisableTFA,
       }}
       secondaryButtonProps={{
