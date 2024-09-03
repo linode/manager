@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import { createContext, useCallback, useState } from 'react';
 
-export interface NotificationContextProps {
+export interface NotificationCenterContextProps {
   closeMenu: () => void;
   menuOpen: boolean;
   openMenu: () => void;
@@ -13,14 +13,14 @@ const defaultContext = {
   openMenu: () => null,
 };
 
-export const notificationContext = createContext<NotificationContextProps>(
+export const notificationCenterContext = createContext<NotificationCenterContextProps>(
   defaultContext
 );
 
 export const menuId = 'notification-events-menu';
 export const menuButtonId = 'menu-button--notification-events-menu';
 
-export const useNotificationContext = (): NotificationContextProps => {
+export const useNotificationContext = (): NotificationCenterContextProps => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const openMenu = useCallback(() => {

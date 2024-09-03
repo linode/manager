@@ -22,7 +22,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
-  { flag: 'eventMessagesV2', label: 'Event Messages V2' },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },

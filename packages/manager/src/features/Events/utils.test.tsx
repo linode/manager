@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import { eventFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -9,7 +11,6 @@ import {
 } from './utils';
 
 import type { Event } from '@linode/api-v4';
-import { DateTime } from 'luxon';
 
 describe('getEventMessage', () => {
   const mockEvent1: Event = eventFactory.build({

@@ -1,9 +1,6 @@
 import { gdprComplianceNotification, notificationFactory } from 'src/factories';
 
-import {
-  adjustSeverity,
-  isEUModelContractNotification,
-} from './useFormattedNotifications';
+import { adjustSeverity, isEUModelContractNotification } from './utils';
 
 // Migration types are considered as types of maintenance notifications.
 const migrationScheduled = notificationFactory.build({

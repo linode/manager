@@ -4,10 +4,10 @@ import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/const
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
+import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';
 
 import type { Event } from '@linode/api-v4';
-import { ACTIONS_WITHOUT_USERNAMES } from './Event.helpers';
 
 type EventMessageManualInput = {
   action: Event['action'];
@@ -54,6 +54,7 @@ export const getEventUsername = (event: Event) => {
   if (event.username && !ACTIONS_WITHOUT_USERNAMES.includes(event.action)) {
     return event.username;
   }
+
   return 'Linode';
 };
 

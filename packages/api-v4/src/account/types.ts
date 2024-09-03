@@ -255,6 +255,7 @@ export type NotificationType =
   | 'reboot_scheduled'
   | 'outage'
   | 'maintenance'
+  | 'maintenance_scheduled'
   | 'payment_due'
   | 'ticket_important'
   | 'ticket_abuse'
