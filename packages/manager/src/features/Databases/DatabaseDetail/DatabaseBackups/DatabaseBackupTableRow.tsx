@@ -14,11 +14,7 @@ interface Props {
   onRestore: (id: number) => void;
 }
 
-export const BackupTableRow = ({
-  backup,
-  disabled = false,
-  onRestore,
-}: Props) => {
+export const BackupTableRow = ({ backup, disabled, onRestore }: Props) => {
   const { created, id } = backup;
 
   return (

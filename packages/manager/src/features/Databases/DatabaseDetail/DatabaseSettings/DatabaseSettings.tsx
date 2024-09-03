@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const DatabaseSettings: React.FC<Props> = (props) => {
-  const { database, disabled = false } = props;
+  const { database, disabled } = props;
   const { data: profile } = useProfile();
 
   const accessControlCopy = (

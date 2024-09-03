@@ -27,7 +27,7 @@ interface Props {
 }
 
 export const DatabaseBackups = (props: Props) => {
-  const { disabled = false } = props;
+  const { disabled } = props;
   const { databaseId, engine } = useParams<{
     databaseId: string;
     engine: Engine;

@@ -69,7 +69,7 @@ interface Props {
 }
 
 export const MaintenanceWindow = (props: Props) => {
-  const { database, disabled = false, timezone } = props;
+  const { database, disabled, timezone } = props;
 
   const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<
     APIError[]

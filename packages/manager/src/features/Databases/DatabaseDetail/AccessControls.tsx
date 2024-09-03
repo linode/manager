@@ -88,7 +88,7 @@ export const AccessControls = (props: Props) => {
   const {
     database: { allow_list: allowList, engine, id },
     description,
-    disabled = false,
+    disabled,
   } = props;
 
   const { classes } = useStyles();

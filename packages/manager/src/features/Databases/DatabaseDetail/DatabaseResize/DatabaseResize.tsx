@@ -35,7 +35,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const DatabaseResize = ({ database, disabled = false }: Props) => {
+export const DatabaseResize = ({ database, disabled }: Props) => {
   const history = useHistory();
 
   const [planSelected, setPlanSelected] = React.useState<string>();

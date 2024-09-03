@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const DatabaseSummary: React.FC<Props> = (props) => {
-  const { database, disabled = false } = props;
+  const { database, disabled } = props;
 
   const description = (
     <>

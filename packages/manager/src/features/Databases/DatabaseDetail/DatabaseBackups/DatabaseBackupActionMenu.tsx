@@ -20,7 +20,7 @@ interface Props {
 
 const DatabaseBackupActionMenu = (props: Props) => {
   const { classes } = useStyles();
-  const { backup, disabled = false, onRestore } = props;
+  const { backup, disabled, onRestore } = props;
 
   const actions = [
     {
