@@ -380,9 +380,7 @@ export const VolumeCreate = () => {
               )}
             </Box>
             <Box
-              alignItems={
-                shouldDisplayClientLibraryCopy ? 'flex-start' : 'flex-end'
-              }
+              alignItems="baseline"
               className={classes.linodeConfigSelectWrapper}
               display="flex"
             >
