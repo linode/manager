@@ -285,6 +285,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     today = generatedData.today;
     currentUnit = generatedData.unit;
   }
+
+  const metricsApiCallError = error?.[0]?.reason;
   return (
     <Grid item lg={widget.size} xs={12}>
       <Paper>
@@ -341,8 +343,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
           <CloudPulseLineGraph
             error={
-              status === 'error' && error?.[0]?.reason !== jweTokenExpiryError // show the error only if the error is not related to token expiration
-                ? error?.[0]?.reason ?? 'Error while rendering graph'
+              status === 'error' && metricsApiCallError !== jweTokenExpiryError // show the error only if the error is not related to token expiration
+                ? metricsApiCallError ?? 'Error while rendering graph'
                 : undefined
             }
             legendRows={
@@ -353,7 +355,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             formatData={(data: number) => convertValueToUnit(data, currentUnit)}
             formatTooltip={(value: number) => formatToolTip(value, unit)}
             gridSize={widget.size}
-            loading={isLoading || error?.[0]?.reason === jweTokenExpiryError} // keep loading until we fetch the refresh token
+            loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
             nativeLegend
             showToday={today}
             timezone={timezone}
