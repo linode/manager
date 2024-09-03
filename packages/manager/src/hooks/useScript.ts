@@ -23,11 +23,12 @@ export const loadScript = (
     // Allow falsy src value if waiting on other data needed for
     // constructing the script URL passed to this hook.
     if (!src) {
+      // console.log({src})
       options?.setStatus?.('idle');
       return resolve({ status: 'idle' });
     }
     // Fetch existing script element by src
-    // It may have been added by another intance of this hook
+    // It may have been added by another instance of this hook
     let script = document.querySelector(
       `script[src='${src}']`
     ) as HTMLScriptElement;
@@ -52,6 +53,7 @@ export const loadScript = (
         });
       };
 
+      // console.log(script.src)
       // Add script to document; default to body
       if (options?.location === 'head') {
         document.head.appendChild(script);

@@ -12,6 +12,7 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import { GoTo } from './GoTo';
 import { MainContent } from './MainContent';
 import { SplashScreen } from './components/SplashScreen';
+import { usePendo } from './hooks/usePendo'
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
@@ -56,6 +57,7 @@ const BaseApp = withDocumentTitleProvider(
 const GlobalListeners = () => {
   useEventsPoller();
   useAdobeAnalytics();
+  usePendo();
   useNewRelic();
   return null;
 };
