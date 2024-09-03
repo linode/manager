@@ -59,6 +59,12 @@ export const BucketDetailsDrawer = React.memo(
       account?.capabilities ?? []
     );
 
+    const isObjectStorageGen2Enabled = isFeatureEnabledV2(
+      'Object Storage Endpoint Types',
+      Boolean(flags.objectStorageGen2?.enabled),
+      account?.capabilities ?? []
+    );
+
     // @TODO OBJGen2 - We could clean this up when OBJ Gen2 is in GA.
     const { data: clusters } = useObjectStorageClusters(
       !isObjMultiClusterEnabled
@@ -74,8 +80,6 @@ export const BucketDetailsDrawer = React.memo(
     );
 
     let formattedCreated;
-    const showBucketRateLimitTable =
-      endpoint_type === 'E2' || endpoint_type === 'E3';
 
     try {
       if (created) {
@@ -141,21 +145,15 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled
          to getBucketAccess and updateBucketAccess.  */}
-        {
-          <>
-            <Typography data-testid="bucketRateLimit" variant="h3">
-              Bucket Rate Limits
-            </Typography>
-            {showBucketRateLimitTable ? (
-              <BucketRateLimitTable endpointType={endpoint_type} />
-            ) : (
-              <Typography>
-                This endpoint type supports up to 750 Requests Per Second(RPS).{' '}
-                <Link to="#">Understand bucket rate limits</Link>.
-              </Typography>
-            )}
-          </>
-        }
+        {isObjectStorageGen2Enabled && (
+          <BucketRateLimitTable
+            typographyProps={{
+              marginTop: 1,
+              variant: 'inherit',
+            }}
+            endpointType={endpoint_type}
+          />
+        )}
         {<Divider spacingBottom={16} spacingTop={16} />}
         {cluster && label && (
           <AccessSelect
