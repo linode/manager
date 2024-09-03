@@ -173,7 +173,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !isPlacementGroupsEnabled,
           href: '/placement-groups',
           icon: <PlacementGroups />,
-          isBeta: flags.placementGroups?.beta,
         },
       ],
       [
@@ -251,7 +250,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       allowMarketplacePrefetch,
       flags.dbaasV2,
       isPlacementGroupsEnabled,
-      flags.placementGroups,
       isACLPEnabled,
     ]
   );
