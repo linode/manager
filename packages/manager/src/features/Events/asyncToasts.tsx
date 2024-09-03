@@ -43,10 +43,10 @@ export const createToast = (options: ToastOptions) => {
 
     return {
       message,
-      ...(option.invertVariant != undefined && {
+      ...(option.invertVariant !== undefined && {
         invertVariant: option.invertVariant,
       }),
-      ...(option.persist != undefined && { persist: option.persist }),
+      ...(option.persist !== undefined && { persist: option.persist }),
     };
   };
 
