@@ -111,9 +111,14 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return graphProp;
   };
 
+  /**
+   *
+   * @param widgetObj Widget configuration received from metrics-definition api
+   */
   const setPreferredWidgetPlan = (widgetObj: Widgets) => {
     const widgetPreferences = preferences.widgets;
     const pref = widgetPreferences?.[widgetObj.label];
+    // if preference is present then update the widget properties present in preference
     if (pref) {
       Object.assign(widgetObj, {
         aggregate_function:

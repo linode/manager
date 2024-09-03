@@ -25,12 +25,20 @@ interface CloudPulseCustomSelectDefaultValueProps {
    */
   options: CloudPulseServiceTypeFiltersOptions[];
 
+  /**
+   * Last selected values from user preference
+   */
   preferences?: AclpConfig;
 
   /**
    * Indicates whether we need to save preferences or not
    */
   savePreferences?: boolean;
+
+  /**
+   * Function to update the user preference
+   * @param data Data to be updated in the preferences
+   */
   updatePreferences?: (data: {}) => void;
 }
 
@@ -56,9 +64,20 @@ interface CloudPulseCustomSelectionChangeProps {
    */
   maxSelections?: number;
 
+  /**
+   * Last selected values from user preference
+   */
   preferences?: AclpConfig;
+
+  /**
+   * boolean variable to check whether preferences should be saved or not
+   */
   savePreferences?: boolean;
 
+  /**
+   * Function to update the user preference
+   * @param data Data to be updated in the preferences
+   */
   updatePreferences?: (data: {}) => void;
 
   /**

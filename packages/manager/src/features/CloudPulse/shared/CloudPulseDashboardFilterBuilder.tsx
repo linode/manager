@@ -43,7 +43,16 @@ export interface CloudPulseDashboardFilterBuilderProps {
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
    */
   isServiceAnalyticsIntegration: boolean;
+
+  /**
+   * Last selected values from user preferences
+   */
   preferences?: AclpConfig;
+
+  /**
+   * Function to update the user preference
+   * @param data Data to be updated in the preferences
+   */
   updatePreferences?: (data: {}) => void;
 }
 
