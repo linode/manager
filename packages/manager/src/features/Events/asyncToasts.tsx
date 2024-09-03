@@ -35,11 +35,18 @@ export const createToast = (options: ToastOptions) => {
   const toastConfig: Toast = {};
 
   const getToastMessage = (option: ToastOption | boolean): ToastMessage => {
+    const message: ToastMessage['message'] = (e) => getEventMessage(e);
+
+    if (typeof option === 'boolean') {
+      return { message };
+    }
+
     return {
-      invertVariant:
-        typeof option !== 'boolean' ? Boolean(option.invertVariant) : false,
-      message: (e) => getEventMessage(e),
-      persist: typeof option !== 'boolean' ? Boolean(option.persist) : false,
+      message,
+      ...(option.invertVariant != undefined && {
+        invertVariant: option.invertVariant,
+      }),
+      ...(option.persist != undefined && { persist: option.persist }),
     };
   };
 

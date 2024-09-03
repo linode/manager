@@ -9,14 +9,10 @@ describe('createToast', () => {
       const result = createToast(options);
       const expected = {
         failure: {
-          invertVariant: false,
           message: expect.any(Function),
-          persist: false,
         },
         success: {
-          invertVariant: false,
           message: expect.any(Function),
-          persist: false,
         },
       };
 
@@ -36,9 +32,7 @@ describe('createToast', () => {
       const result = createToast(options);
       const expected = {
         failure: {
-          invertVariant: false,
           message: expect.any(Function),
-          persist: false,
         },
       };
 
@@ -58,9 +52,7 @@ describe('createToast', () => {
       const result = createToast(options);
       const expected = {
         success: {
-          invertVariant: false,
           message: expect.any(Function),
-          persist: false,
         },
       };
 
@@ -83,9 +75,7 @@ describe('createToast', () => {
     const result = createToast(options);
     const expected = {
       failure: {
-        invertVariant: false,
         message: expect.any(Function),
-        persist: false,
       },
     };
 
@@ -97,9 +87,7 @@ describe('createToast', () => {
     const result = createToast(options);
     const expected = {
       success: {
-        invertVariant: false,
         message: expect.any(Function),
-        persist: false,
       },
     };
 
@@ -114,7 +102,6 @@ describe('createToast', () => {
     const result1 = createToast(failureOnlyOptions);
     const expected1 = {
       failure: {
-        invertVariant: false,
         message: expect.any(Function),
         persist: true,
       },
@@ -137,12 +124,12 @@ describe('createToast', () => {
   });
 
   it('should handle case with both failure and success options with specific values', () => {
-    const options = {
+    const options1 = {
       failure: { invertVariant: true, persist: true },
       success: { invertVariant: true, persist: false },
     };
-    const result = createToast(options);
-    const expected = {
+    const result1 = createToast(options1);
+    const expected1 = {
       failure: {
         invertVariant: true,
         message: expect.any(Function),
@@ -154,7 +141,24 @@ describe('createToast', () => {
         persist: false,
       },
     };
+    expect(result1).toEqual(expected1);
 
-    expect(result).toEqual(expected);
+    const options2 = {
+      failure: { persist: true },
+      success: { invertVariant: true },
+    };
+
+    const result2 = createToast(options2);
+    const expected2 = {
+      failure: {
+        message: expect.any(Function),
+        persist: true,
+      },
+      success: {
+        invertVariant: true,
+        message: expect.any(Function),
+      },
+    };
+    expect(result2).toEqual(expected2);
   });
 });
