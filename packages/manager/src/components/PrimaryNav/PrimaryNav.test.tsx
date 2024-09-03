@@ -80,7 +80,7 @@ describe('PrimaryNav', () => {
     );
 
     const databaseNavItem = await findByText('Databases');
-    let betaChip: any;
+    let betaChip: HTMLElement | null;
     try {
       betaChip = await findByTestId('betaChip');
     } catch (e) {
@@ -149,7 +149,7 @@ describe('PrimaryNav', () => {
     );
 
     const databaseNavItem = await findByText('Databases');
-    let betaChip: any;
+    let betaChip: HTMLElement | null;
     try {
       betaChip = await findByTestId('betaChip');
     } catch (e) {
