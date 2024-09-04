@@ -94,14 +94,14 @@ export const AddIPDrawer = (props: Props) => {
 
   const {
     error: ipv4Error,
-    isLoading: ipv4Loading,
+    isPending: ipv4Loading,
     mutateAsync: allocateIPAddress,
     reset: resetIPv4,
   } = useAllocateIPMutation(linodeId);
 
   const {
     error: ipv6Error,
-    isLoading: ipv6Loading,
+    isPending: ipv6Loading,
     mutateAsync: createIPv6Range,
     reset: resetIPv6,
   } = useCreateIPv6RangeMutation();

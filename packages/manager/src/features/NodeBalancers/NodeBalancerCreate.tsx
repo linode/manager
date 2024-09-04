@@ -114,7 +114,7 @@ const NodeBalancerCreate = () => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
@@ -488,7 +488,10 @@ const NodeBalancerCreate = () => {
       />
       {generalError && !isRestricted && (
         <Notice spacingTop={8} variant="error">
-          <ErrorMessage entityType="nodebalancer_id" message={generalError} />
+          <ErrorMessage
+            entity={{ type: 'nodebalancer_id' }}
+            message={generalError}
+          />
         </Notice>
       )}
       {isRestricted && (
@@ -687,7 +690,7 @@ const NodeBalancerCreate = () => {
           }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          loading={isLoading}
+          loading={isPending}
           onClick={onCreate}
           tooltipText={isInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >

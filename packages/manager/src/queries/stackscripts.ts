@@ -24,7 +24,7 @@ export const getAllOCAsRequest = (passedParams: Params = {}) =>
 export const stackscriptQueries = createQueryKeys('stackscripts', {
   infinite: (filter: Filter = {}) => ({
     queryFn: ({ pageParam }) =>
-      getStackScripts({ page: pageParam, page_size: 25 }, filter),
+      getStackScripts({ page: pageParam as number, page_size: 25 }, filter),
     queryKey: [filter],
   }),
   marketplace: {
@@ -64,20 +64,21 @@ export const useStackScriptsInfiniteQuery = (
       }
       return page + 1;
     },
+    initialPageParam: 1,
   });
 
 export const stackScriptEventHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   // Keep the infinite store up to date
-  queryClient.invalidateQueries({
+  invalidateQueries({
     queryKey: stackscriptQueries.infinite._def,
   });
 
   // If the event has a StackScript entity attached, invalidate it
   if (event.entity?.id) {
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: stackscriptQueries.stackscript(event.entity.id).queryKey,
     });
   }

@@ -3,7 +3,15 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import type { TimeDuration } from '@linode/api-v4';
+import type {
+  APIError,
+  Dashboard,
+  ResourcePage,
+  ServiceTypes,
+  ServiceTypesList,
+  TimeDuration,
+} from '@linode/api-v4';
+import type { UseQueryResult } from '@tanstack/react-query';
 import type {
   StatWithDummyPoint,
   WithStartAndEnd,
@@ -104,4 +112,49 @@ export const seriesDataFormatter = (
   }));
 
   return convertData(formattedArray, startTime, endTime);
+};
+
+/**
+ *
+ * @param rawServiceTypes list of service types returned from api response
+ * @returns converted service types list into string array
+ */
+export const formattedServiceTypes = (
+  rawServiceTypes: ServiceTypesList | undefined
+): string[] => {
+  if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
+    return [];
+  }
+  return rawServiceTypes.data.map((obj: ServiceTypes) => obj.service_type);
+};
+
+/**
+ *
+ * @param queryResults queryResults received from useCloudPulseDashboardsQuery
+ * @param serviceTypes list of service types available
+ * @returns list of dashboards for all the service types & respective loading and error states
+ */
+export const getAllDashboards = (
+  queryResults: UseQueryResult<ResourcePage<Dashboard>, APIError[]>[],
+  serviceTypes: string[]
+) => {
+  let error = '';
+  let isLoading = false;
+  const data: Dashboard[] = queryResults
+    .filter((queryResult, index) => {
+      if (queryResult.isError) {
+        error += serviceTypes[index] + ' ,';
+      }
+      if (queryResult.isLoading) {
+        isLoading = true;
+      }
+      return !queryResult.isLoading && !queryResult.isError;
+    })
+    .map((queryResult) => queryResult?.data?.data ?? [])
+    .flat();
+  return {
+    data,
+    error,
+    isLoading,
+  };
 };

@@ -3,24 +3,30 @@ import {
   deleteAppToken,
   deletePersonalAccessToken,
   updatePersonalAccessToken,
-} from '@linode/api-v4/lib/profile';
-import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
+} from '@linode/api-v4';
 import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+
+import { profileQueries } from './profile';
+
+import type {
   APIError,
   Filter,
   Params,
   ResourcePage,
-} from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
-
-import { profileQueries } from './profile';
+  Token,
+  TokenRequest,
+} from '@linode/api-v4';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     ...profileQueries.appTokens(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -31,7 +37,7 @@ export const usePersonalAccessTokensQuery = (
 ) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     ...profileQueries.personalAccessTokens(params, filter),
   });
 };
@@ -62,7 +68,8 @@ export const useUpdatePersonalAccessTokenMutation = (id: number) => {
 
 export const useRevokePersonalAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deletePersonalAccessToken(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deletePersonalAccessToken(id),
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(() => {
@@ -76,7 +83,8 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
 
 export const useRevokeAppAccessTokenMutation = (id: number) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteAppToken(id), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteAppToken(id),
     onSuccess() {
       // Wait 1 second to invalidate cache after deletion because API needs time
       setTimeout(
@@ -90,11 +98,11 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
   });
 };
 
-export function tokenEventHandler({ queryClient }: EventHandlerData) {
-  queryClient.invalidateQueries({
+export function tokenEventHandler({ invalidateQueries }: EventHandlerData) {
+  invalidateQueries({
     queryKey: profileQueries.appTokens._def,
   });
-  queryClient.invalidateQueries({
+  invalidateQueries({
     queryKey: profileQueries.personalAccessTokens._def,
   });
 }

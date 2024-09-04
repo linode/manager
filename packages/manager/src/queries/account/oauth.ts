@@ -9,7 +9,12 @@ import {
   resetOAuthClientSecret,
   updateOAuthClient,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
@@ -18,7 +23,7 @@ import { accountQueries } from './queries';
 export const useOAuthClientsQuery = (params?: Params, filter?: Filter) =>
   useQuery({
     ...accountQueries.oauthClients(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 interface OAuthClientWithSecret extends OAuthClient {
@@ -70,10 +75,12 @@ export const useUpdateOAuthClientMutation = (id: string) => {
   });
 };
 
-export const oauthClientsEventHandler = ({ queryClient }: EventHandlerData) => {
+export const oauthClientsEventHandler = ({
+  invalidateQueries,
+}: EventHandlerData) => {
   // We may over-fetch because on `onSuccess` also invalidates, but this will be
   // good for UX because Cloud will always be up to date
-  queryClient.invalidateQueries({
+  invalidateQueries({
     queryKey: accountQueries.oauthClients._def,
   });
 };

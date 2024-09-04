@@ -36,7 +36,7 @@ export const ProfileSettings = () => {
   };
 
   const { data: profile } = useProfile();
-  const { isLoading, mutateAsync: updateProfile } = useMutateProfile();
+  const { isPending, mutateAsync: updateProfile } = useMutateProfile();
 
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
@@ -70,7 +70,7 @@ export const ProfileSettings = () => {
           label={`Email alerts for account activity are ${
             areEmailNotificationsEnabled ? 'enabled' : 'disabled'
           }`}
-          disabled={isLoading}
+          disabled={isPending}
         />
       </Paper>
       <Paper>

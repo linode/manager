@@ -104,7 +104,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: createPersonalAccessToken,
   } = useCreatePersonalAccessTokenMutation();
 
@@ -379,7 +379,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
           'data-testid': 'create-button',
           disabled: !hasAccessBeenSelectedForAllScopes(form.values.scopes),
           label: 'Create Token',
-          loading: isLoading,
+          loading: isPending,
           onClick: () => form.handleSubmit(),
         }}
         secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

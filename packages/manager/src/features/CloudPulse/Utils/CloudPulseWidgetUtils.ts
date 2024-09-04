@@ -93,6 +93,11 @@ interface graphDataOptionsProps {
   unit: string;
 
   /**
+   * widget chart type
+   */
+  widgetChartType: string;
+
+  /**
    * preferred color for the widget's graph
    */
   widgetColor: string | undefined;
@@ -150,6 +155,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
     serviceType,
     status,
     unit,
+    widgetChartType,
     widgetColor,
   } = props;
 
@@ -190,8 +196,9 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
 
         const dimension = {
           backgroundColor: color,
-          borderColor: '',
+          borderColor: color,
           data: seriesDataFormatter(transformedData.values, start, end),
+          fill: widgetChartType === 'area',
           label: getLabelName(labelOptions),
         };
         // construct a legend row with the dimension
@@ -245,7 +252,7 @@ export const getCloudPulseMetricRequest = (
     group_by: widget.group_by,
     metric: widget.metric,
     relative_time_duration: duration ?? widget.time_duration,
-    resource_id: resources
+    resource_ids: resources
       ? resourceIds.map((obj) => parseInt(obj, 10))
       : widget.resource_id.map((obj) => parseInt(obj, 10)),
     time_granularity:
@@ -305,9 +312,10 @@ export const mapResourceIdToName = (
   id: string | undefined,
   resources: CloudPulseResources[]
 ): string => {
-  return (
-    resources.find((resourceObj) => resourceObj?.id === id)?.label ?? id ?? ''
+  const resourcesObj = resources.find(
+    (resourceObj) => String(resourceObj.id) === id
   );
+  return resourcesObj?.label ?? id ?? '';
 };
 
 /**

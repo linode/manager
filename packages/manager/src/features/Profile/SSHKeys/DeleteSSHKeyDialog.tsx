@@ -13,7 +13,7 @@ interface Props {
 }
 
 const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
-  const { error, isLoading, mutateAsync } = useDeleteSSHKeyMutation(id);
+  const { error, isPending, mutateAsync } = useDeleteSSHKeyMutation(id);
 
   const onDelete = async () => {
     await mutateAsync();
@@ -27,7 +27,7 @@ const DeleteSSHKeyDialog = ({ id, label, onClose, open }: Props) => {
           primaryButtonProps={{
             'data-testid': 'confirm-delete',
             label: 'Delete',
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

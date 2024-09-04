@@ -53,10 +53,10 @@ export const TimezoneForm = (props: Props) => {
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const { error, isLoading, mutateAsync: updateProfile } = useMutateProfile();
   const [timezoneValue, setTimezoneValue] = React.useState<
     TimezoneOption<string> | string
   >('');
+  const { error, isPending, mutateAsync: updateProfile } = useMutateProfile();
   const timezone = profile?.timezone ?? '';
 
   const handleTimezoneChange = (timezone: TimezoneOption<string>) => {
@@ -120,7 +120,7 @@ export const TimezoneForm = (props: Props) => {
           primaryButtonProps={{
             disabled,
             label: 'Update Timezone',
-            loading: isLoading,
+            loading: isPending,
             onClick: onSubmit,
             sx: {
               margin: '0',

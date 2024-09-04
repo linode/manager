@@ -9,12 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-         ref: ${{ github.base_ref }} # The base branch of the PR (develop)
+          ref: ${{ github.base_ref }} # The base branch of the PR (develop)
 
-      - name: Use Node.js v18.14.0
+      - name: Use Node.js v20.17 LTS
         uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
 
       - uses: actions/cache@v3
         with:
@@ -54,10 +54,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js v18.14.0
+      - name: Use Node.js v20.17 LTS
         uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
 
       - uses: actions/cache@v3
         with:

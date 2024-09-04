@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
@@ -14,7 +14,7 @@ export const useAllAccountInvoices = (
   return useQuery<Invoice[], APIError[]>({
     ...accountQueries.invoices(params, filter),
     ...queryPresets.oneTimeFetch,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -25,13 +25,16 @@ export const useAllAccountPayments = (
   return useQuery<Payment[], APIError[]>({
     ...accountQueries.payments(params, filter),
     ...queryPresets.oneTimeFetch,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
-export const taxIdEventHandler = ({ event, queryClient }: EventHandlerData) => {
+export const taxIdEventHandler = ({
+  event,
+  invalidateQueries,
+}: EventHandlerData) => {
   if (event.action === 'tax_id_invalid' || event.action === 'tax_id_valid') {
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: accountQueries.notifications.queryKey,
     });
   }

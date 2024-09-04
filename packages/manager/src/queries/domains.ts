@@ -9,7 +9,12 @@ import {
   updateDomain,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -66,7 +71,7 @@ const domainQueries = createQueryKeys('domains', {
 export const useDomainsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Domain>, APIError[]>({
     ...domainQueries.domains._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useAllDomainsQuery = (enabled: boolean = false) =>
@@ -186,7 +191,7 @@ export const useUpdateDomainMutation = () => {
 
 export const domainEventsHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   const domainId = event.entity?.id;
 
@@ -196,17 +201,17 @@ export const domainEventsHandler = ({
 
   if (event.action.startsWith('domain_record')) {
     // Invalidate the domain's records because they may have changed
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: domainQueries.domain(domainId)._ctx.records.queryKey,
     });
   } else {
     // Invalidate paginated lists
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: domainQueries.domains.queryKey,
     });
 
     // Invalidate the domain's details
-    queryClient.invalidateQueries({
+    invalidateQueries({
       exact: true,
       queryKey: domainQueries.domain(domainId).queryKey,
     });

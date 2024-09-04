@@ -15,9 +15,9 @@ import { useDialogContext } from 'src/context/useDialogContext';
 import { Footer } from 'src/features/Footer';
 import { GlobalNotifications } from 'src/features/GlobalNotifications/GlobalNotifications';
 import {
-  notificationContext,
+  notificationCenterContext,
   useNotificationContext,
-} from 'src/features/NotificationCenter/NotificationContext';
+} from 'src/features/NotificationCenter/NotificationCenterContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -204,7 +204,7 @@ export const MainContent = () => {
 
   const globalErrors = useGlobalErrors();
 
-  const NotificationProvider = notificationContext.Provider;
+  const NotificationProvider = notificationCenterContext.Provider;
   const contextValue = useNotificationContext();
 
   const ComplianceUpdateProvider = complianceUpdateContext.Provider;

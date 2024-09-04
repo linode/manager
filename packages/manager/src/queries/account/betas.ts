@@ -9,7 +9,12 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { regionQueries } from '../regions/regions';
 import { accountQueries } from './queries';
@@ -17,7 +22,7 @@ import { accountQueries } from './queries';
 export const useAccountBetasQuery = (params?: Params, filter?: Filter) =>
   useQuery<ResourcePage<AccountBeta>, APIError[]>({
     ...accountQueries.betas._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useCreateAccountBetaMutation = () => {

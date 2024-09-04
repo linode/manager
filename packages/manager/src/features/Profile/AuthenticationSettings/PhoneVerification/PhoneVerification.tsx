@@ -67,7 +67,7 @@ export const PhoneVerification = ({
   const {
     data,
     error: sendPhoneVerificationCodeError,
-    isLoading: isResending,
+    isPending: isResending,
     mutateAsync: resendPhoneVerificationCode,
     mutateAsync: sendPhoneVerificationCode,
     reset: resetSendCodeMutation,

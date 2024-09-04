@@ -26,7 +26,7 @@ export const SecurityQuestions = ({
 }) => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
   const {
-    isLoading: isUpdating,
+    isPending: isUpdating,
     mutateAsync: updateSecurityQuestions,
   } = useMutateSecurityQuestions();
   const { enqueueSnackbar } = useSnackbar();

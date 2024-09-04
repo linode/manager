@@ -8,7 +8,12 @@ import {
   uploadImage,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -54,11 +59,11 @@ export const imageQueries = createQueryKeys('images', {
 export const useImagesQuery = (
   params: Params,
   filters: Filter,
-  options?: UseQueryOptions<ResourcePage<Image>, APIError[]>
+  options?: Partial<UseQueryOptions<ResourcePage<Image>, APIError[]>>
 ) =>
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     ...options,
   });
 
@@ -174,13 +179,13 @@ export const useUpdateImageRegionsMutation = (imageId: string) => {
 
 export const imageEventsHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
-    queryClient.invalidateQueries({
+    invalidateQueries({
       queryKey: imageQueries.all._def,
     });
-    queryClient.invalidateQueries({ queryKey: imageQueries.paginated._def });
+    invalidateQueries({ queryKey: imageQueries.paginated._def });
 
     if (event.entity) {
       /*
@@ -194,7 +199,7 @@ export const imageEventsHandler = ({
        */
 
       const imageId = `private/${event.entity.id}`;
-      queryClient.invalidateQueries({
+      invalidateQueries({
         queryKey: imageQueries.image(imageId).queryKey,
       });
     }

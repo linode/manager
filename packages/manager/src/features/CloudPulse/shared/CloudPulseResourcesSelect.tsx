@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
+import { themes } from 'src/utilities/theme';
 
 import { RESOURCES } from '../Utils/constants';
 import {
@@ -58,7 +59,7 @@ export const CloudPulseResourcesSelect = React.memo(
     React.useEffect(() => {
       const saveResources = getUserPreferenceObject()?.resources;
       const defaultResources = Array.isArray(saveResources)
-        ? Array.of(saveResources).map((resourceId) => String(resourceId))
+        ? saveResources.map((resourceId) => String(resourceId))
         : undefined;
       if (resources) {
         if (defaultResources) {
@@ -90,6 +91,15 @@ export const CloudPulseResourcesSelect = React.memo(
           handleResourcesSelection(resourceSelections);
         }}
         textFieldProps={{
+          InputProps: {
+            sx: {
+              maxHeight: '55px',
+              overflow: 'auto',
+              svg: {
+                color: themes.light.color.grey3,
+              },
+            },
+          },
           hideLabel: true,
         }}
         autoHighlight
