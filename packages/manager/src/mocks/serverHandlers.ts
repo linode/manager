@@ -249,8 +249,8 @@ const databases = [
         params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
           : params.engine === 'postgresql'
-            ? pickRandom(possiblePostgresReplicationTypes)
-            : (undefined as any),
+          ? pickRandom(possiblePostgresReplicationTypes)
+          : (undefined as any),
       ssl_connection: true,
       storage_engine: params.engine === 'mongodb' ? 'wiredtiger' : undefined,
     });
