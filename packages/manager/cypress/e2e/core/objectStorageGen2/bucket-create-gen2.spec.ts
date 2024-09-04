@@ -203,7 +203,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
    * Confirms all endpoints are displayed regardless if there's multiple of the same type
    * Confirms S3 endpoint hostname displayed to differentiate between identical options in the dropdown
    */
-  it.only('can create a bucket with endpoint type 2', () => {
+  it('can create a bucket with endpoint type 2', () => {
     const endpointTypeE2 = 'Standard (E2)';
     const bucketLabel = randomLabel();
 
