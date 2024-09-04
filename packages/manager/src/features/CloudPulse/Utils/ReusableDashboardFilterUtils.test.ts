@@ -71,7 +71,7 @@ it('test checkMandatoryFiltersSelected method for role', () => {
 
   result = checkMandatoryFiltersSelected({
     dashboardObj: { ...mockDashboard, service_type: 'dbaas' },
-    filterValue: { role: 'primary', region: 'us-east' },
+    filterValue: { region: 'us-east', role: 'primary' },
     resource: 1,
     timeDuration: { unit: 'min', value: 30 },
   });
