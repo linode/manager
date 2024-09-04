@@ -2283,7 +2283,7 @@ export const handlers = [
   }),
   http.get('*/monitor/services', () => {
     const response = {
-      data: [{ service_type: 'linode' }],
+      data: [{ service_type: 'linode' }, { service_type: 'dbaas' }],
     };
 
     return HttpResponse.json(response);
@@ -2302,6 +2302,28 @@ export const handlers = [
       ],
     };
 
+    return HttpResponse.json(response);
+  }),
+  http.post('*/monitor/alerts', async ({ request }) => {
+    const reqBody = await request.json();
+    const response = {
+      data: [
+        {
+          created: '2021-10-16T04:00:00',
+          created_by: 'user1',
+          id: '35892357',
+          notifications: [
+            {
+              notification_id: '42804',
+              template_name: 'notification',
+            },
+          ],
+          reqBody,
+          updated: '2021-10-16T04:00:00',
+          updated_by: 'user2',
+        },
+      ],
+    };
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services/:serviceType/metric-definitions', () => {
