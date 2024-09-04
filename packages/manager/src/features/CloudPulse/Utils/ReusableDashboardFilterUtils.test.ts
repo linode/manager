@@ -58,11 +58,11 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
   expect(result).toBe(false);
 });
 
-it('test checkMandatoryFiltersSelected method for node type', () => {
+it('test checkMandatoryFiltersSelected method for role', () => {
   // check for dbaas
   let result = checkMandatoryFiltersSelected({
     dashboardObj: { ...mockDashboard, service_type: 'dbaas' },
-    filterValue: { region: 'us-east' }, // here nodeType is missing
+    filterValue: { region: 'us-east' }, // here role is missing
     resource: 1,
     timeDuration: { unit: 'min', value: 30 },
   });
@@ -71,7 +71,7 @@ it('test checkMandatoryFiltersSelected method for node type', () => {
 
   result = checkMandatoryFiltersSelected({
     dashboardObj: { ...mockDashboard, service_type: 'dbaas' },
-    filterValue: { nodeType: 'primary', region: 'us-east' },
+    filterValue: { role: 'primary', region: 'us-east' },
     resource: 1,
     timeDuration: { unit: 'min', value: 30 },
   });
@@ -83,12 +83,12 @@ it('test constructDimensionFilters method', () => {
   mockDashboard.service_type = 'dbaas';
   const result = constructDimensionFilters({
     dashboardObj: mockDashboard,
-    filterValue: { nodeType: 'primary' },
+    filterValue: { role: 'primary' },
     resource: 1,
   });
 
   expect(result.length).toEqual(1);
-  expect(result[0].filterKey).toEqual('nodeType');
+  expect(result[0].filterKey).toEqual('role');
   expect(result[0].filterValue).toEqual('primary');
 });
 
@@ -99,13 +99,13 @@ it('test checkIfFilterNeededInMetricsCall method', () => {
   result = checkIfFilterNeededInMetricsCall('resource_id', 'linode');
   expect(result).toEqual(false); // not needed as dimension filter
 
-  result = checkIfFilterNeededInMetricsCall('nodeType', 'dbaas');
+  result = checkIfFilterNeededInMetricsCall('role', 'dbaas');
   expect(result).toEqual(true);
 
   result = checkIfFilterNeededInMetricsCall('engine', 'dbaas');
   expect(result).toEqual(false);
 
-  result = checkIfFilterNeededInMetricsCall('nodeType', 'xyz'); // xyz service type
+  result = checkIfFilterNeededInMetricsCall('role', 'xyz'); // xyz service type
   expect(result).toEqual(false);
 });
 
@@ -120,7 +120,7 @@ it('test checkIfFilterBuilderNeeded method', () => {
     ...mockDashboard,
     service_type: 'dbaas',
   });
-  expect(result).toBe(true); // should be true for dbaas, as we have the node type filter
+  expect(result).toBe(true); // should be true for dbaas, as we have the role filter
 
   result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
