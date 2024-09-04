@@ -8,12 +8,15 @@ import { useProfile } from 'src/queries/profile/profile';
 
 import { getContrastingFontColor } from './utils';
 
+import type { SxProps } from '@mui/material';
+
 export const DEFAULT_AVATAR_SIZE = 28;
 
 interface Props {
   className?: string;
   color?: string;
   height?: number;
+  sx?: SxProps;
   username?: string;
   width?: number;
 }
@@ -23,6 +26,7 @@ export const Avatar = (props: Props) => {
     className,
     color,
     height = DEFAULT_AVATAR_SIZE,
+    sx,
     username,
     width = DEFAULT_AVATAR_SIZE,
   } = props;
@@ -51,6 +55,7 @@ export const Avatar = (props: Props) => {
         bgcolor: color ?? avatarHexColor,
         height,
         width,
+        ...sx,
       }}
       alt={`Avatar for user ${username ?? profile?.email ?? ''}`}
       className={className}

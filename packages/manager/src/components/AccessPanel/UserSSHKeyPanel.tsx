@@ -1,4 +1,3 @@
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -16,11 +15,15 @@ import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDra
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
+import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
+import { Avatar } from '../Avatar/Avatar';
 import { GravatarByEmail } from '../GravatarByEmail';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
+
+import type { Theme } from '@mui/material/styles';
 
 export const MAX_SSH_KEYS_DISPLAY = 25;
 
@@ -66,6 +69,11 @@ const UserSSHKeyPanel = (props: Props) => {
   const pagination = usePagination(1);
 
   const { data: profile } = useProfile();
+
+  const [hasGravatar, setHasGravatar] = React.useState(false);
+  checkForGravatar(getGravatarUrl(profile?.email ?? '')).then((res) =>
+    setHasGravatar(res)
+  );
 
   const isRestricted = profile?.restricted ?? false;
 
@@ -145,10 +153,14 @@ const UserSSHKeyPanel = (props: Props) => {
           </TableCell>
           <TableCell className={classes.cellUser}>
             <div className={classes.userWrapper}>
-              <GravatarByEmail
-                className={classes.gravatar}
-                email={profile.email}
-              />
+              {hasGravatar ? (
+                <GravatarByEmail
+                  className={classes.gravatar}
+                  email={profile.email}
+                />
+              ) : (
+                <Avatar sx={{ borderRadius: '50%', marginRight: 1 }} />
+              )}
               {profile.username}
             </div>
           </TableCell>
@@ -177,7 +189,14 @@ const UserSSHKeyPanel = (props: Props) => {
         </TableCell>
         <TableCell className={classes.cellUser}>
           <div className={classes.userWrapper}>
-            <GravatarByEmail className={classes.gravatar} email={user.email} />
+            {hasGravatar ? (
+              <GravatarByEmail
+                className={classes.gravatar}
+                email={user.email}
+              />
+            ) : (
+              <Avatar sx={{ borderRadius: '50%', marginRight: 1 }} />
+            )}
             {user.username}
           </div>
         </TableCell>
