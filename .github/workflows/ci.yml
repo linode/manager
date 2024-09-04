@@ -55,7 +55,7 @@ jobs:
       - build-validation
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-validation-lib
           path: packages/validation
@@ -90,7 +90,7 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-validation-lib
           path: packages/validation
@@ -110,7 +110,7 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-validation-lib
           path: packages/validation
@@ -135,11 +135,11 @@ jobs:
           node-version: "20.17"
 
       # Download the validation and api-v4 artifacts (built packages)
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-validation-lib
           path: packages/validation
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
@@ -174,11 +174,11 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-validation-lib
           path: packages/validation
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
@@ -214,11 +214,11 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-validation-lib
           path: packages/validation
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
@@ -240,11 +240,11 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-validation-lib
           path: packages/validation
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
@@ -265,7 +265,7 @@ jobs:
       - publish-validation
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
@@ -302,11 +302,11 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-validation-lib
           path: packages/validation
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
@@ -324,7 +324,7 @@ jobs:
       - build-storybook
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: storybook-build
           path: storybook/build
