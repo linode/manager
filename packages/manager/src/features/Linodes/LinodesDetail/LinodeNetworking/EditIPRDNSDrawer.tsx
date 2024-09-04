@@ -45,17 +45,20 @@ export const EditIPRDNSDrawer = (props: Props) => {
     },
   });
 
-  React.useEffect(() => {
-    if (open) {
-      reset();
-      formik.resetForm();
-    }
-  }, [open]);
+  const onExited = () => {
+    formik.resetForm();
+    reset();
+  };
 
   const errorMap = getErrorMap(['rdns'], error);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Reverse DNS">
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title="Edit Reverse DNS"
+      onExited={onExited}
+    >
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
           <Notice variant="error">{errorMap.none}</Notice>

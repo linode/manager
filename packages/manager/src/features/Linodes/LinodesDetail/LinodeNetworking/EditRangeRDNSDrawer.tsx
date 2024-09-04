@@ -70,17 +70,20 @@ export const EditRangeRDNSDrawer = (props: Props) => {
 
   const theme = useTheme();
 
-  React.useEffect(() => {
-    if (open) {
-      formik.resetForm();
-      reset();
-    }
-  }, [open]);
+  const onExited = () => {
+    formik.resetForm();
+    reset();
+  };
 
   const errorMap = getErrorMap(['rdns'], error);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Reverse DNS">
+    <Drawer
+      onClose={onClose}
+      onExited={onExited}
+      open={open}
+      title="Edit Reverse DNS"
+    >
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
           <Notice data-qa-error style={{ marginTop: 16 }} variant="error">
@@ -133,7 +136,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
             Existing Records
           </Typography>
           {ips.map((ip) => (
-            <div style={{ marginTop: theme.spacing(2) }} key={ip.address}>
+            <div key={ip.address} style={{ marginTop: theme.spacing(2) }}>
               <Typography>{ip.address}</Typography>
               <Typography>{ip.rdns || ''}</Typography>
             </div>
