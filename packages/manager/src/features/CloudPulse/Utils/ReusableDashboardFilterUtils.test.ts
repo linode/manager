@@ -38,6 +38,15 @@ it('test checkMandatoryFiltersSelected method for time duration', () => {
   });
 
   expect(result).toBe(true);
+
+  result = checkMandatoryFiltersSelected({
+    dashboardObj: mockDashboard,
+    filterValue: { region: 'us-east' },
+    resource: 1,
+    timeDuration: undefined,
+  });
+
+  expect(result).toBe(false);
 });
 
 it('test checkMandatoryFiltersSelected method for node type', () => {
