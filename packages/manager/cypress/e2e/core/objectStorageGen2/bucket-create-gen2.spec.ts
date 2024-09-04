@@ -197,4 +197,195 @@ describe('Object Storage Gen2 create bucket tests', () => {
     cy.wait(['@deleteBucket', '@getBuckets']);
     cy.findByText(bucketLabel).should('not.exist');
   });
+
+  /**
+   * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E3
+   */
+  it('can create a bucket with endpoint type 3', () => {
+    const endpointTypeE3 = 'Standard (E3)';
+    const bucketLabel = randomLabel();
+
+    //wait for the newly 'created' mocked bucket to appear
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      label: bucketLabel,
+      region: mockRegion.id,
+      endpoint_type: 'E3',
+      s3_endpoint: undefined,
+    });
+
+    mockGetBuckets([]).as('getBuckets');
+    mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
+    mockCreateBucket({
+      label: bucketLabel,
+      endpoint_type: 'E3',
+      cors_enabled: false,
+      region: mockRegion.id,
+    }).as('createBucket');
+
+    mockAppendFeatureFlags({
+      objMultiCluster: true,
+      objectStorageGen2: { enabled: true },
+    }).as('getFeatureFlags');
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: [
+          'Object Storage',
+          'Object Storage Endpoint Types',
+          'Object Storage Access Key Regions',
+        ],
+      })
+    ).as('getAccount');
+
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
+      'getObjectStorageEndpoints'
+    );
+
+    mockGetRegions(mockRegions);
+
+    cy.visitWithLogin('/object-storage/buckets/create');
+    cy.wait([
+      '@getFeatureFlags',
+      '@getBuckets',
+      '@getAccount',
+      '@getObjectStorageEndpoints',
+    ]);
+
+    ui.drawer
+      .findByTitle('Create Bucket')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Label').click().type(bucketLabel);
+        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByLabelText('Object Storage Endpoint Type')
+          .should('be.visible')
+          .click();
+
+        // Select E3 endpoint
+        ui.autocompletePopper
+          .findByTitle('Standard (E3)')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm bucket rate limits text for E3 endpoint
+        cy.findByText('Bucket Rate Limits').should('be.visible');
+        cy.contains(
+          'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. Understand bucket rate limits.'
+        ).should('be.visible');
+
+        // Confirm bucket rate limit table should exist when E3 endpoint is selected
+        cy.get('[data-testid="bucket-rate-limit-table"]').should('exist');
+
+        // Confirm that basic rate limits table is displayed
+        cy.get('[data-testid="bucket-rate-limit-table"]').within(() => {
+          const expectedHeaders = [
+            'Limits',
+            'GET',
+            'PUT',
+            'LIST',
+            'DELETE',
+            'OTHER',
+          ];
+          const expectedBasicValues = [
+            'Basic',
+            '2,000',
+            '500',
+            '100',
+            '200',
+            '400',
+          ];
+          const expectedHighValues = [
+            'High',
+            '20,000',
+            '2,000',
+            '400',
+            '400',
+            '1,000',
+          ];
+
+          // Check visible elements first
+          cy.findByText('Limits').should('be.visible');
+
+          // Function to check a row of values
+          const checkRowValues = (rowIndex: number, values: string[]) => {
+            cy.findAllByRole('row')
+              .eq(rowIndex)
+              .within(() => {
+                values.forEach((value, columnIndex) => {
+                  if (columnIndex === 0) {
+                    // First column should always be visible
+                    cy.findByText(value).should('be.visible');
+                  } else {
+                    // For other columns, use column index to avoid ambiguity
+                    cy.get(
+                      `td:nth-child(${columnIndex + 1}), th:nth-child(${
+                        columnIndex + 1
+                      })`
+                    )
+                      .scrollIntoView()
+                      .should('be.visible')
+                      .and('contain.text', value);
+                  }
+                });
+              });
+          };
+
+          // Assert that the table has the expected values
+          checkRowValues(0, expectedHeaders);
+          checkRowValues(1, expectedBasicValues);
+          checkRowValues(2, expectedHighValues);
+
+          cy.findByText('Limits').scrollIntoView();
+
+          // Confirm that basic radio button is checked by default
+          cy.findByLabelText('Basic').should('be.checked');
+        });
+
+        ui.buttonGroup
+          .findButtonByTitle('Create Bucket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    mockGetBuckets([mockBucket]).as('getBuckets');
+    cy.wait(['@getBuckets']);
+
+    // Confirm request body has expected data
+    cy.wait('@createBucket').then((xhr) => {
+      const requestPayload = xhr.request.body;
+      expect(requestPayload['endpoint_type']).to.equal('E3');
+      expect(requestPayload['cors_enabled']).to.equal(false);
+    });
+
+    ui.drawer.find().should('not.exist');
+
+    // Confirm that bucket is created, initiate deletion for cleanup
+    cy.findByText(endpointTypeE3).should('be.visible');
+    cy.findByText(bucketLabel)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(mockRegion.label).should('be.visible');
+        ui.button.findByTitle('Delete').should('be.visible').click();
+      });
+
+    ui.dialog
+      .findByTitle(`Delete Bucket ${bucketLabel}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        ui.buttonGroup
+          .findButtonByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm bucket gets deleted
+    mockGetBuckets([]).as('getBuckets');
+    cy.wait(['@deleteBucket', '@getBuckets']);
+    cy.findByText(bucketLabel).should('not.exist');
+  });
 });
