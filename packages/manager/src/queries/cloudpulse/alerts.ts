@@ -7,16 +7,14 @@ import type {
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError } from '@linode/api-v4/lib/types';
 
-export const queryKey = 'aclp-alerts';
+export const aclpQueryKey = 'aclp-alerts';
 
 export const useCreateAlertDefinition = () => {
   const queryClient = useQueryClient();
-  return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>(
-    (data) => createAlertDefinition(data),
-    {
-      onSuccess() {
-        queryClient.invalidateQueries([queryKey, 'paginated']);
-      },
-    }
-  );
+  return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>({
+    mutationFn: (data) => createAlertDefinition(data),
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: [aclpQueryKey] });
+    },
+  });
 };
