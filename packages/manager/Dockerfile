@@ -1,7 +1,7 @@
 # `manager`
 #
 # Serves Cloud Manager.
-FROM node:18.14-bullseye-slim as manager
+FROM node:20.17-bullseye-slim as manager
 ENV NODE_ENV=development
 WORKDIR /home/node/app
 VOLUME /home/node/app
