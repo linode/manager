@@ -38,7 +38,7 @@ export const EditIPRDNSDrawer = (props: Props) => {
         address: ip?.address ?? '',
         rdns: values.rdns === '' ? null : values.rdns,
       });
-      enqueueSnackbar(`Successfully updated RNS for ${ip?.address}`, {
+      enqueueSnackbar(`Successfully updated RDNS for ${ip?.address}`, {
         variant: 'success',
       });
       onClose();

@@ -61,7 +61,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
         address: values.address ?? '',
         rdns: values.rdns === '' ? null : values.rdns,
       });
-      enqueueSnackbar(`Successfully updated RNS for ${range?.range}`, {
+      enqueueSnackbar(`Successfully updated RDNS for ${range?.range}`, {
         variant: 'success',
       });
       onClose();
