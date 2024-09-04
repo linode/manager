@@ -7,8 +7,11 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useAccountUser } from 'src/queries/account/users';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
+import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
+import { StyledGravatar } from './EventRow.styles';
 import {
   formatProgressEvent,
   getEventMessage,
@@ -30,12 +33,18 @@ export const EventRow = (props: EventRowProps) => {
     message: getEventMessage(event),
     username: getEventUsername(event),
   };
+  const { data: user } = useAccountUser(username);
+  const [hasGravatar, setHasGravatar] = React.useState(false);
 
   if (!message) {
     return null;
   }
 
   const { progressEventDisplay, showProgress } = formatProgressEvent(event);
+
+  checkForGravatar(getGravatarUrl(user?.email ?? '')).then((res) =>
+    setHasGravatar(res)
+  );
 
   return (
     <TableRow data-qa-event-row data-test-id={action}>
@@ -54,7 +63,13 @@ export const EventRow = (props: EventRowProps) => {
       <Hidden smDown>
         <TableCell data-qa-event-username-cell parentColumn="Username">
           <Box alignItems="center" display="flex" gap={1}>
-            <Avatar username={username} />
+            {hasGravatar ? (
+              <StyledGravatar
+                username={username === 'Linode' ? '' : username}
+              />
+            ) : (
+              <Avatar height={24} username={username} width={24} />
+            )}
             {username}
           </Box>
         </TableCell>

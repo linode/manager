@@ -1,15 +1,11 @@
+// @TODO: delete file once Gravatar is sunset
 import { styled } from '@mui/material/styles';
 
-import { Avatar } from 'src/components/Avatar/Avatar';
+import { GravatarByUsername } from 'src/components/GravatarByUsername';
 
-// @TODO: delete file
-export const StyledAvatar = styled(Avatar, {
-  label: 'StyledAvatar',
+export const StyledGravatar = styled(GravatarByUsername, {
+  label: 'StyledGravatar',
 })(({ theme }) => ({
-  '& svg': {
-    height: '2vh',
-    width: '2vw',
-  },
   height: theme.spacing(3),
   width: theme.spacing(3),
 }));
