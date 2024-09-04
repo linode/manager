@@ -4,10 +4,7 @@ import {
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
@@ -21,7 +18,6 @@ import {
 } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { linodeCreatePage, vpcCreateDrawer } from 'support/ui/pages';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   randomIp,
   randomLabel,
@@ -35,9 +31,8 @@ describe('Create Linode with VPCs', () => {
   // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
   beforeEach(() => {
     mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(true),
+      linodeCreateRefactor: true,
     });
-    mockGetFeatureFlagClientstream();
   });
 
   /*

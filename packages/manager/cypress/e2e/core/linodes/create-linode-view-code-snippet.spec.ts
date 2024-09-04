@@ -6,12 +6,7 @@ import { ui } from 'support/ui';
 
 import { randomLabel, randomString } from 'support/util/random';
 import { linodeCreatePage } from 'support/ui/pages';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode', () => {
   /*
@@ -22,10 +17,9 @@ describe('Create Linode', () => {
     // TODO Delete these mocks once `apicliDxToolsAdditions` feature flag is retired.
     beforeEach(() => {
       mockAppendFeatureFlags({
-        apicliDxToolsAdditions: makeFeatureFlagData(true),
-        linodeCreateRefactor: makeFeatureFlagData(true),
+        apicliDxToolsAdditions: true,
+        linodeCreateRefactor: true,
       });
-      mockGetFeatureFlagClientstream();
     });
     it(`view code snippets in create linode flow`, () => {
       const linodeLabel = randomLabel();
@@ -154,10 +148,9 @@ describe('Create Linode', () => {
     // TODO Delete these mocks and test once `apicliDxToolsAdditions` feature flag is retired.
     beforeEach(() => {
       mockAppendFeatureFlags({
-        apicliDxToolsAdditions: makeFeatureFlagData(false),
-        linodeCreateRefactor: makeFeatureFlagData(true),
+        apicliDxToolsAdditions: false,
+        linodeCreateRefactor: true,
       });
-      mockGetFeatureFlagClientstream();
     });
     it(`view code snippets in create linode flow`, () => {
       const linodeLabel = randomLabel();

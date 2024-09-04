@@ -13,11 +13,7 @@ import {
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mapStackScriptLabelToOCA } from 'src/features/OneClickApps/utils';
 import { stackScriptFactory } from 'src/factories/stackscripts';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
@@ -170,12 +166,11 @@ describe('OneClick Apps (OCA)', () => {
 
     mockGetStackScripts([stackScripts]).as('getStackScripts');
     mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(false),
-      oneClickApps: makeFeatureFlagData({
+      linodeCreateRefactor: false,
+      oneClickApps: {
         401709: 'E2E Test App',
-      }),
+      },
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
 

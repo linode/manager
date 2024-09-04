@@ -1,14 +1,8 @@
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
 import { accountFactory, placementGroupFactory } from 'src/factories';
 import { regionFactory } from 'src/factories';
 import { ui } from 'support/ui/';
-
-import type { Flags } from 'src/featureFlags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreatePlacementGroup,
@@ -25,12 +19,11 @@ describe('Placement Group create flow', () => {
   beforeEach(() => {
     // TODO Remove feature flag mocks when `placementGroups` flag is retired.
     mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
+      placementGroups: {
         beta: true,
         enabled: true,
-      }),
+      },
     });
-    mockGetFeatureFlagClientstream();
     mockGetAccount(mockAccount);
   });
 

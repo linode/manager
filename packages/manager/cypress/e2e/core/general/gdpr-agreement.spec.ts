@@ -4,11 +4,7 @@ import { regionFactory } from '@src/factories';
 import { randomString, randomLabel } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 import type { Region } from '@linode/api-v4';
 
@@ -108,9 +104,8 @@ describe('GDPR agreement', () => {
     // without checking the GDPR checkbox. (The user will
     // get a validation error if they have not agreed).
     mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(false),
+      linodeCreateRefactor: false,
     });
-    mockGetFeatureFlagClientstream();
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccountAgreements({
       privacy_policy: false,

@@ -2,11 +2,7 @@ import { linodeFactory, regionFactory, VLANFactory } from 'src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { chooseRegion } from 'support/util/regions';
 import {
   randomIp,
@@ -21,9 +17,8 @@ describe('Create Linode with VLANs', () => {
   // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
   beforeEach(() => {
     mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(true),
+      linodeCreateRefactor: true,
     });
-    mockGetFeatureFlagClientstream();
   });
 
   /*

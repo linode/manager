@@ -5,10 +5,7 @@ import {
   regionFactory,
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeDetails,
   mockGetLinodes,
@@ -24,12 +21,9 @@ import {
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
 import type { Linode } from '@linode/api-v4';
-import type { Flags } from 'src/featureFlags';
 
 const mockAccount = accountFactory.build();
 
@@ -56,12 +50,11 @@ describe('Placement Groups Linode assignment', () => {
   // TODO Remove these mocks when `placementGroups` feature flag is retired.
   beforeEach(() => {
     mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
+      placementGroups: {
         beta: true,
         enabled: true,
-      }),
+      },
     });
-    mockGetFeatureFlagClientstream();
     mockGetAccount(mockAccount).as('getAccount');
   });
 

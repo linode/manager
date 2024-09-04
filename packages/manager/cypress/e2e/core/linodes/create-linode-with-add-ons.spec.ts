@@ -1,15 +1,11 @@
 import { linodeFactory } from 'src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -17,9 +13,8 @@ describe('Create Linode with Add-ons', () => {
   // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
   beforeEach(() => {
     mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(true),
+      linodeCreateRefactor: true,
     });
-    mockGetFeatureFlagClientstream();
   });
 
   /*
