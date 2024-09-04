@@ -30,7 +30,7 @@ export const makeResponse = <T extends JsonBodyType>(
   status: number = 200,
   headers: {} = {}
 ) => {
-  return HttpResponse.json(body, {
+  return HttpResponse.json<T>(body, {
     headers,
     status,
   });
@@ -52,7 +52,7 @@ export const makeErrorResponse = (
 ) => {
   const reasonsArray = Array.isArray(reason) ? reason : [reason];
 
-  return HttpResponse.json(
+  return HttpResponse.json<APIErrorResponse>(
     {
       errors: reasonsArray.map((reasonString) => ({
         reason: reasonString,
@@ -144,7 +144,7 @@ export const makePaginatedResponse = <T extends JsonBodyType>({
   const pageCount = Math.ceil(filteredData.length / pageSize);
   const pageSlice = getPaginatedSlice(filteredData, requestedPage, pageSize);
 
-  return HttpResponse.json({
+  return HttpResponse.json<APIPaginatedResponse<T>>({
     data: pageSlice,
     page: requestedPage,
     pages: pageCount,
