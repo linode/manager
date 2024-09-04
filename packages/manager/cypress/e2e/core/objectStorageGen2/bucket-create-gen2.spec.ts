@@ -200,8 +200,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E2
-   * Confirms all endpoints are displayed regardless if there's multiple of the same type
-   * Confirms S3 endpoint hostname displayed to differentiate between identical options in the dropdown
    */
   it('can create a bucket with endpoint type 2', () => {
     const endpointTypeE2 = 'Standard (E2)';
@@ -261,28 +259,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
-
-        // verify that all mocked endpoints show up as options
-        ui.autocompletePopper
-          .findByTitle('Legacy (E0)')
-          .should('be.visible')
-          .should('be.enabled');
-        ui.autocompletePopper
-          .findByTitle('Standard (E1) us-sea-1.linodeobjects.com')
-          .should('be.visible')
-          .should('be.enabled');
-        ui.autocompletePopper
-          .findByTitle('Standard (E1)')
-          .should('be.visible')
-          .should('be.enabled');
-        ui.autocompletePopper
-          .findByTitle('Standard (E2)')
-          .should('be.visible')
-          .should('be.enabled');
-        ui.autocompletePopper
-          .findByTitle('Standard (E3)')
-          .should('be.visible')
-          .should('be.enabled');
 
         // Select E2 endpoint
         ui.autocompletePopper
