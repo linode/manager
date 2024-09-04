@@ -8,8 +8,11 @@ import {
   getEventMessage,
   getEventUsername,
 } from 'src/features/Events/utils';
+import { useAccountUser } from 'src/queries/account/users';
+import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 import {
+  NotificationEventAvatar,
   NotificationEventGravatar,
   NotificationEventStyledBox,
   notificationEventStyles,
@@ -30,6 +33,12 @@ export const NotificationCenterEvent = React.memo(
     const message = getEventMessage(event);
     const username = getEventUsername(event);
 
+    const { data: user } = useAccountUser(username);
+    const [hasGravatar, setHasGravatar] = React.useState(false);
+    checkForGravatar(getGravatarUrl(user?.email ?? '')).then((res) =>
+      setHasGravatar(res)
+    );
+
     /**
      * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
      * Filter these out so we don't display blank messages to the user.
@@ -46,7 +55,11 @@ export const NotificationCenterEvent = React.memo(
         className={unseenEventClass}
         data-testid={event.action}
       >
-        <NotificationEventGravatar username={event.username} />
+        {hasGravatar ? (
+          <NotificationEventGravatar username={event.username} />
+        ) : (
+          <NotificationEventAvatar username={event.username ?? ''} />
+        )}
         <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
           {message}
           {showProgress && (

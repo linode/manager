@@ -10,6 +10,7 @@ import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { NotificationCenterNotificationMessageProps } from './types';
 import type { Theme } from '@mui/material/styles';
+import { Avatar } from 'src/components/Avatar/Avatar';
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   inverted: {
@@ -120,6 +121,15 @@ export const NotificationEventStyledBox = styled(Box, {
 
 export const NotificationEventGravatar = styled(GravatarByUsername, {
   label: 'StyledGravatarByUsername',
+})(() => ({
+  height: 32,
+  marginTop: 2,
+  minWidth: 32,
+  width: 32,
+}));
+
+export const NotificationEventAvatar = styled(Avatar, {
+  label: 'StyledAvatarByUsername',
 })(() => ({
   height: 32,
   marginTop: 2,
