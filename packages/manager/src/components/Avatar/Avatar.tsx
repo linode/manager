@@ -37,10 +37,7 @@ export const Avatar = (props: Props) => {
   const _username = username ?? profile?.username ?? '';
   const isAkamai = /^Linode$|^lke-service-account*/.test(_username);
 
-  const avatarHexColor =
-    isAkamai || !preferences?.avatarColor
-      ? theme.palette.primary.light
-      : preferences?.avatarColor;
+  const avatarColor = preferences?.avatarColor ?? theme.palette.primary.dark;
   const avatarLetter = _username[0]?.toUpperCase() ?? '';
 
   return (
@@ -50,7 +47,7 @@ export const Avatar = (props: Props) => {
           height: '2vh',
           width: '2vw',
         },
-        bgcolor: color ?? avatarHexColor,
+        bgcolor: color ?? avatarColor,
         height,
         width,
         ...sx,
@@ -63,7 +60,7 @@ export const Avatar = (props: Props) => {
       ) : (
         <Typography
           sx={{
-            color: theme.palette.getContrastText(color ?? avatarHexColor),
+            color: theme.palette.getContrastText(color ?? avatarColor),
             fontSize: width / 2,
           }}
         >

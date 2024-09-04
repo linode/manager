@@ -1,7 +1,7 @@
 // @TODO: delete file once Gravatar is sunset
 import { styled } from '@mui/material/styles';
 
-import { GravatarByUsername } from 'src/components/GravatarByUsername';
+import { GravatarByUsername } from '../../components/GravatarByUsername';
 
 export const StyledGravatar = styled(GravatarByUsername, {
   label: 'StyledGravatar',
