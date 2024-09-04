@@ -6,8 +6,6 @@ import AkamaiWave from 'src/assets/logo/akamai-wave.svg';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 
-import { getContrastingFontColor } from './utils';
-
 import type { SxProps } from '@mui/material';
 
 export const DEFAULT_AVATAR_SIZE = 28;
@@ -65,7 +63,7 @@ export const Avatar = (props: Props) => {
       ) : (
         <Typography
           sx={{
-            color: getContrastingFontColor(avatarHexColor),
+            color: theme.palette.getContrastText(color ?? avatarHexColor),
             fontSize: width / 2,
           }}
         >
