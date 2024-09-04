@@ -22,7 +22,7 @@ it('test getDashboardProperties method', () => {
   expect(result.resources).toEqual(['1']);
 });
 
-it('test checkMandatoryFiltersSelected method for time duration', () => {
+it('test checkMandatoryFiltersSelected method for time duration and resource', () => {
   let result = checkMandatoryFiltersSelected({
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
@@ -43,7 +43,16 @@ it('test checkMandatoryFiltersSelected method for time duration', () => {
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
     resource: 1,
-    timeDuration: undefined,
+    timeDuration: undefined, // here time duration is undefined, so it should return false
+  });
+
+  expect(result).toBe(false);
+
+  result = checkMandatoryFiltersSelected({
+    dashboardObj: mockDashboard,
+    filterValue: { region: 'us-east' },
+    resource: 0, // here resource is 0, so it should return false
+    timeDuration: { unit: 'min', value: 30 },
   });
 
   expect(result).toBe(false);
