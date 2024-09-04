@@ -1,4 +1,3 @@
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
@@ -17,15 +16,13 @@ import {
   linodeInTransition,
   transitionText,
 } from 'src/features/Linodes/transitions';
-import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useTypeQuery } from 'src/queries/types';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 import { IPAddress } from '../IPAddress';
-import { LinodeHandlers } from '../LinodesLanding';
 import { RegionIndicator } from '../RegionIndicator';
 import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
 import {
@@ -33,6 +30,10 @@ import {
   StyledIpTableCell,
   StyledMaintenanceTableCell,
 } from './LinodeRow.styles';
+
+import type { LinodeHandlers } from '../LinodesLanding';
+import type { SxProps } from '@mui/system';
+import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;

@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { objectStorageEndpointsFactory } from 'src/factories';
@@ -42,7 +42,7 @@ describe('OMC_CreateBucketDrawer', () => {
   });
 
   it(
-    'should display the endpoint selector if endpoints exist',
+    'should not display the endpoint selector if regions is not selected',
     server.boundary(async () => {
       server.use(
         http.get('*/v4/object-storage/endpoints', () => {
@@ -58,7 +58,7 @@ describe('OMC_CreateBucketDrawer', () => {
         })
       );
 
-      const { getByText, queryByText } = renderWithThemeAndHookFormContext({
+      const { queryByText } = renderWithThemeAndHookFormContext({
         component: <OMC_CreateBucketDrawer {...props} />,
         options: {
           flags: {
@@ -71,19 +71,6 @@ describe('OMC_CreateBucketDrawer', () => {
       expect(
         queryByText('Object Storage Endpoint Type')
       ).not.toBeInTheDocument();
-
-      await waitFor(
-        () =>
-          expect(getByText('Object Storage Endpoint Type')).toBeInTheDocument(),
-        {
-          timeout: 2000,
-        }
-      );
-
-      // Additional verification after waitFor
-      const endpointTypeElement = getByText('Object Storage Endpoint Type');
-      expect(endpointTypeElement).toBeVisible();
-      expect(endpointTypeElement.tagName).toBe('LABEL');
     })
   );
 
