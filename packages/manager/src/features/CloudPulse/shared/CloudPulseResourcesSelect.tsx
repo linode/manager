@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
+import { themes } from 'src/utilities/theme';
 
 import { RESOURCES } from '../Utils/constants';
 
@@ -98,6 +99,9 @@ export const CloudPulseResourcesSelect = React.memo(
             sx: {
               maxHeight: '55px',
               overflow: 'auto',
+              svg: {
+                color: themes.light.color.grey3,
+              },
             },
           },
           hideLabel: true,

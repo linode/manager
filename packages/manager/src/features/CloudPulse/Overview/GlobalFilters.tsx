@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton } from '@mui/material';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -9,6 +9,7 @@ import { Divider } from 'src/components/Divider';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { REFRESH } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -26,7 +27,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleDashboardChange,
     handleTimeDurationChange,
   } = props;
-
   const {
     preferences,
     updateGlobalFilterPreference: updatePreferences,
@@ -56,7 +56,14 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     []
   );
 
-  const handleGlobalRefresh = React.useCallback(() => {}, []);
+  const handleGlobalRefresh = React.useCallback(
+    (dashboardObj?: Dashboard) => {
+      if (!dashboardObj) {
+        return;
+      }
+      handleAnyFilterChange(REFRESH, Date.now());
+    },[]
+  );
 
   return (
     <Grid container gap={1}>
@@ -87,17 +94,16 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             savePreferences
             updatePreferences={updatePreferences}
           />
-          <Tooltip arrow enterDelay={500} placement="top" title="Refresh">
-            <IconButton
-              sx={{
-                marginBlockEnd: 'auto',
-              }}
-              onClick={handleGlobalRefresh}
-              size="small"
-            >
-              <StyledReload />
-            </IconButton>
-          </Tooltip>
+          <IconButton
+            sx={{
+              marginBlockEnd: 'auto',
+            }}
+            disabled={!selectedDashboard}
+            onClick={() => handleGlobalRefresh(selectedDashboard)}
+            size="small"
+          >
+            <StyledReload />
+          </IconButton>
         </Grid>
       </Grid>
       <Grid item xs={12}>

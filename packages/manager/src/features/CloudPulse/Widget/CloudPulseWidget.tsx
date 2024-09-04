@@ -138,6 +138,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   } = props;
   const flags = useFlags();
 
+  const jweTokenExpiryError = 'Token expired';
+
   /**
    *
    * @param zoomInValue: True if zoom in clicked &  False if zoom out icon clicked
@@ -250,6 +252,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       serviceType,
       status,
       unit,
+      widgetChartType: widget.chart_type,
       widgetColor: widget.color,
     });
 
@@ -259,6 +262,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     currentUnit = generatedData.unit;
   }
 
+  const metricsApiCallError = error?.[0]?.reason;
   return (
     <Grid item lg={widget.size} xs={12}>
       <Paper>
@@ -315,8 +319,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
           <CloudPulseLineGraph
             error={
-              status === 'error'
-                ? error?.[0]?.reason ?? 'Error while rendering graph'
+              status === 'error' && metricsApiCallError !== jweTokenExpiryError // show the error only if the error is not related to token expiration
+                ? metricsApiCallError ?? 'Error while rendering graph'
                 : undefined
             }
             legendRows={
@@ -327,7 +331,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             formatData={(data: number) => convertValueToUnit(data, currentUnit)}
             formatTooltip={(value: number) => formatToolTip(value, unit)}
             gridSize={widget.size}
-            loading={isLoading}
+            loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
             nativeLegend
             showToday={today}
             timezone={timezone}

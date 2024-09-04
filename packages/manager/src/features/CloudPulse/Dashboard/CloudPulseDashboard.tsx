@@ -173,6 +173,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const {
     data: jweToken,
     isError: isJweTokenError,
+    isLoading: isJweTokenLoading,
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
@@ -187,7 +188,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     );
   }
 
-  if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
+  if (
+    isMetricDefinitionLoading ||
+    isDashboardLoading ||
+    isResourcesLoading ||
+    isJweTokenLoading
+  ) {
     return <CircleProgress />;
   }
 
@@ -256,11 +262,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     );
   };
 
-  const renderPlaceHolder = (subtitle: string) => {
+  const renderPlaceHolder = (title: string) => {
     return (
       <Grid item xs>
         <Paper>
-          <Placeholder icon={CloudPulseIcon} subtitle={subtitle} title="" />
+          <Placeholder icon={CloudPulseIcon} isEntity title={title} />
         </Paper>
       </Grid>
     );

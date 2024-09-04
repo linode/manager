@@ -63,7 +63,7 @@ describe('CloudPulse Dashboard select', () => {
     );
 
     expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
-    expect(getByPlaceholderText('Select a Dashboard')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select Dashboard')).toBeInTheDocument();
   }),
     it('Should render dashboard select component with data', () => {
       renderWithTheme(<CloudPulseDashboardSelect {...props} />);
