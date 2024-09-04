@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -13,6 +14,7 @@ import { Typography } from 'src/components/Typography';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalize } from 'src/utilities/capitalize';
+import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 import { UsersActionMenu } from './UsersActionMenu';
 
@@ -26,15 +28,20 @@ interface Props {
 export const UserRow = ({ onDelete, user }: Props) => {
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
+  const [hasGravatar, setHasGravatar] = React.useState(false);
 
   const isProxyUser = Boolean(user.user_type === 'proxy');
   const showChildAccountAccessCol = profile?.user_type === 'parent';
+
+  checkForGravatar(getGravatarUrl(user?.email ?? '')).then((res) =>
+    setHasGravatar(res)
+  );
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
-          <GravatarByEmail email={user.email} />
+          {hasGravatar ? <GravatarByEmail email={user.email} /> : <Avatar />}
           <Typography>{user.username}</Typography>
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
