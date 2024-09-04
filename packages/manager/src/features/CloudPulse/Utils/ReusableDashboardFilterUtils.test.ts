@@ -2,6 +2,7 @@ import { dashboardFactory } from 'src/factories';
 
 import {
   checkIfFilterBuilderNeeded,
+  checkIfFilterNeededInMetricsCall,
   checkMandatoryFiltersSelected,
   constructDimensionFilters,
   getDashboardProperties,
@@ -21,7 +22,7 @@ it('test getDashboardProperties method', () => {
   expect(result.resources).toEqual(['1']);
 });
 
-it('test checkMandatoryFiltersSelected method', () => {
+it('test checkMandatoryFiltersSelected method for time duration', () => {
   let result = checkMandatoryFiltersSelected({
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
@@ -37,9 +38,11 @@ it('test checkMandatoryFiltersSelected method', () => {
   });
 
   expect(result).toBe(true);
+});
 
+it('test checkMandatoryFiltersSelected method for node type', () => {
   // check for dbaas
-  result = checkMandatoryFiltersSelected({
+  let result = checkMandatoryFiltersSelected({
     dashboardObj: { ...mockDashboard, service_type: 'dbaas' },
     filterValue: { region: 'us-east' }, // here nodeType is missing
     resource: 1,
@@ -71,6 +74,23 @@ it('test constructDimensionFilters method', () => {
   expect(result[0].filterValue).toEqual('primary');
 });
 
+it('test checkIfFilterNeededInMetricsCall method', () => {
+  let result = checkIfFilterNeededInMetricsCall('region', 'linode');
+  expect(result).toEqual(false);
+
+  result = checkIfFilterNeededInMetricsCall('resource_id', 'linode');
+  expect(result).toEqual(false); // not needed as dimension filter
+
+  result = checkIfFilterNeededInMetricsCall('nodeType', 'dbaas');
+  expect(result).toEqual(true);
+
+  result = checkIfFilterNeededInMetricsCall('engine', 'dbaas');
+  expect(result).toEqual(false);
+
+  result = checkIfFilterNeededInMetricsCall('nodeType', 'xyz'); // xyz service type
+  expect(result).toEqual(false);
+});
+
 it('test checkIfFilterBuilderNeeded method', () => {
   let result = checkIfFilterBuilderNeeded({
     ...mockDashboard,
@@ -89,4 +109,8 @@ it('test checkIfFilterBuilderNeeded method', () => {
     service_type: '',
   });
   expect(result).toBe(false); // should be false for empty / undefined case
+
+  result = checkIfFilterBuilderNeeded(undefined);
+
+  expect(result).toBe(false); // should be false for empty / undefined dashboard
 });

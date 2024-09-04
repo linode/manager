@@ -101,8 +101,7 @@ export const checkIfFilterNeededInMetricsCall = (
     return false;
   }
 
-  return serviceTypeConfig.filters.some((filter) => {
-    const { configuration } = filter;
+  return serviceTypeConfig.filters.some(({ configuration }) => {
     const {
       filterKey: configFilterKey,
       isFilterable,
