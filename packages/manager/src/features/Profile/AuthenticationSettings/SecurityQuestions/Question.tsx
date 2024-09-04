@@ -62,12 +62,12 @@ export const Question = (props: Props) => {
           response: '',
         });
       }}
-      autoHighlight
       defaultValue={currentOption}
       disableClearable
       label={label}
       options={options}
       placeholder="Select a question"
+      value={options.find((option) => option.value === questionResponse?.id)}
     />
   );
 };
