@@ -12,20 +12,20 @@ jobs:
   lint:
     strategy:
       matrix:
-        package: ['linode-manager', '@linode/api-v4', '@linode/validation']
+        package: ["linode-manager", "@linode/api-v4", "@linode/validation"]
     runs-on: ubuntu-latest
     steps:
-       - uses: actions/checkout@v3
-       - uses: actions/setup-node@v3
-         with:
-           node-version: "18.14"
-       - uses: actions/cache@v3
-         with:
-           path: |
-             **/node_modules
-           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-       - run: yarn --frozen-lockfile
-       - run: yarn workspace ${{ matrix.package }} run lint
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20.17"
+      - uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn --frozen-lockfile
+      - run: yarn workspace ${{ matrix.package }} run lint
 
   build-validation:
     runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
       - uses: actions/cache@v3
         with:
           path: |
@@ -83,7 +83,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
       - uses: actions/cache@v3
         with:
           path: |
@@ -104,7 +104,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
       - uses: actions/cache@v3
         with:
           path: |
@@ -132,7 +132,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
 
       # Download the validation and api-v4 artifacts (built packages)
       - uses: actions/download-artifact@v3
@@ -168,7 +168,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
       - uses: actions/cache@v3
         with:
           path: |
@@ -191,7 +191,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
       - uses: actions/cache@v3
         with:
           path: |
@@ -208,7 +208,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
       - uses: actions/cache@v3
         with:
           path: |
@@ -234,7 +234,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
       - uses: actions/cache@v3
         with:
           path: |
@@ -296,7 +296,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.14"
+          node-version: "20.17"
       - uses: actions/cache@v3
         with:
           path: |
