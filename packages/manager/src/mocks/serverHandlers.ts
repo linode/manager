@@ -860,7 +860,7 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
-  http.get('*/v4/object-storage/endpoints', ({}) => {
+  http.get('*/v4/object-storage/endpoints', ({ }) => {
     const endpoints = [
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E0',
@@ -2430,12 +2430,15 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
 
-  http.get('*/monitor/dashboards/:id', () => {
+  http.get('*/monitor/dashboards/:id', ({ params }) => {
     const response = {
       created: '2024-04-29T17:09:29',
-      id: 1,
-      label: 'Linode Service I/O Statistics',
-      service_type: 'linode',
+      id: params.id,
+      label:
+        params.id === '1'
+          ? 'Linode Service I/O Statistics'
+          : 'DBaaS Service I/O Statistics',
+      service_type: params.id === '1' ? 'linode' : 'dbaas', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [
