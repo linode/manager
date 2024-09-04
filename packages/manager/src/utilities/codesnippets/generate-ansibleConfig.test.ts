@@ -43,4 +43,17 @@ describe('generateAnsibleConfig', () => {
 
     expect(generateAnsibleConfig(config)).toEqual(expectedOutput);
   });
+
+  it('should escape backslash characters in YAML strings', () => {
+    const config = {
+      label: 'Linode with ] and also [, }, and \\{',
+      region: 'us-central',
+      root_pass: 'securePass123',
+      type: 'g6-standard-1',
+    };
+
+    const expectedOutput = `- name: Create a new Linode instance.\n  linode.cloud.instance:\n    state: "present"\n    label: "Linode with \\] and also \\[, \\}, and \\\\\\{"\n    type: "g6-standard-1"\n    region: "us-central"\n    root_pass: "securePass123"\n`;
+
+    expect(generateAnsibleConfig(config)).toEqual(expectedOutput);
+  });
 });
