@@ -7,6 +7,8 @@ import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PrimaryNav from './PrimaryNav';
 
+import type { Flags } from 'src/featureFlags';
+
 const props = {
   closeMenu: vi.fn(),
   isCollapsed: false,
@@ -65,14 +67,14 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const flags = {
+    const flags: Partial<Flags> = {
       dbaasV2: {
         beta: true,
         enabled: true,
       },
     };
 
-    const { findByTestId, findByText } = renderWithTheme(
+    const { findByText, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
         flags,
@@ -80,15 +82,9 @@ describe('PrimaryNav', () => {
     );
 
     const databaseNavItem = await findByText('Databases');
-    let betaChip: HTMLElement | null;
-    try {
-      betaChip = await findByTestId('betaChip');
-    } catch (e) {
-      betaChip = null;
-    }
 
     expect(databaseNavItem).toBeVisible();
-    expect(betaChip).toBeNull();
+    expect(queryByTestId('betaChip')).toBeNull();
   });
 
   it('should show Databases menu item if the user has the account capability V2 Beta', async () => {
@@ -102,7 +98,7 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const flags = {
+    const flags: Partial<Flags> = {
       dbaasV2: {
         beta: true,
         enabled: true,
@@ -134,14 +130,14 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const flags = {
+    const flags: Partial<Flags> = {
       dbaasV2: {
         beta: false,
         enabled: true,
       },
     };
 
-    const { findByTestId, findByText } = renderWithTheme(
+    const { findByText, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
         flags,
@@ -149,15 +145,9 @@ describe('PrimaryNav', () => {
     );
 
     const databaseNavItem = await findByText('Databases');
-    let betaChip: HTMLElement | null;
-    try {
-      betaChip = await findByTestId('betaChip');
-    } catch (e) {
-      betaChip = null;
-    }
 
     expect(databaseNavItem).toBeVisible();
-    expect(betaChip).toBeNull();
+    expect(queryByTestId('betaChip')).toBeNull();
   });
 
   it('should show Databases menu item if the user has the account capability V2', async () => {
@@ -171,7 +161,7 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const flags = {
+    const flags: Partial<Flags> = {
       dbaasV2: {
         beta: true,
         enabled: true,
