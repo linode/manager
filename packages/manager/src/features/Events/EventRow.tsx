@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -8,7 +9,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
-import { StyledGravatar } from './EventRow.styles';
 import {
   formatProgressEvent,
   getEventMessage,
@@ -54,7 +54,7 @@ export const EventRow = (props: EventRowProps) => {
       <Hidden smDown>
         <TableCell data-qa-event-username-cell parentColumn="Username">
           <Box alignItems="center" display="flex" gap={1}>
-            <StyledGravatar username={username === 'Linode' ? '' : username} />
+            <Avatar username={username} />
             {username}
           </Box>
         </TableCell>

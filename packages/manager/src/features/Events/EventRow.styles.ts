@@ -1,10 +1,15 @@
 import { styled } from '@mui/material/styles';
 
-import { GravatarByUsername } from '../../components/GravatarByUsername';
+import { Avatar } from 'src/components/Avatar/Avatar';
 
-export const StyledGravatar = styled(GravatarByUsername, {
-  label: 'StyledGravatar',
+// @TODO: delete file
+export const StyledAvatar = styled(Avatar, {
+  label: 'StyledAvatar',
 })(({ theme }) => ({
+  '& svg': {
+    height: '2vh',
+    width: '2vw',
+  },
   height: theme.spacing(3),
   width: theme.spacing(3),
 }));

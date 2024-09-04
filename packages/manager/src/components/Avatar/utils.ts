@@ -1,10 +1,18 @@
 export type RGB = { b: number; g: number; r: number };
 
-export function getFontColor(rgbColor: RGB): string {
+export function getContrastingFontColor(backgroundHexColor: string): string {
   const whiteHex = '#000000';
   const blackHex = '#FFFFFF';
-  const blackTextContrastRatio = getContrastRatio(hexToRGB(whiteHex), rgbColor);
-  const whiteTextContrastRatio = getContrastRatio(hexToRGB(blackHex), rgbColor);
+  const backgroundRBG = hexToRGB(backgroundHexColor);
+
+  const blackTextContrastRatio = getContrastRatio(
+    hexToRGB(whiteHex),
+    backgroundRBG
+  );
+  const whiteTextContrastRatio = getContrastRatio(
+    hexToRGB(blackHex),
+    backgroundRBG
+  );
 
   if (whiteTextContrastRatio > blackTextContrastRatio) {
     return blackHex;
