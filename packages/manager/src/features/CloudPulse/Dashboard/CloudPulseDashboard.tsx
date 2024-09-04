@@ -21,7 +21,10 @@ import {
   getIntervalIndex,
 } from '../Widget/components/CloudPulseIntervalSelect';
 
-import type { CloudPulseWidgetProperties } from '../Widget/CloudPulseWidget';
+import type {
+  CloudPulseMetricsAdditionalFilters,
+  CloudPulseWidgetProperties,
+} from '../Widget/CloudPulseWidget';
 import type {
   AvailableMetrics,
   Dashboard,
@@ -31,6 +34,11 @@ import type {
 } from '@linode/api-v4';
 
 export interface DashboardProperties {
+  /**
+   * Apart from above explicit filters, any additional filters for metrics endpoint will go here
+   */
+  additionalFilters?: CloudPulseMetricsAdditionalFilters[];
+
   /**
    * Id of the selected dashboard
    */
@@ -64,6 +72,7 @@ export interface DashboardProperties {
 
 export const CloudPulseDashboard = (props: DashboardProperties) => {
   const {
+    additionalFilters,
     dashboardId,
     duration,
     manualRefreshTimeStamp,
@@ -81,6 +90,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     widget: Widgets
   ): CloudPulseWidgetProperties => {
     const graphProp: CloudPulseWidgetProperties = {
+      additionalFilters,
       ariaLabel: widget.label,
       authToken: '',
       availableMetrics: undefined,
@@ -144,6 +154,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const {
     data: jweToken,
     isError: isJweTokenError,
+    isLoading: isJweTokenLoading,
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
@@ -158,7 +169,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     );
   }
 
-  if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
+  if (
+    isMetricDefinitionLoading ||
+    isDashboardLoading ||
+    isResourcesLoading ||
+    isJweTokenLoading
+  ) {
     return <CircleProgress />;
   }
 
@@ -227,11 +243,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     );
   };
 
-  const renderPlaceHolder = (subtitle: string) => {
+  const renderPlaceHolder = (title: string) => {
     return (
       <Grid item xs>
         <Paper>
-          <Placeholder icon={CloudPulseIcon} subtitle={subtitle} title="" />
+          <Placeholder icon={CloudPulseIcon} isEntity title={title} />
         </Paper>
       </Grid>
     );

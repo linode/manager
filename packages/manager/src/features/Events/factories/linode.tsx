@@ -569,7 +569,7 @@ const LinodeResizeStartedMessage = ({ event }: { event: Event }) => {
         <>
           {' '}
           to the{' '}
-          {type.data && (
+          {type.data?.label && (
             <strong>{formatStorageUnits(type.data.label)}</strong>
           )}{' '}
           Plan

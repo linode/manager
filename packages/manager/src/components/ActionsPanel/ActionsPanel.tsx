@@ -2,9 +2,12 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useStyles } from 'tss-react/mui';
 
-import { Button, ButtonProps } from 'src/components/Button/Button';
+import { Button } from 'src/components/Button/Button';
 
-import { Box, BoxProps } from '../Box';
+import { Box } from '../Box';
+
+import type { BoxProps } from '../Box';
+import type { ButtonProps } from 'src/components/Button/Button';
 
 interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;

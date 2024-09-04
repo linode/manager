@@ -4,9 +4,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "husky": "^3.0.1",
-    "npm-run-all": "^4.1.5",
-    "postinstall": "^0.6.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4"
   },
   "husky": {
     "hooks": {
@@ -37,6 +35,7 @@
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:ci": "yarn cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
+    "cy:component": "yarn workspace linode-manager cy:component",
     "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
     "changeset": "node scripts/changelog/changeset.mjs",
     "generate-changelogs": "node scripts/changelog/generate-changelogs.mjs",

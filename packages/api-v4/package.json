@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.124.0",
+  "version": "0.125.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -67,7 +67,7 @@
     "lint-staged": "^15.2.9",
     "prettier": "~2.2.1",
     "tsup": "^8.2.4",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.5"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
