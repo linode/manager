@@ -422,13 +422,14 @@ export const VolumeCreate = () => {
                     'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
                   )}
                 </Box>
-                {shouldDisplayClientLibraryCopy && (
-                  <Notice spacingBottom={0} spacingTop={16} variant="warning">
-                    <Typography maxWidth="416px">
-                      {BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY}
-                    </Typography>
-                  </Notice>
-                )}
+                {shouldDisplayClientLibraryCopy &&
+                  values.encryption === 'enabled' && (
+                    <Notice spacingBottom={0} spacingTop={16} variant="warning">
+                      <Typography maxWidth="416px">
+                        {BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY}
+                      </Typography>
+                    </Notice>
+                  )}
               </Stack>
               <ConfigSelect
                 disabled={doesNotHavePermission || config_id === null}
@@ -499,6 +500,11 @@ export const VolumeCreate = () => {
           </Paper>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              disabled={
+                disabled ||
+                (!linodeSupportsBlockStorageEncryption &&
+                  values.encryption === 'enabled')
+              }
               tooltipText={
                 !isLoading && isInvalidPrice
                   ? PRICES_RELOAD_ERROR_NOTICE_TEXT
@@ -507,7 +513,6 @@ export const VolumeCreate = () => {
               buttonType="primary"
               className={classes.button}
               data-qa-deploy-linode
-              disabled={disabled}
               loading={isSubmitting}
               style={{ marginLeft: 12 }}
               type="submit"
