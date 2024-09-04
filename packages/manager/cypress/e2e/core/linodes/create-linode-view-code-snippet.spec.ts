@@ -23,7 +23,6 @@ describe('Create Linode', () => {
     beforeEach(() => {
       mockAppendFeatureFlags({
         apicliDxToolsAdditions: makeFeatureFlagData(true),
-        linodeCreateRefactor: makeFeatureFlagData(true),
       });
       mockGetFeatureFlagClientstream();
     });
@@ -155,7 +154,6 @@ describe('Create Linode', () => {
     beforeEach(() => {
       mockAppendFeatureFlags({
         apicliDxToolsAdditions: makeFeatureFlagData(false),
-        linodeCreateRefactor: makeFeatureFlagData(true),
       });
       mockGetFeatureFlagClientstream();
     });
