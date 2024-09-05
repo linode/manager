@@ -1,4 +1,6 @@
 import { Typography } from '@mui/material';
+import { createFilterOptions } from '@mui/material/Autocomplete';
+
 import * as React from 'react';
 
 import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
@@ -51,6 +53,7 @@ export const RegionSelect = <
     helperText,
     label,
     onChange,
+    placeholder,
     regionFilter,
     regions,
     required,
@@ -116,6 +119,16 @@ export const RegionSelect = <
     return null;
   }, [isGeckoBetaEnabled, isGeckoGAEnabled, selectedRegion]);
 
+  /*
+   * When Gecko is enabled, allow regions to be searched by ID by passing a
+   * custom stringify function.
+   */
+  const filterOptions = isGeckoGAEnabled
+    ? createFilterOptions({
+        stringify: (region: Region) => `${region.label} (${region.id})`,
+      })
+    : undefined;
+
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
@@ -154,6 +167,7 @@ export const RegionSelect = <
         disableClearable={disableClearable}
         disabled={disabled}
         errorText={errorText}
+        filterOptions={filterOptions}
         getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
@@ -163,7 +177,7 @@ export const RegionSelect = <
         noOptionsText="No results"
         onChange={onChange}
         options={regionOptions}
-        placeholder="Select a Region"
+        placeholder={placeholder ?? 'Select a Region'}
         value={selectedRegion as Region}
       />
       {showDistributedRegionIconHelperText && ( // @TODO Gecko Beta: Add docs link

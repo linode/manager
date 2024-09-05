@@ -4,6 +4,72 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-09-03] - v1.127.0
+
+
+### Added:
+
+- CheckoutBar Story ([#10784](https://github.com/linode/manager/pull/10784))
+
+### Changed:
+
+- Improve support ticket form pre-population and field labels ([#10745](https://github.com/linode/manager/pull/10745))
+- Open LISH in a popup window rather than a new tab ([#10789](https://github.com/linode/manager/pull/10789))
+- Use static number of rows in column in LISH to prevent resize and cursor positioning problems ([#10789](https://github.com/linode/manager/pull/10789))
+- Move manual snapshot error message from Linode Backups page to snapshot confirmation dialog ([#10791](https://github.com/linode/manager/pull/10791))
+- "Create Volume" button text to "Add Volume" ([#10808](https://github.com/linode/manager/pull/10808))
+- Storybook navigation bar organization ([#10809](https://github.com/linode/manager/pull/10809))
+- Increase block storage max volume size to 16TB ([#10865](https://github.com/linode/manager/pull/10865))
+
+### Fixed:
+
+- Inability to open Object Storage folders that contain special characters ([#10819](https://github.com/linode/manager/pull/10819))
+- Event handlers making a proportional number of GET requests to the number of incoming events ([#10824](https://github.com/linode/manager/pull/10824))
+- Inaccessible, non-theme error text color in confirmation dialogs ([#10828](https://github.com/linode/manager/pull/10828))
+- CreateSSHKeyDrawer being hidden by Rebuild Linode dialog ([#10833](https://github.com/linode/manager/pull/10833))
+- Firewall warning not appearing in Create Linode flow ([#10838](https://github.com/linode/manager/pull/10838))
+- Restricted users without account access unable to create Linodes on Linode Create v2 ([#10846](https://github.com/linode/manager/pull/10846))
+
+### Tech Stories:
+
+- Improve local Storybook performance ([#10762](https://github.com/linode/manager/pull/10762))
+- Remove `patch-package` dependency ([#10800](https://github.com/linode/manager/pull/10800))
+- Update `storybook` to fix `ip` package vulnerability ([#10827](https://github.com/linode/manager/pull/10827))
+- Update `jsdom` to remove `ws` package vulnerability ([#10829](https://github.com/linode/manager/pull/10829))
+- Dependencies updates and resolution for `braces` package vulnerability ([#10830](https://github.com/linode/manager/pull/10830))
+- Update `browserlist` to latest version ([#10836](https://github.com/linode/manager/pull/10836))
+- Tag Linode Create v2 with form events ([#10840](https://github.com/linode/manager/pull/10840))
+
+### Tests:
+
+- Add test for Linode create error flows ([#10761](https://github.com/linode/manager/pull/10761))
+- Add Cypress test for Object Storage Gen2 Create flow for endpoint type E0, added unit tests for new Gen2 components ([#10774](https://github.com/linode/manager/pull/10774))
+- Add unit tests for new Gen2 components ([#10774](https://github.com/linode/manager/pull/10774))
+- Add test for Linode VPC config not recommended notices ([#10781](https://github.com/linode/manager/pull/10781))
+- Refactor StackScript create test to be resilient to Image deprecations ([#10788](https://github.com/linode/manager/pull/10788))
+- Resolve StackScripts pagination test failure ([#10811](https://github.com/linode/manager/pull/10811))
+- Add unit test cases for CheckoutBar component ([#10818](https://github.com/linode/manager/pull/10818))
+- Resolve StackScript Linode deploy test flake ([#10826](https://github.com/linode/manager/pull/10826))
+- Add unit tests for Confirmation Dialogs ([#10828](https://github.com/linode/manager/pull/10828))
+- Allow region select helpers to be used with mock data ([#10832](https://github.com/linode/manager/pull/10832))
+
+### Upcoming Features:
+
+- Enhance support for CloudPulse X-Filters ([#10769](https://github.com/linode/manager/pull/10769))
+- Hide CORS and SSL for OBJ Gen2 ([#10776](https://github.com/linode/manager/pull/10776))
+- Update DBaaS menu item with V1 or V2 capability, add mock data ([#10786](https://github.com/linode/manager/pull/10786))
+- Add “Encrypt Volume” checkbox in Edit Volume drawer ([#10787](https://github.com/linode/manager/pull/10787))
+- Update Bucket Rate Limits ([#10790](https://github.com/linode/manager/pull/10790))
+- Add "Encryption" column to Linode Volumes table ([#10793](https://github.com/linode/manager/pull/10793))
+- Add bucket management Properties Tab for Object Storage Gen2 ([#10797](https://github.com/linode/manager/pull/10797))
+- Display Endpoint Type alongside each endpoint hostname in Regions Column & Hostnames Drawers ([#10796](https://github.com/linode/manager/pull/10796))
+- Add useRegionQuery and cleanup bucket landing page ([#10801](https://github.com/linode/manager/pull/10801))
+- Add 'Encrypt Volume' checkbox to Clone Volume drawer ([#10803](https://github.com/linode/manager/pull/10803))
+- Modify CloudPulseDashboardSelect and its relevant queries to support multiple service types ([#10805](https://github.com/linode/manager/pull/10805))
+- Add new CloudPulseCustomSelect component and integrate with the global filter builder ([#10807](https://github.com/linode/manager/pull/10807))
+- Add bucket rate limit info to Object Storage Bucket Details drawer ([#10821](https://github.com/linode/manager/pull/10821))
+
+
 ## [2024-08-22] - v1.126.1
 
 ### Fix:
