@@ -39,10 +39,6 @@ const mockLinodes = new Array(5).fill(null).map(
 
 const mockLinodesData = makeResourcePage(mockLinodes);
 
-const emptyLinode: Linode[] = [];
-
-const emptyLinodeData = makeResourcePage(emptyLinode);
-
 const sortByRegion = (a: Linode, b: Linode) => {
   return a.region.localeCompare(b.region);
 };
@@ -399,23 +395,17 @@ describe('linode landing checks', () => {
 
 describe('linode landing checks for empty state', () => {
   beforeEach(() => {
-    const mockAccountSettings = accountSettingsFactory.build({
-      managed: false,
-    });
-
-    cy.intercept('GET', apiMatcher('account/settings'), (req) => {
-      req.reply(mockAccountSettings);
-    }).as('getAccountSettings');
-    cy.intercept('GET', apiMatcher('profile')).as('getProfile');
-    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
-      req.reply(emptyLinodeData);
-    });
-    cy.visitWithLogin('/', { preferenceOverrides });
-    cy.wait('@getAccountSettings');
-    cy.url().should('endWith', routes.linodeLanding);
+    // Mock setup to display the Linode landing page in an empty state
+    mockGetLinodes([]).as('getLinodes');
   });
 
   it('checks empty state on linode landing page', () => {
+    // Login and wait for application to load
+    cy.visitWithLogin(routes.linodeLanding);
+    cy.wait('@getLinodes');
+    cy.url().should('endWith', routes.linodeLanding);
+
+    // Aliases created for accessing child elements during assertions
     cy.get('div[data-qa-placeholder-container="resources-section"]').as(
       'resourcesSection'
     );
@@ -461,10 +451,10 @@ describe('linode landing checks for empty state', () => {
       .contains('Download CSV')
       .should('not.exist');
   });
-});
 
-describe('linode landing checks for restricted user', () => {
-  beforeEach(() => {
+  it('checks restricted user has no access to create linode on linode landing page', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
     const mockProfile = profileFactory.build({
       username: randomLabel(),
       restricted: true,
@@ -485,14 +475,12 @@ describe('linode landing checks for restricted user', () => {
     mockGetProfile(mockProfile);
     mockGetProfileGrants(mockGrants);
     mockGetUser(mockUser);
-    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
-      req.reply(emptyLinodeData);
-    });
-    cy.visitWithLogin('/', { preferenceOverrides });
-    cy.url().should('endWith', routes.linodeLanding);
-  });
 
-  it('checks restricted user has no access to create linode on linode landing page', () => {
+    // Login and wait for application to load
+    cy.visitWithLogin(routes.linodeLanding);
+    cy.wait('@getLinodes');
+    cy.url().should('endWith', routes.linodeLanding);
+
     // Assert that Create Linode button is visible and disabled
     ui.button
       .findByTitle('Create Linode')
