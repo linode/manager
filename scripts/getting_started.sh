@@ -60,8 +60,8 @@ echo export PATH='$VOLTA_HOME/bin:$PATH' >> "$HOME/$bash_config"
 echo export VOLTA_HOME='$HOME/.volta' >> "$HOME/$zsh_config"
 echo export PATH='$VOLTA_HOME/bin:$PATH' >> "$HOME/$zsh_config"
 
-echo "Installing Nodejs v18.14.1"
-volta install node@18.14.1
+echo "Installing Nodejs v20.17 LTS"
+volta install node@20.17
 echo "Installing Yarn"
 volta install yarn@1
 if [ "$1" == '--no-fork' ]; then

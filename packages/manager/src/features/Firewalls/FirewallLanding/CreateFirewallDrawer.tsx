@@ -275,7 +275,7 @@ export const CreateFirewallDrawer = React.memo(
           {generalError && (
             <Notice data-qa-error key={status} variant="error">
               <ErrorMessage
-                entityType="firewall_id"
+                entity={{ type: 'firewall_id' }}
                 message={generalError ?? 'An unexpected error occurred'}
               />
             </Notice>
