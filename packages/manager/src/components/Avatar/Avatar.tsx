@@ -73,6 +73,7 @@ export const Avatar = (props: AvatarProps) => {
         ...sx,
       }}
       alt={`Avatar for user ${username ?? profile?.email ?? ''}`}
+      data-testid="avatar"
     >
       {isAkamai ? (
         <AkamaiWave />
@@ -82,6 +83,7 @@ export const Avatar = (props: AvatarProps) => {
             color: theme.palette.getContrastText(color ?? savedAvatarColor),
             fontSize: width / 2,
           }}
+          data-testid="avatar-letter"
         >
           {avatarLetter}
         </Typography>

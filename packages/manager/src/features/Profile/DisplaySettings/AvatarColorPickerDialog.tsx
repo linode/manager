@@ -12,12 +12,14 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
-interface Props {
+export interface AvatarColorPickerDialogProps {
   handleClose: () => void;
   open: boolean;
 }
 
-export const AvatarColorPickerDialog = (props: Props) => {
+export const AvatarColorPickerDialog = (
+  props: AvatarColorPickerDialogProps
+) => {
   const { handleClose, open } = props;
 
   const [avatarColor, setAvatarColor] = useState<string>();
@@ -27,14 +29,14 @@ export const AvatarColorPickerDialog = (props: Props) => {
 
   return (
     <Dialog onClose={handleClose} open={open} title="Change Avatar Color">
-      <Stack alignItems="baseline" display="flex" flexDirection="row">
+      <Stack alignItems="center" display="flex" flexDirection="row">
         <Typography sx={{ paddingRight: 1 }}>
           Select a background color for your avatar:
         </Typography>
         <ColorPicker
           defaultColor={preferences?.avatarColor}
           inputStyles={{ height: 30, width: 30 }}
-          label="Avatar background color picker"
+          label="Avatar color picker"
           onChange={(color: string) => setAvatarColor(color)}
         />
       </Stack>
