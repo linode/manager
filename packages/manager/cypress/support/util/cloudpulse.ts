@@ -118,7 +118,11 @@ export const selectServiceName = (serviceName: string) => {
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Open')
     .click();
-  ui.autocompletePopper.findByTitle(serviceName).should('be.visible').click();
+  ui.autocomplete
+    .findByPlaceholderCustom('Select Dashboard')
+    .type(`${serviceName}{enter}`);
+
+  // ui.autocompletePopper.findByTitle(serviceName).should('be.visible').click();
 };
 
 /**
