@@ -107,8 +107,8 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     {
       ['+order']: order,
       ['+order_by']: orderBy,
-      ...searchFilter,
       ...filter,
+      ...searchFilter,
     },
     !hasPreselectedStackScript
   );
