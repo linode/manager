@@ -4,9 +4,9 @@
 
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
+import { linodeVlanNoInternetConfig } from 'support/util/linodes';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
-import { linodeVlanNoInternetConfig } from 'support/util/linodes';
 
 import type { Disk, Kernel, Linode, LinodeType, Volume } from '@linode/api-v4';
 
@@ -482,7 +482,8 @@ export const mockGetLinodeKernel = (
   );
 };
 
-/* Intercepts POST request to get a Linode Resize.
+/**
+ * Intercepts POST request to get a Linode Resize.
  *
  * @param linodeId - ID of Linode to fetch.
  *
