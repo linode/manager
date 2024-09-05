@@ -10,18 +10,37 @@ import type { SxProps } from '@mui/material';
 
 export const DEFAULT_AVATAR_SIZE = 28;
 
-interface Props {
-  className?: string;
+export interface AvatarProps {
+  /**
+   * Optional background color to override the color set in user preferences
+   * */
   color?: string;
+  /**
+   * Optional height
+   * @default 28px
+   * */
   height?: number;
+  /**
+   * Optional styles
+   * */
   sx?: SxProps;
+  /**
+   * Optional username to override the profile username; will display the first letter
+   * */
   username?: string;
+  /**
+   * Optional width
+   * @default 28px
+   * */
   width?: number;
 }
 
-export const Avatar = (props: Props) => {
+/**
+ * The Avatar component displays the first letter of a username on a solid background color.
+ * For system avatars associated with Akamai-generated events, an Akamai logo is displayed in place of a letter.
+ */
+export const Avatar = (props: AvatarProps) => {
   const {
-    className,
     color,
     height = DEFAULT_AVATAR_SIZE,
     sx,
@@ -37,30 +56,30 @@ export const Avatar = (props: Props) => {
   const _username = username ?? profile?.username ?? '';
   const isAkamai = /^Linode$|^lke-service-account*/.test(_username);
 
-  const avatarColor = preferences?.avatarColor ?? theme.palette.primary.dark;
+  const savedAvatarColor =
+    preferences?.avatarColor ?? theme.palette.primary.dark;
   const avatarLetter = _username[0]?.toUpperCase() ?? '';
 
   return (
     <_Avatar
       sx={{
         '& svg': {
-          height: '2vh',
-          width: '2vw',
+          height: width / 2,
+          width: width / 2,
         },
-        bgcolor: color ?? avatarColor,
+        bgcolor: color ?? savedAvatarColor,
         height,
         width,
         ...sx,
       }}
       alt={`Avatar for user ${username ?? profile?.email ?? ''}`}
-      className={className}
     >
       {isAkamai ? (
         <AkamaiWave />
       ) : (
         <Typography
           sx={{
-            color: theme.palette.getContrastText(color ?? avatarColor),
+            color: theme.palette.getContrastText(color ?? savedAvatarColor),
             fontSize: width / 2,
           }}
         >

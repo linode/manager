@@ -137,7 +137,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
   const renderAvatar = (id: string) => {
     return (
       <div className={classes.userWrapper}>
-        <Avatar
+        <Avatar // TODO: switch to component Avatar
           alt="Gravatar"
           className={classes.leftIcon}
           src={`https://gravatar.com/avatar/${id}?d=404`}
