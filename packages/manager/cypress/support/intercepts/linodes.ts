@@ -8,7 +8,15 @@ import { linodeVlanNoInternetConfig } from 'support/util/linodes';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
 
-import type { Disk, Kernel, Linode, LinodeType, Volume } from '@linode/api-v4';
+import type {
+  Disk,
+  Firewall,
+  Kernel,
+  Linode,
+  LinodeIPsResponse,
+  LinodeType,
+  Volume,
+} from '@linode/api-v4';
 
 /**
  * Intercepts POST request to create a Linode.
@@ -495,5 +503,41 @@ export const interceptLinodeResize = (
   return cy.intercept(
     'POST',
     apiMatcher(`linode/instances/${linodeId}/resize`)
+  );
+};
+
+/**
+ * Mocks GET request to get a Linode's firewalls
+ *
+ * @param linodeId - ID of Linode to get firewalls associated with it
+ *
+ * @returns Cypress Chainable
+ */
+export const mockGetLinodeFirewalls = (
+  linodeId: number,
+  firewalls: Firewall[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/firewalls`),
+    paginateResponse(firewalls)
+  );
+};
+
+/**
+ * Mocks GET request to get a Linode's IP addresses
+ *
+ * @param linodeId - ID of Linode to get IP addresses for
+ *
+ * @returns Cypress Chainable
+ */
+export const mockGetLinodeIPAddresses = (
+  linodeId: number,
+  ipAddresses: LinodeIPsResponse
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/ips`),
+    makeResponse(ipAddresses)
   );
 };
