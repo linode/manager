@@ -33,9 +33,10 @@ import type { PlanSelectionType } from 'src/features/components/PlansPanel/types
 
 interface Props {
   database: Database;
+  disabled?: boolean;
 }
 
-export const DatabaseResize = ({ database }: Props) => {
+export const DatabaseResize = ({ database, disabled = false }: Props) => {
   const history = useHistory();
 
   const [planSelected, setPlanSelected] = React.useState<string>();
@@ -229,6 +230,7 @@ export const DatabaseResize = ({ database }: Props) => {
         <StyledPlansPanel
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
+          disabled={disabled}
           disabledSmallerPlans={disabledPlans}
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
@@ -243,7 +245,7 @@ export const DatabaseResize = ({ database }: Props) => {
             setIsResizeConfirmationDialogOpen(true);
           }}
           buttonType="primary"
-          disabled={shouldSubmitBeDisabled}
+          disabled={shouldSubmitBeDisabled || disabled}
           type="submit"
         >
           Resize Database Cluster
