@@ -33,6 +33,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'databaseResize', label: 'Database Resize' },
+  { flag: 'apicliDxToolsAdditions', label: 'APICLI DX Tools Additions' },
 ];
 
 const renderFlagItems = (
