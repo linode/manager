@@ -126,8 +126,6 @@ export const selectServiceName = (serviceName: string) => {
  * @param {string} region - The name of the region to select.
  */
 export const selectRegion = (region: string) => {
-  // ui.regionSelect.find().click();
-  // ui.autocompletePopper.findByTitle(region);
   ui.regionSelect.find().click().type(`${region}{enter}`);
 };
 
@@ -151,7 +149,7 @@ export const selectAndVerifyServiceName = (service: string) => {
   const resourceInput = ui.autocomplete.findByTitleCustom('Select Resources');
   resourceInput.findByTitle('Open').click();
   resourceInput.click().type(`${service}{enter}`);
-  //resourceInput.findByTitle('Close').click();
+  // resourceInput.findByTitle('Close').click();
 };
 
 /**
