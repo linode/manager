@@ -65,7 +65,7 @@ import type { PlanSelectionType } from 'src/features/components/PlansPanel/types
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const V1 = 'Managed Databases';
-const V2 = `Managed Databases V2`;
+const V2 = `Managed Databases Beta`;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {

@@ -140,14 +140,14 @@ describe('Database Table', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const aDatabasesTab = screen.getByText('New Database Clusters');
-    const bDatabasesTab = screen.getByText('Legacy Database Clusters');
+    const newDatabasesTab = screen.getByText('New Database Clusters');
+    const legacyDatabasesTab = screen.getByText('Legacy Database Clusters');
 
-    expect(aDatabasesTab).toBeInTheDocument();
-    expect(bDatabasesTab).toBeInTheDocument();
+    expect(newDatabasesTab).toBeInTheDocument();
+    expect(legacyDatabasesTab).toBeInTheDocument();
   });
 
-  it('should render logo in a databases tab ', async () => {
+  it('should render logo in new databases tab ', async () => {
     server.use(
       http.get('*/databases/instances', () => {
         const databases = databaseInstanceFactory.buildList(5, {

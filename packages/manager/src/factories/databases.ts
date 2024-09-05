@@ -190,7 +190,9 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     members: {
       '2.2.2.2': 'primary',
     },
-    platform: Factory.each((i) => (adb10(i) ? 'adb10' : 'adb20')),
+    platform: Factory.each((i) =>
+      adb10(i) ? 'rdbms-legacy' : 'rdbms-default'
+    ),
     region: Factory.each((i) => possibleRegions[i % possibleRegions.length]),
     status: Factory.each((i) => possibleStatuses[i % possibleStatuses.length]),
     type: Factory.each((i) => possibleTypes[i % possibleTypes.length]),

@@ -7,8 +7,10 @@ import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 
+import type { SxProps } from '@mui/material/styles';
+
 interface Props {
-  sx?: React.CSSProperties;
+  sx?: SxProps;
 }
 
 export const DatabaseLogo = ({ sx }: Props) => {

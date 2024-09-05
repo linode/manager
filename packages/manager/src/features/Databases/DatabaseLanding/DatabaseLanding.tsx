@@ -10,13 +10,13 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { DatabaseClusterInfoBanner } from 'src/features/GlobalNotifications/DatabaseClusterInfoBanner';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccount } from 'src/queries/account/account';
 import {
   useDatabaseTypesQuery,
   useDatabasesQuery,
@@ -24,86 +24,81 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { DatabaseEmptyState } from './DatabaseEmptyState';
-import { DatabaseRow } from './DatabaseRow';
-
-import type { DatabaseInstance } from '@linode/api-v4/lib/databases';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 const preferenceKey = 'databases';
 
 const DatabaseLanding = () => {
   const history = useHistory();
-  const aDatabasesPagination = usePagination(1, preferenceKey, 'a');
-  const bDatabasesPagination = usePagination(1, preferenceKey, 'b');
+  const newDatabasesPagination = usePagination(1, preferenceKey, 'new');
+  const legacyDatabasesPagination = usePagination(1, preferenceKey, 'legacy');
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
-  const account = useAccount();
 
-  const { data: types, isLoading: isTypeLoading } = useDatabaseTypesQuery();
+  const { isLoading: isTypeLoading } = useDatabaseTypesQuery();
   const { isDatabasesV2Enabled } = useIsDatabasesEnabled();
 
   const {
-    handleOrderChange: aDatabaseHandleOrderChange,
-    order: aDatabaseOrder,
-    orderBy: aDatabaseOrderBy,
+    handleOrderChange: newDatabaseHandleOrderChange,
+    order: newDatabaseOrder,
+    orderBy: newDatabaseOrderBy,
   } = useOrder(
     {
       order: 'desc',
       orderBy: 'label',
     },
-    `a-${preferenceKey}-order`
+    `new-${preferenceKey}-order`
   );
 
-  const aDatabasesFilter = {
-    ['+contains']: 'adb20',
-    ['+order']: aDatabaseOrder,
-    ['+order_by']: aDatabaseOrderBy,
+  const newDatabasesFilter = {
+    ['platform']: 'rdbms-default',
+    ['+order']: newDatabaseOrder,
+    ['+order_by']: newDatabaseOrderBy,
   };
 
   const {
-    data: aDatabases,
-    error: aDatabasesError,
-    isLoading: aDatabasesIsLoading,
+    data: newDatabases,
+    error: newDatabasesError,
+    isLoading: newDatabasesIsLoading,
   } = useDatabasesQuery(
     {
-      page: aDatabasesPagination.page,
-      page_size: aDatabasesPagination.pageSize,
+      page: newDatabasesPagination.page,
+      page_size: newDatabasesPagination.pageSize,
     },
-    aDatabasesFilter
+    newDatabasesFilter
   );
 
   const {
-    handleOrderChange: bDatabaseHandleOrderChange,
-    order: bDatabaseOrder,
-    orderBy: bDatabaseOrderBy,
+    handleOrderChange: legacyDatabaseHandleOrderChange,
+    order: legacyDatabaseOrder,
+    orderBy: legacyDatabaseOrderBy,
   } = useOrder(
     {
       order: 'desc',
       orderBy: 'label',
     },
-    `b-${preferenceKey}-order`
+    `legacy-${preferenceKey}-order`
   );
 
-  const bDatabasesFilter = {
-    ['+contains']: 'adb10',
-    ['+order']: bDatabaseOrder,
-    ['+order_by']: bDatabaseOrderBy,
+  const legacyDatabasesFilter = {
+    ['platform']: 'rdbms-legacy',
+    ['+order']: legacyDatabaseOrder,
+    ['+order_by']: legacyDatabaseOrderBy,
   };
 
   const {
-    data: bDatabases,
-    error: bDatabasesError,
-    isLoading: bDatabasesIsLoading,
+    data: legacyDatabases,
+    error: legacyDatabasesError,
+    isLoading: legacyDatabasesIsLoading,
   } = useDatabasesQuery(
     {
-      page: bDatabasesPagination.page,
-      page_size: bDatabasesPagination.pageSize,
+      page: legacyDatabasesPagination.page,
+      page_size: legacyDatabasesPagination.pageSize,
     },
-    bDatabasesFilter
+    legacyDatabasesFilter
   );
 
-  const error = aDatabasesError || bDatabasesError;
+  const error = newDatabasesError || legacyDatabasesError;
   if (error) {
     return (
       <ErrorState
@@ -114,14 +109,14 @@ const DatabaseLanding = () => {
     );
   }
 
-  if (aDatabasesIsLoading || bDatabasesIsLoading || isTypeLoading) {
+  if (newDatabasesIsLoading || legacyDatabasesIsLoading || isTypeLoading) {
     return <CircleProgress />;
   }
 
-  const showTabs = isDatabasesV2Enabled && bDatabases.data.length !== 0;
+  const showTabs = isDatabasesV2Enabled && legacyDatabases?.data.length !== 0;
 
   const showEmpty =
-    aDatabases.data.length === 0 && bDatabases.data.length === 0;
+    newDatabases?.data.length === 0 && legacyDatabases?.data.length === 0;
 
   if (showEmpty) {
     return <DatabaseEmptyState />;
@@ -144,7 +139,7 @@ const DatabaseLanding = () => {
         title="Database Clusters"
       />
       {showTabs && <DatabaseClusterInfoBanner />}
-      <Box sx={{ marginTop: '15px' }}>
+      <Box>
         {showTabs ? (
           <Tabs>
             <TabList>
@@ -154,37 +149,40 @@ const DatabaseLanding = () => {
             <TabPanels>
               <SafeTabPanel index={0}>
                 <DatabaseLandingTable
-                  data={bDatabases.data}
-                  handleOrderChange={bDatabaseHandleOrderChange}
-                  order={bDatabaseOrder}
-                  orderBy={bDatabaseOrderBy}
-                  types={types}
+                  data={legacyDatabases?.data}
+                  handleOrderChange={legacyDatabaseHandleOrderChange}
+                  order={legacyDatabaseOrder}
+                  orderBy={legacyDatabaseOrderBy}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={1}>
                 <DatabaseLandingTable
-                  data={aDatabases.data}
-                  handleOrderChange={aDatabaseHandleOrderChange}
-                  isADatabases={true}
-                  order={aDatabaseOrder}
-                  orderBy={aDatabaseOrderBy}
-                  types={types}
+                  data={newDatabases?.data}
+                  handleOrderChange={newDatabaseHandleOrderChange}
+                  isNewDatabase={true}
+                  order={newDatabaseOrder}
+                  orderBy={newDatabaseOrderBy}
                 />
               </SafeTabPanel>
             </TabPanels>
           </Tabs>
         ) : (
           <DatabaseLandingTable
+            data={
+              isDatabasesV2Enabled ? newDatabases?.data : legacyDatabases?.data
+            }
             handleOrderChange={
               isDatabasesV2Enabled
-                ? aDatabaseHandleOrderChange
-                : bDatabaseHandleOrderChange
+                ? newDatabaseHandleOrderChange
+                : legacyDatabaseHandleOrderChange
             }
-            data={isDatabasesV2Enabled ? aDatabases.data : bDatabases.data}
-            isADatabases={isDatabasesV2Enabled}
-            order={isDatabasesV2Enabled ? aDatabaseOrder : bDatabaseOrder}
-            orderBy={isDatabasesV2Enabled ? aDatabaseOrderBy : bDatabaseOrderBy}
-            types={types}
+            order={
+              isDatabasesV2Enabled ? newDatabaseOrder : legacyDatabaseOrder
+            }
+            orderBy={
+              isDatabasesV2Enabled ? newDatabaseOrderBy : legacyDatabaseOrderBy
+            }
+            isNewDatabase={isDatabasesV2Enabled}
           />
         )}
       </Box>

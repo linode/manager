@@ -117,7 +117,7 @@ describe('Database Create', () => {
     server.use(
       http.get('*/account', () => {
         const account = accountFactory.build({
-          capabilities: ['Managed Databases V2'],
+          capabilities: ['Managed Databases Beta'],
         });
         return HttpResponse.json(account);
       })
