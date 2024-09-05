@@ -1,4 +1,3 @@
-import { IPAddress } from '@linode/api-v4/lib/networking';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -10,6 +9,8 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useLinodeIPMutation } from 'src/queries/linodes/networking';
 import { getErrorMap } from 'src/utilities/errorUtils';
+
+import type { IPAddress } from '@linode/api-v4/lib/networking';
 
 interface Props {
   ip: IPAddress | undefined;
@@ -55,9 +56,9 @@ export const EditIPRDNSDrawer = (props: Props) => {
   return (
     <Drawer
       onClose={onClose}
+      onExited={onExited}
       open={open}
       title="Edit Reverse DNS"
-      onExited={onExited}
     >
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
