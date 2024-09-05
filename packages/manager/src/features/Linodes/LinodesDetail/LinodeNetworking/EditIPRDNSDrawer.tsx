@@ -84,7 +84,7 @@ export const EditIPRDNSDrawer = (props: Props) => {
             loading: isPending,
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           style={{ marginTop: 16 }}
         />
       </form>
