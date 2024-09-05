@@ -57,7 +57,9 @@ export const Avatar = (props: AvatarProps) => {
   const isAkamai = /^Linode$|^lke-service-account*/.test(_username);
 
   const savedAvatarColor =
-    preferences?.avatarColor ?? theme.palette.primary.dark;
+    isAkamai || !preferences?.avatarColor
+      ? theme.palette.primary.dark
+      : preferences.avatarColor;
   const avatarLetter = _username[0]?.toUpperCase() ?? '';
 
   return (
