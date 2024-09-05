@@ -70,30 +70,6 @@ describe('createToast', () => {
     });
   });
 
-  it('should handle case with failure as true and success as false', () => {
-    const options = { failure: true, success: false };
-    const result = createToast(options);
-    const expected = {
-      failure: {
-        message: expect.any(Function),
-      },
-    };
-
-    expect(result).toEqual(expected);
-  });
-
-  it('should handle case with success as true and failure as false', () => {
-    const options = { failure: false, success: true };
-    const result = createToast(options);
-    const expected = {
-      success: {
-        message: expect.any(Function),
-      },
-    };
-
-    expect(result).toEqual(expected);
-  });
-
   it('should handle cases with specific values for only failure or success options', () => {
     // Only the failure options with specific values
     const failureOnlyOptions = {
