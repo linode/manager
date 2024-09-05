@@ -289,7 +289,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const metricsApiCallError = error?.[0]?.reason;
   return (
     <Grid item lg={widget.size} xs={12}>
-      <Paper>
+      <Paper data-qa-widget={convertStringToCamelCasesWithSpaces(widget.label)}>
         <Stack spacing={2}>
           <Stack
             alignItems={'center'}
@@ -299,6 +299,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             padding={1}
           >
             <Typography
+              data-qa-widget_header={convertStringToCamelCasesWithSpaces(
+                widget.label
+              )}
               fontSize={{ sm: '1.5rem', xs: '2rem' }}
               marginLeft={1}
               variant="h1"

@@ -98,6 +98,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             sx={{
               marginBlockEnd: 'auto',
             }}
+            data-qa-refresh-button
             disabled={!selectedDashboard}
             onClick={() => handleGlobalRefresh(selectedDashboard)}
             size="small"

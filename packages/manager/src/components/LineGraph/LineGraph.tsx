@@ -383,6 +383,7 @@ export const LineGraph = (props: LineGraphProps) => {
               width: isLegendsFullSize ? '100%' : '85%',
             }} // this sx is added because styled table forcing the legends to be 85% width & 600px max width
             aria-label={`Controls for ${ariaLabel || 'Stats and metrics'}`}
+            data-qa-table-id={ariaLabel}
             noBorder
           >
             <StyledTableHead>
