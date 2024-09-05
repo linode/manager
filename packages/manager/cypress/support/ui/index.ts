@@ -3,6 +3,7 @@ import * as actionMenu from './action-menu';
 import * as autocomplete from './autocomplete';
 import * as breadcrumb from './breadcrumb';
 import * as buttons from './buttons';
+import { cloudpulse } from './cloudpulse';
 import * as dialog from './dialog';
 import * as drawer from './drawer';
 import * as entityHeader from './entity-header';
@@ -38,4 +39,5 @@ export const ui = {
   ...toggle,
   ...tooltip,
   ...userMenu,
+  ...cloudpulse,
 };

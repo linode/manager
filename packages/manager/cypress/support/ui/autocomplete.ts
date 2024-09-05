@@ -13,6 +13,34 @@ export const autocomplete = {
   find: (): Cypress.Chainable => {
     return cy.get('[data-qa-autocomplete] input');
   },
+  /**
+   * Finds an autocomplete input element by its placeholder text.
+   * This method is useful for locating input fields within autocomplete components
+   * when the placeholder text is known.
+   *
+   * @param {string} title - The placeholder text of the input element.
+   * @param {SelectorMatcherOptions} [options] - Optional additional options for selecting elements.
+   * @returns {Cypress.Chainable} - A Cypress chainable object that represents the located element.
+   */
+  findByPlaceholderCustom: (
+    title: string,
+    options?: SelectorMatcherOptions
+  ): Cypress.Chainable => {
+    return cy.get("[data-qa-autocomplete] input[placeholder='" + title + "']");
+  },
+
+  /**
+   * Finds an autocomplete element by its title attribute.
+   * This method is used to locate elements with a specific title attribute within
+   * autocomplete components, useful for when you need to interact with elements
+   * identified by their title.
+   *
+   * @param {string} title - The value of the title attribute for the autocomplete element.
+   * @returns {Cypress.Chainable} - A Cypress chainable object that represents the located element.
+   */
+  findByTitleCustom: (title: string): Cypress.Chainable => {
+    return cy.get('[data-qa-autocomplete="' + title + '"]');
+  },
 };
 
 /**
