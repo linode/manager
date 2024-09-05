@@ -129,7 +129,7 @@ export const NotificationEventGravatar = styled(GravatarByUsername, {
 }));
 
 export const NotificationEventAvatar = styled(Avatar, {
-  label: 'StyledAvatarByUsername',
+  label: 'StyledAvatar',
 })(() => ({
   height: 32,
   marginTop: 2,
