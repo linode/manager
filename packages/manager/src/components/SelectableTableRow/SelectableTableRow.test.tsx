@@ -1,7 +1,7 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { TableCell } from '../TableCell';
 import { SelectableTableRow } from './SelectableTableRow';
@@ -24,8 +24,8 @@ const ariaLabel = 'Select all entities on page';
 
 describe('SelectableTableRow', () => {
   it('should render table row with checkbox and child content', () => {
-    const { getAllByText, getByRole, getByText } = renderWithTheme(
-      <SelectableTableRow {...defaultArgs} />
+    const { getAllByText, getByRole, getByText } = render(
+      wrapWithTableBody(<SelectableTableRow {...defaultArgs} />)
     );
 
     const checkbox = getByRole('checkbox', {
@@ -42,8 +42,8 @@ describe('SelectableTableRow', () => {
   });
 
   it('should call handleToggleCheck on click', () => {
-    const { getByRole } = renderWithTheme(
-      <SelectableTableRow {...defaultArgs} />
+    const { getByRole } = render(
+      wrapWithTableBody(<SelectableTableRow {...defaultArgs} />)
     );
 
     const checkbox = getByRole('checkbox', {
@@ -55,8 +55,10 @@ describe('SelectableTableRow', () => {
   });
 
   it('should show checked checkbox correctly if checked', () => {
-    const { getByRole } = renderWithTheme(
-      <SelectableTableRow {...defaultArgs} isChecked={true} />
+    const { getByRole } = render(
+      wrapWithTableBody(
+        <SelectableTableRow {...defaultArgs} isChecked={true} />
+      )
     );
 
     const checkbox = getByRole('checkbox', {
@@ -67,8 +69,8 @@ describe('SelectableTableRow', () => {
   });
 
   it('should show unchecked checkbox correctly if unchecked', () => {
-    const { getByRole } = renderWithTheme(
-      <SelectableTableRow {...defaultArgs} />
+    const { getByRole } = render(
+      wrapWithTableBody(<SelectableTableRow {...defaultArgs} />)
     );
 
     const checkbox = getByRole('checkbox', {
