@@ -79,7 +79,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
   } = props;
 
   const flags = useFlags();
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
   const location = useLocation();
   const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
@@ -169,7 +169,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 planType={plan}
                 regionsData={regionsData || []}
               />
-              {showDistributedRegionPlanTable && !isGeckoGAEnabled && (
+              {showDistributedRegionPlanTable && !isGeckoLAEnabled && (
                 <Notice
                   text="Distributed region pricing is temporarily $0 during the beta period, after which billing will begin."
                   variant="warning"
