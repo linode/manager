@@ -34,7 +34,7 @@ describe('linode networking', () => {
         reserved: [],
       },
     }).as('getLinodeIPAddresses');
-    mockUpdateIPAddress(linodeIPv4, '').as('updateIPAddress');
+    mockUpdateIPAddress(linodeIPv4, mockRDNS).as('updateIPAddress');
 
     cy.visitWithLogin(`linodes/${mockLinode.id}/networking`);
     cy.wait(['@getLinode', '@getLinodeFirewalls', '@getLinodeIPAddresses']);
@@ -50,7 +50,7 @@ describe('linode networking', () => {
         cy.get('thead').findByText('Reverse DNS').should('be.visible');
       });
 
-    // confirm row for Linode's (first) IPv4 exists and open up the RDNS drawer
+    // confirm row for Linode's (first) IPv4 address exists and open up the RDNS drawer
     cy.get(`[data-qa-ip="${linodeIPv4}"]`)
       .should('be.visible')
       .closest('tr')

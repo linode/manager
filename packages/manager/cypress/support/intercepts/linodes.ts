@@ -507,11 +507,12 @@ export const interceptLinodeResize = (
 };
 
 /**
- * Mocks GET request to get a Linode's firewalls
+ * Mocks GET request to get a Linode's firewalls.
  *
- * @param linodeId - ID of Linode to get firewalls associated with it
+ * @param linodeId - ID of Linode to get firewalls associated with it.
+ * @param firewalls - the firewalls with which to mock the response.
  *
- * @returns Cypress Chainable
+ * @returns Cypress Chainable.
  */
 export const mockGetLinodeFirewalls = (
   linodeId: number,
@@ -525,11 +526,12 @@ export const mockGetLinodeFirewalls = (
 };
 
 /**
- * Mocks GET request to get a Linode's IP addresses
+ * Mocks GET request to get a Linode's IP addresses.
  *
- * @param linodeId - ID of Linode to get IP addresses for
+ * @param linodeId - ID of Linode to get IP addresses for.
+ * @param ipAddresses: the IP Addresses with which to mock the response.
  *
- * @returns Cypress Chainable
+ * @returns Cypress Chainable.
  */
 export const mockGetLinodeIPAddresses = (
   linodeId: number,
