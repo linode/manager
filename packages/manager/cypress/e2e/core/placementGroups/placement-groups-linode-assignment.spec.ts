@@ -46,8 +46,6 @@ const mockRegions = regionFactory.buildList(10, {
 });
 
 describe('Placement Groups Linode assignment', () => {
-  // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
-  // TODO Remove these mocks when `placementGroups` feature flag is retired.
   beforeEach(() => {
     mockGetAccount(mockAccount).as('getAccount');
   });

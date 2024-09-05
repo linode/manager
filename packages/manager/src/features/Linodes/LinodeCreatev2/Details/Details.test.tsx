@@ -41,7 +41,7 @@ describe('Linode Create Details', () => {
     ).toBeVisible();
   });
 
-  it('renders an placement group details', async () => {
+  it('renders a placement group details', async () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <Details />,
     });
