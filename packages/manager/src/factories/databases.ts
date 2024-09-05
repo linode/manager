@@ -16,14 +16,16 @@ import type {
   PostgresReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 
-// These are not all of the possible statuses, but these are some common ones.
 export const possibleStatuses: DatabaseStatus[] = [
-  'provisioning',
   'active',
-  'failed',
   'degraded',
-  'restoring',
+  'failed',
+  'provisioning',
   'resizing',
+  'restoring',
+  'resuming',
+  'suspended',
+  'suspending',
 ];
 
 export const possibleMySQLReplicationTypes: MySQLReplicationType[] = [

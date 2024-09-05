@@ -32,10 +32,11 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { EngineOption } from 'src/features/Databases/DatabaseCreate/EngineOption';
+import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -62,6 +63,9 @@ import type { Theme } from '@mui/material/styles';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+
+const V1 = 'Managed Databases';
+const V2 = `Managed Databases V2`;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -187,6 +191,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 };
 
 interface NodePricing {
+  double: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
   single: DatabasePriceObject | undefined;
 }
@@ -194,7 +199,6 @@ interface NodePricing {
 const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
-  const flags = useFlags();
 
   const {
     data: regionsData,
@@ -214,12 +218,15 @@ const DatabaseCreate = () => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery();
 
+  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
+  const [selectedTab, setSelectedTab] = React.useState(0);
 
   const engineOptions = React.useMemo(() => {
     if (!engines) {
@@ -356,33 +363,46 @@ const DatabaseCreate = () => {
     });
   }, [dbtypes, selectedEngine]);
 
-  const labelToolTip = (
-    <div className={classes.labelToolTipCtn}>
-      <strong>Label must:</strong>
-      <ul>
-        <li>Begin with an alpha character</li>
-        <li>Contain only alpha characters or single hyphens</li>
-        <li>Be between 3 - 32 characters</li>
-      </ul>
-    </div>
-  );
+  const nodeOptions = React.useMemo(() => {
+    const hasDedicated = displayTypes.some(
+      (type) => type.class === 'dedicated'
+    );
 
-  const nodeOptions = [
-    {
-      label: (
-        <Typography>
-          1 Node {` `}
-          <br />
-          <span style={{ fontSize: '12px' }}>
-            {`$${nodePricing?.single?.monthly || 0}/month $${
-              nodePricing?.single?.hourly || 0
-            }/hr`}
-          </span>
-        </Typography>
-      ),
-      value: 1,
-    },
-    {
+    const options = [
+      {
+        label: (
+          <Typography>
+            1 Node {` `}
+            <br />
+            <span style={{ fontSize: '12px' }}>
+              {`$${nodePricing?.single?.monthly || 0}/month $${
+                nodePricing?.single?.hourly || 0
+              }/hr`}
+            </span>
+          </Typography>
+        ),
+        value: 1,
+      },
+    ];
+
+    if (hasDedicated && selectedTab === 0 && isDatabasesV2Enabled) {
+      options.push({
+        label: (
+          <Typography>
+            2 Nodes - High Availability
+            <br />
+            <span style={{ fontSize: '12px' }}>
+              {`$${nodePricing?.double?.monthly || 0}/month $${
+                nodePricing?.double?.hourly || 0
+              }/hr`}
+            </span>
+          </Typography>
+        ),
+        value: 2,
+      });
+    }
+
+    options.push({
       label: (
         <Typography>
           3 Nodes - High Availability (recommended)
@@ -395,8 +415,25 @@ const DatabaseCreate = () => {
         </Typography>
       ),
       value: 3,
-    },
-  ];
+    });
+
+    return options;
+  }, [selectedTab, nodePricing, displayTypes, isDatabasesV2Enabled]);
+
+  const labelToolTip = (
+    <div className={classes.labelToolTipCtn}>
+      <strong>Label must:</strong>
+      <ul>
+        <li>Begin with an alpha character</li>
+        <li>Contain only alpha characters or single hyphens</li>
+        <li>Be between 3 - 32 characters</li>
+      </ul>
+    </div>
+  );
+
+  const handleTabChange = (index: number) => {
+    setSelectedTab(index);
+  };
 
   React.useEffect(() => {
     if (values.type.length === 0 || !dbtypes) {
@@ -411,6 +448,9 @@ const DatabaseCreate = () => {
     const engineType = values.engine.split('/')[0] as Engine;
 
     setNodePricing({
+      double: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 2
+      )?.price,
       multi: type.engines[engineType].find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
       )?.price,
@@ -453,7 +493,7 @@ const DatabaseCreate = () => {
             },
           ],
           labelOptions: {
-            suffixComponent: flags.dbaasV2?.beta ? (
+            suffixComponent: isDatabasesV2Beta ? (
               <BetaChip className={classes.chip} component="span" />
             ) : null,
           },
@@ -504,7 +544,7 @@ const DatabaseCreate = () => {
         </Grid>
         <Grid>
           <RegionSelect
-            currentCapability="Managed Databases"
+            currentCapability={isDatabasesV2Enabled ? V2 : V1}
             disableClearable
             errorText={errors.region}
             onChange={(e, region) => setFieldValue('region', region.id)}
@@ -522,6 +562,7 @@ const DatabaseCreate = () => {
             className={classes.selectPlanPanel}
             data-qa-select-plan
             error={errors.type}
+            handleTabChange={handleTabChange}
             header="Choose a Plan"
             isCreate
             regionsData={regionsData}
@@ -623,6 +664,7 @@ const DatabaseCreate = () => {
           Create Database Cluster
         </Button>
       </Grid>
+      {isDatabasesV2Enabled && <DatabaseLogo />}
     </form>
   );
 };
