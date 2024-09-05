@@ -13,7 +13,7 @@ import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
 import { TagDrawer } from './TagDrawer';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps } from '@mui/material';
 
 export interface TagCellProps {
   /**

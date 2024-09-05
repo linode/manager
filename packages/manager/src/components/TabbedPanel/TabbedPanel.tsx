@@ -1,6 +1,5 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
@@ -14,6 +13,8 @@ import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
 import { Box } from '../Box';
+
+import type { SxProps } from '@mui/material';
 
 export interface Tab {
   disabled?: boolean;

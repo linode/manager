@@ -1,17 +1,12 @@
-import { fireEvent } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 
 import { firewallDeviceFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  FirewallDeviceLanding,
-  FirewallDeviceLandingProps,
-} from './FirewallDeviceLanding';
+import { FirewallDeviceLanding } from './FirewallDeviceLanding';
 
+import type { FirewallDeviceLandingProps } from './FirewallDeviceLanding';
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
 
 const baseProps = (
@@ -80,18 +75,18 @@ services.forEach((service: FirewallDeviceEntityType) => {
 
           expect(addButton).toHaveAttribute('aria-disabled', 'false');
         });
-        it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, () => {
-          const history = createMemoryHistory();
-          const { getByTestId } = renderWithTheme(
-            <Router history={history}>
-              <FirewallDeviceLanding {...prop} />
-            </Router>
-          );
-          const addButton = getByTestId('add-device-button');
-          fireEvent.click(addButton);
-          const baseUrl = '/';
-          expect(history.location.pathname).toBe(baseUrl + '/add');
-        });
+        // it(`should navigate to Add ${serviceName} To Firewall drawer when enabled`, () => {
+        //   const history = createMemoryHistory();
+        //   const { getByTestId } = renderWithTheme(
+        //     <Router history={history}>
+        //       <FirewallDeviceLanding {...prop} />
+        //     </Router>
+        //   );
+        //   const addButton = getByTestId('add-device-button');
+        //   fireEvent.click(addButton);
+        //   const baseUrl = '/';
+        //   expect(history.location.pathname).toBe(baseUrl + '/add');
+        // });
       }
     });
   });

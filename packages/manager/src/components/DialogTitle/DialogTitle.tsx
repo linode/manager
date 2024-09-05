@@ -1,10 +1,11 @@
 import Close from '@mui/icons-material/Close';
-import { Box } from 'src/components/Box';
 import _DialogTitle from '@mui/material/DialogTitle';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
+
+import type { SxProps } from '@mui/material';
 
 interface DialogTitleProps {
   className?: string;

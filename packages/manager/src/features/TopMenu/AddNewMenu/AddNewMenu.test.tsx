@@ -1,7 +1,5 @@
 import { fireEvent } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -30,25 +28,15 @@ describe('AddNewMenu', () => {
     expect(menuItem).toBeInTheDocument();
   });
 
-  test('navigates to Linode create page on Linode menu item click', () => {
-    // Create a mock history object
-    const history = createMemoryHistory();
-
-    // Render the component with the Router and history
-    const { getByText } = renderWithTheme(
-      <Router history={history}>
-        <AddNewMenu />
-      </Router>
-    );
+  test('the linode menu item links to the linode create page', () => {
+    const { getByText } = renderWithTheme(<AddNewMenu />);
 
     const createButton = getByText('Create');
     fireEvent.click(createButton);
 
     const menuItem = getByText('Linode');
-    fireEvent.click(menuItem);
 
-    // Assert that the history's location has changed to the expected URL
-    expect(history.location.pathname).toBe('/linodes/create');
+    expect(menuItem.closest('a')).toHaveAttribute('href', '/linodes/create');
   });
 
   test('does not render hidden menu items', () => {

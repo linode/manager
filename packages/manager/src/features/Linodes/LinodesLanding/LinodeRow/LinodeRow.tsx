@@ -32,7 +32,7 @@ import {
 } from './LinodeRow.styles';
 
 import type { LinodeHandlers } from '../LinodesLanding';
-import type { SxProps } from '@mui/system';
+import type { SxProps } from '@mui/material';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface Props extends LinodeWithMaintenance {

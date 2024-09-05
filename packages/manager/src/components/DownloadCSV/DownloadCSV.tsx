@@ -1,4 +1,3 @@
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 
@@ -6,6 +5,7 @@ import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
+import type { SxProps } from '@mui/material';
 import type { ButtonType } from 'src/components/Button/Button';
 
 interface DownloadCSVProps {

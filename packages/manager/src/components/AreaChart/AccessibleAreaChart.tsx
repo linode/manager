@@ -1,7 +1,7 @@
-import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { visuallyHidden } from 'src/foundations/themes/light';
 
 import { getAccessibleTimestamp } from './utils';
 

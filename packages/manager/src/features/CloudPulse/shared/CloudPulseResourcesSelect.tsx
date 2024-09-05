@@ -1,4 +1,4 @@
-import deepEqual from 'fast-deep-equal';
+import { equals } from 'ramda';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -136,7 +136,7 @@ function compareProps(
   }
 
   // Deep comparison for xFilter
-  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
+  if (!equals(prevProps.xFilter, nextProps.xFilter)) {
     return false;
   }
 

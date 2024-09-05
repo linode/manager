@@ -1,17 +1,15 @@
 import Close from '@mui/icons-material/Close';
 import Grid from '@mui/material/Unstable_Grid2';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import {
-  DismissibleNotificationOptions,
-  useDismissibleNotifications,
-} from 'src/hooks/useDismissibleNotifications';
+import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 
 import { StyledButton, StyledNotice } from './DismissibleBanner.styles';
 
+import type { SxProps } from '@mui/material';
 import type { NoticeProps } from 'src/components/Notice/Notice';
+import type { DismissibleNotificationOptions } from 'src/hooks/useDismissibleNotifications';
 
 interface Props {
   /**

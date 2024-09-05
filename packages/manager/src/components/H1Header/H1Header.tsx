@@ -1,7 +1,8 @@
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
+
+import type { SxProps } from '@mui/material';
 
 interface H1HeaderProps {
   className?: string;

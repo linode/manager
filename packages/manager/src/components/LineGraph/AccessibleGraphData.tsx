@@ -2,11 +2,11 @@
  * ONLY USED IN THE LINE GRAPH COMPONENT (Longview)
  * Delete when LineGraph is sunsetted
  */
-import { visuallyHidden } from '@mui/utils';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
+import { visuallyHidden } from 'src/foundations/themes/light';
 
 import type { ChartData, ChartPoint } from 'chart.js';
 

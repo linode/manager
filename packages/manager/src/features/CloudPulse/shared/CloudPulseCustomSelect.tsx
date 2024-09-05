@@ -1,4 +1,4 @@
-import deepEqual from 'fast-deep-equal';
+import { equals } from 'ramda';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -239,7 +239,7 @@ function compareProps(
   }
 
   // Deep comparison for options
-  if (!deepEqual(prevProps.options, nextProps.options)) {
+  if (!equals(prevProps.options, nextProps.options)) {
     return false;
   }
 

@@ -40,7 +40,7 @@
   "browser": "./lib/index.global.js",
   "unpkg": "./lib/index.global.js",
   "dependencies": {
-    "@linode/validation": "*",
+    "@linode/validation": "workspace:*",
     "axios": "~1.7.4",
     "ipaddr.js": "^2.0.0",
     "yup": "^0.32.9"

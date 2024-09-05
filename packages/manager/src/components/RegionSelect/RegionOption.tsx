@@ -1,4 +1,3 @@
-import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
 import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
@@ -7,6 +6,7 @@ import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { visuallyHidden } from 'src/foundations/themes/light';
 
 import {
   SelectedIcon,

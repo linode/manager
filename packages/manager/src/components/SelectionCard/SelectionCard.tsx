@@ -1,11 +1,12 @@
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme, styled } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
 
 import { CardBase } from './CardBase';
+
+import type { SxProps, Theme } from '@mui/material';
 
 export interface SelectionCardProps {
   /**

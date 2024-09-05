@@ -11,7 +11,7 @@ import { IconButton } from 'src/components/IconButton';
 import { Tooltip, tooltipClasses } from 'src/components/Tooltip';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps } from '@mui/material';
 import type { TooltipProps } from 'src/components/Tooltip';
 
 type TooltipIconStatus =

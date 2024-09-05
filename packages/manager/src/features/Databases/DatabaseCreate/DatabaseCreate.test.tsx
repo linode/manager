@@ -1,7 +1,5 @@
 import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 
 import { databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -57,15 +55,11 @@ describe('Database Create', () => {
       })
     );
 
-    // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-    const history = createMemoryHistory();
-    history.push('databases/create');
 
-    const { getAllByText, getByTestId } = renderWithTheme(
-      <Router history={history}>
-        <DatabaseCreate />
-      </Router>
-    );
+    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
+      MemoryRouter: { initialEntries: ["/databases/create"] },
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 

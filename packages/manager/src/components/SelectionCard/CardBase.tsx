@@ -8,7 +8,7 @@ import {
   CardBaseSubheading,
 } from './CardBase.styles';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps } from '@mui/material';
 
 export interface CardBaseProps {
   checked?: boolean;

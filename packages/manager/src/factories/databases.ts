@@ -1,5 +1,3 @@
-import { v4 } from 'uuid';
-
 import Factory from 'src/factories/factoryProxy';
 import { pickRandom, randomDate } from 'src/utilities/random';
 
@@ -239,7 +237,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
 export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   created: Factory.each(() => randomDate().toISOString()),
   id: Factory.each((i) => i),
-  label: Factory.each(() => `backup-${v4()}`),
+  label: Factory.each((i) => `backup-${i}`),
   type: pickRandom(['snapshot', 'auto']),
 });
 

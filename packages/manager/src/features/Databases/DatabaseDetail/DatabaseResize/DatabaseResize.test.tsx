@@ -3,9 +3,7 @@ import {
   queryByAttribute,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -101,13 +99,16 @@ describe('database resize', () => {
     });
 
     it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
-      const history = createMemoryHistory();
-      history.push(`databases/${database.engine}/${database.id}/resize`);
       const { container, getByTestId, getByText } = renderWithTheme(
-        <Router history={history}>
-          <DatabaseResize database={database} />
-        </Router>
+        <DatabaseResize database={database} />,
+        {
+          // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
+          MemoryRouter: {
+            initialEntries: [
+              `/databases/${database.engine}/${database.id}/resize`,
+            ],
+          },
+        }
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const getById = queryByAttribute.bind(null, 'id');

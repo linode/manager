@@ -1,7 +1,7 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import _Button, { ButtonProps as _ButtonProps } from '@mui/material/Button';
 import { Theme, styled } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
+import { SxProps } from '@mui/material';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/reload.svg';
