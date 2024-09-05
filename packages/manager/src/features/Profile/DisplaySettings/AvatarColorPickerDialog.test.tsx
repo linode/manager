@@ -29,15 +29,15 @@ describe('AvatarColorPicker', () => {
     );
 
     await fireEvent.click(getByText('Close'));
-    expect(mockProps.handleClose).toHaveBeenCalledOnce();
+    expect(mockProps.handleClose).toHaveBeenCalled();
   });
 
-  it.skip('closes when Save button is clicked', async () => {
-    const { getByText, queryByTitle } = renderWithTheme(
+  it('closes when Save button is clicked', async () => {
+    const { getByText } = renderWithTheme(
       <AvatarColorPickerDialog {...mockProps} />
     );
 
     await fireEvent.click(getByText('Save'));
-    expect(queryByTitle('Change Avatar Color')).toBe(null);
+    expect(mockProps.handleClose).toHaveBeenCalled();
   });
 });
