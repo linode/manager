@@ -13,11 +13,9 @@ authenticate();
 describe('linode networking', () => {
   /**
    * - Confirms the success toast message after editing RDNS
-   * Note: this test is only to confirm the toast message and
-   * intentionally doesn't edit the RDNS form
    */
-  it('can edit the RDNS of an IP address', () => {
-    const mockLinode = linodeFactory.build({});
+  it('checks for the toast message upon editing an RDNS', () => {
+    const mockLinode = linodeFactory.build();
     const linodeIPv4 = mockLinode.ipv4[0];
     const mockRDNS = `${linodeIPv4}.ip.linodeusercontent.com`;
     const ipAddress = ipAddressFactory.build({
@@ -73,7 +71,9 @@ describe('linode networking', () => {
           'be.visible'
         );
 
-        // click Save button
+        // click Save button - this test is only to confirm the toast message
+        // and intentionally doesn't edit the RDNS form. Note - although we're using
+        // mocks here, with actual data, I would get an error each time I tried to edit the RDNS
         cy.findByText('Save').should('be.visible').should('be.enabled').click();
       });
 
