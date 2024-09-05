@@ -502,7 +502,8 @@ export const VolumeCreate = () => {
             <Button
               disabled={
                 disabled ||
-                (!linodeSupportsBlockStorageEncryption &&
+                (isBlockStorageEncryptionFeatureEnabled &&
+                  !linodeSupportsBlockStorageEncryption &&
                   values.encryption === 'enabled')
               }
               tooltipText={
