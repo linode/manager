@@ -32,7 +32,7 @@ interface Context {
   regions: Region[] | undefined;
 }
 
-export const ManageImageRegionsForm = (props: Props) => {
+export const ManageImageReplicasForm = (props: Props) => {
   const { image, onClose } = props;
 
   const imageRegionIds = image?.regions.map(({ region }) => region) ?? [];

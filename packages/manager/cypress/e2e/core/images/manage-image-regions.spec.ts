@@ -9,7 +9,7 @@ import { ui } from 'support/ui';
 import type { Image, Region } from '@linode/api-v4';
 import { extendRegion } from 'support/util/regions';
 
-describe('Manage Image Regions', () => {
+describe('Manage Image Replicas', () => {
   /**
    * Adds two new regions to an Image (region3 and region4)
    * and removes one existing region (region 1).
@@ -76,7 +76,7 @@ describe('Manage Image Regions', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        // Close the Manage Regions drawer
+        // Close the Manage Replicas drawer
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')

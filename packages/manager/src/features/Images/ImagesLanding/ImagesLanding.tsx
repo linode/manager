@@ -47,7 +47,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
-import { ManageImageRegionsForm } from './ImageRegions/ManageImageRegionsForm';
+import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
@@ -221,8 +221,8 @@ export const ImagesLanding = () => {
   const [selectedImageId, setSelectedImageId] = React.useState<string>();
 
   const [
-    isManageRegionsDrawerOpen,
-    setIsManageRegionsDrawerOpen,
+    isManageReplicasDrawerOpen,
+    setIsManageReplicasDrawerOpen,
   ] = React.useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
   const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = React.useState(false);
@@ -349,7 +349,7 @@ export const ImagesLanding = () => {
     onManageRegions: multiRegionsEnabled
       ? (image) => {
           setSelectedImageId(image.id);
-          setIsManageRegionsDrawerOpen(true);
+          setIsManageReplicasDrawerOpen(true);
         }
       : undefined,
     onRestore: (image) => {
@@ -599,13 +599,13 @@ export const ImagesLanding = () => {
         open={isRebuildDrawerOpen}
       />
       <Drawer
-        onClose={() => setIsManageRegionsDrawerOpen(false)}
-        open={isManageRegionsDrawerOpen}
+        onClose={() => setIsManageReplicasDrawerOpen(false)}
+        open={isManageReplicasDrawerOpen}
         title={`Manage Replicas for ${selectedImage?.label}`}
       >
-        <ManageImageRegionsForm
+        <ManageImageReplicasForm
           image={selectedImage}
-          onClose={() => setIsManageRegionsDrawerOpen(false)}
+          onClose={() => setIsManageReplicasDrawerOpen(false)}
         />
       </Drawer>
       <ConfirmationDialog
