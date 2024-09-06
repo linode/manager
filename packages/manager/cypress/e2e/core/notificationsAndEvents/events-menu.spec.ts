@@ -229,7 +229,7 @@ describe('Notifications Menu', () => {
    * - Confirms event seen logic for non-typical event ordering edge case.
    * - Confirms that Cloud marks the correct event as seen even when it's not the first result.
    */
-  it.skip('Marks events in menu as seen with duplicate created dates and out-of-order IDs', () => {
+  it('Marks events in menu as seen with duplicate created dates and out-of-order IDs', () => {
     /*
      * When several events are triggered simultaneously, they may have the
      * same `created` timestamp. Cloud asks for events to be sorted by created
@@ -266,8 +266,10 @@ describe('Notifications Menu', () => {
       });
     });
 
-    // Get the highest event ID from the array of mock events.
-    const highestEventId = Math.max(...mockEvents.map((event) => event.id));
+    // Sort the mockEvents array by id in descending order to simulate API response
+    mockEvents.sort((a, b) => b.id - a.id);
+
+    const highestEventId = mockEvents[0].id;
 
     mockGetEvents(mockEvents).as('getEvents');
     mockMarkEventSeen(highestEventId).as('markEventsSeen');
