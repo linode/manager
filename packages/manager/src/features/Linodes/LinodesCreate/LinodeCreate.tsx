@@ -4,7 +4,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import cloneDeep from 'lodash.clonedeep';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { v4 } from 'uuid';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
@@ -466,7 +465,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Reset the plan panel since types may have shifted */
 
     this.setState({
-      planKey: v4(),
+      planKey: crypto.randomUUID(),
       selectedTab: index,
     });
   };
@@ -557,7 +556,7 @@ export class LinodeCreate extends React.PureComponent<
     this.state = {
       hasError: false,
       numberOfNodes: 0,
-      planKey: v4(),
+      planKey: crypto.randomUUID(),
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
       stackScriptSelectedTab:
         preSelectedTab === 2 && location.search.search('Community') > -1

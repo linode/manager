@@ -1,5 +1,5 @@
 {
-  "name": "linode-manager",
+  "name": "@linode/manager",
   "author": "Linode",
   "description": "The Linode Manager website",
   "version": "1.127.0",
@@ -85,15 +85,14 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "start": "concurrently --raw \"vite\" \"tsc --watch --preserveWatchOutput\"",
+    "dev": "concurrently --raw \"vite\" \"tsc --watch --preserveWatchOutput\"",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
-    "start:ci": "yarn serve ./build -p 3000 -s --cors",
-    "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
+    "start:ci": "serve ./build -p 3000 -s --cors",
+    "lint": "eslint . --ext .js,.ts,.tsx --quiet",
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",
-    "precommit": "lint-staged && yarn typecheck",
+    "precommit": "lint-staged && pnpm typecheck",
     "test": "vitest run",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",
     "build-storybook": "storybook build",
