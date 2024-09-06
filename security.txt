@@ -1,4 +1,0 @@
-Contact: disclosure@linode.com
-Encryption: https://keybase.io/linodesecurity/pgp_keys.asc
-Policy: https://hackerone.com/linode
-Hiring: https://linode.com/careers
