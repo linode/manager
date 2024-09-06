@@ -8,7 +8,7 @@ import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useGravatar } from 'src/hooks/useGravatar';
-import { useAccountUser } from 'src/queries/account/users';
+import { useProfile } from 'src/queries/profile/profile';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import { StyledGravatar } from './EventRow.styles';
@@ -33,9 +33,9 @@ export const EventRow = (props: EventRowProps) => {
     message: getEventMessage(event),
     username: getEventUsername(event),
   };
-  const { data: user } = useAccountUser(username);
+  const { data: profile } = useProfile();
 
-  const hasGravatar = useGravatar(user?.email);
+  const hasGravatar = useGravatar(profile?.email);
 
   if (!message) {
     return null;

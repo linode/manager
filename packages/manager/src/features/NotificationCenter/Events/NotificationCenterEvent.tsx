@@ -9,7 +9,7 @@ import {
   getEventUsername,
 } from 'src/features/Events/utils';
 import { useGravatar } from 'src/hooks/useGravatar';
-import { useAccountUser } from 'src/queries/account/users';
+import { useProfile } from 'src/queries/profile/profile';
 
 import {
   NotificationEventAvatar,
@@ -33,8 +33,9 @@ export const NotificationCenterEvent = React.memo(
     const message = getEventMessage(event);
     const username = getEventUsername(event);
 
-    const { data: user } = useAccountUser(username);
-    const hasGravatar = useGravatar(user?.email);
+    const { data: profile } = useProfile();
+
+    const hasGravatar = useGravatar(profile?.email);
 
     /**
      * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).

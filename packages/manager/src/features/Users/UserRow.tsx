@@ -32,7 +32,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const isProxyUser = Boolean(user.user_type === 'proxy');
   const showChildAccountAccessCol = profile?.user_type === 'parent';
 
-  const hasGravatar = useGravatar(user?.email);
+  const hasGravatar = useGravatar(profile?.email);
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
