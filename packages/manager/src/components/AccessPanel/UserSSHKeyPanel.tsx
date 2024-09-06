@@ -12,10 +12,10 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { Typography } from 'src/components/Typography';
 import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
+import { useGravatar } from 'src/hooks/useGravatar';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
-import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 import { Avatar } from '../Avatar/Avatar';
@@ -70,10 +70,7 @@ const UserSSHKeyPanel = (props: Props) => {
 
   const { data: profile } = useProfile();
 
-  const [hasGravatar, setHasGravatar] = React.useState(false);
-  checkForGravatar(getGravatarUrl(profile?.email ?? '')).then((res) =>
-    setHasGravatar(res)
-  );
+  const hasGravatar = useGravatar(profile?.email);
 
   const isRestricted = profile?.restricted ?? false;
 

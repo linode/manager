@@ -21,11 +21,11 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
+import { useGravatar } from 'src/hooks/useGravatar';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { getCompanyNameOrEmail } from './utils';
@@ -106,10 +106,7 @@ export const UserMenu = React.memo(() => {
     theme.breakpoints.down('sm')
   );
 
-  const [hasGravatar, setHasGravatar] = React.useState(false);
-  checkForGravatar(getGravatarUrl(profile?.email ?? '')).then((res) =>
-    setHasGravatar(res)
-  );
+  const hasGravatar = useGravatar(profile?.email);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

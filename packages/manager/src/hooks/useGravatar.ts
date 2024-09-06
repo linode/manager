@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 export function useGravatar(email: string | undefined) {
-  const [hasGravatar, setHasGravatar] = useState(true);
+  const [hasGravatar, setHasGravatar] = useState(false);
 
   useEffect(() => {
     if (email) {

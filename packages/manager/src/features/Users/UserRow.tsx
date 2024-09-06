@@ -11,10 +11,10 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { useGravatar } from 'src/hooks/useGravatar';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalize } from 'src/utilities/capitalize';
-import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 import { UsersActionMenu } from './UsersActionMenu';
 
@@ -28,14 +28,11 @@ interface Props {
 export const UserRow = ({ onDelete, user }: Props) => {
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
-  const [hasGravatar, setHasGravatar] = React.useState(false);
 
   const isProxyUser = Boolean(user.user_type === 'proxy');
   const showChildAccountAccessCol = profile?.user_type === 'parent';
 
-  checkForGravatar(getGravatarUrl(user?.email ?? '')).then((res) =>
-    setHasGravatar(res)
-  );
+  const hasGravatar = useGravatar(user?.email);
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>

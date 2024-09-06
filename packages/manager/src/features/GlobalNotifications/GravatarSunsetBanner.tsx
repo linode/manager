@@ -1,9 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Typography } from 'src/components/Typography';
-import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
+import { useGravatar } from 'src/hooks/useGravatar';
 
 interface Props {
   email: string;
@@ -12,9 +11,8 @@ interface Props {
 export const GravatarSunsetBanner = (props: Props) => {
   const { email } = props;
   const GRAVATAR_DEPRECATION_DATE = 'September 28th, 2024';
-  const [hasGravatar, setHasGravatar] = useState(false);
 
-  checkForGravatar(getGravatarUrl(email)).then((res) => setHasGravatar(res));
+  const hasGravatar = useGravatar(email);
 
   if (!hasGravatar) {
     return;

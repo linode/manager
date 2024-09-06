@@ -8,8 +8,8 @@ import {
   getEventMessage,
   getEventUsername,
 } from 'src/features/Events/utils';
+import { useGravatar } from 'src/hooks/useGravatar';
 import { useAccountUser } from 'src/queries/account/users';
-import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 import {
   NotificationEventAvatar,
@@ -34,10 +34,7 @@ export const NotificationCenterEvent = React.memo(
     const username = getEventUsername(event);
 
     const { data: user } = useAccountUser(username);
-    const [hasGravatar, setHasGravatar] = React.useState(false);
-    checkForGravatar(getGravatarUrl(user?.email ?? '')).then((res) =>
-      setHasGravatar(res)
-    );
+    const hasGravatar = useGravatar(user?.email);
 
     /**
      * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).

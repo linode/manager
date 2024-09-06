@@ -8,8 +8,8 @@ import UserIcon from 'src/assets/icons/account.svg';
 import { Avatar as NewAvatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Typography } from 'src/components/Typography';
+import { useGravatar } from 'src/hooks/useGravatar';
 import { useProfile } from 'src/queries/profile/profile';
-import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 import { Hively, shouldRenderHively } from './Hively';
 import { TicketDetailText } from './TicketDetailText';
@@ -112,11 +112,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
 
   const { data: profile } = useProfile();
 
-  const [hasGravatar, setHasGravatar] = React.useState(false);
-
-  checkForGravatar(getGravatarUrl(reply?.created_by ?? '')).then((res) =>
-    setHasGravatar(res)
-  );
+  const hasGravatar = useGravatar(reply?.created_by);
 
   React.useEffect(() => {
     if (!ticket && !reply) {

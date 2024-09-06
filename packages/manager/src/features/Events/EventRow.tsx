@@ -7,9 +7,9 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useGravatar } from 'src/hooks/useGravatar';
 import { useAccountUser } from 'src/queries/account/users';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
-import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 import { StyledGravatar } from './EventRow.styles';
 import {
@@ -34,17 +34,14 @@ export const EventRow = (props: EventRowProps) => {
     username: getEventUsername(event),
   };
   const { data: user } = useAccountUser(username);
-  const [hasGravatar, setHasGravatar] = React.useState(false);
+
+  const hasGravatar = useGravatar(user?.email);
 
   if (!message) {
     return null;
   }
 
   const { progressEventDisplay, showProgress } = formatProgressEvent(event);
-
-  checkForGravatar(getGravatarUrl(user?.email ?? '')).then((res) =>
-    setHasGravatar(res)
-  );
 
   return (
     <TableRow data-qa-event-row data-test-id={action}>

@@ -1,6 +1,5 @@
 import { updateUser } from '@linode/api-v4/lib/account';
 import { styled, useTheme } from '@mui/material/styles';
-import { useState } from 'react';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -17,9 +16,9 @@ import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTe
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+import { useGravatar } from 'src/hooks/useGravatar';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
-import { checkForGravatar, getGravatarUrl } from 'src/utilities/gravatar';
 
 import { AvatarColorPickerDialog } from './AvatarColorPickerDialog';
 import { TimezoneForm } from './TimezoneForm';
@@ -39,10 +38,7 @@ export const DisplaySettings = () => {
 
   const isProxyUser = profile?.user_type === 'proxy';
 
-  const [hasGravatar, setHasGravatar] = useState(false);
-  checkForGravatar(getGravatarUrl(profile?.email ?? '')).then((res: boolean) =>
-    setHasGravatar(res)
-  );
+  const hasGravatar = useGravatar(profile?.email);
 
   const [
     isColorPickerDialogOpen,
