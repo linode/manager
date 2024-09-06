@@ -55,10 +55,6 @@ describe('Linode create flow with Placement Group', () => {
     mockGetRegions(mockRegions).as('getRegions');
     // TODO Remove feature flag mocks when `placementGroups` flag is retired.
     mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
-        beta: true,
-        enabled: true,
-      }),
       linodeCreateRefactor: makeFeatureFlagData<Flags['linodeCreateRefactor']>(
         false
       ),

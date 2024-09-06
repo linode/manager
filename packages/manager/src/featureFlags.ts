@@ -107,7 +107,6 @@ export interface Flags {
   objectStorageGen2: BaseFeatureFlag;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
-  placementGroups: BetaFeatureFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
