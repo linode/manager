@@ -27,7 +27,7 @@ interface TabbedPanelProps {
   copy?: string;
   docsLink?: JSX.Element;
   error?: JSX.Element | string;
-  handleTabChange?: () => void;
+  handleTabChange?: (index: number) => void;
   header: string;
   initTab?: number;
   innerClass?: string;
@@ -66,7 +66,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   const tabChangeHandler = (index: number) => {
     setTabIndex(index);
     if (handleTabChange) {
-      handleTabChange();
+      handleTabChange(index);
     }
   };
 
