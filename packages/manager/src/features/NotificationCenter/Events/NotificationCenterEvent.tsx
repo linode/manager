@@ -58,7 +58,7 @@ export const NotificationCenterEvent = React.memo(
         {hasGravatar ? (
           <NotificationEventGravatar username={event.username} />
         ) : (
-          <NotificationEventAvatar username={event.username ?? ''} />
+          <NotificationEventAvatar username={event.username ?? 'Linode'} />
         )}
         <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
           {message}
