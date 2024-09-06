@@ -54,29 +54,25 @@ describe('SelectableTableRow', () => {
     expect(defaultArgs.handleToggleCheck).toHaveBeenCalled();
   });
 
-  it('should show checked checkbox correctly if checked', () => {
-    const { getByRole } = render(
-      wrapWithTableBody(
-        <SelectableTableRow {...defaultArgs} isChecked={true} />
-      )
-    );
+  it.each([
+    [true, 'checked'],
+    [false, 'unchecked'],
+  ])(
+    'should correctly reflect the checkbox state when isChecked is %s',
+    (isChecked) => {
+      const { getByRole } = render(
+        wrapWithTableBody(
+          <SelectableTableRow {...defaultArgs} isChecked={isChecked} />
+        )
+      );
 
-    const checkbox = getByRole('checkbox', {
-      name: ariaLabel,
-    });
+      const checkbox = getByRole('checkbox', { name: ariaLabel });
 
-    expect(checkbox).toBeChecked();
-  });
-
-  it('should show unchecked checkbox correctly if unchecked', () => {
-    const { getByRole } = render(
-      wrapWithTableBody(<SelectableTableRow {...defaultArgs} />)
-    );
-
-    const checkbox = getByRole('checkbox', {
-      name: ariaLabel,
-    });
-
-    expect(checkbox).not.toBeChecked();
-  });
+      if (isChecked) {
+        expect(checkbox).toBeChecked();
+      } else {
+        expect(checkbox).not.toBeChecked();
+      }
+    }
+  );
 });
