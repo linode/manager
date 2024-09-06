@@ -2,9 +2,11 @@
  * @file Mocks and intercepts related to notification and event handling.
  */
 
-import type { Event, Notification } from '@linode/api-v4';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
+
+import type { Event, Notification } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch events and mocks response.
@@ -18,6 +20,21 @@ export const mockGetEvents = (events: Event[]): Cypress.Chainable => {
     'GET',
     apiMatcher('account/events*'),
     paginateResponse(events)
+  );
+};
+
+/**
+ * Intercepts POST request to mark an event as seen and mocks response.
+ *
+ * @param eventId - ID of the event for which to intercept request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockMarkEventSeen = (eventId: number): Cypress.Chainable => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/events/${eventId}/seen`),
+    makeResponse({})
   );
 };
 
