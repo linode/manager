@@ -195,7 +195,6 @@ describe('volume create flow', () => {
 
     cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
       (linode: Linode) => {
-        linode.capabilities?.map((capability) => cy.log(capability));
         mockGetVolumes([volume]).as('getVolumes');
         mockGetVolume(volume);
 
