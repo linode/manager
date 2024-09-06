@@ -15,11 +15,17 @@ import { apiMatcher } from 'support/util/intercepts';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { authenticate } from 'support/api/authentication';
 import { mockGetLinodes } from 'support/intercepts/linodes';
-import { userPreferencesFactory } from '@src/factories';
+import { userPreferencesFactory, profileFactory } from '@src/factories';
+import { accountUserFactory } from '@src/factories/accountUsers';
+import { grantsFactory } from '@src/factories/grants';
+import { mockGetUser } from 'support/intercepts/account';
 import {
   mockGetUserPreferences,
   mockUpdateUserPreferences,
+  mockGetProfile,
+  mockGetProfileGrants,
 } from 'support/intercepts/profile';
+import { randomLabel } from 'support/util/random';
 
 const mockLinodes = new Array(5).fill(null).map(
   (_item: null, index: number): Linode => {
@@ -384,5 +390,109 @@ describe('linode landing checks', () => {
     cy.findByText('Region:').should('not.exist');
     cy.findByText('Linode ID:').should('not.exist');
     cy.findByText('Created:').should('not.exist');
+  });
+});
+
+describe('linode landing checks for empty state', () => {
+  beforeEach(() => {
+    // Mock setup to display the Linode landing page in an empty state
+    mockGetLinodes([]).as('getLinodes');
+  });
+
+  it('checks empty state on linode landing page', () => {
+    // Login and wait for application to load
+    cy.visitWithLogin(routes.linodeLanding);
+    cy.wait('@getLinodes');
+    cy.url().should('endWith', routes.linodeLanding);
+
+    // Aliases created for accessing child elements during assertions
+    cy.get('div[data-qa-placeholder-container="resources-section"]').as(
+      'resourcesSection'
+    );
+    cy.get('@resourcesSection')
+      .get('h1[data-qa-header]')
+      .contains('Linodes')
+      .as('linodesHeader');
+
+    // Assert that fields with Linodes and Cloud-based virtual machines text are visible
+    cy.get('@linodesHeader').should('be.visible');
+    cy.get('@linodesHeader')
+      .next('h2')
+      .should('be.visible')
+      .should('have.text', 'Cloud-based virtual machines');
+
+    //Assert that recommended section is visible - Getting Started Guides, Deploy an App and Video Playlist
+    cy.get('@resourcesSection')
+      .contains('h2', 'Getting Started Guides')
+      .should('be.visible');
+    cy.get('@resourcesSection')
+      .contains('h2', 'Deploy an App')
+      .should('be.visible');
+    cy.get('@resourcesSection')
+      .contains('h2', 'Video Playlist')
+      .should('be.visible');
+
+    // Assert that Create Linode button is visible and enabled
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .and('be.enabled');
+
+    // Assert that List of Liondes table does not exist
+    cy.get('table[aria-label="List of Linodes"]').should('not.exist');
+
+    // Assert that Docs link does not exist
+    cy.get(
+      'a[aria-label="Docs - link opens in a new tab"][data-testid="external-link"]'
+    ).should('not.exist');
+
+    // Assert that Download CSV button does not exist
+    cy.get('span[data-testid="loadingIcon"]')
+      .contains('Download CSV')
+      .should('not.exist');
+  });
+
+  it('checks restricted user has no access to create linode on linode landing page', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: true,
+    });
+
+    const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
+      restricted: true,
+      user_type: 'default',
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_linodes: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+
+    // Login and wait for application to load
+    cy.visitWithLogin(routes.linodeLanding);
+    cy.wait('@getLinodes');
+    cy.url().should('endWith', routes.linodeLanding);
+
+    // Assert that Create Linode button is visible and disabled
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .and('be.disabled')
+      .trigger('mouseover');
+
+    // Assert that tooltip is visible with message
+    ui.tooltip
+      .findByText(
+        "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
+      )
+      .should('be.visible');
   });
 });
