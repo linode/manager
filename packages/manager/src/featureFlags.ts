@@ -54,8 +54,9 @@ interface BetaFeatureFlag extends BaseFeatureFlag {
   beta: boolean;
 }
 
-interface GaFeatureFlag extends BaseFeatureFlag {
+interface GeckoFeatureFlag extends BaseFeatureFlag {
   ga: boolean;
+  la: boolean;
 }
 
 interface AclpFlag {
@@ -92,8 +93,7 @@ export interface Flags {
   databases: boolean;
   dbaasV2: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
-  gecko: boolean; // @TODO gecko: delete this after next release
-  gecko2: GaFeatureFlag;
+  gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
   ipv6Sharing: boolean;
