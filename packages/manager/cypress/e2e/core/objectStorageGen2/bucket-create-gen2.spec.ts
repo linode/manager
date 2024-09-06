@@ -16,9 +16,28 @@ import {
   regionFactory,
 } from 'src/factories';
 import { chooseRegion } from 'support/util/regions';
-import type { ObjectStorageEndpoint } from '@linode/api-v4';
+import type {
+  ObjectStorageEndpoint,
+  ObjectStorageEndpointTypes,
+} from '@linode/api-v4';
 
 describe('Object Storage Gen2 create bucket tests', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      objMultiCluster: true,
+      objectStorageGen2: { enabled: true },
+    }).as('getFeatureFlags');
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: [
+          'Object Storage',
+          'Object Storage Endpoint Types',
+          'Object Storage Access Key Regions',
+        ],
+      })
+    ).as('getAccount');
+  });
+
   // Moved these constants to top of scope - they will likely be used for other obj storage gen2 bucket create tests
   const mockRegions = regionFactory.buildList(10, {
     capabilities: ['Object Storage'],
@@ -53,6 +72,36 @@ describe('Object Storage Gen2 create bucket tests', () => {
     }),
   ];
 
+  const checkRateLimitsTable = (endpointType: ObjectStorageEndpointTypes) => {
+    const expectedHeaders = ['Limits', 'GET', 'PUT', 'LIST', 'DELETE', 'OTHER'];
+    const expectedBasicValues = ['Basic', '2,000', '500', '100', '200', '400'];
+    const expectedHighValues =
+      endpointType === 'E3'
+        ? ['High', '20,000', '2,000', '400', '400', '1,000']
+        : ['High', '5,000', '1,000', '200', '200', '800'];
+
+    cy.get('[data-testid="bucket-rate-limit-table"]').within(() => {
+      expectedHeaders.forEach((header, index) => {
+        cy.get('th').eq(index).should('contain.text', header);
+      });
+
+      cy.contains('tr', 'Basic').within(() => {
+        expectedBasicValues.forEach((value, index) => {
+          cy.get('td').eq(index).should('contain.text', value);
+        });
+      });
+
+      cy.contains('tr', 'High').within(() => {
+        expectedHighValues.forEach((value, index) => {
+          cy.get('td').eq(index).should('contain.text', value);
+        });
+      });
+
+      // Check that Basic radio button is checked
+      cy.findByLabelText('Basic').should('be.checked');
+    });
+  };
+
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E0
    * Confirms all endpoints are displayed regardless if there's multiple of the same type
@@ -83,15 +132,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
       objMultiCluster: true,
       objectStorageGen2: { enabled: true },
     }).as('getFeatureFlags');
-    mockGetAccount(
-      accountFactory.build({
-        capabilities: [
-          'Object Storage',
-          'Object Storage Endpoint Types',
-          'Object Storage Access Key Regions',
-        ],
-      })
-    ).as('getAccount');
 
     mockGetObjectStorageEndpoints(mockEndpoints).as(
       'getObjectStorageEndpoints'
@@ -222,20 +262,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
       region: mockRegion.id,
     }).as('createBucket');
 
-    mockAppendFeatureFlags({
-      objMultiCluster: true,
-      objectStorageGen2: { enabled: true },
-    }).as('getFeatureFlags');
-    mockGetAccount(
-      accountFactory.build({
-        capabilities: [
-          'Object Storage',
-          'Object Storage Endpoint Types',
-          'Object Storage Access Key Regions',
-        ],
-      })
-    ).as('getAccount');
-
     mockGetObjectStorageEndpoints(mockEndpoints).as(
       'getObjectStorageEndpoints'
     );
@@ -277,69 +303,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
         cy.get('[data-testid="bucket-rate-limit-table"]').should('exist');
 
         // Confirm that basic rate limits table is displayed
-        cy.get('[data-testid="bucket-rate-limit-table"]').within(() => {
-          const expectedHeaders = [
-            'Limits',
-            'GET',
-            'PUT',
-            'LIST',
-            'DELETE',
-            'OTHER',
-          ];
-          const expectedBasicValues = [
-            'Basic',
-            '2,000',
-            '500',
-            '100',
-            '200',
-            '400',
-          ];
-          const expectedHighValues = [
-            'High',
-            '5,000',
-            '1,000',
-            '200',
-            '200',
-            '800',
-          ];
-
-          // Check visible elements first
-          cy.findByText('Limits').should('be.visible');
-
-          // Function to check a row of values
-          const checkRowValues = (rowIndex: number, values: string[]) => {
-            cy.findAllByRole('row')
-              .eq(rowIndex)
-              .within(() => {
-                values.forEach((value, columnIndex) => {
-                  if (columnIndex === 0) {
-                    // First column should always be visible
-                    cy.findByText(value).should('be.visible');
-                  } else {
-                    // For other columns, use column index to avoid ambiguity
-                    cy.get(
-                      `td:nth-child(${columnIndex + 1}), th:nth-child(${
-                        columnIndex + 1
-                      })`
-                    )
-                      .scrollIntoView()
-                      .should('be.visible')
-                      .and('contain.text', value);
-                  }
-                });
-              });
-          };
-
-          // Assert that the table has the expected values
-          checkRowValues(0, expectedHeaders);
-          checkRowValues(1, expectedBasicValues);
-          checkRowValues(2, expectedHighValues);
-
-          cy.findByText('Limits').scrollIntoView();
-
-          // Confirm that basic radio button is checked by default
-          cy.findByLabelText('Basic').should('be.checked');
-        });
+        checkRateLimitsTable(mockBucket.endpoint_type!);
 
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
@@ -412,20 +376,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
       region: mockRegion.id,
     }).as('createBucket');
 
-    mockAppendFeatureFlags({
-      objMultiCluster: true,
-      objectStorageGen2: { enabled: true },
-    }).as('getFeatureFlags');
-    mockGetAccount(
-      accountFactory.build({
-        capabilities: [
-          'Object Storage',
-          'Object Storage Endpoint Types',
-          'Object Storage Access Key Regions',
-        ],
-      })
-    ).as('getAccount');
-
     mockGetObjectStorageEndpoints(mockEndpoints).as(
       'getObjectStorageEndpoints'
     );
@@ -468,69 +418,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
         cy.get('[data-testid="bucket-rate-limit-table"]').should('exist');
 
         // Confirm that basic rate limits table is displayed
-        cy.get('[data-testid="bucket-rate-limit-table"]').within(() => {
-          const expectedHeaders = [
-            'Limits',
-            'GET',
-            'PUT',
-            'LIST',
-            'DELETE',
-            'OTHER',
-          ];
-          const expectedBasicValues = [
-            'Basic',
-            '2,000',
-            '500',
-            '100',
-            '200',
-            '400',
-          ];
-          const expectedHighValues = [
-            'High',
-            '20,000',
-            '2,000',
-            '400',
-            '400',
-            '1,000',
-          ];
-
-          // Check visible elements first
-          cy.findByText('Limits').should('be.visible');
-
-          // Function to check a row of values
-          const checkRowValues = (rowIndex: number, values: string[]) => {
-            cy.findAllByRole('row')
-              .eq(rowIndex)
-              .within(() => {
-                values.forEach((value, columnIndex) => {
-                  if (columnIndex === 0) {
-                    // First column should always be visible
-                    cy.findByText(value).should('be.visible');
-                  } else {
-                    // For other columns, use column index to avoid ambiguity
-                    cy.get(
-                      `td:nth-child(${columnIndex + 1}), th:nth-child(${
-                        columnIndex + 1
-                      })`
-                    )
-                      .scrollIntoView()
-                      .should('be.visible')
-                      .and('contain.text', value);
-                  }
-                });
-              });
-          };
-
-          // Assert that the table has the expected values
-          checkRowValues(0, expectedHeaders);
-          checkRowValues(1, expectedBasicValues);
-          checkRowValues(2, expectedHighValues);
-
-          cy.findByText('Limits').scrollIntoView();
-
-          // Confirm that basic radio button is checked by default
-          cy.findByLabelText('Basic').should('be.checked');
-        });
+        checkRateLimitsTable(mockBucket.endpoint_type!);
 
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
