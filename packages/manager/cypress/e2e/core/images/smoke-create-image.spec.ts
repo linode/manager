@@ -107,6 +107,6 @@ describe('create image (using mocks)', () => {
     cy.wait('@getEvents');
 
     // Verify a success toast shows
-    ui.toast.assertMessage('Image My Config successfully created.');
+    ui.toast.assertMessage('Image My Config has been created.');
   });
 });
