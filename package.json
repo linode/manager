@@ -9,7 +9,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn workspaces run precommit"
+      "pre-commit": "pnpm run --paralell precommit"
     }
   },
   "scripts": {
