@@ -115,7 +115,7 @@ export const DisplaySettings = () => {
             )}
             <div>
               <Typography sx={{ fontSize: '1rem' }} variant="h2">
-                Profile photo
+                {hasGravatar ? 'Profile photo' : 'Avatar'}
                 {hasGravatar && (
                   <StyledTooltipIcon
                     sxTooltipIcon={{
@@ -131,7 +131,7 @@ export const DisplaySettings = () => {
               <StyledProfileCopy variant="body1">
                 {hasGravatar
                   ? 'Create, upload, and manage your globally recognized avatar from a single place with Gravatar.'
-                  : 'Your profile photo is automatically generated using the first character of your username.'}
+                  : 'Your avatar is automatically generated using the first character of your username.'}
               </StyledProfileCopy>
               {hasGravatar ? (
                 <StyledAddImageLink external to="https://en.gravatar.com/">
