@@ -12,6 +12,7 @@ const props = {
   isSearching: false,
   label: labelVal,
   onSearch: vi.fn(),
+  value: '',
 };
 
 describe('Debounced Search Text Field', () => {

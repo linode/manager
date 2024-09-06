@@ -2,12 +2,15 @@ import Clear from '@mui/icons-material/Clear';
 import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
-import { TextField, TextFieldProps } from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
 import { IconButton } from '../IconButton';
+
+import type { TextFieldProps } from 'src/components/TextField';
 
 export interface DebouncedSearchProps extends TextFieldProps {
   className?: string;
@@ -15,15 +18,6 @@ export interface DebouncedSearchProps extends TextFieldProps {
    * Whether to show a clear button at the end of the input.
    */
   clearable?: boolean;
-  /**
-   * Including this prop will disable this field from being self-managed.
-   * The user must then manage the state of the text field and provide a
-   * value and change handler.
-   */
-  customValue?: {
-    onChange: (newValue: string | undefined) => void;
-    value: string | undefined;
-  };
   /**
    * Interval in milliseconds of time that passes before search queries are accepted.
    * @default 400
@@ -39,8 +33,9 @@ export interface DebouncedSearchProps extends TextFieldProps {
   /**
    * Function to perform when searching for query
    */
-  onSearch?: (query: string) => void;
+  onSearch: (query: string) => void;
   placeholder?: string;
+  value: string;
 }
 
 export const DebouncedSearchTextField = React.memo(
@@ -49,7 +44,6 @@ export const DebouncedSearchTextField = React.memo(
       InputProps,
       className,
       clearable,
-      customValue,
       debounceTime,
       defaultValue,
       hideLabel,
@@ -57,25 +51,28 @@ export const DebouncedSearchTextField = React.memo(
       label,
       onSearch,
       placeholder,
+      value,
       ...restOfTextFieldProps
     } = props;
 
-    // Manage the textfield state if customValue is not provided
-    const managedValue = React.useState<string | undefined>();
-    const [textFieldValue, setTextFieldValue] = customValue
-      ? [customValue.value, customValue.onChange]
-      : managedValue;
+    const [textFieldValue, setTextFieldValue] = React.useState<string>('');
 
+    // Memoize the debounced onChange handler to prevent unnecessary re-creations.
+    const debouncedOnChange = React.useMemo(
+      () =>
+        debounce(debounceTime ?? 400, (e) => {
+          onSearch(e.target.value);
+          setTextFieldValue(e.target.value);
+        }),
+      [debounceTime, onSearch]
+    );
+
+    // Synchronize the internal state with the prop value when the value prop changes.
     React.useEffect(() => {
-      if (textFieldValue != undefined) {
-        const timeout = setTimeout(
-          () => onSearch && onSearch(textFieldValue),
-          debounceTime !== undefined ? debounceTime : 400
-        );
-        return () => clearTimeout(timeout);
+      if (value && value !== textFieldValue) {
+        setTextFieldValue(value);
       }
-      return undefined;
-    }, [debounceTime, onSearch, textFieldValue]);
+    }, [value]);
 
     return (
       <TextField
@@ -88,8 +85,11 @@ export const DebouncedSearchTextField = React.memo(
             clearable &&
             textFieldValue && (
               <IconButton
+                onClick={() => {
+                  setTextFieldValue('');
+                  onSearch('');
+                }}
                 aria-label="Clear"
-                onClick={() => setTextFieldValue('')}
                 size="small"
               >
                 <Clear
@@ -114,7 +114,7 @@ export const DebouncedSearchTextField = React.memo(
         defaultValue={defaultValue}
         hideLabel={hideLabel}
         label={label}
-        onChange={(e) => setTextFieldValue(e.target.value)}
+        onChange={debouncedOnChange}
         placeholder={placeholder || 'Filter by query'}
         value={textFieldValue}
         {...restOfTextFieldProps}
