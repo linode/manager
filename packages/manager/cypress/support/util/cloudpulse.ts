@@ -1,20 +1,28 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
-import 'cypress-wait-until';
-import { aggregation, aggregationConfig } from 'support/constants/aggregation';
+import { accountFactory, profileFactory } from '@src/factories';
+import { accountUserFactory } from '@src/factories/accountUsers';
 import { granularity } from 'support/constants/granularity';
 import { timeRange } from 'support/constants/timerange';
+import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
+import {
+  interceptGetDashBoards,
+  interceptGetMetricDefinitions,
+  interceptGetResources,
+  interceptMetricAPI,
+} from 'support/intercepts/cloudpulseAPIHandler';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 
-export const dashboardName = 'Linode Service I/O Statistics';
+import type { Flags } from 'src/featureFlags';
+export const dashboardName = 'Linode Dashboard';
 export const region = 'US, Chicago, IL (us-ord)';
 export const actualRelativeTimeDuration = timeRange.Last24Hours;
 export const resource = 'test1';
-
 /**
  * This class provides utility functions for interacting with the Cloudpulse dashboard
  * in a Cypress test suite. It includes methods for:
@@ -25,74 +33,89 @@ export const resource = 'test1';
  * - Performing actions like zooming in and out on widgets
  * These utilities ensure efficient and consistent test execution and validation.
  */
-export const cloudpulseTestData = [
-  {
-    expectedAggregation: aggregation.Max,
-    expectedAggregationArray: aggregationConfig.all,
-    expectedGranularity: granularity.Hr1,
-    expectedGranularityArray: Object.values(granularity),
-    name: 'system_disk_OPS_total',
-    title: 'Disk I/O',
-  },
-  {
-    expectedAggregation: aggregation.Max,
-    expectedAggregationArray: aggregationConfig.all,
-    expectedGranularity: granularity.Hr1,
-    expectedGranularityArray: Object.values(granularity),
-    name: 'system_network_io_by_resource',
-    title: 'Network Traffic',
-  },
-  {
-    expectedAggregation: aggregation.Max,
-    expectedAggregationArray: aggregationConfig.all,
-    expectedGranularity: granularity.Hr1,
-    expectedGranularityArray: Object.values(granularity),
-    name: 'system_memory_usage_by_resource',
-    title: 'Memory Usage',
-  },
-  {
-    expectedAggregation: aggregation.Max,
-    expectedAggregationArray: aggregationConfig.basic,
-    expectedGranularity: granularity.Hr1,
-    expectedGranularityArray: Object.values(granularity),
-    name: 'system_cpu_utilization_percent',
-    title: 'CPU Utilization',
-  },
-];
 
+ interface MetricResponse {
+  data: {
+    result: Array<{
+      metric: Record<string, any>;
+      values: [number, string][];
+    }>;
+    resultType: string;
+  };
+  isPartial: boolean;
+  stats: {
+    executionTimeMsec: number;
+    seriesFetched: string;
+  };
+  status: string;
+}
 /**
- * Navigates to the Cloudpulse dashboard and waits for the page to load.
+ * Generates a mock metric response based on the specified time range and granularity.
+ * 
+ * This function:
+ * 1. Determines the time interval based on the granularity (e.g., 5 minutes, 1 hour, 1 day).
+ * 2. Calculates the time range in seconds based on the specified time range (e.g., last 12 hours, last 30 days).
+ * 3. Creates a series of random metric values for the given time range at the specified interval.
+ * 4. Returns a mock response object containing the generated metric data.
+ * 
+ * @param {string} time - The time range for the metric data (e.g., "Last12Hours").
+ * @param {string} granularityData - The granularity of the metric data (e.g., "Min5").
+ * @returns {MetricResponse} - The generated mock metric response.
  */
-export const navigateToCloudpulse = () => {
-  mockAppendFeatureFlags({ aclp: makeFeatureFlagData(true) }).as(
-    'getFeatureFlags'
+export const createMetricResponse = (
+  time: string,
+  granularityData: string
+): MetricResponse => {
+  const currentTime = Math.floor(Date.now() / 1000);
+
+  const intervals: Record<string, number> = {
+    [granularity.Auto]: 3600,
+    [granularity.Day1]: 86400,
+    [granularity.Hr1]: 3600,
+    [granularity.Min5]: 5 * 60,
+  };
+
+  const timeRanges: Record<string, number> = {
+    [timeRange.Last7Days]: 7 * 24 * 3600,
+    [timeRange.Last12Hours]: 12 * 3600,
+    [timeRange.Last24Hours]: 24 * 3600,
+    [timeRange.Last30Days]: 30 * 24 * 3600,
+    [timeRange.Last30Minutes]: 30 * 60,
+  };
+
+  const interval =
+    intervals[granularityData] ||
+    (() => {
+      throw new Error(`Unsupported granularity: ${granularityData}`);
+    })();
+  const timeRangeInSeconds =
+    timeRanges[time] ||
+    (() => {
+      throw new Error(`Unsupported time range: ${time}`);
+    })();
+  const startTime = currentTime - timeRangeInSeconds;
+
+  const values: [number, string][] = Array.from(
+    { length: Math.ceil(timeRangeInSeconds / interval) + 1 },
+    (_, i) => {
+      const timestamp = startTime + i * interval;
+      const value = (Math.random() * 100).toFixed(2);
+      return [timestamp, value];
+    }
   );
-  mockGetFeatureFlagClientstream().as('getClientStream');
 
-  cy.visitWithLogin('/monitor/cloudpulse', {
-    onLoad: (contentWindow: Window) => {
-      if (contentWindow.document.readyState !== 'complete') {
-        throw new Error('Page did not load completely');
-      }
+  return {
+    data: {
+      result: [{ metric: {}, values }],
+      resultType: 'matrix',
     },
-    timeout: 500,
-  });
-
-  cy.wait(['@getFeatureFlags', '@getClientStream']);
-  cy.url().should('include', '/monitor/cloudpulse');
-  waitForPageToLoad();
-};
-
-/**
- * Waits for the Cloudpulse page to fully load and checks that key elements are visible.
- */
-export const waitForPageToLoad = () => {
-  cy.get('[data-testid="circle-progress"]').should('not.exist');
-
-  const keyElementsSelectors = ['[data-testid="textfield-input"]'];
-  keyElementsSelectors.forEach((selector) => {
-    cy.get(selector).should('be.visible');
-  });
+    isPartial: false,
+    stats: {
+      executionTimeMsec: 53,
+      seriesFetched: '6',
+    },
+    status: 'success',
+  };
 };
 
 /**
@@ -105,7 +128,6 @@ export const visitCloudPulseWithFeatureFlagsDisabled = () => {
     'getFeatureFlags'
   );
   mockGetFeatureFlagClientstream().as('getClientStream');
-
   cy.findByLabelText('Monitor').should('not.exist');
 };
 
@@ -118,13 +140,8 @@ export const selectServiceName = (serviceName: string) => {
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Open')
     .click();
-  ui.autocomplete
-    .findByPlaceholderCustom('Select Dashboard')
-    .type(`${serviceName}{enter}`);
-
-  // ui.autocompletePopper.findByTitle(serviceName).should('be.visible').click();
+  ui.autocomplete .findByPlaceholderCustom('Select Dashboard').type(`${serviceName}{enter}`);
 };
-
 /**
  * Selects a region from the region dropdown.
  * @param {string} region - The name of the region to select.
@@ -132,7 +149,6 @@ export const selectServiceName = (serviceName: string) => {
 export const selectRegion = (region: string) => {
   ui.regionSelect.find().click().type(`${region}{enter}`);
 };
-
 /**
  * Selects a time range from the time range dropdown.
  * @param {string} timeRange - The time range to select.
@@ -144,18 +160,15 @@ export const selectTimeRange = (timeRange: string) => {
     .click();
   ui.autocompletePopper.findByTitle(timeRange).should('be.visible').click();
 };
-
 /**
  * Selects a resource name from the resources dropdown and verifies the selection.
  * @param {string} service - The name of the service to select.
  */
-export const selectAndVerifyServiceName = (service: string) => {
+export const selectAndVerifyResource  = (service: string) => {
   const resourceInput = ui.autocomplete.findByTitleCustom('Select Resources');
   resourceInput.findByTitle('Open').click();
   resourceInput.click().type(`${service}{enter}`);
-  // resourceInput.findByTitle('Close').click();
 };
-
 /**
  * Asserts that the selected options match the expected values.
  * @param {string} expectedOptions - The expected options to verify.
@@ -163,40 +176,48 @@ export const selectAndVerifyServiceName = (service: string) => {
 export const assertSelections = (expectedOptions: string) => {
   expect(cy.get(`[value*='${expectedOptions}']`), expectedOptions);
 };
-
 /**
  * Applies a global refresh action on the dashboard.
  */
-export const applyGlobalRefresh = () => {
+export const performGlobalRefresh = () => {
   ui.cloudpulse.findRefreshIcon().click();
 };
 /**
  * Clears the dashboard's preferences and verifies the zeroth page.
  * @param {string} serviceName - The name of the service to verify.
  */
-export const verifyZerothPage = (serviceName: string) => {
+export const resetDashboardAndVerifyPage = (serviceName: string) => {
   ui.autocomplete
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Open')
     .click();
-  ui.autocompletePopper.findByTitle(serviceName).should('be.visible').click();
+  ui.autocomplete .findByPlaceholderCustom('Select Dashboard').type(`${serviceName}{enter}`);
   ui.autocomplete
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Clear')
     .click();
 };
-
 /**
  * Validates that the widget title matches the expected title.
- * @param {string} widgetName - The name of the widget to verify.
+ *
+ * This function locates a widget on the page using its `data-qa-widget` attribute,
+ * finds the `h1` element within the widget, and checks that its text content matches
+ * the expected widget name. It also returns the actual text content of the `h1` element.
+ *
+ * @param {string} widgetName - The expected name of the widget to verify. This is used to
+ *                              construct the selector and to check the title of the widget.
+ *
+ * @returns {Cypress.Chainable<string>} A Cypress chainable object that resolves to the
+ *                                      text content of the `h1` element within the widget.
  */
 export const validateWidgetTitle = (widgetName: string) => {
   const widgetSelector = `[data-qa-widget="${widgetName}"]`;
-  cy.get(widgetSelector)
+  return cy
+    .get(widgetSelector)
     .find('h1')
     .invoke('text')
-    .then((actualTitle) => {
-      expect(actualTitle.trim()).to.equal(widgetName);
+    .then((text) => {
+      expect(text.trim()).to.equal(widgetName);
     });
 };
 
@@ -223,7 +244,6 @@ export const setGranularity = (widgetName: string, granularity: string) => {
       assertSelections(granularity);
     });
 };
-
 /**
  * Sets the aggregation function of a widget.
  * @param {string} widgetName - The name of the widget to set aggregation for.
@@ -246,13 +266,11 @@ export const setAggregation = (widgetName: string, aggregation: string) => {
       assertSelections(aggregation);
     });
 };
-
 /**
  * Verifies that the granularity options available for a widget match the expected options.
  * @param {string} widgetName - The name of the widget to verify.
  * @param {string[]} expectedGranularityOptions - The expected granularity options.
  */
-
 export const verifyGranularity = (
   widgetName: string,
   expectedGranularityOptions: string[]
@@ -321,7 +339,7 @@ export const verifyAggregation = (
  * Verifies that zoom in and zoom out actions are available and performs them on a widget.
  * @param {string} widgetName - The name of the widget to zoom in or out.
  */
-export const verifyZoomInOut = (widgetName: string) => {
+export const checkZoomActions = (widgetName: string) => {
   const widgetSelector = `[data-qa-widget="${widgetName}"]`;
   const zoomInSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-in');
   const zoomOutSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-out');
@@ -332,7 +350,6 @@ export const verifyZoomInOut = (widgetName: string) => {
       const zoomOutAvailable = $el.find(zoomOutSelector).length > 0;
 
       if (zoomInAvailable) {
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.wrap($el)
           .find(zoomInSelector)
           .should('be.visible')
@@ -356,4 +373,47 @@ export const verifyZoomInOut = (widgetName: string) => {
       }
     });
   });
+};
+
+const mockParentProfile = profileFactory.build({
+  user_type: 'parent',
+  username: 'mock-user@linode.com',
+});
+
+const mockParentUser = accountUserFactory.build({
+  user_type: 'default',
+  username: mockParentProfile.email,
+});
+const mockParentAccount = accountFactory.build({
+  company: 'Parent Company',
+});
+/**
+ * Sets up mock data and intercepts for user-related tests.
+ * 
+ * This function:
+ * 1. Mocks responses for user profile, account, and user data APIs.
+ * 2. Configures feature flags for testing.
+ * 3. Mocks the feature flag client stream.
+ * 4. Visits the specified page with a logged-in user.
+ * 5. Sets up intercepts for various API calls and aliases them for testing.
+ * 
+ * This ensures a controlled environment for testing user-related functionality.
+ */
+export const initializeMockUserData = () => {
+  mockGetProfile(mockParentProfile);
+  mockGetAccount(mockParentAccount);
+  mockGetUser(mockParentUser);
+  mockAppendFeatureFlags({
+    aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
+  });
+  mockGetFeatureFlagClientstream();
+  cy.visitWithLogin('monitor/cloudpulse');
+  interceptGetMetricDefinitions().as('dashboardMetricsData');
+  interceptGetDashBoards().as('dashboard');
+  interceptGetResources().as('resourceData');
+  const responsePayload = createMetricResponse(
+    actualRelativeTimeDuration,
+    granularity.Min5
+  );
+  interceptMetricAPI(responsePayload).as('metricAPI');
 };

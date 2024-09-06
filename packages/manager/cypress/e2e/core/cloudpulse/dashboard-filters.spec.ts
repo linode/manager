@@ -1,18 +1,17 @@
 import {
-  navigateToCloudpulse,
   selectServiceName,
   selectRegion,
   selectTimeRange,
-  selectAndVerifyServiceName,
+  selectAndVerifyResource,
   assertSelections,
   visitCloudPulseWithFeatureFlagsDisabled,
   dashboardName,
   actualRelativeTimeDuration,
   region,
   resource,
-  verifyZerothPage,
+  resetDashboardAndVerifyPage,
+  initializeMockUserData,
 } from 'support/util/cloudpulse';
-
 /**
  * This test suite focuses on the standard operations and verifications for the Cloudpulse dashboard.
  *
@@ -26,7 +25,7 @@ import {
 
 describe('Standard Dashboard Filter Application and Configuration Tests', () => {
   beforeEach(() => {
-    navigateToCloudpulse();
+    initializeMockUserData();
   });
 
   it('should verify cloudpulse availability when feature flag is set to false', () => {
@@ -34,7 +33,7 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
   });
 
   it('should clear the preferences of the dashboard', () => {
-    verifyZerothPage(dashboardName);
+    resetDashboardAndVerifyPage(dashboardName);
   });
   it('should set and verify dashboard name', () => {
     selectServiceName(dashboardName);
@@ -51,6 +50,6 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
   });
 
   it('should set and verify resource', () => {
-    selectAndVerifyServiceName(resource);
+    selectAndVerifyResource(resource);
   });
-});
+ });
