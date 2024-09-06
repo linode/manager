@@ -2288,6 +2288,22 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
+  http.post('*/monitor/alerts', async ({ request }) => {
+    const reqBody = await request.json();
+    const response = {
+      data: [
+        {
+          created: '2021-10-16T04:00:00',
+          created_by: 'user1',
+          id: '35892357',
+          reqBody,
+          updated: '2021-10-16T04:00:00',
+          updated_by: 'user2',
+        },
+      ],
+    };
+    return HttpResponse.json(response);
+  }),
   http.get('*/monitor/services/:serviceType/dashboards', () => {
     const response = {
       data: [

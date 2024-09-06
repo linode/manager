@@ -132,3 +132,20 @@ export interface ServiceTypes {
 export interface ServiceTypesList {
   data: ServiceTypes[];
 }
+
+export interface CreateAlertDefinitionPayload {
+  name: string;
+  description?: string;
+  severity: string;
+}
+
+export interface Alert {
+  id: number;
+  name: string;
+  description: string;
+  severity: string;
+  created_by: string;
+  updated_by: string;
+  created: string;
+  updated: string;
+}
