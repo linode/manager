@@ -136,11 +136,11 @@ export const useResizeVolumeMutation = () => {
   return useMutation<Volume, APIError[], ResizeVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => resizeVolume(volumeId, data),
     onSuccess(volume) {
-      // Invalidate the specific volume
-      queryClient.invalidateQueries({
-        queryKey: volumeQueries.volume(volume.id).queryKey,
-      });
-
+      // Update the specific volume
+      queryClient.setQueryData<Volume>(
+        volumeQueries.volume(volume.id).queryKey,
+        volume
+      );
       // Invalidate all lists
       queryClient.invalidateQueries({
         queryKey: volumeQueries.lists.queryKey,
@@ -232,11 +232,11 @@ export const useUpdateVolumeMutation = () => {
   return useMutation<Volume, APIError[], UpdateVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => updateVolume(volumeId, data),
     onSuccess(volume) {
-      // Invalidate the specific volume
-      queryClient.invalidateQueries({
-        queryKey: volumeQueries.volume(volume.id).queryKey,
-      });
-
+      // Update the specific volume
+      queryClient.setQueryData<Volume>(
+        volumeQueries.volume(volume.id).queryKey,
+        volume
+      );
       // Invalidate all lists
       queryClient.invalidateQueries({
         queryKey: volumeQueries.lists.queryKey,
@@ -260,11 +260,11 @@ export const useAttachVolumeMutation = () => {
   return useMutation<Volume, APIError[], AttachVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => attachVolume(volumeId, data),
     onSuccess(volume) {
-      // Invalidate the specific volume
-      queryClient.invalidateQueries({
-        queryKey: volumeQueries.volume(volume.id).queryKey,
-      });
-
+      // Update the specific volume
+      queryClient.setQueryData<Volume>(
+        volumeQueries.volume(volume.id).queryKey,
+        volume
+      );
       // Invalidate all lists
       queryClient.invalidateQueries({
         queryKey: volumeQueries.lists.queryKey,
@@ -280,15 +280,8 @@ export const useAttachVolumeMutation = () => {
   });
 };
 
-export const useDetachVolumeMutation = (volumeId: number) => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
-    mutationFn: () => detachVolume(volumeId),
-    onSuccess() {
-      // Invalidate the volume
-      queryClient.invalidateQueries({
-        queryKey: volumeQueries.volume(volumeId).queryKey,
-      });
-    },
+export const useDetachVolumeMutation = () => {
+  return useMutation<{}, APIError[], { id: number }>({
+    mutationFn: ({ id }) => detachVolume(id),
   });
 };

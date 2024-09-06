@@ -32,10 +32,10 @@ export const DetachVolumeDialog = (props: Props) => {
     error,
     isPending,
     mutateAsync: detachVolume,
-  } = useDetachVolumeMutation(volume?.id ?? -1);
+  } = useDetachVolumeMutation();
 
   const onDetach = () => {
-    detachVolume().then(() => {
+    detachVolume({ id: volume?.id ?? -1 }).then(() => {
       onClose();
       checkForNewEvents();
       enqueueSnackbar(`Volume detachment started`, {
