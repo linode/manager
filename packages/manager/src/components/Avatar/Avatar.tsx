@@ -54,7 +54,8 @@ export const Avatar = (props: AvatarProps) => {
   const { data: profile } = useProfile();
 
   const _username = username ?? profile?.username ?? '';
-  const isAkamai = /^Linode$|^lke-service-account*/.test(_username);
+  const isAkamai =
+    _username === 'Linode' || _username.startsWith('lke-service-account');
 
   const savedAvatarColor =
     isAkamai || !preferences?.avatarColor
