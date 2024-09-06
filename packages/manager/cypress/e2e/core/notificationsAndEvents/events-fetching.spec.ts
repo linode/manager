@@ -110,7 +110,10 @@ describe('Event fetching and polling', () => {
 
     const mockEvent = eventFactory.build({
       id: randomNumber(10000, 99999),
-      created: DateTime.now().minus({ minutes: 5 }).toISO(),
+      created: DateTime.now()
+        .minus({ minutes: 5 })
+        .startOf('second') // Helps with matching the timestamp at the start of the second
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss"),
       duration: null,
       rate: null,
       percent_complete: null,
@@ -172,7 +175,10 @@ describe('Event fetching and polling', () => {
 
     const mockEventBasic = eventFactory.build({
       id: randomNumber(10000, 99999),
-      created: DateTime.now().minus({ minutes: 5 }).toISO(),
+      created: DateTime.now()
+        .minus({ minutes: 5 })
+        .startOf('second') // Helps with matching the timestamp at the start of the second
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss"),
       duration: null,
       rate: null,
       percent_complete: null,
