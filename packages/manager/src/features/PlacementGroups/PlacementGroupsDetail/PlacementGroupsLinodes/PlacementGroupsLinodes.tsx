@@ -90,12 +90,11 @@ export const PlacementGroupsLinodes = (props: Props) => {
       <Grid container justifyContent="space-between">
         <Grid flexGrow={1} sm={6} sx={{ mb: 1 }} xs={12}>
           <DebouncedSearchTextField
-            onSearch={(value) => {
-              setSearchText(value);
-            }}
+            clearable
             debounceTime={250}
             hideLabel
             label="Search Linodes"
+            onSearch={setSearchText}
             placeholder="Search Linodes"
             value={searchText}
           />

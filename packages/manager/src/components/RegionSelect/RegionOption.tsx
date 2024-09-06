@@ -35,7 +35,7 @@ export const RegionOption = ({
   const { className, onClick } = props;
   const isRegionDisabled = Boolean(disabledOptions);
   const isRegionDisabledReason = disabledOptions?.reason;
-  const { isGeckoBetaEnabled, isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
   const displayDistributedRegionIcon =
     isGeckoBetaEnabled && region.site_type === 'distributed';
 
@@ -78,7 +78,7 @@ export const RegionOption = ({
             <StyledFlagContainer>
               <Flag country={region.country} />
             </StyledFlagContainer>
-            {isGeckoGAEnabled ? region.label : `${region.label} (${region.id})`}
+            {isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`}
             {displayDistributedRegionIcon && (
               <Box sx={visuallyHidden}>
                 &nbsp;(This region is a distributed region.)
@@ -88,7 +88,7 @@ export const RegionOption = ({
               <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
             )}
           </Box>
-          {isGeckoGAEnabled && `(${region.id})`}
+          {isGeckoLAEnabled && `(${region.id})`}
           {selected && <SelectedIcon visible />}
           {displayDistributedRegionIcon && (
             <TooltipIcon
