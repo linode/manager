@@ -87,7 +87,7 @@ describe('volume delete flow', () => {
         // Confirm that volume is deleted.
         cy.wait('@deleteVolume').its('response.statusCode').should('eq', 200);
         cy.findByText(volume.label).should('not.exist');
-        ui.toast.assertMessage('Volume successfully deleted.');
+        ui.toast.assertMessage(`Volume ${volume.label} has been deleted.`);
       }
     );
   });

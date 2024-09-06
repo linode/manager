@@ -81,9 +81,7 @@ const eventIntercept = (
  * @param message - Expected failure message.
  */
 const assertFailed = (label: string, id: string, message: string) => {
-  ui.toast.assertMessage(
-    `There was a problem uploading image ${label}: ${message}`
-  );
+  ui.toast.assertMessage(`Image ${label} could not be uploaded: ${message}`);
 
   cy.get(`[data-qa-image-cell="${id}"]`).within(() => {
     fbtVisible(label);
