@@ -19,7 +19,20 @@ describe('Event fetching and polling', () => {
     cy.visitWithLogin('/');
     cy.wait('@getEvents').then((xhr) => {
       const filters = xhr.request.headers['x-filter'];
-      const lastWeekTimestamp = DateTime.now().minus({ weeks: 1 }).toISODate();
+      const lastWeekTimestamp = DateTime.now()
+        .minus({ weeks: 1 })
+        .toUTC()
+        .startOf('second') // Helps with matching the timestamp at the start of the second
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+      // Check if the filter includes either the exact second or the second after
+      // We need to account for the fact that it might be rounded up to the next second.
+      const exactSecond = `"created":{"+gt":"${lastWeekTimestamp}"`;
+      const secondAfter = `"created":{"+gt":"${DateTime.fromISO(
+        lastWeekTimestamp
+      )
+        .plus({ seconds: 1 })
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss")}"`;
 
       /*
        * Confirm that initial fetch request contains filters to achieve
@@ -30,11 +43,11 @@ describe('Event fetching and polling', () => {
        * - Sort events by their created date.
        * - Only retrieve events created within the past week.
        */
+      expect(filters).to.satisfy(
+        (f: string) => f.includes(exactSecond) || f.includes(secondAfter)
+      );
       expect(filters).to.contain('"+neq":"profile_update"');
-      //expect(filters).to.contain('"+limit":25');
-      //expect(filters).to.contain('"+order_by":"created"');
       expect(filters).to.contain('"+order_by":"id"');
-      expect(filters).to.contain(`"created":{"+gt":"${lastWeekTimestamp}`);
     });
   });
 
@@ -45,7 +58,11 @@ describe('Event fetching and polling', () => {
   it('Polls events endpoint after initial fetch', () => {
     const mockEvent = eventFactory.build({
       id: randomNumber(10000, 99999),
-      created: DateTime.now().minus({ minutes: 5 }).toISO(),
+      created: DateTime.now()
+        .minus({ minutes: 5 })
+        .toUTC()
+        .startOf('second') // Helps with matching the timestamp at the start of the second
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss"),
       duration: null,
       rate: null,
       percent_complete: null,
@@ -84,7 +101,7 @@ describe('Event fetching and polling', () => {
    * - Confirms that Cloud Manager does not make a request to the events endpoint before 16 seconds have passed.
    * - Confirms Cloud polling rate when there are no in-progress events.
    */
-  it.skip('Polls events at a 16-second interval', () => {
+  it('Polls events at a 16-second interval', () => {
     // Expect Cloud to poll the events endpoint every 16 seconds,
     // and configure the test to check if a request has been made
     // every simulated second for 16 samples total.
@@ -145,7 +162,7 @@ describe('Event fetching and polling', () => {
    * - Confirms that Cloud Manager does not make a request to the events endpoint before 2 seconds have passed.
    * - Confirms Cloud polling rate when there are in-progress events.
    */
-  it.skip('Polls in-progress events at a 2-second interval', () => {
+  it('Polls in-progress events at a 2-second interval', () => {
     // When in-progress events are present, expect Cloud to poll the
     // events endpoint every 2 seconds, and configure the test to check
     // if a request has been made every simulated tenth of a second for
