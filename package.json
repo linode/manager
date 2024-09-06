@@ -7,11 +7,6 @@
     "typescript": "^5.5.4",
     "concurrently": "^8.2.2"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pnpm run --paralell precommit"
-    }
-  },
   "scripts": {
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
     "install:all": "pnpm install",
@@ -42,7 +37,8 @@
     "coverage:summary": "pnpm --filter @linode/manager coverage:summary",
     "junit:summary": "ts-node scripts/junit-summary/index.ts",
     "generate-tod": "ts-node scripts/tod-payload/index.ts",
-    "docs": "bunx vitepress@1.0.0-rc.44 dev docs"
+    "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
+    "prepare": "husky"
   },
   "resolutions": {
     "braces": "^3.0.3",
