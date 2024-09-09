@@ -47,7 +47,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getEventsForImages } from '../utils';
 import { EditImageDrawer } from './EditImageDrawer';
-import { ManageImageRegionsForm } from './ImageRegions/ManageImageRegionsForm';
+import { ManageImageReplicasForm } from './ImageRegions/ManageImageRegionsForm';
 import { ImageRow } from './ImageRow';
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 import { RebuildImageDrawer } from './RebuildImageDrawer';
@@ -221,8 +221,8 @@ export const ImagesLanding = () => {
   const [selectedImageId, setSelectedImageId] = React.useState<string>();
 
   const [
-    isManageRegionsDrawerOpen,
-    setIsManageRegionsDrawerOpen,
+    isManageReplicasDrawerOpen,
+    setIsManageReplicasDrawerOpen,
   ] = React.useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
   const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = React.useState(false);
@@ -349,7 +349,7 @@ export const ImagesLanding = () => {
     onManageRegions: multiRegionsEnabled
       ? (image) => {
           setSelectedImageId(image.id);
-          setIsManageRegionsDrawerOpen(true);
+          setIsManageReplicasDrawerOpen(true);
         }
       : undefined,
     onRestore: (image) => {
@@ -430,7 +430,8 @@ export const ImagesLanding = () => {
           <Typography variant="h3">Custom Images</Typography>
           <Typography className={classes.imageTableSubheader}>
             These are images you manually uploaded or captured from an existing
-            Linode disk.
+            compute instance disk. You can deploy an image to a compute instance
+            in any region.
           </Typography>
         </div>
         <Table>
@@ -450,7 +451,7 @@ export const ImagesLanding = () => {
               {multiRegionsEnabled && (
                 <>
                   <Hidden smDown>
-                    <TableCell>Region(s)</TableCell>
+                    <TableCell>Replicated in</TableCell>
                   </Hidden>
                   <Hidden smDown>
                     <TableCell>Compatibility</TableCell>
@@ -463,11 +464,11 @@ export const ImagesLanding = () => {
                 handleClick={handleManualImagesOrderChange}
                 label="size"
               >
-                Size
+                {multiRegionsEnabled ? 'Original Image' : 'Size'}
               </TableSortCell>
               {multiRegionsEnabled && (
                 <Hidden mdDown>
-                  <TableCell>Total Size</TableCell>
+                  <TableCell>All Replicas</TableCell>
                 </Hidden>
               )}
               <Hidden mdDown>
@@ -598,13 +599,13 @@ export const ImagesLanding = () => {
         open={isRebuildDrawerOpen}
       />
       <Drawer
-        onClose={() => setIsManageRegionsDrawerOpen(false)}
-        open={isManageRegionsDrawerOpen}
-        title={`Manage Regions for ${selectedImage?.label}`}
+        onClose={() => setIsManageReplicasDrawerOpen(false)}
+        open={isManageReplicasDrawerOpen}
+        title={`Manage Replicas for ${selectedImage?.label}`}
       >
-        <ManageImageRegionsForm
+        <ManageImageReplicasForm
           image={selectedImage}
-          onClose={() => setIsManageRegionsDrawerOpen(false)}
+          onClose={() => setIsManageReplicasDrawerOpen(false)}
         />
       </Drawer>
       <ConfirmationDialog
