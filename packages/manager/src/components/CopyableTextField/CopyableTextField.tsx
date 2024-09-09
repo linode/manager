@@ -38,20 +38,12 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
       {...restProps}
       InputProps={{
         endAdornment: hideIcon ? undefined : (
-          <Box display="flex">
+          <StyledIconBox>
             {props.showDownloadIcon && (
-              <DownloadTooltip
-                className="icon"
-                fileName={fileName}
-                text={`${value}`}
-              />
+              <DownloadTooltip fileName={fileName} text={`${value}`} />
             )}
-            <CopyTooltip
-              className="icon"
-              text={`${value}`}
-              {...CopyTooltipProps}
-            />
-          </Box>
+            <CopyTooltip text={`${value}`} {...CopyTooltipProps} />
+          </StyledIconBox>
         ),
       }}
       className={`${className} copy removeDisabledStyles`}
@@ -65,16 +57,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '&.copy > div': {
     backgroundColor: theme.name === 'dark' ? '#2f3236' : '#f4f4f4',
     opacity: 1,
-  },
-  '.icon': {
-    '& :hover': {
-      color: 'inherit',
-    },
-    '& svg': {
-      color: 'inherit',
-      height: 14,
-      top: 1,
-    },
   },
   '.removeDisabledStyles': {
     '& .MuiInput-input': {
@@ -91,6 +73,22 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       opacity: 1,
     },
   },
+}));
+
+const StyledIconBox = styled(Box)(({ theme }) => ({
+  '& button svg': {
+    color: theme.color.grey1,
+    height: 14,
+    top: 1,
+    transition: theme.transitions.create(['color']),
+  },
+  '& button svg:hover': {
+    color: theme.palette.primary.main,
+  },
+  '&:last-child': {
+    marginRight: theme.spacing(0.5),
+  },
+  display: 'flex',
 }));
 
 const snakeCase = (str: string): string => {
