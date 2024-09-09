@@ -159,12 +159,12 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
         ) : (
           <NewAvatar
             color={
-              reply?.created_by !== profile?.username
+              data?.username !== profile?.username
                 ? theme.palette.primary.dark
                 : undefined
             }
             sx={{ marginTop: 1 }}
-            username={reply?.created_by}
+            username={data?.username}
           />
         )}
       </div>

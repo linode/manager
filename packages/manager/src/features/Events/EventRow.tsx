@@ -36,7 +36,6 @@ export const EventRow = (props: EventRowProps) => {
   const { data: profile } = useProfile();
 
   const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
-  // console.log({ isLoadingGravatar }, { hasGravatar });
 
   if (!message) {
     return null;

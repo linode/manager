@@ -16,7 +16,6 @@ export const GravatarByUsername = (props: GravatarByUsernameProps) => {
   const { className, username } = props;
   const { data: user } = useAccountUser(username ?? '');
   const url = user?.email ? getGravatarUrl(user.email) : undefined;
-  // console.log('rendering gravatar', {url})
 
   return (
     <Avatar
