@@ -22,12 +22,19 @@ import {
 } from 'support/intercepts/cloudpulseAPIHandler';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import type { Flags } from 'src/featureFlags';
-import {createMetricResponse} from '@src/factories/widgetFactory'
-import {  mockGetLinodes} from 'support/intercepts/linodes';
+import { createMetricResponse } from '@src/factories/widgetFactory'
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
+  accountFactory,
   kubeLinodeFactory,
   linodeFactory,
 } from 'src/factories';
+
+import {
+  mockGetAccount,
+  mockCancelAccount,
+  mockCancelAccountError,
+} from 'support/intercepts/account';
 /**
  * This test suite focuses on the standard operations and verifications for the Cloudpulse dashboard.
  *
@@ -54,26 +61,20 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
     interceptGetMetricDefinitions().as('dashboardMetricsData');
     interceptGetDashboards().as('dashboard');
     mockGetLinodes([mockLinode]).as('getLinodes');
-    const responsePayload = createMetricResponse(actualRelativeTimeDuration,granularity.Min5);
+    const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     interceptCreateMetrics(responsePayload).as('metricAPI');
+    const mockAccount = accountFactory.build();
+    mockGetAccount(mockAccount).as('getAccount'); // this enables the account to have capability for Akamai Cloud Pulse
   });
 
-  
+
   it.only('should verify cloudpulse availability when feature flag is set to false', () => {
     mockAppendFeatureFlags({
       aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: false }),
     });
     mockGetFeatureFlagClientstream();
-     cy.visitWithLogin('/linodes');
-    cy.get('[data-testid="menu-item-Monitor"]').should('be.visible').invoke('attr', 'href').then((href) => {
-      cy.log("url ******",href)
-      cy.request({
-        url: href,
-        failOnStatusCode: false
-      }).then((response) => {
-        expect(response.status).to.be.equal(404);
-       });
-    });
+    cy.visitWithLogin('monitor/cloudpulse'); // since we disabled the flag here, we should have not found
+    cy.findByText('Not Found').should('be.visible'); // not found
   });
 
   it('should clear the preferences of the dashboard', () => {
@@ -96,4 +97,4 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
   it('should set and verify resource', () => {
     selectAndVerifyResource(resource);
   });
- });
+});
