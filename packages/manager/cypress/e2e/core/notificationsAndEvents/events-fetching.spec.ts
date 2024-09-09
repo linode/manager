@@ -2,7 +2,7 @@
  * @file Integration tests for Cloud Manager's events fetching and polling behavior.
  */
 
-import { mockGetEvents } from 'support/intercepts/events';
+import { mockGetEvents, mockGetEventsPolling } from 'support/intercepts/events';
 import { DateTime } from 'luxon';
 import { eventFactory } from 'src/factories';
 import { randomNumber } from 'support/util/random';
@@ -15,24 +15,21 @@ describe('Event fetching and polling', () => {
    * - Confirms API filters are applied to the request to limit the number and type of events retrieved.
    */
   it('Makes initial fetch to events endpoint', () => {
+    const mockNow = DateTime.now();
+
     mockGetEvents([]).as('getEvents');
+
+    cy.clock(mockNow.toJSDate());
     cy.visitWithLogin('/');
     cy.wait('@getEvents').then((xhr) => {
       const filters = xhr.request.headers['x-filter'];
-      const lastWeekTimestamp = DateTime.now()
+      const lastWeekTimestamp = mockNow
         .minus({ weeks: 1 })
         .toUTC()
         .startOf('second') // Helps with matching the timestamp at the start of the second
         .toFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-      // Check if the filter includes either the exact second or the second after
-      // We need to account for the fact that it might be rounded up to the next second.
-      const exactSecond = `"created":{"+gt":"${lastWeekTimestamp}"`;
-      const secondAfter = `"created":{"+gt":"${DateTime.fromISO(
-        lastWeekTimestamp
-      )
-        .plus({ seconds: 1 })
-        .toFormat("yyyy-MM-dd'T'HH:mm:ss")}"`;
+      const timestampFilter = `"created":{"+gt":"${lastWeekTimestamp}"`;
 
       /*
        * Confirm that initial fetch request contains filters to achieve
@@ -43,9 +40,7 @@ describe('Event fetching and polling', () => {
        * - Sort events by their created date.
        * - Only retrieve events created within the past week.
        */
-      expect(filters).to.satisfy(
-        (f: string) => f.includes(exactSecond) || f.includes(secondAfter)
-      );
+      expect(filters).to.contain(timestampFilter);
       expect(filters).to.contain('"+neq":"profile_update"');
       expect(filters).to.contain('"+order_by":"id"');
     });
@@ -107,56 +102,46 @@ describe('Event fetching and polling', () => {
     // every simulated second for 16 samples total.
     const expectedPollingInterval = 16_000;
     const pollingSamples = 16;
+    const mockNow = DateTime.now();
+    const mockNowTimestamp = mockNow
+      .toUTC()
+      .startOf('second') // Helps with matching the timestamp at the start of the second
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     const mockEvent = eventFactory.build({
       id: randomNumber(10000, 99999),
       created: DateTime.now()
         .minus({ minutes: 5 })
-        .startOf('second') // Helps with matching the timestamp at the start of the second
         .toFormat("yyyy-MM-dd'T'HH:mm:ss"),
       duration: null,
       rate: null,
       percent_complete: null,
     });
 
-    // Visit Cloud Manager, and wait for Cloud to fire its first two
-    // requests to the `events` endpoint: the initial request, and the
-    // initial polling request.
     mockGetEvents([mockEvent]).as('getEventsInitialFetches');
-    cy.clock();
-    cy.visitWithLogin('/');
-    cy.tick(10000);
 
-    // Wait for Cloud to make its initial 2 requests to the events endpoint
-    // before we begin monitoring polling intervals.
-    cy.wait(['@getEventsInitialFetches', '@getEventsInitialFetches']);
+    // We need access to the `clock` object directly since we cannot call `cy.clock()` inside
+    // a `should(() => {})` callback because Cypress commands are disallowed there.
+    cy.clock(mockNow.toJSDate()).then((clock) => {
+      cy.visitWithLogin('/');
 
-    // Set up intercept and mock for subsequent events requests.
-    mockGetEvents([mockEvent]).as('getEventsPoll');
+      // Confirm that Cloud manager polls the requests endpoint no more than
+      // once every 16 seconds.
+      mockGetEventsPolling([mockEvent], mockNowTimestamp).as('getEventsPoll');
+      for (let i = 0; i < pollingSamples; i += 1) {
+        cy.log(
+          `Confirming that Cloud has not made events request... (${
+            i + 1
+          }/${pollingSamples})`
+        );
+        cy.get('@getEventsPoll.all').should('have.length', 0);
+        cy.tick(expectedPollingInterval / pollingSamples, { log: false });
+      }
 
-    // Simulate a time lapse of 16 seconds, asserting that no request
-    // has been made to the events endpoint during the interim.
-    for (let i = 0; i < pollingSamples; i += 1) {
-      cy.log(
-        `Confirming that Cloud has not made events request... (${
-          i + 1
-        }/${pollingSamples})`
-      );
-      cy.get('@getEventsPoll.all').should('have.length', 0);
-      cy.tick(expectedPollingInterval / pollingSamples, { log: false });
-
-      // Give Cloud Manager a chance to fire a request by waiting 50ms.
-      // Without this wait, we can get false positives because Cypress won't
-      // recognize the request to the events endpoint even if Cloud fires one.
-      // Adding this call to `cy.wait` ensures that Cypress intercepts any
-      // outgoing events requests that might be made erroneously.
-      cy.wait(50, { log: false });
-    }
-
-    // Confirm that Cloud makes expected polling request now that expected
-    // interval has passed.
-    cy.wait('@getEventsPoll');
-    cy.get('@getEventsPoll.all').should('have.length', 1);
+      cy.tick(50);
+      cy.wait('@getEventsPoll');
+      cy.get('@getEventsPoll.all').should('have.length', 1);
+    });
   });
 
   /**
@@ -172,6 +157,11 @@ describe('Event fetching and polling', () => {
     // 20 samples total.
     const expectedPollingInterval = 2_000;
     const pollingSamples = 20;
+    const mockNow = DateTime.now();
+    const mockNowTimestamp = mockNow
+      .toUTC()
+      .startOf('second') // Helps with matching the timestamp at the start of the second
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     const mockEventBasic = eventFactory.build({
       id: randomNumber(10000, 99999),
@@ -198,39 +188,29 @@ describe('Event fetching and polling', () => {
     // requests to the `events` endpoint: the initial request, and the
     // initial polling request.
     mockGetEvents(mockEvents).as('getEventsInitialFetches');
-    cy.clock();
-    cy.visitWithLogin('/');
-    cy.tick(10000);
 
-    // Wait for Cloud to make its initial 2 requests to the events endpoint
-    // before we begin monitoring polling intervals.
-    cy.wait(['@getEventsInitialFetches', '@getEventsInitialFetches']);
+    // We need access to the `clock` object directly since we cannot call `cy.clock()` inside
+    // a `should(() => {})` callback because Cypress commands are disallowed there.
+    cy.clock(Date.now()).then((clock) => {
+      cy.visitWithLogin('/');
 
-    mockGetEvents(mockEvents).as('getEventsPoll');
+      // Confirm that Cloud manager polls the requests endpoint no more than once
+      // every 2 seconds.
+      mockGetEventsPolling(mockEvents, mockNowTimestamp).as('getEventsPoll');
+      for (let i = 0; i < pollingSamples; i += 1) {
+        cy.log(
+          `Confirming that Cloud has not made events request... (${
+            i + 1
+          }/${pollingSamples})`
+        );
+        cy.get('@getEventsPoll.all').should('have.length', 0);
+        cy.tick(expectedPollingInterval / pollingSamples, { log: false });
+      }
 
-    // Simulate a time lapse of 16 seconds, asserting that no request
-    // has been made to the events endpoint during the interim.
-    for (let i = 0; i < pollingSamples; i += 1) {
-      cy.log(
-        `Confirming that Cloud has not made events request... (${
-          i + 1
-        }/${pollingSamples})`
-      );
-      cy.get('@getEventsPoll.all').should('have.length', 0);
-      cy.tick(expectedPollingInterval / pollingSamples, { log: false });
-
-      // Give Cloud Manager a chance to fire a request by waiting 50ms.
-      // Without this wait, we can get false positives because Cypress won't
-      // recognize the request to the events endpoint even if Cloud fires one.
-      // Adding this call to `cy.wait` ensures that Cypress intercepts any
-      // outgoing events requests that might be made erroneously.
-      cy.wait(50, { log: false });
-    }
-
-    // Confirm that Cloud makes expected polling request now that expected
-    // interval has passed.
-    cy.wait('@getEventsPoll');
-    cy.get('@getEventsPoll.all').should('have.length', 1);
+      cy.tick(50);
+      cy.wait('@getEventsPoll');
+      cy.get('@getEventsPoll.all').should('have.length', 1);
+    });
   });
 });
 
