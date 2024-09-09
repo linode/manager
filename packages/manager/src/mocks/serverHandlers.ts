@@ -860,7 +860,7 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(objectStorageTypes));
   }),
-  http.get('*/v4/object-storage/endpoints', ({ }) => {
+  http.get('*/v4/object-storage/endpoints', ({}) => {
     const endpoints = [
       objectStorageEndpointsFactory.build({
         endpoint_type: 'E0',
