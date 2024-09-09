@@ -53,8 +53,7 @@ export const image: PartialEventMap<'image'> = {
 
     finished: (e) => (
       <>
-        Image <EventLink event={e} to="entity" /> has been{' '}
-        <strong>uploaded</strong>.
+        Image <EventLink event={e} to="entity" /> is now available.
       </>
     ),
     notification: (e) => (

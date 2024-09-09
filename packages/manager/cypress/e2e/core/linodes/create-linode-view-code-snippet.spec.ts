@@ -42,7 +42,7 @@ describe('Create Linode', () => {
 
       // View Code Snippets and confirm it's provisioned as expected.
       ui.button
-        .findByTitle('View Code Snippets')
+        .findByTitle('Create using command line')
         .should('be.visible')
         .should('be.enabled')
         .click();

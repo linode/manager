@@ -217,12 +217,7 @@ describe('getPlacementGroupLinodes', () => {
 });
 
 describe('useIsPlacementGroupsEnabled', () => {
-  it('returns true if the feature flag is enabled and the account has the Placement Group capability', () => {
-    queryMocks.useFlags.mockReturnValue({
-      placementGroups: {
-        enabled: true,
-      },
-    });
+  it('returns true if the account has the Placement Group capability', () => {
     queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: ['Placement Group'],
@@ -235,23 +230,6 @@ describe('useIsPlacementGroupsEnabled', () => {
     });
   });
 
-  it('returns false if the feature flag is disabled', () => {
-    queryMocks.useFlags.mockReturnValue({
-      placementGroups: {
-        enabled: false,
-      },
-    });
-    queryMocks.useAccount.mockReturnValue({
-      data: {
-        capabilities: ['Placement Group'],
-      },
-    });
-
-    const { result } = renderHook(() => useIsPlacementGroupsEnabled());
-    expect(result.current).toStrictEqual({
-      isPlacementGroupsEnabled: false,
-    });
-  });
   it('returns false if the account does not have the Placement Group capability', () => {
     queryMocks.useFlags.mockReturnValue({
       placementGroups: {
