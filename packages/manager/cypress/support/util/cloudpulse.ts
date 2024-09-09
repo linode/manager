@@ -1,24 +1,7 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
-import { accountFactory, profileFactory } from '@src/factories';
-import { accountUserFactory } from '@src/factories/accountUsers';
-import { granularity } from 'support/constants/granularity';
-import { timeRange } from 'support/constants/timerange';
-import { mockGetAccount, mockGetUser } from 'support/intercepts/account';
-import {
-  interceptGetDashBoards,
-  interceptGetMetricDefinitions,
-  interceptGetResources,
-  interceptMetricAPI,
-} from 'support/intercepts/cloudpulseAPIHandler';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { mockGetProfile } from 'support/intercepts/profile';
+import { timeRange } from 'support/constants/widget-service';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 
-import type { Flags } from 'src/featureFlags';
 export const dashboardName = 'Linode Dashboard';
 export const region = 'US, Chicago, IL (us-ord)';
 export const actualRelativeTimeDuration = timeRange.Last24Hours;
@@ -34,103 +17,6 @@ export const resource = 'test1';
  * These utilities ensure efficient and consistent test execution and validation.
  */
 
- interface MetricResponse {
-  data: {
-    result: Array<{
-      metric: Record<string, any>;
-      values: [number, string][];
-    }>;
-    resultType: string;
-  };
-  isPartial: boolean;
-  stats: {
-    executionTimeMsec: number;
-    seriesFetched: string;
-  };
-  status: string;
-}
-/**
- * Generates a mock metric response based on the specified time range and granularity.
- * 
- * This function:
- * 1. Determines the time interval based on the granularity (e.g., 5 minutes, 1 hour, 1 day).
- * 2. Calculates the time range in seconds based on the specified time range (e.g., last 12 hours, last 30 days).
- * 3. Creates a series of random metric values for the given time range at the specified interval.
- * 4. Returns a mock response object containing the generated metric data.
- * 
- * @param {string} time - The time range for the metric data (e.g., "Last12Hours").
- * @param {string} granularityData - The granularity of the metric data (e.g., "Min5").
- * @returns {MetricResponse} - The generated mock metric response.
- */
-export const createMetricResponse = (
-  time: string,
-  granularityData: string
-): MetricResponse => {
-  const currentTime = Math.floor(Date.now() / 1000);
-
-  const intervals: Record<string, number> = {
-    [granularity.Auto]: 3600,
-    [granularity.Day1]: 86400,
-    [granularity.Hr1]: 3600,
-    [granularity.Min5]: 5 * 60,
-  };
-
-  const timeRanges: Record<string, number> = {
-    [timeRange.Last7Days]: 7 * 24 * 3600,
-    [timeRange.Last12Hours]: 12 * 3600,
-    [timeRange.Last24Hours]: 24 * 3600,
-    [timeRange.Last30Days]: 30 * 24 * 3600,
-    [timeRange.Last30Minutes]: 30 * 60,
-  };
-
-  const interval =
-    intervals[granularityData] ||
-    (() => {
-      throw new Error(`Unsupported granularity: ${granularityData}`);
-    })();
-  const timeRangeInSeconds =
-    timeRanges[time] ||
-    (() => {
-      throw new Error(`Unsupported time range: ${time}`);
-    })();
-  const startTime = currentTime - timeRangeInSeconds;
-
-  const values: [number, string][] = Array.from(
-    { length: Math.ceil(timeRangeInSeconds / interval) + 1 },
-    (_, i) => {
-      const timestamp = startTime + i * interval;
-      const value = (Math.random() * 100).toFixed(2);
-      return [timestamp, value];
-    }
-  );
-
-  return {
-    data: {
-      result: [{ metric: {}, values }],
-      resultType: 'matrix',
-    },
-    isPartial: false,
-    stats: {
-      executionTimeMsec: 53,
-      seriesFetched: '6',
-    },
-    status: 'success',
-  };
-};
-
-/**
- * Visits the Linodes page when the Cloudpulse feature flag is disabled,
- * and verifies that the Monitor tab is not present.
- */
-export const visitCloudPulseWithFeatureFlagsDisabled = () => {
-  cy.visitWithLogin('/linodes');
-  mockAppendFeatureFlags({ aclp: makeFeatureFlagData(false) }).as(
-    'getFeatureFlags'
-  );
-  mockGetFeatureFlagClientstream().as('getClientStream');
-  cy.findByLabelText('Monitor').should('not.exist');
-};
-
 /**
  * Selects a service name from the dashboard dropdown.
  * @param {string} serviceName - The name of the service to select.
@@ -139,9 +25,14 @@ export const selectServiceName = (serviceName: string) => {
   ui.autocomplete
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Open')
+    .should('be.visible')
     .click();
-  ui.autocomplete .findByPlaceholderCustom('Select Dashboard').type(`${serviceName}{enter}`);
+  ui.autocomplete
+    .findByPlaceholderCustom('Select Dashboard')
+    .type(`${serviceName}{enter}`);
+  cy.findByDisplayValue(serviceName).should('have.value', serviceName);
 };
+
 /**
  * Selects a region from the region dropdown.
  * @param {string} region - The name of the region to select.
@@ -159,22 +50,27 @@ export const selectTimeRange = (timeRange: string) => {
     .findByTitle('Open')
     .click();
   ui.autocompletePopper.findByTitle(timeRange).should('be.visible').click();
+  cy.findByDisplayValue(timeRange).should('have.value', timeRange);
 };
 /**
  * Selects a resource name from the resources dropdown and verifies the selection.
  * @param {string} service - The name of the service to select.
  */
-export const selectAndVerifyResource  = (service: string) => {
+export const selectAndVerifyResource = (service: string) => {
   const resourceInput = ui.autocomplete.findByTitleCustom('Select Resources');
   resourceInput.findByTitle('Open').click();
   resourceInput.click().type(`${service}{enter}`);
+  // Commenting out the line because resourceInput.findByTitle('closure') does not work
+  // resourceInput.findByTitle('Close').click();
+  cy.get('[title="Close"]').click();
 };
 /**
  * Asserts that the selected options match the expected values.
  * @param {string} expectedOptions - The expected options to verify.
  */
 export const assertSelections = (expectedOptions: string) => {
-  expect(cy.get(`[value*='${expectedOptions}']`), expectedOptions);
+  cy.get(`[value*='${expectedOptions}']`).should('be.visible');
+  cy.get(`[value*='${expectedOptions}']`).should('have.value', expectedOptions);
 };
 /**
  * Applies a global refresh action on the dashboard.
@@ -191,7 +87,9 @@ export const resetDashboardAndVerifyPage = (serviceName: string) => {
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Open')
     .click();
-  ui.autocomplete .findByPlaceholderCustom('Select Dashboard').type(`${serviceName}{enter}`);
+  ui.autocomplete
+    .findByPlaceholderCustom('Select Dashboard')
+    .type(`${serviceName}{enter}`);
   ui.autocomplete
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Clear')
@@ -219,6 +117,7 @@ export const validateWidgetTitle = (widgetName: string) => {
     .then((text) => {
       expect(text.trim()).to.equal(widgetName);
     });
+  cy.findByDisplayValue(widgetName).should('have.value', widgetName);
 };
 
 /**
@@ -375,45 +274,14 @@ export const checkZoomActions = (widgetName: string) => {
   });
 };
 
-const mockParentProfile = profileFactory.build({
-  user_type: 'parent',
-  username: 'mock-user@linode.com',
-});
-
-const mockParentUser = accountUserFactory.build({
-  user_type: 'default',
-  username: mockParentProfile.email,
-});
-const mockParentAccount = accountFactory.build({
-  company: 'Parent Company',
-});
 /**
  * Sets up mock data and intercepts for user-related tests.
- * 
+ *
  * This function:
- * 1. Mocks responses for user profile, account, and user data APIs.
- * 2. Configures feature flags for testing.
- * 3. Mocks the feature flag client stream.
- * 4. Visits the specified page with a logged-in user.
- * 5. Sets up intercepts for various API calls and aliases them for testing.
- * 
- * This ensures a controlled environment for testing user-related functionality.
+ * 1. Configures feature flags for testing.
+ * 2 Mocks the feature flag client stream.
+ * 3. Visits the specified page with a logged-in user.
+ * 4. Sets up intercepts for various API calls and aliases them for testing.
+ *
+ *
  */
-export const initializeMockUserData = () => {
-  mockGetProfile(mockParentProfile);
-  mockGetAccount(mockParentAccount);
-  mockGetUser(mockParentUser);
-  mockAppendFeatureFlags({
-    aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
-  });
-  mockGetFeatureFlagClientstream();
-  cy.visitWithLogin('monitor/cloudpulse');
-  interceptGetMetricDefinitions().as('dashboardMetricsData');
-  interceptGetDashBoards().as('dashboard');
-  interceptGetResources().as('resourceData');
-  const responsePayload = createMetricResponse(
-    actualRelativeTimeDuration,
-    granularity.Min5
-  );
-  interceptMetricAPI(responsePayload).as('metricAPI');
-};

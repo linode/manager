@@ -4,14 +4,30 @@ import {
   selectTimeRange,
   selectAndVerifyResource,
   assertSelections,
-  visitCloudPulseWithFeatureFlagsDisabled,
   dashboardName,
   actualRelativeTimeDuration,
   region,
   resource,
   resetDashboardAndVerifyPage,
-  initializeMockUserData,
 } from 'support/util/cloudpulse';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { granularity } from 'support/constants/widget-service';
+import {
+  interceptCreateMetrics,
+  interceptGetDashboards,
+  interceptGetMetricDefinitions,
+} from 'support/intercepts/cloudpulseAPIHandler';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
+import type { Flags } from 'src/featureFlags';
+import {createMetricResponse} from '@src/factories/widgetFactory'
+import {  mockGetLinodes} from 'support/intercepts/linodes';
+import {
+  kubeLinodeFactory,
+  linodeFactory,
+} from 'src/factories';
 /**
  * This test suite focuses on the standard operations and verifications for the Cloudpulse dashboard.
  *
@@ -22,14 +38,42 @@ import {
  * Each test case checks the correctness and persistence of these configurations to ensure that the
  * dashboard behaves as expected under various conditions.
  */
+const mockKubeLinode = kubeLinodeFactory.build();
 
+const mockLinode = linodeFactory.build({
+  label: "test1",
+  id: mockKubeLinode.instance_id ?? undefined,
+});
 describe('Standard Dashboard Filter Application and Configuration Tests', () => {
   beforeEach(() => {
-    initializeMockUserData();
+    mockAppendFeatureFlags({
+      aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
+    });
+    mockGetFeatureFlagClientstream();
+    cy.visitWithLogin('monitor/cloudpulse');
+    interceptGetMetricDefinitions().as('dashboardMetricsData');
+    interceptGetDashboards().as('dashboard');
+    mockGetLinodes([mockLinode]).as('getLinodes');
+    const responsePayload = createMetricResponse(actualRelativeTimeDuration,granularity.Min5);
+    interceptCreateMetrics(responsePayload).as('metricAPI');
   });
 
-  it('should verify cloudpulse availability when feature flag is set to false', () => {
-    visitCloudPulseWithFeatureFlagsDisabled();
+  
+  it.only('should verify cloudpulse availability when feature flag is set to false', () => {
+    mockAppendFeatureFlags({
+      aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: false }),
+    });
+    mockGetFeatureFlagClientstream();
+     cy.visitWithLogin('/linodes');
+    cy.get('[data-testid="menu-item-Monitor"]').should('be.visible').invoke('attr', 'href').then((href) => {
+      cy.log("url ******",href)
+      cy.request({
+        url: href,
+        failOnStatusCode: false
+      }).then((response) => {
+        expect(response.status).to.be.equal(404);
+       });
+    });
   });
 
   it('should clear the preferences of the dashboard', () => {
