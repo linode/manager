@@ -19,7 +19,7 @@ subQuery
   / LessThenOrEqualTo
   / GreaterThanQuery
   / GreaterThanOrEqualTo
-  
+
 DefaultQuery
   = input:String {
       const keys = options.searchableFieldsWithoutOperator;
@@ -29,27 +29,27 @@ DefaultQuery
 EqualQuery
   = key:FilterableField ws* Equal ws* value:Number { return { [key]: value }; }
   / key:FilterableField ws* Equal ws* value:String { return { [key]: value }; }
-  
+
 ContainsQuery
   = key:FilterableField ws* Contains ws* value:String { return { [key]: { "+contains": value } }; }
-  
+
 TagQuery
-  = "tag" ws* Equal ws* value:String { return { "tags": { "+contains": value } }; } 
-  
+  = "tag" ws* Equal ws* value:String { return { "tags": { "+contains": value } }; }
+
 NotEqualQuery
   = Not key:FilterableField ws* Equal ws* value:String { return { [key]: { "+neq": value } }; }
 
 LessThanQuery
-  = key:FilterableField ws* Less ws* value:Number { return { [key]: { "+lt": value } }; } 
-  
+  = key:FilterableField ws* Less ws* value:Number { return { [key]: { "+lt": value } }; }
+
 GreaterThanQuery
-  = key:FilterableField ws* Greater ws* value:Number { return { [key]: { "+gt": value } }; } 
+  = key:FilterableField ws* Greater ws* value:Number { return { [key]: { "+gt": value } }; }
 
 GreaterThanOrEqualTo
-  = key:FilterableField ws* Gte ws* value:Number { return { [key]: { "+gte": value } }; } 
+  = key:FilterableField ws* Gte ws* value:Number { return { [key]: { "+gte": value } }; }
 
 LessThenOrEqualTo
-  = key:FilterableField ws* Lte ws* value:Number { return { [key]: { "+lte": value } }; } 
+  = key:FilterableField ws* Lte ws* value:Number { return { [key]: { "+lte": value } }; }
 
 Or
   = ws+ 'or'i ws+
@@ -65,7 +65,7 @@ And
 Not
   = '!'
   / '-'
-  
+
 Less
   = '<'
 
@@ -74,26 +74,37 @@ Greater
 
 Gte
   = '>='
-  
+
 Lte
   = '<='
-  
+
 Equal
   = "="
 
 Contains
-   = "~"
-   / ":"
-   
+  = "~"
+  / ":"
+
+Quote
+  = "\""
+  / "\'"
+
 FilterableField "filterable field"
   = [a-zA-Z0-9\-\.]+ { return text(); }
 
 String "search value"
+  = Quote value:StringWithSpaces Quote { return value }
+  / Word
+
+Word "word"
   = [a-zA-Z0-9\-\.]+ { return text(); }
-  
+
+StringWithSpaces "string with spaces"
+  = [a-zA-Z0-9\-\. ]+ { return text(); }
+
 Number "numeric search value"
-    = number:[0-9\.]+ { return parseFloat(number.join("")); }
-    / number:[0-9]+ { return parseInt(number.join(""), 10); }
+  = number:[0-9\.]+ { return parseFloat(number.join("")); }
+  / number:[0-9]+ { return parseInt(number.join(""), 10); }
 
 ws "whitespace"
   = [ \t\r\n]
