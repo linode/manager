@@ -4,7 +4,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { FormattedEventMessage } from './FormattedEventMessage';
 
-describe('EventMessage', () => {
+describe('FormattedEventMessage', () => {
   it('renders null when message is null', () => {
     const { queryByRole } = renderWithTheme(
       <FormattedEventMessage message={null} />
