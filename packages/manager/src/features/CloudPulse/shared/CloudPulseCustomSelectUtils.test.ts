@@ -63,7 +63,6 @@ it('test getInitialDefaultSelections method for single selection', () => {
       test: '1',
     },
     savePreferences: true,
-    updatePreferences: (_: {}) => {},
   });
 
   expect(Array.isArray(result)).toBe(false);
@@ -79,7 +78,6 @@ it('test getInitialDefaultSelections method for single selection', () => {
       test: '2',
     },
     savePreferences: true,
-    updatePreferences: (_: {}) => {},
   });
   expect(result).toEqual(undefined);
   expect(handleSelectionChange).toBeCalledTimes(2);
@@ -104,7 +102,6 @@ it('test getInitialDefaultSelections method for multi selection', () => {
       test: '1',
     },
     savePreferences: true,
-    updatePreferences: (_: {}) => {},
   });
 
   expect(Array.isArray(result)).toBe(true);
@@ -120,7 +117,6 @@ it('test getInitialDefaultSelections method for multi selection', () => {
       test: '2',
     },
     savePreferences: true,
-    updatePreferences: (_: {}) => {},
   });
   expect(result).toEqual(undefined);
   expect(handleSelectionChange).toBeCalledTimes(2);
