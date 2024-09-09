@@ -107,7 +107,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
    * Confirms all endpoints are displayed regardless if there's multiple of the same type
    * Confirms S3 endpoint hostname displayed to differentiate between identical options in the dropdown
    */
-  it('can create a bucket with endpoint type 0', () => {
+  it('can create a bucket with E0 endpoint type', () => {
     const endpointTypeE0 = 'Legacy (E0)';
     const bucketLabel = randomLabel();
 
@@ -127,11 +127,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
       cors_enabled: true,
       region: mockRegion.id,
     }).as('createBucket');
-
-    mockAppendFeatureFlags({
-      objMultiCluster: true,
-      objectStorageGen2: { enabled: true },
-    }).as('getFeatureFlags');
 
     mockGetObjectStorageEndpoints(mockEndpoints).as(
       'getObjectStorageEndpoints'
@@ -239,9 +234,120 @@ describe('Object Storage Gen2 create bucket tests', () => {
   });
 
   /**
+   * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E1
+   */
+  it('can create a bucket with E1 endpoint type', () => {
+    const endpointTypeE1 = 'Standard (E1)';
+    const bucketLabel = randomLabel();
+
+    //wait for the newly 'created' mocked bucket to appear
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      label: bucketLabel,
+      region: mockRegion.id,
+      endpoint_type: 'E1',
+      s3_endpoint: undefined,
+    });
+
+    mockGetBuckets([]).as('getBuckets');
+    mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
+    mockCreateBucket({
+      label: bucketLabel,
+      endpoint_type: 'E1',
+      cors_enabled: true,
+      region: mockRegion.id,
+    }).as('createBucket');
+
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
+      'getObjectStorageEndpoints'
+    );
+
+    mockGetRegions(mockRegions);
+
+    cy.visitWithLogin('/object-storage/buckets/create');
+    cy.wait([
+      '@getFeatureFlags',
+      '@getBuckets',
+      '@getAccount',
+      '@getObjectStorageEndpoints',
+    ]);
+
+    ui.drawer
+      .findByTitle('Create Bucket')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Label').click().type(bucketLabel);
+        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByLabelText('Object Storage Endpoint Type')
+          .should('be.visible')
+          .click();
+
+        // Select E1 endpoint
+        ui.autocompletePopper
+          .findByTitle('Standard (E1)')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm bucket rate limits text for E1 endpoint
+        cy.findByText('Bucket Rate Limits').should('be.visible');
+        cy.contains(
+          'This endpoint type supports up to 750 Requests Per Second (RPS). Understand bucket rate limits'
+        ).should('be.visible');
+
+        // Confirm bucket rate limit table should not exist when E1 endpoint is selected
+        cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
+
+        ui.buttonGroup
+          .findButtonByTitle('Create Bucket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    mockGetBuckets([mockBucket]).as('getBuckets');
+    cy.wait(['@getBuckets']);
+
+    // Confirm request body has expected data
+    cy.wait('@createBucket').then((xhr) => {
+      const requestPayload = xhr.request.body;
+      expect(requestPayload['endpoint_type']).to.equal('E1');
+      expect(requestPayload['cors_enabled']).to.equal(true);
+    });
+
+    ui.drawer.find().should('not.exist');
+
+    // Confirm that bucket is created, initiate deletion for cleanup
+    cy.findByText(endpointTypeE1).should('be.visible');
+    cy.findByText(bucketLabel)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(mockRegion.label).should('be.visible');
+        ui.button.findByTitle('Delete').should('be.visible').click();
+      });
+
+    ui.dialog
+      .findByTitle(`Delete Bucket ${bucketLabel}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        ui.buttonGroup
+          .findButtonByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm bucket gets deleted
+    mockGetBuckets([]).as('getBuckets');
+    cy.wait(['@deleteBucket', '@getBuckets']);
+    cy.findByText(bucketLabel).should('not.exist');
+  });
+
+  /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E2
    */
-  it('can create a bucket with endpoint type 2', () => {
+  it('can create a bucket with E2 endpoint type', () => {
     const endpointTypeE2 = 'Standard (E2)';
     const bucketLabel = randomLabel();
 
@@ -355,7 +461,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E3
    */
-  it('can create a bucket with endpoint type 3', () => {
+  it('can create a bucket with E3 endpoint type', () => {
     const endpointTypeE3 = 'Standard (E3)';
     const bucketLabel = randomLabel();
 
