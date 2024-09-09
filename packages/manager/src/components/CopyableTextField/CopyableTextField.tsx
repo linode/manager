@@ -16,7 +16,7 @@ interface CopyableTextFieldProps extends TextFieldProps {
    */
   CopyTooltipProps?: Partial<CopyTooltipProps>;
   className?: string;
-  hideIcon?: boolean;
+  hideIcons?: boolean;
   showDownloadIcon?: boolean;
 }
 
@@ -24,7 +24,7 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
   const {
     CopyTooltipProps,
     className,
-    hideIcon,
+    hideIcons,
     showDownloadIcon,
     value,
     ...restProps
@@ -37,7 +37,7 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
       value={value}
       {...restProps}
       InputProps={{
-        endAdornment: hideIcon ? undefined : (
+        endAdornment: hideIcons ? undefined : (
           <StyledIconBox>
             {props.showDownloadIcon && (
               <DownloadTooltip fileName={fileName} text={`${value}`} />

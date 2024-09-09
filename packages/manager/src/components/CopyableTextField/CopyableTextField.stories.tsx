@@ -25,6 +25,5 @@ export default meta;
 type Story = StoryObj<typeof CopyableTextField>;
 
 export const Default: Story = {
-  args: {},
   render: (args) => <CopyableTextField {...args} />,
 };
