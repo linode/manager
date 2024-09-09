@@ -2,8 +2,11 @@ import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { themes } from 'src/utilities/theme';
-import { WIDGET_FILTERS_COMMON_FONT_SIZE, WIDGET_FILTERS_COMMON_HEIGHT } from '../../Utils/constants';
+
+import {
+  WIDGET_FILTERS_COMMON_FONT_SIZE,
+  WIDGET_FILTERS_COMMON_HEIGHT,
+} from '../../Utils/constants';
 
 export interface AggregateFunctionProperties {
   /**

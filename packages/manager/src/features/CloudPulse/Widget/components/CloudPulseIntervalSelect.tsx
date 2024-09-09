@@ -3,8 +3,12 @@ import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
+import {
+  WIDGET_FILTERS_COMMON_FONT_SIZE,
+  WIDGET_FILTERS_COMMON_HEIGHT,
+} from '../../Utils/constants';
+
 import type { TimeGranularity } from '@linode/api-v4';
-import { WIDGET_FILTERS_COMMON_FONT_SIZE, WIDGET_FILTERS_COMMON_HEIGHT } from '../../Utils/constants';
 
 export interface IntervalSelectProperties {
   /**
