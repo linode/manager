@@ -68,8 +68,6 @@ interface CloudPulseCustomSelectionChangeProps
   preferences?: AclpConfig;
   savePreferences?: boolean;
 
-  updatePreferences?: (data: {}) => void;
-
   /**
    * The listed options in the custom select component
    */

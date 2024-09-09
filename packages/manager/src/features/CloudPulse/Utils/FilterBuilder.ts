@@ -65,7 +65,6 @@ export const getRegionProperties = (
     preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
-    updatePreferences,
   };
 };
 
@@ -106,7 +105,6 @@ export const getResourcesProperties = (
     preferences,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
-    updatePreferences,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
   };
 };
@@ -168,7 +166,6 @@ export const getCustomSelectProperties = (
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
-    updatePreferences,
   };
 };
 
@@ -197,7 +194,6 @@ export const getTimeDurationProperties = (
     handleStatsChange: handleTimeRangeChange,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
-    updatePreferences,
   };
 };
 

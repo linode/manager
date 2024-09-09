@@ -21,7 +21,6 @@ export interface CloudPulseTimeRangeSelectProps
   ) => void;
   placeholder?: string;
   savePreferences?: boolean;
-  updatePreferences?: (data: {}) => void;
 }
 
 const PAST_7_DAYS = 'Last 7 Days';
