@@ -1,8 +1,3 @@
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   accountFactory,
@@ -24,8 +19,6 @@ import { randomNumber, randomString } from 'support/util/random';
 import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { linodeCreatePage } from 'support/ui/pages';
 import { extendRegion } from 'support/util/regions';
-
-import type { Flags } from 'src/featureFlags';
 
 const mockAccount = accountFactory.build();
 
@@ -53,14 +46,6 @@ describe('Linode create flow with Placement Group', () => {
   beforeEach(() => {
     mockGetAccount(mockAccount);
     mockGetRegions(mockRegions).as('getRegions');
-    // TODO Remove feature flag mocks when `placementGroups` flag is retired.
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
-        beta: true,
-        enabled: true,
-      }),
-    });
-    mockGetFeatureFlagClientstream();
   });
 
   /*
