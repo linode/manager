@@ -28,11 +28,11 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
-  { flag: 'placementGroups', label: 'Placement Groups' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'databaseResize', label: 'Database Resize' },
+  { flag: 'apicliDxToolsAdditions', label: 'APICLI DX Tools Additions' },
 ];
 
 const renderFlagItems = (
