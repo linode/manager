@@ -24,6 +24,35 @@ export const mockGetEvents = (events: Event[]): Cypress.Chainable => {
 };
 
 /**
+ * Intercepts polling GET request to fetch events and mocks response.
+ *
+ * Unlike `mockGetEvents`, this utility only intercepts outgoing requests that
+ * occur while Cloud Manager is polling for events.
+ *
+ * @param events - Array of Events with which to mock response.
+ * @param pollingTimestamp - Timestamp to find when identifying polling requests.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetEventsPolling = (
+  events: Event[],
+  pollingTimestamp: string
+): Cypress.Chainable => {
+  return cy.intercept('GET', apiMatcher('account/events*'), (req) => {
+    console.log({ headers: req.headers });
+    if (
+      req.headers['x-filter'].includes(
+        `{"created":{"+gte":"${pollingTimestamp}"}}`
+      )
+    ) {
+      req.reply(paginateResponse(events));
+    } else {
+      req.continue();
+    }
+  });
+};
+
+/**
  * Intercepts POST request to mark an event as seen and mocks response.
  *
  * @param eventId - ID of the event for which to intercept request.
