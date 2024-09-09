@@ -1,8 +1,10 @@
+import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import type { TimeGranularity } from '@linode/api-v4';
+import { WIDGET_FILTERS_COMMON_FONT_SIZE, WIDGET_FILTERS_COMMON_HEIGHT } from '../../Utils/constants';
 
 export interface IntervalSelectProperties {
   /**
@@ -108,6 +110,8 @@ export const CloudPulseIntervalSelect = React.memo(
       });
     }
 
+    const theme = useTheme();
+
     return (
       <Autocomplete
         isOptionEqualToValue={(option, value) => {
@@ -120,6 +124,18 @@ export const CloudPulseIntervalSelect = React.memo(
           });
         }}
         textFieldProps={{
+          InputProps: {
+            sx: {
+              height: WIDGET_FILTERS_COMMON_HEIGHT,
+              input: {
+                fontSize: WIDGET_FILTERS_COMMON_FONT_SIZE,
+              },
+              minHeight: WIDGET_FILTERS_COMMON_HEIGHT,
+              svg: {
+                color: theme.color.grey3,
+              },
+            },
+          },
           hideLabel: true,
         }}
         defaultValue={{ ...default_interval }}

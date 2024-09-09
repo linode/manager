@@ -1,6 +1,9 @@
+import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { themes } from 'src/utilities/theme';
+import { WIDGET_FILTERS_COMMON_FONT_SIZE, WIDGET_FILTERS_COMMON_HEIGHT } from '../../Utils/constants';
 
 export interface AggregateFunctionProperties {
   /**
@@ -36,6 +39,8 @@ export const CloudPulseAggregateFunction = React.memo(
         (obj) => obj.label === props.defaultAggregateFunction
       ) || props.availableAggregateFunctions[0];
 
+    const theme = useTheme();
+
     return (
       <Autocomplete
         isOptionEqualToValue={(option, value) => {
@@ -45,6 +50,18 @@ export const CloudPulseAggregateFunction = React.memo(
           props.onAggregateFuncChange(selectedAggregateFunc.label);
         }}
         textFieldProps={{
+          InputProps: {
+            sx: {
+              height: WIDGET_FILTERS_COMMON_HEIGHT,
+              input: {
+                fontSize: WIDGET_FILTERS_COMMON_FONT_SIZE,
+              },
+              minHeight: WIDGET_FILTERS_COMMON_HEIGHT,
+              svg: {
+                color: theme.color.grey3,
+              },
+            },
+          },
           hideLabel: true,
         }}
         defaultValue={defaultAggregateFunc}

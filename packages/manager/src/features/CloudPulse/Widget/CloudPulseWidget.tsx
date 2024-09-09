@@ -298,11 +298,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             justifyContent={{ sm: 'space-between' }}
             padding={1}
           >
-            <Typography
-              fontSize={{ sm: '1.5rem', xs: '2rem' }}
-              marginLeft={1}
-              variant="h1"
-            >
+            <Typography marginLeft={1} variant="h2">
               {convertStringToCamelCasesWithSpaces(widget.label)}{' '}
               {!isLoading &&
                 `(${currentUnit}${unit.endsWith('ps') ? '/s' : ''})`}

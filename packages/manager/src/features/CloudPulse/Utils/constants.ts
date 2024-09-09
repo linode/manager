@@ -21,3 +21,7 @@ export const TIME_GRANULARITY = 'timeGranularity';
 export const RELATIVE_TIME_DURATION = 'relative_time_duration';
 
 export const RESOURCE_ID = 'resource_id';
+
+export const WIDGET_FILTERS_COMMON_HEIGHT = '22px';
+
+export const WIDGET_FILTERS_COMMON_FONT_SIZE = '12px';
