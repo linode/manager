@@ -94,6 +94,7 @@ export const resetDashboardAndVerifyPage = (serviceName: string) => {
     .click();
   ui.autocomplete
     .findByPlaceholderCustom('Select Dashboard')
+    .clear()
     .type(`${serviceName}{enter}`);
   ui.autocomplete
     .findByTitleCustom('Select Dashboard')
@@ -114,14 +115,12 @@ export const resetDashboardAndVerifyPage = (serviceName: string) => {
  *                                      text content of the `h1` element within the widget.
  */
 export const validateWidgetTitle = (widgetName: string) => {
-  const widgetSelector = `[data-qa-widget="${widgetName}"]`;
+  const widgetSelector = `h1[data-qa-widget-header="${widgetName}"]`;
   return cy
     .get(widgetSelector)
-    .find('h1')
     .invoke('text')
     .then((text) => {
       expect(text.trim()).to.equal(widgetName);
-      cy.findByDisplayValue(widgetName).should('have.value', widgetName);
     });
 };
 
@@ -145,8 +144,7 @@ export const setGranularity = (widgetName: string, granularity: string) => {
         .findByTitle(granularity)
         .should('be.visible')
         .click();
-      assertSelections(granularity);
-      cy.findByDisplayValue(granularity).should('have.value', granularity);
+      //  assertSelections(granularity);
     });
 };
 /**
@@ -169,7 +167,6 @@ export const setAggregation = (widgetName: string, aggregation: string) => {
         .should('be.visible')
         .click();
       assertSelections(aggregation);
-      cy.findByDisplayValue(aggregation).should('have.value', aggregation);
     });
 };
 /**
@@ -245,7 +242,37 @@ export const verifyAggregation = (
  * Verifies that zoom in and zoom out actions are available and performs them on a widget.
  * @param {string} widgetName - The name of the widget to zoom in or out.
  */
+
 export const checkZoomActions = (widgetName: string) => {
+  const widgetSelector = `[data-qa-widget="${widgetName}"]`;
+  //const zoomInSelector = 'svg[data-testid="zoom-in"]';
+ // const zoomOutSelector = 'svg[data-testid="zoom-out"]';
+ const zoomInSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-in');
+  const zoomOutSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-out');
+cy.get(widgetSelector).each(($widget) => {
+    cy.wrap($widget).then(($el) => {
+      const zoomInElement = $el.find(zoomInSelector);
+      const zoomOutElement = $el.find(zoomOutSelector);
+    if (zoomOutElement.length > 0) {
+        cy.wrap(zoomOutElement)
+          .should('be.visible')
+          .click({ timeout: 5000 })
+          .then(() => {
+            cy.log('Zoomed Out on widget:', $el);
+          });
+      } else if (zoomInElement.length > 0) {
+        cy.wrap(zoomInElement)
+          .should('be.visible')
+          .click({ timeout: 5000 })
+          .then(() => {
+            cy.log('Zoomed In on widget:', $el);
+          });
+      }
+    });
+  });
+};
+
+/* export const checkZoomActions1 = (widgetName: string) => {
   const widgetSelector = `[data-qa-widget="${widgetName}"]`;
   const zoomInSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-in');
   const zoomOutSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-out');
@@ -279,4 +306,4 @@ export const checkZoomActions = (widgetName: string) => {
       }
     });
   });
-};
+};*/

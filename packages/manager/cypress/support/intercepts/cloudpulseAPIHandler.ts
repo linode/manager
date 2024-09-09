@@ -102,7 +102,7 @@ const JWSToken = {
   token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
 };
 export const mockJWSToken = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('**/monitor/services/linode/token'), {
+  return cy.intercept('POST', apiMatcher('**/monitor/services/linode/token'), 
     JWSToken,
-  });
+  );
 };

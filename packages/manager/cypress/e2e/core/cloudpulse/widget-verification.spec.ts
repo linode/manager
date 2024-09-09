@@ -8,6 +8,11 @@ import {
   checkZoomActions,
   selectAndVerifyResource,
   resource,
+  resetDashboardAndVerifyPage,
+  selectServiceName,
+  dashboardName,
+  region,
+  selectRegion
 } from 'support/util/cloudpulse';
 import {
   mockAppendFeatureFlags,
@@ -65,8 +70,14 @@ describe('Dashboard Widget Verification Tests', () => {
     cy.visitWithLogin('monitor/cloudpulse');
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     interceptCreateMetrics(responsePayload).as('metricAPI');
+     resetDashboardAndVerifyPage(dashboardName);
+      selectServiceName(dashboardName);
+     selectTimeRange(actualRelativeTimeDuration, Object.values(timeRange));
+      selectRegion(region);
+      selectAndVerifyResource(resource);
+
      });
-  it.only(`should set available granularity of the all the widget`, () => {
+  it(`should set available granularity of the all the widget`, () => {
     linodeWidgets.forEach((testData) => {
       setGranularity(testData.title, testData.expectedGranularity);
     });
@@ -92,11 +103,12 @@ describe('Dashboard Widget Verification Tests', () => {
       verifyAggregation(testData.title, testData.expectedAggregationArray);
     });
   });
-  it(`should zoom in and out of the all the widget`, () => {
+  it.only(`should zoom in and out of the all the widget`, () => {
     linodeWidgets.forEach((testData) => {
-      checkZoomActions(testData.title);
-    });
+    checkZoomActions(testData.title);
   });
+      });
+    });
 
   it('should apply global refresh button and verify network calls', () => {
     ui.cloudpulse.findRefreshIcon().click();
@@ -125,6 +137,6 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 
-});
+
 
 

@@ -114,22 +114,6 @@ export const dashboardMetricsData = {
   ],
 };
 
-export const dashboardDefinitions = {
-  data: [
-    {
-      created: '2024-09-06T08:09:43.641Z',
-      id: 1,
-      label: 'Linode Dashboard',
-      service_type: 'linode',
-      time_duration: {
-        unit: 'min',
-        value: 30,
-      },
-      updated: '2024-09-06T08:09:43.641Z',
-      widgets: [],
-    },
-  ],
-};
 
 export const cloudPulseServices = {
   data: [{ service_type: 'linode' }],
@@ -138,7 +122,7 @@ export const cloudPulseServices = {
 export const linodeMetricsDashboard = {
   created: '2024-04-29T17:09:29',
   id: '1',
-  label: 'Linode Service I/O Statistics',
+  label: 'Linode Dashboard',
   service_type: 'linode',
   type: 'standard',
   updated: null,
@@ -184,4 +168,7 @@ export const linodeMetricsDashboard = {
       y_label: 'system_disk_operations_total',
     },
   ],
+};
+export const dashboardDefinitions = {
+  data: [linodeMetricsDashboard],
 };
