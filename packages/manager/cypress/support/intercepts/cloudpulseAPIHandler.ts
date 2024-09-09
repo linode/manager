@@ -4,6 +4,7 @@
  * @returns Cypress chainable.
  */
 import {
+  cloudPulseServices,
   dashboardDefinitions,
   dashboardMetricsData,
 } from 'support/constants/widget-mockdata';
@@ -23,6 +24,23 @@ export const interceptGetMetricDefinitions = (): Cypress.Chainable<null> => {
     'GET',
     apiMatcher('**/monitor/services/linode/metric-definitions'),
     dashboardMetricsData
+  );
+};
+
+/**
+ * Intercepts HTTP GET requests for metric definitions.
+ *
+ * This function mocks the API response for requests to the endpoint
+ * `dashboardMetricsData`.
+ *
+ * @returns {Cypress.Chainable<null>} The chainable Cypress object.
+ */
+
+export const interceptCloudPulseServices = (): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('**/monitor/services'),
+    cloudPulseServices
   );
 };
 /**

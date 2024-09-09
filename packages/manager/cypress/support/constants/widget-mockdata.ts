@@ -130,3 +130,7 @@ export const dashboardDefinitions = {
     },
   ],
 };
+
+export const cloudPulseServices = {
+  data: [{ service_type: 'linode' }],
+};
