@@ -25,6 +25,7 @@ import { useGravatar } from 'src/hooks/useGravatar';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { fadeIn } from 'src/styles/keyframes';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
@@ -106,7 +107,7 @@ export const UserMenu = React.memo(() => {
     theme.breakpoints.down('sm')
   );
 
-  const hasGravatar = useGravatar(profile?.email);
+  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -214,8 +215,10 @@ export const UserMenu = React.memo(() => {
           startIcon={
             isProxyUser ? (
               <AvatarForProxy />
+            ) : isLoadingGravatar ? (
+              <Box height={28} width={28} />
             ) : hasGravatar ? (
-              <GravatarByEmail email={profile?.email ?? ''} />
+              <StyledGravatar email={profile?.email ?? ''} />
             ) : (
               <Avatar />
             )
@@ -350,4 +353,10 @@ const Heading = styled(Typography)(({ theme }) => ({
   fontSize: '.75rem',
   letterSpacing: 1.875,
   textTransform: 'uppercase',
+}));
+
+const StyledGravatar = styled(GravatarByEmail, {
+  label: 'StyledGravatarByEmail',
+})(() => ({
+  animation: `${fadeIn} .2s ease-out forwards`,
 }));

@@ -1,3 +1,5 @@
+import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
@@ -14,6 +16,7 @@ import { Typography } from 'src/components/Typography';
 import { useGravatar } from 'src/hooks/useGravatar';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile/profile';
+import { fadeIn } from 'src/styles/keyframes';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { UsersActionMenu } from './UsersActionMenu';
@@ -26,19 +29,33 @@ interface Props {
 }
 
 export const UserRow = ({ onDelete, user }: Props) => {
+  const theme = useTheme();
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
 
   const isProxyUser = Boolean(user.user_type === 'proxy');
   const showChildAccountAccessCol = profile?.user_type === 'parent';
 
-  const hasGravatar = useGravatar(profile?.email);
+  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
-          {hasGravatar ? <GravatarByEmail email={user.email} /> : <Avatar />}
+          {isLoadingGravatar ? (
+            <Box height={28} width={28} />
+          ) : hasGravatar ? (
+            <StyledGravatar email={user.email} />
+          ) : (
+            <Avatar
+              color={
+                user.username !== profile?.username
+                  ? theme.palette.primary.dark
+                  : undefined
+              }
+              username={user.username}
+            />
+          )}
           <Typography>{user.username}</Typography>
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
@@ -102,3 +119,9 @@ const LastLogin = (props: Pick<User, 'last_login'>) => {
     </Stack>
   );
 };
+
+const StyledGravatar = styled(GravatarByEmail, {
+  label: 'StyledGravatarByEmail',
+})(() => ({
+  animation: `${fadeIn} .3s ease-out forwards`,
+}));

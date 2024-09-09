@@ -112,7 +112,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
 
   const { data: profile } = useProfile();
 
-  const hasGravatar = useGravatar(profile?.email);
+  const { hasGravatar } = useGravatar(profile?.email);
 
   React.useEffect(() => {
     if (!ticket && !reply) {

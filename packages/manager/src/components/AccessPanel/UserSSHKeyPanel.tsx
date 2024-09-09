@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -16,9 +17,11 @@ import { useGravatar } from 'src/hooks/useGravatar';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
+import { fadeIn } from 'src/styles/keyframes';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 import { Avatar } from '../Avatar/Avatar';
+import { Box } from '../Box';
 import { GravatarByEmail } from '../GravatarByEmail';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
@@ -37,6 +40,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: '30%',
   },
   gravatar: {
+    animation: `${fadeIn} .2s ease-out forwards`,
     borderRadius: '50%',
     height: 24,
     marginRight: theme.spacing(1),
@@ -60,6 +64,7 @@ interface Props {
 
 const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
+  const theme = useTheme();
   const { authorizedUsers, disabled, setAuthorizedUsers } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
@@ -70,7 +75,7 @@ const UserSSHKeyPanel = (props: Props) => {
 
   const { data: profile } = useProfile();
 
-  const hasGravatar = useGravatar(profile?.email);
+  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   const isRestricted = profile?.restricted ?? false;
 
@@ -150,7 +155,9 @@ const UserSSHKeyPanel = (props: Props) => {
           </TableCell>
           <TableCell className={classes.cellUser}>
             <div className={classes.userWrapper}>
-              {hasGravatar ? (
+              {isLoadingGravatar ? (
+                <Box height={28} width={28} />
+              ) : hasGravatar ? (
                 <GravatarByEmail
                   className={classes.gravatar}
                   email={profile.email}
@@ -192,7 +199,15 @@ const UserSSHKeyPanel = (props: Props) => {
                 email={user.email}
               />
             ) : (
-              <Avatar sx={{ borderRadius: '50%', marginRight: 1 }} />
+              <Avatar
+                color={
+                  user.username !== profile?.username
+                    ? theme.palette.primary.dark
+                    : undefined
+                }
+                sx={{ borderRadius: '50%', marginRight: 1 }}
+                username={user.username}
+              />
             )}
             {user.username}
           </div>

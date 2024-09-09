@@ -7,15 +7,16 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 
 import { DEFAULT_AVATAR_SIZE } from './GravatarByEmail';
 
-interface Props {
+export interface GravatarByUsernameProps {
   className?: string;
   username: null | string;
 }
 
-export const GravatarByUsername = (props: Props) => {
+export const GravatarByUsername = (props: GravatarByUsernameProps) => {
   const { className, username } = props;
   const { data: user } = useAccountUser(username ?? '');
   const url = user?.email ? getGravatarUrl(user.email) : undefined;
+  // console.log('rendering gravatar', {url})
 
   return (
     <Avatar

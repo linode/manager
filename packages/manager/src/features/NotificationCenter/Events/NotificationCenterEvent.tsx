@@ -35,7 +35,7 @@ export const NotificationCenterEvent = React.memo(
 
     const { data: profile } = useProfile();
 
-    const hasGravatar = useGravatar(profile?.email);
+    const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
     /**
      * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
@@ -53,7 +53,9 @@ export const NotificationCenterEvent = React.memo(
         className={unseenEventClass}
         data-testid={event.action}
       >
-        {hasGravatar ? (
+        {isLoadingGravatar ? (
+          <Box height={32} width={32} />
+        ) : hasGravatar ? (
           <NotificationEventGravatar username={event.username} />
         ) : (
           <NotificationEventAvatar username={event.username ?? 'Linode'} />

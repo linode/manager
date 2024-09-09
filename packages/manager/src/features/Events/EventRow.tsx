@@ -35,7 +35,8 @@ export const EventRow = (props: EventRowProps) => {
   };
   const { data: profile } = useProfile();
 
-  const hasGravatar = useGravatar(profile?.email);
+  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
+  // console.log({ isLoadingGravatar }, { hasGravatar });
 
   if (!message) {
     return null;
@@ -60,7 +61,9 @@ export const EventRow = (props: EventRowProps) => {
       <Hidden smDown>
         <TableCell data-qa-event-username-cell parentColumn="Username">
           <Box alignItems="center" display="flex" gap={1}>
-            {hasGravatar ? (
+            {isLoadingGravatar ? (
+              <Box height={24} width={24} />
+            ) : hasGravatar ? (
               <StyledGravatar
                 username={username === 'Linode' ? '' : username}
               />

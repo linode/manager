@@ -19,6 +19,7 @@ import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useGravatar } from 'src/hooks/useGravatar';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
+import { fadeIn } from 'src/styles/keyframes';
 
 import { AvatarColorPickerDialog } from './AvatarColorPickerDialog';
 import { TimezoneForm } from './TimezoneForm';
@@ -38,7 +39,7 @@ export const DisplaySettings = () => {
 
   const isProxyUser = profile?.user_type === 'proxy';
 
-  const hasGravatar = useGravatar(profile?.email);
+  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   const [
     isColorPickerDialogOpen,
@@ -100,8 +101,10 @@ export const DisplaySettings = () => {
             }}
             display="flex"
           >
-            {hasGravatar ? (
-              <GravatarByEmail
+            {isLoadingGravatar ? (
+              <Box height={88} width={88} />
+            ) : hasGravatar ? (
+              <StyledGravatar
                 email={profile?.email ?? ''}
                 height={88}
                 width={88}
@@ -218,4 +221,10 @@ const StyledTooltipIcon = styled(TooltipIcon, {
   '& .MuiTooltip-tooltip': {
     minWidth: 350,
   },
+}));
+
+const StyledGravatar = styled(GravatarByEmail, {
+  label: 'StyledGravatarByEmail',
+})(() => ({
+  animation: `${fadeIn} .3s ease-out forwards`,
 }));
