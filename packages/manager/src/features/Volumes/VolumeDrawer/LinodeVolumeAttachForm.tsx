@@ -1,5 +1,3 @@
-import { Linode } from '@linode/api-v4';
-import { Grant } from '@linode/api-v4/lib/account';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -9,7 +7,10 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Notice } from 'src/components/Notice/Notice';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile/profile';
-import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
+import {
+  useAttachVolumeMutation,
+  useVolumeQuery,
+} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -18,10 +19,14 @@ import {
 import { ConfigSelect } from './ConfigSelect';
 import { VolumeSelect } from './VolumeSelect';
 
+import type { Linode } from '@linode/api-v4';
+import type { Grant } from '@linode/api-v4/lib/account';
+
 interface Props {
   linode: Linode;
   onClose: () => void;
   readOnly?: boolean;
+  setClientLibraryCopyVisible: (visible: boolean) => void;
 }
 
 /**
@@ -40,7 +45,7 @@ const AttachVolumeValidationSchema = object({
 const initialValues = { config_id: -1, volume_id: -1 };
 
 export const LinodeVolumeAttachForm = (props: Props) => {
-  const { linode, onClose } = props;
+  const { linode, onClose, setClientLibraryCopyVisible } = props;
 
   const { data: grants } = useGrants();
 
@@ -93,6 +98,17 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     validationSchema: AttachVolumeValidationSchema,
   });
 
+  const { data: volume } = useVolumeQuery(values.volume_id);
+
+  const linodeRequiresClientLibraryUpdate =
+    volume?.encryption === 'enabled' &&
+    Boolean(!linode.capabilities?.includes('blockstorage_encryption'));
+
+  React.useEffect(() => {
+    // When the volume is encrypted but the linode requires a client library update, we want to show the client library copy
+    setClientLibraryCopyVisible(linodeRequiresClientLibraryUpdate);
+  }, [volume]);
+
   return (
     <form onSubmit={handleSubmit}>
       {isReadOnly && (
@@ -108,6 +124,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
       <VolumeSelect
         disabled={isReadOnly}
         error={touched.volume_id ? errors.volume_id : undefined}
+        name="volume_id"
         onBlur={handleBlur}
         onChange={(v) => setFieldValue('volume_id', v)}
         region={linode.region}
@@ -124,7 +141,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
       />
       <ActionsPanel
         primaryButtonProps={{
-          disabled: isReadOnly,
+          disabled: isReadOnly || linodeRequiresClientLibraryUpdate,
           label: 'Attach Volume',
           loading: isSubmitting,
           type: 'submit',

@@ -4,7 +4,7 @@ import MuiAutocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
 import { Box } from 'src/components/Box';
-import { TextField, TextFieldProps } from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 
 import { CircleProgress } from '../CircleProgress';
 import { InputAdornment } from '../InputAdornment';
@@ -15,6 +15,7 @@ import {
 } from './Autocomplete.styles';
 
 import type { AutocompleteProps } from '@mui/material/Autocomplete';
+import type { TextFieldProps } from 'src/components/TextField';
 
 export interface EnhancedAutocompleteProps<
   T extends { label: string },
@@ -25,6 +26,8 @@ export interface EnhancedAutocompleteProps<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     'renderInput'
   > {
+  /** Removes "select all" option for multiselect */
+  disableSelectAll?: boolean;
   /** Provides a hint with error styling to assist users. */
   errorText?: string;
   /** Provides a hint with normal styling to assist users. */
@@ -38,8 +41,6 @@ export interface EnhancedAutocompleteProps<
   placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
-  /** Removes "select all" option for mutliselect */
-  disableSelectAll?: boolean;
   textFieldProps?: Partial<TextFieldProps>;
 }
 
@@ -71,6 +72,7 @@ export const Autocomplete = <
     clearOnBlur,
     defaultValue,
     disablePortal = true,
+    disableSelectAll = false,
     errorText = '',
     helperText,
     label,
@@ -88,7 +90,6 @@ export const Autocomplete = <
     selectAllLabel = '',
     textFieldProps,
     value,
-    disableSelectAll = false,
     ...rest
   } = props;
 
@@ -103,6 +104,11 @@ export const Autocomplete = <
 
   return (
     <MuiAutocomplete
+      options={
+        multiple && !disableSelectAll && options.length > 0
+          ? optionsWithSelectAll
+          : options
+      }
       renderInput={(params) => (
         <TextField
           errorText={errorText}
@@ -169,11 +175,6 @@ export const Autocomplete = <
       multiple={multiple}
       noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
       onBlur={onBlur}
-      options={
-        multiple && !disableSelectAll && options.length > 0
-          ? optionsWithSelectAll
-          : options
-      }
       popupIcon={<KeyboardArrowDownIcon />}
       value={value}
       {...rest}
