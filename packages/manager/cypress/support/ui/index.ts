@@ -1,5 +1,6 @@
 import * as accordion from './accordion';
 import * as actionMenu from './action-menu';
+import * as appBar from './app-bar';
 import * as autocomplete from './autocomplete';
 import * as breadcrumb from './breadcrumb';
 import * as buttons from './buttons';
@@ -21,6 +22,7 @@ import * as userMenu from './user-menu';
 export const ui = {
   ...accordion,
   ...actionMenu,
+  ...appBar,
   ...autocomplete,
   ...breadcrumb,
   ...buttons,
