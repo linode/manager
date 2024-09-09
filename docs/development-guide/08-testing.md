@@ -220,6 +220,14 @@ Environment variables related to Cypress logging and reporting, as well as repor
 | `CY_TEST_FAIL_ON_MANAGED`       | Fail affected tests when Managed is enabled        | `1`              | Unset; disabled by default |
 | `CY_TEST_GENWEIGHTS`            | Generate and output test weights to the given path | `./weights.json` | Unset; disabled by default |
 
+###### Performance
+Environment variables that can be used to improve test performance in some scenarios.
+
+| Environment Variable            | Description                                   | Example            | Default                    |
+|---------------------------------|-----------------------------------------------|--------------------|----------------------------|
+| `CY_TEST_ACCOUNT_CACHE_DIR`     | Directory containing test account cache data  | `./cache/accounts` | Unset; disabled by default |
+
+
 ### Writing End-to-End Tests
 
 1. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)

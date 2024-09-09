@@ -43,6 +43,9 @@ x-e2e-env:
   CY_TEST_SPLIT_RUN_TOTAL: ${CY_TEST_SPLIT_RUN_TOTAL}
   CY_TEST_SPLIT_RUN_INDEX: ${CY_TEST_SPLIT_RUN_INDEX}
 
+  # Cypress performance.
+  CY_TEST_ACCOUNT_CACHE_DIR: ${CY_TEST_ACCOUNT_CACHE_DIR}
+
   # Cypress reporting.
   CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
   CY_TEST_USER_REPORT: ${CY_TEST_USER_REPORT}
@@ -63,6 +66,7 @@ x-e2e-env:
 x-e2e-volumes:
   &default-volumes
   - ./.git:/home/node/app/.git
+  - ./cache:/home/node/app/cache
   - ./packages/manager:/home/node/app/packages/manager
   - ./packages/validation:/home/node/app/packages/validation
   - ./packages/api-v4:/home/node/app/packages/api-v4
