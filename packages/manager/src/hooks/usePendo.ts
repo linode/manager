@@ -1,34 +1,59 @@
-import { useEffect } from 'react';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { reportException } from 'src/exceptionReporting';
-import { useAccount } from 'src/queries/account/account.js';
-import { useProfile } from 'src/queries/profile/profile';
+// import { useAccount } from 'src/queries/account/account.js';
+// import { useProfile } from 'src/queries/profile/profile';
 
-import pendo from '../assets/pendo/pendo.js';
+import { PENDO_API_KEY } from 'src/constants';
+
 import { loadScript } from './useScript';
 
 declare global {
   interface Window {
-    pendo: any;
+    pendo: any; //TODO: can we type this any better?
   }
 }
 
 /**
- * Initializes our Adobe Analytics script on mount and subscribes to page view events.
+ * Initializes our Pendo analytics script on mount.
  */
 export const usePendo = () => {
-  const history = useHistory();
-  const { data: profile } = useProfile();
-  const { data: account } = useAccount();
+  // TODO: update metadata with these values
+  // const { data: profile } = useProfile();
+  // const { data: account } = useAccount();
 
-  console.log('usePendo');
   React.useEffect(() => {
-    loadScript(pendo, { location: 'head' }).then(() => {
-      // This function creates visitors and accounts in Pendo
-      // You will need to replace <visitor-id-goes-here> and <account-id-goes-here> with values you use in your app
-      // Please use Strings, Numbers, or Bools for value types.
+    // Adapted the Pendo install script:
+
+    // Set up Pendo namespace
+    const pendo = (window['pendo'] = window['pendo'] || {});
+
+    // Define the methods Pendo uses in a queue
+    const methodNames = [
+      'initialize',
+      'identify',
+      'updateOptions',
+      'pageLoad',
+      'track',
+    ];
+    let index, x;
+    pendo._q = pendo._q || [];
+    for (index = 0, x = methodNames.length; index < x; ++index) {
+      (function (method) {
+        pendo[method] =
+          pendo[method] ||
+          function () {
+            pendo._q[method === methodNames[0] ? 'unshift' : 'push'](
+              // eslint-disable-next-line prefer-rest-params
+              [method].concat([].slice.call(arguments, 0))
+            );
+          };
+      })(methodNames[index]);
+    }
+
+    // Load Pendo script into the head HTML tag, then initialize Pendo with metadata
+    loadScript(`https://cdn.pendo.io/agent/static/${PENDO_API_KEY}/pendo.js`, {
+      location: 'head',
+    }).then(() => {
       window.pendo.initialize({
         account: {
           id: `test-account-dev`, // Highly recommended, required if using Pendo Feedback
@@ -54,27 +79,5 @@ export const usePendo = () => {
         },
       });
     });
-
-    //   const script = document.createElement('script');
-    //   // eslint-disable-next-line scanjs-rules/assign_to_src
-    //   script.src = pendo;
-    //   script.type = 'text/javascript';
-    //   script.async = true;
-    //   script.defer = true
-
-    //   console.log(script.src);
-    //   // Add script to document; default to body
-    //   if (script){
-    //     document.head.appendChild(script);
-    //   }
   }, []);
-
-  React.useEffect(() => {
-    /**
-     * Send pageviews
-     */
-    return history.listen(({ pathname }) => {});
-  }, [history]);
-
-  return null;
 };
