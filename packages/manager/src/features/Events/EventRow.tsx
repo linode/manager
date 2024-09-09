@@ -5,10 +5,11 @@ import { Avatar } from 'src/components/Avatar/Avatar';
 import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useGravatar } from 'src/hooks/useGravatar';
+// import { useGravatar } from 'src/hooks/useGravatar';
 import { useProfile } from 'src/queries/profile/profile';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
@@ -37,7 +38,7 @@ export const EventRow = (props: EventRowProps) => {
   };
   const { data: profile } = useProfile();
 
-  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
+  // const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   if (!message) {
     return null;
@@ -62,7 +63,28 @@ export const EventRow = (props: EventRowProps) => {
       <Hidden smDown>
         <TableCell data-qa-event-username-cell parentColumn="Username">
           <Box alignItems="center" display="flex" gap={1}>
-            {isLoadingGravatar ? (
+            <GravatarOrAvatar
+              avatar={
+                <Avatar
+                  color={
+                    username !== profile?.username
+                      ? theme.palette.primary.dark
+                      : undefined
+                  }
+                  height={24}
+                  username={username}
+                  width={24}
+                />
+              }
+              gravatar={
+                <StyledGravatar
+                  username={username === 'Linode' ? '' : username}
+                />
+              }
+              height={24}
+              width={24}
+            />
+            {/* {isLoadingGravatar ? (
               <Box height={24} width={24} />
             ) : hasGravatar ? (
               <StyledGravatar
@@ -79,7 +101,7 @@ export const EventRow = (props: EventRowProps) => {
                 username={username}
                 width={24}
               />
-            )}
+            )} */}
             {username}
           </Box>
         </TableCell>

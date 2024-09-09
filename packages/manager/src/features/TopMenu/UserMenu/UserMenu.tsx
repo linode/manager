@@ -12,6 +12,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
@@ -21,7 +22,7 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
-import { useGravatar } from 'src/hooks/useGravatar';
+// import { useGravatar } from 'src/hooks/useGravatar';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
@@ -107,7 +108,7 @@ export const UserMenu = React.memo(() => {
     theme.breakpoints.down('sm')
   );
 
-  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
+  // const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -215,14 +216,21 @@ export const UserMenu = React.memo(() => {
           startIcon={
             isProxyUser ? (
               <AvatarForProxy />
-            ) : isLoadingGravatar ? (
-              <Box height={28} width={28} />
-            ) : hasGravatar ? (
-              <StyledGravatar email={profile?.email ?? ''} />
             ) : (
-              <Avatar />
+              <GravatarOrAvatar
+                avatar={<Avatar />}
+                gravatar={<StyledGravatar email={profile?.email ?? ''} />}
+              />
             )
           }
+          //   isLoadingGravatar ? (
+          //     <Box height={28} width={28} />
+          //   ) : hasGravatar ? (
+          //     <StyledGravatar email={profile?.email ?? ''} />
+          //   ) : (
+          //     <Avatar />
+          //   )
+          // }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
             height: '50px',

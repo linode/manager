@@ -10,6 +10,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
@@ -39,7 +40,7 @@ export const DisplaySettings = () => {
 
   const isProxyUser = profile?.user_type === 'proxy';
 
-  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
+  const { hasGravatar } = useGravatar(profile?.email);
 
   const [
     isColorPickerDialogOpen,
@@ -101,7 +102,7 @@ export const DisplaySettings = () => {
             }}
             display="flex"
           >
-            {isLoadingGravatar ? (
+            {/* {isLoadingGravatar ? (
               <Box height={88} width={88} />
             ) : hasGravatar ? (
               <StyledGravatar
@@ -111,7 +112,19 @@ export const DisplaySettings = () => {
               />
             ) : (
               <Avatar height={88} width={88} />
-            )}
+            )} */}
+            <GravatarOrAvatar
+              gravatar={
+                <StyledGravatar
+                  email={profile?.email ?? ''}
+                  height={88}
+                  width={88}
+                />
+              }
+              avatar={<Avatar height={88} width={88} />}
+              height={88}
+              width={88}
+            />
             <div>
               <Typography sx={{ fontSize: '1rem' }} variant="h2">
                 {hasGravatar ? 'Profile photo' : 'Avatar'}

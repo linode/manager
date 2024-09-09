@@ -7,13 +7,14 @@ import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
+import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Hidden } from 'src/components/Hidden';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { useGravatar } from 'src/hooks/useGravatar';
+// import { useGravatar } from 'src/hooks/useGravatar';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile/profile';
 import { fadeIn } from 'src/styles/keyframes';
@@ -36,13 +37,26 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const isProxyUser = Boolean(user.user_type === 'proxy');
   const showChildAccountAccessCol = profile?.user_type === 'parent';
 
-  const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
+  // const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
-          {isLoadingGravatar ? (
+          <GravatarOrAvatar
+            avatar={
+              <Avatar
+                color={
+                  user.username !== profile?.username
+                    ? theme.palette.primary.dark
+                    : undefined
+                }
+                username={user.username}
+              />
+            }
+            gravatar={<StyledGravatar email={user.email} />}
+          />
+          {/* {isLoadingGravatar ? (
             <Box height={28} width={28} />
           ) : hasGravatar ? (
             <StyledGravatar email={user.email} />
@@ -55,7 +69,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
               }
               username={user.username}
             />
-          )}
+          )} */}
           <Typography>{user.username}</Typography>
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}

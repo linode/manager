@@ -7,8 +7,9 @@ import { makeStyles } from 'tss-react/mui';
 import UserIcon from 'src/assets/icons/account.svg';
 import { Avatar as NewAvatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Typography } from 'src/components/Typography';
-import { useGravatar } from 'src/hooks/useGravatar';
+// import { useGravatar } from 'src/hooks/useGravatar';
 import { useProfile } from 'src/queries/profile/profile';
 
 import { Hively, shouldRenderHively } from './Hively';
@@ -112,7 +113,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
 
   const { data: profile } = useProfile();
 
-  const { hasGravatar } = useGravatar(profile?.email);
+  // const { hasGravatar } = useGravatar(profile?.email);
 
   React.useEffect(() => {
     if (!ticket && !reply) {
@@ -148,7 +149,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
   const renderAvatar = (id: string) => {
     return (
       <div className={classes.userWrapper}>
-        {hasGravatar ? (
+        {/* {hasGravatar ? (
           <Avatar
             alt="Gravatar"
             className={classes.leftIcon}
@@ -166,7 +167,29 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
             sx={{ marginTop: 1 }}
             username={data?.username}
           />
-        )}
+        )} */}
+        <GravatarOrAvatar
+          avatar={
+            <NewAvatar
+              color={
+                data?.username !== profile?.username
+                  ? theme.palette.primary.dark
+                  : undefined
+              }
+              sx={{ marginTop: 1 }}
+              username={data?.username}
+            />
+          }
+          gravatar={
+            <Avatar
+              alt="Gravatar"
+              className={classes.leftIcon}
+              src={`https://gravatar.com/avatar/${id}?d=404`}
+            >
+              <UserIcon />
+            </Avatar>
+          }
+        />
       </div>
     );
   };
