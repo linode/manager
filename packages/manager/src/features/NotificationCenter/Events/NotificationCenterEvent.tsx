@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -28,6 +29,7 @@ interface NotificationEventProps {
 export const NotificationCenterEvent = React.memo(
   (props: NotificationEventProps) => {
     const { event } = props;
+    const theme = useTheme();
     const { classes, cx } = notificationEventStyles();
     const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
     const message = getEventMessage(event);
@@ -58,7 +60,14 @@ export const NotificationCenterEvent = React.memo(
         ) : hasGravatar ? (
           <NotificationEventGravatar username={event.username} />
         ) : (
-          <NotificationEventAvatar username={event.username ?? 'Linode'} />
+          <NotificationEventAvatar
+            color={
+              username !== profile?.username
+                ? theme.palette.primary.dark
+                : undefined
+            }
+            username={event.username ?? 'Linode'}
+          />
         )}
         <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
           {message}

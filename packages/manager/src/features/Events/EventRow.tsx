@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
@@ -27,6 +28,7 @@ interface EventRowProps {
 
 export const EventRow = (props: EventRowProps) => {
   const { event } = props;
+  const theme = useTheme();
   const timestamp = getEventTimestamp(event);
   const { action, message, username } = {
     action: event.action,
@@ -67,7 +69,16 @@ export const EventRow = (props: EventRowProps) => {
                 username={username === 'Linode' ? '' : username}
               />
             ) : (
-              <Avatar height={24} username={username} width={24} />
+              <Avatar
+                color={
+                  username !== profile?.username
+                    ? theme.palette.primary.dark
+                    : undefined
+                }
+                height={24}
+                username={username}
+                width={24}
+              />
             )}
             {username}
           </Box>
