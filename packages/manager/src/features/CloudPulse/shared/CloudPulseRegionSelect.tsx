@@ -3,17 +3,14 @@ import * as React from 'react';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import { REGION, RESOURCES } from '../Utils/constants';
-
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
-  handleRegionChange: (region: string | undefined) => void;
+  handleRegionChange: (region: string | undefined, savePref?: boolean) => void;
   placeholder?: string;
   preferences?: AclpConfig;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
-  updatePreferences?: (data: {}) => void;
 }
 
 export const CloudPulseRegionSelect = React.memo(
@@ -26,7 +23,6 @@ export const CloudPulseRegionSelect = React.memo(
       preferences,
       savePreferences,
       selectedDashboard,
-      updatePreferences,
     } = props;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
@@ -51,14 +47,8 @@ export const CloudPulseRegionSelect = React.memo(
     return (
       <RegionSelect
         onChange={(_, region) => {
-          if (savePreferences && updatePreferences) {
-            updatePreferences({
-              [REGION]: region?.id,
-              [RESOURCES]: undefined,
-            });
-          }
           setSelectedRegion(region?.id);
-          handleRegionChange(region?.id);
+          handleRegionChange(region?.id, savePreferences);
         }}
         textFieldProps={{
           hideLabel: true,

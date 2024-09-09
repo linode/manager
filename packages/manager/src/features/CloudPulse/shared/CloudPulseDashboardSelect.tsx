@@ -6,7 +6,6 @@ import { Typography } from 'src/components/Typography';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
-import { DASHBOARD_ID } from '../Utils/constants';
 import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
 
 import type { Dashboard } from '@linode/api-v4';
@@ -15,20 +14,14 @@ export interface CloudPulseDashboardSelectProps {
   defaultValue?: number;
   handleDashboardChange: (
     dashboard: Dashboard | undefined,
-    isDefault?: boolean
+    savePref?: boolean
   ) => void;
   savePreferences?: boolean;
-  updatePreferences?: (data: {}) => void;
 }
 
 export const CloudPulseDashboardSelect = React.memo(
   (props: CloudPulseDashboardSelectProps) => {
-    const {
-      defaultValue,
-      handleDashboardChange,
-      savePreferences,
-      updatePreferences,
-    } = props;
+    const { defaultValue, handleDashboardChange, savePreferences } = props;
 
     const {
       data: serviceTypesList,
@@ -86,9 +79,9 @@ export const CloudPulseDashboardSelect = React.memo(
             (obj: Dashboard) => obj.id === defaultValue
           );
           setSelectedDashboard(dashboard);
-          handleDashboardChange(dashboard, true);
+          handleDashboardChange(dashboard);
         } else {
-          handleDashboardChange(undefined, true);
+          handleDashboardChange(undefined);
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,13 +89,8 @@ export const CloudPulseDashboardSelect = React.memo(
     return (
       <Autocomplete
         onChange={(_: any, dashboard: Dashboard) => {
-          if (savePreferences && updatePreferences) {
-            updatePreferences({
-              [DASHBOARD_ID]: dashboard?.id,
-            });
-          }
           setSelectedDashboard(dashboard);
-          handleDashboardChange(dashboard);
+          handleDashboardChange(dashboard, savePreferences);
         }}
         renderGroup={(params) => (
           <Box key={params.key}>

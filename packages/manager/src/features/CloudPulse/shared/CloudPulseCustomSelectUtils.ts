@@ -13,7 +13,12 @@ interface CloudPulseCustomSelectDefaultValueProps {
   /**
    * The callback for the selection changes happening in the custom select component
    */
-  handleSelectionChange: (filterKey: string, value: FilterValueType) => void;
+  handleSelectionChange: (
+    filterKey: string,
+    value: FilterValueType,
+    savePref?: boolean,
+    updatedPreferenceData?: {}
+  ) => void;
 
   /**
    * Indicates whether we need multiselect for the component or not
@@ -34,12 +39,6 @@ interface CloudPulseCustomSelectDefaultValueProps {
    * Indicates whether we need to save preferences or not
    */
   savePreferences?: boolean;
-
-  /**
-   * Function to update the user preference
-   * @param data Data to be updated in the preferences
-   */
-  updatePreferences?: (data: {}) => void;
 }
 
 /**
@@ -57,7 +56,12 @@ interface CloudPulseCustomSelectionChangeProps {
   /**
    * The callback for the selection changes happening in the custom select component
    */
-  handleSelectionChange: (filterKey: string, value: FilterValueType) => void;
+  handleSelectionChange: (
+    filterKey: string,
+    value: FilterValueType,
+    savePref?: boolean,
+    updatedPreferenceData?: {}
+  ) => void;
 
   /**
    * The maximum number of selections that needs to be allowed
@@ -73,12 +77,6 @@ interface CloudPulseCustomSelectionChangeProps {
    * boolean variable to check whether preferences should be saved or not
    */
   savePreferences?: boolean;
-
-  /**
-   * Function to update the user preference
-   * @param data Data to be updated in the preferences
-   */
-  updatePreferences?: (data: {}) => void;
 
   /**
    * The listed options in the custom select component
@@ -161,7 +159,6 @@ export const handleCustomSelectionChange = (
     handleSelectionChange,
     maxSelections,
     savePreferences,
-    updatePreferences,
   } = selectionChangeProps;
 
   let { value } = selectionChangeProps;
@@ -176,22 +173,29 @@ export const handleCustomSelectionChange = (
       : String(value.id)
     : undefined;
 
-  // publish the selection change
-  handleSelectionChange(filterKey, result);
+  let updatedPreferenceData: AclpConfig = {};
 
   // update the preferences
-  if (savePreferences && updatePreferences) {
-    updatePreferences({
-      [filterKey]: result,
-    });
+  if (savePreferences) {
+    updatedPreferenceData = { [filterKey]: result };
   }
 
   // update the clear selections in the preference
-  if (clearSelections && savePreferences && updatePreferences) {
-    clearSelections.forEach((selection) =>
-      updatePreferences({ [selection]: undefined })
+  if (clearSelections && savePreferences) {
+    clearSelections.forEach(
+      (selection) =>
+        (updatedPreferenceData = {
+          ...updatedPreferenceData,
+          [selection]: undefined,
+        })
     );
   }
-
+  // publish the selection change
+  handleSelectionChange(
+    filterKey,
+    result,
+    savePreferences,
+    updatedPreferenceData
+  );
   return value;
 };

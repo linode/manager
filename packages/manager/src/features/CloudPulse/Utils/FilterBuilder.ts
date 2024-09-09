@@ -28,7 +28,6 @@ interface CloudPulseFilterProperties {
   };
   isServiceAnalyticsIntegration: boolean;
   preferences?: AclpConfig;
-  updatePreferences?: (data: {}) => void;
 }
 
 interface CloudPulseMandatoryFilterCheckProps {
@@ -50,22 +49,16 @@ interface CloudPulseMandatoryFilterCheckProps {
  */
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
-  handleRegionChange: (region: string | undefined) => void
+  handleRegionChange: (region: string | undefined, savePref?: boolean) => void
 ): CloudPulseRegionSelectProps => {
   const { placeholder } = props.config.configuration;
-  const {
-    dashboard,
-    isServiceAnalyticsIntegration,
-    preferences,
-    updatePreferences,
-  } = props;
+  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
   return {
     handleRegionChange,
     placeholder,
     preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
-    updatePreferences,
   };
 };
 
@@ -81,7 +74,10 @@ export const getRegionProperties = (
  */
 export const getResourcesProperties = (
   props: CloudPulseFilterProperties,
-  handleResourceChange: (resourceId: CloudPulseResources[]) => void
+  handleResourceChange: (
+    resourceId: CloudPulseResources[],
+    savePref?: boolean
+  ) => void
 ): CloudPulseResourcesSelectProps => {
   const { filterKey, placeholder } = props.config.configuration;
   const {
@@ -90,7 +86,6 @@ export const getResourcesProperties = (
     dependentFilters,
     isServiceAnalyticsIntegration,
     preferences,
-    updatePreferences,
   } = props;
   return {
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
@@ -103,7 +98,6 @@ export const getResourcesProperties = (
     preferences,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
-    updatePreferences,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
   };
 };
@@ -115,7 +109,12 @@ export const getResourcesProperties = (
  */
 export const getCustomSelectProperties = (
   props: CloudPulseFilterProperties,
-  handleCustomSelectChange: (filterKey: string, value: FilterValueType) => void
+  handleCustomSelectChange: (
+    filterKey: string,
+    value: FilterValueType,
+    savePref?: boolean,
+    updatedPreferenceData?: {}
+  ) => void
 ): CloudPulseCustomSelectProps => {
   const {
     apiIdField,
@@ -133,7 +132,6 @@ export const getCustomSelectProperties = (
     dependentFilters,
     isServiceAnalyticsIntegration,
     preferences,
-    updatePreferences,
   } = props;
   return {
     apiResponseIdField: apiIdField,
@@ -160,7 +158,6 @@ export const getCustomSelectProperties = (
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
-    updatePreferences,
   };
 };
 
@@ -174,14 +171,14 @@ export const getCustomSelectProperties = (
  */
 export const getTimeDurationProperties = (
   props: CloudPulseFilterProperties,
-  handleTimeRangeChange: (timeDuration: TimeDuration) => void
+  handleTimeRangeChange: (
+    timeDuration: TimeDuration,
+    timeDurationValue?: string,
+    savePref?: boolean
+  ) => void
 ): CloudPulseTimeRangeSelectProps => {
   const { placeholder } = props.config.configuration;
-  const {
-    isServiceAnalyticsIntegration,
-    preferences,
-    updatePreferences,
-  } = props;
+  const { isServiceAnalyticsIntegration, preferences } = props;
 
   const timeDuration = preferences?.timeDuration;
   return {
@@ -190,7 +187,6 @@ export const getTimeDurationProperties = (
     handleStatsChange: handleTimeRangeChange,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
-    updatePreferences,
   };
 };
 

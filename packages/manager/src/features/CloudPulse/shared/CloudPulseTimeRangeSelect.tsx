@@ -2,8 +2,6 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-import { TIME_DURATION } from '../Utils/constants';
-
 import type { TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
@@ -16,10 +14,13 @@ export interface CloudPulseTimeRangeSelectProps
     'defaultValue' | 'onChange'
   > {
   defaultValue?: string;
-  handleStatsChange?: (timeDuration: TimeDuration) => void;
+  handleStatsChange?: (
+    timeDuration: TimeDuration,
+    timeDurationValue?: string,
+    savePref?: boolean
+  ) => void;
   placeholder?: string;
   savePreferences?: boolean;
-  updatePreferences?: (data: {}) => void;
 }
 
 const PAST_7_DAYS = 'Last 7 Days';
@@ -41,7 +42,6 @@ export const CloudPulseTimeRangeSelect = React.memo(
       handleStatsChange,
       placeholder,
       savePreferences,
-      updatePreferences,
     } = props;
     const options = generateSelectOptions();
 
@@ -59,22 +59,24 @@ export const CloudPulseTimeRangeSelect = React.memo(
       const item = getDefaultValue();
 
       if (handleStatsChange) {
-        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+        handleStatsChange(
+          getTimeDurationFromTimeRange(item.value),
+          item.value,
+          false
+        );
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // need to execute only once, during mounting of this component
 
     const handleChange = (item: Item<Labels, Labels>) => {
-      if (savePreferences && updatePreferences) {
-        updatePreferences({
-          [TIME_DURATION]: item.value,
-        });
-      }
-
       setSelectedTimeRange(item);
 
       if (handleStatsChange) {
-        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+        handleStatsChange(
+          getTimeDurationFromTimeRange(item.value),
+          item.value,
+          savePreferences
+        );
       }
       setSelectedTimeRange(item); // update the state variable to retain latest selections
     };

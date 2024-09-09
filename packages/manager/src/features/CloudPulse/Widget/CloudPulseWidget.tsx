@@ -205,13 +205,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     []
   );
 
-  /**
-   *
-   * @param value number value for the tool tip
-   * @param unit string unit for the tool tip
-   * @returns formatted string using @value & @unit
-   */
-
   const {
     data: metricsList,
     error,
@@ -265,7 +258,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const metricsApiCallError = error?.[0]?.reason;
   return (
     <Grid item lg={widget.size} xs={12}>
-      <Paper>
+      <Paper data-qa-widget={convertStringToCamelCasesWithSpaces(widget.label)}>
         <Stack spacing={2}>
           <Stack
             alignItems={'center'}
