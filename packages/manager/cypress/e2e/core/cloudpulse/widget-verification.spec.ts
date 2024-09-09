@@ -1,18 +1,12 @@
 import {
   selectTimeRange,
-  validateWidgetTitle,
-  setGranularity,
-  setAggregation,
-  verifyGranularity,
-  verifyAggregation,
-  checkZoomActions,
   selectAndVerifyResource,
   resource,
-  resetDashboardAndVerifyPage,
   selectServiceName,
   dashboardName,
   region,
-  selectRegion
+  assertSelections,
+  resetDashboardAndVerifyPage
 } from 'support/util/cloudpulse';
 import {
   mockAppendFeatureFlags,
@@ -71,41 +65,141 @@ describe('Dashboard Widget Verification Tests', () => {
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     interceptCreateMetrics(responsePayload).as('metricAPI');
      resetDashboardAndVerifyPage(dashboardName);
-      selectServiceName(dashboardName);
+     selectServiceName(dashboardName);
      selectTimeRange(actualRelativeTimeDuration, Object.values(timeRange));
-      selectRegion(region);
-      selectAndVerifyResource(resource);
+     ui.regionSelect.find().click().type(`${region}{enter}`);
+     selectAndVerifyResource(resource);
 
      });
+    
   it(`should set available granularity of the all the widget`, () => {
     linodeWidgets.forEach((testData) => {
-      setGranularity(testData.title, testData.expectedGranularity);
+     const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+    cy.get(widgetSelector)
+      .first()
+      .should('be.visible')
+       .within(() => {
+      ui.autocomplete
+        .findByTitleCustom('Select an Interval')
+        .findByTitle('Open')
+        .click();
+      ui.autocompletePopper
+        .findByTitle(testData.expectedGranularity)
+        .should('be.visible')
+        .click();
+       assertSelections(testData.expectedGranularity);
+     
     });
+  });
   });
   it(`should verify the title of the  widget`, () => {
     linodeWidgets.forEach((testData) => {
-      validateWidgetTitle(testData.title);
-    });
-  });
-  it(`should set available aggregation of the all the widget`, () => {
-    linodeWidgets.forEach((testData) => {
-      setAggregation(testData.title, testData.expectedAggregation);
-    });
-  });
-  it(`should verify available granularity  of the widget`, () => {
-    linodeWidgets.forEach((testData) => {
-      verifyGranularity(testData.title, testData.expectedGranularityArray);
+      const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
+      cy.get(widgetSelector).invoke('text').then((text) => {
+      expect(text.trim()).to.equal(testData.title);
     });
   });
 
-  it(`should verify available aggregation  of the widget`, () => {
+  it(`should set available aggregation of the all the widget`, () => {
     linodeWidgets.forEach((testData) => {
-      verifyAggregation(testData.title, testData.expectedAggregationArray);
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .first()
+        .should('be.visible')
+        .within(() => {
+          ui.autocomplete
+            .findByTitleCustom('Select an Aggregate Function')
+            .findByTitle('Open')
+            .click();
+          ui.autocompletePopper
+            .findByTitle(testData.expectedAggregation)
+            .should('be.visible')
+            .click();
+         assertSelections(testData.expectedAggregation);
+        });
+  });
+  });
+  it(`should verify available granularity  of the widget`, () => {
+    linodeWidgets.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+     cy.get(widgetSelector)
+       .first()
+       .scrollIntoView()
+        .should('be.visible')
+      .within(() => {
+        ui.autocomplete
+        .findByTitleCustom('Select an Interval')
+        .findByTitle('Open')
+        .click();
+        testData.expectedGranularityArray.forEach((option) => {
+        ui.autocompletePopper
+          .findByTitle(option)
+          .should('be.visible')
+          .then(() => {
+            cy.log(`${option} is visible`);
+          });
+      });
+      ui.autocomplete
+        .findByTitleCustom('Select an Interval')
+        .findByTitle('Close')
+        .click();
     });
   });
-  it.only(`should zoom in and out of the all the widget`, () => {
+});
+
+  it(`should verify available aggregation  of the widget`, () => {
     linodeWidgets.forEach((testData) => {
-    checkZoomActions(testData.title);
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+  cy.get(widgetSelector)
+    .first()
+    .scrollIntoView()
+    .should('be.visible')
+    .within(() => {
+      ui.autocomplete
+        .findByTitleCustom('Select an Aggregate Function')
+        .findByTitle('Open')
+        .click();
+        testData.expectedAggregationArray.forEach((option) => {
+        ui.autocompletePopper
+          .findByTitle(option)
+          .should('be.visible')
+          .then(() => {
+            cy.log(`${option} is visible`);
+          });
+      });
+      ui.autocomplete
+        .findByTitleCustom('Select an Aggregate Function')
+        .findByTitle('Close')
+        .click();
+    });
+    });
+  });
+  it(`should zoom in and out of the all the widget`, () => {
+    linodeWidgets.forEach((testData) => {
+      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      //const zoomInSelector = 'svg[data-testid="zoom-in"]';
+     // const zoomOutSelector = 'svg[data-testid="zoom-out"]';
+     const zoomInSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-in');
+      const zoomOutSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-out');
+    cy.get(widgetSelector).each(($widget) => {
+        cy.wrap($widget).then(($el) => {
+          const zoomInElement = $el.find(zoomInSelector);
+          const zoomOutElement = $el.find(zoomOutSelector);
+        if (zoomOutElement.length > 0) {
+            cy.wrap(zoomOutElement)
+              .should('be.visible')
+              .click({ timeout: 5000 })
+              .then(() => {
+                cy.log('Zoomed Out on widget:', $el);
+              });
+          } else if (zoomInElement.length > 0) {
+            cy.wrap(zoomInElement)
+              .should('be.visible')
+              .click({ timeout: 5000 })
+              .then(() => {
+                cy.log('Zoomed In on widget:', $el);
+              });
+          }
   });
       });
     });
@@ -136,7 +230,8 @@ describe('Dashboard Widget Verification Tests', () => {
       });
     });
   });
-
-
+});
+});
+});
 
 
