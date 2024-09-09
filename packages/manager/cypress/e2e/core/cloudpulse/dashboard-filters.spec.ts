@@ -16,6 +16,7 @@ import {
 } from 'support/intercepts/feature-flags';
 import { granularity } from 'support/constants/widget-service';
 import {
+  interceptCloudPulseServices,
   interceptCreateMetrics,
   interceptGetDashboards,
   interceptGetMetricDefinitions,
@@ -60,6 +61,7 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
     cy.visitWithLogin('monitor/cloudpulse');
     interceptGetMetricDefinitions().as('dashboardMetricsData');
     interceptGetDashboards().as('dashboard');
+    interceptCloudPulseServices().as('services');
     mockGetLinodes([mockLinode]).as('getLinodes');
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     interceptCreateMetrics(responsePayload).as('metricAPI');
@@ -68,7 +70,7 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
   });
 
 
-  it.only('should verify cloudpulse availability when feature flag is set to false', () => {
+  it('should verify cloudpulse availability when feature flag is set to false', () => {
     mockAppendFeatureFlags({
       aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: false }),
     });
@@ -77,10 +79,10 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
     cy.findByText('Not Found').should('be.visible'); // not found
   });
 
-  it('should clear the preferences of the dashboard', () => {
+  it.only('should clear the preferences of the dashboard', () => {
     resetDashboardAndVerifyPage(dashboardName);
   });
-  it('should set and verify dashboard name', () => {
+  it.only('should set and verify dashboard name', () => {
     selectServiceName(dashboardName);
     assertSelections(dashboardName);
   });
