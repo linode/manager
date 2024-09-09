@@ -7,6 +7,7 @@ import {
   cloudPulseServices,
   dashboardDefinitions,
   dashboardMetricsData,
+  linodeMetricsDashboard,
 } from 'support/constants/widget-mockdata';
 import { apiMatcher } from 'support/util/intercepts';
 
@@ -88,4 +89,20 @@ export const interceptCreateMetrics = (
     '**/monitor/services/linode/metrics',
     mockResponse
   );
+};
+
+export const mockLinodeDashboardServicesResponse = (): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('**/monitor/dashboards/1'),
+    linodeMetricsDashboard
+  );
+};
+const JWSToken = {
+  token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
+};
+export const mockJWSToken = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher('**/monitor/services/linode/token'), {
+    JWSToken,
+  });
 };

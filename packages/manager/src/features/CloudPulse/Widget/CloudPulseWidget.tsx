@@ -299,7 +299,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             padding={1}
           >
             <Typography
-              data-qa-widget_header={convertStringToCamelCasesWithSpaces(
+              data-qa-widget-header={convertStringToCamelCasesWithSpaces(
                 widget.label
               )}
               fontSize={{ sm: '1.5rem', xs: '2rem' }}

@@ -43,12 +43,17 @@ export const selectRegion = (region: string) => {
 /**
  * Selects a time range from the time range dropdown.
  * @param {string} timeRange - The time range to select.
+ * @param {Array<string>} timeSegments - An array of time segment values (e.g., ["2024-01-01", "2024-01-02"]).
+
  */
-export const selectTimeRange = (timeRange: string) => {
+export const selectTimeRange = (timeRange: string, timeSegments: string[]) => {
   ui.autocomplete
     .findByTitleCustom('Select Time Duration')
     .findByTitle('Open')
     .click();
+  timeSegments.forEach((option) => {
+    ui.autocompletePopper.findByTitle(option).should('be.visible');
+  });
   ui.autocompletePopper.findByTitle(timeRange).should('be.visible').click();
   cy.findByDisplayValue(timeRange).should('have.value', timeRange);
 };
@@ -116,8 +121,8 @@ export const validateWidgetTitle = (widgetName: string) => {
     .invoke('text')
     .then((text) => {
       expect(text.trim()).to.equal(widgetName);
+      cy.findByDisplayValue(widgetName).should('have.value', widgetName);
     });
-  cy.findByDisplayValue(widgetName).should('have.value', widgetName);
 };
 
 /**
@@ -141,6 +146,7 @@ export const setGranularity = (widgetName: string, granularity: string) => {
         .should('be.visible')
         .click();
       assertSelections(granularity);
+      cy.findByDisplayValue(granularity).should('have.value', granularity);
     });
 };
 /**
@@ -163,6 +169,7 @@ export const setAggregation = (widgetName: string, aggregation: string) => {
         .should('be.visible')
         .click();
       assertSelections(aggregation);
+      cy.findByDisplayValue(aggregation).should('have.value', aggregation);
     });
 };
 /**
@@ -273,15 +280,3 @@ export const checkZoomActions = (widgetName: string) => {
     });
   });
 };
-
-/**
- * Sets up mock data and intercepts for user-related tests.
- *
- * This function:
- * 1. Configures feature flags for testing.
- * 2 Mocks the feature flag client stream.
- * 3. Visits the specified page with a logged-in user.
- * 4. Sets up intercepts for various API calls and aliases them for testing.
- *
- *
- */

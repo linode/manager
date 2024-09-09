@@ -2,6 +2,8 @@ import {
   granularity,
   timeRange,
 } from '../../cypress/support/constants/widget-service';
+
+import type { AvailableMetrics } from '@linode/api-v4';
 export function createWidget(
   name: string,
   title: string,
@@ -19,21 +21,6 @@ export function createWidget(
     title,
   };
 }
-interface MetricResponse {
-  data: {
-    result: Array<{
-      metric: Record<string, any>;
-      values: [number, string][];
-    }>;
-    resultType: string;
-  };
-  isPartial: boolean;
-  stats: {
-    executionTimeMsec: number;
-    seriesFetched: string;
-  };
-  status: string;
-}
 /**
  * Generates a mock metric response based on the specified time range and granularity.
  *
@@ -45,12 +32,12 @@ interface MetricResponse {
  *
  * @param {string} time - The time range for the metric data (e.g., "Last12Hours").
  * @param {string} granularityData - The granularity of the metric data (e.g., "Min5").
- * @returns {MetricResponse} - The generated mock metric response.
+ * @returns {AvailableMetrics} - The generated mock metric response.
  */
 export const createMetricResponse = (
   time: string,
   granularityData: string
-): MetricResponse => {
+): AvailableMetrics => {
   const currentTime = Math.floor(Date.now() / 1000);
 
   const intervals: Record<string, number> = {

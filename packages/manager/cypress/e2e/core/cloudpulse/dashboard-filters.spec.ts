@@ -33,9 +33,10 @@ import {
 
 import {
   mockGetAccount,
-  mockCancelAccount,
-  mockCancelAccountError,
 } from 'support/intercepts/account';
+import {
+  timeRange,
+} from 'support/constants/widget-service';
 /**
  * This test suite focuses on the standard operations and verifications for the Cloudpulse dashboard.
  *
@@ -87,7 +88,7 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
     assertSelections(dashboardName);
   });
   it('should set and verify time range', () => {
-    selectTimeRange(actualRelativeTimeDuration);
+    selectTimeRange(actualRelativeTimeDuration, Object.values(timeRange));
     assertSelections(actualRelativeTimeDuration);
   });
 

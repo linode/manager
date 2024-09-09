@@ -134,3 +134,54 @@ export const dashboardDefinitions = {
 export const cloudPulseServices = {
   data: [{ service_type: 'linode' }],
 };
+
+export const linodeMetricsDashboard = {
+  created: '2024-04-29T17:09:29',
+  id: '1',
+  label: 'Linode Service I/O Statistics',
+  service_type: 'linode',
+  type: 'standard',
+  updated: null,
+  widgets: [
+    {
+      aggregate_function: 'avg',
+      chart_type: 'area',
+      color: 'blue',
+      label: 'CPU utilization',
+      metric: 'system_cpu_utilization_percent',
+      size: 12,
+      unit: '%',
+      y_label: 'system_cpu_utilization_ratio',
+    },
+    {
+      aggregate_function: 'avg',
+      chart_type: 'area',
+      color: 'red',
+      label: 'Memory Usage',
+      metric: 'system_memory_usage_by_resource',
+      size: 12,
+      unit: 'Bytes',
+      y_label: 'system_memory_usage_bytes',
+    },
+    {
+      aggregate_function: 'avg',
+      chart_type: 'area',
+      color: 'green',
+      label: 'Network Traffic',
+      metric: 'system_network_io_by_resource',
+      size: 6,
+      unit: 'Bytes',
+      y_label: 'system_network_io_bytes_total',
+    },
+    {
+      aggregate_function: 'avg',
+      chart_type: 'area',
+      color: 'yellow',
+      label: 'Disk I/O',
+      metric: 'system_disk_OPS_total',
+      size: 6,
+      unit: 'OPS',
+      y_label: 'system_disk_operations_total',
+    },
+  ],
+};
