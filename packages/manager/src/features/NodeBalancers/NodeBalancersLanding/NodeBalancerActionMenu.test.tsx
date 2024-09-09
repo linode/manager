@@ -29,7 +29,7 @@ describe('NodeBalancerActionMenu', () => {
     expect(getByText('Delete')).toBeVisible();
   });
 
-  it('triggers the action to delete the Node Balancer', () => {
+  it('triggers the action to delete the NodeBalancer', () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerActionMenu {...props} />
     );
@@ -39,7 +39,7 @@ describe('NodeBalancerActionMenu', () => {
     expect(props.toggleDialog).toHaveBeenCalled();
   });
 
-  it('disables the delete button if the Node Balancer is read only', () => {
+  it('disables the delete button if the NodeBalancer is read only', () => {
     // make node balancer read only
     vi.mocked(useIsResourceRestricted).mockReturnValue(true);
 
