@@ -53,6 +53,9 @@ describe('NodeBalancersLanding', () => {
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
+    expect(getByText('NodeBalancers')).toBeVisible();
+    expect(getByText('Create NodeBalancer')).toBeVisible();
+
     // confirm table headers
     expect(getByText('Label')).toBeVisible();
     expect(getByText('Backend Status')).toBeVisible();
@@ -60,9 +63,5 @@ describe('NodeBalancersLanding', () => {
     expect(getByText('Ports')).toBeVisible();
     expect(getByText('IP Address')).toBeVisible();
     expect(getByText('Region')).toBeVisible();
-
-    // confirm headers
-    expect(getByText('NodeBalancers')).toBeVisible();
-    expect(getByText('Create NodeBalancer')).toBeVisible();
   });
 });

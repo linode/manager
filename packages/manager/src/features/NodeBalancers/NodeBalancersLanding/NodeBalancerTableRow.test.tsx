@@ -27,7 +27,7 @@ describe('NodeBalancerTableRow', () => {
     expect(getByText('Delete')).toBeVisible();
   });
 
-  it('renders the hidden columns when the screen width is larger', () => {
+  it('renders the hidden columns when the screen width is large enough', () => {
     resizeScreenSize(breakpoints.values.lg);
     const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
@@ -39,7 +39,7 @@ describe('NodeBalancerTableRow', () => {
     expect(getByText('us-east')).toBeVisible();
   });
 
-  it('calls onDelete', () => {
+  it('deletes the NodeBalancer', () => {
     const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
     const deleteButton = getByText('Delete');

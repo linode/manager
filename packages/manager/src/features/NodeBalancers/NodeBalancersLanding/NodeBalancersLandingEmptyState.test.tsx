@@ -8,13 +8,14 @@ import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState'
 
 vi.mock('src/hooks/useRestrictedGlobalGrantCheck');
 
+// Note: An integration test confirming the helper text and enabled Create NodeBalancer button already exists, so we're just checking for a disabled create button here
 describe('NodeBalancersLandingEmptyState', () => {
   afterEach(() => {
     vi.resetAllMocks();
   });
 
-  // Note: An integration test confirming the helper text and enabled Create NodeBalancer button already exists, so we're just checking for a disabled create button here
   it('disables the Create NodeBalancer button if user does not have permissions to create a NodeBalancer', async () => {
+    // disables the create button
     vi.mocked(useRestrictedGlobalGrantCheck).mockReturnValue(true);
 
     const { getByText } = renderWithTheme(<NodeBalancerLandingEmptyState />);

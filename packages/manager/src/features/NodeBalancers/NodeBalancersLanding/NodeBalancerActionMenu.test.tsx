@@ -40,7 +40,7 @@ describe('NodeBalancerActionMenu', () => {
   });
 
   it('disables the delete button if the NodeBalancer is read only', () => {
-    // make node balancer read only
+    // make the NodeBalancer read only
     vi.mocked(useIsResourceRestricted).mockReturnValue(true);
 
     const { getByText } = renderWithTheme(
