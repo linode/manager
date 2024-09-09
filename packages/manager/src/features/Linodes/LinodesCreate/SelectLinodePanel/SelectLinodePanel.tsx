@@ -1,4 +1,3 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
 import { useMediaQuery } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -8,7 +7,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
-import { OrderByProps, sortData } from 'src/components/OrderBy';
+import { sortData } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Paper } from 'src/components/Paper';
@@ -20,6 +19,9 @@ import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnal
 import { PowerActionsDialog } from '../../PowerActionsDialogOrDrawer';
 import { SelectLinodeCards } from './SelectLinodeCards';
 import { SelectLinodeTable } from './SelectLinodeTable';
+
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { OrderByProps } from 'src/components/OrderBy';
 
 interface Props {
   disabled?: boolean;
@@ -138,10 +140,6 @@ export const SelectLinodePanel = (props: Props) => {
                   {!!header ? header : 'Select Linode'}
                 </Typography>
                 <DebouncedSearchTextField
-                  customValue={{
-                    onChange: setUserSearchText,
-                    value: searchText,
-                  }}
                   sx={{
                     marginBottom: theme.spacing(1),
                     width: '330px',
@@ -152,7 +150,9 @@ export const SelectLinodePanel = (props: Props) => {
                   expand={true}
                   hideLabel
                   label=""
+                  onSearch={setUserSearchText}
                   placeholder="Search"
+                  value={searchText}
                 />
                 <StyledBox>
                   <SelectComponent

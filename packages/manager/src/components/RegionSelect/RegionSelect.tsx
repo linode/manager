@@ -1,6 +1,5 @@
 import { Typography } from '@mui/material';
 import { createFilterOptions } from '@mui/material/Autocomplete';
-
 import * as React from 'react';
 
 import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
@@ -63,7 +62,7 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const { isGeckoBetaEnabled, isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
 
   const {
     data: accountAvailability,
@@ -102,7 +101,7 @@ export const RegionSelect = <
   }, {});
 
   const EndAdornment = React.useMemo(() => {
-    // @TODO Gecko: Remove adornment after GA
+    // @TODO Gecko: Remove adornment after LA
     if (isGeckoBetaEnabled && selectedRegion?.site_type === 'distributed') {
       return (
         <TooltipIcon
@@ -113,17 +112,17 @@ export const RegionSelect = <
         />
       );
     }
-    if (isGeckoGAEnabled && selectedRegion) {
+    if (isGeckoLAEnabled && selectedRegion) {
       return `(${selectedRegion?.id})`;
     }
     return null;
-  }, [isGeckoBetaEnabled, isGeckoGAEnabled, selectedRegion]);
+  }, [isGeckoBetaEnabled, isGeckoLAEnabled, selectedRegion]);
 
   /*
    * When Gecko is enabled, allow regions to be searched by ID by passing a
    * custom stringify function.
    */
-  const filterOptions = isGeckoGAEnabled
+  const filterOptions = isGeckoLAEnabled
     ? createFilterOptions({
         stringify: (region: Region) => `${region.label} (${region.id})`,
       })
@@ -133,7 +132,7 @@ export const RegionSelect = <
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
         getOptionLabel={(region) =>
-          isGeckoGAEnabled ? region.label : `${region.label} (${region.id})`
+          isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`
         }
         renderOption={(props, region) => (
           <RegionOption
