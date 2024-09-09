@@ -79,10 +79,10 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
     cy.findByText('Not Found').should('be.visible'); // not found
   });
 
-  it.only('should clear the preferences of the dashboard', () => {
+  it('should clear the preferences of the dashboard', () => {
     resetDashboardAndVerifyPage(dashboardName);
   });
-  it.only('should set and verify dashboard name', () => {
+  it('should set and verify dashboard name', () => {
     selectServiceName(dashboardName);
     assertSelections(dashboardName);
   });
