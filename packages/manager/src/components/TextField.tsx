@@ -160,6 +160,7 @@ interface InputToolTipProps {
   tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   tooltipPosition?: TooltipProps['placement'];
   tooltipText?: JSX.Element | string;
+  tooltipWidth?: number;
 }
 
 interface TextFieldPropsOverrides extends StandardTextFieldProps {
@@ -253,6 +254,7 @@ export const TextField = (props: TextFieldProps) => {
     tooltipOnMouseEnter,
     tooltipPosition,
     tooltipText,
+    tooltipWidth,
     trimmed,
     type,
     value,
@@ -486,6 +488,7 @@ export const TextField = (props: TextFieldProps) => {
             status="help"
             text={tooltipText}
             tooltipPosition={tooltipPosition}
+            width={tooltipWidth}
           />
         )}
       </div>

@@ -3,12 +3,16 @@ import { createTestLinode } from 'support/util/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
-import { interceptCreateVolume } from 'support/intercepts/volumes';
+import {
+  interceptCreateVolume,
+  mockGetVolume,
+  mockGetVolumes,
+} from 'support/intercepts/volumes';
 import { randomNumber, randomString, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
-import { accountFactory, regionFactory } from 'src/factories';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { accountFactory, regionFactory, volumeFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetRegions } from 'support/intercepts/regions';
 
@@ -209,6 +213,75 @@ describe('volume create flow', () => {
         // });
 
         // Ensure warning notice is displayed
+        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
+      }
+    );
+  });
+
+  /*
+   * - Checks for Block Storage Encryption notices in the Create/Attach Volume drawer from the
+       'Storage' details page of an existing Linode.
+   */
+  it('displays a warning notice re: rebooting for client library updates under the appropriate conditions', () => {
+    // Conditions: Block Storage encryption feature flag is on; user has Block Storage Encryption capability; Linode does not support Block Storage Encryption and the user is trying to attach an encrypted volume
+
+    // Mock feature flag -- @TODO BSE: Remove feature flag once BSE is fully rolled out
+    mockAppendFeatureFlags({
+      blockStorageEncryption: true,
+    }).as('getFeatureFlags');
+
+    // Mock account response
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Block Storage Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+    mockGetRegions(mockRegions).as('getRegions');
+
+    const volume = volumeFactory.build({
+      region: mockRegions[0].id,
+      encryption: 'enabled',
+    });
+
+    const linodeRequest = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      root_pass: randomString(16),
+      region: mockRegions[0].id,
+      booted: false,
+    });
+
+    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
+      (linode: Linode) => {
+        mockGetVolumes([volume]).as('getVolumes');
+        mockGetVolume(volume);
+
+        cy.visitWithLogin(`/linodes/${linode.id}/storage`);
+        cy.wait(['@getFeatureFlags', '@getAccount']);
+
+        // Click "Add Volume" button
+        cy.findByText('Add Volume').click();
+
+        cy.get('[data-qa-drawer="true"]').within(() => {
+          cy.get('[data-qa-checked]').should('be.visible').click();
+        });
+
+        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
+
+        // Ensure notice is cleared when switching views in drawer
+        cy.get('[data-qa-radio="Attach Existing Volume"]').click();
+        cy.wait(['@getVolumes']);
+        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
+
+        // Ensure notice is displayed in "Attach Existing Volume" view when an encrypted volume is selected
+        cy.findByPlaceholderText('Select a Volume')
+          .should('be.visible')
+          .click()
+          .type(`${volume.label}{downarrow}{enter}`);
+        ui.autocompletePopper
+          .findByTitle(volume.label)
+          .should('be.visible')
+          .click();
+
         cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
       }
     );
