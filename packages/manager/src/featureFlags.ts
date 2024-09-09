@@ -85,6 +85,7 @@ export interface Flags {
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
+  apicliButtonCopy: string;
   apicliDxToolsAdditions: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;

@@ -3,6 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -17,9 +18,12 @@ import {
 import type { LinodeCreateFormValues } from './utilities';
 
 export const Actions = () => {
+  const flags = useFlags();
   const { params } = useLinodeCreateQueryParams();
 
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
+
+  const apicliButtonCopy = flags?.apicliButtonCopy;
 
   const {
     formState,
@@ -39,7 +43,7 @@ export const Actions = () => {
     sendLinodeCreateFormInputEvent({
       createType: params.type ?? 'OS',
       interaction: 'click',
-      label: 'Create Using Command Line',
+      label: apicliButtonCopy ?? 'Create Using Command Line',
     });
     if (await trigger()) {
       // If validation is successful, we open the dialog.
@@ -52,7 +56,7 @@ export const Actions = () => {
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
       <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
-        Create using command line
+        {apicliButtonCopy ?? 'Create Using Command Line'}
       </Button>
       <Button
         buttonType="primary"
