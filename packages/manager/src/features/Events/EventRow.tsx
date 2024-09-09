@@ -9,7 +9,6 @@ import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-// import { useGravatar } from 'src/hooks/useGravatar';
 import { useProfile } from 'src/queries/profile/profile';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
@@ -37,8 +36,6 @@ export const EventRow = (props: EventRowProps) => {
     username: getEventUsername(event),
   };
   const { data: profile } = useProfile();
-
-  // const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   if (!message) {
     return null;
@@ -84,24 +81,6 @@ export const EventRow = (props: EventRowProps) => {
               height={24}
               width={24}
             />
-            {/* {isLoadingGravatar ? (
-              <Box height={24} width={24} />
-            ) : hasGravatar ? (
-              <StyledGravatar
-                username={username === 'Linode' ? '' : username}
-              />
-            ) : (
-              <Avatar
-                color={
-                  username !== profile?.username
-                    ? theme.palette.primary.dark
-                    : undefined
-                }
-                height={24}
-                username={username}
-                width={24}
-              />
-            )} */}
             {username}
           </Box>
         </TableCell>

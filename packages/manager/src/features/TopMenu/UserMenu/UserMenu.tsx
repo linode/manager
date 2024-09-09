@@ -22,7 +22,6 @@ import { switchAccountSessionContext } from 'src/context/switchAccountSessionCon
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
-// import { useGravatar } from 'src/hooks/useGravatar';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
@@ -107,8 +106,6 @@ export const UserMenu = React.memo(() => {
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
-
-  // const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -223,14 +220,6 @@ export const UserMenu = React.memo(() => {
               />
             )
           }
-          //   isLoadingGravatar ? (
-          //     <Box height={28} width={28} />
-          //   ) : hasGravatar ? (
-          //     <StyledGravatar email={profile?.email ?? ''} />
-          //   ) : (
-          //     <Avatar />
-          //   )
-          // }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
             height: '50px',

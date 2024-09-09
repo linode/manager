@@ -102,17 +102,6 @@ export const DisplaySettings = () => {
             }}
             display="flex"
           >
-            {/* {isLoadingGravatar ? (
-              <Box height={88} width={88} />
-            ) : hasGravatar ? (
-              <StyledGravatar
-                email={profile?.email ?? ''}
-                height={88}
-                width={88}
-              />
-            ) : (
-              <Avatar height={88} width={88} />
-            )} */}
             <GravatarOrAvatar
               gravatar={
                 <StyledGravatar

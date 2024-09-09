@@ -13,7 +13,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { Typography } from 'src/components/Typography';
 import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
-// import { useGravatar } from 'src/hooks/useGravatar';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
@@ -21,7 +20,6 @@ import { fadeIn } from 'src/styles/keyframes';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 import { Avatar } from '../Avatar/Avatar';
-// import { Box } from '../Box';
 import { GravatarByEmail } from '../GravatarByEmail';
 import { GravatarOrAvatar } from '../GravatarOrAvatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
@@ -75,8 +73,6 @@ const UserSSHKeyPanel = (props: Props) => {
   const pagination = usePagination(1);
 
   const { data: profile } = useProfile();
-
-  // const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
 
   const isRestricted = profile?.restricted ?? false;
 
@@ -164,19 +160,7 @@ const UserSSHKeyPanel = (props: Props) => {
                   />
                 }
                 avatar={<Avatar sx={{ borderRadius: '50%', marginRight: 1 }} />}
-                height={28}
-                width={28}
               />
-              {/* // {isLoadingGravatar ? (
-              //   <Box height={28} width={28} />
-              // ) : hasGravatar ? (
-              //   <GravatarByEmail
-              //     className={classes.gravatar}
-              //     email={profile.email}
-              //   />
-              // ) : (
-              //   <Avatar sx={{ borderRadius: '50%', marginRight: 1 }} />
-              // )} */}
               {profile.username}
             </div>
           </TableCell>
@@ -224,22 +208,6 @@ const UserSSHKeyPanel = (props: Props) => {
                 />
               }
             />
-            {/* // {hasGravatar ? (
-            //   <GravatarByEmail
-            //     className={classes.gravatar}
-            //     email={user.email}
-            //   />
-            // ) : (
-            //   <Avatar
-            //     color={
-            //       user.username !== profile?.username
-            //         ? theme.palette.primary.dark
-            //         : undefined
-            //     }
-            //     sx={{ borderRadius: '50%', marginRight: 1 }}
-            //     username={user.username}
-            //   />
-            // )} */}
             {user.username}
           </div>
         </TableCell>

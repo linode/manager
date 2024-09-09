@@ -14,7 +14,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-// import { useGravatar } from 'src/hooks/useGravatar';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile/profile';
 import { fadeIn } from 'src/styles/keyframes';
@@ -37,8 +36,6 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const isProxyUser = Boolean(user.user_type === 'proxy');
   const showChildAccountAccessCol = profile?.user_type === 'parent';
 
-  // const { hasGravatar, isLoadingGravatar } = useGravatar(profile?.email);
-
   return (
     <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
@@ -56,20 +53,6 @@ export const UserRow = ({ onDelete, user }: Props) => {
             }
             gravatar={<StyledGravatar email={user.email} />}
           />
-          {/* {isLoadingGravatar ? (
-            <Box height={28} width={28} />
-          ) : hasGravatar ? (
-            <StyledGravatar email={user.email} />
-          ) : (
-            <Avatar
-              color={
-                user.username !== profile?.username
-                  ? theme.palette.primary.dark
-                  : undefined
-              }
-              username={user.username}
-            />
-          )} */}
           <Typography>{user.username}</Typography>
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
