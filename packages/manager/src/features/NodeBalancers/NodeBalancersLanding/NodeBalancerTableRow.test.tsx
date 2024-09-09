@@ -27,7 +27,7 @@ describe('NodeBalancerTableRow', () => {
     expect(getByText('Delete')).toBeVisible();
   });
 
-  it('renders the NodeBalancerTableRow for a large screen', () => {
+  it('renders the hidden columns when the screen width is larger', () => {
     resizeScreenSize(breakpoints.values.lg);
     const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
