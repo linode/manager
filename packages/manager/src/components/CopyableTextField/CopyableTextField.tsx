@@ -1,8 +1,11 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TextField } from 'src/components/TextField';
+
+import { DownloadTooltip } from '../DownloadTooltip';
 
 import type { CopyTooltipProps } from 'src/components/CopyTooltip/CopyTooltip';
 import type { TextFieldProps } from 'src/components/TextField';
@@ -14,10 +17,20 @@ interface CopyableTextFieldProps extends TextFieldProps {
   CopyTooltipProps?: Partial<CopyTooltipProps>;
   className?: string;
   hideIcon?: boolean;
+  showDownloadIcon?: boolean;
 }
 
 export const CopyableTextField = (props: CopyableTextFieldProps) => {
-  const { CopyTooltipProps, className, hideIcon, value, ...restProps } = props;
+  const {
+    CopyTooltipProps,
+    className,
+    hideIcon,
+    showDownloadIcon,
+    value,
+    ...restProps
+  } = props;
+
+  const fileName = showDownloadIcon ? snakeCase(props.label) : '';
 
   return (
     <StyledTextField
@@ -25,11 +38,20 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
       {...restProps}
       InputProps={{
         endAdornment: hideIcon ? undefined : (
-          <CopyTooltip
-            className="copyIcon"
-            text={`${value}`}
-            {...CopyTooltipProps}
-          />
+          <Box display="flex">
+            {props.showDownloadIcon && (
+              <DownloadTooltip
+                className="icon"
+                fileName={fileName}
+                text={`${value}`}
+              />
+            )}
+            <CopyTooltip
+              className="icon"
+              text={`${value}`}
+              {...CopyTooltipProps}
+            />
+          </Box>
         ),
       }}
       className={`${className} copy removeDisabledStyles`}
@@ -44,12 +66,15 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     backgroundColor: theme.name === 'dark' ? '#2f3236' : '#f4f4f4',
     opacity: 1,
   },
-  '.copyIcon': {
+  '.icon': {
+    '& :hover': {
+      color: 'inherit',
+    },
     '& svg': {
+      color: 'inherit',
       height: 14,
       top: 1,
     },
-    marginRight: theme.spacing(0.5),
   },
   '.removeDisabledStyles': {
     '& .MuiInput-input': {
@@ -67,3 +92,11 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
   },
 }));
+
+const snakeCase = (str: string): string => {
+  return str
+    .replace(/\W+/g, ' ')
+    .split(/ |\B(?=[A-Z])/)
+    .map((word) => word.toLowerCase())
+    .join('_');
+};
