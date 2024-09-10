@@ -288,6 +288,51 @@ export const mockGetLinodeDisks = (
 };
 
 /**
+ * Intercepts DELETE request to delete a Linode's Disks
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptDeleteDisks = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`linode/instances/${linodeId}/disks/*`)
+  );
+};
+
+/**
+ * Intercepts POST request to add a Linode's Disks
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptAddDisks = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', apiMatcher(`linode/instances/${linodeId}/disks`));
+};
+
+/**
+ * Intercepts POST request to resize a Linode's Disks
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptResizeDisks = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/disks/*/resize`)
+  );
+};
+
+/**
  * Intercepts DELETE request to delete linode and mocks response.
  *
  * @param linodeId - ID of Linode for intercepted request.

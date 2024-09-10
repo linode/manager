@@ -144,6 +144,8 @@ describe('Migrate Linode With Firewall', () => {
    * - Uses real API data to create a Firewall, attach a Linode to it, then migrate the Linode.
    */
   it('migrates linode with firewall - real data', () => {
+    cy.tag('method:e2e');
+    cy.tag('purpose:dcTesting');
     const [migrationRegionStart, migrationRegionEnd] = chooseRegions(2);
     const firewallLabel = randomLabel();
     const linodePayload = createLinodeRequestFactory.build({

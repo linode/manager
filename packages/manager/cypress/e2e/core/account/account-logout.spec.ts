@@ -5,6 +5,7 @@ import { ui } from 'support/ui';
 describe('Logout Test', () => {
   beforeEach(() => {
     cy.tag('purpose:syntheticTesting');
+    cy.tag('method:e2e');
   });
 
   /*

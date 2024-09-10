@@ -33,6 +33,7 @@ describe('OneClick Apps (OCA)', () => {
   });
 
   it('Lists all the OneClick Apps', () => {
+    cy.tag('method:e2e');
     interceptGetStackScripts().as('getStackScripts');
 
     cy.visitWithLogin(`/linodes/create?type=One-Click`);

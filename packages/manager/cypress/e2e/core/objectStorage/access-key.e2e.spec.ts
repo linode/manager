@@ -25,6 +25,9 @@ describe('object storage access key end-to-end tests', () => {
   before(() => {
     cleanUp(['obj-buckets', 'obj-access-keys']);
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Creates an access key with unlimited access

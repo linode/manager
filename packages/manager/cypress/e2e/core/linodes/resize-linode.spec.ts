@@ -10,6 +10,7 @@ authenticate();
 describe('resize linode', () => {
   beforeEach(() => {
     cleanUp(['linodes']);
+    cy.tag('method:e2e');
   });
 
   it('resizes a linode by increasing size: warm migration', () => {

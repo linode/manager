@@ -50,6 +50,7 @@ describe('create image (e2e)', () => {
   });
 
   it('create image from a linode', () => {
+    cy.tag('method:e2e');
     const label = randomLabel();
     const description = randomPhrase();
 

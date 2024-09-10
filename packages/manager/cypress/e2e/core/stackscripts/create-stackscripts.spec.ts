@@ -172,6 +172,10 @@ describe('Create stackscripts', () => {
   before(() => {
     cleanUp(['linodes', 'images', 'stackscripts']);
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+    cy.tag('purpose:dcTesting');
+  });
 
   /*
    * - Creates a StackScript with user-defined fields.
