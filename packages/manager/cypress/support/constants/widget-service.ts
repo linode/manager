@@ -7,7 +7,7 @@ export const granularity = {
   Day1: '1 day',
   Hr1: '1 hr',
   Min5: '5 min',
-} as const;
+};
 
 /**
  * Defines various aggregation types that can be applied to data.
@@ -18,7 +18,7 @@ export const aggregation = {
   Max: 'max',
   Min: 'min',
   Sum: 'sum',
-} as const;
+};
 
 // Define a constant object named `timeRange` to represent various time periods.
 // This object maps time range identifiers to their descriptive strings.
@@ -28,7 +28,7 @@ export const timeRange = {
   Last24Hours: 'Last 24 Hours',
   Last30Days: 'Last 30 Days',
   Last30Minutes: 'Last 30 Minutes',
-} as const;
+};
 
 // Define a constant object named `timeUnit` which serves as a mapping
 // between time unit identifiers and their full descriptive names.
@@ -37,7 +37,7 @@ export const timeUnit = {
   day: 'Days',
   hr: 'Hours',
   min: 'Minutes',
-} as const;
+} ;
 /**
  * Configuration object defining predefined sets of aggregation types.
  * These sets can be used to specify acceptable aggregation operations for different contexts.
@@ -55,11 +55,19 @@ export const widgetDetails = {
   linode: [
     {
       expectedAggregation: aggregation.Max,
+      expectedAggregationArray: aggregationConfig.basic,
+      expectedGranularity: granularity.Hr1,
+      expectedGranularityArray: Object.values(granularity),
+      name: 'system_cpu_utilization_percent',
+      title: 'CPU Utilization',
+    },
+    {
+      expectedAggregation: aggregation.Max,
       expectedAggregationArray: aggregationConfig.all,
       expectedGranularity: granularity.Hr1,
       expectedGranularityArray: Object.values(granularity),
-      name: 'system_disk_OPS_total',
-      title: 'Disk I/O',
+      name: 'system_memory_usage_by_resource',
+      title: 'Memory Usage',
     },
     {
       expectedAggregation: aggregation.Max,
@@ -74,16 +82,8 @@ export const widgetDetails = {
       expectedAggregationArray: aggregationConfig.all,
       expectedGranularity: granularity.Hr1,
       expectedGranularityArray: Object.values(granularity),
-      name: 'system_memory_usage_by_resource',
-      title: 'Memory Usage',
-    },
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.basic,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_cpu_utilization_percent',
-      title: 'CPU Utilization',
+      name: 'system_disk_OPS_total',
+      title: 'Disk I/O',
     },
   ],
 };

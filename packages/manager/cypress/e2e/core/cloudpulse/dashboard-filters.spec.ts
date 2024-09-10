@@ -9,7 +9,6 @@ import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
-import { granularity } from 'support/constants/widget-service';
 import {
   interceptCloudPulseServices,
   interceptCreateMetrics,
@@ -25,11 +24,9 @@ import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockGetAccount,
 } from 'support/intercepts/account';
-import {
-  timeRange,
-} from 'support/constants/widget-service';
 import { ui } from 'support/ui';
 import { accountFactory ,dashboardFactory,kubeLinodeFactory,linodeFactory,metricDefinitionsFactory} from 'src/factories';
+import { timeRange, widgetDetails, granularity } from 'support/constants/widget-service';
 /**
  * This test suite focuses on the standard operations and verifications for the Cloudpulse dashboard.
  *
@@ -43,7 +40,7 @@ import { accountFactory ,dashboardFactory,kubeLinodeFactory,linodeFactory,metric
 
 
 
- const dashboardName = 'ananth';
+ const dashboardName = 'Linode Dashboard';
  const region = 'US, Chicago, IL (us-ord)';
  const actualRelativeTimeDuration = timeRange.Last24Hours;
 const resource = 'test1';
@@ -54,26 +51,17 @@ const mockLinode = linodeFactory.build({
 });
 const mockAccount = accountFactory.build();
 
-const widgetLabels = [
-  'CPU utilization',
-  'Memory Usage',
-  'Network Traffic',
-  'Disk I/O',
-];
-const metricsLabels = [
-  'system_cpu_utilization_percent',
-  'system_memory_usage_by_resource',
-  'system_network_io_by_resource',
-  'system_disk_operations_total',
-];
 const y_labels = [
   'system_cpu_utilization_ratio',
   'system_memory_usage_bytes',
   'system_network_io_bytes_total',
   'system_disk_operations_total',
 ];
-const dashboard = dashboardFactory(dashboardName,widgetLabels,metricsLabels,y_labels).build();
-const metricDefinitions = metricDefinitionsFactory(widgetLabels,metricsLabels).build();
+const linodeWidgets = widgetDetails.linode;
+const widgetLabels: string[] = linodeWidgets.map(widget => widget.title);
+const metricsLabels: string[] = linodeWidgets.map(widget => widget.name);
+const dashboard = dashboardFactory(dashboardName, widgetLabels, metricsLabels, y_labels).build();
+const metricDefinitions = metricDefinitionsFactory(widgetLabels, metricsLabels).build();
 describe('Standard Dashboard Filter Application and Configuration Tests', () => {
   beforeEach(() => {
     cy.visitWithLogin('monitor/cloudpulse');
@@ -102,24 +90,15 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
     cy.findByText('Not Found').should('be.visible'); // not found
   });
 
-  it('should clear the preferences of the dashboard', () => {
-    resetDashboardAndVerifyPage(dashboardName);
-  });
-  it('should set and verify dashboard name', () => {
-    selectServiceName(dashboardName);
-    assertSelections(dashboardName);
-  });
-  it('should set and verify time range', () => {
-    selectTimeRange(actualRelativeTimeDuration, Object.values(timeRange));
-    assertSelections(actualRelativeTimeDuration);
-  });
-
-  it('should set and verify region', () => {
-    ui.regionSelect.find().click().type(`${region}{enter}`);
-    assertSelections(region);
-  });
-
-  it('should set and verify resource', () => {
-    selectAndVerifyResource(resource);
+  it('Check the Linode Dashboard for the required global filter.', () => {
+     resetDashboardAndVerifyPage(dashboardName);
+     selectServiceName(dashboardName);
+     assertSelections(dashboardName);
+     selectTimeRange(actualRelativeTimeDuration, Object.values(timeRange));
+     assertSelections(actualRelativeTimeDuration);
+     ui.regionSelect.find().click().type(`${region}{enter}`);
+     assertSelections(region);
+     selectAndVerifyResource(resource);
   });
 });
+

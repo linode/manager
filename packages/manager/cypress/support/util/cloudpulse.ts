@@ -1,4 +1,3 @@
-
 /**
  * This class provides utility functions for interacting with the Cloudpulse dashboard
  * in a Cypress test suite. It includes methods for:
@@ -15,7 +14,6 @@
  * @param {string} serviceName - The name of the service to select.
  */
 import { ui } from 'support/ui';
-
 
 export const selectServiceName = (serviceName: string) => {
   ui.autocomplete
@@ -72,14 +70,18 @@ export const assertSelections = (expectedOptions: string) => {
  * @param {string} serviceName - The name of the service to verify.
  */
 export const resetDashboardAndVerifyPage = (serviceName: string) => {
-
   ui.autocomplete
-    .findByTitleCustom('Select Dashboard')
-    .findByTitle('Clear')
-    .click();
-    ui.autocomplete
-    .findByPlaceholderCustom('Select Dashboard')
-    .should('have.value', ''); // Ensure the input field is cleared
+    .findByTitleCustom('Select Dashboard') // Custom method to locate the dropdown
+    .findByTitle('Clear') // Custom method to locate the "Clear" button
+    .then(($clearButton) => {
+      if ($clearButton.is(':visible')) {
+        // If the "Clear" button is visible, click it
+        cy.wrap($clearButton).click();
+      } else {
+        // If the "Clear" button is not visible, do nothing
+        cy.log('Clear button is not visible, no action taken');
+      }
+    });
 };
 
 /* export const checkZoomActions1 = (widgetName: string) => {

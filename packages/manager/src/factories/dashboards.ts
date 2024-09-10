@@ -85,11 +85,18 @@ export const metricDefinitionsFactory = (
   metricsLabels: string[]
 ) => {
   return Factory.Sync.makeFactory<MetricDefinitions>({
-    data: Factory.each(() => [
-      dashboardMetricFactory(widgetLabels, metricsLabels).build(), // Pass widgetLabels and metricsLabels
-    ]),
+    data: Factory.each(() => {
+      // Create the list of metrics definitions by iterating over widgetLabels
+      return widgetLabels.map((_, index) => {
+        return dashboardMetricFactory(widgetLabels, metricsLabels).build({
+          label: widgetLabels[index % widgetLabels.length],
+          metric: metricsLabels[index % metricsLabels.length]
+        });
+      });
+    }),
   });
 };
+
 const dashboardMetricFactory = (
   widgetLabels: string[],
   metricsLabels: string[]
@@ -97,8 +104,8 @@ const dashboardMetricFactory = (
   return Factory.Sync.makeFactory<AvailableMetrics>({
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
     dimensions: [],
-    label: Factory.each((i) => widgetLabels[i % widgetLabels.length]),
-    metric: Factory.each((i) => metricsLabels[i % metricsLabels.length]),
+    label: Factory.each((i) => widgetLabels[i % widgetLabels.length]), // This might be overridden
+    metric: Factory.each((i) => metricsLabels[i % metricsLabels.length]), // This might be overridden
     metric_type: 'gauge',
     scrape_interval: Factory.each(
       (i) => scrape_interval[i % scrape_interval.length]
@@ -106,3 +113,4 @@ const dashboardMetricFactory = (
     unit: Factory.each((i) => units_interval[i % units_interval.length]),
   });
 };
+
