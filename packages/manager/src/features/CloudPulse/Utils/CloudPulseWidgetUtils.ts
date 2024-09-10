@@ -1,3 +1,6 @@
+import { styled } from '@mui/material';
+
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
@@ -331,3 +334,19 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
       thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
+
+/**
+ * Returns an autocomplete with updates styles according to UX
+ */
+export const StyledWidgetAutocomplete = styled(Autocomplete, {
+  label: 'StyledAutocomplete',
+})(() => ({
+  '&& .MuiInput-input': {
+    padding: '1px',
+  },
+  '&& .MuiInput-root': {
+    height: '22px',
+    minHeight: '22px',
+    width: '90px',
+  },
+}));

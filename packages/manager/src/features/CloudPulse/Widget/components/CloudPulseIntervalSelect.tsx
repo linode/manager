@@ -1,7 +1,6 @@
-import { styled } from '@mui/material';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
 
 import type { TimeGranularity } from '@linode/api-v4';
 
@@ -116,7 +115,7 @@ export const CloudPulseIntervalSelect = React.memo(
     }
 
     return (
-      <StyledAutocomplete
+      <StyledWidgetAutocomplete
         isOptionEqualToValue={(
           option: IntervalOptions,
           value: IntervalOptions
@@ -143,16 +142,3 @@ export const CloudPulseIntervalSelect = React.memo(
     );
   }
 );
-
-const StyledAutocomplete = styled(Autocomplete, {
-  label: 'StyledAutocomplete',
-})(() => ({
-  '&& .MuiInput-input': {
-    padding: '1px',
-  },
-  '&& .MuiInput-root': {
-    height: '22px',
-    minHeight: '22px',
-    width: '90px',
-  },
-}));
