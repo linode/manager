@@ -3,7 +3,6 @@ import { linodeFactory, regionFactory } from '@src/factories';
 import { randomString, randomLabel } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
-
 import type { Region } from '@linode/api-v4';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 

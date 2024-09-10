@@ -1,9 +1,7 @@
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
-import {
-  linodeFactory,
-} from '@src/factories';
+import { linodeFactory } from '@src/factories';
 import {
   dcPricingPlanPlaceholder,
   dcPricingMockLinodeTypes,
@@ -58,8 +56,8 @@ describe('Create Linode with DC-specific pricing', () => {
     mockCreateLinode(mockLinode).as('linodeCreated');
 
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
-    
-    ui.button.findByTitle("Create Linode").click();
+
+    ui.button.findByTitle('Create Linode').click();
 
     // A message is shown to instruct users to select a region in order to view plans and prices
     cy.get('[data-qa-tp="Linode Plan"]').should(
@@ -78,11 +76,10 @@ describe('Create Linode with DC-specific pricing', () => {
     cy.findByText('Shared CPU').click();
     cy.get(`[id="${dcPricingMockLinodeTypes[0].id}"]`).click();
     // Confirm that the backup prices are displayed as expected.
-    cy.get('[data-qa-add-ons="true"]')
-      .within(() => {
-        cy.findByText(`$${currentBackupPrice.monthly}`).should('be.visible');
-        cy.findByText('per month').should('be.visible');
-      });
+    cy.get('[data-qa-add-ons="true"]').within(() => {
+      cy.findByText(`$${currentBackupPrice.monthly}`).should('be.visible');
+      cy.findByText('per month').should('be.visible');
+    });
     // Confirm that the checkout summary at the bottom of the page reflects the correct price.
     cy.get('[data-qa-linode-create-summary="true"]').within(() => {
       cy.findByText(`$${currentPrice.monthly!.toFixed(2)}/month`).should(
@@ -103,11 +100,10 @@ describe('Create Linode with DC-specific pricing', () => {
     cy.findByText('Shared CPU').click();
     cy.get(`[id="${dcPricingMockLinodeTypes[0].id}"]`).click();
     // Confirm that the backup prices are displayed as expected.
-    cy.get('[data-qa-add-ons="true"]')
-      .within(() => {
-        cy.findByText(`$${newBackupPrice.monthly}`).should('be.visible');
-        cy.findByText('per month').should('be.visible');
-      });
+    cy.get('[data-qa-add-ons="true"]').within(() => {
+      cy.findByText(`$${newBackupPrice.monthly}`).should('be.visible');
+      cy.findByText('per month').should('be.visible');
+    });
     // Confirms that the summary updates to reflect price changes if the user changes their region and plan selection.
     cy.get('[data-qa-linode-create-summary="true"]').within(() => {
       cy.findByText(`$${newPrice.monthly!.toFixed(2)}/month`).should(
