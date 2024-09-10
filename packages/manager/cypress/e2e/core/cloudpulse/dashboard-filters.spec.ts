@@ -1,6 +1,5 @@
 import {
   selectServiceName,
-  selectRegion,
   selectTimeRange,
   selectAndVerifyResource,
   assertSelections,
@@ -23,14 +22,8 @@ import {
 } from 'support/intercepts/cloudpulseAPIHandler';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import type { Flags } from 'src/featureFlags';
-import { createMetricResponse } from '@src/factories/widgetFactory'
+import { createMetricResponse } from '@src/factories/widget';
 import { mockGetLinodes } from 'support/intercepts/linodes';
-import {
-  accountFactory,
-  kubeLinodeFactory,
-  linodeFactory,
-} from 'src/factories';
-
 import {
   mockGetAccount,
 } from 'support/intercepts/account';
@@ -38,6 +31,7 @@ import {
   timeRange,
 } from 'support/constants/widget-service';
 import { ui } from 'support/ui';
+import { accountFactory ,dashboardFactory,kubeLinodeFactory,linodeFactory,metricDefinitionsFactory} from 'src/factories';
 /**
  * This test suite focuses on the standard operations and verifications for the Cloudpulse dashboard.
  *
@@ -49,21 +43,40 @@ import { ui } from 'support/ui';
  * dashboard behaves as expected under various conditions.
  */
 const mockKubeLinode = kubeLinodeFactory.build();
-
 const mockLinode = linodeFactory.build({
   label: "test1",
   id: mockKubeLinode.instance_id ?? undefined,
 });
+const widgetLabels = [
+  'CPU utilization',
+  'Memory Usage',
+  'Network Traffic',
+  'Disk I/O',
+];
+const metricsLabels = [
+  'system_cpu_utilization_percent',
+  'system_memory_usage_by_resource',
+  'system_network_io_by_resource',
+  'system_disk_operations_total',
+];
+const y_labels = [
+  'system_cpu_utilization_ratio',
+  'system_memory_usage_bytes',
+  'system_network_io_bytes_total',
+  'system_disk_operations_total',
+];
+const dashboard = dashboardFactory(dashboardName,widgetLabels,metricsLabels,y_labels).build();
+const metricDefinitions = metricDefinitionsFactory(widgetLabels,metricsLabels).build();
 describe('Standard Dashboard Filter Application and Configuration Tests', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
-    });
+    }).as('getFeatureFlags');
     mockGetFeatureFlagClientstream();
     cy.visitWithLogin('monitor/cloudpulse');
-    interceptGetMetricDefinitions().as('dashboardMetricsData');
-    interceptGetDashboards().as('dashboard');
-    interceptCloudPulseServices().as('services');
+    interceptGetMetricDefinitions(metricDefinitions);
+    interceptGetDashboards(dashboard).as('dashboard');
+    interceptCloudPulseServices('linode').as('services');
     mockGetLinodes([mockLinode]).as('getLinodes');
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     interceptCreateMetrics(responsePayload).as('metricAPI');
@@ -82,6 +95,7 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
   });
 
   it('should clear the preferences of the dashboard', () => {
+    cy.log("dashboardName****",dashboardName)
     resetDashboardAndVerifyPage(dashboardName);
   });
   it('should set and verify dashboard name', () => {

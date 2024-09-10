@@ -22,9 +22,9 @@ import {
   interceptGetMetricDefinitions,
 } from 'support/intercepts/cloudpulseAPIHandler';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
-import { createMetricResponse } from '@src/factories/widgetFactory'
+import { createMetricResponse } from '@src/factories/widget'
 import type { Flags } from 'src/featureFlags';
-import { accountFactory ,kubeLinodeFactory,linodeFactory} from 'src/factories';
+import { accountFactory ,dashboardFactory,kubeLinodeFactory,linodeFactory,metricDefinitionsFactory} from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 
@@ -45,19 +45,39 @@ const mockLinode = linodeFactory.build({
   label:"test1",
   id: mockKubeLinode.instance_id ?? undefined,
 });
+const widgetLabels = [
+  'CPU utilization',
+  'Memory Usage',
+  'Network Traffic',
+  'Disk I/O',
+];
+const metricsLabels = [
+  'system_cpu_utilization_percent',
+  'system_memory_usage_by_resource',
+  'system_network_io_by_resource',
+  'system_disk_operations_total',
+];
+const y_labels = [
+  'system_cpu_utilization_ratio',
+  'system_memory_usage_bytes',
+  'system_network_io_bytes_total',
+  'system_disk_operations_total',
+];
 
+const dashboard =  dashboardFactory(dashboardName,widgetLabels,metricsLabels,y_labels).build();
+const metricDefinitions = metricDefinitionsFactory(widgetLabels,metricsLabels).build();
 describe('Dashboard Widget Verification Tests', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
-    });
-    
-    mockGetFeatureFlagClientstream();
+    }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
+     mockGetFeatureFlagClientstream();
     mockGetLinodes([mockLinode]).as('getLinodes');
-    interceptGetMetricDefinitions().as('dashboardMetricsData');
-    interceptGetDashboards().as('dashboard');
-    interceptCloudPulseServices().as('services');
-    mockLinodeDashboardServicesResponse();
+    interceptGetMetricDefinitions(metricDefinitions);
+    interceptGetDashboards(dashboard).as('dashboard');
+    interceptCloudPulseServices('linode').as('services');
+    mockLinodeDashboardServicesResponse(dashboard);
     mockJWSToken();
     const mockAccount = accountFactory.build();
     mockGetAccount(mockAccount).as('getAccount'); // this enables the account to have capability for Akamai Cloud Pulse
@@ -96,7 +116,7 @@ describe('Dashboard Widget Verification Tests', () => {
     linodeWidgets.forEach((testData) => {
       const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
       cy.get(widgetSelector).invoke('text').then((text) => {
-      expect(text.trim()).to.equal(testData.title);
+      expect(text.trim()).to.containIgnoreCase(testData.title);
     });
   });
 

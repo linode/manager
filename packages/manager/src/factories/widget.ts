@@ -4,23 +4,7 @@ import {
 } from '../../cypress/support/constants/widget-service';
 
 import type { AvailableMetrics } from '@linode/api-v4';
-export function createWidget(
-  name: string,
-  title: string,
-  expectedAggregation: string,
-  expectedGranularity: string,
-  expectedGranularityArray: string[],
-  expectedAggregationyArray: string[]
-) {
-  return {
-    expectedAggregation,
-    expectedAggregationyArray,
-    expectedGranularity,
-    expectedGranularityArray,
-    name,
-    title,
-  };
-}
+
 /**
  * Generates a mock metric response based on the specified time range and granularity.
  *

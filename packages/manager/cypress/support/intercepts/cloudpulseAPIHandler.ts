@@ -3,13 +3,10 @@
  *
  * @returns Cypress chainable.
  */
-import {
-  cloudPulseServices,
-  dashboardDefinitions,
-  dashboardMetricsData,
-  linodeMetricsDashboard,
-} from 'support/constants/widget-mockdata';
+
 import { apiMatcher } from 'support/util/intercepts';
+
+import type { Dashboard, MetricDefinitions } from '@linode/api-v4';
 
 /**
  * Intercepts HTTP GET requests for metric definitions.
@@ -20,11 +17,13 @@ import { apiMatcher } from 'support/util/intercepts';
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 
-export const interceptGetMetricDefinitions = (): Cypress.Chainable<null> => {
+export const interceptGetMetricDefinitions = (
+  metricDefinitions: MetricDefinitions
+): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher('**/monitor/services/linode/metric-definitions'),
-    dashboardMetricsData
+    metricDefinitions
   );
 };
 
@@ -37,12 +36,12 @@ export const interceptGetMetricDefinitions = (): Cypress.Chainable<null> => {
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 
-export const interceptCloudPulseServices = (): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'GET',
-    apiMatcher('**/monitor/services'),
-    cloudPulseServices
-  );
+export const interceptCloudPulseServices = (
+  service_type: string
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('**/monitor/services'), {
+    data: [{ service_type }],
+  });
 };
 /**
  * Intercepts HTTP GET requests for dashboard definitions.
@@ -53,11 +52,13 @@ export const interceptCloudPulseServices = (): Cypress.Chainable<null> => {
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 
-export const interceptGetDashboards = (): Cypress.Chainable<null> => {
+export const interceptGetDashboards = (
+  dashboard: Dashboard
+): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher('**/monitor/services/linode/dashboards'),
-    dashboardDefinitions
+    { data: [dashboard] }
   );
 };
 /**
@@ -91,18 +92,18 @@ export const interceptCreateMetrics = (
   );
 };
 
-export const mockLinodeDashboardServicesResponse = (): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'GET',
-    apiMatcher('**/monitor/dashboards/1'),
-    linodeMetricsDashboard
-  );
+export const mockLinodeDashboardServicesResponse = (
+  dashboard: Dashboard
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('**/monitor/dashboards/1'), dashboard);
 };
 const JWSToken = {
   token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
 };
 export const mockJWSToken = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', apiMatcher('**/monitor/services/linode/token'), 
-    JWSToken,
+  return cy.intercept(
+    'POST',
+    apiMatcher('**/monitor/services/linode/token'),
+    JWSToken
   );
 };

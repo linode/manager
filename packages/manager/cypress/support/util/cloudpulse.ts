@@ -1,4 +1,3 @@
-/* eslint-disable cypress/unsafe-to-chain-command */
 import { timeRange } from 'support/constants/widget-service';
 import { ui } from 'support/ui';
 
@@ -32,6 +31,7 @@ export const selectServiceName = (serviceName: string) => {
     .type(`${serviceName}{enter}`);
   cy.findByDisplayValue(serviceName).should('have.value', serviceName);
 };
+
 /**
  * Selects a time range from the time range dropdown.
  * @param {string} timeRange - The time range to select.
@@ -87,6 +87,9 @@ export const resetDashboardAndVerifyPage = (serviceName: string) => {
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Clear')
     .click();
+    ui.autocomplete
+    .findByPlaceholderCustom('Select Dashboard')
+    .should('have.value', ''); // Ensure the input field is cleared
 };
 
 /* export const checkZoomActions1 = (widgetName: string) => {
