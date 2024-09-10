@@ -336,7 +336,7 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
 };
 
 /**
- * Returns an autocomplete with updates styles according to UX
+ * Returns an autocomplete with updated styles according to UX, this will be used at widget level
  */
 export const StyledWidgetAutocomplete = styled(Autocomplete, {
   label: 'StyledAutocomplete',
