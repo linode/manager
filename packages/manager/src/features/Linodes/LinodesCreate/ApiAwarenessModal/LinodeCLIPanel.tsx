@@ -35,6 +35,7 @@ export const LinodeCLIPanel = ({
               'Install and Configure the Linode CLI'
             )
           }
+          data-ab-test={`${title} resource links`}
           to="https://www.linode.com/docs/products/tools/cli/guides/install/"
         >
           Install and Configure the Linode CLI
@@ -45,6 +46,7 @@ export const LinodeCLIPanel = ({
           onClick={() =>
             sendApiAwarenessClickEvent('link', 'Linode CLI Guides')
           }
+          data-ab-test={`${title} resource links`}
           to="https://www.linode.com/docs/products/tools/cli/guides/"
         >
           Linode CLI Guides

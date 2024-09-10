@@ -55,7 +55,12 @@ export const Actions = () => {
 
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-      <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
+      <Button
+        buttonType="outlined"
+        data-ab-test="command-line-tools"
+        data-command-line-tools
+        onClick={onOpenAPIAwareness}
+      >
         {apicliButtonCopy ?? 'Create Using Command Line'}
       </Button>
       <Button

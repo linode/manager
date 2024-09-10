@@ -45,6 +45,7 @@ export const IntegrationsTabPanel = ({
   const handleIntegrationChange = (option: OptionType) => {
     setSelectedIntegration(option);
   };
+
   return (
     <SafeTabPanel index={2}>
       <Typography variant="body1">
@@ -72,7 +73,7 @@ export const IntegrationsTabPanel = ({
                 ? ansibleConfig
                 : terraformConfig
             }
-            commandType={title}
+            commandType={selectedIntegration.value}
             language={'bash'}
           />
         </>

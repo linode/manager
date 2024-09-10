@@ -65,7 +65,7 @@ export const SDKTabPanel = ({ payLoad, title }: SDKTabPanelProps) => {
             command={
               selectedSDK.value === 'go' ? linodegoSnippet : pythonLinodeSnippet
             }
-            commandType={title}
+            commandType={selectedSDK.value}
             language={'bash'}
           />
         </>

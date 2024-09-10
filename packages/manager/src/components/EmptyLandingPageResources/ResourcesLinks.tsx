@@ -13,7 +13,7 @@ export const ResourceLinks = (props: ResourcesLinks) => {
   return (
     <List>
       {links.map((linkData) => (
-        <ListItem key={linkData.to}>
+        <ListItem data-ab-test={linkData.text} key={linkData.to}>
           <Link
             external={linkData.external}
             onClick={getLinkOnClick(linkAnalyticsEvent, linkData.text)}

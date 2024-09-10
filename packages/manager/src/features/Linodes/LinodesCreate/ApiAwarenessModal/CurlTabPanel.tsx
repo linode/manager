@@ -31,6 +31,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
           onClick={() =>
             sendApiAwarenessClickEvent('link', 'personal access token')
           }
+          data-ab-test={`${title} resource links`}
           to="/profile/tokens"
         >
           personal access token
@@ -44,6 +45,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
               'Get Started with the Linode API'
             )
           }
+          data-ab-test={`${title} resource links`}
           to="https://www.linode.com/docs/products/tools/api/get-started/"
         >
           Get Started with the Linode API
@@ -53,6 +55,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
           onClick={() =>
             sendApiAwarenessClickEvent('link', 'Linode API Guides')
           }
+          data-ab-test={`${title} resource links`}
           to="https://www.linode.com/docs/products/tools/api/guides/"
         >
           Linode API Guides

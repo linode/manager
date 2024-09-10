@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+
 import {
   StyledCommandDiv,
   StyledCopyTooltip,
@@ -26,7 +27,11 @@ export const CodeBlock = (props: CodeBlockProps) => {
         language={language}
         textOrMarkdown={'```\n' + command + '\n```'}
       />
-      <StyledCopyTooltip onClickCallback={handleCopyIconClick} text={command} />
+      <StyledCopyTooltip
+        data-ab-test={`${commandType} code snippet copy icon`}
+        onClickCallback={handleCopyIconClick}
+        text={command}
+      />
     </StyledCommandDiv>
   );
 };
