@@ -1,8 +1,3 @@
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   accountFactory,
@@ -24,8 +19,6 @@ import { randomNumber, randomString } from 'support/util/random';
 import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { linodeCreatePage } from 'support/ui/pages';
 import { extendRegion } from 'support/util/regions';
-
-import type { Flags } from 'src/featureFlags';
 
 const mockAccount = accountFactory.build();
 
@@ -53,17 +46,6 @@ describe('Linode create flow with Placement Group', () => {
   beforeEach(() => {
     mockGetAccount(mockAccount);
     mockGetRegions(mockRegions).as('getRegions');
-    // TODO Remove feature flag mocks when `placementGroups` flag is retired.
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
-        beta: true,
-        enabled: true,
-      }),
-      linodeCreateRefactor: makeFeatureFlagData<Flags['linodeCreateRefactor']>(
-        false
-      ),
-    });
-    mockGetFeatureFlagClientstream();
   });
 
   /*
@@ -198,16 +180,16 @@ describe('Linode create flow with Placement Group', () => {
     });
 
     // Confirm the Placement group assignment is accounted for in the summary.
-    cy.get('[data-qa-summary="true"]').within(() => {
-      cy.findByText('Assigned to Placement Group').should('be.visible');
-    });
+    cy.findByText('Assigned to Placement Group')
+      .scrollIntoView()
+      .should('be.visible');
 
     // Type in a label, password and submit the form.
     mockCreateLinode(mockLinode).as('createLinode');
     cy.get('#linode-label').clear().type('linode-with-placement-group');
     cy.get('#root-password').type(randomString(32));
 
-    cy.get('[data-qa-deploy-linode]').click();
+    cy.findByText('Create Linode').should('be.enabled').click();
 
     // Wait for outgoing API request and confirm that payload contains expected data.
     cy.wait('@createLinode').then((xhr) => {
@@ -269,9 +251,9 @@ describe('Linode create flow with Placement Group', () => {
       .click();
 
     // Confirm the Placement group assignment is accounted for in the summary.
-    cy.get('[data-qa-summary="true"]').within(() => {
-      cy.findByText('Assigned to Placement Group').should('be.visible');
-    });
+    cy.findByText('Assigned to Placement Group')
+      .scrollIntoView()
+      .should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
