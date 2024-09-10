@@ -4,8 +4,6 @@ import * as React from 'react';
 import UserIcon from 'src/assets/icons/account.svg';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
-import { Box } from './Box';
-
 export const DEFAULT_AVATAR_SIZE = 28;
 
 export interface GravatarByEmailProps {
@@ -24,18 +22,6 @@ export const GravatarByEmail = (props: GravatarByEmailProps) => {
   } = props;
 
   const url = getGravatarUrl(email);
-
-  // Render placeholder instead of flashing default user icon briefly
-  if (!url) {
-    return (
-      <Box
-        sx={{
-          height,
-          width,
-        }}
-      />
-    );
-  }
 
   return (
     <Avatar
