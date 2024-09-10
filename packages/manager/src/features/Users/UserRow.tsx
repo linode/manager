@@ -120,5 +120,5 @@ const LastLogin = (props: Pick<User, 'last_login'>) => {
 const StyledGravatar = styled(GravatarByEmail, {
   label: 'StyledGravatarByEmail',
 })(() => ({
-  animation: `${fadeIn} .3s ease-out forwards`,
+  animation: `${fadeIn} .2s ease-in-out forwards`,
 }));

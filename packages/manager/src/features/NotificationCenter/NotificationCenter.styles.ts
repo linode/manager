@@ -123,7 +123,7 @@ export const NotificationEventStyledBox = styled(Box, {
 export const NotificationEventGravatar = styled(GravatarByUsername, {
   label: 'StyledGravatarByUsername',
 })(() => ({
-  animation: `${fadeIn} 1s ease-out forwards`,
+  animation: `${fadeIn} .2s ease-in-out forwards`,
   height: 32,
   marginTop: 2,
   minWidth: 32,

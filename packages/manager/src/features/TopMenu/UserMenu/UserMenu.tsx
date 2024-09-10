@@ -355,5 +355,5 @@ const Heading = styled(Typography)(({ theme }) => ({
 const StyledGravatar = styled(GravatarByEmail, {
   label: 'StyledGravatarByEmail',
 })(() => ({
-  animation: `${fadeIn} .2s ease-out forwards`,
+  animation: `${fadeIn} .2s ease-in-out forwards`,
 }));

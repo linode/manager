@@ -8,7 +8,7 @@ import { GravatarByUsername } from '../../components/GravatarByUsername';
 export const StyledGravatar = styled(GravatarByUsername, {
   label: 'StyledGravatar',
 })(({ theme }) => ({
-  animation: `${fadeIn} 1.75s ease-out forwards`,
+  animation: `${fadeIn} 0.2s ease-in-out forwards`,
   height: theme.spacing(3),
   width: theme.spacing(3),
 }));

@@ -39,7 +39,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: '30%',
   },
   gravatar: {
-    animation: `${fadeIn} .2s ease-out forwards`,
+    animation: `${fadeIn} .2s ease-in-out forwards`,
     borderRadius: '50%',
     height: 24,
     marginRight: theme.spacing(1),
