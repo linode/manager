@@ -156,5 +156,3 @@ export const NodeBalancerSettings = () => {
     </div>
   );
 };
-
-export default NodeBalancerSettings;

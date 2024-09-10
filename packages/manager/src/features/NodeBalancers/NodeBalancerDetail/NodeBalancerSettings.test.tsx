@@ -4,7 +4,7 @@ import { firewallFactory, nodeBalancerFactory } from 'src/factories';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import NodeBalancerSettings from './NodeBalancerSettings';
+import { NodeBalancerSettings } from './NodeBalancerSettings';
 
 // Set up various mocks for tests
 vi.mock('src/hooks/useIsResourceRestricted');
