@@ -16,7 +16,6 @@ import { CreateSSHKeyDrawer } from 'src/features/Profile/SSHKeys/CreateSSHKeyDra
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
-import { fadeIn } from 'src/styles/keyframes';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 import { Avatar } from '../Avatar/Avatar';
@@ -39,7 +38,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: '30%',
   },
   gravatar: {
-    animation: `${fadeIn} .2s ease-out forwards`,
     borderRadius: '50%',
     height: 24,
     marginRight: theme.spacing(1),

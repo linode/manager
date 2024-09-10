@@ -1,5 +1,4 @@
 import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
@@ -16,7 +15,6 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile/profile';
-import { fadeIn } from 'src/styles/keyframes';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { UsersActionMenu } from './UsersActionMenu';
@@ -51,7 +49,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
                 username={user.username}
               />
             }
-            gravatar={<StyledGravatar email={user.email} />}
+            gravatar={<GravatarByEmail email={user.email} />}
           />
           <Typography>{user.username}</Typography>
           <Box display="flex" flexGrow={1} />
@@ -116,9 +114,3 @@ const LastLogin = (props: Pick<User, 'last_login'>) => {
     </Stack>
   );
 };
-
-const StyledGravatar = styled(GravatarByEmail, {
-  label: 'StyledGravatarByEmail',
-})(() => ({
-  animation: `${fadeIn} .3s ease-out forwards`,
-}));

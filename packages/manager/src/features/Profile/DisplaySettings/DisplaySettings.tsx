@@ -9,7 +9,6 @@ import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
@@ -20,12 +19,12 @@ import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useGravatar } from 'src/hooks/useGravatar';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
-import { fadeIn } from 'src/styles/keyframes';
 
 import { AvatarColorPickerDialog } from './AvatarColorPickerDialog';
 import { TimezoneForm } from './TimezoneForm';
 
 import type { ApplicationState } from 'src/store';
+import { GravatarByEmail } from 'src/components/GravatarByEmail';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
@@ -104,7 +103,7 @@ export const DisplaySettings = () => {
           >
             <GravatarOrAvatar
               gravatar={
-                <StyledGravatar
+                <GravatarByEmail
                   email={profile?.email ?? ''}
                   height={88}
                   width={88}
@@ -223,10 +222,4 @@ const StyledTooltipIcon = styled(TooltipIcon, {
   '& .MuiTooltip-tooltip': {
     minWidth: 350,
   },
-}));
-
-const StyledGravatar = styled(GravatarByEmail, {
-  label: 'StyledGravatarByEmail',
-})(() => ({
-  animation: `${fadeIn} .3s ease-out forwards`,
 }));

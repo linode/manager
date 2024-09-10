@@ -25,7 +25,6 @@ import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/use
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { fadeIn } from 'src/styles/keyframes';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
@@ -216,7 +215,7 @@ export const UserMenu = React.memo(() => {
             ) : (
               <GravatarOrAvatar
                 avatar={<Avatar />}
-                gravatar={<StyledGravatar email={profile?.email ?? ''} />}
+                gravatar={<GravatarByEmail email={profile?.email ?? ''} />}
               />
             )
           }
@@ -350,10 +349,4 @@ const Heading = styled(Typography)(({ theme }) => ({
   fontSize: '.75rem',
   letterSpacing: 1.875,
   textTransform: 'uppercase',
-}));
-
-const StyledGravatar = styled(GravatarByEmail, {
-  label: 'StyledGravatarByEmail',
-})(() => ({
-  animation: `${fadeIn} .2s ease-out forwards`,
 }));
