@@ -293,7 +293,7 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
     });
     expect(
       getByText(
-        /This endpoint type supports up to 750 Requests Per Second\(RPS\)./
+        /This endpoint type supports up to 750 Requests Per Second \(RPS\)./
       )
     ).toBeInTheDocument();
   });
