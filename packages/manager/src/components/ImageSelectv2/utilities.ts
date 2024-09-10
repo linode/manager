@@ -65,8 +65,6 @@ export const isImageTooFarPastEOL = (image: Image) => {
 
   const differenceInMonths = now.diff(imageEOL, 'months').months;
 
-  // console.log("Image's EOL was", differenceInMonths, "months ago");
-
   return differenceInMonths > MAX_MONTHS_EOL_FILTER;
 };
 
@@ -82,9 +80,7 @@ export const isImageDeprecated = (image: Image) => {
     return image.deprecated;
   }
 
-  const isImageEOL =
-    DateTime.fromISO(image.eol).toUnixInteger() <
-    DateTime.now().toUnixInteger();
+  const isImageEOL = DateTime.fromISO(image.eol) < DateTime.now();
 
   return image.deprecated || isImageEOL;
 };
