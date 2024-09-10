@@ -111,14 +111,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
     const endpointTypeE0 = 'Legacy (E0)';
     const bucketLabel = randomLabel();
 
-    //wait for the newly 'created' mocked bucket to appear
-    const mockBucket = objectStorageBucketFactoryGen2.build({
-      label: bucketLabel,
-      region: mockRegion.id,
-      endpoint_type: 'E0',
-      s3_endpoint: undefined,
-    });
-
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
@@ -141,6 +133,13 @@ describe('Object Storage Gen2 create bucket tests', () => {
       '@getAccount',
       '@getObjectStorageEndpoints',
     ]);
+
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      label: bucketLabel,
+      region: mockRegion.id,
+      endpoint_type: 'E0',
+      s3_endpoint: undefined,
+    });
 
     ui.drawer
       .findByTitle('Create Bucket')
@@ -186,6 +185,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
         // Confirm bucket rate limit table should not exist when E0 endpoint is selected
         cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
 
+        mockGetBuckets([mockBucket]).as('getBuckets');
+
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -193,7 +194,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    mockGetBuckets([mockBucket]).as('getBuckets');
+    // Wait for the newly 'created' mocked bucket to appear
     cy.wait(['@getBuckets']);
 
     // Confirm request body has expected data
@@ -240,14 +241,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
     const endpointTypeE1 = 'Standard (E1)';
     const bucketLabel = randomLabel();
 
-    //wait for the newly 'created' mocked bucket to appear
-    const mockBucket = objectStorageBucketFactoryGen2.build({
-      label: bucketLabel,
-      region: mockRegion.id,
-      endpoint_type: 'E1',
-      s3_endpoint: undefined,
-    });
-
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
@@ -271,6 +264,13 @@ describe('Object Storage Gen2 create bucket tests', () => {
       '@getObjectStorageEndpoints',
     ]);
 
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      label: bucketLabel,
+      region: mockRegion.id,
+      endpoint_type: 'E1',
+      s3_endpoint: 'us-sea-1.linodeobjects.com',
+    });
+
     ui.drawer
       .findByTitle('Create Bucket')
       .should('be.visible')
@@ -283,7 +283,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
         // Select E1 endpoint
         ui.autocompletePopper
-          .findByTitle('Standard (E1)')
+          .findByTitle('Standard (E1) us-sea-1.linodeobjects.com')
           .should('be.visible')
           .should('be.enabled')
           .click();
@@ -297,6 +297,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
         // Confirm bucket rate limit table should not exist when E1 endpoint is selected
         cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
 
+        mockGetBuckets([mockBucket]).as('getBuckets');
+
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -304,7 +306,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    mockGetBuckets([mockBucket]).as('getBuckets');
+    // Wait for the newly 'created' mocked bucket to appear
     cy.wait(['@getBuckets']);
 
     // Confirm request body has expected data
@@ -312,6 +314,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
       const requestPayload = xhr.request.body;
       expect(requestPayload['endpoint_type']).to.equal('E1');
       expect(requestPayload['cors_enabled']).to.equal(true);
+      expect(requestPayload['s3_endpoint']).to.equal(
+        'us-sea-1.linodeobjects.com'
+      );
     });
 
     ui.drawer.find().should('not.exist');
@@ -351,14 +356,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
     const endpointTypeE2 = 'Standard (E2)';
     const bucketLabel = randomLabel();
 
-    //wait for the newly 'created' mocked bucket to appear
-    const mockBucket = objectStorageBucketFactoryGen2.build({
-      label: bucketLabel,
-      region: mockRegion.id,
-      endpoint_type: 'E2',
-      s3_endpoint: undefined,
-    });
-
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
@@ -381,6 +378,13 @@ describe('Object Storage Gen2 create bucket tests', () => {
       '@getAccount',
       '@getObjectStorageEndpoints',
     ]);
+
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      label: bucketLabel,
+      region: mockRegion.id,
+      endpoint_type: 'E2',
+      s3_endpoint: undefined,
+    });
 
     ui.drawer
       .findByTitle('Create Bucket')
@@ -411,6 +415,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
         // Confirm that basic rate limits table is displayed
         checkRateLimitsTable(mockBucket.endpoint_type!);
 
+        mockGetBuckets([mockBucket]).as('getBuckets');
+
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -418,7 +424,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    mockGetBuckets([mockBucket]).as('getBuckets');
+    // Wait for the newly 'created' mocked bucket to appear
     cy.wait(['@getBuckets']);
 
     // Confirm request body has expected data
@@ -465,14 +471,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
     const endpointTypeE3 = 'Standard (E3)';
     const bucketLabel = randomLabel();
 
-    //wait for the newly 'created' mocked bucket to appear
-    const mockBucket = objectStorageBucketFactoryGen2.build({
-      label: bucketLabel,
-      region: mockRegion.id,
-      endpoint_type: 'E3',
-      s3_endpoint: undefined,
-    });
-
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
@@ -495,6 +493,13 @@ describe('Object Storage Gen2 create bucket tests', () => {
       '@getAccount',
       '@getObjectStorageEndpoints',
     ]);
+
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      label: bucketLabel,
+      region: mockRegion.id,
+      endpoint_type: 'E3',
+      s3_endpoint: undefined,
+    });
 
     ui.drawer
       .findByTitle('Create Bucket')
@@ -526,6 +531,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
         // Confirm that basic rate limits table is displayed
         checkRateLimitsTable(mockBucket.endpoint_type!);
 
+        mockGetBuckets([mockBucket]).as('getBuckets');
+
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -533,7 +540,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .click();
       });
 
-    mockGetBuckets([mockBucket]).as('getBuckets');
+    // Wait for the newly 'created' mocked bucket to appear
     cy.wait(['@getBuckets']);
 
     // Confirm request body has expected data
