@@ -150,6 +150,7 @@ export const PowerActionsDialog = (props: Props) => {
       }}
       error={error?.[0].reason}
       onClose={handleOnClose}
+      onSubmit={onSubmit}
       open={isOpen}
       title={`${action} Linode ${linodeLabel ?? ''}?`}
     >

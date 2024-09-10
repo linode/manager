@@ -33,6 +33,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
     error,
     onClose,
     onExited,
+    onSubmit,
     title,
     ...dialogProps
   } = props;
@@ -49,10 +50,17 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
           onClose();
         }
       }}
+      onKeyUp={(e) => {
+        if (e.key === 'Enter') {
+          onSubmit?.(e);
+        }
+      }}
       PaperProps={{ role: undefined }}
+      component="form"
       data-qa-dialog
       data-qa-drawer
       data-testid="drawer"
+      onSubmit={onSubmit}
       role="dialog"
     >
       <DialogTitle onClose={onClose} title={title} />
