@@ -24,7 +24,7 @@ describe('ImageSelectv2', () => {
   });
 
   it('should render items returned by the API', async () => {
-    const images = imageFactory.buildList(5);
+    const images = imageFactory.buildList(5, { eol: null });
 
     server.use(
       http.get('*/v4/images', () => {
@@ -44,7 +44,7 @@ describe('ImageSelectv2', () => {
   });
 
   it('should call onChange when a value is selected', async () => {
-    const image = imageFactory.build();
+    const image = imageFactory.build({ eol: null });
     const onChange = vi.fn();
 
     server.use(
