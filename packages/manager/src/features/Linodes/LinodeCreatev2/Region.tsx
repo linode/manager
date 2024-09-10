@@ -41,7 +41,7 @@ import {
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
 
-export const Region = () => {
+export const Region = React.memo(() => {
   const {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
@@ -269,4 +269,4 @@ export const Region = () => {
       )}
     </Paper>
   );
-};
+});
