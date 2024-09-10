@@ -174,10 +174,7 @@ describe('ConfigureForm component with price comparison', () => {
         {...props}
         currentRegion="us-east"
         selectedRegion="us-central"
-      />,
-      {
-        flags: { placementGroups: { beta: true, enabled: true } },
-      }
+      />
     );
 
     // Verify that the PlacementGroupsSelect component is rendered

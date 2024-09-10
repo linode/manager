@@ -2,7 +2,6 @@ import { linodeFactory, regionFactory, VLANFactory } from 'src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { chooseRegion } from 'support/util/regions';
 import {
   randomIp,
@@ -14,13 +13,6 @@ import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 
 describe('Create Linode with VLANs', () => {
-  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: true,
-    });
-  });
-
   /*
    * - Uses mock API data to confirm VLAN attachment UI flow during Linode create.
    * - Confirms that outgoing Linode create API request contains expected data for VLAN.

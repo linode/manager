@@ -2,7 +2,6 @@
  * @file Integration tests for Placement Group update label flows.
  */
 
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { randomLabel, randomNumber } from 'support/util/random';
 import {
   mockGetPlacementGroups,
@@ -19,12 +18,6 @@ const mockAccount = accountFactory.build();
 describe('Placement Group update label flow', () => {
   // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      placementGroups: {
-        beta: true,
-        enabled: true,
-      },
-    });
     mockGetAccount(mockAccount);
   });
 

@@ -44,6 +44,8 @@ export const NotificationCenterEvent = React.memo(
     return (
       <NotificationEventStyledBox
         className={unseenEventClass}
+        data-qa-event={event.id}
+        data-qa-event-seen={event.seen}
         data-testid={event.action}
       >
         <NotificationEventGravatar username={event.username} />

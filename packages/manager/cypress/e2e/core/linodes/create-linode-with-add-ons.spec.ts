@@ -1,5 +1,4 @@
 import { linodeFactory } from 'src/factories';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
@@ -10,13 +9,6 @@ import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode with Add-ons', () => {
-  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: true,
-    });
-  });
-
   /*
    * - Confirms UI flow to create a Linode with backups using mock API data.
    * - Confirms that backups is reflected in create summary section.

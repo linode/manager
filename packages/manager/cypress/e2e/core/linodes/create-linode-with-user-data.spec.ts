@@ -1,5 +1,4 @@
 import { imageFactory, linodeFactory, regionFactory } from 'src/factories';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetAllImages, mockGetImage } from 'support/intercepts/images';
 import {
   mockCreateLinode,
@@ -12,12 +11,6 @@ import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode with user data', () => {
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: true,
-    });
-  });
-
   /*
    * - Confirms UI flow to create a Linode with cloud-init user data specified.
    * - Confirms that outgoing API request contains expected user data payload.

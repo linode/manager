@@ -9,7 +9,6 @@ import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { cleanUp } from 'support/util/cleanup';
 import { linodeCreatePage } from 'support/ui/pages';
 import { authenticate } from 'support/api/authentication';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptCreateLinode,
   mockCreateLinodeError,
@@ -56,14 +55,6 @@ describe('Create Linode', () => {
   before(() => {
     cleanUp('linodes');
     cleanUp('ssh-keys');
-  });
-
-  // Enable the `linodeCreateRefactor` feature flag.
-  // TODO Delete these mocks once `linodeCreateRefactor` feature flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: true,
-    });
   });
 
   /*

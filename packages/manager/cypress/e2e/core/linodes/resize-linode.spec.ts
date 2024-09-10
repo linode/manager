@@ -181,7 +181,9 @@ describe('resize linode', () => {
         });
 
       // Wait until the disk resize is done.
-      ui.toast.assertMessage(`Disk ${diskName} successfully resized.`);
+      ui.toast.assertMessage(
+        `Disk ${diskName} on Linode ${linode.label} has been resized.`
+      );
 
       interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);

@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
@@ -25,6 +25,47 @@ import type {
   QueryClient,
   QueryKey,
 } from '@tanstack/react-query';
+
+/**
+ * This query exists to get the first 7 days of events when you load the app.
+ *
+ * Using the first page of useEventsInfiniteQuery would be ideal, but we are going to try this...
+ *
+ * @note This initial query should match X-Filtering that our poller does. If we want this query
+ * to have a different filter than our poller, we will need to implement filtering in
+ * `updateEventsQueries` like we do for our infinite queries.
+ */
+export const useInitialEventsQuery = () => {
+  /**
+   * We only want to get events from the last 7 days.
+   */
+  const [defaultCreatedFilter] = useState(
+    DateTime.now()
+      .minus({ days: 7 })
+      .setZone('utc')
+      .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
+  );
+
+  const query = useQuery<ResourcePage<Event>, APIError[]>({
+    gcTime: Infinity,
+    queryFn: () =>
+      getEvents(
+        {},
+        {
+          ...EVENTS_LIST_FILTER,
+          '+order': 'desc',
+          '+order_by': 'id',
+          created: { '+gt': defaultCreatedFilter },
+        }
+      ),
+    queryKey: ['events', 'initial'],
+    staleTime: Infinity,
+  });
+
+  const events = query.data?.data;
+
+  return { ...query, events };
+};
 
 /**
  * Gets an infinitely scrollable list of all Events
@@ -107,32 +148,27 @@ export const useEventsPoller = () => {
 
   const queryClient = useQueryClient();
 
-  const { events } = useEventsInfiniteQuery();
+  const { data: initialEvents } = useInitialEventsQuery();
 
-  const hasFetchedInitialEvents = events !== undefined;
+  const hasFetchedInitialEvents = initialEvents !== undefined;
 
-  const mountTimestamp = useRef(
+  const [mountTimestamp] = useState(
     DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)
   );
 
-  const { data: polledEvents } = useQuery({
+  const { data: events } = useQuery({
     enabled: hasFetchedInitialEvents,
     queryFn: () => {
-      const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
+      const data = queryClient.getQueryData<ResourcePage<Event>>([
         'events',
-        'infinite',
-        EVENTS_LIST_FILTER,
+        'initial',
       ]);
-      const events = data?.pages.reduce(
-        (events, page) => [...events, ...page.data],
-        []
-      );
+      const events = data?.data;
+
       // If the user has events, poll for new events based on the most recent event's created time.
       // If the user has no events, poll events from the time the app mounted.
       const latestEventTime =
-        events && events.length > 0
-          ? events[0].created
-          : mountTimestamp.current;
+        events && events.length > 0 ? events[0].created : mountTimestamp;
 
       const {
         eventsThatAlreadyHappenedAtTheFilterTime,
@@ -161,15 +197,15 @@ export const useEventsPoller = () => {
   });
 
   useEffect(() => {
-    if (polledEvents && polledEvents.length > 0) {
-      updateEventsQueries(polledEvents, queryClient);
+    if (events && events.length > 0) {
+      updateEventsQueries(events, queryClient);
 
-      for (const event of polledEvents) {
+      for (const event of events) {
         handleGlobalToast(event);
         handleEvent(event);
       }
     }
-  }, [polledEvents]);
+  }, [events]);
 
   return null;
 };
@@ -208,6 +244,25 @@ export const useMarkEventsAsSeen = () => {
   return useMutation<{}, APIError[], number>({
     mutationFn: (eventId) => markEventSeen(eventId),
     onSuccess: (_, eventId) => {
+      // Update Initial Query
+      queryClient.setQueryData<ResourcePage<Event>>(
+        ['events', 'initial'],
+        (prev) => {
+          if (!prev) {
+            return undefined;
+          }
+
+          for (const event of prev.data) {
+            if (event.id <= eventId) {
+              event.seen = true;
+            }
+          }
+
+          return prev;
+        }
+      );
+
+      // Update Infinite Queries
       queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
         { queryKey: ['events', 'infinite'] },
         (prev) => {
@@ -218,14 +273,9 @@ export const useMarkEventsAsSeen = () => {
             };
           }
 
-          let foundLatestSeenEvent = false;
-
           for (const page of prev.pages) {
             for (const event of page.data) {
-              if (event.id === eventId) {
-                foundLatestSeenEvent = true;
-              }
-              if (foundLatestSeenEvent) {
+              if (event.id <= eventId) {
                 event.seen = true;
               }
             }
@@ -269,6 +319,8 @@ export const updateEventsQueries = (
 
       updateEventsQuery(filteredEvents, queryKey, queryClient);
     });
+
+  updateInitialEventsQuery(events, queryClient);
 };
 
 /**
@@ -330,6 +382,47 @@ export const updateEventsQuery = (
         pageParams: prev.pageParams,
         pages: prev.pages,
       };
+    }
+  );
+};
+
+export const updateInitialEventsQuery = (
+  events: Event[],
+  queryClient: QueryClient
+) => {
+  queryClient.setQueryData<ResourcePage<Event>>(
+    ['events', 'initial'],
+    (prev) => {
+      if (!prev) {
+        return undefined;
+      }
+      const updatedEventIndexes: number[] = [];
+
+      for (let i = 0; i < events.length; i++) {
+        const indexOfEvent = prev.data.findIndex((e) => e.id === events[i].id);
+
+        if (indexOfEvent !== -1) {
+          prev.data[indexOfEvent] = events[i];
+          updatedEventIndexes.push(i);
+        }
+      }
+
+      const newEvents: Event[] = [];
+
+      for (let i = 0; i < events.length; i++) {
+        if (!updatedEventIndexes.includes(i)) {
+          newEvents.push(events[i]);
+        }
+      }
+
+      if (newEvents.length > 0) {
+        // For all events, that remain, append them to the top of the events list
+        prev.data = [...newEvents, ...prev.data];
+
+        prev.results += newEvents.length;
+      }
+
+      return prev;
     }
   );
 };

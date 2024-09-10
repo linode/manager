@@ -1,33 +1,27 @@
-import { containsClick, containsVisible } from 'support/helpers';
+import { containsVisible } from 'support/helpers';
 import { ui } from 'support/ui';
-import { authenticate } from 'support/api/authentication';
-import { cleanUp } from 'support/util/cleanup';
 import {
   interceptGetStackScripts,
+  mockGetStackScript,
   mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
-import { interceptCreateLinode } from 'support/intercepts/linodes';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 import {
   filterOneClickApps,
   handleAppLabel,
 } from 'src/features/Linodes/LinodesCreate/utilities';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mapStackScriptLabelToOCA } from 'src/features/OneClickApps/utils';
 import { stackScriptFactory } from 'src/factories/stackscripts';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 
 import type { StackScript } from '@linode/api-v4';
 import type { OCA } from '@src/features/OneClickApps/types';
-
-authenticate();
+import { imageFactory, linodeFactory } from 'src/factories';
+import { mockGetAllImages } from 'support/intercepts/images';
 
 describe('OneClick Apps (OCA)', () => {
-  before(() => {
-    cleanUp(['linodes']);
-  });
-
   it('Lists all the OneClick Apps', () => {
     interceptGetStackScripts().as('getStackScripts');
 
@@ -119,9 +113,19 @@ describe('OneClick Apps (OCA)', () => {
   });
 
   it('Deploys a Linode from a One Click App', () => {
-    const stackscriptId = 401709;
-    const stackScripts = stackScriptFactory.build({
-      id: stackscriptId,
+    const images = [
+      imageFactory.build({
+        id: 'linode/ubuntu22.04',
+        label: 'Ubuntu 20.04',
+      }),
+      imageFactory.build({
+        id: 'linode/debian11',
+        label: 'Debian 11',
+      }),
+    ];
+
+    const stackscript = stackScriptFactory.build({
+      id: 0,
       username: 'linode',
       user_gravatar_id: '9d4d301385af69ceb7ad658aad09c142',
       label: 'E2E Test App',
@@ -156,25 +160,25 @@ describe('OneClick Apps (OCA)', () => {
       ],
     });
 
+    const rootPassword = randomString(16);
+    const region = chooseRegion();
+    const linodeLabel = randomLabel();
+
+    // UDF values
     const firstName = randomLabel();
     const password = randomString(16);
-    const image = 'linode/ubuntu22.04';
-    const rootPassword = randomString(16);
-    const region = chooseRegion({ capabilities: ['Vlans'] });
-    const linodeLabel = randomLabel();
     const levelName = 'Get the enderman!';
 
-    mockGetStackScripts([stackScripts]).as('getStackScripts');
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: false,
-      oneClickApps: {
-        401709: 'E2E Test App',
-      },
-    }).as('getFeatureFlags');
+    const linode = linodeFactory.build({
+      label: linodeLabel,
+    });
+
+    mockGetAllImages(images);
+    mockGetStackScripts([stackscript]).as('getStackScripts');
+    mockGetStackScript(stackscript.id, stackscript);
 
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
 
-    cy.wait('@getFeatureFlags');
     cy.wait('@getStackScripts');
 
     cy.findByTestId('one-click-apps-container').within(() => {
@@ -183,40 +187,43 @@ describe('OneClick Apps (OCA)', () => {
 
       // Check that the app is listed and select it
       cy.get('[data-qa-selection-card="true"]').should('have.length', 3);
-      cy.get(`[id=app-${stackscriptId}]`).first().should('be.visible').click();
+      cy.findAllByText(stackscript.label).first().should('be.visible').click();
     });
 
-    // Input the user defined fields
-    const userFieldId =
-      "the-username-for-the-linode's-non-root-admin/ssh-user(must-be-lowercase)";
-    const passwordFieldId =
-      "the-password-for-the-linode's-non-root-admin/ssh-user";
-    const levelNameFieldId = 'world-name';
+    cy.findByLabelText(
+      "The username for the Linode's non-root admin/SSH user(must be lowercase) (required)"
+    )
+      .should('be.visible')
+      .click()
+      .type(firstName);
 
-    cy.findByTestId('user-defined-fields-panel').within(() => {
-      cy.get(`[id="${userFieldId}"]`)
-        .should('be.visible')
-        .click()
-        .type(`${firstName}{enter}`);
-      cy.get(`[id="${passwordFieldId}"]`)
-        .should('be.visible')
-        .click()
-        .type(`${password}{enter}`);
-      cy.get(`[id="${levelNameFieldId}"]`)
-        .should('be.visible')
-        .click()
-        .type(`${levelName}{enter}`);
+    cy.findByLabelText(
+      "The password for the Linode's non-root admin/SSH user (required)"
+    )
+      .should('be.visible')
+      .click()
+      .type(password);
 
-      // Check each field should persist when moving onto another field
-      cy.get(`[id="${userFieldId}"]`).should('have.value', firstName);
-      cy.get(`[id="${passwordFieldId}"]`).should('have.value', password);
-      cy.get(`[id="${levelNameFieldId}"]`).should('have.value', levelName);
-    });
+    cy.findByLabelText('World Name (required)')
+      .should('be.visible')
+      .click()
+      .type(levelName);
+
+    // Check each field should persist when moving onto another field
+    cy.findByLabelText(
+      "The username for the Linode's non-root admin/SSH user(must be lowercase) (required)"
+    ).should('have.value', firstName);
+
+    cy.findByLabelText(
+      "The password for the Linode's non-root admin/SSH user (required)"
+    ).should('have.value', password);
+
+    cy.findByLabelText('World Name (required)').should('have.value', levelName);
 
     // Choose an image
-    cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-      containsClick('Choose an image').type(`${image}{enter}`);
-    });
+    cy.findByPlaceholderText('Choose an image')
+      .click()
+      .type('{downArrow}{enter}');
 
     // Choose a region
     ui.regionSelect.find().click().type(`${region.id}{enter}`);
@@ -232,14 +239,14 @@ describe('OneClick Apps (OCA)', () => {
     cy.findByText('Linode Label')
       .should('be.visible')
       .click()
-      .type('{selectAll}{backspace}')
       .type(linodeLabel);
 
     // Choose a Root Password
     cy.get('[id="root-password"]').type(rootPassword);
 
     // Create the Linode
-    interceptCreateLinode().as('createLinode');
+    mockCreateLinode(linode).as('createLinode');
+
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')
@@ -247,6 +254,7 @@ describe('OneClick Apps (OCA)', () => {
       .click();
 
     cy.wait('@createLinode');
-    ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
+
+    ui.toast.assertMessage(`Your Linode ${linode.label} is being created.`);
   });
 });

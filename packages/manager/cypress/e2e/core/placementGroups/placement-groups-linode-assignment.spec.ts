@@ -5,7 +5,6 @@ import {
   regionFactory,
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeDetails,
   mockGetLinodes,
@@ -46,15 +45,7 @@ const mockRegions = regionFactory.buildList(10, {
 });
 
 describe('Placement Groups Linode assignment', () => {
-  // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
-  // TODO Remove these mocks when `placementGroups` feature flag is retired.
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      placementGroups: {
-        beta: true,
-        enabled: true,
-      },
-    });
     mockGetAccount(mockAccount).as('getAccount');
   });
 

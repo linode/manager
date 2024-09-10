@@ -4,7 +4,6 @@ import {
   subnetFactory,
   vpcFactory,
 } from 'src/factories';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
@@ -28,13 +27,6 @@ import {
 import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode with VPCs', () => {
-  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: true,
-    });
-  });
-
   /*
    * - Confirms UI flow to create a Linode with an existing VPC assigned using mock API data.
    * - Confirms that VPC assignment is reflected in create summary section.

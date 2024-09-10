@@ -1,4 +1,3 @@
-import { DatabaseInstance } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -15,17 +14,25 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useDatabasesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import { DatabaseEmptyState } from './DatabaseEmptyState';
 import { DatabaseRow } from './DatabaseRow';
+
+import type { DatabaseInstance } from '@linode/api-v4/lib/databases';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 const preferenceKey = 'databases';
 
 const DatabaseLanding = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_databases',
+  });
 
   const { data: events } = useInProgressEvents();
 
@@ -71,7 +78,15 @@ const DatabaseLanding = () => {
   return (
     <React.Fragment>
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Databases',
+          }),
+        }}
         createButtonText="Create Database Cluster"
+        disabledCreateButton={isRestricted}
         docsLink="https://www.linode.com/docs/products/databases/managed-databases/"
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"

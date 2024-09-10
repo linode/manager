@@ -2,8 +2,6 @@
  * @file Cypress integration tests for VM Placement Groups deletion flows.
  */
 
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockDeletePlacementGroup,
@@ -43,13 +41,6 @@ const PlacementGroupErrorMessage = 'An unknown error has occurred.';
 
 describe('Placement Group deletion', () => {
   beforeEach(() => {
-    // TODO Remove feature flag mocks when `placementGroups` flag is retired.
-    mockAppendFeatureFlags({
-      placementGroups: {
-        beta: true,
-        enabled: true,
-      },
-    });
     mockGetAccount(mockAccount);
   });
 

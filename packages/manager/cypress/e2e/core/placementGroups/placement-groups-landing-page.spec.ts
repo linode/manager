@@ -1,4 +1,3 @@
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetPlacementGroups } from 'support/intercepts/placement-groups';
 import { ui } from 'support/ui';
 import {
@@ -14,14 +13,7 @@ import { mockGetLinodes } from 'support/intercepts/linodes';
 const mockAccount = accountFactory.build();
 
 describe('VM Placement landing page', () => {
-  // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      placementGroups: {
-        beta: true,
-        enabled: true,
-      },
-    });
     mockGetAccount(mockAccount).as('getAccount');
   });
 
