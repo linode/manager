@@ -306,7 +306,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             <Stack
               alignItems={'center'}
               direction={{ sm: 'row' }}
-              gap={1}
+              gap={{ md: 0, xs: 1 }}
               width={{ sm: 'inherit', xs: '100%' }}
             >
               {availableMetrics?.scrape_interval && (

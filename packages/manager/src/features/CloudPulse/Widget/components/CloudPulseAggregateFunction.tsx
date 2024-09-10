@@ -1,12 +1,7 @@
-import { styled, useTheme } from '@mui/material';
+import { styled } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-
-import {
-  WIDGET_FILTERS_COMMON_FONT_SIZE,
-  WIDGET_FILTERS_COMMON_HEIGHT,
-} from '../../Utils/constants';
 
 export interface AggregateFunctionProperties {
   /**
@@ -41,8 +36,6 @@ export const CloudPulseAggregateFunction = React.memo(
       availableAggregateFunc.find(
         (obj) => obj.label === props.defaultAggregateFunction
       ) || props.availableAggregateFunctions[0];
-
-    const theme = useTheme();
 
     return (
       <StyledAutocomplete
