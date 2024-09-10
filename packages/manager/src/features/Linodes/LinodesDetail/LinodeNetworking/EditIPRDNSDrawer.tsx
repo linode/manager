@@ -6,7 +6,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useLinodeIPMutation } from 'src/queries/linodes/networking';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -67,6 +66,7 @@ export const EditIPRDNSDrawer = (props: Props) => {
         <TextField
           data-qa-domain-name
           errorText={errorMap.rdns}
+          helperText="Leave this field blank to reset RDNS"
           hideLabel
           label="Enter a domain name"
           name="rdns"
@@ -74,9 +74,6 @@ export const EditIPRDNSDrawer = (props: Props) => {
           placeholder="Enter a domain name"
           value={formik.values.rdns}
         />
-        <Typography variant="body1">
-          Leave this field blank to reset RDNS
-        </Typography>
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',

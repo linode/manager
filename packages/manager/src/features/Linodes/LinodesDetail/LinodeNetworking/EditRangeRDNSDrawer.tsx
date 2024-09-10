@@ -101,15 +101,13 @@ export const EditRangeRDNSDrawer = (props: Props) => {
         <TextField
           data-qa-domain-name
           errorText={errorMap.rdns}
+          helperText="Leave this field blank to reset RDNS"
           label="Enter a domain name"
           name="rdns"
           onChange={formik.handleChange}
           placeholder="Enter a domain name"
           value={formik.values.rdns}
         />
-        <Typography variant="body1">
-          Leave this field blank to reset RDNS
-        </Typography>
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
