@@ -3,8 +3,6 @@ import ZoomOutMap from '@mui/icons-material/ZoomOutMap';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { WIDGET_FILTERS_COMMON_HEIGHT } from '../../Utils/constants';
-
 export interface ZoomIconProperties {
   className?: string;
   handleZoomToggle: (zoomIn: boolean) => void;
@@ -25,7 +23,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
           style={{
             color: theme.color.grey1,
             fontSize: 'x-large',
-            height: WIDGET_FILTERS_COMMON_HEIGHT,
+            height: '22px',
           }}
           data-testid="zoom-in"
           onClick={() => handleClick(false)}
@@ -38,7 +36,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
         style={{
           color: theme.color.grey1,
           fontSize: 'x-large',
-          height: WIDGET_FILTERS_COMMON_HEIGHT,
+          height: '22px',
         }}
         data-testid="zoom-out"
         onClick={() => handleClick(true)}
