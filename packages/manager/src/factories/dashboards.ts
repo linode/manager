@@ -34,7 +34,7 @@ export const dashboardFactory = (
   return Factory.Sync.makeFactory<Dashboard>({
     created: new Date().toISOString(),
     id: Factory.each((i) => i),
-    label: dashboardLabel, // Use the passed argument here
+    label: dashboardLabel,
     service_type: 'linode',
     time_duration: {
       unit: 'min',

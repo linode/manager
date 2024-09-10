@@ -3,10 +3,6 @@ import {
   selectTimeRange,
   selectAndVerifyResource,
   assertSelections,
-  dashboardName,
-  actualRelativeTimeDuration,
-  region,
-  resource,
   resetDashboardAndVerifyPage,
 } from 'support/util/cloudpulse';
 import {
@@ -19,6 +15,8 @@ import {
   interceptCreateMetrics,
   interceptGetDashboards,
   interceptGetMetricDefinitions,
+  mockJWSToken,
+  mockLinodeDashboardServicesResponse,
 } from 'support/intercepts/cloudpulseAPIHandler';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import type { Flags } from 'src/featureFlags';
@@ -42,11 +40,20 @@ import { accountFactory ,dashboardFactory,kubeLinodeFactory,linodeFactory,metric
  * Each test case checks the correctness and persistence of these configurations to ensure that the
  * dashboard behaves as expected under various conditions.
  */
+
+
+
+ const dashboardName = 'ananth';
+ const region = 'US, Chicago, IL (us-ord)';
+ const actualRelativeTimeDuration = timeRange.Last24Hours;
+const resource = 'test1';
 const mockKubeLinode = kubeLinodeFactory.build();
 const mockLinode = linodeFactory.build({
-  label: "test1",
+  label: resource,
   id: mockKubeLinode.instance_id ?? undefined,
 });
+const mockAccount = accountFactory.build();
+
 const widgetLabels = [
   'CPU utilization',
   'Memory Usage',
@@ -69,19 +76,20 @@ const dashboard = dashboardFactory(dashboardName,widgetLabels,metricsLabels,y_la
 const metricDefinitions = metricDefinitionsFactory(widgetLabels,metricsLabels).build();
 describe('Standard Dashboard Filter Application and Configuration Tests', () => {
   beforeEach(() => {
+    cy.visitWithLogin('monitor/cloudpulse');
     mockAppendFeatureFlags({
       aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
     }).as('getFeatureFlags');
+    mockGetAccount(mockAccount).as('getAccount'); // this enables the account to have capability for Akamai Cloud Pulse
     mockGetFeatureFlagClientstream();
-    cy.visitWithLogin('monitor/cloudpulse');
     interceptGetMetricDefinitions(metricDefinitions);
     interceptGetDashboards(dashboard).as('dashboard');
     interceptCloudPulseServices('linode').as('services');
     mockGetLinodes([mockLinode]).as('getLinodes');
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     interceptCreateMetrics(responsePayload).as('metricAPI');
-    const mockAccount = accountFactory.build();
-    mockGetAccount(mockAccount).as('getAccount'); // this enables the account to have capability for Akamai Cloud Pulse
+    mockJWSToken();
+    mockLinodeDashboardServicesResponse(dashboard);
   });
 
 
@@ -95,7 +103,6 @@ describe('Standard Dashboard Filter Application and Configuration Tests', () => 
   });
 
   it('should clear the preferences of the dashboard', () => {
-    cy.log("dashboardName****",dashboardName)
     resetDashboardAndVerifyPage(dashboardName);
   });
   it('should set and verify dashboard name', () => {

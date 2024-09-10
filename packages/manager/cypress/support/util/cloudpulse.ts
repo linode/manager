@@ -1,10 +1,4 @@
-import { timeRange } from 'support/constants/widget-service';
-import { ui } from 'support/ui';
 
-export const dashboardName = 'Linode Dashboard';
-export const region = 'US, Chicago, IL (us-ord)';
-export const actualRelativeTimeDuration = timeRange.Last24Hours;
-export const resource = 'test1';
 /**
  * This class provides utility functions for interacting with the Cloudpulse dashboard
  * in a Cypress test suite. It includes methods for:
@@ -20,6 +14,9 @@ export const resource = 'test1';
  * Selects a service name from the dashboard dropdown.
  * @param {string} serviceName - The name of the service to select.
  */
+import { ui } from 'support/ui';
+
+
 export const selectServiceName = (serviceName: string) => {
   ui.autocomplete
     .findByTitleCustom('Select Dashboard')
@@ -75,14 +72,7 @@ export const assertSelections = (expectedOptions: string) => {
  * @param {string} serviceName - The name of the service to verify.
  */
 export const resetDashboardAndVerifyPage = (serviceName: string) => {
-  ui.autocomplete
-    .findByTitleCustom('Select Dashboard')
-    .findByTitle('Open')
-    .click();
-  ui.autocomplete
-    .findByPlaceholderCustom('Select Dashboard')
-    .clear()
-    .type(`${serviceName}{enter}`);
+
   ui.autocomplete
     .findByTitleCustom('Select Dashboard')
     .findByTitle('Clear')
