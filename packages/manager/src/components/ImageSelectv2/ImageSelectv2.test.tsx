@@ -118,6 +118,10 @@ describe('ImageSelectv2', () => {
         eol: null, // should show because this images does not have an EOL
         label: 'linode/image-3',
       }),
+      imageFactory.build({
+        eol: '2017-11-01T00:00:00', // should show as deprecated because it is < 6 months past this EOL
+        label: 'linode/image-4',
+      }),
     ];
 
     server.use(
@@ -135,5 +139,6 @@ describe('ImageSelectv2', () => {
     expect(getByText('linode/image-1')).toBeVisible();
     expect(queryByText('linode/image-2')).toBeNull();
     expect(getByText('linode/image-3')).toBeVisible();
+    expect(getByText('linode/image-4 (deprecated)')).toBeVisible();
   });
 });
