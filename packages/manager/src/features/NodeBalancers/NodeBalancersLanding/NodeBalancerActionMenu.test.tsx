@@ -1,12 +1,9 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
-
-vi.mock('src/hooks/useIsResourceRestricted');
 
 const props = {
   label: 'nodebalancer-1',
@@ -37,18 +34,5 @@ describe('NodeBalancerActionMenu', () => {
     const deleteButton = getByText('Delete');
     fireEvent.click(deleteButton);
     expect(props.toggleDialog).toHaveBeenCalled();
-  });
-
-  it('disables the delete button if the NodeBalancer is read only', () => {
-    // make the NodeBalancer read only
-    vi.mocked(useIsResourceRestricted).mockReturnValue(true);
-
-    const { getByText } = renderWithTheme(
-      <NodeBalancerActionMenu {...props} />
-    );
-
-    const deleteButton = getByText('Delete');
-    fireEvent.click(deleteButton);
-    expect(props.toggleDialog).not.toHaveBeenCalled();
   });
 });

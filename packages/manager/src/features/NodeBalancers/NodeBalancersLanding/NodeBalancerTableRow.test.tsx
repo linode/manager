@@ -3,9 +3,12 @@ import * as React from 'react';
 
 import { nodeBalancerFactory } from 'src/factories';
 import { breakpoints } from 'src/foundations/breakpoints';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
+
+vi.mock('src/hooks/useIsResourceRestricted');
 
 const props = {
   ...nodeBalancerFactory.build(),
@@ -45,5 +48,14 @@ describe('NodeBalancerTableRow', () => {
     const deleteButton = getByText('Delete');
     fireEvent.click(deleteButton);
     expect(props.onDelete).toHaveBeenCalled();
+  });
+
+  it('does not delete the NodeBalancer if the delete button is disabled', () => {
+    vi.mocked(useIsResourceRestricted).mockReturnValue(true);
+    const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
+
+    const deleteButton = getByText('Delete');
+    fireEvent.click(deleteButton);
+    expect(props.onDelete).not.toHaveBeenCalled();
   });
 });
