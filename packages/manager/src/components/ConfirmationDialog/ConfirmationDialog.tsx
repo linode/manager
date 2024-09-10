@@ -38,6 +38,20 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
     ...dialogProps
   } = props;
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // MUI prevents forms within dialogs from being submitted when the enter key is pressed. (which is the native behavior for dialogs)
+    // We provide here a custom handler to submit the form when the enter key is pressed while the dialog is the active element.
+    // If any other element is the active element, the enter key will not submit the form.
+    const currentTarget = e.currentTarget.children[2];
+    const isCurrentTarget = currentTarget.matches('.MuiDialog-container');
+
+    // We want to ensure we're only handling the enter key event when the dialog is the active element.
+    if (e.key === 'Enter' && isCurrentTarget) {
+      e.preventDefault();
+      onSubmit?.(e);
+    }
+  };
+
   return (
     <StyledDialog
       {...dialogProps}
@@ -50,16 +64,12 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
           onClose();
         }
       }}
-      onKeyUp={(e) => {
-        if (e.key === 'Enter') {
-          onSubmit?.(e);
-        }
-      }}
       PaperProps={{ role: undefined }}
       component="form"
       data-qa-dialog
       data-qa-drawer
       data-testid="drawer"
+      onKeyDown={handleKeyDown}
       onSubmit={onSubmit}
       role="dialog"
     >
