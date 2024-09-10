@@ -122,7 +122,10 @@ export const CloudPulseIntervalSelect = React.memo(
         ) => {
           return option?.value === value?.value && option?.unit === value?.unit;
         }}
-        onChange={(_: any, selectedInterval: IntervalOptions) => {
+        onChange={(
+          _: React.SyntheticEvent,
+          selectedInterval: IntervalOptions
+        ) => {
           props.onIntervalChange({
             unit: selectedInterval?.unit,
             value: selectedInterval?.value,
