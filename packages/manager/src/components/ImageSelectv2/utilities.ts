@@ -74,7 +74,7 @@ export const isImageTooFarPastEOL = (image: Image) => {
  * Returns whether or not an image is deprecated
  *
  * Unfortunately, as per `M3-5753`, we can't just simpily check `deprecated` on the `Image`,
- * we must also factor in the EOL date.
+ * we must also consider the EOL date.
  */
 export const isImageDeprecated = (image: Image) => {
   if (image.eol === null) {
