@@ -1,14 +1,15 @@
-import { useTheme } from '@mui/material';
+import { styled } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-import {
-  WIDGET_FILTERS_COMMON_FONT_SIZE,
-  WIDGET_FILTERS_COMMON_HEIGHT,
-} from '../../Utils/constants';
-
 import type { TimeGranularity } from '@linode/api-v4';
+
+interface IntervalOptions {
+  label: string;
+  unit: string;
+  value: number;
+}
 
 export interface IntervalSelectProperties {
   /**
@@ -45,7 +46,7 @@ export const getInSeconds = (interval: string) => {
 };
 
 // Intervals must be in ascending order here
-export const all_interval_options = [
+export const all_interval_options: IntervalOptions[] = [
   {
     label: '1 min',
     unit: 'min',
@@ -68,7 +69,7 @@ export const all_interval_options = [
   },
 ];
 
-const autoIntervalOption = {
+const autoIntervalOption: IntervalOptions = {
   label: 'Auto',
   unit: 'Auto',
   value: -1,
@@ -114,32 +115,21 @@ export const CloudPulseIntervalSelect = React.memo(
       });
     }
 
-    const theme = useTheme();
-
     return (
-      <Autocomplete
-        isOptionEqualToValue={(option, value) => {
+      <StyledAutocomplete
+        isOptionEqualToValue={(
+          option: IntervalOptions,
+          value: IntervalOptions
+        ) => {
           return option?.value === value?.value && option?.unit === value?.unit;
         }}
-        onChange={(_: any, selectedInterval: any) => {
+        onChange={(_: any, selectedInterval: IntervalOptions) => {
           props.onIntervalChange({
             unit: selectedInterval?.unit,
             value: selectedInterval?.value,
           });
         }}
         textFieldProps={{
-          InputProps: {
-            sx: {
-              height: WIDGET_FILTERS_COMMON_HEIGHT,
-              input: {
-                fontSize: WIDGET_FILTERS_COMMON_FONT_SIZE,
-              },
-              minHeight: WIDGET_FILTERS_COMMON_HEIGHT,
-              svg: {
-                color: theme.color.grey3,
-              },
-            },
-          },
           hideLabel: true,
         }}
         defaultValue={{ ...default_interval }}
@@ -153,3 +143,16 @@ export const CloudPulseIntervalSelect = React.memo(
     );
   }
 );
+
+const StyledAutocomplete = styled(Autocomplete, {
+  label: 'StyledAutocomplete',
+})(() => ({
+  '&& .MuiInput-input': {
+    padding: '1px',
+  },
+  '&& .MuiInput-root': {
+    height: '22px',
+    minHeight: '22px',
+    width: '90px',
+  },
+}));

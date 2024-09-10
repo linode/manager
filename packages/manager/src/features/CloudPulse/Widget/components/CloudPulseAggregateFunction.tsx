@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -45,7 +45,7 @@ export const CloudPulseAggregateFunction = React.memo(
     const theme = useTheme();
 
     return (
-      <Autocomplete
+      <StyledAutocomplete
         isOptionEqualToValue={(option, value) => {
           return option.label == value.label;
         }}
@@ -53,18 +53,6 @@ export const CloudPulseAggregateFunction = React.memo(
           props.onAggregateFuncChange(selectedAggregateFunc.label);
         }}
         textFieldProps={{
-          InputProps: {
-            sx: {
-              height: WIDGET_FILTERS_COMMON_HEIGHT,
-              input: {
-                fontSize: WIDGET_FILTERS_COMMON_FONT_SIZE,
-              },
-              minHeight: WIDGET_FILTERS_COMMON_HEIGHT,
-              svg: {
-                color: theme.color.grey3,
-              },
-            },
-          },
           hideLabel: true,
         }}
         defaultValue={defaultAggregateFunc}
@@ -78,3 +66,16 @@ export const CloudPulseAggregateFunction = React.memo(
     );
   }
 );
+
+const StyledAutocomplete = styled(Autocomplete, {
+  label: 'StyledAutocomplete',
+})(() => ({
+  '&& .MuiInput-input': {
+    padding: '1px',
+  },
+  '&& .MuiInput-root': {
+    height: '22px',
+    minHeight: '22px',
+    width: '90px',
+  },
+}));
