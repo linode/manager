@@ -54,7 +54,7 @@ describe('TablesPanel', () => {
     expect(getByText(connectionGraphHeader)).toBeVisible();
     expect(getByText(trafficGraphHeader)).toBeVisible();
 
-    // stats not yet ready
+    // Stats availability message displays in place of graphs
     expect(
       getByText('Connection stats will be available shortly')
     ).toBeVisible();
@@ -74,7 +74,7 @@ describe('TablesPanel', () => {
     expect(getByText(connectionGraphHeader)).toBeVisible();
     expect(getByText(trafficGraphHeader)).toBeVisible();
 
-    // error state
+    // Error message shows in place of graphs
     expect(getAllByText('Not found.')).toHaveLength(2);
   });
 
@@ -91,7 +91,7 @@ describe('TablesPanel', () => {
     expect(getByText(connectionGraphHeader)).toBeVisible();
     expect(getByText(trafficGraphHeader)).toBeVisible();
 
-    // confirm loading state exists
+    // Confirm loading state exists in place of graphs
     expect(getAllByTestId('circle-progress')).toHaveLength(2);
   });
 
@@ -106,7 +106,7 @@ describe('TablesPanel', () => {
             out: [],
           },
         },
-        title: '???',
+        title: 'NodeBalancer stats',
       },
       error: undefined,
       isLoading: false,

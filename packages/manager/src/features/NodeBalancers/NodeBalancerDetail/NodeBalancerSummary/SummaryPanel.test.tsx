@@ -87,7 +87,6 @@ describe('SummaryPanel', () => {
 
     // Tags panel
     expect(getByText('Tags')).toBeVisible();
-    const addATag = getByText('Add a tag');
-    expect(addATag).not.toBeDisabled();
+    expect(getByText('Add a tag')).toBeVisible();
   });
 });
