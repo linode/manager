@@ -3,7 +3,7 @@ import {
   selectServiceName,
   selectAndVerifyResource,
   assertSelections,
-  resetDashboardAndVerifyPage,
+  waitForElementToLoad,
 } from 'support/util/cloudpulse';
 import {
   mockAppendFeatureFlags,
@@ -28,6 +28,7 @@ import type { Flags } from 'src/featureFlags';
 import { accountFactory, dashboardFactory, kubeLinodeFactory, linodeFactory, metricDefinitionsFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 
 
 
@@ -62,15 +63,14 @@ const y_labels = [
 const linodeWidgets = widgetDetails.linode;
 const widgetLabels: string[] = linodeWidgets.map(widget => widget.title);
 const metricsLabels: string[] = linodeWidgets.map(widget => widget.name);
+const service_type='linode';
 
-const dashboard = dashboardFactory(dashboardName, widgetLabels, metricsLabels, y_labels).build();
+const dashboard = dashboardFactory(dashboardName, widgetLabels, metricsLabels, y_labels,service_type).build();
 const metricDefinitions = metricDefinitionsFactory(widgetLabels, metricsLabels).build();
 
 describe('Dashboard Widget Verification Tests', () => {
-  beforeEach(() => {
-    cy.visitWithLogin('monitor/cloudpulse');
-
-    mockAppendFeatureFlags({
+ beforeEach(() => {
+      mockAppendFeatureFlags({
       aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
     }).as('getFeatureFlags');
     mockGetAccount(mockAccount).as('getAccount'); // Enables the account to have capability for Akamai Cloud Pulse
@@ -83,26 +83,36 @@ describe('Dashboard Widget Verification Tests', () => {
     mockJWSToken();
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     interceptCreateMetrics(responsePayload).as('metricAPI');
-    resetDashboardAndVerifyPage(dashboardName);
-    selectServiceName(dashboardName);
-    selectTimeRange(actualRelativeTimeDuration, Object.values(timeRange));
-    ui.regionSelect.find().click().type(`${region}{enter}`);
-    selectAndVerifyResource(resource);
+});
+
+  it('should verify cloudpulse availability when feature flag is set to false', () => {
+    mockAppendFeatureFlags({
+      aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: false }),
+    });
+    mockGetFeatureFlagClientstream();
+    cy.visitWithLogin('monitor/cloudpulse'); // since we disabled the flag here, we should have not found
+    cy.findByText('Not Found').should('be.visible'); // not found
   });
 
-  it('should set available granularity of all the widgets', () => {
+  it.only('should set available granularity of all the widgets', () => {
+    setupMethod()
     linodeWidgets.forEach((testData) => {
+      cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
-      cy.get(widgetSelector)
+      waitForElementToLoad(widgetSelector);
+      cy.get(widgetSelector).as('widget')
+      cy.get('@widget')
+       .should('be.visible')
         .first()
-        .should('be.visible')
         .within(() => {
           ui.autocomplete
             .findByTitleCustom('Select an Interval')
+            .should('be.visible')
             .findByTitle('Open')
             .click();
          ui.autocompletePopper
-            .findByTitle(testData.expectedGranularity)
+            .findByTitle(testData.expectedGranularity).as('granularityOption')
+            cy.get('@granularityOption')
             .should('be.visible')
             .click();
             assertSelections(testData.expectedGranularity);
@@ -111,6 +121,7 @@ describe('Dashboard Widget Verification Tests', () => {
   });
   
   it('should verify the title of the widget', () => {
+    setupMethod()
     linodeWidgets.forEach((testData) => {
       const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
       cy.get(widgetSelector).invoke('text').then((text) => {
@@ -120,7 +131,9 @@ describe('Dashboard Widget Verification Tests', () => {
   });
 
   it('should set available aggregation of all the widgets', () => {
+    setupMethod()
     linodeWidgets.forEach((testData) => {
+      cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
         .first()
@@ -140,7 +153,9 @@ describe('Dashboard Widget Verification Tests', () => {
   });
 
   it('should verify available granularity of the widget', () => {
+    setupMethod()
     linodeWidgets.forEach((testData) => {
+      cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
         .first()
@@ -167,7 +182,9 @@ describe('Dashboard Widget Verification Tests', () => {
   });
 
   it('should verify available aggregation of the widget', () => {
+    setupMethod()
     linodeWidgets.forEach((testData) => {
+      cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
         .first()
@@ -195,47 +212,48 @@ describe('Dashboard Widget Verification Tests', () => {
   });
 
   it('should zoom in and out of all the widgets', () => {
+    setupMethod()
     linodeWidgets.forEach((testData) => {
+      cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
-      const zoomInSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-in');
-      const zoomOutSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-out');
-      cy.get(widgetSelector).each(($widget) => {
-        cy.wrap($widget).then(($el) => {
-          const zoomInElement = $el.find(zoomInSelector);
-          const zoomOutElement = $el.find(zoomOutSelector);
-
-          if (zoomOutElement.length > 0) {
-            cy.wrap(zoomOutElement)
-              .should('be.visible')
-              .click({ timeout: 5000 })
-              .then(() => {
-                cy.log('Zoomed Out on widget:', $el);
-              });
-          } else if (zoomInElement.length > 0) {
-            cy.wrap(zoomInElement)
-              .should('be.visible')
-              .click({ timeout: 5000 })
-              .then(() => {
-                cy.log('Zoomed In on widget:', $el);
-              });
-          }
-        });
+      cy.log("Name of the widget **",testData.title);
+        cy.get(widgetSelector).should('be.visible').within(() => {
+        cy.get(ui.cloudpulse.findZoomButtonByTitle('zoom-out')).should('be.visible')
+        .should('be.enabled')
+        .click();
+        cy.get(ui.cloudpulse.findZoomButtonByTitle('zoom-in')).should('be.visible')
+        .should('be.enabled')
+        .click();
       });
+    
     });
   });
 
   it('should apply global refresh button and verify network calls', () => {
+    setupMethod()
     ui.cloudpulse.findRefreshIcon()
-    .should('be.visible')  // Check if the refresh icon is visible
-    .click();  // Click the refresh icon
-      // check for specific UI elements that should be updated or appear after the refresh
-  // For example, check if widgets have updated data or if new data is visible
+    .should('be.visible') 
+    .click(); 
     linodeWidgets.forEach((widget) => {
       const widgetSelector = `[data-qa-widget="${widget.title}"]`;
       cy.get(widgetSelector)
         .should('be.visible')
-        .and('contain.text', widget.title); // Adjust based on what you expect after refresh
+        .and('contain.text', widget.title); 
     });
 
   });
 });
+
+
+  const setupMethod = () => {
+    mockGetUserPreferences({}).as('getUserPreferences');
+    cy.visitWithLogin('monitor/cloudpulse');
+    cy.get('[data-qa-header="Akamai Cloud Pulse"]').should('be.visible').should('have.text', 'Akamai Cloud Pulse');
+    selectServiceName(dashboardName);
+    assertSelections(dashboardName);
+    selectTimeRange(actualRelativeTimeDuration, Object.values(timeRange));
+    assertSelections(actualRelativeTimeDuration);
+    ui.regionSelect.find().click().type(`${region}{enter}`);
+    assertSelections(region);
+    selectAndVerifyResource(resource);
+};

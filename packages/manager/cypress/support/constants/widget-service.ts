@@ -37,7 +37,7 @@ export const timeUnit = {
   day: 'Days',
   hr: 'Hours',
   min: 'Minutes',
-} ;
+};
 /**
  * Configuration object defining predefined sets of aggregation types.
  * These sets can be used to specify acceptable aggregation operations for different contexts.
@@ -52,6 +52,40 @@ export const aggregationConfig = {
  * Each widget configuration includes expected aggregation types, granularity levels, and other relevant properties.
  */
 export const widgetDetails = {
+  dbaas: [
+    {
+      expectedAggregation: aggregation.Max,
+      expectedAggregationArray: aggregationConfig.basic,
+      expectedGranularity: granularity.Hr1,
+      expectedGranularityArray: Object.values(granularity),
+      name: 'system_cpu_utilization_percent',
+      title: 'CPU Utilization',
+    },
+    {
+      expectedAggregation: aggregation.Max,
+      expectedAggregationArray: aggregationConfig.all,
+      expectedGranularity: granularity.Hr1,
+      expectedGranularityArray: Object.values(granularity),
+      name: 'system_memory_usage_by_resource',
+      title: 'Memory Usage',
+    },
+    {
+      expectedAggregation: aggregation.Max,
+      expectedAggregationArray: aggregationConfig.all,
+      expectedGranularity: granularity.Hr1,
+      expectedGranularityArray: Object.values(granularity),
+      name: 'system_network_io_by_resource',
+      title: 'Network Traffic',
+    },
+    {
+      expectedAggregation: aggregation.Max,
+      expectedAggregationArray: aggregationConfig.all,
+      expectedGranularity: granularity.Hr1,
+      expectedGranularityArray: Object.values(granularity),
+      name: 'system_disk_OPS_total',
+      title: 'Disk I/O',
+    },
+  ],
   linode: [
     {
       expectedAggregation: aggregation.Max,

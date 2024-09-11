@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
 /**
  * This class provides utility functions for interacting with the Cloudpulse dashboard
  * in a Cypress test suite. It includes methods for:
@@ -14,6 +15,16 @@
  * @param {string} serviceName - The name of the service to select.
  */
 import { ui } from 'support/ui';
+
+/**
+ * Waits for the element matching the given CSS selector to appear and become visible.
+ *
+ * @param {string} selector - The CSS selector for the element to wait for.
+ */
+//  command to wait for the element to be fully loaded
+export const waitForElementToLoad = (selector: string) => {
+  cy.get(selector, { timeout: 10000 }).should('be.visible');
+};
 
 export const selectServiceName = (serviceName: string) => {
   ui.autocomplete
@@ -52,8 +63,6 @@ export const selectAndVerifyResource = (service: string) => {
   const resourceInput = ui.autocomplete.findByTitleCustom('Select Resources');
   resourceInput.findByTitle('Open').click();
   resourceInput.click().type(`${service}{enter}`);
-  // Commenting out the line because resourceInput.findByTitle('closure') does not work
-  // resourceInput.findByTitle('Close').click();
   cy.get('[title="Close"]').click();
 };
 /**
@@ -67,55 +76,14 @@ export const assertSelections = (expectedOptions: string) => {
 
 /**
  * Clears the dashboard's preferences and verifies the zeroth page.
- * @param {string} serviceName - The name of the service to verify.
  */
-export const resetDashboardAndVerifyPage = (serviceName: string) => {
+export const resetDashboard = () => {
   ui.autocomplete
-    .findByTitleCustom('Select Dashboard') // Custom method to locate the dropdown
-    .findByTitle('Clear') // Custom method to locate the "Clear" button
-    .then(($clearButton) => {
-      if ($clearButton.is(':visible')) {
-        // If the "Clear" button is visible, click it
-        cy.wrap($clearButton).click();
-      } else {
-        // If the "Clear" button is not visible, do nothing
-        cy.log('Clear button is not visible, no action taken');
-      }
-    });
+    .findByTitleCustom('Select Dashboard')
+    .findByTitle('Clear')
+    .click();
+
+  ui.autocomplete
+    .findByPlaceholderCustom('Select Dashboard')
+    .should('have.value', '');
 };
-
-/* export const checkZoomActions1 = (widgetName: string) => {
-  const widgetSelector = `[data-qa-widget="${widgetName}"]`;
-  const zoomInSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-in');
-  const zoomOutSelector = ui.cloudpulse.findZoomButtonByTitle('zoom-out');
-
-  cy.get(widgetSelector).each(($widget) => {
-    cy.wrap($widget).then(($el) => {
-      const zoomInAvailable = $el.find(zoomInSelector).length > 0;
-      const zoomOutAvailable = $el.find(zoomOutSelector).length > 0;
-
-      if (zoomInAvailable) {
-        cy.wrap($el)
-          .find(zoomInSelector)
-          .should('be.visible')
-          .click({ timeout: 5000 })
-          .then(() => {
-            cy.log('Zoomed In on widget:', $el);
-          });
-      } else if (zoomOutAvailable) {
-        cy.wrap($el)
-          .find(zoomOutSelector)
-          .should('be.visible')
-          .click({ timeout: 5000 })
-          .then(() => {
-            cy.log('Zoomed Out on widget:', $el);
-          });
-      } else {
-        cy.log(
-          'Neither ZoomInMapIcon nor ZoomOutMapIcon found for widget:',
-          $el
-        );
-      }
-    });
-  });
-};*/
