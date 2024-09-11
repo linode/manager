@@ -6,12 +6,8 @@ import { ui } from 'support/ui';
 
 import { randomLabel, randomString } from 'support/util/random';
 import { linodeCreatePage } from 'support/ui/pages';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode', () => {
   /*
@@ -22,10 +18,8 @@ describe('Create Linode', () => {
     // TODO Delete these mocks once `apicliDxToolsAdditions` feature flag is retired.
     beforeEach(() => {
       mockAppendFeatureFlags({
-        apicliDxToolsAdditions: makeFeatureFlagData(true),
-        linodeCreateRefactor: makeFeatureFlagData(true),
+        apicliDxToolsAdditions: true,
       });
-      mockGetFeatureFlagClientstream();
     });
     it(`view code snippets in create linode flow`, () => {
       const linodeLabel = randomLabel();
@@ -42,7 +36,7 @@ describe('Create Linode', () => {
 
       // View Code Snippets and confirm it's provisioned as expected.
       ui.button
-        .findByTitle('View Code Snippets')
+        .findByTitle('Create using command line')
         .should('be.visible')
         .should('be.enabled')
         .click();
@@ -149,15 +143,14 @@ describe('Create Linode', () => {
         });
     });
   });
+
   describe('Create Linode flow with apicliDxToolsAdditions disabled', () => {
     // Enable the `apicliDxToolsAdditions` feature flag.
     // TODO Delete these mocks and test once `apicliDxToolsAdditions` feature flag is retired.
     beforeEach(() => {
       mockAppendFeatureFlags({
-        apicliDxToolsAdditions: makeFeatureFlagData(false),
-        linodeCreateRefactor: makeFeatureFlagData(true),
+        apicliDxToolsAdditions: false,
       });
-      mockGetFeatureFlagClientstream();
     });
     it(`view code snippets in create linode flow`, () => {
       const linodeLabel = randomLabel();
@@ -202,5 +195,76 @@ describe('Create Linode', () => {
             .click();
         });
     });
+  });
+
+  it('creates a linode via CLI', () => {
+    const linodeLabel = randomLabel();
+    const linodePass = randomString(32);
+    const linodeRegion = chooseRegion();
+
+    cy.visitWithLogin('/linodes/create');
+
+    ui.regionSelect.find().click();
+    ui.autocompletePopper
+      .findByTitle(`${linodeRegion.label} (${linodeRegion.id})`)
+      .should('exist')
+      .click();
+
+    cy.get('[id="g6-dedicated-2"]').click();
+
+    cy.findByLabelText('Linode Label').should(
+      'have.value',
+      `debian-${linodeRegion.id}`
+    );
+
+    cy.findByLabelText('Linode Label')
+      .should('be.visible')
+      .should('be.enabled')
+      .clear()
+      .type(linodeLabel);
+
+    cy.findByLabelText('Root Password')
+      .should('be.visible')
+      .should('be.enabled')
+      .type(linodePass);
+
+    ui.button
+      .findByTitle('Create using command line')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    ui.dialog
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .within(() => {
+        // Switch to cURL view if necessary.
+        cy.findByText('cURL').should('be.visible').click();
+
+        // Confirm that cURL command has expected details.
+        [
+          `"region": "${linodeRegion.id}"`,
+          `"type": "g6-dedicated-2"`,
+          `"label": "${linodeLabel}"`,
+          `"root_pass": "${linodePass}"`,
+        ].forEach((line: string) =>
+          cy.findByText(line, { exact: false }).should('be.visible')
+        );
+
+        cy.findByText('Linode CLI').should('be.visible').click();
+
+        [
+          `--region ${linodeRegion.id}`,
+          '--type g6-dedicated-2',
+          `--label ${linodeLabel}`,
+          `--root_pass ${linodePass}`,
+        ].forEach((line: string) => cy.contains(line).should('be.visible'));
+
+        ui.buttonGroup
+          .findButtonByTitle('Close')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
   });
 });
