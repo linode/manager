@@ -22,6 +22,8 @@ export interface GlobalFilterProperties {
   handleTimeDurationChange(timeDuration: TimeDuration): void;
 }
 
+export interface FilterChangeProperties {}
+
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const {
     handleAnyFilterChange,
@@ -46,7 +48,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       }
       handleTimeDurationChange(timerDuration);
     },
-    []
+    [updatePreferences]
   );
 
   const onDashboardChange = React.useCallback(
@@ -59,7 +61,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       setSelectedDashboard(dashboard);
       handleDashboardChange(dashboard);
     },
-    []
+    [updatePreferences]
   );
 
   const emitFilterChange = React.useCallback(
@@ -74,13 +76,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       }
       handleAnyFilterChange(filterKey, value);
     },
-    []
+    [updatePreferences]
   );
 
-  const handleGlobalRefresh = React.useCallback((dashboardObj?: Dashboard) => {
-    if (!dashboardObj) {
-      return;
-    }
+  const handleGlobalRefresh = React.useCallback(() => {
     handleAnyFilterChange(REFRESH, Date.now());
   }, []);
 
@@ -100,7 +99,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           <CloudPulseDashboardSelect
             defaultValue={preferences?.dashboardId}
             handleDashboardChange={onDashboardChange}
-            savePreferences={true}
+            savePreferences
           />
         </Grid>
         <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
@@ -116,7 +115,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               marginBlockEnd: 'auto',
             }}
             disabled={!selectedDashboard}
-            onClick={() => handleGlobalRefresh(selectedDashboard)}
+            onClick={handleGlobalRefresh}
             size="small"
           >
             <StyledReload />

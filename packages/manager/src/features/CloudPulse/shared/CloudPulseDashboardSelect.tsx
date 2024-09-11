@@ -62,7 +62,7 @@ export const CloudPulseDashboardSelect = React.memo(
 
     // sorts dashboards by service type. Required due to unexpected autocomplete grouping behaviour
     const getSortedDashboardsList = (options: Dashboard[]): Dashboard[] => {
-      return options.sort(
+      return [...options].sort(
         (a, b) => -b.service_type.localeCompare(a.service_type)
       );
     };
@@ -74,21 +74,17 @@ export const CloudPulseDashboardSelect = React.memo(
         dashboardsList.length > 0 &&
         selectedDashboard === undefined
       ) {
-        if (defaultValue) {
-          const dashboard = dashboardsList.find(
-            (obj: Dashboard) => obj.id === defaultValue
-          );
-          setSelectedDashboard(dashboard);
-          handleDashboardChange(dashboard);
-        } else {
-          handleDashboardChange(undefined);
-        }
+        const dashboard = defaultValue
+          ? dashboardsList.find((obj: Dashboard) => obj.id === defaultValue)
+          : undefined;
+        setSelectedDashboard(dashboard);
+        handleDashboardChange(dashboard);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dashboardsList]);
     return (
       <Autocomplete
-        onChange={(_: any, dashboard: Dashboard) => {
+        onChange={(e, dashboard: Dashboard) => {
           setSelectedDashboard(dashboard);
           handleDashboardChange(dashboard, savePreferences);
         }}

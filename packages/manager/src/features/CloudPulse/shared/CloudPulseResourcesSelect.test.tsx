@@ -178,7 +178,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
         preferences={{ [RESOURCES]: ['12'] }}
         region={'us-east'}
         resourceType={'linode'}
-        savePreferences={true}
+        savePreferences
       />
     );
 

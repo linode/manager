@@ -90,7 +90,7 @@ describe('CloudPulse Dashboard select', () => {
         <CloudPulseDashboardSelect
           {...props}
           defaultValue={1}
-          savePreferences={true}
+          savePreferences
         />
       );
 

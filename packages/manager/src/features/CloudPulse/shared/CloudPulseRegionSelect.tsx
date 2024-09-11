@@ -32,14 +32,11 @@ export const CloudPulseRegionSelect = React.memo(
       const defaultRegion = preferences?.region;
 
       if (regions && savePreferences) {
-        if (defaultRegion) {
-          const region = regions.find((obj) => obj.id === defaultRegion)?.id;
-          handleRegionChange(region);
-          setSelectedRegion(region);
-        } else {
-          setSelectedRegion(undefined);
-          handleRegionChange(undefined);
-        }
+        const region = defaultRegion
+          ? regions.find((regionObj) => regionObj.id === defaultRegion)?.id
+          : undefined;
+        handleRegionChange(region);
+        setSelectedRegion(region);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [regions, selectedDashboard]);
@@ -65,8 +62,6 @@ export const CloudPulseRegionSelect = React.memo(
       />
     );
   },
-  (
-    oldProps: CloudPulseRegionSelectProps,
-    newProps: CloudPulseRegionSelectProps
-  ) => oldProps.selectedDashboard?.id === newProps.selectedDashboard?.id
+  (prevProps, nextProps) =>
+    prevProps.selectedDashboard?.id === nextProps.selectedDashboard?.id
 );

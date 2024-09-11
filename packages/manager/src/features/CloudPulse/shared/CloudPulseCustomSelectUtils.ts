@@ -2,57 +2,12 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
 import type { AclpConfig } from '@linode/api-v4';
 
-/**
- * The interface for selecting the default value from the user preferences
- */
-interface CloudPulseCustomSelectDefaultValueProps {
-  /**
-   * The filter Key of the current rendered custom select component
-   */
-  filterKey: string;
-  /**
-   * The callback for the selection changes happening in the custom select component
-   */
-  handleSelectionChange: (
-    filterKey: string,
-    value: FilterValueType,
-    savePref?: boolean,
-    updatedPreferenceData?: {}
-  ) => void;
-
-  /**
-   * Indicates whether we need multiselect for the component or not
-   */
-  isMultiSelect: boolean;
-
-  /**
-   * The current listed options in the custom select component
-   */
-  options: CloudPulseServiceTypeFiltersOptions[];
-
-  /**
-   * Last selected values from user preference
-   */
-  preferences?: AclpConfig;
-
-  /**
-   * Indicates whether we need to save preferences or not
-   */
-  savePreferences?: boolean;
-}
-
-/**
- * The interface of publishing the selection change and updating the user preferences accordingly
- */
-interface CloudPulseCustomSelectionChangeProps {
-  /**
-   * The list of filters needs to be cleared on selections
-   */
-  clearSelections: string[];
+interface CloudPulseCustomSelectProps {
   /**
    * The current filter key of the rendered custom select component
    */
   filterKey: string;
+
   /**
    * The callback for the selection changes happening in the custom select component
    */
@@ -62,11 +17,6 @@ interface CloudPulseCustomSelectionChangeProps {
     savePref?: boolean,
     updatedPreferenceData?: {}
   ) => void;
-
-  /**
-   * The maximum number of selections that needs to be allowed
-   */
-  maxSelections?: number;
 
   /**
    * Last selected values from user preference
@@ -77,6 +27,38 @@ interface CloudPulseCustomSelectionChangeProps {
    * boolean variable to check whether preferences should be saved or not
    */
   savePreferences?: boolean;
+}
+
+/**
+ * The interface for selecting the default value from the user preferences
+ */
+interface CloudPulseCustomSelectDefaultValueProps
+  extends CloudPulseCustomSelectProps {
+  /**
+   * Indicates whether we need multiselect for the component or not
+   */
+  isMultiSelect: boolean;
+
+  /**
+   * The current listed options in the custom select component
+   */
+  options: CloudPulseServiceTypeFiltersOptions[];
+}
+
+/**
+ * The interface of publishing the selection change and updating the user preferences accordingly
+ */
+interface CloudPulseCustomSelectionChangeProps
+  extends CloudPulseCustomSelectProps {
+  /**
+   * The list of filters needs to be cleared on selections
+   */
+  clearSelections: string[];
+
+  /**
+   * The maximum number of selections that needs to be allowed
+   */
+  maxSelections?: number;
 
   /**
    * The listed options in the custom select component
