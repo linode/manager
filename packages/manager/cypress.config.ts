@@ -85,7 +85,7 @@ export default defineConfig({
         regionOverrideCheck,
         logTestTagInfo,
         splitCypressRun,
-        enableJunitReport,
+        enableJunitReport(),
         generateTestWeights,
       ]);
     },
