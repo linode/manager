@@ -1,13 +1,10 @@
-import Avatar from '@mui/material/Avatar';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import UserIcon from 'src/assets/icons/account.svg';
-import { Avatar as NewAvatar } from 'src/components/Avatar/Avatar';
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 
@@ -143,30 +140,17 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
     }
   }, [parentTicket, reply, ticket, ticketUpdated]);
 
-  const renderAvatar = (id: string) => {
+  const renderAvatar = () => {
     return (
       <div className={classes.userWrapper}>
-        <GravatarOrAvatar
-          avatar={
-            <NewAvatar
-              color={
-                data?.username !== profile?.username
-                  ? theme.palette.primary.dark
-                  : undefined
-              }
-              sx={{ marginTop: 1 }}
-              username={data?.username}
-            />
+        <Avatar
+          color={
+            data?.username !== profile?.username
+              ? theme.palette.primary.dark
+              : undefined
           }
-          gravatar={
-            <Avatar
-              alt="Gravatar"
-              className={classes.leftIcon}
-              src={`https://gravatar.com/avatar/${id}?d=404`}
-            >
-              <UserIcon />
-            </Avatar>
-          }
+          sx={{ marginTop: 1 }}
+          username={data?.username}
         />
       </div>
     );
@@ -182,7 +166,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
 
   return (
     <Grid container wrap="nowrap">
-      <Grid>{renderAvatar(data.gravatar_id)}</Grid>
+      <Grid>{renderAvatar()}</Grid>
       <Grid className={classes.content}>
         <Grid className={classes.header} container>
           <Grid className={classes.headerInner}>

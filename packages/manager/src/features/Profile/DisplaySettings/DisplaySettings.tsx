@@ -9,14 +9,12 @@ import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useGravatar } from 'src/hooks/useGravatar';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
@@ -24,7 +22,6 @@ import { AvatarColorPickerDialog } from './AvatarColorPickerDialog';
 import { TimezoneForm } from './TimezoneForm';
 
 import type { ApplicationState } from 'src/store';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
 
 export const DisplaySettings = () => {
   const theme = useTheme();
@@ -38,8 +35,6 @@ export const DisplaySettings = () => {
   const emailRef = React.createRef<HTMLInputElement>();
 
   const isProxyUser = profile?.user_type === 'proxy';
-
-  const { hasGravatar } = useGravatar(profile?.email);
 
   const [
     isColorPickerDialogOpen,
@@ -101,50 +96,32 @@ export const DisplaySettings = () => {
             }}
             display="flex"
           >
-            <GravatarOrAvatar
-              gravatar={
-                <GravatarByEmail
-                  email={profile?.email ?? ''}
-                  height={88}
-                  width={88}
-                />
-              }
-              avatar={<Avatar height={88} width={88} />}
-              height={88}
-              width={88}
-            />
+            <Avatar height={88} width={88} />
             <div>
               <Typography sx={{ fontSize: '1rem' }} variant="h2">
-                {hasGravatar ? 'Profile photo' : 'Avatar'}
-                {hasGravatar && (
-                  <StyledTooltipIcon
-                    sxTooltipIcon={{
-                      marginLeft: '6px',
-                      marginTop: '-2px',
-                      padding: 0,
-                    }}
-                    status="help"
-                    text={tooltipIconText}
-                  />
-                )}
+                Avatar
+                <StyledTooltipIcon
+                  sxTooltipIcon={{
+                    marginLeft: '6px',
+                    marginTop: '-2px',
+                    padding: 0,
+                  }}
+                  status="help"
+                  text={tooltipIconText}
+                />
+                )
               </Typography>
               <StyledProfileCopy variant="body1">
-                {hasGravatar
-                  ? 'Create, upload, and manage your globally recognized avatar from a single place with Gravatar.'
-                  : 'Your avatar is automatically generated using the first character of your username.'}
+                Your avatar is automatically generated using the first character
+                of your username.
               </StyledProfileCopy>
-              {hasGravatar ? (
-                <StyledAddImageLink external to="https://en.gravatar.com/">
-                  Manage photo
-                </StyledAddImageLink>
-              ) : (
-                <Button
-                  buttonType="outlined"
-                  onClick={() => setAvatarColorPickerDialogOpen(true)}
-                >
-                  Change Avatar Color
-                </Button>
-              )}
+
+              <Button
+                buttonType="outlined"
+                onClick={() => setAvatarColorPickerDialogOpen(true)}
+              >
+                Change Avatar Color
+              </Button>
             </div>
           </Box>
           <Divider />
@@ -193,20 +170,6 @@ export const DisplaySettings = () => {
     </Paper>
   );
 };
-
-const StyledAddImageLink = styled(Link, {
-  label: 'StyledAddImageLink',
-})(({ theme }) => ({
-  '& svg': {
-    height: '1rem',
-    left: 6,
-    position: 'relative',
-    top: 3,
-    width: '1rem',
-  },
-  fontFamily: theme.font.bold,
-  fontSize: '1rem',
-}));
 
 const StyledProfileCopy = styled(Typography, {
   label: 'StyledProfileCopy',
