@@ -80,7 +80,7 @@ export const fetchCloudPulseMetrics = (
   const config: AxiosRequestConfig = {
     data: requestData,
     headers: {
-      'Authentication-type': 'jwe',
+      'Authentication-Type': 'jwe',
       Authorization: `Bearer ${token}`,
     },
     method: 'POST',
