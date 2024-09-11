@@ -44,9 +44,14 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
     // If any other element is the active element, the enter key will not submit the form.
     const currentTarget = e.currentTarget.children[2];
     const isCurrentTarget = currentTarget.matches('.MuiDialog-container');
+    const activeElement = document.activeElement;
 
     // We want to ensure we're only handling the enter key event when the dialog is the active element.
-    if (e.key === 'Enter' && isCurrentTarget) {
+    if (
+      e.key === 'Enter' &&
+      isCurrentTarget &&
+      activeElement === currentTarget
+    ) {
       e.preventDefault();
       onSubmit?.(e);
     }
@@ -65,7 +70,6 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
         }
       }}
       PaperProps={{ role: undefined }}
-      component="form"
       data-qa-dialog
       data-qa-drawer
       data-testid="drawer"

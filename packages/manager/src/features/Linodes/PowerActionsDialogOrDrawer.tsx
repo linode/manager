@@ -99,9 +99,7 @@ export const PowerActionsDialog = (props: Props) => {
   const isRebootAction = props.action === 'Reboot';
   const isPowerOnAction = props.action === 'Power On';
 
-  const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
+  const onSubmit = async () => {
     if (isPowerOnAction || isRebootAction) {
       const mutateAsync = mutationMap[action as 'Power On' | 'Reboot'];
       await mutateAsync({

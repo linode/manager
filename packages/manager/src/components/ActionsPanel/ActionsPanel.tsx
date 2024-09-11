@@ -65,7 +65,6 @@ export const ActionsPanel = (props: ActionPanelProps) => {
           {...{ [primaryButtonDataQAProp]: true }}
           buttonType="primary"
           {...primaryButtonProps}
-          type="submit"
         >
           {primaryButtonProps.label}
         </Button>
