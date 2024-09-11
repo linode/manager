@@ -19,6 +19,10 @@ const props = {
 };
 
 const loadingTestId = 'circle-progress';
+const nodeBalancerConfig = nodeBalancerConfigFactory.build({
+  id: 1,
+  port: 3000,
+});
 
 describe('NodeBalancerConfigurations', () => {
   beforeEach(() => {
@@ -28,11 +32,7 @@ describe('NodeBalancerConfigurations', () => {
   it('renders the NodeBalancerConfigurations component with one configuration', async () => {
     server.use(
       http.get(`*/nodebalancers/${String(NaN)}/configs`, () => {
-        return HttpResponse.json(
-          makeResourcePage([
-            nodeBalancerConfigFactory.build({ id: 1, port: 3000 }),
-          ])
-        );
+        return HttpResponse.json(makeResourcePage([nodeBalancerConfig]));
       }),
       http.get(`*/nodebalancers/${String(NaN)}/configs/1/nodes`, () => {
         return HttpResponse.json(
@@ -133,5 +133,37 @@ describe('NodeBalancerConfigurations', () => {
     expect(queryByLabelText('Protocol')).toBeVisible();
     expect(queryByLabelText('Algorithm')).toBeVisible();
     expect(queryByLabelText('Session Stickiness')).toBeVisible();
+  });
+
+  it('opens the Delete Configuration dialog', async () => {
+    server.use(
+      http.get(`*/nodebalancers/${String(NaN)}/configs`, () => {
+        return HttpResponse.json(makeResourcePage([nodeBalancerConfig]));
+      }),
+      http.get(`*/nodebalancers/${String(NaN)}/configs/1/nodes`, () => {
+        return HttpResponse.json(makeResourcePage([]));
+      })
+    );
+
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      <NodeBalancerConfigurations {...props} />
+    );
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    expect(getByText('Port 3000')).toBeVisible();
+    expect(getByLabelText('Protocol')).toBeInTheDocument();
+    expect(getByLabelText('Algorithm')).toBeInTheDocument();
+
+    await userEvent.click(getByText('Delete'));
+
+    expect(getByText('Delete this configuration on port 3000?')).toBeVisible();
+    expect(
+      getByText(
+        'Are you sure you want to delete this NodeBalancer Configuration?'
+      )
+    ).toBeVisible();
   });
 });
