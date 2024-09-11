@@ -37,7 +37,7 @@ export const getFilteredImagesForImageSelect = (
   variant: ImageSelectVariant | undefined
 ) => {
   if (variant === 'public') {
-    // For public images, we filter out LKE images and images that are > 6 months part their `eol`
+    // For public images, we filter out LKE images and images that are > 6 months past their `eol`
     return images?.filter(
       (image) => !image.id.includes('kube') && !isImageTooFarPastEOL(image)
     );
@@ -71,7 +71,7 @@ export const isImageTooFarPastEOL = (image: Image) => {
 /**
  * Returns whether or not an image is deprecated
  *
- * Unfortunately, as per `M3-5753`, we can't just simpily check `deprecated` on the `Image`,
+ * Unfortunately, as per `M3-5753`, we can't just simply check `deprecated` on the `Image`,
  * we must also consider the EOL date.
  */
 export const isImageDeprecated = (image: Image) => {
