@@ -1,17 +1,22 @@
-import { SupportReply, SupportTicket } from '@linode/api-v4';
 import Avatar from '@mui/material/Avatar';
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import UserIcon from 'src/assets/icons/account.svg';
+import { Avatar as NewAvatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Typography } from 'src/components/Typography';
+import { useProfile } from 'src/queries/profile/profile';
 
 import { Hively, shouldRenderHively } from './Hively';
 import { TicketDetailText } from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
+
+import type { SupportReply, SupportTicket } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -99,9 +104,13 @@ interface Data {
 export const ExpandableTicketPanel = React.memo((props: Props) => {
   const { classes } = useStyles();
 
+  const theme = useTheme();
+
   const { open, parentTicket, reply, ticket, ticketUpdated } = props;
 
   const [data, setData] = React.useState<Data | undefined>(undefined);
+
+  const { data: profile } = useProfile();
 
   React.useEffect(() => {
     if (!ticket && !reply) {
@@ -137,13 +146,28 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
   const renderAvatar = (id: string) => {
     return (
       <div className={classes.userWrapper}>
-        <Avatar
-          alt="Gravatar"
-          className={classes.leftIcon}
-          src={`https://gravatar.com/avatar/${id}?d=404`}
-        >
-          <UserIcon />
-        </Avatar>
+        <GravatarOrAvatar
+          avatar={
+            <NewAvatar
+              color={
+                data?.username !== profile?.username
+                  ? theme.palette.primary.dark
+                  : undefined
+              }
+              sx={{ marginTop: 1 }}
+              username={data?.username}
+            />
+          }
+          gravatar={
+            <Avatar
+              alt="Gravatar"
+              className={classes.leftIcon}
+              src={`https://gravatar.com/avatar/${id}?d=404`}
+            >
+              <UserIcon />
+            </Avatar>
+          }
+        />
       </div>
     );
   };
