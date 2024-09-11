@@ -70,7 +70,6 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       data-qa-drawer
       data-testid="drawer"
       onKeyDown={handleKeyDown}
-      onSubmit={onSubmit}
       role="dialog"
     >
       <DialogTitle onClose={onClose} title={title} />

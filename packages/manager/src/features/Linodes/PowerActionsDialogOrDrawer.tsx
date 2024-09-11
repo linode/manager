@@ -99,7 +99,9 @@ export const PowerActionsDialog = (props: Props) => {
   const isRebootAction = props.action === 'Reboot';
   const isPowerOnAction = props.action === 'Power On';
 
-  const onSubmit = async () => {
+  const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     if (isPowerOnAction || isRebootAction) {
       const mutateAsync = mutationMap[action as 'Power On' | 'Reboot'];
       await mutateAsync({
@@ -150,7 +152,6 @@ export const PowerActionsDialog = (props: Props) => {
       }}
       error={error?.[0].reason}
       onClose={handleOnClose}
-      onSubmit={onSubmit}
       open={isOpen}
       title={`${action} Linode ${linodeLabel ?? ''}?`}
     >
