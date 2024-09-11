@@ -41,6 +41,7 @@ export const enableJunitReport = (
         rootSuiteTitle: 'Cloud Manager Cypress Tests',
         testsuitesTitle: testSuiteName,
         jenkinsMode,
+        suiteTitleSeparatedBy: jenkinsMode ? '→' : ' ',
       };
     }
     return config;
