@@ -208,7 +208,7 @@ export const CloudPulseCustomSelect = React.memo(
           selectedResource &&
           (!Array.isArray(selectedResource) || selectedResource.length)
             ? ''
-            : placeholder ?? 'Select a Value'
+            : placeholder || 'Select a Value'
         }
         textFieldProps={{
           hideLabel: true,
