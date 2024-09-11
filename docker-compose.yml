@@ -118,6 +118,15 @@ services:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
 
+  # Component test runner.
+  component:
+    <<: *default-runner
+    depends_on: []
+    environment:
+      CY_TEST_DISABLE_RETRIES: 1
+    entrypoint: ['yarn', 'cy:component:run']
+
+
   # End-to-end test runner for Cloud's synthetic monitoring tests.
   # Configured to run against a remote Cloud instance hosted at some URL.
   e2e_heimdall:
