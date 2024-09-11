@@ -3,12 +3,12 @@ import * as React from 'react';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import type { AclpConfig, Dashboard } from '@linode/api-v4';
+import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
+  defaultValue?: FilterValue;
   handleRegionChange: (region: string | undefined, savePref?: boolean) => void;
   placeholder?: string;
-  preferences?: AclpConfig;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
 }
@@ -18,9 +18,9 @@ export const CloudPulseRegionSelect = React.memo(
     const { data: regions } = useRegionsQuery();
 
     const {
+      defaultValue,
       handleRegionChange,
       placeholder,
-      preferences,
       savePreferences,
       selectedDashboard,
     } = props;
@@ -29,11 +29,9 @@ export const CloudPulseRegionSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      const defaultRegion = preferences?.region;
-
       if (regions && savePreferences) {
-        const region = defaultRegion
-          ? regions.find((regionObj) => regionObj.id === defaultRegion)?.id
+        const region = defaultValue
+          ? regions.find((regionObj) => regionObj.id === defaultValue)?.id
           : undefined;
         handleRegionChange(region);
         setSelectedRegion(region);

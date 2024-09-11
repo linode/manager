@@ -22,8 +22,6 @@ export interface GlobalFilterProperties {
   handleTimeDurationChange(timeDuration: TimeDuration): void;
 }
 
-export interface FilterChangeProperties {}
-
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const {
     handleAnyFilterChange,

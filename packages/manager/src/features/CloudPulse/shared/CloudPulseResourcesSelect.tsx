@@ -5,7 +5,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { themes } from 'src/utilities/theme';
 
-import type { AclpConfig, Filter } from '@linode/api-v4';
+import type { Filter, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
   id: string;
@@ -14,13 +14,13 @@ export interface CloudPulseResources {
 }
 
 export interface CloudPulseResourcesSelectProps {
+  defaultValue?: FilterValue;
   disabled?: boolean;
   handleResourcesSelection: (
     resources: CloudPulseResources[],
     savePref?: boolean
   ) => void;
   placeholder?: string;
-  preferences?: AclpConfig;
   region?: string;
   resourceType: string | undefined;
   savePreferences?: boolean;
@@ -30,10 +30,10 @@ export interface CloudPulseResourcesSelectProps {
 export const CloudPulseResourcesSelect = React.memo(
   (props: CloudPulseResourcesSelectProps) => {
     const {
+      defaultValue,
       disabled,
       handleResourcesSelection,
       placeholder,
-      preferences,
       region,
       resourceType,
       savePreferences,
@@ -57,26 +57,22 @@ export const CloudPulseResourcesSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      const defaultValue = preferences?.resources;
       if (resources && savePreferences && !selectedResources) {
-        if (defaultValue && Array.isArray(defaultValue)) {
-          const defaultResources = defaultValue.map((resource) =>
-            String(resource)
-          );
-          const resource = getResourcesList().filter((resource) =>
-            defaultResources.includes(String(resource.id))
-          );
+        const defaultResources =
+          defaultValue && Array.isArray(defaultValue)
+            ? defaultValue.map((resource) => String(resource))
+            : [];
+        const resource = getResourcesList().filter((resource) =>
+          defaultResources.includes(String(resource.id))
+        );
 
-          handleResourcesSelection(resource);
-          setSelectedResources(resource);
-        } else {
-          setSelectedResources([]);
-          handleResourcesSelection([]);
-        }
-      } else if (selectedResources) {
-        handleResourcesSelection([]);
+        handleResourcesSelection(resource);
+        setSelectedResources(resource);
+      } else {
         setSelectedResources([]);
+        handleResourcesSelection([]);
       }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resources]);
 

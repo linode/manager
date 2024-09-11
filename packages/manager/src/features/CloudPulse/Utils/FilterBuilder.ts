@@ -1,4 +1,9 @@
-import { RELATIVE_TIME_DURATION, RESOURCE_ID, RESOURCES } from './constants';
+import {
+  REGION,
+  RELATIVE_TIME_DURATION,
+  RESOURCE_ID,
+  RESOURCES,
+} from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
 
@@ -54,9 +59,9 @@ export const getRegionProperties = (
   const { placeholder } = props.config.configuration;
   const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
   return {
+    defaultValue: preferences?.[REGION],
     handleRegionChange,
     placeholder,
-    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
   };
@@ -88,6 +93,7 @@ export const getResourcesProperties = (
     preferences,
   } = props;
   return {
+    defaultValue: preferences?.[RESOURCES],
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
@@ -95,7 +101,6 @@ export const getResourcesProperties = (
     ),
     handleResourcesSelection: handleResourceChange,
     placeholder,
-    preferences,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: buildXFilter(config, dependentFilters ?? {}),
@@ -141,6 +146,7 @@ export const getCustomSelectProperties = (
       filterKey,
       dashboard
     ),
+    defaultValue: preferences?.[filterKey],
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
@@ -153,7 +159,6 @@ export const getCustomSelectProperties = (
     maxSelections,
     options,
     placeholder,
-    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     type: options
       ? CloudPulseSelectTypes.static

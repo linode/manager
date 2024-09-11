@@ -1,6 +1,6 @@
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
-import type { AclpConfig } from '@linode/api-v4';
+import type { AclpConfig, FilterValue } from '@linode/api-v4';
 
 interface CloudPulseCustomSelectProps {
   /**
@@ -34,6 +34,11 @@ interface CloudPulseCustomSelectProps {
  */
 interface CloudPulseCustomSelectDefaultValueProps
   extends CloudPulseCustomSelectProps {
+  /**
+   * Default selected value from the drop down
+   */
+  defaultValue?: FilterValue;
+
   /**
    * Indicates whether we need multiselect for the component or not
    */
@@ -80,15 +85,14 @@ export const getInitialDefaultSelections = (
   | CloudPulseServiceTypeFiltersOptions[]
   | undefined => {
   const {
+    defaultValue,
     filterKey,
     handleSelectionChange,
     isMultiSelect,
     options,
-    preferences,
     savePreferences,
   } = defaultSelectionProps;
 
-  const defaultValue = savePreferences ? preferences?.[filterKey] : undefined;
   if (!options || options.length === 0) {
     return isMultiSelect ? [] : undefined;
   }
