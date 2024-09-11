@@ -140,7 +140,7 @@ describe('volume create flow', () => {
           .click();
 
         // @TODO BSE: once BSE is fully rolled out, check for the notice (selected linode doesn't have
-        // blockstorage_encryption capability + user checked "Encrypt Volume" checkbox) instead of the absence of it
+        // "Block Storage Encryption" capability + user checked "Encrypt Volume" checkbox) instead of the absence of it
         cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
 
         cy.findByText('Create Volume').click();
@@ -247,7 +247,7 @@ describe('volume create flow', () => {
     const mockLinode = linodeFactory.build({
       region: mockRegions[0].id,
       id: 123456,
-      capabilities: ['blockstorage_encryption'],
+      capabilities: ['Block Storage Encryption'],
     });
 
     mockGetAccount(mockAccount).as('getAccount');
