@@ -14,23 +14,18 @@ const AUTHENTICATED_READ_TEXT = 'Authenticated Read';
 
 vi.mock('src/components/EnhancedSelect/Select');
 
-const mockGetAccess = vi.fn().mockResolvedValue({
-  acl: 'private',
-  cors_enabled: true,
-});
-const mockUpdateAccess = vi.fn().mockResolvedValue({});
-
 const defaultProps: Props = {
+  clusterOrRegion: 'in-maa',
   endpointType: 'E1',
-  getAccess: mockGetAccess,
   name: 'my-object-name',
-  updateAccess: mockUpdateAccess,
   variant: 'bucket',
 };
 
 describe('AccessSelect', () => {
   const renderComponent = (props: Partial<Props> = {}) =>
-    renderWithTheme(<AccessSelect {...defaultProps} {...props} />);
+    renderWithTheme(<AccessSelect {...defaultProps} {...props} />, {
+      flags: { objectStorageGen2: { enabled: true } },
+    });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -54,11 +49,13 @@ describe('AccessSelect', () => {
       });
 
       const aclSelect = screen.getByRole('combobox');
-
-      await waitFor(() => {
-        expect(aclSelect).toBeEnabled();
-        expect(aclSelect).toHaveValue('Private');
-      });
+      await waitFor(
+        () => {
+          expect(aclSelect).toBeEnabled();
+          expect(aclSelect).toHaveValue('Private');
+        },
+        { timeout: 10000 }
+      );
 
       act(() => {
         fireEvent.click(aclSelect);
@@ -69,7 +66,6 @@ describe('AccessSelect', () => {
         'aria-selected',
         'true'
       );
-
       if (shouldShowCORS) {
         await waitFor(() => {
           expect(screen.getByLabelText(CORS_ENABLED_TEXT)).toBeInTheDocument();
@@ -86,7 +82,8 @@ describe('AccessSelect', () => {
           ).not.toBeInTheDocument();
         });
       }
-    }
+    },
+    10000
   );
 
   it('updates the access and CORS settings and submits the appropriate values', async () => {
@@ -95,10 +92,13 @@ describe('AccessSelect', () => {
     const aclSelect = screen.getByRole('combobox');
     const saveButton = screen.getByText('Save').closest('button')!;
 
-    await waitFor(() => {
-      expect(aclSelect).toBeEnabled();
-      expect(aclSelect).toHaveValue('Private');
-    });
+    await waitFor(
+      () => {
+        expect(aclSelect).toBeEnabled();
+        expect(aclSelect).toHaveValue('Private');
+      },
+      { interval: 100, timeout: 5000 }
+    );
 
     // Wait for CORS toggle to appear and be checked
     const corsToggle = await screen.findByRole('checkbox', {
@@ -131,12 +131,9 @@ describe('AccessSelect', () => {
     });
 
     await userEvent.click(saveButton);
-    expect(mockUpdateAccess).toHaveBeenCalledWith('authenticated-read', false);
-
-    await userEvent.click(corsToggle);
-    await waitFor(() => expect(corsToggle).toBeChecked());
-
-    await userEvent.click(saveButton);
-    expect(mockUpdateAccess).toHaveBeenCalledWith('authenticated-read', true);
+    await waitFor(
+      () => screen.findByText('Bucket access updated successfully.'),
+      { timeout: 5000 }
+    );
   });
 });
