@@ -23,7 +23,7 @@ export const Actions = () => {
 
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
-  const apicliButtonCopy = flags?.apicliButtonCopy;
+  const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const {
     formState,

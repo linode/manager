@@ -81,6 +81,7 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 }
 
 export interface Flags {
+  testdxtoolabexperiment: string;
   aclp: AclpFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
