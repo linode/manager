@@ -58,6 +58,14 @@ export default defineConfig({
     specPattern: './cypress/component/**/*.spec.tsx',
     viewportWidth: 500,
     viewportHeight: 500,
+
+    setupNodeEvents(on, config) {
+      return setupPlugins(on, config, [
+        loadEnvironmentConfig,
+        discardPassedTestRecordings,
+        enableJunitReport('Component'),
+      ]);
+    },
   },
 
   e2e: {
