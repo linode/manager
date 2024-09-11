@@ -63,7 +63,7 @@ export default defineConfig({
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         discardPassedTestRecordings,
-        enableJunitReport('Component'),
+        enableJunitReport('Component', true),
       ]);
     },
   },

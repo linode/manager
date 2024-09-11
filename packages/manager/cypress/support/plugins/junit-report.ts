@@ -17,7 +17,10 @@ const capitalize = (str: string): string => {
  *
  * @returns Cypress configuration object.
  */
-export const enableJunitReport = (suiteName?: string): CypressPlugin => {
+export const enableJunitReport = (
+  suiteName?: string,
+  jenkinsMode: boolean = false
+): CypressPlugin => {
   return (_on, config) => {
     if (!!config.env[envVarName]) {
       // Use `suiteName` if it is specified.
@@ -37,7 +40,7 @@ export const enableJunitReport = (suiteName?: string): CypressPlugin => {
         mochaFile: 'cypress/results/test-results-[hash].xml',
         rootSuiteTitle: 'Cloud Manager Cypress Tests',
         testsuitesTitle: testSuiteName,
-        jenkinsMode: false,
+        jenkinsMode,
       };
     }
     return config;
