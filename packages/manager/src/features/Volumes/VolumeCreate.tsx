@@ -245,7 +245,7 @@ export const VolumeCreate = () => {
 
   const { data: linode } = useLinodeQuery(
     linode_id ?? -1,
-    isBlockStorageEncryptionFeatureEnabled
+    isBlockStorageEncryptionFeatureEnabled && linode_id !== null
   );
 
   const linodeSupportsBlockStorageEncryption = Boolean(
