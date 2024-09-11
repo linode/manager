@@ -123,7 +123,8 @@ services:
     <<: *default-runner
     depends_on: []
     environment:
-      CY_TEST_DISABLE_RETRIES: 1
+      CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
+      CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
     entrypoint: ['yarn', 'cy:component:run']
 
 
