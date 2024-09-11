@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ui } from 'support/ui';
 import { checkComponentA11y } from 'support/util/accessibility';
 import { componentTests, visualTests } from 'support/util/components';
-import { createSpy } from 'support/util/components';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
