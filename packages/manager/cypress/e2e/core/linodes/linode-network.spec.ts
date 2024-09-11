@@ -1,6 +1,5 @@
 import { linodeFactory, ipAddressFactory } from '@src/factories';
 
-import { authenticate } from 'support/api/authentication';
 import {
   mockGetLinodeDetails,
   mockGetLinodeIPAddresses,
