@@ -56,6 +56,7 @@ export const Actions = () => {
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
       <Button
+        className="commandLineTools"
         buttonType="outlined"
         data-ab-test="command-line-tools"
         data-command-line-tools
