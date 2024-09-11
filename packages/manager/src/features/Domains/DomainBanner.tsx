@@ -30,9 +30,9 @@ export const DomainBanner = React.memo((props: DomainBannerProps) => {
       variant="warning"
     >
       <>
-        <StyledTypography>
+        <Typography>
           <strong>Your DNS zones are not being served.</strong>
-        </StyledTypography>
+        </Typography>
         <Typography>
           Your domains will not be served by Linode&rsquo;s nameservers unless
           you have at least one active Linode on your account.{` `}
@@ -42,12 +42,6 @@ export const DomainBanner = React.memo((props: DomainBannerProps) => {
     </StyledDismissibleBanner>
   );
 });
-
-const StyledTypography = styled(Typography, { label: 'StyledTypography' })(
-  ({ theme }) => ({
-    marginBottom: theme.spacing(),
-  })
-);
 
 const StyledDismissibleBanner = styled(DismissibleBanner, {
   label: 'StyledDismissableBanner',
