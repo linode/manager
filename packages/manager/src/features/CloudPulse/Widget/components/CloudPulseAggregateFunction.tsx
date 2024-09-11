@@ -67,5 +67,6 @@ export const CloudPulseAggregateFunction = React.memo(
         value={selectedAggregateFunction}
       />
     );
-  }
+  },
+  () => true
 );

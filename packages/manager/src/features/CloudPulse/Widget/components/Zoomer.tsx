@@ -8,10 +8,11 @@ export interface ZoomIconProperties {
   zoomIn: boolean;
 }
 
-export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
-  const handleClick = (needZoomIn: boolean) => {
-    props.handleZoomToggle(needZoomIn);
-  };
+export const ZoomIcon = React.memo(
+  (props: ZoomIconProperties) => {
+    const handleClick = (needZoomIn: boolean) => {
+      props.handleZoomToggle(needZoomIn);
+    };
 
   const ToggleZoomer = () => {
     if (props.zoomIn) {
@@ -33,5 +34,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
     );
   };
 
-  return <ToggleZoomer />;
-});
+    return <ToggleZoomer />;
+  },
+  (prevProps, nextProps) => prevProps.zoomIn === nextProps.zoomIn
+);

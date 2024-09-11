@@ -136,5 +136,6 @@ export const CloudPulseIntervalSelect = React.memo(
         value={selectedInterval}
       />
     );
-  }
+  },
+  () => true
 );
