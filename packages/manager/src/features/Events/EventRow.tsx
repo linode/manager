@@ -1,11 +1,15 @@
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useProfile } from 'src/queries/profile/profile';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import { StyledGravatar } from './EventRow.styles';
@@ -24,12 +28,14 @@ interface EventRowProps {
 
 export const EventRow = (props: EventRowProps) => {
   const { event } = props;
+  const theme = useTheme();
   const timestamp = getEventTimestamp(event);
   const { action, message, username } = {
     action: event.action,
     message: getEventMessage(event),
     username: getEventUsername(event),
   };
+  const { data: profile } = useProfile();
 
   if (!message) {
     return null;
@@ -54,7 +60,27 @@ export const EventRow = (props: EventRowProps) => {
       <Hidden smDown>
         <TableCell data-qa-event-username-cell parentColumn="Username">
           <Box alignItems="center" display="flex" gap={1}>
-            <StyledGravatar username={username === 'Linode' ? '' : username} />
+            <GravatarOrAvatar
+              avatar={
+                <Avatar
+                  color={
+                    username !== profile?.username
+                      ? theme.palette.primary.dark
+                      : undefined
+                  }
+                  height={24}
+                  username={username}
+                  width={24}
+                />
+              }
+              gravatar={
+                <StyledGravatar
+                  username={username === 'Linode' ? '' : username}
+                />
+              }
+              height={24}
+              width={24}
+            />
             {username}
           </Box>
         </TableCell>
