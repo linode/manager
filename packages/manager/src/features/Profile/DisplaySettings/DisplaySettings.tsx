@@ -9,10 +9,8 @@ import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import { Link } from 'src/components/Link';
 import { Paper } from 'src/components/Paper';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
@@ -65,15 +63,6 @@ export const DisplaySettings = () => {
     return updateProfile({ email: newEmail });
   };
 
-  const tooltipIconText = (
-    <>
-      Go to <Link to="https://en.gravatar.com/">gravatar.com</Link> and register
-      an account using the same email address as your Cloud Manager account.
-      Upload your desired profile image to your Gravatar account and it will be
-      automatically linked.
-    </>
-  );
-
   const tooltipForDisabledUsernameField = profile?.restricted
     ? 'Restricted users cannot update their username. Please contact an account administrator.'
     : isProxyUser
@@ -100,16 +89,6 @@ export const DisplaySettings = () => {
             <div>
               <Typography sx={{ fontSize: '1rem' }} variant="h2">
                 Avatar
-                <StyledTooltipIcon
-                  sxTooltipIcon={{
-                    marginLeft: '6px',
-                    marginTop: '-2px',
-                    padding: 0,
-                  }}
-                  status="help"
-                  text={tooltipIconText}
-                />
-                )
               </Typography>
               <StyledProfileCopy variant="body1">
                 Your avatar is automatically generated using the first character
@@ -177,12 +156,4 @@ const StyledProfileCopy = styled(Typography, {
   marginBottom: theme.spacing(2),
   marginTop: 4,
   maxWidth: 360,
-}));
-
-const StyledTooltipIcon = styled(TooltipIcon, {
-  label: 'StyledTooltip',
-})(() => ({
-  '& .MuiTooltip-tooltip': {
-    minWidth: 350,
-  },
 }));
