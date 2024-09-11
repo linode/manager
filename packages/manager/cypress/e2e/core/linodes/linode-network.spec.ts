@@ -9,7 +9,6 @@ import {
 import { mockUpdateIPAddress } from 'support/intercepts/networking';
 import { ui } from 'support/ui';
 
-authenticate();
 describe('linode networking', () => {
   /**
    * - Confirms the success toast message after editing RDNS
