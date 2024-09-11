@@ -335,7 +335,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               </Box>
             </Stack>
           </Stack>
-          <Divider />
 
           <CloudPulseLineGraph
             error={
