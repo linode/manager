@@ -6,7 +6,7 @@
 
 import { apiMatcher } from 'support/util/intercepts';
 
-import type { Dashboard, MetricDefinitions } from '@linode/api-v4';
+import type { AvailableMetrics, Dashboard, MetricDefinitions } from '@linode/api-v4';
 
 /**
  * Intercepts HTTP GET requests for metric definitions.
@@ -17,7 +17,7 @@ import type { Dashboard, MetricDefinitions } from '@linode/api-v4';
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 
-export const interceptGetMetricDefinitions = (
+export const mockGetMetricDefinitions = (
   metricDefinitions: MetricDefinitions
 ): Cypress.Chainable<null> => {
   return cy.intercept(
@@ -36,7 +36,7 @@ export const interceptGetMetricDefinitions = (
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 
-export const interceptCloudPulseServices = (
+export const mockCloudPulseServices = (
   service_type: string
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('**/monitor/services'), {
@@ -52,7 +52,7 @@ export const interceptCloudPulseServices = (
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 
-export const interceptGetDashboards = (
+export const mockGetDashboards = (
   dashboard: Dashboard
 ): Cypress.Chainable<null> => {
   return cy.intercept(
@@ -82,8 +82,8 @@ export const interceptMetricsRequests = () => {
  * @param {any} mockResponse - The mock response to return for the intercepted request.
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
-export const interceptCreateMetrics = (
-  mockResponse: any
+export const mockCreateMetrics = (
+  mockResponse: AvailableMetrics
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',

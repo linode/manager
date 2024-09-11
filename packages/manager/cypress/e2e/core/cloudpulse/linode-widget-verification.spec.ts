@@ -10,18 +10,15 @@ import {
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import {
-  interceptCloudPulseServices,
-  interceptMetricsRequests,
   mockJWSToken,
   mockLinodeDashboardServicesResponse,
+  mockCreateMetrics,
+  mockGetDashboards,
+  mockGetMetricDefinitions,
+  mockCloudPulseServices,
 } from 'support/intercepts/cloudpulseAPIHandler';
 import { ui } from 'support/ui';
 import { timeRange, widgetDetails, granularity } from 'support/constants/widget-service';
-import {
-  interceptCreateMetrics,
-  interceptGetDashboards,
-  interceptGetMetricDefinitions,
-} from 'support/intercepts/cloudpulseAPIHandler';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createMetricResponse } from '@src/factories/widget';
 import type { Flags } from 'src/featureFlags';
@@ -76,13 +73,13 @@ describe('Dashboard Widget Verification Tests', () => {
     mockGetAccount(mockAccount).as('getAccount'); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLinodes([mockLinode]).as('getLinodes');
-    interceptGetMetricDefinitions(metricDefinitions);
-    interceptGetDashboards(dashboard).as('dashboard');
-    interceptCloudPulseServices('linode').as('services');
+    mockGetMetricDefinitions(metricDefinitions);
+    mockGetDashboards(dashboard).as('dashboard');
+    mockCloudPulseServices('linode').as('services');
     mockLinodeDashboardServicesResponse(dashboard);
     mockJWSToken();
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
-    interceptCreateMetrics(responsePayload).as('metricAPI');
+    mockCreateMetrics(responsePayload).as('metricAPI');
 });
 
   it('should verify cloudpulse availability when feature flag is set to false', () => {
