@@ -249,7 +249,7 @@ export const VolumeCreate = () => {
   );
 
   const linodeSupportsBlockStorageEncryption = Boolean(
-    linode?.capabilities?.includes('blockstorage_encryption')
+    linode?.capabilities?.includes('Block Storage Encryption')
   );
 
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
