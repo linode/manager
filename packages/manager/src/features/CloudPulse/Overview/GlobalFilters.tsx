@@ -1,18 +1,24 @@
+import { IconButton } from '@mui/material';
+import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { CloudPulseRegionSelect } from '../shared/CloudPulseRegionSelect';
-import { CloudPulseResourcesSelect } from '../shared/CloudPulseResourcesSelect';
-import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import Reload from 'src/assets/icons/reload.svg';
+import { Divider } from 'src/components/Divider';
 
-import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { WithStartAndEnd } from 'src/features/Longview/request.types';
-import { Dashboard } from '@linode/api-v4';
+import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
+import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { REFRESH } from '../Utils/constants';
+
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { Dashboard, TimeDuration } from '@linode/api-v4';
+import type { WithStartAndEnd } from 'src/features/Longview/request.types';
 
 export interface GlobalFilterProperties {
-  handleAnyFilterChange(filters: FiltersObject): undefined | void;
+  handleAnyFilterChange(filterKey: string, filterValue: FilterValueType): void;
+  handleDashboardChange(dashboard: Dashboard | undefined): void;
+  handleTimeDurationChange(timeDuration: TimeDuration): void;
 }
 
 export interface FiltersObject {
@@ -24,124 +30,103 @@ export interface FiltersObject {
 }
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
-  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    end: 0,
-    start: 0,
-  });
-
+  const {
+    handleAnyFilterChange,
+    handleDashboardChange,
+    handleTimeDurationChange,
+  } = props;
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
-  const [selectedRegion, setRegion] = React.useState<string | undefined>();
-  const [, setResources] = React.useState<CloudPulseResources[]>(); // removed the unused variable, this will be used later point of time
-
-  React.useEffect(() => {
-    const triggerGlobalFilterChange = () => {
-      const globalFilters: FiltersObject = {
-        interval: '',
-        region: '',
-        resource: [],
-        timeRange: time,
-      };
-      if (selectedRegion) {
-        globalFilters.region = selectedRegion;
-      }
-      props.handleAnyFilterChange(globalFilters);
-    };
-    triggerGlobalFilterChange();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [time, selectedRegion]); // if anything changes, emit an event to parent component
 
   const handleTimeRangeChange = React.useCallback(
-    (start: number, end: number) => {
-      setTimeBox({ end, start });
+    (timerDuration: TimeDuration) => {
+      handleTimeDurationChange(timerDuration);
     },
-    []
+    [handleTimeDurationChange]
   );
 
-  const handleRegionChange = React.useCallback((region: string | undefined) => {
-    setRegion(region);
-  }, []);
-
-  const handleResourcesSelection = React.useCallback(
-    (resources: CloudPulseResources[]) => {
-      setResources(resources);
-    },
-    []
-  );
-
-  const handleDashboardChange = React.useCallback(
+  const onDashboardChange = React.useCallback(
     (dashboard: Dashboard | undefined) => {
       setSelectedDashboard(dashboard);
-      setRegion(undefined);
+      handleDashboardChange(dashboard);
     },
-    []
+    [handleDashboardChange]
+  );
+
+  const emitFilterChange = React.useCallback(
+    (filterKey: string, value: FilterValueType) => {
+      handleAnyFilterChange(filterKey, value);
+    },
+    [handleAnyFilterChange]
+  );
+
+  const handleGlobalRefresh = React.useCallback(
+    (dashboardObj?: Dashboard) => {
+      if (!dashboardObj) {
+        return;
+      }
+      handleAnyFilterChange(REFRESH, Date.now());
+    },
+    [handleAnyFilterChange]
   );
 
   return (
-    <Grid container sx={{ ...itemSpacing, padding: '8px' }}>
-      <StyledGrid xs={12}>
-        <Grid sx={{ width: 300 }}>
+    <Grid container gap={1}>
+      <Grid
+        columnSpacing={2}
+        container
+        item
+        justifyContent="space-between"
+        mt={2}
+        px={2}
+        rowGap={2}
+        xs={12}
+      >
+        <Grid display={'flex'} item md={4} sm={5} xs={12}>
           <CloudPulseDashboardSelect
-            handleDashboardChange={handleDashboardChange}
+            handleDashboardChange={onDashboardChange}
           />
         </Grid>
-        <Grid sx={{ marginLeft: 2, width: 250 }}>
-          <StyledCloudPulseRegionSelect
-            handleRegionChange={handleRegionChange}
-            selectedDashboard={selectedDashboard}
-            selectedRegion={selectedRegion}
-          />
-        </Grid>
-
-        <Grid sx={{ marginLeft: 2, width: 350 }}>
-          <StyledCloudPulseResourcesSelect
-            handleResourcesSelection={handleResourcesSelection}
-            region={selectedRegion}
-            resourceType={selectedDashboard?.service_type}
-          />
-        </Grid>
-        <Grid sx={{ marginLeft: 2, width: 250 }}>
-          <StyledCloudPulseTimeRangeSelect
-            defaultValue={'Past 30 Minutes'}
+        <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
+          <CloudPulseTimeRangeSelect
             handleStatsChange={handleTimeRangeChange}
             hideLabel
             label="Select Time Range"
           />
+          <IconButton
+            sx={{
+              marginBlockEnd: 'auto',
+            }}
+            disabled={!selectedDashboard}
+            onClick={() => handleGlobalRefresh(selectedDashboard)}
+            size="small"
+          >
+            <StyledReload />
+          </IconButton>
         </Grid>
-      </StyledGrid>
+      </Grid>
+      <Grid item xs={12}>
+        <Divider />
+      </Grid>
+      {selectedDashboard && (
+        <CloudPulseDashboardFilterBuilder
+          dashboard={selectedDashboard}
+          emitFilterChange={emitFilterChange}
+          isServiceAnalyticsIntegration={false}
+        />
+      )}
     </Grid>
   );
 });
 
-const StyledCloudPulseRegionSelect = styled(CloudPulseRegionSelect, {
-  label: 'StyledCloudPulseRegionSelect',
-})({
-  width: 150,
-});
-
-const StyledCloudPulseTimeRangeSelect = styled(CloudPulseTimeRangeSelect, {
-  label: 'StyledCloudPulseTimeRangeSelect',
-})({
-  width: 150,
-});
-
-const StyledCloudPulseResourcesSelect = styled(CloudPulseResourcesSelect, {
-  label: 'StyledCloudPulseResourcesSelect',
-})({
-  width: 250,
-});
-
-const StyledGrid = styled(Grid, { label: 'StyledGrid' })(({ theme }) => ({
-  alignItems: 'end',
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'start',
-  marginBottom: theme.spacing(1.25),
+const StyledReload = styled(Reload, { label: 'StyledReload' })(({ theme }) => ({
+  '&:active': {
+    color: `${theme.palette.success}`,
+  },
+  '&:hover': {
+    cursor: 'pointer',
+  },
+  height: '24px',
+  width: '24px',
 }));
-
-const itemSpacing = {
-  boxSizing: 'border-box',
-  margin: '0',
-};

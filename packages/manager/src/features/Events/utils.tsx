@@ -4,6 +4,7 @@ import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/const
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
 
+import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';
 
 import type { Event } from '@linode/api-v4';
@@ -44,6 +45,18 @@ export function getEventMessage(
 
   return message ? message(event as Event) : null;
 }
+
+/**
+ * The event username Getter.
+ * Returns the username from event or 'Linode' if username is null or excluded by action.
+ */
+export const getEventUsername = (event: Event) => {
+  if (event.username && !ACTIONS_WITHOUT_USERNAMES.includes(event.action)) {
+    return event.username;
+  }
+
+  return 'Linode';
+};
 
 /**
  * Format the time remaining for an event.

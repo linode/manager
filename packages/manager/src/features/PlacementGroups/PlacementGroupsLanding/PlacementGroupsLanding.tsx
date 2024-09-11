@@ -1,15 +1,12 @@
-import CloseIcon from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -36,7 +33,7 @@ import { getPlacementGroupLinodes } from '../utils';
 import { PlacementGroupsLandingEmptyState } from './PlacementGroupsLandingEmptyState';
 import { PlacementGroupsRow } from './PlacementGroupsRow';
 
-import type { PlacementGroup } from '@linode/api-v4';
+import type { Filter, PlacementGroup } from '@linode/api-v4';
 
 const preferenceKey = 'placement-groups';
 
@@ -55,14 +52,11 @@ export const PlacementGroupsLanding = React.memo(() => {
     `${preferenceKey}-order`
   );
 
-  const filter = {
+  const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
+    ...(query && { label: { '+contains': query } }),
   };
-
-  if (query) {
-    filter['label'] = { '+contains': query };
-  }
 
   const {
     data: placementGroups,
@@ -177,26 +171,12 @@ export const PlacementGroupsLanding = React.memo(() => {
         title="Placement Groups"
       />
       <DebouncedSearchTextField
-        InputProps={{
-          endAdornment: query && (
-            <InputAdornment position="end">
-              {isFetching && <CircleProgress size="sm" />}
-
-              <IconButton
-                aria-label="Clear"
-                onClick={() => setQuery('')}
-                size="small"
-                sx={{ padding: 'unset' }}
-              >
-                <CloseIcon sx={{ color: '#aaa !important' }} />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
+        clearable
         debounceTime={250}
         hideLabel
+        isSearching={isFetching}
         label="Search"
-        onChange={(e) => setQuery(e.target.value)}
+        onSearch={setQuery}
         placeholder="Search Placement Groups"
         sx={{ mb: 4 }}
         value={query}
@@ -215,23 +195,23 @@ export const PlacementGroupsLanding = React.memo(() => {
             </TableSortCell>
             <Hidden smDown>
               <TableSortCell
-                active={orderBy === 'affinity_type'}
+                active={orderBy === 'placement_group_type'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="affinity_type"
+                label="placement_group_type"
               >
-                Affinity Type
+                Placement Group Type
               </TableSortCell>
             </Hidden>
             <Hidden smDown>
               <TableSortCell
-                active={orderBy === 'is_strict'}
+                active={orderBy === 'placement_group_policy'}
                 direction={order}
                 handleClick={handleOrderChange}
-                label="is_strict"
+                label="placement_group_policy"
                 sx={{ width: '20%' }}
               >
-                Affinity Type Enforcement
+                Placement Group Policy
               </TableSortCell>
             </Hidden>
             <TableCell>Linodes</TableCell>

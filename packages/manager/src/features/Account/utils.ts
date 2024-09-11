@@ -6,9 +6,11 @@ import type { GlobalGrantTypes, GrantLevel } from '@linode/api-v4';
 import type { GrantTypeMap } from 'src/features/Account/types';
 
 export type ActionType =
+  | 'attach'
   | 'clone'
   | 'create'
   | 'delete'
+  | 'detach'
   | 'edit'
   | 'migrate'
   | 'modify'

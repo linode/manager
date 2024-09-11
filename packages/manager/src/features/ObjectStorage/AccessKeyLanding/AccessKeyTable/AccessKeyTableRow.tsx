@@ -1,7 +1,3 @@
-import {
-  ObjectStorageKey,
-  RegionS3EndpointAndID,
-} from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -11,16 +7,22 @@ import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import { OpenAccessDrawer } from '../types';
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
+import { StyledLastColumnCell } from './AccessKeyTable.styles';
 import { HostNameTableCell } from './HostNameTableCell';
+
+import type { OpenAccessDrawer } from '../types';
+import type {
+  ObjectStorageKey,
+  ObjectStorageKeyRegions,
+} from '@linode/api-v4/lib/object-storage';
 
 type Props = {
   openDrawer: OpenAccessDrawer;
   openRevokeDialog: (storageKeyData: ObjectStorageKey) => void;
-  setHostNames: (hostNames: RegionS3EndpointAndID[]) => void;
+  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
   setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
 };
@@ -35,7 +37,7 @@ export const AccessKeyTableRow = ({
   const { account } = useAccountManagement();
   const flags = useFlags();
 
-  const isObjMultiClusterEnabled = isFeatureEnabled(
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
@@ -62,14 +64,14 @@ export const AccessKeyTableRow = ({
         />
       )}
 
-      <TableCell>
+      <StyledLastColumnCell addPaddingRight={isObjMultiClusterEnabled}>
         <AccessKeyActionMenu
           label={storageKeyData.label}
           objectStorageKey={storageKeyData}
           openDrawer={openDrawer}
           openRevokeDialog={openRevokeDialog}
         />
-      </TableCell>
+      </StyledLastColumnCell>
     </TableRow>
   );
 };

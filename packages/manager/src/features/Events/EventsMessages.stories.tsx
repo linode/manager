@@ -10,6 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { eventFactory } from 'src/factories/events';
 import { eventMessages } from 'src/features/Events/factory';
 
+import type { EventMessage } from './types';
 import type { Event } from '@linode/api-v4/lib/account';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -21,7 +22,7 @@ const event: Event = eventFactory.build({
     type: 'linode',
     url: 'https://google.com',
   },
-  message: 'message with a `ticked` word',
+  message: 'message with a `ticked` word - please contact Support',
   secondary_entity: {
     id: 1,
     label: '{secondary entity}',
@@ -51,8 +52,8 @@ export const EventMessages: StoryObj = {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.keys(statuses).map((status, key) => {
-                const message = statuses[status](event);
+              {Object.keys(statuses).map((status: keyof EventMessage, key) => {
+                const message = statuses[status]?.(event);
 
                 return (
                   <TableRow key={`status-${key}`}>

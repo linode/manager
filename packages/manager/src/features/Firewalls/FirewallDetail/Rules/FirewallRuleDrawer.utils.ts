@@ -11,6 +11,8 @@ import {
   allIPv6,
   allowAllIPv4,
   allowAllIPv6,
+  allowNoneIPv4,
+  allowNoneIPv6,
   allowsAllIPs,
   predefinedFirewallFromRule,
 } from 'src/features/Firewalls/shared';
@@ -24,7 +26,7 @@ import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
-import type { Item } from 'src/components/EnhancedSelect';
+import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
@@ -172,11 +174,11 @@ export const getInitialAddressFormValue = (
     return 'all';
   }
 
-  if (allowAllIPv4(addresses)) {
+  if (allowAllIPv4(addresses) && allowNoneIPv6(addresses)) {
     return 'allIPv4';
   }
 
-  if (allowAllIPv6(addresses)) {
+  if (allowAllIPv6(addresses) && allowNoneIPv4(addresses)) {
     return 'allIPv6';
   }
 
@@ -239,7 +241,7 @@ export const getInitialIPs = (
  * output: '22, 443, 1313-1515, 8080'
  */
 export const itemsToPortString = (
-  items: Item<string>[],
+  items: FirewallOptionItem<string>[],
   portInput?: string
 ): string | undefined => {
   // If a user has selected ALL, just return that; anything else in the string
@@ -261,11 +263,11 @@ export const itemsToPortString = (
 /**
  *
  * Inverse of itemsToPortString. Takes a string from an API response (or row value)
- * and converts it to Item<string>[] and a custom input string.
+ * and converts it to FirewallOptionItem<string>[] and a custom input string.
  */
 export const portStringToItems = (
   portString?: string
-): [Item<string>[], string] => {
+): [FirewallOptionItem<string>[], string] => {
   // Handle empty input
   if (!portString) {
     return [[], ''];
@@ -277,13 +279,12 @@ export const portStringToItems = (
   }
 
   const ports = portString.split(',').map((p) => p.trim());
-  const items: Item<string>[] = [];
+  const items: FirewallOptionItem<string>[] = [];
   const customInput: string[] = [];
 
   ports.forEach((thisPort) => {
-    const preset = PORT_PRESETS[thisPort];
-    if (preset) {
-      items.push(preset);
+    if (thisPort in PORT_PRESETS) {
+      items.push(PORT_PRESETS[thisPort as keyof typeof PORT_PRESETS]);
     } else {
       customInput.push(thisPort);
     }

@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
+import type { Linode } from '@linode/api-v4/lib/linodes';
 
 export const linode1: Linode = {
   alerts: {
@@ -26,12 +26,13 @@ export const linode1: Linode = {
   label: 'test',
   lke_cluster_id: null,
   placement_group: {
-    affinity_type: 'anti_affinity:local',
     id: 1,
-    is_strict: true,
     label: 'pg-1',
+    placement_group_policy: 'strict',
+    placement_group_type: 'anti_affinity:local',
   },
   region: 'us-east',
+  site_type: 'core',
   specs: {
     disk: 20480,
     gpus: 0,
@@ -72,12 +73,13 @@ export const linode2: Linode = {
   label: 'another-test',
   lke_cluster_id: null,
   placement_group: {
-    affinity_type: 'anti_affinity:local',
     id: 1,
-    is_strict: true,
     label: 'pg-1',
+    placement_group_policy: 'strict',
+    placement_group_type: 'anti_affinity:local',
   },
   region: 'us-east',
+  site_type: 'core',
   specs: {
     disk: 30720,
     gpus: 0,
@@ -118,12 +120,13 @@ export const linode3: Linode = {
   label: 'another-test',
   lke_cluster_id: null,
   placement_group: {
-    affinity_type: 'anti_affinity:local',
     id: 1,
-    is_strict: true,
     label: 'pg-1',
+    placement_group_policy: 'strict',
+    placement_group_type: 'anti_affinity:local',
   },
   region: 'us-east',
+  site_type: 'core',
   specs: {
     disk: 30720,
     gpus: 0,
@@ -164,12 +167,13 @@ export const linode4: Linode = {
   label: 'another-test-eu',
   lke_cluster_id: null,
   placement_group: {
-    affinity_type: 'anti_affinity:local',
     id: 1,
-    is_strict: true,
     label: 'pg-1',
+    placement_group_policy: 'strict',
+    placement_group_type: 'anti_affinity:local',
   },
   region: 'eu-west',
+  site_type: 'core',
   specs: {
     disk: 30720,
     gpus: 0,

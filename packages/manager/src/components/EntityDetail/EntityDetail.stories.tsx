@@ -38,7 +38,6 @@ export const LinodeExample: Story = {
           }}
           id={0}
           linode={linodeFactory.build()}
-          openTagDrawer={action('openTagDrawer')}
         />
       </div>
     );

@@ -1,4 +1,4 @@
-import { AFFINITY_TYPES, PlacementGroup } from '@linode/api-v4';
+import { PLACEMENT_GROUP_TYPES, PlacementGroup } from '@linode/api-v4';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
@@ -73,7 +73,7 @@ export const PlacementGroupSelectOption = ({
                 right: selected ? 14 : 34,
               }}
             >
-              ({AFFINITY_TYPES[value.affinity_type]})
+              ({PLACEMENT_GROUP_TYPES[value.placement_group_type]})
             </Stack>
           </Stack>
           {disabled && (

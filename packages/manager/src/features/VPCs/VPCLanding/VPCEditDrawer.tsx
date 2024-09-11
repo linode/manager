@@ -38,7 +38,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateVPC,
     reset,
   } = useUpdateVPCMutation(vpc?.id ?? -1);
@@ -63,7 +63,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   const handleFieldChange = (field: string, value: string) => {
     form.setFieldValue(field, value);
-    if (form.errors[field]) {
+    if (form.errors[field as keyof UpdateVPCPayloadWithNone]) {
       form.setFieldError(field, undefined);
     }
   };
@@ -132,7 +132,7 @@ export const VPCEditDrawer = (props: Props) => {
             'data-testid': 'save-button',
             disabled: !form.dirty || readOnly,
             label: 'Save',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

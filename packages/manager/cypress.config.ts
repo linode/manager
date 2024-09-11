@@ -14,7 +14,9 @@ import { fetchAccount } from './cypress/support/plugins/fetch-account';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { splitCypressRun } from './cypress/support/plugins/split-run';
 import { enableJunitReport } from './cypress/support/plugins/junit-report';
+import { generateTestWeights } from './cypress/support/plugins/generate-weights';
 import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
+import cypressViteConfig from './cypress/vite.config';
 
 /**
  * Exports a Cypress configuration object.
@@ -41,9 +43,23 @@ export default defineConfig({
   video: true,
 
   // Only retry test when running via CI.
-  retries: process.env['CI'] ? 2 : 0,
+  retries: process.env['CI'] && !process.env['CY_TEST_DISABLE_RETRIES'] ? 2 : 0,
 
   experimentalMemoryManagement: true,
+
+  component: {
+    devServer: {
+      framework: 'react',
+      bundler: 'vite',
+      viteConfig: cypressViteConfig,
+    },
+    indexHtmlFile: './cypress/support/component/index.html',
+    supportFile: './cypress/support/component/setup.tsx',
+    specPattern: './cypress/component/**/*.spec.tsx',
+    viewportWidth: 500,
+    viewportHeight: 500,
+  },
+
   e2e: {
     experimentalRunAllSpecs: true,
 
@@ -70,6 +86,7 @@ export default defineConfig({
         logTestTagInfo,
         splitCypressRun,
         enableJunitReport,
+        generateTestWeights,
       ]);
     },
   },

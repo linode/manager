@@ -1,14 +1,7 @@
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
 import { accountFactory, placementGroupFactory } from 'src/factories';
 import { regionFactory } from 'src/factories';
 import { ui } from 'support/ui/';
-
-import type { Flags } from 'src/featureFlags';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreatePlacementGroup,
@@ -17,20 +10,12 @@ import {
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE } from 'src/features/PlacementGroups/constants';
+import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 const mockAccount = accountFactory.build();
 
 describe('Placement Group create flow', () => {
   beforeEach(() => {
-    // TODO Remove feature flag mocks when `placementGroups` flag is retired.
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
-        beta: true,
-        enabled: true,
-      }),
-    });
-    mockGetFeatureFlagClientstream();
     mockGetAccount(mockAccount);
   });
 
@@ -65,8 +50,8 @@ describe('Placement Group create flow', () => {
     const mockPlacementGroup = placementGroupFactory.build({
       label: randomLabel(),
       region: mockPlacementGroupRegion.id,
-      affinity_type: 'anti_affinity:local',
-      is_strict: true,
+      placement_group_type: 'anti_affinity:local',
+      placement_group_policy: 'strict',
       is_compliant: true,
     });
 
@@ -103,7 +88,7 @@ describe('Placement Group create flow', () => {
           .type(`${mockPlacementGroupRegion.label}{enter}`);
 
         cy.findByText(placementGroupLimitMessage).should('be.visible');
-        cy.findByText(CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE).should(
+        cy.findByText(CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE).should(
           'be.visible'
         );
 
@@ -118,8 +103,10 @@ describe('Placement Group create flow', () => {
     // the options/data chosen by the user.
     cy.wait('@createPlacementGroup').then((xhr) => {
       const requestPayload = xhr.request?.body;
-      expect(requestPayload['affinity_type']).to.equal('anti_affinity:local');
-      expect(requestPayload['is_strict']).to.equal(true);
+      expect(requestPayload['placement_group_type']).to.equal(
+        'anti_affinity:local'
+      );
+      expect(requestPayload['placement_group_policy']).to.equal('strict');
       expect(requestPayload['label']).to.equal(mockPlacementGroup.label);
       expect(requestPayload['region']).to.equal(mockPlacementGroupRegion.id);
     });

@@ -1,8 +1,3 @@
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetPlacementGroups } from 'support/intercepts/placement-groups';
 import { ui } from 'support/ui';
 import {
@@ -15,20 +10,10 @@ import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 
-import type { Flags } from 'src/featureFlags';
-
 const mockAccount = accountFactory.build();
 
 describe('VM Placement landing page', () => {
-  // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
-        beta: true,
-        enabled: true,
-      }),
-    });
-    mockGetFeatureFlagClientstream();
     mockGetAccount(mockAccount).as('getAccount');
   });
 
@@ -73,9 +58,9 @@ describe('VM Placement landing page', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockPlacementGroupCompliantRegion.id,
-      affinity_type: 'anti_affinity:local',
+      placement_group_type: 'anti_affinity:local',
       is_compliant: true,
-      is_strict: false,
+      placement_group_policy: 'flexible',
       members: [],
     });
 
@@ -83,9 +68,9 @@ describe('VM Placement landing page', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockPlacementGroupNoncompliantRegion.id,
-      affinity_type: 'affinity:local',
+      placement_group_type: 'affinity:local',
       is_compliant: false,
-      is_strict: true,
+      placement_group_policy: 'strict',
       members: [
         { linode_id: mockPlacementGroupLinode.id, is_compliant: false },
       ],

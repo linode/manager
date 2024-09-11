@@ -51,30 +51,30 @@ export const useEntityTransfersQuery = (
 ) => {
   const { data: profile } = useProfile();
 
-  return useQuery<EntityTransfersData, APIError[]>(
-    [queryKey, params, filter],
-    () => getAllEntityTransfersRequest(params, filter),
-    {
-      ...queryPresets.longLived,
-      enabled: !profile?.restricted,
-    }
-  );
+  return useQuery<EntityTransfersData, APIError[]>({
+    queryFn: () => getAllEntityTransfersRequest(params, filter),
+    queryKey: [queryKey, params, filter],
+    ...queryPresets.longLived,
+    enabled: !profile?.restricted,
+  });
 };
 
 export const useTransferQuery = (token: string, enabled: boolean = true) => {
-  return useQuery<EntityTransfer, APIError[]>(
-    [queryKey, token],
-    () => getEntityTransfer(token),
-    { ...queryPresets.shortLived, enabled, retry: false }
-  );
+  return useQuery<EntityTransfer, APIError[]>({
+    queryFn: () => getEntityTransfer(token),
+    queryKey: [queryKey, token],
+    ...queryPresets.shortLived,
+    enabled,
+    retry: false,
+  });
 };
 
 export const useCreateTransfer = () => {
   const queryClient = useQueryClient();
-  return useMutation<EntityTransfer, APIError[], CreateTransferPayload>(
-    (createData) => {
+  return useMutation<EntityTransfer, APIError[], CreateTransferPayload>({
+    mutationFn: (createData) => {
       return createEntityTransfer(createData);
     },
-    creationHandlers([queryKey], 'token', queryClient)
-  );
+    ...creationHandlers([queryKey], 'token', queryClient),
+  });
 };

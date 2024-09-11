@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { LinkButton } from 'src/components/LinkButton';
 import { NotFound } from 'src/components/NotFound';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useFlags } from 'src/hooks/useFlags';
+import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
@@ -34,6 +39,12 @@ export const FirewallDetail = () => {
   const history = useHistory();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
+  const flags = useFlags();
+  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
+
+  const secureVMFirewallBanner =
+    (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
   const firewallId = Number(id);
 
@@ -126,6 +137,19 @@ export const FirewallDetail = () => {
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
         title="Firewall Details"
       />
+      {secureVMFirewallBanner && secureVMFirewallBanner.firewallDetails && (
+        <AkamaiBanner
+          action={
+            secureVMFirewallBanner.generateActionText ? (
+              <LinkButton onClick={() => setIsGenerateDialogOpen(true)}>
+                {secureVMFirewallBanner.generateActionText}
+              </LinkButton>
+            ) : undefined
+          }
+          margin={3}
+          {...secureVMFirewallBanner.firewallDetails}
+        />
+      )}
       <Tabs
         index={tabIndex === -1 ? 0 : tabIndex}
         onChange={(i) => history.push(tabs[i].routeName)}
@@ -158,8 +182,10 @@ export const FirewallDetail = () => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
+      <GenerateFirewallDialog
+        onClose={() => setIsGenerateDialogOpen(false)}
+        open={isGenerateDialogOpen}
+      />
     </React.Fragment>
   );
 };
-
-export default FirewallDetail;

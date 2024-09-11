@@ -1,22 +1,24 @@
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
+import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
+import { pluralize } from 'src/utilities/pluralize';
+import { convertStorageUnit } from 'src/utilities/unitConversions';
 
 import { ImagesActionMenu } from './ImagesActionMenu';
-import { RegionsList } from './RegionsList';
 
 import type { Handlers } from './ImagesActionMenu';
 import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
 
 const capabilityMap: Record<ImageCapabilities, string> = {
   'cloud-init': 'Cloud-init',
-  'distributed-images': 'Distributed',
+  'distributed-sites': 'Distributed',
 };
 
 interface Props {
@@ -73,7 +75,14 @@ export const ImageRow = (props: Props) => {
     eventStatus: string | undefined
   ) => {
     if (status === 'available' || eventStatus === 'finished') {
-      return `${size} MB`;
+      const sizeInGB = convertStorageUnit('MB', size, 'GB');
+
+      const formattedSizeInGB = Intl.NumberFormat('en-US', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 0,
+      }).format(sizeInGB);
+
+      return `${formattedSizeInGB} GB`;
     } else if (isFailed) {
       return 'N/A';
     } else {
@@ -85,18 +94,15 @@ export const ImageRow = (props: Props) => {
     <TableRow data-qa-image-cell={id} key={id}>
       <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden smDown>
-        {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
+        <TableCell>{getStatusForImage(status)}</TableCell>
       </Hidden>
       {multiRegionsEnabled && (
         <>
           <Hidden smDown>
             <TableCell>
-              {regions && regions.length > 0 && (
-                <RegionsList
-                  onManageRegions={() => handlers.onManageRegions?.(image)}
-                  regions={regions}
-                />
-              )}
+              <LinkButton onClick={() => handlers.onManageRegions?.(image)}>
+                {pluralize('Region', 'Regions', regions.length)}
+              </LinkButton>
             </TableCell>
           </Hidden>
           <Hidden smDown>
@@ -122,13 +128,13 @@ export const ImageRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <Hidden smDown>
-        {expiry ? (
+        {expiry && (
           <TableCell data-qa-image-date>
             {formatDate(expiry, {
               timezone: profile?.timezone,
             })}
           </TableCell>
-        ) : null}
+        )}
       </Hidden>
       {multiRegionsEnabled && (
         <Hidden mdDown>

@@ -14,20 +14,32 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-const LinodesDetailHeader = React.lazy(
-  () => import('./LinodesDetailHeader/LinodeDetailHeader')
+import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
+
+const LinodesDetailHeader = React.lazy(() =>
+  import(
+    'src/features/Linodes/LinodesDetail/LinodesDetailHeader/LinodeDetailHeader'
+  ).then((module) => ({
+    default: module.LinodeDetailHeader,
+  }))
 );
 const LinodesDetailNavigation = React.lazy(
   () => import('./LinodesDetailNavigation')
 );
-const CloneLanding = React.lazy(() => import('../CloneLanding/CloneLanding'));
+const CloneLanding = React.lazy(() =>
+  import('src/features/Linodes/CloneLanding/CloneLanding').then((module) => ({
+    default: module.CloneLanding,
+  }))
+);
 
-const LinodeDetail = () => {
+export const LinodeDetail = () => {
   const { path, url } = useRouteMatch();
   const { linodeId } = useParams<{ linodeId: string }>();
   const location = useLocation();
 
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+    location.search
+  );
 
   const id = Number(linodeId);
 
@@ -76,5 +88,3 @@ const LinodeDetail = () => {
     </React.Suspense>
   );
 };
-
-export default LinodeDetail;

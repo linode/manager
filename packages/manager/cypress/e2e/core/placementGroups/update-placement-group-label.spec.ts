@@ -2,11 +2,6 @@
  * @file Integration tests for Placement Group update label flows.
  */
 
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber } from 'support/util/random';
 import {
   mockGetPlacementGroups,
@@ -15,7 +10,6 @@ import {
 } from 'support/intercepts/placement-groups';
 import { accountFactory, placementGroupFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
-import type { Flags } from 'src/featureFlags';
 import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
 
@@ -24,13 +18,6 @@ const mockAccount = accountFactory.build();
 describe('Placement Group update label flow', () => {
   // Mock the VM Placement Groups feature flag to be enabled for each test in this block.
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['placementGroups']>({
-        beta: true,
-        enabled: true,
-      }),
-    });
-    mockGetFeatureFlagClientstream();
     mockGetAccount(mockAccount);
   });
 
@@ -49,9 +36,9 @@ describe('Placement Group update label flow', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockPlacementGroupCompliantRegion.id,
-      affinity_type: 'anti_affinity:local',
+      placement_group_type: 'anti_affinity:local',
       is_compliant: true,
-      is_strict: false,
+      placement_group_policy: 'flexible',
       members: [],
     });
 
@@ -115,9 +102,9 @@ describe('Placement Group update label flow', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: mockPlacementGroupCompliantRegion.id,
-      affinity_type: 'anti_affinity:local',
+      placement_group_type: 'anti_affinity:local',
       is_compliant: true,
-      is_strict: false,
+      placement_group_policy: 'flexible',
       members: [],
     });
 

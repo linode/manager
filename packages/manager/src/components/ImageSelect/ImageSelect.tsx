@@ -16,7 +16,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 import { Box } from '../Box';
-import { distroIcons } from '../DistributionIcon';
+import { OS_ICONS } from '../OSIcon';
 import { Stack } from '../Stack';
 
 import type { Image } from '@linode/api-v4/lib/images';
@@ -41,6 +41,8 @@ interface ImageSelectProps {
     image: Image | undefined
   ) => void;
   images: Image[];
+  label?: string;
+  placeholder?: string;
   selectedImageID?: string;
   title: string;
   variant?: Variant;
@@ -115,12 +117,12 @@ export const imagesToGroupedItems = (images: Image[]) => {
                 acc.push({
                   className: vendor
                     ? // Use Tux as a fallback.
-                      `fl-${distroIcons[vendor] ?? 'tux'}`
+                      `fl-${OS_ICONS[vendor as keyof typeof OS_ICONS] ?? 'tux'}`
                     : `fl-tux`,
                   created,
                   isCloudInitCompatible: capabilities?.includes('cloud-init'),
                   isDistributedCompatible: capabilities?.includes(
-                    'distributed-images'
+                    'distributed-sites'
                   ),
                   // Add suffix 'deprecated' to the image at end of life.
                   label:
@@ -158,6 +160,8 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
     error: errorText,
     handleSelectImage,
     images,
+    label,
+    placeholder,
     selectedImageID,
     title,
     variant,
@@ -210,7 +214,7 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
   const showDistributedCapabilityNotice =
     variant === 'private' &&
     filteredImages.some((image) =>
-      image.capabilities.includes('distributed-images')
+      image.capabilities.includes('distributed-sites')
     );
 
   return (
@@ -234,10 +238,10 @@ export const ImageSelect = React.memo((props: ImageSelectProps) => {
           disabled={disabled}
           errorText={errorText ?? imageError}
           isLoading={_loading}
-          label="Images"
+          label={label || 'Images'}
           onChange={onChange}
           options={options}
-          placeholder="Choose an image"
+          placeholder={placeholder || 'Choose an image'}
         />
         {showDistributedCapabilityNotice && (
           <Stack alignItems="center" direction="row" pb={0.8} spacing={1}>

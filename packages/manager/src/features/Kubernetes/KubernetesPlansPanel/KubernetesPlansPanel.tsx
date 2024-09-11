@@ -80,7 +80,7 @@ export const KubernetesPlansPanel = (props: Props) => {
       : _types
   );
 
-  const tabs = Object.keys(plans).map((plan: LinodeTypeClass) => {
+  const tabs = Object.keys(plans).map((plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
     const plansMap: PlanSelectionType[] = plans[plan];
     const {
       allDisabledPlans,
@@ -94,37 +94,38 @@ export const KubernetesPlansPanel = (props: Props) => {
       selectedRegionId,
     });
 
-    return {
-      render: () => {
-        return (
-          <>
-            <PlanInformation
-              isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
-                plan
-              )}
-              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-              hasSelectedRegion={hasSelectedRegion}
-              planType={plan}
-              regionsData={regionsData}
-            />
-            <KubernetesPlanContainer
-              allDisabledPlans={allDisabledPlans}
-              getTypeCount={getTypeCount}
-              hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-              onAdd={onAdd}
-              onSelect={onSelect}
-              plans={plansForThisLinodeTypeClass}
-              selectedId={selectedId}
-              selectedRegionId={selectedRegionId}
-              updatePlanCount={updatePlanCount}
-              wholePanelIsDisabled={isPlanPanelDisabled(plan)}
-            />
-          </>
-        );
-      },
-      title: planTabInfoContent[plan === 'standard' ? 'shared' : plan]?.title,
-    };
-  });
+      return {
+        render: () => {
+          return (
+            <>
+              <PlanInformation
+                isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
+                  plan
+                )}
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                hasSelectedRegion={hasSelectedRegion}
+                planType={plan}
+                regionsData={regionsData}
+              />
+              <KubernetesPlanContainer
+                allDisabledPlans={allDisabledPlans}
+                getTypeCount={getTypeCount}
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                onAdd={onAdd}
+                onSelect={onSelect}
+                plans={plansForThisLinodeTypeClass}
+                selectedId={selectedId}
+                selectedRegionId={selectedRegionId}
+                updatePlanCount={updatePlanCount}
+                wholePanelIsDisabled={isPlanPanelDisabled(plan)}
+              />
+            </>
+          );
+        },
+        title: planTabInfoContent[plan === 'edge' ? 'dedicated' : plan]?.title,
+      };
+    }
+  );
 
   const initialTab = determineInitialPlanCategoryTab(
     types,

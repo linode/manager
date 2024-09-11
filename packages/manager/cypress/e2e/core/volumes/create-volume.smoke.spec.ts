@@ -24,7 +24,7 @@ import {
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 
-const region = 'Newark, NJ';
+const region = 'US, Newark, NJ';
 
 /**
  * Asserts that a volume is listed and has the expected config information.
@@ -154,7 +154,7 @@ describe('volumes', () => {
     // Create a new volume.
     cy.findByText('Storage').should('be.visible').click();
 
-    ui.button.findByTitle('Create Volume').should('be.visible').click();
+    ui.button.findByTitle('Add Volume').should('be.visible').click();
 
     mockGetLinodeVolumes(mockLinode.id, [newVolume]).as('getVolumes');
     ui.drawer
@@ -284,9 +284,9 @@ describe('volumes', () => {
     cy.findByText(mockLinode.label).should('be.visible').click();
     cy.wait(['@getVolumes', '@getLinodeDetail']);
 
-    // Open the Create Volume drawer.
+    // Open the Add Volume drawer.
     cy.findByText('Storage').should('be.visible').click();
-    ui.button.findByTitle('Create Volume').should('be.visible').click();
+    ui.button.findByTitle('Add Volume').should('be.visible').click();
     cy.wait(['@getVolumeTypesError']);
 
     mockGetLinodeVolumes(mockLinode.id, [newVolume]).as('getVolumes');

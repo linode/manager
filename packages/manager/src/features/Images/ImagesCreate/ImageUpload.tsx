@@ -178,23 +178,32 @@ export const ImageUpload = () => {
     <FormProvider {...form}>
       <form onSubmit={onSubmit}>
         <Stack spacing={2}>
+          {isImageCreateRestricted && (
+            <Notice
+              text={getRestrictedResourceText({
+                action: 'create',
+                isSingular: false,
+                resourceType: 'Images',
+              })}
+              important
+              variant="error"
+            />
+          )}
           <Paper>
-            <Typography mb={1.5} variant="h2">
+            <Typography mb={2} variant="h2">
               Image Details
+            </Typography>
+            <Typography>
+              Custom images are billed monthly, at $.10/GB. An uploaded image
+              file needs to meet specific{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image">
+                requirements
+              </Link>
+              .
             </Typography>
             {form.formState.errors.root?.message && (
               <Notice
                 text={form.formState.errors.root.message}
-                variant="error"
-              />
-            )}
-            {isImageCreateRestricted && (
-              <Notice
-                text={getRestrictedResourceText({
-                  action: 'create',
-                  isSingular: false,
-                  resourceType: 'Images',
-                })}
                 variant="error"
               />
             )}
@@ -207,7 +216,6 @@ export const ImageUpload = () => {
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Label"
-                  noMarginTop
                   onBlur={field.onBlur}
                   onChange={field.onChange}
                   value={field.value ?? ''}
@@ -372,6 +380,7 @@ export const ImageUpload = () => {
             <Button
               buttonType="outlined"
               onClick={() => setLinodeCLIModalOpen(true)}
+              disabled={isImageCreateRestricted}
             >
               Upload Using Command Line
             </Button>

@@ -1,11 +1,10 @@
 import { ui } from 'support/ui';
-import { fbtClick, getClick } from 'support/helpers';
-import { regionFactory } from '@src/factories';
+import { linodeFactory, regionFactory } from '@src/factories';
 import { randomString, randomLabel } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccountAgreements } from 'support/intercepts/account';
-
 import type { Region } from '@linode/api-v4';
+import { mockCreateLinode } from 'support/intercepts/linodes';
 
 const mockRegions: Region[] = [
   regionFactory.build({
@@ -49,12 +48,14 @@ describe('GDPR agreement', () => {
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getAgreements', '@getRegions']);
+    cy.wait('@getRegions');
 
     // Paris should have the agreement
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('fr-par').click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('be.visible');
+
+    cy.wait('@getAgreements');
 
     // London should have the agreement
     ui.regionSelect.find().click();
@@ -75,12 +76,14 @@ describe('GDPR agreement', () => {
     }).as('getAgreements');
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getAgreements', '@getRegions']);
+    cy.wait('@getRegions');
 
     // Paris should not have the agreement
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('fr-par').click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
+
+    cy.wait('@getAgreements');
 
     // London should not have the agreement
     ui.regionSelect.find().click();
@@ -93,7 +96,7 @@ describe('GDPR agreement', () => {
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
   });
 
-  it('needs the agreement checked to validate the form', () => {
+  it('needs the agreement checked to submit the form', () => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetAccountAgreements({
       privacy_policy: false,
@@ -103,26 +106,50 @@ describe('GDPR agreement', () => {
     const linodeLabel = randomLabel();
 
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getAgreements', '@getRegions']);
+    cy.wait(['@getRegions']);
 
     // Paris should have the agreement
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionId('fr-par').click();
-    cy.get('[data-testid="eu-agreement-checkbox"]').should('be.visible');
 
-    // Fill out the form
-    fbtClick('Shared CPU');
-    getClick('[id="g6-nanode-1"]');
-    getClick('#linode-label').clear().type(linodeLabel);
-    cy.get('#root-password').type(rootpass);
+    cy.wait('@getAgreements');
 
-    // expect the button to be disabled
-    cy.get('[data-qa-deploy-linode="true"]').should('be.disabled');
+    cy.findByText('Shared CPU').click();
+
+    cy.get('[id="g6-nanode-1"]').click();
+
+    cy.findByLabelText('Linode Label').clear().type(linodeLabel);
+
+    cy.findByLabelText('Root Password').type(rootpass);
+
+    cy.get('[data-testid="eu-agreement-checkbox"]')
+      .scrollIntoView()
+      .should('be.visible');
+
+    cy.findByText('Create Linode')
+      .scrollIntoView()
+      .should('be.enabled')
+      .should('be.visible')
+      .click();
+
+    cy.findByText(
+      'You must agree to the EU agreement to deploy to this region.'
+    ).should('be.visible');
 
     // check the agreement
-    getClick('[data-testid="eu-agreement-checkbox"]');
+    cy.get('#gdpr-checkbox').click();
 
-    // expect the button to be enabled
-    cy.get('[data-qa-deploy-linode="true"]').should('not.be.disabled');
+    cy.findByText(
+      'You must agree to the EU agreement to deploy to this region.'
+    ).should('not.exist');
+
+    mockCreateLinode(linodeFactory.build()).as('createLinode');
+
+    cy.findByText('Create Linode')
+      .should('be.enabled')
+      .should('be.visible')
+      .click();
+
+    cy.wait('@createLinode');
   });
 });

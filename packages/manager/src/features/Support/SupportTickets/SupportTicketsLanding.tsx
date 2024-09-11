@@ -14,6 +14,12 @@ import { SupportTicketDialog } from './SupportTicketDialog';
 import TicketList from './TicketList';
 
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+import type { BooleanString } from 'src/features/Linodes/types';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
+
+interface QueryParams extends BaseQueryParams {
+  drawerOpen: BooleanString;
+}
 
 const tabs = ['open', 'closed'];
 
@@ -22,27 +28,14 @@ const SupportTicketsLanding = () => {
   const history = useHistory();
 
   /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
-  const parsedParams = getQueryParamsFromQueryString(location.search);
+  const parsedParams = getQueryParamsFromQueryString<QueryParams>(
+    location.search
+  );
 
   const stateParams = location.state;
 
   const [drawerOpen, setDrawerOpen] = React.useState(
     stateParams ? stateParams.open : parsedParams.drawerOpen === 'true'
-  );
-
-  // @todo this should be handled in the support ticket component
-  // and probably does not need to use state
-  const [prefilledDescription] = React.useState(
-    stateParams ? stateParams.description : undefined
-  );
-  const [prefilledTitle] = React.useState(
-    stateParams ? stateParams.title : undefined
-  );
-  const [prefilledEntity] = React.useState(
-    stateParams ? stateParams.entity : undefined
-  );
-  const [prefilledTicketType] = React.useState(
-    stateParams ? stateParams.ticketType : undefined
   );
 
   const handleAddTicketSuccess = (
@@ -98,10 +91,6 @@ const SupportTicketsLanding = () => {
         onClose={() => setDrawerOpen(false)}
         onSuccess={handleAddTicketSuccess}
         open={drawerOpen}
-        prefilledDescription={prefilledDescription}
-        prefilledEntity={prefilledEntity}
-        prefilledTicketType={prefilledTicketType}
-        prefilledTitle={prefilledTitle}
       />
     </React.Fragment>
   );

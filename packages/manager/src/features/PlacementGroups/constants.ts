@@ -7,7 +7,7 @@ export const MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE =
 export const PLACEMENT_GROUP_LINODES_ERROR_MESSAGE =
   'There was an error loading Linodes for this Placement Group.';
 
-export const PLACEMENT_GROUP_TOOLTIP_TEXT = `The Affinity Type and Region you selected determine the maximum number of Linodes per placement group.`;
+export const PLACEMENT_GROUP_TOOLTIP_TEXT = `The Placement Group Type and Region you selected determine the maximum number of Linodes per placement group.`;
 
 export const PLACEMENT_GROUP_SELECT_TOOLTIP_COPY = `
 Add your Linode to a group to best meet your needs. 
@@ -25,9 +25,16 @@ export const NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE =
 export const NO_REGIONS_SUPPORT_PLACEMENT_GROUPS_MESSAGE =
   'No regions currently support Placement Groups.';
 
-export const CANNOT_CHANGE_AFFINITY_TYPE_ENFORCEMENT_MESSAGE =
-  'Once you create a placement group, you cannot change its Affinity Type Enforcement setting.';
+export const CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE =
+  'Once you create a placement group, you cannot change its Placement Group Policy.';
 
 // Links
 export const PLACEMENT_GROUPS_DOCS_LINK =
   'https://www.linode.com/docs/products/compute/compute-instances/guides/placement-groups/';
+
+// Text Copy
+export const PLACEMENT_GROUP_POLICY_STRICT =
+  'Allows the addition of more compute instances to the group as long as the placement group remains compliant.';
+
+export const PLACEMENT_GROUP_POLICY_FLEXIBLE =
+  "Allows the addition of more compute instances to the group even if it breaks the placement group's compliance.";

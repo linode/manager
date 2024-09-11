@@ -18,9 +18,12 @@ import {
   mockGetLongviewClients,
   mockFetchLongviewStatus,
   mockCreateLongviewClient,
+  mockDeleteLongviewClient,
+  mockUpdateLongviewClient,
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { randomLabel } from 'support/util/random';
 
 /**
  * Returns the command used to install Longview which is shown in Cloud's UI.
@@ -265,5 +268,145 @@ describe('longview', () => {
         cy.findByText('Network').should('be.visible');
         cy.findByText('Storage').should('be.visible');
       });
+  });
+
+  /*
+   * - Tests Longview installation end-to-end using mock API data.
+   * - Confirms that Cloud Manager UI can rename longview client.
+   */
+
+  it('can rename a Longview client on a Linode', () => {
+    const client: LongviewClient = longviewClientFactory.build();
+
+    const newClient: LongviewClient = longviewClientFactory.build({
+      ...client,
+      label: randomLabel(),
+    });
+
+    mockGetLongviewClients([client]).as('getLongviewClients');
+    mockFetchLongviewStatus(client, 'lastUpdated', longviewLastUpdatedWaiting);
+    mockFetchLongviewStatus(client, 'getValues', longviewGetValuesWaiting);
+    mockFetchLongviewStatus(
+      client,
+      'getLatestValue',
+      longviewGetLatestValueWaiting
+    ).as('fetchLongview');
+
+    cy.visitWithLogin('/longview');
+    cy.wait('@getLongviewClients');
+
+    // Update mocks after initial Longview fetch to simulate client installation and data retrieval.
+    // The next time Cloud makes a request to the fetch endpoint, data will start being returned.
+    // 3 fetches is necessary because the Longview landing page fires 3 requests to the Longview fetch endpoint for each client.
+    // See https://github.com/linode/manager/pull/10579#discussion_r1647945160
+    cy.wait(['@fetchLongview', '@fetchLongview', '@fetchLongview']).then(() => {
+      mockFetchLongviewStatus(
+        client,
+        'lastUpdated',
+        longviewLastUpdatedInstalled
+      );
+      mockFetchLongviewStatus(client, 'getValues', longviewGetValuesInstalled);
+      mockFetchLongviewStatus(
+        client,
+        'getLatestValue',
+        longviewGetLatestValueInstalled
+      );
+    });
+
+    mockUpdateLongviewClient(newClient.id, newClient).as('updateLongview');
+
+    // Confirms that Cloud Manager UI can rename longview client.
+    cy.get(`[data-testid="editable-text"] > [data-testid="Button"]`)
+      .should('be.visible')
+      .click();
+
+    cy.get(`[data-qa-longview-client="${client.id}"]`).within(() => {
+      cy.get(`[data-testid="textfield-input"]`).clear().type(newClient.label);
+      cy.get(`[aria-label="Save new label"]`).should('be.visible').click();
+    });
+
+    cy.wait('@updateLongview');
+    cy.findAllByText(newClient.label).should('be.visible');
+  });
+
+  /*
+   * - Tests Longview installation end-to-end using mock API data.
+   * - Confirms that Cloud Manager UI can delete longview client.
+   */
+
+  it('can delete a Longview client on a Linode', () => {
+    const client: LongviewClient = longviewClientFactory.build();
+    const deleteWarnMessage =
+      'Are you sure you want to delete this Longview Client?';
+
+    mockGetLongviewClients([client]).as('getLongviewClients');
+    mockFetchLongviewStatus(client, 'lastUpdated', longviewLastUpdatedWaiting);
+    mockFetchLongviewStatus(client, 'getValues', longviewGetValuesWaiting);
+    mockFetchLongviewStatus(
+      client,
+      'getLatestValue',
+      longviewGetLatestValueWaiting
+    ).as('fetchLongview');
+
+    cy.visitWithLogin('/longview');
+    cy.wait('@getLongviewClients');
+
+    // Update mocks after initial Longview fetch to simulate client installation and data retrieval.
+    // The next time Cloud makes a request to the fetch endpoint, data will start being returned.
+    // 3 fetches is necessary because the Longview landing page fires 3 requests to the Longview fetch endpoint for each client.
+    // See https://github.com/linode/manager/pull/10579#discussion_r1647945160
+    cy.wait(['@fetchLongview', '@fetchLongview', '@fetchLongview']).then(() => {
+      mockFetchLongviewStatus(
+        client,
+        'lastUpdated',
+        longviewLastUpdatedInstalled
+      );
+      mockFetchLongviewStatus(client, 'getValues', longviewGetValuesInstalled);
+      mockFetchLongviewStatus(
+        client,
+        'getLatestValue',
+        longviewGetLatestValueInstalled
+      );
+    });
+
+    mockDeleteLongviewClient(client.id).as('deleteLongview');
+
+    // Confirms that Cloud Manager UI has delete option.
+    cy.get(`[data-qa-longview-client="${client.id}"]`).within(() => {
+      ui.actionMenu
+        .findByTitle(`Action menu for Longview Client ${client.label}`)
+        .should('be.visible')
+        .click();
+    });
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    // Confirms that Cloud Manager UI has delete warning message and can cancel deletion.
+    ui.dialog
+      .findByTitle(`Delete ${client.label}?`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(deleteWarnMessage).should('be.visible');
+        ui.buttonGroup.findButtonByTitle('Cancel').should('be.visible').click();
+      });
+
+    // Confirms that Cloud Manager UI can delete a Longview Client.
+    cy.get(`[data-qa-longview-client="${client.id}"]`).within(() => {
+      ui.actionMenu
+        .findByTitle(`Action menu for Longview Client ${client.label}`)
+        .click();
+    });
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+    ui.dialog.findByTitle(`Delete ${client.label}?`).within(() => {
+      ui.buttonGroup
+        .findButtonByTitle('Delete')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
+
+    // Confirm that Longview Client is deleted.
+    cy.wait('@deleteLongview');
+    cy.findByText(client.label).should('not.exist');
   });
 });

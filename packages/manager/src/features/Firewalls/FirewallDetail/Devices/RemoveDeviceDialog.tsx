@@ -6,7 +6,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
-import { queryKey as linodesQueryKey } from 'src/queries/linodes/linodes';
+import { linodeQueries } from 'src/queries/linodes/linodes';
 import { nodebalancerQueries } from 'src/queries/nodebalancers';
 
 import type { FirewallDevice } from '@linode/api-v4';
@@ -26,7 +26,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const deviceType = device?.entity.type;
 
-  const { error, isLoading, mutateAsync } = useRemoveFirewallDeviceMutation(
+  const { error, isPending, mutateAsync } = useRemoveFirewallDeviceMutation(
     firewallId,
     device?.id ?? -1
   );
@@ -57,7 +57,8 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
     // Since the linode was removed as a device, invalidate the linode-specific firewall query
     if (deviceType === 'linode') {
       queryClient.invalidateQueries({
-        queryKey: [linodesQueryKey, deviceType, device.entity.id, 'firewalls'],
+        queryKey: linodeQueries.linode(device.entity.id)._ctx.firewalls
+          .queryKey,
       });
     }
 
@@ -92,7 +93,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: primaryButtonText,
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

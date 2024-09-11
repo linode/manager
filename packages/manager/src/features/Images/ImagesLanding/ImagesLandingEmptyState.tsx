@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -15,11 +17,16 @@ import {
 export const ImagesLandingEmptyState = () => {
   const { push } = useHistory();
 
+  const isImagesReadOnly = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_images',
+  });
+
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create Image',
+          disabled: isImagesReadOnly,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
@@ -28,6 +35,11 @@ export const ImagesLandingEmptyState = () => {
             });
             push('/images/create');
           },
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Images',
+          }),
         },
       ]}
       gettingStartedGuidesData={gettingStartedGuides}

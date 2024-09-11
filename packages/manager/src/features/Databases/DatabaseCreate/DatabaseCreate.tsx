@@ -1,15 +1,4 @@
-import {
-  ClusterSize,
-  ComprehensiveReplicationType,
-  CreateDatabasePayload,
-  DatabaseClusterSizeObject,
-  DatabaseEngine,
-  DatabasePriceObject,
-  Engine,
-} from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
@@ -25,7 +14,8 @@ import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -42,10 +32,11 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { EngineOption } from 'src/features/Databases/DatabaseCreate/EngineOption';
+import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -55,14 +46,26 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
-import {
-  ExtendedIP,
-  ipFieldPlaceholder,
-  validateIPs,
-} from 'src/utilities/ipUtils';
+import { ipFieldPlaceholder, validateIPs } from 'src/utilities/ipUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
+import type {
+  ClusterSize,
+  ComprehensiveReplicationType,
+  CreateDatabasePayload,
+  DatabaseClusterSizeObject,
+  DatabaseEngine,
+  DatabasePriceObject,
+  Engine,
+} from '@linode/api-v4/lib/databases/types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
+
+const V1 = 'Managed Databases';
+const V2 = `Managed Databases V2`;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -77,6 +80,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   chip: {
+    marginLeft: 6,
     marginTop: 4,
   },
   createBtn: {
@@ -138,6 +142,7 @@ const engineIcons = {
   mongodb: <MongoDBIcon height="24" width="24" />,
   mysql: <MySQLIcon height="24" width="24" />,
   postgresql: <PostgreSQLIcon height="24" width="24" />,
+  redis: null,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
@@ -186,6 +191,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 };
 
 interface NodePricing {
+  double: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
   single: DatabasePriceObject | undefined;
 }
@@ -193,7 +199,6 @@ interface NodePricing {
 const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
-  const flags = useFlags();
 
   const {
     data: regionsData,
@@ -213,12 +218,15 @@ const DatabaseCreate = () => {
     isLoading: typesLoading,
   } = useDatabaseTypesQuery();
 
+  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
+  const [selectedTab, setSelectedTab] = React.useState(0);
 
   const engineOptions = React.useMemo(() => {
     if (!engines) {
@@ -355,33 +363,46 @@ const DatabaseCreate = () => {
     });
   }, [dbtypes, selectedEngine]);
 
-  const labelToolTip = (
-    <div className={classes.labelToolTipCtn}>
-      <strong>Label must:</strong>
-      <ul>
-        <li>Begin with an alpha character</li>
-        <li>Contain only alpha characters or single hyphens</li>
-        <li>Be between 3 - 32 characters</li>
-      </ul>
-    </div>
-  );
+  const nodeOptions = React.useMemo(() => {
+    const hasDedicated = displayTypes.some(
+      (type) => type.class === 'dedicated'
+    );
 
-  const nodeOptions = [
-    {
-      label: (
-        <Typography>
-          1 Node {` `}
-          <br />
-          <span style={{ fontSize: '12px' }}>
-            {`$${nodePricing?.single?.monthly || 0}/month $${
-              nodePricing?.single?.hourly || 0
-            }/hr`}
-          </span>
-        </Typography>
-      ),
-      value: 1,
-    },
-    {
+    const options = [
+      {
+        label: (
+          <Typography>
+            1 Node {` `}
+            <br />
+            <span style={{ fontSize: '12px' }}>
+              {`$${nodePricing?.single?.monthly || 0}/month $${
+                nodePricing?.single?.hourly || 0
+              }/hr`}
+            </span>
+          </Typography>
+        ),
+        value: 1,
+      },
+    ];
+
+    if (hasDedicated && selectedTab === 0 && isDatabasesV2Enabled) {
+      options.push({
+        label: (
+          <Typography>
+            2 Nodes - High Availability
+            <br />
+            <span style={{ fontSize: '12px' }}>
+              {`$${nodePricing?.double?.monthly || 0}/month $${
+                nodePricing?.double?.hourly || 0
+              }/hr`}
+            </span>
+          </Typography>
+        ),
+        value: 2,
+      });
+    }
+
+    options.push({
       label: (
         <Typography>
           3 Nodes - High Availability (recommended)
@@ -394,8 +415,25 @@ const DatabaseCreate = () => {
         </Typography>
       ),
       value: 3,
-    },
-  ];
+    });
+
+    return options;
+  }, [selectedTab, nodePricing, displayTypes, isDatabasesV2Enabled]);
+
+  const labelToolTip = (
+    <div className={classes.labelToolTipCtn}>
+      <strong>Label must:</strong>
+      <ul>
+        <li>Begin with an alpha character</li>
+        <li>Contain only alpha characters or single hyphens</li>
+        <li>Be between 3 - 32 characters</li>
+      </ul>
+    </div>
+  );
+
+  const handleTabChange = (index: number) => {
+    setSelectedTab(index);
+  };
 
   React.useEffect(() => {
     if (values.type.length === 0 || !dbtypes) {
@@ -407,9 +445,12 @@ const DatabaseCreate = () => {
       return;
     }
 
-    const engineType = values.engine.split('/')[0];
+    const engineType = values.engine.split('/')[0] as Engine;
 
     setNodePricing({
+      double: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 2
+      )?.price,
       multi: type.engines[engineType].find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
       )?.price,
@@ -452,7 +493,7 @@ const DatabaseCreate = () => {
             },
           ],
           labelOptions: {
-            suffixComponent: flags.databaseBeta ? (
+            suffixComponent: isDatabasesV2Beta ? (
               <BetaChip className={classes.chip} component="span" />
             ) : null,
           },
@@ -461,7 +502,14 @@ const DatabaseCreate = () => {
         title="Create"
       />
       <Paper>
-        {createError ? <Notice text={createError} variant="error" /> : null}
+        {createError && (
+          <Notice variant="error">
+            <ErrorMessage
+              entity={{ type: 'database_id' }}
+              message={createError}
+            />
+          </Notice>
+        )}
         <Grid>
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
@@ -496,7 +544,7 @@ const DatabaseCreate = () => {
         </Grid>
         <Grid>
           <RegionSelect
-            currentCapability="Managed Databases"
+            currentCapability={isDatabasesV2Enabled ? V2 : V1}
             disableClearable
             errorText={errors.region}
             onChange={(e, region) => setFieldValue('region', region.id)}
@@ -514,6 +562,7 @@ const DatabaseCreate = () => {
             className={classes.selectPlanPanel}
             data-qa-select-plan
             error={errors.type}
+            handleTabChange={handleTabChange}
             header="Choose a Plan"
             isCreate
             regionsData={regionsData}
@@ -560,21 +609,6 @@ const DatabaseCreate = () => {
               ))}
             </RadioGroup>
           </FormControl>
-          <Grid md={8} xs={12}>
-            {flags.databaseBeta ? (
-              <Notice className={classes.notice} variant="info">
-                <strong>
-                  Notice: There is no charge for database clusters during beta.
-                </strong>{' '}
-                Database clusters will be subject to charges when the beta
-                period ends on May 2nd, 2022.{' '}
-                <Link to="https://www.linode.com/pricing/#databases">
-                  View pricing
-                </Link>
-                .
-              </Notice>
-            ) : undefined}
-          </Grid>
         </Grid>
         <Divider spacingBottom={12} spacingTop={26} />
         <Grid>
@@ -630,6 +664,7 @@ const DatabaseCreate = () => {
           Create Database Cluster
         </Button>
       </Grid>
+      {isDatabasesV2Enabled && <DatabaseLogo />}
     </form>
   );
 };

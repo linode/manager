@@ -1,3 +1,76 @@
+## [2024-09-03] - v0.125.0
+
+
+### Added:
+
+- Managed Databases V2 capability and types ([#10786](https://github.com/linode/manager/pull/10786))
+
+### Changed:
+
+- Deprecate `getClusters` ([#10801](https://github.com/linode/manager/pull/10801))
+- Increase block storage max volume size to 16TB ([#10865](https://github.com/linode/manager/pull/10865))
+
+### Upcoming Features:
+
+- Update `AclpConfig` type ([#10769](https://github.com/linode/manager/pull/10769))
+- Add service types and `getCloudPulseServiceTypes` request ([#10805](https://github.com/linode/manager/pull/10805))
+
+
+## [2024-08-19] - v0.124.0
+
+### Added:
+
+- Firewall template endpoints ([#10770](https://github.com/linode/manager/pull/10770))
+
+### Changed:
+
+- Move `getObjectStorageEndpoints` from `/objects.ts` to `/buckets.ts` ([#10736](https://github.com/linode/manager/pull/10736))
+
+### Upcoming Features:
+
+- Add several CloudPulseMetrics types ([#10710](https://github.com/linode/manager/pull/10710))
+- Change JWETokenPayLoad `resource_id` to `resource_ids` ([#10747](https://github.com/linode/manager/pull/10747))
+- Add 'Akamai Cloud Pulse' in AccountCapability type interface ([#10768](https://github.com/linode/manager/pull/10768))
+
+## [2024-08-05] - v0.123.0
+
+### Added:
+
+- `site_type` to the linode instance type ([#10714](https://github.com/linode/manager/pull/10714))
+
+### Changed:
+
+- Update Object Storage types with more descriptive names ([#10686](https://github.com/linode/manager/pull/10686))
+- Support null values in `Interface` type ([#10690](https://github.com/linode/manager/pull/10690))
+- Linode, Volume, and VolumeRequestPayload interfaces and VolumeStatus, AccountCapability, and Capabilities types to reflect Block Storage Encryption changes ([#10716](https://github.com/linode/manager/pull/10716))
+
+### Upcoming Features:
+
+- Add MetricDefinitions, Dimension, JWETokenPayload, JWEToken and metricDefinitions, dashboard by id and jwe token api calls ([#10676](https://github.com/linode/manager/pull/10676))
+- Add new /v4/object-storage/endpoints endpoint ([#10677](https://github.com/linode/manager/pull/10677))
+
+## [2024-07-22] - v0.122.0
+
+### Changed:
+
+- Breaking: change Placement Group `affinity_type` to `placement_group_type` ([#10651](https://github.com/linode/manager/pull/10651))
+- Breaking: change Placement Group `is_strict` to `placement_group_policy` ([#10651](https://github.com/linode/manager/pull/10651))
+- Use new "lish" API instead of "lish_token" ([#10656](https://github.com/linode/manager/pull/10656))
+
+### Upcoming Features:
+
+- Add ACLG Config and Widget to CloudPulse types ([#10625](https://github.com/linode/manager/pull/10625))
+
+## [2024-07-08] - v0.121.0
+
+### Changed:
+
+- Update `updateImageRegions` to accept `UpdateImageRegionsPayload` instead of `regions: string[]` ([#10617](https://github.com/linode/manager/pull/10617))
+
+### Upcoming Features:
+
+- Added types needed for DashboardSelect component ([#10589](https://github.com/linode/manager/pull/10589))
+
 ## [2024-06-24] - v0.120.0
 
 ### Added:

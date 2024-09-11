@@ -5,12 +5,13 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import { DocsLink } from '../DocsLink/DocsLink';
+import { useIsGeckoEnabled } from '../RegionSelect/RegionSelect.utils';
+import { NETWORK_TRANSFER_USAGE_AND_COST_LINK } from './constants';
 import { TransferDisplayDialogHeader } from './TransferDisplayDialogHeader';
 import { TransferDisplayUsage } from './TransferDisplayUsage';
-import { NETWORK_TRANSFER_QUOTA_DOCS_LINKS } from './constants';
 import { formatRegionList, getDaysRemaining } from './utils';
 
 import type { RegionTransferPool } from './utils';
@@ -38,6 +39,8 @@ export const TransferDisplayDialog = React.memo(
       regionTransferPools,
     } = props;
     const theme = useTheme();
+    const { isGeckoLAEnabled } = useIsGeckoEnabled();
+
     const daysRemainingInMonth = getDaysRemaining();
     const listOfOtherRegionTransferPools: string[] =
       regionTransferPools.length > 0
@@ -62,7 +65,9 @@ export const TransferDisplayDialog = React.memo(
          *  Global Transfer Pool Display
          */}
         <TransferDisplayDialogHeader
-          tooltipText={`The Global Pool includes transfer associated with active services in your devices' regions${
+          tooltipText={`The Global Pool includes transfer associated with active services in your devices' ${
+            isGeckoLAEnabled ? 'core' : ''
+          } regions${
             listOfOtherRegionTransferPools.length > 0
               ? ` except for ${otherRegionPools}.`
               : '.'
@@ -71,6 +76,16 @@ export const TransferDisplayDialog = React.memo(
           dataTestId="global-transfer-pool-header"
           headerText="Global Network Transfer Pool"
         />
+        <Typography marginBottom={theme.spacing(2)}>
+          Any additional transfer usage that exceeds this monthly allotment
+          starts at $0.005/GB (or $5/TB) depending on the service’s region.
+          Additional transfer usage is charged at the end of the billing period.
+          For more information, refer to{' '}
+          <Link to={NETWORK_TRANSFER_USAGE_AND_COST_LINK}>
+            Network Transfer Usage and Costs
+          </Link>
+          .
+        </Typography>
         <TransferDisplayUsage
           pullUsagePct={generalPoolUsagePct}
           quota={quota}
@@ -99,10 +114,16 @@ export const TransferDisplayDialog = React.memo(
               >
                 <Typography
                   fontFamily={theme.font.bold}
+                  fontSize={theme.typography.h3.fontSize}
                   marginBottom={theme.spacing()}
                 >
                   {pool.regionName}{' '}
-                  <Typography component="span">({pool.regionID})</Typography>
+                  <Typography
+                    component="span"
+                    fontSize={theme.typography.h3.fontSize}
+                  >
+                    ({pool.regionID})
+                  </Typography>
                 </Typography>
                 <TransferDisplayUsage
                   pullUsagePct={pool.pct}
@@ -128,12 +149,6 @@ export const TransferDisplayDialog = React.memo(
           prorated based on service creation.
         </Typography>
         <Typography>{transferQuotaDocsText}</Typography>
-        <Box marginTop={theme.spacing(2)}>
-          <DocsLink
-            href={NETWORK_TRANSFER_QUOTA_DOCS_LINKS}
-            label="Network Transfer Usage and Costs"
-          />
-        </Box>
       </Dialog>
     );
   }

@@ -69,17 +69,21 @@ export type ItemsByID<T> = Record<string, T>;
  *
  */
 
-export const listToItemsByID = <E extends {}[]>(
-  entityList: E,
+export const listToItemsByID = <E extends { [id: number | string]: any }>(
+  entityList: E[],
   indexer: string = 'id'
 ) => {
-  return entityList.reduce(
+  return entityList.reduce<Record<string, E>>(
     (map, item) => ({ ...map, [item[indexer]]: item }),
     {}
   );
 };
 
-export const mutationHandlers = <T, V, E = APIError[]>(
+export const mutationHandlers = <
+  T,
+  V extends Record<string, any>,
+  E = APIError[]
+>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
@@ -89,7 +93,7 @@ export const mutationHandlers = <T, V, E = APIError[]>(
       // Update the query data to include the newly updated Entity.
       queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
-        [variables[indexer]]: updatedEntity,
+        [variables[indexer as keyof V]]: updatedEntity,
       }));
     },
   };
@@ -109,7 +113,11 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-export const creationHandlers = <T, V, E = APIError[]>(
+export const creationHandlers = <
+  T extends Record<string, any>,
+  V,
+  E = APIError[]
+>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
@@ -125,7 +133,11 @@ export const creationHandlers = <T, V, E = APIError[]>(
   };
 };
 
-export const deletionHandlers = <T, V, E = APIError[]>(
+export const deletionHandlers = <
+  T,
+  V extends Record<string, any>,
+  E = APIError[]
+>(
   queryKey: QueryKey,
   indexer: string = 'id',
   queryClient: QueryClient
@@ -238,7 +250,7 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
   queryClient: QueryClient
 ) => {
   queryClient.setQueriesData<ResourcePage<T> | undefined>(
-    queryKey,
+    { queryKey },
     (oldData) => {
       if (oldData === undefined) {
         return undefined;
@@ -274,9 +286,9 @@ export const getItemInPaginatedStore = <T extends { id: number | string }>(
   id: number,
   queryClient: QueryClient
 ) => {
-  const stores = queryClient.getQueriesData<ResourcePage<T> | undefined>(
-    queryKey
-  );
+  const stores = queryClient.getQueriesData<ResourcePage<T> | undefined>({
+    queryKey,
+  });
 
   for (const store of stores) {
     const data = store[1]?.data;

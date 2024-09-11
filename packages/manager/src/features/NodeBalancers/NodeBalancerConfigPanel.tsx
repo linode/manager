@@ -1,11 +1,11 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import Select from 'src/components/EnhancedSelect/Select';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -19,9 +19,14 @@ import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
 import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 const DATA_NODE = 'data-node-idx';
+export const ROUND_ROBIN_ALGORITHM_HELPER_TEXT =
+  'Round robin distributes connection requests to backend servers in weighted circular order.';
+export const LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT =
+  'Least connections assigns connections to the backend with the least connections.';
+export const SOURCE_ALGORITHM_HELPER_TEXT =
+  "Source uses the client's IPv4 address.";
 
 export const NodeBalancerConfigPanel = (
   props: NodeBalancerConfigPanelProps
@@ -44,20 +49,20 @@ export const NodeBalancerConfigPanel = (
     submitting,
   } = props;
 
-  const onAlgorithmChange = (e: Item<string>) =>
-    props.onAlgorithmChange(e.value);
-
   const onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onPortChange(e.target.value);
 
   const onPrivateKeyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onPrivateKeyChange(e.target.value);
 
-  const onProtocolChange = (e: Item<string>) => {
+  const onProtocolChange = (
+    event: React.SyntheticEvent,
+    selected: { label: string; value: string }
+  ) => {
     const { healthCheckType } = props;
-    const { value: protocol } = e;
+    const { value: protocol } = selected;
 
-    props.onProtocolChange(e.value);
+    props.onProtocolChange(selected.value);
 
     if (
       protocol === 'tcp' &&
@@ -72,13 +77,6 @@ export const NodeBalancerConfigPanel = (
       props.onHealthCheckTypeChange('http');
     }
   };
-
-  const onProxyProtocolChange = (e: Item<string>) => {
-    props.onProxyProtocolChange(e.value);
-  };
-
-  const onSessionStickinessChange = (e: Item<string>) =>
-    props.onSessionStickinessChange(e.value);
 
   const onSslCertificateChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onSslCertificateChange(e.target.value);
@@ -164,6 +162,12 @@ export const NodeBalancerConfigPanel = (
     return eachAlg.value === algorithm;
   });
 
+  const algorithmHelperText = {
+    leastconn: LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
+    roundrobin: ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
+    source: SOURCE_ALGORITHM_HELPER_TEXT,
+  };
+
   const sessionOptions = [
     { label: 'None', value: 'none' },
     { label: 'Table', value: 'table' },
@@ -200,25 +204,26 @@ export const NodeBalancerConfigPanel = (
             type="number"
             value={port || ''}
           />
-          <FormHelperText>Listen on this port</FormHelperText>
+          <FormHelperText>Listen on this port.</FormHelperText>
         </Grid>
         <Grid md={3} xs={6}>
-          <Select
+          <Autocomplete
             textFieldProps={{
               dataAttrs: {
                 'data-qa-protocol-select': true,
               },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
+            autoHighlight
+            disableClearable
             disabled={disabled}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.protocol}
-            inputId={`protocol-${configIdx}`}
-            isClearable={false}
+            id={`protocol-${configIdx}`}
             label="Protocol"
             noMarginTop
             onChange={onProtocolChange}
             options={protocolOptions}
-            small
+            size="small"
             value={defaultProtocol || protocolOptions[0]}
           />
         </Grid>
@@ -228,6 +233,7 @@ export const NodeBalancerConfigPanel = (
             <Grid md={5} sm={6} xs={12}>
               <TextField
                 data-qa-cert-field
+                data-testid="ssl-certificate"
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.ssl_cert}
@@ -242,6 +248,7 @@ export const NodeBalancerConfigPanel = (
             <Grid md={5} sm={6} xs={12}>
               <TextField
                 data-qa-private-key-field
+                data-testid="private-key"
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.ssl_key}
@@ -258,22 +265,25 @@ export const NodeBalancerConfigPanel = (
 
         {tcpSelected && (
           <Grid md={6} xs={12}>
-            <Select
+            <Autocomplete
+              onChange={(_, selected) => {
+                props.onProxyProtocolChange(selected.value);
+              }}
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-proxy-protocol-select': true,
+                  errorGroup: forEdit ? `${configIdx}` : undefined,
                 },
               }}
+              autoHighlight
+              disableClearable
               disabled={disabled}
-              errorGroup={forEdit ? `${configIdx}` : undefined}
               errorText={errorMap.proxy_protocol}
-              inputId={`proxy-protocol-${configIdx}`}
-              isClearable={false}
+              id={`proxy-protocol-${configIdx}`}
               label="Proxy Protocol"
               noMarginTop
-              onChange={onProxyProtocolChange}
               options={proxyProtocolOptions}
-              small
+              size="small"
               value={selectedProxyProtocol || proxyProtocolOptions[0]}
             />
             <FormHelperText>
@@ -289,52 +299,54 @@ export const NodeBalancerConfigPanel = (
         )}
 
         <Grid md={tcpSelected ? 6 : 3} xs={6}>
-          <Select
+          <Autocomplete
+            onChange={(_, selected) => {
+              props.onAlgorithmChange(selected.value);
+            }}
             textFieldProps={{
               dataAttrs: {
                 'data-qa-algorithm-select': true,
               },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
+            autoHighlight
+            disableClearable
             disabled={disabled}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.algorithm}
-            inputId={`algorithm-${configIdx}`}
-            isClearable={false}
+            id={`algorithm-${configIdx}`}
             label="Algorithm"
             noMarginTop
-            onChange={onAlgorithmChange}
             options={algOptions}
-            small
+            size="small"
             value={defaultAlg || algOptions[0]}
           />
-          <FormHelperText>
-            Roundrobin. Least connections assigns connections to the backend
-            with the least connections. Source uses the client&rsquo;s IPv4
-            address
-          </FormHelperText>
+          <FormHelperText>{algorithmHelperText[algorithm]}</FormHelperText>
         </Grid>
 
         <Grid md={3} xs={6}>
-          <Select
+          <Autocomplete
+            onChange={(_, selected) => {
+              props.onSessionStickinessChange(selected.value);
+            }}
             textFieldProps={{
               dataAttrs: {
                 'data-qa-session-stickiness-select': true,
               },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
+            autoHighlight
+            disableClearable
             disabled={disabled}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.stickiness}
-            inputId={`session-stickiness-${configIdx}`}
-            isClearable={false}
+            id={`session-stickiness-${configIdx}`}
             label="Session Stickiness"
             noMarginTop
-            onChange={onSessionStickinessChange}
             options={sessionOptions}
-            small
+            size="small"
             value={defaultSession || sessionOptions[1]}
           />
           <FormHelperText>
-            Route subsequent requests from the client to the same backend
+            Route subsequent requests from the client to the same backend.
           </FormHelperText>
         </Grid>
         <Grid xs={12}>

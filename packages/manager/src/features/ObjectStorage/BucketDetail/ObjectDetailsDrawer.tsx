@@ -1,5 +1,4 @@
 import {
-  ACLType,
   getObjectACL,
   updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
@@ -18,10 +17,16 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from './AccessSelect';
 
+import type {
+  ACLType,
+  ObjectStorageEndpointTypes,
+} from '@linode/api-v4/lib/object-storage';
+
 export interface ObjectDetailsDrawerProps {
   bucketName: string;
   clusterId: string;
   displayName?: string;
+  endpointType?: ObjectStorageEndpointTypes;
   lastModified?: null | string;
   name?: string;
   onClose: () => void;
@@ -37,6 +42,7 @@ export const ObjectDetailsDrawer = React.memo(
       bucketName,
       clusterId,
       displayName,
+      endpointType,
       lastModified,
       name,
       onClose,
@@ -53,6 +59,9 @@ export const ObjectDetailsDrawer = React.memo(
         });
       }
     } catch {}
+
+    const isAccessSelectEnabled =
+      open && name && endpointType !== 'E2' && endpointType !== 'E3';
 
     return (
       <Drawer
@@ -80,14 +89,21 @@ export const ObjectDetailsDrawer = React.memo(
           </StyledLinkContainer>
         ) : null}
 
-        {open && name ? (
+        {isAccessSelectEnabled ? (
           <>
             <Divider spacingBottom={16} spacingTop={16} />
             <AccessSelect
+              getAccess={() =>
+                getObjectACL({
+                  bucket: bucketName,
+                  clusterId,
+                  params: { name },
+                })
+              }
               updateAccess={(acl: ACLType) =>
                 updateObjectACL(clusterId, bucketName, name, acl)
               }
-              getAccess={() => getObjectACL(clusterId, bucketName, name)}
+              endpointType={endpointType}
               name={name}
               variant="object"
             />

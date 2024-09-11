@@ -19,6 +19,7 @@ import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   linodeId: number | undefined;
+  linodeLabel: string | undefined;
   onClose: () => void;
   open: boolean;
 }
@@ -37,7 +38,7 @@ const options = [
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
 export const LinodeRebuildDialog = (props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeId, linodeLabel, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -96,7 +97,7 @@ export const LinodeRebuildDialog = (props: Props) => {
       maxWidth="md"
       onClose={onClose}
       open={open}
-      title={`Rebuild Linode ${linode?.label ?? ''}`}
+      title={`Rebuild Linode ${linodeLabel ?? ''}`}
     >
       <StyledDiv>
         {unauthorized && <LinodePermissionsError />}

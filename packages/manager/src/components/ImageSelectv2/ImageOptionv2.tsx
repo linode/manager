@@ -5,7 +5,7 @@ import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-regi
 import { useFlags } from 'src/hooks/useFlags';
 
 import { SelectedIcon } from '../Autocomplete/Autocomplete.styles';
-import { DistributionIcon } from '../DistributionIcon';
+import { OSIcon } from '../OSIcon';
 import { Stack } from '../Stack';
 import { Tooltip } from '../Tooltip';
 import { Typography } from '../Typography';
@@ -31,15 +31,11 @@ export const ImageOptionv2 = ({ image, isSelected, listItemProps }: Props) => {
       }}
     >
       <Stack alignItems="center" direction="row" spacing={2}>
-        <DistributionIcon
-          distribution={image.vendor}
-          fontSize="1.8em"
-          lineHeight="1.8em"
-        />
+        <OSIcon fontSize="1.8em" lineHeight="1.8em" os={image.vendor} />
         <Typography color="inherit">{image.label}</Typography>
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
-        {image.capabilities.includes('distributed-images') && (
+        {image.capabilities.includes('distributed-sites') && (
           <Tooltip title="This image is compatible with distributed compute regions.">
             <div style={{ display: 'flex' }}>
               <DistributedRegionIcon height="24px" width="24px" />

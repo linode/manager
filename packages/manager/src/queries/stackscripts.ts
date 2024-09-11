@@ -1,40 +1,34 @@
-import {
-  StackScript,
-  getStackScript,
-  getStackScripts,
-} from '@linode/api-v4/lib/stackscripts';
-import {
+import { getStackScript, getStackScripts } from '@linode/api-v4';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+
+import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
+import { getAll } from 'src/utilities/getAll';
+
+import { queryPresets } from './base';
+
+import type {
   APIError,
   Filter,
   Params,
   ResourcePage,
-} from '@linode/api-v4/lib/types';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-
-import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
-import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
-import { getAll } from 'src/utilities/getAll';
-
-import { queryPresets } from './base';
+  StackScript,
+} from '@linode/api-v4';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const getAllOCAsRequest = (passedParams: Params = {}) =>
   getAll<StackScript>((params) =>
     getOneClickApps({ ...params, ...passedParams })
   )().then((data) => data.data);
 
-const stackscriptQueries = createQueryKeys('stackscripts', {
+export const stackscriptQueries = createQueryKeys('stackscripts', {
   infinite: (filter: Filter = {}) => ({
     queryFn: ({ pageParam }) =>
-      getStackScripts({ page: pageParam, page_size: 25 }, filter),
+      getStackScripts({ page: pageParam as number, page_size: 25 }, filter),
     queryKey: [filter],
   }),
   marketplace: {
-    queryFn: async () => {
-      const stackscripts = await getAllOCAsRequest();
-      return stackscripts.filter((s) => oneClickApps[s.id]);
-    },
+    queryFn: () => getAllOCAsRequest(),
     queryKey: null,
   },
   stackscript: (id: number) => ({
@@ -70,19 +64,22 @@ export const useStackScriptsInfiniteQuery = (
       }
       return page + 1;
     },
+    initialPageParam: 1,
   });
 
 export const stackScriptEventHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   // Keep the infinite store up to date
-  queryClient.invalidateQueries(stackscriptQueries.infinite._def);
+  invalidateQueries({
+    queryKey: stackscriptQueries.infinite._def,
+  });
 
   // If the event has a StackScript entity attached, invalidate it
   if (event.entity?.id) {
-    queryClient.invalidateQueries(
-      stackscriptQueries.stackscript(event.entity.id).queryKey
-    );
+    invalidateQueries({
+      queryKey: stackscriptQueries.stackscript(event.entity.id).queryKey,
+    });
   }
 };

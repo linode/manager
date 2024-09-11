@@ -2,11 +2,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import 'cypress-file-upload';
 import { interceptGetProfile } from 'support/intercepts/profile';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import {
   randomItem,
@@ -29,6 +25,9 @@ import {
   mockGetSupportTicketReplies,
 } from 'support/intercepts/support';
 import {
+  ACCOUNT_LIMIT_DIALOG_TITLE,
+  ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
+  ACCOUNT_LIMIT_HELPER_TEXT,
   SEVERITY_LABEL_MAP,
   SMTP_DIALOG_TITLE,
   SMTP_FIELD_NAME_TO_LABEL_MAP,
@@ -44,11 +43,16 @@ import { createTestLinode } from 'support/util/linodes';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+import {
+  mockCreateLinodeAccountLimitError,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
 import { mockGetDomains } from 'support/intercepts/domains';
 import { mockGetClusters } from 'support/intercepts/lke';
+import { linodeCreatePage } from 'support/ui/pages';
+import { chooseRegion } from 'support/util/regions';
 
-describe('help & support', () => {
+describe('open support tickets', () => {
   after(() => {
     cleanUp(['linodes']);
   });
@@ -61,9 +65,8 @@ describe('help & support', () => {
    */
   it('can open a support ticket', () => {
     mockAppendFeatureFlags({
-      supportTicketSeverity: makeFeatureFlagData(false),
+      supportTicketSeverity: false,
     });
-    mockGetFeatureFlagClientstream();
 
     const image = 'test_screenshot.png';
     const ticketDescription = 'this is a test ticket';
@@ -151,9 +154,8 @@ describe('help & support', () => {
     }
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: makeFeatureFlagData(true),
+      supportTicketSeverity: true,
     });
-    mockGetFeatureFlagClientstream();
     mockCreateSupportTicket(mockTicket).as('createTicket');
     mockGetSupportTickets([]);
     mockGetSupportTicket(mockTicket);
@@ -216,7 +218,7 @@ describe('help & support', () => {
   });
 
   /*
-   * - Opens a SMTP Restriction Removal ticket using mock API data.
+   * - Opens an SMTP Restriction Removal ticket using mock API data.
    * - Creates a new linode that will have SMTP restrictions and navigates to a SMTP support ticket via notice link.
    * - Confirms that the SMTP-specific fields are displayed and handled correctly.
    */
@@ -341,6 +343,185 @@ describe('help & support', () => {
     });
   });
 
+  /*
+   * - Opens an Account Limit ticket using mock API data.
+   * - Mocks an account limit API error and navigates to the support ticket via notice link.
+   * - Confirms that the Account-Limit-specific fields are pre-populated, displayed, and handled correctly.
+   */
+  it('can create an Account Limit support ticket', () => {
+    const mockAccount = accountFactory.build({
+      first_name: 'Jane',
+      last_name: 'Doe',
+      company: 'Acme Co.',
+    });
+
+    const mockFormFields = {
+      description: '',
+      entityId: '',
+      entityInputValue: '',
+      entityType: 'linode_id' as EntityType,
+      selectedSeverity: undefined,
+      summary: 'Account Limit Increase',
+      ticketType: 'accountLimit' as TicketType,
+      customerName: `${mockAccount.first_name} ${mockAccount.last_name}`,
+      companyName: mockAccount.company,
+      numberOfEntities: '2',
+      linodePlan: 'Nanode 1GB',
+      useCase: randomString(),
+      publicInfo: randomString(),
+    };
+
+    const mockAccountLimitTicket = supportTicketFactory.build({
+      summary: mockFormFields.summary,
+      id: randomNumber(),
+      description: formatDescription(mockFormFields, 'accountLimit'),
+      status: 'new',
+    });
+
+    const mockRegion = chooseRegion();
+    const mockPlan = {
+      planType: 'Shared CPU',
+      planLabel: 'Nanode 1 GB',
+      planId: 'g6-nanode-1',
+    };
+
+    const mockLinode = linodeFactory.build();
+
+    const ACCOUNT_THING_LIMIT_ERROR =
+      'A limit on your account is preventing the deployment of the selected Linode plan. To request access to the plan, please contact Support and provide the Linode plan name.';
+
+    mockGetAccount(mockAccount);
+    mockCreateLinodeAccountLimitError(ACCOUNT_THING_LIMIT_ERROR, 400).as(
+      'createLinode'
+    );
+    mockCreateSupportTicket(mockAccountLimitTicket).as('createTicket');
+    mockGetSupportTickets([]);
+    mockGetSupportTicket(mockAccountLimitTicket);
+    mockGetSupportTicketReplies(mockAccountLimitTicket.id, []);
+    mockGetLinodes([mockLinode]);
+
+    cy.visitWithLogin('/linodes/create');
+
+    // Set Linode label, distribution, plan type, password, etc.
+    // linodeCreatePage.setLabel(linodeLabel);
+    linodeCreatePage.selectRegionById(mockRegion.id);
+    linodeCreatePage.selectPlan(mockPlan.planType, mockPlan.planLabel);
+    linodeCreatePage.setRootPassword(randomString(32));
+
+    // Attempt to create Linode and confirm mocked account limit error with support link is present.
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.wait('@createLinode');
+
+    cy.get('[data-qa-error="true"]').first().scrollIntoView();
+    cy.contains(ACCOUNT_THING_LIMIT_ERROR);
+
+    // Navigate to the account limit ticket form.
+    cy.findByText('contact Support').should('be.visible').click();
+
+    // Fill out ticket form.
+    ui.dialog
+      .findByTitle(`Contact Support: ${mockFormFields.summary}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(ACCOUNT_LIMIT_DIALOG_TITLE).should('be.visible');
+        cy.findByText(ACCOUNT_LIMIT_HELPER_TEXT).should('be.visible');
+
+        // Confirm summary, customer name, and company name fields are pre-populated with user account data.
+        cy.findByLabelText('Title', { exact: false })
+          .should('be.visible')
+          .should('have.value', mockFormFields.summary);
+
+        cy.findByLabelText('First and last name', { exact: false })
+          .should('be.visible')
+          .should('have.value', mockFormFields.customerName);
+
+        cy.findByLabelText('Business or company name', { exact: false })
+          .should('be.visible')
+          .should('have.value', mockFormFields.companyName);
+
+        // Confirm plan pre-populates from form payload data.
+        cy.findByLabelText('Which Linode plan do you need access to?', {
+          exact: false,
+        })
+          .should('be.visible')
+          .should('have.value', mockFormFields.linodePlan);
+
+        // Confirm helper text and link.
+        cy.findByText('Current number of Linodes: 1').should('be.visible');
+        cy.findByText('View types of plans')
+          .should('be.visible')
+          .should('have.attr', 'href', 'https://www.linode.com/pricing/');
+
+        ui.button
+          .findByTitle('Open Ticket')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Confirm validation errors display when trying to submit without required fields.
+        cy.findByText('Use case is required.');
+        cy.findByText('Links to public information are required.');
+
+        // Complete the rest of the form.
+        cy.findByLabelText('Total number of Linodes you need?')
+          .should('be.visible')
+          .click()
+          .type(mockFormFields.numberOfEntities);
+
+        cy.get('[data-qa-ticket-use-case]')
+          .should('be.visible')
+          .click()
+          .type(mockFormFields.useCase);
+
+        cy.get('[data-qa-ticket-public-info]')
+          .should('be.visible')
+          .click()
+          .type(mockFormFields.publicInfo);
+
+        // Confirm there is no description field or file upload section.
+        cy.findByText('Description').should('not.exist');
+        cy.findByText('Attach a File').should('not.exist');
+
+        ui.button
+          .findByTitle('Open Ticket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Confirm that ticket create payload contains the expected data.
+    cy.wait('@createTicket').then((xhr) => {
+      expect(xhr.request.body?.summary).to.eq(mockAccountLimitTicket.summary);
+      expect(xhr.request.body?.description).to.eq(
+        mockAccountLimitTicket.description
+      );
+    });
+
+    // Confirm the new ticket is listed with the expected information upon redirecting to the details page.
+    cy.url().should('endWith', `support/tickets/${mockAccountLimitTicket.id}`);
+    cy.contains(
+      `#${mockAccountLimitTicket.id}: ${mockAccountLimitTicket.summary}`
+    ).should('be.visible');
+    Object.entries(ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP).forEach(
+      ([key, fieldLabel]) => {
+        let _fieldLabel = fieldLabel;
+        if (key === 'useCase' || key === 'numberOfEntities') {
+          _fieldLabel = _fieldLabel.replace('entities', 'Linodes');
+        }
+        cy.findByText(_fieldLabel).should('be.visible');
+      }
+    );
+  });
+
+  /*
+   * - Opens a general support ticket with a selected entity using mock API data.
+   * - Confirms that the entity fields are populated, displayed, and validated correctly.
+   */
   it('can create a support ticket with an entity', () => {
     const mockLinodes = linodeFactory.buildList(2);
     const mockDomain = domainFactory.build();

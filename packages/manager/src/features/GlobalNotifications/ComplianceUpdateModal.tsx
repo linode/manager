@@ -20,7 +20,7 @@ export const ComplianceUpdateModal = () => {
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
   const {
-    isLoading,
+    isPending,
     mutateAsync: updateAccountAgreements,
   } = useMutateAccountAgreements();
 
@@ -30,7 +30,9 @@ export const ComplianceUpdateModal = () => {
       .then(() => {
         complianceModelContext.close();
         // Re-request notifications so the GDPR notification goes away.
-        queryClient.invalidateQueries(accountQueries.notifications.queryKey);
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.notifications.queryKey,
+        });
       })
       .catch((err) => {
         const errorMessage = getErrorStringOrDefault(
@@ -48,7 +50,7 @@ export const ComplianceUpdateModal = () => {
           primaryButtonProps={{
             disabled: !checked,
             label: 'Agree',
-            loading: isLoading,
+            loading: isPending,
             onClick: handleAgree,
           }}
           secondaryButtonProps={{

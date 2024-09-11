@@ -18,7 +18,6 @@ import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import LoadBalancerIcon from 'src/assets/icons/entityIcons/loadbalancer.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import PlacementGroupsIcon from 'src/assets/icons/entityIcons/placement-groups.svg';
@@ -26,7 +25,6 @@ import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useIsACLBEnabled } from 'src/features/LoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
 interface LinkProps {
@@ -44,7 +42,6 @@ export const AddNewMenu = () => {
   const open = Boolean(anchorEl);
 
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
-  const { isACLBEnabled } = useIsACLBEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -67,14 +64,6 @@ export const AddNewMenu = () => {
       entity: 'Volume',
       icon: VolumeIcon,
       link: '/volumes/create',
-    },
-    {
-      // TODO ACLB: Replace with ACLB copy when available
-      description: 'Ensure your services are highly available',
-      entity: 'Cloud Load Balancer',
-      hide: !isACLBEnabled,
-      icon: LoadBalancerIcon,
-      link: '/loadbalancers/create',
     },
     {
       description: 'Ensure your services are highly available',

@@ -219,6 +219,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   label="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
                   placeholder="Search by Label, Username, or Description"
+                  value={query ?? ''}
                 />
               </StyledContentDiv>
               <StyledTable
@@ -543,7 +544,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           } else {
             this.setState({
               allStackScriptsLoaded: false,
-              currentSearchFilter: [],
+              currentSearchFilter: {},
             });
           }
         })

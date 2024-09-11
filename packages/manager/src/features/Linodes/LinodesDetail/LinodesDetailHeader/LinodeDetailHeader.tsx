@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
@@ -6,15 +5,10 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { TagDrawer } from 'src/components/TagCell/TagDrawer';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
-import {
-  Action,
-  PowerActionsDialog,
-} from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
@@ -39,14 +33,30 @@ import { MutationNotification } from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
-const LinodeDetailHeader = () => {
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import type { BooleanString } from 'src/features/Linodes/types';
+import type { BaseQueryParams } from 'src/utilities/queryParams';
+
+interface QueryParams extends BaseQueryParams {
+  delete: BooleanString;
+  migrate: BooleanString;
+  rebuild: BooleanString;
+  rescue: BooleanString;
+  resize: BooleanString;
+  upgrade: BooleanString;
+}
+
+export const LinodeDetailHeader = () => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect
   // logic changes the URL) to determine if a modal should be open when this component
   // is first rendered.
   const location = useLocation();
-  const queryParams = getQueryParamsFromQueryString(location.search);
+  const queryParams = getQueryParamsFromQueryString<QueryParams>(
+    location.search
+  );
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
     path: '/linodes/:linodeId/:subpath?',
@@ -59,12 +69,6 @@ const LinodeDetailHeader = () => {
   const { mutateAsync: updateLinode } = useLinodeUpdateMutation(
     matchedLinodeId
   );
-
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: matchedLinodeId,
-  });
 
   const [powerAction, setPowerAction] = React.useState<Action>('Reboot');
   const [powerDialogOpen, setPowerDialogOpen] = React.useState(false);
@@ -88,8 +92,6 @@ const LinodeDetailHeader = () => {
   );
   const isUpgradeVolumesDialogOpen = queryParams.upgrade === 'true';
 
-  const [tagDrawerOpen, setTagDrawerOpen] = React.useState<boolean>(false);
-
   const history = useHistory();
 
   const closeDialogs = () => {
@@ -112,18 +114,6 @@ const LinodeDetailHeader = () => {
     setRescueDialogOpen(false);
     setRebuildDialogOpen(false);
     setEnableBackupsDialogOpen(false);
-  };
-
-  const closeTagDrawer = () => {
-    setTagDrawerOpen(false);
-  };
-
-  const openTagDrawer = () => {
-    setTagDrawerOpen(true);
-  };
-
-  const updateTags = (tags: string[]) => {
-    return updateLinode({ tags });
   };
 
   const {
@@ -235,32 +225,36 @@ const LinodeDetailHeader = () => {
         handlers={handlers}
         id={matchedLinodeId}
         linode={linode}
-        openTagDrawer={openTagDrawer}
       />
       <PowerActionsDialog
         action={powerAction}
         isOpen={powerDialogOpen}
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
       />
       <DeleteLinodeDialog
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
         onSuccess={() => history.replace('/linodes')}
         open={deleteDialogOpen}
       />
       <LinodeResize
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
         open={resizeDialogOpen}
       />
       <LinodeRebuildDialog
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
         open={rebuildDialogOpen}
       />
       <RescueDialog
         linodeId={matchedLinodeId}
+        linodeLabel={linode.label}
         onClose={closeDialogs}
         open={rescueDialogOpen}
       />
@@ -274,14 +268,6 @@ const LinodeDetailHeader = () => {
         onClose={closeDialogs}
         open={isUpgradeVolumesDialogOpen}
       />
-      <TagDrawer
-        disabled={isLinodesGrantReadOnly}
-        entityLabel={linode.label}
-        onClose={closeTagDrawer}
-        open={tagDrawerOpen}
-        tags={linode.tags}
-        updateTags={updateTags}
-      />
       <EnableBackupsDialog
         linodeId={matchedLinodeId}
         onClose={closeDialogs}
@@ -290,5 +276,3 @@ const LinodeDetailHeader = () => {
     </>
   );
 };
-
-export default LinodeDetailHeader;

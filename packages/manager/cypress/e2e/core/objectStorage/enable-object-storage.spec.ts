@@ -31,11 +31,7 @@ import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccessKeys } from 'support/intercepts/object-storage';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 // Various messages, notes, and warnings that may be shown when enabling Object Storage
 // under different circumstances.
@@ -62,9 +58,8 @@ describe('Object Storage enrollment', () => {
   it('can enroll in Object Storage', () => {
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(false),
+      objMultiCluster: false,
     });
-    mockGetFeatureFlagClientstream();
 
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
@@ -149,6 +144,10 @@ describe('Object Storage enrollment', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
+        cy.findByLabelText('Label (required)')
+          .should('be.visible')
+          .type(randomLabel());
+
         // Select a region with special pricing structure.
         ui.regionSelect.find().click().type('Jakarta, ID{enter}');
 
@@ -381,6 +380,8 @@ describe('Object Storage enrollment', () => {
       });
 
     cy.wait('@cancelObjectStorage');
+
+    ui.toast.assertMessage('Object Storage successfully canceled.');
 
     // Confirm that settings page updates to reflect that Object Storage is disabled.
     cy.contains(getStartedNote).should('be.visible');

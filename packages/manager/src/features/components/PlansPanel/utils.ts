@@ -81,12 +81,16 @@ export const getPlanSelectionsByPlanType = <
   }
 
   // filter empty plan group
-  return Object.keys(plansByType).reduce((acc, key) => {
-    if (plansByType[key].length > 0) {
-      acc[key] = plansByType[key];
-    }
-    return acc;
-  }, {} as PlansByType<T>);
+  return Object.keys(plansByType).reduce<Partial<PlansByType<T>>>(
+    (acc, key) => {
+      if (plansByType[key as keyof PlansByType<T>].length > 0) {
+        acc[key as keyof PlansByType<T>] =
+          plansByType[key as keyof PlansByType<T>];
+      }
+      return acc;
+    },
+    {} as PlansByType<T>
+  );
 };
 
 export const determineInitialPlanCategoryTab = (

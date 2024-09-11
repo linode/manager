@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import Select from 'src/components/EnhancedSelect/Select';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
@@ -10,7 +10,6 @@ import { Typography } from 'src/components/Typography';
 import { setErrorMap } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
-import type { Item } from 'src/components/EnhancedSelect';
 
 interface ActiveCheckProps extends NodeBalancerConfigPanelProps {
   errorMap: Record<string, string | undefined>;
@@ -60,9 +59,6 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
   const onHealthCheckTimeoutChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onHealthCheckTimeoutChange(e.target.value);
 
-  const onHealthCheckTypeChange = (e: Item<string>) =>
-    props.onHealthCheckTypeChange(e.value);
-
   const conditionalText = displayProtocolText(protocol);
 
   const typeOptions = [
@@ -99,22 +95,25 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
           </Typography>
         </Grid>
         <Grid xs={12}>
-          <Select
+          <Autocomplete
+            onChange={(_, selected) =>
+              props.onHealthCheckTypeChange(selected.value)
+            }
             textFieldProps={{
               dataAttrs: {
                 'data-qa-active-check-select': true,
               },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
+            autoHighlight
+            disableClearable
             disabled={disabled}
-            errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.check}
-            inputId={`type-${configIdx}`}
-            isClearable={false}
+            id={`type-${configIdx}`}
             label="Type"
             noMarginTop
-            onChange={onHealthCheckTypeChange}
             options={typeOptions}
-            small
+            size="small"
             value={defaultType || typeOptions[0]}
           />
           <FormHelperText>
@@ -189,6 +188,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             {['http', 'http_body'].includes(healthCheckType) && (
               <Grid lg={6} xs={12}>
                 <TextField
+                  data-testid="http-path"
                   disabled={disabled}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   errorText={errorMap.check_path}
@@ -202,6 +202,7 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             {healthCheckType === 'http_body' && (
               <Grid md={12} xs={12}>
                 <TextField
+                  data-testid="http-body"
                   disabled={disabled}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   errorText={errorMap.check_body}

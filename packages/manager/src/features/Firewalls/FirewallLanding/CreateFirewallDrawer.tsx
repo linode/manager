@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -21,7 +22,10 @@ import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelec
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllFirewallsQuery, useCreateFirewall } from 'src/queries/firewalls';
 import { useGrants } from 'src/queries/profile/profile';
-import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
+import {
+  sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormStepEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -42,7 +46,8 @@ import type {
   Linode,
   NodeBalancer,
 } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
+import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
   'Only services you have permission to modify are shown.';
@@ -80,7 +85,16 @@ export const CreateFirewallDrawer = React.memo(
 
     const location = useLocation();
     const isFromLinodeCreate = location.pathname.includes('/linodes/create');
-    const queryParams = getQueryParamsFromQueryString(location.search);
+    const queryParams = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
+      location.search
+    );
+
+    const firewallFormEventOptions: LinodeCreateFormEventOptions = {
+      createType: queryParams.type ?? 'OS',
+      headerName: 'Create Firewall',
+      interaction: 'click',
+      label: '',
+    };
 
     const {
       errors,
@@ -132,6 +146,14 @@ export const CreateFirewallDrawer = React.memo(
               onFirewallCreated(response);
             }
             onClose();
+
+            // Fire analytics form submit upon successful firewall creation from Linode Create flow.
+            if (isFromLinodeCreate) {
+              sendLinodeCreateFormStepEvent({
+                ...firewallFormEventOptions,
+                label: 'Create Firewall',
+              });
+            }
           })
           .catch((err) => {
             const mapErrorToStatus = () =>
@@ -221,14 +243,10 @@ export const CreateFirewallDrawer = React.memo(
       <Link
         onClick={() =>
           isFromLinodeCreate &&
-          sendLinodeCreateFormStepEvent({
-            action: 'click',
-            category: 'link',
-            createType:
-              (queryParams.type as LinodeCreateType) ?? 'Distributions',
-            formStepName: 'Create Firewall Drawer',
+          sendLinodeCreateFormInputEvent({
+            ...firewallFormEventOptions,
             label: 'Learn more',
-            version: 'v1',
+            subheaderName: 'Assign services to the Firewall',
           })
         }
         to={FIREWALL_LIMITS_CONSIDERATIONS_LINK}
@@ -239,7 +257,9 @@ export const CreateFirewallDrawer = React.memo(
 
     const generalError =
       status?.generalError ||
+      // @ts-expect-error this form intentionally breaks Formik's error type
       errors['rules.inbound'] ||
+      // @ts-expect-error this form intentionally breaks Formik's error type
       errors['rules.outbound'] ||
       errors.rules;
 
@@ -253,12 +273,12 @@ export const CreateFirewallDrawer = React.memo(
             />
           ) : null}
           {generalError && (
-            <Notice
-              data-qa-error
-              key={status}
-              text={status?.generalError ?? 'An unexpected error occurred'}
-              variant="error"
-            />
+            <Notice data-qa-error key={status} variant="error">
+              <ErrorMessage
+                entity={{ type: 'firewall_id' }}
+                message={generalError ?? 'An unexpected error occurred'}
+              />
+            </Notice>
           )}
           <TextField
             inputProps={{
@@ -344,6 +364,7 @@ export const CreateFirewallDrawer = React.memo(
                 linodes.map((linode) => linode.id)
               );
             }}
+            // @ts-expect-error this form intentionally breaks Formik's error type
             errorText={errors['devices.linodes']}
             helperText={deviceSelectGuidance}
             multiple
@@ -362,6 +383,7 @@ export const CreateFirewallDrawer = React.memo(
                 nodebalancers.map((nodebalancer) => nodebalancer.id)
               );
             }}
+            // @ts-expect-error this form intentionally breaks Formik's error type
             errorText={errors['devices.nodebalancers']}
             helperText={deviceSelectGuidance}
             multiple
@@ -374,17 +396,6 @@ export const CreateFirewallDrawer = React.memo(
               disabled: userCannotAddFirewall,
               label: 'Create Firewall',
               loading: isSubmitting,
-              onClick: () =>
-                isFromLinodeCreate &&
-                sendLinodeCreateFormStepEvent({
-                  action: 'click',
-                  category: 'button',
-                  createType:
-                    (queryParams.type as LinodeCreateType) ?? 'Distributions',
-                  formStepName: 'Create Firewall Drawer',
-                  label: 'Create Firewall',
-                  version: 'v1',
-                }),
               type: 'submit',
             }}
             secondaryButtonProps={{

@@ -17,7 +17,12 @@ import {
   updateVPC,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAllVPCsRequest } from './requests';
 
@@ -73,7 +78,7 @@ export const useVPCsQuery = (
   return useQuery<ResourcePage<VPC>, APIError[]>({
     ...vpcQueries.paginated(params, filter),
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -87,10 +92,14 @@ export const useCreateVPCMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<VPC, APIError[], CreateVPCPayload>({
     mutationFn: createVPC,
-    onSuccess: (VPC) => {
-      queryClient.invalidateQueries(vpcQueries.all.queryKey);
-      queryClient.invalidateQueries(vpcQueries.paginated._def);
-      queryClient.setQueryData(vpcQueries.vpc(VPC.id).queryKey, VPC);
+    onSuccess(vpc) {
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.all.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.paginated._def,
+      });
+      queryClient.setQueryData<VPC>(vpcQueries.vpc(vpc.id).queryKey, vpc);
     },
   });
 };
@@ -99,9 +108,11 @@ export const useUpdateVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<VPC, APIError[], UpdateVPCPayload>({
     mutationFn: (data) => updateVPC(id, data),
-    onSuccess: (VPC) => {
-      queryClient.invalidateQueries(vpcQueries.paginated._def);
-      queryClient.setQueryData<VPC>(vpcQueries.vpc(VPC.id).queryKey, VPC);
+    onSuccess(vpc) {
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.paginated._def,
+      });
+      queryClient.setQueryData<VPC>(vpcQueries.vpc(vpc.id).queryKey, vpc);
     },
   });
 };
@@ -110,10 +121,16 @@ export const useDeleteVPCMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteVPC(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries(vpcQueries.all.queryKey);
-      queryClient.invalidateQueries(vpcQueries.paginated._def);
-      queryClient.removeQueries(vpcQueries.vpc(id).queryKey);
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.all.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.paginated._def,
+      });
+      queryClient.removeQueries({
+        queryKey: vpcQueries.vpc(id).queryKey,
+      });
     },
   });
 };
@@ -128,21 +145,24 @@ export const useSubnetsQuery = (
   useQuery<ResourcePage<Subnet>, APIError[]>({
     ...vpcQueries.vpc(vpcId)._ctx.subnets._ctx.paginated(params, filter),
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useCreateSubnetMutation = (vpcId: number) => {
   const queryClient = useQueryClient();
   return useMutation<Subnet, APIError[], CreateSubnetPayload>({
     mutationFn: (data) => createSubnet(vpcId, data),
-    onSuccess: () => {
+    onSuccess() {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
-      queryClient.invalidateQueries(vpcQueries.all.queryKey);
-      queryClient.invalidateQueries(vpcQueries.paginated._def);
-      queryClient.invalidateQueries(vpcQueries.vpc(vpcId).queryKey);
-      queryClient.invalidateQueries(
-        vpcQueries.vpc(vpcId)._ctx.subnets.queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.all.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.vpc(vpcId).queryKey,
+      });
     },
   });
 };
@@ -151,14 +171,17 @@ export const useUpdateSubnetMutation = (vpcId: number, subnetId: number) => {
   const queryClient = useQueryClient();
   return useMutation<Subnet, APIError[], ModifySubnetPayload>({
     mutationFn: (data) => modifySubnet(vpcId, subnetId, data),
-    onSuccess: () => {
+    onSuccess() {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
-      queryClient.invalidateQueries(vpcQueries.all.queryKey);
-      queryClient.invalidateQueries(vpcQueries.paginated._def);
-      queryClient.invalidateQueries(vpcQueries.vpc(vpcId).queryKey);
-      queryClient.invalidateQueries(
-        vpcQueries.vpc(vpcId)._ctx.subnets.queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.all.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.vpc(vpcId).queryKey,
+      });
     },
   });
 };
@@ -167,14 +190,17 @@ export const useDeleteSubnetMutation = (vpcId: number, subnetId: number) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteSubnet(vpcId, subnetId),
-    onSuccess: () => {
+    onSuccess() {
       // New subnet created --> refresh the VPC queries (all, paginated, & individual), plus the /subnets VPC query
-      queryClient.invalidateQueries(vpcQueries.all.queryKey);
-      queryClient.invalidateQueries(vpcQueries.paginated._def);
-      queryClient.invalidateQueries(vpcQueries.vpc(vpcId).queryKey);
-      queryClient.invalidateQueries(
-        vpcQueries.vpc(vpcId)._ctx.subnets.queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.all.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: vpcQueries.vpc(vpcId).queryKey,
+      });
     },
   });
 };

@@ -1,4 +1,3 @@
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
@@ -7,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
@@ -23,6 +22,7 @@ import { RecycleNodeDialog } from './RecycleNodeDialog';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 
 import type { Region } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
@@ -145,7 +145,7 @@ export const NodePoolsDisplay = (props: Props) => {
           </Button>
         </Grid>
       </Grid>
-      <Paper>
+      <Stack>
         {poolsError ? (
           <ErrorState errorText={poolsError?.[0].reason} />
         ) : (
@@ -162,7 +162,10 @@ export const NodePoolsDisplay = (props: Props) => {
                   thisPoolType?.formattedLabel ?? 'Unknown type';
 
                 return (
-                  <div key={id}>
+                  <Stack
+                    key={id}
+                    sx={(theme) => ({ paddingBottom: theme.spacing(2) })}
+                  >
                     <NodePool
                       openAutoscalePoolDialog={(poolId) => {
                         setSelectedPoolId(poolId);
@@ -188,7 +191,7 @@ export const NodePoolsDisplay = (props: Props) => {
                       poolId={thisPool.id}
                       typeLabel={typeLabel}
                     />
-                  </div>
+                  </Stack>
                 );
               })}
               {pools?.length > numPoolsToDisplay && (
@@ -245,7 +248,7 @@ export const NodePoolsDisplay = (props: Props) => {
             />
           </Grid>
         )}
-      </Paper>
+      </Stack>
     </>
   );
 };

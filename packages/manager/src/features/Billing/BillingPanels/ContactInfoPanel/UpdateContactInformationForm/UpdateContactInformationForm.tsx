@@ -5,7 +5,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import {
@@ -19,6 +19,8 @@ import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import type { Item } from 'src/components/EnhancedSelect/Select';
+
 interface Props {
   focusEmail: boolean;
   onClose: () => void;
@@ -28,7 +30,7 @@ const excludedUSRegions = ['Micronesia', 'Marshall Islands', 'Palau'];
 
 const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: account } = useAccount();
-  const { error, isLoading, mutateAsync } = useMutateAccount();
+  const { error, isPending, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
@@ -389,7 +391,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           'data-testid': 'save-contact-info',
           disabled: isReadOnly,
           label: 'Save Changes',
-          loading: isLoading,
+          loading: isPending,
           type: 'submit',
         }}
         secondaryButtonProps={{

@@ -1,9 +1,4 @@
 import {
-  CreateImagePayload,
-  Image,
-  ImageUploadPayload,
-  UpdateImageRegionsPayload,
-  UploadImageResponse,
   createImage,
   deleteImage,
   getImage,
@@ -12,19 +7,31 @@ import {
   updateImageRegions,
   uploadImage,
 } from '@linode/api-v4';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
 import { getAll } from 'src/utilities/getAll';
 
 import { profileQueries } from './profile/profile';
+
+import type {
+  APIError,
+  CreateImagePayload,
+  Filter,
+  Image,
+  ImageUploadPayload,
+  Params,
+  ResourcePage,
+  UpdateImageRegionsPayload,
+  UploadImageResponse,
+} from '@linode/api-v4';
+import type { UseQueryOptions } from '@tanstack/react-query';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const getAllImages = (
   passedParams: Params = {},
@@ -49,10 +56,15 @@ export const imageQueries = createQueryKeys('images', {
   }),
 });
 
-export const useImagesQuery = (params: Params, filters: Filter) =>
+export const useImagesQuery = (
+  params: Params,
+  filters: Filter,
+  options?: Partial<UseQueryOptions<ResourcePage<Image>, APIError[]>>
+) =>
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
+    ...options,
   });
 
 export const useImageQuery = (imageId: string, enabled = true) =>
@@ -66,13 +78,17 @@ export const useCreateImageMutation = () => {
   return useMutation<Image, APIError[], CreateImagePayload>({
     mutationFn: createImage,
     onSuccess(image) {
-      queryClient.invalidateQueries(imageQueries.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: imageQueries.paginated._def,
+      });
       queryClient.setQueryData<Image>(
         imageQueries.image(image.id).queryKey,
         image
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
-      queryClient.invalidateQueries(profileQueries.grants.queryKey);
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
     },
   });
 };
@@ -87,7 +103,9 @@ export const useUpdateImageMutation = () => {
     mutationFn: ({ description, imageId, label, tags }) =>
       updateImage(imageId, { description, label, tags }),
     onSuccess(image) {
-      queryClient.invalidateQueries(imageQueries.paginated._def);
+      queryClient.invalidateQueries({
+        queryKey: imageQueries.paginated._def,
+      });
       queryClient.setQueryData<Image>(
         imageQueries.image(image.id).queryKey,
         image
@@ -98,17 +116,17 @@ export const useUpdateImageMutation = () => {
 
 export const useDeleteImageMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], { imageId: string }>(
-    ({ imageId }) => deleteImage(imageId),
-    {
-      onSuccess(_, variables) {
-        queryClient.invalidateQueries(imageQueries.paginated._def);
-        queryClient.removeQueries(
-          imageQueries.image(variables.imageId).queryKey
-        );
-      },
-    }
-  );
+  return useMutation<{}, APIError[], { imageId: string }>({
+    mutationFn: ({ imageId }) => deleteImage(imageId),
+    onSuccess(_, variables) {
+      queryClient.invalidateQueries({
+        queryKey: imageQueries.paginated._def,
+      });
+      queryClient.removeQueries({
+        queryKey: imageQueries.image(variables.imageId).queryKey,
+      });
+    },
+  });
 };
 
 export const useAllImagesQuery = (
@@ -126,8 +144,12 @@ export const useUploadImageMutation = () => {
   return useMutation<UploadImageResponse, APIError[], ImageUploadPayload>({
     mutationFn: uploadImage,
     onSuccess(data) {
-      queryClient.invalidateQueries(imageQueries.paginated._def);
-      queryClient.invalidateQueries(imageQueries.all._def);
+      queryClient.invalidateQueries({
+        queryKey: imageQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: imageQueries.all._def,
+      });
       queryClient.setQueryData<Image>(
         imageQueries.image(data.image.id).queryKey,
         data.image
@@ -141,8 +163,12 @@ export const useUpdateImageRegionsMutation = (imageId: string) => {
   return useMutation<Image, APIError[], UpdateImageRegionsPayload>({
     mutationFn: (data) => updateImageRegions(imageId, data),
     onSuccess(image) {
-      queryClient.invalidateQueries(imageQueries.paginated._def);
-      queryClient.invalidateQueries(imageQueries.all._def);
+      queryClient.invalidateQueries({
+        queryKey: imageQueries.paginated._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: imageQueries.all._def,
+      });
       queryClient.setQueryData<Image>(
         imageQueries.image(image.id).queryKey,
         image
@@ -153,11 +179,13 @@ export const useUpdateImageRegionsMutation = (imageId: string) => {
 
 export const imageEventsHandler = ({
   event,
-  queryClient,
+  invalidateQueries,
 }: EventHandlerData) => {
   if (['failed', 'finished', 'notification'].includes(event.status)) {
-    queryClient.invalidateQueries(imageQueries.all._def);
-    queryClient.invalidateQueries(imageQueries.paginated._def);
+    invalidateQueries({
+      queryKey: imageQueries.all._def,
+    });
+    invalidateQueries({ queryKey: imageQueries.paginated._def });
 
     if (event.entity) {
       /*
@@ -171,7 +199,9 @@ export const imageEventsHandler = ({
        */
 
       const imageId = `private/${event.entity.id}`;
-      queryClient.invalidateQueries(imageQueries.image(imageId).queryKey);
+      invalidateQueries({
+        queryKey: imageQueries.image(imageId).queryKey,
+      });
     }
   }
 };

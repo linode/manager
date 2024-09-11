@@ -1,5 +1,6 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import CloseIcon from '@mui/icons-material/Close';
+import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
@@ -8,6 +9,7 @@ import { debounce } from 'throttle-debounce';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Code } from 'src/components/Code/Code';
 import { IconButton } from 'src/components/IconButton';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Stack } from 'src/components/Stack';
@@ -22,13 +24,17 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useStackScriptQuery,
   useStackScriptsInfiniteQuery,
 } from 'src/queries/stackscripts';
 
-import { useLinodeCreateQueryParams } from '../../utilities';
+import {
+  getGeneratedLinodeLabel,
+  useLinodeCreateQueryParams,
+} from '../../utilities';
 import { StackScriptDetailsDialog } from './StackScriptDetailsDialog';
 import { StackScriptSelectionRow } from './StackScriptSelectionRow';
 import { getDefaultUDFData } from './UserDefinedFields/utilities';
@@ -47,12 +53,21 @@ interface Props {
 export const StackScriptSelectionList = ({ type }: Props) => {
   const [query, setQuery] = useState<string>();
 
+  const queryClient = useQueryClient();
+
   const { handleOrderChange, order, orderBy } = useOrder({
     order: 'desc',
     orderBy: 'deployments_total',
   });
 
-  const { control, setValue } = useFormContext<CreateLinodeRequest>();
+  const {
+    control,
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    getValues,
+    setValue,
+  } = useFormContext<CreateLinodeRequest>();
 
   const { field } = useController({
     control,
@@ -94,8 +109,8 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     {
       ['+order']: order,
       ['+order_by']: orderBy,
-      ...searchFilter,
       ...filter,
+      ...searchFilter,
     },
     !hasPreselectedStackScript
   );
@@ -160,15 +175,36 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           ),
         }}
         tooltipText={
-          type === 'Community'
-            ? 'Hint: try searching for a specific item by prepending your search term with "username:", "label:", or "description:"'
-            : undefined
+          <Stack spacing={1}>
+            <Typography>
+              You can search for a specific item by prepending your search term
+              with "username:", "label:", or "description:".
+            </Typography>
+            <Box>
+              <Typography fontFamily={(theme) => theme.font.bold}>
+                Examples
+              </Typography>
+              <Typography fontSize="0.8rem">
+                <Code>username: linode</Code>
+              </Typography>
+              <Typography fontSize="0.8rem">
+                <Code>label: sql</Code>
+              </Typography>
+              <Typography fontSize="0.8rem">
+                <Code>description: "ubuntu server"</Code>
+              </Typography>
+              <Typography fontSize="0.8rem">
+                <Code>label: sql or label: php</Code>
+              </Typography>
+            </Box>
+          </Stack>
         }
         hideLabel
         label="Search"
         onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search StackScripts"
         spellCheck={false}
+        tooltipWidth={300}
         value={query}
       />
       <Table sx={{ mt: 1 }}>
@@ -189,13 +225,24 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <TableBody>
           {stackscripts?.map((stackscript) => (
             <StackScriptSelectionRow
-              onSelect={() => {
+              onSelect={async () => {
                 setValue('image', null);
                 setValue(
                   'stackscript_data',
                   getDefaultUDFData(stackscript.user_defined_fields)
                 );
                 field.onChange(stackscript.id);
+
+                if (!isLabelFieldDirty) {
+                  setValue(
+                    'label',
+                    await getGeneratedLinodeLabel({
+                      queryClient,
+                      tab: 'StackScripts',
+                      values: getValues(),
+                    })
+                  );
+                }
               }}
               isSelected={field.value === stackscript.id}
               key={stackscript.id}

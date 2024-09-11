@@ -23,7 +23,7 @@ describe('ImageRegionRow', () => {
     );
 
     expect(getByText('creating')).toBeVisible();
-    expect(await findByText('Newark, NJ')).toBeVisible();
+    expect(await findByText('US, Newark, NJ')).toBeVisible();
   });
 
   it('calls onRemove when the remove button is clicked', async () => {
@@ -38,5 +38,20 @@ describe('ImageRegionRow', () => {
     await userEvent.click(removeButton);
 
     expect(onRemove).toHaveBeenCalled();
+  });
+
+  it('disables the remove button if disableRemoveButton is true', async () => {
+    const { getByLabelText } = renderWithTheme(
+      <ImageRegionRow
+        disableRemoveButton
+        onRemove={vi.fn()}
+        region="us-east"
+        status="creating"
+      />
+    );
+
+    const removeButton = getByLabelText('Remove us-east');
+
+    expect(removeButton).toBeDisabled();
   });
 });

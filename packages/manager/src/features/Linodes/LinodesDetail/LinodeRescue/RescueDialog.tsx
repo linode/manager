@@ -8,12 +8,13 @@ import { StandardRescueDialog } from './StandardRescueDialog';
 
 export interface Props {
   linodeId: number | undefined;
+  linodeLabel: string | undefined;
   onClose: () => void;
   open: boolean;
 }
 
 export const RescueDialog = (props: Props) => {
-  const { linodeId, onClose, open } = props;
+  const { linodeId, linodeLabel, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -34,9 +35,19 @@ export const RescueDialog = (props: Props) => {
    * these instances.
    */
   return isBareMetalInstance ? (
-    <BareMetalRescue isOpen={open} linodeId={linodeId} onClose={onClose} />
+    <BareMetalRescue
+      isOpen={open}
+      linodeId={linodeId}
+      linodeLabel={linodeLabel}
+      onClose={onClose}
+    />
   ) : (
     /** For normal Linodes, load the standard rescue dialog. */
-    <StandardRescueDialog linodeId={linodeId} onClose={onClose} open={open} />
+    <StandardRescueDialog
+      linodeId={linodeId}
+      linodeLabel={linodeLabel}
+      onClose={onClose}
+      open={open}
+    />
   );
 };

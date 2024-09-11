@@ -23,8 +23,8 @@ const oneClickFilter = [
         },
       },
     ],
+    '+order_by': 'ordinal',
   },
-  { '+order_by': 'ordinal' },
 ];
 
 export const getOneClickApps = (params?: Params) =>

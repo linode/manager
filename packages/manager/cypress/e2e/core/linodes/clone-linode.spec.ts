@@ -106,7 +106,7 @@ describe('clone linode', () => {
 
       ui.toast.assertMessage(`Your Linode ${newLinodeLabel} is being created.`);
       ui.toast.assertMessage(
-        `Linode ${linode.label} successfully cloned to ${newLinodeLabel}.`,
+        `Linode ${linode.label} has been cloned to ${newLinodeLabel}.`,
         { timeout: CLONE_TIMEOUT }
       );
     });

@@ -1,15 +1,17 @@
-import { Image } from '@linode/api-v4/lib/images';
-import {
+import type { Image } from '@linode/api-v4/lib/images';
+import type {
   CreateLinodeRequest,
   Linode,
   LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
-import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
-
-import { Tag } from 'src/components/TagsInput/TagsInput';
-import { ExtendedType } from 'src/utilities/extendType';
+import type { Region } from '@linode/api-v4/lib/regions';
+import type {
+  StackScript,
+  UserDefinedField,
+} from '@linode/api-v4/lib/stackscripts';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Tag } from 'src/components/TagsInput/TagsInput';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export type TypeInfo =
   | {
@@ -160,7 +162,7 @@ export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
 export type LinodeCreateType =
   | 'Backups'
   | 'Clone Linode'
-  | 'Distributions'
   | 'Images'
+  | 'OS'
   | 'One-Click'
   | 'StackScripts';

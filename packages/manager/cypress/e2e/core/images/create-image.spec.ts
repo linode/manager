@@ -2,13 +2,9 @@ import type { Linode, Region } from '@linode/api-v4';
 import { accountFactory, linodeFactory, regionFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
@@ -130,9 +126,8 @@ describe('create image (e2e)', () => {
   it('displays notice informing user that Images are not encrypted, provided the LDE feature is enabled and the selected linode is not in an Edge region', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
+      linodeDiskEncryption: true,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
@@ -145,13 +140,7 @@ describe('create image (e2e)', () => {
 
     // intercept request
     cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getLinodes',
-      '@getRegions',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getLinodes', '@getRegions']);
 
     // Find the Linode select and open it
     cy.findByLabelText('Linode')
@@ -174,9 +163,8 @@ describe('create image (e2e)', () => {
   it('does not display a notice informing user that Images are not encrypted if the LDE feature is disabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(false),
+      linodeDiskEncryption: false,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
@@ -189,13 +177,7 @@ describe('create image (e2e)', () => {
 
     // intercept request
     cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getLinodes',
-      '@getRegions',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getLinodes', '@getRegions']);
 
     // Find the Linode select and open it
     cy.findByLabelText('Linode')
@@ -218,9 +200,8 @@ describe('create image (e2e)', () => {
   it('does not display a notice informing user that Images are not encrypted if the selected linode is in an Edge region', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
+      linodeDiskEncryption: true,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
@@ -234,13 +215,7 @@ describe('create image (e2e)', () => {
 
     // intercept request
     cy.visitWithLogin('/images/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getClientStream',
-      '@getAccount',
-      '@getRegions',
-      '@getLinodes',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getRegions', '@getLinodes']);
 
     // Find the Linode select and open it
     cy.findByLabelText('Linode')

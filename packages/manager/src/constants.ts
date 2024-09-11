@@ -22,8 +22,6 @@ export const LOGIN_ROOT =
 export const API_ROOT =
   import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 export const BETA_API_ROOT = API_ROOT + 'beta';
-export const LISH_ROOT =
-  import.meta.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
 /** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
 export const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
 /** All of the following used specifically for Algolia search */
@@ -90,7 +88,7 @@ export const DATETIME_DISPLAY_FORMAT = 'yyyy-MM-dd HH:mm';
 export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
 export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-export const MAX_VOLUME_SIZE = 10240;
+export const MAX_VOLUME_SIZE = 16384;
 
 /**
  * As per the current support polocy

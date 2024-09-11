@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -28,11 +29,12 @@ import { privateIPRegex } from 'src/utilities/ipUtils';
 import { isNumeric } from 'src/utilities/stringUtils';
 
 import {
-  LinodeCreateFormValues,
+  getGeneratedLinodeLabel,
   useLinodeCreateQueryParams,
 } from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
 
+import type { LinodeCreateFormValues } from '../utilities';
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 
@@ -51,7 +53,15 @@ export const LinodeSelectTable = (props: Props) => {
     theme.breakpoints.up('md')
   );
 
-  const { control, reset } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    formState: {
+      dirtyFields: { label: isLabelFieldDirty },
+    },
+    getValues,
+    reset,
+    setValue,
+  } = useFormContext<LinodeCreateFormValues>();
 
   const { field, fieldState } = useController<LinodeCreateFormValues, 'linode'>(
     {
@@ -92,7 +102,9 @@ export const LinodeSelectTable = (props: Props) => {
     filter
   );
 
-  const handleSelect = (linode: Linode) => {
+  const queryClient = useQueryClient();
+
+  const handleSelect = async (linode: Linode) => {
     const hasPrivateIP = linode.ipv4.some((ipv4) => privateIPRegex.test(ipv4));
     reset((prev) => ({
       ...prev,
@@ -102,6 +114,17 @@ export const LinodeSelectTable = (props: Props) => {
       region: linode.region,
       type: linode.type ?? '',
     }));
+
+    if (!isLabelFieldDirty) {
+      setValue(
+        'label',
+        await getGeneratedLinodeLabel({
+          queryClient,
+          tab: params.type,
+          values: getValues(),
+        })
+      );
+    }
   };
 
   const handlePowerOff = (linode: Linode) => {
@@ -117,20 +140,19 @@ export const LinodeSelectTable = (props: Props) => {
         <Notice text={fieldState.error?.message} variant="error" />
       )}
       <DebouncedSearchTextField
-        customValue={{
-          onChange: (value) => {
-            if (preselectedLinodeId) {
-              setPreselectedLinodeId(undefined);
-            }
-            setQuery(value ?? '');
-          },
-          value: preselectedLinodeId ? field.value?.label ?? '' : query,
+        onSearch={(value) => {
+          if (preselectedLinodeId) {
+            setPreselectedLinodeId(undefined);
+          }
+          setQuery(value);
         }}
         clearable
+        debounceTime={250}
         hideLabel
         isSearching={isFetching}
         label="Search"
         placeholder="Search"
+        value={preselectedLinodeId ? field.value?.label ?? '' : query}
       />
       <Box>
         {matchesMdUp ? (
@@ -213,6 +235,7 @@ export const LinodeSelectTable = (props: Props) => {
           action="Power Off"
           isOpen={Boolean(linodeToPowerOff)}
           linodeId={linodeToPowerOff?.id}
+          linodeLabel={linodeToPowerOff?.label}
           onClose={() => setLinodeToPowerOff(undefined)}
         />
       )}

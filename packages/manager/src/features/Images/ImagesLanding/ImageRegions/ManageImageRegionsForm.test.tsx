@@ -6,13 +6,13 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ManageImageRegionsForm } from './ManageImageRegionsForm';
+import { ManageImageReplicasForm } from './ManageImageRegionsForm';
 
 describe('ManageImageRegionsDrawer', () => {
   it('should render a save button and a cancel button', () => {
     const image = imageFactory.build();
     const { getByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     const cancelButton = getByText('Cancel').closest('button');
@@ -49,18 +49,26 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
-    await findByText('Newark, NJ');
+    await findByText('US, Newark, NJ');
     await findByText('available');
-    await findByText('Place, CA');
+    await findByText('US, Place, CA');
     await findByText('pending replication');
   });
 
   it('should render a status of "unsaved" when a new region is selected', async () => {
-    const region1 = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
-    const region2 = regionFactory.build({ id: 'us-west', label: 'Place, CA' });
+    const region1 = regionFactory.build({
+      capabilities: ['Object Storage'],
+      id: 'us-east',
+      label: 'Newark, NJ',
+    });
+    const region2 = regionFactory.build({
+      capabilities: ['Object Storage'],
+      id: 'us-west',
+      label: 'Place, CA',
+    });
 
     const image = imageFactory.build({
       regions: [
@@ -78,7 +86,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText, getByLabelText, getByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     const saveButton = getByText('Save').closest('button');
@@ -96,13 +104,59 @@ describe('ManageImageRegionsDrawer', () => {
     // Select new region
     await userEvent.click(await findByText('us-west', { exact: false }));
 
-    // Close the Region Multi-Select to that selections are committed to the list
-    await userEvent.type(regionSelect, '{escape}');
-
-    expect(getByText('Place, CA')).toBeVisible();
+    expect(getByText('US, Place, CA')).toBeVisible();
     expect(getByText('unsaved')).toBeVisible();
 
     // Verify the save button is enabled because changes have been made
     expect(saveButton).toBeEnabled();
+  });
+
+  it("should enforce that the image is 'available' in at least one region", async () => {
+    const region1 = regionFactory.build({ id: 'us-east' });
+    const region2 = regionFactory.build({ id: 'us-west' });
+
+    const image = imageFactory.build({
+      regions: [
+        {
+          region: 'us-east',
+          status: 'available',
+        },
+        {
+          region: 'us-west',
+          status: 'available',
+        },
+      ],
+    });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region1, region2]));
+      })
+    );
+
+    const { findByText, getByLabelText } = renderWithTheme(
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
+    );
+
+    // Verify both region labels have been loaded by the API
+    await findByText(`US, ${region1.label}`);
+    await findByText(`US, ${region2.label}`);
+
+    // Both remove buttons should be enabled
+    expect(getByLabelText('Remove us-east')).toBeEnabled();
+    expect(getByLabelText('Remove us-west')).toBeEnabled();
+
+    // Remove us-west
+    await userEvent.click(getByLabelText('Remove us-west'));
+
+    // The "Remove us-east" button should become disabled because it is the last 'available' region
+    expect(getByLabelText('Remove us-east')).toBeDisabled();
+
+    // Verify tooltip shows
+    expect(
+      getByLabelText(
+        'You cannot remove this region because at least one available region must be present.'
+      )
+    ).toBeInTheDocument();
   });
 });

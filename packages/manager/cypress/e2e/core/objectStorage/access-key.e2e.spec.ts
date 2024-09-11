@@ -2,18 +2,14 @@
  * @file End-to-end tests for Object Storage Access Key operations.
  */
 
-import { objectStorageBucketFactory } from 'src/factories/objectStorage';
+import { createObjectStorageBucketFactoryLegacy } from 'src/factories/objectStorage';
 import { authenticate } from 'support/api/authentication';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   interceptGetAccessKeys,
   interceptCreateAccessKey,
 } from 'support/intercepts/object-storage';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
@@ -41,9 +37,8 @@ describe('object storage access key end-to-end tests', () => {
 
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(false),
+      objMultiCluster: false,
     });
-    mockGetFeatureFlagClientstream();
 
     cy.visitWithLogin('/object-storage/access-keys');
     cy.wait('@getKeys');
@@ -120,7 +115,7 @@ describe('object storage access key end-to-end tests', () => {
   it('can create an access key with limited access - e2e', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-east-1';
-    const bucketRequest = objectStorageBucketFactory.build({
+    const bucketRequest = createObjectStorageBucketFactoryLegacy.build({
       label: bucketLabel,
       cluster: bucketCluster,
       // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
@@ -136,9 +131,8 @@ describe('object storage access key end-to-end tests', () => {
 
       mockGetAccount(accountFactory.build({ capabilities: [] }));
       mockAppendFeatureFlags({
-        objMultiCluster: makeFeatureFlagData(false),
+        objMultiCluster: false,
       });
-      mockGetFeatureFlagClientstream();
 
       interceptGetAccessKeys().as('getKeys');
       interceptCreateAccessKey().as('createKey');

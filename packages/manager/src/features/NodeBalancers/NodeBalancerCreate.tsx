@@ -20,6 +20,7 @@ import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary'
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -113,7 +114,7 @@ const NodeBalancerCreate = () => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
@@ -351,7 +352,13 @@ const NodeBalancerCreate = () => {
     setDeleteConfigConfirmDialog(clone(defaultDeleteConfigConfirmDialogState));
   };
 
-  const onConfigValueChange = (configId: number, key: string, value: any) => {
+  const onConfigValueChange = <
+    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors
+  >(
+    configId: number,
+    key: Key,
+    value: NodeBalancerConfigFieldsWithStatusAndErrors[Key]
+  ) => {
     setNodeBalancerFields((prev) => {
       const newConfigs = [...prev.configs];
       newConfigs[configId][key] = value;
@@ -481,7 +488,10 @@ const NodeBalancerCreate = () => {
       />
       {generalError && !isRestricted && (
         <Notice spacingTop={8} variant="error">
-          {generalError}
+          <ErrorMessage
+            entity={{ type: 'nodebalancer_id' }}
+            message={generalError}
+          />
         </Notice>
       )}
       {isRestricted && (
@@ -680,7 +690,7 @@ const NodeBalancerCreate = () => {
           }}
           buttonType="primary"
           data-qa-deploy-nodebalancer
-          loading={isLoading}
+          loading={isPending}
           onClick={onCreate}
           tooltipText={isInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >

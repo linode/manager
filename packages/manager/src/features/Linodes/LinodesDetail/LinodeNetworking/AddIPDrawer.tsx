@@ -1,4 +1,3 @@
-import { IPv6Prefix } from '@linode/api-v4/lib/networking';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -6,7 +5,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
@@ -17,9 +15,12 @@ import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import {
   useAllocateIPMutation,
-  useCreateIPv6RangeMutation,
   useLinodeIPsQuery,
 } from 'src/queries/linodes/networking';
+import { useCreateIPv6RangeMutation } from 'src/queries/networking/networking';
+
+import type { IPv6Prefix } from '@linode/api-v4/lib/networking';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 type IPType = 'v4Private' | 'v4Public';
 
@@ -93,14 +94,14 @@ export const AddIPDrawer = (props: Props) => {
 
   const {
     error: ipv4Error,
-    isLoading: ipv4Loading,
+    isPending: ipv4Loading,
     mutateAsync: allocateIPAddress,
     reset: resetIPv4,
   } = useAllocateIPMutation(linodeId);
 
   const {
     error: ipv6Error,
-    isLoading: ipv6Loading,
+    isPending: ipv6Loading,
     mutateAsync: createIPv6Range,
     reset: resetIPv6,
   } = useCreateIPv6RangeMutation();

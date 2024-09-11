@@ -35,11 +35,16 @@ x-e2e-env:
   # Cloud Manager-specific test configuration.
   CY_TEST_SUITE: ${CY_TEST_SUITE}
   CY_TEST_REGION: ${CY_TEST_REGION}
+  CY_TEST_TAGS: ${CY_TEST_TAGS}
+  CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
 
   # Cypress environment variables for alternative parallelization.
   CY_TEST_SPLIT_RUN: ${CY_TEST_SPLIT_RUN}
   CY_TEST_SPLIT_RUN_TOTAL: ${CY_TEST_SPLIT_RUN_TOTAL}
   CY_TEST_SPLIT_RUN_INDEX: ${CY_TEST_SPLIT_RUN_INDEX}
+
+  # Cypress performance.
+  CY_TEST_ACCOUNT_CACHE_DIR: ${CY_TEST_ACCOUNT_CACHE_DIR}
 
   # Cypress reporting.
   CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
@@ -61,6 +66,7 @@ x-e2e-env:
 x-e2e-volumes:
   &default-volumes
   - ./.git:/home/node/app/.git
+  - ./cache:/home/node/app/cache
   - ./packages/manager:/home/node/app/packages/manager
   - ./packages/validation:/home/node/app/packages/validation
   - ./packages/api-v4:/home/node/app/packages/api-v4
@@ -104,8 +110,19 @@ services:
       timeout: 10s
       retries: 10
 
+  # Generic end-to-end test runner for Cloud's primary testing pipeline.
+  # Configured to run against a local Cloud instance.
   e2e:
     <<: *default-runner
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+
+  # End-to-end test runner for Cloud's synthetic monitoring tests.
+  # Configured to run against a remote Cloud instance hosted at some URL.
+  e2e_heimdall:
+    <<: *default-runner
+    depends_on: []
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}

@@ -1,4 +1,7 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_TYPES,
+  PLACEMENT_GROUP_POLICIES,
+} from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -20,7 +23,6 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
-  getAffinityTypeEnforcement,
   getLinodesFromAllPlacementGroups,
   hasPlacementGroupReachedCapacity,
 } from './utils';
@@ -54,7 +56,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
     region,
   });
   const {
-    isLoading,
+    isPending,
     mutateAsync: assignLinodes,
   } = useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
@@ -96,7 +98,11 @@ export const PlacementGroupsAssignLinodesDrawer = (
     return null;
   }
 
-  const { affinity_type, is_strict, label } = selectedPlacementGroup;
+  const {
+    label,
+    placement_group_policy,
+    placement_group_type,
+  } = selectedPlacementGroup;
   const linodeSelectLabel = region
     ? `Linodes in ${region.label} (${region.id})`
     : 'Linodes';
@@ -142,12 +148,12 @@ export const PlacementGroupsAssignLinodesDrawer = (
       <DescriptionList
         items={[
           {
-            description: AFFINITY_TYPES[affinity_type],
-            title: 'Affinity Type',
+            description: PLACEMENT_GROUP_TYPES[placement_group_type],
+            title: 'Placement Group Type',
           },
           {
-            description: getAffinityTypeEnforcement(is_strict),
-            title: 'Affinity Type Enforcement',
+            description: PLACEMENT_GROUP_POLICIES[placement_group_policy],
+            title: 'Placement Group Policy',
           },
         ]}
         sx={{ my: 2 }}
@@ -170,7 +176,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
                 setSelectedLinode(value);
               }}
               checkIsOptionEqualToValue
-              disabled={hasReachedCapacity || isLoading}
+              disabled={hasReachedCapacity || isPending}
               label={linodeSelectLabel}
               options={getLinodeSelectOptions()}
               placeholder="Select Linode or type to search"

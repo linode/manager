@@ -1,12 +1,12 @@
-import { Volume } from '@linode/api-v4';
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -16,6 +16,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { Typography } from 'src/components/Typography';
 import { CloneVolumeDrawer } from 'src/features/Volumes/CloneVolumeDrawer';
 import { DeleteVolumeDialog } from 'src/features/Volumes/DeleteVolumeDialog';
 import { DetachVolumeDialog } from 'src/features/Volumes/DetachVolumeDialog';
@@ -31,7 +32,8 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';
 
-import { StyledRootGrid, StyledTypography } from './CommonLinodeStorage.styles';
+import type { Volume } from '@linode/api-v4';
+
 export const preferenceKey = 'linode-volumes';
 
 export const LinodeVolumes = () => {
@@ -71,6 +73,10 @@ export const LinodeVolumes = () => {
     },
     filter
   );
+
+  const {
+    isBlockStorageEncryptionFeatureEnabled,
+  } = useIsBlockStorageEncryptionFeatureEnabled();
 
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(false);
@@ -123,6 +129,8 @@ export const LinodeVolumes = () => {
     return null;
   }
 
+  const numColumns = isBlockStorageEncryptionFeatureEnabled ? 6 : 5; // @TODO BSE: set colSpan for <TableRowEmpty /> to 6 once BSE is fully rolled out
+
   const renderTableContent = () => {
     if (isLoading) {
       return (
@@ -130,14 +138,16 @@ export const LinodeVolumes = () => {
           responsive={{
             3: { xsDown: true },
           }}
-          columns={5}
+          columns={numColumns}
           rows={1}
         />
       );
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results === 0) {
-      return <TableRowEmpty colSpan={5} message="No Volumes to display." />;
+      return (
+        <TableRowEmpty colSpan={numColumns} message="No Volumes to display." />
+      );
     } else if (data) {
       return data.data.map((volume) => {
         return (
@@ -152,6 +162,9 @@ export const LinodeVolumes = () => {
               handleResize: () => handleResize(volume),
               handleUpgrade: () => null,
             }}
+            isBlockStorageEncryptionFeatureEnabled={
+              isBlockStorageEncryptionFeatureEnabled
+            }
             isDetailsPageRow
             key={volume.id}
             volume={volume}
@@ -164,26 +177,26 @@ export const LinodeVolumes = () => {
   };
 
   return (
-    <div style={{ marginTop: '20px' }}>
-      <StyledRootGrid
-        alignItems="flex-end"
-        container
-        justifyContent="space-between"
-        spacing={1}
+    <Box>
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          pl: 2,
+          pr: 0.5,
+          py: 0.5,
+        }}
       >
-        <Grid className="p0">
-          <StyledTypography variant="h3">Volumes</StyledTypography>
-        </Grid>
-        <StyledNewWrapperGrid>
-          <Button
-            buttonType="primary"
-            disabled={isLinodesGrantReadOnly}
-            onClick={handleCreateVolume}
-          >
-            Create Volume
-          </Button>
-        </StyledNewWrapperGrid>
-      </StyledRootGrid>
+        <Typography variant="h3">Volumes</Typography>
+        <Button
+          buttonType="primary"
+          disabled={isLinodesGrantReadOnly}
+          onClick={handleCreateVolume}
+        >
+          Add Volume
+        </Button>
+      </Paper>
       <Table>
         <TableHead>
           <TableRow>
@@ -214,6 +227,9 @@ export const LinodeVolumes = () => {
             <Hidden xsDown>
               <TableCell>File System Path</TableCell>
             </Hidden>
+            {isBlockStorageEncryptionFeatureEnabled && (
+              <TableCell>Encryption</TableCell>
+            )}
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -265,18 +281,6 @@ export const LinodeVolumes = () => {
         open={isDeleteDialogOpen}
         volume={selectedVolume}
       />
-    </div>
+    </Box>
   );
 };
-
-const StyledNewWrapperGrid = styled(Grid, { label: 'StyledNewWrapperGrid' })(
-  ({ theme }) => ({
-    '&.MuiGrid-item': {
-      padding: 5,
-    },
-    [theme.breakpoints.down('sm')]: {
-      marginLeft: `-${theme.spacing(1.5)}`,
-      marginTop: `-${theme.spacing(1)}`,
-    },
-  })
-);

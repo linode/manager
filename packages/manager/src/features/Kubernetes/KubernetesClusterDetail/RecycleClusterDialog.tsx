@@ -20,7 +20,7 @@ export const RecycleClusterDialog = (props: Props) => {
   const { clusterId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isLoading, mutateAsync } = useRecycleClusterMutation(
+  const { error, isPending, mutateAsync } = useRecycleClusterMutation(
     clusterId
   );
 
@@ -38,7 +38,7 @@ export const RecycleClusterDialog = (props: Props) => {
       primaryButtonProps={{
         'data-testid': 'confirm',
         label: 'Recycle All Cluster Nodes',
-        loading: isLoading,
+        loading: isPending,
         onClick: onSubmit,
       }}
       secondaryButtonProps={{

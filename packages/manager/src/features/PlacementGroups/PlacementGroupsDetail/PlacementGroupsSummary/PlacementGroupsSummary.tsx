@@ -1,4 +1,7 @@
-import { AFFINITY_TYPES } from '@linode/api-v4';
+import {
+  PLACEMENT_GROUP_TYPES,
+  PLACEMENT_GROUP_POLICIES,
+} from '@linode/api-v4';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -14,7 +17,6 @@ import {
   PLACEMENT_GROUP_TOOLTIP_TEXT,
   PLACEMENT_GROUPS_DOCS_LINK,
 } from '../../constants';
-import { getAffinityTypeEnforcement } from '../../utils';
 
 import type { PlacementGroup, Region } from '@linode/api-v4';
 
@@ -62,18 +64,20 @@ export const PlacementGroupsSummary = (props: Props) => {
                 tooltip: { text: PLACEMENT_GROUP_TOOLTIP_TEXT, width: 275 },
               },
               {
-                description: AFFINITY_TYPES[placementGroup?.affinity_type],
-                title: 'Affinity Type',
+                description:
+                  PLACEMENT_GROUP_TYPES[placementGroup?.placement_group_type],
+                title: 'Placement Group Type',
               },
               {
                 description: region?.label ?? 'Unknown',
                 title: 'Region',
               },
               {
-                description: getAffinityTypeEnforcement(
-                  placementGroup?.is_strict
-                ),
-                title: 'Affinity Type Enforcement',
+                description:
+                  PLACEMENT_GROUP_POLICIES[
+                    placementGroup?.placement_group_policy
+                  ],
+                title: 'Placement Group Policy',
               },
             ]}
             displayMode="grid"

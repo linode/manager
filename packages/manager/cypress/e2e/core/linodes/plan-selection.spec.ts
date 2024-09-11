@@ -12,13 +12,6 @@ import {
   mockGetRegionAvailability,
 } from 'support/intercepts/regions';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-
-import type { Flags } from 'src/featureFlags';
 
 const mockRegions = [
   regionFactory.build({
@@ -363,12 +356,6 @@ describe('displays specific linode plans for GPU', () => {
     mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
       'getRegionAvailability'
     );
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['gpuv2']>({
-        planDivider: true,
-      }),
-    });
-    mockGetFeatureFlagClientstream();
   });
 
   it('Should render divided tables when GPU divider enabled', () => {

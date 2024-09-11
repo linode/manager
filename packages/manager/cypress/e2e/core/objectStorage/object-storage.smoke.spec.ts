@@ -16,15 +16,12 @@ import {
   mockUploadBucketObjectS3,
   mockCreateBucketError,
 } from 'support/intercepts/object-storage';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 import { accountFactory, regionFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
+import { extendRegion } from 'support/util/regions';
 
 describe('object storage smoke tests', () => {
   /*
@@ -38,15 +35,19 @@ describe('object storage smoke tests', () => {
   it('can create object storage bucket with OBJ Multicluster', () => {
     const mockErrorMessage = 'An unknown error has occurred.';
 
-    const mockRegionWithObj = regionFactory.build({
-      label: randomLabel(),
-      id: `${randomString(2)}-${randomString(3)}`,
-      capabilities: ['Object Storage'],
-    });
+    const mockRegionWithObj = extendRegion(
+      regionFactory.build({
+        label: randomLabel(),
+        id: `${randomString(2)}-${randomString(3)}`,
+        capabilities: ['Object Storage'],
+      })
+    );
 
-    const mockRegionsWithoutObj = regionFactory.buildList(2, {
-      capabilities: [],
-    });
+    const mockRegionsWithoutObj = regionFactory
+      .buildList(2, {
+        capabilities: [],
+      })
+      .map((region) => extendRegion(region));
 
     const mockRegions = [mockRegionWithObj, ...mockRegionsWithoutObj];
 
@@ -63,9 +64,8 @@ describe('object storage smoke tests', () => {
       })
     );
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(true),
+      objMultiCluster: true,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetRegions(mockRegions).as('getRegions');
     mockGetBuckets([]).as('getBuckets');
@@ -82,15 +82,9 @@ describe('object storage smoke tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        // Submit button is disabled when fields are empty.
-        ui.buttonGroup
-          .findButtonByTitle('Create Bucket')
-          .should('be.visible')
-          .should('be.disabled');
-
         // Enter label.
         cy.contains('Label').click().type(mockBucket.label);
-
+        cy.log(`${mockRegionWithObj.label}`);
         cy.contains('Region').click().type(mockRegionWithObj.label);
 
         ui.autocompletePopper
@@ -156,7 +150,7 @@ describe('object storage smoke tests', () => {
    */
   it('can create object storage bucket - smoke', () => {
     const bucketLabel = randomLabel();
-    const bucketRegion = 'Atlanta, GA';
+    const bucketRegion = 'US, Atlanta, GA';
     const bucketCluster = 'us-southeast-1';
     const bucketHostname = `${bucketLabel}.${bucketCluster}.linodeobjects.com`;
 
@@ -168,9 +162,9 @@ describe('object storage smoke tests', () => {
 
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(false),
+      objMultiCluster: false,
+      gecko2: false,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetBuckets([]).as('getBuckets');
 
@@ -305,9 +299,8 @@ describe('object storage smoke tests', () => {
 
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(false),
+      objMultiCluster: false,
     });
-    mockGetFeatureFlagClientstream();
 
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
@@ -359,9 +352,8 @@ describe('object storage smoke tests', () => {
       })
     );
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(true),
+      objMultiCluster: true,
     });
-    mockGetFeatureFlagClientstream();
 
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketMock.region!).as('deleteBucket');

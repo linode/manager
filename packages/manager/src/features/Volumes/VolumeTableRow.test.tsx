@@ -3,11 +3,12 @@ import * as React from 'react';
 
 import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
-import { ActionHandlers } from './VolumesActionMenu';
 import { VolumeTableRow } from './VolumeTableRow';
+
+import type { ActionHandlers } from './VolumesActionMenu';
 
 const attachedVolume = volumeFactory.build({
   linode_id: 0,
@@ -65,7 +66,7 @@ describe('Volume table row', () => {
     expect(getByText('Attach'));
   });
 
-  it('should should render an upgrade chip if the volume is eligible for an upgrade', async () => {
+  it('should render an upgrade chip if the volume is eligible for an upgrade', async () => {
     const volume = volumeFactory.build({ id: 5 });
     const notification = notificationFactory.build({
       entity: { id: volume.id, type: 'volume' },
@@ -85,7 +86,7 @@ describe('Volume table row', () => {
     await findByText('UPGRADE TO NVMe');
   });
 
-  it('should should render an "UPGRADE PENDING" chip if the volume upgrade is imminent', async () => {
+  it('should render an "UPGRADE PENDING" chip if the volume upgrade is imminent', async () => {
     const volume = volumeFactory.build({ id: 5 });
     const notification = notificationFactory.build({
       entity: { id: volume.id, type: 'volume' },
@@ -103,6 +104,33 @@ describe('Volume table row', () => {
     );
 
     await findByText('UPGRADE PENDING');
+  });
+
+  /* @TODO BSE: Remove feature flagging/conditionality once BSE is fully rolled out */
+  it('should render the encryption status if isBlockStorageEncryptionFeatureEnabled is true', async () => {
+    const volume = volumeFactory.build();
+
+    const { findByText } = renderWithTheme(
+      wrapWithTableBody(
+        <VolumeTableRow
+          handlers={handlers}
+          isBlockStorageEncryptionFeatureEnabled
+          volume={volume}
+        />
+      )
+    );
+
+    await findByText('Encrypted');
+  });
+
+  it('should not render the encryption status if isBlockStorageEncryptionFeatureEnabled is false', async () => {
+    const volume = volumeFactory.build();
+
+    const { queryByText } = renderWithTheme(
+      wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
+    );
+
+    expect(queryByText('Encrypted')).toBeNull();
   });
 });
 

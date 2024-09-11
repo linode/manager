@@ -1,7 +1,5 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { updateImageRegionsSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -16,14 +14,25 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { ImageRegionRow } from './ImageRegionRow';
 
-import type { Image, UpdateImageRegionsPayload } from '@linode/api-v4';
+import type {
+  Image,
+  ImageRegion,
+  Region,
+  UpdateImageRegionsPayload,
+} from '@linode/api-v4';
+import type { Resolver } from 'react-hook-form';
+import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 interface Props {
   image: Image | undefined;
   onClose: () => void;
 }
+interface Context {
+  imageRegions: ImageRegion[] | undefined;
+  regions: Region[] | undefined;
+}
 
-export const ManageImageRegionsForm = (props: Props) => {
+export const ManageImageReplicasForm = (props: Props) => {
   const { image, onClose } = props;
 
   const imageRegionIds = image?.regions.map(({ region }) => region) ?? [];
@@ -32,17 +41,16 @@ export const ManageImageRegionsForm = (props: Props) => {
   const { data: regions } = useRegionsQuery();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
 
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
-
   const {
     formState: { errors, isDirty, isSubmitting },
     handleSubmit,
     setError,
     setValue,
     watch,
-  } = useForm<UpdateImageRegionsPayload>({
+  } = useForm<UpdateImageRegionsPayload, Context>({
+    context: { imageRegions: image?.regions, regions },
     defaultValues: { regions: imageRegionIds },
-    resolver: yupResolver(updateImageRegionsSchema),
+    resolver,
     values: { regions: imageRegionIds },
   });
 
@@ -50,9 +58,14 @@ export const ManageImageRegionsForm = (props: Props) => {
     try {
       await mutateAsync(data);
 
-      enqueueSnackbar('Image regions successfully updated.', {
-        variant: 'success',
-      });
+      enqueueSnackbar(
+        `${image?.label ?? 'Image'}'s regions successfully updated.`,
+        {
+          variant: 'success',
+        }
+      );
+
+      onClose();
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -65,6 +78,24 @@ export const ManageImageRegionsForm = (props: Props) => {
   };
 
   const values = watch();
+
+  const disabledRegions: Record<string, DisableRegionOption> = {};
+
+  const availableRegions = image?.regions.filter(
+    (regionItem) => regionItem.status === 'available'
+  );
+  const availableRegionIds = availableRegions?.map((r) => r.region);
+
+  const currentlySelectedAvailableRegions = values.regions.filter((r) =>
+    availableRegionIds?.includes(r)
+  );
+
+  if (currentlySelectedAvailableRegions.length === 1) {
+    disabledRegions[currentlySelectedAvailableRegions[0]] = {
+      reason:
+        'You cannot remove this region because at least one available region must be present.',
+    };
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -79,25 +110,23 @@ export const ManageImageRegionsForm = (props: Props) => {
         for details on managing your Linux system's disk space.
       </Typography>
       <RegionMultiSelect
-        onClose={() => {
-          setValue('regions', [...values.regions, ...selectedRegions], {
+        onChange={(regionIds) =>
+          setValue('regions', regionIds, {
             shouldDirty: true,
             shouldValidate: true,
-          });
-          setSelectedRegions([]);
-        }}
-        regions={(regions ?? []).filter(
-          (r) => !values.regions.includes(r.id) && r.site_type === 'core'
-        )}
-        currentCapability={undefined}
+          })
+        }
+        currentCapability="Object Storage" // Images use Object Storage as the storage backend
+        disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         label="Add Regions"
-        onChange={setSelectedRegions}
-        placeholder="Select Regions"
-        selectedIds={selectedRegions}
+        placeholder="Select regions or type to search"
+        regions={regions?.filter((r) => r.site_type === 'core') ?? []}
+        renderTags={() => null}
+        selectedIds={values.regions}
       />
       <Typography sx={{ mb: 1, mt: 2 }}>
-        Image will be available in these regions ({values.regions.length})
+        Image will be replicated in these regions ({values.regions.length})
       </Typography>
       <Paper
         sx={(theme) => ({
@@ -113,24 +142,34 @@ export const ManageImageRegionsForm = (props: Props) => {
               No Regions Selected
             </Typography>
           )}
-          {values.regions.map((regionId) => (
-            <ImageRegionRow
-              onRemove={() =>
-                setValue(
-                  'regions',
-                  values.regions.filter((r) => r !== regionId),
-                  { shouldDirty: true, shouldValidate: true }
-                )
-              }
-              status={
-                image?.regions.find(
-                  (regionItem) => regionItem.region === regionId
-                )?.status ?? 'unsaved'
-              }
-              key={regionId}
-              region={regionId}
-            />
-          ))}
+          {values.regions.map((regionId) => {
+            const status =
+              image?.regions.find(
+                (regionItem) => regionItem.region === regionId
+              )?.status ?? 'unsaved';
+
+            const isLastAvailableRegion =
+              status === 'available' &&
+              image?.regions
+                .filter((r) => values.regions.includes(r.region))
+                .filter((r) => r.status === 'available').length === 1;
+
+            return (
+              <ImageRegionRow
+                onRemove={() =>
+                  setValue(
+                    'regions',
+                    values.regions.filter((r) => r !== regionId),
+                    { shouldDirty: true, shouldValidate: true }
+                  )
+                }
+                disableRemoveButton={isLastAvailableRegion}
+                key={regionId}
+                region={regionId}
+                status={status}
+              />
+            );
+          })}
         </Stack>
       </Paper>
       <ActionsPanel
@@ -147,4 +186,30 @@ export const ManageImageRegionsForm = (props: Props) => {
       />
     </form>
   );
+};
+
+const resolver: Resolver<UpdateImageRegionsPayload, Context> = async (
+  values,
+  context
+) => {
+  const availableRegionIds = context?.imageRegions
+    ?.filter((r) => r.status === 'available')
+    .map((r) => r.region);
+
+  const isMissingAvailableRegion = !values.regions.some((regionId) =>
+    availableRegionIds?.includes(regionId)
+  );
+
+  const availableRegionLabels = context?.regions
+    ?.filter((r) => availableRegionIds?.includes(r.id))
+    .map((r) => r.label);
+
+  if (isMissingAvailableRegion) {
+    const message = `At least one available region must be present (${availableRegionLabels?.join(
+      ', '
+    )}).`;
+    return { errors: { regions: { message, type: 'validate' } }, values };
+  }
+
+  return { errors: {}, values };
 };

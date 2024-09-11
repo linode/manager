@@ -1,7 +1,12 @@
-import { deleteUser } from '@linode/api-v4/lib/account';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { deleteUser, updateUser } from '@linode/api-v4';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-import { useProfile } from 'src/queries/profile/profile';
+import { profileQueries, useProfile } from 'src/queries/profile/profile';
 
 import { accountQueries } from './queries';
 
@@ -28,7 +33,7 @@ export const useAccountUsers = ({
   return useQuery<ResourcePage<User>, APIError[]>({
     ...accountQueries.users._ctx.paginated(params, filters),
     enabled: enabled && !profile?.restricted,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -46,14 +51,41 @@ export const useAccountUserGrants = (username: string) => {
   );
 };
 
+export const useUpdateUserMutation = (username: string) => {
+  const queryClient = useQueryClient();
+  const { data: profile } = useProfile();
+
+  return useMutation<User, APIError[], Partial<User>>({
+    mutationFn: (data) => updateUser(username, data),
+    onSuccess(user) {
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users._ctx.paginated._def,
+      });
+      queryClient.setQueryData(
+        accountQueries.users._ctx.user(user.username).queryKey,
+        user
+      );
+      // If the currently logged in user updates their user
+      if (username === profile?.username) {
+        queryClient.invalidateQueries({
+          queryKey: profileQueries.profile().queryKey,
+        });
+      }
+    },
+  });
+};
+
 export const useAccountUserDeleteMutation = (username: string) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>(() => deleteUser(username), {
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => deleteUser(username),
     onSuccess() {
-      queryClient.invalidateQueries(accountQueries.users._ctx.paginated._def);
-      queryClient.removeQueries(
-        accountQueries.users._ctx.user(username).queryKey
-      );
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users._ctx.paginated._def,
+      });
+      queryClient.removeQueries({
+        queryKey: accountQueries.users._ctx.user(username).queryKey,
+      });
     },
   });
 };

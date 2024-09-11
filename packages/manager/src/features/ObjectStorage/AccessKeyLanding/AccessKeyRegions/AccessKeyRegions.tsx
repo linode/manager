@@ -29,13 +29,15 @@ export const AccessKeyRegions = (props: Props) => {
 
   return (
     <RegionMultiSelect
-      onChange={onChange}
+      placeholder={
+        selectedRegion.length > 0 ? '' : 'Select regions or type to search'
+      }
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
       isClearable={false}
       label="Regions"
-      placeholder="Select Regions or type to search"
+      onChange={onChange}
       regions={regions ?? []}
       required={required}
       selectedIds={selectedRegion}

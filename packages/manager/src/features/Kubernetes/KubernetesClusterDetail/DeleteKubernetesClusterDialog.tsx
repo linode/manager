@@ -1,4 +1,3 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -8,6 +7,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
+
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 export interface Props {
   clusterId: number;
@@ -36,7 +37,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const { clusterId, clusterLabel, onClose, open } = props;
   const {
     error,
-    isLoading: isDeleting,
+    isPending: isDeleting,
     mutateAsync: deleteCluster,
   } = useDeleteKubernetesClusterMutation();
   const history = useHistory();

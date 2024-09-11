@@ -10,7 +10,7 @@ describe('PlacementGroups Summary', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <PlacementGroupsSummary
         placementGroup={placementGroupFactory.build({
-          affinity_type: 'affinity:local',
+          placement_group_type: 'affinity:local',
           id: 3,
           is_compliant: true,
           label: 'pg-3',
@@ -47,7 +47,7 @@ describe('PlacementGroups Summary', () => {
     expect(getByText('Placement Group Configuration')).toBeInTheDocument();
     expect(getByText('Linodes')).toBeInTheDocument();
     expect(getByTestId('HelpOutlineIcon')).toBeInTheDocument();
-    expect(getByText('Affinity Type')).toBeInTheDocument();
+    expect(getByText('Placement Group Type')).toBeInTheDocument();
     expect(getByText('Region')).toBeInTheDocument();
   });
 });

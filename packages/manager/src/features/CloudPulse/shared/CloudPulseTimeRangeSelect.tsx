@@ -1,90 +1,96 @@
 import * as React from 'react';
 
-import Select, {
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+
+import { TIME_DURATION } from '../Utils/constants';
+import {
+  getUserPreferenceObject,
+  updateGlobalFilterPreference,
+} from '../Utils/UserPreference';
+
+import type { TimeDuration } from '@linode/api-v4';
+import type {
   BaseSelectProps,
   Item,
 } from 'src/components/EnhancedSelect/Select';
 
-interface Props
+export interface CloudPulseTimeRangeSelectProps
   extends Omit<
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
   > {
-  defaultValue?: Labels;
-  handleStatsChange?: (start: number, end: number) => void;
+  handleStatsChange?: (timeDuration: TimeDuration) => void;
+  placeholder?: string;
+  savePreferences?: boolean;
 }
 
-const PAST_7_DAYS = 'Past 7 Days';
-const PAST_12_HOURS = 'Past 12 Hours';
-const PAST_24_HOURS = 'Past 24 Hours';
-const PAST_30_DAYS = 'Past 30 Days';
-const PAST_30_MINUTES = 'Past 30 Minutes';
+const PAST_7_DAYS = 'Last 7 Days';
+const PAST_12_HOURS = 'Last 12 Hours';
+const PAST_24_HOURS = 'Last 24 Hours';
+const PAST_30_DAYS = 'Last 30 Days';
+const PAST_30_MINUTES = 'Last 30 Minutes';
 export type Labels =
-  | 'Past 7 Days'
-  | 'Past 12 Hours'
-  | 'Past 24 Hours'
-  | 'Past 30 Days'
-  | 'Past 30 Minutes';
+  | 'Last 7 Days'
+  | 'Last 12 Hours'
+  | 'Last 24 Hours'
+  | 'Last 30 Days'
+  | 'Last 30 Minutes';
 
-export const CloudPulseTimeRangeSelect = React.memo((props: Props) => {
-  const { defaultValue, handleStatsChange, ...restOfSelectProps } = props;
+export const CloudPulseTimeRangeSelect = React.memo(
+  (props: CloudPulseTimeRangeSelectProps) => {
+    const { handleStatsChange, placeholder } = props;
+    const options = generateSelectOptions();
+    const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
+      const defaultValue = getUserPreferenceObject().timeDuration;
 
-  /*
-    the time range is the label instead of the value because it's a lot harder
-    to keep Date.now() consistent with this state. We can get the actual
-    values when it comes time to make the request.
+      return options.find((o) => o.label === defaultValue) || options[0];
+    }, [options]);
+    const [selectedTimeRange, setSelectedTimeRange] = React.useState<
+      Item<Labels, Labels>
+    >(getDefaultValue());
 
-    Use the value from user preferences if available, then fall back to
-    the default that was passed to the component, and use Past 30 Minutes
-    if all else fails.
+    React.useEffect(() => {
+      const item = getDefaultValue();
 
-    @todo Validation here to make sure that the value from user preferences
-    is a valid time window.
-  */
-  const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    PAST_30_MINUTES
-  );
+      if (handleStatsChange) {
+        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+      }
+      setSelectedTimeRange(item);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // need to execute only once, during mounting of this component
 
-  /*
-    Why division by 1000?
+    const handleChange = (item: Item<Labels, Labels>) => {
+      updateGlobalFilterPreference({
+        [TIME_DURATION]: item.value,
+      });
 
-    Because the LongView API doesn't expect the start and date time
-    to the nearest millisecond - if you send anything more than 10 digits
-    you won't get any data back
-  */
-  const nowInSeconds = Date.now() / 1000;
+      if (handleStatsChange) {
+        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+      }
+      setSelectedTimeRange(item); // update the state variable to retain latest selections
+    };
 
-  React.useEffect(() => {
-    // Do the math and send start/end values to the consumer
-    // (in most cases the consumer has passed defaultValue={'last 30 minutes'}
-    // but the calcs to turn that into start/end numbers live here)
-    if (!!handleStatsChange) {
-      handleStatsChange(
-        Math.round(generateStartTime(selectedTimeRange, nowInSeconds)),
-        Math.round(nowInSeconds)
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTimeRange]);
-
-  const options = generateSelectOptions();
-
-  const handleChange = (item: Item<Labels, Labels>) => {
-    setTimeRange(item.value);
-  };
-
-  return (
-    <Select
-      {...restOfSelectProps}
-      isClearable={false}
-      isSearchable={false}
-      onChange={handleChange}
-      options={options}
-      small
-      value={options.find((o) => o.label === selectedTimeRange) || options[0]}
-    />
-  );
-});
+    return (
+      <Autocomplete
+        onChange={(_: any, value: Item<Labels, Labels>) => {
+          handleChange(value);
+        }}
+        textFieldProps={{
+          hideLabel: true,
+        }}
+        autoHighlight
+        data-testid="cloudpulse-time-duration"
+        disableClearable
+        fullWidth
+        isOptionEqualToValue={(option, value) => option.value === value.value}
+        label="Select Time Duration"
+        options={options}
+        placeholder={placeholder ?? 'Select Time Duration'}
+        value={selectedTimeRange}
+      />
+    );
+  }
+);
 
 /**
  * react-select option generator that aims to remain a pure function
@@ -140,4 +146,33 @@ export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
     default:
       return nowInSeconds - 30 * 24 * 60 * 60;
   }
+};
+
+/**
+ *
+ * @param label label for time duration to get the corresponding time duration object
+ * @returns time duration object for the label
+ */
+const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
+  if (label === PAST_30_MINUTES) {
+    return { unit: 'min', value: 30 };
+  }
+
+  if (label === PAST_24_HOURS) {
+    return { unit: 'hr', value: 24 };
+  }
+
+  if (label === PAST_12_HOURS) {
+    return { unit: 'hr', value: 12 };
+  }
+
+  if (label === PAST_7_DAYS) {
+    return { unit: 'days', value: 7 };
+  }
+
+  if (label === PAST_30_DAYS) {
+    return { unit: 'days', value: 30 };
+  }
+
+  return { unit: 'min', value: 30 };
 };

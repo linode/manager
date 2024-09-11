@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { FormControl } from 'src/components/FormControl';
-import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -29,8 +28,9 @@ export const CaptureSnapshot = (props: Props) => {
 
   const {
     error: snapshotError,
-    isLoading: isSnapshotLoading,
+    isPending: isSnapshotLoading,
     mutateAsync: takeSnapshot,
+    reset,
   } = useLinodeBackupSnapshotMutation(linodeId);
 
   const [
@@ -65,19 +65,14 @@ export const CaptureSnapshot = (props: Props) => {
         manual snapshot will not be overwritten by automatic backups.
       </Typography>
       <FormControl>
-        {hasErrorFor.none && (
-          <Notice spacingBottom={8} variant="error">
-            {hasErrorFor.none}
-          </Notice>
-        )}
         <StyledBox>
           <TextField
-            sx={{ minWidth: 275 }}
             data-qa-manual-name
             errorText={hasErrorFor.label}
             label="Name Snapshot"
             name="label"
             onChange={snapshotForm.handleChange}
+            sx={{ minWidth: 275 }}
             value={snapshotForm.values.label}
           />
           <Button
@@ -91,8 +86,10 @@ export const CaptureSnapshot = (props: Props) => {
         </StyledBox>
       </FormControl>
       <CaptureSnapshotConfirmationDialog
+        error={hasErrorFor.none}
         loading={isSnapshotLoading}
         onClose={() => setIsSnapshotConfirmationDialogOpen(false)}
+        onExited={() => reset()}
         onSnapshot={() => snapshotForm.handleSubmit()}
         open={isSnapshotConfirmationDialogOpen}
       />

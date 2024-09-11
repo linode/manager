@@ -1,25 +1,16 @@
-import {
-  ActiveLongviewPlan,
-  LongviewClient,
-  LongviewSubscription,
-} from '@linode/api-v4/lib/longview/types';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { Typography } from 'src/components/Typography';
-import withLongviewClients, {
-  Props as LongviewProps,
-} from 'src/containers/longview.container';
+import withLongviewClients from 'src/containers/longview.container';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
-import { MapState } from 'src/store/types';
 
 import { LongviewPackageDrawer } from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
@@ -36,10 +27,25 @@ import { LongviewDeleteDialog } from './LongviewDeleteDialog';
 import { LongviewList } from './LongviewList';
 import { SubscriptionDialog } from './SubscriptionDialog';
 
+import type {
+  ActiveLongviewPlan,
+  LongviewClient,
+  LongviewSubscription,
+} from '@linode/api-v4/lib/longview/types';
+import type { RouteComponentProps } from 'react-router-dom';
+import type { Props as LongviewProps } from 'src/containers/longview.container';
+import type { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
+import type { MapState } from 'src/store/types';
+
 interface Props {
   activeSubscription: ActiveLongviewPlan;
   handleAddClient: () => void;
   newClientLoading: boolean;
+}
+
+interface SortOption {
+  label: string;
+  value: SortKey;
 }
 
 export type LongviewClientsCombinedProps = Props &
@@ -70,8 +76,7 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const [selectedClientLabel, setClientLabel] = React.useState<string>('');
 
   /** Handlers/tracking variables for sorting by different client attributes */
-
-  const sortOptions: Item<string>[] = [
+  const sortOptions: SortOption[] = [
     {
       label: 'Client Name',
       value: 'name',
@@ -172,8 +177,8 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
     setQuery(newQuery);
   };
 
-  const handleSortKeyChange = (selected: Item<string>) => {
-    setSortKey(selected.value as SortKey);
+  const handleSortKeyChange = (selected: SortOption) => {
+    setSortKey(selected.value);
   };
 
   // If this value is defined they're not on the free plan
@@ -199,25 +204,32 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
       <StyledHeadingGrid container spacing={2}>
         <StyledSearchbarGrid>
           <DebouncedSearchTextField
+            clearable
             debounceTime={250}
             hideLabel
             label="Filter by client label or hostname"
             onSearch={handleSearch}
             placeholder="Filter by client label or hostname"
+            value={query}
           />
         </StyledSearchbarGrid>
         <StyledSortSelectGrid>
           <Typography sx={{ minWidth: '65px' }}>Sort by: </Typography>
-          <Select
+          <Autocomplete
+            onChange={(_, value) => {
+              handleSortKeyChange(value);
+            }}
+            textFieldProps={{
+              hideLabel: true,
+            }}
             value={sortOptions.find(
               (thisOption) => thisOption.value === sortKey
             )}
-            hideLabel
-            isClearable={false}
+            disableClearable
+            fullWidth
             label="Sort by"
-            onChange={handleSortKeyChange}
             options={sortOptions}
-            small
+            size="small"
           />
         </StyledSortSelectGrid>
       </StyledHeadingGrid>

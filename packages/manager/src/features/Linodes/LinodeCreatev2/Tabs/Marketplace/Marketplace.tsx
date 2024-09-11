@@ -15,7 +15,7 @@ export const Marketplace = () => {
   };
 
   return (
-    <Stack spacing={2}>
+    <Stack data-testid="one-click-apps-container" spacing={2}>
       <AppSelect onOpenDetailsDrawer={onOpenDetailsDrawer} />
       <UserDefinedFields onOpenDetailsDrawer={onOpenDetailsDrawer} />
       <StackScriptImages />

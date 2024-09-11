@@ -1,4 +1,3 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
@@ -10,6 +9,7 @@ import { getStorage, setStorage } from 'src/utilities/storage';
 
 import type { FlagSet, Flags } from 'src/featureFlags';
 import type { Dispatch } from 'src/hooks/types';
+
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 
 /**
@@ -19,21 +19,49 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  * This requirement is both documented here and in our Docs since we don't have a way to enforce types from Launch Darkly objects.
  */
 const options: { flag: keyof Flags; label: string }[] = [
-  { flag: 'aclb', label: 'ACLB' },
-  { flag: 'aclbFullCreateFlow', label: 'ACLB Full Create Flow' },
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'apl', label: 'Application platform for LKE' },
+  { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
-  { flag: 'eventMessagesV2', label: 'Event Messages V2' },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
   { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
-  { flag: 'placementGroups', label: 'Placement Groups' },
+  { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
+  { flag: 'dbaasV2', label: 'Databases V2 Beta' },
+  { flag: 'databaseResize', label: 'Database Resize' },
+  { flag: 'apicliDxToolsAdditions', label: 'APICLI DX Tools Additions' },
 ];
+
+const renderFlagItems = (
+  flags: Partial<Flags>,
+  onCheck: (e: React.ChangeEvent, flag: string) => void
+) => {
+  return options.map((option) => {
+    const flagValue = flags[option.flag];
+    const isChecked =
+      typeof flagValue === 'object' && 'enabled' in flagValue
+        ? Boolean(flagValue.enabled)
+        : Boolean(flagValue);
+
+    return (
+      <li key={option.flag}>
+        <input
+          style={{
+            marginRight: 12,
+          }}
+          checked={isChecked}
+          onChange={(e) => onCheck(e, option.flag)}
+          type="checkbox"
+        />
+        <span title={option.label}>{option.label}</span>
+      </li>
+    );
+  });
+};
 
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
@@ -73,42 +101,22 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   };
 
   return (
-    <Grid container>
-      <Grid xs={12}>
-        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Feature Flags</h4>
-      </Grid>
-      <Grid xs={12}>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {options.map((thisOption) => {
-            const flagValue = flags[thisOption.flag];
-            const isChecked =
-              typeof flagValue === 'object' && 'enabled' in flagValue
-                ? Boolean(flagValue.enabled)
-                : Boolean(flagValue);
-            return (
-              <div
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-                key={thisOption.flag}
-              >
-                <span>{thisOption.label} </span>
-                <input
-                  checked={isChecked}
-                  onChange={(e) => handleCheck(e, thisOption.flag)}
-                  type="checkbox"
-                />
-              </div>
-            );
-          })}
-          <button onClick={resetFlags} style={{ marginTop: 8 }}>
-            Reset to LD default flags
-          </button>
+    <div className="dev-tools__tool">
+      <div className="dev-tools__tool__header">
+        <span title="Enable and disable Cloud Manager feature flags">
+          Feature Flags
+        </span>
+      </div>
+      <div className="dev-tools__tool__body">
+        <div className="dev-tools__list-box">
+          <ul>{renderFlagItems(flags, handleCheck)}</ul>
         </div>
-      </Grid>
-    </Grid>
+      </div>
+      <div className="dev-tools__tool__footer">
+        <div className="dev-tools__button-list">
+          <button onClick={resetFlags}>Reset to LD DEV Defaults</button>
+        </div>
+      </div>
+    </div>
   );
 });
