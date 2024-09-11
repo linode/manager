@@ -374,7 +374,7 @@ componentTests('RegionSelect', (mount) => {
         .should('have.attr', 'data-qa-disabled-item', 'true');
     });
 
-    it.only('only lists regions with the specified capability', () => {
+    it('only lists regions with the specified capability', () => {
       mount(
         <RegionSelect
           regions={regions}
@@ -383,8 +383,6 @@ componentTests('RegionSelect', (mount) => {
           onChange={() => {}}
         />
       );
-
-      console.log(regions);
 
       ui.button
         .findByAttribute('title', 'Open')
