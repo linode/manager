@@ -10,7 +10,7 @@ interface Props {
 
 export const GravatarSunsetBanner = (props: Props) => {
   const { email } = props;
-  const GRAVATAR_DEPRECATION_DATE = 'September 28th, 2024';
+  const GRAVATAR_DEPRECATION_DATE = 'September 30th, 2024';
 
   const hasGravatar = useGravatar(email);
 
