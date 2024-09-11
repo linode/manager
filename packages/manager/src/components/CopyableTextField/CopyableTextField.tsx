@@ -39,7 +39,7 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
       InputProps={{
         endAdornment: hideIcons ? undefined : (
           <StyledIconBox>
-            {props.showDownloadIcon && (
+            {showDownloadIcon && (
               <DownloadTooltip fileName={fileName} text={`${value}`} />
             )}
             <CopyTooltip text={`${value}`} {...CopyTooltipProps} />
