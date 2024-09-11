@@ -261,7 +261,7 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
   });
 
   it('renders the Bucket Rate Limit Table for E2 and E3 buckets', async () => {
-    const { getByTestId } = renderWithThemeAndHookFormContext({
+    const { findByTestId } = renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
           onClose={mockOnClose}
@@ -274,12 +274,12 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
       },
     });
 
-    const rateLimitTable = getByTestId('bucket-rate-limit-table');
+    const rateLimitTable = await findByTestId('bucket-rate-limit-table');
     expect(rateLimitTable).toBeVisible();
   });
 
   it('renders the Bucket Rate Limit Text for E0 and E1 buckets', async () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
+    const { findByText } = renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
           onClose={mockOnClose}
@@ -292,7 +292,7 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
       },
     });
     expect(
-      getByText(
+      await findByText(
         /This endpoint type supports up to 750 Requests Per Second \(RPS\)./
       )
     ).toBeInTheDocument();
