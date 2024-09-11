@@ -102,7 +102,7 @@ export const LinodeVolumeAttachForm = (props: Props) => {
 
   const linodeRequiresClientLibraryUpdate =
     volume?.encryption === 'enabled' &&
-    Boolean(!linode.capabilities?.includes('blockstorage_encryption'));
+    Boolean(!linode.capabilities?.includes('Block Storage Encryption'));
 
   React.useEffect(() => {
     // When the volume is encrypted but the linode requires a client library update, we want to show the client library copy
