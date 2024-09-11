@@ -35,7 +35,7 @@ export const LishSettings = () => {
   const thirdPartyEnabled = profile?.authentication_type !== 'password';
 
   const [lishAuthMethod, setLishAuthMethod] = React.useState<
-    Profile['lish_auth_method'] | string
+    Profile['lish_auth_method'] | undefined
   >(profile?.lish_auth_method || 'password_keys');
 
   const [authorizedKeys, setAuthorizedKeys] = React.useState<string[]>(
@@ -64,7 +64,7 @@ export const LishSettings = () => {
 
   const modeOptions = [
     {
-      isDisabled: profile?.authentication_type !== 'password',
+      disabled: profile?.authentication_type !== 'password',
       label: 'Allow both password and key authentication',
       value: 'password_keys',
     },
@@ -80,9 +80,9 @@ export const LishSettings = () => {
 
   const defaultMode = modeOptions.find((eachMode) => {
     if (profile?.authentication_type !== 'password') {
-      return (eachMode.value as any) === 'keys_only';
+      return (eachMode.value as Profile['lish_auth_method']) === 'keys_only';
     } else {
-      return (eachMode.value as any) === lishAuthMethod;
+      return (eachMode.value as Profile['lish_auth_method']) === lishAuthMethod;
     }
   });
 
@@ -97,7 +97,7 @@ export const LishSettings = () => {
 
     updateProfile({
       authorized_keys: keys,
-      lish_auth_method: lishAuthMethod as any,
+      lish_auth_method: lishAuthMethod as Profile['lish_auth_method'],
     })
       .then((profileData) => {
         setSubmitting(false);
@@ -143,6 +143,10 @@ export const LishSettings = () => {
           <>
             <FormControl sx={{ display: 'flex' }}>
               <Autocomplete
+                onChange={(
+                  _,
+                  item: LishAuthOption<Profile['lish_auth_method']>
+                ) => setLishAuthMethod(item.value)}
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-mode-select': true,
@@ -155,9 +159,9 @@ export const LishSettings = () => {
                 defaultValue={defaultMode}
                 disableClearable
                 errorText={authMethodError}
+                getOptionDisabled={(option) => option.disabled === true}
                 id="mode-select"
                 label="Authentication Mode"
-                onChange={(_, item) => setLishAuthMethod(item.value)}
                 options={modeOptions}
               />
             </FormControl>

@@ -62,6 +62,7 @@ export const Question = (props: Props) => {
           response: '',
         });
       }}
+      autoHighlight
       defaultValue={currentOption}
       disableClearable
       label={label}

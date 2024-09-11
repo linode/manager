@@ -100,7 +100,7 @@ const setSecurityQuestionAnswer = (
   });
 
   getSecurityQuestionAnswer(questionNumber).within(() => {
-    cy.get('[data-testid="textfield-input"]')
+    cy.findByLabelText(`Answer ${questionNumber}`)
       .should('be.visible')
       .should('be.enabled')
       .click()

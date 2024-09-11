@@ -5,6 +5,7 @@ import { Box } from 'src/components/Box';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledCodeSentMessageBox = styled(Box, {
   label: 'StyledCodeSentMessageBox',
@@ -32,6 +33,7 @@ export const StyledLabel = styled(Typography, {
 
 export const StyledInputContainer = styled(Box, {
   label: 'StyledInputContainer',
+  shouldForwardProp: omittedProps(['isPhoneInputFocused']),
 })<{ isPhoneInputFocused: boolean }>(({ isPhoneInputFocused, theme }) => ({
   backgroundColor: theme.name === 'dark' ? '#343438' : undefined,
   border: theme.name === 'light' ? '1px solid #ccc' : '1px solid #222',
@@ -52,16 +54,16 @@ export const StyledInputContainer = styled(Box, {
 export const StyledISOCodeSelect = styled(Autocomplete, {
   label: 'StyledISOCodeSelect',
 })(({ theme }) => ({
-  '& .MuiAutocomplete-inputRoot': {
+  '& div.Mui-focused': {
+    borderColor: 'unset',
+    boxShadow: 'none',
+  },
+  '& div.MuiAutocomplete-inputRoot': {
     border: 'unset',
   },
   '&& .MuiInputBase-root svg': {
     color: `${theme.palette.primary.main}`,
     opacity: '1',
-  },
-  '&.Mui-focused': {
-    borderColor: 'unset',
-    boxShadow: 'none',
   },
   '&:focus': {
     borderColor: 'unset',

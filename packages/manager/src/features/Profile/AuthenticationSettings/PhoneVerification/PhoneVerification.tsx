@@ -258,6 +258,9 @@ export const PhoneVerification = ({
                 isPhoneInputFocused={isPhoneInputFocused}
               >
                 <StyledISOCodeSelect
+                  isOptionEqualToValue={(option, value) =>
+                    option.label === value.label
+                  }
                   onChange={(_, item: SelectPhoneVerificationOption) => {
                     sendCodeForm.setFieldValue('iso_code', item.value);
                   }}
