@@ -98,8 +98,7 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
 
     expect(screen.getByTestId('CloseIcon')).toBeDefined();
 
-    const inputBox = screen.getByPlaceholderText(customNodeTypePlaceholder);
-    fireEvent.change(inputBox, { target: { value: '' } }); // clear the value
+    fireEvent.click(screen.getByTitle('Clear')); // clear the value
     expect(screen.getByText(mandatoryFiltersError)).toBeDefined();
   });
 
