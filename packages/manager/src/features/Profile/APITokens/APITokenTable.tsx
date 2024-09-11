@@ -1,11 +1,10 @@
-import { Token } from '@linode/api-v4/lib/profile';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -28,16 +27,13 @@ import {
 } from 'src/queries/profile/tokens';
 
 import { APITokenMenu } from './APITokenMenu';
-import {
-  StyledAddNewWrapper,
-  StyledHeadline,
-  StyledRootContainer,
-} from './APITokenTable.styles';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 import { RevokeTokenDialog } from './RevokeTokenDialog';
 import { isWayInTheFuture } from './utils';
 import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
+
+import type { Token } from '@linode/api-v4';
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
 
@@ -185,32 +181,34 @@ export const APITokenTable = (props: Props) => {
 
   return (
     <Box>
-      <StyledRootContainer
-        alignItems="center"
-        container
-        justifyContent="space-between"
-        spacing={2}
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          justifyContent: 'space-between',
+          minHeight: '42px',
+          padding: 0.75,
+          paddingLeft: 1.25,
+        }}
       >
-        <Grid>
-          <StyledHeadline data-qa-table={type} variant="h3">
-            {title}
-          </StyledHeadline>
-        </Grid>
-        <StyledAddNewWrapper>
-          {type === 'Personal Access Token' && (
-            <Button
-              tooltipText={
-                isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
-              }
-              buttonType="primary"
-              disabled={isProxyUser}
-              onClick={() => setIsCreateOpen(true)}
-            >
-              Create a Personal Access Token
-            </Button>
-          )}
-        </StyledAddNewWrapper>
-      </StyledRootContainer>
+        <Typography data-qa-table={type} variant="h3">
+          {title}
+        </Typography>
+        {type === 'Personal Access Token' && (
+          <Button
+            tooltipText={
+              isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
+            }
+            buttonType="primary"
+            disabled={isProxyUser}
+            onClick={() => setIsCreateOpen(true)}
+          >
+            Create a Personal Access Token
+          </Button>
+        )}
+      </Paper>
       <Table aria-label={`List of ${title}`}>
         <TableHead>
           <TableRow data-qa-table-head>
