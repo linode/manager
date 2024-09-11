@@ -50,11 +50,14 @@ const DatabaseLanding = () => {
     `new-${preferenceKey}-order`
   );
 
-  const newDatabasesFilter = {
-    ['platform']: 'rdbms-default',
+  const newDatabasesFilter: Record<string, string> = {
     ['+order']: newDatabaseOrder,
     ['+order_by']: newDatabaseOrderBy,
   };
+
+  if (isDatabasesV2Enabled) {
+    newDatabasesFilter['platform'] = 'rdbms-default';
+  }
 
   const {
     data: newDatabases,
@@ -80,11 +83,14 @@ const DatabaseLanding = () => {
     `legacy-${preferenceKey}-order`
   );
 
-  const legacyDatabasesFilter = {
-    ['platform']: 'rdbms-legacy',
+  const legacyDatabasesFilter: Record<string, string> = {
     ['+order']: legacyDatabaseOrder,
     ['+order_by']: legacyDatabaseOrderBy,
   };
+
+  if (isDatabasesV2Enabled) {
+    legacyDatabasesFilter['platform'] = 'rdbms-legacy';
+  }
 
   const {
     data: legacyDatabases,

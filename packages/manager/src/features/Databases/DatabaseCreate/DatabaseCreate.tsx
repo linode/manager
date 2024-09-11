@@ -64,9 +64,6 @@ import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-const V1 = 'Managed Databases';
-const V2 = `Managed Databases Beta`;
-
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
     alignItems: 'center',
@@ -342,7 +339,7 @@ const DatabaseCreate = () => {
     return dbtypes.map((type) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-      const singleNodePricing = type.engines[selectedEngine].find(
+      const singleNodePricing = type.engines[selectedEngine]?.find(
         (cluster) => cluster.quantity === 1
       );
       const price = singleNodePricing?.price ?? {
@@ -448,13 +445,13 @@ const DatabaseCreate = () => {
     const engineType = values.engine.split('/')[0] as Engine;
 
     setNodePricing({
-      double: type.engines[engineType].find(
+      double: type.engines[engineType]?.find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 2
       )?.price,
-      multi: type.engines[engineType].find(
+      multi: type.engines[engineType]?.find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
       )?.price,
-      single: type.engines[engineType].find(
+      single: type.engines[engineType]?.find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
       )?.price,
     });
@@ -544,7 +541,7 @@ const DatabaseCreate = () => {
         </Grid>
         <Grid>
           <RegionSelect
-            currentCapability={isDatabasesV2Enabled ? V2 : V1}
+            currentCapability="Managed Databases"
             disableClearable
             errorText={errors.region}
             onChange={(e, region) => setFieldValue('region', region.id)}
