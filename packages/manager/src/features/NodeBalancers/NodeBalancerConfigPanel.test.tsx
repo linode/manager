@@ -28,7 +28,7 @@ const node: NodeBalancerConfigNodeFields = {
   weight: 100,
 };
 
-const props: NodeBalancerConfigPanelProps = {
+export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
   addNode: vi.fn(),
   algorithm: 'roundrobin',
   checkBody: '',
@@ -79,7 +79,9 @@ describe('NodeBalancerConfigPanel', () => {
       getByText,
       queryByLabelText,
       queryByTestId,
-    } = renderWithTheme(<NodeBalancerConfigPanel {...props} />);
+    } = renderWithTheme(
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
+    );
 
     expect(getByLabelText('Protocol')).toBeVisible();
     expect(getByLabelText('Algorithm')).toBeVisible();
@@ -121,7 +123,10 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders form fields specific to the HTTPS protocol', () => {
     const { getByTestId, queryByLabelText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} protocol="https" />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="https"
+      />
     );
 
     expect(getByTestId('ssl-certificate')).toBeVisible();
@@ -131,7 +136,10 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders form fields specific to the TCP protocol', () => {
     const { getByLabelText, queryByTestId } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} protocol="tcp" />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        protocol="tcp"
+      />
     );
 
     expect(getByLabelText('Proxy Protocol')).toBeVisible();
@@ -141,7 +149,10 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders fields specific to the Active Health Check type of TCP Connection', () => {
     const { getByLabelText, queryByTestId } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} healthCheckType="connection" />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        healthCheckType="connection"
+      />
     );
 
     activeHealthChecks.forEach((type) => {
@@ -153,7 +164,10 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders fields specific to the Active Health Check type of HTTP Status', () => {
     const { getByLabelText, getByTestId, queryByTestId } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} healthCheckType="http" />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        healthCheckType="http"
+      />
     );
 
     activeHealthChecks.forEach((type) => {
@@ -165,7 +179,10 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders fields specific to the Active Health Check type of HTTP Body', () => {
     const { getByLabelText, getByTestId } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} healthCheckType="http_body" />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        healthCheckType="http_body"
+      />
     );
 
     activeHealthChecks.forEach((type) => {
@@ -177,7 +194,7 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders the relevant helper text for the Round Robin algorithm', () => {
     const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} />
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     expect(getByText(ROUND_ROBIN_ALGORITHM_HELPER_TEXT)).toBeVisible();
@@ -189,7 +206,10 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders the relevant helper text for the Least Connections algorithm', () => {
     const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} algorithm={'leastconn'} />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        algorithm={'leastconn'}
+      />
     );
 
     expect(getByText(LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT)).toBeVisible();
@@ -201,7 +221,10 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('renders the relevant helper text for the Source algorithm', () => {
     const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} algorithm={'source'} />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        algorithm={'source'}
+      />
     );
 
     expect(getByText(SOURCE_ALGORITHM_HELPER_TEXT)).toBeVisible();
@@ -215,17 +238,17 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('adds another backend node', () => {
     const { getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} />
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     const addNodeButton = getByText('Add a Node');
     fireEvent.click(addNodeButton);
-    expect(props.addNode).toHaveBeenCalled();
+    expect(nbConfigPanelMockPropsForTest.addNode).toHaveBeenCalled();
   });
 
   it('cannot remove a backend node if there is only one node', () => {
     const { queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} />
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     expect(queryByText('Remove')).not.toBeInTheDocument();
@@ -233,31 +256,37 @@ describe('NodeBalancerConfigPanel', () => {
 
   it('removes a backend node', () => {
     const { getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} nodes={[{ ...node }, node]} />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        nodes={[{ ...node }, node]}
+      />
     );
 
     const removeNodeButton = getByText('Remove');
     fireEvent.click(removeNodeButton);
-    expect(props.removeNode).toHaveBeenCalled();
+    expect(nbConfigPanelMockPropsForTest.removeNode).toHaveBeenCalled();
   });
 
   it('deletes the configuration panel', () => {
     const { getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} />
+      <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     const deleteConfigButton = getByText('Delete');
     fireEvent.click(deleteConfigButton);
-    expect(props.onDelete).toHaveBeenCalled();
+    expect(nbConfigPanelMockPropsForTest.onDelete).toHaveBeenCalled();
   });
 
   it('saves the input after editing the configuration', () => {
     const { getByText } = renderWithTheme(
-      <NodeBalancerConfigPanel {...props} forEdit={true} />
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        forEdit={true}
+      />
     );
 
     const editConfigButton = getByText('Save');
     fireEvent.click(editConfigButton);
-    expect(props.onSave).toHaveBeenCalled();
+    expect(nbConfigPanelMockPropsForTest.onSave).toHaveBeenCalled();
   });
 });
