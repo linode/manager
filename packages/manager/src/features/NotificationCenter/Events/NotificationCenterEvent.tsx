@@ -63,10 +63,10 @@ export const NotificationCenterEvent = React.memo(
                   ? theme.palette.primary.dark
                   : undefined
               }
-              username={getEventUsername(event)}
+              username={username}
             />
           }
-          gravatar={<NotificationEventGravatar username={event.username} />}
+          gravatar={<NotificationEventGravatar username={username} />}
           height={32}
           width={32}
         />
