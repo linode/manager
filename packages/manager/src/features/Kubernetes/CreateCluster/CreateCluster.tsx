@@ -38,7 +38,10 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import {
+  DOCS_LINK_LABEL_APL_APPLICATIONS,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
@@ -47,7 +50,7 @@ import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import {
   StyledDocsLinkContainer,
-  StyledRegionSelectStack,
+  StyledFieldWithDocsStack,
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
@@ -228,7 +231,7 @@ export const CreateCluster = () => {
             value={label || ''}
           />
           <Divider sx={{ marginTop: 4 }} />
-          <StyledRegionSelectStack>
+          <StyledFieldWithDocsStack>
             <Stack>
               <RegionSelect
                 textFieldProps={{
@@ -249,7 +252,7 @@ export const CreateCluster = () => {
                 label={DOCS_LINK_LABEL_DC_PRICING}
               />
             </StyledDocsLinkContainer>
-          </StyledRegionSelectStack>
+          </StyledFieldWithDocsStack>
           <Divider sx={{ marginTop: 4 }} />
           <Select
             onChange={(selected: Item<string>) => {
@@ -265,12 +268,20 @@ export const CreateCluster = () => {
           {showAPL && flags.apl ? (
             <>
               <Divider sx={{ marginTop: 4 }} />
-              <Box>
-                <ApplicationPlatform
-                  setAPL={setAPL}
-                  setHighAvailability={setHighAvailability}
-                />
-              </Box>
+              <StyledFieldWithDocsStack>
+                <Stack>
+                  <ApplicationPlatform
+                    setAPL={setAPL}
+                    setHighAvailability={setHighAvailability}
+                  />
+                </Stack>
+                <StyledDocsLinkContainer>
+                  <DocsLink
+                    href="https://apl-docs.net/docs/apps/alertmanager"
+                    label={DOCS_LINK_LABEL_APL_APPLICATIONS}
+                  />
+                </StyledDocsLinkContainer>
+              </StyledFieldWithDocsStack>
             </>
           ) : null}
           <Divider sx={{ marginTop: 4 }} />

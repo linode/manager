@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
@@ -10,6 +11,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
+import { DOCS_LINK_LABEL_APL_APPLICATIONS } from 'src/utilities/pricing/constants';
 
 export interface APLProps {
   setAPL: (apl: boolean | undefined) => void;
@@ -18,8 +20,7 @@ export interface APLProps {
 
 export const APLCopy = () => (
   <Typography>
-    Provide development teams a pre-paved path to build, deploy and secure their
-    applications.
+    Add a pre-paved path to build, deploy, monitor and secure applications.
     <br />
     <Link to="https://otomi.io">Learn more about APL.</Link>
   </Typography>
@@ -46,15 +47,9 @@ export const ApplicationPlatform = (props: APLProps) => {
           <Typography variant="inherit">
             Application Platform for LKE (APL)
           </Typography>
-          <Chip color="primary" label="Public Preview" sx={{ ml: 1 }} />
+          <Chip color="primary" label="BETA" sx={{ ml: 1 }} />
         </Box>
       </FormLabel>
-      <Notice variant="warning">
-        <Typography>
-          Additional costs will be charged for Object Storage usage, one
-          NodeBalancer and a minimum of 10 Volumes
-        </Typography>
-      </Notice>
       <APLCopy />
       <RadioGroup onChange={(e) => handleChange(e)}>
         <FormControlLabel

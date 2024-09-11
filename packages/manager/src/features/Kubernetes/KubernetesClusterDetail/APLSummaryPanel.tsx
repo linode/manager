@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import axios from 'axios';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -25,6 +26,45 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
+interface StatusState {
+  message?: string;
+  resolved?: boolean;
+  url?: string;
+}
+
+const checkConsoleURL = async (
+  cluster: KubernetesCluster,
+  setStatus: React.Dispatch<React.SetStateAction<StatusState>>
+) => {
+  const consoleURL = `https://console.lke${cluster.id}.akamai-apl.net`;
+
+  const pollURL = async () => {
+    try {
+      const response = await axios.get(consoleURL);
+
+      if (response.status === 200) {
+        clearInterval(interval); // Stop the polling
+        setStatus({ resolved: true, url: consoleURL });
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        setStatus({
+          message:
+            'APL is still being deployed, please check back in a minute.',
+          resolved: false,
+        });
+      } else {
+        console.error('An error occurred:', error.message);
+      }
+    }
+  };
+
+  const interval = setInterval(pollURL, 60000); // Poll every 60 seconds (60000 ms)
+
+  // Run the check immediately without waiting for the first interval
+  await pollURL();
+};
+
 interface Props {
   cluster: KubernetesCluster;
 }
@@ -33,7 +73,17 @@ export const APLSummaryPanel = React.memo((props: Props) => {
   const { cluster } = props;
   const { classes } = useStyles();
 
-  const consoleURL = `https://console.lke${cluster.id}.akamai-apl.net`;
+  const [status, setStatus] = React.useState({
+    message: 'Loading...',
+    resolved: false,
+    url: '',
+  });
+
+  React.useEffect(() => {
+    if (cluster && cluster.id) {
+      checkConsoleURL(cluster, setStatus);
+    }
+  }, [cluster]);
 
   return (
     <Paper className={classes.root}>
@@ -42,7 +92,11 @@ export const APLSummaryPanel = React.memo((props: Props) => {
           <Typography className={classes.label}>
             APL Console Endpoint:
           </Typography>
-          <Link to={consoleURL}>{consoleURL}</Link>
+          {status.resolved ? (
+            <Link to={status.url}>{status.url}</Link>
+          ) : (
+            <Typography>{status.message}</Typography>
+          )}
         </Grid>
       </Grid>
     </Paper>
