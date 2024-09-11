@@ -12,9 +12,9 @@ export const GravatarSunsetBanner = (props: Props) => {
   const { email } = props;
   const GRAVATAR_DEPRECATION_DATE = 'September 30th, 2024';
 
-  const hasGravatar = useGravatar(email);
+  const { hasGravatar, isLoadingGravatar } = useGravatar(email);
 
-  if (!hasGravatar) {
+  if (isLoadingGravatar || !hasGravatar) {
     return;
   }
   return (
