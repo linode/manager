@@ -7,15 +7,17 @@ import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 
 import type { NodeBalancerConfigNodeProps } from './NodeBalancerConfigNode';
 
+const node = {
+  address: 'some address',
+  label: 'some label',
+};
+
 const props: NodeBalancerConfigNodeProps = {
   configIdx: 1,
   disabled: false,
   forEdit: true,
   idx: 1,
-  node: {
-    address: 'some address',
-    label: 'some label',
-  },
+  node,
   onNodeAddressChange: vi.fn(),
   onNodeLabelChange: vi.fn(),
   onNodeModeChange: vi.fn(),
@@ -25,6 +27,44 @@ const props: NodeBalancerConfigNodeProps = {
 };
 
 describe('NodeBalancerConfigNode', () => {
+  it('renders the NodeBAlancerConfigNode', () => {
+    const { getByLabelText, getByText, queryByText } = renderWithTheme(
+      <NodeBalancerConfigNode {...props} />
+    );
+
+    expect(getByLabelText('Label')).toBeVisible();
+    expect(getByLabelText('Port')).toBeVisible();
+    expect(getByLabelText('Weight')).toBeVisible();
+    expect(getByText('Mode')).toBeVisible();
+    expect(getByText('Remove')).toBeVisible();
+    expect(queryByText('Status')).not.toBeInTheDocument();
+  });
+
+  it('renders the node status', () => {
+    const { getByText } = renderWithTheme(
+      <NodeBalancerConfigNode {...props} node={{ ...node, status: 'DOWN' }} />
+    );
+
+    expect(getByText('Status')).toBeVisible();
+    expect(getByText('DOWN')).toBeVisible();
+  });
+
+  it('cannot change the mode if the node is not for edit', () => {
+    const { queryByText } = renderWithTheme(
+      <NodeBalancerConfigNode {...props} forEdit={false} />
+    );
+
+    expect(queryByText('Mode')).not.toBeInTheDocument();
+  });
+
+  it('cannot remove the node if the node is not for edit or is the first node', () => {
+    const { queryByText } = renderWithTheme(
+      <NodeBalancerConfigNode {...props} forEdit={false} idx={0} />
+    );
+
+    expect(queryByText('Remove')).not.toBeInTheDocument();
+  });
+
   it('removes the node', () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerConfigNode {...props} />
