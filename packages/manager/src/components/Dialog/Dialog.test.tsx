@@ -45,15 +45,12 @@ describe('Dialog', () => {
   });
 
   it('should call onClose when the Dialog close button is clicked', () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByRole } = renderWithTheme(
       <Dialog {...defaultArgs} open={true} />
     );
 
-    const closeButton = getByTestId('CloseIcon').closest('button');
-
-    if (closeButton) {
-      fireEvent.click(closeButton);
-    }
+    const closeButton = getByRole('button', { name: 'Close' });
+    fireEvent.click(closeButton);
 
     expect(defaultArgs.onClose).toHaveBeenCalled();
   });
