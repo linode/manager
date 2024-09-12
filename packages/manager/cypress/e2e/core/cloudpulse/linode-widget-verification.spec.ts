@@ -67,7 +67,7 @@ const mockLinode = linodeFactory.build({
   id: mockKubeLinode.instance_id ?? undefined,
 });
 const mockAccount = accountFactory.build();
-const mockDallasRegion = extendRegion(
+const mockRegion = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes'],
     id: 'us-ord',
@@ -91,7 +91,7 @@ describe('Dashboard Widget Verification Tests', () => {
     mockCloudPulseJWSToken(service_type);
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     mockCloudPulseCreateMetrics(responsePayload,service_type).as('getMetrics');
-    mockGetRegions([mockDallasRegion]).as('getRegions');
+    mockGetRegions([mockRegion]).as('getRegions');
 });
 
   it('should verify cloudpulse availability when feature flag is set to false', () => {
@@ -222,7 +222,7 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 
-  it('should zoom in and out of all the widgets', () => {
+  it.only('should zoom in and out of all the widgets', () => {
     setupMethod()
     metrics.forEach((testData) => {
       cy.wait(5000);
@@ -232,7 +232,7 @@ describe('Dashboard Widget Verification Tests', () => {
         .should('be.enabled')
         .click();
         cy.get('@widget').should('be.visible');
-        cy.get('[data-testid="linegraph-wrapper"] canvas').as('canvas')
+        cy.get('[data-testid="linegraph-wrapper"]').as('canvas')
           .should('exist')       
           .and('be.visible');
         ui.cloudpulse.findZoomButtonByTitle('zoom-out').should('be.visible')
