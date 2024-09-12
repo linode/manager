@@ -1,15 +1,19 @@
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
+import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Typography } from 'src/components/Typography';
 import {
   formatProgressEvent,
   getEventMessage,
   getEventUsername,
 } from 'src/features/Events/utils';
+import { useProfile } from 'src/queries/profile/profile';
 
 import {
+  NotificationEventAvatar,
   NotificationEventGravatar,
   NotificationEventStyledBox,
   notificationEventStyles,
@@ -25,10 +29,13 @@ interface NotificationEventProps {
 export const NotificationCenterEvent = React.memo(
   (props: NotificationEventProps) => {
     const { event } = props;
+    const theme = useTheme();
     const { classes, cx } = notificationEventStyles();
     const unseenEventClass = cx({ [classes.unseenEvent]: !event.seen });
     const message = getEventMessage(event);
     const username = getEventUsername(event);
+
+    const { data: profile } = useProfile();
 
     /**
      * Some event types may not be handled by our system (or new types or new ones may be added that we haven't caught yet).
@@ -44,9 +51,25 @@ export const NotificationCenterEvent = React.memo(
     return (
       <NotificationEventStyledBox
         className={unseenEventClass}
+        data-qa-event={event.id}
+        data-qa-event-seen={event.seen}
         data-testid={event.action}
       >
-        <NotificationEventGravatar username={event.username} />
+        <GravatarOrAvatar
+          avatar={
+            <NotificationEventAvatar
+              color={
+                username !== profile?.username
+                  ? theme.palette.primary.dark
+                  : undefined
+              }
+              username={username}
+            />
+          }
+          gravatar={<NotificationEventGravatar username={username} />}
+          height={32}
+          width={32}
+        />
         <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
           {message}
           {showProgress && (

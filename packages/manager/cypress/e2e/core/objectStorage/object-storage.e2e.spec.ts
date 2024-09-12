@@ -25,11 +25,7 @@ import {
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { cleanUp } from 'support/util/cleanup';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 // Message shown on-screen when user navigates to an empty bucket.
 const emptyBucketMessage = 'This bucket is empty.';
@@ -189,9 +185,8 @@ describe('object storage end-to-end tests', () => {
 
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
-      objMultiCluster: makeFeatureFlagData(false),
+      objMultiCluster: false,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     cy.visitWithLogin('/object-storage');
     cy.wait(['@getFeatureFlags', '@getBuckets', '@getNetworkUtilization']);

@@ -47,11 +47,7 @@ import {
 } from 'support/intercepts/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   checkboxTestId,
   headerTestId,
@@ -102,8 +98,8 @@ describe('create linode', () => {
 
   beforeEach(() => {
     mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(false),
-      apicliDxToolsAdditions: makeFeatureFlagData(false),
+      linodeCreateRefactor: false,
+      apicliDxToolsAdditions: false,
     });
   });
 
@@ -474,9 +470,8 @@ describe('create linode', () => {
     mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
 
     mockAppendFeatureFlags({
-      apicliDxToolsAdditions: makeFeatureFlagData(false),
+      apicliDxToolsAdditions: false,
     }).as('getFeatureFlags');
-    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
@@ -540,8 +535,8 @@ describe('create linode', () => {
   it('should not have a "Disk Encryption" section visible if the feature flag is off and user does not have capability', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(false),
-      apicliDxToolsAdditions: makeFeatureFlagData(false),
+      linodeDiskEncryption: false,
+      apicliDxToolsAdditions: false,
     }).as('getFeatureFlags');
 
     // Mock account response
@@ -562,8 +557,8 @@ describe('create linode', () => {
   it('should have a "Disk Encryption" section visible if feature flag is on and user has the capability', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
-      apicliDxToolsAdditions: makeFeatureFlagData(false),
+      linodeDiskEncryption: true,
+      apicliDxToolsAdditions: false,
     }).as('getFeatureFlags');
 
     // Mock account response
