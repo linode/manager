@@ -1,5 +1,7 @@
+import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import {
@@ -12,13 +14,24 @@ export interface CodeBlockProps {
   command: string;
   commandType: string;
   language: 'bash';
+  ldTrackingKey?: string;
 }
 
 export const CodeBlock = (props: CodeBlockProps) => {
-  const { command, commandType, language } = props;
+  const flags = useFlags();
+  const ldClient = useLDClient();
+
+  const { command, commandType, language, ldTrackingKey } = props;
+
+  const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const handleCopyIconClick = () => {
     sendApiAwarenessClickEvent('Copy Icon', commandType);
+    if (ldTrackingKey) {
+      ldClient?.track(ldTrackingKey, {
+        variation: apicliButtonCopy,
+      });
+    }
   };
 
   return (
@@ -27,11 +40,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
         language={language}
         textOrMarkdown={'```\n' + command + '\n```'}
       />
-      <StyledCopyTooltip
-        data-ab-test={`${commandType} code snippet copy icon`}
-        onClickCallback={handleCopyIconClick}
-        text={command}
-      />
+      <StyledCopyTooltip onClickCallback={handleCopyIconClick} text={command} />
     </StyledCommandDiv>
   );
 };

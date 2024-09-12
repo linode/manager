@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,6 +12,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
+import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -58,6 +60,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const { isOpen, onClose, payLoad } = props;
 
   const flags = useFlags();
+  const ldClient = useLDClient();
   const history = useHistory();
   const { data: events } = useInProgressEvents();
 
@@ -71,6 +74,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const isLinodeCreated = linodeCreationEvent !== undefined;
 
   const isDxAdditionsFeatureEnabled = flags?.apicliDxToolsAdditions;
+  const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const tabs = isDxAdditionsFeatureEnabled
     ? [baseTabs[1], baseTabs[0], ...additionalTabs]
@@ -78,6 +82,20 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   const handleTabChange = (index: number) => {
     sendApiAwarenessClickEvent(`${tabs[index].type} Tab`, tabs[index].type);
+
+    let trackingKey = '';
+
+    if (tabs[index].type === 'INTEGRATIONS' && tabs[index].title !== "SDK's") {
+      trackingKey = LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TAB_SELECTION;
+    } else if (tabs[index].type === 'API') {
+      trackingKey = LD_DX_TOOLS_METRICS_KEYS.CURL_TAB_SELECTION;
+    } else if (tabs[index].title === "SDK's") {
+      trackingKey = LD_DX_TOOLS_METRICS_KEYS.SDK_TAB_SELECTION;
+    }
+
+    ldClient?.track(trackingKey, {
+      variation: apicliButtonCopy,
+    });
   };
 
   useEffect(() => {

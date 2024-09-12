@@ -1,8 +1,10 @@
+import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -19,6 +21,7 @@ import type { LinodeCreateFormValues } from './utilities';
 
 export const Actions = () => {
   const flags = useFlags();
+  const ldClient = useLDClient();
   const { params } = useLinodeCreateQueryParams();
 
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
@@ -48,6 +51,10 @@ export const Actions = () => {
     if (await trigger()) {
       // If validation is successful, we open the dialog.
       setIsAPIAwarenessModalOpen(true);
+
+      ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.OPEN_MODAL, {
+        variation: apicliButtonCopy,
+      });
     } else {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
@@ -56,8 +63,8 @@ export const Actions = () => {
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
       <Button
-        className="commandLineTools"
         buttonType="outlined"
+        className="commandLineTools"
         data-ab-test="command-line-tools"
         data-command-line-tools
         onClick={onOpenAPIAwareness}
