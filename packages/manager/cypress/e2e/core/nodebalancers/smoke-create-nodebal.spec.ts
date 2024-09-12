@@ -79,8 +79,7 @@ const createNodeBalancerWithUI = (
 
 authenticate();
 beforeEach(() => {
-  cy.tag('method:e2e');
-  cy.tag('purpose:dcTesting');
+  cy.tag('method:e2e', 'purpose:dcTesting');
 });
 describe('create NodeBalancer', () => {
   before(() => {

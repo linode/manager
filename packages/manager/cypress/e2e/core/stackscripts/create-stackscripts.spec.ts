@@ -173,8 +173,7 @@ describe('Create stackscripts', () => {
     cleanUp(['linodes', 'images', 'stackscripts']);
   });
   beforeEach(() => {
-    cy.tag('method:e2e');
-    cy.tag('purpose:dcTesting');
+    cy.tag('method:e2e', 'purpose:dcTesting');
   });
 
   /*

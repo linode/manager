@@ -47,8 +47,7 @@ describe('clone linode', () => {
    * - Confirms that Linode can be cloned successfully.
    */
   it('can clone a Linode from Linode details page', () => {
-    cy.tag('method:e2e');
-    cy.tag('purpose:dcTesting');
+    cy.tag('method:e2e', 'purpose:dcTesting');
     const linodeRegion = chooseRegion({ capabilities: ['Vlans'] });
     const linodePayload = createLinodeRequestFactory.build({
       label: randomLabel(),

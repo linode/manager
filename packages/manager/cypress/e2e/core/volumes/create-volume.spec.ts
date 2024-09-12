@@ -53,9 +53,7 @@ describe('volume create flow', () => {
    * - Confirms that volume is listed correctly on volumes landing page.
    */
   it('creates an unattached volume', () => {
-    cy.tag('purpose:syntheticTesting');
-    cy.tag('method:e2e');
-    cy.tag('purpose:dcTesting');
+    cy.tag('purpose:syntheticTesting', 'method:e2e', 'purpose:dcTesting');
 
     const region = chooseRegion();
     const volume = {
@@ -100,8 +98,7 @@ describe('volume create flow', () => {
    * - Confirms that volume is listed correctly on Linode 'Storage' details page.
    */
   it('creates an attached volume', () => {
-    cy.tag('method:e2e');
-    cy.tag('purpose:dcTesting');
+    cy.tag('method:e2e', 'purpose:dcTesting');
     const region = chooseRegion();
 
     const linodeRequest = createLinodeRequestFactory.build({

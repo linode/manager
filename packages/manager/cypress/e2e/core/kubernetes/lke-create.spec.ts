@@ -81,8 +81,7 @@ describe('LKE Cluster Creation', () => {
    * - Confirms that correct information is shown on the LKE cluster summary page
    */
   it('can create an LKE cluster', () => {
-    cy.tag('method:e2e');
-    cy.tag('purpose:dcTesting');
+    cy.tag('method:e2e', 'purpose:dcTesting');
     const clusterLabel = randomLabel();
     const clusterRegion = chooseRegion();
     const clusterVersion = '1.27';
