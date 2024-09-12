@@ -44,13 +44,6 @@ export const ActionsPanel = (props: ActionPanelProps) => {
   const primaryButtonDataQAProp = `data-qa-${primaryButtonProps?.['data-testid']}`;
   const secondaryButtonDataQAProp = `data-qa-${secondaryButtonProps?.['data-testid']}`;
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    if (primaryButtonProps?.onClick) {
-      primaryButtonProps.onClick(e);
-    }
-  };
-
   return (
     <StyledBox
       className={cx(className, 'actionPanel')}
@@ -72,8 +65,6 @@ export const ActionsPanel = (props: ActionPanelProps) => {
           {...{ [primaryButtonDataQAProp]: true }}
           buttonType="primary"
           {...primaryButtonProps}
-          onClick={handleSubmit}
-          type="submit"
         >
           {primaryButtonProps.label}
         </Button>
