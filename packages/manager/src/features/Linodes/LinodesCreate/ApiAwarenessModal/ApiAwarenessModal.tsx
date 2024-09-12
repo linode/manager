@@ -81,15 +81,17 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
     : baseTabs;
 
   const handleTabChange = (index: number) => {
-    sendApiAwarenessClickEvent(`${tabs[index].type} Tab`, tabs[index].type);
+    const { title, type } = tabs[index];
+
+    sendApiAwarenessClickEvent(`${type} Tab`, type);
 
     let trackingKey = '';
 
-    if (tabs[index].type === 'INTEGRATIONS' && tabs[index].title !== "SDK's") {
+    if (type === 'INTEGRATIONS' && title !== "SDK's") {
       trackingKey = LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TAB_SELECTION;
-    } else if (tabs[index].type === 'API') {
+    } else if (type === 'API') {
       trackingKey = LD_DX_TOOLS_METRICS_KEYS.CURL_TAB_SELECTION;
-    } else if (tabs[index].title === "SDK's") {
+    } else if (title === "SDK's") {
       trackingKey = LD_DX_TOOLS_METRICS_KEYS.SDK_TAB_SELECTION;
     }
 
