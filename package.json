@@ -36,6 +36,7 @@
     "cy:ci": "yarn cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
     "cy:component": "yarn workspace linode-manager cy:component",
+    "cy:component:run": "yarn workspace linode-manager cy:component:run",
     "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
     "changeset": "node scripts/changelog/changeset.mjs",
     "generate-changelogs": "node scripts/changelog/generate-changelogs.mjs",
