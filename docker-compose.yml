@@ -87,6 +87,8 @@ x-e2e-runners:
       condition: service_healthy
   env_file: ./packages/manager/.env
   volumes: *default-volumes
+  # TODO Stop using entrypoint, use CMD instead.
+  # (Or just make `yarn` the entrypoint, but either way stop forcing `cy:e2e`).
   entrypoint: ['yarn', 'cy:e2e']
 
 services:
@@ -119,6 +121,7 @@ services:
       MANAGER_OAUTH: ${MANAGER_OAUTH}
 
   # Component test runner.
+  # Does not require any Cloud Manager environment to run.
   component:
     <<: *default-runner
     depends_on: []
@@ -126,7 +129,6 @@ services:
       CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
       CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
     entrypoint: ['yarn', 'cy:component:run']
-
 
   # End-to-end test runner for Cloud's synthetic monitoring tests.
   # Configured to run against a remote Cloud instance hosted at some URL.
