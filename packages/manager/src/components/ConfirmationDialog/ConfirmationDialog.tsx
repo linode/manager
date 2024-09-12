@@ -53,7 +53,15 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
       activeElement === currentTarget
     ) {
       e.preventDefault();
-      onSubmit?.(e);
+      if (onSubmit) {
+        onSubmit?.(e);
+      } else if (actions) {
+        if (typeof actions === 'function') {
+          actions(dialogProps).props.primaryButtonProps.onClick?.(e);
+        } else if ('props' in actions) {
+          actions.props.primaryButtonProps?.onClick?.(e);
+        }
+      }
     }
   };
 
