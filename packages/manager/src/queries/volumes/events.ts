@@ -16,6 +16,12 @@ export const volumeEventsHandler = ({
     invalidateQueries({
       queryKey: volumeQueries.lists.queryKey,
     });
+
+    if (event.entity) {
+      invalidateQueries({
+        queryKey: volumeQueries.volume(event.entity.id).queryKey,
+      });
+    }
   }
 
   if (

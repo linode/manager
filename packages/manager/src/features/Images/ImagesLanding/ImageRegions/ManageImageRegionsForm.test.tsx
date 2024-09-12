@@ -6,13 +6,13 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ManageImageRegionsForm } from './ManageImageRegionsForm';
+import { ManageImageReplicasForm } from './ManageImageRegionsForm';
 
 describe('ManageImageRegionsDrawer', () => {
   it('should render a save button and a cancel button', () => {
     const image = imageFactory.build();
     const { getByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     const cancelButton = getByText('Cancel').closest('button');
@@ -49,7 +49,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     await findByText('US, Newark, NJ');
@@ -59,8 +59,16 @@ describe('ManageImageRegionsDrawer', () => {
   });
 
   it('should render a status of "unsaved" when a new region is selected', async () => {
-    const region1 = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
-    const region2 = regionFactory.build({ id: 'us-west', label: 'Place, CA' });
+    const region1 = regionFactory.build({
+      capabilities: ['Object Storage'],
+      id: 'us-east',
+      label: 'Newark, NJ',
+    });
+    const region2 = regionFactory.build({
+      capabilities: ['Object Storage'],
+      id: 'us-west',
+      label: 'Place, CA',
+    });
 
     const image = imageFactory.build({
       regions: [
@@ -78,7 +86,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText, getByLabelText, getByText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     const saveButton = getByText('Save').closest('button');
@@ -127,7 +135,7 @@ describe('ManageImageRegionsDrawer', () => {
     );
 
     const { findByText, getByLabelText } = renderWithTheme(
-      <ManageImageRegionsForm image={image} onClose={vi.fn()} />
+      <ManageImageReplicasForm image={image} onClose={vi.fn()} />
     );
 
     // Verify both region labels have been loaded by the API
