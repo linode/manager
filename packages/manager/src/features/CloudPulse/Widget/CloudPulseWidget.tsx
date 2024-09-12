@@ -303,7 +303,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 `(${currentUnit}${unit.endsWith('ps') ? '/s' : ''})`}
             </Typography>
             <Stack
-              alignItems={'left'}
+              alignItems={'center'}
               direction={{ sm: 'row' }}
               gap={{ md: 2, xs: 1 }}
               width={{ sm: 'inherit', xs: '100%' }}
