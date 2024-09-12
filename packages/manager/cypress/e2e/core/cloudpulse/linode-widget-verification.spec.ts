@@ -21,10 +21,12 @@ import { timeRange, widgetDetails, granularity } from 'support/constants/widget-
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createMetricResponse } from '@src/factories/widget';
 import type { Flags } from 'src/featureFlags';
-import { accountFactory, extendedDashboardFactory, kubeLinodeFactory, linodeFactory, metricDefinitionsFactory } from 'src/factories';
+import { accountFactory, extendedDashboardFactory, kubeLinodeFactory, linodeFactory, metricDefinitionsFactory, regionFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { extendRegion } from 'support/util/regions';
 
 
 
@@ -65,6 +67,14 @@ const mockLinode = linodeFactory.build({
   id: mockKubeLinode.instance_id ?? undefined,
 });
 const mockAccount = accountFactory.build();
+const mockDallasRegion = extendRegion(
+  regionFactory.build({
+    capabilities: ['Linodes'],
+    id: 'us-ord',
+    label: 'Chicago, IL',
+    country: 'us',
+  })
+);
 
 describe('Dashboard Widget Verification Tests', () => {
  beforeEach(() => {
@@ -81,6 +91,7 @@ describe('Dashboard Widget Verification Tests', () => {
     mockCloudPulseJWSToken(service_type);
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
     mockCloudPulseCreateMetrics(responsePayload,service_type).as('getMetrics');
+    mockGetRegions([mockDallasRegion]).as('getRegions');
 });
 
   it('should verify cloudpulse availability when feature flag is set to false', () => {
