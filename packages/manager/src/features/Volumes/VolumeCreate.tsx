@@ -502,7 +502,7 @@ export const VolumeCreate = () => {
             <Button
               disabled={
                 disabled ||
-                (isBlockStorageEncryptionFeatureEnabled && // @TODO BSE: Once BSE is fully rolled out, remove feature flag condition
+                (isBlockStorageEncryptionFeatureEnabled && // @TODO BSE: Once BSE is fully rolled out, remove feature enabled check/condition
                   linode_id !== null &&
                   !linodeSupportsBlockStorageEncryption &&
                   values.encryption === 'enabled')
