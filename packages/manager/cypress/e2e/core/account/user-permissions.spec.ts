@@ -216,9 +216,7 @@ describe('User permission management', () => {
     // Restrict account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUserUpdated);
     mockGetUserGrants(mockUser.username, mockUserGrantsUpdated);
-    cy.findByLabelText('Toggle Full Account Access')
-      .should('be.visible')
-      .click();
+    cy.findByText('Full Account Access').should('be.visible').click();
 
     ui.toast.assertMessage('User permissions successfully saved.');
 
@@ -250,9 +248,7 @@ describe('User permission management', () => {
     // Re-enable unrestricted account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUser);
     mockGetUserGrantsUnrestrictedAccess(mockUser.username);
-    cy.findByLabelText('Toggle Full Account Access')
-      .should('be.visible')
-      .click();
+    cy.findByText('Full Account Access').should('be.visible').click();
 
     cy.findByText('General Permissions').should('be.visible');
     cy.findByText(unrestrictedAccessMessage).should('be.visible');
