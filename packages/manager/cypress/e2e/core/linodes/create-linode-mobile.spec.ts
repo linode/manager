@@ -65,7 +65,7 @@ describe('Linode create mobile smoke', () => {
       cy.wait('@createLinode').then((xhr) => {
         const requestBody = xhr.request.body;
 
-        expect(requestBody['image']).to.equal('linode/debian11');
+        expect(requestBody['image']).to.equal('linode/ubuntu24.04');
         expect(requestBody['label']).to.equal(mockLinode.label);
         expect(requestBody['region']).to.equal(mockLinodeRegion.id);
         expect(requestBody['type']).to.equal('g6-nanode-1');

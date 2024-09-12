@@ -106,10 +106,10 @@ export const createTestLinode = async (
 
   const resolvedCreatePayload = {
     ...createLinodeRequestFactory.build({
-      label: randomLabel(),
-      image: 'linode/debian11',
-      region: chooseRegion().id,
       booted: false,
+      image: 'linode/ubuntu24.04',
+      label: randomLabel(),
+      region: chooseRegion().id,
     }),
     ...(createRequestPayload || {}),
     ...securityMethodPayload,
