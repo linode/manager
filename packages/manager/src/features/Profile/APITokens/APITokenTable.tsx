@@ -190,7 +190,7 @@ export const APITokenTable = (props: Props) => {
           justifyContent: 'space-between',
           minHeight: '42px',
           padding: 0.75,
-          paddingLeft: 1.25,
+          paddingLeft: 2,
         }}
       >
         <Typography data-qa-table={type} variant="h3">
