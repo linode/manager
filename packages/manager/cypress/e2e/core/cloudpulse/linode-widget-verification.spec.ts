@@ -3,18 +3,17 @@ import {
   selectServiceName,
   selectAndVerifyResource,
   assertSelections,
-  waitForElementToLoad,
 } from 'support/util/cloudpulse';
 import {
   mockAppendFeatureFlags,
   mockGetFeatureFlagClientstream,
 } from 'support/intercepts/feature-flags';
 import {
-  mockJWSToken,
-  mockLinodeDashboardServicesResponse,
-  mockCreateMetrics,
-  mockGetDashboards,
-  mockGetMetricDefinitions,
+  mockCloudPulseJWSToken,
+  mockCloudPulseDashboardServicesResponse,
+  mockCloudPulseCreateMetrics,
+  mockCloudPulseGetDashboards,
+  mockCloudPulseGetMetricDefinitions,
   mockCloudPulseServices,
 } from 'support/intercepts/cloudpulseAPIHandler';
 import { ui } from 'support/ui';
@@ -39,17 +38,8 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
  * Testing widget interactions, including zooming and filtering, to ensure proper behavior.
  * Each test ensures that widgets on the dashboard operate correctly and display accurate information.
  */
-export const dashboardName = 'Linode Dashboard';
-export const region = 'US, Chicago, IL (us-ord)';
-export const actualRelativeTimeDuration = timeRange.Last24Hours;
-export const resource = 'test1';
 
-const mockKubeLinode = kubeLinodeFactory.build();
-const mockLinode = linodeFactory.build({
-  label: resource,
-  id: mockKubeLinode.instance_id ?? undefined,
-});
-const mockAccount = accountFactory.build();
+
 
 const y_labels = [
   'system_cpu_utilization_ratio',
@@ -57,13 +47,24 @@ const y_labels = [
   'system_network_io_bytes_total',
   'system_disk_operations_total',
 ];
-const linodeWidgets = widgetDetails.linode;
-const widgetLabels: string[] = linodeWidgets.map(widget => widget.title);
-const metricsLabels: string[] = linodeWidgets.map(widget => widget.name);
-const service_type='linode';
-
+const widgets= widgetDetails.linode;
+const metrics =widgets.metrics;
+export const dashboardName = widgets.dashboardName;
+export const region = widgets.region;
+export const actualRelativeTimeDuration = timeRange.Last24Hours;
+export const resource = widgets.resource
+const widgetLabels: string[] = metrics.map(widget => widget.title); 
+const metricsLabels: string[] = metrics.map(widget => widget.name); 
+const service_type =widgets.service_type;
+const dashboardId=widgets.id
 const dashboard = dashboardFactory(dashboardName, widgetLabels, metricsLabels, y_labels,service_type).build();
 const metricDefinitions = metricDefinitionsFactory(widgetLabels, metricsLabels).build();
+const mockKubeLinode = kubeLinodeFactory.build();
+const mockLinode = linodeFactory.build({
+  label: resource,
+  id: mockKubeLinode.instance_id ?? undefined,
+});
+const mockAccount = accountFactory.build();
 
 describe('Dashboard Widget Verification Tests', () => {
  beforeEach(() => {
@@ -73,13 +74,13 @@ describe('Dashboard Widget Verification Tests', () => {
     mockGetAccount(mockAccount).as('getAccount'); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLinodes([mockLinode]).as('getLinodes');
-    mockGetMetricDefinitions(metricDefinitions);
-    mockGetDashboards(dashboard).as('dashboard');
-    mockCloudPulseServices('linode').as('services');
-    mockLinodeDashboardServicesResponse(dashboard);
-    mockJWSToken();
+    mockCloudPulseGetMetricDefinitions(metricDefinitions,service_type);
+    mockCloudPulseGetDashboards(dashboard,service_type).as('dashboard');
+    mockCloudPulseServices(service_type).as('services');
+    mockCloudPulseDashboardServicesResponse(dashboard,dashboardId);
+    mockCloudPulseJWSToken(service_type);
     const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
-    mockCreateMetrics(responsePayload).as('metricAPI');
+    mockCloudPulseCreateMetrics(responsePayload,service_type).as('getMetrics');
 });
 
   it('should verify cloudpulse availability when feature flag is set to false', () => {
@@ -91,12 +92,11 @@ describe('Dashboard Widget Verification Tests', () => {
     cy.findByText('Not Found').should('be.visible'); // not found
   });
 
-  it.only('should set available granularity of all the widgets', () => {
+  it('should set available granularity of all the widgets', () => {
     setupMethod()
-    linodeWidgets.forEach((testData) => {
+    metrics.forEach((testData) => {
       cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
-      waitForElementToLoad(widgetSelector);
       cy.get(widgetSelector).as('widget')
       cy.get('@widget')
        .should('be.visible')
@@ -111,7 +111,9 @@ describe('Dashboard Widget Verification Tests', () => {
             .findByTitle(testData.expectedGranularity).as('granularityOption')
             cy.get('@granularityOption')
             .should('be.visible')
+            .should('have.text', testData.expectedGranularity)
             .click();
+            cy.findByDisplayValue(testData.expectedGranularity).should('exist');
             assertSelections(testData.expectedGranularity);
         });
     });
@@ -119,17 +121,17 @@ describe('Dashboard Widget Verification Tests', () => {
   
   it('should verify the title of the widget', () => {
     setupMethod()
-    linodeWidgets.forEach((testData) => {
+    metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
       cy.get(widgetSelector).invoke('text').then((text) => {
-        expect(text.trim()).to.equal(testData.title);
+       expect(text.trim()).to.equal(testData.title);
       });
     });
   });
 
   it('should set available aggregation of all the widgets', () => {
     setupMethod()
-    linodeWidgets.forEach((testData) => {
+    metrics.forEach((testData) => {
       cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -138,12 +140,15 @@ describe('Dashboard Widget Verification Tests', () => {
         .within(() => {
           ui.autocomplete
             .findByTitleCustom('Select an Aggregate Function')
+            .should('be.visible')
             .findByTitle('Open')
             .click();
           ui.autocompletePopper
             .findByTitle(testData.expectedAggregation)
             .should('be.visible')
+            .should('have.text', testData.expectedAggregation)
             .click();
+            cy.findByDisplayValue(testData.expectedAggregation).should('exist');
           assertSelections(testData.expectedAggregation);
         });
     });
@@ -151,7 +156,7 @@ describe('Dashboard Widget Verification Tests', () => {
 
   it('should verify available granularity of the widget', () => {
     setupMethod()
-    linodeWidgets.forEach((testData) => {
+    metrics.forEach((testData) => {
       cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -166,13 +171,12 @@ describe('Dashboard Widget Verification Tests', () => {
             ui.autocompletePopper
               .findByTitle(option)
               .should('be.visible')
-              .then(() => {
-                cy.log(`${option} is visible`);
-              });
           });
           ui.autocomplete
             .findByTitleCustom('Select an Interval')
+            .should('be.visible')
             .findByTitle('Close')
+            .should('be.visible')
             .click();
         });
     });
@@ -180,7 +184,7 @@ describe('Dashboard Widget Verification Tests', () => {
 
   it('should verify available aggregation of the widget', () => {
     setupMethod()
-    linodeWidgets.forEach((testData) => {
+    metrics.forEach((testData) => {
       cy.wait(5000);
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -196,13 +200,12 @@ describe('Dashboard Widget Verification Tests', () => {
             ui.autocompletePopper
               .findByTitle(option)
               .should('be.visible')
-              .then(() => {
-                cy.log(`${option} is visible`);
-              });
           });
           ui.autocomplete
             .findByTitleCustom('Select an Aggregate Function')
+            .should('be.visible')
             .findByTitle('Close')
+            .should('be.visible')
             .click();
         });
     });
@@ -210,37 +213,58 @@ describe('Dashboard Widget Verification Tests', () => {
 
   it('should zoom in and out of all the widgets', () => {
     setupMethod()
-    linodeWidgets.forEach((testData) => {
+    metrics.forEach((testData) => {
       cy.wait(5000);
-      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
-      cy.log("Name of the widget **",testData.title);
-        cy.get(widgetSelector).should('be.visible').within(() => {
-        cy.get(ui.cloudpulse.findZoomButtonByTitle('zoom-out')).should('be.visible')
+      cy.get(`[data-qa-widget="${testData.title}"]`).as('widget');
+      cy.get('@widget').should('be.visible').within(() => {
+        ui.cloudpulse.findZoomButtonByTitle('zoom-in').should('be.visible')
         .should('be.enabled')
         .click();
-        cy.get(ui.cloudpulse.findZoomButtonByTitle('zoom-in')).should('be.visible')
+        cy.get('@widget').should('be.visible');
+        cy.get('[data-testid="linegraph-wrapper"] canvas').as('canvas')
+          .should('exist')       
+          .and('be.visible');
+        ui.cloudpulse.findZoomButtonByTitle('zoom-out').should('be.visible')
         .should('be.enabled')
         .click();
+        cy.get('@widget').should('be.visible');
+        cy.get('@canvas').should('exist').and('be.visible');
       });
     
     });
   });
-
+  
   it('should apply global refresh button and verify network calls', () => {
-    setupMethod()
-    ui.cloudpulse.findRefreshIcon()
-    .should('be.visible') 
-    .click(); 
-    linodeWidgets.forEach((widget) => {
-      const widgetSelector = `[data-qa-widget="${widget.title}"]`;
-      cy.get(widgetSelector)
-        .should('be.visible')
-        .and('contain.text', widget.title); 
+    setupMethod();
+    
+    ui.cloudpulse.findRefreshIcon().should('be.visible').click();
+    
+    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then((interceptions) => {
+      const interceptionsArray = Array.isArray(interceptions) ? interceptions : [interceptions];
+      
+      interceptionsArray.forEach((interception) => {
+        const { body: requestPayload } = interception.request;
+        const { metric, time_granularity: granularity, relative_time_duration: timeRange, aggregate_function: aggregateFunction } = requestPayload;
+        const metricData = metrics.find(data => data.name === metric);
+         // Check if metricData and its expected properties are available
+        if (!metricData || !metricData.expectedGranularity || !metricData.expectedAggregation) {
+          expect.fail('metricData or its expected properties are not defined.');
+        }
+         const expectedRelativeTimeDuration = timeRange
+          ? `Last ${timeRange.value} ${['hour', 'hr'].includes(timeRange.unit.toLowerCase()) ? 'Hours' : timeRange.unit}`
+          : '';
+         const currentGranularity = granularity
+          ? `${granularity.value} ${['hour', 'hours'].includes(granularity.unit.toLowerCase()) ? 'hr' : granularity.unit}`
+          : '';
+         expect(metric).to.equal(metricData.name);
+        expect(currentGranularity).to.equal(metricData.expectedGranularity);
+        expect(expectedRelativeTimeDuration).to.equal(actualRelativeTimeDuration);
+       // expect(aggregateFunction).to.equal(metricData.expectedAggregation);
+      });
     });
-
   });
 });
-
+  
 
   const setupMethod = () => {
     mockGetUserPreferences({}).as('getUserPreferences');

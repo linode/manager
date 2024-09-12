@@ -22,9 +22,6 @@ import { ui } from 'support/ui';
  * @param {string} selector - The CSS selector for the element to wait for.
  */
 //  command to wait for the element to be fully loaded
-export const waitForElementToLoad = (selector: string) => {
-  cy.get(selector, { timeout: 10000 }).should('be.visible');
-};
 
 export const selectServiceName = (serviceName: string) => {
   ui.autocomplete

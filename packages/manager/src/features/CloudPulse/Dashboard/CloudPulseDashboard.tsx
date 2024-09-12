@@ -115,7 +115,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     if (pref) {
       Object.assign(widgetObj, {
         aggregate_function: pref.aggregateFunction,
-        size: pref.size,
+        size: pref.size ?? widgetObj.size,
         time_granularity: { ...pref.timeGranularity },
       });
     }

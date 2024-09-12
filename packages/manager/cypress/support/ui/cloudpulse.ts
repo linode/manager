@@ -12,15 +12,15 @@ export const cloudpulse = {
     return cy.get('[data-qa-refresh-button="true"]');
   },
 
-  /**
-   * Generates a selector for a zoom button within a button group based on its title.
-   * This method helps in locating specific zoom buttons by their title attribute within a group of buttons.
-   *
-   * @param {string} buttonTitle - The title of the zoom button to find.
-   *
-   * @returns {string} - A string representing the CSS selector for the zoom button.
-   */
-  findZoomButtonByTitle: (buttonTitle: string): string => {
-    return `[data-qa-zoomer="${buttonTitle}"]`;
+/**
+ * Generates a Cypress chainable for a zoom button based on its title.
+ * This method helps in locating specific zoom buttons by their title attribute within a group of buttons.
+ *
+ * @param {string} buttonTitle - The title of the zoom button to find.
+ *
+ * @returns {Cypress.Chainable} - A Cypress chainable that represents the zoom button element.
+ */
+  findZoomButtonByTitle: (buttonTitle: string): Cypress.Chainable => {
+    return cy.get(`[data-qa-zoomer="${buttonTitle}"]`);
   },
 };

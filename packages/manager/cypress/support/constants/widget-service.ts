@@ -1,3 +1,4 @@
+
 /**
  * Defines the granularity levels used for specifying time intervals in data aggregation or reporting.
  * Each property represents a different granularity level.
@@ -52,72 +53,86 @@ export const aggregationConfig = {
  * Each widget configuration includes expected aggregation types, granularity levels, and other relevant properties.
  */
 export const widgetDetails = {
-  dbaas: [
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.basic,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_cpu_utilization_percent',
-      title: 'CPU Utilization',
-    },
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.all,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_memory_usage_by_resource',
-      title: 'Memory Usage',
-    },
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.all,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_network_io_by_resource',
-      title: 'Network Traffic',
-    },
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.all,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_disk_OPS_total',
-      title: 'Disk I/O',
-    },
-  ],
-  linode: [
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.basic,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_cpu_utilization_percent',
-      title: 'CPU Utilization',
-    },
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.all,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_memory_usage_by_resource',
-      title: 'Memory Usage',
-    },
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.all,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_network_io_by_resource',
-      title: 'Network Traffic',
-    },
-    {
-      expectedAggregation: aggregation.Max,
-      expectedAggregationArray: aggregationConfig.all,
-      expectedGranularity: granularity.Hr1,
-      expectedGranularityArray: Object.values(granularity),
-      name: 'system_disk_OPS_total',
-      title: 'Disk I/O',
-    },
-  ],
+  dbaas: {
+    dashboardName: 'Dbaas Dashboard',
+    id: 2,
+    metrics: [
+      {
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.basic,
+        expectedGranularity: granularity.Hr1,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_cpu_utilization_percent',
+        title: 'CPU Utilization',
+      },
+      {
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.all,
+        expectedGranularity: granularity.Hr1,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_memory_usage_by_resource',
+        title: 'Memory Usage',
+      },
+      {
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.all,
+        expectedGranularity: granularity.Hr1,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_network_io_by_resource',
+        title: 'Network Traffic',
+      },
+      {
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.all,
+        expectedGranularity: granularity.Hr1,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_disk_OPS_total',
+        title: 'Disk I/O',
+      },
+    ],
+    region: 'US, Chicago, IL (us-ord)',
+    resource: 'Dbaas-resource',
+    service_type: 'dbaas',
+  },
+  linode: {
+    dashboardName: 'Linode Dashboard',
+    id: 1,
+    metrics: [
+      {
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.basic,
+        expectedGranularity: granularity.Hr1,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_cpu_utilization_percent',
+        title: 'CPU Utilization',
+      },
+      {
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.all,
+        expectedGranularity: granularity.Hr1,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_memory_usage_by_resource',
+        title: 'Memory Usage',
+      },
+      {
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.all,
+        expectedGranularity: granularity.Hr1,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_network_io_by_resource',
+        title: 'Network Traffic',
+      },
+      {
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.all,
+        expectedGranularity: granularity.Hr1,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_disk_OPS_total',
+        title: 'Disk I/O',
+      },
+    ],
+    region: 'US, Chicago, IL (us-ord)',
+    resource: 'linode-resource',
+    service_type: 'linode',
+  },
 };
