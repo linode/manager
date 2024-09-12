@@ -8,15 +8,18 @@ import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 import type { ResourcesLinks } from './ResourcesLinksTypes';
 
 export const ResourceLinks = (props: ResourcesLinks) => {
-  const { linkAnalyticsEvent, links } = props;
+  const { linkAnalyticsEvent, links, onClick } = props;
 
   return (
     <List>
       {links.map((linkData) => (
         <ListItem data-ab-test={linkData.text} key={linkData.to}>
           <Link
+            onClick={() => {
+              getLinkOnClick(linkAnalyticsEvent, linkData.text);
+              onClick?.();
+            }}
             external={linkData.external}
-            onClick={getLinkOnClick(linkAnalyticsEvent, linkData.text)}
             to={linkData.to}
           >
             {linkData.text}
