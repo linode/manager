@@ -6,12 +6,7 @@ import { ui } from 'support/ui';
 
 import { randomLabel, randomString } from 'support/util/random';
 import { linodeCreatePage } from 'support/ui/pages';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode', () => {
@@ -23,9 +18,8 @@ describe('Create Linode', () => {
     // TODO Delete these mocks once `apicliDxToolsAdditions` feature flag is retired.
     beforeEach(() => {
       mockAppendFeatureFlags({
-        apicliDxToolsAdditions: makeFeatureFlagData(true),
+        apicliDxToolsAdditions: true,
       });
-      mockGetFeatureFlagClientstream();
     });
     it(`view code snippets in create linode flow`, () => {
       const linodeLabel = randomLabel();
@@ -149,15 +143,14 @@ describe('Create Linode', () => {
         });
     });
   });
-  
+
   describe('Create Linode flow with apicliDxToolsAdditions disabled', () => {
     // Enable the `apicliDxToolsAdditions` feature flag.
     // TODO Delete these mocks and test once `apicliDxToolsAdditions` feature flag is retired.
     beforeEach(() => {
       mockAppendFeatureFlags({
-        apicliDxToolsAdditions: makeFeatureFlagData(false),
+        apicliDxToolsAdditions: false,
       });
-      mockGetFeatureFlagClientstream();
     });
     it(`view code snippets in create linode flow`, () => {
       const linodeLabel = randomLabel();
@@ -219,8 +212,10 @@ describe('Create Linode', () => {
 
     cy.get('[id="g6-dedicated-2"]').click();
 
-    cy.findByLabelText('Linode Label')
-      .should('have.value', `debian-${linodeRegion.id}`);
+    cy.findByLabelText('Linode Label').should(
+      'have.value',
+      `debian-${linodeRegion.id}`
+    );
 
     cy.findByLabelText('Linode Label')
       .should('be.visible')
@@ -244,9 +239,7 @@ describe('Create Linode', () => {
       .should('be.visible')
       .within(() => {
         // Switch to cURL view if necessary.
-        cy.findByText('cURL')
-          .should('be.visible')
-          .click();
+        cy.findByText('cURL').should('be.visible').click();
 
         // Confirm that cURL command has expected details.
         [

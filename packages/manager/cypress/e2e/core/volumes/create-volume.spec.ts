@@ -1,6 +1,9 @@
 import type { Linode, Region } from '@linode/api-v4';
 import { createTestLinode } from 'support/util/linodes';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
+import {
+  createLinodeRequestFactory,
+  linodeFactory,
+} from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
 import { cleanUp } from 'support/util/cleanup';
 import {
@@ -15,6 +18,10 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { accountFactory, regionFactory, volumeFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetRegions } from 'support/intercepts/regions';
+import {
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -132,6 +139,10 @@ describe('volume create flow', () => {
           .should('be.visible')
           .click();
 
+        // @TODO BSE: once BSE is fully rolled out, check for the notice (selected linode doesn't have
+        // "Block Storage Encryption" capability + user checked "Encrypt Volume" checkbox) instead of the absence of it
+        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
+
         cy.findByText('Create Volume').click();
         cy.wait('@createVolume');
 
@@ -162,7 +173,112 @@ describe('volume create flow', () => {
   });
 
   /*
-   * - Checks for Block Storage Encryption notices in the Create/Attach Volume drawer from the
+   * - Checks for Block Storage Encryption client library update notice on the Volume Create page.
+   */
+  it('displays a warning notice on Volume Create page re: rebooting for client library updates under the appropriate conditions', () => {
+    // Conditions: Block Storage encryption feature flag is on; user has Block Storage Encryption capability; volume being created is encrypted and the
+    // selected Linode does not support Block Storage Encryption
+
+    // Mock feature flag -- @TODO BSE: Remove feature flag once BSE is fully rolled out
+    mockAppendFeatureFlags({
+      blockStorageEncryption: true,
+    }).as('getFeatureFlags');
+
+    // Mock account response
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Block Storage Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+    mockGetRegions(mockRegions).as('getRegions');
+
+    const linodeRequest = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      root_pass: randomString(16),
+      region: mockRegions[0].id,
+      booted: false,
+    });
+
+    cy.defer(() => createTestLinode(linodeRequest), 'creating Linode').then(
+      (linode: Linode) => {
+        cy.visitWithLogin('/volumes/create');
+        cy.wait(['@getFeatureFlags', '@getAccount']);
+
+        // Select a linode without the BSE capability
+        cy.findByLabelText('Linode')
+          .should('be.visible')
+          .click()
+          .type(linode.label);
+
+        ui.autocompletePopper
+          .findByTitle(linode.label)
+          .should('be.visible')
+          .click();
+
+        // Check the "Encrypt Volume" checkbox
+        cy.get('[data-qa-checked]').should('be.visible').click();
+        // });
+
+        // Ensure warning notice is displayed
+        cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('be.visible');
+      }
+    );
+  });
+
+  /*
+   * - Checks for absence of Block Storage Encryption client library update notice on the Volume Create page
+   *   when selected linode supports BSE
+   */
+  it('does not display a warning notice on Volume Create page re: rebooting for client library updates when selected linode supports BSE', () => {
+    // Conditions: Block Storage encryption feature flag is on; user has Block Storage Encryption capability; volume being created is encrypted and the
+    // selected Linode supports Block Storage Encryption
+
+    // Mock feature flag -- @TODO BSE: Remove feature flag once BSE is fully rolled out
+    mockAppendFeatureFlags({
+      blockStorageEncryption: true,
+    }).as('getFeatureFlags');
+
+    // Mock account response
+    const mockAccount = accountFactory.build({
+      capabilities: ['Linodes', 'Block Storage Encryption'],
+    });
+
+    // Mock linode
+    const mockLinode = linodeFactory.build({
+      region: mockRegions[0].id,
+      id: 123456,
+      capabilities: ['Block Storage Encryption'],
+    });
+
+    mockGetAccount(mockAccount).as('getAccount');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodes([mockLinode]).as('getLinodes');
+    mockGetLinodeDetails(mockLinode.id, mockLinode);
+
+    cy.visitWithLogin(`/volumes/create`);
+    cy.wait(['@getAccount', '@getRegions', '@getLinodes']);
+
+    // Select a linode without the BSE capability
+    cy.findByLabelText('Linode')
+      .should('be.visible')
+      .click()
+      .type(mockLinode.label);
+
+    ui.autocompletePopper
+      .findByTitle(mockLinode.label)
+      .should('be.visible')
+      .click();
+
+    // Check the "Encrypt Volume" checkbox
+    cy.get('[data-qa-checked]').should('be.visible').click();
+    // });
+
+    // Ensure warning notice is not displayed
+    cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
+  });
+
+  /*
+   * - Checks for Block Storage Encryption client library update notice in the Create/Attach Volume drawer from the
        'Storage' details page of an existing Linode.
    */
   it('displays a warning notice re: rebooting for client library updates under the appropriate conditions', () => {
