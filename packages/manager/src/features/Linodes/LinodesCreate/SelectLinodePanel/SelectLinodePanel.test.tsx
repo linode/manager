@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { HttpResponse, http } from 'msw';
 import React from 'react';
 
@@ -89,11 +89,14 @@ describe('SelectLinodePanel (table, desktop)', () => {
       target: { value: defaultProps.linodes[0].label },
     });
 
-    await expect((await findAllByRole('row')).length).toBe(2);
-
-    expect((await findAllByRole('row'))[1]).toHaveTextContent(
-      defaultProps.linodes[0].label
-    );
+    await waitFor(async () => {
+      // wait for rows to be rendered
+      const rows = await findAllByRole('row');
+      // Assert that 2 rows are rendered
+      expect(rows.length).toBe(2);
+      // Check that the second row has the correct text content
+      expect(rows[1]).toHaveTextContent(defaultProps.linodes[0].label);
+    });
   });
 
   it('displays the heading, notices and error', () => {
@@ -188,13 +191,14 @@ describe('SelectLinodePanel (cards, mobile)', () => {
       target: { value: defaultProps.linodes[0].label },
     });
 
-    await expect(
-      container.querySelectorAll('[data-qa-selection-card]').length
-    ).toBe(1);
-
-    expect(
-      container.querySelectorAll('[data-qa-selection-card]')[0]
-    ).toHaveTextContent(defaultProps.linodes[0].label);
+    await waitFor(() => {
+      expect(
+        container.querySelectorAll('[data-qa-selection-card]').length
+      ).toBe(1);
+      expect(
+        container.querySelectorAll('[data-qa-selection-card]')[0]
+      ).toHaveTextContent(defaultProps.linodes[0].label);
+    });
   });
 
   it('prefills the search box when mounted with a selected linode', async () => {

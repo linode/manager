@@ -3,7 +3,6 @@ import { containsVisible, fbtVisible, getClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
-import { mockGetFeatureFlagClientstream } from 'support/intercepts/feature-flags';
 import { interceptLinodeResize } from 'support/intercepts/linodes';
 
 authenticate();
@@ -13,8 +12,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size: warm migration', () => {
-    mockGetFeatureFlagClientstream().as('getClientStream');
-
     // Use `vlan_no_internet` security method.
     // This works around an issue where the Linode API responds with a 400
     // when attempting to interact with it shortly after booting up when the
@@ -40,7 +37,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size: cold migration', () => {
-    mockGetFeatureFlagClientstream().as('getClientStream');
     // Use `vlan_no_internet` security method.
     // This works around an issue where the Linode API responds with a 400
     // when attempting to interact with it shortly after booting up when the
@@ -67,7 +63,6 @@ describe('resize linode', () => {
   });
 
   it('resizes a linode by increasing size when offline: cold migration', () => {
-    mockGetFeatureFlagClientstream().as('getClientStream');
     // Use `vlan_no_internet` security method.
     // This works around an issue where the Linode API responds with a 400
     // when attempting to interact with it shortly after booting up when the
@@ -186,7 +181,9 @@ describe('resize linode', () => {
         });
 
       // Wait until the disk resize is done.
-      ui.toast.assertMessage(`Disk ${diskName} successfully resized.`);
+      ui.toast.assertMessage(
+        `Disk ${diskName} on Linode ${linode.label} has been resized.`
+      );
 
       interceptLinodeResize(linode.id).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);

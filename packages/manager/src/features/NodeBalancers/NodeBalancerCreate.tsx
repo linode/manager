@@ -488,7 +488,10 @@ const NodeBalancerCreate = () => {
       />
       {generalError && !isRestricted && (
         <Notice spacingTop={8} variant="error">
-          <ErrorMessage entityType="nodebalancer_id" message={generalError} />
+          <ErrorMessage
+            entity={{ type: 'nodebalancer_id' }}
+            message={generalError}
+          />
         </Notice>
       )}
       {isRestricted && (
