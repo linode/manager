@@ -97,7 +97,6 @@ export interface Flags {
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
   ipv6Sharing: boolean;
-  linodeCreateRefactor: boolean;
   linodeCreateWithFirewall: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
