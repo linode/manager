@@ -84,3 +84,19 @@ export const resetDashboard = () => {
     .findByPlaceholderCustom('Select Dashboard')
     .should('have.value', '');
 };
+
+export const chooseEngine = (engine: string) => {
+ui.autocomplete
+    .findByTitleCustom('Select a Value')
+    .findByTitle('Open')
+    .click();
+  ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
+  cy.findByDisplayValue(engine).should('have.value', engine);
+};
+
+export const chooseDbCluster = (ClusterName: string) => {
+  const dbCluster = ui.autocomplete.findByTitleCustom('Select DB Cluster Names');
+  dbCluster.findByTitle('Open').click();
+  dbCluster.click().type(`${ClusterName}{enter}`);
+  cy.get('[title="Close"]').click();
+};

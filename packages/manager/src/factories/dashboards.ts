@@ -53,7 +53,21 @@ const units_interval = ['percent', 'byte', 'byte', 'ops_per_second'];
  * const myDashboard = myDashboardFactory.build(); // Creates a Dashboard instance with the specified properties.
  * ```
  */
-export const dashboardFactory = (
+
+export const dashboardFactory = Factory.Sync.makeFactory<Dashboard>({
+  created: new Date().toISOString(),
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `Factory Dashboard-${i}`),
+  service_type: 'linode',
+  time_duration: {
+    unit: 'min',
+    value: 30,
+  },
+  updated: new Date().toISOString(),
+  widgets: [],
+});
+
+export const extendedDashboardFactory = (
   dashboardLabel: string,
   widgetLabels: string[],
   metricsLabels: string[],

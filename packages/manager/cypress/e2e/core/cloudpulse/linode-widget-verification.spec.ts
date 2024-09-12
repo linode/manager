@@ -21,7 +21,7 @@ import { timeRange, widgetDetails, granularity } from 'support/constants/widget-
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createMetricResponse } from '@src/factories/widget';
 import type { Flags } from 'src/featureFlags';
-import { accountFactory, dashboardFactory, kubeLinodeFactory, linodeFactory, metricDefinitionsFactory } from 'src/factories';
+import { accountFactory, extendedDashboardFactory, kubeLinodeFactory, linodeFactory, metricDefinitionsFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
@@ -57,7 +57,7 @@ const widgetLabels: string[] = metrics.map(widget => widget.title);
 const metricsLabels: string[] = metrics.map(widget => widget.name); 
 const service_type =widgets.service_type;
 const dashboardId=widgets.id
-const dashboard = dashboardFactory(dashboardName, widgetLabels, metricsLabels, y_labels,service_type).build();
+const dashboard = extendedDashboardFactory(dashboardName, widgetLabels, metricsLabels, y_labels,service_type).build();
 const metricDefinitions = metricDefinitionsFactory(widgetLabels, metricsLabels).build();
 const mockKubeLinode = kubeLinodeFactory.build();
 const mockLinode = linodeFactory.build({
