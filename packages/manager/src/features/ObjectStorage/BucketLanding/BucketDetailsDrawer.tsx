@@ -181,6 +181,7 @@ export const BucketDetailsDrawer = React.memo(
                 payload
               );
             }}
+            endpointType={endpoint_type}
             name={label}
             variant="bucket"
           />
