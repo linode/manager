@@ -186,6 +186,9 @@ componentTests('ConfirmationDialog', (mount) => {
         cy.get('[data-qa-submitted]').should('be.visible');
       });
 
+      /**
+       * - Pressing the Enter key while being active on a textfield within the dialog does not submit the dialog.
+       */
       it('pressing enter key while being active on a textfield within the dialog does not submit the dialog', () => {
         mount(
           <ConfirmationDialogTestUI>
@@ -206,6 +209,9 @@ componentTests('ConfirmationDialog', (mount) => {
         cy.get('[data-qa-submitted]').should('not.exist');
       });
 
+      /**
+       * - Pressing the Enter key while being active on an autocomplete within the dialog does not submit the dialog.
+       */
       it('pressing enter key while being active on an autocomplete within the dialog does not submit the dialog', () => {
         mount(
           <ConfirmationDialogTestUI>
@@ -237,6 +243,9 @@ componentTests('ConfirmationDialog', (mount) => {
   });
 
   describe('Error display', () => {
+    /**
+     * - ConfirmationDialog displays error message when error prop is passed.
+     */
     it('displays error message when error prop is passed', () => {
       mount(<ConfirmationDialogTestUI error="Error message" />);
 
@@ -252,6 +261,9 @@ componentTests('ConfirmationDialog', (mount) => {
     });
   });
 
+  /**
+   * - ConfirmationDialog passes aXe check when open.
+   */
   visualTests((mount) => {
     describe('Accessibility checks', () => {
       it('passes aXe check when open', () => {

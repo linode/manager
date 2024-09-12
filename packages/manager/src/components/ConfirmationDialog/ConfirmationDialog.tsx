@@ -73,7 +73,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
           onClose();
         }
       }}
-      PaperProps={{ role: undefined }}
+      PaperProps={{ role: 'form' }}
       data-qa-dialog
       data-qa-drawer
       data-testid="drawer"
