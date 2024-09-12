@@ -2,7 +2,6 @@ import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
@@ -304,9 +303,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 `(${currentUnit}${unit.endsWith('ps') ? '/s' : ''})`}
             </Typography>
             <Stack
-              alignItems={'center'}
+              alignItems={'left'}
               direction={{ sm: 'row' }}
-              gap={{ md: 0, xs: 1 }}
+              gap={{ md: 2, xs: 1 }}
               width={{ sm: 'inherit', xs: '100%' }}
             >
               {availableMetrics?.scrape_interval && (

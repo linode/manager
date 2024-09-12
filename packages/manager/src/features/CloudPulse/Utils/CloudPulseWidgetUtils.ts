@@ -341,7 +341,8 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
 export const StyledWidgetAutocomplete = styled(Autocomplete, {
   label: 'StyledAutocomplete',
 })(() => ({
-  '&& .MuiInput-root': {
+  '&& .MuiFormControl-root': {
+    minWidth: '90px',
     width: '90px',
   },
 }));
