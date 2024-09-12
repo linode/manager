@@ -301,25 +301,26 @@ export const LD_DX_TOOLS_METRICS_KEYS = {
   CURL_RESOURCE_LINKS: 'A/B Test: Step 2 : DX Tools cURL resources links',
   CURL_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools cURL tab selection',
   INTEGRATION_ANSIBLE_CODE_SNIPPET:
-    'a-b-test-step-2-integrations-ansible-copy-code-snippet-copy-icon',
+    'A/B Test: Step 2 : Integrations: Ansible copy code snippet (copy icon)',
   INTEGRATION_ANSIBLE_RESOURCE_LINKS:
     'a-b-test-step-2-dx-tools-integrations-ansible-resources-links',
   INTEGRATION_TAB_SELECTION:
     'A/B Test: Step 2 : DX Tools Integrations tab selection',
   INTEGRATION_TERRAFORM_CODE_SNIPPET:
-    'a-b-test-step-2-integrations-terraform-copy-code-snippet-copy-icon',
+    'A/B Test: Step 2 : Integrations: Terraform copy code snippet (copy icon)',
   INTEGRATION_TERRAFORM_RESOURCE_LINKS:
-    'a-b-test-step-2-dx-tools-integrations-terraform-resources-links',
+    'A/B Test: Step 2 : DX Tools integrations terraform resources links',
   LINODE_CLI_CODE_SNIPPET:
     'A/B Test: Step 2 : Linode CLI Tab selection and copy code snippet (copy icon)',
   LINODE_CLI_RESOURCE_LINKS:
     'A/B Test: Step 2 : DX Tools Linode CLI resources links',
   OPEN_MODAL: 'A/B Test: Step 1 : DX Tools Open Modal',
-  SDK_GO_CODE_SNIPPET: 'a-b-test-step-2-sdk-go-copy-code-snippet-copy-icon',
-  SDK_GO_RESOURCE_LINKS: 'a-b-test-step-2-dx-tools-sdk-go-resources-links',
+  SDK_GO_CODE_SNIPPET:
+    'A/B Test: Step 2 : SDK: GO copy code snippet (copy icon)',
+  SDK_GO_RESOURCE_LINKS: 'A/B Test: Step 2 : DX Tools SDK GO resources links',
   SDK_PYTHON_CODE_SNIPPET:
-    'a-b-test-step-2-sdk-python-copy-code-snippet-copy-icon',
+    'A/B Test: Step 2 : SDK: Python copy code snippet (copy icon)',
   SDK_PYTHON_RESOURCE_LINKS:
-    'a-b-test-step-2-dx-tools-sdk-python-resources-links',
+    'A/B Test: Step 2 : DX Tools SDK Python resources links',
   SDK_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools SDK tab selection',
 };
