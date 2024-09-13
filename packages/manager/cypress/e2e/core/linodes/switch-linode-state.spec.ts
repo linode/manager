@@ -8,6 +8,7 @@ authenticate();
 describe('switch linode state', () => {
   beforeEach(() => {
     cleanUp(['linodes']);
+    cy.tag('method:e2e');
   });
 
   /*

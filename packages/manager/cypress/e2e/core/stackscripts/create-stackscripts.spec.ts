@@ -172,6 +172,9 @@ describe('Create stackscripts', () => {
   before(() => {
     cleanUp(['linodes', 'images', 'stackscripts']);
   });
+  beforeEach(() => {
+    cy.tag('method:e2e', 'purpose:dcTesting');
+  });
 
   /*
    * - Creates a StackScript with user-defined fields.
@@ -374,7 +377,7 @@ describe('Create stackscripts', () => {
          */
         filteredImageData?.forEach((imageSample: Image) => {
           const imageLabel = imageSample.label;
-          cy.findAllByText(imageLabel)
+          cy.findAllByText(imageLabel, { exact: false })
             .last()
             .scrollIntoView()
             .should('exist')
