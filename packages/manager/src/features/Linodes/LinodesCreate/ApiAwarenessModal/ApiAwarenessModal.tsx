@@ -85,21 +85,22 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
     sendApiAwarenessClickEvent(`${type} Tab`, type);
 
-    let trackingKey = '';
+    const trackingKey =
+      type === 'INTEGRATIONS' && title !== "SDK's"
+        ? LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TAB_SELECTION
+        : type === 'API'
+        ? LD_DX_TOOLS_METRICS_KEYS.CURL_TAB_SELECTION
+        : title === "SDK's"
+        ? LD_DX_TOOLS_METRICS_KEYS.SDK_TAB_SELECTION
+        : title === 'Linode CLI'
+        ? LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_TAB_SELECTION
+        : undefined;
 
-    if (type === 'INTEGRATIONS' && title !== "SDK's") {
-      trackingKey = LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TAB_SELECTION;
-    } else if (type === 'API') {
-      trackingKey = LD_DX_TOOLS_METRICS_KEYS.CURL_TAB_SELECTION;
-    } else if (title === "SDK's") {
-      trackingKey = LD_DX_TOOLS_METRICS_KEYS.SDK_TAB_SELECTION;
-    } else if (title === 'Linode CLI') {
-      trackingKey = LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_TAB_SELECTION;
+    if (trackingKey) {
+      ldClient?.track(trackingKey, {
+        variation: apicliButtonCopy,
+      });
     }
-
-    ldClient?.track(trackingKey, {
-      variation: apicliButtonCopy,
-    });
   };
 
   useEffect(() => {
