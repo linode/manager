@@ -297,7 +297,7 @@ export const VolumeCreate = () => {
 
   const shouldDisplayClientLibraryCopy =
     isBlockStorageEncryptionFeatureEnabled &&
-    values.linode_id !== null &&
+    linode_id !== null &&
     !linodeSupportsBlockStorageEncryption;
 
   return (
@@ -502,7 +502,8 @@ export const VolumeCreate = () => {
             <Button
               disabled={
                 disabled ||
-                (isBlockStorageEncryptionFeatureEnabled &&
+                (isBlockStorageEncryptionFeatureEnabled && // @TODO BSE: Once BSE is fully rolled out, remove feature enabled check/condition
+                  linode_id !== null &&
                   !linodeSupportsBlockStorageEncryption &&
                   values.encryption === 'enabled')
               }
