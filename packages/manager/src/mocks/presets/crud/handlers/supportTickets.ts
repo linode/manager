@@ -9,7 +9,7 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import type { SupportTicket } from '@linode/api-v4';
+import type { SupportReply, SupportTicket } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {
@@ -26,9 +26,10 @@ export const createSupportTicket = (mockState: MockState) => [
       const payload = await request.clone().json();
 
       const supportTicket = supportTicketFactory.build({
-        closable: payload['closable'],
+        closable: true,
         closed: null,
         description: payload['description'],
+        // TODO: handle dynamic entity selection
         entity: {
           id: 10400,
           label: 'linode123456',
@@ -36,9 +37,8 @@ export const createSupportTicket = (mockState: MockState) => [
           url: '/v4/linode/instances/123456',
         },
         gravatar_id: undefined,
-        id: payload['id'],
         opened: DateTime.now().toISO(),
-        opened_by: payload['opened_by'],
+        opened_by: 'linode',
         status: 'open',
         summary: payload['summary'],
         updated: DateTime.now().toISO(),
@@ -71,27 +71,41 @@ export const getSupportTickets = () => [
       });
     }
   ),
+  http.get(
+    '*/support/tickets/:ticketId',
+    async ({
+      params,
+    }): Promise<StrictResponse<APIErrorResponse | SupportTicket>> => {
+      const id = Number(params.id);
+      const supportTicket = await mswDB.get('supportTickets', id);
+
+      if (!supportTicket) {
+        return makeNotFoundResponse();
+      }
+      return makeResponse(supportTicket);
+    }
+  ),
 ];
 
-// export const getSupportTicket = () => [
-//     http.get('*/support/tickets/:ticketId', ({ params }) => {
-//         const ticket = supportTicketFactory.build({
-//           id: Number(params.ticketId),
-//           severity: 1,
-//         });
-//         return makeResponse(ticket);
-//       })
-// ]
+export const getSupportTicketReplies = () => [
+  http.get(
+    '*/support/tickets/:ticketId/replies',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<SupportReply>>
+    > => {
+      const supportReplies = await mswDB.getAll('supportReplies');
 
-//   http.get('*/support/tickets/999', () => {
-//     const ticket = supportTicketFactory.build({
-//       closed: new Date().toISOString(),
-//       id: 999,
-//     });
-//     return HttpResponse.json(ticket);
-//   }),
+      if (!supportReplies) {
+        return makeNotFoundResponse();
+      }
+      return makePaginatedResponse({
+        data: supportReplies,
+        request,
+      });
+    }
+  ),
+];
 
-//   http.get('*/support/tickets/:ticketId/replies', () => {
-//     const replies = supportReplyFactory.buildList(15);
-//     return makeResourcePage(replies);
-//   }),
+// TODO: Mock ticket close

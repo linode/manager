@@ -7,6 +7,7 @@ import type {
   PlacementGroup,
   Region,
   RegionAvailability,
+  SupportReply,
   SupportTicket,
   Volume,
 } from '@linode/api-v4';
@@ -98,6 +99,7 @@ export interface MockState {
   placementGroups: PlacementGroup[];
   regionAvailability: RegionAvailability[];
   regions: Region[];
+  supportReplies: SupportReply[];
   supportTickets: SupportTicket[];
   volumes: Volume[];
 }
