@@ -7,6 +7,7 @@ import type {
   PlacementGroup,
   Region,
   RegionAvailability,
+  SupportTicket,
   Volume,
 } from '@linode/api-v4';
 import type { HttpHandler } from 'msw';
@@ -70,11 +71,12 @@ export interface MockPresetExtra extends MockPresetBase {
  * Mock Preset Crud
  */
 export type MockPresetCrudGroup = {
-  id: 'Linodes' | 'Placement Groups' | 'Volumes';
+  id: 'Linodes' | 'Placement Groups' | 'Support Tickets' | 'Volumes';
 };
 export type MockPresetCrudId =
   | 'linodes:crud'
   | 'placement-groups:crud'
+  | 'support-tickets:crud'
   | 'volumes:crud';
 export interface MockPresetCrud extends MockPresetBase {
   canUpdateCount?: boolean;
@@ -96,6 +98,7 @@ export interface MockState {
   placementGroups: PlacementGroup[];
   regionAvailability: RegionAvailability[];
   regions: Region[];
+  supportTickets: SupportTicket[];
   volumes: Volume[];
 }
 
