@@ -1,5 +1,8 @@
 import { apiMatcher } from 'support/util/intercepts';
 
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 describe('account activation', () => {
   /**
    * The API will return 403 with the body below for most endpoint except `/v4/profile`.

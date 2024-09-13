@@ -4,6 +4,9 @@ import { interceptCreateDomainRecord } from 'support/intercepts/domains';
 import { createDomainRecords } from 'support/constants/domains';
 
 authenticate();
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 
 describe('Creates Domains records with Form', () => {
   it('Adds domain records to a newly created Domain', () => {
