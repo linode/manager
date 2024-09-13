@@ -34,6 +34,7 @@ export const GoSDKResources = () => {
     ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.SDK_GO_RESOURCE_LINKS, {
       variation: apicliButtonCopy,
     });
+    ldClient?.flush();
   };
   return (
     <>

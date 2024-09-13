@@ -58,6 +58,7 @@ export const TerraformIntegrationResources = () => {
         variation: apicliButtonCopy,
       }
     );
+    ldClient?.flush();
   };
   return (
     <>

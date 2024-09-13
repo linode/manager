@@ -39,6 +39,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
             ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
               variation: apicliButtonCopy,
             });
+            ldClient?.flush();
           }}
           to="/profile/tokens"
         >
@@ -56,6 +57,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
             ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
               variation: apicliButtonCopy,
             });
+            ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/api/get-started/"
         >
@@ -69,6 +71,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
             ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
               variation: apicliButtonCopy,
             });
+            ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/api/guides/"
         >

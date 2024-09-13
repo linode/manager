@@ -100,6 +100,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
       ldClient?.track(trackingKey, {
         variation: apicliButtonCopy,
       });
+      ldClient?.flush();
     }
   };
 

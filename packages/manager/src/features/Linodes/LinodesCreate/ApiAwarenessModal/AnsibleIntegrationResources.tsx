@@ -52,6 +52,7 @@ export const AnsibleIntegrationResources = () => {
         variation: apicliButtonCopy,
       }
     );
+    ldClient?.flush();
   };
   return (
     <>
