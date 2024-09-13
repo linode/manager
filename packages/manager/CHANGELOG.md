@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - DisplayPrice story in Storybook ([#10904](https://github.com/linode/manager/pull/10904))
 - CheckoutSummary story in Storybook ([#10905](https://github.com/linode/manager/pull/10905))
 - CopyableTextField story and cleaned up components ([#10912](https://github.com/linode/manager/pull/10912))
+- Tracking metrics for LD DX Tools AB Test ([#10906](https://github.com/linode/manager/pull/10906))
 
 ### Changed:
 
