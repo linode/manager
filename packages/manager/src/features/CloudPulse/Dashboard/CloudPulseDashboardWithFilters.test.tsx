@@ -13,7 +13,6 @@ const queryMocks = vi.hoisted(() => ({
 const selectTimeDurationPlaceholder = 'Select Time Duration';
 const circleProgress = 'circle-progress';
 const mandatoryFiltersError = 'Mandatory Filters not Selected';
-const customNodeTypePlaceholder = 'Select Node Type';
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');

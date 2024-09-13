@@ -342,6 +342,9 @@ export const StyledWidgetAutocomplete = styled(Autocomplete, {
   label: 'StyledAutocomplete',
 })(() => ({
   '&& .MuiFormControl-root': {
+    '@media (max-width: 600px)': {
+      width: '100%', // 100% width for xs and small screens (max-width: 600px)
+    },
     minWidth: '90px',
     width: '90px',
   },

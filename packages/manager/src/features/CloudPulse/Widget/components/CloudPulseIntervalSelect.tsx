@@ -89,7 +89,7 @@ export const CloudPulseIntervalSelect = React.memo(
     const firstIntervalIndex = getIntervalIndex(scrapeIntervalValue);
 
     // all intervals displayed if srape interval > highest available interval. Error handling done by api
-    const available_interval_options =
+    const availableIntervalOptions =
       firstIntervalIndex < 0
         ? all_interval_options.slice()
         : all_interval_options.slice(
@@ -100,7 +100,7 @@ export const CloudPulseIntervalSelect = React.memo(
     let default_interval =
       props.default_interval?.unit === 'Auto'
         ? autoIntervalOption
-        : available_interval_options.find(
+        : availableIntervalOptions.find(
             (obj) =>
               obj.value === props.default_interval?.value &&
               obj.unit === props.default_interval?.unit
@@ -139,7 +139,7 @@ export const CloudPulseIntervalSelect = React.memo(
         fullWidth={false}
         label="Select an Interval"
         noMarginTop={true}
-        options={[autoIntervalOption, ...available_interval_options]}
+        options={[autoIntervalOption, ...availableIntervalOptions]}
         sx={{ width: { xs: '100%' } }}
       />
     );
