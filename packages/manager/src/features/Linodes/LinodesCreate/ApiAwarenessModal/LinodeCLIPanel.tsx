@@ -40,13 +40,13 @@ export const LinodeCLIPanel = ({
               'link',
               'Install and Configure the Linode CLI'
             );
-            ldClient?.flush();
             ldClient?.track(
               LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_RESOURCE_LINKS,
               {
                 variation: apicliButtonCopy,
               }
             );
+            ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/cli/guides/install/"
         >

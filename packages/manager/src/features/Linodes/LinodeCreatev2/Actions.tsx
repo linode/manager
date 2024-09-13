@@ -55,6 +55,7 @@ export const Actions = () => {
       ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.OPEN_MODAL, {
         variation: apicliButtonCopy,
       });
+      ldClient?.flush();
     } else {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
