@@ -34,7 +34,7 @@ describe('Dialog', () => {
     }
   });
 
-  it('should render a Dialog with childrens if provided', () => {
+  it('should render a Dialog with children if provided', () => {
     const { getByText } = renderWithTheme(
       <Dialog {...defaultArgs} open={true}>
         <p>Child items can go here!</p>
