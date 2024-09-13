@@ -50,6 +50,9 @@ describe('volume attach and detach flows', () => {
   before(() => {
     cleanUp(['volumes', 'linodes']);
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Clicks "Attach" action menu item for volume, selects Linode with common region, and submits form.

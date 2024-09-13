@@ -1,13 +1,16 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   label: string;
