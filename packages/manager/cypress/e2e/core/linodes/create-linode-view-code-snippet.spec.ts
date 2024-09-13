@@ -19,6 +19,7 @@ describe('Create Linode', () => {
     beforeEach(() => {
       mockAppendFeatureFlags({
         apicliDxToolsAdditions: true,
+        testdxtoolabexperiment: 'Create using command line',
       });
     });
     it(`view code snippets in create linode flow`, () => {
