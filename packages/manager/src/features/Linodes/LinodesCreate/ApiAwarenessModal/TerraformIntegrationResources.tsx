@@ -52,13 +52,13 @@ export const TerraformIntegrationResources = () => {
   const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const handleClick = () => {
-    ldClient?.flush();
     ldClient?.track(
       LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TERRAFORM_RESOURCE_LINKS,
       {
         variation: apicliButtonCopy,
       }
     );
+    ldClient?.flush();
   };
   return (
     <>

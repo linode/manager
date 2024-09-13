@@ -46,13 +46,13 @@ export const AnsibleIntegrationResources = () => {
   const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const handleClick = () => {
-    ldClient?.flush();
     ldClient?.track(
       LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_ANSIBLE_RESOURCE_LINKS,
       {
         variation: apicliButtonCopy,
       }
     );
+    ldClient?.flush();
   };
   return (
     <>

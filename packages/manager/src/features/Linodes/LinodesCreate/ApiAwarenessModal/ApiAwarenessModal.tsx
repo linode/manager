@@ -97,10 +97,10 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
         : undefined;
 
     if (trackingKey) {
-      ldClient?.flush();
       ldClient?.track(trackingKey, {
         variation: apicliButtonCopy,
       });
+      ldClient?.flush();
     }
   };
 
