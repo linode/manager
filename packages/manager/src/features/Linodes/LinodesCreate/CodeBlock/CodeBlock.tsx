@@ -31,6 +31,7 @@ export const CodeBlock = (props: CodeBlockProps) => {
       ldClient?.track(ldTrackingKey, {
         variation: apicliButtonCopy,
       });
+      ldClient?.flush();
     }
   };
 

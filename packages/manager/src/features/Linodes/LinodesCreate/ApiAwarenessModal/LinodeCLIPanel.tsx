@@ -46,6 +46,7 @@ export const LinodeCLIPanel = ({
                 variation: apicliButtonCopy,
               }
             );
+            ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/cli/guides/install/"
         >
@@ -62,6 +63,7 @@ export const LinodeCLIPanel = ({
                 variation: apicliButtonCopy,
               }
             );
+            ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/cli/guides/"
         >
