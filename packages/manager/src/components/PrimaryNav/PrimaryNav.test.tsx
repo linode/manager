@@ -89,7 +89,7 @@ describe('PrimaryNav', () => {
 
   it('should show Databases menu item if the user has the account capability V2 Beta', async () => {
     const account = accountFactory.build({
-      capabilities: ['Managed Databases V2'],
+      capabilities: ['Managed Databases Beta'],
     });
 
     server.use(
@@ -121,7 +121,7 @@ describe('PrimaryNav', () => {
 
   it('should show Databases menu item if the user has the account capability V2', async () => {
     const account = accountFactory.build({
-      capabilities: ['Managed Databases V2'],
+      capabilities: ['Managed Databases Beta'],
     });
 
     server.use(
@@ -152,7 +152,7 @@ describe('PrimaryNav', () => {
 
   it('should show Databases menu item if the user has the account capability V2', async () => {
     const account = accountFactory.build({
-      capabilities: ['Managed Databases V2'],
+      capabilities: ['Managed Databases Beta'],
     });
 
     server.use(

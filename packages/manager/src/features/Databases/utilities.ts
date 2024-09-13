@@ -33,7 +33,7 @@ export const useIsDatabasesEnabled = () => {
     );
 
     const isDatabasesV2Enabled =
-      account.capabilities.includes('Managed Databases V2') &&
+      account.capabilities.includes('Managed Databases Beta') &&
       flags.dbaasV2?.enabled;
 
     return {
