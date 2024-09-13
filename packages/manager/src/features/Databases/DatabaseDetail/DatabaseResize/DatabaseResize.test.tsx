@@ -65,7 +65,7 @@ describe('database resize', () => {
   });
 
   describe('On rendering of page', () => {
-    const examplePlanType = 'g6-standard-60';
+    const examplePlanType = 'g6-dedicated-50';
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });

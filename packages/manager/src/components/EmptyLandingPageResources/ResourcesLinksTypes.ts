@@ -11,6 +11,7 @@ export interface linkAnalyticsEvent {
 
 export interface ResourcesHeaders {
   description: string;
+  logo?: React.ReactNode;
   subtitle: string;
   title: string;
 }

@@ -34,9 +34,9 @@ describe('useIsDatabasesEnabled', () => {
     });
   });
 
-  it('should return true for an unrestricted user with the account capability V2', async () => {
+  it('should return true for an unrestricted user with the account capability Beta', async () => {
     const account = accountFactory.build({
-      capabilities: ['Managed Databases V2'],
+      capabilities: ['Managed Databases Beta'],
     });
 
     server.use(
