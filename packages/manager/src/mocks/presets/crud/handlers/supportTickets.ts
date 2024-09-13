@@ -47,6 +47,8 @@ export const createSupportTicket = (mockState: MockState) => [
 
       await mswDB.add('supportTickets', supportTicket, mockState);
 
+      // TODO: event
+
       return makeResponse(supportTicket);
     }
   ),
@@ -76,7 +78,7 @@ export const getSupportTickets = () => [
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | SupportTicket>> => {
-      const id = Number(params.id);
+      const id = Number(params.ticketId);
       const supportTicket = await mswDB.get('supportTickets', id);
 
       if (!supportTicket) {
@@ -89,7 +91,7 @@ export const getSupportTickets = () => [
 
 export const getSupportTicketReplies = () => [
   http.get(
-    '*/support/tickets/:ticketId/replies',
+    '*/support/tickets/:ticketId/replies*',
     async ({
       request,
     }): Promise<
@@ -108,4 +110,24 @@ export const getSupportTicketReplies = () => [
   ),
 ];
 
-// TODO: Mock ticket close
+export const closeSupportTicket = (mockState: MockState) => [
+  http.post('*/support/tickets/:ticketId/close', async ({ params }) => {
+    const id = Number(params.ticketId);
+    const supportTicket = await mswDB.get('supportTickets', id);
+
+    if (!supportTicket) {
+      return makeNotFoundResponse();
+    }
+
+    mswDB.update(
+      'supportTickets',
+      id,
+      { ...supportTicket, closed: DateTime.now().toISO(), status: 'closed' },
+      mockState
+    );
+
+    // TODO: event
+
+    return makeResponse({});
+  }),
+];

@@ -1,6 +1,6 @@
 import {
+  closeSupportTicket,
   createSupportTicket,
-  //   getSupportTicket,
   getSupportTicketReplies,
   getSupportTickets,
 } from 'src/mocks/presets/crud/handlers/supportTickets';
@@ -11,7 +11,7 @@ export const supportTicketCrudPreset: MockPresetCrud = {
   group: { id: 'Support Tickets' },
   handlers: [
     createSupportTicket,
-    // getSupportTicket,
+    closeSupportTicket,
     getSupportTickets,
     getSupportTicketReplies,
   ],
