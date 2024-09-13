@@ -9,7 +9,7 @@ interface Props {
   width?: number;
 }
 
-export const GravatarForProxy = ({ height = 34, width = 34 }: Props) => {
+export const AvatarForProxy = ({ height = 34, width = 34 }: Props) => {
   return (
     <Box
       sx={(theme) => ({

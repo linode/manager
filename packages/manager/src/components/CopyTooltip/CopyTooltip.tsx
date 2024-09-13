@@ -64,7 +64,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   };
 
   const CopyButton = (
-    <StyledCopyButton
+    <StyledIconButton
       aria-label={`Copy ${text} to clipboard`}
       className={className}
       data-qa-copy-btn
@@ -74,7 +74,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       {...props}
     >
       {copyableText ? text : <FileCopy />}
-    </StyledCopyButton>
+    </StyledIconButton>
   );
 
   if (disabled) {
@@ -93,8 +93,8 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   );
 };
 
-const StyledCopyButton = styled('button', {
-  label: 'StyledCopyButton',
+export const StyledIconButton = styled('button', {
+  label: 'StyledIconButton',
   shouldForwardProp: omittedProps(['copyableText', 'text', 'onClickCallback']),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
   '& svg': {

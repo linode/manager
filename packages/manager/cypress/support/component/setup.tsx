@@ -30,9 +30,6 @@ import { ThemeName } from 'src/foundations/themes';
 
 import 'cypress-axe';
 
-// Load fonts using Vite rather than HTML `<link />`.
-import '../../../public/fonts/fonts.css';
-
 /**
  * Mounts a component with a Cloud Manager theme applied.
  *
