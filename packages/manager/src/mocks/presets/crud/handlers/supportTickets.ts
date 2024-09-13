@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { supportTicketFactory } from 'src/factories';
+import { supportReplyFactory, supportTicketFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import {
   makeNotFoundResponse,
@@ -89,27 +89,6 @@ export const getSupportTickets = () => [
   ),
 ];
 
-export const getSupportTicketReplies = () => [
-  http.get(
-    '*/support/tickets/:ticketId/replies*',
-    async ({
-      request,
-    }): Promise<
-      StrictResponse<APIErrorResponse | APIPaginatedResponse<SupportReply>>
-    > => {
-      const supportReplies = await mswDB.getAll('supportReplies');
-
-      if (!supportReplies) {
-        return makeNotFoundResponse();
-      }
-      return makePaginatedResponse({
-        data: supportReplies,
-        request,
-      });
-    }
-  ),
-];
-
 export const closeSupportTicket = (mockState: MockState) => [
   http.post('*/support/tickets/:ticketId/close', async ({ params }) => {
     const id = Number(params.ticketId);
@@ -130,4 +109,46 @@ export const closeSupportTicket = (mockState: MockState) => [
 
     return makeResponse({});
   }),
+];
+
+export const getSupportTicketReplies = () => [
+  http.get(
+    '*/support/tickets/:ticketId/replies',
+    async ({
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<SupportReply>>
+    > => {
+      const supportReplies = await mswDB.getAll('supportReplies');
+
+      if (!supportReplies) {
+        return makeNotFoundResponse();
+      }
+      return makePaginatedResponse({
+        data: supportReplies,
+        request,
+      });
+    }
+  ),
+];
+
+export const createSupportTicketReply = (mockState: MockState) => [
+  http.post(
+    '*/support/tickets/:ticketId/replies',
+    async ({
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | SupportReply>> => {
+      const payload = await request.clone().json();
+
+      const supportTicketReply = supportReplyFactory.build({
+        description: payload['description'],
+      });
+
+      await mswDB.add('supportReplies', supportTicketReply, mockState);
+
+      // TODO: event
+
+      return makeResponse(supportTicketReply);
+    }
+  ),
 ];

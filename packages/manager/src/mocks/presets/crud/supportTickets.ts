@@ -1,6 +1,7 @@
 import {
   closeSupportTicket,
   createSupportTicket,
+  createSupportTicketReply,
   getSupportTicketReplies,
   getSupportTickets,
 } from 'src/mocks/presets/crud/handlers/supportTickets';
@@ -14,6 +15,7 @@ export const supportTicketCrudPreset: MockPresetCrud = {
     closeSupportTicket,
     getSupportTickets,
     getSupportTicketReplies,
+    createSupportTicketReply,
   ],
   id: 'support-tickets:crud',
   label: 'Support Tickets CRUD',
