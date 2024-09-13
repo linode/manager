@@ -194,7 +194,7 @@ const StyledChip = styled(Chip, {
   width: props.showPlus ? 22 : 18,
 }));
 
-const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
+export const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
   animation: `${rotate360} 2s linear infinite`,
   bottom: 4,
   color: theme.palette.primary.main,

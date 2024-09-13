@@ -64,6 +64,9 @@ export const useMutateAccount = () => {
                 variant: 'info',
               }
             );
+            queryClient.invalidateQueries({
+              queryKey: accountQueries.notifications.queryKey,
+            });
           }
 
           return account;
