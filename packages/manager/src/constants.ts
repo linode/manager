@@ -314,6 +314,7 @@ export const LD_DX_TOOLS_METRICS_KEYS = {
     'A/B Test: Step 2 : Linode CLI Tab selection and copy code snippet (copy icon)',
   LINODE_CLI_RESOURCE_LINKS:
     'A/B Test: Step 2 : DX Tools Linode CLI resources links',
+  LINODE_CLI_TAB_SELECTION: 'A/B Test: Step 2 : Linode CLI Tab Selection',
   OPEN_MODAL: 'A/B Test: Step 1 : DX Tools Open Modal',
   SDK_GO_CODE_SNIPPET:
     'A/B Test: Step 2 : SDK: GO copy code snippet (copy icon)',

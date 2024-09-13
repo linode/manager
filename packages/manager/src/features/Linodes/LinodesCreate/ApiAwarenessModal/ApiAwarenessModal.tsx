@@ -93,6 +93,8 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
       trackingKey = LD_DX_TOOLS_METRICS_KEYS.CURL_TAB_SELECTION;
     } else if (title === "SDK's") {
       trackingKey = LD_DX_TOOLS_METRICS_KEYS.SDK_TAB_SELECTION;
+    } else if (title === 'Linode CLI') {
+      trackingKey = LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_TAB_SELECTION;
     }
 
     ldClient?.track(trackingKey, {
