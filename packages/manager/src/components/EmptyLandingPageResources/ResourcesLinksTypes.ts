@@ -18,6 +18,7 @@ export interface ResourcesHeaders {
 export interface ResourcesLinks {
   linkAnalyticsEvent: linkAnalyticsEvent;
   links: ResourcesLink[];
+  onClick?: () => void;
 }
 
 export interface ResourcesLinkSection {

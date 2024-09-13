@@ -419,7 +419,9 @@ export class LinodeCreate extends React.PureComponent<
     sendLinodeCreateFormErrorEvent(errorString, selectedTabName ?? 'OS');
   };
 
-  handleClickCreateUsingCommandLine = () => {
+  handleClickCreateUsingCommandLine = (
+    apicliButtonCopy: string | undefined
+  ) => {
     const payload = {
       authorized_users: this.props.authorized_users,
       backup_id: this.props.selectedBackupID,
@@ -442,9 +444,12 @@ export class LinodeCreate extends React.PureComponent<
     sendLinodeCreateFormInputEvent({
       createType: 'OS',
       interaction: 'click',
-      label: 'Create Using Command Line',
+      label: apicliButtonCopy ?? 'Create Using Command Line',
     });
-    sendApiAwarenessClickEvent('Button', 'Create Using Command Line');
+    sendApiAwarenessClickEvent(
+      'Button',
+      apicliButtonCopy ?? 'Create Using Command Line'
+    );
     this.props.checkValidation(payload);
   };
 
@@ -632,6 +637,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const hasErrorFor = getErrorMap(errorMap, errors);
     const generalError = getErrorMap(errorMap, errors).none;
+    const apicliButtonCopy = this.props.flags?.apicliButtonCopy;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
@@ -1194,11 +1200,13 @@ export class LinodeCreate extends React.PureComponent<
                 (showGDPRCheckbox && !signedAgreement) ||
                 secureVMViolation
               }
+              onClick={() =>
+                this.handleClickCreateUsingCommandLine(apicliButtonCopy)
+              }
               buttonType="outlined"
               data-qa-api-cli-linode
-              onClick={() => this.handleClickCreateUsingCommandLine()}
             >
-              Create using command line
+              {apicliButtonCopy ?? ' Create using command line'}
             </StyledCreateButton>
             <StyledCreateButton
               disabled={

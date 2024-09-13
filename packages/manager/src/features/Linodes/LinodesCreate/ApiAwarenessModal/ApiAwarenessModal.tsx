@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,6 +12,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
+import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -58,6 +60,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const { isOpen, onClose, payLoad } = props;
 
   const flags = useFlags();
+  const ldClient = useLDClient();
   const history = useHistory();
   const { data: events } = useInProgressEvents();
 
@@ -71,13 +74,33 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const isLinodeCreated = linodeCreationEvent !== undefined;
 
   const isDxAdditionsFeatureEnabled = flags?.apicliDxToolsAdditions;
+  const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const tabs = isDxAdditionsFeatureEnabled
     ? [baseTabs[1], baseTabs[0], ...additionalTabs]
     : baseTabs;
 
   const handleTabChange = (index: number) => {
-    sendApiAwarenessClickEvent(`${tabs[index].type} Tab`, tabs[index].type);
+    const { title, type } = tabs[index];
+
+    sendApiAwarenessClickEvent(`${type} Tab`, type);
+
+    const trackingKey =
+      type === 'INTEGRATIONS' && title !== "SDK's"
+        ? LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TAB_SELECTION
+        : type === 'API'
+        ? LD_DX_TOOLS_METRICS_KEYS.CURL_TAB_SELECTION
+        : title === "SDK's"
+        ? LD_DX_TOOLS_METRICS_KEYS.SDK_TAB_SELECTION
+        : title === 'Linode CLI'
+        ? LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_TAB_SELECTION
+        : undefined;
+
+    if (trackingKey) {
+      ldClient?.track(trackingKey, {
+        variation: apicliButtonCopy,
+      });
+    }
   };
 
   useEffect(() => {
