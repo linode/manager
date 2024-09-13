@@ -45,7 +45,7 @@ export const getInSeconds = (interval: string) => {
 };
 
 // Intervals must be in ascending order here
-export const all_interval_options: IntervalOptions[] = [
+export const allIntervalOptions: IntervalOptions[] = [
   {
     label: '1 min',
     unit: 'min',
@@ -75,7 +75,7 @@ const autoIntervalOption: IntervalOptions = {
 };
 
 export const getIntervalIndex = (scrapeIntervalValue: number) => {
-  return all_interval_options.findIndex(
+  return allIntervalOptions.findIndex(
     (interval) =>
       scrapeIntervalValue <=
       getInSeconds(String(interval.value) + interval.unit.slice(0, 1))
@@ -91,10 +91,10 @@ export const CloudPulseIntervalSelect = React.memo(
     // all intervals displayed if srape interval > highest available interval. Error handling done by api
     const availableIntervalOptions =
       firstIntervalIndex < 0
-        ? all_interval_options.slice()
-        : all_interval_options.slice(
+        ? allIntervalOptions.slice()
+        : allIntervalOptions.slice(
             firstIntervalIndex,
-            all_interval_options.length
+            allIntervalOptions.length
           );
 
     let default_interval =
