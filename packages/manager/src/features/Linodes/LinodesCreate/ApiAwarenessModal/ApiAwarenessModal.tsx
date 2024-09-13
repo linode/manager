@@ -129,9 +129,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
       <StyledTabs defaultIndex={0} onChange={handleTabChange}>
         <TabList>
           {tabs.map((tab) => (
-            <Tab data-ab-test={`${tab.title} tab`} key={tab.title}>
-              {tab.title}
-            </Tab>
+            <Tab key={tab.title}>{tab.title}</Tab>
           ))}
         </TabList>
         <TabPanels>
