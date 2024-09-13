@@ -1,3 +1,19 @@
+## [2024-09-16] - v0.126.0
+
+
+### Added:
+
+- LinodeCapabilities type used for `capabilities` property of Linode interface ([#10920](https://github.com/linode/manager/pull/10920))
+
+### Tech Stories:
+
+- Update vitest to latest ([#10843](https://github.com/linode/manager/pull/10843))
+
+### Upcoming Features:
+
+- Change 'bs_encryption_supported' property on Linode object to 'capabilities' ([#10837](https://github.com/linode/manager/pull/10837))
+- Add beta API root for CloudPulse endpoints ([#10851](https://github.com/linode/manager/pull/10851))
+
 ## [2024-09-03] - v0.125.0
 
 
