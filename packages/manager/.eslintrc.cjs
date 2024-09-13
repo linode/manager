@@ -115,7 +115,7 @@ module.exports = {
   rules: {
     '@linode/cloud-manager/no-custom-fontWeight': 'error',
     '@typescript-eslint/camelcase': 'off',
-    "@typescript-eslint/consistent-type-imports": "warn",
+    '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
@@ -159,9 +159,26 @@ module.exports = {
     'no-new-wrappers': 'error',
     'no-restricted-imports': [
       'error',
-      'rxjs',
-      '@mui/core',
-      '@mui/icons-material',
+      {
+        paths: ['rxjs', '@mui/core', '@mui/icons-material'],
+      },
+    ],
+    'no-restricted-imports': [
+      'warn',
+      {
+        paths: [
+          {
+            message: 'Formik is being deprecated. Please use react-hook-form.',
+            name: 'formik',
+          },
+        ],
+        patterns: [
+          {
+            group: ['formik/*'],
+            message: 'Formik is being deprecated. Please use react-hook-form.',
+          },
+        ],
+      },
     ],
     'no-throw-literal': 'warn',
     'no-trailing-spaces': 'warn',
