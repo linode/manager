@@ -229,7 +229,7 @@ describe('Create Linode', () => {
         .type(linodePass);
 
       ui.button
-        .findByTitle('Create Using Command Line')
+        .findByTitle('Create using command line')
         .should('be.visible')
         .should('be.enabled')
         .click();
