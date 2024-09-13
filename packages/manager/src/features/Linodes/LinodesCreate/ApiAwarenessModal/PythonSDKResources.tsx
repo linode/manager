@@ -31,6 +31,7 @@ export const PythonSDKResources = () => {
   const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const handleClick = () => {
+    ldClient?.flush();
     ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.SDK_PYTHON_RESOURCE_LINKS, {
       variation: apicliButtonCopy,
     });

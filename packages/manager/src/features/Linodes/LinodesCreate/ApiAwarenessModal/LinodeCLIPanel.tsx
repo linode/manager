@@ -40,6 +40,7 @@ export const LinodeCLIPanel = ({
               'link',
               'Install and Configure the Linode CLI'
             );
+            ldClient?.flush();
             ldClient?.track(
               LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_RESOURCE_LINKS,
               {
@@ -56,6 +57,7 @@ export const LinodeCLIPanel = ({
         <Link
           onClick={() => {
             sendApiAwarenessClickEvent('link', 'Linode CLI Guides');
+            ldClient?.flush();
             ldClient?.track(
               LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_RESOURCE_LINKS,
               {
