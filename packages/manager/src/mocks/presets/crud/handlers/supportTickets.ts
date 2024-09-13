@@ -27,7 +27,6 @@ export const createSupportTicket = (mockState: MockState) => [
 
       const supportTicket = supportTicketFactory.build({
         closable: true,
-        closed: null,
         description: payload['description'],
         // TODO: handle dynamic entity selection
         entity: {
@@ -36,13 +35,10 @@ export const createSupportTicket = (mockState: MockState) => [
           type: 'linode',
           url: '/v4/linode/instances/123456',
         },
-        gravatar_id: undefined,
         opened: DateTime.now().toISO(),
-        opened_by: 'linode',
-        status: 'open',
+        severity: 1,
         summary: payload['summary'],
         updated: DateTime.now().toISO(),
-        updated_by: null,
       });
 
       await mswDB.add('supportTickets', supportTicket, mockState);
@@ -115,17 +111,22 @@ export const getSupportTicketReplies = () => [
   http.get(
     '*/support/tickets/:ticketId/replies',
     async ({
+      params,
       request,
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<SupportReply>>
     > => {
-      const supportReplies = await mswDB.getAll('supportReplies');
+      const id = Number(params.ticketId);
+      const supportReplies = await mswDB.get('supportReplies', id);
 
       if (!supportReplies) {
-        return makeNotFoundResponse();
+        return makePaginatedResponse({
+          data: [],
+          request,
+        });
       }
       return makePaginatedResponse({
-        data: supportReplies,
+        data: [supportReplies],
         request,
       });
     }
