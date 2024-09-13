@@ -3,6 +3,7 @@ import { http } from 'msw';
 
 import { supportReplyFactory, supportTicketFactory } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
+import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
@@ -43,7 +44,19 @@ export const createSupportTicket = (mockState: MockState) => [
 
       await mswDB.add('supportTickets', supportTicket, mockState);
 
-      // TODO: event
+      queueEvents({
+        event: {
+          action: 'ticket_create',
+          entity: {
+            id: supportTicket.id,
+            label: supportTicket.summary,
+            type: 'support_ticket',
+            url: `/v4/support/tickets/${supportTicket.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
 
       return makeResponse(supportTicket);
     }
@@ -101,8 +114,6 @@ export const closeSupportTicket = (mockState: MockState) => [
       mockState
     );
 
-    // TODO: event
-
     return makeResponse({});
   }),
 ];
@@ -137,9 +148,12 @@ export const createSupportTicketReply = (mockState: MockState) => [
   http.post(
     '*/support/tickets/:ticketId/replies',
     async ({
+      params,
       request,
     }): Promise<StrictResponse<APIErrorResponse | SupportReply>> => {
       const payload = await request.clone().json();
+      const id = Number(params.ticketId);
+      const supportTicket = await mswDB.get('supportTickets', id);
 
       const supportTicketReply = supportReplyFactory.build({
         description: payload['description'],
@@ -147,7 +161,19 @@ export const createSupportTicketReply = (mockState: MockState) => [
 
       await mswDB.add('supportReplies', supportTicketReply, mockState);
 
-      // TODO: event
+      queueEvents({
+        event: {
+          action: 'ticket_update',
+          entity: {
+            id: supportTicket?.id ?? -1,
+            label: supportTicket?.summary ?? null,
+            type: 'support_ticket',
+            url: `/v4/support/tickets/${supportTicket?.id}`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'notification' }],
+      });
 
       return makeResponse(supportTicketReply);
     }
