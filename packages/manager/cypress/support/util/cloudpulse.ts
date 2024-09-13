@@ -84,19 +84,31 @@ export const resetDashboard = () => {
     .findByPlaceholderCustom('Select Dashboard')
     .should('have.value', '');
 };
-
+/**
+ * Selects an engine from a dropdown menu.
+ *
+ * @param {string} engine - The engine to be selected.
+ */
 export const chooseEngine = (engine: string) => {
-ui.autocomplete
+  ui.autocomplete
     .findByTitleCustom('Select a Value')
     .findByTitle('Open')
     .click();
   ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
   cy.findByDisplayValue(engine).should('have.value', engine);
 };
+/**
+ * Selects a node type from a dropdown menu.
+ *
+ * @param {string} node - The node type to be selected.
+ */
 
-export const chooseDbCluster = (ClusterName: string) => {
-  const dbCluster = ui.autocomplete.findByTitleCustom('Select DB Cluster Names');
-  dbCluster.findByTitle('Open').click();
-  dbCluster.click().type(`${ClusterName}{enter}`);
-  cy.get('[title="Close"]').click();
+export const chooseNodeType = (node: string) => {
+  ui.autocomplete
+    .findByPlaceholderCustom('Select Node Type')
+    .should('be.visible')
+    .type(node)
+    .click();
+  ui.autocompletePopper.findByTitle(node).should('be.visible').click();
+  cy.findByDisplayValue(node).should('have.value', node);
 };

@@ -1,3 +1,5 @@
+import { stat } from 'fs';
+
 /**
  * Defines the granularity levels used for specifying time intervals in data aggregation or reporting.
  * Each property represents a different granularity level.
@@ -5,8 +7,8 @@
 export const granularity = {
   Auto: 'Auto',
   Day1: '1 day',
-  Hr1: '1 hr',
-  Min5: '5 min',
+  Hour: '1 hr',
+  Minutes: '5 min',
 };
 
 /**
@@ -55,42 +57,47 @@ export const widgetDetails = {
   dbaas: {
     cluster: 'mysql-cluster',
     dashboardName: 'Dbaas Dashboard',
-    engine: 'mysql',
-    id: 2,
+    engine: 'MySQL',
+    id: 1,
     metrics: [
       {
+        StatsData: 'Controls for Disk I/O',
+        expectedAggregation: aggregation.Max,
+        expectedAggregationArray: aggregationConfig.all,
+        expectedGranularity: granularity.Hour,
+        expectedGranularityArray: Object.values(granularity),
+        name: 'system_disk_OPS_total',
+        title: 'Disk I/O',
+      },
+      {
+        StatsData: 'Controls for CPU Utilization',
         expectedAggregation: aggregation.Max,
         expectedAggregationArray: aggregationConfig.basic,
-        expectedGranularity: granularity.Hr1,
+        expectedGranularity: granularity.Hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_cpu_utilization_percent',
         title: 'CPU Utilization',
       },
       {
+        StatsData: 'Controls for Memory Usage',
         expectedAggregation: aggregation.Max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hr1,
+        expectedGranularity: granularity.Hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_memory_usage_by_resource',
         title: 'Memory Usage',
       },
       {
+        StatsData: 'Controls for Network Traffic',
         expectedAggregation: aggregation.Max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hr1,
+        expectedGranularity: granularity.Hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_network_io_by_resource',
         title: 'Network Traffic',
       },
-      {
-        expectedAggregation: aggregation.Max,
-        expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hr1,
-        expectedGranularityArray: Object.values(granularity),
-        name: 'system_disk_OPS_total',
-        title: 'Disk I/O',
-      },
     ],
+    nodeType: 'Primary',
     region: 'US, Chicago, IL (us-ord)',
     resource: 'Dbaas-resource',
     service_type: 'dbaas',
@@ -102,7 +109,7 @@ export const widgetDetails = {
       {
         expectedAggregation: aggregation.Max,
         expectedAggregationArray: aggregationConfig.basic,
-        expectedGranularity: granularity.Hr1,
+        expectedGranularity: granularity.Hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_cpu_utilization_percent',
         title: 'CPU Utilization',
@@ -110,7 +117,7 @@ export const widgetDetails = {
       {
         expectedAggregation: aggregation.Max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hr1,
+        expectedGranularity: granularity.Hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_memory_usage_by_resource',
         title: 'Memory Usage',
@@ -118,7 +125,7 @@ export const widgetDetails = {
       {
         expectedAggregation: aggregation.Max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hr1,
+        expectedGranularity: granularity.Hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_network_io_by_resource',
         title: 'Network Traffic',
@@ -126,7 +133,7 @@ export const widgetDetails = {
       {
         expectedAggregation: aggregation.Max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hr1,
+        expectedGranularity: granularity.Hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_disk_OPS_total',
         title: 'Disk I/O',

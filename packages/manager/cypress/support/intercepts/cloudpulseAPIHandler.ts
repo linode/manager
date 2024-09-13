@@ -8,6 +8,7 @@ import { apiMatcher } from 'support/util/intercepts';
 
 import type {
   AvailableMetrics,
+  CloudPulseMetricsResponse,
   Dashboard,
   MetricDefinitions,
 } from '@linode/api-v4';
@@ -77,7 +78,7 @@ export const mockCloudPulseGetDashboards = (
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 export const mockCloudPulseCreateMetrics = (
-  mockResponse: AvailableMetrics,
+  mockResponse: CloudPulseMetricsResponse,
   service_type: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(

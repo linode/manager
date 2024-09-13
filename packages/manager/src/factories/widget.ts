@@ -1,9 +1,9 @@
 import {
   granularity,
   timeRange,
-} from '../../cypress/support/constants/widget-service';
+} from '../../cypress/support/constants/widgets';
 
-import type { AvailableMetrics } from '@linode/api-v4';
+import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 
 /**
  * Generates a mock metric response based on the specified time range and granularity.
@@ -16,19 +16,19 @@ import type { AvailableMetrics } from '@linode/api-v4';
  *
  * @param {string} time - The time range for the metric data (e.g., "Last12Hours").
  * @param {string} granularityData - The granularity of the metric data (e.g., "Min5").
- * @returns {AvailableMetrics} - The generated mock metric response.
+ * @returns {CloudPulseMetricsResponse} - The generated mock metric response.
  */
 export const createMetricResponse = (
   time: string,
   granularityData: string
-): AvailableMetrics => {
+): CloudPulseMetricsResponse => {
   const currentTime = Math.floor(Date.now() / 1000);
 
   const intervals: Record<string, number> = {
     [granularity.Auto]: 3600,
     [granularity.Day1]: 86400,
-    [granularity.Hr1]: 3600,
-    [granularity.Min5]: 5 * 60,
+    [granularity.Hour]: 3600,
+    [granularity.Minutes]: 5 * 60,
   };
 
   const timeRanges: Record<string, number> = {

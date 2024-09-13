@@ -17,7 +17,7 @@ import {
   mockCloudPulseServices,
 } from 'support/intercepts/cloudpulseAPIHandler';
 import { ui } from 'support/ui';
-import { timeRange, widgetDetails, granularity } from 'support/constants/widget-service';
+import { timeRange, widgetDetails, granularity } from 'support/constants/widgets';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createMetricResponse } from '@src/factories/widget';
 import type { Flags } from 'src/featureFlags';
@@ -89,7 +89,7 @@ describe('Dashboard Widget Verification Tests', () => {
     mockCloudPulseServices(service_type).as('services');
     mockCloudPulseDashboardServicesResponse(dashboard,dashboardId);
     mockCloudPulseJWSToken(service_type);
-    const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Min5);
+    const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Minutes);
     mockCloudPulseCreateMetrics(responsePayload,service_type).as('getMetrics');
     mockGetRegions([mockRegion]).as('getRegions');
 });
@@ -106,7 +106,7 @@ describe('Dashboard Widget Verification Tests', () => {
   it('should set available granularity of all the widgets', () => {
     setupMethod()
     metrics.forEach((testData) => {
-      cy.wait(5000);
+      cy.wait(7000);//maintaining the wait since page flicker and rendering 
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector).as('widget')
       cy.get('@widget')
@@ -143,7 +143,7 @@ describe('Dashboard Widget Verification Tests', () => {
   it('should set available aggregation of all the widgets', () => {
     setupMethod()
     metrics.forEach((testData) => {
-      cy.wait(5000);
+      cy.wait(7000);//maintaining the wait since page flicker and rendering 
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
         .first()
@@ -168,7 +168,7 @@ describe('Dashboard Widget Verification Tests', () => {
   it('should verify available granularity of the widget', () => {
     setupMethod()
     metrics.forEach((testData) => {
-      cy.wait(5000);
+      cy.wait(7000);//maintaining the wait since page flicker and rendering 
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
         .first()
@@ -196,7 +196,7 @@ describe('Dashboard Widget Verification Tests', () => {
   it('should verify available aggregation of the widget', () => {
     setupMethod()
     metrics.forEach((testData) => {
-      cy.wait(5000);
+      cy.wait(7000);//maintaining the wait since page flicker and rendering 
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
         .first()
@@ -222,10 +222,10 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 
-  it.only('should zoom in and out of all the widgets', () => {
+  it('should zoom in and out of all the widgets', () => {
     setupMethod()
     metrics.forEach((testData) => {
-      cy.wait(5000);
+      cy.wait(7000);//maintaining the wait since page flicker and rendering 
       cy.get(`[data-qa-widget="${testData.title}"]`).as('widget');
       cy.get('@widget').should('be.visible').within(() => {
         ui.cloudpulse.findZoomButtonByTitle('zoom-in').should('be.visible')
