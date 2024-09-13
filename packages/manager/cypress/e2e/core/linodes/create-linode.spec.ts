@@ -10,9 +10,14 @@ import { cleanUp } from 'support/util/cleanup';
 import { linodeCreatePage } from 'support/ui/pages';
 import { authenticate } from 'support/api/authentication';
 import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import {
   interceptCreateLinode,
   mockCreateLinodeError,
 } from 'support/intercepts/linodes';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { interceptGetProfile } from 'support/intercepts/profile';
 import { Region, VLAN, Config, Disk } from '@linode/api-v4';
 import { getRegionById } from 'support/util/regions';
@@ -55,6 +60,15 @@ describe('Create Linode', () => {
   before(() => {
     cleanUp('linodes');
     cleanUp('ssh-keys');
+  });
+
+  // Enable the `linodeCreateRefactor` feature flag.
+  // TODO Delete these mocks once `linodeCreateRefactor` feature flag is retired.
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(true),
+    });
+    mockGetFeatureFlagClientstream();
   });
 
   /*

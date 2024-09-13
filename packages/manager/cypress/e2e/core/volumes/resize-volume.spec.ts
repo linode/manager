@@ -35,9 +35,6 @@ describe('volume resize flow', () => {
   before(() => {
     cleanUp('volumes');
   });
-  beforeEach(() => {
-    cy.tag('method:e2e');
-  });
 
   /*
    * - Clicks "Resize" action menu item for volume, enters new size, and submits form.

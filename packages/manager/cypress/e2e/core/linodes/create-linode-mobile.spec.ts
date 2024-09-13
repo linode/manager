@@ -7,10 +7,23 @@ import { MOBILE_VIEWPORTS } from 'support/constants/environment';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 
 describe('Linode create mobile smoke', () => {
+  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(true),
+    });
+    mockGetFeatureFlagClientstream();
+  });
+
   MOBILE_VIEWPORTS.forEach((viewport) => {
     /*
      * - Confirms Linode create flow can be completed on common mobile screen sizes

@@ -58,14 +58,6 @@ export default defineConfig({
     specPattern: './cypress/component/**/*.spec.tsx',
     viewportWidth: 500,
     viewportHeight: 500,
-
-    setupNodeEvents(on, config) {
-      return setupPlugins(on, config, [
-        loadEnvironmentConfig,
-        discardPassedTestRecordings,
-        enableJunitReport('Component', true),
-      ]);
-    },
   },
 
   e2e: {
@@ -93,7 +85,7 @@ export default defineConfig({
         regionOverrideCheck,
         logTestTagInfo,
         splitCypressRun,
-        enableJunitReport(),
+        enableJunitReport,
         generateTestWeights,
       ]);
     },

@@ -35,9 +35,6 @@ describe('volume clone flow', () => {
   before(() => {
     cleanUp('volumes');
   });
-  beforeEach(() => {
-    cy.tag('method:e2e');
-  });
 
   /*
    * - Clicks "Clone" action menu item for volume, enters new label, and submits form.

@@ -92,7 +92,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <StyledCopyableTextField
           aria-disabled
           fullWidth
-          hideIcons
+          hideIcon
           label="Token"
           value={transfer.token}
         />
@@ -115,7 +115,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <StyledCopyableTextField
           aria-disabled
           fullWidth
-          hideIcons
+          hideIcon
           label="Draft Email"
           multiline
           value={draftEmail}

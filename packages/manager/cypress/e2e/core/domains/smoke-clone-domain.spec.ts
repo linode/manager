@@ -14,9 +14,6 @@ describe('Clone a Domain', () => {
   before(() => {
     cleanUp('domains');
   });
-  beforeEach(() => {
-    cy.tag('method:e2e');
-  });
 
   /*
    * - Clicks "Clone" action menu item for domain but cancels operation.

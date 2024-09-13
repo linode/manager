@@ -5,11 +5,15 @@
 import { createObjectStorageBucketFactoryLegacy } from 'src/factories/objectStorage';
 import { authenticate } from 'support/api/authentication';
 import { createBucket } from '@linode/api-v4/lib/object-storage';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
 import {
   interceptGetAccessKeys,
   interceptCreateAccessKey,
 } from 'support/intercepts/object-storage';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
@@ -20,9 +24,6 @@ authenticate();
 describe('object storage access key end-to-end tests', () => {
   before(() => {
     cleanUp(['obj-buckets', 'obj-access-keys']);
-  });
-  beforeEach(() => {
-    cy.tag('method:e2e');
   });
 
   /*
@@ -40,8 +41,9 @@ describe('object storage access key end-to-end tests', () => {
 
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
-      objMultiCluster: false,
+      objMultiCluster: makeFeatureFlagData(false),
     });
+    mockGetFeatureFlagClientstream();
 
     cy.visitWithLogin('/object-storage/access-keys');
     cy.wait('@getKeys');
@@ -134,8 +136,9 @@ describe('object storage access key end-to-end tests', () => {
 
       mockGetAccount(accountFactory.build({ capabilities: [] }));
       mockAppendFeatureFlags({
-        objMultiCluster: false,
+        objMultiCluster: makeFeatureFlagData(false),
       });
+      mockGetFeatureFlagClientstream();
 
       interceptGetAccessKeys().as('getKeys');
       interceptCreateAccessKey().as('createKey');

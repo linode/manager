@@ -1,3 +1,4 @@
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,8 +12,6 @@ import { useAllNodeBalancerConfigsQuery } from 'src/queries/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
-
-import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 
 interface Props extends NodeBalancer {
   onDelete: () => void;

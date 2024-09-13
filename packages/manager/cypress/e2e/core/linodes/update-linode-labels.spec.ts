@@ -8,7 +8,6 @@ authenticate();
 describe('update linode label', () => {
   beforeEach(() => {
     cleanUp(['linodes']);
-    cy.tag('method:e2e');
   });
 
   it('updates a linode label from details page', () => {

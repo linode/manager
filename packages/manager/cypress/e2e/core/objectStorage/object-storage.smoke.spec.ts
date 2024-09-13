@@ -16,7 +16,11 @@ import {
   mockUploadBucketObjectS3,
   mockCreateBucketError,
 } from 'support/intercepts/object-storage';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
 import { accountFactory, regionFactory } from 'src/factories';
@@ -64,8 +68,9 @@ describe('object storage smoke tests', () => {
       })
     );
     mockAppendFeatureFlags({
-      objMultiCluster: true,
+      objMultiCluster: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetRegions(mockRegions).as('getRegions');
     mockGetBuckets([]).as('getBuckets');
@@ -84,7 +89,7 @@ describe('object storage smoke tests', () => {
       .within(() => {
         // Enter label.
         cy.contains('Label').click().type(mockBucket.label);
-        cy.log(`${mockRegionWithObj.label}`);
+
         cy.contains('Region').click().type(mockRegionWithObj.label);
 
         ui.autocompletePopper
@@ -162,9 +167,10 @@ describe('object storage smoke tests', () => {
 
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
-      objMultiCluster: false,
-      gecko2: false,
+      objMultiCluster: makeFeatureFlagData(false),
+      gecko2: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
 
     mockGetBuckets([]).as('getBuckets');
 
@@ -299,8 +305,9 @@ describe('object storage smoke tests', () => {
 
     mockGetAccount(accountFactory.build({ capabilities: [] }));
     mockAppendFeatureFlags({
-      objMultiCluster: false,
+      objMultiCluster: makeFeatureFlagData(false),
     });
+    mockGetFeatureFlagClientstream();
 
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
@@ -352,8 +359,9 @@ describe('object storage smoke tests', () => {
       })
     );
     mockAppendFeatureFlags({
-      objMultiCluster: true,
+      objMultiCluster: makeFeatureFlagData(true),
     });
+    mockGetFeatureFlagClientstream();
 
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketMock.region!).as('deleteBucket');

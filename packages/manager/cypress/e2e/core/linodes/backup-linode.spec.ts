@@ -41,7 +41,6 @@ describe('linode backups', () => {
    * - Confirms that Linode details page updates to reflect that backups are enabled.
    */
   it('can enable backups', () => {
-    cy.tag('method:e2e');
     // Skip or optionally fail if test account has Managed enabled.
     // This is necessary because Managed accounts have backups enabled implicitly.
     expectManagedDisabled();
@@ -108,7 +107,6 @@ describe('linode backups', () => {
    * - Confirms that backups page content updates to reflect new snapshot.
    */
   it('can capture a manual snapshot', () => {
-    cy.tag('method:e2e');
     // Create a Linode that is not booted and which has backups enabled.
     const createLinodeRequest = createLinodeRequestFactory.build({
       label: randomLabel(),

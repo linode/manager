@@ -7,7 +7,7 @@ import { ImageOptionv2 } from './ImageOptionv2';
 
 describe('ImageOptionv2', () => {
   it('renders the image label', () => {
-    const image = imageFactory.build({ eol: null });
+    const image = imageFactory.build();
 
     const { getByText } = renderWithTheme(
       <ImageOptionv2 image={image} isSelected={false} listItemProps={{}} />
@@ -48,28 +48,5 @@ describe('ImageOptionv2', () => {
         'This image is compatible with distributed compute regions.'
       )
     ).toBeVisible();
-  });
-
-  it('renders (deprecated) if the image is deprecated', () => {
-    const image = imageFactory.build({ deprecated: true });
-
-    const { getByText } = renderWithTheme(
-      <ImageOptionv2 image={image} isSelected={false} listItemProps={{}} />
-    );
-
-    expect(getByText(`${image.label} (deprecated)`)).toBeVisible();
-  });
-
-  it('renders (deprecated) if the image is past its end-of-life', () => {
-    const image = imageFactory.build({
-      deprecated: false,
-      eol: '2015-01-01T00:00:00',
-    });
-
-    const { getByText } = renderWithTheme(
-      <ImageOptionv2 image={image} isSelected={false} listItemProps={{}} />
-    );
-
-    expect(getByText(`${image.label} (deprecated)`)).toBeVisible();
   });
 });

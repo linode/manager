@@ -20,9 +20,6 @@ describe('volume delete flow', () => {
   before(() => {
     cleanUp('volumes');
   });
-  beforeEach(() => {
-    cy.tag('method:e2e');
-  });
 
   /*
    * - Clicks "Delete" action menu item for volume but cancels operation.

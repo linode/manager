@@ -100,7 +100,6 @@
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open --e2e",
     "cy:component": "cypress open --component",
-    "cy:component:run": "cypress run --component --headless -b chrome",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "typecheck": "tsc --noEmit && tsc -p cypress --noEmit",
     "coverage": "vitest run --coverage && open coverage/index.html",

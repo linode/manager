@@ -26,7 +26,7 @@ describe('Images', () => {
   });
 
   it('should only render images that are compatible with the selected StackScript', async () => {
-    const images = imageFactory.buildList(5, { eol: null });
+    const images = imageFactory.buildList(5);
 
     // For the sake of this test, we pretend this image is the only compatible image.
     const compatibleImage = images[2];

@@ -9,7 +9,6 @@ import { OSIcon } from '../OSIcon';
 import { Stack } from '../Stack';
 import { Tooltip } from '../Tooltip';
 import { Typography } from '../Typography';
-import { isImageDeprecated } from './utilities';
 
 import type { Image } from '@linode/api-v4';
 
@@ -33,9 +32,7 @@ export const ImageOptionv2 = ({ image, isSelected, listItemProps }: Props) => {
     >
       <Stack alignItems="center" direction="row" spacing={2}>
         <OSIcon fontSize="1.8em" lineHeight="1.8em" os={image.vendor} />
-        <Typography color="inherit">
-          {image.label} {isImageDeprecated(image) && '(deprecated)'}
-        </Typography>
+        <Typography color="inherit">{image.label}</Typography>
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
         {image.capabilities.includes('distributed-sites') && (

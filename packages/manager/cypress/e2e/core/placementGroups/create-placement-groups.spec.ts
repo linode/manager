@@ -2,6 +2,7 @@ import { mockGetAccount } from 'support/intercepts/account';
 import { accountFactory, placementGroupFactory } from 'src/factories';
 import { regionFactory } from 'src/factories';
 import { ui } from 'support/ui/';
+
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreatePlacementGroup,

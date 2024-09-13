@@ -2,20 +2,18 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { FormattedEventMessage } from './FormattedEventMessage';
+import { EventMessage } from './EventMessage';
 
-describe('FormattedEventMessage', () => {
+describe('EventMessage', () => {
   it('renders null when message is null', () => {
-    const { queryByRole } = renderWithTheme(
-      <FormattedEventMessage message={null} />
-    );
+    const { queryByRole } = renderWithTheme(<EventMessage message={null} />);
 
     expect(queryByRole('pre')).toBeNull();
   });
 
   it('renders message without ticks as plain text', () => {
     const { getByText, queryByRole } = renderWithTheme(
-      <FormattedEventMessage message="Hello, world!" />
+      <EventMessage message="Hello, world!" />
     );
 
     expect(getByText('Hello, world!')).toBeInTheDocument();
@@ -24,22 +22,10 @@ describe('FormattedEventMessage', () => {
 
   it('renders message with ticks as inline code blocks', () => {
     const { container, getByText } = renderWithTheme(
-      <FormattedEventMessage message="Hello, `world`!" />
+      <EventMessage message="Hello, `world`!" />
     );
 
     expect(getByText(/Hello,/)).toBeInTheDocument();
     expect(container.querySelector('pre')).toHaveTextContent('world');
-  });
-
-  it('converts contact support links', () => {
-    const { container, getByText } = renderWithTheme(
-      <FormattedEventMessage message="Please contact Support" />
-    );
-
-    expect(getByText('contact Support')).toBeInTheDocument();
-    expect(container.querySelector('a')).toHaveAttribute(
-      'href',
-      '/support/tickets'
-    );
   });
 });

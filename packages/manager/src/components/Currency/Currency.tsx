@@ -22,15 +22,11 @@ interface CurrencyFormatterProps {
 }
 
 export const Currency = (props: CurrencyFormatterProps) => {
-  const { dataAttrs, decimalPlaces, quantity, wrapInParentheses } = props;
-
-  // Use the default value (2) when decimalPlaces is negative or undefined.
-  const minimumFractionDigits =
-    decimalPlaces !== undefined && decimalPlaces >= 0 ? decimalPlaces : 2;
+  const { dataAttrs, quantity, wrapInParentheses } = props;
 
   const formatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
-    minimumFractionDigits,
+    minimumFractionDigits: props.decimalPlaces ?? 2,
     style: 'currency',
   });
 

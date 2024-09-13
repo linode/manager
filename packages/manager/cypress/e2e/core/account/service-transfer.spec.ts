@@ -121,7 +121,6 @@ describe('Account service transfers', () => {
    * - Confirms user can navigate to service transfer page via user menu.
    */
   it('can navigate to service transfers landing page', () => {
-    cy.tag('method:e2e');
     cy.visitWithLogin('/');
     cy.findByLabelText('Profile & Account').should('be.visible').click();
 
@@ -245,7 +244,6 @@ describe('Account service transfers', () => {
    * - Confirms that users can cancel a service transfer
    */
   it('can initiate and cancel a service transfer', () => {
-    cy.tag('method:e2e');
     // Create a Linode to transfer.
     const setupLinode = async (): Promise<Linode> => {
       const payload = createLinodeRequestFactory.build({

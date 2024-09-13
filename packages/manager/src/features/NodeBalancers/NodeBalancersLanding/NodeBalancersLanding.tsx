@@ -21,8 +21,8 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
-import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
+import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {

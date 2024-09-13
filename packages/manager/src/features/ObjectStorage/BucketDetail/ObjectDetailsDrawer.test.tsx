@@ -2,7 +2,7 @@ import { act, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ObjectDetailsDrawer } from './ObjectDetailsDrawer';
@@ -62,17 +62,6 @@ describe('ObjectDetailsDrawer', () => {
 
     await act(async () => {
       expect(queryByTestId('lastModified')).not.toBeInTheDocument();
-    });
-  });
-
-  it("doesn't show the ACL Switch for E2 and E3 buckets", async () => {
-    const { queryByLabelText } = renderWithTheme(
-      <ObjectDetailsDrawer {...props} endpointType="E3" />
-    );
-    await waitFor(() => {
-      expect(
-        queryByLabelText('Access Control List (ACL)')
-      ).not.toBeInTheDocument();
     });
   });
 });

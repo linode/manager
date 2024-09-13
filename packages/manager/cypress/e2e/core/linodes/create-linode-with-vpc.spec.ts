@@ -5,6 +5,10 @@ import {
   vpcFactory,
 } from 'src/factories';
 import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
@@ -17,6 +21,7 @@ import {
 } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { linodeCreatePage, vpcCreateDrawer } from 'support/ui/pages';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   randomIp,
   randomLabel,
@@ -27,6 +32,14 @@ import {
 import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode with VPCs', () => {
+  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(true),
+    });
+    mockGetFeatureFlagClientstream();
+  });
+
   /*
    * - Confirms UI flow to create a Linode with an existing VPC assigned using mock API data.
    * - Confirms that VPC assignment is reflected in create summary section.

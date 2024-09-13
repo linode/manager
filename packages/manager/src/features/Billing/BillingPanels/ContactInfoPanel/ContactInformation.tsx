@@ -9,7 +9,6 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
-import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 
@@ -240,8 +239,14 @@ const ContactInformation = (props: Props) => {
                 </StyledTypography>
                 {invalidTaxIdNotification && (
                   <TooltipIcon
-                    icon={<StyledAutorenewIcon />}
-                    status="other"
+                    sxTooltipIcon={{
+                      '& > svg': {
+                        fontSize: '18px',
+                      },
+                      paddingBottom: 0,
+                      paddingTop: 0,
+                    }}
+                    status="warning"
                     text={invalidTaxIdNotification.label}
                   />
                 )}

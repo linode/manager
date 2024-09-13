@@ -1,9 +1,7 @@
 import { pages } from 'support/ui/constants';
+
 import type { Page } from 'support/ui/constants';
 
-beforeEach(() => {
-  cy.tag('method:e2e');
-});
 describe('smoke - deep links', () => {
   beforeEach(() => {
     cy.visitWithLogin('/null');

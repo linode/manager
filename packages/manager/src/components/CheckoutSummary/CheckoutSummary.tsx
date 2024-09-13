@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import { Theme, styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
@@ -8,24 +8,10 @@ import { Paper } from '../Paper';
 import { Typography } from '../Typography';
 import { SummaryItem } from './SummaryItem';
 
-import type { Theme } from '@mui/material/styles';
-
-interface CheckoutSummaryProps {
-  /**
-   * JSX element to be displayed as an agreement section.
-   */
+interface Props {
   agreement?: JSX.Element;
-  /**
-   * JSX element for additional content to be rendered within the component.
-   */
   children?: JSX.Element | null;
-  /**
-   * The sections to be displayed in the `CheckoutSumamry`
-   */
   displaySections: SummaryItem[];
-  /**
-   * The heading text to be displayed in the `CheckoutSummary`.
-   */
   heading: string;
 }
 
@@ -36,7 +22,7 @@ export interface SummaryItem {
   title?: string;
 }
 
-export const CheckoutSummary = (props: CheckoutSummaryProps) => {
+export const CheckoutSummary = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 

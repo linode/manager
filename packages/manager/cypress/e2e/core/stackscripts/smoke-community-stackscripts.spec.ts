@@ -190,7 +190,6 @@ describe('Community Stackscripts integration tests', () => {
    * - Confirms that pagination works as expected.
    */
   it('pagination works with infinite scrolling', () => {
-    cy.tag('method:e2e');
     interceptGetStackScripts().as('getStackScripts');
 
     // Fetch all public Images to later use while filtering StackScripts.
@@ -264,7 +263,6 @@ describe('Community Stackscripts integration tests', () => {
    * - Confirms that search can filter the expected results.
    */
   it('search function filters results correctly', () => {
-    cy.tag('method:e2e');
     const stackScript = mockStackScripts[0];
 
     interceptGetStackScripts().as('getStackScripts');

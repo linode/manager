@@ -28,7 +28,7 @@ export const Addons = () => {
     selectedRegion?.site_type === 'edge';
 
   return (
-    <Paper data-qa-add-ons>
+    <Paper>
       <Stack spacing={2}>
         <Typography variant="h2">Add-ons</Typography>
         {isDistributedRegionSelected && (

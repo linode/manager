@@ -67,9 +67,6 @@ describe('delete linode', () => {
   before(() => {
     cleanUp(['linodes', 'lke-clusters']);
   });
-  beforeEach(() => {
-    cy.tag('method:e2e');
-  });
 
   it('deletes linode from linode details page', () => {
     const linodeCreatePayload = createLinodeRequestFactory.build({

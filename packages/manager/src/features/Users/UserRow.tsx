@@ -1,12 +1,9 @@
-import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
-import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Hidden } from 'src/components/Hidden';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -27,7 +24,6 @@ interface Props {
 }
 
 export const UserRow = ({ onDelete, user }: Props) => {
-  const theme = useTheme();
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
 
@@ -38,19 +34,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
     <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
-          <GravatarOrAvatar
-            avatar={
-              <Avatar
-                color={
-                  user.username !== profile?.username
-                    ? theme.palette.primary.dark
-                    : undefined
-                }
-                username={user.username}
-              />
-            }
-            gravatar={<GravatarByEmail email={user.email} />}
-          />
+          <GravatarByEmail email={user.email} />
           <Typography>{user.username}</Typography>
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}

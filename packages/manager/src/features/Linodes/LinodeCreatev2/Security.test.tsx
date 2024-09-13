@@ -17,8 +17,7 @@ import { Security } from './Security';
 import type { LinodeCreateFormValues } from './utilities';
 
 describe('Security', () => {
-  // TODO: Unskip once M3-8559 is addressed.
-  it.skip(
+  it(
     'should render a root password input',
     async () => {
       const { findByLabelText } = renderWithThemeAndHookFormContext({

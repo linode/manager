@@ -2,12 +2,10 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
-import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
-import { fadeIn } from 'src/styles/keyframes';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { NotificationCenterNotificationMessageProps } from './types';
@@ -122,16 +120,6 @@ export const NotificationEventStyledBox = styled(Box, {
 
 export const NotificationEventGravatar = styled(GravatarByUsername, {
   label: 'StyledGravatarByUsername',
-})(() => ({
-  animation: `${fadeIn} .2s ease-in-out forwards`,
-  height: 32,
-  marginTop: 2,
-  minWidth: 32,
-  width: 32,
-}));
-
-export const NotificationEventAvatar = styled(Avatar, {
-  label: 'StyledAvatar',
 })(() => ({
   height: 32,
   marginTop: 2,

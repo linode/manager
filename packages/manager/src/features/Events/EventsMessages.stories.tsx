@@ -22,7 +22,7 @@ const event: Event = eventFactory.build({
     type: 'linode',
     url: 'https://google.com',
   },
-  message: 'message with a `ticked` word - please contact Support',
+  message: 'message with a `ticked` word',
   secondary_entity: {
     id: 1,
     label: '{secondary entity}',

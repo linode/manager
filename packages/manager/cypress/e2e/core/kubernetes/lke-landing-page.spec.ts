@@ -12,15 +12,20 @@ import {
 import { getRegionById } from 'support/util/regions';
 import { readDownload } from 'support/util/downloads';
 import { ui } from 'support/ui';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { mockGetAccount } from 'support/intercepts/account';
 
 describe('LKE landing page', () => {
   it('does not display a Disk Encryption info banner if the LDE feature is disabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: false,
+      linodeDiskEncryption: makeFeatureFlagData(false),
     }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({
@@ -46,8 +51,9 @@ describe('LKE landing page', () => {
   it('displays a Disk Encryption info banner if the LDE feature is enabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: true,
+      linodeDiskEncryption: makeFeatureFlagData(true),
     }).as('getFeatureFlags');
+    mockGetFeatureFlagClientstream().as('getClientStream');
 
     // Mock responses
     const mockAccount = accountFactory.build({

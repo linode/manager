@@ -7,9 +7,6 @@ import { createDomain } from '@linode/api-v4/lib/domains';
 import { ui } from 'support/ui';
 
 authenticate();
-beforeEach(() => {
-  cy.tag('method:e2e');
-});
 describe('Delete a Domain', () => {
   /*
    * - Clicks "Delete" action menu item for domain but cancels operation.

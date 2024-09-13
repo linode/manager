@@ -397,9 +397,9 @@ componentTests('RegionSelect', (mount) => {
           .should('be.visible');
       });
       regionsWithoutObj.forEach((region) => {
-        ui.autocompletePopper.find().within(() => {
-          cy.findByText(`${region.label} (${region.id})`).should('not.exist');
-        });
+        ui.autocompletePopper
+          .findByTitle(`${region.label} (${region.id})`)
+          .should('not.exist');
       });
     });
 

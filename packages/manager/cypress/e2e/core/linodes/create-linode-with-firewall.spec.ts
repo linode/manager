@@ -4,6 +4,10 @@ import {
   firewallTemplateFactory,
 } from 'src/factories';
 import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
@@ -15,10 +19,19 @@ import {
 } from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode with Firewall', () => {
+  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeCreateRefactor: makeFeatureFlagData(true),
+    });
+    mockGetFeatureFlagClientstream();
+  });
+
   /*
    * - Confirms UI flow to create a Linode with an existing Firewall using mock API data.
    * - Confirms that Firewall is reflected in create summary section.

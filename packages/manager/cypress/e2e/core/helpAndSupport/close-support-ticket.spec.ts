@@ -1,5 +1,9 @@
 import 'cypress-file-upload';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import {
   randomItem,
@@ -44,8 +48,9 @@ describe('close support tickets', () => {
     }
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: true,
+      supportTicketSeverity: makeFeatureFlagData(true),
     });
+    mockGetFeatureFlagClientstream();
     mockGetSupportTickets([mockTicket]);
     mockGetSupportTicket(mockTicket).as('getSupportTicket');
     mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');
@@ -102,8 +107,9 @@ describe('close support tickets', () => {
     }
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: true,
+      supportTicketSeverity: makeFeatureFlagData(true),
     });
+    mockGetFeatureFlagClientstream();
     mockGetSupportTickets([mockTicket]);
     mockGetSupportTicket(mockTicket).as('getSupportTicket');
     mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');

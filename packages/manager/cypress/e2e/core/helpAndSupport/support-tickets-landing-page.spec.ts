@@ -1,5 +1,9 @@
 import { interceptGetProfile } from 'support/intercepts/profile';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockAppendFeatureFlags,
+  mockGetFeatureFlagClientstream,
+} from 'support/intercepts/feature-flags';
+import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   randomItem,
   randomLabel,
@@ -34,8 +38,9 @@ describe('support tickets landing page', () => {
    */
   it('shows the empty message when there are no tickets.', () => {
     mockAppendFeatureFlags({
-      supportTicketSeverity: false,
+      supportTicketSeverity: makeFeatureFlagData(false),
     });
+    mockGetFeatureFlagClientstream();
 
     interceptGetProfile().as('getProfile');
 
@@ -87,8 +92,9 @@ describe('support tickets landing page', () => {
     const mockTickets = [mockTicket, mockAnotherTicket];
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: true,
+      supportTicketSeverity: makeFeatureFlagData(true),
     });
+    mockGetFeatureFlagClientstream();
     mockGetSupportTickets(mockTickets);
 
     cy.visitWithLogin('/support/tickets');
@@ -150,8 +156,9 @@ describe('support tickets landing page', () => {
     }
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: true,
+      supportTicketSeverity: makeFeatureFlagData(true),
     });
+    mockGetFeatureFlagClientstream();
     mockGetSupportTickets([mockTicket]);
     mockGetSupportTicket(mockTicket).as('getSupportTicket');
     mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');
@@ -244,8 +251,9 @@ describe('support tickets landing page', () => {
     }
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: true,
+      supportTicketSeverity: makeFeatureFlagData(true),
     });
+    mockGetFeatureFlagClientstream();
     mockGetSupportTickets([mockTicket]);
     mockGetSupportTicket(mockTicket).as('getSupportTicket');
     mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');

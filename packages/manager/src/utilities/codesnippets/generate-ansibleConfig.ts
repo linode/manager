@@ -6,7 +6,7 @@ import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
  * @returns {string} - The safely escaped string.
  */
 function escapeYAMLString(str: string) {
-  return str.replace(/(["':\\\[\\\]\\\{\\\}])/g, '\\$1').replace(/\n/g, '\\n');
+  return str.replace(/(["':\[\]\{\}])/g, '\\$1').replace(/\n/g, '\\n');
 }
 
 /**
