@@ -27,6 +27,9 @@ import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { extendRegion } from 'support/util/regions';
+import { CloudPulseMetricsResponse } from '@linode/api-v4';
+import { transformData } from 'src/features/CloudPulse/Utils/unitConversion';
+import { getMetrics } from 'src/utilities/statMetrics';
 
 
 
@@ -75,6 +78,7 @@ const mockRegion = extendRegion(
     country: 'us',
   })
 );
+let responsePayload: CloudPulseMetricsResponse;
 
 describe('Dashboard Widget Verification Tests', () => {
  beforeEach(() => {
@@ -89,7 +93,7 @@ describe('Dashboard Widget Verification Tests', () => {
     mockCloudPulseServices(service_type).as('services');
     mockCloudPulseDashboardServicesResponse(dashboard,dashboardId);
     mockCloudPulseJWSToken(service_type);
-    const responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Minutes);
+     responsePayload = createMetricResponse(actualRelativeTimeDuration, granularity.Minutes);
     mockCloudPulseCreateMetrics(responsePayload,service_type).as('getMetrics');
     mockGetRegions([mockRegion]).as('getRegions');
 });
@@ -125,8 +129,24 @@ describe('Dashboard Widget Verification Tests', () => {
             .should('have.text', testData.expectedGranularity)
             .click();
             cy.findByDisplayValue(testData.expectedGranularity).should('exist');
+            cy.findByTestId('linegraph-wrapper').as('canvas')
+            .should('be.visible')
+            .find('tbody tr')
+            .each(($tr, index) => {
+              const cells = $tr.find('td').map((i, el) => {
+                const text = Cypress.$(el).text().trim();
+                return text.replace(/^\s*\([^)]+\)/, '');
+              }).get();
+          
+              const [title, actualMax, actualAvg, actualLast] = cells;
+              const widgetValues = verifyWidgetValues(responsePayload, testData.title);
+              assert(Math.abs(widgetValues.max - parseFloat(actualMax)) <= 0.01, `Expected ${widgetValues.max} to be close to ${actualMax}`);
+              assert(Math.abs(widgetValues.average - parseFloat(actualAvg)) <= 0.01, `Expected ${widgetValues.average} to be close to ${actualAvg}`);
+              assert(Math.abs(widgetValues.last - parseFloat(actualLast)) <= 0.01, `Expected ${widgetValues.last} to be close to ${actualLast}`);
+    
             assertSelections(testData.expectedGranularity);
         });
+      });
     });
   });
   
@@ -160,10 +180,26 @@ describe('Dashboard Widget Verification Tests', () => {
             .should('have.text', testData.expectedAggregation)
             .click();
             cy.findByDisplayValue(testData.expectedAggregation).should('exist');
+            cy.findByTestId('linegraph-wrapper').as('canvas')
+            .should('be.visible')
+            .find('tbody tr')
+            .each(($tr, index) => {
+              const cells = $tr.find('td').map((i, el) => {
+                const text = Cypress.$(el).text().trim();
+                return text.replace(/^\s*\([^)]+\)/, '');
+              }).get();
+          
+              const [title, actualMax, actualAvg, actualLast] = cells;
+              const widgetValues = verifyWidgetValues(responsePayload, testData.title);
+              assert(Math.abs(widgetValues.max - parseFloat(actualMax)) <= 0.01, `Expected ${widgetValues.max} to be close to ${actualMax}`);
+              assert(Math.abs(widgetValues.average - parseFloat(actualAvg)) <= 0.01, `Expected ${widgetValues.average} to be close to ${actualAvg}`);
+              assert(Math.abs(widgetValues.last - parseFloat(actualLast)) <= 0.01, `Expected ${widgetValues.last} to be close to ${actualLast}`);
+    
           assertSelections(testData.expectedAggregation);
         });
     });
   });
+});
 
   it('should verify available granularity of the widget', () => {
     setupMethod()
@@ -232,14 +268,24 @@ describe('Dashboard Widget Verification Tests', () => {
         .should('be.enabled')
         .click();
         cy.get('@widget').should('be.visible');
-        cy.get('[data-testid="linegraph-wrapper"]').as('canvas')
-          .should('exist')       
-          .and('be.visible');
+        cy.findByTestId('linegraph-wrapper').as('canvas')
+        .should('be.visible')
+        .find('tbody tr')
+        .each(($tr, index) => {
+          const cells = $tr.find('td').map((i, el) => {
+            const text = Cypress.$(el).text().trim();
+            return text.replace(/^\s*\([^)]+\)/, '');
+          }).get();
+      
+          const [title, actualMax, actualAvg, actualLast] = cells;
+          const widgetValues = verifyWidgetValues(responsePayload, testData.title);
+          assert(Math.abs(widgetValues.max - parseFloat(actualMax)) <= 0.01, `Expected ${widgetValues.max} to be close to ${actualMax}`);
+          assert(Math.abs(widgetValues.average - parseFloat(actualAvg)) <= 0.01, `Expected ${widgetValues.average} to be close to ${actualAvg}`);
+          assert(Math.abs(widgetValues.last - parseFloat(actualLast)) <= 0.01, `Expected ${widgetValues.last} to be close to ${actualLast}`);
+
         ui.cloudpulse.findZoomButtonByTitle('zoom-out').should('be.visible')
         .should('be.enabled')
         .click();
-        cy.get('@widget').should('be.visible');
-        cy.get('@canvas').should('exist').and('be.visible');
       });
     
     });
@@ -275,6 +321,7 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 });
+});
   
 
   const setupMethod = () => {
@@ -288,4 +335,11 @@ describe('Dashboard Widget Verification Tests', () => {
     ui.regionSelect.find().click().type(`${region}{enter}`);
     assertSelections(region);
     selectAndVerifyResource(resource);
+};
+
+const verifyWidgetValues = (responsePayload:CloudPulseMetricsResponse, widgetTitle:string) => {
+  const  data=  transformData(responsePayload.data.result[0].values,'Bytes')
+ const  { average, last, max }= getMetrics(data)
+ return { average, last, max }
+
 };
