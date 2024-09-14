@@ -21,6 +21,8 @@ describe('Image Table Row', () => {
       { region: 'us-east', status: 'available' },
       { region: 'us-southeast', status: 'pending' },
     ],
+    size: 300,
+    total_size: 600,
   });
 
   const handlers: Handlers = {
@@ -41,12 +43,14 @@ describe('Image Table Row', () => {
     );
 
     // Check to see if the row rendered some data
+
+    expect(getByText('2 Regions')).toBeVisible();
+    expect(getByText('0.29 GB')).toBeVisible(); // 300 / 1024 = 0.292
+    expect(getByText('0.59 GB')).toBeVisible(); // 600 / 1024 = 0.585
+
     getByText(image.label);
     getAllByText('Ready');
-    getAllByText((text) => text.includes(image.regions[0].region));
-    getAllByText('+1');
     getAllByText('Cloud-init, Distributed');
-    expect(getAllByText('1500 MB').length).toBe(2);
     getAllByText(image.id);
 
     // Open action menu
@@ -54,7 +58,7 @@ describe('Image Table Row', () => {
     await userEvent.click(actionMenu);
 
     getByText('Edit');
-    getByText('Manage Regions');
+    getByText('Manage Replicas');
     getByText('Deploy to New Linode');
     getByText('Rebuild an Existing Linode');
     getByText('Delete');
@@ -74,7 +78,7 @@ describe('Image Table Row', () => {
     await userEvent.click(getByText('Edit'));
     expect(handlers.onEdit).toBeCalledWith(image);
 
-    await userEvent.click(getByText('Manage Regions'));
+    await userEvent.click(getByText('Manage Replicas'));
     expect(handlers.onManageRegions).toBeCalledWith(image);
 
     await userEvent.click(getByText('Deploy to New Linode'));
