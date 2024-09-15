@@ -310,9 +310,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             >
               {availableMetrics?.scrape_interval && (
                 <CloudPulseIntervalSelect
-                  default_interval={widget?.time_granularity}
+                  defaultInterval={widget?.time_granularity}
                   onIntervalChange={handleIntervalChange}
-                  scrape_interval={availableMetrics.scrape_interval}
+                  scrapeInterval={availableMetrics.scrape_interval}
                 />
               )}
               {Boolean(
