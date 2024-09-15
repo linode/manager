@@ -20,7 +20,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
     if (props.zoomIn) {
       return (
         <ZoomInMap
-          style={{
+          sx={{
             color: theme.color.grey1,
             fontSize: 'x-large',
             height: '34px',
@@ -33,7 +33,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
 
     return (
       <ZoomOutMap
-        style={{
+        sx={{
           color: theme.color.grey1,
           fontSize: 'x-large',
           height: '34px',
