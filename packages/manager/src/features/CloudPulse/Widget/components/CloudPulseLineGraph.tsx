@@ -46,6 +46,9 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
             '& .MuiTable-root': {
               border: 0,
             },
+            height: '100px',
+            maxHeight: '100px',
+            overflow: 'auto',
           }}
           ariaLabel={ariaLabel}
           data={data}

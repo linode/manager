@@ -1,3 +1,6 @@
+import { styled } from '@mui/material';
+
+import { Paper } from 'src/components/Paper';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
@@ -331,3 +334,16 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
       thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
+
+export const StyledWidgetWrapper = styled(Paper, {
+  label: 'StyledWidgetWrapper',
+})(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    maxHeight: '580px',
+    minHeight: '580px',
+  },
+  [theme.breakpoints.up('md')]: {
+    maxHeight: '540px',
+    minHeight: '540px',
+  },
+}));

@@ -203,7 +203,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     // maintain a copy
     const newDashboard: Dashboard = createObjectCopy(dashboard)!;
     return (
-      <Grid columnSpacing={1} container item rowSpacing={2} xs={12}>
+      <Grid columnSpacing={1} container item rowSpacing={1} xs={12}>
         {{ ...newDashboard }.widgets.map((widget, index) => {
           // check if widget metric definition is available or not
           if (widget) {

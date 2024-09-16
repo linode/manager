@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import Reload from 'src/assets/icons/reload.svg';
+import Reload from 'src/assets/icons/cloudpulse_reload.svg';
 import { Divider } from 'src/components/Divider';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
@@ -72,43 +72,50 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   );
 
   return (
-    <Grid container gap={1}>
-      <Grid
-        columnSpacing={2}
-        container
-        item
-        justifyContent="space-between"
-        mt={2}
-        px={2}
-        rowGap={2}
-        xs={12}
-      >
-        <Grid display={'flex'} item md={4} sm={5} xs={12}>
-          <CloudPulseDashboardSelect
-            handleDashboardChange={onDashboardChange}
-          />
+    <Grid container>
+      <Grid container item m={'24px'} rowGap={1} xs={12}>
+        <Grid
+          columnSpacing={2}
+          container
+          item
+          justifyContent="space-between"
+          rowSpacing={2}
+        >
+          <Grid display={'flex'} item md={4} sm={5} xs={12}>
+            <CloudPulseDashboardSelect
+              handleDashboardChange={onDashboardChange}
+            />
+          </Grid>
+          <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
+            <CloudPulseTimeRangeSelect
+              handleStatsChange={handleTimeRangeChange}
+              hideLabel
+              label="Select Time Range"
+            />
+            <IconButton
+              sx={{
+                marginBlockEnd: 'auto',
+              }}
+              disabled={!selectedDashboard}
+              onClick={() => handleGlobalRefresh(selectedDashboard)}
+              size="small"
+            >
+              <StyledReload />
+            </IconButton>
+          </Grid>
         </Grid>
-        <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
-          <CloudPulseTimeRangeSelect
-            handleStatsChange={handleTimeRangeChange}
-            hideLabel
-            label="Select Time Range"
-          />
-          <IconButton
+      </Grid>
+      {selectedDashboard && (
+        <Grid item xs={12}>
+          <Divider
             sx={{
-              marginBlockEnd: 'auto',
+              borderColor: '#F4F5F6',
+              margin: 0,
             }}
-            disabled={!selectedDashboard}
-            onClick={() => handleGlobalRefresh(selectedDashboard)}
-            size="small"
-          >
-            <StyledReload />
-          </IconButton>
+          />
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Divider />
-      </Grid>
+      )}
+
       {selectedDashboard && (
         <CloudPulseDashboardFilterBuilder
           dashboard={selectedDashboard}

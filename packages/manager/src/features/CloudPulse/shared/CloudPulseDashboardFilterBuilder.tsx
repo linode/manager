@@ -5,7 +5,6 @@ import * as React from 'react';
 
 import InfoIcon from 'src/assets/icons/info.svg';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NullComponent from 'src/components/NullComponent';
 
@@ -205,8 +204,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     return (
-      <Grid container item xs={12}>
-        <Grid item key={'toggleFilter'} px={2} xs={12}>
+      <Grid container item m="24px" xs={12}>
+        <Grid item key={'toggleFilter'} marginBottom={1} xs={12}>
           <Button
             startIcon={
               showFilter ? (
@@ -222,11 +221,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             onClick={toggleShowFilter}
             sx={{ justifyContent: 'start', mb: showFilter ? 0 : 2, p: 0 }}
           >
-            <Typography>Filters</Typography>
+            <Typography variant={'h3'}>Filters</Typography>
           </Button>
-        </Grid>
-        <Grid display={showFilter ? 'block' : 'none'} item xs={12}>
-          <Divider />
         </Grid>
         <Grid
           columnSpacing={2}
@@ -234,10 +230,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           display={showFilter ? 'flex' : 'none'}
           item
           maxHeight={'120px'}
-          mb={1}
           overflow={'auto'}
-          px={2}
-          py={1}
           rowGap={2}
           xs={12}
         >

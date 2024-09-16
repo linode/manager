@@ -1,13 +1,13 @@
-import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
 
 import {
+  StyledWidgetPaper,
   generateGraphData,
   getCloudPulseMetricRequest,
 } from '../Utils/CloudPulseWidgetUtils';
@@ -26,12 +26,12 @@ import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { Widgets } from '@linode/api-v4';
 import type {
   AvailableMetrics,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
+import type { Widgets } from '@linode/api-v4';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { Metrics } from 'src/utilities/statMetrics';
 
@@ -289,28 +289,26 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const metricsApiCallError = error?.[0]?.reason;
   return (
     <Grid item lg={widget.size} xs={12}>
-      <Paper>
-        <Stack spacing={2}>
+      <Stack spacing={2}>
+        <StyledWidgetPaper>
           <Stack
             alignItems={'center'}
             direction={{ sm: 'row' }}
             gap={{ sm: 0, xs: 2 }}
             justifyContent={{ sm: 'space-between' }}
+            marginBottom={1}
             padding={1}
           >
-            <Typography
-              fontSize={{ sm: '1.5rem', xs: '2rem' }}
-              marginLeft={1}
-              variant="h1"
-            >
-              {convertStringToCamelCasesWithSpaces(widget.label)}{' '}
-              {!isLoading &&
-                `(${currentUnit}${unit.endsWith('ps') ? '/s' : ''})`}
+            <Typography marginLeft={1} variant="h2">
+              {convertStringToCamelCasesWithSpaces(widget.label)} ({currentUnit}
+              {unit.endsWith('ps') ? '/s' : ''})
             </Typography>
             <Stack
               alignItems={'center'}
               direction={{ sm: 'row' }}
               gap={1}
+              maxHeight={'80px'}
+              overflow={'auto'}
               width={{ sm: 'inherit', xs: '100%' }}
             >
               {availableMetrics?.scrape_interval && (
@@ -339,7 +337,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               </Box>
             </Stack>
           </Stack>
-          <Divider />
 
           <CloudPulseLineGraph
             error={
@@ -356,13 +353,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             formatTooltip={(value: number) => formatToolTip(value, unit)}
             gridSize={widget.size}
             loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
-            nativeLegend
             showToday={today}
             timezone={timezone}
             title={widget.label}
           />
-        </Stack>
-      </Paper>
+        </StyledWidgetPaper>
+      </Stack>
     </Grid>
   );
 };

@@ -131,7 +131,7 @@ export const CloudPulseDashboardLanding = () => {
   }
 
   return (
-    <Grid container spacing={2}>
+    <Grid container paddingTop={'8px'} spacing={2}>
       <Grid item xs={12}>
         <Paper>
           <GlobalFilters
