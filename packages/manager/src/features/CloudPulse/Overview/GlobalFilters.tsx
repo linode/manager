@@ -13,7 +13,7 @@ import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { Dashboard, TimeDuration } from '@linode/api-v4';
+import type { AclpConfig, Dashboard, TimeDuration } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
   handleAnyFilterChange(filterKey: string, filterValue: FilterValueType): void;
@@ -66,7 +66,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       filterKey: string,
       value: FilterValueType,
       savePref: boolean = false,
-      updatedPreferenceData: {} = {}
+      updatedPreferenceData: AclpConfig = {}
     ) => {
       if (savePref) {
         updatePreferences(updatedPreferenceData);

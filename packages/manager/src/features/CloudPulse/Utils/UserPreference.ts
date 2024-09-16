@@ -5,14 +5,16 @@ import {
 
 import { DASHBOARD_ID, TIME_DURATION } from './constants';
 
-import type { AclpWidget } from '@linode/api-v4';
+import type { AclpConfig, AclpWidget } from '@linode/api-v4';
 
-/**
- *
- *  This hook is used in CloudPulseDashboardLanding, GlobalFilters & CloudPulseWidget component
- */
+interface AclpPreferenceObject {
+  isLoading: boolean;
+  preferences: AclpConfig;
+  updateGlobalFilterPreference: (data: AclpConfig) => void;
+  updateWidgetPreference: (label: string, data: Partial<AclpWidget>) => void;
+}
 
-export const useAclpPreference = () => {
+export const useAclpPreference = (): AclpPreferenceObject => {
   const { data: preferences, isLoading } = usePreferences();
 
   const { mutateAsync: updateFunction } = useMutatePreferences();
@@ -21,7 +23,7 @@ export const useAclpPreference = () => {
    *
    * @param data AclpConfig data to be updated in preferences
    */
-  const updateGlobalFilterPreference = (data: {}) => {
+  const updateGlobalFilterPreference = (data: AclpConfig) => {
     let currentPreferences = { ...(preferences?.aclpPreference ?? {}) };
     const keys = Object.keys(data);
 
@@ -60,7 +62,7 @@ export const useAclpPreference = () => {
   };
   return {
     isLoading,
-    preferences: preferences?.aclpPreference ?? {},
+    preferences: { ...(preferences?.aclpPreference ?? {}) },
     updateGlobalFilterPreference,
     updateWidgetPreference,
   };

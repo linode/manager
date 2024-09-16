@@ -4,7 +4,6 @@ import * as React from 'react';
 import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { RESOURCES } from '../Utils/constants';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 
 const queryMocks = vi.hoisted(() => ({
@@ -174,8 +173,8 @@ describe('CloudPulseResourcesSelect component tests', () => {
 
     renderWithTheme(
       <CloudPulseResourcesSelect
+        defaultValue={['12']}
         handleResourcesSelection={mockResourceHandler}
-        preferences={{ [RESOURCES]: ['12'] }}
         region={'us-east'}
         resourceType={'linode'}
         savePreferences

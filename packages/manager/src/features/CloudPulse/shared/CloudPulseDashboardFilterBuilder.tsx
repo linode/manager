@@ -104,7 +104,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         filterKey: string,
         filterValue: FilterValueType,
         savePref: boolean = false,
-        updatedPreferenceData: {} = {}
+        updatedPreferenceData: AclpConfig = {}
       ) => {
         emitFilterChange(
           filterKey,

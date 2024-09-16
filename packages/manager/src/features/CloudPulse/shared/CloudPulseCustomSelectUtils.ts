@@ -15,7 +15,7 @@ interface CloudPulseCustomSelectProps {
     filterKey: string,
     value: FilterValueType,
     savePref?: boolean,
-    updatedPreferenceData?: {}
+    updatedPreferenceData?: AclpConfig
   ) => void;
 
   /**
@@ -106,7 +106,6 @@ export const getInitialDefaultSelections = (
     );
     return initialSelection;
   }
-
   const selectedValues = options.filter(({ id }) =>
     (Array.isArray(defaultValue) ? defaultValue : [defaultValue]).includes(
       String(id)

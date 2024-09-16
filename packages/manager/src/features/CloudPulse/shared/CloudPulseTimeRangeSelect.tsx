@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-import type { TimeDuration } from '@linode/api-v4';
+import type { FilterValue, TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
   Item,
@@ -13,7 +13,7 @@ export interface CloudPulseTimeRangeSelectProps
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
   > {
-  defaultValue?: string;
+  defaultValue?: Partial<FilterValue>;
   handleStatsChange?: (
     timeDuration: TimeDuration,
     timeDurationValue?: string,

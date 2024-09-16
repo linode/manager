@@ -14,7 +14,7 @@ import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
 } from '../Utils/models';
-import type { FilterValue } from '@linode/api-v4';
+import type { AclpConfig, FilterValue } from '@linode/api-v4';
 
 /**
  * These are the properties requires for CloudPulseCustomSelect Components
@@ -74,7 +74,7 @@ export interface CloudPulseCustomSelectProps {
     filterKey: string,
     value: FilterValueType,
     savePref?: boolean,
-    updatedPreferenceData?: {}
+    updatedPreferenceData?: AclpConfig
   ) => void;
 
   /**

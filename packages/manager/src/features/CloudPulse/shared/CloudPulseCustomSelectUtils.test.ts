@@ -55,13 +55,11 @@ it('test getInitialDefaultSelections method for single selection', () => {
   ];
 
   let result = getInitialDefaultSelections({
+    defaultValue: '1',
     filterKey: 'test',
     handleSelectionChange,
     isMultiSelect: false,
     options,
-    preferences: {
-      test: '1',
-    },
     savePreferences: true,
   });
 
@@ -94,13 +92,11 @@ it('test getInitialDefaultSelections method for multi selection', () => {
   ];
 
   let result = getInitialDefaultSelections({
+    defaultValue: ['1'],
     filterKey: 'test',
     handleSelectionChange,
     isMultiSelect: true,
     options,
-    preferences: {
-      test: '1',
-    },
     savePreferences: true,
   });
 

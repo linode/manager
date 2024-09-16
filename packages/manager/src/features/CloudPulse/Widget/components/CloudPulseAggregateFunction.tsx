@@ -16,7 +16,7 @@ export interface AggregateFunctionProperties {
   /**
    * Function to be triggered on aggregate function changed from dropdown
    */
-  onAggregateFuncChange: any;
+  onAggregateFuncChange: (aggregatevalue: string) => void;
 }
 
 export const CloudPulseAggregateFunction = React.memo(

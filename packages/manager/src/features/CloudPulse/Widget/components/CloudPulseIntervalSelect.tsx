@@ -13,7 +13,7 @@ export interface IntervalSelectProperties {
   /**
    * Function to be triggered on aggregate function changed from dropdown
    */
-  onIntervalChange: any;
+  onIntervalChange: (intervalValue: TimeGranularity) => void;
 
   /**
    * scrape intervalto filter out minimum time granularity

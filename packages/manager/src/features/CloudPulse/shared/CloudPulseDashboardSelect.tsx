@@ -8,10 +8,10 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
 
-import type { Dashboard } from '@linode/api-v4';
+import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
-  defaultValue?: number;
+  defaultValue?: Partial<FilterValue>;
   handleDashboardChange: (
     dashboard: Dashboard | undefined,
     savePref?: boolean
