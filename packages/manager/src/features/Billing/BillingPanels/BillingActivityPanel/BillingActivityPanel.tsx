@@ -315,7 +315,11 @@ export const BillingActivityPanel = React.memo((props: Props) => {
 
   const getOrderedPaginatedData = (data: ActivityFeedItem[]) => {
     const orderedData = data.sort((a, b) => {
-      return order === 'asc' ? a.total - b.total : b.total - a.total;
+      if (orderBy === 'total') {
+        return order === 'asc' ? a.total - b.total : b.total - a.total;
+      }
+      // If no valid 'orderBy' is provided, return the data as is.
+      return 0;
     });
 
     const start = (pagination.page - 1) * pagination.pageSize;
