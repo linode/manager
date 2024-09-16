@@ -7,6 +7,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
 import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCurlCommand } from 'src/utilities/codesnippets/generate-cURL';
 
@@ -24,6 +25,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
   const flags = useFlags();
   const ldClient = useLDClient();
   const theme = useTheme();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
     [payLoad]
@@ -36,9 +38,12 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
         <Link
           onClick={() => {
             sendApiAwarenessClickEvent('link', 'personal access token');
-            ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
-              variation: apicliButtonCopy,
-            });
+            if (!isInternalAccount) {
+              ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
+                variation: apicliButtonCopy,
+              });
+            }
+
             ldClient?.flush();
           }}
           to="/profile/tokens"
@@ -53,10 +58,12 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
               'link',
               'Get Started with the Linode API'
             );
+            if (!isInternalAccount) {
+              ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
+                variation: apicliButtonCopy,
+              });
+            }
 
-            ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
-              variation: apicliButtonCopy,
-            });
             ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/api/get-started/"
@@ -67,10 +74,12 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
         <Link
           onClick={() => {
             sendApiAwarenessClickEvent('link', 'Linode API Guides');
+            if (!isInternalAccount) {
+              ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
+                variation: apicliButtonCopy,
+              });
+            }
 
-            ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
-              variation: apicliButtonCopy,
-            });
             ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/api/guides/"
