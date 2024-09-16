@@ -150,7 +150,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
               : undefined
           }
           sx={{ marginTop: 1 }}
-          username={data?.username}
+          username={data?.username === 'Linode' ? 'Akamai' : data?.username}
         />
       </div>
     );
@@ -171,7 +171,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
         <Grid className={classes.header} container>
           <Grid className={classes.headerInner}>
             <Typography className={classes.userName} component="span">
-              {data.friendly_name}
+              {data.friendly_name === 'Linode' ? 'Akamai' : data.friendly_name}
             </Typography>
             {data.from_linode && !OFFICIAL_USERNAMES.includes(data.username) ? (
               <Typography
