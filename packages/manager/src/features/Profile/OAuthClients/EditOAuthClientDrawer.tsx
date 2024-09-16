@@ -1,16 +1,17 @@
-import { OAuthClient, OAuthClientRequest } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField } from 'src/components/TextField';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Notice } from 'src/components/Notice/Notice';
+import { TextField } from 'src/components/TextField';
 import { useUpdateOAuthClientMutation } from 'src/queries/account/oauth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+
+import type { OAuthClient, OAuthClientRequest } from '@linode/api-v4';
 
 interface Props {
   client: OAuthClient | undefined;
@@ -19,7 +20,7 @@ interface Props {
 }
 
 export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
-  const { error, isLoading, mutateAsync, reset } = useUpdateOAuthClientMutation(
+  const { error, isPending, mutateAsync, reset } = useUpdateOAuthClientMutation(
     client?.id ?? ''
   );
 
@@ -81,7 +82,7 @@ export const EditOAuthClientDrawer = ({ client, onClose, open }: Props) => {
           primaryButtonProps={{
             disabled: !formik.dirty,
             label: 'Save Changes',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

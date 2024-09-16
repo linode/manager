@@ -25,6 +25,7 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -128,7 +129,7 @@ export const linodeQueries = createQueryKeys('linodes', {
       }),
       infinite: (filter: Filter = {}) => ({
         queryFn: ({ pageParam }) =>
-          getLinodes({ page: pageParam, page_size: 25 }, filter),
+          getLinodes({ page: pageParam as number, page_size: 25 }, filter),
         queryKey: [filter],
       }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
@@ -162,7 +163,7 @@ export const useLinodesQuery = (
     ...linodeQueries.linodes._ctx.paginated(params, filter),
     ...queryPresets.longLived,
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -187,6 +188,7 @@ export const useInfiniteLinodesQuery = (filter: Filter = {}) =>
       }
       return page + 1;
     },
+    initialPageParam: 1,
   });
 
 export const useLinodeQuery = (id: number, enabled = true) => {
@@ -429,9 +431,9 @@ export const useShutdownLinodeMutation = (id: number) => {
 };
 
 export const useLinodeChangePasswordMutation = (id: number) =>
-  useMutation<{}, APIError[], { root_pass: string }>(({ root_pass }) =>
-    changeLinodePassword(id, root_pass)
-  );
+  useMutation<{}, APIError[], { root_pass: string }>({
+    mutationFn: ({ root_pass }) => changeLinodePassword(id, root_pass),
+  });
 
 export const useLinodeMigrateMutation = (id: number) => {
   const queryClient = useQueryClient();

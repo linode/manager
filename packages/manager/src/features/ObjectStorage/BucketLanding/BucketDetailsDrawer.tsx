@@ -80,8 +80,6 @@ export const BucketDetailsDrawer = React.memo(
     );
 
     let formattedCreated;
-    const showBucketRateLimitTable =
-      endpoint_type === 'E2' || endpoint_type === 'E3';
 
     try {
       if (created) {
@@ -149,17 +147,13 @@ export const BucketDetailsDrawer = React.memo(
          to getBucketAccess and updateBucketAccess.  */}
         {isObjectStorageGen2Enabled && (
           <>
-            <Typography data-testid="bucketRateLimit" variant="h3">
-              Bucket Rate Limits
-            </Typography>
-            {showBucketRateLimitTable ? (
-              <BucketRateLimitTable endpointType={endpoint_type} />
-            ) : (
-              <Typography>
-                This endpoint type supports up to 750 Requests Per Second(RPS).{' '}
-                <Link to="#">Understand bucket rate limits</Link>.
-              </Typography>
-            )}
+            <BucketRateLimitTable
+              typographyProps={{
+                marginTop: 1,
+                variant: 'inherit',
+              }}
+              endpointType={endpoint_type}
+            />
             <Divider spacingBottom={16} spacingTop={16} />
           </>
         )}
@@ -187,6 +181,7 @@ export const BucketDetailsDrawer = React.memo(
                 payload
               );
             }}
+            endpointType={endpoint_type}
             name={label}
             variant="bucket"
           />

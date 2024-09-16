@@ -141,7 +141,7 @@ export const getAllDashboards = (
   let error = '';
   let isLoading = false;
   const data: Dashboard[] = queryResults
-    .filter((queryResult: UseQueryResult, index) => {
+    .filter((queryResult, index) => {
       if (queryResult.isError) {
         error += serviceTypes[index] + ' ,';
       }

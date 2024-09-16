@@ -28,7 +28,7 @@ export const EnableBackupsDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: enableBackups,
     reset,
   } = useLinodeBackupsEnableMutation(linodeId ?? -1);
@@ -82,7 +82,7 @@ export const EnableBackupsDialog = (props: Props) => {
         'data-testid': 'confirm-enable-backups',
         disabled: hasBackupsMonthlyPriceError,
         label: 'Enable Backups',
-        loading: isLoading,
+        loading: isPending,
         onClick: handleEnableBackups,
       }}
       secondaryButtonProps={{

@@ -5,7 +5,6 @@ import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
@@ -127,7 +126,7 @@ describe('create image (e2e)', () => {
   it('displays notice informing user that Images are not encrypted, provided the LDE feature is enabled and the selected linode is not in an Edge region', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
+      linodeDiskEncryption: true,
     }).as('getFeatureFlags');
 
     // Mock responses
@@ -164,7 +163,7 @@ describe('create image (e2e)', () => {
   it('does not display a notice informing user that Images are not encrypted if the LDE feature is disabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(false),
+      linodeDiskEncryption: false,
     }).as('getFeatureFlags');
 
     // Mock responses
@@ -201,7 +200,7 @@ describe('create image (e2e)', () => {
   it('does not display a notice informing user that Images are not encrypted if the selected linode is in an Edge region', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
+      linodeDiskEncryption: true,
     }).as('getFeatureFlags');
 
     // Mock responses
