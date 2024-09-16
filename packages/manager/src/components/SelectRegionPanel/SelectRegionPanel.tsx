@@ -71,7 +71,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
     location.search
   );
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   const { data: regions } = useRegionsQuery();
 
@@ -115,7 +115,6 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
   );
 
   const disabledRegions = getDisabledRegions({
-    linodeCreateTab: params.type,
     regions: regions ?? [],
     selectedImage: image,
   });
@@ -165,7 +164,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           label={DOCS_LINK_LABEL_DC_PRICING}
         />
       </Box>
-      {!isGeckoGAEnabled && (
+      {!isGeckoLAEnabled && (
         <RegionHelperText
           onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
         />
@@ -182,7 +181,7 @@ export const SelectRegionPanel = (props: SelectRegionPanelProps) => {
           </Typography>
         </Notice>
       ) : null}
-      {isGeckoGAEnabled && isDistributedRegionSupported(params.type) ? (
+      {isGeckoLAEnabled && isDistributedRegionSupported(params.type) ? (
         <TwoStepRegionSelect
           showDistributedRegionIconHelperText={
             showDistributedRegionIconHelperText

@@ -11,3 +11,19 @@ export const getGravatarUrlFromHash = (hash: string): string => {
 export const getGravatarUrl = (email: string): string => {
   return getGravatarUrlFromHash(getEmailHash(email));
 };
+
+export const checkForGravatar = async (url: string) => {
+  try {
+    const response = await fetch(url);
+
+    if (response.status === 200) {
+      return true;
+    }
+    if (response.status === 404) {
+      return false;
+    }
+  } catch (error) {
+    // The fetch to Gravatar failed. Event won't be logged.
+  }
+  return false;
+};

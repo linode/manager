@@ -20,7 +20,7 @@ export const ResetOAuthClientDialog = ({
   open,
   showSecret,
 }: Props) => {
-  const { error, isLoading, mutateAsync } = useResetOAuthClientMutation(id);
+  const { error, isPending, mutateAsync } = useResetOAuthClientMutation(id);
 
   const onReset = () => {
     mutateAsync().then((data) => {
@@ -35,7 +35,7 @@ export const ResetOAuthClientDialog = ({
         <ActionsPanel
           primaryButtonProps={{
             label: 'Reset Secret',
-            loading: isLoading,
+            loading: isPending,
             onClick: onReset,
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

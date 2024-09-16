@@ -132,12 +132,8 @@ export const useIsPlacementGroupsEnabled = (): {
     return { isPlacementGroupsEnabled: false };
   }
 
-  const hasAccountCapability = account?.capabilities?.includes(
-    'Placement Group'
-  );
-  const isFeatureFlagEnabled = flags.placementGroups?.enabled;
   const isPlacementGroupsEnabled = Boolean(
-    hasAccountCapability && isFeatureFlagEnabled
+    account?.capabilities?.includes('Placement Group')
   );
 
   return { isPlacementGroupsEnabled };

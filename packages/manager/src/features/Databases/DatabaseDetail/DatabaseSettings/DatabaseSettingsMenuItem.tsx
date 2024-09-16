@@ -72,6 +72,7 @@ export const DatabaseSettingsMenuItem = (props: Props) => {
         data-qa-settings-button={buttonText}
         disabled={disabled}
         onClick={onClick}
+        title={buttonText}
       >
         {buttonText}
       </Button>

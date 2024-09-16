@@ -19,7 +19,12 @@ import {
   updateNodePool,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -101,7 +106,7 @@ export const useKubernetesClustersQuery = (
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>({
     ...kubernetesQueries.lists._ctx.paginated(params, filter),
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -127,7 +132,7 @@ export const useKubernetesClusterMutation = (id: number) => {
 export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
   return useQuery<KubernetesEndpointResponse[], APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.endpoints,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     refetchOnMount: true,
     retry: true,
     retryDelay: 5000,
