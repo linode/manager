@@ -2,6 +2,7 @@ import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import {
@@ -20,6 +21,7 @@ export interface CodeBlockProps {
 export const CodeBlock = (props: CodeBlockProps) => {
   const flags = useFlags();
   const ldClient = useLDClient();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
 
   const { command, commandType, language, ldTrackingKey } = props;
 
@@ -27,10 +29,11 @@ export const CodeBlock = (props: CodeBlockProps) => {
 
   const handleCopyIconClick = () => {
     sendApiAwarenessClickEvent('Copy Icon', commandType);
-    if (ldTrackingKey) {
+    if (ldTrackingKey && !isInternalAccount) {
       ldClient?.track(ldTrackingKey, {
         variation: apicliButtonCopy,
       });
+      ldClient?.flush();
     }
   };
 

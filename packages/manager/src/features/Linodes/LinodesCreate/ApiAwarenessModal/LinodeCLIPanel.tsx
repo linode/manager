@@ -6,6 +6,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
 import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCLICommand } from 'src/utilities/codesnippets/generate-cli';
 
@@ -26,6 +27,7 @@ export const LinodeCLIPanel = ({
 }: LinodeCLIPanelProps) => {
   const ldClient = useLDClient();
   const flags = useFlags();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
   const cliCommand = useMemo(() => generateCLICommand(payLoad), [payLoad]);
   const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
@@ -40,12 +42,15 @@ export const LinodeCLIPanel = ({
               'link',
               'Install and Configure the Linode CLI'
             );
-            ldClient?.track(
-              LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_RESOURCE_LINKS,
-              {
-                variation: apicliButtonCopy,
-              }
-            );
+            if (!isInternalAccount) {
+              ldClient?.track(
+                LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_RESOURCE_LINKS,
+                {
+                  variation: apicliButtonCopy,
+                }
+              );
+            }
+            ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/cli/guides/install/"
         >
@@ -56,12 +61,15 @@ export const LinodeCLIPanel = ({
         <Link
           onClick={() => {
             sendApiAwarenessClickEvent('link', 'Linode CLI Guides');
-            ldClient?.track(
-              LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_RESOURCE_LINKS,
-              {
-                variation: apicliButtonCopy,
-              }
-            );
+            if (!isInternalAccount) {
+              ldClient?.track(
+                LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_RESOURCE_LINKS,
+                {
+                  variation: apicliButtonCopy,
+                }
+              );
+            }
+            ldClient?.flush();
           }}
           to="https://www.linode.com/docs/products/tools/cli/guides/"
         >
