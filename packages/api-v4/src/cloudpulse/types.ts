@@ -11,6 +11,7 @@ export interface Dashboard {
 export interface TimeGranularity {
   unit: string;
   value: number;
+  label?: string;
 }
 
 export interface TimeDuration {

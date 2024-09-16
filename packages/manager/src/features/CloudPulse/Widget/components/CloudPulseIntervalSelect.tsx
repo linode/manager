@@ -8,7 +8,7 @@ export interface IntervalSelectProperties {
   /**
    * Default time granularity to be selected
    */
-  default_interval?: TimeGranularity | undefined;
+  defaultInterval?: TimeGranularity | undefined;
 
   /**
    * Function to be triggered on aggregate function changed from dropdown
@@ -18,7 +18,7 @@ export interface IntervalSelectProperties {
   /**
    * scrape intervalto filter out minimum time granularity
    */
-  scrape_interval: string;
+  scrapeInterval: string;
 }
 
 export const getInSeconds = (interval: string) => {
@@ -78,8 +78,8 @@ export const getIntervalIndex = (scrapeIntervalValue: number) => {
 
 export const CloudPulseIntervalSelect = React.memo(
   (props: IntervalSelectProperties) => {
-    const { default_interval, onIntervalChange, scrape_interval } = props;
-    const scrapeIntervalValue = getInSeconds(scrape_interval);
+    const { defaultInterval, onIntervalChange, scrapeInterval } = props;
+    const scrapeIntervalValue = getInSeconds(scrapeInterval);
 
     const firstIntervalIndex = getIntervalIndex(scrapeIntervalValue);
 
@@ -93,12 +93,12 @@ export const CloudPulseIntervalSelect = React.memo(
           );
 
     let default_value =
-      default_interval?.unit === 'Auto'
+      defaultInterval?.unit === 'Auto'
         ? autoIntervalOption
         : available_interval_options.find(
             (obj) =>
-              obj.value === default_interval?.value &&
-              obj.unit === default_interval?.unit
+              obj.value === defaultInterval?.value &&
+              obj.unit === defaultInterval?.unit
           );
 
     if (!default_value) {

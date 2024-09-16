@@ -106,7 +106,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       widget: { ...widget },
     };
     if (savePref) {
-      setPreferredWidgetPlan(graphProp.widget);
+      graphProp.widget = setPreferredWidgetPlan(graphProp.widget);
     }
     return graphProp;
   };
@@ -120,23 +120,24 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     const pref = widgetPreferences?.[widgetObj.label];
     // if preference is present then update the widget properties present in preference
     if (pref) {
-      Object.assign(widgetObj, {
+      return {
+        ...widgetObj,
         aggregate_function:
           pref.aggregateFunction ?? widgetObj.aggregate_function,
         size: pref.size ?? widgetObj.size,
         time_granularity: {
           ...(pref.timeGranularity ?? widgetObj.time_granularity),
         },
-      });
+      };
     } else {
-      Object.assign(widgetObj, {
+      return {
         ...widgetObj,
         time_granularity: {
           label: 'Auto',
           unit: 'Auto',
           value: -1,
         },
-      });
+      };
     }
   };
 
