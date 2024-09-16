@@ -17,6 +17,7 @@ import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 import type { IPAddress, IPRange } from '@linode/api-v4';
 import type { IPv6 } from 'ipaddr.js';
 import type { IPDisplay } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
+import { LinkButton } from 'src/components/LinkButton';
 
 export interface IPAddressRowHandlers {
   handleOpenEditRDNS: (ip: IPAddress) => void;
@@ -169,21 +170,12 @@ const RangeRDNSCell = (props: {
   }
 
   return (
-    <button
+    <LinkButton
       aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
       onClick={onViewDetails}
     >
-      <Typography
-        sx={{
-          '&:hover': {
-            color: theme.palette.primary.light,
-          },
-          color: theme.palette.primary.main,
-        }}
-      >
-        {ipsWithRDNS.length} Addresses
-      </Typography>
-    </button>
+      {ipsWithRDNS.length} Addresses
+    </LinkButton>
   );
 };
 
