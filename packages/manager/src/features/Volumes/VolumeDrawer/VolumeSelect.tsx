@@ -1,12 +1,12 @@
-import Autocomplete from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import { TextField } from 'src/components/TextField';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useInfiniteVolumesQuery } from 'src/queries/volumes/volumes';
 
 interface Props {
   disabled?: boolean;
   error?: string;
+  name: string;
   onBlur: (e: any) => void;
   onChange: (volumeId: null | number) => void;
   region?: string;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const VolumeSelect = (props: Props) => {
-  const { disabled, error, onBlur, onChange, region, value } = props;
+  const { disabled, error, name, onBlur, onChange, region, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
@@ -60,6 +60,9 @@ export const VolumeSelect = (props: Props) => {
           }
         },
       }}
+      helperText={
+        region && "Only volumes in this Linode's region are attachable."
+      }
       onChange={(event, value) => {
         onChange(value?.id ?? -1);
         setInputValue('');
@@ -71,23 +74,16 @@ export const VolumeSelect = (props: Props) => {
           setInputValue('');
         }
       }}
-      renderInput={(params) => (
-        <TextField
-          helperText={
-            region && "Only volumes in this Linode's region are attachable."
-          }
-          errorText={error}
-          label="Volume"
-          onBlur={onBlur}
-          placeholder="Select a Volume"
-          {...params}
-        />
-      )}
       disabled={disabled}
+      errorText={error}
+      id={name}
       inputValue={selectedVolume ? selectedVolume.label : inputValue}
       isOptionEqualToValue={(option) => option.id === selectedVolume?.id}
+      label="Volume"
       loading={isLoading}
+      onBlur={onBlur}
       options={options ?? []}
+      placeholder="Select a Volume"
       value={selectedVolume}
     />
   );

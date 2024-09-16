@@ -16,6 +16,7 @@ import { splitCypressRun } from './cypress/support/plugins/split-run';
 import { enableJunitReport } from './cypress/support/plugins/junit-report';
 import { generateTestWeights } from './cypress/support/plugins/generate-weights';
 import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
+import cypressViteConfig from './cypress/vite.config';
 
 /**
  * Exports a Cypress configuration object.
@@ -45,6 +46,28 @@ export default defineConfig({
   retries: process.env['CI'] && !process.env['CY_TEST_DISABLE_RETRIES'] ? 2 : 0,
 
   experimentalMemoryManagement: true,
+
+  component: {
+    devServer: {
+      framework: 'react',
+      bundler: 'vite',
+      viteConfig: cypressViteConfig,
+    },
+    indexHtmlFile: './cypress/support/component/index.html',
+    supportFile: './cypress/support/component/setup.tsx',
+    specPattern: './cypress/component/**/*.spec.tsx',
+    viewportWidth: 500,
+    viewportHeight: 500,
+
+    setupNodeEvents(on, config) {
+      return setupPlugins(on, config, [
+        loadEnvironmentConfig,
+        discardPassedTestRecordings,
+        enableJunitReport('Component', true),
+      ]);
+    },
+  },
+
   e2e: {
     experimentalRunAllSpecs: true,
 
@@ -70,7 +93,7 @@ export default defineConfig({
         regionOverrideCheck,
         logTestTagInfo,
         splitCypressRun,
-        enableJunitReport,
+        enableJunitReport(),
         generateTestWeights,
       ]);
     },

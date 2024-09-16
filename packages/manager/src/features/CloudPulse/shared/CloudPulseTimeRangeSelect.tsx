@@ -24,17 +24,17 @@ export interface CloudPulseTimeRangeSelectProps
   savePreferences?: boolean;
 }
 
-const PAST_7_DAYS = 'Past 7 Days';
-const PAST_12_HOURS = 'Past 12 Hours';
-const PAST_24_HOURS = 'Past 24 Hours';
-const PAST_30_DAYS = 'Past 30 Days';
-const PAST_30_MINUTES = 'Past 30 Minutes';
+const PAST_7_DAYS = 'Last 7 Days';
+const PAST_12_HOURS = 'Last 12 Hours';
+const PAST_24_HOURS = 'Last 24 Hours';
+const PAST_30_DAYS = 'Last 30 Days';
+const PAST_30_MINUTES = 'Last 30 Minutes';
 export type Labels =
-  | 'Past 7 Days'
-  | 'Past 12 Hours'
-  | 'Past 24 Hours'
-  | 'Past 30 Days'
-  | 'Past 30 Minutes';
+  | 'Last 7 Days'
+  | 'Last 12 Hours'
+  | 'Last 24 Hours'
+  | 'Last 30 Days'
+  | 'Last 30 Minutes';
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
@@ -56,7 +56,8 @@ export const CloudPulseTimeRangeSelect = React.memo(
         handleStatsChange(getTimeDurationFromTimeRange(item.value));
       }
       setSelectedTimeRange(item);
-    }, [handleStatsChange, getDefaultValue]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // need to execute only once, during mounting of this component
 
     const handleChange = (item: Item<Labels, Labels>) => {
       updateGlobalFilterPreference({
@@ -66,6 +67,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
       if (handleStatsChange) {
         handleStatsChange(getTimeDurationFromTimeRange(item.value));
       }
+      setSelectedTimeRange(item); // update the state variable to retain latest selections
     };
 
     return (
@@ -165,11 +167,11 @@ const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
   }
 
   if (label === PAST_7_DAYS) {
-    return { unit: 'day', value: 7 };
+    return { unit: 'days', value: 7 };
   }
 
   if (label === PAST_30_DAYS) {
-    return { unit: 'day', value: 30 };
+    return { unit: 'days', value: 30 };
   }
 
   return { unit: 'min', value: 30 };

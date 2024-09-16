@@ -1,4 +1,3 @@
-import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -6,6 +5,8 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Typography } from 'src/components/Typography';
 import { useDeleteNodePoolMutation } from 'src/queries/kubernetes';
 import { pluralize } from 'src/utilities/pluralize';
+
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 interface Props {
   kubernetesClusterId: number;
@@ -17,7 +18,7 @@ interface Props {
 export const DeleteNodePoolDialog = (props: Props) => {
   const { kubernetesClusterId, nodePool, onClose, open } = props;
 
-  const { error, isLoading, mutateAsync } = useDeleteNodePoolMutation(
+  const { error, isPending, mutateAsync } = useDeleteNodePoolMutation(
     kubernetesClusterId,
     nodePool?.id ?? -1
   );
@@ -35,7 +36,7 @@ export const DeleteNodePoolDialog = (props: Props) => {
       primaryButtonProps={{
         'data-testid': 'confirm',
         label: 'Delete',
-        loading: isLoading,
+        loading: isPending,
         onClick: onDelete,
       }}
       secondaryButtonProps={{

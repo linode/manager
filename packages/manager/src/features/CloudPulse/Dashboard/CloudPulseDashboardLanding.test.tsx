@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CloudPulseDashboardLanding } from './CloudPulseDashboardLanding';
 
 const dashboardLabel = 'Factory Dashboard-1';
-const selectDashboardLabel = 'Select a Dashboard';
+const selectDashboardLabel = 'Select Dashboard';
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
   useLoadUserPreferences: vi.fn().mockReturnValue({}),

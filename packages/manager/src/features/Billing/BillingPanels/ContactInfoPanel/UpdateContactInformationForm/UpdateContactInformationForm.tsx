@@ -30,7 +30,7 @@ const excludedUSRegions = ['Micronesia', 'Marshall Islands', 'Palau'];
 
 const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: account } = useAccount();
-  const { error, isLoading, mutateAsync } = useMutateAccount();
+  const { error, isPending, mutateAsync } = useMutateAccount();
   const { data: notifications, refetch } = useNotificationsQuery();
   const { classes } = useStyles();
   const emailRef = React.useRef<HTMLInputElement>();
@@ -391,7 +391,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           'data-testid': 'save-contact-info',
           disabled: isReadOnly,
           label: 'Save Changes',
-          loading: isLoading,
+          loading: isPending,
           type: 'submit',
         }}
         secondaryButtonProps={{

@@ -1,7 +1,10 @@
 import * as React from 'react';
 
-import { objectStorageBucketFactory } from 'src/factories';
-import { renderWithTheme, mockMatchMedia } from 'src/utilities/testHelpers';
+import {
+  objectStorageBucketFactory,
+  objectStorageBucketFactoryGen2,
+} from 'src/factories';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketTable } from './BucketTable';
 
@@ -42,5 +45,21 @@ describe('BucketTable', () => {
     for (const bucket of buckets) {
       expect(getByText(bucket.label)).toBeVisible();
     }
+  });
+
+  it('renders "Endpoint Type" column when Gen 2 is enabled', () => {
+    const bucket = objectStorageBucketFactoryGen2.buildList(1);
+    const { getByText } = renderWithTheme(
+      <BucketTable
+        data={bucket}
+        handleClickDetails={vi.fn()}
+        handleClickRemove={vi.fn()}
+        handleOrderChange={vi.fn()}
+        order="asc"
+        orderBy="label"
+      />
+    );
+    expect(getByText('Endpoint Type')).toBeVisible();
+    expect(getByText('Standard (E3)')).toBeVisible();
   });
 });

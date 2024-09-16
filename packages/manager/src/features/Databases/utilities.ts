@@ -39,6 +39,7 @@ export const useIsDatabasesEnabled = () => {
     return {
       isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
       isDatabasesV1Enabled,
+      isDatabasesV2Beta: isDatabasesV2Enabled && flags.dbaasV2?.beta,
       isDatabasesV2Enabled,
     };
   }

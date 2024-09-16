@@ -32,7 +32,7 @@ export const ScheduleSettings = (props: Props) => {
 
   const {
     error: updateLinodeError,
-    isLoading: isUpdating,
+    isPending: isUpdating,
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 

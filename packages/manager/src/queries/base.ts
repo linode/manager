@@ -250,7 +250,7 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
   queryClient: QueryClient
 ) => {
   queryClient.setQueriesData<ResourcePage<T> | undefined>(
-    queryKey,
+    { queryKey },
     (oldData) => {
       if (oldData === undefined) {
         return undefined;
@@ -286,9 +286,9 @@ export const getItemInPaginatedStore = <T extends { id: number | string }>(
   id: number,
   queryClient: QueryClient
 ) => {
-  const stores = queryClient.getQueriesData<ResourcePage<T> | undefined>(
-    queryKey
-  );
+  const stores = queryClient.getQueriesData<ResourcePage<T> | undefined>({
+    queryKey,
+  });
 
   for (const store of stores) {
     const data = store[1]?.data;

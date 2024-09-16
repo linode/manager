@@ -8,7 +8,12 @@ import {
   updatePlacementGroup,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { getAll } from 'src/utilities/getAll';
 
@@ -73,7 +78,7 @@ export const usePlacementGroupsQuery = (
 ) =>
   useQuery<ResourcePage<PlacementGroup>, APIError[]>({
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     ...placementGroupQueries.paginated(params, filter),
   });
 

@@ -59,7 +59,7 @@ export const accountQueries = createQueryKeys('account', {
         filter: options.filter,
         headers: options.headers,
         params: {
-          page: pageParam,
+          page: pageParam as number,
           page_size: 25,
         },
       }),

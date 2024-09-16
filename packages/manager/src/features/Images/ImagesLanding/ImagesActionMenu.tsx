@@ -97,7 +97,7 @@ export const ImagesActionMenu = (props: Props) => {
                 {
                   disabled: isImageReadOnly || isDisabled,
                   onClick: () => onManageRegions(image),
-                  title: 'Manage Regions',
+                  title: 'Manage Replicas',
                   tooltip: isImageReadOnly
                     ? getRestrictedResourceText({
                         action: 'edit',

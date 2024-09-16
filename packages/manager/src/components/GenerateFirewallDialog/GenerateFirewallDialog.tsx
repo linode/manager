@@ -5,8 +5,10 @@ import { replaceNewlinesWithLineBreaks } from 'src/utilities/replaceNewlinesWith
 
 import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
+import { ErrorMessage } from '../ErrorMessage';
 import { LinearProgress } from '../LinearProgress';
 import { Link } from '../Link';
+import { Notice } from '../Notice/Notice';
 import { Stack } from '../Stack';
 import { Typography } from '../Typography';
 import { useCreateFirewallFromTemplate } from './useCreateFirewallFromTemplate';
@@ -209,7 +211,9 @@ const ErrorDialogContent = (
   return (
     <Stack gap={3}>
       <Typography variant="h2">An error occurred</Typography>
-      <Typography>{error}</Typography>
+      <Notice variant="error">
+        <ErrorMessage entity={{ type: 'firewall_id' }} message={error} />
+      </Notice>
       <Stack direction="row-reverse" gap={2}>
         <Button buttonType="primary" onClick={createFirewallFromTemplate}>
           Retry

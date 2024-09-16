@@ -21,28 +21,26 @@ export const useEnableBackupsOnLinodesMutation = () => {
     (EnableBackupsFufilledResult | EnableBackupsRejectedResult)[],
     unknown,
     Linode[]
-  >(
-    async (linodes) => {
+  >({
+    mutationFn: async (linodes) => {
       const data = await Promise.allSettled(
         linodes.map((linode) => enableBackups(linode.id))
       );
       return linodes.map((linode, idx) => ({ linode, ...data[idx] }));
     },
-    {
-      onSuccess(_, variables) {
-        queryClient.invalidateQueries(linodeQueries.linodes);
-        for (const linode of variables) {
-          queryClient.invalidateQueries({
-            exact: true,
-            queryKey: linodeQueries.linode(linode.id).queryKey,
-          });
-          queryClient.invalidateQueries({
-            queryKey: linodeQueries.linode(linode.id)._ctx.backups.queryKey,
-          });
-        }
-      },
-    }
-  );
+    onSuccess(_, variables) {
+      queryClient.invalidateQueries(linodeQueries.linodes);
+      for (const linode of variables) {
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(linode.id).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linode.id)._ctx.backups.queryKey,
+        });
+      }
+    },
+  });
 };
 
 interface FailureNotificationProps {

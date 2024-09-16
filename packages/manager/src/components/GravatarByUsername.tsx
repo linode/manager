@@ -5,17 +5,23 @@ import UserIcon from 'src/assets/icons/account.svg';
 import { useAccountUser } from 'src/queries/account/users';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
+import { Box } from './Box';
 import { DEFAULT_AVATAR_SIZE } from './GravatarByEmail';
 
-interface Props {
+export interface GravatarByUsernameProps {
   className?: string;
   username: null | string;
 }
 
-export const GravatarByUsername = (props: Props) => {
+export const GravatarByUsername = (props: GravatarByUsernameProps) => {
   const { className, username } = props;
-  const { data: user } = useAccountUser(username ?? '');
+  const { data: user, isLoading } = useAccountUser(username ?? '');
   const url = user?.email ? getGravatarUrl(user.email) : undefined;
+
+  // Render placeholder instead of flashing default user icon briefly
+  if (isLoading) {
+    return <Box height={DEFAULT_AVATAR_SIZE} width={DEFAULT_AVATAR_SIZE} />;
+  }
 
   return (
     <Avatar

@@ -1,9 +1,12 @@
+import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
+import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -19,12 +22,13 @@ import type { LinodeCreateFormValues } from './utilities';
 
 export const Actions = () => {
   const flags = useFlags();
-
+  const ldClient = useLDClient();
   const { params } = useLinodeCreateQueryParams();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
 
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
-  const isDxToolsAdditionsEnabled = flags?.apicliDxToolsAdditions;
+  const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const {
     formState,
@@ -44,13 +48,18 @@ export const Actions = () => {
     sendLinodeCreateFormInputEvent({
       createType: params.type ?? 'OS',
       interaction: 'click',
-      label: isDxToolsAdditionsEnabled
-        ? 'View Code Snippets'
-        : 'Create Using Command Line',
+      label: apicliButtonCopy ?? 'Create Using Command Line',
     });
     if (await trigger()) {
       // If validation is successful, we open the dialog.
       setIsAPIAwarenessModalOpen(true);
+      if (!isInternalAccount) {
+        ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.OPEN_MODAL, {
+          variation: apicliButtonCopy,
+        });
+      }
+
+      ldClient?.flush();
     } else {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
     }
@@ -59,9 +68,7 @@ export const Actions = () => {
   return (
     <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
       <Button buttonType="outlined" onClick={onOpenAPIAwareness}>
-        {isDxToolsAdditionsEnabled
-          ? 'View Code Snippets'
-          : 'Create using command line'}
+        {apicliButtonCopy ?? 'Create Using Command Line'}
       </Button>
       <Button
         buttonType="primary"

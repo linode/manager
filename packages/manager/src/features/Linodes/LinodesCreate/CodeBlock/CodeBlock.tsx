@@ -1,6 +1,10 @@
+import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+
 import {
   StyledCommandDiv,
   StyledCopyTooltip,
@@ -11,13 +15,26 @@ export interface CodeBlockProps {
   command: string;
   commandType: string;
   language: 'bash';
+  ldTrackingKey?: string;
 }
 
 export const CodeBlock = (props: CodeBlockProps) => {
-  const { command, commandType, language } = props;
+  const flags = useFlags();
+  const ldClient = useLDClient();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
+
+  const { command, commandType, language, ldTrackingKey } = props;
+
+  const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const handleCopyIconClick = () => {
     sendApiAwarenessClickEvent('Copy Icon', commandType);
+    if (ldTrackingKey && !isInternalAccount) {
+      ldClient?.track(ldTrackingKey, {
+        variation: apicliButtonCopy,
+      });
+      ldClient?.flush();
+    }
   };
 
   return (

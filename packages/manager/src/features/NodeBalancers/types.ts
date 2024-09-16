@@ -1,8 +1,8 @@
-import {
+import type {
   NodeBalancerConfigNodeMode,
   NodeBalancerProxyProtocol,
 } from '@linode/api-v4/lib/nodebalancers/types';
-import { APIError } from '@linode/api-v4/lib/types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface NodeBalancerConfigFieldsWithStatus
   extends NodeBalancerConfigFields {

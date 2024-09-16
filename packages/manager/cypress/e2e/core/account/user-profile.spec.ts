@@ -36,8 +36,8 @@ describe('User Profile', () => {
       cy.visitWithLogin(`account/users/${activeUsername}`);
       cy.wait('@getUser');
 
-      cy.findByText('Username').should('be.visible');
-      cy.findByText('Email').should('be.visible');
+      cy.findByLabelText('Username').should('be.visible');
+      cy.findByLabelText('Email').should('be.visible');
       cy.findByText('Delete User').should('be.visible');
 
       // Confirm the currently active user cannot be deleted.
@@ -125,8 +125,8 @@ describe('User Profile', () => {
 
       cy.wait('@getUser');
 
-      cy.findByText('Username').should('be.visible');
-      cy.findByText('Email').should('be.visible');
+      cy.findByLabelText('Username').should('be.visible');
+      cy.findByLabelText('Email').should('be.visible');
       cy.findByText('Delete User').should('be.visible');
       ui.button.findByTitle('Delete').should('be.visible').should('be.enabled');
 
@@ -210,8 +210,8 @@ describe('User Profile', () => {
 
       cy.wait('@getUser');
 
-      cy.findByText('Username').should('be.visible');
-      cy.findByText('Email').should('be.visible');
+      cy.findByLabelText('Username').should('be.visible');
+      cy.findByLabelText('Email').should('be.visible');
       cy.findByText('Delete User').should('be.visible');
 
       cy.get('[id="username"]')

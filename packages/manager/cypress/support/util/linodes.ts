@@ -1,11 +1,13 @@
 import { createLinode, getLinodeConfigs } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
+import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
+import { pageSize } from 'support/constants/api';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
 import { depaginate } from './paginate';
-import { pageSize } from 'support/constants/api';
 
 import type {
   Config,
@@ -13,17 +15,16 @@ import type {
   InterfacePayload,
   Linode,
 } from '@linode/api-v4';
-import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
 
 /**
  * Linode create interface to configure a Linode with no public internet access.
  */
 export const linodeVlanNoInternetConfig: InterfacePayload[] = [
   {
-    purpose: 'vlan',
-    primary: false,
-    label: randomLabel(),
     ipam_address: null,
+    label: randomLabel(),
+    primary: false,
+    purpose: 'vlan',
   },
 ];
 
@@ -40,30 +41,30 @@ export const linodeVlanNoInternetConfig: InterfacePayload[] = [
  */
 export type CreateTestLinodeSecurityMethod =
   | 'firewall'
-  | 'vlan_no_internet'
-  | 'powered_off';
+  | 'powered_off'
+  | 'vlan_no_internet';
 
 /**
  * Options to control the behavior of test Linode creation.
  */
 export interface CreateTestLinodeOptions {
-  /** Whether to wait for created Linode disks to be available before resolving. */
-  waitForDisks: boolean;
+  /** Method to use to secure the test Linode. */
+  securityMethod: CreateTestLinodeSecurityMethod;
 
   /** Whether to wait for created Linode to boot before resolving. */
   waitForBoot: boolean;
 
-  /** Method to use to secure the test Linode. */
-  securityMethod: CreateTestLinodeSecurityMethod;
+  /** Whether to wait for created Linode disks to be available before resolving. */
+  waitForDisks: boolean;
 }
 
 /**
  * Default test Linode creation options.
  */
 export const defaultCreateTestLinodeOptions = {
-  waitForDisks: false,
-  waitForBoot: false,
   securityMethod: 'firewall',
+  waitForBoot: false,
+  waitForDisks: false,
 };
 
 /**
@@ -106,20 +107,20 @@ export const createTestLinode = async (
 
   const resolvedCreatePayload = {
     ...createLinodeRequestFactory.build({
-      label: randomLabel(),
-      image: 'linode/debian11',
-      region: chooseRegion().id,
       booted: false,
+      image: 'linode/debian11',
+      label: randomLabel(),
+      region: chooseRegion().id,
     }),
     ...(createRequestPayload || {}),
     ...securityMethodPayload,
 
     // Override given root password; mitigate against using default factory password, inadvertent logging, etc.
     root_pass: randomString(64, {
+      lowercase: true,
+      numbers: true,
       spaces: true,
       symbols: true,
-      numbers: true,
-      lowercase: true,
       uppercase: true,
     }),
   };
@@ -169,21 +170,24 @@ export const createTestLinode = async (
   }
 
   Cypress.log({
-    name: 'createTestLinode',
-    message: `Create Linode '${linode.label}' (ID ${linode.id})`,
     consoleProps: () => {
       return {
+        linode,
         options: resolvedOptions,
         payload: {
           ...resolvedCreatePayload,
           root_pass: '(redacted)',
         },
-        linode,
       };
     },
+    message: `Create Linode '${linode.label}' (ID ${linode.id})`,
+    name: 'createTestLinode',
   });
 
-  return linode;
+  return {
+    ...linode,
+    capabilities: [],
+  };
 };
 
 /**

@@ -285,6 +285,7 @@ export const VPCSubnetsTable = (props: Props) => {
           label="Filter Subnets by label or id"
           onSearch={handleSearch}
           placeholder="Filter Subnets by label or id"
+          value={subnetsFilterText}
         />
         <Button
           sx={{

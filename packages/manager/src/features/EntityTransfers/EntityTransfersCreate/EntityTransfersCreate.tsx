@@ -1,8 +1,7 @@
-import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { curry } from 'ramda';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -20,15 +19,15 @@ import {
 import { LinodeTransferTable } from './LinodeTransferTable';
 import { TransferCheckoutBar } from './TransferCheckoutBar';
 import { TransferHeader } from './TransferHeader';
-import {
-  TransferableEntity,
-  defaultTransferState,
-  transferReducer,
-} from './transferReducer';
+import { defaultTransferState, transferReducer } from './transferReducer';
+
+import type { TransferableEntity } from './transferReducer';
+import type { CreateTransferPayload } from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
 
 export const EntityTransfersCreate = () => {
   const { push } = useHistory();
-  const { error, isLoading, mutateAsync: createTransfer } = useCreateTransfer();
+  const { error, isPending, mutateAsync: createTransfer } = useCreateTransfer();
   const queryClient = useQueryClient();
 
   /**
@@ -115,7 +114,7 @@ export const EntityTransfersCreate = () => {
             handleSubmit={(payload) =>
               handleCreateTransfer(payload, queryClient)
             }
-            isCreating={isLoading}
+            isCreating={isPending}
             removeEntities={removeEntitiesFromTransfer}
             selectedEntities={state}
           />

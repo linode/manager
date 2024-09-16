@@ -1,7 +1,7 @@
 import { ResourcePage } from 'src/types';
 import Request, { setMethod, setURL } from '../request';
 import { Dashboard } from './types';
-import { API_ROOT } from 'src/constants';
+import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 
 // Returns the list of all the dashboards available
 export const getDashboards = (serviceType: string) =>

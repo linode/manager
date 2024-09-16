@@ -1,6 +1,5 @@
-import { CreateObjectStorageBucketSSLPayload } from '@linode/api-v4/lib/object-storage';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -28,6 +27,8 @@ import {
   StyledHelperText,
   StyledKeyWrapper,
 } from './BucketSSL.styles';
+
+import type { CreateObjectStorageBucketSSLPayload } from '@linode/api-v4';
 
 interface Props {
   bucketName: string;
@@ -80,7 +81,7 @@ export const SSLBody = (props: Props) => {
 const AddCertForm = (props: Props) => {
   const { bucketName, clusterId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { error, isLoading, mutateAsync } = useBucketSSLMutation(
+  const { error, isPending, mutateAsync } = useBucketSSLMutation(
     clusterId,
     bucketName
   );
@@ -145,7 +146,7 @@ const AddCertForm = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Upload Certificate',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
         />
@@ -160,7 +161,7 @@ const RemoveCertForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: deleteSSLCert,
   } = useBucketSSLDeleteMutation(clusterId, bucketName);
 
@@ -177,11 +178,11 @@ const RemoveCertForm = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         label: 'Remove certificate',
-        loading: isLoading,
+        loading: isPending,
         onClick: removeCertificate,
       }}
       secondaryButtonProps={{
-        disabled: isLoading,
+        disabled: isPending,
         label: 'Cancel',
         onClick: () => setOpen(false),
       }}

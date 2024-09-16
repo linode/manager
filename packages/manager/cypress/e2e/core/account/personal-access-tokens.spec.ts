@@ -24,6 +24,8 @@ describe('Personal access tokens', () => {
    * - Confirms that user is shown the token secret upon successful PAT creation
    * - Confirms that new personal access token is shown in list
    * - Confirms that user can open and close "View Scopes" drawer
+   * - Confirm that the “Child account access” grant is not visible in the list of permissions.
+   * - Upon clicking “Create Token”, assert that the outgoing API request payload contains "scopes" value as defined in token.
    */
   it('can create personal access tokens', () => {
     const token = appTokenFactory.build({
@@ -63,6 +65,9 @@ describe('Personal access tokens', () => {
       .findByTitle('Add Personal Access Token')
       .should('be.visible')
       .within(() => {
+        // Confirm that the “Child account access” grant is not visible in the list of permissions.
+        cy.findAllByText('Child Account Access').should('not.exist');
+
         // Confirm submit button is disabled without specifying scopes.
         ui.buttonGroup
           .findButtonByTitle('Create Token')
@@ -147,7 +152,12 @@ describe('Personal access tokens', () => {
       });
 
     // Confirm that new PAT is shown in list and "View Scopes" drawer works.
-    cy.wait('@getTokens');
+    // Upon clicking “Create Token”, assert that the outgoing API request payload contains "scopes" value as defined in token.
+    cy.wait('@getTokens').then((xhr) => {
+      const actualTokenData = xhr.response?.body.data;
+      const actualTokenScopes = actualTokenData[0].scopes;
+      expect(actualTokenScopes).to.equal(token.scopes);
+    });
     cy.findByText(token.label)
       .should('be.visible')
       .closest('tr')

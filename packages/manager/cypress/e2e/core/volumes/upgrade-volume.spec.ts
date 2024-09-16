@@ -87,7 +87,7 @@ describe('volume upgrade/migration', () => {
 
     cy.findByText('active').should('be.visible');
 
-    ui.toast.assertMessage(`Volume ${volume.label} successfully upgraded.`);
+    ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
 
   it('can upgrade an attached volume from the volumes landing page', () => {
@@ -178,7 +178,7 @@ describe('volume upgrade/migration', () => {
 
     cy.findByText('active').should('be.visible');
 
-    ui.toast.assertMessage(`Volume ${volume.label} successfully upgraded.`);
+    ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
 
   it('can upgrade an attached volume from the linode details page', () => {
@@ -265,6 +265,6 @@ describe('volume upgrade/migration', () => {
 
     cy.findByText('active').should('be.visible');
 
-    ui.toast.assertMessage(`Volume ${volume.label} successfully upgraded.`);
+    ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
 });

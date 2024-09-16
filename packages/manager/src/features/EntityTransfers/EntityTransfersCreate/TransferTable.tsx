@@ -6,13 +6,13 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 
 import {
+  StyledCheckAllTableCell,
   StyledCheckbox,
   StyledDebouncedSearchTextField,
   StyledEmptyCheckbox,
   StyledPaginationFooter,
   StyledTable,
   StyledTypography,
-  StyledCheckAllTableCell,
 } from './TransferTable.styles';
 
 export interface Props {
@@ -24,6 +24,7 @@ export interface Props {
   page: number;
   pageSize: number;
   requestPage: (page: number) => void;
+  searchText: string;
   toggleSelectAll: (isToggled: boolean) => void;
 }
 
@@ -36,6 +37,7 @@ export const TransferTable = React.memo((props: Props) => {
     page,
     pageSize,
     requestPage,
+    searchText,
     toggleSelectAll,
   } = props;
 
@@ -57,6 +59,7 @@ export const TransferTable = React.memo((props: Props) => {
         label="Search by label"
         onSearch={handleSearch}
         placeholder="Search by label"
+        value={searchText}
       />
       <StyledTable>
         <TableHead>

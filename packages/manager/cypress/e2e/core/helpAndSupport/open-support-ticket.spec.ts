@@ -2,11 +2,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import 'cypress-file-upload';
 import { interceptGetProfile } from 'support/intercepts/profile';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import {
   randomItem,
@@ -69,9 +65,8 @@ describe('open support tickets', () => {
    */
   it('can open a support ticket', () => {
     mockAppendFeatureFlags({
-      supportTicketSeverity: makeFeatureFlagData(false),
+      supportTicketSeverity: false,
     });
-    mockGetFeatureFlagClientstream();
 
     const image = 'test_screenshot.png';
     const ticketDescription = 'this is a test ticket';
@@ -159,9 +154,8 @@ describe('open support tickets', () => {
     }
 
     mockAppendFeatureFlags({
-      supportTicketSeverity: makeFeatureFlagData(true),
+      supportTicketSeverity: true,
     });
-    mockGetFeatureFlagClientstream();
     mockCreateSupportTicket(mockTicket).as('createTicket');
     mockGetSupportTickets([]);
     mockGetSupportTicket(mockTicket);

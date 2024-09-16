@@ -49,7 +49,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   // Text input for filtering processes by name or user.
-  const [inputText, setInputText] = React.useState<string | undefined>();
+  const [inputText, setInputText] = React.useState<string>();
 
   // The selected process row.
   const [selectedProcess, setSelectedProcess] = React.useState<Process | null>(

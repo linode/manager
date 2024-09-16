@@ -28,7 +28,7 @@ export const CaptureSnapshot = (props: Props) => {
 
   const {
     error: snapshotError,
-    isLoading: isSnapshotLoading,
+    isPending: isSnapshotLoading,
     mutateAsync: takeSnapshot,
     reset,
   } = useLinodeBackupSnapshotMutation(linodeId);

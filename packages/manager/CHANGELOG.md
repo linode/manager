@@ -4,6 +4,92 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-09-16] - v1.128.0
+
+
+### Added:
+
+- Gravatar sunset banner for existing Gravatar users ([#10859](https://github.com/linode/manager/pull/10859))
+- New Marketplace app for September 2024 ([#10874](https://github.com/linode/manager/pull/10874))
+- Support for quoted strings in Search v2 ([#10894](https://github.com/linode/manager/pull/10894))
+- SelectableTableRow story in Storybook ([#10870](https://github.com/linode/manager/pull/10870))
+- DisplayPrice story in Storybook ([#10904](https://github.com/linode/manager/pull/10904))
+- CheckoutSummary story in Storybook ([#10905](https://github.com/linode/manager/pull/10905))
+- CopyableTextField story and cleaned up components ([#10912](https://github.com/linode/manager/pull/10912))
+- Tracking metrics for LD DX Tools AB Test ([#10906](https://github.com/linode/manager/pull/10906))
+
+### Changed:
+
+- Restricted access UX for Databases ([#10794](https://github.com/linode/manager/pull/10794))
+- Update image related copy as part of Image Service Gen2 ([#10835](https://github.com/linode/manager/pull/10835))
+- Disable Region in OS tab for unsupported distributed images and fix helper text positioning ([#10848](https://github.com/linode/manager/pull/10848))
+- Avatars for users without Gravatars ([#10859](https://github.com/linode/manager/pull/10859))
+- Refactor and improve the User Details page ([#10861](https://github.com/linode/manager/pull/10861))
+- Hide Beta price notice for Gecko LA and rename Ga code references to LA ([#10896](https://github.com/linode/manager/pull/10896))
+- Lower Events historical data fetching to 7 days ([#10899](https://github.com/linode/manager/pull/10899))
+- Update security policy ([#10902](https://github.com/linode/manager/pull/10902))
+- "Contact support" links to new support ticket in event messages ([#10910](https://github.com/linode/manager/pull/10910))
+- Invalid Tax Id notification ([#10928](https://github.com/linode/manager/pull/10928))
+
+### Fixed:
+
+- Helper text copy in NodeBalancer Create form “Algorithm” field ([#10855](https://github.com/linode/manager/pull/10855))
+- Regions to be searched by ID when Gecko is enabled ([#10871](https://github.com/linode/manager/pull/10871))
+- Weblish line wrapping ([#10893](https://github.com/linode/manager/pull/10893))
+- Search queries containing `and` on Linode Create v2's StackScript tab not being respected ([#10894](https://github.com/linode/manager/pull/10894))
+- Typo with toast success notification when updating Reverse DNS ([#10895](https://github.com/linode/manager/pull/10895))
+- Linode Migrate Datacenter Started event message referring to the wrong region ([#10901](https://github.com/linode/manager/pull/10901))
+- DisplayPrice story crash when Currency component's minimumFractionDigits is negative ([#10913](https://github.com/linode/manager/pull/10913))
+- Linode Create v2 not handling deprecated and EOL Images ([#10914](https://github.com/linode/manager/pull/10914))
+- API Tokens Table style regression ([#10918](https://github.com/linode/manager/pull/10918))
+- Incorrect avatar displaying in Notification Center for a small subset of events ([#10923](https://github.com/linode/manager/pull/10923))
+
+### Tech Stories:
+
+- Introduce Mock Service Worker V2 ([#10610](https://github.com/linode/manager/pull/10610))
+- Replace lodash set utility function to handle security threat raised by Dependabot ([#10814](https://github.com/linode/manager/pull/10814))
+- Remove `eventMessages` feature flag logic and legacy code ([#10839](https://github.com/linode/manager/pull/10839))
+- Refactor `useToastNotification` async toasts ([#10841](https://github.com/linode/manager/pull/10841))
+- Update TypeScript and Vitest to latest ([#10843](https://github.com/linode/manager/pull/10843))
+- Remove global error interceptors ([#10850](https://github.com/linode/manager/pull/10850))
+- Update Node.js from `18.14` to `20.17` ([#10866](https://github.com/linode/manager/pull/10866))
+- Remove `placementGroups` feature flag and conditional rendering ([#10877](https://github.com/linode/manager/pull/10877))
+- Resolve "Incomplete string escape or encoding" codeQL alert in `generate-ansibleConfig.ts` ([#10887](https://github.com/linode/manager/pull/10887))
+- Remove `linodeCreateRefactor` feature flag ([#10921](https://github.com/linode/manager/pull/10921))
+
+### Tests:
+
+- Add Cypress integration test for Secure VMs firewall generation ([#10802](https://github.com/linode/manager/pull/10802))
+- Add tests for NodeBalancer Create flow ([#10825](https://github.com/linode/manager/pull/10825))
+- Add unit test for LinodeVolumeAddDrawer and E2E test for client library update notices in Create/Attach Volume drawer ([#10837](https://github.com/linode/manager/pull/10837))
+- Add new tests for for selecting "All" Scopes ([#10852](https://github.com/linode/manager/pull/10852))
+- Add unit tests for NodeBalancerConfigPanel ([#10855](https://github.com/linode/manager/pull/10855))
+- Add `CY_TEST_ACCOUNT_CACHE_DIR` environment variable to enable retrieval of test account cache data ([#10867](https://github.com/linode/manager/pull/10867))
+- Allow tests to fall back on cached account data when API request fails ([#10867](https://github.com/linode/manager/pull/10867))
+- Add Cypress integration test for Object Storage Gen2: E2 Endpoint ([#10879](https://github.com/linode/manager/pull/10879))
+- Add Cypress integration test for Object Storage Gen2: E3 Endpoint ([#10880](https://github.com/linode/manager/pull/10880))
+- Add Cypress test for empty Linode landing page and restricted user Linode landing page ([#10882](https://github.com/linode/manager/pull/10882))
+- Update region selection helpers to account for upcoming Gecko improvements ([#10888](https://github.com/linode/manager/pull/10888))
+- Update remaining Linode Create Cypress tests run against Linode Create v2 ([#10889](https://github.com/linode/manager/pull/10889))
+- Add unit tests for SelectableTableRow component ([#10890](https://github.com/linode/manager/pull/10890))
+- Clean up feature flag mocks ([#10892](https://github.com/linode/manager/pull/10892))
+- Add Cypress test to confirm toast when updating RDNS, add unit tests for RDNS drawers ([#10895](https://github.com/linode/manager/pull/10895))
+- Add Cypress integration test for Object Storage Gen2: E1 Endpoint ([#10907](https://github.com/linode/manager/pull/10907))
+- Add unit tests for AttachVolumeDrawer component ([#10909](https://github.com/linode/manager/pull/10909))
+- Add unit tests for NodeBalancersLanding package ([#10911](https://github.com/linode/manager/pull/10911))
+- Support running component tests via CI ([#10926](https://github.com/linode/manager/pull/10926))
+
+### Upcoming Features:
+
+- Support Volume Encryption and associated notices in Create/Attach Volume drawer ([#10837](https://github.com/linode/manager/pull/10837))
+- Add new `CloudPulseDashboardWithFilters` component that will be used as a reusable component in service provider pages ([#10845](https://github.com/linode/manager/pull/10845))
+- Fix Demo feedback and missing changes across ACLP ([#10851](https://github.com/linode/manager/pull/10851))
+- Add conditional client library update required reboot notice to Volume Create page ([#10868](https://github.com/linode/manager/pull/10868))
+- Add DBaaS V2 Create enhancements ([#10872](https://github.com/linode/manager/pull/10872))
+- Revert the “View Code Snippets” button copy to the original text ([#10886](https://github.com/linode/manager/pull/10886))
+- Add “Encrypt Volume” checkbox in Attach Volume drawer ([#10909](https://github.com/linode/manager/pull/10909))
+- Update BSE capability for Linodes to be `Block Storage Encryption` instead of `blockstorage_encryption` ([#10920](https://github.com/linode/manager/pull/10920))
+
 ## [2024-09-03] - v1.127.0
 
 

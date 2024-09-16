@@ -114,7 +114,9 @@ describe('volume attach and detach flows', () => {
 
         // Confirm that volume has been attached to Linode.
         cy.wait('@attachVolume').its('response.statusCode').should('eq', 200);
-        ui.toast.assertMessage(`Volume ${volume.label} successfully attached.`);
+        ui.toast.assertMessage(
+          `Volume ${volume.label} has been attached to Linode ${linode.label}.`
+        );
         cy.findByText(volume.label)
           .should('be.visible')
           .closest('tr')

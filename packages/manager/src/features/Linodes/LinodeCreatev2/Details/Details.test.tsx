@@ -41,12 +41,9 @@ describe('Linode Create Details', () => {
     ).toBeVisible();
   });
 
-  it('renders an placement group details if the flag is on', async () => {
+  it('renders a placement group details', async () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <Details />,
-      options: {
-        flags: { placementGroups: { beta: true, enabled: true } },
-      },
     });
 
     await waitFor(() => {
@@ -56,19 +53,6 @@ describe('Linode Create Details', () => {
         )
       ).toBeVisible();
     });
-  });
-
-  it('does not render the placement group select if the flag is off', () => {
-    const { queryByText } = renderWithThemeAndHookFormContext({
-      component: <Details />,
-      options: {
-        flags: { placementGroups: { beta: true, enabled: false } },
-      },
-    });
-
-    expect(
-      queryByText('Select a region above to see available Placement Groups.')
-    ).toBeNull();
   });
 
   it('does not render the tag select when cloning', () => {

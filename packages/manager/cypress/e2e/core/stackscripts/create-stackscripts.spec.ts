@@ -374,7 +374,7 @@ describe('Create stackscripts', () => {
          */
         filteredImageData?.forEach((imageSample: Image) => {
           const imageLabel = imageSample.label;
-          cy.findAllByText(imageLabel)
+          cy.findAllByText(imageLabel, { exact: false })
             .last()
             .scrollIntoView()
             .should('exist')

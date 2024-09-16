@@ -3,11 +3,6 @@ import {
   linodeFactory,
   sshKeyFactory,
 } from 'src/factories';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { mockGetUser, mockGetUsers } from 'support/intercepts/account';
@@ -17,14 +12,6 @@ import { ui } from 'support/ui';
 import { mockCreateSSHKey } from 'support/intercepts/profile';
 
 describe('Create Linode with SSH Key', () => {
-  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(true),
-    });
-    mockGetFeatureFlagClientstream();
-  });
-
   /*
    * - Confirms UI flow when creating a Linode with an authorized SSH key.
    * - Confirms that existing SSH keys are listed on page and can be selected.

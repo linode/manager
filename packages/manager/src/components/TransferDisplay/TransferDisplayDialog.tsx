@@ -39,7 +39,7 @@ export const TransferDisplayDialog = React.memo(
       regionTransferPools,
     } = props;
     const theme = useTheme();
-    const { isGeckoGAEnabled } = useIsGeckoEnabled();
+    const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
     const daysRemainingInMonth = getDaysRemaining();
     const listOfOtherRegionTransferPools: string[] =
@@ -66,7 +66,7 @@ export const TransferDisplayDialog = React.memo(
          */}
         <TransferDisplayDialogHeader
           tooltipText={`The Global Pool includes transfer associated with active services in your devices' ${
-            isGeckoGAEnabled ? 'core' : ''
+            isGeckoLAEnabled ? 'core' : ''
           } regions${
             listOfOtherRegionTransferPools.length > 0
               ? ` except for ${otherRegionPools}.`

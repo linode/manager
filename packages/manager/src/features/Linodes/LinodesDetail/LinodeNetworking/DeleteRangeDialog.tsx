@@ -19,7 +19,7 @@ export const DeleteRangeDialog = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: removeRange,
   } = useLinodeRemoveRangeMutation(range.range);
 
@@ -37,7 +37,7 @@ export const DeleteRangeDialog = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             label: 'Delete Range',
-            loading: isLoading,
+            loading: isPending,
             onClick: handleDeleteIP,
           }}
           secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}

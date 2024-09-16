@@ -66,7 +66,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   >();
 
   const {
-    isLoading: isLoadingCreateVPC,
+    isPending: isLoadingCreateVPC,
     mutateAsync: createVPC,
   } = useCreateVPCMutation();
 
