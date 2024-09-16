@@ -335,7 +335,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
     if (accountPaymentsError || accountInvoicesError) {
       return (
         <TableRowError
-          colSpan={5}
+          colSpan={4}
           message={'There was an error retrieving your billing activity.'}
         />
       );
@@ -343,7 +343,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
     if (orderedPaginatedData.length == 0) {
       return (
         <TableRowEmpty
-          colSpan={5}
+          colSpan={4}
           message="No Billing & Payment History found."
         />
       );
