@@ -11,15 +11,16 @@ import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
-import OrderBy from 'src/components/OrderBy';
-import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { TableSortCell } from 'src/components/TableSortCell';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
@@ -29,6 +30,8 @@ import {
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
 import { useSet } from 'src/hooks/useSet';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -168,6 +171,7 @@ const AkamaiBillingInvoiceText = (
 // =============================================================================
 // <BillingActivityPanel />
 // =============================================================================
+
 export interface Props {
   accountActiveSince?: string;
 }
@@ -177,6 +181,10 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
+
+  const pagination = usePagination(1, 'billing-activity');
+  const { handleOrderChange, order, orderBy } = useOrder();
+
   const isAkamaiCustomer = account?.billing_source === 'akamai';
   const { classes } = useStyles();
   const flags = useFlags();
@@ -302,6 +310,61 @@ export const BillingActivityPanel = React.memo((props: Props) => {
     );
   }, [selectedTransactionType, combinedData]);
 
+  const data =
+    selectedTransactionType.value === 'all' ? combinedData : filteredData;
+
+  const getOrderedPaginatedData = (data: ActivityFeedItem[]) => {
+    const orderedData = data.sort((a, b) => {
+      return order === 'asc' ? a.total - b.total : b.total - a.total;
+    });
+
+    const start = (pagination.page - 1) * pagination.pageSize;
+    const end = start + pagination.pageSize;
+
+    return orderedData.slice(start, end);
+  };
+
+  const orderedPaginatedData = getOrderedPaginatedData(data);
+
+  const renderTableContent = () => {
+    if (accountPaymentsLoading || accountInvoicesLoading) {
+      return <TableRowLoading columns={4} rows={1} />;
+    }
+    if (accountPaymentsError || accountInvoicesError) {
+      return (
+        <TableRowError
+          colSpan={5}
+          message={'There was an error retrieving your billing activity.'}
+        />
+      );
+    }
+    if (orderedPaginatedData.length == 0) {
+      return (
+        <TableRowEmpty
+          colSpan={5}
+          message="No Billing & Payment History found."
+        />
+      );
+    }
+    if (orderedPaginatedData.length > 0) {
+      return orderedPaginatedData.map((thisItem) => (
+        <ActivityFeedItem
+          downloadPDF={
+            thisItem.type === 'invoice'
+              ? downloadInvoicePDF
+              : downloadPaymentPDF
+          }
+          hasError={pdfErrors.has(`${thisItem.type}-${thisItem.id}`)}
+          isLoading={pdfLoading.has(`${thisItem.type}-${thisItem.id}`)}
+          key={`${thisItem.type}-${thisItem.id}`}
+          {...thisItem}
+        />
+      ));
+    }
+
+    return null;
+  };
+
   return (
     <Grid data-qa-billing-activity-panel xs={12}>
       <Paper variant="outlined">
@@ -368,96 +431,36 @@ export const BillingActivityPanel = React.memo((props: Props) => {
             />
           </div>
         </StyledBillingAndPaymentHistoryHeader>
-        <OrderBy
-          data={
-            selectedTransactionType.value === 'all'
-              ? combinedData
-              : filteredData
-          }
-          order={'desc'}
-          orderBy={'date'}
-        >
-          {({ data: orderedData }) => (
-            <Paginate data={orderedData} pageSize={25} shouldScroll={false}>
-              {({
-                count,
-                data: paginatedAndOrderedData,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-              }) => (
-                <>
-                  <Table aria-label="List of Invoices and Payments">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell className={classes.descriptionColumn}>
-                          Description
-                        </TableCell>
-                        <TableCell className={classes.dateColumn}>
-                          Date
-                        </TableCell>
-                        <TableCell className={classes.totalColumn}>
-                          Amount
-                        </TableCell>
-                        <TableCell className={classes.pdfDownloadColumn} />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        error={
-                          accountPaymentsError || accountInvoicesError
-                            ? [
-                                {
-                                  reason:
-                                    'There was an error retrieving your billing activity.',
-                                },
-                              ]
-                            : undefined
-                        }
-                        loading={
-                          accountPaymentsLoading || accountInvoicesLoading
-                        }
-                        loadingProps={{
-                          columns: 4,
-                        }}
-                        length={paginatedAndOrderedData.length}
-                      >
-                        {paginatedAndOrderedData.map((thisItem) => {
-                          return (
-                            <ActivityFeedItem
-                              downloadPDF={
-                                thisItem.type === 'invoice'
-                                  ? downloadInvoicePDF
-                                  : downloadPaymentPDF
-                              }
-                              hasError={pdfErrors.has(
-                                `${thisItem.type}-${thisItem.id}`
-                              )}
-                              isLoading={pdfLoading.has(
-                                `${thisItem.type}-${thisItem.id}`
-                              )}
-                              key={`${thisItem.type}-${thisItem.id}`}
-                              {...thisItem}
-                            />
-                          );
-                        })}
-                      </TableContentWrapper>
-                    </TableBody>
-                  </Table>
-                  <PaginationFooter
-                    count={count}
-                    eventCategory="Billing Activity Table"
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                  />
-                </>
-              )}
-            </Paginate>
-          )}
-        </OrderBy>
+        <Table aria-label="List of Invoices and Payments">
+          <TableHead>
+            <TableRow>
+              <TableCell className={classes.descriptionColumn}>
+                Description
+              </TableCell>
+              <TableCell className={classes.dateColumn}>Date</TableCell>
+              <TableSortCell
+                active={orderBy === 'total'}
+                className={classes.totalColumn}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="total"
+              >
+                Amount
+              </TableSortCell>
+
+              <TableCell className={classes.pdfDownloadColumn} />
+            </TableRow>
+          </TableHead>
+          <TableBody>{renderTableContent()}</TableBody>
+        </Table>
+        <PaginationFooter
+          count={data.length}
+          eventCategory="Billing Activity Table"
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+        />
       </Paper>
     </Grid>
   );
