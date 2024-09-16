@@ -1,11 +1,11 @@
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/Linodes/LinodesCreate/PlansAvailabilityNotice.styles';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { PlansAvailabilityNotice } from '../../Linodes/LinodesCreate/PlansAvailabilityNotice';
 import {
@@ -19,6 +19,8 @@ import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';
 
 import type { Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import type { Theme } from '@mui/material/styles';
 
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
@@ -40,20 +42,34 @@ export const PlanInformation = (props: PlanInformationProps) => {
     planType,
     regionsData,
   } = props;
-
+  const theme = useTheme();
   const getDisabledClass = (thisClass: LinodeTypeClass) => {
     return Boolean(disabledClasses?.includes(thisClass));
   };
+  const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
 
   return (
     <>
       {planType === 'gpu' ? (
-        <PlansAvailabilityNotice
-          hasSelectedRegion={hasSelectedRegion}
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          planType={planType}
-          regionsData={regionsData || []}
-        />
+        <>
+          {showGPUEgressBanner && (
+            <Notice variant="info">
+              <Typography fontFamily={theme.font.bold} fontSize="1rem">
+                New GPU instances are now generally available. Deploy an RTX
+                4000 Ada GPU instance in select core compute regions in North
+                America, Europe, and Asia. Receive 1 TB of free included network
+                transfer for a limited time.{' '}
+                <Link to="/docs/guides/gpu-egress-banner">Learn more</Link>.
+              </Typography>
+            </Notice>
+          )}
+          <PlansAvailabilityNotice
+            hasSelectedRegion={hasSelectedRegion}
+            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+            planType={planType}
+            regionsData={regionsData || []}
+          />
+        </>
       ) : null}
       {planType === 'metal' ? (
         <MetalNotice
