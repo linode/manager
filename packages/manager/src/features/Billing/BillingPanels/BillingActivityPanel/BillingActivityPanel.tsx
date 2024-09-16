@@ -172,6 +172,8 @@ const AkamaiBillingInvoiceText = (
 // <BillingActivityPanel />
 // =============================================================================
 
+const NUM_COLS = 4;
+
 export interface Props {
   accountActiveSince?: string;
 }
@@ -330,20 +332,20 @@ export const BillingActivityPanel = React.memo((props: Props) => {
 
   const renderTableContent = () => {
     if (accountPaymentsLoading || accountInvoicesLoading) {
-      return <TableRowLoading columns={4} rows={1} />;
+      return <TableRowLoading columns={NUM_COLS} rows={1} />;
     }
     if (accountPaymentsError || accountInvoicesError) {
       return (
         <TableRowError
-          colSpan={4}
-          message={'There was an error retrieving your billing activity.'}
+          colSpan={NUM_COLS}
+          message="There was an error retrieving your billing activity."
         />
       );
     }
-    if (orderedPaginatedData.length == 0) {
+    if (orderedPaginatedData.length === 0) {
       return (
         <TableRowEmpty
-          colSpan={4}
+          colSpan={NUM_COLS}
           message="No Billing & Payment History found."
         />
       );
