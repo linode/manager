@@ -113,6 +113,7 @@ module.exports = {
     '@linode/eslint-plugin-cloud-manager',
   ],
   rules: {
+    '@linode/cloud-manager/deprecate-formik': 'warn',
     '@linode/cloud-manager/no-custom-fontWeight': 'error',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/consistent-type-imports': 'warn',
@@ -159,26 +160,9 @@ module.exports = {
     'no-new-wrappers': 'error',
     'no-restricted-imports': [
       'error',
-      {
-        paths: ['rxjs', '@mui/core', '@mui/icons-material'],
-      },
-    ],
-    'no-restricted-imports': [
-      'warn',
-      {
-        paths: [
-          {
-            message: 'Formik is being deprecated. Please use react-hook-form.',
-            name: 'formik',
-          },
-        ],
-        patterns: [
-          {
-            group: ['formik/*'],
-            message: 'Formik is being deprecated. Please use react-hook-form.',
-          },
-        ],
-      },
+      'rxjs',
+      '@mui/core',
+      '@mui/icons-material',
     ],
     'no-throw-literal': 'warn',
     'no-trailing-spaces': 'warn',
