@@ -55,7 +55,7 @@ export const createMetricResponse = (
     { length: Math.ceil(timeRangeInSeconds / interval) + 1 },
     (_, i) => {
       const timestamp = startTime + i * interval;
-      const value = (Math.random() * 100).toFixed(2);
+      const value = (Math.round(Math.random() * 100 * 100) / 100).toFixed(2); // Round and convert to string with 2 decimal places
       return [timestamp, value];
     }
   );
@@ -63,12 +63,11 @@ export const createMetricResponse = (
   return {
     data: {
       result: [{ metric: {}, values }],
-      resultType: 'matrix',
+      result_type: 'matrix',
     },
     isPartial: false,
     stats: {
-      executionTimeMsec: 53,
-      seriesFetched: '6',
+      series_fetched: 53,
     },
     status: 'success',
   };
