@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import { useTheme } from '@mui/material/styles';
 import { parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 
@@ -137,7 +136,6 @@ const RangeRDNSCell = (props: {
   range: IPRange;
 }) => {
   const { linodeId, onViewDetails, range } = props;
-  const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(linodeId);
 
