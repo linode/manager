@@ -114,6 +114,7 @@
   },
   "devDependencies": {
     "@linode/eslint-plugin-cloud-manager": "^0.0.3",
+    "@storybook/addon-a11y": "^8.3.0",
     "@storybook/addon-actions": "^8.3.0",
     "@storybook/addon-controls": "^8.3.0",
     "@storybook/addon-docs": "^8.3.0",
