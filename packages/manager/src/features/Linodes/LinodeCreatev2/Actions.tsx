@@ -6,6 +6,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -23,6 +24,7 @@ export const Actions = () => {
   const flags = useFlags();
   const ldClient = useLDClient();
   const { params } = useLinodeCreateQueryParams();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
 
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
@@ -51,10 +53,12 @@ export const Actions = () => {
     if (await trigger()) {
       // If validation is successful, we open the dialog.
       setIsAPIAwarenessModalOpen(true);
+      if (!isInternalAccount) {
+        ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.OPEN_MODAL, {
+          variation: apicliButtonCopy,
+        });
+      }
 
-      ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.OPEN_MODAL, {
-        variation: apicliButtonCopy,
-      });
       ldClient?.flush();
     } else {
       scrollErrorIntoView(undefined, { behavior: 'smooth' });
