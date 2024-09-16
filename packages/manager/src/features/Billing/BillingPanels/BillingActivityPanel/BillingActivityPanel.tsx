@@ -313,7 +313,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const data =
     selectedTransactionType.value === 'all' ? combinedData : filteredData;
 
-  const getOrderedPaginatedData = (data: ActivityFeedItem[]) => {
+  const orderedPaginatedData = React.useMemo(() => {
     const orderedData = data.sort((a, b) => {
       if (orderBy === 'total') {
         return order === 'asc' ? a.total - b.total : b.total - a.total;
@@ -326,9 +326,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
     const end = start + pagination.pageSize;
 
     return orderedData.slice(start, end);
-  };
-
-  const orderedPaginatedData = getOrderedPaginatedData(data);
+  }, [data, orderBy, order, pagination.page, pagination.pageSize]);
 
   const renderTableContent = () => {
     if (accountPaymentsLoading || accountInvoicesLoading) {
