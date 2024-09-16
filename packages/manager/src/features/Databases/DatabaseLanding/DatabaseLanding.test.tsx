@@ -16,6 +16,18 @@ import {
 import DatabaseLanding from './DatabaseLanding';
 import DatabaseRow from './DatabaseRow';
 
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
+}));
+
+vi.mock('src/queries/profile/profile', async () => {
+  const actual = await vi.importActual('src/queries/profile/profile');
+  return {
+    ...actual,
+    useProfile: queryMocks.useProfile,
+  };
+});
+
 beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
@@ -96,5 +108,39 @@ describe('Database Table', () => {
         "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution."
       )
     ).toBeInTheDocument();
+  });
+});
+
+describe('Database Landing', () => {
+  it('should have the "Create Database Cluster" button disabled for restricted users', async () => {
+    queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
+
+    const { container, getByTestId } = renderWithTheme(<DatabaseLanding />);
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const createClusterButton = container.querySelector('button');
+
+    expect(createClusterButton).toBeInTheDocument();
+    expect(createClusterButton).toHaveTextContent('Create Database Cluster');
+    expect(createClusterButton).toBeDisabled();
+  });
+
+  it('should have the "Create Database Cluster" button enabled for users with full access', async () => {
+    queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
+
+    const { container, getByTestId } = renderWithTheme(<DatabaseLanding />);
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const createClusterButton = container.querySelector('button');
+
+    expect(createClusterButton).toBeInTheDocument();
+    expect(createClusterButton).toHaveTextContent('Create Database Cluster');
+    expect(createClusterButton).not.toBeDisabled();
   });
 });

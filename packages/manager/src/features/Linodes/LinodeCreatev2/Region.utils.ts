@@ -1,9 +1,7 @@
-import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { Image, Region } from '@linode/api-v4';
 import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 interface DisabledRegionOptions {
-  linodeCreateTab: LinodeCreateType | undefined;
   regions: Region[];
   selectedImage: Image | undefined;
 }
@@ -14,13 +12,12 @@ interface DisabledRegionOptions {
  * @returns key/value pairs for disabled regions. the key is the region id and the value is why the region is disabled
  */
 export const getDisabledRegions = (options: DisabledRegionOptions) => {
-  const { linodeCreateTab, regions, selectedImage } = options;
+  const { regions, selectedImage } = options;
 
-  // On the images tab, we disabled distributed regions if:
+  // Disable distributed regions if:
   // - The user has selected an Image
   // - The selected image does not have the `distributed-sites` capability
   if (
-    linodeCreateTab === 'Images' &&
     selectedImage &&
     !selectedImage.capabilities.includes('distributed-sites')
   ) {

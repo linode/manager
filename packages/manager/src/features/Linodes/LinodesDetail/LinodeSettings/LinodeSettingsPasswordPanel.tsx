@@ -51,12 +51,12 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
 
   const {
     error: linodePasswordError,
-    isLoading: isLinodePasswordLoading,
+    isPending: isLinodePasswordLoading,
     mutateAsync: changeLinodePassword,
   } = useLinodeChangePasswordMutation(linodeId);
   const {
     error: diskPasswordError,
-    isLoading: isDiskPasswordLoading,
+    isPending: isDiskPasswordLoading,
     mutateAsync: changeLinodeDiskPassword,
   } = useLinodeDiskChangePasswordMutation(linodeId, selectedDiskId ?? -1);
 

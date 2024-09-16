@@ -20,7 +20,7 @@ export const ComplianceUpdateModal = () => {
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
   const {
-    isLoading,
+    isPending,
     mutateAsync: updateAccountAgreements,
   } = useMutateAccountAgreements();
 
@@ -50,7 +50,7 @@ export const ComplianceUpdateModal = () => {
           primaryButtonProps={{
             disabled: !checked,
             label: 'Agree',
-            loading: isLoading,
+            loading: isPending,
             onClick: handleAgree,
           }}
           secondaryButtonProps={{

@@ -8,7 +8,7 @@ import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 
-import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';
+import { isEUModelContractNotification } from '../NotificationCenter/utils';
 
 export const ComplianceBanner = () => {
   const context = React.useContext(complianceUpdateContext);

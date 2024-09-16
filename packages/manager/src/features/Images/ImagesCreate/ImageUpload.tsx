@@ -190,8 +190,16 @@ export const ImageUpload = () => {
             />
           )}
           <Paper>
-            <Typography mb={1.5} variant="h2">
+            <Typography mb={2} variant="h2">
               Image Details
+            </Typography>
+            <Typography>
+              Custom images are billed monthly, at $.10/GB. An uploaded image
+              file needs to meet specific{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image">
+                requirements
+              </Link>
+              .
             </Typography>
             {form.formState.errors.root?.message && (
               <Notice
@@ -208,7 +216,6 @@ export const ImageUpload = () => {
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Label"
-                  noMarginTop
                   onBlur={field.onBlur}
                   onChange={field.onChange}
                   value={field.value ?? ''}

@@ -26,7 +26,7 @@ export const useIncidentQuery = () =>
   });
 
 export const useMaintenanceQuery = (
-  options?: UseQueryOptions<MaintenanceResponse, APIError[]>
+  options?: Partial<UseQueryOptions<MaintenanceResponse, APIError[]>>
 ) =>
   useQuery<MaintenanceResponse, APIError[]>({
     ...statusPageQueries.maintenance,

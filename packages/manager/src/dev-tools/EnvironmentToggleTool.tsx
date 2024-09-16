@@ -3,6 +3,8 @@ import * as React from 'react';
 
 import { storage } from 'src/utilities/storage';
 
+import { DevToolSelect } from './components/DevToolSelect';
+
 interface EnvironmentOption {
   apiRoot: string;
   clientID: string;
@@ -53,15 +55,13 @@ export const EnvironmentToggleTool = () => {
 
   const localStorageEnv = storage.devToolsEnv.get();
   const currentEnvLabel = localStorageEnv?.label;
+  const selectedOptionLabel = options[selectedOption]?.label;
 
   return (
     <Grid container>
-      <Grid xs={12}>
-        <h4 style={{ marginBottom: 8, marginTop: 0 }}>Environment</h4>
-      </Grid>
-      <Grid xs={12}>
-        <select
-          onBlur={(e) => {
+      <Grid display="flex" flexWrap="nowrap" xs={12}>
+        <DevToolSelect
+          onChange={(e) => {
             const selectedIndex = options.findIndex(
               (o) => o.label === e.target.value
             );
@@ -81,7 +81,7 @@ export const EnvironmentToggleTool = () => {
               </option>
             );
           })}
-        </select>
+        </DevToolSelect>
         <button
           onClick={() => {
             const selected = options[selectedOption];
@@ -90,6 +90,8 @@ export const EnvironmentToggleTool = () => {
               window.location.reload();
             }
           }}
+          className="green"
+          disabled={selectedOptionLabel === currentEnvLabel}
         >
           Refresh
         </button>

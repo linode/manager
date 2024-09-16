@@ -18,7 +18,7 @@ export const DeleteOAuthClientDialog = ({
   onClose,
   open,
 }: Props) => {
-  const { error, isLoading, mutateAsync } = useDeleteOAuthClientMutation(id);
+  const { error, isPending, mutateAsync } = useDeleteOAuthClientMutation(id);
 
   const onDelete = () => {
     mutateAsync().then(() => {
@@ -33,7 +33,7 @@ export const DeleteOAuthClientDialog = ({
           primaryButtonProps={{
             'data-testid': 'button-confirm',
             label: 'Delete',
-            loading: isLoading,
+            loading: isPending,
             onClick: onDelete,
           }}
           secondaryButtonProps={{

@@ -60,7 +60,7 @@ export const BackupDrawer = (props: Props) => {
 
   const {
     error: updateAccountSettingsError,
-    isLoading: isUpdatingAccountSettings,
+    isPending: isUpdatingAccountSettings,
     mutateAsync: updateAccountSettings,
   } = useMutateAccountSettings();
 
@@ -70,7 +70,7 @@ export const BackupDrawer = (props: Props) => {
 
   const {
     data: enableBackupsResult,
-    isLoading: isEnablingBackups,
+    isPending: isEnablingBackups,
     mutateAsync: enableBackups,
   } = useEnableBackupsOnLinodesMutation();
 

@@ -1,25 +1,19 @@
 import {
-  AttachVolumePayload,
-  CloneVolumePayload,
-  ResizeVolumePayload,
-  UpdateVolumeRequest,
-  Volume,
-  VolumeRequestPayload,
   attachVolume,
   cloneVolume,
   createVolume,
   deleteVolume,
   detachVolume,
   getLinodeVolumes,
+  getVolume,
   getVolumes,
   migrateVolumes,
   resizeVolume,
   updateVolume,
 } from '@linode/api-v4';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { Filter, Params, PriceType } from '@linode/api-v4/src/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -30,6 +24,17 @@ import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile/profile';
 import { getAllVolumeTypes, getAllVolumes } from './requests';
+
+import type {
+  AttachVolumePayload,
+  CloneVolumePayload,
+  ResizeVolumePayload,
+  UpdateVolumeRequest,
+  Volume,
+  VolumeRequestPayload,
+} from '@linode/api-v4';
+import type { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import type { Filter, Params, PriceType } from '@linode/api-v4/src/types';
 
 export const volumeQueries = createQueryKeys('volumes', {
   linode: (linodeId: number) => ({
@@ -49,7 +54,7 @@ export const volumeQueries = createQueryKeys('volumes', {
       }),
       infinite: (filter: Filter = {}) => ({
         queryFn: ({ pageParam }) =>
-          getVolumes({ page: pageParam, page_size: 25 }, filter),
+          getVolumes({ page: pageParam as number, page_size: 25 }, filter),
         queryKey: [filter],
       }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
@@ -63,12 +68,23 @@ export const volumeQueries = createQueryKeys('volumes', {
     queryFn: getAllVolumeTypes,
     queryKey: null,
   },
+  volume: (id: number) => ({
+    queryFn: () => getVolume(id),
+    queryKey: [id],
+  }),
 });
+
+export const useVolumeQuery = (id: number, enabled = true) => {
+  return useQuery<Volume, APIError[]>({
+    ...volumeQueries.volume(id),
+    enabled,
+  });
+};
 
 export const useVolumesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.lists._ctx.paginated(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useVolumeTypesQuery = () =>
@@ -86,6 +102,7 @@ export const useInfiniteVolumesQuery = (filter: Filter) =>
       }
       return page + 1;
     },
+    initialPageParam: 1,
   });
 
 export const useAllVolumesQuery = (
@@ -107,7 +124,7 @@ export const useLinodeVolumesQuery = (
   useQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.linode(linodeId)._ctx.volumes(params, filter),
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 interface ResizeVolumePayloadWithId extends ResizeVolumePayload {
@@ -119,6 +136,11 @@ export const useResizeVolumeMutation = () => {
   return useMutation<Volume, APIError[], ResizeVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => resizeVolume(volumeId, data),
     onSuccess(volume) {
+      // Update the specific volume
+      queryClient.setQueryData<Volume>(
+        volumeQueries.volume(volume.id).queryKey,
+        volume
+      );
       // Invalidate all lists
       queryClient.invalidateQueries({
         queryKey: volumeQueries.lists.queryKey,
@@ -210,6 +232,11 @@ export const useUpdateVolumeMutation = () => {
   return useMutation<Volume, APIError[], UpdateVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => updateVolume(volumeId, data),
     onSuccess(volume) {
+      // Update the specific volume
+      queryClient.setQueryData<Volume>(
+        volumeQueries.volume(volume.id).queryKey,
+        volume
+      );
       // Invalidate all lists
       queryClient.invalidateQueries({
         queryKey: volumeQueries.lists.queryKey,
@@ -233,10 +260,16 @@ export const useAttachVolumeMutation = () => {
   return useMutation<Volume, APIError[], AttachVolumePayloadWithId>({
     mutationFn: ({ volumeId, ...data }) => attachVolume(volumeId, data),
     onSuccess(volume) {
+      // Update the specific volume
+      queryClient.setQueryData<Volume>(
+        volumeQueries.volume(volume.id).queryKey,
+        volume
+      );
       // Invalidate all lists
       queryClient.invalidateQueries({
         queryKey: volumeQueries.lists.queryKey,
       });
+
       // If the volume is assigned to a Linode, invalidate that Linode's list
       if (volume.linode_id) {
         queryClient.invalidateQueries({
@@ -247,7 +280,8 @@ export const useAttachVolumeMutation = () => {
   });
 };
 
-export const useDetachVolumeMutation = () =>
-  useMutation<{}, APIError[], { id: number }>({
+export const useDetachVolumeMutation = () => {
+  return useMutation<{}, APIError[], { id: number }>({
     mutationFn: ({ id }) => detachVolume(id),
   });
+};

@@ -2,13 +2,8 @@ import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
 import { accountFactory } from 'src/factories/account';
 import type { Account } from '@linode/api-v4';
 import { ui } from 'support/ui';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import type { Flags } from 'src/featureFlags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = accountFactory.build({
@@ -72,11 +67,10 @@ const checkAccountContactDisplay = (accountInfo: Account) => {
 describe('Billing Contact', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      taxId: makeFeatureFlagData<Flags['taxId']>({
+      taxId: {
         enabled: true,
-      }),
+      },
     });
-    mockGetFeatureFlagClientstream();
   });
   it('Edit Contact Info', () => {
     // mock the user's account data and confirm that it is displayed correctly upon page load

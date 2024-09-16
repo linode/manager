@@ -24,14 +24,6 @@ export const StyledRootContainer = styled(Paper, {
   padding: theme.spacing(3),
 }));
 
-export const StyledHelperText = styled(Typography, {
-  label: 'StyledHelperText',
-})(({ theme }) => ({
-  lineHeight: 1.5,
-  paddingBottom: theme.spacing(),
-  paddingTop: theme.spacing(),
-}));
-
 export const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',
 })(() => ({

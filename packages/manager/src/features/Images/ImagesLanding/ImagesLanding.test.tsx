@@ -57,10 +57,10 @@ describe('Images Landing Table', () => {
     // Static text and table column headers
     expect(getAllByText('Image').length).toBe(2);
     expect(getAllByText('Status').length).toBe(2);
-    expect(getAllByText('Region(s)').length).toBe(1);
+    expect(getAllByText('Replicated in').length).toBe(1);
     expect(getAllByText('Compatibility').length).toBe(1);
-    expect(getAllByText('Size').length).toBe(2);
-    expect(getAllByText('Total Size').length).toBe(1);
+    expect(getAllByText('Original Image').length).toBe(1);
+    expect(getAllByText('All Replicas').length).toBe(1);
     expect(getAllByText('Created').length).toBe(2);
     expect(getAllByText('Image ID').length).toBe(1);
   });

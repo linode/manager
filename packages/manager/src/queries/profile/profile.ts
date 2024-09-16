@@ -1,7 +1,4 @@
 import {
-  Profile,
-  SSHKey,
-  TrustedDevice,
   createSSHKey,
   deleteSSHKey,
   deleteTrustedDevice,
@@ -22,13 +19,11 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
-  QueryClient,
+  keepPreviousData,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-
-import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 import { accountQueries } from '../account/queries';
 import { queryPresets } from '../base';
@@ -38,11 +33,16 @@ import type {
   Filter,
   Grants,
   Params,
+  Profile,
   RequestOptions,
   ResourcePage,
+  SSHKey,
   SendPhoneVerificationCodePayload,
+  TrustedDevice,
   VerifyVerificationCodePayload,
 } from '@linode/api-v4';
+import type { QueryClient } from '@tanstack/react-query';
+import type { EventHandlerData } from 'src/hooks/useEventHandlers';
 
 export const profileQueries = createQueryKeys('profile', {
   appTokens: (params: Params = {}, filter: Filter = {}) => ({
@@ -90,7 +90,13 @@ export const useMutateProfile = () => {
   const queryClient = useQueryClient();
   return useMutation<Profile, APIError[], Partial<Profile>>({
     mutationFn: updateProfile,
-    onSuccess: (newData) => updateProfileData(newData, queryClient),
+    onSuccess(newData) {
+      updateProfileData(newData, queryClient);
+
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.users.queryKey,
+      });
+    },
   });
 };
 
@@ -144,7 +150,7 @@ export const useSSHKeysQuery = (
   useQuery<ResourcePage<SSHKey>, APIError[]>({
     ...profileQueries.sshKeys(params, filter),
     enabled,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useCreateSSHKeyMutation = () => {
@@ -211,7 +217,7 @@ export const sshKeyEventHandler = ({ invalidateQueries }: EventHandlerData) => {
 export const useTrustedDevicesQuery = (params?: Params, filter?: Filter) =>
   useQuery<ResourcePage<TrustedDevice>, APIError[]>({
     ...profileQueries.trustedDevices(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useRevokeTrustedDeviceMutation = (id: number) => {

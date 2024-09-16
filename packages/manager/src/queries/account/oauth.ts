@@ -9,7 +9,12 @@ import {
   resetOAuthClientSecret,
   updateOAuthClient,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { EventHandlerData } from 'src/hooks/useEventHandlers';
 
@@ -18,7 +23,7 @@ import { accountQueries } from './queries';
 export const useOAuthClientsQuery = (params?: Params, filter?: Filter) =>
   useQuery({
     ...accountQueries.oauthClients(params, filter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 interface OAuthClientWithSecret extends OAuthClient {

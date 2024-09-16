@@ -45,7 +45,7 @@ export const MutationNotification = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: startMutation,
   } = useStartLinodeMutationMutation(linodeId);
 
@@ -132,7 +132,7 @@ export const MutationNotification = (props: Props) => {
         handleClose={() => setIsMutationDrawerOpen(false)}
         initMutation={initMutation}
         linodeId={linodeId}
-        loading={isLoading}
+        loading={isPending}
         open={isMutationDrawerOpen}
       />
     </>

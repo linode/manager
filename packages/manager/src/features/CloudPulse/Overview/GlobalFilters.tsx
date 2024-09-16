@@ -1,5 +1,5 @@
+import { IconButton } from '@mui/material';
 import { Grid } from '@mui/material';
-import { IconButton, Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,6 +9,7 @@ import { Divider } from 'src/components/Divider';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { REFRESH } from '../Utils/constants';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
@@ -34,7 +35,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleDashboardChange,
     handleTimeDurationChange,
   } = props;
-
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
@@ -61,7 +61,15 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     [handleAnyFilterChange]
   );
 
-  const handleGlobalRefresh = React.useCallback(() => {}, []);
+  const handleGlobalRefresh = React.useCallback(
+    (dashboardObj?: Dashboard) => {
+      if (!dashboardObj) {
+        return;
+      }
+      handleAnyFilterChange(REFRESH, Date.now());
+    },
+    [handleAnyFilterChange]
+  );
 
   return (
     <Grid container gap={1}>
@@ -86,17 +94,16 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             hideLabel
             label="Select Time Range"
           />
-          <Tooltip arrow enterDelay={500} placement="top" title="Refresh">
-            <IconButton
-              sx={{
-                marginBlockEnd: 'auto',
-              }}
-              onClick={handleGlobalRefresh}
-              size="small"
-            >
-              <StyledReload />
-            </IconButton>
-          </Tooltip>
+          <IconButton
+            sx={{
+              marginBlockEnd: 'auto',
+            }}
+            disabled={!selectedDashboard}
+            onClick={() => handleGlobalRefresh(selectedDashboard)}
+            size="small"
+          >
+            <StyledReload />
+          </IconButton>
         </Grid>
       </Grid>
       <Grid item xs={12}>

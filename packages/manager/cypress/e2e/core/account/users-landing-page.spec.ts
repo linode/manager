@@ -444,7 +444,6 @@ describe('Users landing page', () => {
     });
 
     mockGetUsers([mockUser]).as('getUsers');
-    mockGetUser(mockUser);
     mockGetUserGrantsUnrestrictedAccess(mockUser.username);
     mockAddUser(newUser).as('addUser');
 
@@ -487,6 +486,8 @@ describe('Users landing page', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
+
+    mockGetUser(newUser).as('getUser');
 
     // confirm to add a new user
     ui.drawer
@@ -535,10 +536,8 @@ describe('Users landing page', () => {
     cy.wait('@addUser').then((intercept) => {
       expect(intercept.request.body['restricted']).to.equal(newUser.restricted);
     });
-    cy.wait('@getUsers');
 
-    // the new user is displayed in the user list
-    cy.findByText(newUser.username).should('be.visible');
+    cy.wait('@getUser');
 
     // redirects to the new user's "User Permissions" page
     cy.url().should('endWith', `/users/${newUser.username}/permissions`);

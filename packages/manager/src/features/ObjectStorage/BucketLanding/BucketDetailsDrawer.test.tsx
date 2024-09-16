@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 
 import {
   objectStorageBucketFactory,
+  objectStorageBucketFactoryGen2,
   profileFactory,
   regionFactory,
 } from 'src/factories';
@@ -198,5 +199,102 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
         screen.queryByLabelText('Access Control List (ACL)')
       ).not.toBeInTheDocument();
     });
+  });
+});
+
+describe('BucketDetailDrawer: Gen2 UI', () => {
+  const e3Bucket = objectStorageBucketFactoryGen2.build();
+  const e1Bucket = objectStorageBucketFactoryGen2.build({
+    endpoint_type: 'E1',
+  });
+
+  const region = regionFactory.build({
+    id: e3Bucket.region,
+  });
+
+  it('renders correctly when open', () => {
+    renderWithThemeAndHookFormContext({
+      component: (
+        <BucketDetailsDrawer
+          onClose={mockOnClose}
+          open={true}
+          selectedBucket={e3Bucket}
+        />
+      ),
+      options: {
+        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
+      },
+    });
+
+    expect(screen.getByText(e3Bucket.label)).toBeInTheDocument();
+    expect(screen.getByTestId('createdTime')).toHaveTextContent(
+      'Created: 2019-12-12'
+    );
+    expect(screen.getByTestId('endpointType')).toHaveTextContent(
+      `Endpoint Type: E3`
+    );
+    expect(screen.getByTestId('cluster')).toHaveTextContent(region.id);
+    expect(screen.getByText(e3Bucket.hostname)).toBeInTheDocument();
+    expect(screen.getByText('1 MB')).toBeInTheDocument();
+    expect(screen.getByText('103 objects')).toBeInTheDocument();
+  });
+
+  it("doesn't show the CORS switch for E2 and E3 buckets", async () => {
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: (
+        <BucketDetailsDrawer
+          onClose={mockOnClose}
+          open={true}
+          selectedBucket={e3Bucket}
+        />
+      ),
+      options: {
+        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
+      },
+    });
+
+    expect(
+      getByText(
+        /CORS \(Cross Origin Sharing\) is not available for endpoint types E2 and E3./
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('renders the Bucket Rate Limit Table for E2 and E3 buckets', async () => {
+    const { findByTestId } = renderWithThemeAndHookFormContext({
+      component: (
+        <BucketDetailsDrawer
+          onClose={mockOnClose}
+          open={true}
+          selectedBucket={e3Bucket}
+        />
+      ),
+      options: {
+        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
+      },
+    });
+
+    const rateLimitTable = await findByTestId('bucket-rate-limit-table');
+    expect(rateLimitTable).toBeVisible();
+  });
+
+  it('renders the Bucket Rate Limit Text for E0 and E1 buckets', async () => {
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: (
+        <BucketDetailsDrawer
+          onClose={mockOnClose}
+          open={true}
+          selectedBucket={e1Bucket}
+        />
+      ),
+      options: {
+        flags: { objMultiCluster: false, objectStorageGen2: { enabled: true } },
+      },
+    });
+    expect(
+      await findByText(
+        /This endpoint type supports up to 750 Requests Per Second \(RPS\)./
+      )
+    ).toBeInTheDocument();
   });
 });

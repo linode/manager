@@ -120,7 +120,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
 
   const {
     error: resetKubeConfigError,
-    isLoading: isResettingKubeConfig,
+    isPending: isResettingKubeConfig,
     mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
 

@@ -33,7 +33,7 @@ export const autocompletePopper = {
    * Finds an item within an autocomplete popper that has the given title.
    */
   findByTitle: (
-    title: string,
+    title: string | RegExp,
     options?: SelectorMatcherOptions
   ): Cypress.Chainable => {
     return (
@@ -90,7 +90,9 @@ export const regionSelect = {
    */
   findItemByRegionId: (regionId: string, searchRegions?: Region[]) => {
     const region = getRegionById(regionId, searchRegions);
-    return autocompletePopper.findByTitle(`${region.label} (${region.id})`);
+    return autocompletePopper.findByTitle(
+      new RegExp(`${region.label}\\s?(\(${region.id}\))?`)
+    );
   },
 
   /**
@@ -105,6 +107,8 @@ export const regionSelect = {
    */
   findItemByRegionLabel: (regionLabel: string, searchRegions?: Region[]) => {
     const region = getRegionByLabel(regionLabel, searchRegions);
-    return autocompletePopper.findByTitle(`${region.label} (${region.id})`);
+    return autocompletePopper.findByTitle(
+      new RegExp(`${region.label}\\s?(\(${region.id}\))?`)
+    );
   },
 };

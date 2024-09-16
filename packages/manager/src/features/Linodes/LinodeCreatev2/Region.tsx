@@ -86,9 +86,9 @@ export const Region = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
   const showTwoStepRegion =
-    isGeckoGAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
+    isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
@@ -176,18 +176,16 @@ export const Region = () => {
 
   const hideDistributedRegions =
     !flags.gecko2?.enabled ||
-    flags.gecko2?.ga ||
     !isDistributedRegionSupported(params.type ?? 'OS');
 
   const showDistributedRegionIconHelperText =
-    !hideDistributedRegions &&
-    regions?.some(
-      (region) =>
-        region.site_type === 'distributed' || region.site_type === 'edge'
-    );
+    isGeckoBetaEnabled && !hideDistributedRegions;
+  regions?.some(
+    (region) =>
+      region.site_type === 'distributed' || region.site_type === 'edge'
+  );
 
   const disabledRegions = getDisabledRegions({
-    linodeCreateTab: params.type,
     regions: regions ?? [],
     selectedImage: image,
   });

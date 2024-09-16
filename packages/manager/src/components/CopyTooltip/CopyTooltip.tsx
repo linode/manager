@@ -3,8 +3,10 @@ import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import FileCopy from 'src/assets/icons/copy.svg';
-import { Tooltip, TooltipProps } from 'src/components/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 import { omittedProps } from 'src/utilities/omittedProps';
+
+import type { TooltipProps } from 'src/components/Tooltip';
 
 export interface CopyTooltipProps {
   /**
@@ -62,7 +64,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   };
 
   const CopyButton = (
-    <StyledCopyButton
+    <StyledIconButton
       aria-label={`Copy ${text} to clipboard`}
       className={className}
       data-qa-copy-btn
@@ -72,7 +74,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       {...props}
     >
       {copyableText ? text : <FileCopy />}
-    </StyledCopyButton>
+    </StyledIconButton>
   );
 
   if (disabled) {
@@ -91,8 +93,8 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   );
 };
 
-const StyledCopyButton = styled('button', {
-  label: 'StyledCopyButton',
+export const StyledIconButton = styled('button', {
+  label: 'StyledIconButton',
   shouldForwardProp: omittedProps(['copyableText', 'text', 'onClickCallback']),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
   '& svg': {

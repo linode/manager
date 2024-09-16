@@ -34,13 +34,13 @@ export const NodeBalancerSettings = () => {
 
   const {
     error: labelError,
-    isLoading: isUpdatingLabel,
+    isPending: isUpdatingLabel,
     mutateAsync: updateNodeBalancerLabel,
   } = useNodebalancerUpdateMutation(id);
 
   const {
     error: throttleError,
-    isLoading: isUpdatingThrottle,
+    isPending: isUpdatingThrottle,
     mutateAsync: updateNodeBalancerThrottle,
   } = useNodebalancerUpdateMutation(id);
 

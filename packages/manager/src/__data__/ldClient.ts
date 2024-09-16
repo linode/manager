@@ -1,4 +1,4 @@
-import { LDClient } from 'launchdarkly-js-client-sdk';
+import type { LDClient } from 'launchdarkly-js-client-sdk';
 
 const client: LDClient = {
   allFlags: vi.fn(),

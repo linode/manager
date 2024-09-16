@@ -8,7 +8,7 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 
-interface Props {
+interface Props extends Pick<LinodeLishData, 'weblish_url' | 'ws_protocols'> {
   linode: Linode;
   refreshToken: () => Promise<void>;
 }
@@ -18,10 +18,7 @@ interface State {
   renderingLish: boolean;
 }
 
-type CombinedProps = Props &
-  Pick<LinodeLishData, 'weblish_url' | 'ws_protocols'>;
-
-export class Weblish extends React.Component<CombinedProps, State> {
+export class Weblish extends React.Component<Props, State> {
   mounted: boolean = false;
   socket: WebSocket;
 
@@ -36,7 +33,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
     this.connect();
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: Props) {
     /*
      * If we have a new token, refresh the webosocket connection
      * and console with the new token
@@ -110,7 +107,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
     const { group, label } = linode;
 
     this.terminal = new Terminal({
-      cols: 120,
+      cols: 80,
       cursorBlink: true,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
       rows: 40,

@@ -4,10 +4,10 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { CopyableAndDownloadableTextField } from 'src/components/CopyableAndDownloadableTextField';
+import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Notice } from 'src/components/Notice/Notice';
-import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
 import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
+import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -118,17 +118,19 @@ export const SecretTokenDialog = (props: Props) => {
       {objectStorageKey ? (
         <>
           <Box marginBottom="16px">
-            <CopyableAndDownloadableTextField
+            <CopyableTextField
               expand
               label={'Access Key'}
+              showDownloadIcon
               spellCheck={false}
               value={objectStorageKey.access_key || ''}
             />
           </Box>
           <Box marginBottom="16px">
-            <CopyableAndDownloadableTextField
+            <CopyableTextField
               expand
               label={'Secret Key'}
+              showDownloadIcon
               spellCheck={false}
               value={objectStorageKey.secret_key || ''}
             />
@@ -136,9 +138,10 @@ export const SecretTokenDialog = (props: Props) => {
         </>
       ) : value ? (
         <Box marginBottom="16px">
-          <CopyableAndDownloadableTextField
+          <CopyableTextField
             expand
             label={title}
+            showDownloadIcon
             spellCheck={false}
             value={value || ''}
           />

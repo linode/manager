@@ -39,7 +39,7 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: unassignLinodes,
   } = useUnassignLinodesFromPlacementGroup(+placementGroupId ?? -1);
 
@@ -78,9 +78,9 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
   const actions = (
     <ActionsPanel
       primaryButtonProps={{
-        disabled: isLoading || isLinodeReadOnly,
+        disabled: isPending || isLinodeReadOnly,
         label: 'Unassign',
-        loading: isLoading,
+        loading: isPending,
         onClick: onUnassign,
       }}
       secondaryButtonProps={{

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Notice } from 'src/components/Notice/Notice';
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
@@ -35,6 +36,7 @@ export interface PlansPanelProps {
   disabledTabs?: string[];
   docsLink?: JSX.Element;
   error?: string;
+  handleTabChange?: (index: number) => void;
   header?: string;
   isCreate?: boolean;
   linodeID?: number | undefined;
@@ -66,6 +68,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     disabledSmallerPlans,
     docsLink,
     error,
+    handleTabChange,
     header,
     isCreate,
     linodeID,
@@ -78,6 +81,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
   } = props;
 
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
   const location = useLocation();
   const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
@@ -167,7 +171,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 planType={plan}
                 regionsData={regionsData || []}
               />
-              {showDistributedRegionPlanTable && (
+              {showDistributedRegionPlanTable && !isGeckoLAEnabled && (
                 <Notice
                   text="Distributed region pricing is temporarily $0 during the beta period, after which billing will begin."
                   variant="warning"
@@ -223,6 +227,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
       data-qa-select-plan
       docsLink={docsLink}
       error={error}
+      handleTabChange={handleTabChange}
       header={header || 'Linode Plan'}
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}

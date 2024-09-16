@@ -120,6 +120,17 @@ describe('database resize', () => {
       fireEvent.click(resizeButton);
       getByText(`Resize Database Cluster ${database.label}?`);
     });
+
+    it('Should disable the "Resize Database Cluster" button when disabled = true', async () => {
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseResize database={database} disabled={true} />
+      );
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      const resizeDatabaseBtn = getByText('Resize Database Cluster').closest(
+        'button'
+      );
+      expect(resizeDatabaseBtn).toBeDisabled();
+    });
   });
 
   describe('should be disabled smaller plans', () => {

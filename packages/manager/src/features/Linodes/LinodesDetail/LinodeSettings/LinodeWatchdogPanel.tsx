@@ -24,7 +24,7 @@ export const LinodeWatchdogPanel = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateLinode,
   } = useLinodeUpdateMutation(linodeId);
 
@@ -59,7 +59,7 @@ export const LinodeWatchdogPanel = (props: Props) => {
             label={
               <Stack alignItems="center" direction="row" spacing={1}>
                 <Box>{linode?.watchdog_enabled ? 'Enabled' : 'Disabled'}</Box>
-                <Box>{isLoading && <CircleProgress size="sm" />}</Box>
+                <Box>{isPending && <CircleProgress size="sm" />}</Box>
               </Stack>
             }
             disabled={isReadOnly}

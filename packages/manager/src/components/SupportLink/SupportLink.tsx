@@ -19,7 +19,7 @@ interface SupportLinkProps {
 }
 
 export interface EntityForTicketDetails {
-  id: number | undefined;
+  id?: number;
   type: EntityType;
 }
 

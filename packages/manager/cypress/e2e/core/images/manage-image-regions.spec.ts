@@ -6,19 +6,23 @@ import {
 } from 'support/intercepts/images';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import type { Image } from '@linode/api-v4';
+import type { Image, Region } from '@linode/api-v4';
 import { extendRegion } from 'support/util/regions';
 
-describe('Manage Image Regions', () => {
+describe('Manage Image Replicas', () => {
   /**
    * Adds two new regions to an Image (region3 and region4)
    * and removes one existing region (region 1).
    */
   it("updates an Image's regions", () => {
-    const region1 = extendRegion(regionFactory.build({ site_type: 'core' }));
-    const region2 = extendRegion(regionFactory.build({ site_type: 'core' }));
-    const region3 = extendRegion(regionFactory.build({ site_type: 'core' }));
-    const region4 = extendRegion(regionFactory.build({ site_type: 'core' }));
+    const regionOptions: Partial<Region> = {
+      site_type: 'core',
+      capabilities: ['Object Storage'],
+    };
+    const region1 = extendRegion(regionFactory.build(regionOptions));
+    const region2 = extendRegion(regionFactory.build(regionOptions));
+    const region3 = extendRegion(regionFactory.build(regionOptions));
+    const region4 = extendRegion(regionFactory.build(regionOptions));
 
     const image = imageFactory.build({
       size: 50,
@@ -41,28 +45,28 @@ describe('Manage Image Regions', () => {
       .closest('tr')
       .within(() => {
         // Verify total size is rendered
-        cy.findByText(`${image.total_size} MB`).should('be.visible');
+        cy.findByText(`0.1 GB`).should('be.visible'); // 100 / 1024 = 0.09765
 
         // Verify capabilities are rendered
         cy.findByText('Distributed').should('be.visible');
 
-        // Verify the first region is rendered
-        cy.findByText(region1.label + ',').should('be.visible');
-
-        // Click the "+1"
-        cy.findByText('+1').should('be.visible').should('be.enabled').click();
+        // Verify the number of regions is rendered and click it
+        cy.findByText(`${image.regions.length} Regions`)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
-    // Verify the Manage Regions drawer opens and contains basic content
+    // Verify the Manage Replicas drawer opens and contains basic content
     ui.drawer
-      .findByTitle(`Manage Regions for ${image.label}`)
+      .findByTitle(`Manage Replicas for ${image.label}`)
       .should('be.visible')
       .within(() => {
         // Verify the Image regions render
         cy.findByText(region1.label).should('be.visible');
         cy.findByText(region2.label).should('be.visible');
 
-        cy.findByText('Image will be available in these regions (2)').should(
+        cy.findByText('Image will be replicated in these regions (2)').should(
           'be.visible'
         );
 
@@ -72,7 +76,7 @@ describe('Manage Image Regions', () => {
           .should('be.visible')
           .should('be.disabled');
 
-        // Close the Manage Regions drawer
+        // Close the Manage Replicas drawer
         ui.button
           .findByTitle('Cancel')
           .should('be.visible')
@@ -91,9 +95,9 @@ describe('Manage Image Regions', () => {
           .click();
       });
 
-    // Click "Manage Regions" option in the action menu
+    // Click "Manage Replicas" option in the action menu
     ui.actionMenuItem
-      .findByTitle('Manage Regions')
+      .findByTitle('Manage Replicas')
       .should('be.visible')
       .should('be.enabled')
       .click();
@@ -142,7 +146,7 @@ describe('Manage Image Regions', () => {
 
     // Click outside of the Region Multi-Select to close the popover
     ui.drawer
-      .findByTitle(`Manage Regions for ${image.label}`)
+      .findByTitle(`Manage Replicas for ${image.label}`)
       .click()
       .within(() => {
         // Verify the existing image regions render
@@ -155,7 +159,7 @@ describe('Manage Image Regions', () => {
         cy.findAllByText('unsaved').should('be.visible');
 
         // Verify the count is now 3
-        cy.findByText('Image will be available in these regions (4)').should(
+        cy.findByText('Image will be replicated in these regions (4)').should(
           'be.visible'
         );
 
@@ -172,7 +176,7 @@ describe('Manage Image Regions', () => {
         cy.findByText(region1.label).should('not.exist');
 
         // Verify the count is now 3
-        cy.findByText('Image will be available in these regions (3)').should(
+        cy.findByText('Image will be replicated in these regions (3)').should(
           'be.visible'
         );
 
@@ -190,19 +194,17 @@ describe('Manage Image Regions', () => {
       .closest('tr')
       .within(() => {
         // Verify the new size is shown
-        cy.findByText('150 MB');
+        cy.findByText('0.15 GB'); // 150 / 2014 = 0.1464
 
-        // Verify the first region is rendered
-        cy.findByText(region2.label + ',').should('be.visible');
-
-        cy.findByText('+2').should('be.visible').should('be.enabled');
-
-        // Verify the regions count is now "+2" and open the drawer
-        cy.findByText('+2').should('be.visible').should('be.enabled').click();
+        // Verify the new number of regions is shown and click it
+        cy.findByText(`${updatedImage.regions.length} Regions`)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
     ui.drawer
-      .findByTitle(`Manage Regions for ${image.label}`)
+      .findByTitle(`Manage Replicas for ${image.label}`)
       .click()
       .within(() => {
         // "Unsaved" regions should transition to "pending replication" because

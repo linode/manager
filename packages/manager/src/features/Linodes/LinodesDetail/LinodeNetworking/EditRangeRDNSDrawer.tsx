@@ -45,7 +45,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
 
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: updateIP,
     reset,
   } = useLinodeIPMutation();
@@ -61,7 +61,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
         address: values.address ?? '',
         rdns: values.rdns === '' ? null : values.rdns,
       });
-      enqueueSnackbar(`Successfully updated RNS for ${range?.range}`, {
+      enqueueSnackbar(`Successfully updated RDNS for ${range?.range}`, {
         variant: 'success',
       });
       onClose();
@@ -70,17 +70,20 @@ export const EditRangeRDNSDrawer = (props: Props) => {
 
   const theme = useTheme();
 
-  React.useEffect(() => {
-    if (open) {
-      formik.resetForm();
-      reset();
-    }
-  }, [open]);
+  const onExited = () => {
+    formik.resetForm();
+    reset();
+  };
 
   const errorMap = getErrorMap(['rdns'], error);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Edit Reverse DNS">
+    <Drawer
+      onClose={onClose}
+      onExited={onExited}
+      open={open}
+      title="Edit Reverse DNS"
+    >
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
           <Notice data-qa-error style={{ marginTop: 16 }} variant="error">
@@ -98,20 +101,18 @@ export const EditRangeRDNSDrawer = (props: Props) => {
         <TextField
           data-qa-domain-name
           errorText={errorMap.rdns}
+          helperText="Leave this field blank to reset RDNS"
           label="Enter a domain name"
           name="rdns"
           onChange={formik.handleChange}
           placeholder="Enter a domain name"
           value={formik.values.rdns}
         />
-        <Typography variant="body1">
-          Leave this field blank to reset RDNS
-        </Typography>
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
             label: 'Save',
-            loading: isLoading,
+            loading: isPending,
             type: 'submit',
           }}
           secondaryButtonProps={{
@@ -133,7 +134,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
             Existing Records
           </Typography>
           {ips.map((ip) => (
-            <div style={{ marginTop: theme.spacing(2) }} key={ip.address}>
+            <div key={ip.address} style={{ marginTop: theme.spacing(2) }}>
               <Typography>{ip.address}</Typography>
               <Typography>{ip.rdns || ''}</Typography>
             </div>

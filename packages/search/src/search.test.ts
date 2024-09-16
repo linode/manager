@@ -142,4 +142,29 @@ describe("getAPIFilterFromQuery", () => {
       getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] }).error?.message
     ).toEqual("Expected search value or whitespace but end of input found.");
   });
+
+  it("allows a quoted string so you can use spaces in the query (double quotes)", () => {
+    const query = 'label: "my stackscript"';
+
+    expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+      filter: {
+        label: { '+contains': "my stackscript" }
+      },
+      error: null,
+    });
+  });
+
+  it("allows a quoted string so you can use spaces in the query (single quotes)", () => {
+    const query = "label: 'my stackscript' and username = linode";
+
+    expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+      filter: {
+        ["+and"]: [
+          { label: { "+contains": "my stackscript" } },
+          { username: "linode" },
+        ],
+      },
+      error: null,
+    });
+  });
 });

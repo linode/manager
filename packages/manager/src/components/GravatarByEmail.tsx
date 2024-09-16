@@ -6,14 +6,14 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 
 export const DEFAULT_AVATAR_SIZE = 28;
 
-interface Props {
+export interface GravatarByEmailProps {
   className?: string;
   email: string;
   height?: number;
   width?: number;
 }
 
-export const GravatarByEmail = (props: Props) => {
+export const GravatarByEmail = (props: GravatarByEmailProps) => {
   const {
     className,
     email,
