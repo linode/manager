@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import NodeBalancerCreate from './NodeBalancerCreate';
 
 // Note: see nodeblaancers-create-in-complex-form.spec.ts for an e2e test of this flow
-describe('NodeBalancerCreate unit tests', () => {
+describe('NodeBalancerCreate', () => {
   it('renders all parts of the NodeBalancerCreate page', () => {
     const { getAllByText, getByLabelText, getByText } = renderWithTheme(
       <NodeBalancerCreate />
