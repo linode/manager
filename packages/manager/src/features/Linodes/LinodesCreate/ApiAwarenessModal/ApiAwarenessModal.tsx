@@ -14,6 +14,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
@@ -63,6 +64,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const ldClient = useLDClient();
   const history = useHistory();
   const { data: events } = useInProgressEvents();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
 
   const linodeCreationEvent = events?.find(
     (event) =>
@@ -97,9 +99,12 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
         : undefined;
 
     if (trackingKey) {
-      ldClient?.track(trackingKey, {
-        variation: apicliButtonCopy,
-      });
+      if (!isInternalAccount) {
+        ldClient?.track(trackingKey, {
+          variation: apicliButtonCopy,
+        });
+      }
+
       ldClient?.flush();
     }
   };

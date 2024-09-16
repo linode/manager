@@ -5,6 +5,7 @@ import { ResourceLinks } from 'src/components/EmptyLandingPageResources/Resource
 import { Typography } from 'src/components/Typography';
 import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 
 import type { ResourcesLinks } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
@@ -27,13 +28,17 @@ export const gettingStartedGuides: ResourcesLinks['links'] = [
 export const PythonSDKResources = () => {
   const ldClient = useLDClient();
   const flags = useFlags();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
 
   const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
   const handleClick = () => {
-    ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.SDK_PYTHON_RESOURCE_LINKS, {
-      variation: apicliButtonCopy,
-    });
+    if (!isInternalAccount) {
+      ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.SDK_PYTHON_RESOURCE_LINKS, {
+        variation: apicliButtonCopy,
+      });
+    }
+
     ldClient?.flush();
   };
   return (
