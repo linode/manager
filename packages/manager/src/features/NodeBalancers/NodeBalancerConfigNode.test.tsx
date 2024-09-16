@@ -27,7 +27,7 @@ const props: NodeBalancerConfigNodeProps = {
 };
 
 describe('NodeBalancerConfigNode', () => {
-  it('renders the NodeBAlancerConfigNode', () => {
+  it('renders the NodeBalancerConfigNode', () => {
     const { getByLabelText, getByText, queryByText } = renderWithTheme(
       <NodeBalancerConfigNode {...props} />
     );
