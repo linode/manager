@@ -181,7 +181,7 @@ const RangeRDNSCell = (props: {
           color: theme.palette.primary.main,
         }}
       >
-        {ipsWithRDNS.length} Addresses2
+        {ipsWithRDNS.length} Addresses
       </Typography>
     </button>
   );
