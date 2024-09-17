@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { Checkbox } from 'src/components/Checkbox';
@@ -20,16 +20,23 @@ import { getBackupsEnabledValue } from './utilities';
 import type { LinodeCreateFormValues } from '../utilities';
 
 export const Backups = () => {
-  const { control } = useFormContext<LinodeCreateFormValues>();
+  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+
   const { field } = useController({
     control,
     name: 'backups_enabled',
   });
 
-  const [regionId, typeId, diskEncryption] = useWatch({
+  const [linode, regionId, typeId, diskEncryption] = useWatch({
     control,
-    name: ['region', 'type', 'disk_encryption'],
+    name: ['linode', 'region', 'type', 'disk_encryption'],
   });
+
+  const defaultValue = linode?.backups?.enabled ?? false;
+
+  useEffect(() => {
+    setValue('backups_enabled', defaultValue);
+  }, [defaultValue, setValue]);
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
