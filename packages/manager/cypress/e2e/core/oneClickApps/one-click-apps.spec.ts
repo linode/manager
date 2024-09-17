@@ -51,7 +51,7 @@ describe('OneClick Apps (OCA)', () => {
     });
   });
 
-  it.only('Can view app details of a marketplace app', () => {
+  it('Can view app details of a marketplace app', () => {
     cy.tag('method:e2e');
 
     // Mock no overrides to prevent feature flag changes from causing test interfearence
