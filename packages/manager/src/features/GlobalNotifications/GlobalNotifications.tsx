@@ -15,7 +15,6 @@ import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { ComplianceBanner } from './ComplianceBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
 import { EmailBounceNotificationSection } from './EmailBounce';
-import { GravatarSunsetBanner } from './GravatarSunsetBanner';
 import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
 import { DesignUpdateBanner } from './TokensUpdateBanner';
@@ -87,7 +86,6 @@ export const GlobalNotifications = () => {
       Object.keys(flags.taxCollectionBanner).length > 0 ? (
         <TaxCollectionBanner />
       ) : null}
-      <GravatarSunsetBanner email={profile?.email ?? ''} />
     </>
   );
 };
