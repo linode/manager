@@ -1,15 +1,4 @@
-import { imageFactory, normalizeEntities } from 'src/factories';
-
 import { utoa } from './utilities';
-
-const linodeImage = imageFactory.build({
-  id: 'linode/debian10',
-  label: 'Debian 10',
-  vendor: 'linode',
-});
-
-const images = normalizeEntities(imageFactory.buildList(10));
-images['linode/debian10'] = linodeImage;
 
 /**
  * This is an example cloud-init config
