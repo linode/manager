@@ -1,8 +1,7 @@
-import { ManagedContact } from '@linode/api-v4/lib/managed';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
+import { AddNewLink } from 'src/components/AddNewLink/AddNewLink';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
@@ -23,14 +22,16 @@ import {
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import {
+  StyledHeaderGrid,
+  StyledTypography,
+  StyledWrapperGrid,
+} from './Contacts.styles';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
-import { ManagedContactGroup, Mode } from './common';
-import {
-  StyledWrapperGrid,
-  StyledTypography,
-  StyledHeaderGrid,
-} from './Contacts.styles';
+
+import type { ManagedContactGroup, Mode } from './common';
+import type { ManagedContact } from '@linode/api-v4/lib/managed';
 
 const Contacts = () => {
   const { enqueueSnackbar } = useSnackbar();

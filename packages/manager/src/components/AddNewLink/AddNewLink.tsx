@@ -1,8 +1,10 @@
 import * as React from 'react';
 
-import { Tooltip, TooltipProps } from 'src/components/Tooltip';
+import { Tooltip } from 'src/components/Tooltip';
 
 import { Button } from '../Button/Button';
+
+import type { TooltipProps } from 'src/components/Tooltip';
 
 export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
   disabled?: boolean;
@@ -12,7 +14,7 @@ export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
   onClick: (e?: React.MouseEvent<HTMLElement>) => void;
 }
 
-const AddNewLink = (props: Props) => {
+export const AddNewLink = (props: Props) => {
   const {
     className,
     disabled,
@@ -57,5 +59,3 @@ const AddNewLink = (props: Props) => {
     </Button>
   );
 };
-
-export default AddNewLink;

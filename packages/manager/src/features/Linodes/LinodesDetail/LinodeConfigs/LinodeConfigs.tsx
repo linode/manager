@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import AddNewLink from 'src/components/AddNewLink';
+import { AddNewLink } from 'src/components/AddNewLink/AddNewLink';
 import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';

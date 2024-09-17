@@ -1,10 +1,7 @@
-import { CredentialPayload } from '@linode/api-v4/lib/managed/types';
-import { APIError } from '@linode/api-v4/lib/types';
-import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
+import { AddNewLink } from 'src/components/AddNewLink/AddNewLink';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
@@ -38,6 +35,10 @@ import {
 import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
+
+import type { CredentialPayload } from '@linode/api-v4/lib/managed/types';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { FormikBag } from 'formik';
 
 export type FormikProps = FormikBag<{}, CredentialPayload>;
 
