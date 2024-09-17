@@ -449,6 +449,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                     }),
                   },
                 }}
+                data-qa="toggle-full-account-access"
                 label="Full Account Access"
                 labelPlacement="end"
                 value={restricted}
