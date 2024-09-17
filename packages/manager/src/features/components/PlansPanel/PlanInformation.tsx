@@ -57,9 +57,10 @@ export const PlanInformation = (props: PlanInformationProps) => {
               <Typography fontFamily={theme.font.bold} fontSize="1rem">
                 New GPU instances are now generally available. Deploy an RTX
                 4000 Ada GPU instance in select core compute regions in North
-                America, Europe, and Asia. Receive 1 TB of free included network
-                transfer for a limited time.{' '}
-                <Link to="/docs/guides/gpu-egress-banner">Learn more</Link>.
+                America, Europe, and Asia. <br />
+                Receive 1 TB of free included network transfer for a limited
+                time. {/* TODO: Add link to GPU egress banner */}
+                <Link to="#">Learn more</Link>.
               </Typography>
             </Notice>
           )}
