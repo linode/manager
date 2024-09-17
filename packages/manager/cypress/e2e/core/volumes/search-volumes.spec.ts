@@ -1,7 +1,6 @@
 import { createVolume } from '@linode/api-v4/lib/volumes';
 import { Volume } from '@linode/api-v4';
 import { ui } from 'support/ui';
-
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 import { cleanUp } from 'support/util/cleanup';
@@ -10,6 +9,9 @@ authenticate();
 describe('Search Volumes', () => {
   before(() => {
     cleanUp(['volumes']);
+  });
+  beforeEach(() => {
+    cy.tag('method:e2e');
   });
 
   /*

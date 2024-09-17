@@ -151,6 +151,7 @@ export interface BaseDatabase {
    * A key/value object where the key is an IP address and the value is a member type.
    */
   members: Record<string, MemberType>;
+  platform?: string;
 }
 
 export interface MySQLDatabase extends BaseDatabase {
