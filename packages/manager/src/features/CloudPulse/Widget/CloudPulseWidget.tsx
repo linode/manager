@@ -7,7 +7,7 @@ import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
 
 import {
-  StyledWidgetPaper,
+  StyledWidgetWrapper,
   generateGraphData,
   getCloudPulseMetricRequest,
 } from '../Utils/CloudPulseWidgetUtils';
@@ -290,7 +290,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   return (
     <Grid item lg={widget.size} xs={12}>
       <Stack spacing={2}>
-        <StyledWidgetPaper>
+        <StyledWidgetWrapper>
           <Stack
             alignItems={'center'}
             direction={{ sm: 'row' }}
@@ -357,7 +357,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             timezone={timezone}
             title={widget.label}
           />
-        </StyledWidgetPaper>
+        </StyledWidgetWrapper>
       </Stack>
     </Grid>
   );

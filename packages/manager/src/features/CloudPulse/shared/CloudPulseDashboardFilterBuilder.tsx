@@ -1,8 +1,8 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/ArrowDropDown';
-import KeyboardArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Grid, Typography } from '@mui/material';
 import * as React from 'react';
 
+import KeyboardArrowDownIcon from 'src/assets/icons/cloudpulse_arrow_down.svg';
+import KeyboardArrowRightIcon from 'src/assets/icons/cloudpulse_arrow_right.svg';
 import InfoIcon from 'src/assets/icons/info.svg';
 import { Button } from 'src/components/Button/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -205,7 +205,15 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     return (
       <Grid container item m="24px" xs={12}>
-        <Grid item key={'toggleFilter'} marginBottom={1} xs={12}>
+        <Grid
+          sx={{
+            m: 0,
+            p: 0,
+          }}
+          item
+          key={'toggleFilter'}
+          xs={12}
+        >
           <Button
             startIcon={
               showFilter ? (
@@ -219,7 +227,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               )
             }
             onClick={toggleShowFilter}
-            sx={{ justifyContent: 'start', mb: showFilter ? 0 : 2, p: 0 }}
+            sx={{ justifyContent: 'start', mb: 0, p: 0 }}
           >
             <Typography variant={'h3'}>Filters</Typography>
           </Button>
