@@ -1351,13 +1351,10 @@
     react-dom "^17.0.2"
     style-dictionary "4.0.1"
 
-"@linode/eslint-plugin-cloud-manager@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@linode/eslint-plugin-cloud-manager/-/eslint-plugin-cloud-manager-0.0.4.tgz#8d6783c33d52c5814bda9fc8dc5830fd4c88e0e2"
-  integrity sha512-Ac59pQCFhsVQYwYACHS1/gBs7KgwhzCG3CFiglrLTyveVyNg6Yv8fI7rWzyD+nABgOiqgzngxtU9YKsQvFshKQ==
-
-"@linode/eslint-plugin-cloud-manager@file:.yalc/@linode/eslint-plugin-cloud-manager":
-  version "0.0.3"
+"@linode/eslint-plugin-cloud-manager@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@linode/eslint-plugin-cloud-manager/-/eslint-plugin-cloud-manager-0.0.5.tgz#d35a80870e301ff43c4a2ade7d53d866c6a87bb8"
+  integrity sha512-zOT3iFnFTG5h4ylczvA3fUk8xiJPKzmzNTVsszjfyTDqFr6FiCDhGzUgj7znToW6J3Mr3CATobid2GCR2Ls19Q==
 
 "@lukemorales/query-key-factory@^1.3.4":
   version "1.3.4"
