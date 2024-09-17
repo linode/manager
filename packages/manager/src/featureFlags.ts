@@ -81,7 +81,6 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
 }
 
 export interface Flags {
-  testdxtoolabexperiment: string;
   aclp: AclpFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
@@ -120,6 +119,7 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxId: BaseFeatureFlag;
   taxes: Taxes;
+  testdxtoolabexperiment: string;
   tpaProviders: Provider[];
 }
 
