@@ -57,7 +57,7 @@ export const UserPermissionsEntitySection = React.memo(
       <Box key={entity} paddingBottom="0" marginTop={`${theme.spacing(2)}`}>
         {showHeading && (
           <Typography
-            variant="h2"
+            variant="h3"
             sx={{
               marginTop: theme.spacing(3),
               marginBottom: theme.spacing(2),

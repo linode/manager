@@ -345,7 +345,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           spacing={2}
         >
           <Grid>
-            <Typography data-qa-permissions-header="billing" variant="h2">
+            <Typography data-qa-permissions-header="billing" variant="h3">
               Billing Access
             </Typography>
           </Grid>
@@ -419,7 +419,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                   textTransform: 'capitalize',
                 }}
                 data-qa-restrict-access={restricted}
-                variant="h1"
+                variant="h2"
               >
                 {isProxyUser ? PARENT_USER : 'General'} Permissions
               </Typography>
@@ -590,7 +590,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <Grid>
             <Typography
               data-qa-permissions-header="Specific Permissions"
-              variant="h1"
+              variant="h2"
             >
               Specific Permissions
             </Typography>
