@@ -16,10 +16,11 @@ import {
 } from 'src/queries/profile/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
-import { ThemeChoice } from 'src/utilities/theme';
 import { isOSMac } from 'src/utilities/userAgent';
 
 import { PreferenceEditor } from './PreferenceEditor';
+
+import type { ThemeChoice } from 'src/utilities/theme';
 
 export const ProfileSettings = () => {
   const location = useLocation();
@@ -48,6 +49,8 @@ export const ProfileSettings = () => {
     preferences?.type_to_confirm === true;
 
   const areEmailNotificationsEnabled = profile?.email_notifications === true;
+
+  const isSensitiveDataRedacted = preferences?.hideSensitiveData === true;
 
   return (
     <Stack spacing={2}>
@@ -113,6 +116,28 @@ export const ProfileSettings = () => {
           }
           label={`Type-to-confirm is ${
             isTypeToConfirmEnabled ? 'enabled' : 'disabled'
+          }`}
+        />
+      </Paper>
+      <Paper>
+        <Typography marginBottom={1} variant="h2">
+          Redact Sensitive Data
+        </Typography>
+        <Typography marginBottom={1} variant="body1">
+          Replace IP addresses and user contact information with redacted
+          placeholder data for privacy.
+        </Typography>
+        <FormControlLabel
+          control={
+            <Toggle
+              onChange={(_, checked) =>
+                updatePreferences({ hideSensitiveData: checked })
+              }
+              checked={isSensitiveDataRedacted}
+            />
+          }
+          label={`Sensitive data is ${
+            isSensitiveDataRedacted ? 'redacted' : 'visible'
           }`}
         />
       </Paper>
