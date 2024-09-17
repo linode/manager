@@ -8,8 +8,10 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { LinkButton } from 'src/components/LinkButton';
+import { RedactableText } from 'src/components/RedactableText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { usePreferences } from 'src/queries/profile/preferences';
 import {
   profileQueries,
   updateProfileData,
@@ -54,6 +56,7 @@ export const PhoneVerification = ({
   const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
   const [isViewMode, setIsViewMode] = React.useState(hasVerifiedPhoneNumber);
   const [isPhoneInputFocused, setIsPhoneInputFocused] = React.useState(false);
+  const { data: preferences } = usePreferences();
 
   React.useEffect(() => {
     // If the user opts-out, hasVerifiedPhoneNumber will change, therefore
@@ -215,9 +218,14 @@ export const PhoneVerification = ({
               </StyledPhoneNumberTitle>
               <Box alignItems="center" display="flex" style={{ gap: 10 }}>
                 <Typography>
-                  {profile?.verified_phone_number
-                    ? getFormattedNumber(profile.verified_phone_number)
-                    : 'No Phone Number'}
+                  <RedactableText
+                    isRedacted={Boolean(preferences?.redactSensitiveData)}
+                    isToggleable
+                  >
+                    {profile?.verified_phone_number
+                      ? getFormattedNumber(profile.verified_phone_number)
+                      : 'No Phone Number'}
+                  </RedactableText>
                 </Typography>
                 <LinkButton
                   style={{

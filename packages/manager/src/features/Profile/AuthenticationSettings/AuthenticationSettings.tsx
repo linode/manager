@@ -13,8 +13,8 @@ import { useProfile } from 'src/queries/profile/profile';
 
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import { ResetPassword } from './ResetPassword';
-import { SMSMessaging } from './SMSMessaging';
 import { SecurityQuestions } from './SecurityQuestions/SecurityQuestions';
+import { SMSMessaging } from './SMSMessaging';
 import { TPAProviders } from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import { TwoFactor } from './TwoFactor/TwoFactor';
