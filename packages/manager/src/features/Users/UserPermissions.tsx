@@ -1,19 +1,11 @@
 import {
-  GlobalGrantTypes,
-  Grant,
-  GrantLevel,
-  GrantType,
-  Grants,
-  User,
   getGrants,
   getUser,
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { QueryClient } from '@tanstack/react-query';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
@@ -21,9 +13,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-// import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
@@ -34,14 +24,8 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import {
-  WithFeatureFlagProps,
-  withFeatureFlags,
-} from 'src/containers/flags.container';
-import {
-  WithQueryClientProps,
-  withQueryClient,
-} from 'src/containers/withQueryClient.container';
+import { withFeatureFlags } from 'src/containers/flags.container';
+import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';
 import { accountQueries } from 'src/queries/account/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -59,6 +43,20 @@ import {
   StyledUnrestrictedGrid,
 } from './UserPermissions.styles';
 import { UserPermissionsEntitySection } from './UserPermissionsEntitySection';
+
+import type {
+  GlobalGrantTypes,
+  Grant,
+  GrantLevel,
+  GrantType,
+  Grants,
+  User,
+} from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { QueryClient } from '@tanstack/react-query';
+import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { WithFeatureFlagProps } from 'src/containers/flags.container';
+import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 interface Props {
   accountUsername?: string;
   currentUsername?: string;
@@ -91,30 +89,6 @@ interface State {
 type CombinedProps = Props & WithQueryClientProps & WithFeatureFlagProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
-  componentDidMount() {
-    this.getUserGrants();
-    this.getUserType();
-  }
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.currentUsername !== this.props.currentUsername) {
-      this.getUserGrants();
-      this.getUserType();
-    }
-  }
-
-  render() {
-    const { loading } = this.state;
-    const { currentUsername } = this.props;
-
-    return (
-      <div ref={this.formContainerRef}>
-        <DocumentTitleSegment segment={`${currentUsername} - Permissions`} />
-        {loading ? <CircleProgress /> : this.renderBody()}
-      </div>
-    );
-  }
-
   billingPermOnClick = (value: null | string) => () => {
     const lp = lensPath(['grants', 'global', 'account_access']);
     this.setState(set(lp, value));
@@ -679,9 +653,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <Typography data-qa-unrestricted-msg>
             This user has unrestricted access to the account.
           </Typography>
-          {/* <Button buttonType="primary" onClick={this.onChangeRestricted}>
-          Save
-        </Button> */}
         </StyledUnrestrictedGrid>
       </Paper>
     );
@@ -823,6 +794,30 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     setAllPerm: 'null',
     userType: null,
   };
+
+  componentDidMount() {
+    this.getUserGrants();
+    this.getUserType();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (prevProps.currentUsername !== this.props.currentUsername) {
+      this.getUserGrants();
+      this.getUserType();
+    }
+  }
+
+  render() {
+    const { loading } = this.state;
+    const { currentUsername } = this.props;
+
+    return (
+      <div ref={this.formContainerRef}>
+        <DocumentTitleSegment segment={`${currentUsername} - Permissions`} />
+        {loading ? <CircleProgress /> : this.renderBody()}
+      </div>
+    );
+  }
 }
 
 export default withQueryClient(withFeatureFlags(UserPermissions));
