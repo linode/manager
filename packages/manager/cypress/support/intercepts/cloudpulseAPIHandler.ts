@@ -7,7 +7,6 @@
 import { apiMatcher } from 'support/util/intercepts';
 
 import type {
-  AvailableMetrics,
   CloudPulseMetricsResponse,
   Dashboard,
   MetricDefinitions,

@@ -1,5 +1,3 @@
-import { stat } from 'fs';
-
 /**
  * Defines the granularity levels used for specifying time intervals in data aggregation or reporting.
  * Each property represents a different granularity level.
