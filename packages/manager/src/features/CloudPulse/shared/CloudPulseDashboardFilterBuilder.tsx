@@ -227,7 +227,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               )
             }
             onClick={toggleShowFilter}
-            sx={{ justifyContent: 'start', mb: 0, p: 0 }}
+            sx={{ justifyContent: 'start', m: 0, minHeight: 'auto', p: 0 }}
           >
             <Typography variant={'h3'}>Filters</Typography>
           </Button>
