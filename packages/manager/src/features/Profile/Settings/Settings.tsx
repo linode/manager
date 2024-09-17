@@ -51,7 +51,7 @@ export const ProfileSettings = () => {
 
   const areEmailNotificationsEnabled = profile?.email_notifications === true;
 
-  const isSensitiveDataRedacted = preferences?.hideSensitiveData === true;
+  const isSensitiveDataRedacted = preferences?.redactSensitiveData === true;
 
   return (
     <Stack spacing={2}>
@@ -132,7 +132,7 @@ export const ProfileSettings = () => {
           control={
             <Toggle
               onChange={(_, checked) =>
-                updatePreferences({ hideSensitiveData: checked })
+                updatePreferences({ redactSensitiveData: checked })
               }
               checked={isSensitiveDataRedacted}
             />

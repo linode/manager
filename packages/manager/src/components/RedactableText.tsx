@@ -9,7 +9,7 @@ import { Tooltip } from './Tooltip';
 
 interface Props {
   children: JSX.Element | string;
-  isTextVisible: boolean;
+  isRedacted: boolean;
   isToggleable: boolean;
   toggleButtonProps?: {
     hideText: string;
@@ -19,9 +19,9 @@ interface Props {
 }
 
 export const RedactableText = (props: Props) => {
-  const { children, isTextVisible, isToggleable, toggleButtonProps } = props;
+  const { children, isRedacted, isToggleable, toggleButtonProps } = props;
 
-  const [_isRedacted, setIsRedacted] = React.useState(!isTextVisible);
+  const [_isRedacted, setIsRedacted] = React.useState(isRedacted);
 
   const isRedactedButtonText = toggleButtonProps?.showText ?? (
     <VisibilityIcon aria-label="Show" />
@@ -30,8 +30,8 @@ export const RedactableText = (props: Props) => {
     <VisibilityOffIcon aria-label="Hide" />
   );
 
-  // Return early and show the original text.
-  if (isTextVisible) {
+  // Return early based on the prop value and show the original text.
+  if (!isRedacted) {
     return children;
   }
 
