@@ -35,7 +35,6 @@ export const RedactableText = (props: Props) => {
     return children;
   }
 
-  // children - StyledRootInput width set to 100% causing the margin issue
   return (
     <Stack
       alignItems="center"
