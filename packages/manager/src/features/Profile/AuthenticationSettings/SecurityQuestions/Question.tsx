@@ -3,7 +3,9 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { InputLabel } from 'src/components/InputLabel';
 import { LinkButton } from 'src/components/LinkButton';
+import { RedactableText } from 'src/components/RedactableText';
 import { Typography } from 'src/components/Typography';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { SecurityQuestion } from '@linode/api-v4/lib/profile';
 
@@ -31,6 +33,8 @@ export const Question = (props: Props) => {
     setFieldValue,
   } = props;
 
+  const { data: preferences } = usePreferences();
+
   const currentOption = questionResponse
     ? {
         label: questionResponse.question,
@@ -44,8 +48,20 @@ export const Question = (props: Props) => {
     return (
       <>
         <InputLabel>{label}</InputLabel>
-        <Typography style={{ fontSize: '0.875rem' }} variant="body1">
-          {questionResponse?.question}
+        <Typography
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            fontSize: '0.875rem',
+          }}
+          variant="body1"
+        >
+          <RedactableText
+            isRedacted={Boolean(preferences?.redactSensitiveData)}
+            isToggleable
+          >
+            {questionResponse?.question}
+          </RedactableText>
           <LinkButton onClick={onClickEdit} style={{ marginLeft: 10 }}>
             Edit
           </LinkButton>

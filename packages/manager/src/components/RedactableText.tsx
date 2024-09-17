@@ -8,9 +8,9 @@ import { Stack } from './Stack';
 import { Tooltip } from './Tooltip';
 
 interface Props {
-  children: JSX.Element | string;
+  children: JSX.Element | string | undefined;
   isRedacted: boolean;
-  isToggleable: boolean;
+  isToggleable?: boolean;
   toggleButtonProps?: {
     hideText: string;
     isDisabled: boolean;
@@ -19,7 +19,12 @@ interface Props {
 }
 
 export const RedactableText = (props: Props) => {
-  const { children, isRedacted, isToggleable, toggleButtonProps } = props;
+  const {
+    children,
+    isRedacted,
+    isToggleable = false,
+    toggleButtonProps,
+  } = props;
 
   const [_isRedacted, setIsRedacted] = React.useState(isRedacted);
 
@@ -30,7 +35,11 @@ export const RedactableText = (props: Props) => {
     <VisibilityOffIcon aria-label="Hide" />
   );
 
-  // Return early based on the prop value and show the original text.
+  // Return early based on the prop value and the original text.
+  if (!children) {
+    return;
+  }
+
   if (!isRedacted) {
     return children;
   }
@@ -62,6 +71,7 @@ const StyledToggleButton = styled(Button, {
 })(({ theme }) => ({
   '& svg': {
     color: theme.palette.grey[500],
+    fontSize: '0.875rem',
   },
   fontSize: '0.875rem',
   marginLeft: theme.spacing(),
