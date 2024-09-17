@@ -4,6 +4,7 @@ import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { RedactableText } from 'src/components/RedactableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -18,6 +19,7 @@ import {
 } from 'src/features/Linodes/transitions';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useInProgressEvents } from 'src/queries/events/events';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { useTypeQuery } from 'src/queries/types';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -84,6 +86,8 @@ export const LinodeRow = (props: Props) => {
 
   const [isHovered, setIsHovered] = React.useState(false);
 
+  const { data: preferences } = usePreferences();
+
   const handleMouseEnter = React.useCallback(() => {
     setIsHovered(true);
   }, []);
@@ -146,7 +150,12 @@ export const LinodeRow = (props: Props) => {
           {linodeType ? formatStorageUnits(linodeType.label) : type}
         </TableCell>
         <StyledIpTableCell data-qa-ips>
-          <IPAddress ips={ipv4} isHovered={isHovered} />
+          <RedactableText
+            isTextVisible={Boolean(preferences?.hideSensitiveData)}
+            isToggleable
+          >
+            <IPAddress ips={ipv4} isHovered={isHovered} />
+          </RedactableText>
         </StyledIpTableCell>
         <Hidden lgDown>
           <TableCell data-qa-region>
