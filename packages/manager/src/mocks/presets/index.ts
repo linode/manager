@@ -10,6 +10,7 @@ import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
 import { parentAccountPreset } from './extra/account/parentAccount';
 import { apiResponseTimePreset } from './extra/api/api';
+import { linodeLimitsPreset } from './extra/limits/linode-limits';
 import { coreAndDistributedRegionsPreset } from './extra/regions/coreAndDistributed';
 import { coreOnlyRegionsPreset } from './extra/regions/coreOnly';
 import { legacyRegionsPreset } from './extra/regions/legacyRegions';
@@ -39,6 +40,7 @@ export const extraMockPresets: MockPresetExtra[] = [
   apiResponseTimePreset,
   parentAccountPreset,
   childAccountPreset,
+  linodeLimitsPreset,
   managedEnabledPreset,
   managedDisabledPreset,
   coreAndDistributedRegionsPreset,
