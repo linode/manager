@@ -13,27 +13,6 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { Tag } from 'src/components/TagsInput/TagsInput';
 import type { ExtendedType } from 'src/utilities/extendType';
 
-export type TypeInfo =
-  | {
-      details: string;
-      hourly: null | number | undefined;
-      monthly: null | number | undefined;
-      title: string;
-    }
-  | undefined;
-
-export type Info = { details?: string; title?: string } | undefined;
-
-/**
- * These props are meant purely for what is displayed in the
- * Checkout bar
- */
-export interface WithDisplayData {
-  imageDisplayInfo?: Info;
-  regionDisplayInfo?: Info;
-  typeDisplayInfo?: TypeInfo;
-}
-
 /**
  * Pure Data without the loading and error
  * keys. Component with these props have already been
