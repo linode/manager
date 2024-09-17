@@ -52,7 +52,7 @@ export const additionalTabs = [
   },
   {
     component: SDKTabPanel,
-    title: `SDK's`,
+    title: `SDKs`,
     type: 'INTEGRATIONS',
   },
 ];
@@ -88,11 +88,11 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
     sendApiAwarenessClickEvent(`${type} Tab`, type);
 
     const trackingKey =
-      type === 'INTEGRATIONS' && title !== "SDK's"
+      type === 'INTEGRATIONS' && title !== 'SDKs'
         ? LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TAB_SELECTION
         : type === 'API'
         ? LD_DX_TOOLS_METRICS_KEYS.CURL_TAB_SELECTION
-        : title === "SDK's"
+        : title === 'SDKs'
         ? LD_DX_TOOLS_METRICS_KEYS.SDK_TAB_SELECTION
         : title === 'Linode CLI'
         ? LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_TAB_SELECTION
