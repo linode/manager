@@ -52,7 +52,7 @@ export const additionalTabs = [
   },
   {
     component: SDKTabPanel,
-    title: `SDKs`,
+    title: 'SDKs',
     type: 'INTEGRATIONS',
   },
 ];
