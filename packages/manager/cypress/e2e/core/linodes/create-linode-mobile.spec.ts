@@ -29,7 +29,7 @@ describe('Linode create mobile smoke', () => {
       cy.viewport(viewport.width, viewport.height);
       cy.visitWithLogin('/linodes/create');
 
-      linodeCreatePage.selectImage('Debian 11');
+      linodeCreatePage.selectImage('Ubuntu 24.04 LTS');
       linodeCreatePage.selectRegionById(mockLinodeRegion.id);
       linodeCreatePage.selectPlanCard('Shared CPU', 'Nanode 1 GB');
       linodeCreatePage.setLabel(mockLinode.label);
@@ -39,7 +39,7 @@ describe('Linode create mobile smoke', () => {
         .scrollIntoView()
         .within(() => {
           cy.findByText('Nanode 1 GB').should('be.visible');
-          cy.findByText('Debian 11').should('be.visible');
+          cy.findByText('Ubuntu 24.04 LTS').should('be.visible');
           cy.findByText(mockLinodeRegion.label).should('be.visible');
         });
 
