@@ -339,8 +339,8 @@ export const StyledWidgetWrapper = styled(Paper, {
   label: 'StyledWidgetWrapper',
 })(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    maxHeight: '580px',
-    minHeight: '580px',
+    maxHeight: '610px',
+    minHeight: '610px',
   },
   [theme.breakpoints.up('md')]: {
     maxHeight: '540px',
