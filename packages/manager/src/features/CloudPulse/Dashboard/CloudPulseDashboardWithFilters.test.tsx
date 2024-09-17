@@ -13,7 +13,6 @@ const queryMocks = vi.hoisted(() => ({
 const selectTimeDurationPlaceholder = 'Select Time Duration';
 const circleProgress = 'circle-progress';
 const mandatoryFiltersError = 'Mandatory Filters not Selected';
-const customNodeTypePlaceholder = 'Select Node Type';
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');
@@ -98,8 +97,7 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
 
     expect(screen.getByTestId('CloseIcon')).toBeDefined();
 
-    const inputBox = screen.getByPlaceholderText(customNodeTypePlaceholder);
-    fireEvent.change(inputBox, { target: { value: '' } }); // clear the value
+    fireEvent.click(screen.getByTitle('Clear')); // clear the value
     expect(screen.getByText(mandatoryFiltersError)).toBeDefined();
   });
 
