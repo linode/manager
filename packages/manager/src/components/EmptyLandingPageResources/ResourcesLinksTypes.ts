@@ -11,6 +11,7 @@ export interface linkAnalyticsEvent {
 
 export interface ResourcesHeaders {
   description: string;
+  logo?: React.ReactNode;
   subtitle: string;
   title: string;
 }
@@ -18,6 +19,7 @@ export interface ResourcesHeaders {
 export interface ResourcesLinks {
   linkAnalyticsEvent: linkAnalyticsEvent;
   links: ResourcesLink[];
+  onClick?: () => void;
 }
 
 export interface ResourcesLinkSection {

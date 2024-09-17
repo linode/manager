@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
+import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { generateAnsibleConfig } from 'src/utilities/codesnippets/generate-ansibleConfig';
 import { generateTerraformConfig } from 'src/utilities/codesnippets/generate-terraformConfig';
 
@@ -28,7 +29,6 @@ const integrationsOptions: OptionType[] = [
 
 export const IntegrationsTabPanel = ({
   payLoad,
-  title,
 }: IntegrationsTabPanelProps) => {
   const [selectedIntegration, setSelectedIntegration] = useState<
     OptionType | undefined
@@ -45,6 +45,7 @@ export const IntegrationsTabPanel = ({
   const handleIntegrationChange = (option: OptionType) => {
     setSelectedIntegration(option);
   };
+
   return (
     <SafeTabPanel index={2}>
       <Typography variant="body1">
@@ -72,7 +73,12 @@ export const IntegrationsTabPanel = ({
                 ? ansibleConfig
                 : terraformConfig
             }
-            commandType={title}
+            ldTrackingKey={
+              selectedIntegration.value === 'ansible'
+                ? LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_ANSIBLE_CODE_SNIPPET
+                : LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TERRAFORM_CODE_SNIPPET
+            }
+            commandType={selectedIntegration.value}
             language={'bash'}
           />
         </>

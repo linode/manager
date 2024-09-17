@@ -13,6 +13,9 @@ describe('Search Images', () => {
   before(() => {
     cleanUp(['linodes', 'images']);
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Confirm that images are API searchable and filtered in the UI.
