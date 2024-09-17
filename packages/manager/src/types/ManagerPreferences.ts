@@ -15,6 +15,7 @@ export interface DismissedNotification {
 }
 
 export interface ManagerPreferences extends UserPreferences {
+  avatarColor?: string;
   backups_cta_dismissed?: boolean;
   desktop_sidebar_open?: boolean;
   dismissed_notifications?: Record<string, DismissedNotification>;

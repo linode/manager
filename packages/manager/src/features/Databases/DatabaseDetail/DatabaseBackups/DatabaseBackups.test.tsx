@@ -59,4 +59,56 @@ describe('Database Backups', () => {
 
     expect(await findByText('No backups to display.')).toBeInTheDocument();
   });
+
+  it('should disable the restore button if disabled = true', async () => {
+    const backups = databaseBackupFactory.buildList(7);
+
+    server.use(
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
+      }),
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(databaseFactory.build());
+      }),
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage(backups));
+      })
+    );
+
+    const { findAllByText } = renderWithTheme(
+      <DatabaseBackups disabled={true} />
+    );
+    const buttonSpans = await findAllByText('Restore');
+    expect(buttonSpans.length).toEqual(7);
+    buttonSpans.forEach((span: HTMLSpanElement) => {
+      const button = span.closest('button');
+      expect(button).toBeDisabled();
+    });
+  });
+
+  it('should enable the restore button if disabled = false', async () => {
+    const backups = databaseBackupFactory.buildList(7);
+
+    server.use(
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
+      }),
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(databaseFactory.build());
+      }),
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage(backups));
+      })
+    );
+
+    const { findAllByText } = renderWithTheme(
+      <DatabaseBackups disabled={false} />
+    );
+    const buttonSpans = await findAllByText('Restore');
+    expect(buttonSpans.length).toEqual(7);
+    buttonSpans.forEach((span: HTMLSpanElement) => {
+      const button = span.closest('button');
+      expect(button).toBeEnabled();
+    });
+  });
 });

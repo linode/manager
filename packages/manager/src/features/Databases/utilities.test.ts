@@ -29,13 +29,14 @@ describe('useIsDatabasesEnabled', () => {
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
       expect(result.current.isDatabasesV1Enabled).toBe(true);
+      expect(result.current.isDatabasesV2Beta).toBe(false);
       expect(result.current.isDatabasesV2Enabled).toBe(false);
     });
   });
 
-  it('should return true for an unrestricted user with the account capability V2', async () => {
+  it('should return true for an unrestricted user with the account capability Beta', async () => {
     const account = accountFactory.build({
-      capabilities: ['Managed Databases V2'],
+      capabilities: ['Managed Databases Beta'],
     });
 
     server.use(
@@ -54,6 +55,7 @@ describe('useIsDatabasesEnabled', () => {
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
       expect(result.current.isDatabasesV1Enabled).toBe(false);
+      expect(result.current.isDatabasesV2Beta).toBe(true);
       expect(result.current.isDatabasesV2Enabled).toBe(true);
     });
   });

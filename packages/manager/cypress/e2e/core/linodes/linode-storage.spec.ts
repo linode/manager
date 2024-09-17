@@ -5,7 +5,11 @@ import { createTestLinode } from 'support/util/linodes';
 import { containsVisible, fbtClick, fbtVisible } from 'support/helpers';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { apiMatcher } from 'support/util/intercepts';
+import {
+  interceptDeleteDisks,
+  interceptAddDisks,
+  interceptResizeDisks,
+} from 'support/intercepts/linodes';
 
 // 3 minutes.
 const LINODE_PROVISION_TIMEOUT = 180_000;
@@ -97,6 +101,9 @@ const addDisk = (diskName: string) => {
 };
 
 authenticate();
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 describe('linode storage tab', () => {
   before(() => {
     cleanUp(['linodes', 'lke-clusters']);
@@ -105,10 +112,7 @@ describe('linode storage tab', () => {
   it('try to delete in use disk', () => {
     const diskName = 'Debian 11 Disk';
     cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
-      cy.intercept(
-        'DELETE',
-        apiMatcher(`linode/instances/${linode.id}/disks/*`)
-      ).as('deleteDisk');
+      interceptDeleteDisks(linode.id).as('deleteDisk');
       cy.visitWithLogin(`linodes/${linode.id}/storage`);
       containsVisible('RUNNING');
       fbtVisible(diskName);
@@ -128,14 +132,8 @@ describe('linode storage tab', () => {
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
     cy.defer(() => createTestLinode({ image: null })).then((linode) => {
-      cy.intercept(
-        'DELETE',
-        apiMatcher(`linode/instances/${linode.id}/disks/*`)
-      ).as('deleteDisk');
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/disks`)
-      ).as('addDisk');
+      interceptDeleteDisks(linode.id).as('deleteDisk');
+      interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(diskName);
       fbtVisible(diskName);
@@ -148,7 +146,9 @@ describe('linode storage tab', () => {
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.findByText('Deleting', { exact: false }).should('be.visible');
       ui.button.findByTitle('Add a Disk').should('be.enabled');
-      ui.toast.assertMessage(`Disk ${diskName} successfully deleted.`);
+      ui.toast.assertMessage(
+        `Disk ${diskName} on Linode ${linode.label} has been deleted.`
+      );
       cy.findByLabelText('List of Disks').within(() => {
         cy.contains(diskName).should('not.exist');
       });
@@ -158,10 +158,7 @@ describe('linode storage tab', () => {
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
     cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
-      cy.intercept(
-        'POST',
-        apiMatcher(`/linode/instances/${linode.id}/disks`)
-      ).as('addDisk');
+      interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(diskName);
       fbtVisible(diskName);
@@ -172,14 +169,8 @@ describe('linode storage tab', () => {
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
     cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/disks`)
-      ).as('addDisk');
-      cy.intercept(
-        'POST',
-        apiMatcher(`linode/instances/${linode.id}/disks/*/resize`)
-      ).as('resizeDisk');
+      interceptAddDisks(linode.id).as('addDisk');
+      interceptResizeDisks(linode.id).as('resizeDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(diskName);
       fbtVisible(diskName);
@@ -209,7 +200,9 @@ describe('linode storage tab', () => {
       cy.wait('@resizeDisk').its('response.statusCode').should('eq', 200);
       ui.toast.assertMessage('Disk queued for resizing.');
       // cy.findByText('Resizing', { exact: false }).should('be.visible');
-      ui.toast.assertMessage(`Disk ${diskName} successfully resized.`);
+      ui.toast.assertMessage(
+        `Disk ${diskName} on Linode ${linode.label} has been resized.`
+      );
     });
   });
 });

@@ -9,6 +9,7 @@ import { debounce } from 'throttle-debounce';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Code } from 'src/components/Code/Code';
 import { IconButton } from 'src/components/IconButton';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Stack } from 'src/components/Stack';
@@ -23,6 +24,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useStackScriptQuery,
@@ -107,8 +109,8 @@ export const StackScriptSelectionList = ({ type }: Props) => {
     {
       ['+order']: order,
       ['+order_by']: orderBy,
-      ...searchFilter,
       ...filter,
+      ...searchFilter,
     },
     !hasPreselectedStackScript
   );
@@ -173,15 +175,36 @@ export const StackScriptSelectionList = ({ type }: Props) => {
           ),
         }}
         tooltipText={
-          type === 'Community'
-            ? 'Hint: try searching for a specific item by prepending your search term with "username:", "label:", or "description:"'
-            : undefined
+          <Stack spacing={1}>
+            <Typography>
+              You can search for a specific item by prepending your search term
+              with "username:", "label:", or "description:".
+            </Typography>
+            <Box>
+              <Typography fontFamily={(theme) => theme.font.bold}>
+                Examples
+              </Typography>
+              <Typography fontSize="0.8rem">
+                <Code>username: linode</Code>
+              </Typography>
+              <Typography fontSize="0.8rem">
+                <Code>label: sql</Code>
+              </Typography>
+              <Typography fontSize="0.8rem">
+                <Code>description: "ubuntu server"</Code>
+              </Typography>
+              <Typography fontSize="0.8rem">
+                <Code>label: sql or label: php</Code>
+              </Typography>
+            </Box>
+          </Stack>
         }
         hideLabel
         label="Search"
         onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search StackScripts"
         spellCheck={false}
+        tooltipWidth={300}
         value={query}
       />
       <Table sx={{ mt: 1 }}>

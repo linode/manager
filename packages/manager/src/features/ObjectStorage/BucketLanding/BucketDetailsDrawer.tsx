@@ -157,6 +157,7 @@ export const BucketDetailsDrawer = React.memo(
                 ? currentRegion.id
                 : cluster
             }
+            endpointType={endpoint_type}
             name={label}
             variant="bucket"
           />
