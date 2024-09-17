@@ -151,7 +151,7 @@ export const LinodeRow = (props: Props) => {
         </TableCell>
         <StyledIpTableCell data-qa-ips>
           <RedactableText
-            isTextVisible={Boolean(preferences?.hideSensitiveData)}
+            isRedacted={Boolean(preferences?.redactSensitiveData)}
             isToggleable
           >
             <IPAddress ips={ipv4} isHovered={isHovered} />
