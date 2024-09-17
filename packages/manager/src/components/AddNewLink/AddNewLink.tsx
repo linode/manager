@@ -6,7 +6,7 @@ import { Button } from '../Button/Button';
 
 import type { TooltipProps } from 'src/components/Tooltip';
 
-export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
+interface Props extends Omit<TooltipProps, 'children' | 'title'> {
   disabled?: boolean;
   disabledReason?: string;
   display?: string;
@@ -37,7 +37,7 @@ export const AddNewLink = (props: Props) => {
     return (
       <Tooltip
         {...remainingPropsAsTooltipProps}
-        data-qa-disabled-text-icon-tooltip
+        data-testid="disabled-tooltip"
         enterTouchDelay={0}
         leaveTouchDelay={5000}
         placement={props.placement ? props.placement : 'bottom'}
