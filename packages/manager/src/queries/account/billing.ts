@@ -33,7 +33,7 @@ export const taxIdEventHandler = ({
   event,
   invalidateQueries,
 }: EventHandlerData) => {
-  if (event.action === 'tax_id_invalid' || event.action === 'tax_id_valid') {
+  if (event.action === 'tax_id_verifying' || event.action === 'tax_id_valid') {
     invalidateQueries({
       queryKey: accountQueries.notifications.queryKey,
     });

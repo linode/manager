@@ -85,7 +85,7 @@ const ContactInformation = (props: Props) => {
   const isChildUser = Boolean(profile?.user_type === 'child');
 
   const invalidTaxIdNotification = notifications?.find((notification) => {
-    return notification.type === 'tax_id_invalid';
+    return notification.type === 'tax_id_verifying';
   });
 
   const isReadOnly =

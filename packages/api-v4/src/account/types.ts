@@ -265,7 +265,7 @@ export type NotificationType =
   | 'user_email_bounce'
   | 'volume_migration_scheduled'
   | 'volume_migration_imminent'
-  | 'tax_id_invalid';
+  | 'tax_id_verifying';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -440,7 +440,7 @@ export const EventActionKeys = [
   'subnet_update',
   'tag_create',
   'tag_delete',
-  'tax_id_invalid',
+  'tax_id_verifying',
   'tax_id_valid',
   'tfa_disabled',
   'tfa_enabled',
