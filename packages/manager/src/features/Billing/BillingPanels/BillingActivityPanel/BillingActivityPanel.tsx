@@ -320,8 +320,8 @@ export const BillingActivityPanel = React.memo((props: Props) => {
       if (orderBy === 'total') {
         return order === 'asc' ? a.total - b.total : b.total - a.total;
       }
-      // If no valid 'orderBy' is provided, return the data as is.
-      return 0;
+      // Default: If no valid 'orderBy' is provided, sort the data by date in descending order.
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
     const start = (pagination.page - 1) * pagination.pageSize;
