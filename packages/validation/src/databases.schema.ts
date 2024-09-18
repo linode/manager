@@ -12,7 +12,7 @@ export const createDatabaseSchema = object({
   region: string().required('Region is required'),
   type: string().required('Type is required'),
   cluster_size: number()
-    .oneOf([1, 3], 'Nodes are required')
+    .oneOf([1, 2, 3], 'Nodes are required')
     .required('Nodes are required'),
   replication_type: string().when('engine', {
     is: (engine: string) => Boolean(engine.match(/mysql|postgres/g)),

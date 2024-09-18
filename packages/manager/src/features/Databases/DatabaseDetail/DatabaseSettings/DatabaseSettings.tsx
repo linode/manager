@@ -28,11 +28,15 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     </Typography>
   );
 
-  const resetRootPasswordCopy =
-    'Resetting your root password will automatically generate a new password. You can view the updated password on your database cluster summary page. ';
+  const isLegacy = database.platform === 'rdbms-legacy';
 
-  const deleteClusterCopy =
-    'Deleting a database cluster is permanent and cannot be undone.';
+  const resetRootPasswordCopy = isLegacy
+    ? 'Resetting your root password will automatically generate a new password. You can view the updated password on your database cluster summary page. '
+    : 'Reset your root password if someone should no longer have access to the root user or if you believe your password may have been compromised. This will automatically generate a new password that you’ll be able to see on your database cluster summary page.';
+
+  const deleteClusterCopy = isLegacy
+    ? 'Deleting a database cluster is permanent and cannot be undone.'
+    : 'Permanently remove an unused database cluster.';
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [
