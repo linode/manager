@@ -7,10 +7,25 @@ import { Button } from '../Button/Button';
 import type { TooltipProps } from 'src/components/Tooltip';
 
 interface Props extends Omit<TooltipProps, 'children' | 'title'> {
+  /**
+   * Boolean for if `AddNewLink` should be disabled or not
+   */
   disabled?: boolean;
+  /**
+   * The reason why `AddNewLink` is disabled
+   */
   disabledReason?: string;
+  /**
+   * The text to display in `AddNewLink`. Takes precendence over `label`
+   */
   display?: string;
+  /**
+   * The text to display if no `display` prop is passed in
+   */
   label: string;
+  /**
+   * The action to perform when clicking on `AddNewLink`
+   */
   onClick: (e?: React.MouseEvent<HTMLElement>) => void;
 }
 
