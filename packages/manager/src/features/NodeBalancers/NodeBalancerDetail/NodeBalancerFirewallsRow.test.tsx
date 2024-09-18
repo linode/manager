@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { firewallFactory } from 'src/factories';
@@ -53,17 +53,17 @@ describe('NodeBalancerFirewallsRow', () => {
     expect(getByText('Unassign')).toBeVisible();
   });
 
-  it('unassigns the firewall', () => {
+  it('unassigns the firewall', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerFirewallsRow {...props} />
     );
 
     const unassignButton = getByText('Unassign');
-    fireEvent.click(unassignButton);
+    await userEvent.click(unassignButton);
     expect(props.onClickUnassign).toHaveBeenCalled();
   });
 
-  it('disables unassigning the firewall if user cannot modify firewall', () => {
+  it('disables unassigning the firewall if user cannot modify firewall', async () => {
     vi.mocked(checkIfUserCanModifyFirewall).mockReturnValue(false);
     const { getByTestId } = renderWithTheme(
       <NodeBalancerFirewallsRow {...props} />
@@ -71,7 +71,7 @@ describe('NodeBalancerFirewallsRow', () => {
 
     const unassignButton = getByTestId('Button');
     expect(unassignButton).toBeDisabled();
-    fireEvent.click(unassignButton);
+    await userEvent.click(unassignButton);
     expect(props.onClickUnassign).not.toHaveBeenCalled();
   });
 });
