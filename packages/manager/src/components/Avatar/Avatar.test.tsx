@@ -61,7 +61,7 @@ describe('Avatar', () => {
   });
 
   it('should render an svg instead of first letter for system users', async () => {
-    const systemUsernames = ['Linode', 'lke-service-account-123'];
+    const systemUsernames = ['Akamai', 'lke-service-account-123'];
 
     systemUsernames.forEach((username, i) => {
       const { getAllByRole, queryByTestId } = renderWithTheme(

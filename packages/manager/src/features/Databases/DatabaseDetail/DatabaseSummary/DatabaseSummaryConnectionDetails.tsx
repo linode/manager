@@ -359,7 +359,12 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         {database.hosts.secondary ? (
           <Box alignItems="center" display="flex" flexDirection="row">
             <Typography>
-              <span>private network host</span> = {database.hosts.secondary}
+              {database.platform === 'rdbms-default' ? (
+                <span>read-only host</span>
+              ) : (
+                <span>private network host</span>
+              )}
+              = {database.hosts.secondary}
             </Typography>
             <CopyTooltip
               className={classes.inlineCopyToolTip}
