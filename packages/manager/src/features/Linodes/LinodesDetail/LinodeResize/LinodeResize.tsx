@@ -73,7 +73,7 @@ export const LinodeResize = (props: Props) => {
   const { data: preferences } = usePreferences(open);
   const { enqueueSnackbar } = useSnackbar();
   const [confirmationText, setConfirmationText] = React.useState('');
-  const [hasResizeError, setHasResizeError] = React.useState<boolean>(false);
+  const [resizeError, setResizeError] = React.useState<string>('');
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const {
@@ -147,13 +147,13 @@ export const LinodeResize = (props: Props) => {
     if (!open) {
       formik.resetForm();
       setConfirmationText('');
-      setHasResizeError(false);
+      setResizeError('');
     }
   }, [open]);
 
   React.useEffect(() => {
     if (error) {
-      setHasResizeError(true);
+      setResizeError(error?.[0]?.reason);
     }
   }, [error]);
 
@@ -178,7 +178,6 @@ export const LinodeResize = (props: Props) => {
 
   const currentTypes =
     types?.filter((thisType) => !Boolean(thisType.successor)) ?? [];
-  const resizeError = error?.[0]?.reason;
 
   return (
     <Dialog
@@ -201,7 +200,7 @@ export const LinodeResize = (props: Props) => {
               variant="error"
             />
           )}
-          {hasResizeError && resizeError && (
+          {resizeError && (
             <Notice variant="error">
               <ErrorMessage
                 entity={{

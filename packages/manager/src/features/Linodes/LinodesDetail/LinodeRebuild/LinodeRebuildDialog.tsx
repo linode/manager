@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { Dialog } from 'src/components/Dialog/Dialog';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
@@ -102,7 +103,17 @@ export const LinodeRebuildDialog = (props: Props) => {
       <StyledDiv>
         {unauthorized && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}
-        {rebuildError && <Notice variant="error">{rebuildError}</Notice>}
+        {rebuildError && (
+          <Notice variant="error">
+            <ErrorMessage
+              entity={{
+                id: linodeId,
+                type: 'linode_id',
+              }}
+              message={rebuildError}
+            />
+          </Notice>
+        )}
         <Typography
           data-qa-rebuild-desc
           sx={{ paddingBottom: theme.spacing(2) }}
