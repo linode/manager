@@ -14,16 +14,10 @@ import { getMarketplaceAppLabel } from 'src/features/Linodes/LinodeCreatev2/Tabs
 import type { StackScript } from '@linode/api-v4';
 import { imageFactory, linodeFactory } from 'src/factories';
 import { mockGetAllImages } from 'support/intercepts/images';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('OneClick Apps (OCA)', () => {
   it('Lists all the OneClick Apps', () => {
     cy.tag('method:e2e');
-
-    // Mock no overrides to prevent feature flag changes from causing test interfearence
-    mockAppendFeatureFlags({
-      marketplaceAppOverrides: [],
-    });
 
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
@@ -37,14 +31,17 @@ describe('OneClick Apps (OCA)', () => {
         cy.findByText('Popular apps').should('be.visible');
         cy.findByText('All apps').should('be.visible');
 
+        // For every Marketplace app defined in Cloud Manager, make sure the API returns
+        // the nessesary StackScript and that the app renders on the page.
         for (const stackscriptId in oneClickApps) {
           const stackscript = stackScripts.find(s => s.id === +stackscriptId);
           const app = oneClickApps[stackscriptId];
+
           if (!stackscript) {
             throw new Error(`Cloud Manager's fetch to GET /v4/linode/stackscripts did not recieve a StackScript with ID ${stackscriptId}. We expected that StackScript to be in the response for the Marketplace app named "${app.name}".`);
           }
 
-          // Use `findAllByText` because some apps may be duplicatd under different sections
+          // Using `findAllByText` because some apps may be duplicatd under different sections
           cy.findAllByText(getMarketplaceAppLabel(app.name)).should('exist');
         }
       });
@@ -54,17 +51,13 @@ describe('OneClick Apps (OCA)', () => {
   it('Can view app details of a marketplace app', () => {
     cy.tag('method:e2e');
 
-    // Mock no overrides to prevent feature flag changes from causing test interfearence
-    mockAppendFeatureFlags({
-      marketplaceAppOverrides: [],
-    });
-
     interceptGetStackScripts().as('getStackScripts');
     cy.visitWithLogin(`/linodes/create?type=One-Click`);
 
     cy.wait('@getStackScripts').then((xhr) => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
 
+      // For the sake of this test, use the first marketplace app defined in Cloud Manager
       const candidateStackScriptId = +(Object.keys(oneClickApps)[0]);
 
       const candidateApp = oneClickApps[candidateStackScriptId];
@@ -102,7 +95,7 @@ describe('OneClick Apps (OCA)', () => {
     });
   });
 
-  it('Deploys a Linode from a One Click App', () => {
+  it('Deploys a Linode from a One Click App with user defined fields', () => {
     const images = [
       imageFactory.build({
         id: 'linode/ubuntu22.04',
@@ -114,8 +107,11 @@ describe('OneClick Apps (OCA)', () => {
       }),
     ];
 
+    // For the sake of this test, use the first marketplace app defined in Cloud Manager
+    const candidateStackScriptId = +(Object.keys(oneClickApps)[0]);
+
     const stackscript = stackScriptFactory.build({
-      id: 0,
+      id: candidateStackScriptId,
       username: 'linode',
       user_gravatar_id: '9d4d301385af69ceb7ad658aad09c142',
       label: 'E2E Test App',
@@ -176,7 +172,7 @@ describe('OneClick Apps (OCA)', () => {
       cy.findByText('New apps').should('be.visible');
 
       // Check that the app is listed and select it
-      cy.get('[data-qa-selection-card="true"]').should('have.length', 3);
+      cy.get('[data-qa-selection-card="true"]').should('have.length', 2);
       cy.findAllByText(stackscript.label).first().should('be.visible').click();
     });
 
