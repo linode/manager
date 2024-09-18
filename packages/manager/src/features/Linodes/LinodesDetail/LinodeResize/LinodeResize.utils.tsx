@@ -3,32 +3,20 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import type { APIError, Disk, LinodeType } from '@linode/api-v4';
+import type { Disk, LinodeType } from '@linode/api-v4';
 
-export const getError = (error: APIError[] | null) => {
-  if (!error) {
-    return null;
-  }
-
-  const errorText = error?.[0]?.reason;
-  if (
-    typeof errorText === 'string' &&
-    errorText.match(/allocated more disk/i)
-  ) {
-    return (
-      <Typography>
-        The current disk size of your Linode is too large for the new service
-        plan. Please resize your disk to accommodate the new plan. You can read
-        our{' '}
-        <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
-          Resize Your Linode
-        </Link>{' '}
-        guide for more detailed instructions.
-      </Typography>
-    );
-  }
-
-  return errorText;
+export const LinodeResizeAllocationError = () => {
+  return (
+    <Typography>
+      The current disk size of your Linode is too large for the new service
+      plan. Please resize your disk to accommodate the new plan. You can read
+      our{' '}
+      <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
+        Resize Your Linode
+      </Link>{' '}
+      guide for more detailed instructions.
+    </Typography>
+  );
 };
 
 /**
