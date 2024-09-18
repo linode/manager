@@ -343,12 +343,12 @@ export const StyledWidgetWrapper = styled(Paper, {
   label: 'StyledWidgetWrapper',
 })(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    height: theme.spacing(76),
+    height: theme.spacing(76), // 608px
     maxHeight: theme.spacing(76),
   },
   [theme.breakpoints.up('md')]: {
-    height: theme.spacing(67.5),
-    maxHeight: theme.spacing(67.5),
+    height: theme.spacing(67.5), // 540px
+    maxHeight: theme.spacing(67.5), // 540px
   },
 }));
 /**
