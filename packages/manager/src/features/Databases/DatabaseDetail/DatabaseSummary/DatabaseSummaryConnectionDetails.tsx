@@ -377,17 +377,6 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             />
           </Box>
         ) : null}
-        {database.platform === 'rdbms-default' && database.hosts.readOnly ? (
-          <Box alignItems="center" display="flex" flexDirection="row">
-            <Typography>
-              <span>read-only host</span> = {database.hosts.readOnly}
-            </Typography>
-            <CopyTooltip
-              className={classes.inlineCopyToolTip}
-              text={database.hosts.readOnly}
-            />
-          </Box>
-        ) : null}
         <Typography>
           <span>port</span> = {database.port}
         </Typography>

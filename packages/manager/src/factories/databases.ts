@@ -215,7 +215,6 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   engine: 'mysql',
   hosts: {
     primary: 'db-mysql-primary-0.b.linodeb.net',
-    readOnly: 'db-mysql-secondary-0.b.linodeb.net',
     secondary: 'db-mysql-secondary-0.b.linodeb.net',
   },
   id: Factory.each((i) => i),
