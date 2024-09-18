@@ -1,4 +1,4 @@
-import { Grid, Paper, useTheme } from '@mui/material';
+import { Grid, Paper } from '@mui/material';
 import * as React from 'react';
 
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
@@ -51,8 +51,6 @@ export const CloudPulseDashboardLanding = () => {
   );
 
   const { isLoading } = useLoadUserPreferences();
-
-  const theme = useTheme();
 
   /**
    * Takes an error message as input and renders a placeholder with the error message
@@ -133,7 +131,7 @@ export const CloudPulseDashboardLanding = () => {
   }
 
   return (
-    <Grid container paddingTop={theme.spacing(1)} spacing={theme.spacing(2)}>
+    <Grid container paddingTop={1} spacing={2}>
       <Grid item xs={12}>
         <Paper>
           <GlobalFilters
