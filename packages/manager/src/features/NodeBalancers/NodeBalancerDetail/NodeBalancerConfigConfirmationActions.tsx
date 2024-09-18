@@ -1,16 +1,18 @@
-import React from 'react';
+import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+
+export interface NodeBalancerConfigConfirmationActionsPros {
+  isLoading: boolean;
+  onClose: () => void;
+  onDelete: () => void;
+}
 
 export const NodeBalancerConfigConfirmationActions = ({
   isLoading,
   onClose,
   onDelete,
-}: {
-  isLoading: boolean;
-  onClose: () => void;
-  onDelete: () => void;
-}) => (
+}: NodeBalancerConfigConfirmationActionsPros) => (
   <ActionsPanel
     primaryButtonProps={{
       'data-testid': 'confirm-cancel',
