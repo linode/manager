@@ -64,6 +64,9 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
     }
   };
 
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) =>
+    e.currentTarget.focus();
+
   if (!actionsList || actionsList.length === 0) {
     return null;
   }
@@ -135,10 +138,17 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
                 a.onClick();
               }
             }}
+            sx={(theme) => ({
+              '&:hover, &:focus': {
+                backgroundColor:
+                  theme.palette.mode === 'dark' ? theme.color.grey2 : '',
+              },
+            })}
             data-qa-action-menu-item={a.title}
             data-testid={a.title}
             disabled={a.disabled}
             key={idx}
+            onMouseEnter={handleMouseEnter}
           >
             <ListItemText primaryTypographyProps={{ color: 'inherit' }}>
               {a.title}
