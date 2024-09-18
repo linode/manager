@@ -1,4 +1,4 @@
-import { IconButton } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -71,9 +71,11 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     [handleAnyFilterChange]
   );
 
+  const theme = useTheme();
+
   return (
     <Grid container>
-      <Grid container item m={'24px'} rowGap={1} xs={12}>
+      <Grid container item m={3} rowGap={1} xs={12}>
         <Grid
           columnSpacing={2}
           container
@@ -109,7 +111,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         <Grid item xs={12}>
           <Divider
             sx={{
-              borderColor: '#F4F5F6',
+              borderColor: theme.color.grey5,
               margin: 0,
             }}
           />
