@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 
 export const StyledCommandDiv = styled('div', { label: 'StyledCommandDiv' })(
   ({ theme }) => ({

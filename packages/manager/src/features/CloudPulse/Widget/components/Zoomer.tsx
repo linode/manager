@@ -1,5 +1,6 @@
 import ZoomInMap from '@mui/icons-material/ZoomInMap';
 import ZoomOutMap from '@mui/icons-material/ZoomOutMap';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 export interface ZoomIconProperties {
@@ -9,6 +10,8 @@ export interface ZoomIconProperties {
 }
 
 export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
+  const theme = useTheme();
+
   const handleClick = (needZoomIn: boolean) => {
     props.handleZoomToggle(needZoomIn);
   };
@@ -18,9 +21,13 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
       return (
         <ZoomInMap
           data-qa-zoomer="zoom-in"
+          sx={{
+            color: theme.color.grey1,
+            fontSize: 'x-large',
+            height: '34px',
+          }}
           data-testid="zoom-in"
           onClick={() => handleClick(false)}
-          style={{ color: 'grey', fontSize: 'x-large' }}
         />
       );
     }
@@ -28,9 +35,13 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
     return (
       <ZoomOutMap
         data-qa-zoomer="zoom-out"
+        sx={{
+          color: theme.color.grey1,
+          fontSize: 'x-large',
+          height: '34px',
+        }}
         data-testid="zoom-out"
         onClick={() => handleClick(true)}
-        style={{ color: 'grey', fontSize: 'x-large' }}
       />
     );
   };

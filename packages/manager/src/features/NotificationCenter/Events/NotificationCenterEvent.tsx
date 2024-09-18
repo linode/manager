@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
 import { Box } from 'src/components/Box';
-import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Typography } from 'src/components/Typography';
 import {
   formatProgressEvent,
@@ -14,7 +13,6 @@ import { useProfile } from 'src/queries/profile/profile';
 
 import {
   NotificationEventAvatar,
-  NotificationEventGravatar,
   NotificationEventStyledBox,
   notificationEventStyles,
 } from '../NotificationCenter.styles';
@@ -55,21 +53,15 @@ export const NotificationCenterEvent = React.memo(
         data-qa-event-seen={event.seen}
         data-testid={event.action}
       >
-        <GravatarOrAvatar
-          avatar={
-            <NotificationEventAvatar
-              color={
-                username !== profile?.username
-                  ? theme.palette.primary.dark
-                  : undefined
-              }
-              username={username}
-            />
+        <NotificationEventAvatar
+          color={
+            username !== profile?.username
+              ? theme.palette.primary.dark
+              : undefined
           }
-          gravatar={<NotificationEventGravatar username={username} />}
-          height={32}
-          width={32}
+          username={username}
         />
+
         <Box sx={{ marginTop: '-2px', paddingRight: 1, width: '100%' }}>
           {message}
           {showProgress && (

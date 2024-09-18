@@ -2,7 +2,6 @@ import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
@@ -302,9 +301,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               data-qa-widget-header={convertStringToCamelCasesWithSpaces(
                 widget.label
               )}
-              fontSize={{ sm: '1.5rem', xs: '2rem' }}
               marginLeft={1}
-              variant="h1"
+              variant="h2"
             >
               {convertStringToCamelCasesWithSpaces(widget.label)}{' '}
               {!isLoading &&
@@ -313,14 +311,14 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             <Stack
               alignItems={'center'}
               direction={{ sm: 'row' }}
-              gap={1}
+              gap={{ md: 2, xs: 1 }}
               width={{ sm: 'inherit', xs: '100%' }}
             >
               {availableMetrics?.scrape_interval && (
                 <CloudPulseIntervalSelect
-                  default_interval={widget?.time_granularity}
+                  defaultInterval={widget?.time_granularity}
                   onIntervalChange={handleIntervalChange}
-                  scrape_interval={availableMetrics.scrape_interval}
+                  scrapeInterval={availableMetrics.scrape_interval}
                 />
               )}
               {Boolean(
@@ -342,7 +340,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               </Box>
             </Stack>
           </Stack>
-          <Divider />
 
           <CloudPulseLineGraph
             error={
