@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -64,11 +64,11 @@ describe('AddNewLink', () => {
     expect(queryByText(label)).not.toBeInTheDocument();
   });
 
-  it('fires the onClick event if the button is clicked', () => {
+  it('fires the onClick event if the button is clicked', async () => {
     const { getByText } = renderWithTheme(<AddNewLink {...props} />);
 
     const button = getByText(label);
-    fireEvent.click(button);
+    await userEvent.click(button);
     expect(props.onClick).toHaveBeenCalled();
   });
 });

@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -25,14 +25,14 @@ describe('AccountActivationLanding', () => {
     expect(queryByText(openSupportTicket)).not.toBeInTheDocument();
   });
 
-  it('toggles open the Support Ticket dialog', () => {
+  it('toggles open the Support Ticket dialog', async () => {
     const { getByText, queryByText } = renderWithTheme(
       <AccountActivationLanding />
     );
 
     expect(queryByText(openSupportTicket)).not.toBeInTheDocument();
     const supportButtonLink = getByText(/please open a Support ticket/);
-    fireEvent.click(supportButtonLink);
+    await userEvent.click(supportButtonLink);
     expect(getByText(openSupportTicket)).toBeVisible();
   });
 });
