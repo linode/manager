@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Paper } from 'src/components/Paper';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
@@ -335,6 +336,9 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
   );
 };
 
+/**
+ * Returns a paper that wraps the contents of the widget around it
+ */
 export const StyledWidgetWrapper = styled(Paper, {
   label: 'StyledWidgetWrapper',
 })(({ theme }) => ({
@@ -345,5 +349,19 @@ export const StyledWidgetWrapper = styled(Paper, {
   [theme.breakpoints.up('md')]: {
     maxHeight: '540px',
     minHeight: '540px',
+  },
+}));
+/**
+ * Returns an autocomplete with updated styles according to UX, this will be used at widget level
+ */
+export const StyledWidgetAutocomplete = styled(Autocomplete, {
+  label: 'StyledAutocomplete',
+})(({ theme }) => ({
+  '&& .MuiFormControl-root': {
+    minWidth: '90px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%', // 100% width for xs and small screens
+    },
+    width: '90px',
   },
 }));
