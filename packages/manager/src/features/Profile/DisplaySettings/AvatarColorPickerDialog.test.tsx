@@ -14,13 +14,17 @@ const mockProps: AvatarColorPickerDialogProps = {
 
 describe('AvatarColorPicker', () => {
   it('should render a dialog with a title, color picker, and avatar components', () => {
-    const { getByLabelText, getByTestId, getByTitle } = renderWithTheme(
-      <AvatarColorPickerDialog {...mockProps} />
-    );
+    const {
+      getByLabelText,
+      getByRole,
+      getByTestId,
+      getByTitle,
+    } = renderWithTheme(<AvatarColorPickerDialog {...mockProps} />);
 
     expect(getByTitle('Change Avatar Color')).toBeVisible();
     expect(getByLabelText('Avatar color picker')).toBeVisible();
     expect(getByTestId('avatar')).toBeVisible();
+    expect(getByRole('button', { name: 'Save' })).toBeDisabled();
   });
 
   it('calls onClose when Close button is clicked', async () => {
@@ -29,15 +33,6 @@ describe('AvatarColorPicker', () => {
     );
 
     await fireEvent.click(getByText('Close'));
-    expect(mockProps.handleClose).toHaveBeenCalled();
-  });
-
-  it('closes when Save button is clicked', async () => {
-    const { getByText } = renderWithTheme(
-      <AvatarColorPickerDialog {...mockProps} />
-    );
-
-    await fireEvent.click(getByText('Save'));
     expect(mockProps.handleClose).toHaveBeenCalled();
   });
 });
