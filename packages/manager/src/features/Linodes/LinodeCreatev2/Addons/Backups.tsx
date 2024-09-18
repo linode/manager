@@ -21,7 +21,6 @@ import type { LinodeCreateFormValues } from '../utilities';
 
 export const Backups = () => {
   const { control } = useFormContext<LinodeCreateFormValues>();
-
   const { field } = useController({
     control,
     name: 'backups_enabled',
