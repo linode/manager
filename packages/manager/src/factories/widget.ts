@@ -25,18 +25,18 @@ export const createMetricResponse = (
   const currentTime = Math.floor(Date.now() / 1000);
 
   const intervals: Record<string, number> = {
-    [granularity.Auto]: 3600,
-    [granularity.Day1]: 86400,
-    [granularity.Hour]: 3600,
-    [granularity.Minutes]: 5 * 60,
+    [granularity.auto]: 3600,
+    [granularity.day1]: 86400,
+    [granularity.hour]: 3600,
+    [granularity.minutes]: 5 * 60,
   };
 
   const timeRanges: Record<string, number> = {
-    [timeRange.Last7Days]: 7 * 24 * 3600,
-    [timeRange.Last12Hours]: 12 * 3600,
-    [timeRange.Last24Hours]: 24 * 3600,
-    [timeRange.Last30Days]: 30 * 24 * 3600,
-    [timeRange.Last30Minutes]: 30 * 60,
+    [timeRange.last7Days]: 7 * 24 * 3600,
+    [timeRange.last12Hours]: 12 * 3600,
+    [timeRange.last24Hours]: 24 * 3600,
+    [timeRange.last30Days]: 30 * 24 * 3600,
+    [timeRange.last30Minutes]: 30 * 60,
   };
 
   const interval =

@@ -62,7 +62,7 @@ const widgets = widgetDetails.linode;
 const metrics = widgets.metrics;
 export const dashboardName = widgets.dashboardName;
 export const region = widgets.region;
-export const actualRelativeTimeDuration = timeRange.Last24Hours;
+export const actualRelativeTimeDuration = timeRange.last24Hours;
 export const resource = widgets.resource;
 const widgetLabels: string[] = metrics.map((widget) => widget.title);
 const metricsLabels: string[] = metrics.map((widget) => widget.name);
@@ -109,7 +109,7 @@ describe('Dashboard Widget Verification Tests', () => {
     mockCloudPulseJWSToken(service_type);
     responsePayload = createMetricResponse(
       actualRelativeTimeDuration,
-      granularity.Minutes
+      granularity.minutes
     );
     mockCloudPulseCreateMetrics(responsePayload, service_type).as('getMetrics');
     mockGetRegions([mockRegion]).as('getRegions');
@@ -413,6 +413,20 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 });
+/**
+ * `setupMethod` initializes the Cloud Pulse dashboard for testing by performing a series of setup actions.
+ * This method mocks user preferences, navigates to the Cloud Pulse page, and configures various settings
+ * including service name, time range, engine, region, resource, and node type. It also verifies each selection 
+ * to ensure the dashboard is correctly configured before running further tests.
+ * 
+ * Steps:
+ * 1. Mock user preferences to ensure a consistent test environment.
+ * 2. Navigate to the Cloud Pulse page and verify that it has loaded correctly.
+ * 3. Select and verify the service name.
+ * 4. Set and verify the time range for the dashboard.
+ * 5. Select and verify the region.
+ * 6. Choose and verify the resource from available widgets.
+ */
 
 const setupMethod = () => {
   mockGetUserPreferences({}).as('getUserPreferences');
@@ -428,7 +442,18 @@ const setupMethod = () => {
   assertSelections(region);
   selectAndVerifyResource(resource);
 };
-
+/**
+ * `verifyWidgetValues` processes and verifies the metric values of a widget from the provided response payload.
+ * 
+ * This method performs the following steps:
+ * 1. Transforms the raw data from the response payload into a more manageable format using `transformData`.
+ * 2. Extracts key metrics (average, last, and max) from the transformed data using `getMetrics`.
+ * 3. Rounds these metrics to two decimal places for accuracy.
+ * 4. Returns an object containing the rounded average, last, and max values for further verification or comparison.
+ * 
+ * @param {CloudPulseMetricsResponse} responsePayload - The response payload containing metric data for a widget.
+ * @returns {Object} An object with the rounded average, last, and max metric values.
+ */
 const verifyWidgetValues = (responsePayload: CloudPulseMetricsResponse) => {
   const data = transformData(responsePayload.data.result[0].values, 'Bytes');
   const { average, last, max } = getMetrics(data);

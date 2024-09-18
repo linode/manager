@@ -3,10 +3,10 @@
  * Each property represents a different granularity level.
  */
 export const granularity = {
-  Auto: 'Auto',
-  Day1: '1 day',
-  Hour: '1 hr',
-  Minutes: '5 min',
+  auto: 'Auto',
+  day1: '1 day',
+  hour: '1 hr',
+  minutes: '5 min',
 };
 
 /**
@@ -14,20 +14,20 @@ export const granularity = {
  * Each property represents a different type of aggregation operation.
  */
 export const aggregation = {
-  Avg: 'avg',
-  Max: 'max',
-  Min: 'min',
-  Sum: 'sum',
+  avg: 'avg',
+  max: 'max',
+  min: 'min',
+  sum: 'sum',
 };
 
 // Define a constant object named `timeRange` to represent various time periods.
 // This object maps time range identifiers to their descriptive strings.
 export const timeRange = {
-  Last7Days: 'Last 7 Days',
-  Last12Hours: 'Last 12 Hours',
-  Last24Hours: 'Last 24 Hours',
-  Last30Days: 'Last 30 Days',
-  Last30Minutes: 'Last 30 Minutes',
+  last7Days: 'Last 7 Days',
+  last12Hours: 'Last 12 Hours',
+  last24Hours: 'Last 24 Hours',
+  last30Days: 'Last 30 Days',
+  last30Minutes: 'Last 30 Minutes',
 };
 
 // Define a constant object named `timeUnit` which serves as a mapping
@@ -44,8 +44,8 @@ export const timeUnit = {
  */
 
 export const aggregationConfig = {
-  all: [aggregation.Avg, aggregation.Max, aggregation.Min, aggregation.Sum],
-  basic: [aggregation.Avg, aggregation.Max, aggregation.Min],
+  all: [aggregation.avg, aggregation.max, aggregation.min, aggregation.sum],
+  basic: [aggregation.avg, aggregation.max, aggregation.min],
 };
 /**
  * Configuration object for widget details.
@@ -60,36 +60,36 @@ export const widgetDetails = {
     metrics: [
       {
         StatsData: 'Controls for Disk I/O',
-        expectedAggregation: aggregation.Max,
+        expectedAggregation: aggregation.max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hour,
+        expectedGranularity: granularity.hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_disk_OPS_total',
         title: 'Disk I/O',
       },
       {
         StatsData: 'Controls for CPU Utilization',
-        expectedAggregation: aggregation.Max,
+        expectedAggregation: aggregation.max,
         expectedAggregationArray: aggregationConfig.basic,
-        expectedGranularity: granularity.Hour,
+        expectedGranularity: granularity.hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_cpu_utilization_percent',
         title: 'CPU Utilization',
       },
       {
         StatsData: 'Controls for Memory Usage',
-        expectedAggregation: aggregation.Max,
+        expectedAggregation: aggregation.max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hour,
+        expectedGranularity: granularity.hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_memory_usage_by_resource',
         title: 'Memory Usage',
       },
       {
         StatsData: 'Controls for Network Traffic',
-        expectedAggregation: aggregation.Max,
+        expectedAggregation: aggregation.max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hour,
+        expectedGranularity: granularity.hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_network_io_by_resource',
         title: 'Network Traffic',
@@ -105,33 +105,33 @@ export const widgetDetails = {
     id: 1,
     metrics: [
       {
-        expectedAggregation: aggregation.Max,
+        expectedAggregation: aggregation.max,
         expectedAggregationArray: aggregationConfig.basic,
-        expectedGranularity: granularity.Hour,
+        expectedGranularity: granularity.hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_cpu_utilization_percent',
         title: 'CPU Utilization',
       },
       {
-        expectedAggregation: aggregation.Max,
+        expectedAggregation: aggregation.max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hour,
+        expectedGranularity: granularity.hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_memory_usage_by_resource',
         title: 'Memory Usage',
       },
       {
-        expectedAggregation: aggregation.Max,
+        expectedAggregation: aggregation.max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hour,
+        expectedGranularity: granularity.hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_network_io_by_resource',
         title: 'Network Traffic',
       },
       {
-        expectedAggregation: aggregation.Max,
+        expectedAggregation: aggregation.max,
         expectedAggregationArray: aggregationConfig.all,
-        expectedGranularity: granularity.Hour,
+        expectedGranularity: granularity.hour,
         expectedGranularityArray: Object.values(granularity),
         name: 'system_disk_OPS_total',
         title: 'Disk I/O',

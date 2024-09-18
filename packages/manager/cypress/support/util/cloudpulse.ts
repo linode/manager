@@ -91,7 +91,7 @@ export const resetDashboard = () => {
  */
 export const chooseEngine = (engine: string) => {
   ui.autocomplete
-    .findByTitleCustom('Select a Value')
+    .findByTitleCustom('Select an Engine')
     .findByTitle('Open')
     .click();
   ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
