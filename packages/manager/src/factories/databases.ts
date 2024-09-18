@@ -163,7 +163,7 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
       },
     ],
   },
-  id: Factory.each((i) => `g6-standard-${i}`),
+  id: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
   label: Factory.each((i) => `Linode ${i} GB`),
   memory: Factory.each((i) => i * 2048),
   vcpus: Factory.each((i) => i * 2),
@@ -181,8 +181,8 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     created: '2021-12-09T17:15:12',
     engine: Factory.each((i) => ['mysql', 'postgresql'][i % 2] as Engine),
     hosts: {
-      primary: 'db-primary-0.b.linodeb.net',
-      secondary: 'db-secondary-0.b.linodeb.net',
+      primary: 'db-mysql-primary-0.b.linodeb.net',
+      secondary: 'db-mysql-secondary-0.b.linodeb.net',
     },
     id: Factory.each((i) => i),
     instance_uri: '',
@@ -190,7 +190,9 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     members: {
       '2.2.2.2': 'primary',
     },
-    platform: Factory.each((i) => (adb10(i) ? 'adb10' : 'adb20')),
+    platform: Factory.each((i) =>
+      adb10(i) ? 'rdbms-legacy' : 'rdbms-default'
+    ),
     region: Factory.each((i) => possibleRegions[i % possibleRegions.length]),
     status: Factory.each((i) => possibleStatuses[i % possibleStatuses.length]),
     type: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
@@ -220,6 +222,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   members: {
     '2.2.2.2': 'primary',
   },
+  platform: pickRandom(['rdbms-legacy', 'rdbms-default']),
   port: 3306,
   region: 'us-east',
   ssl_connection: false,

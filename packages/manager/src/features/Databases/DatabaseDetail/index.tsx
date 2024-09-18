@@ -12,6 +12,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -199,6 +200,7 @@ export const DatabaseDetail = () => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
+      {database.platform === 'rdbms-default' && <DatabaseLogo />}
     </>
   );
 };

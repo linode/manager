@@ -1,4 +1,5 @@
 import userEvent from '@testing-library/user-event';
+import { Settings } from 'luxon';
 import React from 'react';
 
 import { imageFactory } from 'src/factories';
@@ -24,7 +25,7 @@ describe('ImageSelectv2', () => {
   });
 
   it('should render items returned by the API', async () => {
-    const images = imageFactory.buildList(5);
+    const images = imageFactory.buildList(5, { eol: null });
 
     server.use(
       http.get('*/v4/images', () => {
@@ -44,7 +45,7 @@ describe('ImageSelectv2', () => {
   });
 
   it('should call onChange when a value is selected', async () => {
-    const image = imageFactory.build();
+    const image = imageFactory.build({ eol: null });
     const onChange = vi.fn();
 
     server.use(
@@ -98,5 +99,46 @@ describe('ImageSelectv2', () => {
     );
 
     await findByTestId('os-icon');
+  });
+
+  it('does not render images that are more than 6 months past their eol', async () => {
+    // Mock the current date
+    Settings.now = () => new Date(2018, 1, 1).valueOf();
+
+    const images = [
+      imageFactory.build({
+        eol: '2018-04-01T00:00:00', // should show because this image is not EOL yet
+        label: 'linode/image-1',
+      }),
+      imageFactory.build({
+        eol: '2017-01-01T00:00:00', // should not show because it is > 6 months past this EOL
+        label: 'linode/image-2',
+      }),
+      imageFactory.build({
+        eol: null, // should show because this images does not have an EOL
+        label: 'linode/image-3',
+      }),
+      imageFactory.build({
+        eol: '2017-11-01T00:00:00', // should show as deprecated because it is < 6 months past this EOL
+        label: 'linode/image-4',
+      }),
+    ];
+
+    server.use(
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
+      <ImageSelectv2 value={null} />
+    );
+
+    await userEvent.click(getByPlaceholderText('Choose an image'));
+
+    expect(getByText('linode/image-1')).toBeVisible();
+    expect(queryByText('linode/image-2')).toBeNull();
+    expect(getByText('linode/image-3')).toBeVisible();
+    expect(getByText('linode/image-4 (deprecated)')).toBeVisible();
   });
 });

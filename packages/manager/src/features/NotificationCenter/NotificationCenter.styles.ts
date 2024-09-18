@@ -2,8 +2,8 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
+import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
-import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { omittedProps } from 'src/utilities/omittedProps';
@@ -118,8 +118,8 @@ export const NotificationEventStyledBox = styled(Box, {
   width: '100%',
 }));
 
-export const NotificationEventGravatar = styled(GravatarByUsername, {
-  label: 'StyledGravatarByUsername',
+export const NotificationEventAvatar = styled(Avatar, {
+  label: 'StyledAvatar',
 })(() => ({
   height: 32,
   marginTop: 2,
