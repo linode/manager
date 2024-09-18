@@ -43,7 +43,7 @@
     "highlight.js": "~10.4.1",
     "immer": "^9.0.6",
     "ipaddr.js": "^1.9.1",
-    "jspdf": "^2.3.1",
+    "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.5.14",
     "launchdarkly-react-client-sdk": "3.0.10",
     "libphonenumber-js": "^1.10.6",
