@@ -15,9 +15,9 @@ describe('Interval select component', () => {
 
     const { getByRole } = renderWithTheme(
       <CloudPulseIntervalSelect
-        default_interval={default_interval}
+        defaultInterval={default_interval}
         onIntervalChange={intervalSelectionChange}
-        scrape_interval={scrape_interval}
+        scrapeInterval={scrape_interval}
       />
     );
 
