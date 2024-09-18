@@ -75,13 +75,19 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   return (
     <Grid container>
-      <Grid container item m={3} rowGap={1} xs={12}>
+      <Grid
+        container
+        item
+        m={theme.spacing(3)}
+        rowGap={theme.spacing(1)}
+        xs={12}
+      >
         <Grid
-          columnSpacing={2}
+          columnSpacing={theme.spacing(2)}
           container
           item
           justifyContent="space-between"
-          rowSpacing={2}
+          rowSpacing={theme.spacing(2)}
         >
           <Grid display={'flex'} item md={4} sm={5} xs={12}>
             <CloudPulseDashboardSelect
