@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -125,6 +125,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const timezone = profile?.timezone ?? DateTime.local().zoneName;
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
+
+  const theme = useTheme();
 
   const {
     additionalFilters,
@@ -306,8 +308,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             <Stack
               alignItems={'center'}
               direction={{ sm: 'row' }}
-              gap={1}
-              maxHeight={'85px'}
+              gap={2}
+              maxHeight={`calc(${theme.spacing(10)} + 5px)`}
               overflow={'auto'}
               width={{ sm: 'inherit', xs: '100%' }}
             >
