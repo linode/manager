@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MuiAutocomplete from '@mui/material/Autocomplete';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
@@ -17,6 +17,7 @@ import {
 import type { AutocompleteProps } from '@mui/material/Autocomplete';
 import type { SxProps } from '@mui/system';
 import type { TextFieldProps } from 'src/components/TextField';
+import type { PopperProps } from '@mui/base';
 
 export interface EnhancedAutocompleteProps<
   T extends { label: string },
@@ -108,11 +109,16 @@ export const Autocomplete = <
 
   const optionsWithSelectAll = [selectAllOption, ...options] as T[];
 
+  const popper = useCallback(
+    (props: PopperProps) => {
+      return <CustomPopper {...props} sx={sxPopperComponent} />;
+    },
+    [sxPopperComponent]
+  );
+
   return (
     <MuiAutocomplete
-      PopperComponent={(props) => {
-        return <CustomPopper {...props} sx={sxPopperComponent} />;
-      }}
+      PopperComponent={popper}
       options={
         multiple && !disableSelectAll && options.length > 0
           ? optionsWithSelectAll
