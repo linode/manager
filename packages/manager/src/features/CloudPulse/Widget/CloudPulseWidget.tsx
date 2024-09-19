@@ -310,7 +310,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               direction={{ sm: 'row' }}
               gap={2}
               maxHeight={`calc(${theme.spacing(10)} + 5px)`}
-              overflow={'auto'}
+              overflow="auto"
               width={{ sm: 'inherit', xs: '100%' }}
             >
               {availableMetrics?.scrape_interval && (
