@@ -18,9 +18,7 @@ const defaultArgs = {
 };
 
 export const Default: Story = {
-  args: {
-    ...defaultArgs,
-  },
+  args: defaultArgs,
   render: (args) => {
     return <AddNewLink {...args} />;
   },
