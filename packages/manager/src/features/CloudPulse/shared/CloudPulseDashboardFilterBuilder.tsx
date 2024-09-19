@@ -204,7 +204,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     return (
-      <Grid container item m="24px" xs={12}>
+      <Grid container item m={3} xs={12}>
         <Grid
           sx={{
             m: 0,
