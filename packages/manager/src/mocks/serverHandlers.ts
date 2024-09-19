@@ -264,7 +264,7 @@ const databases = [
   }),
 
   http.get('*/databases/:engine/instances/:databaseId/backups', () => {
-    const backups = databaseBackupFactory.buildList(7);
+    const backups = databaseBackupFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(backups));
   }),
 
