@@ -15,6 +15,7 @@ export interface DialogProps extends _DialogProps {
   className?: string;
   error?: string;
   fullHeight?: boolean;
+  subtitle?: string;
   title: string;
   titleBottomBorder?: boolean;
 }
@@ -49,6 +50,7 @@ export const Dialog = (props: DialogProps) => {
     fullWidth,
     maxWidth = 'md',
     onClose,
+    subtitle,
     title,
     titleBottomBorder,
     ...rest
@@ -78,6 +80,7 @@ export const Dialog = (props: DialogProps) => {
         <DialogTitle
           id={titleID}
           onClose={() => onClose && onClose({}, 'backdropClick')}
+          subtitle={subtitle}
           title={title}
         />
         {titleBottomBorder && <StyledHr />}

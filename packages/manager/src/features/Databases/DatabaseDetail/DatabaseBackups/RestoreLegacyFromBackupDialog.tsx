@@ -10,7 +10,7 @@ import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Database, DatabaseBackup } from '@linode/api-v4';
+import type { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import type { DialogProps } from 'src/components/Dialog/Dialog';
 
 interface Props extends Omit<DialogProps, 'title'> {
@@ -20,7 +20,7 @@ interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
 }
 
-export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
+export const RestoreLegacyFromBackupDialog = (props: Props) => {
   const { backup, database, onClose, open } = props;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -30,7 +30,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
     error,
     isPending,
     mutateAsync: restore,
-  } = useRestoreFromBackupMutation(database.engine, database.id, backup.id);
+  } = useRestoreFromBackupMutation(database.engine, database.id, backup?.id);
 
   const handleRestoreDatabase = () => {
     restore().then(() => {
@@ -79,4 +79,4 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
   );
 };
 
-export default RestoreFromBackupDialog;
+export default RestoreLegacyFromBackupDialog;

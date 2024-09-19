@@ -44,6 +44,14 @@ describe('Dialog', () => {
     expect(getByText('Child items can go here!')).toBeInTheDocument();
   });
 
+  it('should render a Dialog with subtitle if provided', () => {
+    const { getByText } = renderWithTheme(
+      <Dialog {...defaultArgs} open={true} subtitle="This is a subtitle" />
+    );
+
+    expect(getByText('This is a subtitle')).toBeInTheDocument();
+  });
+
   it('should call onClose when the Dialog close button is clicked', () => {
     const { getByRole } = renderWithTheme(
       <Dialog {...defaultArgs} open={true} />
