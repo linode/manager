@@ -204,7 +204,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     return (
-      <Grid container item m={3} xs={12}>
+      <Grid
+        container
+        item
+        m={3}
+        paddingBottom={isServiceAnalyticsIntegration ? 3 : 0}
+        xs={12}
+      >
         <Grid
           sx={{
             m: 0,
