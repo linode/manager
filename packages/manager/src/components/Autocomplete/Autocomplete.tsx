@@ -109,7 +109,8 @@ export const Autocomplete = <
 
   const optionsWithSelectAll = [selectAllOption, ...options] as T[];
 
-  const popper = useCallback(
+  /* Memoize popper callback to prevent unnecessary popper re-rendering. */
+  const customPopper = useCallback(
     (props: PopperProps) => {
       return <CustomPopper {...props} sx={sxPopperComponent} />;
     },
@@ -118,7 +119,7 @@ export const Autocomplete = <
 
   return (
     <MuiAutocomplete
-      PopperComponent={popper}
+      PopperComponent={customPopper}
       options={
         multiple && !disableSelectAll && options.length > 0
           ? optionsWithSelectAll
