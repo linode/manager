@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardArrowDownIcon from 'src/assets/icons/arrow_down.svg';
@@ -57,6 +57,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }>({});
 
     const [showFilter, setShowFilter] = React.useState<boolean>(true);
+
+    const theme = useTheme();
 
     const dependentFilterReference: React.MutableRefObject<{
       [key: string]: FilterValueType;
@@ -238,6 +240,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               minHeight: 'auto',
               minWidth: 'auto',
               p: 0,
+              svg: {
+                color: theme.color.grey4,
+              },
             }}
             onClick={toggleShowFilter}
           >
