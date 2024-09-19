@@ -20,6 +20,17 @@ const mockLKELimits = () => {
     http.put('*/v4/lke/clusters/:id/pools/:poolId', () => {
       return makeErrorResponse(errorResponse);
     }),
+
+    http.all('*/v4/lke/clusters*', async () => {
+      // Simulating a 500ms delay for all requests
+      // to make the UI feel more realistic (e.g. loading states)
+      await new Promise((resolve) => {
+        const timer = setTimeout(resolve, 2000);
+        // Clear the timer if the request is aborted
+        // to avoid any potential memory leaks
+        return () => clearTimeout(timer);
+      });
+    }),
   ];
 };
 
