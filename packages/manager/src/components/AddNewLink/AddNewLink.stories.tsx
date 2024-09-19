@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions';
-import React from 'react';
 
 import { AddNewLink } from './AddNewLink';
 
@@ -19,9 +18,6 @@ const defaultArgs = {
 
 export const Default: Story = {
   args: defaultArgs,
-  render: (args) => {
-    return <AddNewLink {...args} />;
-  },
 };
 
 export const CustomDisplay = {
@@ -31,13 +27,19 @@ export const CustomDisplay = {
   },
 };
 
-export const Disabled = {
+export const DisabledWithoutReason = {
+  args: {
+    ...defaultArgs,
+    disabled: true,
+  },
+};
+
+export const DisabledWithReason = {
   args: {
     ...defaultArgs,
     disabled: true,
     disabledReason: 'This is disabled',
   },
-  render: Default.render,
 };
 
 export default meta;

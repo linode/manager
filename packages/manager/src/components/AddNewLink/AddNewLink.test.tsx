@@ -20,6 +20,7 @@ describe('AddNewLink', () => {
 
     expect(getByText(label)).toBeVisible();
   });
+
   it('renders the AddNewLink component without a tooltip if disabled is falsy', () => {
     const { queryByLabelText, queryByTestId } = renderWithTheme(
       <AddNewLink
@@ -33,12 +34,14 @@ describe('AddNewLink', () => {
     expect(queryByTestId(testId)).not.toBeInTheDocument();
   });
 
-  it('renders the AddNewLink component without a tooltip if disabledReason is falsy', () => {
-    const { queryByTestId } = renderWithTheme(
+  it('renders the AddNewLink component without a tooltip if disabledReason is falsy', async () => {
+    const { getByText, queryByTestId } = renderWithTheme(
       <AddNewLink {...props} disabled />
     );
 
     expect(queryByTestId(testId)).not.toBeInTheDocument();
+    await userEvent.click(getByText(label));
+    expect(props.onClick).not.toHaveBeenCalled();
   });
 
   it('renders a tooltip if disabled and disabledReason are truthy', () => {
