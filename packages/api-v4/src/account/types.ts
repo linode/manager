@@ -440,7 +440,7 @@ export const EventActionKeys = [
   'subnet_update',
   'tag_create',
   'tag_delete',
-  'tax_id_verifying',
+  'tax_id_invalid',
   'tax_id_valid',
   'tfa_disabled',
   'tfa_enabled',

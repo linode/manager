@@ -83,6 +83,10 @@ export const toasts: Toasts = {
   linode_resize: createToast({ failure: true, success: true }),
   linode_snapshot: createToast({ failure: { persist: true } }),
   longviewclient_create: createToast({ failure: true, success: true }),
+  tax_id_invalid: createToast({
+    failure: true,
+    success: { invertVariant: true, persist: true },
+  }),
   volume_attach: createToast({ failure: true, success: true }),
   volume_create: createToast({ failure: true, success: true }),
   volume_delete: createToast({ failure: true, success: true }),
