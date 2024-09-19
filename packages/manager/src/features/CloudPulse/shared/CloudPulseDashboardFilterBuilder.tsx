@@ -219,7 +219,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             p: 0,
           }}
           item
-          key={'toggleFilter'}
+          key="toggleFilter"
           xs={12}
         >
           <Button
