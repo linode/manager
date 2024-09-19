@@ -158,9 +158,4 @@ const StyledPlaceholder = styled(Placeholder, {
   flex: 'auto',
 });
 
-const StyledPaper = styled(
-  Paper,
-  {}
-)({
-  padding: 0,
-});
+const StyledPaper = styled(Paper, {})({ padding: 0 });
