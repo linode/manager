@@ -148,6 +148,7 @@ export const getCustomSelectProperties = (
       filterKey,
       dashboard
     ),
+    dashboard,
     defaultValue: preferences?.[filterKey],
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,

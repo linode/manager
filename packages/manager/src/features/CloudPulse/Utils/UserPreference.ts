@@ -22,12 +22,14 @@ export const useAclpPreference = (): AclpPreferenceObject => {
 
   const { mutateAsync: updateFunction } = useMutatePreferences();
 
+  const preferenceRef = useRef(preferences?.aclpPreference ?? {});
+
   /**
    *
    * @param data AclpConfig data to be updated in preferences
    */
   const updateGlobalFilterPreference = (data: AclpConfig) => {
-    let currentPreferences = { ...(preferences?.aclpPreference ?? {}) };
+    let currentPreferences = { ...preferenceRef.current };
     const keys = Object.keys(data);
 
     if (keys.includes(DASHBOARD_ID)) {
@@ -41,6 +43,7 @@ export const useAclpPreference = (): AclpPreferenceObject => {
         ...data,
       };
     }
+    preferenceRef.current = currentPreferences;
     updateFunction({ aclpPreference: currentPreferences });
   };
 
@@ -50,7 +53,7 @@ export const useAclpPreference = (): AclpPreferenceObject => {
    * @param data AclpWidget data for the label that is to be updated in preference
    */
   const updateWidgetPreference = (label: string, data: Partial<AclpWidget>) => {
-    const updatedPreferences = { ...(preferences?.aclpPreference ?? {}) };
+    const updatedPreferences = { ...preferenceRef.current };
 
     if (!updatedPreferences.widgets) {
       updatedPreferences.widgets = {};
@@ -61,6 +64,8 @@ export const useAclpPreference = (): AclpPreferenceObject => {
       label,
       ...data,
     };
+
+    preferenceRef.current = updatedPreferences;
     updateFunction({ aclpPreference: updatedPreferences });
   };
   return {

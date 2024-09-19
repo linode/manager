@@ -1,10 +1,8 @@
-import { Grid, Paper } from '@mui/material';
+import { Grid } from '@mui/material';
 import React from 'react';
 
-import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import {
@@ -13,25 +11,10 @@ import {
 } from 'src/queries/cloudpulse/services';
 
 import { useAclpPreference } from '../Utils/UserPreference';
-import { createObjectCopy } from '../Utils/utils';
-import { CloudPulseWidget } from '../Widget/CloudPulseWidget';
-import {
-  all_interval_options,
-  getInSeconds,
-  getIntervalIndex,
-} from '../Widget/components/CloudPulseIntervalSelect';
+import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
 
-import type {
-  CloudPulseMetricsAdditionalFilters,
-  CloudPulseWidgetProperties,
-} from '../Widget/CloudPulseWidget';
-import type {
-  AvailableMetrics,
-  Dashboard,
-  JWETokenPayLoad,
-  TimeDuration,
-  Widgets,
-} from '@linode/api-v4';
+import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
+import type { JWETokenPayLoad, TimeDuration } from '@linode/api-v4';
 
 export interface DashboardProperties {
   /**
@@ -52,7 +35,7 @@ export interface DashboardProperties {
   /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
    */
-  manualRefreshTimeStamp?: number | undefined;
+  manualRefreshTimeStamp?: number;
 
   /**
    * Selected region for the dashboard
@@ -86,65 +69,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return {
       resource_ids: resourceList?.map((resource) => Number(resource.id)) ?? [],
     };
-  };
-
-  const getCloudPulseGraphProperties = (
-    widget: Widgets
-  ): CloudPulseWidgetProperties => {
-    const graphProp: CloudPulseWidgetProperties = {
-      additionalFilters,
-      ariaLabel: widget.label,
-      authToken: '',
-      availableMetrics: undefined,
-      duration,
-      errorLabel: 'Error While Loading Data',
-      resourceIds: resources,
-      resources: [],
-      serviceType: dashboard?.service_type ?? '',
-      timeStamp: manualRefreshTimeStamp,
-      unit: widget.unit ?? '%',
-      widget: { ...widget },
-    };
-    if (savePref) {
-      graphProp.widget = setPreferredWidgetPlan(graphProp.widget);
-    }
-    return graphProp;
-  };
-
-  /**
-   *
-   * @param widgetObj Widget configuration received from metrics-definition api
-   */
-  const setPreferredWidgetPlan = (widgetObj: Widgets) => {
-    const widgetPreferences = preferences.widgets;
-    const pref = widgetPreferences?.[widgetObj.label];
-    // if preference is present then update the widget properties present in preference
-    if (pref) {
-      return {
-        ...widgetObj,
-        aggregate_function:
-          pref.aggregateFunction ?? widgetObj.aggregate_function,
-        size: pref.size ?? widgetObj.size,
-        time_granularity: {
-          ...(pref.timeGranularity ?? widgetObj.time_granularity),
-        },
-      };
-    } else {
-      return {
-        ...widgetObj,
-        time_granularity: {
-          label: 'Auto',
-          unit: 'Auto',
-          value: -1,
-        },
-      };
-    }
-  };
-
-  const getTimeGranularity = (scrapeInterval: string) => {
-    const scrapeIntervalValue = getInSeconds(scrapeInterval);
-    const index = getIntervalIndex(scrapeIntervalValue);
-    return index < 0 ? all_interval_options[0] : all_interval_options[index];
   };
 
   const {
@@ -202,76 +126,18 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return <ErrorState errorText={'Error loading metric definitions'} />;
   }
 
-  const RenderWidgets = () => {
-    if (!dashboard || !dashboard.widgets?.length) {
-      return renderPlaceHolder(
-        'No visualizations are available at this moment. Create Dashboards to list here.'
-      );
-    }
-
-    if (
-      !dashboard.service_type ||
-      !Boolean(resources.length > 0) ||
-      !jweToken?.token ||
-      !Boolean(resourceList?.length)
-    ) {
-      return renderPlaceHolder(
-        'Select Dashboard, Region and Resource to visualize metrics'
-      );
-    }
-
-    // maintain a copy
-    const newDashboard: Dashboard = createObjectCopy(dashboard)!;
-    return (
-      <Grid columnSpacing={1} container item rowSpacing={2} xs={12}>
-        {{ ...newDashboard }.widgets.map((widget, index) => {
-          // check if widget metric definition is available or not
-          if (widget) {
-            // find the metric defintion of the widget label
-            const availMetrics = metricDefinitions?.data.find(
-              (availMetrics: AvailableMetrics) =>
-                widget.label === availMetrics.label
-            );
-            const cloudPulseWidgetProperties = getCloudPulseGraphProperties({
-              ...widget,
-            });
-
-            // metric definition is available but time_granularity is not present
-            if (
-              availMetrics &&
-              !cloudPulseWidgetProperties.widget.time_granularity
-            ) {
-              cloudPulseWidgetProperties.widget.time_granularity = getTimeGranularity(
-                availMetrics.scrape_interval
-              );
-            }
-            return (
-              <CloudPulseWidget
-                key={widget.label}
-                {...cloudPulseWidgetProperties}
-                authToken={jweToken?.token}
-                availableMetrics={availMetrics}
-                resources={resourceList!}
-                savePref={savePref}
-              />
-            );
-          } else {
-            return <React.Fragment key={index}></React.Fragment>;
-          }
-        })}
-      </Grid>
-    );
-  };
-
-  const renderPlaceHolder = (title: string) => {
-    return (
-      <Grid item xs>
-        <Paper>
-          <Placeholder icon={CloudPulseIcon} isEntity title={title} />
-        </Paper>
-      </Grid>
-    );
-  };
-
-  return <RenderWidgets />;
+  return (
+    <RenderWidgets
+      additionalFilters={additionalFilters}
+      dashboard={dashboard}
+      duration={duration}
+      jweToken={jweToken}
+      manualRefreshTimeStamp={manualRefreshTimeStamp}
+      metricDefinitions={metricDefinitions}
+      preferences={preferences}
+      resourceList={resourceList}
+      resources={resources}
+      savePref={savePref}
+    />
+  );
 };

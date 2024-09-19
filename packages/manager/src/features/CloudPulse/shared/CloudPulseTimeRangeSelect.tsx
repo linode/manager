@@ -44,7 +44,6 @@ export const CloudPulseTimeRangeSelect = React.memo(
       savePreferences,
     } = props;
     const options = generateSelectOptions();
-
     const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
       if (!savePreferences) {
         return options[0];
@@ -67,7 +66,6 @@ export const CloudPulseTimeRangeSelect = React.memo(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // need to execute only once, during mounting of this component
-
     const handleChange = (item: Item<Labels, Labels>) => {
       setSelectedTimeRange(item);
 
@@ -99,7 +97,9 @@ export const CloudPulseTimeRangeSelect = React.memo(
       />
     );
   },
-  () => true
+  (prevProps, newProps) =>
+    prevProps.handleStatsChange === newProps.handleStatsChange &&
+    prevProps.placeholder === newProps.placeholder
 );
 
 /**

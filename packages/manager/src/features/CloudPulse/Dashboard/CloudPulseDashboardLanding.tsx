@@ -1,4 +1,5 @@
 import { Grid, Paper } from '@mui/material';
+import deepEqual from 'fast-deep-equal';
 import * as React from 'react';
 
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
@@ -17,6 +18,17 @@ import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
 export type FilterValueType = number | number[] | string | string[] | undefined;
 
+interface DashboardProp {
+  dashboard?: Dashboard;
+  filterValue: {
+    [key: string]: FilterValueType;
+  };
+  timeDuration?: TimeDuration;
+}
+
+const selectDashboardAndFilterMessage =
+  'Select Dashboard and filters to visualize metrics.';
+
 export const CloudPulseDashboardLanding = () => {
   const [filterValue, setFilterValue] = React.useState<{
     [key: string]: FilterValueType;
@@ -25,12 +37,12 @@ export const CloudPulseDashboardLanding = () => {
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
 
-  const selectDashboardAndFilterMessage =
-    'Select Dashboard and filters to visualize metrics.';
-
   const onFilterChange = React.useCallback(
     (filterKey: string, filterValue: FilterValueType) => {
-      setFilterValue((prev) => ({ ...prev, [filterKey]: filterValue }));
+      setFilterValue((prev: { [key: string]: FilterValueType }) => ({
+        ...prev,
+        [filterKey]: filterValue,
+      }));
     },
     []
   );
@@ -46,32 +58,33 @@ export const CloudPulseDashboardLanding = () => {
     },
     []
   );
-
-  /**
-   * Takes an error message as input and renders a placeholder with the error message
-   * @param errorMessage {string} - Error message which will be displayed
-   *
-   */
-  const renderErrorPlaceholder = (errorMessage: string) => {
-    return (
+  return (
+    <Grid container spacing={2}>
       <Grid item xs={12}>
         <Paper>
-          <StyledPlaceholder
-            icon={CloudPulseIcon}
-            isEntity
-            subtitle={errorMessage}
-            title=""
+          <GlobalFilters
+            handleAnyFilterChange={onFilterChange}
+            handleDashboardChange={onDashboardChange}
+            handleTimeDurationChange={onTimeDurationChange}
           />
         </Paper>
       </Grid>
-    );
-  };
+      <RenderDashboard
+        dashboard={dashboard}
+        filterValue={filterValue}
+        timeDuration={timeDuration}
+      />
+    </Grid>
+  );
+};
 
-  /**
-   * Incase of errors and filter criteria not met, this renders the required error message placeholder and in case of success checks, renders a dashboard
-   * @returns Placeholder | Dashboard
-   */
-  const RenderDashboard = () => {
+/**
+ * Incase of errors and filter criteria not met, this renders the required error message placeholder and in case of success checks, renders a dashboard
+ * @returns Placeholder | Dashboard
+ */
+const RenderDashboard = React.memo(
+  (props: DashboardProp) => {
+    const { dashboard, filterValue, timeDuration } = props;
     if (!dashboard) {
       return renderErrorPlaceholder(selectDashboardAndFilterMessage);
     }
@@ -119,19 +132,40 @@ export const CloudPulseDashboardLanding = () => {
         savePref={true}
       />
     );
-  };
+  },
+  (oldProps: DashboardProp, newProps: DashboardProp) => {
+    if (!deepEqual(oldProps.dashboard, newProps.dashboard)) {
+      return false;
+    }
+
+    if (!deepEqual(oldProps.filterValue, newProps.filterValue)) {
+      return false;
+    }
+
+    if (!deepEqual(oldProps.timeDuration, newProps.timeDuration)) {
+      return false;
+    }
+
+    return true;
+  }
+);
+
+/**
+ * Takes an error message as input and renders a placeholder with the error message
+ * @param errorMessage {string} - Error message which will be displayed
+ *
+ */
+const renderErrorPlaceholder = (errorMessage: string) => {
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Paper>
-          <GlobalFilters
-            handleAnyFilterChange={onFilterChange}
-            handleDashboardChange={onDashboardChange}
-            handleTimeDurationChange={onTimeDurationChange}
-          />
-        </Paper>
-      </Grid>
-      <RenderDashboard />
+    <Grid item xs={12}>
+      <Paper>
+        <StyledPlaceholder
+          icon={CloudPulseIcon}
+          isEntity
+          subtitle={errorMessage}
+          title=""
+        />
+      </Paper>
     </Grid>
   );
 };

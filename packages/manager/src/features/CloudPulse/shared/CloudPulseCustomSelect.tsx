@@ -14,7 +14,7 @@ import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
 } from '../Utils/models';
-import type { AclpConfig, FilterValue } from '@linode/api-v4';
+import type { AclpConfig, Dashboard, FilterValue } from '@linode/api-v4';
 
 /**
  * These are the properties requires for CloudPulseCustomSelect Components
@@ -41,6 +41,8 @@ export interface CloudPulseCustomSelectProps {
    */
   clearDependentSelections?: string[];
 
+  dashboard: Dashboard;
+
   /**
    * Last selected values from user preferences
    */
@@ -60,11 +62,11 @@ export interface CloudPulseCustomSelectProps {
    * The filterKey that needs to be used
    */
   filterKey: string;
-
   /**
    * The type of the filter like string, number etc.,
    */
   filterType: string;
+
   /**
    * The callback function , that will be called on a filter change
    * @param filterKey - The filterKey of the component
@@ -122,6 +124,7 @@ export const CloudPulseCustomSelect = React.memo(
       apiResponseLabelField,
       apiV4QueryKey,
       clearDependentSelections,
+      dashboard,
       defaultValue,
       disabled,
       filterKey,
@@ -169,6 +172,14 @@ export const CloudPulseCustomSelect = React.memo(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savePreferences, options, apiV4QueryKey, queriedResources]); // only execute this use efffect one time or if savePreferences or options or dataApiUrl changes
+
+    React.useEffect(() => {
+      if (!selectedResource) {
+        setResource(isMultiSelect ? [] : undefined);
+        handleSelectionChange(filterKey, isMultiSelect ? [] : undefined);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dashboard?.id]);
 
     const handleChange = (
       _: React.SyntheticEvent,

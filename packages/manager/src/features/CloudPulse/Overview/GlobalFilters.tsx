@@ -37,6 +37,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
+
   const handleTimeRangeChange = React.useCallback(
     (
       timerDuration: TimeDuration,
@@ -48,7 +49,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       }
       handleTimeDurationChange(timerDuration);
     },
-    [updatePreferences]
+    []
   );
 
   const onDashboardChange = React.useCallback(
@@ -61,7 +62,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       setSelectedDashboard(dashboard);
       handleDashboardChange(dashboard);
     },
-    [updatePreferences]
+    []
   );
 
   const emitFilterChange = React.useCallback(
@@ -76,7 +77,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       }
       handleAnyFilterChange(filterKey, value);
     },
-    [updatePreferences]
+    []
   );
 
   const handleGlobalRefresh = React.useCallback(() => {
