@@ -181,7 +181,10 @@ export const MonitorTable = () => {
         <Grid>
           <Grid alignItems="flex-end" container>
             <StyledGrid>
-              <Button onClick={() => setMonitorDrawerOpen(true)}>
+              <Button
+                buttonType="primary"
+                onClick={() => setMonitorDrawerOpen(true)}
+              >
                 Add Monitor
               </Button>
             </StyledGrid>

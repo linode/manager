@@ -205,7 +205,9 @@ export const CredentialList = () => {
         spacing={2}
       >
         <StyledWrapperGrid>
-          <Button onClick={() => setDrawerOpen(true)}>Add Credential</Button>
+          <Button buttonType="primary" onClick={() => setDrawerOpen(true)}>
+            Add Credential
+          </Button>
         </StyledWrapperGrid>
       </StyledHeaderGrid>
       <OrderBy data={credentials} order={'asc'} orderBy={'label'}>

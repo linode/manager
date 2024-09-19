@@ -97,7 +97,7 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
-        <Button disabled={isReadOnly} onClick={onCreate}>
+        <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>
       </Box>

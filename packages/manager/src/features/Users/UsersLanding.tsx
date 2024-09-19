@@ -152,6 +152,7 @@ export const UsersLanding = () => {
               ? 'You cannot create other users as a restricted user.'
               : undefined
           }
+          buttonType="primary"
           disabled={isRestrictedUser}
           onClick={() => setIsCreateDrawerOpen(true)}
         >

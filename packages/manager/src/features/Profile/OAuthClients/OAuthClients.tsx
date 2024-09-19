@@ -129,7 +129,10 @@ const OAuthClients = () => {
         marginBottom={1}
         paddingRight={{ lg: 0, md: 0, sm: 1, xs: 1 }}
       >
-        <Button onClick={() => setIsCreateDrawerOpen(true)}>
+        <Button
+          buttonType="primary"
+          onClick={() => setIsCreateDrawerOpen(true)}
+        >
           Add an OAuth App
         </Button>
       </Box>

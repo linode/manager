@@ -108,7 +108,10 @@ export const SSHKeys = () => {
         spacing={2}
       >
         <StyledAddNewWrapperGridItem>
-          <Button onClick={() => setIsCreateDrawerOpen(true)}>
+          <Button
+            buttonType="primary"
+            onClick={() => setIsCreateDrawerOpen(true)}
+          >
             Add an SSH Key
           </Button>
         </StyledAddNewWrapperGridItem>

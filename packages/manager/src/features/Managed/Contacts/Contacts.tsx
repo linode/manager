@@ -105,6 +105,7 @@ const Contacts = () => {
               setContactDrawerMode('create');
               contactDrawer.open();
             }}
+            buttonType="primary"
           >
             Add Contact
           </Button>

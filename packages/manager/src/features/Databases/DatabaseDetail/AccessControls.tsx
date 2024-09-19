@@ -198,6 +198,7 @@ export const AccessControls = (props: Props) => {
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <Button
+          buttonType="primary"
           className={classes.addAccessControlBtn}
           disabled={disabled}
           onClick={() => setAddAccessControlDrawerOpen(true)}
