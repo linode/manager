@@ -1,4 +1,5 @@
 import { action } from '@storybook/addon-actions';
+import { expect, userEvent, within } from '@storybook/test';
 import React from 'react';
 
 import { TypeToConfirmDialog } from './TypeToConfirmDialog';
@@ -46,5 +47,27 @@ export default meta;
 type Story = StoryObj<typeof TypeToConfirmDialog>;
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+    const deleteButton = canvas.getByRole('button', { name: 'Delete' });
+    expect(deleteButton).toHaveAttribute('aria-disabled', 'true');
+  },
+  render: (args) => <TypeToConfirmDialog {...args} />,
+};
+
+export const WithLinodeLabel: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement.ownerDocument.body);
+
+    const linodeLabelInput = canvas.getByLabelText('Linode Label', {
+      selector: 'input',
+    });
+
+    await userEvent.type(linodeLabelInput, 'test linode', {
+      delay: 10,
+    });
+    const deleteButton = canvas.getByRole('button', { name: 'Delete' });
+    expect(deleteButton).not.toHaveAttribute('aria-disabled');
+  },
   render: (args) => <TypeToConfirmDialog {...args} />,
 };
