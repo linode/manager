@@ -2,8 +2,8 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { AddNewLink } from 'src/components/AddNewLink/AddNewLink';
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -97,11 +97,9 @@ const LinodeConfigs = () => {
           }}
           label={'Configuration Profiles'}
         />
-        <AddNewLink
-          disabled={isReadOnly}
-          label="Add Configuration"
-          onClick={onCreate}
-        />
+        <Button disabled={isReadOnly} onClick={onCreate}>
+          Add Configuration
+        </Button>
       </Box>
       <OrderBy data={configs ?? []} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (

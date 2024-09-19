@@ -2,7 +2,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { AddNewLink } from 'src/components/AddNewLink/AddNewLink';
+import { Button } from 'src/components/Button/Button';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
@@ -181,10 +181,9 @@ export const MonitorTable = () => {
         <Grid>
           <Grid alignItems="flex-end" container>
             <StyledGrid>
-              <AddNewLink
-                label="Add Monitor"
-                onClick={() => setMonitorDrawerOpen(true)}
-              />
+              <Button onClick={() => setMonitorDrawerOpen(true)}>
+                Add Monitor
+              </Button>
             </StyledGrid>
           </Grid>
         </Grid>

@@ -1,7 +1,7 @@
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { AddNewLink } from 'src/components/AddNewLink/AddNewLink';
+import { Button } from 'src/components/Button/Button';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
@@ -205,10 +205,7 @@ export const CredentialList = () => {
         spacing={2}
       >
         <StyledWrapperGrid>
-          <AddNewLink
-            label="Add Credential"
-            onClick={() => setDrawerOpen(true)}
-          />
+          <Button onClick={() => setDrawerOpen(true)}>Add Credential</Button>
         </StyledWrapperGrid>
       </StyledHeaderGrid>
       <OrderBy data={credentials} order={'asc'} orderBy={'label'}>
