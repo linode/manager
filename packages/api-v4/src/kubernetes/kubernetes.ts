@@ -15,6 +15,7 @@ import type {
   KubernetesEndpointResponse,
   KubernetesDashboardResponse,
   KubernetesVersion,
+  KubernetesControlPlaneACLPayload,
 } from './types';
 
 /**
@@ -191,4 +192,39 @@ export const getKubernetesTypes = (params?: Params) =>
     setURL(`${API_ROOT}/lke/types`),
     setMethod('GET'),
     setParams(params)
+  );
+
+/**
+ * getKubernetesClusterControlPlaneACL
+ *
+ * Return control plane access list about a single Kubernetes cluster
+ *
+ */
+export const getKubernetesClusterControlPlaneACL = (clusterID: number) =>
+  Request<KubernetesControlPlaneACLPayload>(
+    setMethod('GET'),
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID
+      )}/control_plane_acl`
+    )
+  );
+
+/**
+ * updateKubernetesClusterControlPlaneACL
+ *
+ * Update an existing ACL from a single Kubernetes cluster.
+ */
+export const updateKubernetesClusterControlPlaneACL = (
+  clusterID: number,
+  data: Partial<KubernetesControlPlaneACLPayload>
+) =>
+  Request<KubernetesControlPlaneACLPayload>(
+    setMethod('PUT'),
+    setURL(
+      `${API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID
+      )}/control_plane_acl`
+    ),
+    setData(data)
   );

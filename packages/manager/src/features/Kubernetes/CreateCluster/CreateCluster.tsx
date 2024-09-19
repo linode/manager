@@ -18,6 +18,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import {
+  getKubeControlPlaneACL,
   getKubeHighAvailability,
   getLatestVersion,
 } from 'src/features/Kubernetes/kubeUtils';
@@ -49,7 +50,9 @@ import {
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
+import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import { NodePoolPanel } from './NodePoolPanel';
+import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import type {
   CreateKubeClusterPayload,
@@ -72,12 +75,20 @@ export const CreateCluster = () => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
+  const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(true);
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
+  const { showControlPlaneACL } = getKubeControlPlaneACL(account);
+  const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
+    stringToExtendedIP('0.0.0.0/0'),
+  ]);
+  const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
+    stringToExtendedIP('::/0'),
+  ]);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -128,8 +139,23 @@ export const CreateCluster = () => {
       pick(['type', 'count'])
     ) as CreateNodePoolData[];
 
+    const _ipv4 = ipV4Addr.map((ip) => {
+      return ip.address;
+    });
+
+    const _ipv6 = ipV6Addr.map((ip) => {
+      return ip.address;
+    });
+
     const payload: CreateKubeClusterPayload = {
-      control_plane: { high_availability: highAvailability ?? false },
+      control_plane: {
+        high_availability: highAvailability ?? false,
+        acl: {
+          enabled: controlPlaneACL,
+          'revision-id': '',
+          addresses: { ipv4: _ipv4, ipv6: _ipv6 },
+        },
+      },
       k8s_version: version,
       label,
       node_pools,
@@ -278,6 +304,23 @@ export const CreateCluster = () => {
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                 selectedRegionId={selectedRegionId}
                 setHighAvailability={setHighAvailability}
+              />
+            </Box>
+          ) : null}
+          <Divider sx={{ marginTop: 4 }} />
+          {showControlPlaneACL ? (
+            <Box data-testid="control-plane-acl">
+              <ControlPlaneACLPane
+                enableControlPlaneACL={controlPlaneACL}
+                setControlPlaneACL={setControlPlaneACL}
+                ipV4Addr={ipV4Addr}
+                handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
+                  setIPv4Addr(newIpV4Addr);
+                }}
+                ipV6Addr={ipV6Addr}
+                handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
+                  setIPv6Addr(newIpV6Addr);
+                }}
               />
             </Box>
           ) : null}

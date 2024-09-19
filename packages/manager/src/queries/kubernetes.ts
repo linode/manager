@@ -10,6 +10,7 @@ import {
   getKubernetesClusters,
   getKubernetesTypes,
   getKubernetesVersions,
+  getKubernetesClusterControlPlaneACL,
   getNodePools,
   recycleAllNodes,
   recycleClusterNodes,
@@ -17,6 +18,7 @@ import {
   resetKubeConfig,
   updateKubernetesCluster,
   updateNodePool,
+  updateKubernetesClusterControlPlaneACL,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
@@ -36,6 +38,7 @@ import type {
   CreateNodePoolData,
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
   KubernetesVersion,
@@ -69,6 +72,10 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       },
       pools: {
         queryFn: () => getAllNodePoolsForCluster(id),
+        queryKey: null,
+      },
+      acl: {
+        queryFn: () => getKubernetesClusterControlPlaneACL(id),
         queryKey: null,
       },
     },
@@ -309,6 +316,32 @@ export const useAllKubernetesClustersQuery = (enabled = false) => {
   return useQuery<KubernetesCluster[], APIError[]>({
     ...kubernetesQueries.lists._ctx.all,
     enabled,
+  });
+};
+
+export const useKubernetesControlPlaneACLQuery = (clusterId: number) => {
+  return useQuery<KubernetesControlPlaneACLPayload, APIError[]>(
+    kubernetesQueries.cluster(clusterId)._ctx.acl
+  );
+};
+
+export const useKubernetesControlPlaneACLMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    KubernetesControlPlaneACLPayload,
+    APIError[],
+    Partial<KubernetesControlPlaneACLPayload>
+  >({
+    mutationFn: (data) => updateKubernetesClusterControlPlaneACL(id, data),
+    onSuccess(data) {
+      queryClient.invalidateQueries({
+        queryKey: kubernetesQueries.cluster(id)._ctx.acl.queryKey,
+      });
+      queryClient.setQueryData(
+        kubernetesQueries.cluster(id)._ctx.acl.queryKey,
+        data
+      );
+    },
   });
 };
 

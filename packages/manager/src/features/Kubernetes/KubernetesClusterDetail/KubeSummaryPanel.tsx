@@ -16,6 +16,7 @@ import { Stack } from 'src/components/Stack';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
+import { KubeClusterControlPlaneACL } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterControlPlaneACL';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
@@ -27,6 +28,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
+import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 
 import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import type { Theme } from '@mui/material/styles';
@@ -107,6 +109,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [
+    isControlPlaneACLDrawerOpen,
+    setControlPlaneACLDrawerOpen,
+  ] = React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
@@ -244,6 +250,34 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             </Box>
           </EntityHeader>
         }
+        footer={
+          <>
+            <Box
+              sx={{
+                paddingBottom: theme.spacing(),
+                paddingTop: theme.spacing(),
+                paddingLeft: theme.spacing(),
+              }}
+            >
+              <Typography variant="h3">IPACL</Typography>
+            </Box>
+            <Box
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'start',
+                width: '100%',
+                paddingLeft: theme.spacing(),
+                marginLeft: '10px',
+              }}
+            >
+              <KubeClusterControlPlaneACL
+                cluster={cluster}
+                handleOpenDrawer={() => setControlPlaneACLDrawerOpen(true)}
+              />
+            </Box>
+          </>
+        }
         noBodyBottomBorder
       />
 
@@ -252,6 +286,12 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         clusterId={cluster.id}
         clusterLabel={cluster.label}
         open={drawerOpen}
+      />
+      <KubeControlPlaneACLDrawer
+        closeDrawer={() => setControlPlaneACLDrawerOpen(false)}
+        clusterId={cluster.id}
+        clusterLabel={cluster.label}
+        open={isControlPlaneACLDrawerOpen}
       />
       <DeleteKubernetesClusterDialog
         clusterId={cluster.id}
