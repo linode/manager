@@ -29,7 +29,6 @@ export const CustomDisplay = {
     ...defaultArgs,
     display: 'test display',
   },
-  render: Default.render,
 };
 
 export const Disabled = {
