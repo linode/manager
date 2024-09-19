@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import Reload from 'src/assets/icons/cloudpulse_reload.svg';
+import Reload from 'src/assets/icons/refresh.svg';
 import { Divider } from 'src/components/Divider';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
