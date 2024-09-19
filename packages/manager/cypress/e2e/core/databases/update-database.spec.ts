@@ -144,9 +144,29 @@ const resetRootPassword = () => {
 
 describe('Update database clusters', () => {
   beforeEach(() => {
+    const mockAccount = accountFactory.build({
+      capabilities: [
+        'Akamai Cloud Pulse',
+        'Block Storage',
+        'Cloud Firewall',
+        'Disk Encryption',
+        'Kubernetes',
+        'Linodes',
+        'LKE HA Control Planes',
+        'Machine Images',
+        'Managed Databases',
+        'NodeBalancers',
+        'Object Storage Access Key Regions',
+        'Object Storage Endpoint Types',
+        'Object Storage',
+        'Placement Group',
+        'Vlans',
+      ],
+    });
     mockAppendFeatureFlags({
       dbaasV2: { enabled: false, beta: false },
     });
+    mockGetAccount(mockAccount);
   });
 
   databaseConfigurations.forEach(
@@ -173,10 +193,9 @@ describe('Update database clusters', () => {
             engine: configuration.dbType,
             status: 'active',
             allow_list: [allowedIp],
+            platform: 'rdbms-legacy',
           });
 
-          // Mock account to ensure 'Managed Databases' capability.
-          mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
           mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
           mockResetPassword(database.id, database.engine).as(
@@ -189,7 +208,7 @@ describe('Update database clusters', () => {
           ).as('getCredentials');
 
           cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-          cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
+          cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           cy.get('[data-qa-cluster-config]').within(() => {
             cy.findByText(configuration.region.label).should('be.visible');
@@ -290,6 +309,7 @@ describe('Update database clusters', () => {
               primary: undefined,
               secondary: undefined,
             },
+            platform: 'rdbms-legacy',
           });
 
           const errorMessage =
