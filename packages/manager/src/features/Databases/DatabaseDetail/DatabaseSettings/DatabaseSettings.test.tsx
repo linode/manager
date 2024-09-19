@@ -51,4 +51,30 @@ describe('DatabaseSettings Component', () => {
       expect(button).toBeEnabled();
     }
   });
+
+  it('Should render Maintenance Window with radio buttons', () => {
+    const database = databaseFactory.build({
+      platform: 'rdbms-legacy',
+    });
+    const { getByRole, queryByText } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
+    const radioInput = getByRole('radiogroup');
+    expect(radioInput).toHaveTextContent('Monthly');
+    expect(radioInput).toHaveTextContent('Weekly');
+    expect(queryByText('Maintenance Window')).toBeTruthy();
+  });
+
+  it('Should render Weekly Maintenance Window', () => {
+    const database = databaseFactory.build({
+      platform: 'rdbms-default',
+    });
+    const { queryByText } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
+
+    expect(queryByText('Monthly')).toBeNull();
+    expect(queryByText('Weekly')).toBeNull();
+    expect(queryByText('Set a Weekly Maintenance Window')).toBeTruthy();
+  });
 });
