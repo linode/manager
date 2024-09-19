@@ -2,12 +2,12 @@ import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
+import { Paper } from 'src/components/Paper';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
 
 import {
-  StyledWidgetWrapper,
   generateGraphData,
   getCloudPulseMetricRequest,
 } from '../Utils/CloudPulseWidgetUtils';
@@ -290,9 +290,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   const metricsApiCallError = error?.[0]?.reason;
   return (
-    <Grid item lg={widget.size} xs={12}>
-      <Stack spacing={2}>
-        <StyledWidgetWrapper>
+    <Grid container item lg={widget.size} xs={12}>
+      <Stack flexGrow={1} spacing={2}>
+        <Paper sx={{ flexGrow: 1 }}>
           <Stack
             alignItems={'center'}
             direction={{ sm: 'row' }}
@@ -339,7 +339,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               </Box>
             </Stack>
           </Stack>
-
           <CloudPulseLineGraph
             error={
               status === 'error' && metricsApiCallError !== jweTokenExpiryError // show the error only if the error is not related to token expiration
@@ -359,7 +358,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             timezone={timezone}
             title={widget.label}
           />
-        </StyledWidgetWrapper>
+        </Paper>
       </Stack>
     </Grid>
   );

@@ -1,7 +1,6 @@
 import { styled } from '@mui/material';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Paper } from 'src/components/Paper';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
@@ -335,22 +334,6 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
       thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
-
-/**
- * Returns a paper that wraps the contents of the widget around it
- */
-export const StyledWidgetWrapper = styled(Paper, {
-  label: 'StyledWidgetWrapper',
-})(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    height: theme.spacing(76), // 608px
-    maxHeight: theme.spacing(76),
-  },
-  [theme.breakpoints.up('md')]: {
-    height: theme.spacing(67.5), // 540px
-    maxHeight: theme.spacing(67.5), // 540px
-  },
-}));
 /**
  * Returns an autocomplete with updated styles according to UX, this will be used at widget level
  */

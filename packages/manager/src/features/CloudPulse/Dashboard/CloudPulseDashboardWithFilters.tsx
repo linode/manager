@@ -100,9 +100,11 @@ export const CloudPulseDashboardWithFilters = React.memo(
 
     return (
       <>
-        <Paper sx={{
-          padding:0
-        }}>
+        <Paper
+          sx={{
+            padding: 0,
+          }}
+        >
           <Grid
             justifyContent={{
               sm: 'flex-end',
