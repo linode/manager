@@ -5,6 +5,7 @@ import {
   mockGetBuckets,
   mockDeleteBucket,
   mockCreateBucket,
+  mockGetBucketAccess,
 } from 'support/intercepts/object-storage';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -102,14 +103,72 @@ describe('Object Storage Gen2 create bucket tests', () => {
     });
   };
 
+  const bucketRateLimitsNotice =
+    'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. Understand bucket rate limits.';
+  const CORSNotice =
+    'CORS (Cross Origin Sharing) is not available for endpoint types E2 and E3';
+
+  // For E0/E1, confirm CORS toggle and ACL selection are both present
+  // For E2/E3, confirm rate limit notice and table are present, ACL selection is present, CORS toggle is absent
+  const checkBucketDetailsDrawer = (
+    bucketLabel: string,
+    endpointType: string
+  ) => {
+    ui.drawer.findByTitle(bucketLabel).within(() => {
+      if (
+        endpointType === 'Standard (E3)' ||
+        endpointType === 'Standard (E2)'
+      ) {
+        cy.contains(bucketRateLimitsNotice).should('be.visible');
+        cy.get('[data-testid="bucket-rate-limit-table"]').should('be.visible');
+        cy.contains(CORSNotice).should('be.visible');
+      } else {
+        cy.get('[data-testid="bucket-rate-limit-table"]').should('not.exist');
+        ui.toggle
+          .find()
+          .should('have.attr', 'data-qa-toggle', 'true')
+          .should('be.visible');
+        cy.contains('CORS Enabled').should('be.visible');
+      }
+
+      // Verify that all ACL selection show up as options
+      cy.findByLabelText('Access Control List (ACL)')
+        .should('be.visible')
+        .should('have.value', 'Private')
+        .click();
+      ui.autocompletePopper
+        .findByTitle('Public Read')
+        .should('be.visible')
+        .should('be.enabled');
+      ui.autocompletePopper
+        .findByTitle('Authenticated Read')
+        .should('be.visible')
+        .should('be.enabled');
+      ui.autocompletePopper
+        .findByTitle('Public Read/Write')
+        .should('be.visible')
+        .should('be.enabled');
+      ui.autocompletePopper
+        .findByTitle('Private')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // Close the Details drawer
+      cy.get('[data-qa-close-drawer="true"]').should('be.visible').click();
+    });
+  };
+
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E0
    * Confirms all endpoints are displayed regardless if there's multiple of the same type
    * Confirms S3 endpoint hostname displayed to differentiate between identical options in the dropdown
+   * Confirms correct information displays in the details drawer for all endpoint types
    */
   it('can create a bucket with E0 endpoint type', () => {
     const endpointTypeE0 = 'Legacy (E0)';
     const bucketLabel = randomLabel();
+    const bucketCluster = 'us-iad-12';
 
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
@@ -125,6 +184,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     mockGetRegions(mockRegions);
+    mockGetBucketAccess(bucketLabel, bucketCluster).as('getBucketAccess');
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
@@ -213,8 +273,14 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .closest('tr')
       .within(() => {
         cy.findByText(mockRegion.label).should('be.visible');
-        ui.button.findByTitle('Delete').should('be.visible').click();
+        // Confirm that clicking "Details" button for the bucket opens details drawer
+        ui.button.findByTitle('Details').should('be.visible').click();
       });
+
+    checkBucketDetailsDrawer(bucketLabel, endpointTypeE0);
+
+    // Delete the bucket to clean up
+    ui.button.findByTitle('Delete').should('be.visible').click();
 
     ui.dialog
       .findByTitle(`Delete Bucket ${bucketLabel}`)
@@ -236,10 +302,12 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E1
+   * Confirms correct information displays in the details drawer for all endpoint types
    */
   it('can create a bucket with E1 endpoint type', () => {
     const endpointTypeE1 = 'Standard (E1)';
     const bucketLabel = randomLabel();
+    const bucketCluster = 'us-iad-12';
 
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
@@ -255,6 +323,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     mockGetRegions(mockRegions);
+    mockGetBucketAccess(bucketLabel, bucketCluster).as('getBucketAccess');
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
@@ -328,8 +397,14 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .closest('tr')
       .within(() => {
         cy.findByText(mockRegion.label).should('be.visible');
-        ui.button.findByTitle('Delete').should('be.visible').click();
+        // Confirm that clicking "Details" button for the bucket opens details drawer
+        ui.button.findByTitle('Details').should('be.visible').click();
       });
+
+    checkBucketDetailsDrawer(bucketLabel, endpointTypeE1);
+
+    // Delete the bucket to clean up
+    ui.button.findByTitle('Delete').should('be.visible').click();
 
     ui.dialog
       .findByTitle(`Delete Bucket ${bucketLabel}`)
@@ -351,10 +426,12 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E2
+   * Confirms correct information displays in the details drawer for all endpoint types
    */
   it('can create a bucket with E2 endpoint type', () => {
     const endpointTypeE2 = 'Standard (E2)';
     const bucketLabel = randomLabel();
+    const bucketCluster = 'us-iad-12';
 
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
@@ -370,6 +447,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     mockGetRegions(mockRegions);
+    mockGetBucketAccess(bucketLabel, bucketCluster).as('getBucketAccess');
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
@@ -405,9 +483,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
         // Confirm bucket rate limits text for E2 endpoint
         cy.findByText('Bucket Rate Limits').should('be.visible');
-        cy.contains(
-          'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. Understand bucket rate limits.'
-        ).should('be.visible');
+        cy.contains(bucketRateLimitsNotice).should('be.visible');
 
         // Confirm bucket rate limit table should exist when E2 endpoint is selected
         cy.get('[data-testid="bucket-rate-limit-table"]').should('exist');
@@ -443,8 +519,14 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .closest('tr')
       .within(() => {
         cy.findByText(mockRegion.label).should('be.visible');
-        ui.button.findByTitle('Delete').should('be.visible').click();
+        // Confirm that clicking "Details" button for the bucket opens details drawer
+        ui.button.findByTitle('Details').should('be.visible').click();
       });
+
+    checkBucketDetailsDrawer(bucketLabel, endpointTypeE2);
+
+    // Delete the bucket to clean up
+    ui.button.findByTitle('Delete').should('be.visible').click();
 
     ui.dialog
       .findByTitle(`Delete Bucket ${bucketLabel}`)
@@ -466,10 +548,12 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E3
+   * Confirms correct information displays in the details drawer for all endpoint types
    */
   it('can create a bucket with E3 endpoint type', () => {
     const endpointTypeE3 = 'Standard (E3)';
     const bucketLabel = randomLabel();
+    const bucketCluster = 'us-iad-12';
 
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
@@ -485,6 +569,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     mockGetRegions(mockRegions);
+    mockGetBucketAccess(bucketLabel, bucketCluster).as('getBucketAccess');
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
@@ -521,9 +606,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
         // Confirm bucket rate limits text for E3 endpoint
         cy.findByText('Bucket Rate Limits').should('be.visible');
-        cy.contains(
-          'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. Understand bucket rate limits.'
-        ).should('be.visible');
+        cy.contains(bucketRateLimitsNotice).should('be.visible');
 
         // Confirm bucket rate limit table should exist when E3 endpoint is selected
         cy.get('[data-testid="bucket-rate-limit-table"]').should('exist');
@@ -559,9 +642,14 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .closest('tr')
       .within(() => {
         cy.findByText(mockRegion.label).should('be.visible');
-        ui.button.findByTitle('Delete').should('be.visible').click();
+        // Confirm that clicking "Details" button for the bucket opens details drawer
+        ui.button.findByTitle('Details').should('be.visible').click();
       });
 
+    checkBucketDetailsDrawer(bucketLabel, endpointTypeE3);
+
+    // Delete the bucket to clean up
+    ui.button.findByTitle('Delete').should('be.visible').click();
     ui.dialog
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
