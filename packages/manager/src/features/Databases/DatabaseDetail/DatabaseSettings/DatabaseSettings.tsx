@@ -1,9 +1,8 @@
-import { Database } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 
 import AccessControls from '../AccessControls';
@@ -11,6 +10,8 @@ import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteCluster
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
 import MaintenanceWindow from './MaintenanceWindow';
+
+import type { Database } from '@linode/api-v4/lib/databases/types';
 
 interface Props {
   database: Database;

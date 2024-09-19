@@ -25,30 +25,28 @@ describe('DatabaseSettings Component', () => {
   });
 
   it('Should disable buttons if disabled = true', () => {
-    const { getByTitle } = renderWithTheme(
+    const { getByRole, getByTitle } = renderWithTheme(
       <DatabaseSettings database={database} disabled={true} />
     );
-    const disabledButtons = [
-      'Manage Access Controls',
-      'Reset Root Password',
-      'Save Changes',
-    ];
+    const disabledButtons = ['Reset Root Password', 'Save Changes'];
 
     for (const buttonTitle of disabledButtons) {
       const button = getByTitle(buttonTitle);
       expect(button).toBeDisabled();
     }
+    expect(
+      getByRole('button', { name: 'Manage Access Controls' })
+    ).toBeDisabled();
   });
 
   it('Should enable buttons if disabled = false', () => {
-    const { getByTitle } = renderWithTheme(
+    const { getByRole, getByTitle } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
-    const enabledButtons = ['Manage Access Controls', 'Reset Root Password'];
 
-    for (const buttonTitle of enabledButtons) {
-      const button = getByTitle(buttonTitle);
-      expect(button).toBeEnabled();
-    }
+    expect(getByTitle('Reset Root Password')).toBeEnabled();
+    expect(
+      getByRole('button', { name: 'Manage Access Controls' })
+    ).toBeEnabled();
   });
 });

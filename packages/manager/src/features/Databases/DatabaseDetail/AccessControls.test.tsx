@@ -33,19 +33,21 @@ describe('Access Controls', () => {
 
   it('Should disable "Manage Access Control" button if disabled = true', () => {
     const database = databaseFactory.build();
-    const { getByTitle } = renderWithTheme(
+    const { getByRole } = renderWithTheme(
       <AccessControls database={database} disabled={true} />
     );
-    const manageAccessControlBtn = getByTitle('Manage Access Controls');
-    expect(manageAccessControlBtn).toBeDisabled();
+    expect(
+      getByRole('button', { name: 'Manage Access Controls' })
+    ).toBeDisabled();
   });
 
   it('Should enable "Manage Access Control" button if disabled = false', () => {
     const database = databaseFactory.build();
-    const { getByTitle } = renderWithTheme(
+    const { getByRole } = renderWithTheme(
       <AccessControls database={database} disabled={false} />
     );
-    const manageAccessControlBtn = getByTitle('Manage Access Controls');
-    expect(manageAccessControlBtn).toBeEnabled();
+    expect(
+      getByRole('button', { name: 'Manage Access Controls' })
+    ).toBeEnabled();
   });
 });
