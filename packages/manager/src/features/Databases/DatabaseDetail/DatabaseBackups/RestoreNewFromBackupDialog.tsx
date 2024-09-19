@@ -24,9 +24,9 @@ export const RestoreNewFromBackupDialog = (props: Props) => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  const formatedDate = `${restoreTime?.split('T')[0]} ${restoreTime
-    ?.split('T')[1]
-    .slice(0, 5)}`;
+  const formatedDate =
+    restoreTime &&
+    `${restoreTime?.split('T')[0]} ${restoreTime?.split('T')[1].slice(0, 5)}`;
 
   const { error, mutateAsync: restore } = useNewRestoreFromBackupMutation(
     database.engine,
@@ -51,7 +51,7 @@ export const RestoreNewFromBackupDialog = (props: Props) => {
     <Dialog
       onClose={onClose}
       open={open}
-      subtitle={`From ${formatedDate} (UTC)`}
+      subtitle={formatedDate && `From ${formatedDate} (UTC)`}
       title={`Restore ${database.label}`}
     >
       <Typography sx={(theme) => ({ marginBottom: theme.spacing(4) })}>

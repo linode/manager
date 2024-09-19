@@ -1,4 +1,4 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { FormControl } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -22,11 +23,11 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
 import {
   StyledDateCalendar,
-  StyledTimePicker,
   StyledTypography,
 } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups.style';
 import RestoreLegacyFromBackupDialog from 'src/features/Databases/DatabaseDetail/DatabaseBackups/RestoreLegacyFromBackupDialog';
 import RestoreNewFromBackupDialog from 'src/features/Databases/DatabaseDetail/DatabaseBackups/RestoreNewFromBackupDialog';
+import { isOutsideBackupTimeframe } from 'src/features/Databases/utilities';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useDatabaseBackupsQuery,
@@ -131,20 +132,6 @@ export const DatabaseBackups = (props: Props) => {
     ? DateTime.fromISO(database.oldest_restore_time)
     : null;
 
-  const isWithinBackupTimeframe = (
-    date: DateTime,
-    oldestBackup: DateTime | null
-  ) => {
-    const today = DateTime.now().startOf('day');
-    if (!oldestBackup) {
-      return false;
-    }
-    const backupStart = oldestBackup.startOf('day');
-    const dateStart = date.startOf('day');
-
-    return dateStart < backupStart || dateStart > today;
-  };
-
   const onRestoreNewDatabase = (selectedDate: DateTime | null) => {
     const day = selectedDate?.toISODate();
     const time = selectedTime?.toISOTime({ includeOffset: false });
@@ -202,7 +189,7 @@ export const DatabaseBackups = (props: Props) => {
           <LocalizationProvider dateAdapter={AdapterLuxon}>
             <StyledDateCalendar
               shouldDisableDate={(date) =>
-                isWithinBackupTimeframe(date, oldestBackup)
+                isOutsideBackupTimeframe(date, oldestBackup)
               }
               onChange={(newDate) => setSelectedDate(newDate)}
               value={selectedDate}
@@ -211,27 +198,33 @@ export const DatabaseBackups = (props: Props) => {
         </Grid>
         <Grid item lg={3} md={4} xs={12}>
           <Typography variant="h3">Time (UTC)</Typography>
-          <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <StyledTimePicker
-              slotProps={{
-                desktopPaper: {
-                  sx: {
-                    '.MuiPickersLayout-contentWrapper': {
-                      display: 'flex',
-                    },
-                    marginLeft: '-17px',
-                  },
+          <FormControl style={{ marginTop: 0 }}>
+            {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
+            <Select
+              defaultValue={hourSelectionMap.find(
+                (option) => option.value === selectedTime?.hour
+              )}
+              onChange={(time) =>
+                setSelectedTime(
+                  DateTime.now().set({ hour: time.value, minute: 0 })
+                )
+              }
+              textFieldProps={{
+                dataAttrs: {
+                  'data-qa-time-select': true,
                 },
               }}
-              ampm={false}
+              value={hourSelectionMap.find(
+                (thisOption) => thisOption.value === selectedTime?.hour
+              )}
               disabled={!selectedDate}
-              label=""
-              onChange={(time) => setSelectedTime(time)}
-              slots={{ openPickerIcon: KeyboardArrowDownIcon }}
-              timeSteps={{ hours: 1, minutes: 1 }}
-              value={selectedTime}
+              isClearable={false}
+              name="Time"
+              noMarginTop
+              options={hourSelectionMap}
+              placeholder="Choose a time"
             />
-          </LocalizationProvider>
+          </FormControl>
         </Grid>
       </Grid>
       <Grid item xs={12}>
@@ -239,7 +232,7 @@ export const DatabaseBackups = (props: Props) => {
           <Button
             buttonType="primary"
             data-qa-settings-button="restore"
-            disabled={selectedDate ? false : true}
+            disabled={!selectedDate}
             onClick={() => onRestoreNewDatabase(selectedDate)}
           >
             Restore
@@ -293,5 +286,32 @@ export const DatabaseBackups = (props: Props) => {
     </>
   );
 };
+
+const hourSelectionMap = [
+  { label: '00:00', value: 0 },
+  { label: '01:00', value: 1 },
+  { label: '02:00', value: 2 },
+  { label: '03:00', value: 3 },
+  { label: '04:00', value: 4 },
+  { label: '05:00', value: 5 },
+  { label: '06:00', value: 6 },
+  { label: '07:00', value: 7 },
+  { label: '08:00', value: 8 },
+  { label: '09:00', value: 9 },
+  { label: '10:00', value: 10 },
+  { label: '11:00', value: 11 },
+  { label: '12:00', value: 12 },
+  { label: '13:00', value: 13 },
+  { label: '14:00', value: 14 },
+  { label: '15:00', value: 15 },
+  { label: '16:00', value: 16 },
+  { label: '17:00', value: 17 },
+  { label: '18:00', value: 18 },
+  { label: '19:00', value: 19 },
+  { label: '20:00', value: 20 },
+  { label: '21:00', value: 21 },
+  { label: '22:00', value: 22 },
+  { label: '23:00', value: 23 },
+];
 
 export default DatabaseBackups;

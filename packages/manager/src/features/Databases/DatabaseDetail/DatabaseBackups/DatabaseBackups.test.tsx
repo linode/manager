@@ -145,7 +145,7 @@ describe('Database Backups', () => {
     const { findByText } = renderWithTheme(
       <DatabaseBackups disabled={false} />
     );
-    const timePickerLabel = await findByText('Time(UTC)');
+    const timePickerLabel = await findByText('Time (UTC)');
     expect(timePickerLabel).toBeInTheDocument();
   });
 });
