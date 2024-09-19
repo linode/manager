@@ -26,6 +26,7 @@ import {
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
 import { accountFactory } from '@src/factories';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 /**
  * Updates a database cluster's label.
@@ -142,6 +143,12 @@ const resetRootPassword = () => {
 };
 
 describe('Update database clusters', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      dbaasV2: { enabled: false, beta: false },
+    });
+  });
+
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
       describe(`updates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
