@@ -18,7 +18,12 @@ export const StyledTimePicker = styled(TimePicker)(() => ({
   width: '120px',
 }));
 
-export const StyledDateCalendar = styled(DateCalendar)(() => ({
+export const StyledDateCalendar = styled(DateCalendar, {
+  label: 'StyledDateCalendar',
+})(({ theme }) => ({
+  '.MuiButtonBase-root.MuiPickersDay-root.Mui-disabled': {
+    color: theme.color.grey3,
+  },
   '.MuiPickersArrowSwitcher-spacer': { width: '15px' },
   '.MuiPickersCalendarHeader-labelContainer': {
     fontSize: '0.95rem',

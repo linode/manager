@@ -20,7 +20,7 @@ interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
 }
 
-export const RestoreLegacyFromBackupDialog: React.FC<Props> = (props) => {
+export const RestoreLegacyFromBackupDialog = (props: Props) => {
   const { backup, database, onClose, open } = props;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();

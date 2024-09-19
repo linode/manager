@@ -19,7 +19,7 @@ interface Props extends Omit<DialogProps, 'title'> {
   restoreTime?: string;
 }
 
-export const RestoreNewFromBackupDialog: React.FC<Props> = (props) => {
+export const RestoreNewFromBackupDialog = (props: Props) => {
   const { database, onClose, open, restoreTime } = props;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -54,10 +54,10 @@ export const RestoreNewFromBackupDialog: React.FC<Props> = (props) => {
       subtitle={`From ${formatedDate} (UTC)`}
       title={`Restore ${database.label}`}
     >
-      <Typography sx={{ marginBottom: '20px' }}>
+      <Typography sx={(theme) => ({ marginBottom: theme.spacing(4) })}>
         Restoring a backup creates a fork from this backup. If you proceed and
         the fork is created successfully, you have 10 days to delete the
-        original database cluster. Failing to do so, will lead to additional
+        original database cluster. Failing to do so will lead to additional
         billing caused by two running clusters instead of one.
       </Typography>
       <ActionsPanel
@@ -75,7 +75,6 @@ export const RestoreNewFromBackupDialog: React.FC<Props> = (props) => {
           display: 'flex',
           marginBottom: '0',
           paddingBottom: '0',
-          paddingTop: '10px',
         }}
       />
       {error ? (
