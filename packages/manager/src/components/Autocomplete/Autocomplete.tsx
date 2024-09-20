@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MuiAutocomplete from '@mui/material/Autocomplete';
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
@@ -15,9 +15,7 @@ import {
 } from './Autocomplete.styles';
 
 import type { AutocompleteProps } from '@mui/material/Autocomplete';
-import type { SxProps } from '@mui/system';
 import type { TextFieldProps } from 'src/components/TextField';
-import type { PopperProps } from '@mui/base';
 
 export interface EnhancedAutocompleteProps<
   T extends { label: string },
@@ -43,10 +41,6 @@ export interface EnhancedAutocompleteProps<
   placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
-  /**
-   * The prop that allows defining CSS style overrides for the PopperComponent.
-   */
-  sxPopperComponent?: SxProps;
   textFieldProps?: Partial<TextFieldProps>;
 }
 
@@ -94,7 +88,6 @@ export const Autocomplete = <
     placeholder,
     renderOption,
     selectAllLabel = '',
-    sxPopperComponent,
     textFieldProps,
     value,
     ...rest
@@ -109,17 +102,8 @@ export const Autocomplete = <
 
   const optionsWithSelectAll = [selectAllOption, ...options] as T[];
 
-  /* Memoize popper callback to prevent unnecessary popper re-rendering. */
-  const customPopper = useCallback(
-    (props: PopperProps) => {
-      return <CustomPopper {...props} sx={sxPopperComponent} />;
-    },
-    [sxPopperComponent]
-  );
-
   return (
     <MuiAutocomplete
-      PopperComponent={customPopper}
       options={
         multiple && !disableSelectAll && options.length > 0
           ? optionsWithSelectAll
@@ -179,6 +163,7 @@ export const Autocomplete = <
         );
       }}
       ChipProps={{ deleteIcon: <CloseIcon /> }}
+      PopperComponent={CustomPopper}
       clearOnBlur={clearOnBlur}
       data-qa-autocomplete
       defaultValue={defaultValue}
