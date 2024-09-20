@@ -210,6 +210,12 @@ const databases = [
         label: `Nanode 1 GB`,
         memory: 1024,
       }),
+      databaseTypeFactory.build({
+        class: 'nanode',
+        id: 'g6-standard-1',
+        label: `Linode 2 GB`,
+        memory: 2048,
+      }),
       ...databaseTypeFactory.buildList(7, { class: 'standard' }),
     ];
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
@@ -258,7 +264,7 @@ const databases = [
   }),
 
   http.get('*/databases/:engine/instances/:databaseId/backups', () => {
-    const backups = databaseBackupFactory.buildList(7);
+    const backups = databaseBackupFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(backups));
   }),
 
