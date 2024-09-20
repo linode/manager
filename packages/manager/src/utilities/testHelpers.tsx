@@ -62,7 +62,7 @@ interface Options {
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
   queryClient?: QueryClient;
-  route?: string;
+  routePath?: string;
   theme?: 'dark' | 'light';
 }
 
@@ -77,7 +77,7 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
   );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
-  const { customStore, queryClient: passedQueryClient, route } = options;
+  const { customStore, queryClient: passedQueryClient, routePath } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
   const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
@@ -87,7 +87,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
     configureStore<ApplicationState>([thunk])(defaultState)
   );
 
-  const uiToDisplay = ui.children ?? ui;
+  const uiToRender = ui.children ?? ui;
 
   return (
     <Provider store={storeToPass}>
@@ -101,10 +101,10 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
           >
             <SnackbarProvider>
               <MemoryRouter {...options.MemoryRouter}>
-                {route ? (
-                  <Route path={route}>{uiToDisplay}</Route>
+                {routePath ? (
+                  <Route path={routePath}>{uiToRender}</Route>
                 ) : (
-                  uiToDisplay
+                  uiToRender
                 )}
               </MemoryRouter>
             </SnackbarProvider>

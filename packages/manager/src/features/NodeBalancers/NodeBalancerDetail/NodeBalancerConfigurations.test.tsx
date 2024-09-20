@@ -48,7 +48,7 @@ describe('NodeBalancerConfigurations', () => {
       <NodeBalancerConfigurations {...props} />,
       {
         MemoryRouter: memoryRouter,
-        route: routePath,
+        routePath,
       }
     );
 
@@ -101,7 +101,7 @@ describe('NodeBalancerConfigurations', () => {
       <NodeBalancerConfigurations {...props} />,
       {
         MemoryRouter: memoryRouter,
-        route: routePath,
+        routePath,
       }
     );
 
@@ -129,7 +129,7 @@ describe('NodeBalancerConfigurations', () => {
       <NodeBalancerConfigurations {...props} />,
       {
         MemoryRouter: memoryRouter,
-        route: routePath,
+        routePath,
       }
     );
 
@@ -164,7 +164,7 @@ describe('NodeBalancerConfigurations', () => {
       <NodeBalancerConfigurations {...props} />,
       {
         MemoryRouter: memoryRouter,
-        route: routePath,
+        routePath,
       }
     );
 
