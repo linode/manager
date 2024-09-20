@@ -15,6 +15,7 @@ const meta: Meta<typeof NotificationMenu> = {
   component: NotificationMenu,
   decorators: [
     (Story: StoryFn) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const contextValue = useNotificationContext();
       const NotificationProvider = _notificationContext.Provider;
       return (
