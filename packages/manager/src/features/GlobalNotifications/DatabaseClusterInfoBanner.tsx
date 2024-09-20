@@ -33,10 +33,10 @@ export const DatabaseClusterInfoBanner = () => {
           </li>
           <li>
             <Typography variant="body2">
-              You won’t be charged for Aiven database clusters created during
+              You won’t be charged for Aiven Database clusters created during
               duration of the Beta phase. If you decide to keep the new clusters
               later on, you’ll be charged according to the new payment. You can
-              always remove unwanted clusters.
+              always delete unwanted clusters.
             </Typography>
           </li>
         </ul>
