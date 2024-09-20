@@ -334,6 +334,7 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
       thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
+
 /**
  * Returns an autocomplete with updated styles according to UX, this will be used at widget level
  */
