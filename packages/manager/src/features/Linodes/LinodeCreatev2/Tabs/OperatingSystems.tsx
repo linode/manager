@@ -4,7 +4,9 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+import { Region } from 'src/features/Linodes/LinodeCreatev2/Region';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { getGeneratedLinodeLabel } from '../utilities';
@@ -45,18 +47,21 @@ export const OperatingSystems = () => {
   };
 
   return (
-    <Paper>
-      <Typography variant="h2">Choose an OS</Typography>
-      <ImageSelectv2
-        disabled={isCreateLinodeRestricted}
-        errorText={fieldState.error?.message}
-        label="Linux Distribution"
-        onBlur={field.onBlur}
-        onChange={onChange}
-        placeholder="Choose a Linux distribution"
-        value={field.value}
-        variant="public"
-      />
-    </Paper>
+    <Stack spacing={3}>
+      <Region />
+      <Paper>
+        <Typography variant="h2">Choose an OS</Typography>
+        <ImageSelectv2
+          disabled={isCreateLinodeRestricted}
+          errorText={fieldState.error?.message}
+          label="Linux Distribution"
+          onBlur={field.onBlur}
+          onChange={onChange}
+          placeholder="Choose a Linux distribution"
+          value={field.value}
+          variant="public"
+        />
+      </Paper>
+    </Stack>
   );
 };

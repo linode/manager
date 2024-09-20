@@ -110,7 +110,7 @@ describe('linode storage tab', () => {
   });
 
   it('try to delete in use disk', () => {
-    const diskName = 'Debian 11 Disk';
+    const diskName = 'Ubuntu 24.04 LTS Disk';
     cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
       interceptDeleteDisks(linode.id).as('deleteDisk');
       cy.visitWithLogin(`linodes/${linode.id}/storage`);

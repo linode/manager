@@ -24,7 +24,7 @@ export const filterImagesByType = (
  * LKE (Linode Kubernetes Engine) image. In Cloud Manager, we hide
  * these images from the user.
  *
- * Image IDs are in the form linode/debian11 or private/15943292
+ * Image IDs are in the form linode/ubuntu24.04 or private/15943292
  *
  * @param {string | null} id the image's id (unlike most entities, image ids are string)
  * @returns {boolean} true if the image is an LKE image

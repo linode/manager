@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { Stack } from 'src/components/Stack';
+import { Region } from 'src/features/Linodes/LinodeCreatev2/Region';
 
 import { StackScriptImages } from '../StackScripts/StackScriptImages';
 import { UserDefinedFields } from '../StackScripts/UserDefinedFields/UserDefinedFields';
@@ -18,6 +19,7 @@ export const Marketplace = () => {
     <Stack data-testid="one-click-apps-container" spacing={2}>
       <AppSelect onOpenDetailsDrawer={onOpenDetailsDrawer} />
       <UserDefinedFields onOpenDetailsDrawer={onOpenDetailsDrawer} />
+      <Region />
       <StackScriptImages />
       <AppDetailDrawerv2
         onClose={() => setDrawerStackScriptId(undefined)}

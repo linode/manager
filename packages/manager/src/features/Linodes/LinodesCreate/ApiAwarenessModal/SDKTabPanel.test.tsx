@@ -11,7 +11,7 @@ import type { SDKTabPanelProps } from './SDKTabPanel';
 
 const defaultProps: SDKTabPanelProps = {
   payLoad: {
-    image: 'linode/debian11',
+    image: 'linode/ubuntu24.04',
     label: 'debian-us-ord-001',
     region: 'us-ord',
     root_pass: 'testpassword',

@@ -214,7 +214,7 @@ describe('Create Linode', () => {
 
       cy.findByLabelText('Linode Label').should(
         'have.value',
-        `debian-${linodeRegion.id}`
+        `ubuntu-${linodeRegion.id}`
       );
 
       cy.findByLabelText('Linode Label')

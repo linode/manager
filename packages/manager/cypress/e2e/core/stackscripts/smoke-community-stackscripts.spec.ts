@@ -43,7 +43,7 @@ const mockStackScripts: StackScript[] = [
       'linode/rocky8',
       'linode/debian11',
       'linode/centos-stream9',
-      'linode/ubuntu22.04',
+      'linode/ubuntu24.04',
       'linode/almalinux9',
       'linode/rocky9',
     ],
