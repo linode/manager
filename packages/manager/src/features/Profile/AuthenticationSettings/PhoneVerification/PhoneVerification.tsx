@@ -270,13 +270,15 @@ export const PhoneVerification = ({
                     } ${getCountryFlag(country.code)}`,
                     value: country.code,
                   }))}
-                  sxPopperComponent={{
-                    '& .MuiPaper-root.MuiAutocomplete-paper': {
-                      border: '1px solid #3683dc',
-                      maxHeight: '285px',
-                      overflow: 'hidden',
-                      textWrap: 'nowrap',
-                      width: 'fit-content',
+                  slotProps={{
+                    paper: {
+                      sx: {
+                        border: '1px solid #3683dc',
+                        maxHeight: '285px',
+                        overflow: 'hidden',
+                        textWrap: 'nowrap',
+                        width: 'fit-content',
+                      },
                     },
                   }}
                   textFieldProps={{

@@ -97,9 +97,13 @@ export const TimezoneForm = (props: Props) => {
       <StyledRootContainer>
         <Stack>
           <Autocomplete
-            sxPopperComponent={{
-              maxHeight: '285px',
-              overflow: 'hidden',
+            slotProps={{
+              popper: {
+                sx: {
+                  maxHeight: '285px',
+                  overflow: 'hidden',
+                },
+              },
             }}
             value={timezoneList.find(
               (option) => option.value === timezoneValue

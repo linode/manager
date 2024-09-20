@@ -15,7 +15,6 @@ import {
 } from './Autocomplete.styles';
 
 import type { AutocompleteProps } from '@mui/material/Autocomplete';
-import type { SxProps } from '@mui/system';
 import type { TextFieldProps } from 'src/components/TextField';
 
 export interface EnhancedAutocompleteProps<
@@ -42,10 +41,6 @@ export interface EnhancedAutocompleteProps<
   placeholder?: string;
   /** Label for the "select all" option. */
   selectAllLabel?: string;
-  /**
-   * The prop that allows defining CSS style overrides for the PopperComponent.
-   */
-  sxPopperComponent?: SxProps;
   textFieldProps?: Partial<TextFieldProps>;
 }
 
@@ -93,7 +88,6 @@ export const Autocomplete = <
     placeholder,
     renderOption,
     selectAllLabel = '',
-    sxPopperComponent,
     textFieldProps,
     value,
     ...rest
@@ -110,9 +104,6 @@ export const Autocomplete = <
 
   return (
     <MuiAutocomplete
-      PopperComponent={(props) => {
-        return <CustomPopper {...props} sx={sxPopperComponent} />;
-      }}
       options={
         multiple && !disableSelectAll && options.length > 0
           ? optionsWithSelectAll
@@ -172,6 +163,7 @@ export const Autocomplete = <
         );
       }}
       ChipProps={{ deleteIcon: <CloseIcon /> }}
+      PopperComponent={CustomPopper}
       clearOnBlur={clearOnBlur}
       data-qa-autocomplete
       defaultValue={defaultValue}
