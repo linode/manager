@@ -24,29 +24,24 @@ describe('DatabaseSettings Component', () => {
     expect(headings[2].textContent).toBe('Delete Cluster');
   });
 
-  it('Should disable buttons if disabled = true', () => {
+  it.each([
+    ['disable', true],
+    ['enable', false],
+  ])('should %s buttons when disabled is %s', (_, isDisabled) => {
     const { getByRole, getByTitle } = renderWithTheme(
-      <DatabaseSettings database={database} disabled={true} />
+      <DatabaseSettings database={database} disabled={isDisabled} />
     );
-    const disabledButtons = ['Reset Root Password', 'Save Changes'];
+    const button1 = getByTitle('Reset Root Password');
+    const button2 = getByTitle('Save Changes');
+    const button3 = getByRole('button', { name: 'Manage Access Controls' });
 
-    for (const buttonTitle of disabledButtons) {
-      const button = getByTitle(buttonTitle);
-      expect(button).toBeDisabled();
+    if (isDisabled) {
+      expect(button1).toBeDisabled();
+      expect(button2).toBeDisabled();
+      expect(button3).toBeDisabled();
+    } else {
+      expect(button1).toBeEnabled();
+      expect(button3).toBeEnabled();
     }
-    expect(
-      getByRole('button', { name: 'Manage Access Controls' })
-    ).toBeDisabled();
-  });
-
-  it('Should enable buttons if disabled = false', () => {
-    const { getByRole, getByTitle } = renderWithTheme(
-      <DatabaseSettings database={database} />
-    );
-
-    expect(getByTitle('Reset Root Password')).toBeEnabled();
-    expect(
-      getByRole('button', { name: 'Manage Access Controls' })
-    ).toBeEnabled();
   });
 });
