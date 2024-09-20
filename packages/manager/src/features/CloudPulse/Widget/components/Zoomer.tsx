@@ -1,7 +1,8 @@
-import ZoomInMap from '@mui/icons-material/ZoomInMap';
-import ZoomOutMap from '@mui/icons-material/ZoomOutMap';
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
+
+import ZoomInMap from 'src/assets/icons/zoomin.svg';
+import ZoomOutMap from 'src/assets/icons/zoomout.svg';
 
 export interface ZoomIconProperties {
   className?: string;
