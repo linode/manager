@@ -91,7 +91,7 @@ import type { MapState } from 'src/store/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-const DEFAULT_IMAGE = 'linode/debian11';
+const DEFAULT_IMAGE = 'linode/ubuntu24.04';
 
 interface State {
   additionalIPv4RangesForVPC: ExtendedIP[];
