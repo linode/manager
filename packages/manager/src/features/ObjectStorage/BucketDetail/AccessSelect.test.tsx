@@ -2,6 +2,7 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AccessSelect } from './AccessSelect';
@@ -11,6 +12,8 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 const CORS_ENABLED_TEXT = 'CORS Enabled';
 const AUTHENTICATED_READ_TEXT = 'Authenticated Read';
+const BUCKET_ACCESS_URL = '*object-storage/buckets/*/*/access';
+const OBJECT_ACCESS_URL = '*object-storage/buckets/*/*/object-acl';
 
 vi.mock('src/components/EnhancedSelect/Select');
 
@@ -30,7 +33,6 @@ describe('AccessSelect', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
   it.each([
     ['bucket', 'E0', true],
     ['bucket', 'E1', true],
@@ -43,19 +45,25 @@ describe('AccessSelect', () => {
   ])(
     'shows correct UI for %s variant and %s endpoint type',
     async (variant, endpointType, shouldShowCORS) => {
+      server.use(
+        http.get(BUCKET_ACCESS_URL, () => {
+          return HttpResponse.json({ acl: 'private', cors_enabled: true });
+        }),
+        http.get(OBJECT_ACCESS_URL, () => {
+          return HttpResponse.json({ acl: 'private' });
+        })
+      );
+
       renderComponent({
         endpointType: endpointType as ObjectStorageEndpointTypes,
         variant: variant as 'bucket' | 'object',
       });
 
       const aclSelect = screen.getByRole('combobox');
-      await waitFor(
-        () => {
-          expect(aclSelect).toBeEnabled();
-          expect(aclSelect).toHaveValue('Private');
-        },
-        { timeout: 10000 }
-      );
+      await waitFor(() => {
+        expect(aclSelect).toBeEnabled();
+        expect(aclSelect).toHaveValue('Private');
+      });
 
       act(() => {
         fireEvent.click(aclSelect);
@@ -82,12 +90,20 @@ describe('AccessSelect', () => {
           ).not.toBeInTheDocument();
         });
       }
-    },
-    10000
+    }
   );
 
   it('updates the access and CORS settings and submits the appropriate values', async () => {
     renderComponent();
+
+    server.use(
+      http.get(BUCKET_ACCESS_URL, () => {
+        return HttpResponse.json({ acl: 'private', cors_enabled: true });
+      }),
+      http.put(BUCKET_ACCESS_URL, () => {
+        return HttpResponse.json({});
+      })
+    );
 
     const aclSelect = screen.getByRole('combobox');
     const saveButton = screen.getByText('Save').closest('button')!;
@@ -131,9 +147,8 @@ describe('AccessSelect', () => {
     });
 
     await userEvent.click(saveButton);
-    await waitFor(
-      () => screen.findByText('Bucket access updated successfully.'),
-      { timeout: 5000 }
+    await waitFor(() =>
+      screen.findByText('Bucket access updated successfully.')
     );
   });
 });

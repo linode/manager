@@ -50,7 +50,9 @@ export const AccessSelect = React.memo((props: Props) => {
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
   const isCorsEnabled =
-    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
+    (variant === 'bucket' || variant == 'object') &&
+    endpointType !== 'E2' &&
+    endpointType !== 'E3';
 
   const {
     data: bucketAccessData,
@@ -90,7 +92,7 @@ export const AccessSelect = React.memo((props: Props) => {
   } = useForm<Required<UpdateObjectStorageBucketAccessPayload>>({
     defaultValues: {
       acl: 'private',
-      cors_enabled: false,
+      cors_enabled: true,
     },
   });
 
@@ -110,20 +112,6 @@ export const AccessSelect = React.memo((props: Props) => {
       reset({ acl: _acl || undefined, cors_enabled });
     }
   }, [bucketAccessData, objectAccessData, variant, reset]);
-
-  const onSubmit = handleSubmit(async (data) => {
-    closeDialog();
-
-    if (variant === 'bucket') {
-      // Don't send the ACL with the payload if it's "custom", since it's
-      // not valid (though it's a valid return type).
-      const payload =
-        data.acl === 'custom' ? { cors_enabled: data.cors_enabled } : data;
-      await updateBucketAccess(payload);
-    } else {
-      await updateObjectAccess(data.acl);
-    }
-  });
 
   const aclOptions = variant === 'bucket' ? bucketACLOptions : objectACLOptions;
 
@@ -150,6 +138,23 @@ export const AccessSelect = React.memo((props: Props) => {
     getErrorStringOrDefault(updateBucketAccessError || '') ||
     getErrorStringOrDefault(updateObjectAccessError || '') ||
     errors.acl?.message;
+
+  const onSubmit = handleSubmit(async (data) => {
+    closeDialog();
+    if (errorText) {
+      return;
+    }
+
+    if (variant === 'bucket') {
+      // Don't send the ACL with the payload if it's "custom", since it's
+      // not valid (though it's a valid return type).
+      const payload =
+        data.acl === 'custom' ? { cors_enabled: data.cors_enabled } : data;
+      await updateBucketAccess(payload);
+    } else {
+      await updateObjectAccess(data.acl);
+    }
+  });
 
   return (
     <form onSubmit={onSubmit}>
