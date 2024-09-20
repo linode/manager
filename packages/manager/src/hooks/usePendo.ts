@@ -20,8 +20,12 @@ export const usePendo = () => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
 
-  const visitorId = profile?.uid ? sha256(profile.uid.toString()) : undefined;
-  const accountId = account?.euuid ? sha256(account.euuid) : undefined;
+  const visitorId: string | undefined = profile?.uid
+    ? sha256(profile.uid.toString())
+    : undefined;
+  const accountId: string | undefined = account?.euuid
+    ? sha256(account.euuid)
+    : undefined;
 
   const PENDO_URL = `https://cdn.pendo.io/agent/static/${PENDO_API_KEY}/pendo.js`;
 
@@ -72,7 +76,35 @@ export const usePendo = () => {
           // You can add any additional account level key-values here,
           // as long as it's not one of the above reserved names.
         },
-
+        // Controls what URLs we send to Pendo. Refer to: https://agent.pendo.io/advanced/location/.
+        location: {
+          transforms: [
+            {
+              action: 'Clear',
+              attr: 'hash',
+            },
+            {
+              action: 'Clear',
+              attr: 'search',
+            },
+            {
+              action: 'Replace',
+              attr: 'pathname',
+              data(url: string) {
+                const idMatchingRegex = /\d+$/;
+                const userPathMatchingRegex = /(users\/).*/;
+                if (idMatchingRegex.test(url)) {
+                  // Removes everything after the last /
+                  return url.replace(/\/[^\/]*$/, '/');
+                } else if (userPathMatchingRegex.test(url)) {
+                  // Removes everything after /users
+                  return url.replace(userPathMatchingRegex, '$1');
+                }
+                return url;
+              },
+            },
+          ],
+        },
         visitor: {
           id: visitorId, // Required if user is logged in
           // email:        // Recommended if using Pendo Feedback, or NPS Email
