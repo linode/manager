@@ -8,7 +8,7 @@ import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -62,6 +62,7 @@ interface Options {
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
   queryClient?: QueryClient;
+  route?: string;
   theme?: 'dark' | 'light';
 }
 
@@ -76,7 +77,7 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
   );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
-  const { customStore, queryClient: passedQueryClient } = options;
+  const { customStore, queryClient: passedQueryClient, route } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
   const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
@@ -85,6 +86,8 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   setupInterceptors(
     configureStore<ApplicationState>([thunk])(defaultState)
   );
+
+  const uiToDisplay = ui.children ?? ui;
 
   return (
     <Provider store={storeToPass}>
@@ -98,7 +101,11 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
           >
             <SnackbarProvider>
               <MemoryRouter {...options.MemoryRouter}>
-                {ui.children ?? ui}
+                {route ? (
+                  <Route path={route}>{uiToDisplay}</Route>
+                ) : (
+                  uiToDisplay
+                )}
               </MemoryRouter>
             </SnackbarProvider>
           </LDProvider>

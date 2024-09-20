@@ -19,6 +19,9 @@ const props = {
 };
 
 const loadingTestId = 'circle-progress';
+const memoryRouter = { initialEntries: ['nodebalancers/1/configurations'] };
+const routePath = 'nodebalancers/:nodeBalancerId/configurations';
+
 const nodeBalancerConfig = nodeBalancerConfigFactory.build({
   id: 1,
   port: 3000,
@@ -31,10 +34,10 @@ describe('NodeBalancerConfigurations', () => {
 
   it('renders the NodeBalancerConfigurations component with one configuration', async () => {
     server.use(
-      http.get(`*/nodebalancers/${String(NaN)}/configs`, () => {
+      http.get(`*/nodebalancers/:id/configs`, () => {
         return HttpResponse.json(makeResourcePage([nodeBalancerConfig]));
       }),
-      http.get(`*/nodebalancers/${String(NaN)}/configs/1/nodes`, () => {
+      http.get(`*/nodebalancers/:id/configs/1/nodes`, () => {
         return HttpResponse.json(
           makeResourcePage([nodeBalancerConfigNodeFactory.build({ id: 1 })])
         );
@@ -42,7 +45,11 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />
+      <NodeBalancerConfigurations {...props} />,
+      {
+        MemoryRouter: memoryRouter,
+        route: routePath,
+      }
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -85,13 +92,17 @@ describe('NodeBalancerConfigurations', () => {
 
   it('renders the NodeBalancerConfigurations component with no configurations', async () => {
     server.use(
-      http.get(`*/nodebalancers/${String(NaN)}/configs`, () => {
+      http.get(`*/nodebalancers/:id/configs`, () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
 
     const { getByTestId, getByText, queryByLabelText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />
+      <NodeBalancerConfigurations {...props} />,
+      {
+        MemoryRouter: memoryRouter,
+        route: routePath,
+      }
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -109,13 +120,17 @@ describe('NodeBalancerConfigurations', () => {
 
   it('adds another configuration', async () => {
     server.use(
-      http.get(`*/nodebalancers/${String(NaN)}/configs`, () => {
+      http.get(`*/nodebalancers/:id/configs`, () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
 
     const { getByTestId, getByText, queryByLabelText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />
+      <NodeBalancerConfigurations {...props} />,
+      {
+        MemoryRouter: memoryRouter,
+        route: routePath,
+      }
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -137,16 +152,20 @@ describe('NodeBalancerConfigurations', () => {
 
   it('opens the Delete Configuration dialog', async () => {
     server.use(
-      http.get(`*/nodebalancers/${String(NaN)}/configs`, () => {
+      http.get(`*/nodebalancers/:id/configs`, () => {
         return HttpResponse.json(makeResourcePage([nodeBalancerConfig]));
       }),
-      http.get(`*/nodebalancers/${String(NaN)}/configs/1/nodes`, () => {
+      http.get(`*/nodebalancers/:id/configs/1/nodes`, () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
 
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />
+      <NodeBalancerConfigurations {...props} />,
+      {
+        MemoryRouter: memoryRouter,
+        route: routePath,
+      }
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
