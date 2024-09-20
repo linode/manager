@@ -1,7 +1,7 @@
 import { sha256 } from 'js-sha256';
 import React from 'react';
 
-import { /* APP_ROOT,*/ PENDO_API_KEY } from 'src/constants';
+import { PENDO_API_KEY } from 'src/constants';
 import { useAccount } from 'src/queries/account/account.js';
 import { useProfile } from 'src/queries/profile/profile';
 
@@ -20,19 +20,17 @@ export const usePendo = () => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
 
-  const visitorId = sha256(profile?.uid.toString() ?? '');
-  const accountId = sha256(account?.euuid ?? '');
+  const visitorId = profile?.uid ? sha256(profile.uid.toString()) : undefined;
+  const accountId = account?.euuid ? sha256(account.euuid) : undefined;
 
-  // const STAGING_URL = '';
-  const PROD_URL = `https://cdn.pendo.io/agent/static/${PENDO_API_KEY}/pendo.js`;
-  // const PENDO_CDN_URL =
-  //   APP_ROOT !== 'https://cloud.linode.com' ? STAGING_URL : PROD_URL;
+  const PENDO_URL = `https://cdn.pendo.io/agent/static/${PENDO_API_KEY}/pendo.js`;
 
   React.useEffect(() => {
-    // Adapted the Pendo install script:
+    // Adapted Pendo install script for readability:
 
-    // Set up Pendo namespace
+    // Set up Pendo namespace and queue
     const pendo = (window['pendo'] = window['pendo'] || {});
+    pendo._q = pendo._q || [];
 
     // Define the methods Pendo uses in a queue
     const methodNames = [
@@ -42,9 +40,9 @@ export const usePendo = () => {
       'pageLoad',
       'track',
     ];
-    let index, x;
-    pendo._q = pendo._q || [];
-    for (index = 0, x = methodNames.length; index < x; ++index) {
+
+    // Enqueue methods and their arguments on the Pendo object
+    methodNames.forEach((_, index) => {
       (function (method) {
         pendo[method] =
           pendo[method] ||
@@ -55,10 +53,10 @@ export const usePendo = () => {
             );
           };
       })(methodNames[index]);
-    }
+    });
 
     // Load Pendo script into the head HTML tag, then initialize Pendo with metadata
-    loadScript(PROD_URL, {
+    loadScript(PENDO_URL, {
       location: 'head',
     }).then(() => {
       window.pendo.initialize({
@@ -86,5 +84,5 @@ export const usePendo = () => {
         },
       });
     });
-  }, []);
+  }, [PENDO_URL, accountId, visitorId]);
 };
