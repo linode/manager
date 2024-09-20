@@ -27,7 +27,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   avatar: {
     paddingTop: theme.spacing(0.5),
     [theme.breakpoints.down('sm')]: {
-      paddingRight: 10,
+      paddingRight: theme.spacing(1),
       paddingTop: theme.spacing(1),
     },
   },
