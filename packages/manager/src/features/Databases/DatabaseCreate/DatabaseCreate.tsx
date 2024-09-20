@@ -277,7 +277,9 @@ const DatabaseCreate = () => {
       ...values,
       allow_list: _allow_list,
     };
-
+    if (isDatabasesV2Beta) {
+      delete createPayload.replication_type;
+    }
     try {
       const response = await createDatabase(createPayload);
       history.push(`/databases/${response.engine}/${response.id}`);
@@ -459,17 +461,26 @@ const DatabaseCreate = () => {
       'cluster_size',
       values.cluster_size < 1 ? 3 : values.cluster_size
     );
-    setFieldValue(
-      'replication_type',
-      determineReplicationType(values.cluster_size, values.engine)
-    );
-    setFieldValue(
-      'replication_commit_type',
-      determineReplicationCommitType(values.engine)
-    );
+    !isDatabasesV2Enabled &&
+      setFieldValue(
+        'replication_type',
+        determineReplicationType(values.cluster_size, values.engine)
+      );
+    !isDatabasesV2Enabled &&
+      setFieldValue(
+        'replication_commit_type',
+        determineReplicationCommitType(values.engine)
+      );
     setFieldValue('storage_engine', determineStorageEngine(values.engine));
     setFieldValue('compression_type', determineCompressionType(values.engine));
-  }, [dbtypes, setFieldValue, values.cluster_size, values.type, values.engine]);
+  }, [
+    dbtypes,
+    setFieldValue,
+    values.cluster_size,
+    values.type,
+    values.engine,
+    isDatabasesV2Enabled,
+  ]);
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
@@ -580,10 +591,11 @@ const DatabaseCreate = () => {
           <FormControl
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFieldValue('cluster_size', +e.target.value);
-              setFieldValue(
-                'replication_type',
-                +e.target.value === 1 ? 'none' : 'semi_synch'
-              );
+              !isDatabasesV2Enabled &&
+                setFieldValue(
+                  'replication_type',
+                  +e.target.value === 1 ? 'none' : 'semi_synch'
+                );
             }}
             data-testid="database-nodes"
           >

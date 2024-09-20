@@ -156,7 +156,7 @@ export interface BaseDatabase {
 }
 
 export interface MySQLDatabase extends BaseDatabase {
-  replication_type: MySQLReplicationType;
+  replication_type?: MySQLReplicationType;
 }
 
 export type PostgresReplicationType = 'none' | 'synch' | 'asynch';
@@ -169,8 +169,8 @@ type ReplicationCommitTypes =
   | 'off';
 
 export interface PostgresDatabase extends BaseDatabase {
-  replication_type: PostgresReplicationType;
-  replication_commit_type: ReplicationCommitTypes;
+  replication_type?: PostgresReplicationType;
+  replication_commit_type?: ReplicationCommitTypes;
 }
 
 type MongoStorageEngine = 'wiredtiger' | 'mmapv1';

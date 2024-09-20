@@ -37,10 +37,12 @@ export const DatabaseStatusDisplay = (props: Props) => {
   let progress: number | undefined;
   let displayedStatus;
 
-  if (
+  const isResizing =
     recentEvent?.action === 'database_resize' &&
-    (recentEvent?.status === 'started' || recentEvent?.status === 'scheduled')
-  ) {
+    database.status === 'resizing' &&
+    (recentEvent?.status === 'started' || recentEvent?.status === 'scheduled');
+
+  if (isResizing) {
     progress = recentEvent?.percent_complete ?? 0;
     displayedStatus = (
       <>
