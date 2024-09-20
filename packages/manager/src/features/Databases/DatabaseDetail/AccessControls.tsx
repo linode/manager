@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
+import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Notice } from 'src/components/Notice/Notice';
@@ -197,12 +197,14 @@ export const AccessControls = (props: Props) => {
           </div>
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
-        <AddNewLink
+        <Button
+          buttonType="primary"
           className={classes.addAccessControlBtn}
           disabled={disabled}
-          label="Manage Access Controls"
           onClick={() => setAddAccessControlDrawerOpen(true)}
-        />
+        >
+          Manage Access Controls
+        </Button>
       </div>
       {ipTable(allowList)}
       <ConfirmationDialog
