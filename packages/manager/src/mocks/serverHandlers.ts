@@ -1582,7 +1582,6 @@ export const handlers = [
       const events = eventFactory.buildList(1, {
         action: 'lke_node_create',
         entity: { id: 999, label: 'linode-1', type: 'linode' },
-        status: 'notification',
         message:
           'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
         percent_complete: 15,
