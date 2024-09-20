@@ -10,6 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
@@ -40,6 +41,7 @@ const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
 export const LinodeRebuildDialog = (props: Props) => {
   const { linodeId, linodeLabel, onClose, open } = props;
+  const modalRef = React.useRef<HTMLDivElement>(null);
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -84,6 +86,7 @@ export const LinodeRebuildDialog = (props: Props) => {
 
   const handleRebuildError = (status: string) => {
     setRebuildError(status);
+    scrollErrorIntoViewV2(modalRef);
   };
 
   const toggleDiskEncryptionEnabled = () => {
@@ -98,6 +101,7 @@ export const LinodeRebuildDialog = (props: Props) => {
       maxWidth="md"
       onClose={onClose}
       open={open}
+      ref={modalRef}
       title={`Rebuild Linode ${linodeLabel ?? ''}`}
     >
       <StyledDiv>
