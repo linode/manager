@@ -504,3 +504,20 @@ export const mockGetObjectStorageEndpoints = (
     paginateResponse(endpoints)
   );
 };
+
+/**
+ * Intercepts GET request to get object storage access keys
+ *
+ * @param accessKeys - Object Storage access keys for which to mock response
+ *
+ * @returns Cypress chainable
+ */
+export const mockGetObjectStorageAccessKeys = (
+  accessKeys: ObjectStorageKey[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/keys*`),
+    paginateResponse(accessKeys)
+  );
+};
