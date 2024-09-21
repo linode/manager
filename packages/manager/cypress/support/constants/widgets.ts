@@ -53,7 +53,7 @@ export const aggregationConfig = {
  */
 export const widgetDetails = {
   dbaas: {
-    cluster: 'mysql-cluster',
+    clusterName: 'mysql-cluster',
     dashboardName: 'Dbaas Dashboard',
     engine: 'MySQL',
     id: 1,
@@ -95,7 +95,7 @@ export const widgetDetails = {
         title: 'Network Traffic',
       },
     ],
-    nodeType: 'Primary',
+    nodeType: 'Secondary',
     region: 'US, Chicago, IL (us-ord)',
     resource: 'Dbaas-resource',
     service_type: 'dbaas',
