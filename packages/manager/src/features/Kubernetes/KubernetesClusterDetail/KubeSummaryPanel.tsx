@@ -113,6 +113,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     isControlPlaneACLDrawerOpen,
     setControlPlaneACLDrawerOpen,
   ] = React.useState<boolean>(false);
+  const [
+    isControlPlaneACLMigrated,
+    setControlPlaneACLMigrated,
+  ] = React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
@@ -273,6 +277,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             >
               <KubeClusterControlPlaneACL
                 cluster={cluster}
+                setControlPlaneACLMigrated={setControlPlaneACLMigrated}
                 handleOpenDrawer={() => setControlPlaneACLDrawerOpen(true)}
               />
             </Box>
@@ -291,6 +296,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         closeDrawer={() => setControlPlaneACLDrawerOpen(false)}
         clusterId={cluster.id}
         clusterLabel={cluster.label}
+        clusterMigrated={isControlPlaneACLMigrated}
         open={isControlPlaneACLDrawerOpen}
       />
       <DeleteKubernetesClusterDialog

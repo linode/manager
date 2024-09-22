@@ -55,7 +55,12 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     }
   };
 
-  const [inputError, setInputError] = React.useState<string | undefined>('');
+  const [ipV4InputError, setIPV4InputError] = React.useState<
+    string | undefined
+  >('');
+  const [ipV6InputError, setIPV6InputError] = React.useState<
+    string | undefined
+  >('');
 
   return (
     <FormControl data-testid="control-plane-ipacl-form">
@@ -81,7 +86,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
       />
       <Stack sx={{ display: statusStyle(enableControlPlaneACL) }}>
         <MultipleIPInput
-          buttonText="Add IPv4 Address to ACL"
+          buttonText="Add IP Address"
           ips={ipV4Addr}
           onChange={(_ips: ExtendedIP[]) => {
             const validatedIPs = validateIPs(_ips, {
@@ -89,24 +94,34 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               errorMessage: 'Must be a valid IPv4 address.',
             });
             const ipsWithErrors = validatedIPs.filter((thisIP) =>
-              setInputError(thisIP.error)
+              setIPV4InputError(thisIP.error)
             );
             if (ipsWithErrors.length === 0) {
               handleIPv4Change(validatedIPs);
             }
           }}
           placeholder="0.0.0.0/0"
-          title="" // Empty string so a title isn't displayed for each IP input
-          error={inputError}
+          title="IPv4 Addresses or CIDR"
+          error={ipV4InputError}
         />
         <MultipleIPInput
-          buttonText="Add IPv6 Address to ACL"
+          buttonText="Add IP Address"
           ips={ipV6Addr}
-          onChange={(newIpV6Addr: ExtendedIP[]) => {
-            handleIPv6Change(newIpV6Addr);
+          onChange={(_ips: ExtendedIP[]) => {
+            const validatedIPs = validateIPs(_ips, {
+              allowEmptyAddress: false,
+              errorMessage: 'Must be a valid IPv6 address.',
+            });
+            const ipsWithErrors: ExtendedIP[] = validatedIPs.filter((thisIP) =>
+              setIPV6InputError(thisIP.error)
+            );
+            if (ipsWithErrors.length === 0) {
+              handleIPv6Change(validatedIPs);
+            }
           }}
           placeholder="::/0"
-          title="" // Empty string so a title isn't displayed for each IP input
+          title="IPv6 Addresses or CIDR"
+          error={ipV6InputError}
         />
       </Stack>
     </FormControl>

@@ -7,6 +7,7 @@ import { Typography } from 'src/components/Typography';
 import {
   useKubernetesControlPlaneACLMutation,
   useKubernetesControlPlaneACLQuery,
+  useKubernetesClusterMutation,
 } from 'src/queries/kubernetes';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {
@@ -25,13 +26,17 @@ interface Props {
   closeDrawer: () => void;
   clusterId: number;
   clusterLabel: string;
+  clusterMigrated: boolean;
   open: boolean;
 }
 
 export const KubeControlPlaneACLDrawer = (props: Props) => {
-  const { closeDrawer, clusterId, clusterLabel, open } = props;
+  const { closeDrawer, clusterId, clusterLabel, clusterMigrated, open } = props;
 
   const [ipV4InputError, setIPV4InputError] = React.useState<
+    string | undefined
+  >('');
+  const [ipV6InputError, setIPV6InputError] = React.useState<
     string | undefined
   >('');
   const [updateError, setUpdateACLError] = React.useState<string>();
@@ -69,11 +74,17 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open && !isLoadingKubernetesACL && !isFetchingKubernetesACL) {
       // updates states based on queried data
-      setIPv4Addr(_ipv4 ? _ipv4 : []);
-      setIPv6Addr(_ipv6 ? _ipv6 : []);
+      setIPv4Addr(
+        _ipv4 ? _ipv4 : clusterMigrated ? [] : [stringToExtendedIP('0.0.0.0/0')]
+      );
+      setIPv6Addr(
+        _ipv6 ? _ipv6 : clusterMigrated ? [] : [stringToExtendedIP('::/0')]
+      );
       setControlPlaneACL(_enabled ? _enabled : false);
       setRevisionID(_revisionID ? _revisionID : '');
       setUpdateACLError(isErrorKubernetesACL?.[0].reason);
+      setIPV4InputError(undefined);
+      setIPV6InputError(undefined);
       setUpdating(false);
       refetchKubernetesACL();
     }
@@ -82,6 +93,10 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
   } = useKubernetesControlPlaneACLMutation(clusterId);
+
+  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
+    clusterId
+  );
 
   const updateCluster = () => {
     setUpdateACLError(undefined);
@@ -97,27 +112,41 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
-        enabled: controlPlaneACL,
+        enabled: clusterMigrated ? controlPlaneACL : true, // new cluster installations default to true
         'revision-id': revisionID,
         addresses: { ipv4: _newIPv4, ipv6: _newIPv6 },
       },
     };
 
-    updateKubernetesClusterControlPlaneACL(payload)
-      .then(() => {
-        closeDrawer();
-        setUpdating(false);
+    if (clusterMigrated) {
+      updateKubernetesClusterControlPlaneACL(payload)
+        .then(() => {
+          closeDrawer();
+          setUpdating(false);
+        })
+        .catch((err) => {
+          const regex = /(?<=\bControl\b: ).*/;
+          setUpdateACLError(err[0].reason.match(regex));
+          setUpdating(false);
+        });
+    } else {
+      updateKubernetesCluster({
+        control_plane: payload,
       })
-      .catch((err) => {
-        const regex = /(?<=\bControl\b: ).*/;
-        setUpdateACLError(err[0].reason.match(regex));
-      });
-
-    setUpdating(false);
+        .then((_) => {
+          closeDrawer();
+          setUpdating(false);
+        })
+        .catch((err) => {
+          const regex = /(?<=\bControl\b: ).*/;
+          setUpdateACLError(err[0].reason.match(regex));
+          setUpdating(false);
+        });
+    }
   };
 
   const ErrorMessage = () => {
-    if (!!updateError) {
+    if (!!updateError && clusterMigrated) {
       return (
         <Notice spacingTop={8} variant="error">
           {updateError}
@@ -125,6 +154,22 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       );
     }
     return <></>;
+  };
+
+  const ClusterNeedsMigration = () => {
+    if (!clusterMigrated) {
+      return (
+        <>
+          <Notice spacingTop={8} variant="error">
+            IPACL is not yet installed on this cluster.... may take up to 10
+            minutes before..
+          </Notice>
+          <Divider sx={{ marginTop: 1 }} />
+        </>
+      );
+    } else {
+      return <></>;
+    }
   };
 
   const EnabledCopy = () => {
@@ -145,6 +190,25 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         </Grid>
       </>
     );
+  };
+
+  const RevisionID = () => {
+    if (clusterMigrated) {
+      return (
+        <>
+          <RevisionIDCopy />
+          <TextField
+            data-qa-label-input
+            label="Revision ID"
+            value={revisionID}
+            onBlur={(e) => setRevisionID(e.target.value)}
+          />
+          <Divider sx={{ marginTop: 4 }} />
+        </>
+      );
+    } else {
+      return <></>;
+    }
   };
 
   const RevisionIDCopy = () => {
@@ -182,6 +246,10 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     );
   };
 
+  const SubmitButtonCopy = () => {
+    return clusterMigrated ? 'Update' : 'Install';
+  };
+
   return (
     <Drawer
       onClose={closeDrawer}
@@ -190,7 +258,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       wide
     >
       <DrawerContent
-        error={!!isErrorKubernetesACL}
+        error={!!isErrorKubernetesACL && clusterMigrated} // when cluster has not migrated, we expect an error from the query
         errorMessage={isErrorKubernetesACL?.[0].reason} // only on initial loading error do we disable the drawer altogether
         loading={isLoadingKubernetesACL || isFetchingKubernetesACL}
         title={clusterLabel}
@@ -210,27 +278,26 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           </Grid>
           <Divider sx={{ marginTop: 4 }} />
 
+          <ClusterNeedsMigration />
+
           <EnabledCopy />
           <Checkbox
-            checked={controlPlaneACL}
+            checked={clusterMigrated ? controlPlaneACL : true}
             name="ipacl-checkbox"
             text={'IPACL Enabled'}
-            onChange={(e) => setControlPlaneACL(e.target.checked)}
+            onChange={(e) => {
+              if (clusterMigrated) {
+                return setControlPlaneACL(e.target.checked);
+              }
+            }}
           />
           <Divider sx={{ marginTop: 4 }} />
 
-          <RevisionIDCopy />
-          <TextField
-            data-qa-label-input
-            label="Revision ID"
-            value={revisionID}
-            onBlur={(e) => setRevisionID(e.target.value)}
-          />
-          <Divider sx={{ marginTop: 4 }} />
+          <RevisionID />
 
           <AddressesCopy />
           <MultipleIPInput
-            buttonText="Add IPv4 Address to ACL"
+            buttonText="Add IP Address"
             ips={ipV4Addr}
             onChange={(_ips: ExtendedIP[]) => {
               const validatedIPs = validateIPs(_ips, {
@@ -245,17 +312,27 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               }
             }}
             placeholder="0.0.0.0/0"
-            title="" // Empty string so a title isn't displayed for each IP input
+            title="IPv4 Addresses or CIDR"
             error={ipV4InputError}
           />
           <MultipleIPInput
-            buttonText="Add IPv6 Address to ACL"
+            buttonText="Add IP Address"
             ips={ipV6Addr}
-            onChange={(newIpV6Addr: ExtendedIP[]) => {
-              setIPv6Addr(newIpV6Addr);
+            onChange={(_ips: ExtendedIP[]) => {
+              const validatedIPs = validateIPs(_ips, {
+                allowEmptyAddress: false,
+                errorMessage: 'Must be a valid IPv6 address.',
+              });
+              const ipsWithErrors: ExtendedIP[] = validatedIPs.filter(
+                (thisIP) => setIPV6InputError(thisIP.error)
+              );
+              if (ipsWithErrors.length === 0) {
+                setIPv6Addr(validatedIPs);
+              }
             }}
             placeholder="::/0"
-            title="" // Empty string so a title isn't displayed for each IP input
+            title="IPv6 Addresses or CIDR"
+            error={ipV6InputError}
           />
           <Divider sx={{ marginTop: 4 }} />
 
@@ -266,7 +343,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             onClick={updateCluster}
             disabled={!!ipV4InputError}
           >
-            Update
+            <SubmitButtonCopy />
           </StyledButton>
           <ErrorMessage />
         </Stack>

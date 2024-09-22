@@ -15,6 +15,7 @@ import type { Theme } from '@mui/material/styles';
 
 interface Props {
   cluster: KubernetesCluster;
+  setControlPlaneACLMigrated: (s: boolean) => void;
   handleOpenDrawer: () => void;
 }
 
@@ -69,7 +70,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
   const theme = useTheme();
-  const { cluster, handleOpenDrawer } = props;
+  const { cluster, handleOpenDrawer, setControlPlaneACLMigrated } = props;
   const { classes } = useStyles();
 
   const {
@@ -87,6 +88,12 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
     ? acl_response?.acl.addresses?.ipv6?.length
     : 0;
   const totalNumberIPs = totalIPv4 + totalIPv6;
+
+  const failedMigrationStatus = () => {
+    // when a cluster has not migrated, the query will always fail
+    setControlPlaneACLMigrated(!isErrorKubernetesACL);
+    return isErrorKubernetesACL;
+  };
 
   const IPACLdClusterToolTip = () => {
     return (
@@ -131,8 +138,12 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
   const NotMigratedCopy = () => {
     return (
       <>
-        Cluster Requires Migration
-        <IPACLdClusterToolTip />
+        <Box className={classes.aclElement} onClick={handleOpenDrawer}>
+          <Typography className={classes.aclElementText}>
+            Cluster Requires Migration
+          </Typography>
+          <IPACLdClusterToolTip />
+        </Box>
       </>
     );
   };
@@ -140,7 +151,7 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
   const kubeSpecsLeft = [
     isLoadingKubernetesACL ? (
       <CircleProgress size="sm" sx={{ marginTop: 2 }} />
-    ) : isErrorKubernetesACL ? (
+    ) : failedMigrationStatus() ? (
       <NotMigratedCopy />
     ) : enabledACL ? (
       <EnabledCopy />
