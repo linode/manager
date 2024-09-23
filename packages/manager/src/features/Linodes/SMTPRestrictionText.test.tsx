@@ -2,15 +2,17 @@ import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
+import { linodeFactory } from 'src/factories';
 import { accountFactory } from 'src/factories/account';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   SMTPRestrictionText,
-  SMTPRestrictionTextProps,
   accountCreatedAfterRestrictions,
 } from './SMTPRestrictionText';
+
+import type { SMTPRestrictionTextProps } from './SMTPRestrictionText';
 
 const defaultChildren = (props: { text: React.ReactNode }) => (
   <span>{props.text}</span>
@@ -75,6 +77,62 @@ describe('SMTPRestrictionText component', () => {
 
     const { queryByText } = renderWithTheme(
       <SMTPRestrictionText
+        supportLink={{ id: 0, label: 'Test Linode' }}
+        {...props}
+      />
+    );
+
+    await waitFor(() =>
+      expect(
+        queryByText('SMTP ports may be restricted on this Linode.', {
+          exact: false,
+        })
+      ).toBeNull()
+    );
+  });
+
+  it('should not render for an account with the "SMTP Enabled" capability', async () => {
+    const account = accountFactory.build({
+      active_since: MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED,
+      capabilities: ['SMTP Enabled'],
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { queryByText } = renderWithTheme(
+      <SMTPRestrictionText
+        supportLink={{ id: 0, label: 'Test Linode' }}
+        {...props}
+      />
+    );
+
+    await waitFor(() =>
+      expect(
+        queryByText('SMTP ports may be restricted on this Linode.', {
+          exact: false,
+        })
+      ).toBeNull()
+    );
+  });
+
+  it('should not render for a Linode with the "SMTP Enabled" capability', async () => {
+    const account = accountFactory.build({
+      active_since: MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED,
+    });
+
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+
+    const { queryByText } = renderWithTheme(
+      <SMTPRestrictionText
+        linode={linodeFactory.build({ capabilities: ['SMTP Enabled'] })}
         supportLink={{ id: 0, label: 'Test Linode' }}
         {...props}
       />
