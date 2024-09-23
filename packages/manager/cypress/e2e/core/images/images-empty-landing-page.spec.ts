@@ -15,7 +15,7 @@ describe('Images empty landing page', () => {
 
     // confirms helper text
     cy.findByText(
-      'Store custom Linux images so you can rapidly deploy compute instances that are preconfigured with what you need.'
+      'Store custom Linux images to rapidly deploy compute instances preconfigured with what you need.'
     ).should('be.visible');
 
     // checks that guides are visible
