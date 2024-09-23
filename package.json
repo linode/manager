@@ -3,7 +3,7 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "husky": "^8.0.0",
+    "husky": "^9.1.6",
     "typescript": "^5.5.4"
   },
   "scripts": {
@@ -40,7 +40,7 @@
     "junit:summary": "ts-node scripts/junit-summary/index.ts",
     "generate-tod": "ts-node scripts/tod-payload/index.ts",
     "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "resolutions": {
     "braces": "^3.0.3",
