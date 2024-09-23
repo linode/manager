@@ -15,7 +15,7 @@ describe('Images empty landing page', () => {
 
     // confirms helper text
     cy.findByText(
-      'Store your own custom Linux images, enabling you to rapidly deploy Linode Compute Instances preconfigured with the software and settings you require.'
+      'Store custom Linux images so you can rapidly deploy compute instances that are preconfigured with what you need.'
     ).should('be.visible');
 
     // checks that guides are visible
