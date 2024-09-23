@@ -3,13 +3,8 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "husky": "^3.0.1",
+    "husky": "^8.0.0",
     "typescript": "^5.5.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn workspaces run precommit"
-    }
   },
   "scripts": {
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
@@ -44,7 +39,8 @@
     "coverage:summary": "yarn workspace linode-manager coverage:summary",
     "junit:summary": "ts-node scripts/junit-summary/index.ts",
     "generate-tod": "ts-node scripts/tod-payload/index.ts",
-    "docs": "bunx vitepress@1.0.0-rc.44 dev docs"
+    "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
+    "prepare": "husky install"
   },
   "resolutions": {
     "braces": "^3.0.3",
