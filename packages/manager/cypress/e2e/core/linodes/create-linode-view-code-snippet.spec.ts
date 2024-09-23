@@ -19,6 +19,7 @@ describe('Create Linode', () => {
     beforeEach(() => {
       mockAppendFeatureFlags({
         apicliDxToolsAdditions: true,
+        testdxtoolabexperiment: 'Create using command line',
       });
     });
     it(`view code snippets in create linode flow`, () => {
@@ -104,8 +105,8 @@ describe('Create Linode', () => {
             'Import Existing Infrastructure to Terraform'
           ).should('be.visible');
 
-          // Validate SDK's tab
-          ui.tabList.findTabByTitle(`SDK's`).should('be.visible').click();
+          // Validate SDKs tab
+          ui.tabList.findTabByTitle(`SDKs`).should('be.visible').click();
 
           ui.autocomplete.find().click();
 
@@ -150,6 +151,7 @@ describe('Create Linode', () => {
     beforeEach(() => {
       mockAppendFeatureFlags({
         apicliDxToolsAdditions: false,
+        testdxtoolabexperiment: 'Create using command line',
       });
     });
     it(`view code snippets in create linode flow`, () => {
@@ -195,76 +197,75 @@ describe('Create Linode', () => {
             .click();
         });
     });
-  });
+    it('creates a linode via CLI', () => {
+      const linodeLabel = randomLabel();
+      const linodePass = randomString(32);
+      const linodeRegion = chooseRegion();
 
-  it('creates a linode via CLI', () => {
-    const linodeLabel = randomLabel();
-    const linodePass = randomString(32);
-    const linodeRegion = chooseRegion();
+      cy.visitWithLogin('/linodes/create');
 
-    cy.visitWithLogin('/linodes/create');
+      ui.regionSelect.find().click();
+      ui.autocompletePopper
+        .findByTitle(`${linodeRegion.label} (${linodeRegion.id})`)
+        .should('exist')
+        .click();
 
-    ui.regionSelect.find().click();
-    ui.autocompletePopper
-      .findByTitle(`${linodeRegion.label} (${linodeRegion.id})`)
-      .should('exist')
-      .click();
+      cy.get('[id="g6-dedicated-2"]').click();
 
-    cy.get('[id="g6-dedicated-2"]').click();
+      cy.findByLabelText('Linode Label').should(
+        'have.value',
+        `debian-${linodeRegion.id}`
+      );
 
-    cy.findByLabelText('Linode Label').should(
-      'have.value',
-      `debian-${linodeRegion.id}`
-    );
+      cy.findByLabelText('Linode Label')
+        .should('be.visible')
+        .should('be.enabled')
+        .clear()
+        .type(linodeLabel);
 
-    cy.findByLabelText('Linode Label')
-      .should('be.visible')
-      .should('be.enabled')
-      .clear()
-      .type(linodeLabel);
+      cy.findByLabelText('Root Password')
+        .should('be.visible')
+        .should('be.enabled')
+        .type(linodePass);
 
-    cy.findByLabelText('Root Password')
-      .should('be.visible')
-      .should('be.enabled')
-      .type(linodePass);
+      ui.button
+        .findByTitle('Create using command line')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
-    ui.button
-      .findByTitle('Create using command line')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+      ui.dialog
+        .findByTitle('Create Linode')
+        .should('be.visible')
+        .within(() => {
+          // Switch to cURL view if necessary.
+          cy.findByText('cURL').should('be.visible').click();
 
-    ui.dialog
-      .findByTitle('Create Linode')
-      .should('be.visible')
-      .within(() => {
-        // Switch to cURL view if necessary.
-        cy.findByText('cURL').should('be.visible').click();
+          // Confirm that cURL command has expected details.
+          [
+            `"region": "${linodeRegion.id}"`,
+            `"type": "g6-dedicated-2"`,
+            `"label": "${linodeLabel}"`,
+            `"root_pass": "${linodePass}"`,
+          ].forEach((line: string) =>
+            cy.findByText(line, { exact: false }).should('be.visible')
+          );
 
-        // Confirm that cURL command has expected details.
-        [
-          `"region": "${linodeRegion.id}"`,
-          `"type": "g6-dedicated-2"`,
-          `"label": "${linodeLabel}"`,
-          `"root_pass": "${linodePass}"`,
-        ].forEach((line: string) =>
-          cy.findByText(line, { exact: false }).should('be.visible')
-        );
+          cy.findByText('Linode CLI').should('be.visible').click();
 
-        cy.findByText('Linode CLI').should('be.visible').click();
+          [
+            `--region ${linodeRegion.id}`,
+            '--type g6-dedicated-2',
+            `--label ${linodeLabel}`,
+            `--root_pass ${linodePass}`,
+          ].forEach((line: string) => cy.contains(line).should('be.visible'));
 
-        [
-          `--region ${linodeRegion.id}`,
-          '--type g6-dedicated-2',
-          `--label ${linodeLabel}`,
-          `--root_pass ${linodePass}`,
-        ].forEach((line: string) => cy.contains(line).should('be.visible'));
-
-        ui.buttonGroup
-          .findButtonByTitle('Close')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
+          ui.buttonGroup
+            .findButtonByTitle('Close')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+    });
   });
 });
