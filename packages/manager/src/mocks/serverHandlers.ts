@@ -1608,7 +1608,6 @@ export const handlers = [
               ...baseEvent,
               action: eventKey as Event['action'],
               id: eventIndex * 1000 + statusIndex,
-              message: messageFunc ? messageFunc(baseEvent) : '',
               status: status as Event['status'],
             })
           )
