@@ -11,7 +11,7 @@ import type {
 
 export const headers: ResourcesHeaders = {
   description:
-    'Store custom Linux images so you can rapidly deploy compute instances that are preconfigured with what you need.',
+    'Store custom Linux images to rapidly deploy compute instances preconfigured with what you need.',
   subtitle: '',
   title: 'Images',
 };
