@@ -128,7 +128,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
               defaultValue={'Past 30 Minutes'}
               handleStatsChange={handleStatsChange}
               hideLabel
-              label="Select Time Range"
+              label="Select a Time Range"
             />
           </StyledBox>
           <ProcessesTable

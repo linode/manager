@@ -98,10 +98,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               sx={{
                 marginBlockEnd: 'auto',
               }}
-            data-qa-refresh-button
-            disabled={!selectedDashboard}
-            onClick={() => handleGlobalRefresh(selectedDashboard)}
-            size="small"
+              data-qa-refresh-button
+              disabled={!selectedDashboard}
+              onClick={() => handleGlobalRefresh(selectedDashboard)}
+              size="small"
             >
               <StyledReload />
             </IconButton>
@@ -115,6 +115,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               borderColor: theme.color.grey5,
               margin: 0,
             }}
+          />
         </Grid>
       )}
 
