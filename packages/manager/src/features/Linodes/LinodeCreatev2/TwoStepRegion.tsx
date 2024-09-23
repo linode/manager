@@ -104,7 +104,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
             <Box marginTop={2}>
               <RegionHelperText
                 onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
-                showCoreHelperText={true}
+                showCoreHelperText
               />
             </Box>
             <RegionSelect
