@@ -244,13 +244,12 @@ export const legacyRestoreWithBackup = (
   );
 
 /**
- * newRestoreWithBackup for the New Database
+ * restoreWithBackup for the New Database
  *
  * Fully restore a backup to the cluster
  */
-export const newRestoreWithBackup = (
+export const restoreWithBackup = (
   engine: Engine,
-  label: string,
   fork: {
     source: number;
     restore_time?: string;
@@ -259,7 +258,7 @@ export const newRestoreWithBackup = (
   Request<{}>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
-    setData({ fork, label })
+    setData({ fork })
   );
 
 /**
