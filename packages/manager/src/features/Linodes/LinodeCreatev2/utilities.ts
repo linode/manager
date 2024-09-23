@@ -304,6 +304,7 @@ export const defaultValues = async (
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
+    backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
     interfaces: defaultInterfaces,
     linode,
