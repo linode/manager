@@ -62,7 +62,6 @@ export const getRegionProperties = (
     defaultValue: preferences?.[REGION],
     handleRegionChange,
     placeholder,
-    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
   };
@@ -102,7 +101,6 @@ export const getResourcesProperties = (
     ),
     handleResourcesSelection: handleResourceChange,
     placeholder,
-    preferences,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
     xFilter: buildXFilter(config, dependentFilters ?? {}),

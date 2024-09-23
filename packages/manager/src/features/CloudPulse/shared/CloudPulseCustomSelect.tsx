@@ -173,14 +173,6 @@ export const CloudPulseCustomSelect = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savePreferences, options, apiV4QueryKey, queriedResources]); // only execute this use efffect one time or if savePreferences or options or dataApiUrl changes
 
-    React.useEffect(() => {
-      if (!selectedResource) {
-        setResource(isMultiSelect ? [] : undefined);
-        handleSelectionChange(filterKey, isMultiSelect ? [] : undefined);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dashboard?.id]);
-
     const handleChange = (
       _: React.SyntheticEvent,
       value:

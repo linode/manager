@@ -3,7 +3,7 @@ import * as React from 'react';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import type { AclpConfig, Dashboard, FilterValue } from '@linode/api-v4';
+import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -37,13 +37,6 @@ export const CloudPulseRegionSelect = React.memo(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [regions]);
-
-    // Once the data is loaded, set the state variable with value stored in preferences
-    React.useEffect(() => {
-      handleRegionChange(undefined);
-      setSelectedRegion(undefined);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedDashboard?.id]);
 
     return (
       <RegionSelect
