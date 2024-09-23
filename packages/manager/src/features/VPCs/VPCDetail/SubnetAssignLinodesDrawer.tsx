@@ -29,7 +29,6 @@ import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { getAllLinodeConfigs } from 'src/queries/linodes/requests';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import {
@@ -48,6 +47,7 @@ import type {
   Linode,
   Subnet,
 } from '@linode/api-v4';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or something
@@ -548,7 +548,7 @@ export const SubnetAssignLinodesDrawer = (
           handleUnassignLinode(data as LinodeAndConfigData);
           setUnassignLinodesErrors([]);
         }}
-        headerText={`Linodes Assigned to Subnet (${assignedLinodesAndConfigData.length})`}
+        headerText={`Linodes recently assigned to Subnet (${assignedLinodesAndConfigData.length})`}
         noDataText={'No Linodes have been assigned.'}
         preferredDataLabel="linodeConfigLabel"
         selectionData={assignedLinodesAndConfigData}
