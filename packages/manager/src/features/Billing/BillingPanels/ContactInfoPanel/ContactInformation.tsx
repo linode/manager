@@ -84,7 +84,7 @@ const ContactInformation = (props: Props) => {
 
   const isChildUser = Boolean(profile?.user_type === 'child');
 
-  const invalidTaxIdNotification = notifications?.find((notification) => {
+  const taxIdIsVerifyingNotification = notifications?.find((notification) => {
     return notification.type === 'tax_id_verifying';
   });
 
@@ -238,11 +238,11 @@ const ContactInformation = (props: Props) => {
                 >
                   <strong>Tax ID</strong> {taxId}
                 </StyledTypography>
-                {invalidTaxIdNotification && (
+                {taxIdIsVerifyingNotification && (
                   <TooltipIcon
                     icon={<StyledAutorenewIcon />}
                     status="other"
-                    text={invalidTaxIdNotification.label}
+                    text={taxIdIsVerifyingNotification.label}
                   />
                 )}
               </Box>
