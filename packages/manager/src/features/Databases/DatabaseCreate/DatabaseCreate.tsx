@@ -618,7 +618,7 @@ const DatabaseCreate = () => {
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
-            <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls">
               Learn more
             </Link>
             .
