@@ -104,6 +104,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
             <Box marginTop={2}>
               <RegionHelperText
                 onClick={() => sendLinodeCreateDocsEvent('Speedtest')}
+                showCoreHelperText={true}
               />
             </Box>
             <RegionSelect
@@ -120,6 +121,12 @@ export const TwoStepRegion = (props: CombinedProps) => {
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
+            <Box mt={2}>
+              <Typography>
+                Data centers in distributed locations enable you to place
+                workloads closer to users.
+              </Typography>
+            </Box>
             <Autocomplete
               onChange={(_, selectedOption) => {
                 if (selectedOption?.value) {
