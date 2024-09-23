@@ -1612,14 +1612,13 @@ export const handlers = [
             })
           )
       );
-
       // Randomly select 25 items
       const randomEvents = events.sort(() => 0.5 - Math.random()).slice(0, 25);
 
       return HttpResponse.json(makeResourcePage(randomEvents));
     },
     {
-      once: false,
+      once: true,
     }
   ),
 
