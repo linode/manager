@@ -7,8 +7,11 @@ import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constan
 import { useAccount } from 'src/queries/account/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
+import type { Linode } from '@linode/api-v4';
+
 export interface SMTPRestrictionTextProps {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
+  linode?: Linode;
   supportLink?: {
     id: number;
     label: string;
@@ -16,14 +19,17 @@ export interface SMTPRestrictionTextProps {
 }
 
 export const SMTPRestrictionText = (props: SMTPRestrictionTextProps) => {
-  const { supportLink } = props;
+  const { linode, supportLink } = props;
   const { data: account } = useAccount();
+
+  const displayRestrictionText =
+    accountCreatedAfterRestrictions(account?.active_since) &&
+    !account?.capabilities.includes('SMTP Enabled') &&
+    (linode === undefined || !linode.capabilities?.includes('SMTP Enabled'));
 
   // If there account was created before restrictions were put into place,
   // there's no need to display anything.
-  const text = !accountCreatedAfterRestrictions(
-    account?.active_since
-  ) ? null : (
+  const text = displayRestrictionText ? (
     <Typography variant="body1">
       SMTP ports may be restricted on this Linode. Need to send email? Review
       our{' '}
@@ -46,10 +52,9 @@ export const SMTPRestrictionText = (props: SMTPRestrictionTextProps) => {
       )}
       .
     </Typography>
-  );
+  ) : null;
 
-  // eslint-disable-next-line
-  return <>{props.children({ text })}</>;
+  return props.children({ text });
 };
 
 export const accountCreatedAfterRestrictions = (_accountCreated?: string) => {
