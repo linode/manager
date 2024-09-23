@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { LinodeResizeAllocationError } from 'src/features/Linodes/LinodesDetail/LinodeResize/LinodeResize.utils';
-
+import { LinodeResizeAllocationError } from './LinodeResizeAllocationError';
 import { MigrateError } from './MigrateError';
 import { SupportTicketGeneralError } from './SupportTicketGeneralError';
 import { Typography } from './Typography';
