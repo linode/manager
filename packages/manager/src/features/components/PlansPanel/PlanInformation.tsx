@@ -59,8 +59,11 @@ export const PlanInformation = (props: PlanInformationProps) => {
                 4000 Ada GPU instance in select core compute regions in North
                 America, Europe, and Asia. <br />
                 Receive 1 TB of free included network transfer for a limited
-                time. {/* TODO: Add link to GPU egress banner */}
-                <Link to="#">Learn more</Link>.
+                time.{' '}
+                <Link to="https://www.linode.com/blog/compute/new-gpus-nvidia-rtx-4000-ada-generation">
+                  Learn more
+                </Link>
+                .
               </Typography>
             </Notice>
           )}
