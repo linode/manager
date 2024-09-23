@@ -110,7 +110,7 @@ export const CloudPulseResourcesSelect = React.memo(
         data-testid="resource-select"
         disabled={disabled || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Select Resources"
+        label="Select a Resources"
         limitTags={2}
         multiple
         options={getResourcesList()}

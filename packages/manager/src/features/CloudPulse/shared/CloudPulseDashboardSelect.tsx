@@ -116,7 +116,7 @@ export const CloudPulseDashboardSelect = React.memo(
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Select Dashboard"
+        label="Select a Dashboard"
         loading={dashboardsLoading || serviceTypesLoading}
         options={getSortedDashboardsList(dashboardsList ?? [])}
         placeholder={placeHolder}

@@ -25,12 +25,12 @@ import { ui } from 'support/ui';
 
 export const selectServiceName = (serviceName: string) => {
   ui.autocomplete
-    .findByTitleCustom('Select Dashboard')
+    .findByTitleCustom('Select a Dashboard')
     .findByTitle('Open')
     .should('be.visible')
     .click();
   ui.autocomplete
-    .findByPlaceholderCustom('Select Dashboard')
+    .findByPlaceholderCustom('Select a Dashboard')
     .type(`${serviceName}{enter}`);
   cy.findByDisplayValue(serviceName).should('have.value', serviceName);
 };
@@ -43,7 +43,7 @@ export const selectServiceName = (serviceName: string) => {
  */
 export const selectTimeRange = (timeRange: string, timeSegments: string[]) => {
   ui.autocomplete
-    .findByTitleCustom('Select Time Duration')
+    .findByTitleCustom('Select a Time Duration')
     .findByTitle('Open')
     .click();
   timeSegments.forEach((option) => {
@@ -57,7 +57,7 @@ export const selectTimeRange = (timeRange: string, timeSegments: string[]) => {
  * @param {string} service - The name of the service to select.
  */
 export const selectAndVerifyResource = (service: string) => {
-  const resourceInput = ui.autocomplete.findByTitleCustom('Select Resources');
+  const resourceInput = ui.autocomplete.findByTitleCustom('Select a Resources');
   resourceInput.findByTitle('Open').click();
   resourceInput.click().type(`${service}{enter}`);
   cy.get('[title="Close"]').click();
@@ -76,12 +76,12 @@ export const assertSelections = (expectedOptions: string) => {
  */
 export const resetDashboard = () => {
   ui.autocomplete
-    .findByTitleCustom('Select Dashboard')
+    .findByTitleCustom('Select a Dashboard')
     .findByTitle('Clear')
     .click();
 
   ui.autocomplete
-    .findByPlaceholderCustom('Select Dashboard')
+    .findByPlaceholderCustom('Select a Dashboard')
     .should('have.value', '');
 };
 /**
@@ -105,7 +105,7 @@ export const chooseEngine = (engine: string) => {
 
 export const chooseNodeType = (node: string) => {
   ui.autocomplete
-    .findByPlaceholderCustom('Select Node Type')
+    .findByPlaceholderCustom('Select a Node Type')
     .should('be.visible')
     .type(node)
     .click();
