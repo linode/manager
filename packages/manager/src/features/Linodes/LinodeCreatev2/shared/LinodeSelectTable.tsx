@@ -109,6 +109,7 @@ export const LinodeSelectTable = (props: Props) => {
     reset((prev) => ({
       ...prev,
       backup_id: null,
+      backups_enabled: linode.backups.enabled,
       linode,
       private_ip: hasPrivateIP,
       region: linode.region,
