@@ -11,8 +11,6 @@ import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
@@ -209,16 +207,6 @@ export const UserMenu = React.memo(() => {
         title="Profile & Account"
       >
         <Button
-          startIcon={
-            isProxyUser ? (
-              <AvatarForProxy />
-            ) : (
-              <GravatarOrAvatar
-                avatar={<Avatar />}
-                gravatar={<GravatarByEmail email={profile?.email ?? ''} />}
-              />
-            )
-          }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
             height: '50px',
@@ -230,6 +218,7 @@ export const UserMenu = React.memo(() => {
           disableRipple
           endIcon={getEndIcon()}
           onClick={handleClick}
+          startIcon={isProxyUser ? <AvatarForProxy /> : <Avatar />}
         >
           <Hidden mdDown>
             <Stack alignItems={'flex-start'}>

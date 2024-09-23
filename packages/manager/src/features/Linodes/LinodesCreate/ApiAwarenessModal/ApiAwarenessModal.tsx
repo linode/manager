@@ -14,6 +14,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
 import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
@@ -51,7 +52,7 @@ export const additionalTabs = [
   },
   {
     component: SDKTabPanel,
-    title: `SDK's`,
+    title: 'SDKs',
     type: 'INTEGRATIONS',
   },
 ];
@@ -63,6 +64,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
   const ldClient = useLDClient();
   const history = useHistory();
   const { data: events } = useInProgressEvents();
+  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
 
   const linodeCreationEvent = events?.find(
     (event) =>
@@ -86,20 +88,24 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
     sendApiAwarenessClickEvent(`${type} Tab`, type);
 
     const trackingKey =
-      type === 'INTEGRATIONS' && title !== "SDK's"
+      type === 'INTEGRATIONS' && title !== 'SDKs'
         ? LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TAB_SELECTION
         : type === 'API'
         ? LD_DX_TOOLS_METRICS_KEYS.CURL_TAB_SELECTION
-        : title === "SDK's"
+        : title === 'SDKs'
         ? LD_DX_TOOLS_METRICS_KEYS.SDK_TAB_SELECTION
         : title === 'Linode CLI'
         ? LD_DX_TOOLS_METRICS_KEYS.LINODE_CLI_TAB_SELECTION
         : undefined;
 
     if (trackingKey) {
-      ldClient?.track(trackingKey, {
-        variation: apicliButtonCopy,
-      });
+      if (!isInternalAccount) {
+        ldClient?.track(trackingKey, {
+          variation: apicliButtonCopy,
+        });
+      }
+
+      ldClient?.flush();
     }
   };
 
