@@ -14,7 +14,7 @@ import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
 } from '../Utils/models';
-import type { AclpConfig, Dashboard, FilterValue } from '@linode/api-v4';
+import type { AclpConfig, FilterValue } from '@linode/api-v4';
 
 /**
  * These are the properties requires for CloudPulseCustomSelect Components
@@ -40,8 +40,6 @@ export interface CloudPulseCustomSelectProps {
    * The dependent selections to be cleared on this filter update
    */
   clearDependentSelections?: string[];
-
-  dashboard: Dashboard;
 
   /**
    * Last selected values from user preferences
@@ -124,7 +122,6 @@ export const CloudPulseCustomSelect = React.memo(
       apiResponseLabelField,
       apiV4QueryKey,
       clearDependentSelections,
-      dashboard,
       defaultValue,
       disabled,
       filterKey,

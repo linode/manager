@@ -50,7 +50,6 @@ export const CloudPulseDashboardLanding = () => {
   const onDashboardChange = React.useCallback((dashboardObj: Dashboard) => {
     setDashboard(dashboardObj);
     setFilterValue({}); // clear the filter values on dashboard change
-
   }, []);
   const onTimeDurationChange = React.useCallback(
     (timeDurationObj: TimeDuration) => {

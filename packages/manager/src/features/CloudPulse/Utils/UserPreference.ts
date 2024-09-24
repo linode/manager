@@ -5,7 +5,6 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
-
 import { DASHBOARD_ID, TIME_DURATION } from './constants';
 
 import type { AclpConfig, AclpWidget } from '@linode/api-v4';

@@ -127,7 +127,6 @@ export const getInitialDefaultSelections = (
     handleSelectionChange,
     isMultiSelect,
     options,
-    preferences,
     savePreferences,
   } = defaultSelectionProps;
 
