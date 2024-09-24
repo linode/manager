@@ -100,7 +100,7 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
    * - Confirms the CORS toggle still appears for buckets with endpoint type E0
    * - Confirms the SSL/TLS tab appears for buckets with endpoint type E0
    */
-  it('does not hide the CORS toggle or SSL/TLS tab for buckets with the E0 endpoint', () => {
+  it('does not hide the CORS toggle or SSL/TLS tab for buckets with an E0 endpoint', () => {
     createMocksAndNavigateToPage('E0');
 
     // confirm CORS toggle is visible and the SSL/TLS tab is present
@@ -111,7 +111,7 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
    * - Confirms the CORS toggle still appears for buckets with endpoint type E1
    * - Confirms the SSL/TLS tab appears for buckets with endpoint type E1
    */
-  it('does not hide the CORS toggle or SSL/TLS tab for buckets with the E1 endpoint', () => {
+  it('does not hide the CORS toggle or SSL/TLS tab for buckets with an E1 endpoint', () => {
     createMocksAndNavigateToPage('E1');
 
     // confirm CORS toggle is visible and the SSL/TLS tab is present
@@ -120,9 +120,9 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
 
   /**
    * - Confirms the CORS and display notice is hidden for buckets with endpoint type E2
-   * - Confirms the SSL/TLS tab is visible for buckets with endpoint type E2
+   * - Confirms the SSL/TLS tab appears for buckets with endpoint type E2
    */
-  it('hides the CORS and display notice and hides the SSL/TLS tab for the E2 endpoint', () => {
+  it('hides the CORS toggle and displays a notice for buckets with an E2 endpoint', () => {
     createMocksAndNavigateToPage('E2');
 
     // confirms the CORS toggle is not visible
@@ -137,7 +137,7 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
    * - Confirms the CORS and display notice is hidden for buckets with endpoint type E3
    * - Confirms the SSL/TLS tab is hidden for buckets with endpoint type E3
    */
-  it('hides the CORS and display notice and disables the SSL/TLS tab for the E3 endpoint', () => {
+  it('hides the CORS toggle, displays a notice, and disables the SSL/TLS tab for buckets with an E3 endpoint', () => {
     createMocksAndNavigateToPage('E3');
 
     // confirms the CORS toggle is not visible
