@@ -19,13 +19,13 @@ export const AccountRoutes = () => {
   );
 };
 
-export const accountRoute = createRoute({
+const accountRoute = createRoute({
   component: AccountRoutes,
   getParentRoute: () => rootRoute,
   path: 'account',
 });
 
-export const accountIndexRoute = createRoute({
+const accountIndexRoute = createRoute({
   component: lazyRouteComponent(
     () => import('src/features/Account/AccountLanding')
   ),
@@ -33,7 +33,7 @@ export const accountIndexRoute = createRoute({
   path: '/',
 });
 
-export const accountUsersUsernameRoute = createRoute({
+const accountUsersUsernameRoute = createRoute({
   component: lazyRouteComponent(() =>
     import('src/features/Users/UserDetail').then((module) => ({
       default: module.UserDetail,
@@ -43,7 +43,7 @@ export const accountUsersUsernameRoute = createRoute({
   path: 'users/$username',
 });
 
-export const accountBillingRoute = createRoute({
+const accountBillingRoute = createRoute({
   component: lazyRouteComponent(
     () => import('src/features/Account/AccountLanding')
   ),
@@ -51,7 +51,7 @@ export const accountBillingRoute = createRoute({
   path: 'billing',
 });
 
-export const accountBillingEditRoute = createRoute({
+const accountBillingEditRoute = createRoute({
   component: lazyRouteComponent(
     () => import('src/features/Account/AccountLanding')
   ),
@@ -59,7 +59,7 @@ export const accountBillingEditRoute = createRoute({
   path: 'billing/edit',
 });
 
-export const accountInvoicesInvoiceIdRoute = createRoute({
+const accountInvoicesInvoiceIdRoute = createRoute({
   component: lazyRouteComponent(() =>
     import('src/features/Billing/InvoiceDetail/InvoiceDetail').then(
       (module) => ({
@@ -74,7 +74,7 @@ export const accountInvoicesInvoiceIdRoute = createRoute({
   path: 'billing/invoices/$invoiceId',
 });
 
-export const accountEntityTransfersCreateRoute = createRoute({
+const accountEntityTransfersCreateRoute = createRoute({
   component: lazyRouteComponent(() =>
     import(
       'src/features/EntityTransfers/EntityTransfersCreate/EntityTransfersCreate'
@@ -85,3 +85,12 @@ export const accountEntityTransfersCreateRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: 'service-transfers/create',
 });
+
+export const accountRouteTree = accountRoute.addChildren([
+  accountIndexRoute,
+  accountUsersUsernameRoute,
+  accountBillingRoute,
+  accountBillingEditRoute,
+  accountInvoicesInvoiceIdRoute,
+  accountEntityTransfersCreateRoute,
+]);

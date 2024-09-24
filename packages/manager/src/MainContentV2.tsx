@@ -11,11 +11,6 @@ import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 import { rootRoute } from './routes/root';
 
-const Domains = React.lazy(() =>
-  import('src/features/Domains').then((module) => ({
-    default: module.DomainsRoutes,
-  }))
-);
 const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() =>
   import('src/features/Kubernetes').then((module) => ({
@@ -27,9 +22,6 @@ const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
   }))
-);
-const NodeBalancers = React.lazy(
-  () => import('src/features/NodeBalancers/NodeBalancers')
 );
 const StackScripts = React.lazy(
   () => import('src/features/StackScripts/StackScripts')
@@ -72,18 +64,6 @@ const CloudPulse = React.lazy(() =>
     default: module.CloudPulseLanding,
   }))
 );
-
-const nodeBalancersRoute = createRoute({
-  component: NodeBalancers,
-  getParentRoute: () => rootRoute,
-  path: 'nodebalancers',
-});
-
-const domainsRoute = createRoute({
-  component: Domains,
-  getParentRoute: () => rootRoute,
-  path: 'domains',
-});
 
 const managedRoute = createRoute({
   component: Managed,
@@ -204,8 +184,6 @@ const notFoundRoute = createRoute({
 // @ts-expect-error - TODO: Fix this type error
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routeTree = rootRoute.addChildren([
-  nodeBalancersRoute,
-  domainsRoute,
   managedRoute,
   longviewRoute,
   imagesRoute,

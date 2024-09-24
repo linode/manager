@@ -27,7 +27,7 @@ export const placementGroupsRoute = createRoute({
   path: 'placement-groups',
 });
 
-export const placementGroupsIndexRoute = createRoute({
+const placementGroupsIndexRoute = createRoute({
   component: lazyRouteComponent(() =>
     import(
       'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
@@ -39,7 +39,7 @@ export const placementGroupsIndexRoute = createRoute({
   path: '/',
 });
 
-export const placementGroupsCreateRoute = createRoute({
+const placementGroupsCreateRoute = createRoute({
   component: lazyRouteComponent(() =>
     import(
       'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
@@ -51,7 +51,7 @@ export const placementGroupsCreateRoute = createRoute({
   path: 'create',
 });
 
-export const placementGroupsEditRoute = createRoute({
+const placementGroupsEditRoute = createRoute({
   component: lazyRouteComponent(() =>
     import(
       'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
@@ -66,7 +66,7 @@ export const placementGroupsEditRoute = createRoute({
   path: 'edit/$id',
 });
 
-export const placementGroupsDeleteRoute = createRoute({
+const placementGroupsDeleteRoute = createRoute({
   component: lazyRouteComponent(() =>
     import(
       'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
@@ -81,7 +81,7 @@ export const placementGroupsDeleteRoute = createRoute({
   path: 'delete/$id',
 });
 
-export const placementGroupsUnassignRoute = createRoute({
+const placementGroupsUnassignRoute = createRoute({
   component: lazyRouteComponent(() =>
     import(
       'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
@@ -97,7 +97,7 @@ export const placementGroupsUnassignRoute = createRoute({
   path: '$id/unassign/$linodeId',
 });
 
-export const placementGroupsDetailRoute = createRoute({
+const placementGroupsDetailRoute = createRoute({
   component: lazyRouteComponent(() =>
     import(
       'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
@@ -111,3 +111,12 @@ export const placementGroupsDetailRoute = createRoute({
   }),
   path: '$id',
 });
+
+export const placementGroupsRouteTree = placementGroupsRoute.addChildren([
+  placementGroupsIndexRoute,
+  placementGroupsCreateRoute,
+  placementGroupsEditRoute,
+  placementGroupsDeleteRoute,
+  placementGroupsDetailRoute,
+  placementGroupsUnassignRoute,
+]);
