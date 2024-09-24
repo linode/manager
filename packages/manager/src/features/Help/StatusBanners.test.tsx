@@ -30,7 +30,10 @@ describe('Status banners from statuspage.io', () => {
 
     it('clicking the link should redirect you to the provided href', async () => {
       renderWithTheme(<IncidentBanner {...props} />);
-      expect(screen.getByRole('link')).toHaveAttribute('href', props.href);
+      expect(screen.getByRole('link')).toHaveAttribute(
+        'href',
+        props.href + '/'
+      );
     });
 
     it("clicking a banner's close icon should remove it from view", async () => {
