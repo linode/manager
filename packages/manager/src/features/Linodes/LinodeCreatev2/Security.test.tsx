@@ -18,7 +18,7 @@ import type { LinodeCreateFormValues } from './utilities';
 
 describe('Security', () => {
   // TODO: Unskip once M3-8559 is addressed.
-  it.skip(
+  it(
     'should render a root password input',
     async () => {
       const { findByLabelText } = renderWithThemeAndHookFormContext({
@@ -30,7 +30,7 @@ describe('Security', () => {
       expect(rootPasswordInput).toBeVisible();
       expect(rootPasswordInput).toBeEnabled();
     },
-    { timeout: 5_000 }
+    { timeout: 5_000, skip: true }
   );
 
   it('should render a SSH Keys heading', async () => {
