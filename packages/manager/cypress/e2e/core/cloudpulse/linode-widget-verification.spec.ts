@@ -297,7 +297,7 @@ describe('Dashboard Widget Verification Tests', () => {
   it('should apply global refresh button and verify network calls', () => {
     setupMethod();
 
-    ui.cloudpulse.findRefreshIcon().should('be.visible').click();
+    ui.button.findByAttribute('aria-label', 'cloudpulse-refresh').should('be.visible').click();
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
       (interceptions) => {
         const interceptionsArray = Array.isArray(interceptions)
@@ -322,18 +322,16 @@ describe('Dashboard Widget Verification Tests', () => {
             );
           }
           const expectedRelativeTimeDuration = timeRange
-            ? `Last ${timeRange.value} ${
-                ['hour', 'hr'].includes(timeRange.unit.toLowerCase())
-                  ? 'Hours'
-                  : timeRange.unit
-              }`
+            ? `Last ${timeRange.value} ${['hour', 'hr'].includes(timeRange.unit.toLowerCase())
+              ? 'Hours'
+              : timeRange.unit
+            }`
             : '';
           const currentGranularity = granularity
-            ? `${granularity.value} ${
-                ['hour', 'hours'].includes(granularity.unit.toLowerCase())
-                  ? 'hr'
-                  : granularity.unit
-              }`
+            ? `${granularity.value} ${['hour', 'hours'].includes(granularity.unit.toLowerCase())
+              ? 'hr'
+              : granularity.unit
+            }`
             : '';
           expect(metric).to.equal(metricData.name);
           expect(currentGranularity).to.equal(metricData.expectedGranularity);
@@ -354,8 +352,8 @@ describe('Dashboard Widget Verification Tests', () => {
       cy.get('@widget')
         .should('be.visible')
         .within(() => {
-          ui.cloudpulse
-            .findZoomButtonByTitle('zoom-in')
+          ui.button
+            .findByAttribute('aria-label', 'zoom-out')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -382,8 +380,8 @@ describe('Dashboard Widget Verification Tests', () => {
                 testData.title
               );
             });
-          ui.cloudpulse
-            .findZoomButtonByTitle('zoom-out')
+          ui.button
+            .findByAttribute('aria-label', 'zoom-out')
             .should('be.visible')
             .should('be.enabled')
             .scrollIntoView()
