@@ -62,17 +62,16 @@ describe.only('Object Storage Gen 2 bucket details tabs', () => {
     );
 
     cy.visitWithLogin(`/object-storage/buckets/${cluster}/${label}/${tab}`);
+    if (mockAccess) {
+      mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
+      cy.wait('@getBucketAccess');
+    }
     cy.wait([
       '@getFeatureFlags',
       '@getAccount',
       '@getObjectStorageEndpoints',
       '@getBucketsForRegion',
     ]);
-
-    if (mockAccess) {
-      mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
-      cy.wait('@getBucketAccess');
-    }
   };
 
   describe('Access and SSL/TLS tabs', () => {
