@@ -1,11 +1,10 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/ArrowDropDown';
-import KeyboardArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, useTheme } from '@mui/material';
 import * as React from 'react';
 
+import KeyboardArrowDownIcon from 'src/assets/icons/arrow_down.svg';
+import KeyboardArrowRightIcon from 'src/assets/icons/arrow_right.svg';
 import InfoIcon from 'src/assets/icons/info.svg';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NullComponent from 'src/components/NullComponent';
 
@@ -71,6 +70,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }>({});
 
     const [showFilter, setShowFilter] = React.useState<boolean>(true);
+
+    const theme = useTheme();
 
     const dependentFilterReference: React.MutableRefObject<{
       [key: string]: FilterValueType;
@@ -261,8 +262,22 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     return (
-      <Grid container item xs={12}>
-        <Grid item key={'toggleFilter'} px={2} xs={12}>
+      <Grid
+        container
+        item
+        m={3}
+        paddingBottom={isServiceAnalyticsIntegration ? 3 : 0}
+        xs={12}
+      >
+        <Grid
+          sx={{
+            m: 0,
+            p: 0,
+          }}
+          item
+          key="toggleFilter"
+          xs={12}
+        >
           <Button
             startIcon={
               showFilter ? (
@@ -275,14 +290,20 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 />
               )
             }
+            sx={{
+              justifyContent: 'start',
+              m: 0,
+              minHeight: 'auto',
+              minWidth: 'auto',
+              p: 0,
+              svg: {
+                color: theme.color.grey4,
+              },
+            }}
             onClick={toggleShowFilter}
-            sx={{ justifyContent: 'start', mb: showFilter ? 0 : 2, p: 0 }}
           >
-            <Typography>Filters</Typography>
+            <Typography variant="h3">Filters</Typography>
           </Button>
-        </Grid>
-        <Grid display={showFilter ? 'block' : 'none'} item xs={12}>
-          <Divider />
         </Grid>
         <Grid
           columnSpacing={2}
@@ -290,10 +311,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           display={showFilter ? 'flex' : 'none'}
           item
           maxHeight={'120px'}
-          mb={1}
           overflow={'auto'}
-          px={2}
-          py={1}
           rowGap={2}
           xs={12}
         >

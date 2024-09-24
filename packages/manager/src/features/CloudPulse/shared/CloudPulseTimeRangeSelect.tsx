@@ -92,7 +92,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Select Time Duration"
         options={options}
-        placeholder={placeholder ?? 'Select Time Duration'}
+        placeholder={placeholder ?? 'Select a Time Duration'}
         value={selectedTimeRange}
       />
     );

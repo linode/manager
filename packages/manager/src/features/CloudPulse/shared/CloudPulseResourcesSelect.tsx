@@ -84,6 +84,9 @@ export const CloudPulseResourcesSelect = React.memo(
           setSelectedResources(resourceSelections);
           handleResourcesSelection(resourceSelections, savePreferences);
         }}
+        placeholder={
+          selectedResources?.length ? '' : placeholder || 'Select a Resource'
+        }
         textFieldProps={{
           InputProps: {
             sx: {
@@ -105,7 +108,6 @@ export const CloudPulseResourcesSelect = React.memo(
         limitTags={2}
         multiple
         options={getResourcesList}
-        placeholder={placeholder ?? 'Select a Resource'}
         value={selectedResources ?? []}
       />
     );

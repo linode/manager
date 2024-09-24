@@ -1,8 +1,14 @@
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
 
 import type { TimeGranularity } from '@linode/api-v4';
+
+interface IntervalOptions {
+  label: string;
+  unit: string;
+  value: number;
+}
 
 export interface IntervalSelectProperties {
   /**
@@ -39,7 +45,7 @@ export const getInSeconds = (interval: string) => {
 };
 
 // Intervals must be in ascending order here
-export const allIntervalOptions = [
+export const allIntervalOptions: IntervalOptions[] = [
   {
     label: '1 min',
     unit: 'min',
@@ -62,7 +68,7 @@ export const allIntervalOptions = [
   },
 ];
 
-const autoIntervalOption = {
+const autoIntervalOption: IntervalOptions = {
   label: 'Auto',
   unit: 'Auto',
   value: -1,
@@ -84,7 +90,7 @@ export const CloudPulseIntervalSelect = React.memo(
     const firstIntervalIndex = getIntervalIndex(scrapeIntervalValue);
 
     // all intervals displayed if srape interval > highest available interval. Error handling done by api
-    const available_interval_options =
+    const availableIntervalOptions =
       firstIntervalIndex < 0
         ? allIntervalOptions.slice()
         : allIntervalOptions.slice(
@@ -95,7 +101,7 @@ export const CloudPulseIntervalSelect = React.memo(
     let default_value =
       defaultInterval?.unit === 'Auto'
         ? autoIntervalOption
-        : available_interval_options.find(
+        : availableIntervalOptions.find(
             (obj) =>
               obj.value === defaultInterval?.value &&
               obj.unit === defaultInterval?.unit
@@ -113,11 +119,17 @@ export const CloudPulseIntervalSelect = React.memo(
     );
 
     return (
-      <Autocomplete
-        isOptionEqualToValue={(option, value) => {
+      <StyledWidgetAutocomplete
+        isOptionEqualToValue={(
+          option: IntervalOptions,
+          value: IntervalOptions
+        ) => {
           return option?.value === value?.value && option?.unit === value?.unit;
         }}
-        onChange={(_: any, selectedInterval: any) => {
+        onChange={(
+          _: React.SyntheticEvent,
+          selectedInterval: IntervalOptions
+        ) => {
           setSelectedInterval(selectedInterval);
           onIntervalChange({
             unit: selectedInterval?.unit,
@@ -131,7 +143,7 @@ export const CloudPulseIntervalSelect = React.memo(
         fullWidth={false}
         label="Select an Interval"
         noMarginTop={true}
-        options={[autoIntervalOption, ...available_interval_options]}
+        options={[autoIntervalOption, ...availableIntervalOptions]}
         sx={{ width: { xs: '100%' } }}
         value={selectedInterval}
       />

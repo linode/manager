@@ -1,13 +1,8 @@
 import { ui } from 'support/ui';
-import {
-  accountFactory,
-  regionFactory,
-} from '@src/factories';
+import { accountFactory, regionFactory } from '@src/factories';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetAccount } from 'support/intercepts/account';
-import {
-  mockAppendFeatureFlags,
-} from 'support/intercepts/feature-flags';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { makeFeatureFlagData } from 'support/util/feature-flags';
 import {
   checkboxTestId,

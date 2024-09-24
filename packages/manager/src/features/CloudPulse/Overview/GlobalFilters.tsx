@@ -1,9 +1,9 @@
+import { IconButton, useTheme } from '@mui/material';
 import { Grid } from '@mui/material';
-import { IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import Reload from 'src/assets/icons/reload.svg';
+import Reload from 'src/assets/icons/refresh.svg';
 import { Divider } from 'src/components/Divider';
 
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
@@ -84,48 +84,57 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleAnyFilterChange(REFRESH, Date.now());
   }, []);
 
+  const theme = useTheme();
+
   return (
-    <Grid container gap={1}>
-      <Grid
-        columnSpacing={2}
-        container
-        item
-        justifyContent="space-between"
-        mt={2}
-        px={2}
-        rowGap={2}
-        xs={12}
-      >
-        <Grid display={'flex'} item md={4} sm={5} xs={12}>
-          <CloudPulseDashboardSelect
-            defaultValue={preferences?.dashboardId}
+    <Grid container>
+      <Grid container item m={3} rowGap={1} xs={12}>
+        <Grid
+          columnSpacing={2}
+          container
+          item
+          justifyContent="space-between"
+          rowSpacing={2}
+        >
+          <Grid display={'flex'} item md={4} sm={5} xs={12}>
+            <CloudPulseDashboardSelect
+              defaultValue={preferences?.dashboardId}
             handleDashboardChange={onDashboardChange}
-            savePreferences
+              savePreferences
           />
-        </Grid>
-        <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
-          <CloudPulseTimeRangeSelect
-            defaultValue={preferences?.timeDuration}
+          </Grid>
+          <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
+            <CloudPulseTimeRangeSelect
+              defaultValue={preferences?.timeDuration}
             handleStatsChange={handleTimeRangeChange}
-            hideLabel
-            label="Select Time Range"
-            savePreferences
+              hideLabel
+              label="Select Time Range"
+              savePreferences
           />
-          <IconButton
-            sx={{
-              marginBlockEnd: 'auto',
-            }}
-            disabled={!selectedDashboard}
-            onClick={handleGlobalRefresh}
-            size="small"
-          >
-            <StyledReload />
-          </IconButton>
+            <IconButton
+              sx={{
+                marginBlockEnd: 'auto',
+              }}
+              disabled={!selectedDashboard}
+              onClick={handleGlobalRefresh}
+              size="small"
+            >
+              <StyledReload />
+            </IconButton>
+          </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Divider />
-      </Grid>
+      {selectedDashboard && (
+        <Grid item xs={12}>
+          <Divider
+            sx={{
+              borderColor: theme.color.grey5,
+              margin: 0,
+            }}
+          />
+        </Grid>
+      )}
+
       {selectedDashboard && (
         <CloudPulseDashboardFilterBuilder
           dashboard={selectedDashboard}

@@ -1,17 +1,16 @@
-import { GlobalGrantTypes } from '@linode/api-v4/lib/account';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { Theme, styled, useMediaQuery } from '@mui/material';
+import { styled, useMediaQuery } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { Avatar } from 'src/components/Avatar/Avatar';
+import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import { GravatarForProxy } from 'src/components/GravatarForProxy';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
@@ -28,6 +27,9 @@ import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnaly
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { getCompanyNameOrEmail } from './utils';
+
+import type { GlobalGrantTypes } from '@linode/api-v4/lib/account';
+import type { Theme } from '@mui/material';
 
 interface MenuLink {
   display: string;
@@ -205,13 +207,6 @@ export const UserMenu = React.memo(() => {
         title="Profile & Account"
       >
         <Button
-          startIcon={
-            isProxyUser ? (
-              <GravatarForProxy />
-            ) : (
-              <GravatarByEmail email={profile?.email ?? ''} />
-            )
-          }
           sx={(theme) => ({
             backgroundColor: open ? theme.bg.app : undefined,
             height: '50px',
@@ -223,6 +218,7 @@ export const UserMenu = React.memo(() => {
           disableRipple
           endIcon={getEndIcon()}
           onClick={handleClick}
+          startIcon={isProxyUser ? <AvatarForProxy /> : <Avatar />}
         >
           <Hidden mdDown>
             <Stack alignItems={'flex-start'}>

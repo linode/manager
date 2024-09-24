@@ -7,7 +7,7 @@ import { CloudPulseIntervalSelect } from './CloudPulseIntervalSelect';
 import type { TimeGranularity } from '@linode/api-v4';
 
 describe('Interval select component', () => {
-  const intervalSelectionChange = (_selectedInterval: TimeGranularity) => {};
+  const intervalSelectionChange = (_selectedInterval: TimeGranularity) => { };
 
   it('should check for the selected value in interval select dropdown', () => {
     const scrape_interval = '30s';

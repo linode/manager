@@ -24,31 +24,50 @@ describe('DatabaseSettings Component', () => {
     expect(headings[2].textContent).toBe('Delete Cluster');
   });
 
-  it('Should disable buttons if disabled = true', () => {
-    const { getByTitle } = renderWithTheme(
-      <DatabaseSettings database={database} disabled={true} />
+  it.each([
+    ['disable', true],
+    ['enable', false],
+  ])('should %s buttons when disabled is %s', (_, isDisabled) => {
+    const { getByRole, getByTitle } = renderWithTheme(
+      <DatabaseSettings database={database} disabled={isDisabled} />
     );
-    const disabledButtons = [
-      'Manage Access Controls',
-      'Reset Root Password',
-      'Save Changes',
-    ];
+    const button1 = getByTitle('Reset Root Password');
+    const button2 = getByTitle('Save Changes');
+    const button3 = getByRole('button', { name: 'Manage Access Controls' });
 
-    for (const buttonTitle of disabledButtons) {
-      const button = getByTitle(buttonTitle);
-      expect(button).toBeDisabled();
+    if (isDisabled) {
+      expect(button1).toBeDisabled();
+      expect(button2).toBeDisabled();
+      expect(button3).toBeDisabled();
+    } else {
+      expect(button1).toBeEnabled();
+      expect(button3).toBeEnabled();
     }
   });
 
-  it('Should enable buttons if disabled = false', () => {
-    const { getByTitle } = renderWithTheme(
+  it('Should render Maintenance Window with radio buttons', () => {
+    const database = databaseFactory.build({
+      platform: 'rdbms-legacy',
+    });
+    const { getByRole, queryByText } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
-    const enabledButtons = ['Manage Access Controls', 'Reset Root Password'];
+    const radioInput = getByRole('radiogroup');
+    expect(radioInput).toHaveTextContent('Monthly');
+    expect(radioInput).toHaveTextContent('Weekly');
+    expect(queryByText('Maintenance Window')).toBeTruthy();
+  });
 
-    for (const buttonTitle of enabledButtons) {
-      const button = getByTitle(buttonTitle);
-      expect(button).toBeEnabled();
-    }
+  it('Should render Weekly Maintenance Window', () => {
+    const database = databaseFactory.build({
+      platform: 'rdbms-default',
+    });
+    const { queryByText } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
+
+    expect(queryByText('Monthly')).toBeNull();
+    expect(queryByText('Weekly')).toBeNull();
+    expect(queryByText('Set a Weekly Maintenance Window')).toBeTruthy();
   });
 });

@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
@@ -33,7 +35,7 @@ export const useIsDatabasesEnabled = () => {
     );
 
     const isDatabasesV2Enabled =
-      account.capabilities.includes('Managed Databases V2') &&
+      account.capabilities.includes('Managed Databases Beta') &&
       flags.dbaasV2?.enabled;
 
     return {
@@ -49,4 +51,27 @@ export const useIsDatabasesEnabled = () => {
   return {
     isDatabasesEnabled: userCouldLoadDatabaseEngines,
   };
+};
+
+/**
+ * Checks if a given date is outside the timeframe between the oldest backup and today.
+ *
+ * @param {DateTime} date - The date you want to check.
+ * @param {DateTime | null} oldestBackup - The date of the oldest backup. If there are no backups (i.e., `null`), the function will return `false`.
+ * @returns {boolean}
+ *   - `true` if the date is before the oldest backup or after today.
+ *   - `false` if the date is within the range between the oldest backup and today.
+ */
+export const isOutsideBackupTimeframe = (
+  date: DateTime,
+  oldestBackup: DateTime | null
+) => {
+  const today = DateTime.now().startOf('day');
+  if (!oldestBackup) {
+    return false;
+  }
+  const backupStart = oldestBackup.startOf('day');
+  const dateStart = date.startOf('day');
+
+  return dateStart < backupStart || dateStart > today;
 };
