@@ -52,5 +52,8 @@ export const linodesDetailRoute = createRoute({
     )
   ),
   getParentRoute: () => linodesRoute,
+  parseParams: (params) => ({
+    linodeId: Number(params.linodeId),
+  }),
   path: '$linodeId',
 });
