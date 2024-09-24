@@ -40,7 +40,7 @@ export const accountUsersUsernameRoute = createRoute({
     }))
   ),
   getParentRoute: () => accountRoute,
-  path: 'users/:username',
+  path: 'users/$username',
 });
 
 export const accountBillingRoute = createRoute({
@@ -68,7 +68,10 @@ export const accountInvoicesInvoiceIdRoute = createRoute({
     )
   ),
   getParentRoute: () => accountRoute,
-  path: 'billing/invoices/:invoiceId',
+  parseParams: (params) => ({
+    invoiceId: Number(params.invoiceId),
+  }),
+  path: 'billing/invoices/$invoiceId',
 });
 
 export const accountEntityTransfersCreateRoute = createRoute({

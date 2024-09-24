@@ -60,6 +60,9 @@ export const placementGroupsEditRoute = createRoute({
     }))
   ),
   getParentRoute: () => placementGroupsRoute,
+  parseParams: (params) => ({
+    id: Number(params.id),
+  }),
   path: 'edit/$id',
 });
 
@@ -72,6 +75,9 @@ export const placementGroupsDeleteRoute = createRoute({
     }))
   ),
   getParentRoute: () => placementGroupsRoute,
+  parseParams: (params) => ({
+    id: Number(params.id),
+  }),
   path: 'delete/$id',
 });
 
@@ -84,7 +90,11 @@ export const placementGroupsUnassignRoute = createRoute({
     }))
   ),
   getParentRoute: () => placementGroupsRoute,
-  path: '$id/unassign/$linodeId?',
+  parseParams: (params) => ({
+    id: Number(params.id),
+    linodeId: Number(params.linodeId),
+  }),
+  path: '$id/unassign/$linodeId',
 });
 
 export const placementGroupsDetailRoute = createRoute({
@@ -96,5 +106,8 @@ export const placementGroupsDetailRoute = createRoute({
     }))
   ),
   getParentRoute: () => placementGroupsRoute,
+  parseParams: (params) => ({
+    id: Number(params.id),
+  }),
   path: '$id',
 });
