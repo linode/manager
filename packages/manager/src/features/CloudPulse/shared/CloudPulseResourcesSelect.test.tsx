@@ -33,6 +33,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
     const { getByPlaceholderText, getByTestId } = renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
+        placeholder="Select Resources"
         region={undefined}
         resourceType={undefined}
       />

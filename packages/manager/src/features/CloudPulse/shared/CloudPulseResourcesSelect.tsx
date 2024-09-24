@@ -105,6 +105,7 @@ export const CloudPulseResourcesSelect = React.memo(
         limitTags={2}
         multiple
         options={getResourcesList}
+        placeholder={placeholder ?? 'Select a Resource'}
         value={selectedResources ?? []}
       />
     );
