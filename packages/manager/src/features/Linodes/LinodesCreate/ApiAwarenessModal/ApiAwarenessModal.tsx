@@ -137,11 +137,12 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
               onClick={() => sendApiAwarenessClickEvent('link', 'Linode API')}
               to="https://techdocs.akamai.com/linode-api/reference/api/"
             >
-              Linode API.
-            </Link>{' '}
-            Select one of the methods below and paste the corresponding command
-            into your local terminal. The values for each command have been
-            populated with the selections made in the Cloud Manager create form.
+              Linode API
+            </Link>
+            . Select one of the methods below and paste the corresponding
+            command into your local terminal. The values for each command have
+            been populated with the selections made in the Cloud Manager create
+            form.
           </>
         ) : (
           'Create a Linode in the command line using either cURL or the Linode CLI — both of which are powered by the Linode API. Select one of the methods below and paste the corresponding command into your local terminal. The values for each command have been populated with the selections made in the Cloud Manager create form.'
