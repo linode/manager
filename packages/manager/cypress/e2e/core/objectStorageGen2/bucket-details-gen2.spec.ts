@@ -13,7 +13,7 @@ import {
 } from 'src/factories';
 import { ACLType, ObjectStorageEndpointTypes } from '@linode/api-v4';
 
-describe('Object Storage Gen 2 bucket details tab tests', () => {
+describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       objMultiCluster: true,
