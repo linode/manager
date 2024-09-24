@@ -11,10 +11,14 @@ import {
   objectStorageEndpointsFactory,
   regionFactory,
 } from 'src/factories';
-import { ACLType, ObjectStorageEndpointTypes } from '@linode/api-v4';
+import {
+  ACLType,
+  ObjectStorageBucketAccess,
+  ObjectStorageEndpointTypes,
+} from '@linode/api-v4';
 import { checkRateLimitsTable } from './bucket-create-gen2.spec';
 
-describe('Object Storage Gen 2 bucket details tabs', () => {
+describe.only('Object Storage Gen 2 bucket details tabs', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       objMultiCluster: true,
@@ -35,43 +39,48 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
     capabilities: ['Object Storage'],
   });
 
+  const createMocksAndNavigateToTab = (
+    endpointType: ObjectStorageEndpointTypes,
+    tab: string,
+    mockAccess?: ObjectStorageBucketAccess
+  ) => {
+    const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: endpointType,
+      region: mockRegion.id,
+    });
+    const { cluster, label } = mockBucket;
+    const mockEndpoint = objectStorageEndpointsFactory.build({
+      endpoint_type: endpointType,
+      region: mockRegion.id,
+    });
+
+    mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
+      'getBucketsForRegion'
+    );
+    mockGetObjectStorageEndpoints([mockEndpoint]).as(
+      'getObjectStorageEndpoints'
+    );
+
+    cy.visitWithLogin(`/object-storage/buckets/${cluster}/${label}/${tab}`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getAccount',
+      '@getObjectStorageEndpoints',
+      '@getBucketsForRegion',
+    ]);
+
+    if (mockAccess) {
+      mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
+      cy.wait('@getBucketAccess');
+    }
+  };
+
   describe('Access and SSL/TLS tabs', () => {
     const mockAccess = {
       acl: 'private' as ACLType,
       acl_xml: '',
       cors_enabled: true,
       cors_xml: '',
-    };
-
-    const createMocksAndNavigateToTab = (
-      endpointType: ObjectStorageEndpointTypes
-    ) => {
-      const mockBucket = objectStorageBucketFactoryGen2.build({
-        endpoint_type: endpointType,
-        region: mockRegion.id,
-      });
-      const { cluster, label } = mockBucket;
-      const mockEndpoint = objectStorageEndpointsFactory.build({
-        endpoint_type: endpointType,
-        region: mockRegion.id,
-      });
-
-      mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
-      mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
-        'getBucketsForRegion'
-      );
-      mockGetObjectStorageEndpoints([mockEndpoint]).as(
-        'getObjectStorageEndpoints'
-      );
-
-      cy.visitWithLogin(`/object-storage/buckets/${cluster}/${label}/access`);
-      cy.wait([
-        '@getFeatureFlags',
-        '@getAccount',
-        '@getObjectStorageEndpoints',
-        '@getBucketsForRegion',
-        '@getBucketAccess',
-      ]);
     };
 
     const confirmCORSToggleAndSSLTabPresent = () => {
@@ -103,7 +112,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
      * - Confirms the SSL/TLS tab appears for buckets with endpoint type E0
      */
     it('does not hide the CORS toggle or SSL/TLS tab for buckets with an E0 endpoint', () => {
-      createMocksAndNavigateToTab('E0');
+      createMocksAndNavigateToTab('E0', 'access', mockAccess);
 
       // confirm CORS toggle is visible and the SSL/TLS tab is present
       confirmCORSToggleAndSSLTabPresent();
@@ -114,7 +123,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
      * - Confirms the SSL/TLS tab appears for buckets with endpoint type E1
      */
     it('does not hide the CORS toggle or SSL/TLS tab for buckets with an E1 endpoint', () => {
-      createMocksAndNavigateToTab('E1');
+      createMocksAndNavigateToTab('E1', 'access', mockAccess);
 
       // confirm CORS toggle is visible and the SSL/TLS tab is present
       confirmCORSToggleAndSSLTabPresent();
@@ -125,7 +134,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
      * - Confirms the SSL/TLS tab appears for buckets with endpoint type E2
      */
     it('hides the CORS toggle and displays a notice for buckets with an E2 endpoint', () => {
-      createMocksAndNavigateToTab('E2');
+      createMocksAndNavigateToTab('E2', 'access', mockAccess);
 
       // confirms the CORS toggle is not visible
       confirmCORSNotPresent();
@@ -140,7 +149,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
      * - Confirms the SSL/TLS tab is hidden for buckets with endpoint type E3
      */
     it('hides the CORS toggle, displays a notice, and disables the SSL/TLS tab for buckets with an E3 endpoint', () => {
-      createMocksAndNavigateToTab('E3');
+      createMocksAndNavigateToTab('E3', 'access', mockAccess);
 
       // confirms the CORS toggle is not visible
       confirmCORSNotPresent();
@@ -150,7 +159,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
     });
   });
 
-  describe.only('Properties tab', () => {
+  describe('Properties tab', () => {
     // TODO: Confirm AC as rn the properties tab shows up for E0/E1 (but it's basically a blank page)
     // /**
     //  * - Confirms absence of Properties tab for buckets with endpoint type E0
@@ -172,32 +181,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
      * - Confirms the Properties tab contains the bucket rate limit table
      */
     it('shows the properties tab and rate limit table for buckets with endpoint type E2', () => {
-      const mockBucket = objectStorageBucketFactoryGen2.build({
-        endpoint_type: 'E2',
-        region: mockRegion.id,
-      });
-      const { cluster, label } = mockBucket;
-      const mockEndpoint = objectStorageEndpointsFactory.build({
-        endpoint_type: 'E2',
-        region: mockRegion.id,
-      });
-
-      mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
-        'getBucketsForRegion'
-      );
-      mockGetObjectStorageEndpoints([mockEndpoint]).as(
-        'getObjectStorageEndpoints'
-      );
-
-      cy.visitWithLogin(
-        `/object-storage/buckets/${cluster}/${label}/properties`
-      );
-      cy.wait([
-        '@getFeatureFlags',
-        '@getAccount',
-        '@getObjectStorageEndpoints',
-        '@getBucketsForRegion',
-      ]);
+      createMocksAndNavigateToTab('E2', 'properties');
 
       cy.findByText('Bucket Rate Limits');
       cy.contains(
@@ -212,32 +196,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
      * - Confirms the Properties tab contains the bucket rate limit table
      */
     it('shows the properties tab and rate limit table for buckets with endpoint type E3', () => {
-      const mockBucket = objectStorageBucketFactoryGen2.build({
-        endpoint_type: 'E3',
-        region: mockRegion.id,
-      });
-      const { cluster, label } = mockBucket;
-      const mockEndpoint = objectStorageEndpointsFactory.build({
-        endpoint_type: 'E3',
-        region: mockRegion.id,
-      });
-
-      mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
-        'getBucketsForRegion'
-      );
-      mockGetObjectStorageEndpoints([mockEndpoint]).as(
-        'getObjectStorageEndpoints'
-      );
-
-      cy.visitWithLogin(
-        `/object-storage/buckets/${cluster}/${label}/properties`
-      );
-      cy.wait([
-        '@getFeatureFlags',
-        '@getAccount',
-        '@getObjectStorageEndpoints',
-        '@getBucketsForRegion',
-      ]);
+      createMocksAndNavigateToTab('E3', 'properties');
 
       cy.findByText('Bucket Rate Limits');
       cy.contains(
