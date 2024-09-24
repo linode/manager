@@ -24,15 +24,15 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
-  { flag: 'linodeCreateRefactor', label: 'Linode Create v2' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
-  { flag: 'placementGroups', label: 'Placement Groups' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'databaseResize', label: 'Database Resize' },
+  { flag: 'apicliDxToolsAdditions', label: 'APICLI DX Tools Additions' },
+  { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
 ];
 
 const renderFlagItems = (

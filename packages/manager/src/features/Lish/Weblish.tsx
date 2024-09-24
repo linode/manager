@@ -107,7 +107,7 @@ export class Weblish extends React.Component<Props, State> {
     const { group, label } = linode;
 
     this.terminal = new Terminal({
-      cols: 120,
+      cols: 80,
       cursorBlink: true,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
       rows: 40,

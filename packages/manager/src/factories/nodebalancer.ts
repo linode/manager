@@ -1,9 +1,10 @@
-import {
+import Factory from 'src/factories/factoryProxy';
+
+import type {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers/types';
-import Factory from 'src/factories/factoryProxy';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   client_conn_throttle: 0,

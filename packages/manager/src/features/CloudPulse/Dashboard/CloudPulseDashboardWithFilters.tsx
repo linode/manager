@@ -1,4 +1,4 @@
-import { Divider, Grid, styled } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import React from 'react';
 
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
@@ -100,7 +100,11 @@ export const CloudPulseDashboardWithFilters = React.memo(
 
     return (
       <>
-        <Paper>
+        <Paper
+          sx={{
+            padding: 0,
+          }}
+        >
           <Grid
             justifyContent={{
               sm: 'flex-end',
@@ -126,16 +130,12 @@ export const CloudPulseDashboardWithFilters = React.memo(
               />
             </Grid>
           </Grid>
-          <Divider />
           {isFilterBuilderNeeded && (
-            <>
-              <CloudPulseDashboardFilterBuilder
-                dashboard={dashboard}
-                emitFilterChange={onFilterChange}
-                isServiceAnalyticsIntegration={true}
-              />
-              <Divider />
-            </>
+            <CloudPulseDashboardFilterBuilder
+              dashboard={dashboard}
+              emitFilterChange={onFilterChange}
+              isServiceAnalyticsIntegration={true}
+            />
           )}
         </Paper>
         {isMandatoryFiltersSelected ? (

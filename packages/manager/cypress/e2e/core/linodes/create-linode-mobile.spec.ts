@@ -7,23 +7,10 @@ import { MOBILE_VIEWPORTS } from 'support/constants/environment';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { ui } from 'support/ui';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 
 describe('Linode create mobile smoke', () => {
-  // TODO Remove feature flag mocks when `linodeCreateRefactor` flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      linodeCreateRefactor: makeFeatureFlagData(true),
-    });
-    mockGetFeatureFlagClientstream();
-  });
-
   MOBILE_VIEWPORTS.forEach((viewport) => {
     /*
      * - Confirms Linode create flow can be completed on common mobile screen sizes
@@ -42,7 +29,7 @@ describe('Linode create mobile smoke', () => {
       cy.viewport(viewport.width, viewport.height);
       cy.visitWithLogin('/linodes/create');
 
-      linodeCreatePage.selectImage('Debian 11');
+      linodeCreatePage.selectImage('Ubuntu 24.04 LTS');
       linodeCreatePage.selectRegionById(mockLinodeRegion.id);
       linodeCreatePage.selectPlanCard('Shared CPU', 'Nanode 1 GB');
       linodeCreatePage.setLabel(mockLinode.label);
@@ -52,7 +39,7 @@ describe('Linode create mobile smoke', () => {
         .scrollIntoView()
         .within(() => {
           cy.findByText('Nanode 1 GB').should('be.visible');
-          cy.findByText('Debian 11').should('be.visible');
+          cy.findByText('Ubuntu 24.04 LTS').should('be.visible');
           cy.findByText(mockLinodeRegion.label).should('be.visible');
         });
 
@@ -65,7 +52,7 @@ describe('Linode create mobile smoke', () => {
       cy.wait('@createLinode').then((xhr) => {
         const requestBody = xhr.request.body;
 
-        expect(requestBody['image']).to.equal('linode/debian11');
+        expect(requestBody['image']).to.equal('linode/ubuntu24.04');
         expect(requestBody['label']).to.equal(mockLinode.label);
         expect(requestBody['region']).to.equal(mockLinodeRegion.id);
         expect(requestBody['type']).to.equal('g6-nanode-1');

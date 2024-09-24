@@ -1,4 +1,3 @@
-import { Volume } from '@linode/api-v4';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -6,7 +5,11 @@ import * as React from 'react';
 import { number, object } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
+import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
+import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
+import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
@@ -16,6 +19,8 @@ import { useAttachVolumeMutation } from 'src/queries/volumes/volumes';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
+
+import type { Volume } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -42,6 +47,10 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
   const { data: grants } = useGrants();
 
   const { error, mutateAsync: attachVolume } = useAttachVolumeMutation();
+
+  const {
+    isBlockStorageEncryptionFeatureEnabled,
+  } = useIsBlockStorageEncryptionFeatureEnabled();
 
   const formik = useFormik({
     initialValues: { config_id: -1, linode_id: -1 },
@@ -142,7 +151,21 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
           onBlur={() => null}
           value={formik.values.config_id}
         />
-
+        {isBlockStorageEncryptionFeatureEnabled && (
+          <Box
+            sx={{
+              marginLeft: '2px',
+              marginTop: '16px',
+            }}
+          >
+            <Checkbox
+              checked={volume?.encryption === 'enabled'}
+              disabled
+              text="Encrypt Volume"
+              toolTipText={BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY}
+            />
+          </Box>
+        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',

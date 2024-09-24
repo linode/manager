@@ -3,9 +3,9 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "husky": "^9.1.5",
-    "typescript": "^5.5.4",
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.6",
+    "typescript": "^5.5.4"
   },
   "scripts": {
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
@@ -30,6 +30,7 @@
     "cy:ci": "pnpm cy:e2e",
     "cy:debug": "pnpm --filer @linode/manager cy:debug",
     "cy:component": "pnpm --filter @linode/manager cy:component",
+    "cy:component:run": "pnpm --filter @linode/manager cy:component:run",
     "cy:rec-snap": "pnpm --filter @linode/manager cy:rec-snap",
     "changeset": "node scripts/changelog/changeset.mjs",
     "generate-changelogs": "node scripts/changelog/generate-changelogs.mjs",

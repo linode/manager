@@ -419,7 +419,7 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   handleClickCreateUsingCommandLine = (
-    isDxToolsAdditionsEnabled: boolean | undefined
+    apicliButtonCopy: string | undefined
   ) => {
     const payload = {
       authorized_users: this.props.authorized_users,
@@ -443,15 +443,11 @@ export class LinodeCreate extends React.PureComponent<
     sendLinodeCreateFormInputEvent({
       createType: 'OS',
       interaction: 'click',
-      label: isDxToolsAdditionsEnabled
-        ? 'View Code Snippets'
-        : 'Create Using Command Line',
+      label: apicliButtonCopy ?? 'Create Using Command Line',
     });
     sendApiAwarenessClickEvent(
       'Button',
-      isDxToolsAdditionsEnabled
-        ? 'View Code Snippets'
-        : 'Create Using Command Line'
+      apicliButtonCopy ?? 'Create Using Command Line'
     );
     this.props.checkValidation(payload);
   };
@@ -640,7 +636,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const hasErrorFor = getErrorMap(errorMap, errors);
     const generalError = getErrorMap(errorMap, errors).none;
-    const isDxToolsAdditionsEnabled = this.props.flags?.apicliDxToolsAdditions;
+    const apicliButtonCopy = this.props.flags?.apicliButtonCopy;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
@@ -1204,16 +1200,12 @@ export class LinodeCreate extends React.PureComponent<
                 secureVMViolation
               }
               onClick={() =>
-                this.handleClickCreateUsingCommandLine(
-                  isDxToolsAdditionsEnabled
-                )
+                this.handleClickCreateUsingCommandLine(apicliButtonCopy)
               }
               buttonType="outlined"
               data-qa-api-cli-linode
             >
-              {isDxToolsAdditionsEnabled
-                ? 'View Code Snippets'
-                : 'Create using command line'}
+              {apicliButtonCopy ?? ' Create using command line'}
             </StyledCreateButton>
             <StyledCreateButton
               disabled={

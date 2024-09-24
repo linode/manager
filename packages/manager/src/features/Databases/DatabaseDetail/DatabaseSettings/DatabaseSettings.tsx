@@ -1,9 +1,8 @@
-import { Database } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import { Typography } from 'src/components/Typography';
 import { Paper } from 'src/components/Paper';
+import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 
 import AccessControls from '../AccessControls';
@@ -12,12 +11,15 @@ import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
 import MaintenanceWindow from './MaintenanceWindow';
 
+import type { Database } from '@linode/api-v4/lib/databases/types';
+
 interface Props {
   database: Database;
+  disabled?: boolean;
 }
 
 export const DatabaseSettings: React.FC<Props> = (props) => {
-  const { database } = props;
+  const { database, disabled } = props;
   const { data: profile } = useProfile();
 
   const accessControlCopy = (
@@ -27,11 +29,15 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     </Typography>
   );
 
-  const resetRootPasswordCopy =
-    'Resetting your root password will automatically generate a new password. You can view the updated password on your database cluster summary page. ';
+  const isLegacy = database.platform === 'rdbms-legacy';
 
-  const deleteClusterCopy =
-    'Deleting a database cluster is permanent and cannot be undone.';
+  const resetRootPasswordCopy = isLegacy
+    ? 'Resetting your root password will automatically generate a new password. You can view the updated password on your database cluster summary page. '
+    : 'Reset your root password if someone should no longer have access to the root user or if you believe your password may have been compromised. This will automatically generate a new password that you’ll be able to see on your database cluster summary page.';
+
+  const deleteClusterCopy = isLegacy
+    ? 'Deleting a database cluster is permanent and cannot be undone.'
+    : 'Permanently remove an unused database cluster.';
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [
@@ -58,11 +64,16 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   return (
     <>
       <Paper>
-        <AccessControls database={database} description={accessControlCopy} />
+        <AccessControls
+          database={database}
+          description={accessControlCopy}
+          disabled={disabled}
+        />
         <Divider spacingBottom={22} spacingTop={28} />
         <DatabaseSettingsMenuItem
           buttonText="Reset Root Password"
           descriptiveText={resetRootPasswordCopy}
+          disabled={disabled}
           onClick={onResetRootPassword}
           sectionTitle="Reset Root Password"
         />
@@ -75,7 +86,11 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           sectionTitle="Delete Cluster"
         />
         <Divider spacingBottom={22} spacingTop={28} />
-        <MaintenanceWindow database={database} timezone={profile?.timezone} />
+        <MaintenanceWindow
+          database={database}
+          disabled={disabled}
+          timezone={profile?.timezone}
+        />
       </Paper>
       <DatabaseSettingsDeleteClusterDialog
         databaseEngine={database.engine}

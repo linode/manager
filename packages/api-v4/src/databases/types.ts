@@ -28,15 +28,15 @@ export interface DatabaseEngine {
 }
 
 export type DatabaseStatus =
+  | 'active'
+  | 'degraded'
+  | 'failed'
   | 'provisioning'
   | 'resizing'
-  | 'active'
-  | 'suspending'
-  | 'suspended'
-  | 'resuming'
   | 'restoring'
-  | 'failed'
-  | 'degraded';
+  | 'resuming'
+  | 'suspended'
+  | 'suspending';
 
 export type DatabaseBackupType = 'snapshot' | 'auto';
 
@@ -151,6 +151,8 @@ export interface BaseDatabase {
    * A key/value object where the key is an IP address and the value is a member type.
    */
   members: Record<string, MemberType>;
+  platform?: string;
+  oldest_restore_time?: string;
 }
 
 export interface MySQLDatabase extends BaseDatabase {

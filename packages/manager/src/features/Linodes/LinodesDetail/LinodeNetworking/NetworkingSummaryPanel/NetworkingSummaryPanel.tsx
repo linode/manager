@@ -17,7 +17,7 @@ interface Props {
 export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   // @todo maybe move this query closer to the consuming component
   const { data: linode } = useLinodeQuery(props.linodeId);
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
   const theme = useTheme();
 
   if (!linode) {
@@ -25,7 +25,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
   }
 
   const hideNetworkTransfer =
-    isGeckoGAEnabled && linode.site_type === 'distributed';
+    isGeckoLAEnabled && linode.site_type === 'distributed';
 
   return (
     <Paper>

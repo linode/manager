@@ -91,6 +91,9 @@ describe('Linode Config management', () => {
         }
       );
     });
+    beforeEach(() => {
+      cy.tag('method:e2e');
+    });
 
     /*
      * - Tests Linode config creation end-to-end using real API requests.
@@ -381,7 +384,7 @@ describe('Linode Config management', () => {
 
         // Confirm toast message and that UI updates to reflect clone in progress.
         ui.toast.assertMessage(
-          `Linode ${sourceLinode.label} successfully cloned to ${destLinode.label}.`
+          `Linode ${sourceLinode.label} has been cloned to ${destLinode.label}.`
         );
         cy.findByText(/CLONING \(\d+%\)/).should('be.visible');
       });
