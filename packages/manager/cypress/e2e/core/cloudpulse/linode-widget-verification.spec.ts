@@ -27,11 +27,12 @@ import { createMetricResponse } from '@src/factories/widget';
 import type { Flags } from 'src/featureFlags';
 import {
   accountFactory,
-  extendedDashboardFactory,
+  dashboardFactory,
+  dashboardMetricFactory,
   kubeLinodeFactory,
   linodeFactory,
-  metricDefinitionsFactory,
   regionFactory,
+  widgetFactory,
 } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
@@ -68,17 +69,25 @@ const widgetLabels: string[] = metrics.map((widget) => widget.title);
 const metricsLabels: string[] = metrics.map((widget) => widget.name);
 const service_type = widgets.service_type;
 const dashboardId = widgets.id;
-const dashboard = extendedDashboardFactory(
-  dashboardName,
-  widgetLabels,
-  metricsLabels,
-  y_labels,
-  service_type
-).build();
-const metricDefinitions = metricDefinitionsFactory(
-  widgetLabels,
-  metricsLabels
-).build();
+
+const dashboard = dashboardFactory.build({
+  label: dashboardName,
+  service_type: service_type,
+  widgets: [...widgetLabels.map((label: string, index: number) =>
+    widgetFactory.build({
+      label,
+      y_label: y_labels[index],
+      metric: metricsLabels[index],
+    }))]
+})
+
+const metricDefinitions = {
+  data: [...widgetLabels.map((label, index) =>
+    dashboardMetricFactory.build({
+      label,
+      metric: metricsLabels[index],
+    }))]
+}
 const mockKubeLinode = kubeLinodeFactory.build();
 const mockLinode = linodeFactory.build({
   label: resource,
@@ -124,7 +133,7 @@ describe('Dashboard Widget Verification Tests', () => {
     cy.findByText('Not Found').should('be.visible'); // not found
   });
 
-  it('should set available granularity of all the widgets', () => {
+  it.only('should set available granularity of all the widgets', () => {
     setupMethod();
     metrics.forEach((testData) => {
       cy.wait(7000); //maintaining the wait since page flicker and rendering

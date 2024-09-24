@@ -13,18 +13,6 @@ const chart_type = ['area', 'area', 'area', 'line'];
 const scrape_interval = ['2m', '30s', '30s', '30s'];
 const units_interval = ['percent', 'byte', 'byte', 'ops_per_second'];
 
-/* export const dashboardFactory = Factory.Sync.makeFactory<Dashboard>({
-  created: new Date().toISOString(),
-  id: Factory.each((i) => i),
-  label: 'Linode Dashboard',
-  service_type: 'linode',
-  time_duration: {
-    unit: 'min',
-    value: 30,
-  },
-  updated: new Date().toISOString(),
-  widgets: Factory.each(() => widgetFactory.buildList(4)), // Create a list of 1 widgets
-});*/
 /**
  * Factory function to create instances of the `Dashboard` model with predefined properties and values.
  *
@@ -66,31 +54,6 @@ export const dashboardFactory = Factory.Sync.makeFactory<Dashboard>({
   updated: new Date().toISOString(),
   widgets: [],
 });
-
-export const extendedDashboardFactory = (
-  dashboardLabel: string,
-  widgetLabels: string[],
-  metricsLabels: string[],
-  y_labels: string[],
-  service: string
-) => {
-  return Factory.Sync.makeFactory<Dashboard>({
-    created: new Date().toISOString(),
-    id: Factory.each((i) => i),
-    label: dashboardLabel,
-    service_type: service,
-    time_duration: {
-      unit: 'min',
-      value: 30,
-    },
-    updated: new Date().toISOString(),
-    widgets: Factory.each(() =>
-      widgetFactory(widgetLabels, metricsLabels, y_labels).buildList(
-        widgetLabels.length
-      )
-    ),
-  });
-};
 /**
  * Factory function to create instances of the `Widgets` model with predefined properties and values.
  *
@@ -127,76 +90,31 @@ export const extendedDashboardFactory = (
  * const myWidget = myWidgetFactory.build(); // Creates a Widget instance with the specified properties.
  * ```
  */
-
-export const widgetFactory = (
-  widgetLabels: string[],
-  metricsLabels: string[],
-  y_labels: string[]
-) => {
-  return Factory.Sync.makeFactory<Widgets>({
-    aggregate_function: 'avg',
-    chart_type: Factory.each((i) => chart_type[i % chart_type.length]),
-    color: Factory.each((i) => color[i % color.length]),
-    filters: [],
-    group_by: 'region',
-    label: Factory.each((i) => widgetLabels[i % widgetLabels.length]),
-    metric: Factory.each((i) => metricsLabels[i % metricsLabels.length]),
-    namespace_id: Factory.each((i) => i % 10),
-    region_id: Factory.each((i) => i % 5),
-    resource_id: Factory.each((i) => [`resource-${i}`]),
-    service_type: 'default',
-    serviceType: 'default',
-    size: 12,
-    time_duration: {
-      unit: 'min',
-      value: 30,
-    },
-    time_granularity: {
-      unit: 'hour',
-      value: 1,
-    },
-    unit: Factory.each((i) => units[i % units.length]),
-    y_label: Factory.each((i) => y_labels[i % y_labels.length]),
-  });
-};
-/**
- * Factory function to create instances of the `MetricDefinitions` model with predefined properties and values.
- *
- * @param {string[]} widgetLabels - An array of labels for widgets used in the metric definitions.
- * @param {string[]} metricsLabels - An array of labels for metrics associated with the widget definitions.
- *
- * @returns {Factory<MetricDefinitions>} A Factory instance for creating `MetricDefinitions` objects with the specified properties.
- *
- * @description
- * This function uses the `Factory.Sync.makeFactory` method to create a factory for generating `MetricDefinitions` objects.
- * The created `MetricDefinitions` object includes:
- * - `data`: An array of metric definitions. Each metric definition is created using the `dashboardMetricFactory` function, which provides the following properties:
- *   - `label`: A label for the metric, chosen from the `widgetLabels` array. The label is selected based on the index modulo the length of `widgetLabels` to ensure cycling through the labels.
- *   - `metric`: A metric label, chosen from the `metricsLabels` array. The metric is selected based on the index modulo the length of `metricsLabels` to ensure cycling through the labels.
- *
- * The `data` array contains metric definitions where the number of elements matches the length of the `widgetLabels` array. Each element in the array represents a metric definition corresponding to a widget label and a metric label.
- *
- * Usage Example:
- * ```typescript
- * const myMetricDefinitionsFactory = metricDefinitionsFactory(['Widget1', 'Widget2'], ['Metric1', 'Metric2']);
- * const myMetricDefinitions = myMetricDefinitionsFactory.build(); // Creates a MetricDefinitions instance with the specified properties.
- * ```
- */
-export const metricDefinitionsFactory = (
-  widgetLabels: string[],
-  metricsLabels: string[]
-) => {
-  return Factory.Sync.makeFactory<MetricDefinitions>({
-    data: Factory.each(() => {
-      return widgetLabels.map((_, index) => {
-        return dashboardMetricFactory(widgetLabels, metricsLabels).build({
-          label: widgetLabels[index % widgetLabels.length],
-          metric: metricsLabels[index % metricsLabels.length],
-        });
-      });
-    }),
-  });
-};
+export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
+  aggregate_function: 'avg',
+  chart_type: Factory.each((i) => chart_type[i % chart_type.length]),
+  color: Factory.each((i) => color[i % color.length]),
+  filters: [],
+  group_by: 'region',
+  label: Factory.each((i) => 'widget_label_' + i),
+  metric: Factory.each((i) => 'widget_metric_' + i),
+  namespace_id: Factory.each((i) => i % 10),
+  region_id: Factory.each((i) => i % 5),
+  resource_id: Factory.each((i) => [`resource-${i}`]),
+  service_type: 'default',
+  serviceType: 'default',
+  size: 12,
+  time_duration: {
+    unit: 'min',
+    value: 30,
+  },
+  time_granularity: {
+    unit: 'hour',
+    value: 1,
+  },
+  unit: Factory.each((i) => units[i % units.length]),
+  y_label: Factory.each((i) => 'y_label_' + i),
+});
 /**
  * Factory function to create instances of the `AvailableMetrics` model with predefined properties and values.
  *
@@ -223,19 +141,16 @@ export const metricDefinitionsFactory = (
  * ```
  */
 
-const dashboardMetricFactory = (
-  widgetLabels: string[],
-  metricsLabels: string[]
-) => {
-  return Factory.Sync.makeFactory<AvailableMetrics>({
+export const dashboardMetricFactory = Factory.Sync.makeFactory<AvailableMetrics>(
+  {
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
     dimensions: [],
-    label: Factory.each((i) => widgetLabels[i % widgetLabels.length]), // This might be overridden
-    metric: Factory.each((i) => metricsLabels[i % metricsLabels.length]), // This might be overridden
+    label: Factory.each((i) => 'widget_label_' + i), // This might be overridden
+    metric: Factory.each((i) => 'widget_metric_' + i), // This might be overridden
     metric_type: 'gauge',
     scrape_interval: Factory.each(
       (i) => scrape_interval[i % scrape_interval.length]
     ),
     unit: Factory.each((i) => units_interval[i % units_interval.length]),
-  });
-};
+  }
+);
