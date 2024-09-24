@@ -336,7 +336,6 @@ export const lightTheme: ThemeOptions = {
           svg: {
             color: Color.Neutrals[40],
           },
-          top: 'unset',
         },
         groupLabel: {
           fontFamily: latoWeb.bold,
@@ -808,23 +807,20 @@ export const lightTheme: ThemeOptions = {
             marginTop: 0,
           },
         },
-        input: ({ theme }) => ({
+        input: {
           '&::placeholder': {
             color: Color.Neutrals[50],
           },
           boxSizing: 'border-box',
-          [theme.breakpoints.only('xs')]: {
-            fontSize: '1rem',
-          },
           fontSize: '0.9rem',
           padding: 8,
-        }),
+        },
         inputMultiline: {
           lineHeight: 1.4,
           minHeight: 125,
           padding: '9px 12px',
         },
-        root: ({ theme }) => ({
+        root: {
           '& svg': {
             '&:hover': {
               color: Color.Brand[60],
@@ -858,16 +854,12 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: Color.Neutrals.White,
           border: `1px solid ${Color.Neutrals[40]}`,
           boxSizing: 'border-box',
-          [theme.breakpoints.down('xs')]: {
-            maxWidth: '100%',
-            width: '100%',
-          },
           color: primaryColors.text,
           lineHeight: 1,
           maxWidth: inputMaxWidth,
           minHeight: 34,
           transition: 'border-color 225ms ease-in-out',
-        }),
+        },
       },
     },
     MuiInputAdornment: {
@@ -875,21 +867,15 @@ export const lightTheme: ThemeOptions = {
         positionEnd: {
           marginRight: 10,
         },
-        root: ({ theme }) => ({
+        root: {
           '& p': {
-            [theme.breakpoints.only('xs')]: {
-              fontSize: '1rem',
-            },
             color: Color.Neutrals[70],
             fontSize: '0.9rem',
-          },
-          [theme.breakpoints.only('xs')]: {
-            fontSize: '1rem',
           },
           color: Color.Neutrals[70],
           fontSize: '0.9rem',
           whiteSpace: 'nowrap',
-        }),
+        },
       },
     },
     MuiInputBase: {

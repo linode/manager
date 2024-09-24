@@ -54,10 +54,9 @@ describe('Database Create', () => {
       })
     );
 
-
     const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
       // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-      MemoryRouter: { initialEntries: ["/databases/create"] },
+      MemoryRouter: { initialEntries: ['/databases/create'] },
     });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -83,15 +82,9 @@ describe('Database Create', () => {
       })
     );
 
-    // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-    const history = createMemoryHistory();
-    history.push('databases/create');
-
-    const { getAllByText, getByTestId } = renderWithTheme(
-      <Router history={history}>
-        <DatabaseCreate />
-      </Router>
-    );
+    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      MemoryRouter: { initialEntries: ['databases/create'] },
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -117,10 +110,6 @@ describe('Database Create', () => {
       })
     );
 
-    // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-    const history = createMemoryHistory();
-    history.push('databases/create');
-
     const flags = {
       dbaasV2: {
         beta: true,
@@ -128,12 +117,11 @@ describe('Database Create', () => {
       },
     };
 
-    const { getAllByText, getByTestId } = renderWithTheme(
-      <Router history={history}>
-        <DatabaseCreate />
-      </Router>,
-      { flags }
-    );
+    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
+      MemoryRouter: { initialEntries: ['databases/create'] },
+      flags,
+    });
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
