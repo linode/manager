@@ -1,4 +1,3 @@
-import { TableCell } from '@mui/material';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -60,8 +59,14 @@ const DatabaseLandingTable = ({
               Status
             </TableSortCell>
             {isNewDatabase && (
-              /* TODO add back TableSortCell once API is updated to support sort by Plan */
-              <TableCell>Plan</TableCell>
+              <TableSortCell
+                active={orderBy === 'plan'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="plan"
+              >
+                Plan
+              </TableSortCell>
             )}
             <Hidden smDown>
               <TableSortCell

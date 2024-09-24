@@ -8,6 +8,6 @@ describe('isLinodeKubeImageId', () => {
     expect(isLinodeKubeImageId('linode/alpine3.15')).toBe(false);
   });
   it('should be true if the image is a linode kube image', () => {
-    expect(isLinodeKubeImageId('linode/debian11-kube-v1.23.4')).toBe(true);
+    expect(isLinodeKubeImageId('linode/ubuntu24.04-kube-v1.23.4')).toBe(true);
   });
 });

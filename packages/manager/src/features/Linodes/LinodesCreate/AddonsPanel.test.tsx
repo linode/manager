@@ -107,7 +107,7 @@ const props: AddonsPanelProps = {
       group: '',
       hypervisor: 'kvm',
       id: 45329311,
-      image: 'linode/debian11',
+      image: 'linode/ubuntu24.04',
       ipv4: ['192.168.139.183', '139.144.17.202'],
       ipv6: '2600:3c04::f03c:93ff:fe75:0612/128',
       label: 'debian-ca-central',

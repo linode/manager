@@ -1,8 +1,8 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
+import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -108,10 +108,12 @@ export const SSHKeys = () => {
         spacing={2}
       >
         <StyledAddNewWrapperGridItem>
-          <AddNewLink
-            label="Add an SSH Key"
+          <Button
+            buttonType="primary"
             onClick={() => setIsCreateDrawerOpen(true)}
-          />
+          >
+            Add an SSH Key
+          </Button>
         </StyledAddNewWrapperGridItem>
       </Grid>
       <Table>

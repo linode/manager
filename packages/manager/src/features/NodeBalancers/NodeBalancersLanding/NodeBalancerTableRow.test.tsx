@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { nodeBalancerFactory } from 'src/factories';
@@ -42,20 +42,20 @@ describe('NodeBalancerTableRow', () => {
     expect(getByText('us-east')).toBeVisible();
   });
 
-  it('deletes the NodeBalancer', () => {
+  it('deletes the NodeBalancer', async () => {
     const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
     const deleteButton = getByText('Delete');
-    fireEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
     expect(props.onDelete).toHaveBeenCalled();
   });
 
-  it('does not delete the NodeBalancer if the delete button is disabled', () => {
+  it('does not delete the NodeBalancer if the delete button is disabled', async () => {
     vi.mocked(useIsResourceRestricted).mockReturnValue(true);
     const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
     const deleteButton = getByText('Delete');
-    fireEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
     expect(props.onDelete).not.toHaveBeenCalled();
   });
 });
