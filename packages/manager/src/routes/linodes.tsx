@@ -23,7 +23,7 @@ export const linodesRoute = createRoute({
   path: 'linodes',
 });
 
-export const linodesIndexRoute = createRoute({
+const linodesIndexRoute = createRoute({
   component: lazyRouteComponent(() =>
     import('src/features/Linodes').then((module) => ({
       default: module.LinodesLandingWrapper,
@@ -33,7 +33,7 @@ export const linodesIndexRoute = createRoute({
   path: '/',
 });
 
-export const linodesCreateRoute = createRoute({
+const linodesCreateRoute = createRoute({
   component: lazyRouteComponent(() =>
     import('src/features/Linodes/LinodeCreatev2').then((module) => ({
       default: module.LinodeCreatev2,
@@ -43,7 +43,7 @@ export const linodesCreateRoute = createRoute({
   path: 'create',
 });
 
-export const linodesDetailRoute = createRoute({
+const linodesDetailRoute = createRoute({
   component: lazyRouteComponent(() =>
     import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
       (module) => ({
@@ -57,3 +57,9 @@ export const linodesDetailRoute = createRoute({
   }),
   path: '$linodeId',
 });
+
+export const linodesRouteTree = linodesRoute.addChildren([
+  linodesIndexRoute,
+  linodesCreateRoute,
+  linodesDetailRoute,
+]);

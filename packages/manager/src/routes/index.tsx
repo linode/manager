@@ -4,29 +4,12 @@ import React from 'react';
 import { NotFound } from 'src/components/NotFound';
 
 import {
-  accountBillingEditRoute,
-  accountBillingRoute,
-  accountEntityTransfersCreateRoute,
-  accountIndexRoute,
-  accountInvoicesInvoiceIdRoute,
-  accountRoute,
-  accountUsersUsernameRoute,
+  accountRouteTree,
 } from './account';
-import {
-  linodesCreateRoute,
-  linodesDetailRoute,
-  linodesIndexRoute,
-  linodesRoute,
-} from './linodes';
-import {
-  placementGroupsCreateRoute,
-  placementGroupsDeleteRoute,
-  placementGroupsDetailRoute,
-  placementGroupsEditRoute,
-  placementGroupsIndexRoute,
-  placementGroupsRoute,
-  placementGroupsUnassignRoute,
-} from './placementGroups';
+import { domainsRouteTree } from './domains';
+import { linodesRouteTree } from './linodes';
+import { nodeBalancersRouteTree } from './nodeBalancers';
+import { placementGroupsRouteTree } from './placementGroups';
 import { rootRoute } from './root';
 import { volumesCreateRoute, volumesIndexRoute, volumesRoute } from './volumes';
 
@@ -44,28 +27,11 @@ const indexRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  accountRoute.addChildren([
-    accountIndexRoute,
-    accountUsersUsernameRoute,
-    accountBillingRoute.addChildren([
-      accountBillingEditRoute,
-      accountInvoicesInvoiceIdRoute,
-    ]),
-    accountEntityTransfersCreateRoute,
-  ]),
-  linodesRoute.addChildren([
-    linodesIndexRoute,
-    linodesCreateRoute,
-    linodesDetailRoute,
-  ]),
-  placementGroupsRoute.addChildren([
-    placementGroupsIndexRoute,
-    placementGroupsCreateRoute,
-    placementGroupsEditRoute,
-    placementGroupsDeleteRoute,
-    placementGroupsDetailRoute,
-    placementGroupsUnassignRoute,
-  ]),
+  accountRouteTree,
+  domainsRouteTree,
+  linodesRouteTree,
+  nodeBalancersRouteTree,
+  placementGroupsRouteTree,
   volumesRoute.addChildren([volumesIndexRoute, volumesCreateRoute]),
 ]);
 
