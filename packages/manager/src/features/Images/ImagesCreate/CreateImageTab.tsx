@@ -316,7 +316,7 @@ export const CreateImageTab = () => {
                               Many Linode supported operating systems are
                               compatible with cloud-init by default, or you may
                               have installed cloud-init.{' '}
-                              <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
+                              <Link to="https://techdocs.akamai.com/cloud-computing/docs/overview-of-the-metadata-service">
                                 Learn more.
                               </Link>
                             </Typography>
