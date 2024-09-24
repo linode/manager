@@ -9,12 +9,13 @@ import {
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
-import { GoTo } from './GoTo';
-import { MainContent } from './MainContent';
 import { SplashScreen } from './components/SplashScreen';
+import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
+//import { MainContent } from './MainContent';
+import { MainContentV2 } from './MainContentV2';
 import { useEventsPoller } from './queries/events/events';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
@@ -46,7 +47,8 @@ const BaseApp = withDocumentTitleProvider(
         </div>
         <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
-        <MainContent />
+        {/* <MainContent /> */}
+        <MainContentV2 />
         <GlobalListeners />
       </ErrorBoundary>
     );
