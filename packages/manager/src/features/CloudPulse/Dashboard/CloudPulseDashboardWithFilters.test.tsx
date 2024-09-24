@@ -10,7 +10,6 @@ const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardByIdQuery: vi.fn().mockReturnValue({}),
 }));
 
-const selectTimeDurationPlaceholder = 'Select a Time Duration';
 const circleProgress = 'circle-progress';
 const mandatoryFiltersError = 'Mandatory Filters not Selected';
 
