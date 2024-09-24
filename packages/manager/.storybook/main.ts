@@ -41,9 +41,9 @@ const config: StorybookConfig = {
           ? !/node_modules\/(?!@mui)/.test(prop.parent.fileName)
           : true,
       // Only compile files that have stories for faster local development performance
-      // include: /(development|test)/i.test(process.env.NODE_ENV ?? '')
-      //   ? typeScriptFileGlobs
-      //   : undefined,
+      include: /(development|test)/i.test(process.env.NODE_ENV ?? '')
+        ? typeScriptFileGlobs
+        : undefined,
     },
     reactDocgen: 'react-docgen-typescript',
   },
