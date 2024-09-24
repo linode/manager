@@ -124,7 +124,7 @@ const notices = {
 
 authenticate();
 describe('displays linode plans panel based on availability', () => {
-  before(() => {
+  beforeEach(() => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
     mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
@@ -220,7 +220,7 @@ describe('displays linode plans panel based on availability', () => {
 });
 
 describe('displays kubernetes plans panel based on availability', () => {
-  before(() => {
+  beforeEach(() => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
     mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
@@ -350,7 +350,7 @@ describe('displays kubernetes plans panel based on availability', () => {
 });
 
 describe('displays specific linode plans for GPU', () => {
-  before(() => {
+  beforeEach(() => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
     mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(

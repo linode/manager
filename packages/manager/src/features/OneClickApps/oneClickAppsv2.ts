@@ -2600,7 +2600,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/marketplace-docs/guides/apache-spark/',
+          'https://www.linode.com/docs/marketplace-docs/guides/apache-spark-cluster/',
         title: 'Deploy Apache Spark through the Linode Marketplace',
       },
     ],

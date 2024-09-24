@@ -68,7 +68,7 @@ export const TerraformIntegrationResources = () => {
   return (
     <>
       <Typography sx={(theme) => ({ mt: theme.spacing(2) })} variant="h3">
-        Getting started
+        Getting Started
       </Typography>
       <ResourceLinks
         linkAnalyticsEvent={linkAnalyticsEvent}

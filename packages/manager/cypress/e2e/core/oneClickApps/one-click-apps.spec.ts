@@ -34,11 +34,13 @@ describe('OneClick Apps (OCA)', () => {
         // For every Marketplace app defined in Cloud Manager, make sure the API returns
         // the nessesary StackScript and that the app renders on the page.
         for (const stackscriptId in oneClickApps) {
-          const stackscript = stackScripts.find(s => s.id === +stackscriptId);
+          const stackscript = stackScripts.find((s) => s.id === +stackscriptId);
           const app = oneClickApps[stackscriptId];
 
           if (!stackscript) {
-            throw new Error(`Cloud Manager's fetch to GET /v4/linode/stackscripts did not recieve a StackScript with ID ${stackscriptId}. We expected that StackScript to be in the response for the Marketplace app named "${app.name}".`);
+            throw new Error(
+              `Cloud Manager's fetch to GET /v4/linode/stackscripts did not recieve a StackScript with ID ${stackscriptId}. We expected that StackScript to be in the response for the Marketplace app named "${app.name}".`
+            );
           }
 
           // Using `findAllByText` because some apps may be duplicatd under different sections
@@ -58,18 +60,24 @@ describe('OneClick Apps (OCA)', () => {
       const stackScripts: StackScript[] = xhr.response?.body.data ?? [];
 
       // For the sake of this test, use the first marketplace app defined in Cloud Manager
-      const candidateStackScriptId = +(Object.keys(oneClickApps)[0]);
+      const candidateStackScriptId = +Object.keys(oneClickApps)[0];
 
       const candidateApp = oneClickApps[candidateStackScriptId];
 
       if (!candidateApp) {
-        throw new Error("The candidate app for this test no longer exists. The tests needs updating.");
+        throw new Error(
+          'The candidate app for this test no longer exists. The tests needs updating.'
+        );
       }
 
-      const candidateStackScript = stackScripts.find(s => s.id === candidateStackScriptId);
+      const candidateStackScript = stackScripts.find(
+        (s) => s.id === candidateStackScriptId
+      );
 
       if (!candidateStackScript) {
-        throw new Error("No StackScript returned by the API for the candidate app.");
+        throw new Error(
+          'No StackScript returned by the API for the candidate app.'
+        );
       }
 
       cy.findByTestId('one-click-apps-container').within(() => {
@@ -108,7 +116,7 @@ describe('OneClick Apps (OCA)', () => {
     ];
 
     // For the sake of this test, use the first marketplace app defined in Cloud Manager
-    const candidateStackScriptId = +(Object.keys(oneClickApps)[0]);
+    const candidateStackScriptId = +Object.keys(oneClickApps)[0];
 
     const stackscript = stackScriptFactory.build({
       id: candidateStackScriptId,
@@ -118,7 +126,7 @@ describe('OneClick Apps (OCA)', () => {
       description: 'Minecraft OCA',
       ordinal: 10,
       logo_url: 'assets/Minecraft.svg',
-      images: ['linode/debian11', 'linode/ubuntu22.04'],
+      images: ['linode/debian11', 'linode/ubuntu24.04'],
       deployments_total: 18854,
       deployments_active: 412,
       is_public: true,

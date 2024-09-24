@@ -222,6 +222,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   members: {
     '2.2.2.2': 'primary',
   },
+  oldest_restore_time: '2024-09-15T17:15:12',
   platform: pickRandom(['rdbms-legacy', 'rdbms-default']),
   port: 3306,
   region: 'us-east',
@@ -242,7 +243,12 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
 });
 
 export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
-  created: Factory.each(() => randomDate().toISOString()),
+  created: Factory.each(() =>
+    randomDate(
+      new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+      new Date()
+    ).toISOString()
+  ),
   id: Factory.each((i) => i),
   label: Factory.each(() => `backup-${v4()}`),
   type: pickRandom(['snapshot', 'auto']),

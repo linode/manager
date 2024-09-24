@@ -5,8 +5,9 @@ import {
   getDatabaseCredentials,
   getDatabases,
   getEngineDatabase,
+  legacyRestoreWithBackup,
+  newRestoreWithBackup,
   resetDatabaseCredentials,
-  restoreWithBackup,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -208,13 +209,32 @@ export const useRestoreFromBackupMutation = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
-    mutationFn: () => restoreWithBackup(engine, databaseId, backupId),
+    mutationFn: () => legacyRestoreWithBackup(engine, databaseId, backupId),
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: databaseQueries.databases.queryKey,
       });
       queryClient.invalidateQueries({
         queryKey: databaseQueries.database(engine, databaseId).queryKey,
+      });
+    },
+  });
+};
+
+export const useNewRestoreFromBackupMutation = (
+  engine: Engine,
+  label: string,
+  fork: {
+    restore_time?: string;
+    source: number;
+  }
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => newRestoreWithBackup(engine, label, fork),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
       });
     },
   });
