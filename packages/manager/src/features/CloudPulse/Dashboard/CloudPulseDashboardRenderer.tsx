@@ -19,6 +19,11 @@ export const CloudPulseDashboardRenderer = React.memo(
     const selectDashboardAndFilterMessage =
       'Select Dashboard and filters to visualize metrics.';
 
+    const getMetricsCall = React.useMemo(
+      () => getMetricsCallCustomFilters(filterValue, dashboard?.service_type),
+      [dashboard?.service_type, filterValue]
+    );
+
     if (!dashboard) {
       return (
         <CloudPulseErrorPlaceholder
@@ -50,10 +55,6 @@ export const CloudPulseDashboardRenderer = React.memo(
 
     return (
       <CloudPulseDashboard
-        additionalFilters={getMetricsCallCustomFilters(
-          filterValue,
-          dashboard.service_type
-        )}
         manualRefreshTimeStamp={
           filterValue[REFRESH] && typeof filterValue[REFRESH] === 'number'
             ? filterValue[REFRESH]
@@ -69,6 +70,7 @@ export const CloudPulseDashboardRenderer = React.memo(
             ? (filterValue[RESOURCE_ID] as string[])
             : []
         }
+        additionalFilters={getMetricsCall}
         dashboardId={dashboard.id}
         duration={timeDuration}
         savePref={true}

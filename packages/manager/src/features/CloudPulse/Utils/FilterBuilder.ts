@@ -304,9 +304,11 @@ export const getMetricsCallCustomFilters = (
   selectedFilters: {
     [key: string]: FilterValueType;
   },
-  serviceType: string
+  serviceType?: string
 ): CloudPulseMetricsAdditionalFilters[] => {
-  const serviceTypeConfig = FILTER_CONFIG.get(serviceType);
+  const serviceTypeConfig = serviceType
+    ? FILTER_CONFIG.get(serviceType)
+    : undefined;
 
   // If configuration exists, filter and map it to the desired CloudPulseMetricsAdditionalFilters format
   return (
