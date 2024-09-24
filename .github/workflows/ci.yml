@@ -45,9 +45,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: packages-validation-lib
-          path: |
-             packages/validation/index.js
-             packages/validation/lib
+          path: packages/validation/lib
 
   publish-validation:
     runs-on: ubuntu-latest
@@ -58,7 +56,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
@@ -93,7 +91,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - run: pnpm --filter @linode/api-v4 test
 
   build-sdk:
@@ -112,7 +110,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @linode/api-v4 build
       - uses: actions/upload-artifact@v4
@@ -132,11 +130,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
 
       # Create an api-v4 tarball
       - run: cd packages/api-v4 && npm pack --pack-destination ../../
@@ -170,11 +168,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @linode/manager test
 
@@ -210,11 +208,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @linode/manager typecheck
 
@@ -235,11 +233,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm install @linode/manager build
       - uses: actions/upload-artifact@v4
@@ -260,7 +258,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
@@ -285,6 +283,10 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -292,11 +294,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @linode/manager build-storybook
       - uses: actions/upload-artifact@v4
