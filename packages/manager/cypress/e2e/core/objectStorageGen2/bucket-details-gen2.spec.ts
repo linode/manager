@@ -77,10 +77,9 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
     cy.findByLabelText('Access Control List (ACL)').should('be.visible');
     // confirm CORS is visible
     cy.findByText('CORS Enabled').should('be.visible');
-    cy.findByText(
-      /Whether Cross-Origin Resource Sharing is enabled for all origins. For more fine-grained control of CORS, please use another/
+    cy.contains(
+      'Whether Cross-Origin Resource Sharing is enabled for all origins. For more fine-grained control of CORS, please use another S3-compatible tool.'
     ).should('be.visible');
-    cy.findByText(/S3-compatible tool/).should('be.visible');
 
     // Confirm SSL/TLS tab is not hidden and is clickable
     cy.findByText('SSL/TLS').should('be.visible').click();
@@ -91,8 +90,8 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
     cy.findByText('Bucket Access').should('be.visible');
     cy.findByLabelText('Access Control List (ACL)').should('be.visible');
     // confirm CORS is not visible
-    cy.findByText(
-      /CORS \(Cross Origin Sharing\) is not available for endpoint types E2 and E3/
+    cy.contains(
+      'CORS (Cross Origin Sharing) is not available for endpoint types E2 and E3'
     ).should('be.visible');
   };
 
