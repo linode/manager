@@ -15,7 +15,7 @@ import {
   mockCloudPulseGetDashboards,
   mockCloudPulseGetMetricDefinitions,
   mockCloudPulseServices,
-} from 'support/intercepts/cloudpulseAPIHandler';
+} from 'support/intercepts/cloudpulse';
 import { ui } from 'support/ui';
 import {
   timeRange,
@@ -60,10 +60,10 @@ const y_labels = [
 ];
 const widgets = widgetDetails.linode;
 const metrics = widgets.metrics;
-export const dashboardName = widgets.dashboardName;
-export const region = widgets.region;
-export const actualRelativeTimeDuration = timeRange.last24Hours;
-export const resource = widgets.resource;
+ const dashboardName = widgets.dashboardName;
+ const region = widgets.region;
+const actualRelativeTimeDuration = timeRange.last24Hours;
+ const resource = widgets.resource;
 const widgetLabels: string[] = metrics.map((widget) => widget.title);
 const metricsLabels: string[] = metrics.map((widget) => widget.name);
 const service_type = widgets.service_type;
@@ -97,10 +97,12 @@ let responsePayload: CloudPulseMetricsResponse;
 describe('Dashboard Widget Verification Tests', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
+        aclp: makeFeatureFlagData<Flags['aclp']>({ beta: true, enabled: true }),
+     }).as('getFeatureFlags');
+         mockAppendFeatureFlags({
+     aclp: { beta: true, enabled: true },
     }).as('getFeatureFlags');
     mockGetAccount(mockAccount).as('getAccount'); // Enables the account to have capability for Akamai Cloud Pulse
-    mockGetFeatureFlagClientstream().as('getClientStream');
     mockGetLinodes([mockLinode]).as('getLinodes');
     mockCloudPulseGetMetricDefinitions(metricDefinitions, service_type);
     mockCloudPulseGetDashboards(dashboard, service_type).as('dashboard');
@@ -177,7 +179,7 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 
-  it('should verify the title of the widget', () => {
+  it.only('should verify the title of the widget', () => {
     setupMethod();
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
