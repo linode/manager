@@ -123,7 +123,6 @@ function compareProps(
   const keysToCompare: (keyof CloudPulseResourcesSelectProps)[] = [
     'region',
     'resourceType',
-    'handleResourcesSelection',
   ];
 
   for (const key of keysToCompare) {

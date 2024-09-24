@@ -10,43 +10,40 @@ export interface ZoomIconProperties {
   zoomIn: boolean;
 }
 
-export const ZoomIcon = React.memo(
-  (props: ZoomIconProperties) => {
-    const theme = useTheme();
+export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
+  const theme = useTheme();
 
-    const handleClick = (needZoomIn: boolean) => {
-      props.handleZoomToggle(needZoomIn);
-    };
+  const handleClick = (needZoomIn: boolean) => {
+    props.handleZoomToggle(needZoomIn);
+  };
 
-    const ToggleZoomer = () => {
-      if (props.zoomIn) {
-        return (
-          <ZoomInMap
-            sx={{
-              color: theme.color.grey1,
-              fontSize: 'x-large',
-              height: '34px',
-            }}
-            data-testid="zoom-in"
-            onClick={() => handleClick(false)}
-          />
-        );
-      }
-
+  const ToggleZoomer = () => {
+    if (props.zoomIn) {
       return (
-        <ZoomOutMap
+        <ZoomInMap
           sx={{
             color: theme.color.grey1,
             fontSize: 'x-large',
             height: '34px',
           }}
-          data-testid="zoom-out"
-          onClick={() => handleClick(true)}
+          data-testid="zoom-in"
+          onClick={() => handleClick(false)}
         />
       );
-    };
+    }
 
-    return <ToggleZoomer />;
-  },
-  (prevProps, nextProps) => prevProps.zoomIn === nextProps.zoomIn
-);
+    return (
+      <ZoomOutMap
+        sx={{
+          color: theme.color.grey1,
+          fontSize: 'x-large',
+          height: '34px',
+        }}
+        data-testid="zoom-out"
+        onClick={() => handleClick(true)}
+      />
+    );
+  };
+
+  return <ToggleZoomer />;
+});

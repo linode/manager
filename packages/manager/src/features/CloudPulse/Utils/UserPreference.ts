@@ -21,7 +21,7 @@ export const useAclpPreference = (): AclpPreferenceObject => {
 
   const { mutateAsync: updateFunction } = useMutatePreferences();
 
-  const preferenceRef = useRef(preferences?.aclpPreference ?? {});
+  const preferenceRef = useRef<AclpConfig>(preferences?.aclpPreference ?? {});
 
   /**
    *

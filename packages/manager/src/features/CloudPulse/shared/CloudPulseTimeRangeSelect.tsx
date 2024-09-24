@@ -19,7 +19,6 @@ export interface CloudPulseTimeRangeSelectProps
     timeDurationValue?: string,
     savePref?: boolean
   ) => void;
-  placeholder?: string;
   savePreferences?: boolean;
 }
 
@@ -37,12 +36,7 @@ export type Labels =
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
-    const {
-      defaultValue,
-      handleStatsChange,
-      placeholder,
-      savePreferences,
-    } = props;
+    const { defaultValue, handleStatsChange, savePreferences } = props;
     const options = generateSelectOptions();
     const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
       if (!savePreferences) {
@@ -92,14 +86,11 @@ export const CloudPulseTimeRangeSelect = React.memo(
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Select Time Duration"
         options={options}
-        placeholder={placeholder ?? 'Select a Time Duration'}
         value={selectedTimeRange}
       />
     );
   },
-  (prevProps, newProps) =>
-    prevProps.handleStatsChange === newProps.handleStatsChange &&
-    prevProps.placeholder === newProps.placeholder
+  () => true
 );
 
 /**

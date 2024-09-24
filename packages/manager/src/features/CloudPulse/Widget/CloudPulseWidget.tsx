@@ -147,23 +147,20 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
    *
    * @param zoomInValue: True if zoom in clicked &  False if zoom out icon clicked
    */
-  const handleZoomToggle = React.useCallback(
-    (zoomInValue: boolean) => {
-      if (savePref) {
-        updatePreferences(widget.label, {
-          [SIZE]: zoomInValue ? 12 : 6,
-        });
-      }
-
-      setWidget((currentWidget: Widgets) => {
-        return {
-          ...currentWidget,
-          size: zoomInValue ? 12 : 6,
-        };
+  const handleZoomToggle = React.useCallback((zoomInValue: boolean) => {
+    if (savePref) {
+      updatePreferences(widget.label, {
+        [SIZE]: zoomInValue ? 12 : 6,
       });
-    },
-    [updatePreferences]
-  );
+    }
+
+    setWidget((currentWidget: Widgets) => {
+      return {
+        ...currentWidget,
+        size: zoomInValue ? 12 : 6,
+      };
+    });
+  }, []);
 
   /**
    *
@@ -186,7 +183,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         };
       });
     },
-    [updatePreferences]
+    []
   );
 
   /**
@@ -208,7 +205,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         };
       });
     },
-    [updatePreferences]
+    []
   );
 
   const {

@@ -118,6 +118,5 @@ export const CloudPulseDashboardSelect = React.memo(
       />
     );
   },
-  (prevProps, newProps) =>
-    prevProps.handleDashboardChange === newProps.handleDashboardChange
+  () => true
 );
