@@ -5,7 +5,7 @@ import {
   usePreferences,
 } from 'src/queries/profile/preferences';
 
-import { DASHBOARD_ID, TIME_DURATION } from './constants';
+import { DASHBOARD_ID, TIME_DURATION, WIDGETS } from './constants';
 
 import type { AclpConfig, AclpWidget } from '@linode/api-v4';
 
@@ -35,6 +35,7 @@ export const useAclpPreference = (): AclpPreferenceObject => {
       currentPreferences = {
         ...data,
         [TIME_DURATION]: currentPreferences[TIME_DURATION],
+        [WIDGETS]: {},
       };
     } else {
       currentPreferences = {
