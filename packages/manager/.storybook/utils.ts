@@ -1,4 +1,4 @@
-import glob from 'glob';
+import { globSync } from 'glob';
 
 const PATTERN = 'src/**/*.stories.tsx';
 
@@ -10,7 +10,7 @@ const PATTERN = 'src/**/*.stories.tsx';
  * Example: src/components/Button/Button.stories.tsx -> src/components/Button/**\/*.{ts,tsx}
  */
 export const getReactDocgenTSFileGlobs = () => {
-  const filesWithStories = glob.sync(PATTERN);
+  const filesWithStories = globSync(PATTERN);
   const files: string[] = [];
 
   filesWithStories.forEach((file) => {
