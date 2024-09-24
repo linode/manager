@@ -100,7 +100,6 @@ import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
-import { eventMessages } from 'src/features/Events/factory';
 import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
@@ -1582,6 +1581,54 @@ export const handlers = [
   http.get(
     '*/events',
     () => {
+      const events = eventFactory.buildList(1, {
+        action: 'lke_node_create',
+        entity: { id: 999, label: 'linode-1', type: 'linode' },
+        message:
+          'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+        percent_complete: 15,
+      });
+      const dbEvents = eventFactory.buildList(1, {
+        action: 'database_low_disk_space',
+        entity: { id: 999, label: 'database-1', type: 'database' },
+        message: 'Low disk space.',
+      });
+      const oldEvents = eventFactory.buildList(20, {
+        action: 'account_update',
+        percent_complete: 100,
+        seen: true,
+      });
+      const eventWithSpecialCharacters = eventFactory.build({
+        action: 'ticket_update',
+        entity: {
+          id: 10,
+          label: 'Ticket name with special characters... (?)',
+          type: 'ticket',
+        },
+        message: 'Ticket name with special characters... (?)',
+        percent_complete: 100,
+        status: 'notification',
+      });
+      const placementGroupCreateEvent = eventFactory.buildList(1, {
+        action: 'placement_group_create',
+        entity: { id: 999, label: 'PG-1', type: 'placement_group' },
+        message: 'Placement Group successfully created.',
+        percent_complete: 100,
+        status: 'notification',
+      });
+      const placementGroupAssignedEvent = eventFactory.buildList(1, {
+        action: 'placement_group_assign',
+        entity: { id: 990, label: 'PG-2', type: 'placement_group' },
+        message: 'Placement Group successfully assigned.',
+        percent_complete: 100,
+        secondary_entity: {
+          id: 1,
+          label: 'My Config',
+          type: 'linode',
+          url: '/v4/linode/instances/1/configs/1',
+        },
+        status: 'notification',
+      });
       const baseEvent: Event = eventFactory.build({
         action: 'linode_boot',
         entity: {
@@ -1601,21 +1648,17 @@ export const handlers = [
         username: 'Mock User',
       });
 
-      const events = Object.entries(eventMessages).flatMap(
-        ([eventKey, statuses], eventIndex) =>
-          Object.entries(statuses).map(
-            ([status, messageFunc], statusIndex) => ({
-              ...baseEvent,
-              action: eventKey as Event['action'],
-              id: eventIndex * 1000 + statusIndex,
-              status: status as Event['status'],
-            })
-          )
+      return HttpResponse.json(
+        makeResourcePage([
+          ...events,
+          ...dbEvents,
+          ...oldEvents,
+          ...placementGroupAssignedEvent,
+          ...placementGroupCreateEvent,
+          eventWithSpecialCharacters,
+          baseEvent,
+        ])
       );
-      // Randomly select 25 items
-      const randomEvents = events.sort(() => 0.5 - Math.random()).slice(0, 25);
-
-      return HttpResponse.json(makeResourcePage(randomEvents));
     },
     {
       once: true,
