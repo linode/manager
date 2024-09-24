@@ -18,7 +18,7 @@ import {
 import { Checkbox } from 'src/components/Checkbox';
 import { TextField } from 'src/components/TextField';
 import { Stack, Divider } from '@mui/material';
-import { StyledButton } from 'src/components/CheckoutBar/styles';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 import { Notice } from 'src/components/Notice/Notice';
 
@@ -69,6 +69,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
   const [revisionID, setRevisionID] = React.useState<string | undefined>();
 
+  const [submitButtonLabel, setSubmitButtonLabel] = React.useState<string>('');
+
   // refetchOnMount isnt good enough for this query because
   // it is already mounted in the rendered Drawer
   React.useEffect(() => {
@@ -86,6 +88,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       setIPV4InputError(undefined);
       setIPV6InputError(undefined);
       setUpdating(false);
+      setSubmitButtonLabel(clusterMigrated ? 'Update' : 'Install');
       refetchKubernetesACL();
     }
   }, [open]);
@@ -246,10 +249,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     );
   };
 
-  const SubmitButtonCopy = () => {
-    return clusterMigrated ? 'Update' : 'Install';
-  };
-
   return (
     <Drawer
       onClose={closeDrawer}
@@ -334,17 +333,19 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             title="IPv6 Addresses or CIDR"
             error={ipV6InputError}
           />
-          <Divider sx={{ marginTop: 4 }} />
 
-          <StyledButton
-            buttonType="primary"
-            data-qa-update-acl
-            loading={updating}
-            onClick={updateCluster}
-            disabled={!!ipV4InputError}
-          >
-            <SubmitButtonCopy />
-          </StyledButton>
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'update-acl-button',
+              disabled: !!ipV4InputError,
+              label: submitButtonLabel,
+              loading: updating,
+              onClick: updateCluster,
+              type: 'submit',
+            }}
+            secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
+          />
+
           <ErrorMessage />
         </Stack>
       </DrawerContent>

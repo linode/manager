@@ -1,4 +1,4 @@
-import { FormLabel } from '@mui/material';
+import { Box, FormLabel } from '@mui/material';
 import * as React from 'react';
 
 import { FormControl } from 'src/components/FormControl';
@@ -78,13 +78,17 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         </Typography>
       </FormLabel>
       <IPACLCopy />
-      <Checkbox
-        checked={enableControlPlaneACL}
-        name="ipacl-checkbox"
-        text={'Enable IPACL'}
-        onChange={(e) => handleChange(e)}
-      />
-      <Stack sx={{ display: statusStyle(enableControlPlaneACL) }}>
+      <Box sx={{ marginTop: 4 }}>
+        <Checkbox
+          checked={enableControlPlaneACL}
+          name="ipacl-checkbox"
+          text={'Enable IPACL'}
+          onChange={(e) => handleChange(e)}
+        />
+      </Box>
+      <Stack
+        sx={{ marginBottom: 4, display: statusStyle(enableControlPlaneACL) }}
+      >
         <MultipleIPInput
           buttonText="Add IP Address"
           ips={ipV4Addr}

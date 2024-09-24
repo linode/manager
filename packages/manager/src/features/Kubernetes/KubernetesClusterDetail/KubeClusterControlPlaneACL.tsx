@@ -1,11 +1,9 @@
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from 'src/components/Box';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useKubernetesControlPlaneACLQuery } from 'src/queries/kubernetes';
 import { pluralize } from 'src/utilities/pluralize';
@@ -69,7 +67,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
-  const theme = useTheme();
   const { cluster, handleOpenDrawer, setControlPlaneACLMigrated } = props;
   const { classes } = useStyles();
 
@@ -93,22 +90,6 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
     // when a cluster has not migrated, the query will always fail
     setControlPlaneACLMigrated(!isErrorKubernetesACL);
     return isErrorKubernetesACL;
-  };
-
-  const IPACLdClusterToolTip = () => {
-    return (
-      <TooltipIcon
-        sxTooltipIcon={{
-          marginBottom: theme.spacing(0.5),
-          marginLeft: theme.spacing(1),
-          padding: 0,
-        }}
-        classes={{ popper: classes.tooltip }}
-        status="help"
-        text="ERR"
-        tooltipPosition="bottom"
-      />
-    );
   };
 
   const EnabledCopy = () => {
@@ -139,10 +120,7 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
     return (
       <>
         <Box className={classes.aclElement} onClick={handleOpenDrawer}>
-          <Typography className={classes.aclElementText}>
-            Cluster Requires Migration
-          </Typography>
-          <IPACLdClusterToolTip />
+          <Typography className={classes.aclElementText}>Install</Typography>
         </Box>
       </>
     );
@@ -150,7 +128,7 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
 
   const kubeSpecsLeft = [
     isLoadingKubernetesACL ? (
-      <CircleProgress size="sm" sx={{ marginTop: 2 }} />
+      <CircleProgress size="sm" sx={{ marginTop: 0 }} />
     ) : failedMigrationStatus() ? (
       <NotMigratedCopy />
     ) : enabledACL ? (

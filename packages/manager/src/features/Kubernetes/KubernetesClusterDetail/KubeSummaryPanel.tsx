@@ -33,6 +33,13 @@ import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import type { Theme } from '@mui/material/styles';
 
+import {
+  StyledBox,
+  StyledLabelBox,
+  StyledListItem,
+  sxListItemFirstChild,
+} from './KubeSummaryPanel.styles';
+
 const useStyles = makeStyles()((theme: Theme) => ({
   actionRow: {
     '& button': {
@@ -255,33 +262,47 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
           </EntityHeader>
         }
         footer={
-          <>
-            <Box
-              sx={{
-                paddingBottom: theme.spacing(),
-                paddingTop: theme.spacing(),
-                paddingLeft: theme.spacing(),
-              }}
-            >
-              <Typography variant="h3">IPACL</Typography>
-            </Box>
-            <Box
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'start',
-                width: '100%',
-                paddingLeft: theme.spacing(),
-                marginLeft: '10px',
-              }}
-            >
-              <KubeClusterControlPlaneACL
-                cluster={cluster}
-                setControlPlaneACLMigrated={setControlPlaneACLMigrated}
-                handleOpenDrawer={() => setControlPlaneACLDrawerOpen(true)}
-              />
-            </Box>
-          </>
+          <Grid
+            sx={{
+              display: 'flex',
+              padding: 0,
+              [theme.breakpoints.down('lg')]: {
+                padding: '8px',
+              },
+              [theme.breakpoints.down('md')]: {
+                display: 'grid',
+                gridTemplateColumns: '50% 2fr',
+              },
+            }}
+            alignItems="flex-start"
+            lg={8}
+            xs={12}
+          >
+            <StyledBox sx={{ padding: 1, marginLeft: -1 }}>
+              <StyledListItem
+                sx={{
+                  ...sxListItemFirstChild,
+                  [theme.breakpoints.down('lg')]: {
+                    paddingLeft: 0,
+                  },
+                }}
+              >
+                <StyledLabelBox component="span">IPACL: </StyledLabelBox>{' '}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    marginLeft: '4px',
+                  }}
+                >
+                  <KubeClusterControlPlaneACL
+                    cluster={cluster}
+                    setControlPlaneACLMigrated={setControlPlaneACLMigrated}
+                    handleOpenDrawer={() => setControlPlaneACLDrawerOpen(true)}
+                  />
+                </Box>
+              </StyledListItem>
+            </StyledBox>
+          </Grid>
         }
         noBodyBottomBorder
       />
