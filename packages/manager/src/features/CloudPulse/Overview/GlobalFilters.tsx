@@ -98,7 +98,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               sx={{
                 marginBlockEnd: 'auto',
               }}
-              data-qa-refresh-button
+              aria-label='cloudpulse-refresh'
               disabled={!selectedDashboard}
               onClick={() => handleGlobalRefresh(selectedDashboard)}
               size="small"
