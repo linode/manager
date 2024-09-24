@@ -1,0 +1,3 @@
+library 'ui-builder'
+
+testManagerComponents()
