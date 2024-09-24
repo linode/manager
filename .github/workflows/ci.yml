@@ -45,7 +45,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation/lib
+          path: |
+             packages/validation/index.js
+             packages/validation/lib
 
   publish-validation:
     runs-on: ubuntu-latest
