@@ -11,7 +11,7 @@ import type {
 
 export const headers: ResourcesHeaders = {
   description:
-    'Store your own custom Linux images, enabling you to rapidly deploy Linode Compute Instances preconfigured with the software and settings you require.',
+    'Store custom Linux images to rapidly deploy compute instances preconfigured with what you need.',
   subtitle: '',
   title: 'Images',
 };
