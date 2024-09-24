@@ -1,4 +1,3 @@
-import { Firewall, FirewallDevice } from '@linode/api-v4';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +12,8 @@ import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { NodeBalancerFirewallsActionMenu } from './NodeBalancerFirewallsActionMenu';
+
+import type { Firewall, FirewallDevice } from '@linode/api-v4';
 
 interface Props {
   firewall: Firewall;

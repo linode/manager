@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -32,12 +32,12 @@ describe('NodeBalancerDeleteDialog', () => {
     expect(getByText('Delete')).toBeVisible();
   });
 
-  it('calls the onClose function of the dialog', () => {
+  it('calls the onClose function of the dialog', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerDeleteDialog {...props} />
     );
 
-    fireEvent.click(getByText('Cancel'));
+    await userEvent.click(getByText('Cancel'));
     expect(props.onClose).toHaveBeenCalled();
   });
 });
