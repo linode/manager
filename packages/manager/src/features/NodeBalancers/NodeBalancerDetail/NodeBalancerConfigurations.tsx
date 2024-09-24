@@ -25,6 +25,7 @@ import { withRouter } from 'react-router-dom';
 import { compose as composeC } from 'recompose';
 
 import { Accordion } from 'src/components/Accordion';
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -47,7 +48,6 @@ import {
   parseAddresses,
   transformConfigsForRequest,
 } from '../utils';
-import { NodeBalancerConfigConfirmationActions } from './NodeBalancerConfigConfirmationActions';
 
 import type {
   NodeBalancerConfigFieldsWithStatus,
@@ -1130,10 +1130,19 @@ class NodeBalancerConfigurations extends React.Component<
 
         <ConfirmationDialog
           actions={
-            <NodeBalancerConfigConfirmationActions
-              isLoading={this.state.deleteConfigConfirmDialog.submitting}
-              onClose={this.onCloseConfirmation}
-              onDelete={this.deleteConfig}
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'confirm-cancel',
+                label: 'Delete',
+                loading: this.state.deleteConfigConfirmDialog.submitting,
+                onClick: this.deleteConfig,
+              }}
+              secondaryButtonProps={{
+                'data-testid': 'cancel-cancel',
+                label: 'Cancel',
+                onClick: this.onCloseConfirmation,
+              }}
+              style={{ padding: 0 }}
             />
           }
           title={
