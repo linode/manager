@@ -87,6 +87,8 @@ const preview: Preview = {
       sort: 'requiredFirst',
     },
     docs: {
+      // @todo get docs mode dark mode working again
+      // https://github.com/hipstersmoothie/storybook-dark-mode/issues/282
       container: DocsContainer,
       page: () => (
         <>
