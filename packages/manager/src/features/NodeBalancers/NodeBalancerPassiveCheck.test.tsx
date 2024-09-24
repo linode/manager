@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -20,7 +20,7 @@ describe('NodeBalancer PassiveCheck', () => {
     ).toBeVisible();
   });
 
-  it('calls onCheckPassiveChange when the check is toggled', () => {
+  it('calls onCheckPassiveChange when the check is toggled', async () => {
     const { getByLabelText } = renderWithTheme(
       <PassiveCheck {...nbConfigPanelMockPropsForTest} />
     );
@@ -28,7 +28,7 @@ describe('NodeBalancer PassiveCheck', () => {
     const passiveChecksToggle = getByLabelText('Passive Checks');
     expect(passiveChecksToggle).toBeInTheDocument();
 
-    fireEvent.click(passiveChecksToggle);
+    await userEvent.click(passiveChecksToggle);
     expect(
       nbConfigPanelMockPropsForTest.onCheckPassiveChange
     ).toHaveBeenCalled();
