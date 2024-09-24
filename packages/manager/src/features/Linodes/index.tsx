@@ -41,7 +41,7 @@ export const LinodesRoutes = () => {
 // mapStateToProps, but since I wanted to use a query (for accountMaintenance)
 // I needed a Function Component. It seemed safer to do it this way instead of
 // refactoring LinodesLanding.
-const LinodesLandingWrapper = React.memo(() => {
+export const LinodesLandingWrapper = React.memo(() => {
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
     { status: { '+or': ['pending, started'] } }
