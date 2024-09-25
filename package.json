@@ -37,8 +37,8 @@
     "generate-changelogs": "node scripts/changelog/generate-changelogs.mjs",
     "coverage": "yarn workspace linode-manager coverage",
     "coverage:summary": "yarn workspace linode-manager coverage:summary",
-    "junit:summary": "ts-node scripts/junit-summary/index.ts",
-    "generate-tod": "ts-node scripts/tod-payload/index.ts",
+    "junit:summary": "tsx scripts/junit-summary/index.ts",
+    "generate-tod": "tsx scripts/tod-payload/index.ts",
     "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
     "prepare": "husky"
   },
