@@ -1,14 +1,11 @@
-import {
-  Outlet,
-  createRoute,
-  lazyRouteComponent,
-} from '@tanstack/react-router';
+import { Outlet, createRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
+import { strictLazyRouteComponent } from './utils';
 
 export const AccountRoutes = () => {
   return (
@@ -26,7 +23,7 @@ const accountRoute = createRoute({
 });
 
 const accountIndexRoute = createRoute({
-  component: lazyRouteComponent(
+  component: strictLazyRouteComponent(
     () => import('src/features/Account/AccountLanding')
   ),
   getParentRoute: () => accountRoute,
@@ -34,17 +31,16 @@ const accountIndexRoute = createRoute({
 });
 
 const accountUsersUsernameRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Users/UserDetail').then((module) => ({
-      default: module.UserDetail,
-    }))
+  component: strictLazyRouteComponent(
+    () => import('src/features/Users/UserDetail'),
+    'UserDetail'
   ),
   getParentRoute: () => accountRoute,
   path: 'users/$username',
 });
 
 const accountBillingRoute = createRoute({
-  component: lazyRouteComponent(
+  component: strictLazyRouteComponent(
     () => import('src/features/Account/AccountLanding')
   ),
   getParentRoute: () => accountRoute,
@@ -52,7 +48,7 @@ const accountBillingRoute = createRoute({
 });
 
 const accountBillingEditRoute = createRoute({
-  component: lazyRouteComponent(
+  component: strictLazyRouteComponent(
     () => import('src/features/Account/AccountLanding')
   ),
   getParentRoute: () => accountRoute,
@@ -60,12 +56,9 @@ const accountBillingEditRoute = createRoute({
 });
 
 const accountInvoicesInvoiceIdRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Billing/InvoiceDetail/InvoiceDetail').then(
-      (module) => ({
-        default: module.InvoiceDetail,
-      })
-    )
+  component: strictLazyRouteComponent(
+    () => import('src/features/Billing/InvoiceDetail/InvoiceDetail'),
+    'InvoiceDetail'
   ),
   getParentRoute: () => accountRoute,
   parseParams: (params) => ({
@@ -75,12 +68,12 @@ const accountInvoicesInvoiceIdRoute = createRoute({
 });
 
 const accountEntityTransfersCreateRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/EntityTransfers/EntityTransfersCreate/EntityTransfersCreate'
-    ).then((module) => ({
-      default: module.EntityTransfersCreate,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/EntityTransfers/EntityTransfersCreate/EntityTransfersCreate'
+      ),
+    'EntityTransfersCreate'
   ),
   getParentRoute: () => accountRoute,
   path: 'service-transfers/create',

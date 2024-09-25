@@ -1,13 +1,10 @@
-import {
-  Outlet,
-  createRoute,
-  lazyRouteComponent,
-} from '@tanstack/react-router';
+import { Outlet, createRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
+import { strictLazyRouteComponent } from './utils';
 
 export const LinodesRoutes = () => {
   return (
@@ -24,32 +21,27 @@ export const linodesRoute = createRoute({
 });
 
 const linodesIndexRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Linodes').then((module) => ({
-      default: module.LinodesLandingWrapper,
-    }))
+  component: strictLazyRouteComponent(
+    () => import('src/features/Linodes'),
+    'LinodesLandingWrapper'
   ),
   getParentRoute: () => linodesRoute,
   path: '/',
 });
 
 const linodesCreateRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Linodes/LinodeCreatev2').then((module) => ({
-      default: module.LinodeCreatev2,
-    }))
+  component: strictLazyRouteComponent(
+    () => import('src/features/Linodes/LinodeCreatev2'),
+    'LinodeCreatev2'
   ),
   getParentRoute: () => linodesRoute,
   path: 'create',
 });
 
 const linodesDetailRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-      (module) => ({
-        default: module.LinodeDetail,
-      })
-    )
+  component: strictLazyRouteComponent(
+    () => import('src/features/Linodes/LinodesDetail/LinodesDetail'),
+    'LinodeDetail'
   ),
   getParentRoute: () => linodesRoute,
   parseParams: (params) => ({

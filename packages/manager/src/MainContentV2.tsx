@@ -11,7 +11,6 @@ import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 import { rootRoute } from './routes/root';
 
-const Images = React.lazy(() => import('src/features/Images'));
 const Kubernetes = React.lazy(() =>
   import('src/features/Kubernetes').then((module) => ({
     default: module.Kubernetes,
@@ -75,12 +74,6 @@ const longviewRoute = createRoute({
   component: Longview,
   getParentRoute: () => rootRoute,
   path: 'longview',
-});
-
-const imagesRoute = createRoute({
-  component: Images,
-  getParentRoute: () => rootRoute,
-  path: 'images',
 });
 
 const stackScriptsRoute = createRoute({
@@ -186,7 +179,6 @@ const notFoundRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   managedRoute,
   longviewRoute,
-  imagesRoute,
   stackScriptsRoute,
   objectStorageRoute,
   kubernetesRoute,
