@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
+import { Box } from 'src/components/Box';
+import { Tooltip } from 'src/components/Tooltip';
+
+import {
+  StyledWidgetAutocomplete,
+  commonPopperProps,
+} from '../../Utils/CloudPulseWidgetUtils';
 
 import type { TimeGranularity } from '@linode/api-v4';
 
@@ -115,33 +121,40 @@ export const CloudPulseIntervalSelect = React.memo(
     }
 
     return (
-      <StyledWidgetAutocomplete
-        isOptionEqualToValue={(
-          option: IntervalOptions,
-          value: IntervalOptions
-        ) => {
-          return option?.value === value?.value && option?.unit === value?.unit;
-        }}
-        onChange={(
-          _: React.SyntheticEvent,
-          selectedInterval: IntervalOptions
-        ) => {
-          props.onIntervalChange({
-            unit: selectedInterval?.unit,
-            value: selectedInterval?.value,
-          });
-        }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
-        defaultValue={{ ...default_interval }}
-        disableClearable
-        fullWidth={false}
-        label="Select an Interval"
-        noMarginTop={true}
-        options={[autoIntervalOption, ...availableIntervalOptions]}
-        sx={{ width: { xs: '100%' } }}
-      />
+      <Tooltip
+        PopperProps={commonPopperProps}
+        placement={'bottom-end'}
+        title={'Minimize'}
+      >
+        <span>
+          <StyledWidgetAutocomplete
+            isOptionEqualToValue={(
+              option: IntervalOptions,
+              value: IntervalOptions
+            ) => option?.value === value?.value && option?.unit === value?.unit}
+            onChange={(
+              _: React.SyntheticEvent,
+              selectedInterval: IntervalOptions
+            ) => {
+              props.onIntervalChange({
+                unit: selectedInterval?.unit,
+                value: selectedInterval?.value,
+              });
+            }}
+            textFieldProps={{
+              hideLabel: true,
+            }}
+            defaultValue={{ ...default_interval }}
+            disableClearable
+            fullWidth={false}
+            label="Select an Interval"
+            noMarginTop={true}
+            options={[autoIntervalOption, ...availableIntervalOptions]}
+            sx={{ width: { xs: '100%' } }}
+            autoHighlight
+          />
+        </span>
+      </Tooltip>
     );
   }
 );

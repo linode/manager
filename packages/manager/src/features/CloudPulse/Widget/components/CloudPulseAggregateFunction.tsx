@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
+import { Tooltip } from 'src/components/Tooltip';
+
+import {
+  StyledWidgetAutocomplete,
+  commonPopperProps,
+} from '../../Utils/CloudPulseWidgetUtils';
 
 export interface AggregateFunctionProperties {
   /**
@@ -37,24 +42,32 @@ export const CloudPulseAggregateFunction = React.memo(
       ) || props.availableAggregateFunctions[0];
 
     return (
-      <StyledWidgetAutocomplete
-        isOptionEqualToValue={(option, value) => {
-          return option.label == value.label;
-        }}
-        onChange={(_: any, selectedAggregateFunc: any) => {
-          props.onAggregateFuncChange(selectedAggregateFunc.label);
-        }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
-        defaultValue={defaultAggregateFunc}
-        disableClearable
-        fullWidth={false}
-        label="Select an Aggregate Function"
-        noMarginTop={true}
-        options={availableAggregateFunc}
-        sx={{ width: '100%' }}
-      />
+      <Tooltip
+        PopperProps={commonPopperProps}
+        placement={'bottom-end'}
+        title={'Minimize'}
+      >
+        <span>
+          <StyledWidgetAutocomplete
+            isOptionEqualToValue={(option, value) => {
+              return option.label == value.label;
+            }}
+            onChange={(_: any, selectedAggregateFunc: any) => {
+              props.onAggregateFuncChange(selectedAggregateFunc.label);
+            }}
+            textFieldProps={{
+              hideLabel: true,
+            }}
+            defaultValue={defaultAggregateFunc}
+            disableClearable
+            fullWidth={false}
+            label="Select an Aggregate Function"
+            noMarginTop={true}
+            options={availableAggregateFunc}
+            sx={{ width: '100%' }}
+          />
+        </span>
+      </Tooltip>
     );
   }
 );

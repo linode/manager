@@ -1,8 +1,11 @@
-import { useTheme } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import ZoomInMap from 'src/assets/icons/zoomin.svg';
 import ZoomOutMap from 'src/assets/icons/zoomout.svg';
+import { Tooltip } from 'src/components/Tooltip';
+
+import { commonPopperProps } from '../../Utils/CloudPulseWidgetUtils';
 
 export interface ZoomIconProperties {
   className?: string;
@@ -20,28 +23,46 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
   const ToggleZoomer = () => {
     if (props.zoomIn) {
       return (
-        <ZoomInMap
-          sx={{
-            color: theme.color.grey1,
-            fontSize: 'x-large',
-            height: '34px',
-          }}
-          data-testid="zoom-in"
-          onClick={() => handleClick(false)}
-        />
+        <Tooltip
+          PopperProps={commonPopperProps}
+          placement={'bottom-end'}
+          title={'Minimize'}
+        >
+          <IconButton
+            sx={{
+              color: theme.color.grey1,
+              fontSize: 'x-large',
+              height: '34px',
+              padding: '0',
+            }}
+            data-testid="zoom-in"
+            onClick={() => handleClick(false)}
+          >
+            <ZoomInMap />
+          </IconButton>
+        </Tooltip>
       );
     }
 
     return (
-      <ZoomOutMap
-        sx={{
-          color: theme.color.grey1,
-          fontSize: 'x-large',
-          height: '34px',
-        }}
-        data-testid="zoom-out"
-        onClick={() => handleClick(true)}
-      />
+      <Tooltip
+        PopperProps={commonPopperProps}
+        placement={'bottom-end'}
+        title={'Maximize'}
+      >
+        <IconButton
+          sx={{
+            color: theme.color.grey1,
+            fontSize: 'x-large',
+            height: '34px',
+            padding: '0',
+          }}
+          data-testid="zoom-out"
+          onClick={() => handleClick(true)}
+        >
+          <ZoomOutMap />
+        </IconButton>
+      </Tooltip>
     );
   };
 
