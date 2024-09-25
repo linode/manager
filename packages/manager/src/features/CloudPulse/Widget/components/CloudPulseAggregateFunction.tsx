@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
+import { Tooltip } from 'src/components/Tooltip';
+
+import {
+  StyledWidgetAutocomplete,
+  commonPopperProps,
+} from '../../Utils/CloudPulseWidgetUtils';
 
 export interface AggregateFunctionProperties {
   /**
@@ -52,26 +57,32 @@ export const CloudPulseAggregateFunction = React.memo(
     ] = React.useState<AggregateFunction>(defaultValue);
 
     return (
-      <StyledWidgetAutocomplete
-        isOptionEqualToValue={(option, value) => {
-          return option.label == value.label;
-        }}
-        onChange={(e, selectedAggregateFunc: AggregateFunction) => {
-          setSelectedAggregateFunction(selectedAggregateFunc);
-          onAggregateFuncChange(selectedAggregateFunc.label);
-        }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
-        autoHighlight
-        disableClearable
-        fullWidth={false}
-        label="Select an Aggregate Function"
-        noMarginTop={true}
-        options={availableAggregateFunc}
-        sx={{ width: '100%' }}
-        value={selectedAggregateFunction}
-      />
+      <Tooltip
+        PopperProps={commonPopperProps}
+        placement={'bottom-end'}
+        title={'Minimize'}
+      >
+        <span>
+          <StyledWidgetAutocomplete
+            isOptionEqualToValue={(option, value) => {
+              return option.label == value.label;
+            }}
+            onChange={(_: any, selectedAggregateFunc: any) => {
+              props.onAggregateFuncChange(selectedAggregateFunc.label);
+            }}
+            textFieldProps={{
+              hideLabel: true,
+            }}
+            defaultValue={defaultAggregateFunction}
+            disableClearable
+            fullWidth={false}
+            label="Select an Aggregate Function"
+            noMarginTop={true}
+            options={availableAggregateFunc}
+            sx={{ width: '100%' }}
+          />
+        </span>
+      </Tooltip>
     );
   }
 );

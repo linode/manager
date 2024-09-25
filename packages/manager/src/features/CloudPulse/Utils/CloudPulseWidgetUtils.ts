@@ -26,6 +26,7 @@ import type {
 } from '@linode/api-v4';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
+import { Tooltip } from 'src/components/Tooltip';
 
 interface LabelNameOptionsProps {
   /**
@@ -349,3 +350,25 @@ export const StyledWidgetAutocomplete = styled(Autocomplete, {
     width: '90px',
   },
 }));
+
+// popperProps.ts
+export const commonPopperProps = {
+  modifiers: [
+    {
+      name: 'offset',
+      options: {
+        offset: [0, -8], // Adjust offset if needed
+      },
+    },
+  ],
+  sx: {
+    '& .MuiTooltip-tooltip': {
+      bgcolor: 'black',
+      color: 'white',
+      fontSize: '13px',
+      maxHeight: '28px',
+      maxWidth: '64px',
+      padding: '6px',
+    },
+  },
+};
