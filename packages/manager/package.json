@@ -208,7 +208,7 @@
     "simple-git": "^3.19.0",
     "storybook": "^8.3.0",
     "storybook-dark-mode": "^4.0.1",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.19.1",
     "vite": "^5.4.6",
     "vite-plugin-svgr": "^3.2.0",
     "vitest": "^2.1.1"
