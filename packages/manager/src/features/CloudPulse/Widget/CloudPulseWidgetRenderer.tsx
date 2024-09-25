@@ -188,8 +188,6 @@ export const RenderWidgets = React.memo(
         oldProps.manualRefreshTimeStamp,
         newProps.manualRefreshTimeStamp
       ) ||
-      !deepEqual(oldProps.metricDefinitions, newProps.metricDefinitions) ||
-      !deepEqual(oldProps.resourceList, newProps.resourceList) ||
       !deepEqual(oldProps.resources, newProps.resources)
     ) {
       return false;

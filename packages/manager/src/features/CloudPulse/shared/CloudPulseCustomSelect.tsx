@@ -260,11 +260,6 @@ function compareProps(
     }
   }
 
-  // Deep comparison for options
-  if (!deepEqual(prevProps.options, nextProps.options)) {
-    return false;
-  }
-
   // Ignore function props in comparison
   return true;
 }
