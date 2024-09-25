@@ -1,8 +1,3 @@
-import {
-  granularity,
-  timeRange,
-} from '../../cypress/support/constants/widgets';
-
 import type { CloudPulseMetricsResponse } from '@linode/api-v4';
 
 /**
@@ -25,18 +20,18 @@ export const createMetricResponse = (
   const currentTime = Math.floor(Date.now() / 1000);
 
   const intervals: Record<string, number> = {
-    [granularity.auto]: 3600,
-    [granularity.day1]: 86400,
-    [granularity.hour]: 3600,
-    [granularity.minutes]: 5 * 60,
+    ['1 day']: 86400,
+    ['1 hr']: 3600,
+    ['5 min']: 5 * 60,
+    ['Auto']: 3600,
   };
 
   const timeRanges: Record<string, number> = {
-    [timeRange.last7Days]: 7 * 24 * 3600,
-    [timeRange.last12Hours]: 12 * 3600,
-    [timeRange.last24Hours]: 24 * 3600,
-    [timeRange.last30Days]: 30 * 24 * 3600,
-    [timeRange.last30Minutes]: 30 * 60,
+    ['Last 7 Days']: 7 * 24 * 3600,
+    ['Last 12 Hours']: 12 * 3600,
+    ['Last 24 Hours']: 24 * 3600,
+    ['Last 30 Days']: 30 * 24 * 3600,
+    ['Last 30 Minutes']: 30 * 60,
   };
 
   const interval =

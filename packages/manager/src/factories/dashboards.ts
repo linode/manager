@@ -1,17 +1,10 @@
 import Factory from 'src/factories/factoryProxy';
 
-import type {
-  AvailableMetrics,
-  Dashboard,
-  MetricDefinitions,
-  Widgets,
-} from '@linode/api-v4';
+import type { AvailableMetrics, Dashboard, Widgets } from '@linode/api-v4';
 
-const units = ['%', '%', 'Bytes', 'OPS'];
 const color = ['blue', 'red', 'green', 'yellow'];
 const chart_type = ['area', 'area', 'area', 'line'];
 const scrape_interval = ['2m', '30s', '30s', '30s'];
-const units_interval = ['percent', 'byte', 'byte', 'ops_per_second'];
 
 /**
  * Factory function to create instances of the `Dashboard` model with predefined properties and values.
@@ -112,7 +105,7 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
     unit: 'hour',
     value: 1,
   },
-  unit: Factory.each((i) => units[i % units.length]),
+  unit: 'defaultUnit',
   y_label: Factory.each((i) => 'y_label_' + i),
 });
 /**
@@ -151,6 +144,6 @@ export const dashboardMetricFactory = Factory.Sync.makeFactory<AvailableMetrics>
     scrape_interval: Factory.each(
       (i) => scrape_interval[i % scrape_interval.length]
     ),
-    unit: Factory.each((i) => units_interval[i % units_interval.length]),
+    unit: 'defaultUnit',
   }
 );
