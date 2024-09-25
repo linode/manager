@@ -1,8 +1,4 @@
-import {
-  Outlet,
-  createRoute,
-  lazyRouteComponent,
-} from '@tanstack/react-router';
+import { Outlet, createRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -10,6 +6,7 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
+import { strictLazyRouteComponent } from './utils';
 
 export const AccountRoutes = () => {
   return (
@@ -28,36 +25,36 @@ export const placementGroupsRoute = createRoute({
 });
 
 const placementGroupsIndexRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-    ).then((module) => ({
-      default: module.PlacementGroupsLanding,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
+      ),
+    'PlacementGroupsLanding'
   ),
   getParentRoute: () => placementGroupsRoute,
   path: '/',
 });
 
 const placementGroupsCreateRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-    ).then((module) => ({
-      default: module.PlacementGroupsLanding,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
+      ),
+    'PlacementGroupsLanding'
   ),
   getParentRoute: () => placementGroupsRoute,
   path: 'create',
 });
 
 const placementGroupsEditRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-    ).then((module) => ({
-      default: module.PlacementGroupsLanding,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
+      ),
+    'PlacementGroupsLanding'
   ),
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
@@ -67,12 +64,12 @@ const placementGroupsEditRoute = createRoute({
 });
 
 const placementGroupsDeleteRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-    ).then((module) => ({
-      default: module.PlacementGroupsLanding,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
+      ),
+    'PlacementGroupsLanding'
   ),
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
@@ -82,12 +79,12 @@ const placementGroupsDeleteRoute = createRoute({
 });
 
 const placementGroupsUnassignRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-    ).then((module) => ({
-      default: module.PlacementGroupsDetail,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
+      ),
+    'PlacementGroupsDetail'
   ),
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
@@ -98,12 +95,12 @@ const placementGroupsUnassignRoute = createRoute({
 });
 
 const placementGroupsDetailRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-    ).then((module) => ({
-      default: module.PlacementGroupsDetail,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
+      ),
+    'PlacementGroupsDetail'
   ),
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({

@@ -1,14 +1,11 @@
-import {
-  Outlet,
-  createRoute,
-  lazyRouteComponent,
-} from '@tanstack/react-router';
+import { Outlet, createRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
+import { strictLazyRouteComponent } from './utils';
 
 export const NodeBalancersRoutes = () => {
   return (
@@ -26,7 +23,7 @@ const nodeBalancersRoute = createRoute({
 });
 
 const nodeBalancersIndexRoute = createRoute({
-  component: lazyRouteComponent(
+  component: strictLazyRouteComponent(
     () =>
       import(
         'src/features/NodeBalancers/NodeBalancersLanding/NodeBalancersLanding'
@@ -37,20 +34,20 @@ const nodeBalancersIndexRoute = createRoute({
 });
 
 const nodeBalancersCreateRoute = createRoute({
-  component: lazyRouteComponent(
-    () => import('src/features/NodeBalancers/NodeBalancerCreate')
+  component: strictLazyRouteComponent(
+    () => import('src/features/NodeBalancers/NodeBalancerCreate'),
   ),
   getParentRoute: () => nodeBalancersRoute,
   path: 'create',
 });
 
 const nodeBalancerDetailRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerDetail'
-    ).then((module) => ({
-      default: module.NodeBalancerDetail,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerDetail'
+      ),
+    'NodeBalancerDetail'
   ),
   getParentRoute: () => nodeBalancersRoute,
   parseParams: (params) => ({
@@ -60,19 +57,19 @@ const nodeBalancerDetailRoute = createRoute({
 });
 
 const nodeBalancerDetailSummaryRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/NodeBalancerSummary'
-    ).then((module) => ({
-      default: module.NodeBalancerSummary,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/NodeBalancerSummary'
+      ),
+    'NodeBalancerSummary'
   ),
   getParentRoute: () => nodeBalancerDetailRoute,
   path: 'summary',
 });
 
 const nodeBalancerDetailConfigurationsRoute = createRoute({
-  component: lazyRouteComponent(
+  component: strictLazyRouteComponent(
     () =>
       import(
         'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerConfigurations'
@@ -83,12 +80,12 @@ const nodeBalancerDetailConfigurationsRoute = createRoute({
 });
 
 const nodeBalancerDetailSettingsRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import(
-      'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSettings'
-    ).then((module) => ({
-      default: module.NodeBalancerSettings,
-    }))
+  component: strictLazyRouteComponent(
+    () =>
+      import(
+        'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSettings'
+      ),
+    'NodeBalancerSettings'
   ),
   getParentRoute: () => nodeBalancerDetailRoute,
   path: 'settings',

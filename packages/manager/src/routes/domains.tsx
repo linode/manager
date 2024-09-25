@@ -1,14 +1,11 @@
-import {
-  Outlet,
-  createRoute,
-  lazyRouteComponent,
-} from '@tanstack/react-router';
+import { Outlet, createRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
+import { strictLazyRouteComponent } from './utils';
 
 export const DomainsRoutes = () => {
   return (
@@ -26,30 +23,27 @@ const domainsRoute = createRoute({
 });
 
 const domainsIndexRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Domains/DomainsLanding').then((module) => ({
-      default: module.DomainsLanding,
-    }))
+  component: strictLazyRouteComponent(
+    () => import('src/features/Domains/DomainsLanding'),
+    'DomainsLanding'
   ),
   getParentRoute: () => domainsRoute,
   path: '/',
 });
 
 const domainCreateRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Domains/CreateDomain/CreateDomain').then((module) => ({
-      default: module.CreateDomain,
-    }))
+  component: strictLazyRouteComponent(
+    () => import('src/features/Domains/CreateDomain/CreateDomain'),
+    'CreateDomain'
   ),
   getParentRoute: () => domainsRoute,
   path: 'create',
 });
 
 const domainDetailRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Domains/DomainDetail').then((module) => ({
-      default: module.DomainDetailRouting,
-    }))
+  component: strictLazyRouteComponent(
+    () => import('src/features/Domains/DomainDetail'),
+    'DomainDetailRouting'
   ),
   getParentRoute: () => domainsRoute,
   parseParams: (params) => ({
@@ -59,10 +53,9 @@ const domainDetailRoute = createRoute({
 });
 
 const domainDetailRecordsRoute = createRoute({
-  component: lazyRouteComponent(() =>
-    import('src/features/Domains/DomainDetail').then((module) => ({
-      default: module.DomainDetailRouting,
-    }))
+  component: strictLazyRouteComponent(
+    () => import('src/features/Domains/DomainDetail'),
+    'DomainDetailRouting'
   ),
   getParentRoute: () => domainDetailRoute,
   path: 'records',
