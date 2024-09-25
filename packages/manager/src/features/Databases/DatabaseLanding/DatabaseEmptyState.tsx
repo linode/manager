@@ -13,13 +13,19 @@ import {
   linkAnalyticsEvent,
   youtubeLinkData,
 } from './DatabaseLandingEmptyStateData';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 
 export const DatabaseEmptyState = () => {
   const { push } = useHistory();
+  const { isDatabasesV2Enabled } = useIsDatabasesEnabled();
 
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
+
+  if (!isDatabasesV2Enabled) {
+    headers.logo = '';
+  }
 
   return (
     <ResourcesSection
