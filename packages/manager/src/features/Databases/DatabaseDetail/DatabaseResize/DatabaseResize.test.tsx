@@ -133,6 +133,164 @@ describe('database resize', () => {
     });
   });
 
+  describe('on rendering of page ', () => {
+    describe('and isDatabasesGAEnabled is true', () => {
+      describe('and the Shared CPU tab is preselected', () => {
+        it('should render set node section', async () => {
+          const flags = {
+            dbaasV2: {
+              beta: false,
+              enabled: true,
+            },
+          };
+          const mockDatabase = databaseFactory.build({
+            cluster_size: 3,
+            type: 'g6-nanode-1',
+          });
+          const { getByTestId, getByText } = renderWithTheme(
+            <DatabaseResize database={mockDatabase} />,
+            { flags }
+          );
+
+          expect(getByTestId(loadingTestId)).toBeInTheDocument();
+          await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+          expect(getByText('Set Number of Nodes')).toBeDefined();
+          expect(
+            getByText('Please select a plan or set the number of nodes.')
+          ).toBeDefined();
+        });
+
+        it('should render the correct number of node radio buttons and associated costs', async () => {
+          const flags = {
+            dbaasV2: {
+              beta: false,
+              enabled: true,
+            },
+          };
+          const mockDatabase = databaseFactory.build({
+            cluster_size: 3,
+            type: 'g6-nanode-1',
+          });
+          const { getByTestId } = renderWithTheme(
+            <DatabaseResize database={mockDatabase} />,
+            { flags }
+          );
+          await waitForElementToBeRemoved(getByTestId(loadingTestId));
+          const nodeRadioBtns = getByTestId('database-nodes');
+          expect(nodeRadioBtns.children.length).toBe(2);
+          expect(nodeRadioBtns).toHaveTextContent('$60/month $0.09/hr');
+          expect(nodeRadioBtns).toHaveTextContent('$140/month $0.21/hr');
+        });
+
+        it('should preselect cluster size in Set Number of Nodes', async () => {
+          const flags = {
+            dbaasV2: {
+              beta: false,
+              enabled: true,
+            },
+          };
+          const mockDatabase = databaseFactory.build({
+            cluster_size: 3,
+            type: 'g6-nanode-1',
+          });
+          const { getByTestId } = renderWithTheme(
+            <DatabaseResize database={mockDatabase} />,
+            { flags }
+          );
+          await waitForElementToBeRemoved(getByTestId(loadingTestId));
+          const selectedNodeRadioButton = getByTestId(
+            `database-node-${mockDatabase.cluster_size}`
+          ).children[0].children[0] as HTMLInputElement;
+          expect(selectedNodeRadioButton).toBeChecked();
+        });
+
+        it('should disable visible lower node selections', async () => {
+          const flags = {
+            dbaasV2: {
+              beta: false,
+              enabled: true,
+            },
+          };
+          const mockDatabase = databaseFactory.build({
+            cluster_size: 3,
+            type: 'g6-nanode-1',
+          });
+          const { getByTestId } = renderWithTheme(
+            <DatabaseResize database={mockDatabase} />,
+            { flags }
+          );
+          await waitForElementToBeRemoved(getByTestId(loadingTestId));
+          const selectedNodeRadioButton = getByTestId(`database-node-1`)
+            .children[0].children[0] as HTMLInputElement;
+          expect(selectedNodeRadioButton).toBeDisabled();
+        });
+
+        it('should set price enable the resize button when a new number of nodes is selected', async () => {
+          const flags = {
+            dbaasV2: {
+              beta: false,
+              enabled: true,
+            },
+          };
+          const mockDatabase = databaseFactory.build({
+            cluster_size: 1,
+            type: 'g6-nanode-1',
+          });
+          const { getByTestId, getByText } = renderWithTheme(
+            <DatabaseResize database={mockDatabase} />,
+            { flags }
+          );
+          await waitForElementToBeRemoved(getByTestId(loadingTestId));
+          // Mock clicking 3 Nodes option
+          const selectedNodeRadioButton = getByTestId(`database-node-3`)
+            .children[0].children[0] as HTMLInputElement;
+          fireEvent.click(selectedNodeRadioButton);
+          const resizeButton = getByText(/Resize Database Cluster/i).closest(
+            'button'
+          );
+          expect(resizeButton).toBeEnabled();
+
+          const expectedSummaryText =
+            'Nanode 1 GB 3 Nodes: $140/month or $0.21/hour';
+          const summary = getByTestId(`summary`);
+          expect(summary).toHaveTextContent(expectedSummaryText);
+        });
+
+        it('should disable the resize button if node selection is set back to current', async () => {
+          const flags = {
+            dbaasV2: {
+              beta: false,
+              enabled: true,
+            },
+          };
+          const mockDatabase = databaseFactory.build({
+            cluster_size: 1,
+            type: 'g6-nanode-1',
+          });
+          const { getByTestId, getByText } = renderWithTheme(
+            <DatabaseResize database={mockDatabase} />,
+            { flags }
+          );
+          await waitForElementToBeRemoved(getByTestId(loadingTestId));
+          // Mock clicking 3 Nodes option
+          const threeNodesRadioButton = getByTestId(`database-node-3`)
+            .children[0].children[0] as HTMLInputElement;
+          fireEvent.click(threeNodesRadioButton);
+          const resizeButton = getByText(/Resize Database Cluster/i).closest(
+            'button'
+          );
+          expect(resizeButton).toBeEnabled();
+          // Mock clicking 1 Node option
+          const oneNodeRadioButton = getByTestId(`database-node-1`).children[0]
+            .children[0] as HTMLInputElement;
+          fireEvent.click(oneNodeRadioButton);
+          expect(resizeButton).toBeDisabled();
+        });
+      });
+    });
+  });
+
   describe('should be disabled smaller plans', () => {
     const database = databaseFactory.build({
       type: 'g6-dedicated-8',
