@@ -368,7 +368,7 @@ describe('displays specific linode plans for GPU', () => {
     // Should display two separate tables
     cy.findByText('GPU').click();
     cy.get(linodePlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {
