@@ -143,6 +143,8 @@ describe('Dashboard Widget Verification Tests', () => {
         .should('be.visible')
         .first()
         .within(() => {
+          const widgetFilterSelector = `[data-qa-widget-filters="${testData.title}"]`;
+          cy.get(widgetFilterSelector).invoke('attr', 'style', 'overflow:visible');
           ui.autocomplete
             .findByTitleCustom('Select an Interval')
             .should('be.visible')
@@ -262,6 +264,8 @@ describe('Dashboard Widget Verification Tests', () => {
             .findByTitleCustom('Select an Interval')
             .findByTitle('Open')
             .click();
+          const widgetFilterSelector = `[data-qa-widget-filter="${testData.title}"]`;
+          cy.get(widgetFilterSelector).invoke('attr', 'style', 'overflow:visible');
           testData.expectedGranularityArray.forEach((option) => {
             ui.autocompletePopper.findByTitle(option).should('be.visible');
           });
