@@ -5,7 +5,7 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "husky": "^9.1.6",
-    "typescript": "^5.5.4"
+    "typescript": "5.5.4"
   },
   "scripts": {
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
