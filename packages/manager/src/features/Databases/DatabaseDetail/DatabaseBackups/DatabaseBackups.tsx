@@ -10,6 +10,7 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect/Select';
+import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -71,13 +72,13 @@ export const DatabaseBackups = (props: Props) => {
     isLoading: isDatabaseLoading,
   } = useDatabaseQuery(engine, id);
 
-  const isNewDatabase = database?.platform === 'rdbms-default';
+  const isDefaultDatabase = database?.platform === 'rdbms-default';
 
   const {
     data: backups,
     error: backupsError,
     isLoading: isBackupsLoading,
-  } = useDatabaseBackupsQuery(engine, id);
+  } = useDatabaseBackupsQuery(engine, id, !isDefaultDatabase);
 
   const { handleOrderChange, order, orderBy } = useOrder({
     order: 'desc',
@@ -132,6 +133,10 @@ export const DatabaseBackups = (props: Props) => {
     ? DateTime.fromISO(database.oldest_restore_time)
     : null;
 
+  const unableToRestoreCopy = !oldestBackup
+    ? 'You can restore a backup after the first backup is completed.'
+    : '';
+
   const onRestoreNewDatabase = (selectedDate: DateTime | null) => {
     const day = selectedDate?.toISODate();
     const time = selectedTime?.toISOTime({ includeOffset: false });
@@ -143,7 +148,7 @@ export const DatabaseBackups = (props: Props) => {
     setIsRestoreDialogOpen(true);
   };
 
-  return isNewDatabase ? (
+  return isDefaultDatabase ? (
     <Paper style={{ marginTop: 16 }}>
       <Typography variant="h2">Summary</Typography>
       <StyledTypography>
@@ -183,6 +188,9 @@ export const DatabaseBackups = (props: Props) => {
         Select a date and time within the last 10 days you want to create a fork
         from.
       </StyledTypography>
+      {unableToRestoreCopy && (
+        <Notice spacingTop={16} text={unableToRestoreCopy} variant="info" />
+      )}
       <Grid container justifyContent="flex-start" mt={2}>
         <Grid item lg={3} md={4} xs={12}>
           <Typography variant="h3">Date</Typography>

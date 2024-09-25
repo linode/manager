@@ -6,7 +6,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { useNewRestoreFromBackupMutation } from 'src/queries/databases/databases';
+import { useRestoreFromBackupMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Database } from '@linode/api-v4/lib/databases';
@@ -28,9 +28,8 @@ export const RestoreNewFromBackupDialog = (props: Props) => {
     restoreTime &&
     `${restoreTime?.split('T')[0]} ${restoreTime?.split('T')[1].slice(0, 5)}`;
 
-  const { error, mutateAsync: restore } = useNewRestoreFromBackupMutation(
+  const { error, mutateAsync: restore } = useRestoreFromBackupMutation(
     database.engine,
-    `${database.label}(FORK ${formatedDate})`,
     {
       restore_time: restoreTime,
       source: database.id,

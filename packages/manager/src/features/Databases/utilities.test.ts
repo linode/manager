@@ -135,8 +135,8 @@ describe('isOutsideBackupTimeframe', () => {
     expect(isOutsideBackupTimeframe(date, oldestBackup)).toBe(false);
   });
 
-  it('should return false if there is no oldest backup', () => {
+  it('should return true if there is no oldest backup', () => {
     const date = DateTime.now().minus({ days: 3 });
-    expect(isOutsideBackupTimeframe(date, null)).toBe(false);
+    expect(isOutsideBackupTimeframe(date, null)).toBe(true);
   });
 });

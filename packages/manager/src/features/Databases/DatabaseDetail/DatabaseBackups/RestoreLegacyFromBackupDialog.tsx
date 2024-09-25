@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { useRestoreFromBackupMutation } from 'src/queries/databases/databases';
+import { useLegacyRestoreFromBackupMutation } from 'src/queries/databases/databases';
 import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
@@ -30,7 +30,11 @@ export const RestoreLegacyFromBackupDialog = (props: Props) => {
     error,
     isPending,
     mutateAsync: restore,
-  } = useRestoreFromBackupMutation(database.engine, database.id, backup?.id);
+  } = useLegacyRestoreFromBackupMutation(
+    database.engine,
+    database.id,
+    backup?.id
+  );
 
   const handleRestoreDatabase = () => {
     restore().then(() => {
