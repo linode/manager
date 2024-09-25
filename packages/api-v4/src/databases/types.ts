@@ -54,7 +54,8 @@ export interface DatabaseCredentials {
 
 interface DatabaseHosts {
   primary: string;
-  secondary: string;
+  secondary?: string;
+  standby?: string;
 }
 
 export interface SSLFields {

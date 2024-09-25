@@ -180,10 +180,17 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     ),
     created: '2021-12-09T17:15:12',
     engine: Factory.each((i) => ['mysql', 'postgresql'][i % 2] as Engine),
-    hosts: {
-      primary: 'db-mysql-primary-0.b.linodeb.net',
-      secondary: 'db-mysql-secondary-0.b.linodeb.net',
-    },
+    hosts: Factory.each((i) =>
+      adb10(i)
+        ? {
+            primary: 'db-mysql-primary-0.b.linodeb.net',
+            secondary: 'db-mysql-secondary-0.b.linodeb.net',
+          }
+        : {
+            primary: 'db-mysql-primary-0.b.linodeb.net',
+            standby: 'db-mysql-secondary-0.b.linodeb.net',
+          }
+    ),
     id: Factory.each((i) => i),
     instance_uri: '',
     label: Factory.each((i) => `example.com-database-${i}`),
@@ -213,10 +220,17 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   created: '2021-12-09T17:15:12',
   encrypted: false,
   engine: 'mysql',
-  hosts: {
-    primary: 'db-mysql-primary-0.b.linodeb.net',
-    secondary: 'db-mysql-secondary-0.b.linodeb.net',
-  },
+  hosts: Factory.each((i) =>
+    adb10(i)
+      ? {
+          primary: 'db-mysql-primary-0.b.linodeb.net',
+          secondary: 'db-mysql-secondary-0.b.linodeb.net',
+        }
+      : {
+          primary: 'db-mysql-primary-0.b.linodeb.net',
+          standby: 'db-mysql-secondary-0.b.linodeb.net',
+        }
+  ),
   id: Factory.each((i) => i),
   label: Factory.each((i) => `database-${i}`),
   members: {
