@@ -315,9 +315,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               {unit.endsWith('ps') ? '/s' : ''})
             </Typography>
             <Stack
-              data-qa-widget-filters={convertStringToCamelCasesWithSpaces(
-                widget.label
-              )}
               alignItems={'center'}
               direction={{ sm: 'row' }}
               gap={2}
