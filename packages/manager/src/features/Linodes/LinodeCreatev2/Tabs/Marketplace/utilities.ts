@@ -1,3 +1,5 @@
+import { decode } from 'he';
+
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { useFlags } from 'src/hooks/useFlags';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
@@ -179,3 +181,11 @@ export const useMarketplaceApps = () => {
 
   return { apps, ...query };
 };
+
+export const getMarketplaceAppLabel = (label: string) =>
+  decode(
+    label
+      .replace(' Null One-Click', '')
+      .replace(' One-Click', '')
+      .replace(' Cluster', '')
+  ).trim();
