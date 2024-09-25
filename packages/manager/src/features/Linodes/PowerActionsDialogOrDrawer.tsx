@@ -202,7 +202,7 @@ export const PowerActionsDialog = (props: Props) => {
             Powered down Linodes will still accrue charges.
             <br />
             See the&nbsp;
-            <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works#will-i-be-billed-for-powered-off-or-unused-services">
               Billing and Payments documentation
             </Link>
             &nbsp;for more information.

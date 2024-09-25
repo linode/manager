@@ -180,7 +180,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
               onClick={() =>
                 sendApiAwarenessClickEvent('link', 'View all tools')
               }
-              to="https://www.linode.com/docs/products/tools/api/developers/"
+              to="https://techdocs.akamai.com/linode-api/reference/api"
             >
               View all tools
             </Link>{' '}

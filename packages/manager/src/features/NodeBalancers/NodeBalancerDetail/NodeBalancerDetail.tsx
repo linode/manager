@@ -114,7 +114,7 @@ export const NodeBalancerDetail = () => {
           pathname: `/nodebalancers/${nodeBalancerLabel}`,
         }}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         title={nodeBalancerLabel}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
