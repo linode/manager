@@ -103,7 +103,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         <Notice text={errors.root.message} variant="error" />
       )}
       <Typography>
-        Custom images are billed monthly, at $.10/GB. Check out{' '}
+        Custom images are billed monthly, at $0.10/GB. Check out{' '}
         <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
           this guide
         </Link>{' '}
