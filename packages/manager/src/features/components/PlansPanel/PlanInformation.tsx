@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -42,7 +41,6 @@ export const PlanInformation = (props: PlanInformationProps) => {
     planType,
     regionsData,
   } = props;
-  const theme = useTheme();
   const getDisabledClass = (thisClass: LinodeTypeClass) => {
     return Boolean(disabledClasses?.includes(thisClass));
   };
@@ -53,8 +51,11 @@ export const PlanInformation = (props: PlanInformationProps) => {
       {planType === 'gpu' ? (
         <>
           {showGPUEgressBanner && (
-            <Notice variant="info">
-              <Typography fontFamily={theme.font.bold} fontSize="1rem">
+            <Notice spacingBottom={8} variant="info">
+              <Typography
+                fontFamily={(theme: Theme) => theme.font.bold}
+                fontSize="1rem"
+              >
                 New GPU instances are now generally available. Deploy an RTX
                 4000 Ada GPU instance in select core compute regions in North
                 America, Europe, and Asia. <br />
@@ -121,7 +122,6 @@ interface ClassDescriptionCopyProps {
 
 export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
   const { planType } = props;
-  const theme = useTheme();
   let planTypeLabel: null | string;
   let docLink: null | string;
 
@@ -153,7 +153,10 @@ export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
 
   return planTypeLabel && docLink ? (
     <Typography
-      sx={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }}
+      sx={(theme: Theme) => ({
+        marginBottom: theme.spacing(3),
+        marginTop: theme.spacing(1),
+      })}
     >
       {
         planTabInfoContent[planType as keyof typeof planTabInfoContent]
