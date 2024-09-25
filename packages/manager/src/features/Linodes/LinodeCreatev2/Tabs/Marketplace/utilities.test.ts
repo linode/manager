@@ -112,7 +112,7 @@ describe('getFilteredApps', () => {
 describe('useMarketplaceApps', () => {
   it('should return apps from the stackscripts response', async () => {
     const stackscript = stackScriptFactory.build({
-      id: 0,
+      id: 401697,
       label: 'Linode Marketplace App',
     });
 
@@ -130,7 +130,7 @@ describe('useMarketplaceApps', () => {
     await waitFor(() => {
       expect(result.current.apps).toStrictEqual([
         {
-          details: oneClickApps[0],
+          details: oneClickApps[401697],
           stackscript,
         },
       ]);

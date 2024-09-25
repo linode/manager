@@ -7,13 +7,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
-import { useExpandIconStyles } from './UserDataAccordion.styles';
 import { UserDataAccordionHeading } from './UserDataAccordionHeading';
 
-import type { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-
 export interface UserDataAccordionProps {
-  createType?: CreateTypes;
   disabled?: boolean;
   onChange: (userData: string) => void;
   renderCheckbox?: JSX.Element;
@@ -22,15 +18,7 @@ export interface UserDataAccordionProps {
 }
 
 export const UserDataAccordion = (props: UserDataAccordionProps) => {
-  const { classes, cx } = useExpandIconStyles();
-  const {
-    createType,
-    disabled,
-    onChange,
-    renderCheckbox,
-    renderNotice,
-    userData,
-  } = props;
+  const { disabled, onChange, renderCheckbox, renderNotice, userData } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
   const checkFormat = ({
@@ -56,14 +44,8 @@ export const UserDataAccordion = (props: UserDataAccordionProps) => {
     padding: `0px 24px 24px ${renderNotice ? 0 : 24}px`,
   };
 
-  const fromBackupOrFromLinode =
-    createType && ['fromBackup', 'fromLinode'].includes(createType);
-
   return (
     <Accordion
-      expandIconClassNames={cx({
-        [classes.expandIconStyles]: !!fromBackupOrFromLinode,
-      })}
       headingProps={{
         variant: 'h2',
       }}
@@ -72,7 +54,7 @@ export const UserDataAccordion = (props: UserDataAccordionProps) => {
       }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       summaryProps={{
         sx: {
-          alignItems: fromBackupOrFromLinode ? 'flex-start' : 'center',
+          alignItems: 'center',
           padding: '5px 24px 0px 24px',
         },
       }}
@@ -82,7 +64,7 @@ export const UserDataAccordion = (props: UserDataAccordionProps) => {
         },
       }}
       detailProps={{ sx: sxDetails }}
-      heading={<UserDataAccordionHeading createType={createType} />}
+      heading={<UserDataAccordionHeading />}
     >
       {renderNotice ? (
         <Box data-testid="render-notice" marginBottom="16px">
