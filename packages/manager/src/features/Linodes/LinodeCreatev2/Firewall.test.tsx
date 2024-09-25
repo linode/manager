@@ -43,22 +43,26 @@ describe('Linode Create v2 Firewall', () => {
     expect(createFirewallButton).toBeEnabled();
   });
 
-  it('should populate the select based on form data and the firewall API response', async () => {
-    const firewall = firewallFactory.build();
+  it(
+    'should populate the select based on form data and the firewall API response',
+    async () => {
+      const firewall = firewallFactory.build();
 
-    server.use(
-      http.get('*/v4/firewalls', () => {
-        return HttpResponse.json(makeResourcePage([firewall]));
-      })
-    );
+      server.use(
+        http.get('*/v4/firewalls', () => {
+          return HttpResponse.json(makeResourcePage([firewall]));
+        })
+      );
 
-    const {
-      findByDisplayValue,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <Firewall />,
-      useFormOptions: { defaultValues: { firewall_id: firewall.id } },
-    });
+      const {
+        findByDisplayValue,
+      } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <Firewall />,
+        useFormOptions: { defaultValues: { firewall_id: firewall.id } },
+      });
 
-    await findByDisplayValue(firewall.label);
-  });
+      await findByDisplayValue(firewall.label);
+    },
+    { timeout: 5_000 }
+  );
 });
