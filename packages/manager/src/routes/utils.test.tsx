@@ -91,6 +91,7 @@ describe('strictLazyRouteComponent', () => {
       Promise.resolve({ notAComponent: 'string' })
     );
 
+    // @ts-expect-error - forcing the wrong type
     const result = strictLazyRouteComponent(mockImporter, 'notAComponent');
     await expect((result as any)()).rejects.toThrow(
       'Export "notAComponent" is not a valid React component'
