@@ -1,6 +1,6 @@
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetObjectStorageAccessKeys } from 'support/intercepts/object-storage';
+import { mockGetAccessKeys } from 'support/intercepts/object-storage';
 import { accountFactory, objectStorageKeyFactory } from 'src/factories';
 import { ui } from 'support/ui';
 
@@ -43,7 +43,7 @@ describe('Object Storage gen2 access keys tests', () => {
       ],
     });
 
-    mockGetObjectStorageAccessKeys([mockAccessKey1, mockAccessKey2]).as(
+    mockGetAccessKeys([mockAccessKey1, mockAccessKey2]).as(
       'getObjectStorageAccessKeys'
     ),
       cy.visitWithLogin('/object-storage/access-keys');
