@@ -49,9 +49,6 @@
     "yargs-parser": "^21.1.1",
     "kind-of": "^6.0.3",
     "node-fetch": "^2.6.7",
-    "ua-parser-js": "^0.7.33",
-    "immer": "^9.0.6",
-    "glob-parent": "^5.1.2",
     "yaml": "^2.3.0",
     "semver": "^7.5.2",
     "jackspeak": "2.1.1"
