@@ -134,6 +134,7 @@ export const CloudPulseIntervalSelect = React.memo(
         textFieldProps={{
           hideLabel: true,
         }}
+        autoHighlight
         defaultValue={{ ...default_interval }}
         disableClearable
         fullWidth={false}
