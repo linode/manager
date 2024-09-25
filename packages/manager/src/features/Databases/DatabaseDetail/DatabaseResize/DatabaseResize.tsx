@@ -67,7 +67,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     data: dbTypes,
     error: typesError,
     isLoading: typesLoading,
-  } = useDatabaseTypesQuery();
+  } = useDatabaseTypesQuery({ platform: database.platform });
 
   const { enqueueSnackbar } = useSnackbar();
 
