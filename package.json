@@ -45,8 +45,7 @@
   "resolutions": {
     "node-fetch": "^2.6.7",
     "yaml": "^2.3.0",
-    "semver": "^7.5.2",
-    "jackspeak": "2.1.1"
+    "semver": "^7.5.2"
   },
   "workspaces": {
     "packages": [
