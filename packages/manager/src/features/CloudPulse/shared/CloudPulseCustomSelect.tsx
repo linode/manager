@@ -213,6 +213,7 @@ export const CloudPulseCustomSelect = React.memo(
         textFieldProps={{
           hideLabel: true,
         }}
+        autoHighlight
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
