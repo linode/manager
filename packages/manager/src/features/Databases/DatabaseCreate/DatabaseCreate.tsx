@@ -461,16 +461,16 @@ const DatabaseCreate = () => {
       'cluster_size',
       values.cluster_size < 1 ? 3 : values.cluster_size
     );
-    !isDatabasesV2Enabled &&
+    if (!isDatabasesV2Enabled) {
       setFieldValue(
         'replication_type',
         determineReplicationType(values.cluster_size, values.engine)
       );
-    !isDatabasesV2Enabled &&
       setFieldValue(
         'replication_commit_type',
         determineReplicationCommitType(values.engine)
       );
+    }
     setFieldValue('storage_engine', determineStorageEngine(values.engine));
     setFieldValue('compression_type', determineCompressionType(values.engine));
   }, [

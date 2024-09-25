@@ -39,7 +39,6 @@ export const DatabaseStatusDisplay = (props: Props) => {
 
   const isResizing =
     recentEvent?.action === 'database_resize' &&
-    database.status === 'resizing' &&
     (recentEvent?.status === 'started' || recentEvent?.status === 'scheduled');
 
   if (isResizing) {
