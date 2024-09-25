@@ -43,11 +43,6 @@
     "prepare": "husky"
   },
   "resolutions": {
-    "braces": "^3.0.3",
-    "@babel/traverse": "^7.23.3",
-    "minimist": "^1.2.3",
-    "yargs-parser": "^21.1.1",
-    "kind-of": "^6.0.3",
     "node-fetch": "^2.6.7",
     "yaml": "^2.3.0",
     "semver": "^7.5.2",
