@@ -1,8 +1,6 @@
 import { lazyRouteComponent } from '@tanstack/react-router';
 
-import type { ComponentType } from 'react';
-
-type AnyModule = { [key: string]: any };
+type AnyModule = { [key: string]: React.ComponentType<unknown> };
 
 /**
  * This function is a wrapper around lazyRouteComponent that ensures the
@@ -12,7 +10,7 @@ type AnyModule = { [key: string]: any };
  * By using a function overload we do just that.
  */
 export function strictLazyRouteComponent<
-  T extends { default: ComponentType<any> }
+  T extends { default: React.ComponentType<unknown> }
 >(importer: () => Promise<T>): ReturnType<typeof lazyRouteComponent>;
 export function strictLazyRouteComponent<
   T extends AnyModule,
@@ -27,11 +25,11 @@ export function strictLazyRouteComponent<T extends AnyModule>(
 ): ReturnType<typeof lazyRouteComponent> {
   return lazyRouteComponent(() =>
     importer().then((module) => {
-      let component: ComponentType<any>;
+      let component: React.ComponentType<unknown>;
 
       if (exportName) {
         if (exportName in module) {
-          component = module[exportName] as ComponentType<any>;
+          component = module[exportName] as React.ComponentType<unknown>;
         } else {
           throw new Error(`Export "${exportName}" not found in module`);
         }
