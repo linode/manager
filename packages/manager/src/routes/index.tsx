@@ -3,9 +3,7 @@ import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 
-import {
-  accountRouteTree,
-} from './account';
+import { accountRouteTree } from './account';
 import { domainsRouteTree } from './domains';
 import { linodesRouteTree } from './linodes';
 import { nodeBalancersRouteTree } from './nodeBalancers';
@@ -25,7 +23,7 @@ const indexRoute = createRoute({
   path: '/',
 });
 
-const routeTree = rootRoute.addChildren([
+export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountRouteTree,
   domainsRouteTree,
