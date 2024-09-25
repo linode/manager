@@ -98,7 +98,7 @@ export const CloudPulseIntervalSelect = React.memo(
             allIntervalOptions.length
           );
 
-    let default_value =
+    let defaultValue =
       defaultInterval?.unit === 'Auto'
         ? autoIntervalOption
         : availableIntervalOptions.find(
@@ -107,15 +107,15 @@ export const CloudPulseIntervalSelect = React.memo(
               obj.unit === defaultInterval?.unit
           );
 
-    if (!default_value) {
-      default_value = autoIntervalOption;
+    if (!defaultValue) {
+      defaultValue = autoIntervalOption;
       onIntervalChange({
-        unit: default_value.unit,
-        value: default_value.value,
+        unit: defaultValue.unit,
+        value: defaultValue.value,
       });
     }
     const [selectedInterval, setSelectedInterval] = React.useState(
-      default_value
+      defaultValue
     );
 
     return (

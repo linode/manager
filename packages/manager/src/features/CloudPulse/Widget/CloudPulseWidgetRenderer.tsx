@@ -1,11 +1,10 @@
 import { Grid, Paper } from '@mui/material';
-import deepEqual from 'fast-deep-equal';
 import React from 'react';
 
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
-import { createObjectCopy } from '../Utils/utils';
+import { arrayDeepEqual, createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from './CloudPulseWidget';
 import {
   allIntervalOptions,
@@ -23,9 +22,14 @@ import type {
   AvailableMetrics,
   Dashboard,
   JWEToken,
+  MetricDefinitions,
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
+
+interface CompareProperties {
+  [key: string]: number | string | undefined;
+}
 
 interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
@@ -33,7 +37,7 @@ interface WidgetProps {
   duration: TimeDuration;
   jweToken?: JWEToken | undefined;
   manualRefreshTimeStamp?: number;
-  metricDefinitions: any;
+  metricDefinitions: MetricDefinitions | undefined;
   preferences?: AclpConfig;
   resourceList: CloudPulseResources[] | undefined;
   resources: string[];
@@ -179,20 +183,30 @@ export const RenderWidgets = React.memo(
     );
   },
   (oldProps: WidgetProps, newProps: WidgetProps) => {
-    if (
-      !deepEqual(oldProps.dashboard, newProps.dashboard) ||
-      !deepEqual(oldProps.additionalFilters, newProps.additionalFilters) ||
-      !deepEqual(oldProps.duration, newProps.duration) ||
-      !deepEqual(oldProps.jweToken, newProps.jweToken) ||
-      !deepEqual(
-        oldProps.manualRefreshTimeStamp,
-        newProps.manualRefreshTimeStamp
-      ) ||
-      !deepEqual(oldProps.resources, newProps.resources)
-    ) {
+    const oldValue: CompareProperties = {
+      id: oldProps.dashboard?.id,
+      timeStamp: oldProps.manualRefreshTimeStamp,
+      token: oldProps.jweToken?.token,
+      unit: oldProps.duration?.unit,
+      value: oldProps.duration?.value,
+    };
+
+    const newValue: CompareProperties = {
+      id: newProps.dashboard?.id,
+      timeStamp: newProps.manualRefreshTimeStamp,
+      token: newProps.jweToken?.token,
+      unit: newProps.duration?.unit,
+      value: newProps.duration?.value,
+    };
+
+    for (const key of Object.keys(oldValue)) {
+      if (oldValue[key] !== newValue[key]) {
+        return false;
+      }
+    }
+    if (!arrayDeepEqual(oldProps.resources, newProps.resources)) {
       return false;
     }
-
     return true;
   }
 );

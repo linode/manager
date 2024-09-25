@@ -1,4 +1,3 @@
-import deepEqual from 'fast-deep-equal';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';

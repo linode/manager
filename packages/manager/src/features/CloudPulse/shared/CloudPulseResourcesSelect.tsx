@@ -1,4 +1,3 @@
-import deepEqual from 'fast-deep-equal';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -130,9 +129,7 @@ function compareProps(
       return false;
     }
   }
-
-  // Deep comparison for xFilter
-  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
+  if (prevProps.xFilter !== nextProps.xFilter) {
     return false;
   }
 
