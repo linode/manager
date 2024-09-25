@@ -430,7 +430,7 @@ const weekSelectionMap = [
 ];
 
 const utcOffsetText = (utcOffsetInHours: number) => {
-  return utcOffsetInHours < 0
+  return utcOffsetInHours <= 0
     ? `+${Math.abs(utcOffsetInHours)}`
     : `-${utcOffsetInHours}`;
 };
