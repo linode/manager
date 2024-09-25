@@ -18,8 +18,13 @@ export const getAllDatabases = (
   passedParams: Params = {},
   passedFilter: Filter = {}
 ) =>
-  getAll<DatabaseInstance>((params, filter) =>
-    getDatabases({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+  getAll<DatabaseInstance>(
+    (params, filter) =>
+      getDatabases(
+        { ...params, ...passedParams },
+        { ...filter, ...passedFilter }
+      ),
+    100 // DBaaS supports a maximum of 100 page per call
   )().then((data) => data.data);
 
 export const getAllDatabaseEngines = () =>
