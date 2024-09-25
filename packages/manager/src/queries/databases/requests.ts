@@ -24,7 +24,7 @@ export const getAllDatabases = (
         { ...params, ...passedParams },
         { ...filter, ...passedFilter }
       ),
-    100 // DBaaS supports a maximum of 100 page per call
+    100 // DBaaS supports a maximum of 100 page size per call
   )().then((data) => data.data);
 
 export const getAllDatabaseEngines = () =>
