@@ -83,7 +83,7 @@ export const Root = () => {
   }
 
   return (
-    <div className={classes.appFrame}>
+    <div className={classes.appFrame} data-testid="root">
       <SessionExpirationProvider value={sessionExpirationContextValue}>
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>

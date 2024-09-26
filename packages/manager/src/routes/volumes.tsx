@@ -16,13 +16,13 @@ export const VolumesRoutes = () => {
   );
 };
 
-export const volumesRoute = createRoute({
+const volumesRoute = createRoute({
   component: VolumesRoutes,
   getParentRoute: () => rootRoute,
   path: 'volumes',
 });
 
-export const volumesIndexRoute = createRoute({
+const volumesIndexRoute = createRoute({
   component: strictLazyRouteComponent(() =>
     import('src/features/Volumes/VolumesLanding').then((module) => ({
       default: module.VolumesLanding,
@@ -32,7 +32,7 @@ export const volumesIndexRoute = createRoute({
   path: '/',
 });
 
-export const volumesCreateRoute = createRoute({
+const volumesCreateRoute = createRoute({
   component: strictLazyRouteComponent(() =>
     import('src/features/Volumes/VolumeCreate').then((module) => ({
       default: module.VolumeCreate,
@@ -41,3 +41,8 @@ export const volumesCreateRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: 'create',
 });
+
+export const volumesRouteTree = volumesRoute.addChildren([
+  volumesIndexRoute,
+  volumesCreateRoute,
+]);
