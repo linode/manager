@@ -6,8 +6,8 @@ import {
   getDatabases,
   getEngineDatabase,
   legacyRestoreWithBackup,
-  newRestoreWithBackup,
   resetDatabaseCredentials,
+  restoreWithBackup,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -160,10 +160,15 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
-  useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
-    databaseQueries.database(engine, id)._ctx.backups
-  );
+export const useDatabaseBackupsQuery = (
+  engine: Engine,
+  id: number,
+  enabled: boolean = false
+) =>
+  useQuery<ResourcePage<DatabaseBackup>, APIError[]>({
+    ...databaseQueries.database(engine, id)._ctx.backups,
+    enabled,
+  });
 
 export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
   useQuery<DatabaseEngine[], APIError[]>({
@@ -202,7 +207,7 @@ export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useRestoreFromBackupMutation = (
+export const useLegacyRestoreFromBackupMutation = (
   engine: Engine,
   databaseId: number,
   backupId: number
@@ -221,9 +226,8 @@ export const useRestoreFromBackupMutation = (
   });
 };
 
-export const useNewRestoreFromBackupMutation = (
+export const useRestoreFromBackupMutation = (
   engine: Engine,
-  label: string,
   fork: {
     restore_time?: string;
     source: number;
@@ -231,7 +235,7 @@ export const useNewRestoreFromBackupMutation = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
-    mutationFn: () => newRestoreWithBackup(engine, label, fork),
+    mutationFn: () => restoreWithBackup(engine, fork),
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: databaseQueries.databases.queryKey,

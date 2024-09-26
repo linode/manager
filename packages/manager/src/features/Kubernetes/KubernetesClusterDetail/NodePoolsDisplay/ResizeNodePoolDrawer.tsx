@@ -5,6 +5,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
+import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
@@ -68,6 +69,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     isPending,
     mutateAsync: updateNodePool,
   } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
+  const [resizeNodePoolError, setResizeNodePoolError] = React.useState<string>(
+    ''
+  );
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
@@ -79,12 +83,19 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     }
     if (open) {
       setUpdatedCount(nodePool.count);
+      setResizeNodePoolError('');
     }
   }, [nodePool, open]);
 
   const handleChange = (value: number) => {
     setUpdatedCount(Math.min(100, Math.floor(value)));
   };
+
+  React.useEffect(() => {
+    if (error) {
+      setResizeNodePoolError(error?.[0].reason);
+    }
+  }, [error]);
 
   if (!nodePool) {
     // This should never happen, but it keeps TypeScript happy and avoids crashing if we
@@ -140,7 +151,14 @@ export const ResizeNodePoolDrawer = (props: Props) => {
             </Typography>
           </div>
 
-          {error && <Notice text={error?.[0].reason} variant="error" />}
+          {resizeNodePoolError && (
+            <Notice variant="error">
+              <ErrorMessage
+                entity={{ id: kubernetesClusterId, type: 'lkecluster_id' }}
+                message={resizeNodePoolError}
+              />
+            </Notice>
+          )}
 
           <div className={classes.section}>
             <Typography className={classes.helperText}>

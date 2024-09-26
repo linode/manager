@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Stack } from 'src/components/Stack';
+import { Region } from 'src/features/Linodes/LinodeCreatev2/Region';
 
 import { StackScriptImages } from './StackScriptImages';
 import { StackScriptSelection } from './StackScriptSelection';
@@ -11,6 +12,7 @@ export const StackScripts = () => {
     <Stack spacing={3}>
       <StackScriptSelection />
       <UserDefinedFields />
+      <Region />
       <StackScriptImages />
     </Stack>
   );

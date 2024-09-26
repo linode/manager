@@ -35,11 +35,11 @@ import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import {
   StyledCircleProgress,
   StyledDivWrapper,
+  StyledFullAccountAccessToggleGrid,
   StyledHeaderGrid,
   StyledPaper,
   StyledPermPaper,
   StyledSelect,
-  StyledSubHeaderGrid,
   StyledUnrestrictedGrid,
 } from './UserPermissions.styles';
 import { UserPermissionsEntitySection } from './UserPermissionsEntitySection';
@@ -424,27 +424,37 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 {isProxyUser ? PARENT_USER : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
-            <StyledSubHeaderGrid>
-              <Toggle
-                tooltipText={
-                  currentUsername === accountUsername
-                    ? 'You cannot restrict the current active user.'
-                    : ''
+            <StyledFullAccountAccessToggleGrid>
+              <FormControlLabel
+                control={
+                  <Toggle
+                    inputProps={{
+                      'aria-label': 'Toggle Full Account Access',
+                    }}
+                    tooltipText={
+                      currentUsername === accountUsername
+                        ? 'You cannot restrict the current active user.'
+                        : ''
+                    }
+                    checked={!restricted}
+                    disabled={currentUsername === accountUsername}
+                    onChange={this.onChangeRestricted}
+                  />
                 }
-                aria-label="Toggle Full Account Access"
-                checked={!restricted}
-                disabled={currentUsername === accountUsername}
-                onChange={this.onChangeRestricted}
+                slotProps={{
+                  typography: {
+                    sx: (theme) => ({
+                      fontFamily: theme.font.bold,
+                      fontSize: '16px',
+                    }),
+                  },
+                }}
+                data-qa="toggle-full-account-access"
+                label="Full Account Access"
+                labelPlacement="end"
+                value={restricted}
               />
-            </StyledSubHeaderGrid>
-            <Grid sx={{ padding: 0 }}>
-              <Typography
-                sx={{ fontFamily: (theme) => theme.font.bold }}
-                variant="subtitle2"
-              >
-                Full Account Access
-              </Typography>
-            </Grid>
+            </StyledFullAccountAccessToggleGrid>
           </Grid>
         </StyledPaper>
         {restricted ? this.renderPermissions() : this.renderUnrestricted()}
@@ -505,7 +515,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <StyledPermPaper data-qa-global-section>
         <Typography
           data-qa-permissions-header="Global Permissions"
-          variant="subtitle2"
+          variant="body2"
         >
           Configure the specific rights and privileges this user has within the
           account.{<br />}Remember that permissions related to actions with the
@@ -585,7 +595,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               Specific Permissions
             </Typography>
           </Grid>
-
           <Grid style={{ marginTop: 5 }}>
             <StyledSelect
               defaultValue={defaultPerm}
