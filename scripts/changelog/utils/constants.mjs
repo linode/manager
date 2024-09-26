@@ -7,6 +7,7 @@ const __dirname = path.dirname(__filename);
 export const BOT = "linode-gh-bot";
 
 export const PACKAGES = ["api-v4", "manager", "validation"];
+export const VALID_FILENAMES = ["CHANGELOG.md", ".changeset", "package.json"];
 export const CHANGESET_TYPES = [
   "Added",
   "Fixed",
@@ -34,11 +35,19 @@ const validatePackage = (linodePackage) => {
   }
 };
 
+// Validate the fileName before using it (whitelist approach)
+const validateFileName = (fileName) => {
+  if (!VALID_FILENAMES.includes(fileName)) {
+    throw new Error(`Invalid file name: ${fileName}`);
+  }
+};
+
 // Safe path join with base directory enforcement
 const safePathJoin = (linodePackage, fileName) => {
   const sanitizedPackage = sanitizeInput(linodePackage); // Sanitize input
 
   validatePackage(sanitizedPackage); // Validate sanitized input
+  validateFileName(fileName); // Validate file name from a whitelist
 
   // Resolve the path to ensure it's absolute
   const resolvedPath = path.resolve(baseDir, sanitizedPackage, fileName);
