@@ -103,7 +103,7 @@ const mockRegion = extendRegion(
     country: 'us',
   })
 );
-let responsePayload: CloudPulseMetricsResponse;
+const responsePayload: CloudPulseMetricsResponse = createMetricResponse(timeRanges.last24Hours, '5 min');
 describe('Dashboard Widget Verification Tests', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
@@ -122,7 +122,6 @@ describe('Dashboard Widget Verification Tests', () => {
     mockCloudPulseServices(widgetDetails.linode.service_type).as('services');
     mockCloudPulseDashboardServicesResponse(dashboard, widgetDetails.linode.id);
     mockCloudPulseJWSToken(widgetDetails.linode.service_type);
-    responsePayload = createMetricResponse(timeRanges.last24Hours, '5 min');
     mockCloudPulseCreateMetrics(
       responsePayload,
       widgetDetails.linode.service_type
@@ -292,7 +291,7 @@ describe('Dashboard Widget Verification Tests', () => {
     setupMethod();
     cy.wait(7000); //maintaining the wait since page flicker and rendering
     ui.button
-      .findByAttribute('aria-label', 'cloudpulse-refresh')
+      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
       .should('be.visible')
       .click();
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
@@ -310,11 +309,10 @@ describe('Dashboard Widget Verification Tests', () => {
             );
           }
           const expectedRelativeTimeDuration = timeRange
-            ? `Last ${timeRange.value} ${
-                ['hour', 'hr'].includes(timeRange.unit.toLowerCase())
-                  ? 'Hours'
-                  : timeRange.unit
-              }`
+            ? `Last ${timeRange.value} ${['hour', 'hr'].includes(timeRange.unit.toLowerCase())
+              ? 'Hours'
+              : timeRange.unit
+            }`
             : '';
           expect(metric).to.equal(metricData.name);
           expect(expectedRelativeTimeDuration).to.equal(timeRanges.last24Hours);
@@ -332,7 +330,7 @@ describe('Dashboard Widget Verification Tests', () => {
         .should('be.visible')
         .within(() => {
           ui.button
-            .findByAttribute('aria-label', 'zoom-in')
+            .findByAttribute('aria-label', 'Zoom In')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -360,7 +358,7 @@ describe('Dashboard Widget Verification Tests', () => {
               );
             });
           ui.button
-            .findByAttribute('aria-label', 'zoom-out')
+            .findByAttribute('aria-label', 'Zoom Out')
             .should('be.visible')
             .should('be.enabled')
             .scrollIntoView()

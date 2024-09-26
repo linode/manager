@@ -57,7 +57,7 @@ export const selectTimeRange = (timeRange: string, timeSegments: string[]) => {
  * @param {string} service - The name of the service to select.
  */
 export const selectAndVerifyResource = (service: string) => {
-  const resourceInput = ui.autocomplete.findByTitleCustom('Select a Resources');
+  const resourceInput = ui.autocomplete.findByTitleCustom('Select a Resource');
   resourceInput.findByTitle('Open').click();
   resourceInput.click().type(`${service}{enter}`);
   cy.get('[title="Close"]').click();
