@@ -1,10 +1,10 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const BOT = 'linode-gh-bot';
+export const BOT = "linode-gh-bot";
 
 export const PACKAGES = ["api-v4", "manager", "validation"];
 export const CHANGESET_TYPES = [
@@ -19,11 +19,22 @@ export const CHANGESET_TYPES = [
 export const OWNER = "linode";
 export const REPO = "manager";
 
-export const changelogPath = (linodePackage) =>
+// Validate the linodePackage before using it
+const validatePackage = (linodePackage) => {
+  if (!PACKAGES.includes(linodePackage)) {
+    throw new Error(`Invalid package name: ${linodePackage}`);
+  }
+};
+
+export const changelogPath = (linodePackage) => {
+  validatePackage(linodePackage);
   path.join(__dirname, `../../../packages/${linodePackage}/CHANGELOG.md`);
-export const changesetDirectory = (linodePackage) =>
+};
+export const changesetDirectory = (linodePackage) => {
+  validatePackage(linodePackage);
   path.join(__dirname, `../../../packages/${linodePackage}/.changeset`);
-export const packageJsonPath = (linodePackage) =>
+};
+export const packageJsonPath = (linodePackage) => {
+  validatePackage(linodePackage);
   path.join(__dirname, `../../../packages/${linodePackage}/package.json`);
-
-
+};
