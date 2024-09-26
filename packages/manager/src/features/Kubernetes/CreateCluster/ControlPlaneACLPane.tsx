@@ -6,8 +6,8 @@ import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { ExtendedIP, validateIPs } from 'src/utilities/ipUtils';
-import { Notice } from 'src/components/Notice/Notice';
-import { Checkbox } from 'src/components/Checkbox';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import Stack from '@mui/material/Stack';
 
 export interface ControlPlaneACLProps {
@@ -17,17 +17,14 @@ export interface ControlPlaneACLProps {
   handleIPv4Change: (ips: ExtendedIP[]) => void;
   ipV6Addr: ExtendedIP[];
   handleIPv6Change: (ips: ExtendedIP[]) => void;
-  aclError?: string;
 }
 
 export const IPACLCopy = () => (
   <Typography>
-    This is the text for Control Plane Access Control.
-    <br />
+    This is the text for Control Plane Access Control.{' '}
     <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
-      Learn more about the control plane access control list
+      Learn more.
     </Link>
-    .
   </Typography>
 );
 
@@ -39,12 +36,25 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     handleIPv4Change,
     ipV6Addr,
     handleIPv6Change,
-    aclError,
   } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setControlPlaneACL(!enableControlPlaneACL);
   };
+
+  const handleIPv4ChangeCB = React.useCallback(
+    (_ips: ExtendedIP[]) => {
+      handleIPv4Change(_ips);
+    },
+    [handleIPv4Change]
+  );
+
+  const handleIPv6ChangeCB = React.useCallback(
+    (_ips: ExtendedIP[]) => {
+      handleIPv6Change(_ips);
+    },
+    [handleIPv6Change]
+  );
 
   const statusStyle = (status: boolean) => {
     switch (status) {
@@ -55,16 +65,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     }
   };
 
-  const [ipV4InputError, setIPV4InputError] = React.useState<
-    string | undefined
-  >('');
-  const [ipV6InputError, setIPV6InputError] = React.useState<
-    string | undefined
-  >('');
-
   return (
     <FormControl data-testid="control-plane-ipacl-form">
-      {aclError && <Notice text={aclError} variant="error" />}
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
@@ -78,12 +80,16 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         </Typography>
       </FormLabel>
       <IPACLCopy />
-      <Box sx={{ marginTop: 4 }}>
-        <Checkbox
-          checked={enableControlPlaneACL}
-          name="ipacl-checkbox"
-          text={'Enable IPACL'}
-          onChange={(e) => handleChange(e)}
+      <Box sx={{ marginTop: 2 }}>
+        <FormControlLabel
+          control={
+            <Toggle
+              checked={enableControlPlaneACL}
+              name="ipacl-checkbox"
+              onChange={(e) => handleChange(e)}
+            />
+          }
+          label={'Enable IPACL'}
         />
       </Box>
       <Stack
@@ -92,40 +98,30 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         <MultipleIPInput
           buttonText="Add IP Address"
           ips={ipV4Addr}
-          onChange={(_ips: ExtendedIP[]) => {
+          onChange={handleIPv4ChangeCB}
+          onBlur={(_ips: ExtendedIP[]) => {
             const validatedIPs = validateIPs(_ips, {
               allowEmptyAddress: false,
               errorMessage: 'Must be a valid IPv4 address.',
             });
-            const ipsWithErrors = validatedIPs.filter((thisIP) =>
-              setIPV4InputError(thisIP.error)
-            );
-            if (ipsWithErrors.length === 0) {
-              handleIPv4Change(validatedIPs);
-            }
+            handleIPv4ChangeCB(validatedIPs);
           }}
           placeholder="0.0.0.0/0"
-          title="IPv4 Addresses or CIDR"
-          error={ipV4InputError}
+          title="IPv4 Addresses or CIDRs"
         />
         <MultipleIPInput
           buttonText="Add IP Address"
           ips={ipV6Addr}
-          onChange={(_ips: ExtendedIP[]) => {
+          onChange={handleIPv6ChangeCB}
+          onBlur={(_ips: ExtendedIP[]) => {
             const validatedIPs = validateIPs(_ips, {
               allowEmptyAddress: false,
               errorMessage: 'Must be a valid IPv6 address.',
             });
-            const ipsWithErrors: ExtendedIP[] = validatedIPs.filter((thisIP) =>
-              setIPV6InputError(thisIP.error)
-            );
-            if (ipsWithErrors.length === 0) {
-              handleIPv6Change(validatedIPs);
-            }
+            handleIPv6Change(validatedIPs);
           }}
           placeholder="::/0"
-          title="IPv6 Addresses or CIDR"
-          error={ipV6InputError}
+          title="IPv6 Addresses or CIDRs"
         />
       </Stack>
     </FormControl>

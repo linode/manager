@@ -109,7 +109,7 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
       <>
         <Box className={classes.aclElement} onClick={handleOpenDrawer}>
           <Typography className={classes.aclElementText}>
-            IPACL Disabled
+            Enable IPACL
           </Typography>
         </Box>
       </>
@@ -120,13 +120,15 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
     return (
       <>
         <Box className={classes.aclElement} onClick={handleOpenDrawer}>
-          <Typography className={classes.aclElementText}>Install</Typography>
+          <Typography className={classes.aclElementText}>
+            Install IPACL
+          </Typography>
         </Box>
       </>
     );
   };
 
-  const kubeSpecsLeft = [
+  const availableActions = [
     isLoadingKubernetesACL ? (
       <CircleProgress size="sm" sx={{ marginTop: 0 }} />
     ) : failedMigrationStatus() ? (
@@ -147,7 +149,7 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
       className={classes.item}
       wrap="nowrap"
     >
-      <Typography>{kubeSpecsLeft}</Typography>
+      <Typography>{availableActions}</Typography>
     </Grid>
   );
 });

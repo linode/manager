@@ -89,7 +89,6 @@ export const sxLastListItem = {
 
 export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
   ({ theme }) => ({
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     color: theme.textColors.tableStatic,
     display: 'flex',
     padding: `0px 10px`,

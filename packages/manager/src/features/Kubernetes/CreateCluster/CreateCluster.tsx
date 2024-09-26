@@ -52,7 +52,7 @@ import {
 import { HAControlPlane } from './HAControlPlane';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import { NodePoolPanel } from './NodePoolPanel';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 
 import type {
   CreateKubeClusterPayload,
@@ -83,12 +83,8 @@ export const CreateCluster = () => {
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-  const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
-    stringToExtendedIP('0.0.0.0/0'),
-  ]);
-  const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
-    stringToExtendedIP('::/0'),
-  ]);
+  const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([]);
+  const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([]);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -139,13 +135,25 @@ export const CreateCluster = () => {
       pick(['type', 'count'])
     ) as CreateNodePoolData[];
 
-    const _ipv4 = ipV4Addr.map((ip) => {
-      return ip.address;
-    });
+    const _ipv4 = ipV4Addr
+      .map((ip) => {
+        return ip.address;
+      })
+      .filter((ip) => ip != '');
 
-    const _ipv6 = ipV6Addr.map((ip) => {
-      return ip.address;
-    });
+    const _ipv6 = ipV6Addr
+      .map((ip) => {
+        return ip.address;
+      })
+      .filter((ip) => ip != '');
+
+    const addressIPv4Payload = {
+      ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
+    };
+
+    const addressIPv6Payload = {
+      ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
+    };
 
     const payload: CreateKubeClusterPayload = {
       control_plane: {
@@ -153,7 +161,12 @@ export const CreateCluster = () => {
         acl: {
           enabled: controlPlaneACL,
           'revision-id': '',
-          addresses: { ipv4: _ipv4, ipv6: _ipv6 },
+          ...((_ipv4.length > 0 || _ipv6.length > 0) && {
+            addresses: {
+              ...addressIPv4Payload,
+              ...addressIPv6Payload,
+            },
+          }),
         },
       },
       k8s_version: version,

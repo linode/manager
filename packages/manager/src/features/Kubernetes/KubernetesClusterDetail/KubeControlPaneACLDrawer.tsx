@@ -165,7 +165,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         <>
           <Notice spacingTop={8} variant="error">
             IPACL is not yet installed on this cluster.... may take up to 10
-            minutes before..
+            minutes or more, before ACLs are enforced...
           </Notice>
           <Divider sx={{ marginTop: 1 }} />
         </>
@@ -206,7 +206,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             value={revisionID}
             onBlur={(e) => setRevisionID(e.target.value)}
           />
-          <Divider sx={{ marginTop: 4 }} />
+          <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
         </>
       );
     } else {
@@ -265,9 +265,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         <Stack sx={{ marginTop: 4 }}>
           <Grid container spacing={2}>
             <Grid>
-              <Typography variant="h3">{clusterLabel}</Typography>
-            </Grid>
-            <Grid>
               <Typography variant="body1">
                 When a cluster is equipped with an ACL, the apiserver and
                 dashboard endpoints get mapped to a NodeBalancer address where
@@ -275,7 +272,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               </Typography>
             </Grid>
           </Grid>
-          <Divider sx={{ marginTop: 4 }} />
+          <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
           <ClusterNeedsMigration />
 
@@ -290,7 +287,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               }
             }}
           />
-          <Divider sx={{ marginTop: 4 }} />
+          <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
           <RevisionID />
 
