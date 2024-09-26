@@ -22,6 +22,8 @@ import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnaly
 import AccountLogins from './AccountLogins';
 import { SwitchAccountButton } from './SwitchAccountButton';
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
+import { createLazyRoute, createRoute, Outlet } from '@tanstack/react-router';
+import { accountRoute } from 'src/routes/account';
 
 const Billing = React.lazy(() =>
   import('src/features/Billing/BillingDetail').then((module) => ({
@@ -184,29 +186,11 @@ const AccountLanding = () => {
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
-
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={idx}>
-              <Billing />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <Users />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <AccountLogins />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <EntityTransfersLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <MaintenanceLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
-              <GlobalSettings />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
+        <TabPanels>
+          <React.Suspense fallback={<SuspenseLoader />}>
+            <Outlet />
+          </React.Suspense>
+        </TabPanels>
       </Tabs>
       <SwitchAccountDrawer
         onClose={() => setIsDrawerOpen(false)}
@@ -217,4 +201,44 @@ const AccountLanding = () => {
   );
 };
 
-export default AccountLanding;
+export const accountIndexRoute = createRoute({
+  component: AccountLanding,
+  getParentRoute: () => accountRoute,
+  path: '/',
+});
+
+export const accountBillingRoute = createRoute({
+  component: Billing,
+  getParentRoute: () => accountIndexRoute,
+  path: 'billing'
+});
+
+export const accountUsersRoute = createRoute({
+  component: Users,
+  getParentRoute: () => accountIndexRoute,
+  path: 'users',
+});
+
+export const accountLoginHistoryRoute = createRoute({
+  component: AccountLogins,
+  getParentRoute: () => accountIndexRoute,
+  path: 'login-history',
+});
+
+export const accountServiceTransfersRoute = createRoute({
+  component: EntityTransfersLanding,
+  getParentRoute: () => accountIndexRoute,
+  path: 'service-transfers',
+});
+
+export const accountMaintenanceRoute = createRoute({
+  component: MaintenanceLanding,
+  getParentRoute: () => accountIndexRoute,
+  path: 'maintenance',
+});
+
+export const accountSettingsRoute = createRoute({
+  component: GlobalSettings,
+  getParentRoute: () => accountIndexRoute,
+  path: 'settings',
+});
