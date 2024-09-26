@@ -32,9 +32,6 @@ import { CloudPulseMetricsResponse } from '@linode/api-v4';
 import { transformData } from 'src/features/CloudPulse/Utils/unitConversion';
 import { getMetrics } from 'src/utilities/statMetrics';
 
-const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
-const timeDurationToSelect = 'Last 24 Hours';
-
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
  * This test suite is dedicated to verifying the functionality and display of widgets on the Cloudpulse dashboard.
@@ -45,6 +42,8 @@ const timeDurationToSelect = 'Last 24 Hours';
  * Testing widget interactions, including zooming and filtering, to ensure proper behavior.
  * Each test ensures that widgets on the dashboard operate correctly and display accurate information.
  */
+const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
+const timeDurationToSelect = 'Last 24 Hours';
 
 const {
   metrics,
@@ -143,7 +142,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     cy.findByText(resource).should('be.visible');
 
-    // Verify that the expected widgets areloaded.
+    // Verifies that the expected widgets are loaded on the dashboard.
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
       cy.get(widgetSelector)
