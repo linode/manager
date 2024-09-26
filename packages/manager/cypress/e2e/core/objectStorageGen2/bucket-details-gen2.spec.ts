@@ -41,108 +41,107 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
     cors_xml: '',
   };
 
-  const createMocksAndNavigateToPage = (
+  const createMocksBasedOnEndpointType = (
     endpointType: ObjectStorageEndpointTypes
   ) => {
     const mockBucket = objectStorageBucketFactoryGen2.build({
       endpoint_type: endpointType,
       region: mockRegion.id,
     });
-    const { cluster, label } = mockBucket;
     const mockEndpoint = objectStorageEndpointsFactory.build({
       endpoint_type: endpointType,
       region: mockRegion.id,
     });
 
-    mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
-    mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
-      'getBucketsForRegion'
-    );
-    mockGetObjectStorageEndpoints([mockEndpoint]).as(
-      'getObjectStorageEndpoints'
-    );
-
-    cy.visitWithLogin(`/object-storage/buckets/${cluster}/${label}/access`);
-    cy.wait([
-      '@getFeatureFlags',
-      '@getAccount',
-      '@getObjectStorageEndpoints',
-      '@getBucketsForRegion',
-      '@getBucketAccess',
-    ]);
+    return { mockBucket, mockEndpoint };
   };
 
-  const confirmCORSToggleAndSSLTabPresent = () => {
-    cy.findByText('Bucket Access').should('be.visible');
-    cy.findByLabelText('Access Control List (ACL)').should('be.visible');
-    // confirm CORS is visible
-    cy.findByText('CORS Enabled').should('be.visible');
-    cy.contains(
-      'Whether Cross-Origin Resource Sharing is enabled for all origins. For more fine-grained control of CORS, please use another S3-compatible tool.'
-    ).should('be.visible');
+  ['E0', 'E1'].forEach((endpoint: ObjectStorageEndpointTypes) => {
+    /**
+     * Parameterized test for object storage endpoint types E0 and E1
+     * - Confirms the CORS toggle still appears
+     * - Confirms the SSL/TLS tab appears
+     */
+    it(`does not hide the CORS toggle or SSL/TLS tab for buckets with an ${endpoint} endpoint`, () => {
+      const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
+        endpoint
+      );
+      const { cluster, label } = mockBucket;
 
-    // Confirm SSL/TLS tab is not hidden and is clickable
-    cy.findByText('SSL/TLS').should('be.visible').click();
-    cy.url().should('endWith', '/ssl');
-  };
+      mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
+      mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
+        'getBucketsForRegion'
+      );
+      mockGetObjectStorageEndpoints([mockEndpoint]).as(
+        'getObjectStorageEndpoints'
+      );
 
-  const confirmCORSNotPresent = () => {
-    cy.findByText('Bucket Access').should('be.visible');
-    cy.findByLabelText('Access Control List (ACL)').should('be.visible');
-    // confirm CORS is not visible
-    cy.contains(
-      'CORS (Cross Origin Sharing) is not available for endpoint types E2 and E3'
-    ).should('be.visible');
-  };
+      cy.visitWithLogin(`/object-storage/buckets/${cluster}/${label}/access`);
+      cy.wait([
+        '@getFeatureFlags',
+        '@getAccount',
+        '@getObjectStorageEndpoints',
+        '@getBucketsForRegion',
+        '@getBucketAccess',
+      ]);
 
-  /**
-   * - Confirms the CORS toggle still appears for buckets with endpoint type E0
-   * - Confirms the SSL/TLS tab appears for buckets with endpoint type E0
-   */
-  it('does not hide the CORS toggle or SSL/TLS tab for buckets with an E0 endpoint', () => {
-    createMocksAndNavigateToPage('E0');
+      cy.findByText('Bucket Access').should('be.visible');
+      cy.findByLabelText('Access Control List (ACL)').should('be.visible');
+      // confirm CORS is visible
+      cy.findByText('CORS Enabled').should('be.visible');
+      cy.contains(
+        'Whether Cross-Origin Resource Sharing is enabled for all origins. For more fine-grained control of CORS, please use another S3-compatible tool.'
+      ).should('be.visible');
 
-    // confirm CORS toggle is visible and the SSL/TLS tab is present
-    confirmCORSToggleAndSSLTabPresent();
+      // Confirm SSL/TLS tab is not hidden and is clickable
+      cy.findByText('SSL/TLS').should('be.visible').click();
+      cy.url().should('endWith', '/ssl');
+    });
   });
 
-  /**
-   * - Confirms the CORS toggle still appears for buckets with endpoint type E1
-   * - Confirms the SSL/TLS tab appears for buckets with endpoint type E1
-   */
-  it('does not hide the CORS toggle or SSL/TLS tab for buckets with an E1 endpoint', () => {
-    createMocksAndNavigateToPage('E1');
+  ['E2', 'E3'].forEach((endpoint: ObjectStorageEndpointTypes) => {
+    /**
+     * Parameterized test for object storage endpoint types E2 and E3
+     * - Confirms the CORS toggle is hidden
+     * - Confirms the SSL/TLS tab is present for E2 but hidden for E3
+     */
+    it(`hides the CORS toggle and confirms the correct state of the TLS/SSL tab for endpoint ${endpoint}`, () => {
+      const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
+        endpoint
+      );
+      const { cluster, label } = mockBucket;
 
-    // confirm CORS toggle is visible and the SSL/TLS tab is present
-    confirmCORSToggleAndSSLTabPresent();
-  });
+      mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
+      mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
+        'getBucketsForRegion'
+      );
+      mockGetObjectStorageEndpoints([mockEndpoint]).as(
+        'getObjectStorageEndpoints'
+      );
 
-  /**
-   * - Confirms the CORS and display notice is hidden for buckets with endpoint type E2
-   * - Confirms the SSL/TLS tab appears for buckets with endpoint type E2
-   */
-  it('hides the CORS toggle and displays a notice for buckets with an E2 endpoint', () => {
-    createMocksAndNavigateToPage('E2');
+      cy.visitWithLogin(`/object-storage/buckets/${cluster}/${label}/access`);
+      cy.wait([
+        '@getFeatureFlags',
+        '@getAccount',
+        '@getObjectStorageEndpoints',
+        '@getBucketsForRegion',
+        '@getBucketAccess',
+      ]);
 
-    // confirms the CORS toggle is not visible
-    confirmCORSNotPresent();
+      cy.findByText('Bucket Access').should('be.visible');
+      cy.findByLabelText('Access Control List (ACL)').should('be.visible');
+      // confirm CORS is not visible
+      cy.contains(
+        'CORS (Cross Origin Sharing) is not available for endpoint types E2 and E3'
+      ).should('be.visible');
 
-    // Confirm SSL/TLS tab is not hidden and is clickable
-    cy.findByText('SSL/TLS').should('be.visible').click();
-    cy.url().should('endWith', '/ssl');
-  });
-
-  /**
-   * - Confirms the CORS and display notice is hidden for buckets with endpoint type E3
-   * - Confirms the SSL/TLS tab is hidden for buckets with endpoint type E3
-   */
-  it('hides the CORS toggle, displays a notice, and disables the SSL/TLS tab for buckets with an E3 endpoint', () => {
-    createMocksAndNavigateToPage('E3');
-
-    // confirms the CORS toggle is not visible
-    confirmCORSNotPresent();
-
-    // Confirm SSL/TLS tab is hidden
-    cy.findByText('SSL/TLS').should('not.exist');
+      if (endpoint === 'E3') {
+        cy.findByText('SSL/TLS').should('not.exist');
+      } else {
+        // For E2, the SSL/TLS tab is present and clickable
+        cy.findByText('SSL/TLS').should('be.visible').click();
+        cy.url().should('endWith', '/ssl');
+      }
+    });
   });
 });
