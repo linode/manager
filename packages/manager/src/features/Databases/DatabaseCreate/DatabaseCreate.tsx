@@ -196,6 +196,7 @@ interface NodePricing {
 const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
+  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
 
   const {
     data: regionsData,
@@ -213,9 +214,9 @@ const DatabaseCreate = () => {
     data: dbtypes,
     error: typesError,
     isLoading: typesLoading,
-  } = useDatabaseTypesQuery();
-
-  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  } = useDatabaseTypesQuery({
+    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+  });
 
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
