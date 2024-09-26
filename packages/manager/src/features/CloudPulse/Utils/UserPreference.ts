@@ -74,7 +74,7 @@ export const useAclpPreference = (): AclpPreferenceObject => {
   };
   return {
     isLoading,
-    preferences: { ...(preferences?.aclpPreference ?? {}) },
+    preferences: preferences?.aclpPreference ?? {},
     updateGlobalFilterPreference,
     updateWidgetPreference,
   };

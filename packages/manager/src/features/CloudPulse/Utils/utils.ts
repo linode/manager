@@ -158,36 +158,3 @@ export const getAllDashboards = (
     isLoading,
   };
 };
-
-/**
- *
- * @param oldValue array of old values
- * @param newValue array of new values
- * @returns true if both the arrays are equals otherwise false
- */
-export const arrayDeepEqual = (
-  oldValue: number[] | string[],
-  newValue: number[] | string[]
-): boolean => {
-  if (oldValue === newValue) {
-    return true;
-  }
-
-  if (!oldValue || !newValue) {
-    return false;
-  }
-
-  if (oldValue.length !== newValue.length) {
-    return false;
-  }
-  oldValue.sort();
-  newValue.sort();
-
-  for (let i = 0; i < oldValue.length; i++) {
-    if (oldValue[i] !== newValue[i]) {
-      return false;
-    }
-  }
-
-  return true;
-};

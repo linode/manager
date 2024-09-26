@@ -4,7 +4,7 @@ import React from 'react';
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
-import { arrayDeepEqual, createObjectCopy } from '../Utils/utils';
+import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from './CloudPulseWidget';
 import {
   allIntervalOptions,
@@ -26,10 +26,6 @@ import type {
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
-
-interface CompareProperties {
-  [key: string]: number | string | undefined;
-}
 
 interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
@@ -183,30 +179,20 @@ export const RenderWidgets = React.memo(
     );
   },
   (oldProps: WidgetProps, newProps: WidgetProps) => {
-    const oldValue: CompareProperties = {
-      id: oldProps.dashboard?.id,
-      timeStamp: oldProps.manualRefreshTimeStamp,
-      token: oldProps.jweToken?.token,
-      unit: oldProps.duration?.unit,
-      value: oldProps.duration?.value,
-    };
+    const keysToCompare: (keyof WidgetProps)[] = [
+      'dashboard',
+      'manualRefreshTimeStamp',
+      'jweToken',
+      'duration',
+      'resources',
+    ];
 
-    const newValue: CompareProperties = {
-      id: newProps.dashboard?.id,
-      timeStamp: newProps.manualRefreshTimeStamp,
-      token: newProps.jweToken?.token,
-      unit: newProps.duration?.unit,
-      value: newProps.duration?.value,
-    };
-
-    for (const key of Object.keys(oldValue)) {
-      if (oldValue[key] !== newValue[key]) {
+    for (const key of keysToCompare) {
+      if (oldProps[key] !== newProps[key]) {
         return false;
       }
     }
-    if (!arrayDeepEqual(oldProps.resources, newProps.resources)) {
-      return false;
-    }
+
     return true;
   }
 );

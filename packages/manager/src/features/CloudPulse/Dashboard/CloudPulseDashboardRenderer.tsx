@@ -7,7 +7,6 @@ import {
   getMetricsCallCustomFilters,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
-import { arrayDeepEqual } from '../Utils/utils';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { DashboardProp } from './CloudPulseDashboardLanding';
@@ -76,42 +75,5 @@ export const CloudPulseDashboardRenderer = React.memo(
         savePref={true}
       />
     );
-  },
-  (oldProps: DashboardProp, newProps: DashboardProp) => {
-    if (oldProps.dashboard?.id !== newProps.dashboard?.id) {
-      return false;
-    }
-
-    if (
-      oldProps.timeDuration?.unit !== newProps.timeDuration?.unit ||
-      oldProps.timeDuration?.value !== newProps.timeDuration?.value
-    ) {
-      return false;
-    }
-
-    const oldKeys = Object.keys(oldProps.filterValue);
-    const newKeys = Object.keys(newProps.filterValue);
-
-    if (oldKeys.length !== newKeys.length) {
-      return false;
-    }
-
-    for (const key of oldKeys) {
-      const oldValue = oldProps.filterValue[key];
-      const newValue = newProps.filterValue[key];
-
-      if (
-        Array.isArray(oldValue) &&
-        Array.isArray(newValue) &&
-        !arrayDeepEqual(oldValue, newValue)
-      ) {
-        return false;
-      }
-
-      if (oldValue !== newValue) {
-        return false;
-      }
-    }
-    return true;
   }
 );
