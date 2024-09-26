@@ -1,11 +1,12 @@
 import { IconButton } from '@mui/material';
-import { decode } from 'he';
 import * as React from 'react';
 
 import Info from 'src/assets/icons/info.svg';
 import { Chip } from 'src/components/Chip';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { APP_ROOT } from 'src/constants';
+
+import { getMarketplaceAppLabel } from './utilities';
 
 interface Props {
   /**
@@ -48,12 +49,7 @@ export const AppSelectionCard = (props: Props) => {
     }
   };
 
-  const displayLabel = decode(
-    label
-      .replace(' Null One-Click', '')
-      .replace(' One-Click', '')
-      .replace(' Cluster', '')
-  ).trim();
+  const displayLabel = getMarketplaceAppLabel(label);
 
   const renderIcon =
     iconUrl === ''

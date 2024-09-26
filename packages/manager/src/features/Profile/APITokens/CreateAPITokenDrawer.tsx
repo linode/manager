@@ -3,8 +3,8 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { FormControl } from 'src/components/FormControl';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { Notice } from 'src/components/Notice/Notice';
@@ -30,13 +30,14 @@ import {
   StyledSelectCell,
 } from './APITokenDrawer.styles';
 import {
-  Permission,
   allScopesAreTheSame,
   basePermNameMap,
   hasAccessBeenSelectedForAllScopes,
   permTuplesToScopeString,
   scopeStringToPermTuples,
 } from './utils';
+
+import type { Permission } from './utils';
 
 type Expiry = [string, string];
 
@@ -172,10 +173,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
     form.setFieldValue('scopes', newScopes);
   };
 
-  const handleExpiryChange = (e: Item<string>) => {
-    form.setFieldValue('expiry', e.value);
-  };
-
   // Permission scopes with a different default when Selecting All for the specified access level.
   const excludedScopesFromSelectAll: ExcludedScope[] = [
     {
@@ -214,11 +211,30 @@ export const CreateAPITokenDrawer = (props: Props) => {
         value={form.values.label}
       />
       <FormControl data-testid="expiry-select">
-        <Select
-          isClearable={false}
+        <Autocomplete
+          onChange={(_, selected) =>
+            form.setFieldValue('expiry', selected.value)
+          }
+          slotProps={{
+            popper: {
+              sx: {
+                '&& .MuiAutocomplete-listbox': {
+                  padding: 0,
+                },
+              },
+            },
+          }}
+          sx={{
+            '&& .MuiAutocomplete-inputRoot': {
+              paddingLeft: 1,
+              paddingRight: 0,
+            },
+            '&& .MuiInput-input': {
+              padding: '0px 2px',
+            },
+          }}
+          disableClearable
           label="Expiry"
-          name="expiry"
-          onChange={handleExpiryChange}
           options={expiryList}
           value={expiryList.find((item) => item.value === form.values.expiry)}
         />

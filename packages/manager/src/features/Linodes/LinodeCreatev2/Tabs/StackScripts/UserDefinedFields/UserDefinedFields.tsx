@@ -1,5 +1,3 @@
-import { CreateLinodeRequest } from '@linode/api-v4';
-import { decode } from 'he';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -14,8 +12,11 @@ import { Typography } from 'src/components/Typography';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 
+import { getMarketplaceAppLabel } from '../../Marketplace/utilities';
 import { UserDefinedFieldInput } from './UserDefinedFieldInput';
 import { separateUDFsByRequiredStatus } from './utilities';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 interface Props {
   /**
@@ -73,10 +74,12 @@ export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
               src={`/assets/${marketplaceAppInfo.logo_url}`}
             />
             <Typography variant="h2">
-              {decode(stackscript.label.replace('One-Click', ''))} Setup
+              {getMarketplaceAppLabel(stackscript.label)} Setup
             </Typography>
             <IconButton
-              aria-label={`View details for ${stackscript.label}`}
+              aria-label={`View details for ${getMarketplaceAppLabel(
+                stackscript.label
+              )}`}
               onClick={() => onOpenDetailsDrawer?.(stackscriptId!)}
               size="large"
             >

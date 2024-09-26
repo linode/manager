@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -13,8 +13,8 @@ import { Typography } from 'src/components/Typography';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
-import { NodeBalancerConfigNodeFields } from './types';
 
+import type { NodeBalancerConfigNodeFields } from './types';
 import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
 
 export interface NodeBalancerConfigNodeProps {

@@ -3,7 +3,9 @@ import { useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
+import { NavTabs } from 'src/components/NavTabs/NavTabs';
+
+import type { NavTab } from 'src/components/NavTabs/NavTabs';
 
 const SSHKeys = React.lazy(() =>
   import('./SSHKeys/SSHKeys').then((module) => ({
@@ -42,7 +44,7 @@ const APITokens = React.lazy(() =>
   }))
 );
 
-const Profile = () => {
+export const Profile = () => {
   const { url } = useRouteMatch();
 
   const tabs: NavTab[] = [
@@ -96,5 +98,3 @@ const Profile = () => {
     </React.Fragment>
   );
 };
-
-export default Profile;

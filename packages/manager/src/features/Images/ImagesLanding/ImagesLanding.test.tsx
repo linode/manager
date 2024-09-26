@@ -114,7 +114,7 @@ describe('Images Landing Table', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
     expect(
-      getByText((text) => text.includes('Store your own custom Linux images'))
+      getByText((text) => text.includes('Store custom Linux images'))
     ).toBeInTheDocument();
   });
 

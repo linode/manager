@@ -1,5 +1,5 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import Select from 'src/components/EnhancedSelect/Select';
@@ -41,16 +41,17 @@ export const StyledHeaderGrid = styled(Grid, {
   [theme.breakpoints.down('sm')]: {
     marginLeft: theme.spacing(2),
     marginTop: theme.spacing(1),
-    width: '100%',
   },
+  width: '100%',
 }));
 
-export const StyledSubHeaderGrid = styled(Grid, {
-  label: 'StyledSubHeaderGrid',
+export const StyledFullAccountAccessToggleGrid = styled(Grid, {
+  label: 'StyledFullAccountAccessToggleGrid',
 })(({ theme }) => ({
+  marginTop: theme.spacing(2),
+  padding: 0,
   [theme.breakpoints.down('sm')]: {
-    margin: theme.spacing(0.5),
-    padding: 0,
+    paddingLeft: theme.spacing(2),
   },
 }));
 
@@ -68,7 +69,6 @@ export const StyledPaper = styled(Paper, {
   label: 'StyledPaper',
 })(({ theme }) => ({
   paddingBottom: 0,
-  paddingTop: 0,
   [theme.breakpoints.down('sm')]: {
     padding: 0,
   },

@@ -15,6 +15,7 @@ import type {
   Filter,
   Grants,
   Params,
+  Profile,
   ResourcePage,
   User,
 } from '@linode/api-v4';
@@ -65,11 +66,20 @@ export const useUpdateUserMutation = (username: string) => {
         accountQueries.users._ctx.user(user.username).queryKey,
         user
       );
-      // If the currently logged in user updates their user
+
+      // If the currently logged in user updates their user, we need to update the profile
+      // query to reflect the latest data.
       if (username === profile?.username) {
-        queryClient.invalidateQueries({
-          queryKey: profileQueries.profile().queryKey,
-        });
+        queryClient.setQueryData<Profile>(
+          profileQueries.profile().queryKey,
+          (oldProfile) => {
+            if (!oldProfile) {
+              return;
+            }
+
+            return { ...oldProfile, ...user };
+          }
+        );
       }
     },
   });

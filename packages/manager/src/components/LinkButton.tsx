@@ -46,6 +46,7 @@ export const LinkButton = (props: Props) => {
       disabled={isDisabled}
       onClick={onClick}
       style={style}
+      tabIndex={0}
       type="button"
     >
       {children}

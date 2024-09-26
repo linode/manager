@@ -140,6 +140,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
           buttonType="primary"
+          data-testid="delete-nodebalancer"
           disabled={isNodeBalancerReadOnly}
           onClick={() => setIsDeleteDialogOpen(true)}
         >
@@ -155,5 +156,3 @@ export const NodeBalancerSettings = () => {
     </div>
   );
 };
-
-export default NodeBalancerSettings;

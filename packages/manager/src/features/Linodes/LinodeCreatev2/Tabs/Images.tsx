@@ -12,6 +12,7 @@ import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+import { Region } from 'src/features/Linodes/LinodeCreatev2/Region';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -95,27 +96,30 @@ export const Images = () => {
   }
 
   return (
-    <Paper>
-      <Typography variant="h2">Choose an Image</Typography>
-      <Box alignItems="flex-end" display="flex" flexWrap="wrap" gap={2}>
-        <ImageSelectv2
-          disabled={isCreateLinodeRestricted}
-          errorText={fieldState.error?.message}
-          onBlur={field.onBlur}
-          onChange={onChange}
-          sx={{ width: '416px' }}
-          value={field.value}
-          variant="private"
-        />
-        {showDistributedCapabilityNotice && (
-          <Stack alignItems="center" direction="row" pb={0.8} spacing={1}>
-            <DistributedRegionIcon height="21px" width="24px" />
-            <Typography>
-              Indicates compatibility with distributed compute regions.
-            </Typography>
-          </Stack>
-        )}
-      </Box>
-    </Paper>
+    <Stack spacing={3}>
+      <Region />
+      <Paper>
+        <Typography variant="h2">Choose an Image</Typography>
+        <Box alignItems="flex-end" display="flex" flexWrap="wrap" gap={2}>
+          <ImageSelectv2
+            disabled={isCreateLinodeRestricted}
+            errorText={fieldState.error?.message}
+            onBlur={field.onBlur}
+            onChange={onChange}
+            sx={{ width: '416px' }}
+            value={field.value}
+            variant="private"
+          />
+          {showDistributedCapabilityNotice && (
+            <Stack alignItems="center" direction="row" pb={0.8} spacing={1}>
+              <DistributedRegionIcon height="21px" width="24px" />
+              <Typography>
+                Indicates compatibility with distributed compute regions.
+              </Typography>
+            </Stack>
+          )}
+        </Box>
+      </Paper>
+    </Stack>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { LinodeResizeAllocationError } from './LinodeResizeAllocationError';
 import { MigrateError } from './MigrateError';
 import { SupportTicketGeneralError } from './SupportTicketGeneralError';
 import { Typography } from './Typography';
@@ -15,6 +16,7 @@ interface Props {
 
 export const migrationsDisabledRegex = /migrations are currently disabled/i;
 export const supportTextRegex = /(open a support ticket|contact Support)/i;
+export const allocationErrorRegex = /allocated more disk/i;
 
 export const ErrorMessage = (props: Props) => {
   const { entity, formPayloadValues, message } = props;
@@ -31,6 +33,10 @@ export const ErrorMessage = (props: Props) => {
         generalError={message}
       />
     );
+  }
+
+  if (allocationErrorRegex.test(message)) {
+    return <LinodeResizeAllocationError />;
   }
 
   return <Typography py={2}>{message}</Typography>;

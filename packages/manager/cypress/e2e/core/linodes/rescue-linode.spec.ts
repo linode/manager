@@ -38,6 +38,7 @@ describe('Rescue Linodes', () => {
    * - Confirms that toast appears confirming successful reboot into rescue mode.
    */
   it('Can reboot a Linode into rescue mode', () => {
+    cy.tag('method:e2e');
     const linodePayload = createLinodeRequestFactory.build({
       label: randomLabel(),
       region: chooseRegion().id,

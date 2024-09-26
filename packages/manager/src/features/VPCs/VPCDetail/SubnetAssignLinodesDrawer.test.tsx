@@ -1,13 +1,14 @@
-import { Subnet } from '@linode/api-v4';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { linodeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
+
+import type { Subnet } from '@linode/api-v4';
 
 beforeAll(() => mockMatchMedia());
 
@@ -57,7 +58,9 @@ describe('Subnet Assign Linodes Drawer', () => {
 
     const assignButton = getByText('Assign Linode');
     expect(assignButton).toBeVisible();
-    const alreadyAssigned = getByText('Linodes Assigned to Subnet (0)');
+    const alreadyAssigned = getByText(
+      'Linodes recently assigned to Subnet (0)'
+    );
     expect(alreadyAssigned).toBeVisible();
     const doneButton = getByText('Done');
     expect(doneButton).toBeVisible();

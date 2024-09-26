@@ -5,8 +5,6 @@ import { Avatar } from 'src/components/Avatar/Avatar';
 import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { GravatarByEmail } from 'src/components/GravatarByEmail';
-import { GravatarOrAvatar } from 'src/components/GravatarOrAvatar';
 import { Hidden } from 'src/components/Hidden';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -38,18 +36,13 @@ export const UserRow = ({ onDelete, user }: Props) => {
     <TableRow data-qa-table-row={user.username} key={user.username}>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1.5}>
-          <GravatarOrAvatar
-            avatar={
-              <Avatar
-                color={
-                  user.username !== profile?.username
-                    ? theme.palette.primary.dark
-                    : undefined
-                }
-                username={user.username}
-              />
+          <Avatar
+            color={
+              user.username !== profile?.username
+                ? theme.palette.primary.dark
+                : undefined
             }
-            gravatar={<GravatarByEmail email={user.email} />}
+            username={user.username}
           />
           <Typography>{user.username}</Typography>
           <Box display="flex" flexGrow={1} />

@@ -16,7 +16,7 @@ import { getUserPreferenceObject } from '../Utils/UserPreference';
 import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from '../Widget/CloudPulseWidget';
 import {
-  all_interval_options,
+  allIntervalOptions,
   getInSeconds,
   getIntervalIndex,
 } from '../Widget/components/CloudPulseIntervalSelect';
@@ -124,7 +124,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const getTimeGranularity = (scrapeInterval: string) => {
     const scrapeIntervalValue = getInSeconds(scrapeInterval);
     const index = getIntervalIndex(scrapeIntervalValue);
-    return index < 0 ? all_interval_options[0] : all_interval_options[index];
+    return index < 0 ? allIntervalOptions[0] : allIntervalOptions[index];
   };
 
   const {
@@ -203,7 +203,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     // maintain a copy
     const newDashboard: Dashboard = createObjectCopy(dashboard)!;
     return (
-      <Grid columnSpacing={1} container item rowSpacing={2} xs={12}>
+      <Grid columnSpacing={2} container item rowSpacing={2} xs={12}>
         {{ ...newDashboard }.widgets.map((widget, index) => {
           // check if widget metric definition is available or not
           if (widget) {

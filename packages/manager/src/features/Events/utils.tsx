@@ -55,7 +55,7 @@ export const getEventUsername = (event: Event) => {
     return event.username;
   }
 
-  return 'Linode';
+  return 'Akamai';
 };
 
 /**

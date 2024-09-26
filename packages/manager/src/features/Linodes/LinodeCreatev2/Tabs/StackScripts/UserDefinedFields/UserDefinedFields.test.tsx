@@ -62,7 +62,7 @@ describe('UserDefinedFields', () => {
 
   it('should render a notice if this is a cluster', async () => {
     const stackscript = stackScriptFactory.build({
-      id: 0,
+      id: 607488,
       label: 'Marketplace App for Redis',
       user_defined_fields: [
         {

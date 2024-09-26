@@ -1,4 +1,3 @@
-import { NodeBalancer } from '@linode/api-v4';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -7,6 +6,8 @@ import { nodeBalancerFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerSelect } from './NodeBalancerSelect';
+
+import type { NodeBalancer } from '@linode/api-v4';
 
 const fakeNodeBalancerData = nodeBalancerFactory.build({
   id: 1,

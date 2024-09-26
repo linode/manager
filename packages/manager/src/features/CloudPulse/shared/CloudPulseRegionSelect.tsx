@@ -62,7 +62,7 @@ export const CloudPulseRegionSelect = React.memo(
         disabled={!selectedDashboard || !regions}
         fullWidth
         label="Select a Region"
-        placeholder={placeholder ?? 'Select Region'}
+        placeholder={placeholder ?? 'Select a Region'}
         regions={regions ? regions : []}
         value={selectedRegion}
       />

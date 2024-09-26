@@ -105,8 +105,8 @@ describe('Create Linode', () => {
             'Import Existing Infrastructure to Terraform'
           ).should('be.visible');
 
-          // Validate SDK's tab
-          ui.tabList.findTabByTitle(`SDK's`).should('be.visible').click();
+          // Validate SDKs tab
+          ui.tabList.findTabByTitle(`SDKs`).should('be.visible').click();
 
           ui.autocomplete.find().click();
 
@@ -214,7 +214,7 @@ describe('Create Linode', () => {
 
       cy.findByLabelText('Linode Label').should(
         'have.value',
-        `debian-${linodeRegion.id}`
+        `ubuntu-${linodeRegion.id}`
       );
 
       cy.findByLabelText('Linode Label')

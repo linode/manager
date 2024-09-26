@@ -73,7 +73,8 @@ export const ENCRYPT_DISK_REBUILD_DISTRIBUTED_COPY =
   'Distributed Compute Instances are secured using disk encryption.';
 
 /* Block Storage Encryption constants */
-const BLOCK_STORAGE_ENCRYPTION_GUIDE_LINK = ''; // @TODO BSE: Update with guide link
+const BLOCK_STORAGE_ENCRYPTION_GUIDE_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/volumes-disk-encryption';
 
 export const BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION = (
   <>

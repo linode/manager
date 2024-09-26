@@ -53,13 +53,11 @@ describe('Timezone change form', () => {
   });
 
   it("should include text with the user's current time zone", async () => {
-    const { getByText } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <TimezoneForm loggedInAsCustomer={true} />,
       { queryClient }
     );
-
-    expect(getByText('New York', { exact: false })).toBeInTheDocument();
-    expect(getByText('Eastern Time', { exact: false })).toBeInTheDocument();
+    expect(queryByTestId('admin-notice')).toHaveTextContent('America/New_York');
   });
 });
 

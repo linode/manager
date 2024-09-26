@@ -8,10 +8,6 @@ import globalErrors, {
   State as GlobalErrorState,
   defaultState as defaultGlobalErrorState,
 } from 'src/store/globalErrors';
-import linodeCreateReducer, {
-  State as LinodeCreateState,
-  defaultState as linodeCreateDefaultState,
-} from 'src/store/linodeCreate/linodeCreate.reducer';
 import longview, {
   State as LongviewState,
   defaultState as defaultLongviewState,
@@ -37,7 +33,6 @@ import thunk from 'redux-thunk';
 
 export interface ApplicationState {
   authentication: AuthState;
-  createLinode: LinodeCreateState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
@@ -48,7 +43,6 @@ export interface ApplicationState {
 
 export const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
-  createLinode: linodeCreateDefaultState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
@@ -62,7 +56,6 @@ export const defaultState: ApplicationState = {
  */
 const reducers = combineReducers<ApplicationState>({
   authentication,
-  createLinode: linodeCreateReducer,
   globalErrors,
   longviewClients: longview,
   longviewStats,
