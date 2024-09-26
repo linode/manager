@@ -113,9 +113,10 @@ module.exports = {
     '@linode/eslint-plugin-cloud-manager',
   ],
   rules: {
+    '@linode/cloud-manager/deprecate-formik': 'warn',
     '@linode/cloud-manager/no-custom-fontWeight': 'error',
     '@typescript-eslint/camelcase': 'off',
-    "@typescript-eslint/consistent-type-imports": "warn",
+    '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',

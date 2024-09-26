@@ -170,6 +170,9 @@ describe('update firewall', () => {
   before(() => {
     cleanUp('firewalls');
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Confirms that a linode can be added and removed from a firewall.

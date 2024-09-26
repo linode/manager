@@ -11,12 +11,6 @@ export type DialogType =
   | 'resize'
   | 'upgrade_volumes';
 
-export type OpenDialog = (
-  type: DialogType,
-  linodeID: number,
-  linodeLabel?: string
-) => void;
-
 export interface LinodeCreateQueryParams extends BaseQueryParams {
   type: LinodeCreateType;
 }

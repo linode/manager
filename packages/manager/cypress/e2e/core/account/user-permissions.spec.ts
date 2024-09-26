@@ -216,7 +216,7 @@ describe('User permission management', () => {
     // Restrict account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUserUpdated);
     mockGetUserGrants(mockUser.username, mockUserGrantsUpdated);
-    cy.findByLabelText('Toggle Full Account Access')
+    cy.get('[data-qa="toggle-full-account-access"]')
       .should('be.visible')
       .click();
 
@@ -250,7 +250,7 @@ describe('User permission management', () => {
     // Re-enable unrestricted account access, confirm page updates to reflect change.
     mockUpdateUser(mockUser.username, mockUser);
     mockGetUserGrantsUnrestrictedAccess(mockUser.username);
-    cy.findByLabelText('Toggle Full Account Access')
+    cy.get('[data-qa="toggle-full-account-access"]')
       .should('be.visible')
       .click();
 

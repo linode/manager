@@ -5,6 +5,7 @@ import {
   getDatabaseCredentials,
   getDatabases,
   getEngineDatabase,
+  legacyRestoreWithBackup,
   resetDatabaseCredentials,
   restoreWithBackup,
   updateDatabase,
@@ -74,7 +75,12 @@ export const databaseQueries = createQueryKeys('databases', {
     queryKey: null,
   },
   types: {
-    queryFn: getAllDatabaseTypes,
+    contextQueries: {
+      all: (filter: Filter = {}) => ({
+        queryFn: () => getAllDatabaseTypes(filter),
+        queryKey: [filter],
+      }),
+    },
     queryKey: null,
   },
 });
@@ -159,10 +165,15 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
-  useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
-    databaseQueries.database(engine, id)._ctx.backups
-  );
+export const useDatabaseBackupsQuery = (
+  engine: Engine,
+  id: number,
+  enabled: boolean = false
+) =>
+  useQuery<ResourcePage<DatabaseBackup>, APIError[]>({
+    ...databaseQueries.database(engine, id)._ctx.backups,
+    enabled,
+  });
 
 export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
   useQuery<DatabaseEngine[], APIError[]>({
@@ -170,8 +181,10 @@ export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDatabaseTypesQuery = () =>
-  useQuery<DatabaseType[], APIError[]>(databaseQueries.types);
+export const useDatabaseTypesQuery = (filter: Filter = {}) =>
+  useQuery<DatabaseType[], APIError[]>({
+    ...databaseQueries.types._ctx.all(filter),
+  });
 
 export const useDatabaseCredentialsQuery = (
   engine: Engine,
@@ -201,20 +214,38 @@ export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
   });
 };
 
-export const useRestoreFromBackupMutation = (
+export const useLegacyRestoreFromBackupMutation = (
   engine: Engine,
   databaseId: number,
   backupId: number
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
-    mutationFn: () => restoreWithBackup(engine, databaseId, backupId),
+    mutationFn: () => legacyRestoreWithBackup(engine, databaseId, backupId),
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: databaseQueries.databases.queryKey,
       });
       queryClient.invalidateQueries({
         queryKey: databaseQueries.database(engine, databaseId).queryKey,
+      });
+    },
+  });
+};
+
+export const useRestoreFromBackupMutation = (
+  engine: Engine,
+  fork: {
+    restore_time?: string;
+    source: number;
+  }
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => restoreWithBackup(engine, fork),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
       });
     },
   });
