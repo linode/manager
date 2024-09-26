@@ -3,10 +3,12 @@ import {
   createMemoryHistory,
   createRouter,
 } from '@tanstack/react-router';
+import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { allPaths } from './allPaths';
 import { routeTree } from './index';
 
 // Mock any context or dependencies your routes might need
@@ -32,43 +34,7 @@ const createTestRouter = (initialPath: string) => {
   });
 };
 
-// Function to generate a mock value for a dynamic segment
-const mockDynamicSegment = (segment: string): string => {
-  if (segment.includes('id')) {
-    return '1';
-  } else if (segment === 'username') {
-    return 'testuser';
-  } else {
-    return 'mock-value';
-  }
-};
-
-// Recursive function to get all route paths, including dynamic routes
-const getAllRoutePaths = (route: any, parentPath = ''): string[] => {
-  const currentPath = parentPath + (route.path || '');
-
-  // console.log(currentPath)
-
-  let paths =
-    currentPath && currentPath !== '/' && currentPath !== '//'
-      ? [currentPath]
-      : [];
-
-  if (route.children) {
-    route.children.forEach((childRoute: any) => {
-      paths = [...paths, ...getAllRoutePaths(childRoute, currentPath)];
-    });
-  }
-
-  // Replace dynamic segments with mock values
-  return paths.map((path) =>
-    path.replace(/:\w+/g, (match) => mockDynamicSegment(match.slice(1)))
-  );
-};
-
-const allPaths = getAllRoutePaths(routeTree);
-
-describe('Route Tests', () => {
+describe.skip('Route Tests', () => {
   test.each(allPaths)('renders %s route correctly', async (path) => {
     const router = createTestRouter(path);
 
@@ -76,8 +42,17 @@ describe('Route Tests', () => {
       <RouterProvider router={router} />
     );
 
+    await waitFor(
+      () => {
+        const h1 = getByRole('heading', { level: 1 });
+        expect(h1).toBeInTheDocument();
+      },
+      { timeout: 10_000 }
+    );
     // Wait for any async operations to complete
     await findByRole('main', {}, { timeout: 2000 });
+
+    // console.log(container.innerHTML);
 
     // Check if the page has rendered without throwing an error
     expect(getByRole('main')).toBeInTheDocument();

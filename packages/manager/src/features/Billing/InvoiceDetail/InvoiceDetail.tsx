@@ -1,14 +1,7 @@
-import {
-  Account,
-  Invoice,
-  InvoiceItem,
-  getInvoice,
-  getInvoiceItems,
-} from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -17,6 +10,7 @@ import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { IconButton } from 'src/components/IconButton';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
@@ -28,9 +22,12 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 
-import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
+import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
 import { InvoiceTable } from './InvoiceTable';
+
+import type { Account, Invoice, InvoiceItem } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export const InvoiceDetail = () => {
   const { invoiceId } = useParams<{ invoiceId: string }>();
@@ -157,13 +154,14 @@ export const InvoiceDetail = () => {
                 </IconButton>
               </Link>
               {invoice && (
-                <Typography
-                  data-qa-invoice-id
-                  sx={{ paddingLeft: theme.spacing(1) }}
-                  variant="h2"
-                >
-                  Invoice #{invoice.id}
-                </Typography>
+                <LandingHeader
+                  breadcrumbProps={{
+                    crumbOverrides: [{ label: 'Billing Info', position: 1 }],
+                    firstAndLastOnly: true,
+                    labelTitle: `Invoice ${invoice.id}`,
+                    pathname: location.pathname,
+                  }}
+                />
               )}
             </Grid>
             <Grid

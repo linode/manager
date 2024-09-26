@@ -9,7 +9,7 @@ import { linodesRouteTree } from './linodes';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { placementGroupsRouteTree } from './placementGroups';
 import { rootRoute } from './root';
-import { volumesCreateRoute, volumesIndexRoute, volumesRoute } from './volumes';
+import { volumesRouteTree } from './volumes';
 
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
@@ -30,7 +30,7 @@ export const routeTree = rootRoute.addChildren([
   linodesRouteTree,
   nodeBalancersRouteTree,
   placementGroupsRouteTree,
-  volumesRoute.addChildren([volumesIndexRoute, volumesCreateRoute]),
+  volumesRouteTree,
 ]);
 
 export const router = createRouter({
