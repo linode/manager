@@ -28,13 +28,19 @@ const validatePackage = (linodePackage) => {
 
 export const changelogPath = (linodePackage) => {
   validatePackage(linodePackage);
-  path.join(__dirname, `../../../packages/${linodePackage}/CHANGELOG.md`);
+  return path.join(
+    __dirname,
+    `../../../packages/${linodePackage}/CHANGELOG.md`
+  );
 };
 export const changesetDirectory = (linodePackage) => {
   validatePackage(linodePackage);
-  path.join(__dirname, `../../../packages/${linodePackage}/.changeset`);
+  return path.join(__dirname, `../../../packages/${linodePackage}/.changeset`);
 };
 export const packageJsonPath = (linodePackage) => {
   validatePackage(linodePackage);
-  path.join(__dirname, `../../../packages/${linodePackage}/package.json`);
+  return path.join(
+    __dirname,
+    `../../../packages/${linodePackage}/package.json`
+  );
 };
