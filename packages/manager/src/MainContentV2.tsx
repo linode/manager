@@ -11,30 +11,6 @@ import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 import { rootRoute } from './routes/root';
 
-const Kubernetes = React.lazy(() =>
-  import('src/features/Kubernetes').then((module) => ({
-    default: module.Kubernetes,
-  }))
-);
-const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
-const Profile = React.lazy(() =>
-  import('src/features/Profile/Profile').then((module) => ({
-    default: module.Profile,
-  }))
-);
-const StackScripts = React.lazy(
-  () => import('src/features/StackScripts/StackScripts')
-);
-const SupportTickets = React.lazy(
-  () => import('src/features/Support/SupportTickets')
-);
-const SupportTicketDetail = React.lazy(() =>
-  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
-    (module) => ({
-      default: module.SupportTicketDetail,
-    })
-  )
-);
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
@@ -74,30 +50,6 @@ const longviewRoute = createRoute({
   component: Longview,
   getParentRoute: () => rootRoute,
   path: 'longview',
-});
-
-const stackScriptsRoute = createRoute({
-  component: StackScripts,
-  getParentRoute: () => rootRoute,
-  path: 'stackscripts',
-});
-
-const objectStorageRoute = createRoute({
-  component: ObjectStorage,
-  getParentRoute: () => rootRoute,
-  path: 'object-storage',
-});
-
-const kubernetesRoute = createRoute({
-  component: Kubernetes,
-  getParentRoute: () => rootRoute,
-  path: 'kubernetes',
-});
-
-const profileRoute = createRoute({
-  component: Profile,
-  getParentRoute: () => rootRoute,
-  path: 'profile',
 });
 
 const supportRoute = createRoute({
@@ -154,18 +106,6 @@ const accountActivationRoute = createRoute({
   path: 'account-activation',
 });
 
-const supportTicketDetailRoute = createRoute({
-  component: SupportTicketDetail,
-  getParentRoute: () => rootRoute,
-  path: 'support/tickets/:id',
-});
-
-const supportTicketsRoute = createRoute({
-  component: SupportTickets,
-  getParentRoute: () => rootRoute,
-  path: 'support/tickets/create',
-});
-
 const notFoundRoute = createRoute({
   component: NotFound,
   getParentRoute: () => rootRoute,
@@ -179,10 +119,6 @@ const notFoundRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   managedRoute,
   longviewRoute,
-  stackScriptsRoute,
-  objectStorageRoute,
-  kubernetesRoute,
-  profileRoute,
   supportRoute,
   searchRoute,
   eventsRoute,
@@ -192,8 +128,6 @@ const routeTree = rootRoute.addChildren([
   vpcRoute,
   cloudPulseRoute,
   accountActivationRoute,
-  supportTicketsRoute,
-  supportTicketDetailRoute,
   notFoundRoute,
 ]);
 

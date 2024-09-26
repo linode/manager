@@ -39,6 +39,23 @@ const accountUsersUsernameRoute = createRoute({
   path: 'users/$username',
 });
 
+const accountUsersUsernameProfileRoute = createRoute({
+  component: strictLazyRouteComponent(
+    () => import('src/features/Users/UserProfile/UserProfile'),
+    'UserProfile'
+  ),
+  getParentRoute: () => accountUsersUsernameRoute,
+  path: 'users/$username/profile',
+});
+
+const accountUsersUsernamePermissionsRoute = createRoute({
+  component: strictLazyRouteComponent(
+    () => import('src/features/Users/UserPermissions')
+  ),
+  getParentRoute: () => accountUsersUsernameRoute,
+  path: 'users/$username/permissions',
+});
+
 const accountBillingRoute = createRoute({
   component: strictLazyRouteComponent(
     () => import('src/features/Account/AccountLanding')
@@ -81,7 +98,10 @@ const accountEntityTransfersCreateRoute = createRoute({
 
 export const accountRouteTree = accountRoute.addChildren([
   accountIndexRoute,
-  accountUsersUsernameRoute,
+  accountUsersUsernameRoute.addChildren([
+    accountUsersUsernameProfileRoute,
+    accountUsersUsernamePermissionsRoute,
+  ]),
   accountBillingRoute,
   accountBillingEditRoute,
   accountInvoicesInvoiceIdRoute,
