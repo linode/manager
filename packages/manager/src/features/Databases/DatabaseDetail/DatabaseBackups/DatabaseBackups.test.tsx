@@ -95,6 +95,36 @@ describe('Database Backups', () => {
     });
   });
 
+  it('should disable the restore button if no oldest_restore_time is returned', async () => {
+    const mockDatabase = databaseFactory.build({
+      oldest_restore_time: undefined,
+      platform: 'rdbms-default',
+    });
+    const backups = databaseBackupFactory.buildList(7);
+
+    server.use(
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
+      }),
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(mockDatabase);
+      }),
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage(backups));
+      })
+    );
+
+    const { findAllByText } = renderWithTheme(
+      <DatabaseBackups disabled={true} />
+    );
+    const buttonSpans = await findAllByText('Restore');
+    expect(buttonSpans.length).toEqual(1);
+    buttonSpans.forEach((span: HTMLSpanElement) => {
+      const button = span.closest('button');
+      expect(button).toBeDisabled();
+    });
+  });
+
   it('should enable the restore button if disabled = false', async () => {
     const mockDatabase = databaseFactory.build({
       platform: 'rdbms-legacy',
