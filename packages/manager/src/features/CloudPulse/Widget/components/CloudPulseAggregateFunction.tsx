@@ -19,6 +19,11 @@ export interface AggregateFunctionProperties {
   onAggregateFuncChange: (aggregatevalue: string) => void;
 }
 
+interface AggregateFunction {
+  label: string;
+  value: string;
+}
+
 export const CloudPulseAggregateFunction = React.memo(
   (props: AggregateFunctionProperties) => {
     const {
@@ -28,7 +33,7 @@ export const CloudPulseAggregateFunction = React.memo(
     } = props;
 
     // Convert list of availableAggregateFunc into a proper response structure accepted by Autocomplete component
-    const availableAggregateFunc = availableAggregateFunctions?.map(
+    const availableAggregateFunc: AggregateFunction[] = availableAggregateFunctions?.map(
       (aggrFunc) => {
         return {
           label: aggrFunc,
@@ -39,19 +44,19 @@ export const CloudPulseAggregateFunction = React.memo(
     const defaultValue =
       availableAggregateFunc.find(
         (obj) => obj.label === defaultAggregateFunction
-      ) || availableAggregateFunctions[0];
+      ) || availableAggregateFunc[0];
 
     const [
       selectedAggregateFunction,
       setSelectedAggregateFunction,
-    ] = React.useState(defaultValue);
+    ] = React.useState<AggregateFunction>(defaultValue);
 
     return (
       <StyledWidgetAutocomplete
         isOptionEqualToValue={(option, value) => {
           return option.label == value.label;
         }}
-        onChange={(_: any, selectedAggregateFunc: any) => {
+        onChange={(e, selectedAggregateFunc: AggregateFunction) => {
           setSelectedAggregateFunction(selectedAggregateFunc);
           onAggregateFuncChange(selectedAggregateFunc.label);
         }}
