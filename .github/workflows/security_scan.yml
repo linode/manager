@@ -4,7 +4,7 @@ name: Security Scan
 on:
   push:
     branches:
-      - develop
+      - M3-7277
 
 jobs:
   security-scan:
@@ -12,22 +12,22 @@ jobs:
     container:
       image: returntocorp/semgrep
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Perform scanning using Semgrep
-      # Pass even when it identifies issues or encounters errors.
-    - name: Run SAST scan
-      if: always()
-      run: semgrep ci || true
-      env:
-         SEMGREP_RULES: p/default
+        # Perform scanning using Semgrep
+        # Pass even when it identifies issues or encounters errors.
+      - name: Run SAST scan
+        if: always()
+        run: semgrep ci || true
+        env:
+          SEMGREP_RULES: p/default
 
-      # Post results to Slack notification channel.
-    - name: slack-notify
-      uses: rtCamp/action-slack-notify@master
-      env:
+        # Post results to Slack notification channel.
+      - name: slack-notify
+        uses: rtCamp/action-slack-notify@master
+        env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_SAST_WEBHOOK }}
           SLACK_MESSAGE: "Message: ${{ github.event.head_commit.message }} \nRepository: ${{ github.event.repository.url }}"
           SLACK_COLOR: ${{ job.status }}
-          SLACK_FOOTER: ''
+          SLACK_FOOTER: ""
           MSG_MINIMAL: event,actions url,commit
