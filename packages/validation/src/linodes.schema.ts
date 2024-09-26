@@ -518,6 +518,6 @@ export const UpdateLinodeDiskSchema = object({
 
 export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().shape(
   {
-    image: string().required('An image is required.'),
+    image: string().required('An image is required.').nullable(),
   }
 );
