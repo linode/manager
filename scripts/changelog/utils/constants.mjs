@@ -22,6 +22,11 @@ export const REPO = "manager";
 // Base directory for all packages
 const baseDir = path.resolve(__dirname, "../../../packages");
 
+// Sanitize input to allow only alphanumeric, dashes, and underscores
+const sanitizeInput = (input) => {
+  return input.replace(/[^a-zA-Z0-9-_]/g, "");
+};
+
 // Validate the linodePackage before using it
 const validatePackage = (linodePackage) => {
   if (!PACKAGES.includes(linodePackage)) {
@@ -31,10 +36,12 @@ const validatePackage = (linodePackage) => {
 
 // Safe path join with base directory enforcement
 const safePathJoin = (linodePackage, fileName) => {
-  validatePackage(linodePackage);
+  const sanitizedPackage = sanitizeInput(linodePackage); // Sanitize input
+
+  validatePackage(sanitizedPackage); // Validate sanitized input
 
   // Resolve the path to ensure it's absolute
-  const resolvedPath = path.resolve(baseDir, linodePackage, fileName);
+  const resolvedPath = path.resolve(baseDir, sanitizedPackage, fileName);
 
   // Ensure the resolved path starts with the baseDir to prevent traversal
   if (!resolvedPath.startsWith(baseDir)) {
