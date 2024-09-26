@@ -1,3 +1,6 @@
+/**
+ * @file Integration Tests for CloudPulse Linode Dashboard.
+ */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCloudPulseJWSToken,
@@ -42,31 +45,36 @@ const timeDurationToSelect = 'Last 24 Hours';
  * Each test ensures that widgets on the dashboard operate correctly and display accurate information.
  */
 
-const { metrics, id, service_type, dashboardName, region, resource } = widgetDetails.linode
+const {
+  metrics,
+  id,
+  service_type,
+  dashboardName,
+  region,
+  resource,
+} = widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type,
-  widgets:
-    metrics.map(({ title, yLabel, name, unit }) => {
-      return widgetFactory.build({
-        label: title,
-        y_label: yLabel,
-        metric: name,
-        unit
-      })
-    })
+  widgets: metrics.map(({ title, yLabel, name, unit }) => {
+    return widgetFactory.build({
+      label: title,
+      y_label: yLabel,
+      metric: name,
+      unit,
+    });
+  }),
 });
 
 const metricDefinitions = {
-  data:
-    metrics.map(({ title, name, unit }) =>
-      dashboardMetricFactory.build({
-        label: title,
-        metric: name,
-        unit,
-      })
-    ),
+  data: metrics.map(({ title, name, unit }) =>
+    dashboardMetricFactory.build({
+      label: title,
+      metric: name,
+      unit,
+    })
+  ),
 };
 
 const mockLinode = linodeFactory.build({
@@ -88,28 +96,21 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponses(
   '5 min'
 );
 
-describe('Dashboard Widget Verification Tests', () => {
+describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclp: { beta: true, enabled: true },
     });
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
-    mockCloudPulseGetMetricDefinitions(
-      metricDefinitions,
-      service_type
-    );
-    mockCloudPulseGetDashboards(
-      dashboard,
-      service_type
-    );
+    mockCloudPulseGetMetricDefinitions(metricDefinitions, service_type);
+    mockCloudPulseGetDashboards(dashboard, service_type);
     mockCloudPulseServices(service_type);
     mockCloudPulseDashboardServicesResponse(dashboard, id);
     mockCloudPulseJWSToken(service_type);
-    mockCloudPulseCreateMetrics(
-      metricsAPIResponsePayload,
-      service_type
-    ).as('getMetrics');
+    mockCloudPulseCreateMetrics(metricsAPIResponsePayload, service_type).as(
+      'getMetrics'
+    );
     mockGetRegions([mockRegion]);
     mockGetUserPreferences({});
 
@@ -132,10 +133,7 @@ describe('Dashboard Widget Verification Tests', () => {
       .should('be.visible');
 
     // Select a region from the dropdown.
-    ui.regionSelect
-      .find()
-      .click()
-      .type(`${region}{enter}`);
+    ui.regionSelect.find().click().type(`${region}{enter}`);
 
     // Select a resource from the autocomplete input.
     ui.autocomplete
@@ -201,7 +199,7 @@ describe('Dashboard Widget Verification Tests', () => {
             .each(($tr) => {
               const cells = $tr
                 .find('td')
-                .map((i, el) => {
+                .map((_i, el) => {
                   const text = Cypress.$(el).text().trim();
                   return text.replace(/^\s*\([^)]+\)/, '');
                 })
@@ -262,7 +260,7 @@ describe('Dashboard Widget Verification Tests', () => {
             .each(($tr) => {
               const cells = $tr
                 .find('td')
-                .map((i, el) => {
+                .map((_i, el) => {
                   const text = Cypress.$(el).text().trim();
                   return text.replace(/^\s*\([^)]+\)/, '');
                 })
@@ -311,10 +309,11 @@ describe('Dashboard Widget Verification Tests', () => {
             );
           }
           const expectedRelativeTimeDuration = timeRange
-            ? `Last ${timeRange.value} ${['hour', 'hr'].includes(timeRange.unit.toLowerCase())
-              ? 'Hours'
-              : timeRange.unit
-            }`
+            ? `Last ${timeRange.value} ${
+                ['hour', 'hr'].includes(timeRange.unit.toLowerCase())
+                  ? 'Hours'
+                  : timeRange.unit
+              }`
             : '';
           expect(metric).to.equal(metricData.name);
           expect(expectedRelativeTimeDuration).to.equal(timeDurationToSelect);
@@ -331,7 +330,6 @@ describe('Dashboard Widget Verification Tests', () => {
       cy.get('@widget')
         .should('be.visible')
         .within(() => {
-
           // find and click the zoom in button
           ui.button
             .findByAttribute('aria-label', 'Zoom In')
@@ -347,7 +345,7 @@ describe('Dashboard Widget Verification Tests', () => {
             .each(($tr) => {
               const cells = $tr
                 .find('td')
-                .map((i, el) => Cypress.$(el).text().trim())
+                .map((_i, el) => Cypress.$(el).text().trim())
                 .get();
               const [title, actualMax, actualAvg, actualLast] = cells;
               const widgetValues = getWidgetLegendRowValuesFromResponse(
