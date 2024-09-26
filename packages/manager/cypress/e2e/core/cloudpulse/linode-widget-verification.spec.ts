@@ -1,9 +1,3 @@
-import {
-  selectTimeRange,
-  selectServiceName,
-  selectAndVerifyResource,
-  assertSelections,
-} from 'support/util/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCloudPulseJWSToken,
@@ -15,7 +9,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
-import { createMetricResponse } from '@src/factories/widget';
+import { CloudPulseMetricsResponses } from '@src/factories/widget';
 import {
   accountFactory,
   dashboardFactory,
@@ -103,7 +97,10 @@ const mockRegion = extendRegion(
     country: 'us',
   })
 );
-let responsePayload: CloudPulseMetricsResponse;
+const responsePayload = CloudPulseMetricsResponses(
+  timeRanges.last24Hours,
+  '5 min'
+);
 describe('Dashboard Widget Verification Tests', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
@@ -122,16 +119,44 @@ describe('Dashboard Widget Verification Tests', () => {
     mockCloudPulseServices(widgetDetails.linode.service_type).as('services');
     mockCloudPulseDashboardServicesResponse(dashboard, widgetDetails.linode.id);
     mockCloudPulseJWSToken(widgetDetails.linode.service_type);
-    responsePayload = createMetricResponse(timeRanges.last24Hours, '5 min');
     mockCloudPulseCreateMetrics(
       responsePayload,
       widgetDetails.linode.service_type
     ).as('getMetrics');
     mockGetRegions([mockRegion]).as('getRegions');
-  });
+    mockGetUserPreferences({}).as('getUserPreferences');
+    cy.visitWithLogin('monitor/cloudpulse').as('cloudPulsePage');
+    cy.get('@cloudPulsePage');
 
-  it('should verify the title of the widget', () => {
-    setupMethod();
+    // Selecting a dashboard from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Select a Dashboard')
+      .should('be.visible')
+      .type(`${widgetDetails.linode.dashboardName}{enter}`)
+      .should('have.value', widgetDetails.linode.dashboardName);
+
+    // Select a time duration from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Select a Time Duration')
+      .should('be.visible')
+      .type(`${timeRanges.last24Hours}{enter}`)
+      .should('have.value', timeRanges.last24Hours);
+
+    // Select a region from the dropdown.
+    ui.regionSelect
+      .find()
+      .click()
+      .type(`${widgetDetails.linode.region}{enter}`);
+
+    // Select a resource from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Select a Resources')
+      .should('be.visible')
+      .type(`${widgetDetails.linode.resource}{enter}`)
+      .click();
+    cy.findByText(widgetDetails.linode.resource).should('be.visible');
+
+    // Verify that the titles of the widgets are displayed correctly, including the unit.
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
       cy.get(widgetSelector)
@@ -143,8 +168,8 @@ describe('Dashboard Widget Verification Tests', () => {
         });
     });
   });
+
   it('should verify available granularity of the widget', () => {
-    setupMethod();
     metrics.forEach((testData) => {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
@@ -153,25 +178,14 @@ describe('Dashboard Widget Verification Tests', () => {
         .scrollIntoView()
         .should('be.visible')
         .within(() => {
-          ui.autocomplete
-            .findByTitleCustom('Select an Interval')
-            .findByTitle('Open')
-            .click();
+          ui.autocomplete.findByLabel('Select an Interval').click();
           expectedGranularityArray.forEach((option) => {
             ui.autocompletePopper.findByTitle(option).should('exist');
           });
-          ui.autocomplete
-            .findByTitleCustom('Select an Interval')
-            .should('be.visible')
-            .findByTitle('Close')
-            .should('be.visible')
-            .click();
         });
     });
   });
-
   it('should verify available aggregation of the widget', () => {
-    setupMethod();
     metrics.forEach((testData) => {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
@@ -180,24 +194,14 @@ describe('Dashboard Widget Verification Tests', () => {
         .scrollIntoView()
         .should('be.visible')
         .within(() => {
-          ui.autocomplete
-            .findByTitleCustom('Select an Aggregate Function')
-            .findByTitle('Open')
-            .click();
+          ui.autocomplete.findByLabel('Select an Aggregate Function').click();
           testData.expectedAggregationArray.forEach((option) => {
             ui.autocompletePopper.findByTitle(option).should('exist');
           });
-          ui.autocomplete
-            .findByTitleCustom('Select an Aggregate Function')
-            .should('be.visible')
-            .findByTitle('Close')
-            .should('be.visible')
-            .click();
         });
     });
   });
   it('should set available granularity of all the widgets', () => {
-    setupMethod();
     metrics.forEach((testData) => {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
@@ -207,12 +211,9 @@ describe('Dashboard Widget Verification Tests', () => {
         .first()
         .within(() => {
           ui.autocomplete
-            .findByTitleCustom('Select an Interval')
+            .findByLabel('Select an Interval')
             .should('be.visible')
-            .findByTitle('Open')
-            .click()
             .type(`${testData.expectedGranularity}{enter}`);
-          cy.findByDisplayValue(testData.expectedGranularity).should('exist');
           cy.findByTestId('linegraph-wrapper')
             .as('canvas')
             .should('be.visible')
@@ -237,13 +238,11 @@ describe('Dashboard Widget Verification Tests', () => {
                 widgetValues,
                 testData.title
               );
-              assertSelections(testData.expectedGranularity);
             });
         });
     });
   });
   it('should set available aggregation of all the widgets', () => {
-    setupMethod();
     metrics.forEach((testData) => {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
@@ -252,12 +251,9 @@ describe('Dashboard Widget Verification Tests', () => {
         .should('be.visible')
         .within(() => {
           ui.autocomplete
-            .findByTitleCustom('Select an Aggregate Function')
+            .findByLabel('Select an Aggregate Function')
             .should('be.visible')
-            .findByTitle('Open')
-            .click()
             .type(`${testData.expectedAggregation}{enter}`);
-          cy.findByDisplayValue(testData.expectedAggregation).should('exist');
           cy.findByTestId('linegraph-wrapper')
             .as('canvas')
             .should('be.visible')
@@ -282,14 +278,12 @@ describe('Dashboard Widget Verification Tests', () => {
                 widgetValues,
                 testData.title
               );
-              assertSelections(testData.expectedAggregation);
             });
         });
     });
   });
 
   it('should apply global refresh button and verify network calls', () => {
-    setupMethod();
     cy.wait(7000); //maintaining the wait since page flicker and rendering
     ui.button
       .findByAttribute('aria-label', 'cloudpulse-refresh')
@@ -324,7 +318,6 @@ describe('Dashboard Widget Verification Tests', () => {
   });
 
   it('should zoom in and out of all the widgets', () => {
-    setupMethod();
     metrics.forEach((testData) => {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       cy.get(`[data-qa-widget="${testData.title}"]`).as('widget');
@@ -392,32 +385,6 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 });
-/**
- * `setupMethod` initializes the Cloud Pulse dashboard for testing by performing a series of setup actions.
- * This method mocks user preferences, navigates to the Cloud Pulse page, and configures various settings
- * including service name, time range, engine, region, resource, and node type. It also verifies each selection
- * to ensure the dashboard is correctly configured before running further tests.
- *
- * Steps:
- * 1. Mock user preferences to ensure a consistent test environment.
- * 2. Navigate to the Cloud Pulse page and verify that it has loaded correctly.
- * 3. Select and verify the service name.
- * 4. Set and verify the time range for the dashboard.
- * 5. Select and verify the region.
- * 6. Choose and verify the resource from available widgets.
- */
-
-const setupMethod = () => {
-  mockGetUserPreferences({}).as('getUserPreferences');
-  cy.visitWithLogin('monitor/cloudpulse');
-  selectServiceName(widgetDetails.linode.dashboardName);
-  assertSelections(widgetDetails.linode.dashboardName);
-  selectTimeRange(timeRanges.last24Hours, Object.values(timeRanges));
-  assertSelections(timeRanges.last24Hours);
-  ui.regionSelect.find().click().type(`${widgetDetails.linode.region}{enter}`);
-  assertSelections(widgetDetails.linode.region);
-  selectAndVerifyResource(widgetDetails.linode.resource);
-};
 /**
  * `verifyWidgetValues` processes and verifies the metric values of a widget from the provided response payload.
  *

@@ -55,7 +55,7 @@ describe('CloudPulse  navigation', () => {
   /*
    * - Confirms that manual navigation to Cloudpulse landing page with feature is disabled displays Not Found to user.
    */
-  it('displays Not Found when manually navigating to /placement-groups with feature flag disabled', () => {
+  it('displays Not Found when manually navigating to /cloudpulse with feature flag disabled', () => {
     mockAppendFeatureFlags({
       aclp: {
         beta: true,

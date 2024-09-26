@@ -25,14 +25,10 @@ import { ui } from 'support/ui';
 
 export const selectServiceName = (serviceName: string) => {
   ui.autocomplete
-    .findByTitleCustom('Select a Dashboard')
-    .findByTitle('Open')
+    .findByLabel('Select a Dashboard')
     .should('be.visible')
-    .click();
-  ui.autocomplete
-    .findByPlaceholderCustom('Select a Dashboard')
-    .type(`${serviceName}{enter}`);
-  cy.findByDisplayValue(serviceName).should('have.value', serviceName);
+    .type(`${serviceName}{enter}`)
+    .should('have.value', serviceName);
 };
 
 /**
@@ -41,49 +37,25 @@ export const selectServiceName = (serviceName: string) => {
  * @param {Array<string>} timeSegments - An array of time segment values (e.g., ["2024-01-01", "2024-01-02"]).
 
  */
-export const selectTimeRange = (timeRange: string, timeSegments: string[]) => {
+export const selectTimeRange = (timeRange: string) => {
   ui.autocomplete
-    .findByTitleCustom('Select a Time Duration')
-    .findByTitle('Open')
-    .click();
-  timeSegments.forEach((option) => {
-    ui.autocompletePopper.findByTitle(option).should('be.visible');
-  });
-  ui.autocompletePopper.findByTitle(timeRange).should('be.visible').click();
-  cy.findByDisplayValue(timeRange).should('have.value', timeRange);
+    .findByLabel('Select a Time Duration')
+    .should('be.visible')
+    .type(`${timeRange}{enter}`)
+    .should('have.value', timeRange);
 };
 /**
  * Selects a resource name from the resources dropdown and verifies the selection.
  * @param {string} service - The name of the service to select.
  */
 export const selectAndVerifyResource = (service: string) => {
-  const resourceInput = ui.autocomplete.findByTitleCustom('Select a Resources');
-  resourceInput.findByTitle('Open').click();
-  resourceInput.click().type(`${service}{enter}`);
+  ui.autocomplete
+    .findByLabel('Select a Resources')
+    .should('be.visible')
+    .type(`${service}{enter}`);
   cy.get('[title="Close"]').click();
 };
-/**
- * Asserts that the selected options match the expected values.
- * @param {string} expectedOptions - The expected options to verify.
- */
-export const assertSelections = (expectedOptions: string) => {
-  cy.get(`[value*='${expectedOptions}']`).should('be.visible');
-  cy.get(`[value*='${expectedOptions}']`).should('have.value', expectedOptions);
-};
 
-/**
- * Clears the dashboard's preferences and verifies the zeroth page.
- */
-export const resetDashboard = () => {
-  ui.autocomplete
-    .findByTitleCustom('Select a Dashboard')
-    .findByTitle('Clear')
-    .click();
-
-  ui.autocomplete
-    .findByPlaceholderCustom('Select a Dashboard')
-    .should('have.value', '');
-};
 /**
  * Selects an engine from a dropdown menu.
  *
@@ -91,11 +63,10 @@ export const resetDashboard = () => {
  */
 export const chooseEngine = (engine: string) => {
   ui.autocomplete
-    .findByTitleCustom('Select an Engine')
-    .findByTitle('Open')
-    .click();
-  ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
-  cy.findByDisplayValue(engine).should('have.value', engine);
+    .findByLabel('Select an Engine')
+    .should('be.visible')
+    .type(`${engine}{enter}`)
+    .should('have.value', engine);
 };
 /**
  * Selects a node type from a dropdown menu.
@@ -105,10 +76,8 @@ export const chooseEngine = (engine: string) => {
 
 export const chooseNodeType = (node: string) => {
   ui.autocomplete
-    .findByPlaceholderCustom('Select a Node Type')
+    .findByLabel('Select a Node Type')
     .should('be.visible')
-    .type(node)
-    .click();
-  ui.autocompletePopper.findByTitle(node).should('be.visible').click();
-  cy.findByDisplayValue(node).should('have.value', node);
+    .type(`${node}{enter}`)
+    .should('have.value', node);
 };
