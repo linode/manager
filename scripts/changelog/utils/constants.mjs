@@ -19,6 +19,9 @@ export const CHANGESET_TYPES = [
 export const OWNER = "linode";
 export const REPO = "manager";
 
+// Base directory for all packages
+const baseDir = path.resolve(__dirname, "../../../packages");
+
 // Validate the linodePackage before using it
 const validatePackage = (linodePackage) => {
   if (!PACKAGES.includes(linodePackage)) {
@@ -26,21 +29,24 @@ const validatePackage = (linodePackage) => {
   }
 };
 
-export const changelogPath = (linodePackage) => {
+// Safe path join with base directory enforcement
+const safePathJoin = (linodePackage, fileName) => {
   validatePackage(linodePackage);
-  return path.join(
-    __dirname,
-    `../../../packages/${linodePackage}/CHANGELOG.md`
-  );
+
+  // Resolve the path to ensure it's absolute
+  const resolvedPath = path.resolve(baseDir, linodePackage, fileName);
+
+  // Ensure the resolved path starts with the baseDir to prevent traversal
+  if (!resolvedPath.startsWith(baseDir)) {
+    throw new Error("Path traversal attempt detected");
+  }
+
+  return resolvedPath;
 };
-export const changesetDirectory = (linodePackage) => {
-  validatePackage(linodePackage);
-  return path.join(__dirname, `../../../packages/${linodePackage}/.changeset`);
-};
-export const packageJsonPath = (linodePackage) => {
-  validatePackage(linodePackage);
-  return path.join(
-    __dirname,
-    `../../../packages/${linodePackage}/package.json`
-  );
-};
+
+export const changelogPath = (linodePackage) =>
+  safePathJoin(linodePackage, "CHANGELOG.md");
+export const changesetDirectory = (linodePackage) =>
+  safePathJoin(linodePackage, ".changeset");
+export const packageJsonPath = (linodePackage) =>
+  safePathJoin(linodePackage, "package.json");
