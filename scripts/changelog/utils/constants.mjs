@@ -20,7 +20,7 @@ export const CHANGESET_TYPES = [
 export const OWNER = "linode";
 export const REPO = "manager";
 
-// Base directory for all packages
+// Base directory for all packages - ensure it's absolute
 const baseDir = path.resolve(__dirname, "../../../packages");
 
 // Sanitize input to allow only alphanumeric, dashes, and underscores
@@ -49,8 +49,11 @@ const safePathJoin = (linodePackage, fileName) => {
   validatePackage(sanitizedPackage); // Validate sanitized input
   validateFileName(fileName); // Validate file name from a whitelist
 
-  // Resolve the path to ensure it's absolute
-  const resolvedPath = path.resolve(baseDir, sanitizedPackage, fileName);
+  // Normalize and resolve the path to ensure it's absolute and safe
+  const resolvedPath = path.resolve(
+    baseDir,
+    path.normalize(path.join(sanitizedPackage, fileName))
+  );
 
   // Ensure the resolved path starts with the baseDir to prevent traversal
   if (!resolvedPath.startsWith(baseDir)) {
