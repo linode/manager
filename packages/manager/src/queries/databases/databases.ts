@@ -75,7 +75,12 @@ export const databaseQueries = createQueryKeys('databases', {
     queryKey: null,
   },
   types: {
-    queryFn: getAllDatabaseTypes,
+    contextQueries: {
+      all: (filter: Filter = {}) => ({
+        queryFn: () => getAllDatabaseTypes(filter),
+        queryKey: [filter],
+      }),
+    },
     queryKey: null,
   },
 });
@@ -176,8 +181,10 @@ export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDatabaseTypesQuery = () =>
-  useQuery<DatabaseType[], APIError[]>(databaseQueries.types);
+export const useDatabaseTypesQuery = (filter: Filter = {}) =>
+  useQuery<DatabaseType[], APIError[]>({
+    ...databaseQueries.types._ctx.all(filter),
+  });
 
 export const useDatabaseCredentialsQuery = (
   engine: Engine,
