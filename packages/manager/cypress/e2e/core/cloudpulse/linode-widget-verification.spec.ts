@@ -12,11 +12,12 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
-import { cloudPulseMetricsResponses } from 'src/factories/widget';
 import {
   accountFactory,
+  cloudPulseMetricsResponseFactory,
   dashboardFactory,
   dashboardMetricFactory,
+  generateValues,
   kubeLinodeFactory,
   linodeFactory,
   regionFactory,
@@ -91,10 +92,8 @@ const mockRegion = extendRegion(
     country: 'us',
   })
 );
-const metricsAPIResponsePayload = cloudPulseMetricsResponses(
-  timeDurationToSelect,
-  '5 min'
-);
+const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build( {data:generateValues( timeDurationToSelect,
+  '5 min')});
 
 describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
@@ -144,7 +143,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     cy.findByText(resource).should('be.visible');
 
-    // Verify that the titles of the widgets are displayed correctly, including the unit.
+    // Verify that the expected widgets areloaded.
     metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
       cy.get(widgetSelector)
