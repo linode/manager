@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 import { useFlags } from 'src/hooks/useFlags';
+import { useGlobalErrors } from 'src/hooks/useGlobalErrors';
 
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
@@ -11,15 +12,11 @@ import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 import { rootRoute } from './routes/root';
 
-const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed/ManagedLanding'));
 const Help = React.lazy(() =>
   import('./features/Help/index').then((module) => ({
     default: module.HelpAndSupport,
   }))
-);
-const SearchLanding = React.lazy(
-  () => import('src/features/Search/SearchLanding')
 );
 const EventsLanding = React.lazy(() =>
   import('src/features/Events/EventsLanding').then((module) => ({
@@ -46,22 +43,10 @@ const managedRoute = createRoute({
   path: 'managed',
 });
 
-const longviewRoute = createRoute({
-  component: Longview,
-  getParentRoute: () => rootRoute,
-  path: 'longview',
-});
-
 const supportRoute = createRoute({
   component: Help,
   getParentRoute: () => rootRoute,
   path: 'support',
-});
-
-const searchRoute = createRoute({
-  component: SearchLanding,
-  getParentRoute: () => rootRoute,
-  path: 'search',
 });
 
 const eventsRoute = createRoute({
@@ -118,9 +103,7 @@ const notFoundRoute = createRoute({
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routeTree = rootRoute.addChildren([
   managedRoute,
-  longviewRoute,
   supportRoute,
-  searchRoute,
   eventsRoute,
   firewallsRoute,
   databasesRoute,
@@ -136,12 +119,14 @@ export const MainContentV2 = () => {
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
+  const globalErrors = useGlobalErrors();
   const flags = useFlags();
 
   // Update the router's context
   router.update({
     context: {
       accountSettings,
+      globalErrors,
       isACLPEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,

@@ -50,6 +50,9 @@ const kubernetesClusterRoute = createRoute({
     'KubernetesClusterDetail'
   ),
   getParentRoute: () => kubernetesRoute,
+  parseParams: (params) => ({
+    clusterID: Number(params.clusterID),
+  }),
   path: '$clusterID',
 });
 

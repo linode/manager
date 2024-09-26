@@ -17,12 +17,18 @@ export const StackScriptsRoutes = () => {
 };
 
 const StackScriptsRoute = createRoute({
+  component: StackScriptsRoutes,
+  getParentRoute: () => rootRoute,
+  path: 'stackscripts',
+});
+
+const StackScriptsLandingRoute = createRoute({
   component: strictLazyRouteComponent(
     () => import('src/features/StackScripts/StackScriptsLanding'),
     'StackScriptsLanding'
   ),
-  getParentRoute: () => rootRoute,
-  path: 'stackscripts',
+  getParentRoute: () => StackScriptsRoute,
+  path: '/',
 });
 
 const StackScriptsAccountRoute = createRoute({
@@ -59,6 +65,9 @@ const StackScriptsDetailRoute = createRoute({
     'StackScriptsDetail'
   ),
   getParentRoute: () => StackScriptsRoute,
+  parseParams: (params) => ({
+    stackScriptID: Number(params.stackScriptID),
+  }),
   path: '$stackScriptID',
 });
 
@@ -69,10 +78,14 @@ const StackScriptsEditRoute = createRoute({
     'StackScriptCreate'
   ),
   getParentRoute: () => StackScriptsRoute,
+  parseParams: (params) => ({
+    stackScriptID: Number(params.stackScriptID),
+  }),
   path: '$stackScriptID/edit',
 });
 
 export const stackScriptsRouteTree = StackScriptsRoute.addChildren([
+  StackScriptsLandingRoute,
   StackScriptsAccountRoute,
   StackScriptsCommunityRoute,
   StackScriptsCreateRoute,

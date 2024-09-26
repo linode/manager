@@ -7,6 +7,8 @@ import { accountRouteTree } from './account';
 import { domainsRouteTree } from './domains';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
+import { longviewRouteTree } from './longview';
+import { managedRouteTree } from './managed';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './object-storage';
 import { placementGroupsRouteTree } from './placementGroups';
@@ -34,6 +36,8 @@ export const routeTree = rootRoute.addChildren([
   domainsRouteTree,
   kubernetesRouteTree,
   linodesRouteTree,
+  longviewRouteTree,
+  managedRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
@@ -44,13 +48,7 @@ export const routeTree = rootRoute.addChildren([
 ]);
 
 export const router = createRouter({
-  context: {
-    accountSettings: undefined,
-    isACLPEnabled: false,
-    isDatabasesEnabled: false,
-    isPlacementGroupsEnabled: false,
-    selfServeBetas: false,
-  },
+  context: {},
   defaultNotFoundComponent: () => <NotFound />,
   routeTree,
 });
