@@ -286,7 +286,7 @@ describe('Dashboard Widget Verification Tests', () => {
   it('should apply global refresh button and verify network calls', () => {
     cy.wait(7000); //maintaining the wait since page flicker and rendering
     ui.button
-      .findByAttribute('aria-label', 'cloudpulse-refresh')
+      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
       .should('be.visible')
       .click();
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
@@ -325,7 +325,7 @@ describe('Dashboard Widget Verification Tests', () => {
         .should('be.visible')
         .within(() => {
           ui.button
-            .findByAttribute('aria-label', 'zoom-in')
+            .findByAttribute('aria-label', 'Zoom In')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -353,7 +353,7 @@ describe('Dashboard Widget Verification Tests', () => {
               );
             });
           ui.button
-            .findByAttribute('aria-label', 'zoom-out')
+            .findByAttribute('aria-label', 'Zoom Out')
             .should('be.visible')
             .should('be.enabled')
             .scrollIntoView()
