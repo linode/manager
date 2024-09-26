@@ -5,15 +5,6 @@ import type { SupportTicketFormFields } from 'src/features/Support/SupportTicket
 
 const localStorageCache: Record<string, any> = {};
 
-export const isValidURL = (url: string) => {
-  try {
-    new URL(url);
-    return true;
-  } catch (_) {
-    return false;
-  }
-};
-
 export const getStorage = (key: string, fallback?: any) => {
   if (localStorageCache[key]) {
     return localStorageCache[key];

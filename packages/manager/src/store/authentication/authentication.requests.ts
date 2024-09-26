@@ -1,6 +1,5 @@
 import { LOGIN_ROOT } from 'src/constants';
 import { revokeToken } from 'src/session';
-import { isValidURL } from 'src/utilities/storage';
 import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
 
 import { handleLogout as _handleLogout } from './authentication.actions';
@@ -24,19 +23,7 @@ export const handleLogout: ThunkActionCreator<
 > = ({ client_id, token }) => (dispatch) => {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
-  let loginURL;
-
-  try {
-    loginURL = new URL(
-      localStorageOverrides?.loginRoot ?? LOGIN_ROOT
-    ).toString();
-  } catch (e) {
-    loginURL = LOGIN_ROOT;
-  }
-
-  if (!isValidURL(loginURL)) {
-    throw new Error('Invalid login URL');
-  }
+  const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
 
   return revokeToken(client_id, token)
     .then((response) => {
