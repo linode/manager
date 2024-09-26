@@ -9,7 +9,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
-import { CloudPulseMetricsResponses } from '@src/factories/widget';
+import { cloudPulseMetricsResponses } from 'src/factories/widget';
 import {
   accountFactory,
   dashboardFactory,
@@ -27,20 +27,9 @@ import { extendRegion } from 'support/util/regions';
 import { CloudPulseMetricsResponse } from '@linode/api-v4';
 import { transformData } from 'src/features/CloudPulse/Utils/unitConversion';
 import { getMetrics } from 'src/utilities/statMetrics';
-const timeRanges = {
-  last7Days: 'Last 7 Days',
-  last12Hours: 'Last 12 Hours',
-  last24Hours: 'Last 24 Hours',
-  last30Days: 'Last 30 Days',
-  last30Minutes: 'Last 30 Minutes',
-};
-const y_labels = [
-  'system_cpu_utilization_ratio',
-  'system_memory_usage_bytes',
-  'system_network_io_bytes_total',
-  'system_disk_operations_total',
-];
+
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
+const timeDurationToSelect = 'Last 24 Hours';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -53,41 +42,38 @@ const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
  * Each test ensures that widgets on the dashboard operate correctly and display accurate information.
  */
 
-const metrics = widgetDetails.linode.metrics;
-const widgetLabels: string[] = metrics.map((widget) => widget.title);
-const metricsLabels: string[] = metrics.map((widget) => widget.name);
-const unit: string[] = metrics.map((widget) => widget.unit);
+const { metrics, id, service_type, dashboardName, region, resource } = widgetDetails.linode
+
 const dashboard = dashboardFactory.build({
-  label: widgetDetails.linode.dashboardName,
-  service_type: widgetDetails.linode.service_type,
-  widgets: [
-    ...widgetLabels.map((label: string, index: number) =>
-      widgetFactory.build({
-        label,
-        y_label: y_labels[index],
-        metric: metricsLabels[index],
-        unit: unit[index],
+  label: dashboardName,
+  service_type,
+  widgets:
+    metrics.map(({ title, yLabel, name, unit }) => {
+      return widgetFactory.build({
+        label: title,
+        y_label: yLabel,
+        metric: name,
+        unit
       })
-    ),
-  ],
+    })
 });
 
 const metricDefinitions = {
-  data: [
-    ...widgetLabels.map((label, index) =>
+  data:
+    metrics.map(({ title, name, unit }) =>
       dashboardMetricFactory.build({
-        label,
-        metric: metricsLabels[index],
-        unit: unit[index],
+        label: title,
+        metric: name,
+        unit,
       })
     ),
-  ],
 };
-const mockKubeLinode = kubeLinodeFactory.build();
+
 const mockLinode = linodeFactory.build({
-  label: widgetDetails.linode.resource,
-  id: mockKubeLinode.instance_id ?? undefined,
+  label: resource,
+  id: kubeLinodeFactory.build().instance_id ?? undefined,
 });
+
 const mockAccount = accountFactory.build();
 const mockRegion = extendRegion(
   regionFactory.build({
@@ -97,34 +83,37 @@ const mockRegion = extendRegion(
     country: 'us',
   })
 );
-const responsePayload = CloudPulseMetricsResponses(
-  timeRanges.last24Hours,
+const metricsAPIResponsePayload = cloudPulseMetricsResponses(
+  timeDurationToSelect,
   '5 min'
 );
+
 describe('Dashboard Widget Verification Tests', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclp: { beta: true, enabled: true },
-    }).as('getFeatureFlags');
-    mockGetAccount(mockAccount).as('getAccount'); // Enables the account to have capability for Akamai Cloud Pulse
-    mockGetLinodes([mockLinode]).as('getLinodes');
+    });
+    mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
+    mockGetLinodes([mockLinode]);
     mockCloudPulseGetMetricDefinitions(
       metricDefinitions,
-      widgetDetails.linode.service_type
+      service_type
     );
     mockCloudPulseGetDashboards(
       dashboard,
-      widgetDetails.linode.service_type
-    ).as('dashboard');
-    mockCloudPulseServices(widgetDetails.linode.service_type).as('services');
-    mockCloudPulseDashboardServicesResponse(dashboard, widgetDetails.linode.id);
-    mockCloudPulseJWSToken(widgetDetails.linode.service_type);
+      service_type
+    );
+    mockCloudPulseServices(service_type);
+    mockCloudPulseDashboardServicesResponse(dashboard, id);
+    mockCloudPulseJWSToken(service_type);
     mockCloudPulseCreateMetrics(
-      responsePayload,
-      widgetDetails.linode.service_type
+      metricsAPIResponsePayload,
+      service_type
     ).as('getMetrics');
-    mockGetRegions([mockRegion]).as('getRegions');
-    mockGetUserPreferences({}).as('getUserPreferences');
+    mockGetRegions([mockRegion]);
+    mockGetUserPreferences({});
+
+    // navigate to the cloudpulse page
     cy.visitWithLogin('monitor/cloudpulse').as('cloudPulsePage');
     cy.get('@cloudPulsePage');
 
@@ -132,29 +121,30 @@ describe('Dashboard Widget Verification Tests', () => {
     ui.autocomplete
       .findByLabel('Select a Dashboard')
       .should('be.visible')
-      .type(`${widgetDetails.linode.dashboardName}{enter}`)
+      .type(`${dashboardName}{enter}`)
       .should('be.visible');
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
       .findByLabel('Select a Time Duration')
       .should('be.visible')
-      .type(`${timeRanges.last24Hours}{enter}`)
+      .type(`${timeDurationToSelect}{enter}`)
       .should('be.visible');
 
     // Select a region from the dropdown.
     ui.regionSelect
       .find()
       .click()
-      .type(`${widgetDetails.linode.region}{enter}`);
+      .type(`${region}{enter}`);
 
     // Select a resource from the autocomplete input.
     ui.autocomplete
       .findByLabel('Select a Resource')
       .should('be.visible')
-      .type(`${widgetDetails.linode.resource}{enter}`)
+      .type(`${resource}{enter}`)
       .click();
-    cy.findByText(widgetDetails.linode.resource).should('be.visible');
+
+    cy.findByText(resource).should('be.visible');
 
     // Verify that the titles of the widgets are displayed correctly, including the unit.
     metrics.forEach((testData) => {
@@ -169,14 +159,13 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 
-  it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
+  it('should allow users to select desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     for (const testData of metrics) {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
 
       cy.get(widgetSelector)
-        .should('be.visible')
         .first()
         .within(() => {
           // check for all available granularity in popper
@@ -193,9 +182,9 @@ describe('Dashboard Widget Verification Tests', () => {
           ui.autocomplete
             .findByLabel('Select an Interval')
             .should('be.visible')
-            .type(`${testData.expectedGranularity}{enter}`); //type expected granularity
+            .type(`${testData.expectedGranularity}{enter}`);
 
-          //check if the API call is made correctly with time granularity value selected
+          //check if the API call is made correctly with the selected time granularity value
           cy.wait('@getMetrics').then((interception) => {
             expect(interception)
               .to.have.property('response')
@@ -205,7 +194,7 @@ describe('Dashboard Widget Verification Tests', () => {
             );
           });
 
-          //validate the widget linegrah is present
+          //validate the widget line graph is present and its legend rows
           cy.findByTestId('linegraph-wrapper')
             .should('be.visible')
             .find('tbody tr')
@@ -219,7 +208,7 @@ describe('Dashboard Widget Verification Tests', () => {
                 .get();
               const [title, actualMax, actualAvg, actualLast] = cells; // the average, max and last present in the widget
               const widgetValues = getWidgetLegendRowValuesFromResponse(
-                responsePayload
+                metricsAPIResponsePayload
               ); // the average, max and last from the response payload
               compareWidgetValues(
                 // compare both
@@ -237,38 +226,36 @@ describe('Dashboard Widget Verification Tests', () => {
     }
   });
 
-  it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
+  it('should allow users to select the desired aggregation and see the most recent data from the API displayed in the graph', () => {
     for (const testData of metrics) {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
 
       cy.get(widgetSelector)
-        .should('be.visible')
         .first()
         .within(() => {
           mockCloudPulseCreateMetrics(
-            responsePayload,
-            widgetDetails.linode.service_type
+            metricsAPIResponsePayload,
+            service_type
           ).as('getAggregationMetrics');
 
           //find the interval component and select the expected granularity
           ui.autocomplete
             .findByLabel('Select an Aggregate Function')
             .should('be.visible')
-            .type(`${testData.expectedAggregation}{enter}`); //type expected granularity
+            .type(`${testData.expectedAggregation}{enter}`);
 
           //check if the API call is made correctly with time granularity value selected
           cy.wait('@getAggregationMetrics').then((interception) => {
             expect(interception)
               .to.have.property('response')
               .with.property('statusCode', 200);
-            // cy.log(JSON.stringify(interception.request.body));
             expect(testData.expectedAggregation).to.equal(
               interception.request.body.aggregate_function
             );
           });
 
-          //validate the widget linegrah is present
+          //validate the widget line graph is present and its legend rows
           cy.findByTestId('linegraph-wrapper')
             .should('be.visible')
             .find('tbody tr')
@@ -282,7 +269,7 @@ describe('Dashboard Widget Verification Tests', () => {
                 .get();
               const [title, actualMax, actualAvg, actualLast] = cells; // the average, max and last present in the widget
               const widgetValues = getWidgetLegendRowValuesFromResponse(
-                responsePayload
+                metricsAPIResponsePayload
               ); // the average, max and last from the response payload
               compareWidgetValues(
                 // compare both
@@ -324,14 +311,13 @@ describe('Dashboard Widget Verification Tests', () => {
             );
           }
           const expectedRelativeTimeDuration = timeRange
-            ? `Last ${timeRange.value} ${
-                ['hour', 'hr'].includes(timeRange.unit.toLowerCase())
-                  ? 'Hours'
-                  : timeRange.unit
-              }`
+            ? `Last ${timeRange.value} ${['hour', 'hr'].includes(timeRange.unit.toLowerCase())
+              ? 'Hours'
+              : timeRange.unit
+            }`
             : '';
           expect(metric).to.equal(metricData.name);
-          expect(expectedRelativeTimeDuration).to.equal(timeRanges.last24Hours);
+          expect(expectedRelativeTimeDuration).to.equal(timeDurationToSelect);
         });
       }
     );
@@ -345,12 +331,15 @@ describe('Dashboard Widget Verification Tests', () => {
       cy.get('@widget')
         .should('be.visible')
         .within(() => {
+
+          // find and click the zoom in button
           ui.button
             .findByAttribute('aria-label', 'Zoom In')
             .should('be.visible')
-            .should('be.enabled')
             .click();
           cy.get('@widget').should('be.visible');
+
+          // validate the widget details
           cy.findByTestId('linegraph-wrapper')
             .as('canvas')
             .should('be.visible')
@@ -362,7 +351,7 @@ describe('Dashboard Widget Verification Tests', () => {
                 .get();
               const [title, actualMax, actualAvg, actualLast] = cells;
               const widgetValues = getWidgetLegendRowValuesFromResponse(
-                responsePayload
+                metricsAPIResponsePayload
               );
               compareWidgetValues(
                 {
@@ -380,10 +369,11 @@ describe('Dashboard Widget Verification Tests', () => {
           ui.button
             .findByAttribute('aria-label', 'Zoom Out')
             .should('be.visible')
-            .should('be.enabled')
             .scrollIntoView()
             .click({ force: true });
           cy.get('@widget').should('be.visible');
+
+          // validate the widget details
           cy.findByTestId('linegraph-wrapper')
             .as('canvas')
             .should('be.visible')
@@ -395,7 +385,7 @@ describe('Dashboard Widget Verification Tests', () => {
                 .get();
               const [title, actualMax, actualAvg, actualLast] = cells;
               const widgetValues = getWidgetLegendRowValuesFromResponse(
-                responsePayload
+                metricsAPIResponsePayload
               );
               compareWidgetValues(
                 {

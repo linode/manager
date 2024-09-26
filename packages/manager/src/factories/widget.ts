@@ -13,7 +13,7 @@ import type { CloudPulseMetricsResponse } from '@linode/api-v4';
  * @param {string} granularityData - The granularity of the metric data (e.g., "Min5").
  * @returns {CloudPulseMetricsResponse} - The generated mock metric response.
  */
-export const CloudPulseMetricsResponses = (
+export const cloudPulseMetricsResponses = (
   time: string,
   granularityData: string
 ): CloudPulseMetricsResponse => {
