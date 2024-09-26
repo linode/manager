@@ -17,6 +17,7 @@ export const widgetDetails = {
         name: 'system_disk_OPS_total',
         title: 'Disk I/O',
         unit: 'OPS',
+        yLabel: 'system_disk_operations_total',
       },
       {
         expectedAggregation: 'max',
@@ -25,6 +26,7 @@ export const widgetDetails = {
         name: 'system_cpu_utilization_percent',
         title: 'CPU Utilization',
         unit: '%',
+        yLabel: 'system_cpu_utilization_ratio',
       },
       {
         expectedAggregation: 'max',
@@ -33,6 +35,7 @@ export const widgetDetails = {
         name: 'system_memory_usage_by_resource',
         title: 'Memory Usage',
         unit: 'Bytes',
+        yLabel: 'system_memory_usage_bytes',
       },
       {
         expectedAggregation: 'max',
@@ -41,6 +44,7 @@ export const widgetDetails = {
         name: 'system_network_io_by_resource',
         title: 'Network Traffic',
         unit: 'Bytes',
+        yLabel: 'system_network_io_bytes_total',
       },
     ],
     nodeType: 'Secondary',
@@ -59,6 +63,7 @@ export const widgetDetails = {
         name: 'system_cpu_utilization_percent',
         title: 'CPU Utilization',
         unit: '%',
+        yLabel: 'system_cpu_utilization_ratio',
       },
       {
         expectedAggregation: 'max',
@@ -67,6 +72,7 @@ export const widgetDetails = {
         name: 'system_memory_usage_by_resource',
         title: 'Memory Usage',
         unit: 'Bytes',
+        yLabel: 'system_memory_usage_bytes',
       },
       {
         expectedAggregation: 'max',
@@ -75,6 +81,7 @@ export const widgetDetails = {
         name: 'system_network_io_by_resource',
         title: 'Network Traffic',
         unit: 'Bytes',
+        yLabel: 'system_network_io_bytes_total',
       },
       {
         expectedAggregation: 'max',
@@ -83,6 +90,7 @@ export const widgetDetails = {
         name: 'system_disk_OPS_total',
         title: 'Disk I/O',
         unit: 'OPS',
+        yLabel: 'system_disk_operations_total',
       },
     ],
     region: 'US, Chicago, IL (us-ord)',
