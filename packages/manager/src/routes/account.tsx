@@ -3,6 +3,15 @@ import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import {
+  accountBillingRoute,
+  accountIndexRoute,
+  accountLoginHistoryRoute,
+  accountMaintenanceRoute,
+  accountServiceTransfersRoute,
+  accountSettingsRoute,
+  accountUsersRoute,
+} from 'src/features/Account/AccountLanding';
 
 import { rootRoute } from './root';
 import { strictLazyRouteComponent } from './utils';
@@ -16,18 +25,10 @@ export const AccountRoutes = () => {
   );
 };
 
-const accountRoute = createRoute({
+export const accountRoute = createRoute({
   component: AccountRoutes,
   getParentRoute: () => rootRoute,
   path: 'account',
-});
-
-const accountIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Account/AccountLanding')
-  ),
-  getParentRoute: () => accountRoute,
-  path: '/',
 });
 
 const accountUsersUsernameRoute = createRoute({
@@ -56,22 +57,6 @@ const accountUsersUsernamePermissionsRoute = createRoute({
   path: 'users/$username/permissions',
 });
 
-const accountBillingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Account/AccountLanding')
-  ),
-  getParentRoute: () => accountRoute,
-  path: 'billing',
-});
-
-const accountBillingEditRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Account/AccountLanding')
-  ),
-  getParentRoute: () => accountRoute,
-  path: 'billing/edit',
-});
-
 const accountInvoicesInvoiceIdRoute = createRoute({
   component: strictLazyRouteComponent(
     () => import('src/features/Billing/InvoiceDetail/InvoiceDetail'),
@@ -97,13 +82,18 @@ const accountEntityTransfersCreateRoute = createRoute({
 });
 
 export const accountRouteTree = accountRoute.addChildren([
-  accountIndexRoute,
   accountUsersUsernameRoute.addChildren([
     accountUsersUsernameProfileRoute,
     accountUsersUsernamePermissionsRoute,
   ]),
-  accountBillingRoute,
-  accountBillingEditRoute,
+  accountIndexRoute.addChildren([
+    accountBillingRoute,
+    accountUsersRoute,
+    accountLoginHistoryRoute,
+    accountServiceTransfersRoute,
+    accountMaintenanceRoute,
+    accountSettingsRoute,
+  ]),
   accountInvoicesInvoiceIdRoute,
   accountEntityTransfersCreateRoute,
 ]);
