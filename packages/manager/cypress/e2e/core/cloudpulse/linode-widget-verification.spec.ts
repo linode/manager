@@ -48,7 +48,7 @@ const timeDurationToSelect = 'Last 24 Hours';
 const {
   metrics,
   id,
-  service_type,
+  serviceType,
   dashboardName,
   region,
   resource,
@@ -56,7 +56,7 @@ const {
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
-  service_type,
+  service_type: serviceType,
   widgets: metrics.map(({ title, yLabel, name, unit }) => {
     return widgetFactory.build({
       label: title,
@@ -103,12 +103,12 @@ describe('Integration Tests for Linode Dashboard ', () => {
     });
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
-    mockCloudPulseGetMetricDefinitions(metricDefinitions, service_type);
-    mockCloudPulseGetDashboards(dashboard, service_type);
-    mockCloudPulseServices(service_type);
+    mockCloudPulseGetMetricDefinitions(metricDefinitions, serviceType);
+    mockCloudPulseGetDashboards(dashboard, serviceType);
+    mockCloudPulseServices(serviceType);
     mockCloudPulseDashboardServicesResponse(dashboard, id);
-    mockCloudPulseJWSToken(service_type);
-    mockCloudPulseCreateMetrics(metricsAPIResponsePayload, service_type).as(
+    mockCloudPulseJWSToken(serviceType);
+    mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as(
       'getMetrics'
     );
     mockGetRegions([mockRegion]);
@@ -234,7 +234,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
         .within(() => {
           mockCloudPulseCreateMetrics(
             metricsAPIResponsePayload,
-            service_type
+            serviceType
           ).as('getAggregationMetrics');
 
           //find the interval component and select the expected granularity
@@ -309,11 +309,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
             );
           }
           const expectedRelativeTimeDuration = timeRange
-            ? `Last ${timeRange.value} ${
-                ['hour', 'hr'].includes(timeRange.unit.toLowerCase())
-                  ? 'Hours'
-                  : timeRange.unit
-              }`
+            ? `Last ${timeRange.value} ${['hour', 'hr'].includes(timeRange.unit.toLowerCase())
+              ? 'Hours'
+              : timeRange.unit
+            }`
             : '';
           expect(metric).to.equal(metricData.name);
           expect(expectedRelativeTimeDuration).to.equal(timeDurationToSelect);
