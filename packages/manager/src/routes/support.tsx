@@ -17,6 +17,7 @@ export const SupportTicketsRoutes = () => {
 };
 
 const SupportRoute = createRoute({
+  // TODO: TanStackRouter - got to handle the MainContent.tsx `globalErrors.account_unactivated` logic.
   component: SupportTicketsRoutes,
   getParentRoute: () => rootRoute,
   path: 'support',
@@ -46,6 +47,9 @@ const SupportTicketDetailRoute = createRoute({
     'SupportTicketDetail'
   ),
   getParentRoute: () => SupportTicketsRoute,
+  parseParams: (params) => ({
+    ticketId: Number(params.ticketId),
+  }),
   path: '$ticketId',
 });
 
