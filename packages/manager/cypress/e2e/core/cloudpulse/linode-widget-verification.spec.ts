@@ -143,18 +143,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .click();
 
     cy.findByText(resource).should('be.visible');
-
-    // Verify that the titles of the widgets are displayed correctly, including the unit.
-    metrics.forEach((testData) => {
-      const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
-      cy.get(widgetSelector)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(
-            `${testData.title} (${testData.unit.trim()})`
-          );
-        });
-    });
   });
 
   it('should allow users to select desired granularity and see the most recent data from the API reflected in the graph', () => {
@@ -325,6 +313,16 @@ describe('Integration Tests for Linode Dashboard ', () => {
     // do zoom in and zoom out test on all the widgets
     metrics.forEach((testData) => {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
+
+      // validate the widget title along with the unit
+      cy.get(`[data-qa-widget-header="${testData.title}"]`)
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal(
+            `${testData.title} (${testData.unit.trim()})`
+          );
+        });
+
       cy.get(`[data-qa-widget="${testData.title}"]`).as('widget');
       cy.get('@widget')
         .should('be.visible')
