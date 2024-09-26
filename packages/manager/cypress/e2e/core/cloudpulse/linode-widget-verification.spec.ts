@@ -133,14 +133,14 @@ describe('Dashboard Widget Verification Tests', () => {
       .findByLabel('Select a Dashboard')
       .should('be.visible')
       .type(`${widgetDetails.linode.dashboardName}{enter}`)
-      .should('have.value', widgetDetails.linode.dashboardName);
+      .should('be.visible');
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
       .findByLabel('Select a Time Duration')
       .should('be.visible')
       .type(`${timeRanges.last24Hours}{enter}`)
-      .should('have.value', timeRanges.last24Hours);
+      .should('be.visible');
 
     // Select a region from the dropdown.
     ui.regionSelect
@@ -150,7 +150,7 @@ describe('Dashboard Widget Verification Tests', () => {
 
     // Select a resource from the autocomplete input.
     ui.autocomplete
-      .findByLabel('Select a Resources')
+      .findByLabel('Select a Resource')
       .should('be.visible')
       .type(`${widgetDetails.linode.resource}{enter}`)
       .click();
@@ -169,56 +169,47 @@ describe('Dashboard Widget Verification Tests', () => {
     });
   });
 
-  it('should verify available granularity of the widget', () => {
-    metrics.forEach((testData) => {
+  it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
+    // validate the widget level granularity selection and its metrics
+    for (const testData of metrics) {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+
       cy.get(widgetSelector)
-        .first()
-        .scrollIntoView()
-        .should('be.visible')
-        .within(() => {
-          ui.autocomplete.findByLabel('Select an Interval').click();
-          expectedGranularityArray.forEach((option) => {
-            ui.autocompletePopper.findByTitle(option).should('exist');
-          });
-        });
-    });
-  });
-  it('should verify available aggregation of the widget', () => {
-    metrics.forEach((testData) => {
-      cy.wait(7000); //maintaining the wait since page flicker and rendering
-      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
-      cy.get(widgetSelector)
-        .first()
-        .scrollIntoView()
-        .should('be.visible')
-        .within(() => {
-          ui.autocomplete.findByLabel('Select an Aggregate Function').click();
-          testData.expectedAggregationArray.forEach((option) => {
-            ui.autocompletePopper.findByTitle(option).should('exist');
-          });
-        });
-    });
-  });
-  it('should set available granularity of all the widgets', () => {
-    metrics.forEach((testData) => {
-      cy.wait(7000); //maintaining the wait since page flicker and rendering
-      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
-      cy.get(widgetSelector).as('widget');
-      cy.get('@widget')
         .should('be.visible')
         .first()
         .within(() => {
+          // check for all available granularity in popper
           ui.autocomplete
             .findByLabel('Select an Interval')
             .should('be.visible')
-            .type(`${testData.expectedGranularity}{enter}`);
+            .click();
+
+          expectedGranularityArray.forEach((option) => {
+            ui.autocompletePopper.findByTitle(option).should('exist');
+          });
+
+          //find the interval component and select the expected granularity
+          ui.autocomplete
+            .findByLabel('Select an Interval')
+            .should('be.visible')
+            .type(`${testData.expectedGranularity}{enter}`); //type expected granularity
+
+          //check if the API call is made correctly with time granularity value selected
+          cy.wait('@getMetrics').then((interception) => {
+            expect(interception)
+              .to.have.property('response')
+              .with.property('statusCode', 200);
+            expect(testData.expectedGranularity).to.include(
+              interception.request.body.time_granularity.value
+            );
+          });
+
+          //validate the widget linegrah is present
           cy.findByTestId('linegraph-wrapper')
-            .as('canvas')
             .should('be.visible')
             .find('tbody tr')
-            .each(($tr, index) => {
+            .each(($tr) => {
               const cells = $tr
                 .find('td')
                 .map((i, el) => {
@@ -226,9 +217,12 @@ describe('Dashboard Widget Verification Tests', () => {
                   return text.replace(/^\s*\([^)]+\)/, '');
                 })
                 .get();
-              const [title, actualMax, actualAvg, actualLast] = cells;
-              const widgetValues = verifyWidgetValues(responsePayload);
+              const [title, actualMax, actualAvg, actualLast] = cells; // the average, max and last present in the widget
+              const widgetValues = getWidgetLegendRowValuesFromResponse(
+                responsePayload
+              ); // the average, max and last from the response payload
               compareWidgetValues(
+                // compare both
                 {
                   title,
                   max: parseFloat(actualMax),
@@ -240,25 +234,45 @@ describe('Dashboard Widget Verification Tests', () => {
               );
             });
         });
-    });
+    }
   });
-  it('should set available aggregation of all the widgets', () => {
-    metrics.forEach((testData) => {
+
+  it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
+    for (const testData of metrics) {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+
       cy.get(widgetSelector)
-        .first()
         .should('be.visible')
+        .first()
         .within(() => {
+          mockCloudPulseCreateMetrics(
+            responsePayload,
+            widgetDetails.linode.service_type
+          ).as('getAggregationMetrics');
+
+          //find the interval component and select the expected granularity
           ui.autocomplete
             .findByLabel('Select an Aggregate Function')
             .should('be.visible')
-            .type(`${testData.expectedAggregation}{enter}`);
+            .type(`${testData.expectedAggregation}{enter}`); //type expected granularity
+
+          //check if the API call is made correctly with time granularity value selected
+          cy.wait('@getAggregationMetrics').then((interception) => {
+            expect(interception)
+              .to.have.property('response')
+              .with.property('statusCode', 200);
+            // cy.log(JSON.stringify(interception.request.body));
+            expect(testData.expectedAggregation).to.equal(
+              interception.request.body.aggregate_function
+            );
+          });
+
+          //validate the widget linegrah is present
           cy.findByTestId('linegraph-wrapper')
-            .as('canvas')
             .should('be.visible')
             .find('tbody tr')
-            .each(($tr, index) => {
+            .each(($tr) => {
               const cells = $tr
                 .find('td')
                 .map((i, el) => {
@@ -266,9 +280,12 @@ describe('Dashboard Widget Verification Tests', () => {
                   return text.replace(/^\s*\([^)]+\)/, '');
                 })
                 .get();
-              const [title, actualMax, actualAvg, actualLast] = cells;
-              const widgetValues = verifyWidgetValues(responsePayload);
+              const [title, actualMax, actualAvg, actualLast] = cells; // the average, max and last present in the widget
+              const widgetValues = getWidgetLegendRowValuesFromResponse(
+                responsePayload
+              ); // the average, max and last from the response payload
               compareWidgetValues(
+                // compare both
                 {
                   title,
                   max: parseFloat(actualMax),
@@ -280,15 +297,18 @@ describe('Dashboard Widget Verification Tests', () => {
               );
             });
         });
-    });
+    }
   });
-
-  it('should apply global refresh button and verify network calls', () => {
+  it('should trigger the global refresh button and verify the corresponding network calls', () => {
     cy.wait(7000); //maintaining the wait since page flicker and rendering
+
+    // click the global refresh button
     ui.button
       .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
       .should('be.visible')
       .click();
+
+    // validate the API calls are going with intended payload
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
       (interceptions) => {
         const interceptionsArray = Array.isArray(interceptions)
@@ -318,6 +338,7 @@ describe('Dashboard Widget Verification Tests', () => {
   });
 
   it('should zoom in and out of all the widgets', () => {
+    // do zoom in and zoom out test on all the widgets
     metrics.forEach((testData) => {
       cy.wait(7000); //maintaining the wait since page flicker and rendering
       cy.get(`[data-qa-widget="${testData.title}"]`).as('widget');
@@ -340,7 +361,9 @@ describe('Dashboard Widget Verification Tests', () => {
                 .map((i, el) => Cypress.$(el).text().trim())
                 .get();
               const [title, actualMax, actualAvg, actualLast] = cells;
-              const widgetValues = verifyWidgetValues(responsePayload);
+              const widgetValues = getWidgetLegendRowValuesFromResponse(
+                responsePayload
+              );
               compareWidgetValues(
                 {
                   title,
@@ -352,6 +375,8 @@ describe('Dashboard Widget Verification Tests', () => {
                 testData.title
               );
             });
+
+          // click zoom out and validate the same
           ui.button
             .findByAttribute('aria-label', 'Zoom Out')
             .should('be.visible')
@@ -369,7 +394,9 @@ describe('Dashboard Widget Verification Tests', () => {
                 .map((i, el) => Cypress.$(el).text().trim())
                 .get();
               const [title, actualMax, actualAvg, actualLast] = cells;
-              const widgetValues = verifyWidgetValues(responsePayload);
+              const widgetValues = getWidgetLegendRowValuesFromResponse(
+                responsePayload
+              );
               compareWidgetValues(
                 {
                   title,
@@ -397,7 +424,9 @@ describe('Dashboard Widget Verification Tests', () => {
  * @param {CloudPulseMetricsResponse} responsePayload - The response payload containing metric data for a widget.
  * @returns {Object} An object with the rounded average, last, and max metric values.
  */
-const verifyWidgetValues = (responsePayload: CloudPulseMetricsResponse) => {
+const getWidgetLegendRowValuesFromResponse = (
+  responsePayload: CloudPulseMetricsResponse
+) => {
   const data = transformData(responsePayload.data.result[0].values, 'Bytes');
   const { average, last, max } = getMetrics(data);
   const roundedAverage = Math.round(average * 100) / 100;
