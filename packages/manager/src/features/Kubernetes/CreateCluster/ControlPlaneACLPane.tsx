@@ -56,15 +56,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     [handleIPv6Change]
   );
 
-  const statusStyle = (status: boolean) => {
-    switch (status) {
-      case false:
-        return 'none';
-      default:
-        return '';
-    }
-  };
-
   return (
     <FormControl data-testid="control-plane-ipacl-form">
       <FormLabel
@@ -92,38 +83,38 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
           label={'Enable IPACL'}
         />
       </Box>
-      <Stack
-        sx={{ marginBottom: 4, display: statusStyle(enableControlPlaneACL) }}
-      >
-        <MultipleIPInput
-          buttonText="Add IP Address"
-          ips={ipV4Addr}
-          onChange={handleIPv4ChangeCB}
-          onBlur={(_ips: ExtendedIP[]) => {
-            const validatedIPs = validateIPs(_ips, {
-              allowEmptyAddress: false,
-              errorMessage: 'Must be a valid IPv4 address.',
-            });
-            handleIPv4ChangeCB(validatedIPs);
-          }}
-          placeholder="0.0.0.0/0"
-          title="IPv4 Addresses or CIDRs"
-        />
-        <MultipleIPInput
-          buttonText="Add IP Address"
-          ips={ipV6Addr}
-          onChange={handleIPv6ChangeCB}
-          onBlur={(_ips: ExtendedIP[]) => {
-            const validatedIPs = validateIPs(_ips, {
-              allowEmptyAddress: false,
-              errorMessage: 'Must be a valid IPv6 address.',
-            });
-            handleIPv6Change(validatedIPs);
-          }}
-          placeholder="::/0"
-          title="IPv6 Addresses or CIDRs"
-        />
-      </Stack>
+      {enableControlPlaneACL && (
+        <Stack sx={{ marginBottom: 4 }}>
+          <MultipleIPInput
+            buttonText="Add IP Address"
+            ips={ipV4Addr}
+            onChange={handleIPv4ChangeCB}
+            onBlur={(_ips: ExtendedIP[]) => {
+              const validatedIPs = validateIPs(_ips, {
+                allowEmptyAddress: false,
+                errorMessage: 'Must be a valid IPv4 address.',
+              });
+              handleIPv4ChangeCB(validatedIPs);
+            }}
+            placeholder="0.0.0.0/0"
+            title="IPv4 Addresses or CIDRs"
+          />
+          <MultipleIPInput
+            buttonText="Add IP Address"
+            ips={ipV6Addr}
+            onChange={handleIPv6ChangeCB}
+            onBlur={(_ips: ExtendedIP[]) => {
+              const validatedIPs = validateIPs(_ips, {
+                allowEmptyAddress: false,
+                errorMessage: 'Must be a valid IPv6 address.',
+              });
+              handleIPv6ChangeCB(validatedIPs);
+            }}
+            placeholder="::/0"
+            title="IPv6 Addresses or CIDRs"
+          />
+        </Stack>
+      )}
     </FormControl>
   );
 };

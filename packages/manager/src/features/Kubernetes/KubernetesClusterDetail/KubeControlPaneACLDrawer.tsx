@@ -15,12 +15,14 @@ import {
   validateIPs,
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
-import { Checkbox } from 'src/components/Checkbox';
 import { TextField } from 'src/components/TextField';
 import { Stack, Divider } from '@mui/material';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 import { Notice } from 'src/components/Notice/Notice';
+import { Box } from '@mui/material';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Toggle } from 'src/components/Toggle/Toggle';
 
 interface Props {
   closeDrawer: () => void;
@@ -33,12 +35,6 @@ interface Props {
 export const KubeControlPlaneACLDrawer = (props: Props) => {
   const { closeDrawer, clusterId, clusterLabel, clusterMigrated, open } = props;
 
-  const [ipV4InputError, setIPV4InputError] = React.useState<
-    string | undefined
-  >('');
-  const [ipV6InputError, setIPV6InputError] = React.useState<
-    string | undefined
-  >('');
   const [updateError, setUpdateACLError] = React.useState<string>();
   const [updating, setUpdating] = React.useState<boolean>(false);
 
@@ -85,8 +81,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       setControlPlaneACL(_enabled ? _enabled : false);
       setRevisionID(_revisionID ? _revisionID : '');
       setUpdateACLError(isErrorKubernetesACL?.[0].reason);
-      setIPV4InputError(undefined);
-      setIPV6InputError(undefined);
       setUpdating(false);
       setSubmitButtonLabel(clusterMigrated ? 'Update' : 'Install');
       refetchKubernetesACL();
@@ -105,19 +99,36 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     setUpdateACLError(undefined);
     setUpdating(true);
 
-    const _newIPv4 = ipV4Addr.map((ip) => {
-      return ip.address;
-    });
+    const _ipv4 = ipV4Addr
+      .map((ip) => {
+        return ip.address;
+      })
+      .filter((ip) => ip != '');
 
-    const _newIPv6 = ipV6Addr.map((ip) => {
-      return ip.address;
-    });
+    const _ipv6 = ipV6Addr
+      .map((ip) => {
+        return ip.address;
+      })
+      .filter((ip) => ip != '');
+
+    const addressIPv4Payload = {
+      ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
+    };
+
+    const addressIPv6Payload = {
+      ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
+    };
 
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
         enabled: clusterMigrated ? controlPlaneACL : true, // new cluster installations default to true
         'revision-id': revisionID,
-        addresses: { ipv4: _newIPv4, ipv6: _newIPv6 },
+        ...((_ipv4.length > 0 || _ipv6.length > 0) && {
+          addresses: {
+            ...addressIPv4Payload,
+            ...addressIPv6Payload,
+          },
+        }),
       },
     };
 
@@ -147,6 +158,20 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         });
     }
   };
+
+  const handleIPv4ChangeCB = React.useCallback(
+    (_ips: ExtendedIP[]) => {
+      setIPv4Addr(_ips);
+    },
+    [setIPv4Addr]
+  );
+
+  const handleIPv6ChangeCB = React.useCallback(
+    (_ips: ExtendedIP[]) => {
+      setIPv6Addr(_ips);
+    },
+    [setIPv6Addr]
+  );
 
   const ErrorMessage = () => {
     if (!!updateError && clusterMigrated) {
@@ -276,18 +301,28 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
           <ClusterNeedsMigration />
 
-          <EnabledCopy />
-          <Checkbox
-            checked={clusterMigrated ? controlPlaneACL : true}
-            name="ipacl-checkbox"
-            text={'IPACL Enabled'}
-            onChange={(e) => {
-              if (clusterMigrated) {
-                return setControlPlaneACL(e.target.checked);
-              }
-            }}
-          />
-          <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+          {clusterMigrated && (
+            <>
+              <EnabledCopy />
+              <Box sx={{ marginTop: 2 }}>
+                <FormControlLabel
+                  control={
+                    <Toggle
+                      checked={clusterMigrated ? controlPlaneACL : true}
+                      name="ipacl-checkbox"
+                      onChange={(e) => {
+                        if (clusterMigrated) {
+                          return setControlPlaneACL(e.target.checked);
+                        }
+                      }}
+                    />
+                  }
+                  label={'IPACL Enabled'}
+                />
+              </Box>
+              <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+            </>
+          )}
 
           <RevisionID />
 
@@ -295,46 +330,35 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           <MultipleIPInput
             buttonText="Add IP Address"
             ips={ipV4Addr}
-            onChange={(_ips: ExtendedIP[]) => {
+            onChange={handleIPv4ChangeCB}
+            onBlur={(_ips: ExtendedIP[]) => {
               const validatedIPs = validateIPs(_ips, {
                 allowEmptyAddress: false,
                 errorMessage: 'Must be a valid IPv4 address.',
               });
-              const ipsWithErrors: ExtendedIP[] = validatedIPs.filter(
-                (thisIP) => setIPV4InputError(thisIP.error)
-              );
-              if (ipsWithErrors.length === 0) {
-                setIPv4Addr(validatedIPs);
-              }
+              handleIPv4ChangeCB(validatedIPs);
             }}
             placeholder="0.0.0.0/0"
-            title="IPv4 Addresses or CIDR"
-            error={ipV4InputError}
+            title="IPv4 Addresses or CIDRs"
           />
           <MultipleIPInput
             buttonText="Add IP Address"
             ips={ipV6Addr}
-            onChange={(_ips: ExtendedIP[]) => {
+            onChange={handleIPv6ChangeCB}
+            onBlur={(_ips: ExtendedIP[]) => {
               const validatedIPs = validateIPs(_ips, {
                 allowEmptyAddress: false,
                 errorMessage: 'Must be a valid IPv6 address.',
               });
-              const ipsWithErrors: ExtendedIP[] = validatedIPs.filter(
-                (thisIP) => setIPV6InputError(thisIP.error)
-              );
-              if (ipsWithErrors.length === 0) {
-                setIPv6Addr(validatedIPs);
-              }
+              handleIPv6ChangeCB(validatedIPs);
             }}
             placeholder="::/0"
-            title="IPv6 Addresses or CIDR"
-            error={ipV6InputError}
+            title="IPv6 Addresses or CIDRs"
           />
 
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'update-acl-button',
-              disabled: !!ipV4InputError,
               label: submitButtonLabel,
               loading: updating,
               onClick: updateCluster,
