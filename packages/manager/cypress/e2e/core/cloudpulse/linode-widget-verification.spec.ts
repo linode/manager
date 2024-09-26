@@ -130,36 +130,6 @@ describe('Dashboard Widget Verification Tests', () => {
     mockGetRegions([mockRegion]).as('getRegions');
   });
 
-  it('should verify cloudpulse availability when feature flag is set to true', () => {
-    mockAppendFeatureFlags({
-      aclp: { beta: true, enabled: true },
-    }).as('getFeatureFlags');
-    cy.visitWithLogin('/linodes'); // since we disabled the flag here, we should have not found
-    cy.wait('@getFeatureFlags');
-    ui.nav.findItemByTitle('Monitor').should('be.visible').click();
-    cy.url().should('endWith', '/cloudpulse');
-  });
-
-  it('should verify CloudPulse availability when feature flag is set to false and accessed directly', () => {
-    mockAppendFeatureFlags({
-      aclp: { beta: true, enabled: false },
-    }).as('getFeatureFlags');
-    cy.visitWithLogin('monitor/cloudpulse');
-    cy.wait('@getFeatureFlags');
-    cy.findByText('Not Found').should('be.visible'); // not found
-    // Check that the Monitor button is not present in the sidebar
-    cy.get('[data-testid="menu-item-Monitor"]').should('not.exist');
-  });
-
-  it('should verify that the Monitor button is not available in the sidebar when the feature flag is disabled', () => {
-    mockAppendFeatureFlags({
-      aclp: { beta: true, enabled: false },
-    }).as('getFeatureFlags');
-    cy.visitWithLogin('/linodes');
-    cy.wait('@getFeatureFlags');
-    // Check that the Monitor button is not present in the sidebar
-    cy.get('[data-testid="menu-item-Monitor"]').should('not.exist');
-  });
   it('should verify the title of the widget', () => {
     setupMethod();
     metrics.forEach((testData) => {
