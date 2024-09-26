@@ -50,7 +50,7 @@ export const widgetDetails = {
     nodeType: 'Secondary',
     region: 'US, Chicago, IL (us-ord)',
     resource: 'Dbaas-resource',
-    service_type: 'dbaas',
+    serviceType: 'dbaas',
   },
   linode: {
     dashboardName: 'Linode Dashboard',
@@ -95,6 +95,6 @@ export const widgetDetails = {
     ],
     region: 'US, Chicago, IL (us-ord)',
     resource: 'linode-resource',
-    service_type: 'linode',
+    serviceType: 'linode',
   },
 };
