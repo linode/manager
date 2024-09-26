@@ -5,10 +5,15 @@ import { NotFound } from 'src/components/NotFound';
 
 import { accountRouteTree } from './account';
 import { domainsRouteTree } from './domains';
+import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
 import { nodeBalancersRouteTree } from './nodeBalancers';
+import { objectStorageRouteTree } from './object-storage';
 import { placementGroupsRouteTree } from './placementGroups';
+import { profileRouteTree } from './profile';
 import { rootRoute } from './root';
+import { stackScriptsRouteTree } from './stackscripts';
+import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
 
 const indexRoute = createRoute({
@@ -27,9 +32,14 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountRouteTree,
   domainsRouteTree,
+  kubernetesRouteTree,
   linodesRouteTree,
   nodeBalancersRouteTree,
+  objectStorageRouteTree,
   placementGroupsRouteTree,
+  profileRouteTree,
+  stackScriptsRouteTree,
+  supportRouteTree,
   volumesRouteTree,
 ]);
 

@@ -51,9 +51,6 @@ describe.skip('Route Tests', () => {
     );
     // Wait for any async operations to complete
     await findByRole('main', {}, { timeout: 2000 });
-
-    // console.log(container.innerHTML);
-
     // Check if the page has rendered without throwing an error
     expect(getByRole('main')).toBeInTheDocument();
   });
