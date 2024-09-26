@@ -20,8 +20,7 @@ import { volumesRouteTree } from './volumes';
 
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
-    // TODO: TanStackRouter - fix this `any` type
-    const { accountSettings } = context as any;
+    const { accountSettings } = context;
     const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
     throw redirect({ to: defaultRoot });
