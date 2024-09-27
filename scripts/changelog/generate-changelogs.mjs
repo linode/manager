@@ -17,6 +17,18 @@ import {
 
 const today = new Date().toISOString().slice(0, 10);
 
+// Sanitize the file name to prevent path traversal
+const sanitizeFileName = (fileName) => {
+  return fileName.replace(/[^a-zA-Z0-9-_\.]/g, ""); // Allow only alphanumeric, dashes, underscores, and dots
+};
+
+// Safe path join function to prevent path traversal
+const safeJoinPath = (dir, file) => {
+  const sanitizedFile = sanitizeFileName(file);
+  const safeFile = path.basename(sanitizedFile); // Ensure we only get the file name
+  return path.join(dir, safeFile); // Join directory and sanitized file name
+};
+
 try {
   for (const pkg in PACKAGES) {
     const changesetEntries = {};
@@ -25,13 +37,10 @@ try {
       packageJsonPath(linodePackage),
       "utf-8"
     );
-    // Parse the package.json file
     const parsedPackageJsonFile = JSON.parse(packageJsonFile);
-    // Get the current version from package.json
     const currentSemver = parsedPackageJsonFile.version;
 
     try {
-      // Check if there are any changeset files in the .changeset directories
       const files = await new Promise((resolve, reject) => {
         fs.readdir(changesetDirectory(linodePackage), (err, files) => {
           if (err) {
@@ -42,15 +51,11 @@ try {
         });
       });
 
-      // If only README.md in there, no changeset(s)
       if (files.length === 1) {
         logger.success({
           message: `No Changeset file(s) found for @linode/${linodePackage}. Skipping...`,
         });
       } else {
-        /**
-         * Prompt the user for the release date and the type of version bump.
-         */
         const { releaseDate } = await inquirer.prompt([
           {
             type: "input",
@@ -64,7 +69,6 @@ try {
               if (!input.match(/^\d{4}-\d{2}-\d{2}$/)) {
                 return "Please enter a valid date in the format YYYY-MM-DD.";
               }
-
               return true;
             },
             default: today,
@@ -73,13 +77,15 @@ try {
 
         try {
           files.forEach((file) => {
-            // Skipping the README file
             if (file === "README.md") {
               return;
             }
 
-            // Logic to parse the changeset file and generate the changelog content
-            const filePath = path.join(changesetDirectory(linodePackage), file);
+            // Use the safeJoinPath function to prevent path traversal
+            const filePath = safeJoinPath(
+              changesetDirectory(linodePackage),
+              file
+            );
             const content = fs.readFileSync(filePath, "utf-8");
             const matches = content.match(
               new RegExp(`"@linode/${linodePackage}": ([^\n]+)`)
@@ -102,21 +108,20 @@ try {
           });
         }
 
-        const changelogContent = initiateChangelogEntry(releaseDate, currentSemver);
-        // Generate the final changelog content
+        const changelogContent = initiateChangelogEntry(
+          releaseDate,
+          currentSemver
+        );
         populateChangelogEntry(changesetEntries, changelogContent);
 
         try {
-          // Read the existing changelog content
           const existingChangelogContent = fs.readFileSync(
             changelogPath(linodePackage),
             "utf-8"
           );
 
-          // Find the index of the first entry
           const firstEntryIndex = existingChangelogContent.indexOf("## [");
 
-          // Prepare the updated changelog content
           const updatedChangelogContent =
             firstEntryIndex === -1
               ? `${changelogContent.join("\n")}\n\n${existingChangelogContent}`
@@ -127,7 +132,6 @@ try {
                   "\n"
                 )}\n\n${existingChangelogContent.slice(firstEntryIndex)}`;
 
-          // Write the updated changelog content
           fs.writeFileSync(
             changelogPath(linodePackage),
             updatedChangelogContent
@@ -143,7 +147,6 @@ try {
           });
         }
 
-        // Delete the changeset files for each package
         await deleteChangesets(linodePackage);
       }
     } catch (error) {
