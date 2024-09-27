@@ -14,9 +14,9 @@ import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
-// import { MainContent } from './MainContent';
-import { MainContentV2 } from './MainContentV2';
 import { useEventsPoller } from './queries/events/events';
+// import { MainContent } from './MainContent';
+import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 // Ensure component's display name is 'App'
@@ -48,7 +48,7 @@ const BaseApp = withDocumentTitleProvider(
         <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
         {/* <MainContent /> */}
-        <MainContentV2 />
+        <Router />
         <GlobalListeners />
       </ErrorBoundary>
     );
