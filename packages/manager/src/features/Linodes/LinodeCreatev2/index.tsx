@@ -35,7 +35,6 @@ import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
 import { Plan } from './Plan';
-import { Region } from './Region';
 import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
 import { SMTP } from './SMTP';
@@ -225,7 +224,6 @@ export const LinodeCreatev2 = () => {
               </SafeTabPanel>
             </TabPanels>
           </Tabs>
-          {params.type !== 'Backups' && <Region />}
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}

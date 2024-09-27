@@ -1,5 +1,3 @@
-import { oneClickAppFactory } from 'src/factories/stackscripts';
-
 import type { OCA } from './types';
 
 /**
@@ -9,10 +7,6 @@ import type { OCA } from './types';
  * for it to be visible to users.
  */
 export const oneClickApps: Record<number, OCA> = {
-  0: oneClickAppFactory.build({
-    isNew: true,
-    name: 'E2E Test App',
-  }),
   401697: {
     alt_description: 'Popular website content management system.',
     alt_name: 'CMS: content management system',
@@ -2606,7 +2600,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href:
-          'https://www.linode.com/docs/marketplace-docs/guides/apache-spark/',
+          'https://www.linode.com/docs/marketplace-docs/guides/apache-spark-cluster/',
         title: 'Deploy Apache Spark through the Linode Marketplace',
       },
     ],
