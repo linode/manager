@@ -14,6 +14,7 @@ import { useCreateVPC } from 'src/hooks/useCreateVPC';
 import { CannotCreateVPCNotice } from './FormComponents/CannotCreateVPCNotice';
 import { StyledHeaderTypography } from './FormComponents/VPCCreateForm.styles';
 import { VPCTopSectionContent } from './FormComponents/VPCTopSectionContent';
+import { createLazyRoute } from '@tanstack/react-router';
 
 const VPCCreate = () => {
   const {
@@ -84,6 +85,10 @@ const VPCCreate = () => {
     </>
   );
 };
+
+export const vpcCreateRoute = createLazyRoute('/vpcs/create')({
+  component: VPCCreate,
+});
 
 const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',

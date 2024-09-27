@@ -23,6 +23,7 @@ import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { VPCEditDrawer } from './VPCEditDrawer';
 import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
+import { createLazyRoute } from '@tanstack/react-router';
 
 const preferenceKey = 'vpcs';
 const VPC_CREATE_ROUTE = 'vpcs/create';
@@ -168,5 +169,9 @@ const VPCLanding = () => {
     </>
   );
 };
+
+export const vpcLandingRoute = createLazyRoute('/')({
+  component: VPCLanding,
+});
 
 export default VPCLanding;

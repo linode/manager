@@ -6,7 +6,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const VPCRoutes = () => {
   return (
@@ -25,28 +24,27 @@ const vpcsRoute = createRoute({
 });
 
 const vpcsLandingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/VPCs/VPCLanding/VPCLanding')
-  ),
   getParentRoute: () => vpcsRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/VPCs/VPCLanding/VPCLanding').then(
+    (m) => m.vpcLandingRoute
+  )
+);
 
 const vpcsCreateRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/VPCs/VPCCreate/VPCCreate')
-  ),
   getParentRoute: () => vpcsRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import('src/features/VPCs/VPCCreate/VPCCreate').then((m) => m.vpcCreateRoute)
+);
 
 const vpcsDetailRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/VPCs/VPCDetail/VPCDetail')
-  ),
   getParentRoute: () => vpcsRoute,
   path: '$vpcId',
-});
+}).lazy(() =>
+  import('src/features/VPCs/VPCDetail/VPCDetail').then((m) => m.vpcDetailRoute)
+);
 
 export const vpcsRouteTree = vpcsRoute.addChildren([
   vpcsLandingRoute,
