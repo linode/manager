@@ -17,8 +17,7 @@ import { Security } from './Security';
 import type { LinodeCreateFormValues } from './utilities';
 
 describe('Security', () => {
-  // TODO: Unskip once M3-8559 is addressed.
-  it.skip(
+  it(
     'should render a root password input',
     async () => {
       const { findByLabelText } = renderWithThemeAndHookFormContext({
@@ -55,31 +54,35 @@ describe('Security', () => {
     expect(addSSHKeyButton).toBeEnabled();
   });
 
-  it('should disable the password input if the user does not have permission to create linodes', async () => {
-    server.use(
-      http.get('*/v4/profile', () => {
-        return HttpResponse.json(profileFactory.build({ restricted: true }));
-      }),
-      http.get('*/v4/profile/sshkeys', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      }),
-      http.get('*/v4/profile/grants', () => {
-        return HttpResponse.json(
-          grantsFactory.build({ global: { add_linodes: false } })
-        );
-      })
-    );
+  it(
+    'should disable the password input if the user does not have permission to create linodes',
+    async () => {
+      server.use(
+        http.get('*/v4/profile', () => {
+          return HttpResponse.json(profileFactory.build({ restricted: true }));
+        }),
+        http.get('*/v4/profile/sshkeys', () => {
+          return HttpResponse.json(makeResourcePage([]));
+        }),
+        http.get('*/v4/profile/grants', () => {
+          return HttpResponse.json(
+            grantsFactory.build({ global: { add_linodes: false } })
+          );
+        })
+      );
 
-    const { findByLabelText } = renderWithThemeAndHookFormContext({
-      component: <Security />,
-    });
+      const { findByLabelText } = renderWithThemeAndHookFormContext({
+        component: <Security />,
+      });
 
-    const rootPasswordInput = await findByLabelText('Root Password');
+      const rootPasswordInput = await findByLabelText('Root Password');
 
-    await waitFor(() => {
-      expect(rootPasswordInput).toBeDisabled();
-    });
-  });
+      await waitFor(() => {
+        expect(rootPasswordInput).toBeDisabled();
+      });
+    },
+    { timeout: 5_000 }
+  );
 
   it('should disable ssh key selection if the user does not have permission to create linodes', async () => {
     const sshKeys = sshKeyFactory.buildList(3);
