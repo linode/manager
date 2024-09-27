@@ -5,6 +5,7 @@ import { NotFound } from 'src/components/NotFound';
 
 import { accountRouteTree } from './account';
 import { domainsRouteTree } from './domains';
+import { eventsRouteTree } from './events';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
 import { longviewRouteTree } from './longview';
@@ -33,6 +34,7 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountRouteTree,
   domainsRouteTree,
+  eventsRouteTree,
   kubernetesRouteTree,
   linodesRouteTree,
   longviewRouteTree,
