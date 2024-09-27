@@ -1,4 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
@@ -328,3 +329,7 @@ export const VolumesLanding = () => {
 };
 
 export default VolumesLanding;
+
+export const volumesLandingRoute = createLazyRoute('/')({
+  component: VolumesLanding,
+});

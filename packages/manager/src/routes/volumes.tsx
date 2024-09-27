@@ -5,7 +5,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const VolumesRoutes = () => {
   return (
@@ -23,24 +22,20 @@ const volumesRoute = createRoute({
 });
 
 const volumesIndexRoute = createRoute({
-  component: strictLazyRouteComponent(() =>
-    import('src/features/Volumes/VolumesLanding').then((module) => ({
-      default: module.VolumesLanding,
-    }))
-  ),
   getParentRoute: () => volumesRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Volumes/VolumesLanding').then(
+    (m) => m.volumesLandingRoute
+  )
+);
 
 const volumesCreateRoute = createRoute({
-  component: strictLazyRouteComponent(() =>
-    import('src/features/Volumes/VolumeCreate').then((module) => ({
-      default: module.VolumeCreate,
-    }))
-  ),
   getParentRoute: () => volumesRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import('src/features/Volumes/VolumeCreate').then((m) => m.volumeCreateRoute)
+);
 
 export const volumesRouteTree = volumesRoute.addChildren([
   volumesIndexRoute,

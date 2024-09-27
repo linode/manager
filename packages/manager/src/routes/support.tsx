@@ -5,7 +5,6 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { StatusBanners } from 'src/features/Help/StatusBanners';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const SupportTicketsRoutes = () => {
   return (
@@ -24,42 +23,41 @@ const SupportRoute = createRoute({
 });
 
 const SupportLandingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Help/HelpLanding'),
-    'HelpLanding'
-  ),
   getParentRoute: () => SupportRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Help/HelpLanding').then((m) => m.helpLandingRoute)
+);
 
 const SupportTicketsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Support/SupportTickets/SupportTicketsLanding')
-  ),
   getParentRoute: () => SupportRoute,
   path: 'tickets',
-});
+}).lazy(() =>
+  import('src/features/Support/SupportTickets/SupportTicketsLanding').then(
+    (m) => m.supportTicketsLandingRoute
+  )
+);
 
 const SupportTicketDetailRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import('src/features/Support/SupportTicketDetail/SupportTicketDetail'),
-    'SupportTicketDetail'
-  ),
   getParentRoute: () => SupportTicketsRoute,
   parseParams: (params) => ({
     ticketId: Number(params.ticketId),
   }),
   path: '$ticketId',
-});
+}).lazy(() =>
+  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
+    (m) => m.supportTicketDetailRoute
+  )
+);
 
 const SupportSearchLandingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Help/SupportSearchLanding/SupportSearchLanding')
-  ),
   getParentRoute: () => SupportRoute,
   path: 'search',
-});
+}).lazy(() =>
+  import('src/features/Help/SupportSearchLanding/SupportSearchLanding').then(
+    (m) => m.supportSearchLandingRoute
+  )
+);
 
 export const supportRouteTree = SupportRoute.addChildren([
   SupportLandingRoute,
