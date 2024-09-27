@@ -85,7 +85,7 @@
   "scripts": {
     "start": "concurrently --raw \"vite\" \"tsc --watch --preserveWatchOutput\"",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
-    "start:ci": "yarn serve ./build -p 3000 -s --cors",
+    "start:ci": "vite preview --port 3000 --host",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",
@@ -199,7 +199,6 @@
     "msw": "^2.2.3",
     "prettier": "~2.2.1",
     "redux-mock-store": "^1.5.3",
-    "serve": "^14.0.1",
     "simple-git": "^3.19.0",
     "storybook": "^8.3.0",
     "storybook-dark-mode": "4.0.1",
