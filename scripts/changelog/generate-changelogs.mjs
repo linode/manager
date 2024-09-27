@@ -15,28 +15,18 @@ import {
   changelogPath,
 } from "./utils/constants.mjs";
 
+const today = new Date().toISOString().slice(0, 10);
+
 // Sanitize the file name to prevent path traversal
 const sanitizeFileName = (fileName) => {
   return fileName.replace(/[^a-zA-Z0-9-_\.]/g, ""); // Allow only alphanumeric, dashes, underscores, and dots
 };
 
-// Safe path join function with path traversal validation
+// Safe path join function to prevent path traversal
 const safeJoinPath = (dir, file) => {
   const sanitizedFile = sanitizeFileName(file);
   const safeFile = path.basename(sanitizedFile); // Ensure we only get the file name
-
-  // Convert base directory to an absolute path
-  const absoluteDir = path.resolve(dir);
-
-  // Join the directory and sanitized file name
-  const resolvedPath = path.join(absoluteDir, safeFile);
-
-  // Verify the resolved path starts with the absolute base directory
-  if (!resolvedPath.startsWith(absoluteDir)) {
-    throw new Error("Path traversal attempt detected");
-  }
-
-  return resolvedPath;
+  return path.join(dir, safeFile); // Join directory and sanitized file name
 };
 
 try {
