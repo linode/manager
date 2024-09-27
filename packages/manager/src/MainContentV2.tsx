@@ -12,7 +12,6 @@ import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 import { rootRoute } from './routes/root';
 
-const Databases = React.lazy(() => import('src/features/Databases'));
 const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 
@@ -21,12 +20,6 @@ const CloudPulse = React.lazy(() =>
     default: module.CloudPulseLanding,
   }))
 );
-
-const databasesRoute = createRoute({
-  component: Databases,
-  getParentRoute: () => rootRoute,
-  path: 'databases',
-});
 
 const betaRoute = createRoute({
   component: BetaRoutes,
@@ -57,7 +50,6 @@ const notFoundRoute = createRoute({
 // @ts-expect-error - TODO: Fix this type error
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routeTree = rootRoute.addChildren([
-  databasesRoute,
   betaRoute,
   vpcRoute,
   cloudPulseRoute,
