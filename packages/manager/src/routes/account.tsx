@@ -96,12 +96,21 @@ const accountEntityTransfersCreateRoute = createRoute({
   path: 'service-transfers/create',
 });
 
+const accountActivationLandingRoute = createRoute({
+  component: strictLazyRouteComponent(
+    () => import('src/components/AccountActivation/AccountActivationLanding')
+  ),
+  getParentRoute: () => rootRoute,
+  path: 'account-activation',
+});
+
 export const accountRouteTree = accountRoute.addChildren([
   accountIndexRoute,
   accountUsersUsernameRoute.addChildren([
     accountUsersUsernameProfileRoute,
     accountUsersUsernamePermissionsRoute,
   ]),
+  accountActivationLandingRoute,
   accountBillingRoute,
   accountBillingEditRoute,
   accountInvoicesInvoiceIdRoute,
