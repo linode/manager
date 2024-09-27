@@ -32,7 +32,9 @@ export const genOAuthEndpoint = (
 
   const query = {
     client_id: clientID,
-    redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${redirectUri}`,
+    redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${encodeURIComponent(
+      redirectUri
+    )}`,
     response_type: 'token',
     scope,
     state: nonce,
