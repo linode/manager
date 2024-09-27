@@ -12,10 +12,6 @@ import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 import { rootRoute } from './routes/root';
 
-const AccountActivationLanding = React.lazy(
-  () => import('src/components/AccountActivation/AccountActivationLanding')
-);
-const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
@@ -25,12 +21,6 @@ const CloudPulse = React.lazy(() =>
     default: module.CloudPulseLanding,
   }))
 );
-
-const firewallsRoute = createRoute({
-  component: Firewalls,
-  getParentRoute: () => rootRoute,
-  path: 'firewalls',
-});
 
 const databasesRoute = createRoute({
   component: Databases,
@@ -56,12 +46,6 @@ const cloudPulseRoute = createRoute({
   path: 'monitor/cloudpulse',
 });
 
-const accountActivationRoute = createRoute({
-  component: AccountActivationLanding,
-  getParentRoute: () => rootRoute,
-  path: 'account-activation',
-});
-
 const notFoundRoute = createRoute({
   component: NotFound,
   getParentRoute: () => rootRoute,
@@ -73,12 +57,10 @@ const notFoundRoute = createRoute({
 // @ts-expect-error - TODO: Fix this type error
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routeTree = rootRoute.addChildren([
-  firewallsRoute,
   databasesRoute,
   betaRoute,
   vpcRoute,
   cloudPulseRoute,
-  accountActivationRoute,
   notFoundRoute,
 ]);
 
