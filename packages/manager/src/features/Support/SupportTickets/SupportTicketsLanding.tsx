@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -97,3 +98,7 @@ const SupportTicketsLanding = () => {
 };
 
 export default SupportTicketsLanding;
+
+export const supportTicketsLandingRoute = createLazyRoute('/support/tickets')({
+  component: SupportTicketsLanding,
+});

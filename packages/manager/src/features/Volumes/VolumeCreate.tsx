@@ -1,5 +1,6 @@
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -545,3 +546,7 @@ const initialValues: FormState = {
   region: '',
   size: 20,
 };
+
+export const volumeCreateRoute = createLazyRoute('/volumes/create')({
+  component: VolumeCreate,
+});
