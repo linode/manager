@@ -18,9 +18,9 @@
  *                          will fail otherwise.
  */
 
-const fs = require('fs');
-const path = require('path');
-const readline = require('readline');
+const fs = require("fs");
+const path = require("path");
+const readline = require("readline");
 
 // Command line arguments with executable path and name excluded.
 const args = process.argv.slice(2);
@@ -31,7 +31,7 @@ const args = process.argv.slice(2);
  * @var {string[]}
  */
 const desiredVersions = args.filter((arg) => {
-  return !arg.startsWith('-');
+  return !arg.startsWith("-");
 });
 
 /**
@@ -40,7 +40,7 @@ const desiredVersions = args.filter((arg) => {
  * @var {string[]}
  */
 const flags = args.filter((arg) => {
-  return arg.startsWith('-');
+  return arg.startsWith("-");
 });
 
 /**
@@ -48,7 +48,17 @@ const flags = args.filter((arg) => {
  *
  * @var {string}
  */
-const root = path.resolve(__dirname, '..', '..');
+const root = path.resolve(__dirname, "..", "..");
+
+/**
+ * Sanitize the package name to prevent path traversal attacks.
+ *
+ * @param {string} packageName - The name of the package.
+ * @returns {string} - The sanitized package name.
+ */
+const sanitizePackageName = (packageName) => {
+  return packageName.replace(/[^a-zA-Z0-9-_]/g, "");
+};
 
 /**
  * Gets the path to the package.json file for the package with the given name.
@@ -58,7 +68,23 @@ const root = path.resolve(__dirname, '..', '..');
  * @returns {string} Package path for `packageName`.
  */
 const getPackagePath = (packageName) => {
-  return path.join(root, 'packages', packageName, 'package.json');
+  const sanitizedPackageName = sanitizePackageName(packageName);
+
+  // Join the root directory, packages directory, and sanitized package name
+  const packagePath = path.join(
+    root,
+    "packages",
+    sanitizedPackageName,
+    "package.json"
+  );
+
+  // Ensure the resolved path is within the expected directory to prevent traversal
+  const resolvedPath = path.resolve(packagePath);
+  if (!resolvedPath.startsWith(path.resolve(root, "packages"))) {
+    throw new Error("Path traversal attempt detected");
+  }
+
+  return resolvedPath;
 };
 
 /**
@@ -69,7 +95,7 @@ const getPackagePath = (packageName) => {
 const readlinePromise = (prompt) => {
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
   return new Promise((resolve) => {
@@ -78,7 +104,7 @@ const readlinePromise = (prompt) => {
       resolve(result);
     });
   });
-}
+};
 
 /**
  * If `true`, packages will be updated using desired versions passed via CLI.
@@ -90,7 +116,7 @@ const readlinePromise = (prompt) => {
  *
  * @var {boolean}
  */
-const force = flags.includes('-f') || flags.includes('--force');
+const force = flags.includes("-f") || flags.includes("--force");
 
 /**
  * Desired package versions from command line arguments.
@@ -103,9 +129,21 @@ const [
 
 // Describes packages that should be modified by this script.
 const jobs = [
-  { name: 'manager', path: getPackagePath('manager'), desiredVersion: desiredManagerVersion },
-  { name: 'api-v4', path: getPackagePath('api-v4'), desiredVersion: desiredApiVersion },
-  { name: 'validation', path: getPackagePath('validation'), desiredVersion: desiredValidationVersion },
+  {
+    name: "manager",
+    path: getPackagePath("manager"),
+    desiredVersion: desiredManagerVersion,
+  },
+  {
+    name: "api-v4",
+    path: getPackagePath("api-v4"),
+    desiredVersion: desiredApiVersion,
+  },
+  {
+    name: "validation",
+    path: getPackagePath("validation"),
+    desiredVersion: desiredValidationVersion,
+  },
 ];
 
 // Describes the files that will be written to, and the changes that will be made.
@@ -128,11 +166,12 @@ const main = async () => {
   const currentPackageInfo = jobs.map((job) => {
     return {
       name: job.name,
-      currentVersion: JSON.parse(fs.readFileSync(job.path, 'utf8')).version || '(No Version)',
+      currentVersion:
+        JSON.parse(fs.readFileSync(job.path, "utf8")).version || "(No Version)",
     };
   });
 
-  console.info('Package info:');
+  console.info("Package info:");
   console.table(currentPackageInfo);
 
   for (job of jobs) {
@@ -145,27 +184,32 @@ const main = async () => {
 
     let result = undefined;
     if (!force) {
-      const suggestedVersion = jobVersion ? jobVersion : (() => {
-        // If package doesn't have a version for some reason, suggest `0.1.0`.
-        if (!currentVersion) {
-          return `0.1.0`;
-        }
-        // Assumes `major.minor.patch` format, undefined behavior otherwise.
-        const [major, minor, patch] = currentVersion.split('.');
-        return `${major || 0}.${Number(minor || 0) + 1}.0`;
-      })();
+      const suggestedVersion = jobVersion
+        ? jobVersion
+        : (() => {
+            // If package doesn't have a version for some reason, suggest `0.1.0`.
+            if (!currentVersion) {
+              return `0.1.0`;
+            }
+            // Assumes `major.minor.patch` format, undefined behavior otherwise.
+            const [major, minor, patch] = currentVersion.split(".");
+            return `${major || 0}.${Number(minor || 0) + 1}.0`;
+          })();
 
-      const prompt = `New version for '${jobName}' package? (${ suggestedVersion })\n`;
+      const prompt = `New version for '${jobName}' package? (${suggestedVersion})\n`;
       result = await readlinePromise(prompt);
       if (!result) {
         result = suggestedVersion;
       }
-    }
-    else {
+    } else {
       if (!jobVersion) {
-        throw new Error(`Unable to increment package '${jobName}' version; -f flag was passed but no version was specified for this package`);
+        throw new Error(
+          `Unable to increment package '${jobName}' version; -f flag was passed but no version was specified for this package`
+        );
       }
-      console.info(`Incrementing package '${jobName}' version to '${jobVersion}'`);
+      console.info(
+        `Incrementing package '${jobName}' version to '${jobVersion}'`
+      );
       result = jobVersion;
     }
 
@@ -179,7 +223,7 @@ const main = async () => {
       oldVersion: currentVersion,
       newVersion: result,
     });
-  };
+  }
 
   for (writeTask of writeTasks) {
     try {
@@ -189,31 +233,32 @@ const main = async () => {
         oldVersion: writeTask.oldVersion,
         newVersion: writeTask.newVersion,
       });
-    }
-    catch (e) {
+    } catch (e) {
       console.error(e.message);
       console.error(`Unable to write changes to ${writeTask.filepath}`);
     }
   }
 };
 
-// Run program, display errors, summary, etc .
+// Run program, display errors, summary, etc.
 (async () => {
   let error = false;
   try {
     await main();
-    console.info('Successfully incremented package versions. See the summary below:');
-  }
-  catch (e) {
-    console.error(e.message || 'An unknown error has occurred.');
-    console.error('An error has occurred and package versions were not incremented as expected.')
+    console.info(
+      "Successfully incremented package versions. See the summary below:"
+    );
+  } catch (e) {
+    console.error(e.message || "An unknown error has occurred.");
+    console.error(
+      "An error has occurred and package versions were not incremented as expected."
+    );
     error = true;
-  }
-  finally {
+  } finally {
     if (summary.length) {
       console.table(summary);
     } else {
-      console.info('No changes have been made.');
+      console.info("No changes have been made.");
     }
     if (error) {
       process.exit(1);
