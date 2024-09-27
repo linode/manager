@@ -1,7 +1,6 @@
-import { RouterProvider, createRoute } from '@tanstack/react-router';
+import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { useFlags } from 'src/hooks/useFlags';
 import { useGlobalErrors } from 'src/hooks/useGlobalErrors';
 
@@ -10,31 +9,6 @@ import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
-import { rootRoute } from './routes/root';
-
-const CloudPulse = React.lazy(() =>
-  import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
-    default: module.CloudPulseLanding,
-  }))
-);
-
-const cloudPulseRoute = createRoute({
-  component: CloudPulse,
-  getParentRoute: () => rootRoute,
-  path: 'monitor/cloudpulse',
-});
-
-const notFoundRoute = createRoute({
-  component: NotFound,
-  getParentRoute: () => rootRoute,
-  path: '*',
-});
-
-// Create the route tree
-// TODO: TanStackRouter - continue exporting this
-// @ts-expect-error - TODO: Fix this type error
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const routeTree = rootRoute.addChildren([cloudPulseRoute, notFoundRoute]);
 
 export const MainContentV2 = () => {
   const { data: accountSettings } = useAccountSettings();

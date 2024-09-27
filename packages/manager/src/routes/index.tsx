@@ -5,6 +5,7 @@ import { NotFound } from 'src/components/NotFound';
 
 import { accountRouteTree } from './account';
 import { betaRouteTree } from './betas';
+import { cloudPulseRouteTree } from './cloudPulse';
 import { databasesRouteTree } from './databases';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
@@ -38,6 +39,7 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountRouteTree,
   betaRouteTree,
+  cloudPulseRouteTree,
   databasesRouteTree,
   domainsRouteTree,
   eventsRouteTree,
