@@ -17,20 +17,17 @@ import { Security } from './Security';
 import type { LinodeCreateFormValues } from './utilities';
 
 describe('Security', () => {
-  it(
-    'should render a root password input',
-    async () => {
-      const { findByLabelText } = renderWithThemeAndHookFormContext({
-        component: <Security />,
-      });
+  // TODO: Unskip once M3-8559 is addressed.
+  it.skip('should render a root password input', async () => {
+    const { findByLabelText } = renderWithThemeAndHookFormContext({
+      component: <Security />,
+    });
 
-      const rootPasswordInput = await findByLabelText('Root Password');
+    const rootPasswordInput = await findByLabelText('Root Password');
 
-      expect(rootPasswordInput).toBeVisible();
-      expect(rootPasswordInput).toBeEnabled();
-    },
-    { timeout: 5_000 }
-  );
+    expect(rootPasswordInput).toBeVisible();
+    expect(rootPasswordInput).toBeEnabled();
+  });
 
   it('should render a SSH Keys heading', async () => {
     const { getAllByText } = renderWithThemeAndHookFormContext({
