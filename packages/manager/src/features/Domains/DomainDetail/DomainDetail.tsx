@@ -110,7 +110,7 @@ export const DomainDetail = () => {
           />
         }
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/dns-manager/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         title="Domain Details"
       />
       {location.state && location.state.recordError && (

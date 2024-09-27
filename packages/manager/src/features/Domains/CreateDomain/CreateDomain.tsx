@@ -286,7 +286,7 @@ export const CreateDomain = () => {
       <DocumentTitleSegment segment="Create Domain" />
       <LandingHeader
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/dns-manager/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         title="Create"
       />
       <StyledGrid>

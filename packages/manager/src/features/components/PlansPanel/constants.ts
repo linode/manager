@@ -13,15 +13,15 @@ export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
 export const DEDICATED_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/dedicated-cpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/dedicated-cpu-compute-instances';
 export const SHARED_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/shared-cpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/shared-cpu-compute-instances';
 export const HIGH_MEMORY_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/high-memory/';
+  'https://techdocs.akamai.com/cloud-computing/docs/high-memory-compute-instances';
 export const PREMIUM_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/premium/';
+  'https://techdocs.akamai.com/cloud-computing/docs/premium-compute-instances';
 export const GPU_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/gpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/gpu-compute-instances';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   addons: {

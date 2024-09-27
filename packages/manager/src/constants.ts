@@ -289,11 +289,11 @@ export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
 
 // Firewall links
 export const CREATE_FIREWALL_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/';
+  'https://techdocs.akamai.com/cloud-computing/docs/create-a-cloud-firewall';
 export const FIREWALL_GET_STARTED_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/';
+  'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls';
 export const FIREWALL_LIMITS_CONSIDERATIONS_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations';
+  'https://techdocs.akamai.com/cloud-computing/docs/cloud-firewall#limits-and-considerations';
 
 // A/B Testing LD metrics keys for DX Tools
 export const LD_DX_TOOLS_METRICS_KEYS = {

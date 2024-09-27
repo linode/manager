@@ -204,7 +204,7 @@ export const AccessSelect = React.memo((props: Props) => {
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
-          <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools">
             S3-compatible tool
           </Link>
           .

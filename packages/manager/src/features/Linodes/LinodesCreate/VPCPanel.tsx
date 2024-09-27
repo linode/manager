@@ -167,7 +167,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
               label: 'Learn more',
             })
           }
-          to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc"
         >
           Learn more
         </Link>

@@ -47,7 +47,7 @@ export const ManagedLanding = () => {
       <DocumentTitleSegment segment="Managed" />
       <ProductInformationBanner bannerLocation="Managed" />
       <LandingHeader
-        docsLink="https://www.linode.com/docs/platform/linode-managed/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-managed-service"
         entity="Managed"
         extraActions={<SupportWidget />}
         removeCrumbX={1}

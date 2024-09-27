@@ -98,7 +98,7 @@ export const NodeBalancersLanding = () => {
           }),
         }}
         disabledCreateButton={isRestricted}
-        docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         entity="NodeBalancer"
         onButtonClick={() => history.push('/nodebalancers/create')}
         title="NodeBalancers"

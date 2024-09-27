@@ -47,7 +47,7 @@ export const VPCTopSectionContent = (props: Props) => {
               label: 'Learn more',
             })
           }
-          to="https://www.linode.com/docs/products/networking/vpc/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/vpc"
         >
           Learn more
         </Link>

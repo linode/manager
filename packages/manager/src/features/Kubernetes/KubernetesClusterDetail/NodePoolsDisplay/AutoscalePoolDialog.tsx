@@ -166,7 +166,7 @@ export const AutoscalePoolDialog = (props: Props) => {
         Set minimum and maximum node pool constraints for LKE to resize your
         cluster automatically based on resource demand and overall usage.
         Maximum limit is 100 nodes.{' '}
-        <Link to="https://www.linode.com/docs/products/compute/kubernetes/guides/enable-cluster-autoscaling">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-nodes-and-node-pools">
           Learn more.
         </Link>
       </Typography>

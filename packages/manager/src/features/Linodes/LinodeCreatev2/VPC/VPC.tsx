@@ -97,7 +97,7 @@ export const VPC = () => {
                 label: 'Learn more',
               })
             }
-            to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
+            to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc"
           >
             Learn more.
           </Link>
@@ -284,7 +284,7 @@ export const VPC = () => {
                   <Typography>
                     Assign additional IPv4 address ranges that the VPC can use
                     to reach services running on this Linode.{' '}
-                    <Link to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/">
+                    <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
                       Learn more
                     </Link>
                     .

@@ -138,7 +138,7 @@ export const StackScriptsDetail = () => {
         createButtonText="Deploy New Linode"
         disabledCreateButton={userCannotAddLinodes}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/platform/stackscripts"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         onButtonClick={handleCreateClick}
         title={stackScript.label}
       />

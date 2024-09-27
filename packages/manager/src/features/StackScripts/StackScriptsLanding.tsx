@@ -38,7 +38,7 @@ export const StackScriptsLanding = () => {
         />
       ) : null}
       <LandingHeader
-        docsLink="https://www.linode.com/docs/platform/stackscripts"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         entity="StackScript"
         onButtonClick={goToCreateStackScript}
         removeCrumbX={1}

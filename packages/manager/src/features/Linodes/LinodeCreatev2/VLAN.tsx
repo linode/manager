@@ -74,7 +74,7 @@ export const VLAN = () => {
         the eth1 interface, with eth0 being used for connections to the public
         internet. VLAN configurations can be further edited in the
         Linode&rsquo;s{' '}
-        <Link to="https://www.linode.com/docs/guides/linode-configuration-profiles/">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance">
           Configuration Profile
         </Link>
         .

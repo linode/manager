@@ -66,7 +66,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
 
             ldClient?.flush();
           }}
-          to="https://www.linode.com/docs/products/tools/api/get-started/"
+          to="https://techdocs.akamai.com/linode-api/reference/get-started"
         >
           Get Started with the Linode API
         </Link>{' '}
@@ -82,7 +82,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
 
             ldClient?.flush();
           }}
-          to="https://www.linode.com/docs/products/tools/api/guides/"
+          to="https://techdocs.akamai.com/linode-api/reference/api"
         >
           Linode API Guides
         </Link>

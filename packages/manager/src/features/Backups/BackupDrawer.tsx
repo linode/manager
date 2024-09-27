@@ -151,7 +151,7 @@ all new Linodes will automatically be backed up.`
           Three backup slots are executed and rotated automatically: a daily
           backup, a 2-7 day old backup, and an 8-14 day old backup. See our
           {` `}
-          <Link to="https://www.linode.com/docs/platform/disk-images/linode-backup-service/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/backup-service">
             guide on Backups
           </Link>{' '}
           for more information on features and limitations.{' '}

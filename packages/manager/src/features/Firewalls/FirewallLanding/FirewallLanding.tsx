@@ -145,7 +145,7 @@ const FirewallLanding = () => {
           ) : undefined
         }
         breadcrumbProps={{ pathname: '/firewalls' }}
-        docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         entity="Firewall"
         onButtonClick={onOpenCreateDrawer}
         title="Firewalls"

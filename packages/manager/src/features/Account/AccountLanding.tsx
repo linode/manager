@@ -160,7 +160,7 @@ const AccountLanding = () => {
   if (isBillingTabSelected) {
     landingHeaderProps.docsLabel = 'How Linode Billing Works';
     landingHeaderProps.docsLink =
-      'https://www.linode.com/docs/guides/how-linode-billing-works/';
+      'https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works';
     landingHeaderProps.createButtonText = 'Make a Payment';
     if (!isAkamaiAccount) {
       landingHeaderProps.onButtonClick = () =>

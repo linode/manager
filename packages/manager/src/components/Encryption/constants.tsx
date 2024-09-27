@@ -4,7 +4,7 @@ import { Link } from 'src/components/Link';
 
 /* Disk Encryption constants */
 const DISK_ENCRYPTION_GUIDE_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/guides/local-disk-encryption';
+  'https://techdocs.akamai.com/cloud-computing/docs/local-disk-encryption';
 
 export const DISK_ENCRYPTION_GENERAL_DESCRIPTION = (
   <>
@@ -18,16 +18,11 @@ export const DISK_ENCRYPTION_GENERAL_DESCRIPTION = (
 export const DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION =
   'Distributed Compute Instances are secured using disk encryption. Encryption and decryption are automatically managed for you.';
 
-const DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_DOCS_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/guides/local-disk-encryption/';
-
 export const DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY = (
   <>
     Disk encryption is now standard on Linodes.{' '}
-    <Link to={DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_DOCS_LINK}>
-      Learn how
-    </Link>{' '}
-    to update and protect your clusters.
+    <Link to={DISK_ENCRYPTION_GUIDE_LINK}>Learn how</Link> to update and protect
+    your clusters.
   </>
 );
 

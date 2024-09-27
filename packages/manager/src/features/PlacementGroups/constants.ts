@@ -30,7 +30,7 @@ export const CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE =
 
 // Links
 export const PLACEMENT_GROUPS_DOCS_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/guides/placement-groups/';
+  'https://techdocs.akamai.com/cloud-computing/docs/work-with-placement-groups';
 
 // Text Copy
 export const PLACEMENT_GROUP_POLICY_STRICT =
