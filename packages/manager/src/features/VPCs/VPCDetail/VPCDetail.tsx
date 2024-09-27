@@ -28,6 +28,7 @@ import {
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
+import { createLazyRoute } from '@tanstack/react-router';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -213,5 +214,9 @@ const VPCDetail = () => {
     </>
   );
 };
+
+export const vpcDetailRoute = createLazyRoute('/vpcs/$vpcId')({
+  component: VPCDetail,
+});
 
 export default VPCDetail;
