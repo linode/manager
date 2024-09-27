@@ -108,7 +108,7 @@ export const AuthenticationSettings = () => {
           with a verification code. Standard carrier messaging fees may apply.
           By clicking Send Verification Code you are opting in to receive SMS
           messages. You may opt out at any time.{' '}
-          <Link to="https://www.linode.com/docs/guides/user-security-controls#phone-verification">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/security-controls-for-user-accounts#phone-verification">
             Learn more about security options.
           </Link>
         </StyledMainCopy>
