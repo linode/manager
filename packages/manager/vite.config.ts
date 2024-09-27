@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react-swc';
 import svgr from 'vite-plugin-svgr';
 import { defineConfig } from 'vitest/config';
+import type { UserConfig } from 'vitest/config';
 import { URL } from 'url';
 
 // ESM-friendly alternative to `__dirname`.
@@ -11,7 +12,8 @@ export default defineConfig({
     outDir: 'build',
   },
   envPrefix: 'REACT_APP_',
-  plugins: [react(), svgr({ exportAsDefault: true })],
+  // @todo Remove this `as` when we upgrade our package manager. Yarn v1's hoisting behavior is causing a type error
+  plugins: [react(), svgr({ exportAsDefault: true })] as UserConfig['plugins'],
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,

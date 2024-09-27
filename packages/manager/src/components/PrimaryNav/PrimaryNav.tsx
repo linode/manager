@@ -294,7 +294,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               const props = {
                 closeMenu,
                 isCollapsed,
-                key: thisLink.display,
                 locationPathname: location.pathname,
                 locationSearch: location.search,
                 ...thisLink,
@@ -307,11 +306,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 thisLink.prefetchRequestCondition !== undefined ? (
                 <PrefetchPrimaryLink
                   {...props}
+                  key={thisLink.display}
                   prefetchRequestCondition={thisLink.prefetchRequestCondition}
                   prefetchRequestFn={thisLink.prefetchRequestFn}
                 />
               ) : (
-                <PrimaryLink {...props} />
+                <PrimaryLink {...props} key={thisLink.display} />
               );
             })}
           </div>

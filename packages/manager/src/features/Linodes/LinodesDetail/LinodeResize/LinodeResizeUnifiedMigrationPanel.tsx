@@ -83,7 +83,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
               }
               status="help"
               tooltipPosition="right"
-              width={[theme.breakpoints.up('sm')] ? 375 : 300}
+              width={375}
             />
           </Box>
           <Box width="100%">
@@ -112,7 +112,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
               }
               status="help"
               tooltipPosition="right"
-              width={[theme.breakpoints.up('sm')] ? 450 : 300}
+              width={450}
             />
           </Box>
         </RadioGroup>

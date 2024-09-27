@@ -439,7 +439,7 @@ export const VolumeCreate = () => {
                 onBlur={handleBlur}
                 onChange={(id: number) => setFieldValue('config_id', id)}
                 value={config_id}
-                width={[theme.breakpoints.down('sm')] ? 320 : 400}
+                width={320}
               />
             </Box>
             <Box alignItems="flex-end" display="flex" position="relative">
