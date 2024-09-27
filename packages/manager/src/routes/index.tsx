@@ -4,6 +4,7 @@ import React from 'react';
 import { NotFound } from 'src/components/NotFound';
 
 import { accountRouteTree } from './account';
+import { betaRouteTree } from './betas';
 import { databasesRouteTree } from './databases';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
@@ -35,6 +36,7 @@ const indexRoute = createRoute({
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountRouteTree,
+  betaRouteTree,
   databasesRouteTree,
   domainsRouteTree,
   eventsRouteTree,
