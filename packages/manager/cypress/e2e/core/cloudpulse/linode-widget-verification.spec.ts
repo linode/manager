@@ -145,13 +145,13 @@ describe('Integration Tests for Linode Dashboard ', () => {
     cy.findByText(resource).should('be.visible');
 
     // Verifies that the expected widgets are loaded on the dashboard.
-    metrics.forEach((testData) => {
-      const widgetSelector = `[data-qa-widget-header="${testData.title}"]`;
+    metrics.forEach(({ title, unit }) => {
+      const widgetSelector = `[data-qa-widget-header="${title}"]`;
       cy.get(widgetSelector)
         .invoke('text')
         .then((text) => {
           expect(text.trim()).to.equal(
-            `${testData.title} (${testData.unit.trim()})`
+            `${title} (${unit.trim()})`
           );
         });
     });
@@ -160,8 +160,11 @@ describe('Integration Tests for Linode Dashboard ', () => {
   it('should allow users to select desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     for (const testData of metrics) {
+
+      const { title: testDataTitle, expectedGranularity } = testData;
+
       cy.wait(7000); //maintaining the wait since page flicker and rendering
-      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      const widgetSelector = `[data-qa-widget="${testDataTitle}"]`;
 
       cy.get(widgetSelector)
         .first()
@@ -180,14 +183,14 @@ describe('Integration Tests for Linode Dashboard ', () => {
           ui.autocomplete
             .findByLabel('Select an Interval')
             .should('be.visible')
-            .type(`${testData.expectedGranularity}{enter}`);
+            .type(`${expectedGranularity}{enter}`);
 
           //check if the API call is made correctly with the selected time granularity value
           cy.wait('@getMetrics').then((interception) => {
             expect(interception)
               .to.have.property('response')
               .with.property('statusCode', 200);
-            expect(testData.expectedGranularity).to.include(
+            expect(expectedGranularity).to.include(
               interception.request.body.time_granularity.value
             );
           });
@@ -217,7 +220,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
                   last: parseFloat(actualLast),
                 },
                 widgetValues,
-                testData.title
+                testDataTitle
               );
             });
         });
@@ -226,12 +229,25 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
   it('should allow users to select the desired aggregation and see the most recent data from the API displayed in the graph', () => {
     for (const testData of metrics) {
+
+      const { title: testDataTitle, expectedAggregation, expectedAggregationArray } = testData;
+
       cy.wait(7000); //maintaining the wait since page flicker and rendering
-      const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      const widgetSelector = `[data-qa-widget="${testDataTitle}"]`;
 
       cy.get(widgetSelector)
         .first()
         .within(() => {
+          // check for all available aggregation in popper
+          ui.autocomplete
+            .findByLabel('Select an Aggregate Function')
+            .should('be.visible')
+            .click();
+
+          expectedAggregationArray.forEach((option) => {
+            ui.autocompletePopper.findByTitle(option).should('exist');
+          });
+
           mockCloudPulseCreateMetrics(
             metricsAPIResponsePayload,
             serviceType
@@ -241,14 +257,14 @@ describe('Integration Tests for Linode Dashboard ', () => {
           ui.autocomplete
             .findByLabel('Select an Aggregate Function')
             .should('be.visible')
-            .type(`${testData.expectedAggregation}{enter}`);
+            .type(`${expectedAggregation}{enter}`);
 
           //check if the API call is made correctly with time granularity value selected
           cy.wait('@getAggregationMetrics').then((interception) => {
             expect(interception)
               .to.have.property('response')
               .with.property('statusCode', 200);
-            expect(testData.expectedAggregation).to.equal(
+            expect(expectedAggregation).to.equal(
               interception.request.body.aggregate_function
             );
           });
@@ -278,7 +294,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
                   last: parseFloat(actualLast),
                 },
                 widgetValues,
-                testData.title
+                testDataTitle
               );
             });
         });
@@ -302,7 +318,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
         interceptionsArray.forEach((interception) => {
           const { body: requestPayload } = interception.request;
           const { metric, relative_time_duration: timeRange } = requestPayload;
-          const metricData = metrics.find((data) => data.name === metric);
+          const metricData = metrics.find(({ name }) => name === metric);
           if (!metricData) {
             expect.fail(
               'metricData or its expected properties are not defined.'
@@ -324,18 +340,12 @@ describe('Integration Tests for Linode Dashboard ', () => {
   it('should zoom in and out of all the widgets', () => {
     // do zoom in and zoom out test on all the widgets
     metrics.forEach((testData) => {
+
+      const { title: testDataTitle } = testData;
+
       cy.wait(7000); //maintaining the wait since page flicker and rendering
 
-      // validate the widget title along with the unit
-      cy.get(`[data-qa-widget-header="${testData.title}"]`)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(
-            `${testData.title} (${testData.unit.trim()})`
-          );
-        });
-
-      cy.get(`[data-qa-widget="${testData.title}"]`).as('widget');
+      cy.get(`[data-qa-widget="${testDataTitle}"]`).as('widget');
       cy.get('@widget')
         .should('be.visible')
         .within(() => {
@@ -368,7 +378,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
                   last: parseFloat(actualLast),
                 },
                 widgetValues,
-                testData.title
+                testDataTitle
               );
             });
 
@@ -394,6 +404,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
               const widgetValues = getWidgetLegendRowValuesFromResponse(
                 metricsAPIResponsePayload
               );
+              cy.log('testDataTitle', testDataTitle)
               compareWidgetValues(
                 {
                   title,
@@ -402,7 +413,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
                   last: parseFloat(actualLast),
                 },
                 widgetValues,
-                testData.title
+                testDataTitle
               );
             });
         });
@@ -451,22 +462,35 @@ const compareWidgetValues = (
   expectedValues: { max: number; average: number; last: number },
   title: string
 ) => {
-  expect(actualValues.max).to.equal(
-    expectedValues.max,
-    `Expected ${expectedValues.max} for max, but got ${actualValues.max}`
+
+
+
+  const { title: actualTitle, max: actualMax,
+    average: actualAverage, last: actualLast,
+  } = actualValues;
+
+  const { max: expectedMax,
+    average: expectedAverage, last: expectedLast,
+  } = expectedValues;
+
+
+  expect(actualMax).to.equal(
+    expectedMax,
+    `Expected ${expectedMax} for max, but got ${actualMax}`
   );
-  expect(actualValues.average).to.equal(
-    expectedValues.average,
-    `Expected ${expectedValues.average} for average, but got ${actualValues.average}`
+  expect(actualAverage).to.equal(
+    expectedAverage,
+    `Expected ${expectedAverage} for average, but got ${actualAverage}`
   );
-  expect(actualValues.last).to.equal(
-    expectedValues.last,
-    `Expected ${expectedValues.last} for last, but got ${actualValues.last}`
+  expect(actualLast).to.equal(
+    expectedLast,
+    `Expected ${expectedLast} for last, but got ${actualLast}`
   );
-  const extractedTitle = actualValues.title.substring(
+  const extractedTitle = actualTitle.substring(
     0,
-    actualValues.title.indexOf(' ', actualValues.title.indexOf(' ') + 1)
+    actualTitle.indexOf(' ', actualValues.title.indexOf(' ') + 1)
   );
+
   expect(extractedTitle).to.equal(
     title,
     `Expected ${title} for title ${extractedTitle}`
