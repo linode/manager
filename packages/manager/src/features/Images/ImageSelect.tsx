@@ -67,11 +67,11 @@ export const ImageSelect = (props: MultiProps | Props) => {
       }}
     >
       <Autocomplete
-        onChange={(event, value) => {
+        onChange={(_, value) => {
           if (isMulti && Array.isArray(value)) {
             onSelect((value ?? []) as Image[]);
           } else if (!isMulti) {
-            onSelect(value as Image);
+            onSelect((value as Image) ?? null);
           }
         }}
         textFieldProps={{
@@ -80,8 +80,9 @@ export const ImageSelect = (props: MultiProps | Props) => {
         }}
         value={
           isMulti
-            ? options.filter((o) => value?.includes(o.id)) ?? []
-            : options.find((o) => o.id === value) ?? null
+            ? options.filter((option) => value?.includes(option.id)) ?? []
+            : options.find((option) => option.id === value) ??
+              (value ? null : undefined)
         }
         disableCloseOnSelect={false}
         disableSelectAll
@@ -97,5 +98,3 @@ export const ImageSelect = (props: MultiProps | Props) => {
     </Box>
   );
 };
-
-export default ImageSelect;
