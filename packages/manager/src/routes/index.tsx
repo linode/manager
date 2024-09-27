@@ -21,6 +21,7 @@ import { rootRoute } from './root';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
+import { vpcsRouteTree } from './vpcs';
 
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
@@ -52,6 +53,7 @@ export const routeTree = rootRoute.addChildren([
   stackScriptsRouteTree,
   supportRouteTree,
   volumesRouteTree,
+  vpcsRouteTree,
 ]);
 
 export const router = createRouter({

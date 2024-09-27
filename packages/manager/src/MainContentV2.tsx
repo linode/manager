@@ -12,19 +12,11 @@ import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 import { rootRoute } from './routes/root';
 
-const VPC = React.lazy(() => import('src/features/VPCs'));
-
 const CloudPulse = React.lazy(() =>
   import('src/features/CloudPulse/CloudPulseLanding').then((module) => ({
     default: module.CloudPulseLanding,
   }))
 );
-
-const vpcRoute = createRoute({
-  component: VPC,
-  getParentRoute: () => rootRoute,
-  path: 'vpcs',
-});
 
 const cloudPulseRoute = createRoute({
   component: CloudPulse,
@@ -42,11 +34,7 @@ const notFoundRoute = createRoute({
 // TODO: TanStackRouter - continue exporting this
 // @ts-expect-error - TODO: Fix this type error
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const routeTree = rootRoute.addChildren([
-  vpcRoute,
-  cloudPulseRoute,
-  notFoundRoute,
-]);
+const routeTree = rootRoute.addChildren([cloudPulseRoute, notFoundRoute]);
 
 export const MainContentV2 = () => {
   const { data: accountSettings } = useAccountSettings();

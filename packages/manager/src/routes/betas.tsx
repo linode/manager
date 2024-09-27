@@ -1,7 +1,6 @@
 import { Outlet, createRoute } from '@tanstack/react-router';
 import React from 'react';
 
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
@@ -10,7 +9,6 @@ import { strictLazyRouteComponent } from './utils';
 export const BetaRoutes = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <ProductInformationBanner bannerLocation="Volumes" />
       <Outlet />
     </React.Suspense>
   );
