@@ -10,7 +10,7 @@ import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useAccountSettings } from './queries/account/settings';
 import { router } from './routes';
 
-export const MainContentV2 = () => {
+export const Router = () => {
   const { data: accountSettings } = useAccountSettings();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
