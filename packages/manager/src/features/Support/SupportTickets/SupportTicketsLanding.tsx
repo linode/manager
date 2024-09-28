@@ -99,6 +99,8 @@ const SupportTicketsLanding = () => {
 
 export default SupportTicketsLanding;
 
-export const supportTicketsLandingRoute = createLazyRoute('/support/tickets')({
+export const supportTicketsLandingLazyRoute = createLazyRoute(
+  '/support/tickets'
+)({
   component: SupportTicketsLanding,
 });

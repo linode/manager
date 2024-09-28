@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -16,19 +17,18 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery } from 'src/queries/vpcs/vpcs';
 import { truncate } from 'src/utilities/truncate';
 
-import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
-import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
 import { REBOOT_LINODE_WARNING_VPCDETAILS } from '../constants';
 import { getUniqueLinodesFromSubnets } from '../utils';
+import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
+import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
 import {
   StyledActionButton,
-  StyledDescriptionBox,
   StyledBox,
+  StyledDescriptionBox,
   StyledSummaryBox,
   StyledSummaryTextTypography,
 } from './VPCDetail.styles';
 import { VPCSubnetsTable } from './VPCSubnetsTable';
-import { createLazyRoute } from '@tanstack/react-router';
 
 const VPCDetail = () => {
   const { vpcId } = useParams<{ vpcId: string }>();
@@ -215,7 +215,7 @@ const VPCDetail = () => {
   );
 };
 
-export const vpcDetailRoute = createLazyRoute('/vpcs/$vpcId')({
+export const vpcDetailLazyRoute = createLazyRoute('/vpcs/$vpcId')({
   component: VPCDetail,
 });
 

@@ -27,6 +27,6 @@ const StyledRootContainer = styled('div', {
   },
 }));
 
-export const helpLandingRoute = createLazyRoute('/')({
+export const helpLandingLazyRoute = createLazyRoute('/')({
   component: HelpLanding,
 });
