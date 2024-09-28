@@ -86,7 +86,7 @@ const VPCCreate = () => {
   );
 };
 
-export const vpcCreateRoute = createLazyRoute('/vpcs/create')({
+export const vpcCreateLazyRoute = createLazyRoute('/vpcs/create')({
   component: VPCCreate,
 });
 

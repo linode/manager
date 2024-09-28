@@ -28,7 +28,7 @@ const vpcsLandingRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/VPCs/VPCLanding/VPCLanding').then(
-    (m) => m.vpcLandingRoute
+    (m) => m.vpcLandingLazyRoute
   )
 );
 
@@ -36,14 +36,18 @@ const vpcsCreateRoute = createRoute({
   getParentRoute: () => vpcsRoute,
   path: 'create',
 }).lazy(() =>
-  import('src/features/VPCs/VPCCreate/VPCCreate').then((m) => m.vpcCreateRoute)
+  import('src/features/VPCs/VPCCreate/VPCCreate').then(
+    (m) => m.vpcCreateLazyRoute
+  )
 );
 
 const vpcsDetailRoute = createRoute({
   getParentRoute: () => vpcsRoute,
   path: '$vpcId',
 }).lazy(() =>
-  import('src/features/VPCs/VPCDetail/VPCDetail').then((m) => m.vpcDetailRoute)
+  import('src/features/VPCs/VPCDetail/VPCDetail').then(
+    (m) => m.vpcDetailLazyRoute
+  )
 );
 
 export const vpcsRouteTree = vpcsRoute.addChildren([

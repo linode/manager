@@ -4,7 +4,6 @@ import React from 'react';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const ProfileRoutes = () => {
   return (
@@ -15,87 +14,83 @@ export const ProfileRoutes = () => {
 };
 
 const ProfileRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Profile/DisplaySettings/DisplaySettings'),
-    'DisplaySettings'
-  ),
   getParentRoute: () => rootRoute,
   path: 'profile',
-});
+}).lazy(() =>
+  import('src/features/Profile/DisplaySettings/DisplaySettings').then(
+    (m) => m.DisplaySettingsLazyRoute
+  )
+);
 
 const ProfileDisplaySettingsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Profile/DisplaySettings/DisplaySettings'),
-    'DisplaySettings'
-  ),
   getParentRoute: () => ProfileRoute,
   path: 'display',
-});
+}).lazy(() =>
+  import('src/features/Profile/DisplaySettings/DisplaySettings').then(
+    (m) => m.DisplaySettingsLazyRoute
+  )
+);
 
 const ProfileAuthenticationSettingsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/Profile/AuthenticationSettings/AuthenticationSettings'
-      ),
-    'AuthenticationSettings'
-  ),
   getParentRoute: () => ProfileRoute,
   path: 'auth',
-});
+}).lazy(() =>
+  import(
+    'src/features/Profile/AuthenticationSettings/AuthenticationSettings'
+  ).then((m) => m.AuthenticationSettingsLazyRoute)
+);
 
 const ProfileSSHKeysRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Profile/SSHKeys/SSHKeys'),
-    'SSHKeys'
-  ),
   getParentRoute: () => ProfileRoute,
   path: 'keys',
-});
+}).lazy(() =>
+  import('src/features/Profile/SSHKeys/SSHKeys').then((m) => m.SSHKeysLazyRoute)
+);
 
 const ProfileLishSettingsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Profile/LishSettings/LishSettings'),
-    'LishSettings'
-  ),
   getParentRoute: () => ProfileRoute,
   path: 'lish',
-});
+}).lazy(() =>
+  import('src/features/Profile/LishSettings/LishSettings').then(
+    (m) => m.LishSettingsLazyRoute
+  )
+);
 
 const ProfileAPITokensRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Profile/APITokens/APITokens'),
-    'APITokens'
-  ),
   getParentRoute: () => ProfileRoute,
   path: 'tokens',
-});
+}).lazy(() =>
+  import('src/features/Profile/APITokens/APITokens').then(
+    (m) => m.APITokensLazyRoute
+  )
+);
 
 const ProfileOAuthClientsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Profile/OAuthClients/OAuthClients')
-  ),
   getParentRoute: () => ProfileRoute,
   path: 'clients',
-});
+}).lazy(() =>
+  import('src/features/Profile/OAuthClients/OAuthClients').then(
+    (m) => m.OAuthClientsLazyRoute
+  )
+);
 
 const ProfileReferralsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Profile/Referrals/Referrals'),
-    'Referrals'
-  ),
   getParentRoute: () => ProfileRoute,
   path: 'referrals',
-});
+}).lazy(() =>
+  import('src/features/Profile/Referrals/Referrals').then(
+    (m) => m.ReferralsLazyRoute
+  )
+);
 
 const ProfileSettingsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Profile/Settings/Settings'),
-    'ProfileSettings'
-  ),
   getParentRoute: () => ProfileRoute,
   path: 'settings',
-});
+}).lazy(() =>
+  import('src/features/Profile/Settings/Settings').then(
+    (m) => m.SettingsLazyRoute
+  )
+);
 
 export const profileRouteTree = ProfileRoute.addChildren([
   ProfileAuthenticationSettingsRoute,

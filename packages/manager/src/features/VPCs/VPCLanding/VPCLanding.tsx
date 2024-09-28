@@ -171,7 +171,7 @@ const VPCLanding = () => {
   );
 };
 
-export const vpcLandingRoute = createLazyRoute('/')({
+export const vpcLandingLazyRoute = createLazyRoute('/')({
   component: VPCLanding,
 });
 

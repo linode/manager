@@ -330,6 +330,6 @@ export const VolumesLanding = () => {
 
 export default VolumesLanding;
 
-export const volumesLandingRoute = createLazyRoute('/')({
+export const volumesLandingLazyRoute = createLazyRoute('/')({
   component: VolumesLanding,
 });

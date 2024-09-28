@@ -155,7 +155,7 @@ const StyledStack = styled(Stack, {
   marginRight: theme.spacing(),
 }));
 
-export const supportTicketDetailRoute = createLazyRoute(
+export const supportTicketDetailLazyRoute = createLazyRoute(
   '/support/tickets/$ticketId'
 )({
   component: SupportTicketDetail,

@@ -547,6 +547,6 @@ const initialValues: FormState = {
   size: 20,
 };
 
-export const volumeCreateRoute = createLazyRoute('/volumes/create')({
+export const volumeCreateLazyRoute = createLazyRoute('/volumes/create')({
   component: VolumeCreate,
 });

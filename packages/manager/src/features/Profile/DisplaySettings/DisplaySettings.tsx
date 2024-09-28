@@ -1,5 +1,6 @@
 import { updateUser } from '@linode/api-v4/lib/account';
 import { styled, useTheme } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -157,3 +158,7 @@ const StyledProfileCopy = styled(Typography, {
   marginTop: 4,
   maxWidth: 360,
 }));
+
+export const DisplaySettingsLazyRoute = createLazyRoute('/profile/display')({
+  component: DisplaySettings,
+});

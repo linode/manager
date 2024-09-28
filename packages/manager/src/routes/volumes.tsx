@@ -26,7 +26,7 @@ const volumesIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/Volumes/VolumesLanding').then(
-    (m) => m.volumesLandingRoute
+    (m) => m.volumesLandingLazyRoute
   )
 );
 
@@ -34,7 +34,9 @@ const volumesCreateRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: 'create',
 }).lazy(() =>
-  import('src/features/Volumes/VolumeCreate').then((m) => m.volumeCreateRoute)
+  import('src/features/Volumes/VolumeCreate').then(
+    (m) => m.volumeCreateLazyRoute
+  )
 );
 
 export const volumesRouteTree = volumesRoute.addChildren([

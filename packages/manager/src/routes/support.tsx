@@ -26,7 +26,7 @@ const SupportLandingRoute = createRoute({
   getParentRoute: () => SupportRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/Help/HelpLanding').then((m) => m.helpLandingRoute)
+  import('src/features/Help/HelpLanding').then((m) => m.helpLandingLazyRoute)
 );
 
 const SupportTicketsRoute = createRoute({
@@ -34,7 +34,7 @@ const SupportTicketsRoute = createRoute({
   path: 'tickets',
 }).lazy(() =>
   import('src/features/Support/SupportTickets/SupportTicketsLanding').then(
-    (m) => m.supportTicketsLandingRoute
+    (m) => m.supportTicketsLandingLazyRoute
   )
 );
 
@@ -46,7 +46,7 @@ const SupportTicketDetailRoute = createRoute({
   path: '$ticketId',
 }).lazy(() =>
   import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
-    (m) => m.supportTicketDetailRoute
+    (m) => m.supportTicketDetailLazyRoute
   )
 );
 
@@ -55,7 +55,7 @@ const SupportSearchLandingRoute = createRoute({
   path: 'search',
 }).lazy(() =>
   import('src/features/Help/SupportSearchLanding/SupportSearchLanding').then(
-    (m) => m.supportSearchLandingRoute
+    (m) => m.supportSearchLandingLazyRoute
   )
 );
 

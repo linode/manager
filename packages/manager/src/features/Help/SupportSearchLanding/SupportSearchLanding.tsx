@@ -127,6 +127,8 @@ export default withSearch({ highlight: false, hitsPerPage: 5 })(
   SupportSearchLanding
 );
 
-export const supportSearchLandingRoute = createLazyRoute('/support/search')({
-  component: SupportSearchLanding,
-});
+export const supportSearchLandingLazyRoute = createLazyRoute('/support/search')(
+  {
+    component: SupportSearchLanding,
+  }
+);
