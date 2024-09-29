@@ -3,9 +3,8 @@ import * as React from 'react';
 
 import ZoomInMap from 'src/assets/icons/zoomin.svg';
 import ZoomOutMap from 'src/assets/icons/zoomout.svg';
-import { Tooltip } from 'src/components/Tooltip';
 
-import { commonPopperProps } from '../../Utils/CloudPulseWidgetUtils';
+import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
 
 export interface ZoomIconProperties {
   className?: string;
@@ -23,11 +22,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
   const ToggleZoomer = () => {
     if (props.zoomIn) {
       return (
-        <Tooltip
-          PopperProps={commonPopperProps}
-          placement={'bottom-end'}
-          title={'Minimize'}
-        >
+        <CloudPulseTooltip title={'Minimize'}>
           <IconButton
             sx={{
               color: theme.color.grey1,
@@ -40,16 +35,12 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
           >
             <ZoomInMap />
           </IconButton>
-        </Tooltip>
+        </CloudPulseTooltip>
       );
     }
 
     return (
-      <Tooltip
-        PopperProps={commonPopperProps}
-        placement={'bottom-end'}
-        title={'Maximize'}
-      >
+      <CloudPulseTooltip title={'Maximize'}>
         <IconButton
           sx={{
             color: theme.color.grey1,
@@ -62,7 +53,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
         >
           <ZoomOutMap />
         </IconButton>
-      </Tooltip>
+      </CloudPulseTooltip>
     );
   };
 

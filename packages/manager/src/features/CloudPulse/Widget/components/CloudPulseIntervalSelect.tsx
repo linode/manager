@@ -1,12 +1,7 @@
 import React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Tooltip } from 'src/components/Tooltip';
-
-import {
-  StyledWidgetAutocomplete,
-  commonPopperProps,
-} from '../../Utils/CloudPulseWidgetUtils';
+import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
+import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
 
 import type { TimeGranularity } from '@linode/api-v4';
 
@@ -121,40 +116,34 @@ export const CloudPulseIntervalSelect = React.memo(
     }
 
     return (
-      <Tooltip
-        PopperProps={commonPopperProps}
-        placement={'bottom-end'}
-        title={'Minimize'}
-      >
-        <span>
-          <StyledWidgetAutocomplete
-            isOptionEqualToValue={(
-              option: IntervalOptions,
-              value: IntervalOptions
-            ) => option?.value === value?.value && option?.unit === value?.unit}
-            onChange={(
-              _: React.SyntheticEvent,
-              selectedInterval: IntervalOptions
-            ) => {
-              props.onIntervalChange({
-                unit: selectedInterval?.unit,
-                value: selectedInterval?.value,
-              });
-            }}
-            textFieldProps={{
-              hideLabel: true,
-            }}
-            defaultValue={{ ...default_interval }}
-            disableClearable
-            fullWidth={false}
-            label="Select an Interval"
-            noMarginTop={true}
-            options={[autoIntervalOption, ...availableIntervalOptions]}
-            sx={{ width: { xs: '100%' } }}
-            autoHighlight
-          />
-        </span>
-      </Tooltip>
+      <CloudPulseTooltip title={'Granularity'}>
+        <StyledWidgetAutocomplete
+          isOptionEqualToValue={(
+            option: IntervalOptions,
+            value: IntervalOptions
+          ) => option?.value === value?.value && option?.unit === value?.unit}
+          onChange={(
+            _: React.SyntheticEvent,
+            selectedInterval: IntervalOptions
+          ) => {
+            props.onIntervalChange({
+              unit: selectedInterval?.unit,
+              value: selectedInterval?.value,
+            });
+          }}
+          textFieldProps={{
+            hideLabel: true,
+          }}
+          autoHighlight
+          defaultValue={{ ...default_interval }}
+          disableClearable
+          fullWidth={false}
+          label="Select an Interval"
+          noMarginTop={true}
+          options={[autoIntervalOption, ...availableIntervalOptions]}
+          sx={{ width: { xs: '100%' } }}
+        />
+      </CloudPulseTooltip>
     );
   }
 );

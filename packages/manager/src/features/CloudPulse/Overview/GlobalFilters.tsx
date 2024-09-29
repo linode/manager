@@ -1,5 +1,5 @@
-import { IconButton, useTheme } from '@mui/material';
 import { Grid } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -10,6 +10,7 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
 import { REFRESH } from '../Utils/constants';
+import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
@@ -94,16 +95,18 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               hideLabel
               label="Select Time Range"
             />
-            <IconButton
-              sx={{
-                marginBlockEnd: 'auto',
-              }}
-              disabled={!selectedDashboard}
-              onClick={() => handleGlobalRefresh(selectedDashboard)}
-              size="small"
-            >
-              <StyledReload />
-            </IconButton>
+            <CloudPulseTooltip title="Refresh">
+              <IconButton
+                sx={{
+                  marginBlockEnd: 'auto',
+                }}
+                disabled={!selectedDashboard}
+                onClick={() => handleGlobalRefresh(selectedDashboard)}
+                size="small"
+              >
+                <StyledReload />
+              </IconButton>
+            </CloudPulseTooltip>
           </Grid>
         </Grid>
       </Grid>
