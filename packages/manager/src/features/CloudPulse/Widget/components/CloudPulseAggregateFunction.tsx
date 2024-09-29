@@ -1,11 +1,8 @@
 import React from 'react';
 
-import { Tooltip } from 'src/components/Tooltip';
-
-import {
-  StyledWidgetAutocomplete,
-  commonPopperProps,
-} from '../../Utils/CloudPulseWidgetUtils';
+import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
+import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
+import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 
 export interface AggregateFunctionProperties {
   /**
@@ -57,32 +54,26 @@ export const CloudPulseAggregateFunction = React.memo(
     ] = React.useState<AggregateFunction>(defaultValue);
 
     return (
-      <Tooltip
-        PopperProps={commonPopperProps}
-        placement={'bottom-end'}
-        title={'Minimize'}
-      >
-        <span>
-          <StyledWidgetAutocomplete
-            isOptionEqualToValue={(option, value) => {
-              return option.label == value.label;
-            }}
-            onChange={(_: any, selectedAggregateFunc: any) => {
-              props.onAggregateFuncChange(selectedAggregateFunc.label);
-            }}
-            textFieldProps={{
-              hideLabel: true,
-            }}
-            defaultValue={defaultAggregateFunction}
-            disableClearable
-            fullWidth={false}
-            label="Select an Aggregate Function"
-            noMarginTop={true}
-            options={availableAggregateFunc}
-            sx={{ width: '100%' }}
-          />
-        </span>
-      </Tooltip>
+      <CloudPulseTooltip title={'Aggregation'}>
+        <StyledWidgetAutocomplete
+          isOptionEqualToValue={(option, value) => {
+            return option.label == value.label;
+          }}
+          onChange={(_: any, selectedAggregateFunc: any) => {
+            props.onAggregateFuncChange(selectedAggregateFunc.label);
+          }}
+          textFieldProps={{
+            hideLabel: true,
+          }}
+          defaultValue={defaultAggregateFunction}
+          disableClearable
+          fullWidth={false}
+          label="Select an Aggregate Function"
+          noMarginTop={true}
+          options={availableAggregateFunc}
+          sx={{ width: '100%' }}
+        />
+      </CloudPulseTooltip>
     );
   }
 );

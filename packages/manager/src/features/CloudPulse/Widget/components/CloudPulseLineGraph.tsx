@@ -49,7 +49,6 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
               border: 0,
             },
             backgroundColor: theme.bg.offWhite,
-            height: `calc(${theme.spacing(14)} + 3px)`, // 115px
             maxHeight: `calc(${theme.spacing(14)} + 3px)`,
             overflow: 'auto',
             padding: theme.spacing(1),
