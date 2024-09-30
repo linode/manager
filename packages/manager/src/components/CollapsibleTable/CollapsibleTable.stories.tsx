@@ -47,6 +47,7 @@ export const Default: StoryObj<typeof CollapsibleTable> = {
             <TableCell>159</TableCell>
             <TableCell>6</TableCell>
             <TableCell>24</TableCell>
+            <TableCell></TableCell>
           </>
         ),
         id: 1,
