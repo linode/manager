@@ -40,7 +40,7 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
     data: types,
     error: typesError,
     isLoading: typesLoading,
-  } = useDatabaseTypesQuery();
+  } = useDatabaseTypesQuery({ platform: database.platform });
   const theme = useTheme();
   const { data: regions } = useRegionsQuery();
 
