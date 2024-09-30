@@ -281,7 +281,7 @@ export const KubernetesLanding = () => {
   );
 };
 
-export const KubernetesLandingLazyRoute = createLazyRoute(
+export const kubernetesLandingLazyRoute = createLazyRoute(
   '/kubernetes/clusters'
 )({
   component: KubernetesLanding,

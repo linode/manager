@@ -18,7 +18,7 @@ const ProfileRoute = createRoute({
   path: 'profile',
 }).lazy(() =>
   import('src/features/Profile/DisplaySettings/DisplaySettings').then(
-    (m) => m.DisplaySettingsLazyRoute
+    (m) => m.displaySettingsLazyRoute
   )
 );
 
@@ -27,7 +27,7 @@ const ProfileDisplaySettingsRoute = createRoute({
   path: 'display',
 }).lazy(() =>
   import('src/features/Profile/DisplaySettings/DisplaySettings').then(
-    (m) => m.DisplaySettingsLazyRoute
+    (m) => m.displaySettingsLazyRoute
   )
 );
 
@@ -37,7 +37,7 @@ const ProfileAuthenticationSettingsRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/Profile/AuthenticationSettings/AuthenticationSettings'
-  ).then((m) => m.AuthenticationSettingsLazyRoute)
+  ).then((m) => m.authenticationSettingsLazyRoute)
 );
 
 const ProfileSSHKeysRoute = createRoute({
@@ -52,7 +52,7 @@ const ProfileLishSettingsRoute = createRoute({
   path: 'lish',
 }).lazy(() =>
   import('src/features/Profile/LishSettings/LishSettings').then(
-    (m) => m.LishSettingsLazyRoute
+    (m) => m.lishSettingsLazyRoute
   )
 );
 

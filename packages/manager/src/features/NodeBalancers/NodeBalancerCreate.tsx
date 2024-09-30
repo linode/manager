@@ -797,7 +797,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
   }, []);
 };
 
-export const NodeBalancerCreateLazyRoute = createLazyRoute(
+export const nodeBalancerCreateLazyRoute = createLazyRoute(
   '/nodebalancers/create'
 )({
   component: NodeBalancerCreate,

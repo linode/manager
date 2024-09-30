@@ -447,7 +447,7 @@ export const CreateDomain = () => {
   );
 };
 
-export const CreateDomainLazyRoute = createLazyRoute('/domains/create')({
+export const createDomainLazyRoute = createLazyRoute('/domains/create')({
   component: CreateDomain,
 });
 

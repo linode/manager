@@ -80,7 +80,7 @@ export const ManagedDashboardCard = () => {
   );
 };
 
-export const ManagedDashboardCardLazyRoute = createLazyRoute('/managed')({
+export const managedDashboardCardLazyRoute = createLazyRoute('/managed')({
   component: ManagedDashboardCard,
 });
 

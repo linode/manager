@@ -26,7 +26,7 @@ const firewallsIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/Firewalls/FirewallLanding/FirewallLanding').then(
-    (m) => m.FirewallLandingLazyRoute
+    (m) => m.firewallLandingLazyRoute
   )
 );
 
@@ -35,7 +35,7 @@ const firewallCreateRoute = createRoute({
   path: 'create',
 }).lazy(() =>
   import('src/features/Firewalls/FirewallLanding/FirewallLanding').then(
-    (m) => m.FirewallLandingLazyRoute
+    (m) => m.firewallLandingLazyRoute
   )
 );
 
@@ -47,7 +47,7 @@ const firewallDetailRoute = createRoute({
   path: '$id',
 }).lazy(() =>
   import('src/features/Firewalls/FirewallDetail/index').then(
-    (m) => m.FirewallDetailLazyRoute
+    (m) => m.firewallDetailLazyRoute
   )
 );
 
@@ -56,7 +56,7 @@ const firewallDetailRulesRoute = createRoute({
   path: '$id/rules',
 }).lazy(() =>
   import('src/features/Firewalls/FirewallDetail/index').then(
-    (m) => m.FirewallDetailLazyRoute
+    (m) => m.firewallDetailLazyRoute
   )
 );
 
@@ -65,7 +65,7 @@ const firewallDetailLinodesRoute = createRoute({
   path: '$id/linodes',
 }).lazy(() =>
   import('src/features/Firewalls/FirewallDetail/index').then(
-    (m) => m.FirewallDetailLazyRoute
+    (m) => m.firewallDetailLazyRoute
   )
 );
 
@@ -74,7 +74,7 @@ const firewallDetailNodebalancersRoute = createRoute({
   path: '$id/nodebalancers',
 }).lazy(() =>
   import('src/features/Firewalls/FirewallDetail/index').then(
-    (m) => m.FirewallDetailLazyRoute
+    (m) => m.firewallDetailLazyRoute
   )
 );
 

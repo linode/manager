@@ -297,7 +297,7 @@ export const CredentialList = () => {
   );
 };
 
-export const ManagedCredentialsLazyRoute = createLazyRoute(
+export const managedCredentialsLazyRoute = createLazyRoute(
   '/managed/credentials'
 )({
   component: CredentialList,

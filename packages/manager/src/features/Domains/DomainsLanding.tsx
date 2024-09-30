@@ -335,6 +335,6 @@ const StyledButon = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
   whiteSpace: 'nowrap',
 }));
 
-export const DomainsLandingLazyRoute = createLazyRoute('/domains')({
+export const domainsLandingLazyRoute = createLazyRoute('/domains')({
   component: DomainsLanding,
 });

@@ -44,7 +44,7 @@ export const ImageCreate = () => {
   );
 };
 
-export const ImageCreateLazyRoute = createLazyRoute('/images/create')({
+export const imageCreateLazyRoute = createLazyRoute('/images/create')({
   component: ImageCreate,
 });
 

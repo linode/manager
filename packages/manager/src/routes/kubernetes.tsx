@@ -33,7 +33,7 @@ const kubernetesIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/Kubernetes/KubernetesLanding/KubernetesLanding').then(
-    (m) => m.KubernetesLandingLazyRoute
+    (m) => m.kubernetesLandingLazyRoute
   )
 );
 
@@ -42,7 +42,7 @@ const kubernetesClustersRoute = createRoute({
   path: 'clusters',
 }).lazy(() =>
   import('src/features/Kubernetes/KubernetesLanding/KubernetesLanding').then(
-    (m) => m.KubernetesLandingLazyRoute
+    (m) => m.kubernetesLandingLazyRoute
   )
 );
 
@@ -51,7 +51,7 @@ const kubernetesCreateRoute = createRoute({
   path: 'create',
 }).lazy(() =>
   import('src/features/Kubernetes/CreateCluster/CreateCluster').then(
-    (m) => m.CreateClusterLazyRoute
+    (m) => m.createClusterLazyRoute
   )
 );
 
@@ -64,7 +64,7 @@ const kubernetesClusterDetailRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/Kubernetes/KubernetesClusterDetail/KubernetesClusterDetail'
-  ).then((m) => m.KubernetesClusterDetailLazyRoute)
+  ).then((m) => m.kubernetesClusterDetailLazyRoute)
 );
 
 const kubernetesClusterDetailSummaryRoute = createRoute({
@@ -73,7 +73,7 @@ const kubernetesClusterDetailSummaryRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/Kubernetes/KubernetesClusterDetail/KubernetesClusterDetail'
-  ).then((m) => m.KubernetesClusterDetailLazyRoute)
+  ).then((m) => m.kubernetesClusterDetailLazyRoute)
 );
 
 export const kubernetesRouteTree = kubernetesRoute.addChildren([

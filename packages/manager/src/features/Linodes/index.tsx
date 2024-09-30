@@ -74,6 +74,6 @@ export const LinodesLandingWrapper = React.memo(() => {
   );
 });
 
-export const LinodesLandingLazyRoute = createLazyRoute('/linodes')({
+export const linodesLandingLazyRoute = createLazyRoute('/linodes')({
   component: LinodesLandingWrapper,
 });

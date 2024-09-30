@@ -26,7 +26,7 @@ const domainsIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/Domains/DomainsLanding').then(
-    (m) => m.DomainsLandingLazyRoute
+    (m) => m.domainsLandingLazyRoute
   )
 );
 
@@ -35,7 +35,7 @@ const domainCreateRoute = createRoute({
   path: 'create',
 }).lazy(() =>
   import('src/features/Domains/CreateDomain/CreateDomain').then(
-    (m) => m.CreateDomainLazyRoute
+    (m) => m.createDomainLazyRoute
   )
 );
 
@@ -47,7 +47,7 @@ const domainDetailRoute = createRoute({
   path: '$domainId',
 }).lazy(() =>
   import('src/features/Domains/DomainDetail').then(
-    (m) => m.DomainDetailLazyRoute
+    (m) => m.domainDetailLazyRoute
   )
 );
 
@@ -56,7 +56,7 @@ const domainDetailRecordsRoute = createRoute({
   path: 'records',
 }).lazy(() =>
   import('src/features/Domains/DomainDetail').then(
-    (m) => m.DomainDetailLazyRoute
+    (m) => m.domainDetailLazyRoute
   )
 );
 

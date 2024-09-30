@@ -191,6 +191,6 @@ export const FirewallDetail = () => {
   );
 };
 
-export const FirewallDetailLazyRoute = createLazyRoute('/firewalls/$id')({
+export const firewallDetailLazyRoute = createLazyRoute('/firewalls/$id')({
   component: FirewallDetail,
 });

@@ -234,7 +234,7 @@ const Contacts = () => {
   );
 };
 
-export const ManagedContactsLazyRoute = createLazyRoute('/managed/contacts')({
+export const managedContactsLazyRoute = createLazyRoute('/managed/contacts')({
   component: Contacts,
 });
 

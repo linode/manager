@@ -158,7 +158,7 @@ export const NodeBalancerSettings = () => {
   );
 };
 
-export const NodeBalancerSettingsLazyRoute = createLazyRoute(
+export const nodeBalancerSettingsLazyRoute = createLazyRoute(
   '/nodebalancers/$nodeBalancerId/settings'
 )({
   component: NodeBalancerSettings,

@@ -218,7 +218,7 @@ const StyledPromotionalOfferCard = styled(PromotionalOfferCard, {
   marginBottom: theme.spacing(0.5),
 }));
 
-export const ObjectStorageLandingLazyRoute = createLazyRoute('/object-storage')(
+export const objectStorageLandingLazyRoute = createLazyRoute('/object-storage')(
   {
     component: ObjectStorageLanding,
   }

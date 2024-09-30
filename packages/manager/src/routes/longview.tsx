@@ -27,7 +27,7 @@ export const longviewLandingRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/Longview/LongviewLanding/LongviewLanding').then(
-    (m) => m.LongviewLandingLazyRoute
+    (m) => m.longviewLandingLazyRoute
   )
 );
 

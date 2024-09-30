@@ -165,7 +165,7 @@ export const NodeBalancersLanding = () => {
   );
 };
 
-export const NodeBalancersLandingLazyRoute = createLazyRoute('/nodebalancers')({
+export const nodeBalancersLandingLazyRoute = createLazyRoute('/nodebalancers')({
   component: NodeBalancersLanding,
 });
 

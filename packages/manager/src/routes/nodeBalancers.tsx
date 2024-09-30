@@ -31,7 +31,7 @@ const nodeBalancersIndexRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/NodeBalancers/NodeBalancersLanding/NodeBalancersLanding'
-  ).then((m) => m.NodeBalancersLandingLazyRoute)
+  ).then((m) => m.nodeBalancersLandingLazyRoute)
 );
 
 const nodeBalancersCreateRoute = createRoute({
@@ -39,7 +39,7 @@ const nodeBalancersCreateRoute = createRoute({
   path: 'create',
 }).lazy(() =>
   import('src/features/NodeBalancers/NodeBalancerCreate').then(
-    (m) => m.NodeBalancerCreateLazyRoute
+    (m) => m.nodeBalancerCreateLazyRoute
   )
 );
 
@@ -52,7 +52,7 @@ const nodeBalancerDetailRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerDetail'
-  ).then((m) => m.NodeBalancerDetailLazyRoute)
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
 const nodeBalancerDetailSummaryRoute = createRoute({
@@ -61,7 +61,7 @@ const nodeBalancerDetailSummaryRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/NodeBalancerSummary'
-  ).then((m) => m.NodeBalancerSummaryLazyRoute)
+  ).then((m) => m.nodeBalancerSummaryLazyRoute)
 );
 
 // TODO TanStack Router - figure proper way of lazy loading class components
@@ -82,7 +82,7 @@ const nodeBalancerDetailSettingsRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSettings'
-  ).then((m) => m.NodeBalancerSettingsLazyRoute)
+  ).then((m) => m.nodeBalancerSettingsLazyRoute)
 );
 
 export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([

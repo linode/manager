@@ -212,7 +212,7 @@ const FirewallLanding = () => {
   );
 };
 
-export const FirewallLandingLazyRoute = createLazyRoute('/firewalls')({
+export const firewallLandingLazyRoute = createLazyRoute('/firewalls')({
   component: FirewallLanding,
 });
 

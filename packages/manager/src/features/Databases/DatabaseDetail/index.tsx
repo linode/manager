@@ -209,7 +209,7 @@ export const DatabaseDetail = () => {
   );
 };
 
-export const DatabaseDetailLazyRoute = createLazyRoute(
+export const databaseDetailLazyRoute = createLazyRoute(
   '/databases/$engine/$databaseId'
 )({
   component: DatabaseDetail,

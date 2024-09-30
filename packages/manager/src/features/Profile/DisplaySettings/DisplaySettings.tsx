@@ -159,6 +159,6 @@ const StyledProfileCopy = styled(Typography, {
   maxWidth: 360,
 }));
 
-export const DisplaySettingsLazyRoute = createLazyRoute('/profile/display')({
+export const displaySettingsLazyRoute = createLazyRoute('/profile/display')({
   component: DisplaySettings,
 });

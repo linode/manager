@@ -29,7 +29,7 @@ const placementGroupsIndexRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.PlacementGroupsLandingLazyRoute)
+  ).then((m) => m.placementGroupsLandingLazyRoute)
 );
 
 const placementGroupsCreateRoute = createRoute({
@@ -38,7 +38,7 @@ const placementGroupsCreateRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.PlacementGroupsLandingLazyRoute)
+  ).then((m) => m.placementGroupsLandingLazyRoute)
 );
 
 const placementGroupsEditRoute = createRoute({
@@ -50,7 +50,7 @@ const placementGroupsEditRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.PlacementGroupsLandingLazyRoute)
+  ).then((m) => m.placementGroupsLandingLazyRoute)
 );
 
 const placementGroupsDeleteRoute = createRoute({
@@ -62,7 +62,7 @@ const placementGroupsDeleteRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.PlacementGroupsLandingLazyRoute)
+  ).then((m) => m.placementGroupsLandingLazyRoute)
 );
 
 const placementGroupsUnassignRoute = createRoute({
@@ -75,7 +75,7 @@ const placementGroupsUnassignRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.PlacementGroupsUnassignLazyRoute)
+  ).then((m) => m.placementGroupsUnassignLazyRoute)
 );
 
 const placementGroupsDetailRoute = createRoute({
@@ -87,7 +87,7 @@ const placementGroupsDetailRoute = createRoute({
 }).lazy(() =>
   import(
     'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.PlacementGroupsDetailLazyRoute)
+  ).then((m) => m.placementGroupsDetailLazyRoute)
 );
 
 export const placementGroupsRouteTree = placementGroupsRoute.addChildren([

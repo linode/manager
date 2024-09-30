@@ -26,7 +26,7 @@ const objectStorageIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/ObjectStorage/ObjectStorageLanding').then(
-    (m) => m.ObjectStorageLandingLazyRoute
+    (m) => m.objectStorageLandingLazyRoute
   )
 );
 
@@ -35,7 +35,7 @@ const objectStorageBucketsRoute = createRoute({
   path: 'buckets',
 }).lazy(() =>
   import('src/features/ObjectStorage/ObjectStorageLanding').then(
-    (m) => m.ObjectStorageLandingLazyRoute
+    (m) => m.objectStorageLandingLazyRoute
   )
 );
 
@@ -44,7 +44,7 @@ const objectStorageAccessKeysRoute = createRoute({
   path: 'access-keys',
 }).lazy(() =>
   import('src/features/ObjectStorage/ObjectStorageLanding').then(
-    (m) => m.ObjectStorageLandingLazyRoute
+    (m) => m.objectStorageLandingLazyRoute
   )
 );
 
@@ -53,7 +53,7 @@ const objectStorageBucketDetailRoute = createRoute({
   path: '$clusterId/$bucketName',
 }).lazy(() =>
   import('src/features/ObjectStorage/BucketDetail').then(
-    (m) => m.BucketDetailLandingLazyRoute
+    (m) => m.bucketDetailLandingLazyRoute
   )
 );
 

@@ -282,7 +282,7 @@ export const PlacementGroupsLanding = React.memo(() => {
   );
 });
 
-export const PlacementGroupsLandingLazyRoute = createLazyRoute(
+export const placementGroupsLandingLazyRoute = createLazyRoute(
   '/placement-groups'
 )({
   component: PlacementGroupsLanding,
