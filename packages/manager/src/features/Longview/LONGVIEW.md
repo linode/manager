@@ -1,6 +1,6 @@
 # Longview
 
-Longview is a monitoring service that allows you to monitor either a Linode service, such as a Linode or NodeBalancer. To get started, [please see the Linode documentation.](https://www.linode.com/docs/platform/longview/longview/)
+Longview is a monitoring service that allows you to monitor either a Linode service, such as a Linode or NodeBalancer. To get started, [please see the Linode documentation.](https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview)
 
 ## Making Requests
 

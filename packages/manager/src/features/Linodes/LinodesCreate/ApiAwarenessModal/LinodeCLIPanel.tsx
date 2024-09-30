@@ -52,7 +52,7 @@ export const LinodeCLIPanel = ({
             }
             ldClient?.flush();
           }}
-          to="https://www.linode.com/docs/products/tools/cli/guides/install/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/install-and-configure-the-cli"
         >
           Install and Configure the Linode CLI
         </Link>{' '}
@@ -71,7 +71,7 @@ export const LinodeCLIPanel = ({
             }
             ldClient?.flush();
           }}
-          to="https://www.linode.com/docs/products/tools/cli/guides/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/cli"
         >
           Linode CLI Guides
         </Link>
