@@ -120,7 +120,7 @@ export const CloudPulseIntervalSelect = React.memo(
     );
 
     return (
-      <CloudPulseTooltip title={'Granularity'}>
+      <CloudPulseTooltip title={'Data points aggregation'}>
         <StyledWidgetAutocomplete
           isOptionEqualToValue={(
             option: IntervalOptions,

@@ -54,7 +54,7 @@ export const CloudPulseAggregateFunction = React.memo(
     ] = React.useState<AggregateFunction>(defaultValue);
 
     return (
-      <CloudPulseTooltip title={'Aggregation'}>
+      <CloudPulseTooltip title={'Aggregation function'}>
         <StyledWidgetAutocomplete
           isOptionEqualToValue={(option, value) => {
             return option.label == value.label;

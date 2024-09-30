@@ -110,7 +110,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               label="Select Time Range"
               savePreferences
             />
-            <CloudPulseTooltip title="Refresh">
+            <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton
                 sx={{
                   marginBlockEnd: 'auto',

@@ -1,39 +1,47 @@
+import { styled, tooltipClasses, useTheme } from '@mui/material';
 import React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
 
-interface CloudPulseTooltipProps {
-  children: any;
-  title: string;
-}
+import type { TooltipProps } from '@mui/material';
 
-export const CloudPulseTooltip = React.memo((props: CloudPulseTooltipProps) => {
+export const CloudPulseTooltip = React.memo((props: TooltipProps) => {
+  const theme = useTheme();
+
   return (
-    <Tooltip
+    <BootstrapTooltip
       PopperProps={{
         modifiers: [
           {
             name: 'offset',
             options: {
-              offset: [0, -8], // Adjust offset if needed
+              offset: [0, -7], // Adjust offset if needed
             },
           },
         ],
-        sx: {
-          '& .MuiTooltip-tooltip': {
-            bgcolor: 'black',
-            color: 'white',
-            fontSize: '14px',
-            maxHeight: '28px',
-            maxWidth: '120px',
-            padding: '6px',
-          },
-        },
       }}
-      placement={'bottom-end'}
+      disableHoverListener={props.open !== undefined ? !props.open : false} // Disable hover during operation
+      open={props.open}
+      placement={props.placement ?? 'top-start'}
       title={props.title}
     >
       <span>{props.children}</span>
-    </Tooltip>
+    </BootstrapTooltip>
   );
 });
+
+const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.common.black,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    fontSize: theme.spacing(1.75),
+    maxHeight: theme.spacing(3.5),
+    maxWidth: theme.spacing(30),
+    padding: theme.spacing(0.75),
+  },
+}));
