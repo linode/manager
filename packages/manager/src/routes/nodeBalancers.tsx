@@ -1,11 +1,14 @@
-import { Outlet, createRoute } from '@tanstack/react-router';
+import {
+  Outlet,
+  createRoute,
+  lazyRouteComponent,
+} from '@tanstack/react-router';
 import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const NodeBalancersRoutes = () => {
   return (
@@ -23,53 +26,47 @@ const nodeBalancersRoute = createRoute({
 });
 
 const nodeBalancersIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/NodeBalancers/NodeBalancersLanding/NodeBalancersLanding'
-      )
-  ),
   getParentRoute: () => nodeBalancersRoute,
   path: '/',
-});
+}).lazy(() =>
+  import(
+    'src/features/NodeBalancers/NodeBalancersLanding/NodeBalancersLanding'
+  ).then((m) => m.NodeBalancersLandingLazyRoute)
+);
 
 const nodeBalancersCreateRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/NodeBalancers/NodeBalancerCreate'),
-  ),
   getParentRoute: () => nodeBalancersRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import('src/features/NodeBalancers/NodeBalancerCreate').then(
+    (m) => m.NodeBalancerCreateLazyRoute
+  )
+);
 
 const nodeBalancerDetailRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerDetail'
-      ),
-    'NodeBalancerDetail'
-  ),
   getParentRoute: () => nodeBalancersRoute,
   parseParams: (params) => ({
     nodeBalancerId: Number(params.nodeBalancerId),
   }),
   path: '$nodeBalancerId',
-});
+}).lazy(() =>
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerDetail'
+  ).then((m) => m.NodeBalancerDetailLazyRoute)
+);
 
 const nodeBalancerDetailSummaryRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/NodeBalancerSummary'
-      ),
-    'NodeBalancerSummary'
-  ),
   getParentRoute: () => nodeBalancerDetailRoute,
   path: 'summary',
-});
+}).lazy(() =>
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/NodeBalancerSummary'
+  ).then((m) => m.NodeBalancerSummaryLazyRoute)
+);
 
+// TODO TanStack Router - figure proper way of lazy loading class components
 const nodeBalancerDetailConfigurationsRoute = createRoute({
-  component: strictLazyRouteComponent(
+  component: lazyRouteComponent(
     () =>
       import(
         'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerConfigurations'
@@ -80,16 +77,13 @@ const nodeBalancerDetailConfigurationsRoute = createRoute({
 });
 
 const nodeBalancerDetailSettingsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSettings'
-      ),
-    'NodeBalancerSettings'
-  ),
   getParentRoute: () => nodeBalancerDetailRoute,
   path: 'settings',
-});
+}).lazy(() =>
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSettings'
+  ).then((m) => m.NodeBalancerSettingsLazyRoute)
+);
 
 export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
   nodeBalancersIndexRoute,

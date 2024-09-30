@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -216,3 +217,9 @@ const StyledPromotionalOfferCard = styled(PromotionalOfferCard, {
 })(({ theme }) => ({
   marginBottom: theme.spacing(0.5),
 }));
+
+export const ObjectStorageLandingLazyRoute = createLazyRoute('/object-storage')(
+  {
+    component: ObjectStorageLanding,
+  }
+);

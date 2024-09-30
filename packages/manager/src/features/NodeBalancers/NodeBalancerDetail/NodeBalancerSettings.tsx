@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -156,3 +157,9 @@ export const NodeBalancerSettings = () => {
     </div>
   );
 };
+
+export const NodeBalancerSettingsLazyRoute = createLazyRoute(
+  '/nodebalancers/$nodeBalancerId/settings'
+)({
+  component: NodeBalancerSettings,
+});
