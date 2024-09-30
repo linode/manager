@@ -1,6 +1,6 @@
 import { createLinodeRequestFactory } from 'src/factories';
+import { base64UserData, userData } from 'src/utilities/metadata.test';
 
-import { base64UserData, userData } from '../LinodesCreate/utilities.test';
 import {
   getInterfacesPayload,
   getIsValidLinodeLabelCharacter,

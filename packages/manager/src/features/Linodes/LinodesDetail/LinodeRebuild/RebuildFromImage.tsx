@@ -1,11 +1,7 @@
-import {
-  RebuildRequest,
-  UserData,
-  rebuildLinode,
-} from '@linode/api-v4/lib/linodes';
+import { rebuildLinode } from '@linode/api-v4';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Formik, FormikProps } from 'formik';
+import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -18,7 +14,6 @@ import { Divider } from 'src/components/Divider';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
-import { regionSupportsMetadata } from 'src/features/Linodes/LinodesCreate/utilities';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -29,6 +24,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { regionSupportsMetadata } from 'src/utilities/metadata';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
@@ -38,6 +34,9 @@ import {
   StyledGrid,
   StyledNotice,
 } from './RebuildFromImage.styles';
+
+import type { RebuildRequest, UserData } from '@linode/api-v4';
+import type { FormikProps } from 'formik';
 
 interface Props {
   disabled: boolean;
