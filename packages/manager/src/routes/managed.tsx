@@ -5,7 +5,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const ManagedRoutes = () => {
   return (
@@ -22,47 +21,62 @@ export const managedRoute = createRoute({
   path: 'managed',
 });
 
-export const managedSummaryRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Managed/ManagedDashboardCard')
-  ),
+export const managedIndexRoute = createRoute({
   getParentRoute: () => managedRoute,
-  path: '/summary',
-});
+  path: '/',
+}).lazy(() =>
+  import('src/features/Managed/ManagedDashboardCard/ManagedDashboardCard').then(
+    (m) => m.ManagedDashboardCardLazyRoute
+  )
+);
+
+export const managedSummaryRoute = createRoute({
+  getParentRoute: () => managedRoute,
+  path: 'summary',
+}).lazy(() =>
+  import('src/features/Managed/ManagedDashboardCard/ManagedDashboardCard').then(
+    (m) => m.ManagedDashboardCardLazyRoute
+  )
+);
 
 export const managedMonitorsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Managed/Monitors')
-  ),
   getParentRoute: () => managedRoute,
-  path: '/monitors',
-});
+  path: 'monitors',
+}).lazy(() =>
+  import('src/features/Managed/Monitors/MonitorTable').then(
+    (m) => m.ManagedMonitorTableLazyRoute
+  )
+);
 
 export const managedSSHAccessRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Managed/SSHAccess')
-  ),
   getParentRoute: () => managedRoute,
-  path: '/ssh-access',
-});
+  path: 'ssh-access',
+}).lazy(() =>
+  import('src/features/Managed/SSHAccess/SSHAccess').then(
+    (m) => m.ManagedSSHAccessLazyRoute
+  )
+);
 
 export const managedCredentialsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Managed/Credentials/CredentialList')
-  ),
   getParentRoute: () => managedRoute,
-  path: '/credentials',
-});
+  path: 'credentials',
+}).lazy(() =>
+  import('src/features/Managed/Credentials/CredentialList').then(
+    (m) => m.ManagedCredentialsLazyRoute
+  )
+);
 
 export const managedContactsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Managed/Contacts/Contacts')
-  ),
   getParentRoute: () => managedRoute,
-  path: '/contacts',
-});
+  path: 'contacts',
+}).lazy(() =>
+  import('src/features/Managed/Contacts/Contacts').then(
+    (m) => m.ManagedContactsLazyRoute
+  )
+);
 
 export const managedRouteTree = managedRoute.addChildren([
+  managedIndexRoute,
   managedSummaryRoute,
   managedMonitorsRoute,
   managedSSHAccessRoute,

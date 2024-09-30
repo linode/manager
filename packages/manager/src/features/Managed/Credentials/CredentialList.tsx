@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -295,5 +296,11 @@ export const CredentialList = () => {
     </>
   );
 };
+
+export const ManagedCredentialsLazyRoute = createLazyRoute(
+  '/managed/credentials'
+)({
+  component: CredentialList,
+});
 
 export default CredentialList;

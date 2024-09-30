@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -232,6 +233,10 @@ const Contacts = () => {
     </>
   );
 };
+
+export const ManagedContactsLazyRoute = createLazyRoute('/managed/contacts')({
+  component: Contacts,
+});
 
 export default Contacts;
 

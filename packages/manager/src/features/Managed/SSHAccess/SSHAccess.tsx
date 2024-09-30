@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -14,5 +15,11 @@ const SSHAcess = () => {
     </>
   );
 };
+
+export const ManagedSSHAccessLazyRoute = createLazyRoute('/managed/ssh-access')(
+  {
+    component: SSHAcess,
+  }
+);
 
 export default SSHAcess;
