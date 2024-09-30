@@ -15,8 +15,10 @@ import type { SupportedLanguage } from 'src/components/HighlightedMarkdown/Highl
 
 export interface CodeBlockProps {
   command: string;
+  /** Label for analytics */
   commandType: string;
   handleCopyIconClick?: () => void;
+  /** The command language */
   language: SupportedLanguage;
   ldTrackingKey?: string;
 }
