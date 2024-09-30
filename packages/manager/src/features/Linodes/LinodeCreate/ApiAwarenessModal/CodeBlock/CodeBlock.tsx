@@ -11,10 +11,12 @@ import {
   StyledHighlightedMarkdown,
 } from './CodeBlock.styles';
 
+import type { SupportedLanguage } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+
 export interface CodeBlockProps {
   command: string;
   commandType: string;
-  language: 'bash';
+  language: SupportedLanguage;
   ldTrackingKey?: string;
 }
 

@@ -1,35 +1,14 @@
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Download from 'src/assets/icons/download.svg';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Typography } from 'src/components/Typography';
+import { CodeBlock } from 'src/features/Linodes/LinodesCreate/CodeBlock/CodeBlock';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  icon: {
-    color: '#3683dc',
-  },
-  iconLink: {
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    font: 'inherit',
-    marginRight: theme.spacing(1),
-    padding: 0,
-  },
-  tooltip: {
-    '& svg': {
-      color: '#3683dc',
-    },
-  },
-}));
 
 interface Props {
   closeDrawer: () => void;
@@ -39,7 +18,6 @@ interface Props {
 }
 
 export const KubeConfigDrawer = (props: Props) => {
-  const { classes } = useStyles();
   const { closeDrawer, clusterId, clusterLabel, open } = props;
 
   const {
@@ -59,35 +37,46 @@ export const KubeConfigDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer onClose={closeDrawer} open={open} title={'View Kubeconfig'} wide>
+    <Drawer onClose={closeDrawer} open={open} title="View Kubeconfig" wide>
       <DrawerContent
         error={!!error}
         errorMessage={error?.[0].reason}
         loading={isLoading}
         title={clusterLabel}
       >
-        <Grid container spacing={2}>
-          <Grid>
-            <Typography variant="h3">{clusterLabel}</Typography>
-          </Grid>
-          <Grid>
-            <button
-              onClick={() =>
-                downloadFile(`${clusterLabel}-kubeconfig.yaml`, data ?? '')
-              }
-              className={classes.iconLink}
-              title="Download"
-            >
-              <Download className={classes.icon} />
-            </button>
-            <CopyTooltip className={classes.tooltip} text={data ?? ''} />
-          </Grid>
-        </Grid>
-        <HighlightedMarkdown
+        <Box display="flex">
+          <Typography mr={2} variant="h3">
+            {clusterLabel}
+          </Typography>
+          <StyledDownloadButton
+            onClick={() =>
+              downloadFile(`${clusterLabel}-kubeconfig.yaml`, data ?? '')
+            }
+            title="Download"
+          >
+            <Download />
+          </StyledDownloadButton>
+        </Box>
+        <CodeBlock
+          command={data ?? ''}
+          commandType="Kube Config Yaml"
           language="yaml"
-          textOrMarkdown={'```\n' + data + '\n```'}
         />
       </DrawerContent>
     </Drawer>
   );
 };
+
+export const StyledDownloadButton = styled('button', {
+  label: 'StyledDownloadButton',
+})(({ theme }) => ({
+  '& svg': {
+    color: '#3683dc',
+  },
+  background: 'none',
+  border: 'none',
+  cursor: 'pointer',
+  font: 'inherit',
+  marginRight: theme.spacing(1),
+  padding: 0,
+}));
