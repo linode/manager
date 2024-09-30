@@ -49,8 +49,8 @@ export const AccessSelect = React.memo((props: Props) => {
 
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
-  const isCorsEnabled =
-    (variant === 'bucket' || variant == 'object') &&
+  const isCorsAvailable =
+    (variant === 'bucket' || variant === 'object') &&
     endpointType !== 'E2' &&
     endpointType !== 'E3';
 
@@ -107,7 +107,7 @@ export const AccessSelect = React.memo((props: Props) => {
       const _acl =
         variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
       const cors_enabled = isUpdateObjectStorageBucketAccessPayload(data)
-        ? data?.cors_enabled || undefined
+        ? data.cors_enabled ?? undefined
         : true;
       reset({ acl: _acl || undefined, cors_enabled });
     }
@@ -203,7 +203,7 @@ export const AccessSelect = React.memo((props: Props) => {
         )}
       </div>
 
-      {isCorsEnabled && (
+      {isCorsAvailable && (
         <Controller
           render={({ field }) => (
             <FormControlLabel
@@ -229,7 +229,7 @@ export const AccessSelect = React.memo((props: Props) => {
         />
       )}
 
-      {isCorsEnabled ? (
+      {isCorsAvailable ? (
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
