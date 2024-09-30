@@ -55,7 +55,7 @@ import {
   useHandleLinodeCreateAnalyticsFormError,
   useLinodeCreateQueryParams,
 } from './utilities';
-import { VLAN } from './VLAN';
+import { VLAN } from './VLAN/VLAN';
 import { VPC } from './VPC/VPC';
 
 import type {
