@@ -10,6 +10,7 @@ import { databasesRouteTree } from './databases';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
 import { firewallsRouteTree } from './firewalls';
+import { imagesRouteTree } from './images';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
 import { longviewRouteTree } from './longview';
@@ -44,6 +45,7 @@ export const routeTree = rootRoute.addChildren([
   domainsRouteTree,
   eventsRouteTree,
   firewallsRouteTree,
+  imagesRouteTree,
   kubernetesRouteTree,
   linodesRouteTree,
   longviewRouteTree,

@@ -5,7 +5,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const ImagesRoutes = () => {
   return (
@@ -23,19 +22,24 @@ export const imagesRoute = createRoute({
 });
 
 export const imagesIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Images/ImagesLanding/ImagesLanding'),
-    'ImagesLanding'
-  ),
   getParentRoute: () => imagesRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Images/ImagesLanding/ImagesLanding').then(
+    (m) => m.ImagesLandingLazyRoute
+  )
+);
 
 export const imagesCreateRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Images/ImagesCreate/ImageCreate'),
-    'ImageCreate'
-  ),
   getParentRoute: () => imagesRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import('src/features/Images/ImagesCreate/ImageCreate').then(
+    (m) => m.ImageCreateLazyRoute
+  )
+);
+
+export const imagesRouteTree = imagesRoute.addChildren([
+  imagesIndexRoute,
+  imagesCreateRoute,
+]);

@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -124,3 +125,9 @@ export const KubernetesClusterDetail = () => {
     </>
   );
 };
+
+export const KubernetesClusterDetailLazyRoute = createLazyRoute(
+  '/kubernetes/clusters/$clusterID'
+)({
+  component: KubernetesClusterDetail,
+});
