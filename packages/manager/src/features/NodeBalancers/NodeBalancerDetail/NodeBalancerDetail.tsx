@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
   matchPath,
@@ -155,3 +156,11 @@ export const NodeBalancerDetail = () => {
     </React.Fragment>
   );
 };
+
+export const NodeBalancerDetailLazyRoute = createLazyRoute(
+  '/nodebalancers/$nodeBalancerId'
+)({
+  component: NodeBalancerDetail,
+});
+
+export default NodeBalancerDetail;

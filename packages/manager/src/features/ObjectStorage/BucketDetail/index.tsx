@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath } from 'react-router-dom';
 
@@ -148,6 +149,12 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       </Tabs>
     </>
   );
+});
+
+export const BucketDetailLandingLazyRoute = createLazyRoute(
+  '/object-storage/buckets/$clusterId/$bucketName'
+)({
+  component: BucketDetailLanding,
 });
 
 export default BucketDetailLanding;
