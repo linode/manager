@@ -142,7 +142,7 @@ const DatabaseLanding = () => {
         }}
         createButtonText="Create Database Cluster"
         disabledCreateButton={isRestricted}
-        docsLink="https://www.linode.com/docs/products/databases/managed-databases/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/managed-databases"
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />

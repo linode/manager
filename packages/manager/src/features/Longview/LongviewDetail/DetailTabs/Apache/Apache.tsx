@@ -71,7 +71,7 @@ export const Apache = React.memo((props: Props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-apache/#troubleshooting">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-apache-metrics-with-linode-longview#troubleshooting">
             guide
           </Link>{' '}
           for help troubleshooting the Apache Longview app.

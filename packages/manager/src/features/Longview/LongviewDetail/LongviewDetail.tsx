@@ -205,7 +205,7 @@ export const LongviewDetail = (props: CombinedProps) => {
           pathname: props.location.pathname,
         }}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/platform/longview/longview/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
         title={client.label}
       />
       {notifications.map((thisNotification, idx) => (
