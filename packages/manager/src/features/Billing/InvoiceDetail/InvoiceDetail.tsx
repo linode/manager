@@ -2,6 +2,7 @@ import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -269,3 +270,9 @@ export const InvoiceDetail = () => {
     </Paper>
   );
 };
+
+export const invoiceDetailLazyRoute = createLazyRoute(
+  '/account/billing/invoices/$invoiceId'
+)({
+  component: InvoiceDetail,
+});

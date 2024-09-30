@@ -5,7 +5,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const DomainsRoutes = () => {
   return (
@@ -23,43 +22,43 @@ const domainsRoute = createRoute({
 });
 
 const domainsIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Domains/DomainsLanding'),
-    'DomainsLanding'
-  ),
   getParentRoute: () => domainsRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Domains/DomainsLanding').then(
+    (m) => m.DomainsLandingLazyRoute
+  )
+);
 
 const domainCreateRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Domains/CreateDomain/CreateDomain'),
-    'CreateDomain'
-  ),
   getParentRoute: () => domainsRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import('src/features/Domains/CreateDomain/CreateDomain').then(
+    (m) => m.CreateDomainLazyRoute
+  )
+);
 
 const domainDetailRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Domains/DomainDetail'),
-    'DomainDetailRouting'
-  ),
   getParentRoute: () => domainsRoute,
   parseParams: (params) => ({
     domainId: Number(params.domainId),
   }),
   path: '$domainId',
-});
+}).lazy(() =>
+  import('src/features/Domains/DomainDetail').then(
+    (m) => m.DomainDetailLazyRoute
+  )
+);
 
 const domainDetailRecordsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Domains/DomainDetail'),
-    'DomainDetailRouting'
-  ),
   getParentRoute: () => domainDetailRoute,
   path: 'records',
-});
+}).lazy(() =>
+  import('src/features/Domains/DomainDetail').then(
+    (m) => m.DomainDetailLazyRoute
+  )
+);
 
 export const domainsRouteTree = domainsRoute.addChildren([
   domainsIndexRoute,

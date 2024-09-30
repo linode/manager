@@ -8,7 +8,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { allPaths } from './allPaths';
+import { allPaths } from './utils/allPaths';
 import { routeTree } from './index';
 
 // Mock any context or dependencies your routes might need
