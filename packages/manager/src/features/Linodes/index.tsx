@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
@@ -71,4 +72,8 @@ export const LinodesLandingWrapper = React.memo(() => {
       linodesRequestLoading={isLoading}
     />
   );
+});
+
+export const LinodesLandingLazyRoute = createLazyRoute('/linodes')({
+  component: LinodesLandingWrapper,
 });

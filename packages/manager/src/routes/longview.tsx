@@ -3,9 +3,9 @@ import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { LongviewDetail } from 'src/features/Longview/LongviewDetail/LongviewDetail';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const LongviewRoutes = () => {
   return (
@@ -23,19 +23,16 @@ export const longviewRoute = createRoute({
 });
 
 export const longviewLandingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Longview/LongviewLanding/LongviewLanding'),
-    'LongviewLanding'
-  ),
   getParentRoute: () => longviewRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Longview/LongviewLanding/LongviewLanding').then(
+    (m) => m.LongviewLandingLazyRoute
+  )
+);
 
 export const longviewDetailRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Longview/LongviewDetail/LongviewDetail'),
-    'LongviewDetail'
-  ),
+  component: LongviewDetail,
   getParentRoute: () => longviewRoute,
   parseParams: (params) => ({
     id: Number(params.id),
