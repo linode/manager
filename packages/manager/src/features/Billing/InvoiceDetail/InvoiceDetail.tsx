@@ -258,7 +258,7 @@ export const InvoiceDetail = () => {
                 This invoice may include Linode Compute Instances that have been
                 powered off as the data is maintained and resources are still
                 reserved. If you no longer need powered-down Linodes, you can{' '}
-                <Link to="https://www.linode.com/docs/products/platform/billing/guides/stop-billing/">
+                <Link to="https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing">
                   {' '}
                   remove the service
                 </Link>{' '}

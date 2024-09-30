@@ -116,7 +116,7 @@ export const disk: PartialEventMap<'disk'> = {
       <>
         Image <EventLink event={e} to="secondaryEntity" /> could{' '}
         <strong>not</strong> be <strong>created</strong>.{' '}
-        <Link to="https://www.linode.com/docs/products/tools/images/#technical-specifications">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/images#technical-specifications">
           Learn more about image technical specifications
         </Link>
         .
@@ -155,7 +155,7 @@ export const disk: PartialEventMap<'disk'> = {
               'Disk resize failed toast'
             );
           }}
-          to="https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/manage-disks-on-a-compute-instance"
         >
           Learn more
         </Link>
