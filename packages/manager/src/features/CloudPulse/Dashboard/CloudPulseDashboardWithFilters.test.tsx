@@ -10,10 +10,9 @@ const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardByIdQuery: vi.fn().mockReturnValue({}),
 }));
 
-const selectTimeDurationPlaceholder = 'Select Time Duration';
+const selectTimeDurationPlaceholder = 'Select a Time Duration';
 const circleProgress = 'circle-progress';
 const mandatoryFiltersError = 'Mandatory Filters not Selected';
-const customNodeTypePlaceholder = 'Select Node Type';
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');
@@ -64,7 +63,9 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
     );
 
-    expect(screen.getByText(selectTimeDurationPlaceholder)).toBeDefined();
+    expect(
+      screen.getByPlaceholderText(selectTimeDurationPlaceholder)
+    ).toBeDefined();
     expect(screen.getByTestId(circleProgress)).toBeDefined(); // the dashboards started to render
   });
 
@@ -80,7 +81,9 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
     );
 
-    expect(screen.getByText(selectTimeDurationPlaceholder)).toBeDefined();
+    expect(
+      screen.getByPlaceholderText(selectTimeDurationPlaceholder)
+    ).toBeDefined();
     expect(screen.getByTestId(circleProgress)).toBeDefined(); // the dashboards started to render
   });
 
@@ -98,8 +101,7 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
 
     expect(screen.getByTestId('CloseIcon')).toBeDefined();
 
-    const inputBox = screen.getByPlaceholderText(customNodeTypePlaceholder);
-    fireEvent.change(inputBox, { target: { value: '' } }); // clear the value
+    fireEvent.click(screen.getByTitle('Clear')); // clear the value
     expect(screen.getByText(mandatoryFiltersError)).toBeDefined();
   });
 

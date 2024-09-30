@@ -32,16 +32,16 @@ const props = {
 
 describe('Create API Token Drawer', () => {
   it('checks API Token Drawer rendering', () => {
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getAllByTestId, getByTestId, getByText } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
     );
     const drawerTitle = getByText('Add Personal Access Token');
     expect(drawerTitle).toBeVisible();
 
     const labelTitle = getByText(/Label/);
-    const labelField = getByTestId('textfield-input');
+    const labelField = getAllByTestId('textfield-input');
     expect(labelTitle).toBeVisible();
-    expect(labelField).toBeEnabled();
+    expect(labelField[0]).toBeEnabled();
 
     const expiry = getByText(/Expiry/);
     expect(expiry).toBeVisible();
@@ -67,12 +67,12 @@ describe('Create API Token Drawer', () => {
         })
       );
 
-      const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      const { getAllByTestId, getByLabelText, getByText } = renderWithTheme(
         <CreateAPITokenDrawer {...props} />
       );
 
-      const labelField = getByTestId('textfield-input');
-      await userEvent.type(labelField, 'my-test-token');
+      const labelField = getAllByTestId('textfield-input');
+      await userEvent.type(labelField[0], 'my-test-token');
 
       const selectAllNoAccessPermRadioButton = getByLabelText(
         'Select no access for all'
@@ -110,8 +110,10 @@ describe('Create API Token Drawer', () => {
   });
 
   it('Should default to 6 months for expiration', () => {
-    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
-    getByText('In 6 months');
+    const { getAllByRole } = renderWithTheme(
+      <CreateAPITokenDrawer {...props} />
+    );
+    expect(getAllByRole('combobox')[0]).toHaveDisplayValue('In 6 months');
   });
 
   it('Should show the Child Account Access scope for a parent user account with the parent/child feature flag on', () => {

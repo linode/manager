@@ -40,14 +40,14 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from '../../Account/utils';
+import { uploadImageFile } from '../requests';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
-import {
+import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
+
+import type {
   ImageUploadFormData,
   ImageUploadNavigationState,
 } from './ImageUpload.utils';
-import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
-import { uploadImageFile } from '../requests';
-
 import type { AxiosError, AxiosProgressEvent } from 'axios';
 
 export const ImageUpload = () => {
@@ -194,9 +194,9 @@ export const ImageUpload = () => {
               Image Details
             </Typography>
             <Typography>
-              Custom images are billed monthly, at $.10/GB. An uploaded image
+              Custom images are billed monthly, at $0.10/GB. An uploaded image
               file needs to meet specific{' '}
-              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image">
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#requirements-and-considerations">
                 requirements
               </Link>
               .
@@ -331,17 +331,6 @@ export const ImageUpload = () => {
                 variant="error"
               />
             )}
-            <Notice spacingBottom={0} variant="warning">
-              <Typography>
-                Image files must be raw disk images (.img) compressed using gzip
-                (.gz). The maximum file size is 5 GB (compressed) and maximum
-                image size is 6 GB (uncompressed).
-              </Typography>
-            </Notice>
-            <Typography sx={{ paddingBlock: 2 }}>
-              Custom Images are billed at $0.10/GB per month based on the
-              uncompressed image size.
-            </Typography>
             <Controller
               render={({ field }) => (
                 <ImageUploader
@@ -379,8 +368,8 @@ export const ImageUpload = () => {
           <Box display="flex" gap={1} justifyContent="flex-end">
             <Button
               buttonType="outlined"
-              onClick={() => setLinodeCLIModalOpen(true)}
               disabled={isImageCreateRestricted}
+              onClick={() => setLinodeCLIModalOpen(true)}
             >
               Upload Using Command Line
             </Button>

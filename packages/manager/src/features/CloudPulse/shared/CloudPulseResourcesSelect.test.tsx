@@ -42,7 +42,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
     expect(getByTestId('resource-select')).toBeInTheDocument();
-    expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select a Resource')).toBeInTheDocument();
   }),
     it('should render resources happy path', () => {
       queryMocks.useResourcesQuery.mockReturnValue({

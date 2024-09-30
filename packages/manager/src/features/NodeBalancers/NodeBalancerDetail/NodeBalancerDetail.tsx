@@ -24,7 +24,7 @@ import { useGrants } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
-import NodeBalancerSettings from './NodeBalancerSettings';
+import { NodeBalancerSettings } from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 
 export const NodeBalancerDetail = () => {

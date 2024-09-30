@@ -28,7 +28,7 @@ import type { FieldErrors } from 'react-hook-form';
 /**
  * This is the ID of the Image of the default OS.
  */
-const DEFAULT_OS = 'linode/debian11';
+const DEFAULT_OS = 'linode/ubuntu24.04';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -304,6 +304,7 @@ export const defaultValues = async (
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
+    backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
     interfaces: defaultInterfaces,
     linode,

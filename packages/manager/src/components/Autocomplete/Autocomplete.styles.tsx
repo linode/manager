@@ -1,9 +1,11 @@
 import DoneIcon from '@mui/icons-material/Done';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { omittedProps } from 'src/utilities/omittedProps';
+
+import type { PopperProps } from '@mui/material/Popper';
 
 export const StyledListItem = styled('li', {
   label: 'StyledListItem',

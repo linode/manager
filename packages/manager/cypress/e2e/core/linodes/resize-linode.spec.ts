@@ -9,6 +9,7 @@ authenticate();
 describe('resize linode', () => {
   beforeEach(() => {
     cleanUp(['linodes']);
+    cy.tag('method:e2e');
   });
 
   it('resizes a linode by increasing size: warm migration', () => {
@@ -121,7 +122,7 @@ describe('resize linode', () => {
         { securityMethod: 'vlan_no_internet' }
       )
     ).then((linode) => {
-      const diskName = 'Debian 11 Disk';
+      const diskName = 'Ubuntu 24.04 LTS Disk';
       const size = '50000'; // 50 GB
 
       // Error flow when attempting to resize a linode to a smaller size without

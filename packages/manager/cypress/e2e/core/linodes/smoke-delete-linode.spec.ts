@@ -48,7 +48,7 @@ const deleteLinodeFromActionMenu = (linodeLabel: string) => {
     });
 
   cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
-  cy.findByText(linodeLabel).should('not.exist');
+  cy.findAllByText(linodeLabel).should('not.exist');
 };
 
 const preferenceOverrides = {
@@ -66,6 +66,9 @@ authenticate();
 describe('delete linode', () => {
   before(() => {
     cleanUp(['linodes', 'lke-clusters']);
+  });
+  beforeEach(() => {
+    cy.tag('method:e2e');
   });
 
   it('deletes linode from linode details page', () => {

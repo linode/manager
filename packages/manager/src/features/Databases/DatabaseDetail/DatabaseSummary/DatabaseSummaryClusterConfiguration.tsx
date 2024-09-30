@@ -53,12 +53,15 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
 
   const { database } = props;
 
-  const { data: types } = useDatabaseTypesQuery();
+  const { data: types } = useDatabaseTypesQuery({
+    platform: database.platform,
+  });
+
+  const type = types?.find((type: DatabaseType) => type.id === database?.type);
+
   const { data: regions } = useRegionsQuery();
 
   const region = regions?.find((r: Region) => r.id === database.region);
-
-  const type = types?.find((type: DatabaseType) => type.id === database?.type);
 
   const { data: events } = useInProgressEvents();
 

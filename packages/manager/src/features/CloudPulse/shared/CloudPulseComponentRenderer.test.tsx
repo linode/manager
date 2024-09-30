@@ -47,7 +47,7 @@ describe('ComponentRenderer component tests', () => {
       </Grid>
     );
 
-    expect(getByPlaceholderText('Select Region')).toBeDefined();
+    expect(getByPlaceholderText('Select a Region')).toBeDefined();
   }),
     it('it should render provided resource filter in props', () => {
       const resourceProps = linodeFilterConfig?.filters.find(
@@ -81,6 +81,6 @@ describe('ComponentRenderer component tests', () => {
           })}
         </Grid>
       );
-      expect(getByPlaceholderText('Select Resources')).toBeDefined();
+      expect(getByPlaceholderText('Select a Resource')).toBeDefined();
     });
 });

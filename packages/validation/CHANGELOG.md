@@ -1,3 +1,10 @@
+## [2024-09-30] - v0.53.0
+
+
+### Changed:
+
+- Make `replication_type` and `replication_commit_type` optional in `databases.schema.ts` ([#10980](https://github.com/linode/manager/pull/10980))
+
 ## [2024-09-03] - v0.52.0
 
 

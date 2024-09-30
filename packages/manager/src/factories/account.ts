@@ -46,6 +46,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'LKE HA Control Planes',
     'Machine Images',
     'Managed Databases',
+    'Managed Databases Beta',
     'NodeBalancers',
     'Object Storage Access Key Regions',
     'Object Storage Endpoint Types',

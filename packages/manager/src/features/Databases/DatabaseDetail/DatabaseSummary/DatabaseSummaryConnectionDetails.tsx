@@ -146,6 +146,13 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
+  const username =
+    database.platform === 'rdbms-default'
+      ? 'akmadmin'
+      : database.engine === 'postgresql'
+      ? 'linpostgres'
+      : DB_ROOT_USERNAME;
+
   const password =
     showCredentials && credentials ? credentials?.password : '••••••••••';
 
@@ -191,7 +198,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
 
   const disableShowBtn = ['failed', 'provisioning'].includes(database.status);
   const disableDownloadCACertificateBtn = database.status === 'provisioning';
-  // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
+  const readOnlyHost = database?.hosts?.standby || database?.hosts?.secondary;
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (
@@ -235,8 +242,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       </Typography>
       <Box className={classes.connectionDetailsCtn} data-qa-connection-details>
         <Typography>
-          <span>username</span> ={' '}
-          {database.engine === 'postgresql' ? 'linpostgres' : DB_ROOT_USERNAME}
+          <span>username</span> = {username}
         </Typography>
         <Box display="flex">
           <Typography>
@@ -356,14 +362,19 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             </>
           )}
         </Box>
-        {database.hosts.secondary ? (
+        {readOnlyHost ? (
           <Box alignItems="center" display="flex" flexDirection="row">
             <Typography>
-              <span>private network host</span> = {database.hosts.secondary}
+              {database.platform === 'rdbms-default' ? (
+                <span>read-only host</span>
+              ) : (
+                <span>private network host</span>
+              )}
+              = {readOnlyHost}
             </Typography>
             <CopyTooltip
               className={classes.inlineCopyToolTip}
-              text={database.hosts.secondary}
+              text={readOnlyHost}
             />
             <TooltipIcon
               status="help"

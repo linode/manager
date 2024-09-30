@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -129,10 +129,12 @@ const OAuthClients = () => {
         marginBottom={1}
         paddingRight={{ lg: 0, md: 0, sm: 1, xs: 1 }}
       >
-        <AddNewLink
-          label="Add an OAuth App"
+        <Button
+          buttonType="primary"
           onClick={() => setIsCreateDrawerOpen(true)}
-        />
+        >
+          Add an OAuth App
+        </Button>
       </Box>
       <Table aria-label="List of OAuth Apps">
         <TableHead>

@@ -110,6 +110,7 @@ describe('rebuild linode', () => {
    * - Confirms that password complexity
    */
   it('rebuilds a linode from Image', () => {
+    cy.tag('method:e2e');
     const weakPassword = 'abc123';
     const fairPassword = 'Akamai123';
 
@@ -164,6 +165,7 @@ describe('rebuild linode', () => {
    * - Confirms that a Linode can be rebuilt using a Community StackScript.
    */
   it('rebuilds a linode from Community StackScript', () => {
+    cy.tag('method:e2e');
     const stackScriptId = '443929';
     const stackScriptName = 'OpenLiteSpeed-WordPress';
     const image = 'AlmaLinux 9';
@@ -226,6 +228,7 @@ describe('rebuild linode', () => {
    * - Confirms that a Linode can be rebuilt using an Account StackScript.
    */
   it('rebuilds a linode from Account StackScript', () => {
+    cy.tag('method:e2e');
     const image = 'Alpine';
     const region = 'us-east';
 

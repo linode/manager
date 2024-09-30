@@ -1,5 +1,7 @@
-// Function to send aria-live messages
-// Fo instance, when page is loading
+/**
+ * Function to send aria-live messages
+ * For instance, when page is loading
+ */
 export const srSpeak = (text: string, priority: 'assertive' | 'polite') => {
   const el = document.createElement('div');
   const id = 'speak-' + Math.random().toString(36).substr(2, 9);

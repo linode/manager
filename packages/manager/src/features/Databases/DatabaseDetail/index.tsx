@@ -1,5 +1,3 @@
-import { Engine } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
@@ -12,6 +10,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
@@ -21,6 +20,9 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { Engine } from '@linode/api-v4/lib/databases/types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -43,7 +45,9 @@ export const DatabaseDetail = () => {
   const id = Number(databaseId);
 
   const { data: database, error, isLoading } = useDatabaseQuery(engine, id);
-  const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery({
+    platform: database?.platform,
+  });
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
 
@@ -199,6 +203,7 @@ export const DatabaseDetail = () => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
+      {database.platform === 'rdbms-default' && <DatabaseLogo />}
     </>
   );
 };

@@ -11,6 +11,9 @@ describe('volume update flow', () => {
   before(() => {
     cleanUp(['tags', 'volumes']);
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Confirms that volume label and tags can be changed from the Volumes landing page.

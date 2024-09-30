@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
 
 export interface AggregateFunctionProperties {
   /**
@@ -37,7 +37,7 @@ export const CloudPulseAggregateFunction = React.memo(
       ) || props.availableAggregateFunctions[0];
 
     return (
-      <Autocomplete
+      <StyledWidgetAutocomplete
         isOptionEqualToValue={(option, value) => {
           return option.label == value.label;
         }}

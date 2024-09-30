@@ -1,9 +1,6 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { Theme, useTheme } from '@mui/material/styles';
-import {
-  default as _TextField,
-  StandardTextFieldProps,
-} from '@mui/material/TextField';
+import { useTheme } from '@mui/material/styles';
+import { default as _TextField } from '@mui/material/TextField';
 import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -13,11 +10,13 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { InputLabel } from 'src/components/InputLabel';
-import { TooltipProps } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
+import type { Theme } from '@mui/material/styles';
+import type { StandardTextFieldProps } from '@mui/material/TextField';
 import type { BoxProps } from 'src/components/Box';
+import type { TooltipProps } from 'src/components/Tooltip';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   absolute: {
@@ -480,8 +479,10 @@ export const TextField = (props: TextFieldProps) => {
         {tooltipText && (
           <TooltipIcon
             sxTooltipIcon={{
+              height: '34px',
               margin: '0px 0px 0px 4px',
-              padding: '6px',
+              padding: '17px',
+              width: '34px',
             }}
             classes={{ popper: tooltipClasses }}
             onMouseEnter={tooltipOnMouseEnter}
