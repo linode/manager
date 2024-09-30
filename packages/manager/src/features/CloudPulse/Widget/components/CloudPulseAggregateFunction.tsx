@@ -39,7 +39,7 @@ export const CloudPulseAggregateFunction = React.memo(
       ) || props.availableAggregateFunctions[0];
 
     return (
-      <CloudPulseTooltip title={'Aggregation'}>
+      <CloudPulseTooltip title={'Aggregation function'}>
         <StyledWidgetAutocomplete
           getOptionLabel={(option: { label: string }) => {
             return convertStringToCamelCasesWithSpaces(option.label); // options needed to be display in Caps first

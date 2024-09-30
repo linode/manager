@@ -50,8 +50,9 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
             },
             backgroundColor: theme.bg.offWhite,
             maxHeight: `calc(${theme.spacing(14)} + 3px)`,
+            minHeight: `calc(${theme.spacing(10)})`,
             overflow: 'auto',
-            padding: theme.spacing(1),
+            paddingLeft: theme.spacing(1),
           }}
           ariaLabel={ariaLabel}
           data={data}

@@ -22,7 +22,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
   const ToggleZoomer = () => {
     if (props.zoomIn) {
       return (
-        <CloudPulseTooltip title={'Minimize'}>
+        <CloudPulseTooltip placement="bottom-end" title={'Minimize'}>
           <IconButton
             sx={{
               color: theme.color.grey1,
@@ -40,7 +40,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
     }
 
     return (
-      <CloudPulseTooltip title={'Maximize'}>
+      <CloudPulseTooltip placement="bottom-end" title={'Maximize'}>
         <IconButton
           sx={{
             color: theme.color.grey1,
