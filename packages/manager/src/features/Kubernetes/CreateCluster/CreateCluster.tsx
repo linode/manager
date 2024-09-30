@@ -52,7 +52,7 @@ import {
 import { HAControlPlane } from './HAControlPlane';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import { NodePoolPanel } from './NodePoolPanel';
-import { ExtendedIP } from 'src/utilities/ipUtils';
+import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import type {
   CreateKubeClusterPayload,
@@ -83,8 +83,12 @@ export const CreateCluster = () => {
   const { data: account } = useAccount();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
-  const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([]);
-  const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([]);
+  const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
+    stringToExtendedIP(''),
+  ]);
+  const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
+    stringToExtendedIP(''),
+  ]);
 
   const {
     data: kubernetesHighAvailabilityTypesData,

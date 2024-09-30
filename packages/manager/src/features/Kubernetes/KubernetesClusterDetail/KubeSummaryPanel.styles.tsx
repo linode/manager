@@ -72,7 +72,7 @@ export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
 export const StyledLabelBox = styled(Box, { label: 'StyledLabelBox' })(
   ({ theme }) => ({
     fontFamily: theme.font.bold,
-    marginRight: '4px',
+    marginRight: '8px',
   })
 );
 

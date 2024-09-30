@@ -59,6 +59,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
   const _revisionID = data?.acl?.['revision-id'];
 
+  const _hideEnableFromUI = !clusterMigrated || !_enabled;
+
   // respective react states
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([]);
   const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([]);
@@ -72,17 +74,19 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open && !isLoadingKubernetesACL && !isFetchingKubernetesACL) {
       // updates states based on queried data
-      setIPv4Addr(
-        _ipv4 ? _ipv4 : clusterMigrated ? [] : [stringToExtendedIP('0.0.0.0/0')]
-      );
-      setIPv6Addr(
-        _ipv6 ? _ipv6 : clusterMigrated ? [] : [stringToExtendedIP('::/0')]
-      );
+      setIPv4Addr(_ipv4 ? _ipv4 : [stringToExtendedIP('')]);
+      setIPv6Addr(_ipv6 ? _ipv6 : [stringToExtendedIP('')]);
       setControlPlaneACL(_enabled ? _enabled : false);
       setRevisionID(_revisionID ? _revisionID : '');
       setUpdateACLError(isErrorKubernetesACL?.[0].reason);
       setUpdating(false);
-      setSubmitButtonLabel(clusterMigrated ? 'Update' : 'Install');
+      setSubmitButtonLabel(
+        _hideEnableFromUI
+          ? 'Enable IPACL'
+          : clusterMigrated
+          ? 'Update IPACL'
+          : 'Install IPACL'
+      );
       refetchKubernetesACL();
     }
   }, [open]);
@@ -121,7 +125,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
-        enabled: clusterMigrated ? controlPlaneACL : true, // new cluster installations default to true
+        enabled: _hideEnableFromUI ? true : controlPlaneACL, // both new cluster installations as well as all the states where the UI disabled the option for the user to enable, we default to true
         'revision-id': revisionID,
         ...((_ipv4.length > 0 || _ipv6.length > 0) && {
           addresses: {
@@ -188,11 +192,10 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     if (!clusterMigrated) {
       return (
         <>
-          <Notice spacingTop={8} variant="error">
+          <Notice spacingTop={24} variant="warning">
             IPACL is not yet installed on this cluster.... may take up to 10
             minutes or more, before ACLs are enforced...
           </Notice>
-          <Divider sx={{ marginTop: 1 }} />
         </>
       );
     } else {
@@ -264,7 +267,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         <Grid>
           <Typography variant="h3">Addresses</Typography>
         </Grid>
-        <Grid>
+        <Grid sx={{ marginBottom: 1 }}>
           <Typography variant="body1">
             A list of individual ipv4 and ipv6 addresses or CIDRs to ALLOW
             access to the control plane.
@@ -299,9 +302,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           </Grid>
           <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
-          <ClusterNeedsMigration />
-
-          {clusterMigrated && (
+          {!_hideEnableFromUI && (
             <>
               <EnabledCopy />
               <Box sx={{ marginTop: 2 }}>
@@ -327,6 +328,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           <RevisionID />
 
           <AddressesCopy />
+          <ErrorMessage />
           <MultipleIPInput
             buttonText="Add IP Address"
             ips={ipV4Addr}
@@ -367,7 +369,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
           />
 
-          <ErrorMessage />
+          <ClusterNeedsMigration />
         </Stack>
       </DrawerContent>
     </Drawer>

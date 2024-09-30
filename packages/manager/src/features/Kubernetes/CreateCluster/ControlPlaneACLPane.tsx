@@ -71,7 +71,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         </Typography>
       </FormLabel>
       <IPACLCopy />
-      <Box sx={{ marginTop: 2 }}>
+      <Box sx={{ marginTop: 2, marginBottom: 1 }}>
         <FormControlLabel
           control={
             <Toggle
@@ -84,7 +84,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         />
       </Box>
       {enableControlPlaneACL && (
-        <Stack sx={{ marginBottom: 4 }}>
+        <Stack sx={{ marginBottom: 3 }}>
           <MultipleIPInput
             buttonText="Add IP Address"
             ips={ipV4Addr}
