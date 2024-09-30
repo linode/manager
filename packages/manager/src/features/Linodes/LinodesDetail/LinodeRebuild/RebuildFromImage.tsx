@@ -13,7 +13,6 @@ import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { UserDataAccordion } from 'src/features/Linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -34,6 +33,7 @@ import {
   StyledGrid,
   StyledNotice,
 } from './RebuildFromImage.styles';
+import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 
 import type { RebuildRequest, UserData } from '@linode/api-v4';
 import type { FormikProps } from 'formik';
