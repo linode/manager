@@ -19,13 +19,13 @@ import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
+import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { inputMaxWidth } from 'src/foundations/themes/light';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery, useVPCsQuery } from 'src/queries/vpcs/vpcs';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
-import { VPCCreateDrawer } from '../../LinodesCreate/VPCCreateDrawer';
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 

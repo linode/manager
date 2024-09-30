@@ -27,7 +27,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { VPCCreateDrawer } from './VPCCreateDrawer';
+import { VPCCreateDrawer } from '../../../VPCs/VPCCreateDrawer/VPCCreateDrawer';
 
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
