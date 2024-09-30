@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -279,5 +280,11 @@ export const KubernetesLanding = () => {
     </>
   );
 };
+
+export const KubernetesLandingLazyRoute = createLazyRoute(
+  '/kubernetes/clusters'
+)({
+  component: KubernetesLanding,
+});
 
 export default KubernetesLanding;

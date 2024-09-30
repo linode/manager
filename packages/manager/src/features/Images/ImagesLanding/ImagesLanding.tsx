@@ -1,5 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -639,5 +640,9 @@ export const ImagesLanding = () => {
     </React.Fragment>
   );
 };
+
+export const ImagesLandingLazyRoute = createLazyRoute('/images')({
+  component: ImagesLanding,
+});
 
 export default ImagesLanding;
