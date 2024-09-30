@@ -48,7 +48,9 @@ export const CloudPulseResourcesSelect = React.memo(
 
     const [selectedResources, setSelectedResources] = React.useState<
       CloudPulseResources[]
-    >();
+    >([]);
+
+    const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       return resources && resources.length > 0 ? resources : [];
@@ -79,11 +81,21 @@ export const CloudPulseResourcesSelect = React.memo(
 
     return (
       <Autocomplete
-        onChange={(_: any, resourceSelections: CloudPulseResources[]) => {
+        onChange={(
+          _: React.SyntheticEvent,
+          resourceSelections: CloudPulseResources[]
+        ) => {
           setSelectedResources(resourceSelections);
+
+          if (!isAutocompleteOpen.current) {
+            handleResourcesSelection(resourceSelections, savePreferences);
+          }
         }}
         onClose={() => {
           handleResourcesSelection(selectedResources ?? [], savePreferences);
+        }}
+        onOpen={() => {
+          isAutocompleteOpen.current = true;
         }}
         placeholder={
           selectedResources?.length ? '' : placeholder || 'Select a Resource'
