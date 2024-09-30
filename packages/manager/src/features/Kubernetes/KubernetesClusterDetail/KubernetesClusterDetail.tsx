@@ -126,7 +126,7 @@ export const KubernetesClusterDetail = () => {
   );
 };
 
-export const KubernetesClusterDetailLazyRoute = createLazyRoute(
+export const kubernetesClusterDetailLazyRoute = createLazyRoute(
   '/kubernetes/clusters/$clusterID'
 )({
   component: KubernetesClusterDetail,

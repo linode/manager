@@ -28,7 +28,7 @@ const databasesIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/Databases/DatabaseLanding/DatabaseLanding').then(
-    (m) => m.DatabaseLandingLazyRoute
+    (m) => m.databaseLandingLazyRoute
   )
 );
 
@@ -37,7 +37,7 @@ const databasesCreateRoute = createRoute({
   path: 'create',
 }).lazy(() =>
   import('src/features/Databases/DatabaseCreate/DatabaseCreate').then(
-    (m) => m.DatabaseCreateLazyRoute
+    (m) => m.databaseCreateLazyRoute
   )
 );
 
@@ -50,7 +50,7 @@ const databasesDetailRoute = createRoute({
   path: '$engine/$databaseId',
 }).lazy(() =>
   import('src/features/Databases/DatabaseDetail').then(
-    (m) => m.DatabaseDetailLazyRoute
+    (m) => m.databaseDetailLazyRoute
   )
 );
 
@@ -59,7 +59,7 @@ const databasesDetailSummaryRoute = createRoute({
   path: 'summary',
 }).lazy(() =>
   import('src/features/Databases/DatabaseDetail').then(
-    (m) => m.DatabaseDetailLazyRoute
+    (m) => m.databaseDetailLazyRoute
   )
 );
 
@@ -68,7 +68,7 @@ const databasesDetailBackupsRoute = createRoute({
   path: 'backups',
 }).lazy(() =>
   import('src/features/Databases/DatabaseDetail').then(
-    (m) => m.DatabaseDetailLazyRoute
+    (m) => m.databaseDetailLazyRoute
   )
 );
 
@@ -77,7 +77,7 @@ const databasesDetailResizeRoute = createRoute({
   path: 'resize',
 }).lazy(() =>
   import('src/features/Databases/DatabaseDetail').then(
-    (m) => m.DatabaseDetailLazyRoute
+    (m) => m.databaseDetailLazyRoute
   )
 );
 
@@ -86,7 +86,7 @@ const databasesDetailSettingsRoute = createRoute({
   path: 'settings',
 }).lazy(() =>
   import('src/features/Databases/DatabaseDetail').then(
-    (m) => m.DatabaseDetailLazyRoute
+    (m) => m.databaseDetailLazyRoute
   )
 );
 

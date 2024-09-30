@@ -725,7 +725,7 @@ const determineCompressionType = (engine: string) => {
   return undefined;
 };
 
-export const DatabaseCreateLazyRoute = createLazyRoute('/databases/create')({
+export const databaseCreateLazyRoute = createLazyRoute('/databases/create')({
   component: DatabaseCreate,
 });
 

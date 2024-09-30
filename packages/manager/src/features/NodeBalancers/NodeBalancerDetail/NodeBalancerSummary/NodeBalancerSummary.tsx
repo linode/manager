@@ -46,7 +46,7 @@ const StyledSidebarGridItem = styled(Grid, {
   },
 }));
 
-export const NodeBalancerSummaryLazyRoute = createLazyRoute(
+export const nodeBalancerSummaryLazyRoute = createLazyRoute(
   '/nodebalancers/$nodeBalancerId'
 )({
   component: NodeBalancerSummary,

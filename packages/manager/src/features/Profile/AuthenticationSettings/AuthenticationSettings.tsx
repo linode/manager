@@ -128,6 +128,12 @@ export const AuthenticationSettings = () => {
   );
 };
 
+export const authenticationSettingsLazyRoute = createLazyRoute('/profile/auth')(
+  {
+    component: AuthenticationSettings,
+  }
+);
+
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',
 })(({ theme }) => ({
@@ -149,9 +155,3 @@ export const StyledMainCopy = styled(Typography, {
   marginTop: theme.spacing(),
   maxWidth: 960,
 }));
-
-export const AuthenticationSettingsLazyRoute = createLazyRoute('/profile/auth')(
-  {
-    component: AuthenticationSettings,
-  }
-);

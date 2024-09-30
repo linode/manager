@@ -224,6 +224,6 @@ export const LishSettings = () => {
   );
 };
 
-export const LishSettingsLazyRoute = createLazyRoute('/profile/lish')({
+export const lishSettingsLazyRoute = createLazyRoute('/profile/lish')({
   component: LishSettings,
 });

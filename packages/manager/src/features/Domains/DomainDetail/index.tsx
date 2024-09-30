@@ -44,6 +44,6 @@ export const DomainDetailRouting = () => {
   return <DomainsLanding domainForEditing={domain} />;
 };
 
-export const DomainDetailLazyRoute = createLazyRoute('/domains/$domainId')({
+export const domainDetailLazyRoute = createLazyRoute('/domains/$domainId')({
   component: DomainDetailRouting,
 });

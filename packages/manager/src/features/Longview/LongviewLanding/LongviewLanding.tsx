@@ -185,7 +185,7 @@ const StyledTabs = styled(Tabs, {
   marginTop: 0,
 }));
 
-export const LongviewLandingLazyRoute = createLazyRoute('/longview')({
+export const longviewLandingLazyRoute = createLazyRoute('/longview')({
   component: LongviewLanding,
 });
 

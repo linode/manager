@@ -26,7 +26,7 @@ export const imagesIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/Images/ImagesLanding/ImagesLanding').then(
-    (m) => m.ImagesLandingLazyRoute
+    (m) => m.imagesLandingLazyRoute
   )
 );
 
@@ -35,7 +35,7 @@ export const imagesCreateRoute = createRoute({
   path: 'create',
 }).lazy(() =>
   import('src/features/Images/ImagesCreate/ImageCreate').then(
-    (m) => m.ImageCreateLazyRoute
+    (m) => m.imageCreateLazyRoute
   )
 );
 

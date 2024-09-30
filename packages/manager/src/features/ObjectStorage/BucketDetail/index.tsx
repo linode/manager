@@ -151,7 +151,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
   );
 });
 
-export const BucketDetailLandingLazyRoute = createLazyRoute(
+export const bucketDetailLandingLazyRoute = createLazyRoute(
   '/object-storage/buckets/$clusterId/$bucketName'
 )({
   component: BucketDetailLanding,

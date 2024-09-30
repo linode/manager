@@ -26,7 +26,7 @@ const cloudPulseLandingRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/CloudPulse/CloudPulseLanding').then(
-    (m) => m.CloudPulseLandingLazyRoute
+    (m) => m.cloudPulseLandingLazyRoute
   )
 );
 

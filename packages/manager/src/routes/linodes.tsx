@@ -23,7 +23,7 @@ const linodesIndexRoute = createRoute({
   getParentRoute: () => linodesRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/Linodes/index').then((m) => m.LinodesLandingLazyRoute)
+  import('src/features/Linodes/index').then((m) => m.linodesLandingLazyRoute)
 );
 
 const linodesCreateRoute = createRoute({
@@ -31,7 +31,7 @@ const linodesCreateRoute = createRoute({
   path: 'create',
 }).lazy(() =>
   import('src/features/Linodes/LinodeCreatev2').then(
-    (m) => m.LinodeCreatev2LazyRoute
+    (m) => m.linodeCreatev2LazyRoute
   )
 );
 
@@ -43,7 +43,7 @@ const linodesDetailRoute = createRoute({
   path: '$linodeId',
 }).lazy(() =>
   import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-    (m) => m.LinodeDetailLazyRoute
+    (m) => m.linodeDetailLazyRoute
   )
 );
 

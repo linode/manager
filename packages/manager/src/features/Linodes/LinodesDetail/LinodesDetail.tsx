@@ -90,6 +90,6 @@ export const LinodeDetail = () => {
   );
 };
 
-export const LinodeDetailLazyRoute = createLazyRoute('/linodes/$linodeId')({
+export const linodeDetailLazyRoute = createLazyRoute('/linodes/$linodeId')({
   component: LinodeDetail,
 });

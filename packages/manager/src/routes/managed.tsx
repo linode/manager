@@ -26,7 +26,7 @@ export const managedIndexRoute = createRoute({
   path: '/',
 }).lazy(() =>
   import('src/features/Managed/ManagedDashboardCard/ManagedDashboardCard').then(
-    (m) => m.ManagedDashboardCardLazyRoute
+    (m) => m.managedDashboardCardLazyRoute
   )
 );
 
@@ -35,7 +35,7 @@ export const managedSummaryRoute = createRoute({
   path: 'summary',
 }).lazy(() =>
   import('src/features/Managed/ManagedDashboardCard/ManagedDashboardCard').then(
-    (m) => m.ManagedDashboardCardLazyRoute
+    (m) => m.managedDashboardCardLazyRoute
   )
 );
 
@@ -44,7 +44,7 @@ export const managedMonitorsRoute = createRoute({
   path: 'monitors',
 }).lazy(() =>
   import('src/features/Managed/Monitors/MonitorTable').then(
-    (m) => m.ManagedMonitorTableLazyRoute
+    (m) => m.managedMonitorTableLazyRoute
   )
 );
 
@@ -53,7 +53,7 @@ export const managedSSHAccessRoute = createRoute({
   path: 'ssh-access',
 }).lazy(() =>
   import('src/features/Managed/SSHAccess/SSHAccess').then(
-    (m) => m.ManagedSSHAccessLazyRoute
+    (m) => m.managedSSHAccessLazyRoute
   )
 );
 
@@ -62,7 +62,7 @@ export const managedCredentialsRoute = createRoute({
   path: 'credentials',
 }).lazy(() =>
   import('src/features/Managed/Credentials/CredentialList').then(
-    (m) => m.ManagedCredentialsLazyRoute
+    (m) => m.managedCredentialsLazyRoute
   )
 );
 
@@ -71,7 +71,7 @@ export const managedContactsRoute = createRoute({
   path: 'contacts',
 }).lazy(() =>
   import('src/features/Managed/Contacts/Contacts').then(
-    (m) => m.ManagedContactsLazyRoute
+    (m) => m.managedContactsLazyRoute
   )
 );
 

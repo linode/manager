@@ -294,7 +294,7 @@ export const MonitorTable = () => {
   );
 };
 
-export const ManagedMonitorTableLazyRoute = createLazyRoute('/managed')({
+export const managedMonitorTableLazyRoute = createLazyRoute('/managed')({
   component: MonitorTable,
 });
 

@@ -16,7 +16,7 @@ const SSHAcess = () => {
   );
 };
 
-export const ManagedSSHAccessLazyRoute = createLazyRoute('/managed/ssh-access')(
+export const managedSSHAccessLazyRoute = createLazyRoute('/managed/ssh-access')(
   {
     component: SSHAcess,
   }

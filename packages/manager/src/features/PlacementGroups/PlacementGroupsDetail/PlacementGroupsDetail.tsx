@@ -136,13 +136,13 @@ export const PlacementGroupsDetail = () => {
   );
 };
 
-export const PlacementGroupsDetailLazyRoute = createLazyRoute(
+export const placementGroupsDetailLazyRoute = createLazyRoute(
   '/placement-groups/$id'
 )({
   component: PlacementGroupsDetail,
 });
 
-export const PlacementGroupsUnassignLazyRoute = createLazyRoute(
+export const placementGroupsUnassignLazyRoute = createLazyRoute(
   '/placement-groups/$id/linodes/unassign/$linodeId'
 )({
   component: PlacementGroupsDetail,

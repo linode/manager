@@ -208,7 +208,7 @@ const DatabaseLanding = () => {
   );
 };
 
-export const DatabaseLandingLazyRoute = createLazyRoute('/databases')({
+export const databaseLandingLazyRoute = createLazyRoute('/databases')({
   component: DatabaseLanding,
 });
 

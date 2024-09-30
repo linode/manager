@@ -125,6 +125,6 @@ export const EventsLanding = (props: Props) => {
   );
 };
 
-export const EventsLandingLazyRoute = createLazyRoute('/events')({
+export const eventsLandingLazyRoute = createLazyRoute('/events')({
   component: EventsLanding,
 });

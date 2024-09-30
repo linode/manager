@@ -641,7 +641,7 @@ export const ImagesLanding = () => {
   );
 };
 
-export const ImagesLandingLazyRoute = createLazyRoute('/images')({
+export const imagesLandingLazyRoute = createLazyRoute('/images')({
   component: ImagesLanding,
 });
 

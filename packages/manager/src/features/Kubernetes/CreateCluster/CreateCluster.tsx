@@ -343,6 +343,6 @@ export const CreateCluster = () => {
   );
 };
 
-export const CreateClusterLazyRoute = createLazyRoute('/kubernetes/create')({
+export const createClusterLazyRoute = createLazyRoute('/kubernetes/create')({
   component: CreateCluster,
 });
