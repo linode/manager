@@ -155,6 +155,9 @@ const assertStatusForUrlAtAlias = (
 };
 
 authenticate();
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 describe('object storage end-to-end tests', () => {
   before(() => {
     cleanUp('obj-buckets');

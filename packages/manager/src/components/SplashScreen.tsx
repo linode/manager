@@ -7,7 +7,6 @@ import { Box } from './Box';
 
 export const SplashScreen = () => {
   React.useEffect(() => {
-    // @TODO: The utilility cases a scrollbar to show in the browser, fix it.
     srSpeak('Loading Linode Cloud Manager', 'polite');
   }, []);
 

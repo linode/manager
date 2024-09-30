@@ -61,8 +61,7 @@ describe('CloudPulseCustomSelect component tests', () => {
         type={CloudPulseSelectTypes.static}
       />
     );
-
-    expect(screen.getByPlaceholderText(testFilter)).toBeDefined();
+    expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     fireEvent.click(screen.getByText('Test1'));
@@ -82,8 +81,7 @@ describe('CloudPulseCustomSelect component tests', () => {
         type={CloudPulseSelectTypes.static}
       />
     );
-
-    expect(screen.getByPlaceholderText(testFilter)).toBeDefined();
+    expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     expect(screen.getAllByText('Test1').length).toEqual(2); // here it should be 2
@@ -111,13 +109,17 @@ describe('CloudPulseCustomSelect component tests', () => {
         type={CloudPulseSelectTypes.dynamic}
       />
     );
-    expect(screen.getByPlaceholderText(testFilter)).toBeDefined();
+    expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     fireEvent.click(screen.getByText('Test1'));
     const textField = screen.getByTestId('textfield-input');
     expect(textField.getAttribute('value')).toEqual('Test1');
     expect(selectionChnage).toHaveBeenCalledTimes(1);
+
+    // if we click on clear icon , placeholder should appear for single select
+    fireEvent.click(screen.getByTitle('Clear'));
+    expect(screen.getByPlaceholderText(testFilter)).toBeDefined();
   });
 
   it('should render a component successfully with required props dynamic multi select', () => {
@@ -133,7 +135,7 @@ describe('CloudPulseCustomSelect component tests', () => {
         type={CloudPulseSelectTypes.dynamic}
       />
     );
-    expect(screen.getByPlaceholderText(testFilter)).toBeDefined();
+    expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     expect(screen.getAllByText('Test1').length).toEqual(2); // here it should be 2
@@ -148,5 +150,9 @@ describe('CloudPulseCustomSelect component tests', () => {
     expect(screen.getAllByText('Test1').length).toEqual(1);
     expect(screen.getAllByText('Test2').length).toEqual(1);
     expect(selectionChnage).toHaveBeenCalledTimes(2); // check if selection change is called twice as we selected two options
+
+    // if we click on clear icon , placeholder should appear
+    fireEvent.click(screen.getByTitle('Clear'));
+    expect(screen.getByPlaceholderText(testFilter)).toBeDefined();
   });
 });
