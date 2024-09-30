@@ -5,7 +5,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const CloudPulseRoutes = () => {
   return (
@@ -23,13 +22,13 @@ const cloudPulseRoute = createRoute({
 });
 
 const cloudPulseLandingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/CloudPulse/CloudPulseLanding'),
-    'CloudPulseLanding'
-  ),
   getParentRoute: () => cloudPulseRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/CloudPulse/CloudPulseLanding').then(
+    (m) => m.CloudPulseLandingLazyRoute
+  )
+);
 
 export const cloudPulseRouteTree = cloudPulseRoute.addChildren([
   cloudPulseLandingRoute,

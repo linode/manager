@@ -5,7 +5,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const AccountRoutes = () => {
   return (
@@ -23,89 +22,135 @@ const accountRoute = createRoute({
 });
 
 const accountIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Account/AccountLanding')
-  ),
   getParentRoute: () => accountRoute,
   path: '/',
-});
-
-const accountUsersUsernameRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Users/UserDetail'),
-    'UserDetail'
-  ),
-  getParentRoute: () => accountRoute,
-  path: 'users/$username',
-});
-
-const accountUsersUsernameProfileRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Users/UserProfile/UserProfile'),
-    'UserProfile'
-  ),
-  getParentRoute: () => accountUsersUsernameRoute,
-  path: 'users/$username/profile',
-});
-
-const accountUsersUsernamePermissionsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Users/UserPermissions')
-  ),
-  getParentRoute: () => accountUsersUsernameRoute,
-  path: 'users/$username/permissions',
-});
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
 
 const accountBillingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Account/AccountLanding')
-  ),
   getParentRoute: () => accountRoute,
   path: 'billing',
-});
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
+
+const accountUsersRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: '/users',
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
+
+const accountLoginHistoryRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: '/login-history',
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
+
+const accountServiceTransfersRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: '/service-transfers',
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
+
+const accountMaintenanceRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: '/maintenance',
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
+
+const accountSettingsRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: '/settings',
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
+
+const accountUsersUsernameRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: 'users/$username',
+}).lazy(() =>
+  import('src/features/Users/UserDetail').then((m) => m.userDetailLazyRoute)
+);
+
+const accountUsersUsernameProfileRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: 'users/$username/profile',
+}).lazy(() =>
+  import('src/features/Users/UserDetail').then((m) => m.userDetailLazyRoute)
+);
+
+const accountUsersUsernamePermissionsRoute = createRoute({
+  getParentRoute: () => accountUsersUsernameRoute,
+  path: 'users/$username/permissions',
+}).lazy(() =>
+  import('src/features/Users/UserDetail').then((m) => m.userDetailLazyRoute)
+);
 
 const accountBillingEditRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Account/AccountLanding')
-  ),
   getParentRoute: () => accountRoute,
   path: 'billing/edit',
-});
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
 
 const accountInvoicesInvoiceIdRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Billing/InvoiceDetail/InvoiceDetail'),
-    'InvoiceDetail'
-  ),
   getParentRoute: () => accountRoute,
   parseParams: (params) => ({
     invoiceId: Number(params.invoiceId),
   }),
   path: 'billing/invoices/$invoiceId',
-});
+}).lazy(() =>
+  import('src/features/Billing/InvoiceDetail/InvoiceDetail').then(
+    (m) => m.invoiceDetailLazyRoute
+  )
+);
 
 const accountEntityTransfersCreateRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/EntityTransfers/EntityTransfersCreate/EntityTransfersCreate'
-      ),
-    'EntityTransfersCreate'
-  ),
   getParentRoute: () => accountRoute,
   path: 'service-transfers/create',
-});
+}).lazy(() =>
+  import(
+    'src/features/EntityTransfers/EntityTransfersCreate/EntityTransfersCreate'
+  ).then((m) => m.entityTransfersCreateLazyRoute)
+);
 
 const accountActivationLandingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/components/AccountActivation/AccountActivationLanding')
-  ),
   getParentRoute: () => rootRoute,
   path: 'account-activation',
-});
+}).lazy(() =>
+  import('src/components/AccountActivation/AccountActivationLanding').then(
+    (m) => m.accountActivationLandingLazyRoute
+  )
+);
 
 export const accountRouteTree = accountRoute.addChildren([
   accountIndexRoute,
+  accountUsersRoute,
+  accountLoginHistoryRoute,
+  accountServiceTransfersRoute,
+  accountMaintenanceRoute,
+  accountSettingsRoute,
   accountUsersUsernameRoute.addChildren([
     accountUsersUsernameProfileRoute,
     accountUsersUsernamePermissionsRoute,

@@ -4,7 +4,6 @@ import React from 'react';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const BetaRoutes = () => {
   return (
@@ -21,20 +20,18 @@ const betaRoute = createRoute({
 });
 
 const betaLandingRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Betas/BetasLanding')
-  ),
   getParentRoute: () => betaRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Betas/BetasLanding').then((m) => m.betasLandingLazyRoute)
+);
 
 const betaSignupRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Betas/BetaSignup')
-  ),
   getParentRoute: () => betaRoute,
   path: 'signup',
-});
+}).lazy(() =>
+  import('src/features/Betas/BetaSignup').then((m) => m.betaSignupLazyRoute)
+);
 
 export const betaRouteTree = betaRoute.addChildren([
   betaLandingRoute,

@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -333,3 +334,7 @@ const StyledButon = styled(Button, { label: 'StyledButton' })(({ theme }) => ({
   marginLeft: `-${theme.spacing()}`,
   whiteSpace: 'nowrap',
 }));
+
+export const DomainsLandingLazyRoute = createLazyRoute('/domains')({
+  component: DomainsLanding,
+});

@@ -6,7 +6,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const DatabasesRoutes = () => {
   return (
@@ -25,68 +24,71 @@ const databasesRoute = createRoute({
 });
 
 const databasesIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Databases/DatabaseLanding')
-  ),
   getParentRoute: () => databasesRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Databases/DatabaseLanding/DatabaseLanding').then(
+    (m) => m.DatabaseLandingLazyRoute
+  )
+);
 
 const databasesCreateRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Databases/DatabaseCreate')
-  ),
   getParentRoute: () => databasesRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import('src/features/Databases/DatabaseCreate/DatabaseCreate').then(
+    (m) => m.DatabaseCreateLazyRoute
+  )
+);
 
 const databasesDetailRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Databases/DatabaseDetail')
-  ),
   getParentRoute: () => databasesRoute,
   parseParams: (params) => ({
     databaseId: Number(params.databaseId),
     engine: params.engine,
   }),
   path: '$engine/$databaseId',
-});
+}).lazy(() =>
+  import('src/features/Databases/DatabaseDetail').then(
+    (m) => m.DatabaseDetailLazyRoute
+  )
+);
 
 const databasesDetailSummaryRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Databases/DatabaseDetail/DatabaseSummary')
-  ),
   getParentRoute: () => databasesDetailRoute,
   path: 'summary',
-});
+}).lazy(() =>
+  import('src/features/Databases/DatabaseDetail').then(
+    (m) => m.DatabaseDetailLazyRoute
+  )
+);
 
 const databasesDetailBackupsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Databases/DatabaseDetail/DatabaseBackups')
-  ),
   getParentRoute: () => databasesDetailRoute,
   path: 'backups',
-});
+}).lazy(() =>
+  import('src/features/Databases/DatabaseDetail').then(
+    (m) => m.DatabaseDetailLazyRoute
+  )
+);
 
 const databasesDetailResizeRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize'
-      ),
-    'DatabaseResize'
-  ),
   getParentRoute: () => databasesDetailRoute,
   path: 'resize',
-});
+}).lazy(() =>
+  import('src/features/Databases/DatabaseDetail').then(
+    (m) => m.DatabaseDetailLazyRoute
+  )
+);
 
 const databasesDetailSettingsRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Databases/DatabaseDetail/DatabaseSettings')
-  ),
   getParentRoute: () => databasesDetailRoute,
   path: 'settings',
-});
+}).lazy(() =>
+  import('src/features/Databases/DatabaseDetail').then(
+    (m) => m.DatabaseDetailLazyRoute
+  )
+);
 
 export const databasesRouteTree = databasesRoute.addChildren([
   databasesIndexRoute,
