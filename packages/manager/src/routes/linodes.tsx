@@ -4,7 +4,6 @@ import React from 'react';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const LinodesRoutes = () => {
   return (
@@ -21,34 +20,32 @@ export const linodesRoute = createRoute({
 });
 
 const linodesIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Linodes'),
-    'LinodesLandingWrapper'
-  ),
   getParentRoute: () => linodesRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Linodes/index').then((m) => m.LinodesLandingLazyRoute)
+);
 
 const linodesCreateRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Linodes/LinodeCreatev2'),
-    'LinodeCreatev2'
-  ),
   getParentRoute: () => linodesRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import('src/features/Linodes/LinodeCreatev2').then(
+    (m) => m.LinodeCreatev2LazyRoute
+  )
+);
 
 const linodesDetailRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Linodes/LinodesDetail/LinodesDetail'),
-    'LinodeDetail'
-  ),
   getParentRoute: () => linodesRoute,
   parseParams: (params) => ({
     linodeId: Number(params.linodeId),
   }),
   path: '$linodeId',
-});
+}).lazy(() =>
+  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
+    (m) => m.LinodeDetailLazyRoute
+  )
+);
 
 export const linodesRouteTree = linodesRoute.addChildren([
   linodesIndexRoute,

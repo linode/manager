@@ -1,6 +1,7 @@
 import { isEmpty } from '@linode/api-v4';
 import * as Sentry from '@sentry/react';
 import { useQueryClient } from '@tanstack/react-query';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -242,3 +243,7 @@ export const LinodeCreatev2 = () => {
     </FormProvider>
   );
 };
+
+export const LinodeCreatev2LazyRoute = createLazyRoute('/linodes/create')({
+  component: LinodeCreatev2,
+});
