@@ -4,7 +4,6 @@ import React from 'react';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const EventsRoutes = () => {
   return (
@@ -21,12 +20,12 @@ export const eventsRoute = createRoute({
 });
 
 const eventsIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () => import('src/features/Events/EventsLanding'),
-    'EventsLanding'
-  ),
   getParentRoute: () => eventsRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Events/EventsLanding').then(
+    (m) => m.EventsLandingLazyRoute
+  )
+);
 
 export const eventsRouteTree = eventsRoute.addChildren([eventsIndexRoute]);
