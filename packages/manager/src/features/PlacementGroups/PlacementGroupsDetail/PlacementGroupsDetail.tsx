@@ -1,4 +1,5 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -75,7 +76,7 @@ export const PlacementGroupsDetail = () => {
     placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
   );
 
-  const { placement_group_type, label } = placementGroup;
+  const { label, placement_group_type } = placementGroup;
 
   const resetEditableLabel = () => {
     return `${label} (${PLACEMENT_GROUP_TYPES[placement_group_type]})`;
@@ -134,3 +135,15 @@ export const PlacementGroupsDetail = () => {
     </>
   );
 };
+
+export const PlacementGroupsDetailLazyRoute = createLazyRoute(
+  '/placement-groups/$id'
+)({
+  component: PlacementGroupsDetail,
+});
+
+export const PlacementGroupsUnassignLazyRoute = createLazyRoute(
+  '/placement-groups/$id/linodes/unassign/$linodeId'
+)({
+  component: PlacementGroupsDetail,
+});
