@@ -344,6 +344,15 @@ export const useDeleteBucketWithRegionMutation = () => {
   });
 };
 
+export const getObjectBucketObjectsQueryKey = (
+  clusterId: string,
+  bucket: string,
+  prefix: string
+) => [
+  ...objectStorageQueries.bucket(clusterId, bucket)._ctx.objects.queryKey,
+  ...prefixToQueryKey(prefix),
+];
+
 export const useObjectBucketObjectsInfiniteQuery = (
   clusterId: string,
   bucket: string,
@@ -358,10 +367,7 @@ export const useObjectBucketObjectsInfiniteQuery = (
         clusterId,
         params: { delimiter, marker: pageParam as string | undefined, prefix },
       }),
-    queryKey: [
-      ...objectStorageQueries.bucket(clusterId, bucket)._ctx.objects.queryKey,
-      ...prefixToQueryKey(prefix),
-    ],
+    queryKey: getObjectBucketObjectsQueryKey(clusterId, bucket, prefix),
   });
 
 export const useCreateObjectUrlMutation = (

@@ -51,6 +51,7 @@ export const AvatarColorPickerDialog = (
 
       <ActionsPanel
         primaryButtonProps={{
+          disabled: !avatarColor || preferences?.avatarColor === avatarColor,
           label: 'Save',
           onClick: () => {
             if (avatarColor) {

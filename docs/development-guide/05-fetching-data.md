@@ -253,7 +253,7 @@ Note: the legacy `scrollErrorIntoView` is deprecated in favor of `scrollErrorInt
 
 Since Cloud Manager uses different ways of handling forms and validation, the `scrollErrorIntoViewV2` util should be implemented using the following patterns to ensure consistency.
 
-##### Formik
+##### Formik (deprecated)
 ```Typescript
 import * as React from 'react';
 

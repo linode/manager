@@ -54,7 +54,8 @@ export interface DatabaseCredentials {
 
 interface DatabaseHosts {
   primary: string;
-  secondary: string;
+  secondary?: string;
+  standby?: string;
 }
 
 export interface SSLFields {
@@ -152,10 +153,11 @@ export interface BaseDatabase {
    */
   members: Record<string, MemberType>;
   platform?: string;
+  oldest_restore_time?: string;
 }
 
 export interface MySQLDatabase extends BaseDatabase {
-  replication_type: MySQLReplicationType;
+  replication_type?: MySQLReplicationType;
 }
 
 export type PostgresReplicationType = 'none' | 'synch' | 'asynch';
@@ -168,8 +170,8 @@ type ReplicationCommitTypes =
   | 'off';
 
 export interface PostgresDatabase extends BaseDatabase {
-  replication_type: PostgresReplicationType;
-  replication_commit_type: ReplicationCommitTypes;
+  replication_type?: PostgresReplicationType;
+  replication_commit_type?: ReplicationCommitTypes;
 }
 
 type MongoStorageEngine = 'wiredtiger' | 'mmapv1';

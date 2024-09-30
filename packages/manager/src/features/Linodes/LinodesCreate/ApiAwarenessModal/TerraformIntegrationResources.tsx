@@ -27,7 +27,7 @@ export const gettingStartedGuides: ResourcesLinks['links'] = [
   {
     text: 'Manage Personal Access Tokens',
     to:
-      'https://www.linode.com/docs/products/tools/api/guides/manage-api-tokens/',
+      'https://techdocs.akamai.com/cloud-computing/docs/manage-personal-access-tokens',
   },
   {
     text: 'Use Terraform With Linode Object Storage',
@@ -68,7 +68,7 @@ export const TerraformIntegrationResources = () => {
   return (
     <>
       <Typography sx={(theme) => ({ mt: theme.spacing(2) })} variant="h3">
-        Getting started
+        Getting Started
       </Typography>
       <ResourceLinks
         linkAnalyticsEvent={linkAnalyticsEvent}

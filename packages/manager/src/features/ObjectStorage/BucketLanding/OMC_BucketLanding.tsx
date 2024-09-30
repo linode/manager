@@ -202,11 +202,11 @@ export const OMC_BucketLanding = () => {
         </Notice>
         <Typography className={classes.copy}>
           A bucket must be empty before deleting it. Please{' '}
-          <Link to="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/lifecycle-policies">
             delete all objects
           </Link>
           , or use{' '}
-          <Link to="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools">
             another tool
           </Link>{' '}
           to force deletion.

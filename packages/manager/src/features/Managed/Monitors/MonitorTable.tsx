@@ -1,11 +1,8 @@
-import { ManagedServicePayload } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import Grid from '@mui/material/Unstable_Grid2';
-import { FormikBag } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import AddNewLink from 'src/components/AddNewLink';
+import { Button } from 'src/components/Button/Button';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
@@ -40,6 +37,10 @@ import {
   StyledTableSortCell,
 } from './MonitorTable.styles';
 import MonitorTableContent from './MonitorTableContent';
+
+import type { ManagedServicePayload } from '@linode/api-v4/lib/managed';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { FormikBag } from 'formik';
 
 export type Modes = 'create' | 'edit';
 export type FormikProps = FormikBag<{}, ManagedServicePayload>;
@@ -180,10 +181,12 @@ export const MonitorTable = () => {
         <Grid>
           <Grid alignItems="flex-end" container>
             <StyledGrid>
-              <AddNewLink
-                label="Add Monitor"
+              <Button
+                buttonType="primary"
                 onClick={() => setMonitorDrawerOpen(true)}
-              />
+              >
+                Add Monitor
+              </Button>
             </StyledGrid>
           </Grid>
         </Grid>

@@ -1,22 +1,25 @@
 import Close from '@mui/icons-material/Close';
-import { Box } from 'src/components/Box';
+import { Typography } from '@mui/material';
 import _DialogTitle from '@mui/material/DialogTitle';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
+
+import type { SxProps } from '@mui/system';
 
 interface DialogTitleProps {
   className?: string;
   id?: string;
   onClose?: () => void;
+  subtitle?: string;
   sx?: SxProps;
   title: string;
 }
 
 const DialogTitle = (props: DialogTitleProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const { className, id, onClose, sx, title } = props;
+  const { className, id, onClose, subtitle, sx, title } = props;
 
   React.useEffect(() => {
     if (ref.current === null) {
@@ -63,6 +66,7 @@ const DialogTitle = (props: DialogTitleProps) => {
           </IconButton>
         )}
       </Box>
+      {subtitle && <Typography>{subtitle}</Typography>}
     </_DialogTitle>
   );
 };

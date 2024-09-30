@@ -211,6 +211,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       : type.disk <= currentPlanDisk
   );
 
+  const isDisabledSharedTab = database.cluster_size === 2;
+
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -232,9 +234,11 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           data-qa-select-plan
           disabled={disabled}
           disabledSmallerPlans={disabledPlans}
+          disabledTabs={isDisabledSharedTab ? ['shared'] : []}
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedId={planSelected}
+          tabDisabledMessage="Resizing a 2-nodes cluster is only allowed with Dedicated plans."
           types={displayTypes}
         />
       </Paper>
