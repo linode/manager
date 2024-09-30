@@ -128,7 +128,7 @@ export const tableItems = tableRowItems.map((table) => {
   };
 });
 
-const tableRowEmpty = <TableRowEmpty colSpan={5} />;
+const tableRowEmpty = <TableRowEmpty colSpan={4} />;
 
 const defaultArgs = {
   TableItems: tableItems,
