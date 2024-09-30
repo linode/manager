@@ -6,7 +6,6 @@ import { ProductInformationBanner } from 'src/components/ProductInformationBanne
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { rootRoute } from './root';
-import { strictLazyRouteComponent } from './utils';
 
 export const AccountRoutes = () => {
   return (
@@ -25,89 +24,71 @@ export const placementGroupsRoute = createRoute({
 });
 
 const placementGroupsIndexRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-      ),
-    'PlacementGroupsLanding'
-  ),
   getParentRoute: () => placementGroupsRoute,
   path: '/',
-});
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
+  ).then((m) => m.PlacementGroupsLandingLazyRoute)
+);
 
 const placementGroupsCreateRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-      ),
-    'PlacementGroupsLanding'
-  ),
   getParentRoute: () => placementGroupsRoute,
   path: 'create',
-});
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
+  ).then((m) => m.PlacementGroupsLandingLazyRoute)
+);
 
 const placementGroupsEditRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-      ),
-    'PlacementGroupsLanding'
-  ),
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
     id: Number(params.id),
   }),
   path: 'edit/$id',
-});
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
+  ).then((m) => m.PlacementGroupsLandingLazyRoute)
+);
 
 const placementGroupsDeleteRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-      ),
-    'PlacementGroupsLanding'
-  ),
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
     id: Number(params.id),
   }),
   path: 'delete/$id',
-});
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
+  ).then((m) => m.PlacementGroupsLandingLazyRoute)
+);
 
 const placementGroupsUnassignRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-      ),
-    'PlacementGroupsDetail'
-  ),
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
     id: Number(params.id),
     linodeId: Number(params.linodeId),
   }),
-  path: '$id/unassign/$linodeId',
-});
+  path: '$id/linodes/unassign/$linodeId',
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
+  ).then((m) => m.PlacementGroupsUnassignLazyRoute)
+);
 
 const placementGroupsDetailRoute = createRoute({
-  component: strictLazyRouteComponent(
-    () =>
-      import(
-        'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-      ),
-    'PlacementGroupsDetail'
-  ),
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
     id: Number(params.id),
   }),
   path: '$id',
-});
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
+  ).then((m) => m.PlacementGroupsDetailLazyRoute)
+);
 
 export const placementGroupsRouteTree = placementGroupsRoute.addChildren([
   placementGroupsIndexRoute,
