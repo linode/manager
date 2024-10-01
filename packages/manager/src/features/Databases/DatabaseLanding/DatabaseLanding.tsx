@@ -35,8 +35,10 @@ const DatabaseLanding = () => {
     globalGrantType: 'add_databases',
   });
 
-  const { isLoading: isTypeLoading } = useDatabaseTypesQuery();
   const { isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  const { isLoading: isTypeLoading } = useDatabaseTypesQuery({
+    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+  });
 
   const {
     handleOrderChange: newDatabaseHandleOrderChange,
