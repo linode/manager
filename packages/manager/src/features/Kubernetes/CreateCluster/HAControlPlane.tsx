@@ -23,7 +23,7 @@ export const HACopy = () => (
     Recommended for production workloads, a high availability (HA) control plane
     is replicated on multiple master nodes to 99.99% uptime.
     <br />
-    <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
+    <Link to="https://techdocs.akamai.com/cloud-computing/docs/high-availability-ha-control-plane-on-lke">
       Learn more about the HA control plane
     </Link>
     .

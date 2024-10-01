@@ -48,7 +48,7 @@ export const ImageUploadCLIDialog = (props: ImageUploadSuccessDialogProps) => {
       />
       <Typography sx={{ paddingTop: 2 }}>
         For more information, please see{' '}
-        <Link to="https://www.linode.com/docs/guides/linode-cli">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-cli">
           our guide on using the Linode CLI
         </Link>
         .

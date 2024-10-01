@@ -53,7 +53,7 @@ export const SubnetContent = (props: Props) => {
               subheaderName: 'Subnets',
             })
           }
-          to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/manage-vpc-subnets"
         >
           Learn more
         </Link>

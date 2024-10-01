@@ -10,9 +10,11 @@ import NullComponent from 'src/components/NullComponent';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
+  DASHBOARD_ID,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
+  RESOURCES,
 } from '../Utils/constants';
 import {
   getCustomSelectProperties,
@@ -24,7 +26,7 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
-import type { Dashboard } from '@linode/api-v4';
+import type { AclpConfig, Dashboard } from '@linode/api-v4';
 
 export interface CloudPulseDashboardFilterBuilderProps {
   /**
@@ -36,12 +38,22 @@ export interface CloudPulseDashboardFilterBuilderProps {
   /**
    * all the selection changes in the filter goes through this method
    */
-  emitFilterChange: (filterKey: string, value: FilterValueType) => void;
+  emitFilterChange: (
+    filterKey: string,
+    value: FilterValueType,
+    savePref?: boolean,
+    updatePreferenceData?: {}
+  ) => void;
 
   /**
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
    */
   isServiceAnalyticsIntegration: boolean;
+
+  /**
+   * Last selected values from user preferences
+   */
+  preferences?: AclpConfig;
 }
 
 export const CloudPulseDashboardFilterBuilder = React.memo(
@@ -50,6 +62,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       dashboard,
       emitFilterChange,
       isServiceAnalyticsIntegration,
+      preferences,
     } = props;
 
     const [, setDependentFilters] = React.useState<{
@@ -89,33 +102,68 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const emitFilterChangeByFilterKey = React.useCallback(
-      (filterKey: string, filterValue: FilterValueType) => {
-        emitFilterChange(filterKey, filterValue);
+      (
+        filterKey: string,
+        filterValue: FilterValueType,
+        savePref: boolean = false,
+        updatedPreferenceData: AclpConfig = {}
+      ) => {
+        emitFilterChange(
+          filterKey,
+          filterValue,
+          savePref,
+          updatedPreferenceData
+        );
         checkAndUpdateDependentFilters(filterKey, filterValue);
       },
       [emitFilterChange, checkAndUpdateDependentFilters]
     );
 
     const handleResourceChange = React.useCallback(
-      (resourceId: CloudPulseResources[]) => {
+      (resourceId: CloudPulseResources[], savePref: boolean = false) => {
         emitFilterChangeByFilterKey(
           RESOURCE_ID,
-          resourceId.map((resource) => resource.id)
+          resourceId.map((resource) => resource.id),
+          savePref,
+          {
+            [RESOURCES]: resourceId.map((resource: { id: string }) =>
+              String(resource.id)
+            ),
+          }
         );
       },
       [emitFilterChangeByFilterKey]
     );
 
     const handleRegionChange = React.useCallback(
-      (region: string | undefined) => {
-        emitFilterChangeByFilterKey(REGION, region);
+      (region: string | undefined, savePref: boolean = false) => {
+        const updatedPreferenceData = {
+          [REGION]: region,
+          [RESOURCES]: undefined,
+        };
+        emitFilterChangeByFilterKey(
+          REGION,
+          region,
+          savePref,
+          updatedPreferenceData
+        );
       },
       [emitFilterChangeByFilterKey]
     );
 
     const handleCustomSelectChange = React.useCallback(
-      (filterKey: string, value: FilterValueType) => {
-        emitFilterChangeByFilterKey(filterKey, value);
+      (
+        filterKey: string,
+        value: FilterValueType,
+        savePref: boolean = false,
+        updatedPreferenceData: {} = {}
+      ) => {
+        emitFilterChangeByFilterKey(
+          filterKey,
+          value,
+          savePref,
+          updatedPreferenceData
+        );
       },
       [emitFilterChangeByFilterKey]
     );
@@ -124,7 +172,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (config: CloudPulseServiceTypeFilters) => {
         if (config.configuration.filterKey === REGION) {
           return getRegionProperties(
-            { config, dashboard, isServiceAnalyticsIntegration },
+            {
+              config,
+              dashboard,
+              isServiceAnalyticsIntegration,
+              preferences,
+            },
             handleRegionChange
           );
         } else if (config.configuration.filterKey === RESOURCE_ID) {
@@ -134,6 +187,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
+              preferences,
             },
             handleResourceChange
           );
@@ -144,6 +198,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
+              preferences,
             },
             handleCustomSelectChange
           );
@@ -155,6 +210,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleResourceChange,
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
+        preferences,
       ]
     );
 
@@ -271,5 +327,9 @@ function compareProps(
   oldProps: CloudPulseDashboardFilterBuilderProps,
   newProps: CloudPulseDashboardFilterBuilderProps
 ) {
-  return oldProps.dashboard?.id === newProps.dashboard?.id;
+  return (
+    oldProps.dashboard?.id === newProps.dashboard?.id &&
+    oldProps.preferences?.[DASHBOARD_ID] ===
+      newProps.preferences?.[DASHBOARD_ID]
+  );
 }
