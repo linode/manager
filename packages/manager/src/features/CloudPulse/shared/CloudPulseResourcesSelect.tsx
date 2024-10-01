@@ -92,6 +92,7 @@ export const CloudPulseResourcesSelect = React.memo(
           }
         }}
         onClose={() => {
+          isAutocompleteOpen.current = false;
           handleResourcesSelection(selectedResources ?? [], savePreferences);
         }}
         onOpen={() => {

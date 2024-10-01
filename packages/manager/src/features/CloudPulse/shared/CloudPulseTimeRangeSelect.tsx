@@ -2,8 +2,6 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-import { DASHBOARD_ID, TIME_DURATION } from '../Utils/constants';
-
 import type { FilterValue, TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
