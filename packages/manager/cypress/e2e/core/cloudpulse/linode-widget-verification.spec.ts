@@ -31,6 +31,7 @@ import { extendRegion } from 'support/util/regions';
 import { CloudPulseMetricsResponse } from '@linode/api-v4';
 import { transformData } from 'src/features/CloudPulse/Utils/unitConversion';
 import { getMetrics } from 'src/utilities/statMetrics';
+import { Interception } from 'cypress/types/net-stubbing';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -96,54 +97,26 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
     '5 min')
 });
 /**
- * Compares actual widget values to the expected values and asserts their equality.
+ * `verifyWidgetValues` processes and verifies the metric values of a widget from the provided response payload.
  *
- * @param actualValues - The actual values retrieved from the widget, consisting of:
- *   @param actualValues.max - The maximum value shown on the widget.
- *   @param actualValues.average - The average value shown on the widget.
- *   @param actualValues.last - The last or most recent value shown on the widget.
+ * This method performs the following steps:
+ * 1. Transforms the raw data from the response payload into a more manageable format using `transformData`.
+ * 2. Extracts key metrics (average, last, and max) from the transformed data using `getMetrics`.
+ * 3. Rounds these metrics to two decimal places for accuracy.
+ * 4. Returns an object containing the rounded average, last, and max values for further verification or comparison.
  *
- * @param expectedValues - The expected values that the widget should display, consisting of:
- *   @param expectedValues.max - The expected maximum value.
- *   @param expectedValues.average - The expected average value.
- *   @param expectedValues.last - The expected last or most recent value.
+ * @param {CloudPulseMetricsResponse} responsePayload - The response payload containing metric data for a widget.
+ * @returns {Object} An object with the rounded average, last, and max metric values.
  */
-
-const compareWidgetValues = (
-  actualValues: { title: string; max: number; average: number; last: number },
-  expectedValues: { max: number; average: number; last: number },
-  title: string
+const getWidgetLegendRowValuesFromResponse = (
+  responsePayload: CloudPulseMetricsResponse
 ) => {
-
- const { title: actualTitle, max: actualMax,
-    average: actualAverage, last: actualLast,
-  } = actualValues;
-
-  const { max: expectedMax,
-    average: expectedAverage, last: expectedLast,
-  } = expectedValues;
-
-  expect(actualMax).to.equal(
-    expectedMax,
-    `Expected ${expectedMax} for max, but got ${actualMax}`
-  );
-  expect(actualAverage).to.equal(
-    expectedAverage,
-    `Expected ${expectedAverage} for average, but got ${actualAverage}`
-  );
-  expect(actualLast).to.equal(
-    expectedLast,
-    `Expected ${expectedLast} for last, but got ${actualLast}`
-  );
-  const extractedTitle = actualTitle.substring(
-    0,
-    actualTitle.indexOf(' ', actualValues.title.indexOf(' ') + 1)
-  );
-
-  expect(extractedTitle).to.equal(
-    title,
-    `Expected ${title} for title ${extractedTitle}`
-  );
+  const data = transformData(responsePayload.data.result[0].values, 'Bytes');
+  const { average, last, max } = getMetrics(data);
+  const roundedAverage = Math.round(average * 100) / 100;
+  const roundedLast = Math.round(last * 100) / 100;
+  const roundedMax = Math.round(max * 100) / 100;
+  return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 
 
@@ -247,32 +220,15 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
           //validate the widget line graph is present and its legend rows
           cy.findByTestId('linegraph-wrapper')
-            .should('be.visible')
-            .find('tbody tr')
-            .each(($tr) => {
-              const cells = $tr
-                .find('td')
-                .map((_i, el) => {
-                  const text = Cypress.$(el).text().trim();
-                  return text.replace(/^\s*\([^)]+\)/, '');
-                })
-                .get();
-              const [title, actualMax, actualAvg, actualLast] = cells; // the average, max and last present in the widget
-              const widgetValues = getWidgetLegendRowValuesFromResponse(
-                metricsAPIResponsePayload
-              ); // the average, max and last from the response payload
-              compareWidgetValues(
-                // compare both
-                {
-                  title,
-                  max: parseFloat(actualMax),
-                  average: parseFloat(actualAvg),
-                  last: parseFloat(actualLast),
-                },
-                widgetValues,
-                testDataTitle
+          .within(() => {
+            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+               metricsAPIResponsePayload
               );
-            });
+             cy.findByText(`${testData.title} (${testData.unit})`).should('be.visible');
+              cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
+              cy.findByText(`${expectedWidgetValues.average} ${testData.unit}`).should('be.visible');
+             cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
+           });
         });
     }
   });
@@ -320,71 +276,45 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
           //validate the widget line graph is present and its legend rows
           cy.findByTestId('linegraph-wrapper')
-            .should('be.visible')
-            .find('tbody tr')
-            .each(($tr) => {
-              const cells = $tr
-                .find('td')
-                .map((_i, el) => {
-                  const text = Cypress.$(el).text().trim();
-                  return text.replace(/^\s*\([^)]+\)/, '');
-                })
-                .get();
-              const [title, actualMax, actualAvg, actualLast] = cells; // the average, max and last present in the widget
-              const widgetValues = getWidgetLegendRowValuesFromResponse(
-                metricsAPIResponsePayload
-              ); // the average, max and last from the response payload
-              compareWidgetValues(
-                // compare both
-                {
-                  title,
-                  max: parseFloat(actualMax),
-                  average: parseFloat(actualAvg),
-                  last: parseFloat(actualLast),
-                },
-                widgetValues,
-                testDataTitle
+          .within(() => {
+            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+               metricsAPIResponsePayload
               );
-            });
+              cy.findByText(`${testData.title} (${testData.unit})`).should('be.visible');
+              cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
+              cy.findByText(`${expectedWidgetValues.average} ${testData.unit}`).should('be.visible');
+             cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
+           });
         });
     }
   });
   it('should trigger the global refresh button and verify the corresponding network calls', () => {
     cy.wait(7000); //maintaining the wait since page flicker and rendering
+    mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as('refreshMetrics');
+   // click the global refresh button
+       ui.button 
+     .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
+    .should('be.visible')
+    .click();
 
-    // click the global refresh button
-    ui.button
-      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
-      .should('be.visible')
-      .click();
+  // validate the API calls are going with intended payload
+  cy.get('@refreshMetrics.all')
+    .should('have.length', 4)
+    .each((xhr: unknown) => {
+      const interception = xhr as Interception;
+      const { body: requestPayload } = interception.request;
+      const { metric, relative_time_duration: timeRange } = requestPayload;
+      const metricData = metrics.find(({ name }) => name === metric);
 
-    // validate the API calls are going with intended payload
-    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']).then(
-      (interceptions) => {
-        const interceptionsArray = Array.isArray(interceptions)
-          ? interceptions
-          : [interceptions];
-        interceptionsArray.forEach((interception) => {
-          const { body: requestPayload } = interception.request;
-          const { metric, relative_time_duration: timeRange } = requestPayload;
-          const metricData = metrics.find(({ name }) => name === metric);
-          if (!metricData) {
-            expect.fail(
-              'metricData or its expected properties are not defined.'
-            );
-          }
-          const expectedRelativeTimeDuration = timeRange
-            ? `Last ${timeRange.value} ${['hour', 'hr'].includes(timeRange.unit.toLowerCase())
-              ? 'Hours'
-              : timeRange.unit
-            }`
-            : '';
-          expect(metric).to.equal(metricData.name);
-          expect(expectedRelativeTimeDuration).to.equal(timeDurationToSelect);
-        });
+      if (!metricData) {
+        throw new Error(`Unexpected metric name '${metric}' included in the outgoing refresh API request`);
       }
-    );
-  });
+      expect(metric).to.equal(metricData.name);
+      expect(timeRange).to.have.property('unit', 'hr');
+      expect(timeRange).to.have.property('value', 24);
+    });
+});
+  
 
   it('should zoom in and out of all the widgets', () => {
     // do zoom in and zoom out test on all the widgets
@@ -407,28 +337,15 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
           // validate the widget details
           cy.findByTestId('linegraph-wrapper')
-            .should('be.visible')
-            .find('tbody tr')
-            .each(($tr) => {
-              const cells = $tr
-                .find('td')
-                .map((_i, el) => Cypress.$(el).text().trim())
-                .get();
-              const [title, actualMax, actualAvg, actualLast] = cells;
-              const widgetValues = getWidgetLegendRowValuesFromResponse(
-                metricsAPIResponsePayload
-              );
-              compareWidgetValues(
-                {
-                  title,
-                  max: parseFloat(actualMax),
-                  average: parseFloat(actualAvg),
-                  last: parseFloat(actualLast),
-                },
-                widgetValues,
-                testDataTitle
-              );
-            });
+                    .within(() => {
+                      const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+                         metricsAPIResponsePayload
+                        );
+                        cy.findByText(`${testData.title} (${testData.unit})`).should('be.visible');
+                        cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
+                        cy.findByText(`${expectedWidgetValues.average} ${testData.unit}`).should('be.visible');
+                       cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
+                     });
 
           // click zoom out and validate the same
           ui.button
@@ -440,53 +357,18 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
           // validate the widget details
           cy.findByTestId('linegraph-wrapper')
-            .should('be.visible')
-            .find('tbody tr')
-            .each(($tr) => {
-              const cells = $tr
-                .find('td')
-                .map((i, el) => Cypress.$(el).text().trim())
-                .get();
-              const [title, actualMax, actualAvg, actualLast] = cells;
-              const widgetValues = getWidgetLegendRowValuesFromResponse(
-                metricsAPIResponsePayload
+          .within(() => {
+            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+               metricsAPIResponsePayload
               );
-              cy.log('testDataTitle', testDataTitle)
-              compareWidgetValues(
-                {
-                  title,
-                  max: parseFloat(actualMax),
-                  average: parseFloat(actualAvg),
-                  last: parseFloat(actualLast),
-                },
-                widgetValues,
-                testDataTitle
-              );
-            });
+              cy.findByText(`${testData.title} (${testData.unit})`).should('be.visible');
+              cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
+              cy.findByText(`${expectedWidgetValues.average} ${testData.unit}`).should('be.visible');
+             cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
+           });
         });
     });
   });
 });
-/**
- * `verifyWidgetValues` processes and verifies the metric values of a widget from the provided response payload.
- *
- * This method performs the following steps:
- * 1. Transforms the raw data from the response payload into a more manageable format using `transformData`.
- * 2. Extracts key metrics (average, last, and max) from the transformed data using `getMetrics`.
- * 3. Rounds these metrics to two decimal places for accuracy.
- * 4. Returns an object containing the rounded average, last, and max values for further verification or comparison.
- *
- * @param {CloudPulseMetricsResponse} responsePayload - The response payload containing metric data for a widget.
- * @returns {Object} An object with the rounded average, last, and max metric values.
- */
-const getWidgetLegendRowValuesFromResponse = (
-  responsePayload: CloudPulseMetricsResponse
-) => {
-  const data = transformData(responsePayload.data.result[0].values, 'Bytes');
-  const { average, last, max } = getMetrics(data);
-  const roundedAverage = Math.round(average * 100) / 100;
-  const roundedLast = Math.round(last * 100) / 100;
-  const roundedMax = Math.round(max * 100) / 100;
-  return { average: roundedAverage, last: roundedLast, max: roundedMax };
-};
+
 

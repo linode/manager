@@ -66,7 +66,7 @@ export const widgetDetails = {
         expectedGranularity: '1 hr',
         name: 'system_memory_usage_by_resource',
         title: 'Memory Usage',
-        unit: 'Bytes',
+        unit: 'B',
         yLabel: 'system_memory_usage_bytes',
       },
       {
@@ -75,7 +75,7 @@ export const widgetDetails = {
         expectedGranularity: '1 hr',
         name: 'system_network_io_by_resource',
         title: 'Network Traffic',
-        unit: 'Bytes',
+        unit: 'B',
         yLabel: 'system_network_io_bytes_total',
       },
       {

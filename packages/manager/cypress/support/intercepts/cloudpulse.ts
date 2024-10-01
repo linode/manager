@@ -5,6 +5,7 @@
  */
 
 import { apiMatcher } from 'support/util/intercepts';
+import { paginateResponse } from 'support/util/paginate';
 import { randomString } from 'support/util/random';
 import { makeResponse } from 'support/util/response';
 
@@ -15,7 +16,7 @@ import type {
 } from '@linode/api-v4';
 
 /**
- * Intercepts HTTP GET requests for metric definitions.
+ * Intercepts  GET requests for metric definitions.
  *
  * This function mocks the API response for requests to the endpoint
  * `dashboardMetricsData`.
@@ -35,7 +36,7 @@ export const mockCloudPulseGetMetricDefinitions = (
 };
 
 /**
- * Intercepts HTTP GET requests for metric definitions.
+ * Intercepts  GET requests for metric definitions.
  *
  * This function mocks the API response for requests to the endpoint
  * `dashboardMetricsData`.
@@ -50,23 +51,24 @@ export const mockCloudPulseServices = (
     data: [{ service_type }],
   });
 };
+
 /**
- * Intercepts HTTP GET requests for dashboard definitions.
- *
- * This function mocks the API response for requests to the endpoint
- * `dashboardDefinitions`.
- *
- * @returns {Cypress.Chainable<null>} The chainable Cypress object.
- */
++ * Intercepts GET requests to fetch dashboards and mocks response.
++ *
++ * @param dashboards - Array of Dashboard objects with which to mock response.
++ * @param serviceType - Service type for which to intercept dashboard request.
++ *
++ * @returns The chainable Cypress object.
++ */
 
 export const mockCloudPulseGetDashboards = (
-  dashboard: Dashboard,
+  dashboards: Dashboard[],
   serviceType: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher(`/monitor/services/${serviceType}/dashboards`),
-    { data: [dashboard] }
+    paginateResponse(dashboards)
   );
 };
 
@@ -88,6 +90,7 @@ export const mockCloudPulseCreateMetrics = (
     mockResponse
   );
 };
+
 /**
  * Mocks the API response for fetching a dashboard.
  *
@@ -122,6 +125,7 @@ export const mockCloudPulseDashboardServicesResponse = (
  * @param {string} service_type - The type of service for which to mock the JWE token request.
  * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object, enabling command chaining in tests.
  */
+
 export const mockCloudPulseJWSToken = (
   serviceType: string,
   token?: string
