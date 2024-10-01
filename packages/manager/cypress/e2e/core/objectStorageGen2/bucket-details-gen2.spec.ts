@@ -144,7 +144,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
     });
   });
 
-  describe.only('Properties tab', () => {
+  describe('Properties tab', () => {
     ['E0', 'E1'].forEach((endpoint: ObjectStorageEndpointTypes) => {
       /**
        * Parameterized test for buckets with endpoint types of E0 and E1
