@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-10-02] - v1.129.1
+
+
+### Fixed:
+
+- DBaaS Landing Page V2 platform error for New Beta Users ([#11024](https://github.com/linode/manager/pull/11024))
+
 ## [2024-09-30] - v1.129.0
 
 
@@ -40,6 +47,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Enabled Shared CPU tab for 2-nodes Database Cluster Resize ([#10995](https://github.com/linode/manager/pull/10995))
 - Set full height to DX Tools Modal and add Linode API link ([#10998](https://github.com/linode/manager/pull/10998))
 - Database Detail page Summary tab display of username and read-only host ([#10989](https://github.com/linode/manager/pull/10989))
+- Missing platform header in DBaaS types call ([#11010](https://github.com/linode/manager/pull/11010))
 
 ### Removed:
 
