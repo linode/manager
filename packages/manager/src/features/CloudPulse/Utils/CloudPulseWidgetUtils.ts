@@ -26,7 +26,6 @@ import type {
 } from '@linode/api-v4';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
-import { Tooltip } from 'src/components/Tooltip';
 
 interface LabelNameOptionsProps {
   /**

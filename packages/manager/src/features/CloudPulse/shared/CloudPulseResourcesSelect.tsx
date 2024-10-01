@@ -88,12 +88,12 @@ export const CloudPulseResourcesSelect = React.memo(
           setSelectedResources(resourceSelections);
 
           if (!isAutocompleteOpen.current) {
-            handleResourcesSelection(resourceSelections);
+            handleResourcesSelection(resourceSelections, savePreferences);
           }
         }}
         onClose={() => {
           isAutocompleteOpen.current = false;
-          handleResourcesSelection(selectedResources ?? []);
+          handleResourcesSelection(selectedResources ?? [], savePreferences);
         }}
         onOpen={() => {
           isAutocompleteOpen.current = true;
