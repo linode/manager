@@ -31,7 +31,7 @@ export const mockCloudPulseGetMetricDefinitions = (
   return cy.intercept(
     'GET',
     apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
-    metricDefinitions
+    makeResponse(metricDefinitions)
   );
 };
 
@@ -47,9 +47,11 @@ export const mockCloudPulseGetMetricDefinitions = (
 export const mockCloudPulseServices = (
   serviceType: string
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher('/monitor/services'), {
-    data: [{ service_type: serviceType }],
-  });
+  return cy.intercept(
+    'GET',
+    apiMatcher('/monitor/services'),
+    paginateResponse([{ service_type: serviceType }])
+  );
 };
 
 /**
@@ -87,7 +89,7 @@ export const mockCloudPulseCreateMetrics = (
   return cy.intercept(
     'POST',
     `**/monitor/services/${serviceType}/metrics`,
-    mockResponse
+    makeResponse(mockResponse)
   );
 };
 
@@ -110,7 +112,7 @@ export const mockCloudPulseDashboardServicesResponse = (
   return cy.intercept(
     'GET',
     apiMatcher(`/monitor/dashboards/${id}`),
-    dashboard
+    makeResponse(dashboard)
   );
 };
 
