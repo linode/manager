@@ -36,15 +36,12 @@ export const ConfigSelect = React.memo((props: Props) => {
     return { label: config.label, value: config.id };
   });
 
-  // Use useEffect to handle the side effect
-  React.useEffect(() => {
-    if (configList?.length === 1) {
-      const newValue = configList[0].value;
-      if (value !== newValue) {
-        onChange(newValue);
-      }
+  if (configList?.length === 1) {
+    const newValue = configList[0].value;
+    if (value !== newValue) {
+      onChange(newValue);
     }
-  }, [configList, onChange, value]);
+  }
 
   return (
     <FormControl
