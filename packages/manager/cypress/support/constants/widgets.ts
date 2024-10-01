@@ -1,3 +1,9 @@
+/**
+ * Provides configuration details for dashboards, including service types (DBaaS, Linode),
+ * related metrics (such as CPU utilization, memory usage, disk I/O), and their properties like
+ * expected aggregations, granularity, units, and labels. This configuration is used for validating
+ * and interacting with dashboard widgets.
+ */
 export const widgetDetails = {
   dbaas: {
     clusterName: 'mysql-cluster',

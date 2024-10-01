@@ -126,7 +126,7 @@ export const mockCloudPulseDashboardServicesResponse = (
  * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object, enabling command chaining in tests.
  */
 
-export const mockCloudPulseJWSToken = (
+export const mockCloudPulseJWEToken = (
   serviceType: string,
   token?: string
 ): Cypress.Chainable<null> => {
