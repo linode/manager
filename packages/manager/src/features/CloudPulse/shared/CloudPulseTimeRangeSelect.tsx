@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
+import { DASHBOARD_ID, TIME_DURATION } from '../Utils/constants';
+
 import type { FilterValue, TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
@@ -43,7 +45,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
         return options[0];
       }
       return options.find((o) => o.label === defaultValue) || options[0];
-    }, []);
+    }, [defaultValue]);
     const [selectedTimeRange, setSelectedTimeRange] = React.useState<
       Item<Labels, Labels>
     >(getDefaultValue());
@@ -58,8 +60,12 @@ export const CloudPulseTimeRangeSelect = React.memo(
           false
         );
       }
+
+      if (item !== selectedTimeRange) {
+        setSelectedTimeRange(item);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // need to execute only once, during mounting of this component
+    }, [defaultValue]); // need to execute only once, during mounting of this component
     const handleChange = (item: Item<Labels, Labels>) => {
       setSelectedTimeRange(item);
 
