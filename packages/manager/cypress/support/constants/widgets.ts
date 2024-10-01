@@ -1,5 +1,3 @@
-
-
 export const widgetDetails = {
   dbaas: {
     clusterName: 'mysql-cluster',

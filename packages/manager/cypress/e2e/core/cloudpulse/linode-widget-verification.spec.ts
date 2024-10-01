@@ -195,14 +195,12 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     cy.findByText(resource).should('be.visible');
 
-    // Verifies that the expected widgets are loaded on the dashboard.
-    metrics.forEach(({ title, unit }) => {
+    for (const { title, unit } of metrics) {
       const widgetSelector = `[data-qa-widget-header="${title}"]`;
       cy.get(widgetSelector).should('have.text', `${title} (${unit.trim()})`).should('be.visible');
-
-   });
+    }
   });
-  
+
   
 
   it('should allow users to select desired granularity and see the most recent data from the API reflected in the graph', () => {
