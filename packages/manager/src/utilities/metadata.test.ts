@@ -1,4 +1,4 @@
-import { utoa } from './utilities';
+import { utoa } from './metadata';
 
 /**
  * This is an example cloud-init config

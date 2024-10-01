@@ -14,7 +14,10 @@ import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
+import {
+  REGION_CAVEAT_HELPER_TEXT,
+  VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+} from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
@@ -24,8 +27,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { REGION_CAVEAT_HELPER_TEXT } from './constants';
-import { VPCCreateDrawer } from './VPCCreateDrawer';
+import { VPCCreateDrawer } from '../../../VPCs/VPCCreateDrawer/VPCCreateDrawer';
 
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';

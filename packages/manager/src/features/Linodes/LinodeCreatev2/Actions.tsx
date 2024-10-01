@@ -12,7 +12,7 @@ import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventA
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
-import { ApiAwarenessModal } from '../LinodesCreate/ApiAwarenessModal/ApiAwarenessModal';
+import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
   getLinodeCreatePayload,
   useLinodeCreateQueryParams,

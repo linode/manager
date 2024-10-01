@@ -10,7 +10,7 @@ import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCLICommand } from 'src/utilities/codesnippets/generate-cli';
 
-import { CodeBlock } from '../CodeBlock/CodeBlock';
+import { CodeBlock } from './CodeBlock/CodeBlock';
 
 import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 

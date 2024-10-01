@@ -11,6 +11,9 @@ export const WARNING_ICON_UNRECOMMENDED_CONFIG =
   'warning-icon-for-unrecommended-config';
 
 // Copy
+export const REGION_CAVEAT_HELPER_TEXT =
+  'A Linode may be assigned only to a VPC in the same region.';
+
 export const ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE =
   'Assigning a Linode to a subnet requires you to reboot the Linode to update its configuration.';
 

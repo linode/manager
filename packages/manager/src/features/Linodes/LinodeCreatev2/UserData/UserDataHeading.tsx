@@ -8,7 +8,7 @@ import { Typography } from 'src/components/Typography';
 
 import { useLinodeCreateQueryParams } from '../utilities';
 
-import type { LinodeCreateType } from '../../LinodesCreate/types';
+import type { LinodeCreateType } from '../types';
 
 export const UserDataHeading = () => {
   const { params } = useLinodeCreateQueryParams();

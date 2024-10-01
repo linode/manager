@@ -3,10 +3,9 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { StyledNoticeTypography } from 'src/features/Linodes/LinodesCreate/PlansAvailabilityNotice.styles';
+import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { PlansAvailabilityNotice } from '../../Linodes/LinodesCreate/PlansAvailabilityNotice';
 import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
@@ -15,6 +14,7 @@ import {
   SHARED_COMPUTE_INSTANCES_LINK,
 } from './constants';
 import { MetalNotice } from './MetalNotice';
+import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
 import { planTabInfoContent } from './utils';
 
 import type { Region } from '@linode/api-v4';
