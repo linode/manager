@@ -1,4 +1,4 @@
-import { styled, tooltipClasses, useTheme } from '@mui/material';
+import { styled, tooltipClasses } from '@mui/material';
 import React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
@@ -6,10 +6,10 @@ import { Tooltip } from 'src/components/Tooltip';
 import type { TooltipProps } from '@mui/material';
 
 export const CloudPulseTooltip = React.memo((props: TooltipProps) => {
-  const theme = useTheme();
+  const { children, placement, title } = props;
 
   return (
-    <BootstrapTooltip
+    <StyledTooltip
       PopperProps={{
         modifiers: [
           {
@@ -20,18 +20,19 @@ export const CloudPulseTooltip = React.memo((props: TooltipProps) => {
           },
         ],
       }}
-      disableHoverListener={props.open !== undefined ? !props.open : false} // Disable hover during operation
-      open={props.open}
-      placement={props.placement ?? 'top-start'}
-      title={props.title}
+      arrow
+      data-qa-tooltip={title}
+      data-test-id={title}
+      placement={placement ?? 'top-start'}
+      title={title}
     >
-      <span>{props.children}</span>
-    </BootstrapTooltip>
+      <span>{children}</span>
+    </StyledTooltip>
   );
 });
 
-const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
+const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: theme.palette.common.black,
