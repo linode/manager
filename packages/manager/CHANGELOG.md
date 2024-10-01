@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-10-02] - v1.129.1
+
+
+### Fixed:
+
+- DBaaS Landing Page V2 platform error for New Beta Users ([#11024](https://github.com/linode/manager/pull/11024))
+
 ## [2024-09-30] - v1.129.0
 
 
