@@ -5,6 +5,7 @@ import {
   mockGetObjectStorageEndpoints,
   mockGetBucketAccess,
 } from 'support/intercepts/object-storage';
+import { checkRateLimitsTable } from 'support/util/object-storage-gen2';
 import { ui } from 'support/ui';
 import {
   accountFactory,
@@ -13,7 +14,6 @@ import {
   regionFactory,
 } from 'src/factories';
 import { ACLType, ObjectStorageEndpointTypes } from '@linode/api-v4';
-import { checkRateLimitsTable } from './bucket-create-gen2.spec';
 
 describe('Object Storage Gen 2 bucket details tabs', () => {
   beforeEach(() => {
