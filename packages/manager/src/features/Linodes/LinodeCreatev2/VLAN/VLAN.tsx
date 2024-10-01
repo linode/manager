@@ -12,8 +12,8 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
-import { VLANAvailabilityNotice } from '../LinodesCreate/VLANAvailabilityNotice';
-import { useLinodeCreateQueryParams } from './utilities';
+import { VLANAvailabilityNotice } from './VLANAvailabilityNotice';
+import { useLinodeCreateQueryParams } from '../utilities';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
