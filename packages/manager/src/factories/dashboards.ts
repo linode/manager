@@ -154,7 +154,7 @@ export const dashboardMetricFactory = Factory.Sync.makeFactory<AvailableMetrics>
   }
 );
 // Function to generate random values based on the number of points
-export const generateValues = (
+export const generateRandomMetricsData = (
   time: string,
   granularityData: string
 ): CloudPulseMetricsResponseData => {

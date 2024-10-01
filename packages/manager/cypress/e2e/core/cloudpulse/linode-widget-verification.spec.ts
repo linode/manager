@@ -17,7 +17,7 @@ import {
   cloudPulseMetricsResponseFactory,
   dashboardFactory,
   dashboardMetricFactory,
-  generateValues,
+  generateRandomMetricsData,
   kubeLinodeFactory,
   linodeFactory,
   regionFactory,
@@ -93,7 +93,7 @@ const mockRegion = extendRegion(
   })
 );
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
-  data: generateValues(timeDurationToSelect,
+  data: generateRandomMetricsData(timeDurationToSelect,
     '5 min')
 });
 /**
