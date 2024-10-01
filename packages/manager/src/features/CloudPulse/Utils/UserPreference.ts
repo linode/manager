@@ -37,7 +37,6 @@ export const useAclpPreference = (): AclpPreferenceObject => {
     if (keys.includes(DASHBOARD_ID)) {
       currentPreferences = {
         ...data,
-        [TIME_DURATION]: currentPreferences[TIME_DURATION],
         [WIDGETS]: {},
       };
     } else {
