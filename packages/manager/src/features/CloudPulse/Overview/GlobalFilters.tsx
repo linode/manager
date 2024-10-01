@@ -110,17 +110,19 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               label="Select Time Range"
               savePreferences
             />
-            <IconButton
-              sx={{
-                marginBlockEnd: 'auto',
-              }}
-              data-testid="global-refresh"
-              disabled={!selectedDashboard}
-              onClick={handleGlobalRefresh}
-              size="small"
-            >
-              <StyledReload />
-            </IconButton>
+            <CloudPulseTooltip placement="bottom-end" title="Refresh">
+              <IconButton
+                sx={{
+                  marginBlockEnd: 'auto',
+                }}
+                data-testid="global-refresh"
+                disabled={!selectedDashboard}
+                onClick={handleGlobalRefresh}
+                size="small"
+              >
+                <StyledReload />
+              </IconButton>
+            </CloudPulseTooltip>
           </Grid>
         </Grid>
       </Grid>
