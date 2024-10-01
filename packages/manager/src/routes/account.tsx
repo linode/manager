@@ -92,17 +92,35 @@ const accountUsersUsernameRoute = createRoute({
 );
 
 const accountUsersUsernameProfileRoute = createRoute({
-  getParentRoute: () => accountRoute,
-  path: 'users/$username/profile',
+  getParentRoute: () => accountUsersUsernameRoute,
+  path: 'profile',
 }).lazy(() =>
   import('src/features/Users/UserDetail').then((m) => m.userDetailLazyRoute)
 );
 
 const accountUsersUsernamePermissionsRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
-  path: 'users/$username/permissions',
+  path: 'permissions',
 }).lazy(() =>
   import('src/features/Users/UserDetail').then((m) => m.userDetailLazyRoute)
+);
+
+const accountBillingMakePaymentRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: 'billing/make-payment',
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
+);
+
+const accountBillingPaymentMethodsRoute = createRoute({
+  getParentRoute: () => accountRoute,
+  path: 'billing/add-payment-method',
+}).lazy(() =>
+  import('src/features/Account/AccountLanding').then(
+    (m) => m.accountLandingLazyRoute
+  )
 );
 
 const accountBillingEditRoute = createRoute({
@@ -157,6 +175,8 @@ export const accountRouteTree = accountRoute.addChildren([
   ]),
   accountActivationLandingRoute,
   accountBillingRoute,
+  accountBillingMakePaymentRoute,
+  accountBillingPaymentMethodsRoute,
   accountBillingEditRoute,
   accountInvoicesInvoiceIdRoute,
   accountEntityTransfersCreateRoute,
