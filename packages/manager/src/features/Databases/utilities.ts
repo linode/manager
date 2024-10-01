@@ -57,7 +57,7 @@ export const useIsDatabasesEnabled = () => {
  * Checks if a given date is outside the timeframe between the oldest backup and today.
  *
  * @param {DateTime} date - The date you want to check.
- * @param {DateTime | null} oldestBackup - The date of the oldest backup. If there are no backups (i.e., `null`), the function will return `false`.
+ * @param {DateTime | null} oldestBackup - The date of the oldest backup. If there are no backups (i.e., `null`), the function will return `true`.
  * @returns {boolean}
  *   - `true` if the date is before the oldest backup or after today.
  *   - `false` if the date is within the range between the oldest backup and today.
@@ -66,10 +66,11 @@ export const isOutsideBackupTimeframe = (
   date: DateTime,
   oldestBackup: DateTime | null
 ) => {
-  const today = DateTime.now().startOf('day');
   if (!oldestBackup) {
-    return false;
+    return true;
   }
+
+  const today = DateTime.now().startOf('day');
   const backupStart = oldestBackup.startOf('day');
   const dateStart = date.startOf('day');
 

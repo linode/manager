@@ -35,8 +35,10 @@ const DatabaseLanding = () => {
     globalGrantType: 'add_databases',
   });
 
-  const { isLoading: isTypeLoading } = useDatabaseTypesQuery();
   const { isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  const { isLoading: isTypeLoading } = useDatabaseTypesQuery({
+    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+  });
 
   const {
     handleOrderChange: newDatabaseHandleOrderChange,
@@ -140,7 +142,7 @@ const DatabaseLanding = () => {
         }}
         createButtonText="Create Database Cluster"
         disabledCreateButton={isRestricted}
-        docsLink="https://www.linode.com/docs/products/databases/managed-databases/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/managed-databases"
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
