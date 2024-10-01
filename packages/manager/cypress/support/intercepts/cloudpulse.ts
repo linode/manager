@@ -5,6 +5,8 @@
  */
 
 import { apiMatcher } from 'support/util/intercepts';
+import { randomString } from 'support/util/random';
+import { makeResponse } from 'support/util/response';
 
 import type {
   CloudPulseMetricsResponse,
@@ -23,11 +25,11 @@ import type {
 
 export const mockCloudPulseGetMetricDefinitions = (
   metricDefinitions: MetricDefinitions,
-  service_type: string
+  serviceType: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/monitor/services/${service_type}/metric-definitions`),
+    apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
     metricDefinitions
   );
 };
@@ -59,11 +61,11 @@ export const mockCloudPulseServices = (
 
 export const mockCloudPulseGetDashboards = (
   dashboard: Dashboard,
-  service_type: string
+  serviceType: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    apiMatcher(`/monitor/services/${service_type}/dashboards`),
+    apiMatcher(`/monitor/services/${serviceType}/dashboards`),
     { data: [dashboard] }
   );
 };
@@ -78,11 +80,11 @@ export const mockCloudPulseGetDashboards = (
  */
 export const mockCloudPulseCreateMetrics = (
   mockResponse: CloudPulseMetricsResponse,
-  service_type: string
+  serviceType: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `**/monitor/services/${service_type}/metrics`,
+    `**/monitor/services/${serviceType}/metrics`,
     mockResponse
   );
 };
@@ -110,25 +112,24 @@ export const mockCloudPulseDashboardServicesResponse = (
 };
 
 /**
- * Mocks the API response for generating a JWT token for a specific service.
+ * Mocks the API response for generating a JWE token for a specific service.
  *
  * This function sets up an interception for POST requests to the endpoint that generates
- * JWT tokens for a particular service type. By returning a mock JWT token, you can test
+ * JWE tokens for a particular service type. By returning a mock JWE token, you can test
  * how your application handles authentication and authorization without making actual network
  * requests to the backend service.
  *
- * @param {string} service_type - The type of service for which to mock the JWT token request.
+ * @param {string} service_type - The type of service for which to mock the JWE token request.
  * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object, enabling command chaining in tests.
  */
-const JWSToken = {
-  token: 'eyJhbGciOiAiZGlyIiwgImVuYyI6ICJBMTI4Q0JDLUhTMjU2IiwgImtpZCI6ID',
-};
 export const mockCloudPulseJWSToken = (
-  service_type: string
+  serviceType: string,
+  token?: string
 ): Cypress.Chainable<null> => {
+  const mockToken = token ?? randomString(62);
   return cy.intercept(
     'POST',
-    apiMatcher(`/monitor/services/${service_type}/token`),
-    JWSToken
+    apiMatcher(`/monitor/services/${serviceType}/token`),
+    makeResponse({ token: mockToken })
   );
 };

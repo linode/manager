@@ -95,6 +95,57 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateValues(timeDurationToSelect,
     '5 min')
 });
+/**
+ * Compares actual widget values to the expected values and asserts their equality.
+ *
+ * @param actualValues - The actual values retrieved from the widget, consisting of:
+ *   @param actualValues.max - The maximum value shown on the widget.
+ *   @param actualValues.average - The average value shown on the widget.
+ *   @param actualValues.last - The last or most recent value shown on the widget.
+ *
+ * @param expectedValues - The expected values that the widget should display, consisting of:
+ *   @param expectedValues.max - The expected maximum value.
+ *   @param expectedValues.average - The expected average value.
+ *   @param expectedValues.last - The expected last or most recent value.
+ */
+
+const compareWidgetValues = (
+  actualValues: { title: string; max: number; average: number; last: number },
+  expectedValues: { max: number; average: number; last: number },
+  title: string
+) => {
+
+ const { title: actualTitle, max: actualMax,
+    average: actualAverage, last: actualLast,
+  } = actualValues;
+
+  const { max: expectedMax,
+    average: expectedAverage, last: expectedLast,
+  } = expectedValues;
+
+  expect(actualMax).to.equal(
+    expectedMax,
+    `Expected ${expectedMax} for max, but got ${actualMax}`
+  );
+  expect(actualAverage).to.equal(
+    expectedAverage,
+    `Expected ${expectedAverage} for average, but got ${actualAverage}`
+  );
+  expect(actualLast).to.equal(
+    expectedLast,
+    `Expected ${expectedLast} for last, but got ${actualLast}`
+  );
+  const extractedTitle = actualTitle.substring(
+    0,
+    actualTitle.indexOf(' ', actualValues.title.indexOf(' ') + 1)
+  );
+
+  expect(extractedTitle).to.equal(
+    title,
+    `Expected ${title} for title ${extractedTitle}`
+  );
+};
+
 
 describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
@@ -147,15 +198,12 @@ describe('Integration Tests for Linode Dashboard ', () => {
     // Verifies that the expected widgets are loaded on the dashboard.
     metrics.forEach(({ title, unit }) => {
       const widgetSelector = `[data-qa-widget-header="${title}"]`;
-      cy.get(widgetSelector)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(
-            `${title} (${unit.trim()})`
-          );
-        });
-    });
+      cy.get(widgetSelector).should('have.text', `${title} (${unit.trim()})`).should('be.visible');
+
+   });
   });
+  
+  
 
   it('should allow users to select desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
@@ -167,7 +215,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
       const widgetSelector = `[data-qa-widget="${testDataTitle}"]`;
 
       cy.get(widgetSelector)
-        .first()
         .within(() => {
           // check for all available granularity in popper
           ui.autocomplete
@@ -179,6 +226,11 @@ describe('Integration Tests for Linode Dashboard ', () => {
             ui.autocompletePopper.findByTitle(option).should('exist');
           });
 
+          mockCloudPulseCreateMetrics(
+            metricsAPIResponsePayload,
+            serviceType
+          ).as('getMetrics');
+          
           //find the interval component and select the expected granularity
           ui.autocomplete
             .findByLabel('Select an Interval')
@@ -236,7 +288,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
       const widgetSelector = `[data-qa-widget="${testDataTitle}"]`;
 
       cy.get(widgetSelector)
-        .first()
         .within(() => {
           // check for all available aggregation in popper
           ui.autocomplete
@@ -358,7 +409,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
           // validate the widget details
           cy.findByTestId('linegraph-wrapper')
-            .as('canvas')
             .should('be.visible')
             .find('tbody tr')
             .each(($tr) => {
@@ -392,7 +442,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
           // validate the widget details
           cy.findByTestId('linegraph-wrapper')
-            .as('canvas')
             .should('be.visible')
             .find('tbody tr')
             .each(($tr) => {
@@ -443,56 +492,3 @@ const getWidgetLegendRowValuesFromResponse = (
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 
-/**
- * Compares actual widget values to the expected values and asserts their equality.
- *
- * @param actualValues - The actual values retrieved from the widget, consisting of:
- *   @param actualValues.max - The maximum value shown on the widget.
- *   @param actualValues.average - The average value shown on the widget.
- *   @param actualValues.last - The last or most recent value shown on the widget.
- *
- * @param expectedValues - The expected values that the widget should display, consisting of:
- *   @param expectedValues.max - The expected maximum value.
- *   @param expectedValues.average - The expected average value.
- *   @param expectedValues.last - The expected last or most recent value.
- */
-
-const compareWidgetValues = (
-  actualValues: { title: string; max: number; average: number; last: number },
-  expectedValues: { max: number; average: number; last: number },
-  title: string
-) => {
-
-
-
-  const { title: actualTitle, max: actualMax,
-    average: actualAverage, last: actualLast,
-  } = actualValues;
-
-  const { max: expectedMax,
-    average: expectedAverage, last: expectedLast,
-  } = expectedValues;
-
-
-  expect(actualMax).to.equal(
-    expectedMax,
-    `Expected ${expectedMax} for max, but got ${actualMax}`
-  );
-  expect(actualAverage).to.equal(
-    expectedAverage,
-    `Expected ${expectedAverage} for average, but got ${actualAverage}`
-  );
-  expect(actualLast).to.equal(
-    expectedLast,
-    `Expected ${expectedLast} for last, but got ${actualLast}`
-  );
-  const extractedTitle = actualTitle.substring(
-    0,
-    actualTitle.indexOf(' ', actualValues.title.indexOf(' ') + 1)
-  );
-
-  expect(extractedTitle).to.equal(
-    title,
-    `Expected ${title} for title ${extractedTitle}`
-  );
-};
