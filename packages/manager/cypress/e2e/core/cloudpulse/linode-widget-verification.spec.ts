@@ -169,8 +169,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
     cy.findByText(resource).should('be.visible');
 
     for (const { title, unit } of metrics) {
-      const widgetSelector = `[data-qa-widget-header="${title}"]`;
-      cy.get(widgetSelector).should('have.text', `${title} (${unit.trim()})`).should('be.visible');
+      const widgetSelector = `[data-qa-widget="${title}"]`;
+      cy.get(widgetSelector)
+        .find('h2')
+        .should('have.text', `${title} (${unit.trim()})`).should('be.visible');
     }
   });
 

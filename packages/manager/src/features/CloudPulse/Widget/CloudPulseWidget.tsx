@@ -304,13 +304,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             marginBottom={1}
             padding={1}
           >
-            <Typography
-              data-qa-widget-header={convertStringToCamelCasesWithSpaces(
-                widget.label
-              )}
-              marginLeft={1}
-              variant="h2"
-            >
+            <Typography marginLeft={1} variant="h2">
               {convertStringToCamelCasesWithSpaces(widget.label)} ({currentUnit}
               {unit.endsWith('ps') ? '/s' : ''})
             </Typography>
