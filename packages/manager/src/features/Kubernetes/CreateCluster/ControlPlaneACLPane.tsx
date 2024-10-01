@@ -57,21 +57,19 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
   );
 
   return (
-    <FormControl data-testid="control-plane-ipacl-form">
-      <FormLabel
-        sx={(theme) => ({
-          '&&.MuiFormLabel-root.Mui-focused': {
-            color: theme.name === 'dark' ? 'white' : theme.color.black,
-          },
-        })}
-        id="ipacl-radio-buttons-group-label"
-      >
-        <Typography variant="inherit">
-          Control Plane Access Control (IPACL)
+    <>
+      <FormControl data-testid="control-plane-ipacl-form">
+        <FormLabel id="ipacl-radio-buttons-group-label">
+          <Typography variant="inherit">
+            Control Plane Access Control (IPACL)
+          </Typography>
+        </FormLabel>
+        <Typography mb={1}>
+          This is the text for Control Plane Access Control.{' '}
+          <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
+            Learn more.
+          </Link>
         </Typography>
-      </FormLabel>
-      <IPACLCopy />
-      <Box sx={{ marginTop: 2, marginBottom: 1 }}>
         <FormControlLabel
           control={
             <Toggle
@@ -80,11 +78,11 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               onChange={(e) => handleChange(e)}
             />
           }
-          label={'Enable IPACL'}
+          label="Enable IPACL"
         />
-      </Box>
+      </FormControl>
       {enableControlPlaneACL && (
-        <Stack sx={{ marginBottom: 3 }}>
+        <Box sx={{ marginBottom: 3, maxWidth: 450 }}>
           <MultipleIPInput
             buttonText="Add IP Address"
             ips={ipV4Addr}
@@ -113,8 +111,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             placeholder="::/0"
             title="IPv6 Addresses or CIDRs"
           />
-        </Stack>
+        </Box>
       )}
-    </FormControl>
+    </>
   );
 };

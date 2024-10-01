@@ -324,40 +324,39 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
             </>
           )}
-
           <RevisionID />
-
           <AddressesCopy />
           <ErrorMessage />
-          <MultipleIPInput
-            buttonText="Add IP Address"
-            ips={ipV4Addr}
-            onChange={handleIPv4ChangeCB}
-            onBlur={(_ips: ExtendedIP[]) => {
-              const validatedIPs = validateIPs(_ips, {
-                allowEmptyAddress: false,
-                errorMessage: 'Must be a valid IPv4 address.',
-              });
-              handleIPv4ChangeCB(validatedIPs);
-            }}
-            placeholder="0.0.0.0/0"
-            title="IPv4 Addresses or CIDRs"
-          />
-          <MultipleIPInput
-            buttonText="Add IP Address"
-            ips={ipV6Addr}
-            onChange={handleIPv6ChangeCB}
-            onBlur={(_ips: ExtendedIP[]) => {
-              const validatedIPs = validateIPs(_ips, {
-                allowEmptyAddress: false,
-                errorMessage: 'Must be a valid IPv6 address.',
-              });
-              handleIPv6ChangeCB(validatedIPs);
-            }}
-            placeholder="::/0"
-            title="IPv6 Addresses or CIDRs"
-          />
-
+          <Box sx={{ maxWidth: 450 }}>
+            <MultipleIPInput
+              buttonText="Add IP Address"
+              ips={ipV4Addr}
+              onChange={handleIPv4ChangeCB}
+              onBlur={(_ips: ExtendedIP[]) => {
+                const validatedIPs = validateIPs(_ips, {
+                  allowEmptyAddress: false,
+                  errorMessage: 'Must be a valid IPv4 address.',
+                });
+                handleIPv4ChangeCB(validatedIPs);
+              }}
+              placeholder="0.0.0.0/0"
+              title="IPv4 Addresses or CIDRs"
+            />
+            <MultipleIPInput
+              buttonText="Add IP Address"
+              ips={ipV6Addr}
+              onChange={handleIPv6ChangeCB}
+              onBlur={(_ips: ExtendedIP[]) => {
+                const validatedIPs = validateIPs(_ips, {
+                  allowEmptyAddress: false,
+                  errorMessage: 'Must be a valid IPv6 address.',
+                });
+                handleIPv6ChangeCB(validatedIPs);
+              }}
+              placeholder="::/0"
+              title="IPv6 Addresses or CIDRs"
+            />
+          </Box>
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'update-acl-button',
@@ -368,7 +367,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             }}
             secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
           />
-
           <ClusterNeedsMigration />
         </Stack>
       </DrawerContent>
