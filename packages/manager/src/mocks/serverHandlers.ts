@@ -100,11 +100,12 @@ import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
-import { pickRandom } from 'src/utilities/random';
 import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
+
+import { pickRandom } from 'src/utilities/random';
 
 import type {
   AccountMaintenance,
@@ -264,7 +265,7 @@ const databases = [
   }),
 
   http.get('*/databases/:engine/instances/:databaseId/backups', () => {
-    const backups = databaseBackupFactory.buildList(7);
+    const backups = databaseBackupFactory.buildList(10);
     return HttpResponse.json(makeResourcePage(backups));
   }),
 
@@ -2451,7 +2452,7 @@ export const handlers = [
         {
           aggregate_function: 'avg',
           chart_type: 'area',
-          color: 'blue',
+          color: 'default',
           label: 'CPU utilization',
           metric: 'system_cpu_utilization_percent',
           size: 12,
@@ -2461,7 +2462,7 @@ export const handlers = [
         {
           aggregate_function: 'avg',
           chart_type: 'area',
-          color: 'red',
+          color: 'default',
           label: 'Memory Usage',
           metric: 'system_memory_usage_by_resource',
           size: 12,
@@ -2471,7 +2472,7 @@ export const handlers = [
         {
           aggregate_function: 'avg',
           chart_type: 'area',
-          color: 'green',
+          color: 'default',
           label: 'Network Traffic',
           metric: 'system_network_io_by_resource',
           size: 6,
@@ -2481,7 +2482,7 @@ export const handlers = [
         {
           aggregate_function: 'avg',
           chart_type: 'area',
-          color: 'yellow',
+          color: 'default',
           label: 'Disk I/O',
           metric: 'system_disk_OPS_total',
           size: 6,
@@ -2497,7 +2498,9 @@ export const handlers = [
       data: {
         result: [
           {
-            metric: {},
+            metric: {
+              test: 'Test1',
+            },
             values: [
               [1721854379, '0.2744841110560275'],
               [1721857979, '0.2980357104166823'],
@@ -2512,6 +2515,46 @@ export const handlers = [
               [1721890379, '0.26863082415681144'],
               [1721893979, '0.26126998689934394'],
               [1721897579, '0.26164641539434685'],
+            ],
+          },
+          {
+            metric: {
+              test2: 'Test2',
+            },
+            values: [
+              [1721854379, '0.3744841110560275'],
+              [1721857979, '0.4980357104166823'],
+              [1721861579, '0.3290476561287732'],
+              [1721865179, '0.42148793964961897'],
+              [1721868779, '0.2269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.5237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.35839295774934357'],
+              [1721890379, '0.36863082415681144'],
+              [1721893979, '0.46126998689934394'],
+              [1721897579, '0.56164641539434685'],
+            ],
+          },
+          {
+            metric: {
+              test3: 'Test3',
+            },
+            values: [
+              [1721854379, '0.3744841110560275'],
+              [1721857979, '0.4980357104166823'],
+              [1721861579, '0.3290476561287732'],
+              [1721865179, '0.4148793964961897'],
+              [1721868779, '0.4269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.6237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.45839295774934357'],
+              [1721890379, '0.36863082415681144'],
+              [1721893979, '0.56126998689934394'],
+              [1721897579, '0.66164641539434685'],
             ],
           },
         ],

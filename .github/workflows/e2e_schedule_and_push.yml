@@ -26,11 +26,11 @@ jobs:
     steps:
       - name: install command line utilities
         run: sudo apt-get install -y expect
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             node_modules
@@ -60,7 +60,7 @@ jobs:
           yarn build
           yarn start:manager:ci &
       - name: Run tests
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           working-directory: packages/manager
           wait-on: "http://localhost:3000"

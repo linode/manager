@@ -69,7 +69,7 @@ export const TPAProviders = (props: Props) => {
           You can use your Cloud Manager credentials or another provider such as
           Google or GitHub to log in to your Cloud Manager account. More
           information is available in{' '}
-          <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/enable-third-party-authentication">
             How to Enable Third Party Authentication on Your User Account
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (2FA).

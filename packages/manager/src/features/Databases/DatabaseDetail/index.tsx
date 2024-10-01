@@ -1,5 +1,3 @@
-import { Engine } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
@@ -23,6 +21,9 @@ import {
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import type { Engine } from '@linode/api-v4/lib/databases/types';
+import type { APIError } from '@linode/api-v4/lib/types';
+
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
@@ -44,7 +45,9 @@ export const DatabaseDetail = () => {
   const id = Number(databaseId);
 
   const { data: database, error, isLoading } = useDatabaseQuery(engine, id);
-  const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery({
+    platform: database?.platform,
+  });
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
 

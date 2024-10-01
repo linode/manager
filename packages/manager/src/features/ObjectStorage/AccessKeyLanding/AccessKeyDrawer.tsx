@@ -231,7 +231,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                     Generate an Access Key for use with an{' '}
                     <Link
                       className="h-u"
-                      to="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
+                      to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools"
                     >
                       S3-compatible client
                     </Link>

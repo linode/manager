@@ -215,6 +215,15 @@ export const CreateAPITokenDrawer = (props: Props) => {
           onChange={(_, selected) =>
             form.setFieldValue('expiry', selected.value)
           }
+          slotProps={{
+            popper: {
+              sx: {
+                '&& .MuiAutocomplete-listbox': {
+                  padding: 0,
+                },
+              },
+            },
+          }}
           sx={{
             '&& .MuiAutocomplete-inputRoot': {
               paddingLeft: 1,
@@ -222,11 +231,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
             },
             '&& .MuiInput-input': {
               padding: '0px 2px',
-            },
-          }}
-          sxPopperComponent={{
-            '&& .MuiAutocomplete-listbox': {
-              padding: 0,
             },
           }}
           disableClearable

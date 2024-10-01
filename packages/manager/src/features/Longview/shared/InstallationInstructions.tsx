@@ -58,14 +58,14 @@ export const InstallationInstructions = React.memo((props: Props) => {
         <Grid container spacing={2}>
           <StyledInstructionGrid>
             <Typography>
-              <Link to="https://www.linode.com/docs/platform/longview/troubleshooting-linode-longview/">
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/troubleshooting-linode-longview">
                 Troubleshooting guide
               </Link>
             </Typography>
           </StyledInstructionGrid>
           <StyledInstructionGrid>
             <Typography>
-              <Link to="https://www.linode.com/docs/platform/longview/what-is-longview/#install-the-longview-agent">
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview#install-the-longview-agent">
                 Manual installation instructions
               </Link>
             </Typography>

@@ -15,15 +15,17 @@ import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { VPCSelect } from 'src/components/VPCSelect';
-import { VPC_AUTO_ASSIGN_IPV4_TOOLTIP } from 'src/features/VPCs/constants';
+import {
+  REGION_CAVEAT_HELPER_TEXT,
+  VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
+} from 'src/features/VPCs/constants';
+import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { inputMaxWidth } from 'src/foundations/themes/light';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery, useVPCsQuery } from 'src/queries/vpcs/vpcs';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
-import { REGION_CAVEAT_HELPER_TEXT } from '../../LinodesCreate/constants';
-import { VPCCreateDrawer } from '../../LinodesCreate/VPCCreateDrawer';
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
@@ -97,7 +99,7 @@ export const VPC = () => {
                 label: 'Learn more',
               })
             }
-            to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/"
+            to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc"
           >
             Learn more.
           </Link>
@@ -284,7 +286,7 @@ export const VPC = () => {
                   <Typography>
                     Assign additional IPv4 address ranges that the VPC can use
                     to reach services running on this Linode.{' '}
-                    <Link to="https://www.linode.com/docs/products/networking/vpc/guides/assign-services/">
+                    <Link to="https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc">
                       Learn more
                     </Link>
                     .

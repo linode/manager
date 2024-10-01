@@ -4,11 +4,7 @@ import * as React from 'react';
 import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { RESOURCES } from '../Utils/constants';
-import * as preferences from '../Utils/UserPreference';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
-
-import type { AclpConfig } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   useResourcesQuery: vi.fn().mockReturnValue({}),
@@ -42,7 +38,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
     expect(getByTestId('resource-select')).toBeInTheDocument();
-    expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select a Resource')).toBeInTheDocument();
   }),
     it('should render resources happy path', () => {
       queryMocks.useResourcesQuery.mockReturnValue({
@@ -174,15 +170,14 @@ describe('CloudPulseResourcesSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    vi.spyOn(preferences, 'getUserPreferenceObject').mockReturnValue({
-      [RESOURCES]: ['12'],
-    } as AclpConfig);
 
     renderWithTheme(
       <CloudPulseResourcesSelect
+        defaultValue={['12']}
         handleResourcesSelection={mockResourceHandler}
         region={'us-east'}
         resourceType={'linode'}
+        savePreferences
       />
     );
 

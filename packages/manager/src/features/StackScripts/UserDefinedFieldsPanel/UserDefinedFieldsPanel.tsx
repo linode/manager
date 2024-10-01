@@ -18,7 +18,7 @@ import {
   separateUDFsByRequiredStatus,
 } from 'src/features/Linodes/LinodeCreatev2/Tabs/StackScripts/UserDefinedFields/utilities';
 
-import { AppInfo } from '../../Linodes/LinodesCreate/AppInfo';
+import { AppInfo } from './AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import { UserDefinedSelect } from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
