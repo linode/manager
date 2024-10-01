@@ -134,7 +134,7 @@ export const FirewallDetail = () => {
           pathname: `/firewalls/${firewall.label}`,
         }}
         docsLabel="Docs"
-        docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         title="Firewall Details"
       />
       {secureVMFirewallBanner && secureVMFirewallBanner.firewallDetails && (

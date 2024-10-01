@@ -22,23 +22,22 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     {
       text: 'Getting Started with Cloud Firewalls',
       to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/',
+        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls',
     },
     {
       text: 'Manage Firewall Rules',
       to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/guides/manage-firewall-rules/',
+        'https://techdocs.akamai.com/cloud-computing/docs/manage-firewall-rules',
     },
     {
       text: 'Comparing Cloud Firewalls to Linux Firewall Software',
       to:
-        'https://www.linode.com/docs/products/networking/cloud-firewall/guides/comparing-firewalls/',
+        'https://techdocs.akamai.com/cloud-computing/docs/comparing-cloud-firewalls-to-linux-firewall-software',
     },
   ],
   moreInfo: {
     text: 'View additional Firewalls guides',
-    to:
-      'https://www.linode.com/docs/products/networking/cloud-firewall/guides/',
+    to: 'https://techdocs.akamai.com/cloud-computing/docs/cloud-firewall',
   },
   title: 'Getting Started Guides',
 };

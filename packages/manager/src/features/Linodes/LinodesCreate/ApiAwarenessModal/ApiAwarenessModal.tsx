@@ -122,6 +122,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
         overflowX: 'hidden',
         paddingBottom: '0px',
       }}
+      fullHeight
       fullWidth
       maxWidth="sm"
       onClose={onClose}
@@ -129,9 +130,23 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
       title="Create Linode"
     >
       <Typography sx={{ paddingBottom: '6px' }} variant="body1">
-        {isDxAdditionsFeatureEnabled
-          ? 'Create a Linode in the command line, powered by the Linode API. Select one of the methods below and paste the corresponding command into your local terminal. The values for each command have been populated with the selections made in the Cloud Manager create form.'
-          : 'Create a Linode in the command line using either cURL or the Linode CLI — both of which are powered by the Linode API. Select one of the methods below and paste the corresponding command into your local terminal. The values for each command have been populated with the selections made in the Cloud Manager create form.'}
+        {isDxAdditionsFeatureEnabled ? (
+          <>
+            Create a Linode in the command line, powered by the{' '}
+            <Link
+              onClick={() => sendApiAwarenessClickEvent('link', 'Linode API')}
+              to="https://techdocs.akamai.com/linode-api/reference/api/"
+            >
+              Linode API
+            </Link>
+            . Select one of the methods below and paste the corresponding
+            command into your local terminal. The values for each command have
+            been populated with the selections made in the Cloud Manager create
+            form.
+          </>
+        ) : (
+          'Create a Linode in the command line using either cURL or the Linode CLI — both of which are powered by the Linode API. Select one of the methods below and paste the corresponding command into your local terminal. The values for each command have been populated with the selections made in the Cloud Manager create form.'
+        )}
       </Typography>
       <StyledTabs defaultIndex={0} onChange={handleTabChange}>
         <TabList>
@@ -180,7 +195,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
               onClick={() =>
                 sendApiAwarenessClickEvent('link', 'View all tools')
               }
-              to="https://www.linode.com/docs/products/tools/api/developers/"
+              to="https://techdocs.akamai.com/linode-api/reference/api"
             >
               View all tools
             </Link>{' '}

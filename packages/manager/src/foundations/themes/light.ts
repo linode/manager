@@ -336,7 +336,6 @@ export const lightTheme: ThemeOptions = {
           svg: {
             color: Color.Neutrals[40],
           },
-          top: 'unset',
         },
         groupLabel: {
           fontFamily: latoWeb.bold,

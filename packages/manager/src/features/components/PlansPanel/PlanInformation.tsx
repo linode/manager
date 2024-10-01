@@ -1,11 +1,10 @@
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-import { Theme, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/Linodes/LinodesCreate/PlansAvailabilityNotice.styles';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { PlansAvailabilityNotice } from '../../Linodes/LinodesCreate/PlansAvailabilityNotice';
 import {
@@ -19,6 +18,8 @@ import { MetalNotice } from './MetalNotice';
 import { planTabInfoContent } from './utils';
 
 import type { Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import type { Theme } from '@mui/material/styles';
 
 export interface PlanInformationProps {
   disabledClasses?: LinodeTypeClass[];
@@ -40,20 +41,40 @@ export const PlanInformation = (props: PlanInformationProps) => {
     planType,
     regionsData,
   } = props;
-
   const getDisabledClass = (thisClass: LinodeTypeClass) => {
     return Boolean(disabledClasses?.includes(thisClass));
   };
+  const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
 
   return (
     <>
       {planType === 'gpu' ? (
-        <PlansAvailabilityNotice
-          hasSelectedRegion={hasSelectedRegion}
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          planType={planType}
-          regionsData={regionsData || []}
-        />
+        <>
+          {showGPUEgressBanner && (
+            <Notice spacingBottom={8} variant="info">
+              <Typography
+                fontFamily={(theme: Theme) => theme.font.bold}
+                fontSize="1rem"
+              >
+                New GPU instances are now generally available. Deploy an RTX
+                4000 Ada GPU instance in select core compute regions in North
+                America, Europe, and Asia. <br />
+                Receive 1 TB of free included network transfer for a limited
+                time.{' '}
+                <Link to="https://www.linode.com/blog/compute/new-gpus-nvidia-rtx-4000-ada-generation">
+                  Learn more
+                </Link>
+                .
+              </Typography>
+            </Notice>
+          )}
+          <PlansAvailabilityNotice
+            hasSelectedRegion={hasSelectedRegion}
+            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+            planType={planType}
+            regionsData={regionsData || []}
+          />
+        </>
       ) : null}
       {planType === 'metal' ? (
         <MetalNotice
@@ -101,7 +122,6 @@ interface ClassDescriptionCopyProps {
 
 export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
   const { planType } = props;
-  const theme = useTheme();
   let planTypeLabel: null | string;
   let docLink: null | string;
 
@@ -133,7 +153,10 @@ export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
 
   return planTypeLabel && docLink ? (
     <Typography
-      sx={{ marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }}
+      sx={(theme: Theme) => ({
+        marginBottom: theme.spacing(3),
+        marginTop: theme.spacing(1),
+      })}
     >
       {
         planTabInfoContent[planType as keyof typeof planTabInfoContent]

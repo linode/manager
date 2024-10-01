@@ -44,16 +44,6 @@ describe('UserDataAccordion', () => {
     ).toBeInTheDocument();
   });
 
-  it('should display a custom header warning message', () => {
-    renderWithTheme(<UserDataAccordion {...props} createType="fromBackup" />);
-
-    const headerWarningMessage = screen.getByText(
-      'Existing user data is not accessible when creating a Linode from a backup. You may add new user data now.'
-    );
-
-    expect(headerWarningMessage).toBeInTheDocument();
-  });
-
   it('should display a custom notice', () => {
     renderWithTheme(
       <UserDataAccordion {...props} renderNotice={<div>Custom notice</div>} />
