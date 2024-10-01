@@ -40,11 +40,12 @@ cat << EOF
 
 EOF
 
-echo "Installling homebrew from https://brew.sh"
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo "Installing Homebrew from https://brew.sh"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew update --force
+
 # Use brew bundle to install git, volta, and github cli
-echo "installing Git, Volta, and Github CLI using homebrew"
+echo "Installing Git, Volta, and GitHub CLI using Homebrew"
 brew bundle --no-lock --file=- <<EOF
      brew "git"
      brew "volta"
