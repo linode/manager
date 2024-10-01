@@ -1,5 +1,4 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -79,9 +78,5 @@ export const ManagedDashboardCard = () => {
     </StyledDashboardCard>
   );
 };
-
-export const managedDashboardCardLazyRoute = createLazyRoute('/managed')({
-  component: ManagedDashboardCard,
-});
 
 export default ManagedDashboardCard;

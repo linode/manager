@@ -39,11 +39,11 @@ const SupportTicketsRoute = createRoute({
 );
 
 const SupportTicketDetailRoute = createRoute({
-  getParentRoute: () => SupportTicketsRoute,
+  getParentRoute: () => SupportRoute,
   parseParams: (params) => ({
     ticketId: Number(params.ticketId),
   }),
-  path: '$ticketId',
+  path: 'tickets/$ticketId',
 }).lazy(() =>
   import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
     (m) => m.supportTicketDetailLazyRoute

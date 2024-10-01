@@ -25,8 +25,8 @@ export const managedIndexRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/Managed/ManagedDashboardCard/ManagedDashboardCard').then(
-    (m) => m.managedDashboardCardLazyRoute
+  import('src/features/Managed/ManagedLanding').then(
+    (m) => m.managedLandingLazyRoute
   )
 );
 
@@ -34,8 +34,8 @@ export const managedSummaryRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'summary',
 }).lazy(() =>
-  import('src/features/Managed/ManagedDashboardCard/ManagedDashboardCard').then(
-    (m) => m.managedDashboardCardLazyRoute
+  import('src/features/Managed/ManagedLanding').then(
+    (m) => m.managedLandingLazyRoute
   )
 );
 
@@ -43,8 +43,8 @@ export const managedMonitorsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'monitors',
 }).lazy(() =>
-  import('src/features/Managed/Monitors/MonitorTable').then(
-    (m) => m.managedMonitorTableLazyRoute
+  import('src/features/Managed/ManagedLanding').then(
+    (m) => m.managedLandingLazyRoute
   )
 );
 
@@ -52,8 +52,8 @@ export const managedSSHAccessRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'ssh-access',
 }).lazy(() =>
-  import('src/features/Managed/SSHAccess/SSHAccess').then(
-    (m) => m.managedSSHAccessLazyRoute
+  import('src/features/Managed/ManagedLanding').then(
+    (m) => m.managedLandingLazyRoute
   )
 );
 
@@ -61,8 +61,8 @@ export const managedCredentialsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'credentials',
 }).lazy(() =>
-  import('src/features/Managed/Credentials/CredentialList').then(
-    (m) => m.managedCredentialsLazyRoute
+  import('src/features/Managed/ManagedLanding').then(
+    (m) => m.managedLandingLazyRoute
   )
 );
 
@@ -70,8 +70,8 @@ export const managedContactsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'contacts',
 }).lazy(() =>
-  import('src/features/Managed/Contacts/Contacts').then(
-    (m) => m.managedContactsLazyRoute
+  import('src/features/Managed/ManagedLanding').then(
+    (m) => m.managedLandingLazyRoute
   )
 );
 
