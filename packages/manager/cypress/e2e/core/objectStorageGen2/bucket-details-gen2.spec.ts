@@ -221,6 +221,7 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
         ]);
 
         cy.findByText('Bucket Rate Limits');
+        // Confirm bucket rate limits table exists with correct values and that its helper text exists
         cy.contains(
           'Specifies the maximum Requests Per Second (RPS) for a bucket. To increase it to High, open a support ticket. Understand bucket rate limits.'
         ).should('be.visible');
