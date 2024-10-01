@@ -44,10 +44,10 @@ export const deleteChangesets = async (linodePackage) => {
         const filePath = safeConcatenatePath(changesetDir, sanitizedFile); // Use safe concatenation
         try {
           await unlink(filePath);
-          console.warn(`Deleted: ${filePath}`);
+          console.warn("Deleted:", filePath); // Pass variables separately to avoid template literals
           await git.rm(filePath);
         } catch (error) {
-          console.error(`Error occurred while deleting ${filePath}:`, error);
+          console.error("Error occurred while deleting:", filePath, error); // No template literals here
         }
       }
     }
@@ -57,7 +57,8 @@ export const deleteChangesets = async (linodePackage) => {
     });
   } catch (error) {
     logger.error({
-      message: `Error occurred while deleting changesets for @linode/${linodePackage}`,
+      message:
+        "Error occurred while deleting changesets for @linode/" + linodePackage,
       info: error,
     });
   }
