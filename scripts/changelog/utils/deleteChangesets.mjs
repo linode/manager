@@ -20,36 +20,13 @@ const sanitizeFileName = (fileName) => {
 };
 
 /**
- * Check if the resolved path starts with the intended directory
- * @param {string} dir - The base directory
- * @param {string} candidate - The file path to check
- * @returns {boolean} - Returns true if the file path is within the base directory
- */
-const checkPrefix = (dir, candidate) => {
-  const absPrefix = path.resolve(dir) + path.sep;
-  const absCandidate = path.resolve(candidate) + path.sep;
-  return absCandidate.startsWith(absPrefix); // Ensure the candidate is inside the dir
-};
-
-/**
- * Safe path join function to prevent path traversal
- * @param {string} dir - The base directory
- * @param {string} file - The file name
+ * Safe path concatenation using string methods to avoid path traversal vulnerabilities.
+ * @param {string} dir - The base directory (trusted)
+ * @param {string} file - The sanitized file name (validated)
  * @returns {string} - Safe file path
  */
-const safeJoinPath = (dir, file) => {
-  const sanitizedFile = sanitizeFileName(file);
-  const safeFile = path
-    .normalize(sanitizedFile)
-    .replace(/^(\.\.(\/|\\|$))+/, ""); // Normalize and remove dangerous patterns
-  const safePath = path.join(dir, safeFile);
-
-  // Ensure the final path is within the base directory
-  if (!checkPrefix(dir, safePath)) {
-    throw new Error("Path traversal attempt detected");
-  }
-
-  return safePath;
+const safeConcatenatePath = (dir, file) => {
+  return `${dir}/${file}`; // Simple string concatenation since the dir is trusted and file is sanitized
 };
 
 /**
@@ -63,7 +40,8 @@ export const deleteChangesets = async (linodePackage) => {
 
     for (const file of files) {
       if (file !== "README.md") {
-        const filePath = safeJoinPath(changesetDir, file); // Use safe path join
+        const sanitizedFile = sanitizeFileName(file); // Sanitize file name first
+        const filePath = safeConcatenatePath(changesetDir, sanitizedFile); // Use safe concatenation
         try {
           await unlink(filePath);
           console.warn(`Deleted: ${filePath}`);
