@@ -63,8 +63,10 @@ import { deleteInternalHeader } from './setup/delete-internal-header';
 import { mockFeatureFlagClientstream } from './setup/feature-flag-clientstream';
 import { mockAccountRequest } from './setup/mock-account-request';
 import { trackApiRequests } from './setup/request-tracking';
+import { postRunCleanUp } from './setup/post-run-cleanup';
 
 trackApiRequests();
 mockAccountRequest();
 mockFeatureFlagClientstream();
 deleteInternalHeader();
+postRunCleanUp();
