@@ -12,6 +12,7 @@ import { useAPISearch } from 'src/features/Search/useAPISearch';
 import withStoreSearch from 'src/features/Search/withStoreSearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -101,6 +102,7 @@ const SearchBar = (props: SearchProps) => {
   const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
   const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
+  const { data: firewalls } = useAllFirewallsQuery(shouldMakeRequests);
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
@@ -183,7 +185,8 @@ const SearchBar = (props: SearchProps) => {
         _privateImages ?? [],
         regions ?? [],
         searchableLinodes ?? [],
-        nodebalancers ?? []
+        nodebalancers ?? [],
+        firewalls ?? []
       );
     }
   }, [
@@ -198,6 +201,7 @@ const SearchBar = (props: SearchProps) => {
     _privateImages,
     regions,
     nodebalancers,
+    firewalls,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {

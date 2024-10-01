@@ -5,6 +5,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import type {
   Domain,
+  Firewall,
   Image,
   KubernetesCluster,
   Linode,
@@ -161,4 +162,19 @@ export const bucketToSearchableItem = (
   entityType: 'bucket',
   label: bucket.label,
   value: `${bucket.cluster}/${bucket.label}`,
+});
+
+export const firewallToSearchableItem = (
+  firewall: Firewall
+): SearchableItem => ({
+  data: {
+    created: firewall.created,
+    description: firewall.status.toUpperCase(),
+    icon: 'firewall',
+    path: `/firewalls/${firewall.id}`,
+    tags: firewall.tags,
+  },
+  entityType: 'firewall',
+  label: firewall.label,
+  value: firewall.id,
 });
