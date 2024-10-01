@@ -36,6 +36,9 @@ export const ConfigSelect = React.memo((props: Props) => {
     return { label: config.label, value: config.id };
   });
 
+  // This used to be in a useEffect. We are reverting that because it caused a
+  // page crash - see [PDI-3054] for more information. Note that [M3-8578] will
+  // need to be looked into again as a result.
   if (configList?.length === 1) {
     const newValue = configList[0].value;
     if (value !== newValue) {
