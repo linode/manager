@@ -62,7 +62,7 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
      * - Confirms the CORS toggle still appears
      * - Confirms the SSL/TLS tab appears
      */
-    it(`does not hide the CORS toggle or SSL/TLS tab for buckets with an ${endpoint} endpoint`, () => {
+    it(`does not hide the CORS toggle and SSL/TLS tab for buckets with an ${endpoint} endpoint`, () => {
       const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
         endpoint
       );
@@ -103,9 +103,9 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
     /**
      * Parameterized test for object storage endpoint types E2 and E3
      * - Confirms the CORS toggle is hidden
-     * - Confirms the SSL/TLS tab is present for E2 but hidden for E3
+     * - Confirms the SSL/TLS tab is hidden
      */
-    it(`hides the CORS toggle and confirms the correct state of the TLS/SSL tab for endpoint ${endpoint}`, () => {
+    it(`hides the CORS toggle and SSL/TLS tab for for buckets with an ${endpoint} endpoint`, () => {
       const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
         endpoint
       );
@@ -135,13 +135,8 @@ describe('Object Storage Gen 2 bucket details Access and SSL/TLS tabs', () => {
         'CORS (Cross Origin Sharing) is not available for endpoint types E2 and E3'
       ).should('be.visible');
 
-      if (endpoint === 'E3') {
-        cy.findByText('SSL/TLS').should('not.exist');
-      } else {
-        // For E2, the SSL/TLS tab is present and clickable
-        cy.findByText('SSL/TLS').should('be.visible').click();
-        cy.url().should('endWith', '/ssl');
-      }
+      // confirms the SSL/TLS tab is not present
+      cy.findByText('SSL/TLS').should('not.exist');
     });
   });
 });
