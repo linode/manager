@@ -20,6 +20,18 @@ const sanitizeFileName = (fileName) => {
 };
 
 /**
+ * Check if the resolved path starts with the intended directory
+ * @param {string} dir - The base directory
+ * @param {string} candidate - The file path to check
+ * @returns {boolean} - Returns true if the file path is within the base directory
+ */
+const checkPrefix = (dir, candidate) => {
+  const absPrefix = path.resolve(dir) + path.sep;
+  const absCandidate = path.resolve(candidate) + path.sep;
+  return absCandidate.startsWith(absPrefix); // Ensure the candidate is inside the dir
+};
+
+/**
  * Safe path join function to prevent path traversal
  * @param {string} dir - The base directory
  * @param {string} file - The file name
@@ -27,22 +39,22 @@ const sanitizeFileName = (fileName) => {
  */
 const safeJoinPath = (dir, file) => {
   const sanitizedFile = sanitizeFileName(file);
-  const safeFile = path.basename(sanitizedFile); // Ensure the file is not traversing directories
+  const safeFile = path
+    .normalize(sanitizedFile)
+    .replace(/^(\.\.(\/|\\|$))+/, ""); // Normalize and remove dangerous patterns
+  const safePath = path.join(dir, safeFile);
 
-  // Resolve to absolute path
-  const resolvedPath = path.resolve(dir, safeFile);
-
-  // Ensure that the resolved path is still within the intended directory
-  if (!resolvedPath.startsWith(path.resolve(dir))) {
+  // Ensure the final path is within the base directory
+  if (!checkPrefix(dir, safePath)) {
     throw new Error("Path traversal attempt detected");
   }
 
-  return resolvedPath;
+  return safePath;
 };
 
 /**
- * Populates the changelog content with the provided entries.
- * @returns {void} Deletes the changeset files and tracks the deletions in Git.
+ * Deletes the changeset files and tracks the deletions in Git.
+ * @returns {void}
  */
 export const deleteChangesets = async (linodePackage) => {
   const changesetDir = changesetDirectory(linodePackage);
