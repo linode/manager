@@ -128,7 +128,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
     mockCloudPulseGetMetricDefinitions(metricDefinitions, serviceType);
-    mockCloudPulseGetDashboards(dashboard, serviceType);
+    mockCloudPulseGetDashboards([dashboard], serviceType);
     mockCloudPulseServices(serviceType);
     mockCloudPulseDashboardServicesResponse(dashboard, id);
     mockCloudPulseJWSToken(serviceType);
@@ -183,8 +183,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
     for (const testData of metrics) {
 
       const { title: testDataTitle, expectedGranularity } = testData;
-
-      cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testDataTitle}"]`;
 
       cy.get(widgetSelector)
@@ -240,7 +238,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
       const { title: testDataTitle, expectedAggregation, expectedAggregationArray } = testData;
 
-      cy.wait(7000); //maintaining the wait since page flicker and rendering
       const widgetSelector = `[data-qa-widget="${testDataTitle}"]`;
 
       cy.get(widgetSelector)
@@ -291,7 +288,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
     }
   });
   it('should trigger the global refresh button and verify the corresponding network calls', () => {
-    cy.wait(7000); //maintaining the wait since page flicker and rendering
     mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as('refreshMetrics');
    // click the global refresh button
        ui.button 
@@ -323,9 +319,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
     metrics.forEach((testData) => {
 
       const { title: testDataTitle } = testData;
-
-      cy.wait(7000); //maintaining the wait since page flicker and rendering
-
+      
       cy.get(`[data-qa-widget="${testDataTitle}"]`).as('widget');
       cy.get('@widget')
         .should('be.visible')
