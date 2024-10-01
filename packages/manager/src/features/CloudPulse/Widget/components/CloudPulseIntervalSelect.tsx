@@ -19,7 +19,7 @@ export interface IntervalSelectProperties {
   /**
    * Function to be triggered on aggregate function changed from dropdown
    */
-  onIntervalChange: any;
+  onIntervalChange: (intervalValue: TimeGranularity) => void;
 
   /**
    * scrape intervalto filter out minimum time granularity
@@ -84,7 +84,8 @@ export const getIntervalIndex = (scrapeIntervalValue: number) => {
 
 export const CloudPulseIntervalSelect = React.memo(
   (props: IntervalSelectProperties) => {
-    const scrapeIntervalValue = getInSeconds(props.scrapeInterval);
+    const { defaultInterval, onIntervalChange, scrapeInterval } = props;
+    const scrapeIntervalValue = getInSeconds(scrapeInterval);
 
     const firstIntervalIndex = getIntervalIndex(scrapeIntervalValue);
 
@@ -97,22 +98,25 @@ export const CloudPulseIntervalSelect = React.memo(
             allIntervalOptions.length
           );
 
-    let default_interval =
-      props.defaultInterval?.unit === 'Auto'
+    let defaultValue =
+      defaultInterval?.unit === 'Auto'
         ? autoIntervalOption
         : availableIntervalOptions.find(
             (obj) =>
-              obj.value === props.defaultInterval?.value &&
-              obj.unit === props.defaultInterval?.unit
+              obj.value === defaultInterval?.value &&
+              obj.unit === defaultInterval?.unit
           );
 
-    if (!default_interval) {
-      default_interval = autoIntervalOption;
-      props.onIntervalChange({
-        unit: default_interval.unit,
-        value: default_interval.value,
+    if (!defaultValue) {
+      defaultValue = autoIntervalOption;
+      onIntervalChange({
+        unit: defaultValue.unit,
+        value: defaultValue.value,
       });
     }
+    const [selectedInterval, setSelectedInterval] = React.useState(
+      defaultValue
+    );
 
     return (
       <StyledWidgetAutocomplete
@@ -126,7 +130,8 @@ export const CloudPulseIntervalSelect = React.memo(
           _: React.SyntheticEvent,
           selectedInterval: IntervalOptions
         ) => {
-          props.onIntervalChange({
+          setSelectedInterval(selectedInterval);
+          onIntervalChange({
             unit: selectedInterval?.unit,
             value: selectedInterval?.value,
           });
@@ -135,13 +140,13 @@ export const CloudPulseIntervalSelect = React.memo(
           hideLabel: true,
         }}
         autoHighlight
-        defaultValue={{ ...default_interval }}
         disableClearable
         fullWidth={false}
         label="Select an Interval"
         noMarginTop={true}
         options={[autoIntervalOption, ...availableIntervalOptions]}
         sx={{ width: { xs: '100%' } }}
+        value={selectedInterval}
       />
     );
   }

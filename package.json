@@ -3,13 +3,8 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "husky": "^3.0.1",
+    "husky": "^9.1.6",
     "typescript": "^5.5.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn workspaces run precommit"
-    }
   },
   "scripts": {
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
@@ -42,26 +37,15 @@
     "generate-changelogs": "node scripts/changelog/generate-changelogs.mjs",
     "coverage": "yarn workspace linode-manager coverage",
     "coverage:summary": "yarn workspace linode-manager coverage:summary",
-    "junit:summary": "ts-node scripts/junit-summary/index.ts",
-    "generate-tod": "ts-node scripts/tod-payload/index.ts",
-    "docs": "bunx vitepress@1.0.0-rc.44 dev docs"
+    "junit:summary": "tsx scripts/junit-summary/index.ts",
+    "generate-tod": "tsx scripts/tod-payload/index.ts",
+    "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
+    "prepare": "husky"
   },
   "resolutions": {
-    "braces": "^3.0.3",
-    "@babel/traverse": "^7.23.3",
-    "minimist": "^1.2.3",
-    "yargs-parser": "^21.1.1",
-    "kind-of": "^6.0.3",
     "node-fetch": "^2.6.7",
-    "ua-parser-js": "^0.7.33",
-    "immer": "^9.0.6",
-    "glob-parent": "^5.1.2",
-    "hosted-git-info": "^5.0.0",
     "yaml": "^2.3.0",
-    "word-wrap": "^1.2.4",
-    "semver": "^7.5.2",
-    "tough-cookie": "^4.1.3",
-    "jackspeak": "2.1.1"
+    "semver": "^7.5.2"
   },
   "workspaces": {
     "packages": [

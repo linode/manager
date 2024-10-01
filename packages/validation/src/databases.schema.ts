@@ -25,14 +25,14 @@ export const createDatabaseSchema = object({
         is: (engine: string) => Boolean(engine.match(/postgres/)),
         then: string().oneOf(['none', 'synch', 'asynch']),
       })
-      .required('Replication Type is required'),
+      .optional(),
     otherwise: string().notRequired().nullable(true),
   }),
   replication_commit_type: string().when('engine', {
     is: (engine: string) => Boolean(engine.match(/postgres/)),
     then: string()
       .oneOf(['off', 'on', 'local', 'remote_write', 'remote_apply'])
-      .required(),
+      .optional(),
     otherwise: string().notRequired().nullable(true),
   }),
   storage_engine: string().when('engine', {

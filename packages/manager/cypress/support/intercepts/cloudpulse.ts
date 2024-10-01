@@ -45,10 +45,10 @@ export const mockCloudPulseGetMetricDefinitions = (
  */
 
 export const mockCloudPulseServices = (
-  service_type: string
+  serviceType: string
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('/monitor/services'), {
-    data: [{ service_type }],
+    data: [{ service_type: serviceType }],
   });
 };
 

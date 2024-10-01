@@ -2,13 +2,7 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-import { TIME_DURATION } from '../Utils/constants';
-import {
-  getUserPreferenceObject,
-  updateGlobalFilterPreference,
-} from '../Utils/UserPreference';
-
-import type { TimeDuration } from '@linode/api-v4';
+import type { FilterValue, TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
   Item,
@@ -19,8 +13,12 @@ export interface CloudPulseTimeRangeSelectProps
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
   > {
-  handleStatsChange?: (timeDuration: TimeDuration) => void;
-  placeholder?: string;
+  defaultValue?: Partial<FilterValue>;
+  handleStatsChange?: (
+    timeDuration: TimeDuration,
+    timeDurationValue?: string,
+    savePref?: boolean
+  ) => void;
   savePreferences?: boolean;
 }
 
@@ -38,13 +36,14 @@ export type Labels =
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
-    const { handleStatsChange, placeholder } = props;
+    const { defaultValue, handleStatsChange, savePreferences } = props;
     const options = generateSelectOptions();
     const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
-      const defaultValue = getUserPreferenceObject().timeDuration;
-
+      if (!savePreferences) {
+        return options[0];
+      }
       return options.find((o) => o.label === defaultValue) || options[0];
-    }, [options]);
+    }, []);
     const [selectedTimeRange, setSelectedTimeRange] = React.useState<
       Item<Labels, Labels>
     >(getDefaultValue());
@@ -53,26 +52,28 @@ export const CloudPulseTimeRangeSelect = React.memo(
       const item = getDefaultValue();
 
       if (handleStatsChange) {
-        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+        handleStatsChange(
+          getTimeDurationFromTimeRange(item.value),
+          item.value,
+          false
+        );
       }
-      setSelectedTimeRange(item);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // need to execute only once, during mounting of this component
-
     const handleChange = (item: Item<Labels, Labels>) => {
-      updateGlobalFilterPreference({
-        [TIME_DURATION]: item.value,
-      });
+      setSelectedTimeRange(item);
 
       if (handleStatsChange) {
-        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+        handleStatsChange(
+          getTimeDurationFromTimeRange(item.value),
+          item.value,
+          savePreferences
+        );
       }
-      setSelectedTimeRange(item); // update the state variable to retain latest selections
     };
-
     return (
       <Autocomplete
-        onChange={(_: any, value: Item<Labels, Labels>) => {
+        onChange={(e, value: Item<Labels, Labels>) => {
           handleChange(value);
         }}
         textFieldProps={{
@@ -85,7 +86,6 @@ export const CloudPulseTimeRangeSelect = React.memo(
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Select a Time Duration"
         options={options}
-        placeholder={placeholder ?? 'Select a Time Duration'}
         value={selectedTimeRange}
       />
     );

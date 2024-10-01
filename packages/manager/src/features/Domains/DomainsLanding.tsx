@@ -232,7 +232,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
             Import a Zone
           </StyledButon>
         }
-        docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         entity="Domain"
         onButtonClick={navigateToCreate}
         title="Domains"

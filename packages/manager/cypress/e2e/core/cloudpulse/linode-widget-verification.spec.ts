@@ -93,8 +93,7 @@ const mockRegion = extendRegion(
   })
 );
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
-  data: generateRandomMetricsData(timeDurationToSelect,
-    '5 min')
+  data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 /**
  * `verifyWidgetValues` processes and verifies the metric values of a widget from the provided response payload.
@@ -118,7 +117,6 @@ const getWidgetLegendRowValuesFromResponse = (
   const roundedMax = Math.round(max * 100) / 100;
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
-
 
 describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
@@ -172,154 +170,167 @@ describe('Integration Tests for Linode Dashboard ', () => {
       const widgetSelector = `[data-qa-widget="${title}"]`;
       cy.get(widgetSelector)
         .find('h2')
-        .should('have.text', `${title} (${unit.trim()})`).should('be.visible');
+        .should('have.text', `${title} (${unit.trim()})`)
+        .should('be.visible');
     }
   });
-
-  
 
   it('should allow users to select desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
     for (const testData of metrics) {
-
       const { title: testDataTitle, expectedGranularity } = testData;
       const widgetSelector = `[data-qa-widget="${testDataTitle}"]`;
 
-      cy.get(widgetSelector)
-        .within(() => {
-          // check for all available granularity in popper
-          ui.autocomplete
-            .findByLabel('Select an Interval')
-            .should('be.visible')
-            .click();
+      cy.get(widgetSelector).within(() => {
+        // check for all available granularity in popper
+        ui.autocomplete
+          .findByLabel('Select an Interval')
+          .should('be.visible')
+          .click();
 
-          expectedGranularityArray.forEach((option) => {
-            ui.autocompletePopper.findByTitle(option).should('exist');
-          });
-
-          mockCloudPulseCreateMetrics(
-            metricsAPIResponsePayload,
-            serviceType
-          ).as('getMetrics');
-          
-          //find the interval component and select the expected granularity
-          ui.autocomplete
-            .findByLabel('Select an Interval')
-            .should('be.visible')
-            .type(`${expectedGranularity}{enter}`);
-
-          //check if the API call is made correctly with the selected time granularity value
-          cy.wait('@getMetrics').then((interception) => {
-            expect(interception)
-              .to.have.property('response')
-              .with.property('statusCode', 200);
-            expect(expectedGranularity).to.include(
-              interception.request.body.time_granularity.value
-            );
-          });
-
-          //validate the widget line graph is present and its legend rows
-          cy.findByTestId('linegraph-wrapper')
-          .within(() => {
-            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-               metricsAPIResponsePayload
-              );
-             cy.findByText(`${testData.title} (${testData.unit})`).should('be.visible');
-              cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
-              cy.findByText(`${expectedWidgetValues.average} ${testData.unit}`).should('be.visible');
-             cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
-           });
+        expectedGranularityArray.forEach((option) => {
+          ui.autocompletePopper.findByTitle(option).should('exist');
         });
+
+        mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as(
+          'getGranularityMetrics'
+        );
+
+        //find the interval component and select the expected granularity
+        ui.autocomplete
+          .findByLabel('Select an Interval')
+          .should('be.visible')
+          .type(`${expectedGranularity}{enter}`);
+
+        //check if the API call is made correctly with the selected time granularity value
+        cy.wait('@getGranularityMetrics').then((interception) => {
+          expect(interception)
+            .to.have.property('response')
+            .with.property('statusCode', 200);
+          expect(expectedGranularity).to.include(
+            interception.request.body.time_granularity.value
+          );
+        });
+
+        //validate the widget line graph is present and its legend rows
+        cy.findByTestId('linegraph-wrapper').within(() => {
+          const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+            metricsAPIResponsePayload
+          );
+          cy.findByText(`${testData.title} (${testData.unit})`).should(
+            'be.visible'
+          );
+          cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should(
+            'be.visible'
+          );
+          cy.findByText(
+            `${expectedWidgetValues.average} ${testData.unit}`
+          ).should('be.visible');
+          cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should(
+            'be.visible'
+          );
+        });
+      });
     }
   });
 
   it('should allow users to select the desired aggregation and see the most recent data from the API displayed in the graph', () => {
     for (const testData of metrics) {
-
-      const { title: testDataTitle, expectedAggregation, expectedAggregationArray } = testData;
+      const {
+        title: testDataTitle,
+        expectedAggregation,
+        expectedAggregationArray,
+      } = testData;
 
       const widgetSelector = `[data-qa-widget="${testDataTitle}"]`;
 
-      cy.get(widgetSelector)
-        .within(() => {
-          // check for all available aggregation in popper
-          ui.autocomplete
-            .findByLabel('Select an Aggregate Function')
-            .should('be.visible')
-            .click();
+      cy.get(widgetSelector).within(() => {
+        // check for all available aggregation in popper
+        ui.autocomplete
+          .findByLabel('Select an Aggregate Function')
+          .should('be.visible')
+          .click();
 
-          expectedAggregationArray.forEach((option) => {
-            ui.autocompletePopper.findByTitle(option).should('exist');
-          });
-
-          mockCloudPulseCreateMetrics(
-            metricsAPIResponsePayload,
-            serviceType
-          ).as('getAggregationMetrics');
-
-          //find the interval component and select the expected granularity
-          ui.autocomplete
-            .findByLabel('Select an Aggregate Function')
-            .should('be.visible')
-            .type(`${expectedAggregation}{enter}`);
-
-          //check if the API call is made correctly with time granularity value selected
-          cy.wait('@getAggregationMetrics').then((interception) => {
-            expect(interception)
-              .to.have.property('response')
-              .with.property('statusCode', 200);
-            expect(expectedAggregation).to.equal(
-              interception.request.body.aggregate_function
-            );
-          });
-
-          //validate the widget line graph is present and its legend rows
-          cy.findByTestId('linegraph-wrapper')
-          .within(() => {
-            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-               metricsAPIResponsePayload
-              );
-              cy.findByText(`${testData.title} (${testData.unit})`).should('be.visible');
-              cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
-              cy.findByText(`${expectedWidgetValues.average} ${testData.unit}`).should('be.visible');
-             cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
-           });
+        expectedAggregationArray.forEach((option) => {
+          ui.autocompletePopper.findByTitle(option).should('exist');
         });
+
+        mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as(
+          'getAggregationMetrics'
+        );
+
+        //find the interval component and select the expected granularity
+        ui.autocomplete
+          .findByLabel('Select an Aggregate Function')
+          .should('be.visible')
+          .type(`${expectedAggregation}{enter}`);
+
+        //check if the API call is made correctly with time granularity value selected
+        cy.wait('@getAggregationMetrics').then((interception) => {
+          expect(interception)
+            .to.have.property('response')
+            .with.property('statusCode', 200);
+          expect(expectedAggregation).to.equal(
+            interception.request.body.aggregate_function
+          );
+        });
+
+        //validate the widget line graph is present and its legend rows
+        cy.findByTestId('linegraph-wrapper').within(() => {
+          const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+            metricsAPIResponsePayload
+          );
+          cy.findByText(`${testData.title} (${testData.unit})`).should(
+            'be.visible'
+          );
+          cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should(
+            'be.visible'
+          );
+          cy.findByText(
+            `${expectedWidgetValues.average} ${testData.unit}`
+          ).should('be.visible');
+          cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should(
+            'be.visible'
+          );
+        });
+      });
     }
   });
   it('should trigger the global refresh button and verify the corresponding network calls', () => {
-    mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as('refreshMetrics');
-   // click the global refresh button
-       ui.button 
-     .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
-    .should('be.visible')
-    .click();
+    mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as(
+      'refreshMetrics'
+    );
+    // click the global refresh button
+    ui.button
+      .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
+      .should('be.visible')
+      .click();
 
-  // validate the API calls are going with intended payload
-  cy.get('@refreshMetrics.all')
-    .should('have.length', 4)
-    .each((xhr: unknown) => {
-      const interception = xhr as Interception;
-      const { body: requestPayload } = interception.request;
-      const { metric, relative_time_duration: timeRange } = requestPayload;
-      const metricData = metrics.find(({ name }) => name === metric);
+    // validate the API calls are going with intended payload
+    cy.get('@refreshMetrics.all')
+      .should('have.length', 4)
+      .each((xhr: unknown) => {
+        const interception = xhr as Interception;
+        const { body: requestPayload } = interception.request;
+        const { metric, relative_time_duration: timeRange } = requestPayload;
+        const metricData = metrics.find(({ name }) => name === metric);
 
-      if (!metricData) {
-        throw new Error(`Unexpected metric name '${metric}' included in the outgoing refresh API request`);
-      }
-      expect(metric).to.equal(metricData.name);
-      expect(timeRange).to.have.property('unit', 'hr');
-      expect(timeRange).to.have.property('value', 24);
-    });
-});
-  
+        if (!metricData) {
+          throw new Error(
+            `Unexpected metric name '${metric}' included in the outgoing refresh API request`
+          );
+        }
+        expect(metric).to.equal(metricData.name);
+        expect(timeRange).to.have.property('unit', 'hr');
+        expect(timeRange).to.have.property('value', 24);
+      });
+  });
 
   it('should zoom in and out of all the widgets', () => {
     // do zoom in and zoom out test on all the widgets
     metrics.forEach((testData) => {
-
       const { title: testDataTitle } = testData;
-      
+
       cy.get(`[data-qa-widget="${testDataTitle}"]`).as('widget');
       cy.get('@widget')
         .should('be.visible')
@@ -332,16 +343,23 @@ describe('Integration Tests for Linode Dashboard ', () => {
           cy.get('@widget').should('be.visible');
 
           // validate the widget details
-          cy.findByTestId('linegraph-wrapper')
-                    .within(() => {
-                      const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-                         metricsAPIResponsePayload
-                        );
-                        cy.findByText(`${testData.title} (${testData.unit})`).should('be.visible');
-                        cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
-                        cy.findByText(`${expectedWidgetValues.average} ${testData.unit}`).should('be.visible');
-                       cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
-                     });
+          cy.findByTestId('linegraph-wrapper').within(() => {
+            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+              metricsAPIResponsePayload
+            );
+            cy.findByText(`${testData.title} (${testData.unit})`).should(
+              'be.visible'
+            );
+            cy.findByText(
+              `${expectedWidgetValues.max} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.average} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.last} ${testData.unit}`
+            ).should('be.visible');
+          });
 
           // click zoom out and validate the same
           ui.button
@@ -352,19 +370,24 @@ describe('Integration Tests for Linode Dashboard ', () => {
           cy.get('@widget').should('be.visible');
 
           // validate the widget details
-          cy.findByTestId('linegraph-wrapper')
-          .within(() => {
+          cy.findByTestId('linegraph-wrapper').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-               metricsAPIResponsePayload
-              );
-              cy.findByText(`${testData.title} (${testData.unit})`).should('be.visible');
-              cy.findByText(`${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
-              cy.findByText(`${expectedWidgetValues.average} ${testData.unit}`).should('be.visible');
-             cy.findByText(`${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
-           });
+              metricsAPIResponsePayload
+            );
+            cy.findByText(`${testData.title} (${testData.unit})`).should(
+              'be.visible'
+            );
+            cy.findByText(
+              `${expectedWidgetValues.max} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.average} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.last} ${testData.unit}`
+            ).should('be.visible');
+          });
         });
     });
   });
 });
-
-

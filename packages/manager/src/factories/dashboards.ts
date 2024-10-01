@@ -132,11 +132,6 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
  * - `metric_type`: Set to `'gauge'`, indicating the type of metric.
  * - `scrape_interval`: The interval at which metrics are scraped, chosen from a predefined list (`scrape_interval`). The value is selected based on the index modulo the length of `scrape_interval`.
  * - `unit`: The unit of measurement for the metric, chosen from a predefined list (`units_interval`). The unit is selected based on the index modulo the length of `units_interval`.
- *
- * Usage Example:
- * ```typescript
- * const myDashboardMetricFactory = dashboardMetricFactory(['Widget1', 'Widget2'], ['Metric1', 'Metric2']);
- * const myMetric = myDashboardMetricFactory.build(); // Creates an AvailableMetrics instance with the specified properties.
  * ```
  */
 
@@ -155,8 +150,13 @@ export const dashboardMetricFactory = Factory.Sync.makeFactory<AvailableMetrics>
 );
 // Function to generate random values based on the number of points
 export const generateRandomMetricsData = (
-  time: string,
-  granularityData: string
+  time:
+    | 'Last 7 Days'
+    | 'Last 12 Hours'
+    | 'Last 24 Hours'
+    | 'Last 30 Days'
+    | 'Last 30 Minutes',
+  granularityData: '1 day' | '1 hr' | '5 min' | 'Auto'
 ): CloudPulseMetricsResponseData => {
   const currentTime = Math.floor(Date.now() / 1000);
 
@@ -175,16 +175,8 @@ export const generateRandomMetricsData = (
     ['Last 30 Minutes']: 30 * 60,
   };
 
-  const interval =
-    intervals[granularityData] ||
-    (() => {
-      throw new Error(`Unsupported granularity: ${granularityData}`);
-    })();
-  const timeRangeInSeconds =
-    timeRanges[time] ||
-    (() => {
-      throw new Error(`Unsupported time range: ${time}`);
-    })();
+  const interval = intervals[granularityData];
+  const timeRangeInSeconds = timeRanges[time];
   const startTime = currentTime - timeRangeInSeconds;
 
   const values: [number, string][] = Array.from(
@@ -198,7 +190,7 @@ export const generateRandomMetricsData = (
   return {
     result: [{ metric: {}, values }],
     result_type: 'matrix',
-  }
+  };
 };
 
 // Factory for CloudPulseMetricsResponseData

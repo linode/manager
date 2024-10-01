@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -26,13 +26,13 @@ describe('NodeBalancerActionMenu', () => {
     expect(getByText('Delete')).toBeVisible();
   });
 
-  it('triggers the action to delete the NodeBalancer', () => {
+  it('triggers the action to delete the NodeBalancer', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerActionMenu {...props} />
     );
 
     const deleteButton = getByText('Delete');
-    fireEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
     expect(props.toggleDialog).toHaveBeenCalled();
   });
 });
