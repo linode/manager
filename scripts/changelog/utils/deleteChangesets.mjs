@@ -28,7 +28,16 @@ const sanitizeFileName = (fileName) => {
 const safeJoinPath = (dir, file) => {
   const sanitizedFile = sanitizeFileName(file);
   const safeFile = path.basename(sanitizedFile); // Ensure the file is not traversing directories
-  return path.join(dir, safeFile); // Join the directory and file safely
+
+  // Resolve to absolute path
+  const resolvedPath = path.resolve(dir, safeFile);
+
+  // Ensure that the resolved path is still within the intended directory
+  if (!resolvedPath.startsWith(path.resolve(dir))) {
+    throw new Error("Path traversal attempt detected");
+  }
+
+  return resolvedPath;
 };
 
 /**
