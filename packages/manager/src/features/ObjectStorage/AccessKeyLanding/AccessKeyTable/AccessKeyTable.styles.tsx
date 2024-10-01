@@ -9,7 +9,7 @@ interface StyledLastColumnCellProps extends TableCellProps {
   addPaddingRight?: boolean;
 }
 export const StyledLastColumnCell = styled(TableCell, {
-  shouldForwardProp: omittedProps(['isObjMultiClusterEnabled']),
+  shouldForwardProp: omittedProps(['addPaddingRight']),
 })<StyledLastColumnCellProps>(({ addPaddingRight }) => ({
   '&&:last-child': {
     'padding-right': addPaddingRight ? '15px' : 0,
