@@ -1,5 +1,4 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -293,9 +292,5 @@ export const MonitorTable = () => {
     </>
   );
 };
-
-export const managedMonitorTableLazyRoute = createLazyRoute('/managed')({
-  component: MonitorTable,
-});
 
 export default MonitorTable;

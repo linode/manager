@@ -27,10 +27,13 @@ import { vpcsRouteTree } from './vpcs';
 
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
-    const { accountSettings } = context;
-    const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
-
-    throw redirect({ to: defaultRoot });
+    // ****
+    // TODO TanStack Router - enable this in phase 2 (managed tabs are broken for now cause of mismatched history)
+    // ****
+    // const { accountSettings } = context;
+    // const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
+    // throw redirect({ to: defaultRoot });
+    throw redirect({ to: '/linodes' });
   },
   getParentRoute: () => rootRoute,
   path: '/',
