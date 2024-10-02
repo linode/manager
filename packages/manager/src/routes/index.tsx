@@ -20,6 +20,7 @@ import { objectStorageRouteTree } from './object-storage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
 import { rootRoute } from './root';
+import { searchRouteTree } from './search';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
@@ -57,6 +58,7 @@ export const routeTree = rootRoute.addChildren([
   objectStorageRouteTree,
   placementGroupsRouteTree,
   profileRouteTree,
+  searchRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,
   volumesRouteTree,
