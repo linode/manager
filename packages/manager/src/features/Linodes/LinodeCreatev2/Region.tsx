@@ -30,7 +30,6 @@ import {
 } from 'src/utilities/pricing/constants';
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
-import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
 import { getDisabledRegions } from './Region.utils';
 import { TwoStepRegion } from './TwoStepRegion';
 import {
@@ -233,7 +232,8 @@ export const Region = React.memo(() => {
       {showCrossDataCenterCloneWarning && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
           <Typography fontFamily={(theme) => theme.font.bold}>
-            {CROSS_DATA_CENTER_CLONE_WARNING}
+            Cloning a powered off instance across data centers may cause long
+            periods of down time.
           </Typography>
         </Notice>
       )}

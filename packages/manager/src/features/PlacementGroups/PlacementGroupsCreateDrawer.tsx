@@ -35,7 +35,7 @@ import {
   hasRegionReachedPlacementGroupCapacity,
 } from './utils';
 
-import type { LinodeCreateType } from '../Linodes/LinodesCreate/types';
+import type { LinodeCreateType } from '../Linodes/LinodeCreatev2/types';
 import type { PlacementGroupsCreateDrawerProps } from './types';
 import type {
   CreatePlacementGroupPayload,
