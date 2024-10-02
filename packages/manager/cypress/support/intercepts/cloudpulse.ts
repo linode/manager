@@ -16,7 +16,7 @@ import type {
 } from '@linode/api-v4';
 
 /**
- * Intercepts  GET requests for metric definitions.
+ * Intercepts GET requests for metric definitions.
  *
  * This function mocks the API response for requests to the endpoint
  * `dashboardMetricsData`.
@@ -25,8 +25,8 @@ import type {
  */
 
 export const mockGetCloudPulseMetricDefinitions = (
-  metricDefinitions: MetricDefinitions,
-  serviceType: string
+  serviceType: string,
+  metricDefinitions: MetricDefinitions
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
@@ -64,8 +64,8 @@ export const mockGetCloudPulseServices = (
 + */
 
 export const mockGetCloudPulseDashboards = (
-  dashboards: Dashboard[],
-  serviceType: string
+  serviceType: string,
+  dashboards: Dashboard[]
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
@@ -83,8 +83,8 @@ export const mockGetCloudPulseDashboards = (
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 export const mockCreateCloudPulseMetrics = (
-  mockResponse: CloudPulseMetricsResponse,
-  serviceType: string
+  serviceType: string,
+  mockResponse: CloudPulseMetricsResponse
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
@@ -106,8 +106,8 @@ export const mockCreateCloudPulseMetrics = (
  */
 
 export const mockGetCloudPulseDashboard = (
-  dashboard: Dashboard,
-  id: number
+  id: number,
+  dashboard: Dashboard
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
