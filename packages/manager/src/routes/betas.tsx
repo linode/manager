@@ -2,6 +2,8 @@ import { Outlet, createRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import BetaSignup from 'src/features/Betas/BetaSignup';
+import BetasLanding from 'src/features/Betas/BetasLanding';
 
 import { rootRoute } from './root';
 
@@ -20,18 +22,16 @@ const betaRoute = createRoute({
 });
 
 const betaLandingRoute = createRoute({
+  component: BetasLanding,
   getParentRoute: () => betaRoute,
   path: '/',
-}).lazy(() =>
-  import('src/features/Betas/BetasLanding').then((m) => m.betasLandingLazyRoute)
-);
+});
 
 const betaSignupRoute = createRoute({
+  component: BetaSignup,
   getParentRoute: () => betaRoute,
   path: 'signup',
-}).lazy(() =>
-  import('src/features/Betas/BetaSignup').then((m) => m.betaSignupLazyRoute)
-);
+});
 
 export const betaRouteTree = betaRoute.addChildren([
   betaLandingRoute,

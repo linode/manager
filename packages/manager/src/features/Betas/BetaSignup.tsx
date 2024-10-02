@@ -1,5 +1,4 @@
 import { Stack } from '@mui/system';
-import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -183,9 +182,5 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
     </>
   );
 };
-
-export const betaSignupLazyRoute = createLazyRoute('/betas/signup')({
-  component: BetaSignup,
-});
 
 export default BetaSignup;
