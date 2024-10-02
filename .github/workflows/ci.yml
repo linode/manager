@@ -233,7 +233,7 @@ jobs:
         with:
           name: packages-validation-lib
           path: packages/validation/lib
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
