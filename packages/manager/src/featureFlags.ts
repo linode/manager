@@ -95,6 +95,7 @@ export interface Flags {
   databases: boolean;
   dbaasV2: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
+  disallowImageUploadToNonObjRegions: boolean;
   gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
