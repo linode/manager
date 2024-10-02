@@ -269,6 +269,7 @@ export const ImageUpload = () => {
                   }}
                   disableClearable
                   errorText={fieldState.error?.message}
+                  ignoreAccountAvailability
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta

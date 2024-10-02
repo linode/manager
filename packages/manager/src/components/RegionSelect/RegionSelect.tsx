@@ -50,6 +50,7 @@ export const RegionSelect = <
     disabledRegions: disabledRegionsFromProps,
     errorText,
     helperText,
+    ignoreAccountAvailability,
     label,
     onChange,
     placeholder,
@@ -67,7 +68,7 @@ export const RegionSelect = <
   const {
     data: accountAvailability,
     isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery();
+  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -86,6 +87,7 @@ export const RegionSelect = <
       acc[region.id] = disabledRegionsFromProps[region.id];
     }
     if (
+      !ignoreAccountAvailability &&
       isRegionOptionUnavailable({
         accountAvailabilityData: accountAvailability,
         currentCapability,
