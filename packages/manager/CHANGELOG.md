@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - DBaaS Landing Page V2 platform error for New Beta Users ([#11024](https://github.com/linode/manager/pull/11024))
+- Add Volume button on Linodes Storage tab causing page crash ([#11032](https://github.com/linode/manager/pull/11032))
 
 ## [2024-09-30] - v1.129.0
 
