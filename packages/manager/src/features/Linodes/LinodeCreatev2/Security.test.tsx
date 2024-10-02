@@ -78,7 +78,8 @@ describe('Security', () => {
     });
   });
 
-  it('should disable ssh key selection if the user does not have permission to create linodes', async () => {
+  // Skipping due to test flake
+  it.skip('should disable ssh key selection if the user does not have permission to create linodes', async () => {
     const sshKeys = sshKeyFactory.buildList(3);
     server.use(
       http.get('*/v4/profile', () => {

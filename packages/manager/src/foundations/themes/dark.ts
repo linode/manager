@@ -577,7 +577,7 @@ export const darkTheme: ThemeOptions = {
             opacity: 1,
           },
           '&:hover, &:focus': {
-            backgroundColor: Dropdown.Background.Hover,
+            backgroundColor: Color.Neutrals[80],
             color: Dropdown.Text.Default,
           },
           '&:last-child': {
