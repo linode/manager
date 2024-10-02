@@ -51,7 +51,7 @@ const LinodesLandingWrapper = React.memo(() => {
     { status: { '+or': ['pending, started'] } }
   );
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   const [regionFilter, setRegionFilter] = React.useState<
     RegionFilter | undefined
@@ -59,7 +59,7 @@ const LinodesLandingWrapper = React.memo(() => {
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery(
     {},
-    isGeckoGAEnabled ? generateLinodesXFilter(regionFilter) : {}
+    isGeckoLAEnabled ? generateLinodesXFilter(regionFilter) : {}
   );
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(

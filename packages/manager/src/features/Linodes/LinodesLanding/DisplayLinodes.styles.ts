@@ -27,14 +27,14 @@ export const StyledTagHeader = styled(Typography, {
 
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
-  shouldForwardProp: omittedProps(['isGroupedByTag', 'isGeckoGAEnabled']),
-})<{ isGeckoGAEnabled: boolean; isGroupedByTag: boolean }>(
-  ({ isGeckoGAEnabled, isGroupedByTag, theme }) => ({
+  shouldForwardProp: omittedProps(['isGroupedByTag', 'isGeckoLAEnabled']),
+})<{ isGeckoLAEnabled: boolean; isGroupedByTag: boolean }>(
+  ({ isGeckoLAEnabled, isGroupedByTag, theme }) => ({
     alignItems: 'center',
     backgroundColor: theme.bg.tableHeader,
     display: 'flex',
     height: 46,
-    justifyContent: isGeckoGAEnabled ? 'space-between' : 'flex-end',
+    justifyContent: isGeckoLAEnabled ? 'space-between' : 'flex-end',
     marginBottom: isGroupedByTag ? theme.spacing(4) : 0,
   })
 );

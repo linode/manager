@@ -105,7 +105,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
   const params = getQueryParamsFromQueryString<QueryParams>(search);
   const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   return (
     <Paginate
@@ -144,7 +144,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
           <React.Fragment>
             {display === 'list' && (
               <>
-                {isGeckoGAEnabled && (
+                {isGeckoLAEnabled && (
                   <Paper sx={{ padding: 1 }}>
                     <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
                   </Paper>
@@ -166,7 +166,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
               <>
                 <Grid className={'px0'} xs={12}>
                   <StyledControlHeader
-                    isGeckoGAEnabled={isGeckoGAEnabled ?? false}
+                    isGeckoLAEnabled={isGeckoLAEnabled ?? false}
                     isGroupedByTag={linodesAreGrouped}
                   >
                     <div
@@ -175,7 +175,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                     >
                       Currently in {linodeViewPreference} view
                     </div>
-                    {isGeckoGAEnabled && (
+                    {isGeckoLAEnabled && (
                       <RegionTypeFilter
                         handleRegionFilter={handleRegionFilter}
                       />

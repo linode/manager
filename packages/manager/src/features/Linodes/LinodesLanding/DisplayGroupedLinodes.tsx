@@ -99,20 +99,20 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     return acc;
   }, 0);
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   if (display === 'grid') {
     return (
       <>
         <Grid className={'px0'} xs={12}>
           <StyledControlHeader
-            isGeckoGAEnabled={isGeckoGAEnabled ?? false}
+            isGeckoLAEnabled={isGeckoLAEnabled ?? false}
             isGroupedByTag={linodesAreGrouped}
           >
             <div className="visually-hidden" id={displayViewDescriptionId}>
               Currently in {linodeViewPreference} view
             </div>
-            {isGeckoGAEnabled && (
+            {isGeckoLAEnabled && (
               <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
             )}
             <Box>
