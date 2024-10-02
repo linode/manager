@@ -77,6 +77,7 @@ export const TimezoneForm = (props: Props) => {
           value={timezoneOptions.find(
             (option) => option.value === timezoneValue
           )}
+          autoHighlight
           disableClearable
           errorText={error?.[0].reason}
           fullWidth
