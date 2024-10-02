@@ -89,6 +89,7 @@ export interface LinodesLandingProps {
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;
+  totalNumLinodes: number;
 }
 
 type CombinedProps = LinodesLandingProps &
@@ -195,6 +196,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       linodesRequestError,
       linodesRequestLoading,
       profile,
+      totalNumLinodes,
     } = this.props;
 
     const isLinodesGrantReadOnly =
@@ -244,7 +246,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    if (this.props.linodesData.length === 0) {
+    if (totalNumLinodes === 0 && linodesData.length === 0) {
       return (
         <>
           <ProductInformationBanner bannerLocation="Linodes" />
