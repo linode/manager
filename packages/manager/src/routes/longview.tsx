@@ -31,6 +31,24 @@ export const longviewLandingRoute = createRoute({
   )
 );
 
+export const longviewLandingClientsRoute = createRoute({
+  getParentRoute: () => longviewRoute,
+  path: 'clients',
+}).lazy(() =>
+  import('src/features/Longview/LongviewLanding/LongviewLanding').then(
+    (m) => m.longviewLandingLazyRoute
+  )
+);
+
+export const longviewLandingPlanDetailsRoute = createRoute({
+  getParentRoute: () => longviewRoute,
+  path: 'plan-details',
+}).lazy(() =>
+  import('src/features/Longview/LongviewLanding/LongviewLanding').then(
+    (m) => m.longviewLandingLazyRoute
+  )
+);
+
 export const longviewDetailRoute = createRoute({
   component: LongviewDetail,
   getParentRoute: () => longviewRoute,
@@ -40,7 +58,45 @@ export const longviewDetailRoute = createRoute({
   path: 'clients/$id',
 });
 
+export const longviewDetailOverviewRoute = createRoute({
+  component: LongviewDetail,
+  getParentRoute: () => longviewDetailRoute,
+  path: 'overview',
+});
+
+export const longviewDetailProcessesRoute = createRoute({
+  component: LongviewDetail,
+  getParentRoute: () => longviewDetailRoute,
+  path: 'processes',
+});
+
+export const longviewDetailNetworkRoute = createRoute({
+  component: LongviewDetail,
+  getParentRoute: () => longviewDetailRoute,
+  path: 'network',
+});
+
+export const longviewDetailDisksRoute = createRoute({
+  component: LongviewDetail,
+  getParentRoute: () => longviewDetailRoute,
+  path: 'disks',
+});
+
+export const longviewDetailInstallationRoute = createRoute({
+  component: LongviewDetail,
+  getParentRoute: () => longviewDetailRoute,
+  path: 'installation',
+});
+
 export const longviewRouteTree = longviewRoute.addChildren([
   longviewLandingRoute,
-  longviewDetailRoute,
+  longviewLandingClientsRoute,
+  longviewLandingPlanDetailsRoute,
+  longviewDetailRoute.addChildren([
+    longviewDetailOverviewRoute,
+    longviewDetailProcessesRoute,
+    longviewDetailNetworkRoute,
+    longviewDetailDisksRoute,
+    longviewDetailInstallationRoute,
+  ]),
 ]);
