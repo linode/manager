@@ -84,7 +84,7 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
           .type('50');
 
         // Add a backend node
-        cy.get('[data-testid="Button"]').contains('Add a Node').click();
+        cy.get('[data-testid="button"]').contains('Add a Node').click();
         cy.findAllByText('Label').last().click().type(randomLabel());
         cy.findAllByText('IP Address')
           .last()
@@ -179,7 +179,7 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
           .click();
 
         // Add another configuration
-        cy.get('[data-testid="Button"]')
+        cy.get('[data-testid="button"]')
           .contains('Add another Configuration')
           .click();
         cy.get('[data-qa-panel="Configuration - Port "]').within(() => {
@@ -260,7 +260,7 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
         .click();
 
       // Add another configuration
-      cy.get('[data-testid="Button"]')
+      cy.get('[data-testid="button"]')
         .contains('Add another Configuration')
         .click();
       cy.get('[data-qa-panel="Configuration - Port "]').within(() => {

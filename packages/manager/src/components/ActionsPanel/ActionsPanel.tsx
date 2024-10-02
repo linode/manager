@@ -41,12 +41,8 @@ export const ActionsPanel = (props: ActionPanelProps) => {
 
   const { cx } = useStyles();
 
-  const primaryButtonDataQAProp = `data-qa-${
-    primaryButtonProps?.['data-testid']?.toLowerCase() ?? 'primary-button'
-  }`;
-  const secondaryButtonDataQAProp = `data-qa-${
-    secondaryButtonProps?.['data-testid']?.toLowerCase() ?? 'secondary-button'
-  }`;
+  const primaryButtonDataQAProp = `data-qa-${primaryButtonProps?.['data-testid']}`;
+  const secondaryButtonDataQAProp = `data-qa-${secondaryButtonProps?.['data-testid']}`;
 
   return (
     <StyledBox
