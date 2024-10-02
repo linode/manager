@@ -1,4 +1,3 @@
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
@@ -70,9 +69,5 @@ const BetasLanding = () => {
     </>
   );
 };
-
-export const betasLandingLazyRoute = createLazyRoute('/betas')({
-  component: BetasLanding,
-});
 
 export default BetasLanding;

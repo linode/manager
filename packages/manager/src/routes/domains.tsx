@@ -53,6 +53,7 @@ const domainDetailRoute = createRoute({
 
 const domainDetailRecordsRoute = createRoute({
   getParentRoute: () => domainDetailRoute,
+  // unsure this path is needed, but added for legacy purposes
   path: 'records',
 }).lazy(() =>
   import('src/features/Domains/DomainDetail').then(
