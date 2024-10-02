@@ -8,7 +8,6 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { ExtendedIP, validateIPs } from 'src/utilities/ipUtils';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Toggle } from 'src/components/Toggle/Toggle';
-import Stack from '@mui/material/Stack';
 
 export interface ControlPlaneACLProps {
   enableControlPlaneACL: boolean;

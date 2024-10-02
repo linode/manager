@@ -193,8 +193,9 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       return (
         <>
           <Notice spacingTop={24} variant="warning">
-            IPACL is not yet installed on this cluster.... may take up to 10
-            minutes or more, before ACLs are enforced...
+            IPACL has not yet been installed on this cluster. During
+            installation, it may take up to 20 minutes before ACLs are fully
+            enforced for the first time.
           </Notice>
         </>
       );
