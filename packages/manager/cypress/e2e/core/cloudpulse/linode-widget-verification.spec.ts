@@ -120,12 +120,12 @@ describe('Integration Tests for Linode Dashboard ', () => {
     });
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
-    mockGetCloudPulseMetricDefinitions(metricDefinitions, serviceType);
-    mockGetCloudPulseDashboards([dashboard], serviceType);
+    mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
+    mockGetCloudPulseDashboards(serviceType, [dashboard]);
     mockGetCloudPulseServices(serviceType);
-    mockGetCloudPulseDashboard(dashboard, id);
+    mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
-    mockCreateCloudPulseMetrics(metricsAPIResponsePayload, serviceType).as(
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
     );
     mockGetRegions([mockRegion]);
@@ -183,8 +183,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
           });
 
           mockCreateCloudPulseMetrics(
-            metricsAPIResponsePayload,
-            serviceType
+            serviceType,
+            metricsAPIResponsePayload
           ).as('getGranularityMetrics');
 
           //find the interval component and select the expected granularity
@@ -231,8 +231,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
         .should('be.visible')
         .within(() => {
           mockCreateCloudPulseMetrics(
-            metricsAPIResponsePayload,
-            serviceType
+            serviceType,
+            metricsAPIResponsePayload
           ).as('getAggregationMetrics');
 
           //find the interval component and select the expected granularity
@@ -273,7 +273,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
     });
   });
   it('should trigger the global refresh button and verify the corresponding network calls', () => {
-    mockCreateCloudPulseMetrics(metricsAPIResponsePayload, serviceType).as(
+    mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
     // click the global refresh button
