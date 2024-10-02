@@ -15,13 +15,13 @@ export const ImagesRoutes = () => {
   );
 };
 
-export const imagesRoute = createRoute({
+const imagesRoute = createRoute({
   component: ImagesRoutes,
   getParentRoute: () => rootRoute,
   path: 'images',
 });
 
-export const imagesIndexRoute = createRoute({
+const imagesIndexRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: '/',
 }).lazy(() =>
@@ -30,7 +30,7 @@ export const imagesIndexRoute = createRoute({
   )
 );
 
-export const imagesCreateRoute = createRoute({
+const imagesCreateRoute = createRoute({
   getParentRoute: () => imagesRoute,
   path: 'create',
 }).lazy(() =>

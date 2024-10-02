@@ -65,19 +65,6 @@ const placementGroupsDeleteRoute = createRoute({
   ).then((m) => m.placementGroupsLandingLazyRoute)
 );
 
-const placementGroupsUnassignRoute = createRoute({
-  getParentRoute: () => placementGroupsRoute,
-  parseParams: (params) => ({
-    id: Number(params.id),
-    linodeId: Number(params.linodeId),
-  }),
-  path: '$id/linodes/unassign/$linodeId',
-}).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsUnassignLazyRoute)
-);
-
 const placementGroupsDetailRoute = createRoute({
   getParentRoute: () => placementGroupsRoute,
   parseParams: (params) => ({
@@ -90,11 +77,44 @@ const placementGroupsDetailRoute = createRoute({
   ).then((m) => m.placementGroupsDetailLazyRoute)
 );
 
+const placementGroupsDetailLinodesRoute = createRoute({
+  getParentRoute: () => placementGroupsDetailRoute,
+  path: 'linodes',
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
+  ).then((m) => m.placementGroupsDetailLazyRoute)
+);
+
+const placementGroupsAssignRoute = createRoute({
+  getParentRoute: () => placementGroupsDetailLinodesRoute,
+  path: 'assign',
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
+  ).then((m) => m.placementGroupsUnassignLazyRoute)
+);
+
+const placementGroupsUnassignRoute = createRoute({
+  getParentRoute: () => placementGroupsDetailLinodesRoute,
+  parseParams: (params) => ({
+    linodeId: Number(params.linodeId),
+  }),
+  path: 'unassign/$linodeId',
+}).lazy(() =>
+  import(
+    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
+  ).then((m) => m.placementGroupsUnassignLazyRoute)
+);
+
 export const placementGroupsRouteTree = placementGroupsRoute.addChildren([
   placementGroupsIndexRoute,
   placementGroupsCreateRoute,
   placementGroupsEditRoute,
   placementGroupsDeleteRoute,
-  placementGroupsDetailRoute,
-  placementGroupsUnassignRoute,
+  placementGroupsDetailRoute.addChildren([
+    placementGroupsDetailLinodesRoute,
+    placementGroupsAssignRoute,
+    placementGroupsUnassignRoute,
+  ]),
 ]);

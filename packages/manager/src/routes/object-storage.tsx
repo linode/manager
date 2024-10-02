@@ -31,7 +31,7 @@ const objectStorageIndexRoute = createRoute({
 );
 
 const objectStorageBucketsRoute = createRoute({
-  getParentRoute: () => objectStorageIndexRoute,
+  getParentRoute: () => objectStorageRoute,
   path: 'buckets',
 }).lazy(() =>
   import('src/features/ObjectStorage/ObjectStorageLanding').then(
@@ -40,8 +40,17 @@ const objectStorageBucketsRoute = createRoute({
 );
 
 const objectStorageAccessKeysRoute = createRoute({
-  getParentRoute: () => objectStorageIndexRoute,
+  getParentRoute: () => objectStorageRoute,
   path: 'access-keys',
+}).lazy(() =>
+  import('src/features/ObjectStorage/ObjectStorageLanding').then(
+    (m) => m.objectStorageLandingLazyRoute
+  )
+);
+
+const objectStorageBucketCreateRoute = createRoute({
+  getParentRoute: () => objectStorageBucketsRoute,
+  path: 'create',
 }).lazy(() =>
   import('src/features/ObjectStorage/ObjectStorageLanding').then(
     (m) => m.objectStorageLandingLazyRoute
@@ -57,19 +66,41 @@ const objectStorageBucketDetailRoute = createRoute({
   )
 );
 
-const objectStorageBucketCreateRoute = createRoute({
-  getParentRoute: () => objectStorageBucketsRoute,
-  path: 'create',
+const objectStorageBucketDetailObjectsRoute = createRoute({
+  getParentRoute: () => objectStorageBucketDetailRoute,
+  path: 'objects',
 }).lazy(() =>
-  import('src/features/ObjectStorage/ObjectStorageLanding').then(
-    (m) => m.objectStorageLandingLazyRoute
+  import('src/features/ObjectStorage/BucketDetail').then(
+    (m) => m.bucketDetailLandingLazyRoute
   )
 );
 
+const objectStorageBucketDetailAccessRoute = createRoute({
+  getParentRoute: () => objectStorageBucketDetailRoute,
+  path: 'access',
+}).lazy(() =>
+  import('src/features/ObjectStorage/BucketDetail').then(
+    (m) => m.bucketDetailLandingLazyRoute
+  )
+);
+
+const objectStorageBucketSSLRoute = createRoute({
+  getParentRoute: () => objectStorageBucketDetailRoute,
+  path: 'ssl',
+}).lazy(() =>
+  import('src/features/ObjectStorage/BucketDetail').then(
+    (m) => m.bucketDetailLandingLazyRoute
+  )
+);
 export const objectStorageRouteTree = objectStorageRoute.addChildren([
   objectStorageIndexRoute,
-  objectStorageBucketsRoute,
-  objectStorageBucketCreateRoute,
-  objectStorageBucketDetailRoute,
+  objectStorageBucketsRoute.addChildren([
+    objectStorageBucketDetailRoute.addChildren([
+      objectStorageBucketDetailObjectsRoute,
+      objectStorageBucketDetailAccessRoute,
+      objectStorageBucketSSLRoute,
+    ]),
+    objectStorageBucketCreateRoute,
+  ]),
   objectStorageAccessKeysRoute,
 ]);

@@ -15,13 +15,13 @@ export const ManagedRoutes = () => {
   );
 };
 
-export const managedRoute = createRoute({
+const managedRoute = createRoute({
   component: ManagedRoutes,
   getParentRoute: () => rootRoute,
   path: 'managed',
 });
 
-export const managedIndexRoute = createRoute({
+const managedIndexRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: '/',
 }).lazy(() =>
@@ -30,7 +30,7 @@ export const managedIndexRoute = createRoute({
   )
 );
 
-export const managedSummaryRoute = createRoute({
+const managedSummaryRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'summary',
 }).lazy(() =>
@@ -39,7 +39,7 @@ export const managedSummaryRoute = createRoute({
   )
 );
 
-export const managedMonitorsRoute = createRoute({
+const managedMonitorsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'monitors',
 }).lazy(() =>
@@ -48,7 +48,7 @@ export const managedMonitorsRoute = createRoute({
   )
 );
 
-export const managedSSHAccessRoute = createRoute({
+const managedSSHAccessRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'ssh-access',
 }).lazy(() =>
@@ -57,7 +57,7 @@ export const managedSSHAccessRoute = createRoute({
   )
 );
 
-export const managedCredentialsRoute = createRoute({
+const managedCredentialsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'credentials',
 }).lazy(() =>
@@ -66,7 +66,7 @@ export const managedCredentialsRoute = createRoute({
   )
 );
 
-export const managedContactsRoute = createRoute({
+const managedContactsRoute = createRoute({
   getParentRoute: () => managedRoute,
   path: 'contacts',
 }).lazy(() =>

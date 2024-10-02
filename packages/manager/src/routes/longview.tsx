@@ -16,13 +16,13 @@ export const LongviewRoutes = () => {
   );
 };
 
-export const longviewRoute = createRoute({
+const longviewRoute = createRoute({
   component: LongviewRoutes,
   getParentRoute: () => rootRoute,
   path: 'longview',
 });
 
-export const longviewLandingRoute = createRoute({
+const longviewLandingRoute = createRoute({
   getParentRoute: () => longviewRoute,
   path: '/',
 }).lazy(() =>
@@ -31,7 +31,7 @@ export const longviewLandingRoute = createRoute({
   )
 );
 
-export const longviewLandingClientsRoute = createRoute({
+const longviewLandingClientsRoute = createRoute({
   getParentRoute: () => longviewRoute,
   path: 'clients',
 }).lazy(() =>
@@ -40,7 +40,7 @@ export const longviewLandingClientsRoute = createRoute({
   )
 );
 
-export const longviewLandingPlanDetailsRoute = createRoute({
+const longviewLandingPlanDetailsRoute = createRoute({
   getParentRoute: () => longviewRoute,
   path: 'plan-details',
 }).lazy(() =>
@@ -49,7 +49,7 @@ export const longviewLandingPlanDetailsRoute = createRoute({
   )
 );
 
-export const longviewDetailRoute = createRoute({
+const longviewDetailRoute = createRoute({
   component: LongviewDetail,
   getParentRoute: () => longviewRoute,
   parseParams: (params) => ({
@@ -58,31 +58,31 @@ export const longviewDetailRoute = createRoute({
   path: 'clients/$id',
 });
 
-export const longviewDetailOverviewRoute = createRoute({
+const longviewDetailOverviewRoute = createRoute({
   component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'overview',
 });
 
-export const longviewDetailProcessesRoute = createRoute({
+const longviewDetailProcessesRoute = createRoute({
   component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'processes',
 });
 
-export const longviewDetailNetworkRoute = createRoute({
+const longviewDetailNetworkRoute = createRoute({
   component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'network',
 });
 
-export const longviewDetailDisksRoute = createRoute({
+const longviewDetailDisksRoute = createRoute({
   component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'disks',
 });
 
-export const longviewDetailInstallationRoute = createRoute({
+const longviewDetailInstallationRoute = createRoute({
   component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'installation',

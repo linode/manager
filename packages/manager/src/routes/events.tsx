@@ -13,7 +13,7 @@ export const EventsRoutes = () => {
   );
 };
 
-export const eventsRoute = createRoute({
+const eventsRoute = createRoute({
   component: EventsRoutes,
   getParentRoute: () => rootRoute,
   path: 'events',
