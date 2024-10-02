@@ -349,7 +349,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                 this.props.history.push('/linodes/create')
                               }
                               disabledCreateButton={isLinodesGrantReadOnly}
-                              docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                              docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
                               entity="Linode"
                               title="Linodes"
                             />

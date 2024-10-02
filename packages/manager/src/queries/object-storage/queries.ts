@@ -12,6 +12,7 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -175,7 +176,7 @@ export const useObjectStorageBuckets = (enabled = true) => {
 export const useObjectStorageAccessKeys = (params: Params) =>
   useQuery<ResourcePage<ObjectStorageKey>, APIError[]>({
     ...objectStorageQueries.accessKeys(params),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useCreateBucketMutation = () => {
@@ -267,6 +268,15 @@ export const useDeleteBucketWithRegionMutation = () => {
   });
 };
 
+export const getObjectBucketObjectsQueryKey = (
+  clusterId: string,
+  bucket: string,
+  prefix: string
+) => [
+  ...objectStorageQueries.bucket(clusterId, bucket)._ctx.objects.queryKey,
+  ...prefixToQueryKey(prefix),
+];
+
 export const useObjectBucketObjectsInfiniteQuery = (
   clusterId: string,
   bucket: string,
@@ -274,16 +284,14 @@ export const useObjectBucketObjectsInfiniteQuery = (
 ) =>
   useInfiniteQuery<ObjectStorageObjectList, APIError[]>({
     getNextPageParam: (lastPage) => lastPage.next_marker,
+    initialPageParam: undefined,
     queryFn: ({ pageParam }) =>
       getObjectList({
         bucket,
         clusterId,
-        params: { delimiter, marker: pageParam, prefix },
+        params: { delimiter, marker: pageParam as string | undefined, prefix },
       }),
-    queryKey: [
-      ...objectStorageQueries.bucket(clusterId, bucket)._ctx.objects.queryKey,
-      ...prefixToQueryKey(prefix),
-    ],
+    queryKey: getObjectBucketObjectsQueryKey(clusterId, bucket, prefix),
   });
 
 export const useCreateObjectUrlMutation = (

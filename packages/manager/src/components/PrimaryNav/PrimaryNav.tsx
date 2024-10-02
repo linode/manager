@@ -31,7 +31,6 @@ import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils'
 import { useFlags } from 'src/hooks/useFlags';
 import { usePrefetch } from 'src/hooks/usePreFetch';
 import { useAccountSettings } from 'src/queries/account/settings';
-import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
@@ -88,33 +87,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const flags = useFlags();
   const location = useLocation();
 
-  const [
-    enableMarketplacePrefetch,
-    setEnableMarketplacePrefetch,
-  ] = React.useState(false);
-
   const { data: accountSettings } = useAccountSettings();
   const isManaged = accountSettings?.managed ?? false;
-
-  const {
-    data: oneClickApps,
-    error: oneClickAppsError,
-    isLoading: oneClickAppsLoading,
-  } = useMarketplaceAppsQuery(enableMarketplacePrefetch);
-
-  const allowMarketplacePrefetch =
-    !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
 
   const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
-
-  const prefetchMarketplace = () => {
-    if (!enableMarketplacePrefetch) {
-      setEnableMarketplacePrefetch(true);
-    }
-  };
+  const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
     () => [
@@ -173,7 +152,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !isPlacementGroupsEnabled,
           href: '/placement-groups',
           icon: <PlacementGroups />,
-          isBeta: flags.placementGroups?.beta,
         },
       ],
       [
@@ -187,7 +165,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           hide: !isDatabasesEnabled,
           href: '/databases',
           icon: <Database />,
-          isBeta: flags.dbaasV2?.beta,
+          isBeta: isDatabasesV2Beta,
         },
         {
           activeLinks: ['/kubernetes/create'],
@@ -221,8 +199,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Marketplace',
           href: '/linodes/create?type=One-Click',
           icon: <OCA />,
-          prefetchRequestCondition: allowMarketplacePrefetch,
-          prefetchRequestFn: prefetchMarketplace,
         },
       ],
       [
@@ -247,11 +223,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       isDatabasesEnabled,
+      isDatabasesV2Beta,
       isManaged,
-      allowMarketplacePrefetch,
-      flags.dbaasV2,
       isPlacementGroupsEnabled,
-      flags.placementGroups,
       isACLPEnabled,
     ]
   );
@@ -320,7 +294,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               const props = {
                 closeMenu,
                 isCollapsed,
-                key: thisLink.display,
                 locationPathname: location.pathname,
                 locationSearch: location.search,
                 ...thisLink,
@@ -333,11 +306,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 thisLink.prefetchRequestCondition !== undefined ? (
                 <PrefetchPrimaryLink
                   {...props}
+                  key={thisLink.display}
                   prefetchRequestCondition={thisLink.prefetchRequestCondition}
                   prefetchRequestFn={thisLink.prefetchRequestFn}
                 />
               ) : (
-                <PrimaryLink {...props} />
+                <PrimaryLink {...props} key={thisLink.display} />
               );
             })}
           </div>

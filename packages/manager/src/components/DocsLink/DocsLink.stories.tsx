@@ -12,11 +12,12 @@ export const Default: StoryObj<DocsLinkProps> = {
 const meta: Meta<DocsLinkProps> = {
   argTypes: {},
   args: {
-    href: 'https://www.linode.com/docs/products/compute/compute-instances/faqs',
+    href:
+      'https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances',
     label: 'Custom Doc Link Label',
   },
   component: DocsLink,
-  title: 'Components/Link/DocsLink',
+  title: 'Foundations/Link/DocsLink',
 };
 
 export default meta;

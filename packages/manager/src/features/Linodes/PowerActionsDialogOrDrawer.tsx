@@ -54,19 +54,19 @@ export const PowerActionsDialog = (props: Props) => {
 
   const {
     error: bootError,
-    isLoading: isBooting,
+    isPending: isBooting,
     mutateAsync: bootLinode,
   } = useBootLinodeMutation(linodeId ?? -1, configs);
 
   const {
     error: rebootError,
-    isLoading: isRebooting,
+    isPending: isRebooting,
     mutateAsync: rebootLinode,
   } = useRebootLinodeMutation(linodeId ?? -1, configs);
 
   const {
     error: shutdownError,
-    isLoading: isShuttingDown,
+    isPending: isShuttingDown,
     mutateAsync: shutdownLinode,
   } = useShutdownLinodeMutation(linodeId ?? -1);
 
@@ -163,7 +163,7 @@ export const PowerActionsDialog = (props: Props) => {
           }}
         >
           See the&nbsp;
-          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/set-up-and-secure/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/set-up-and-secure-a-compute-instance">
             guide for setting up and securing a compute instance
           </Link>
           &nbsp;for more information.
@@ -202,7 +202,7 @@ export const PowerActionsDialog = (props: Props) => {
             Powered down Linodes will still accrue charges.
             <br />
             See the&nbsp;
-            <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works#will-i-be-billed-for-powered-off-or-unused-services">
               Billing and Payments documentation
             </Link>
             &nbsp;for more information.

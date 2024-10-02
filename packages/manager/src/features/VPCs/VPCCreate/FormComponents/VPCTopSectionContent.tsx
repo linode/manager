@@ -12,7 +12,7 @@ import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreatev2/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 
@@ -47,7 +47,7 @@ export const VPCTopSectionContent = (props: Props) => {
               label: 'Learn more',
             })
           }
-          to="https://www.linode.com/docs/products/networking/vpc/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/vpc"
         >
           Learn more
         </Link>

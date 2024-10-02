@@ -81,6 +81,6 @@ describe('ComponentRenderer component tests', () => {
           })}
         </Grid>
       );
-      expect(getByPlaceholderText('Select Resources')).toBeDefined();
+      expect(getByPlaceholderText('Select a Resource')).toBeDefined();
     });
 });

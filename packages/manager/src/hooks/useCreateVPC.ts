@@ -17,7 +17,7 @@ import type {
   CreateSubnetPayload,
   CreateVPCPayload,
 } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreatev2/types';
 import type { SubnetError } from 'src/utilities/formikErrorUtils';
 import type { SubnetFieldState } from 'src/utilities/subnets';
 
@@ -66,7 +66,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   >();
 
   const {
-    isLoading: isLoadingCreateVPC,
+    isPending: isLoadingCreateVPC,
     mutateAsync: createVPC,
   } = useCreateVPCMutation();
 

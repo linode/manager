@@ -16,7 +16,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
-import { SupportLink } from 'src/components/SupportLink';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -190,27 +189,14 @@ export const CreateImageTab = () => {
           <Stack spacing={2}>
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
-              By default, Linode images are limited to 6144 MB of data per disk.
-              Ensure your content doesn&rsquo;t exceed this limit, or{' '}
-              <SupportLink
-                entity={
-                  selectedLinodeId !== null
-                    ? { id: selectedLinodeId, type: 'linode_id' }
-                    : undefined
-                }
-                text="open a support ticket"
-                title="Request to increase Image size limit when capturing from Linode disk"
-              />{' '}
-              to request a higher limit. Additionally, images can&rsquo;t be
-              created from a raw disk or a disk that&rsquo;s formatted using a
-              custom file system.
+              Custom images are billed monthly, at $0.10/GB. The disk you target
+              for an image needs to meet specific{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image">
+                requirements
+              </Link>
+              .
             </Typography>
-            {linodeIsInDistributedRegion && (
-              <Notice variant="info">
-                This Linode is in a distributed compute region. Images captured
-                from this Linode will be stored in the closest core site.
-              </Notice>
-            )}
+
             <LinodeSelect
               getOptionDisabled={
                 grants
@@ -234,6 +220,18 @@ export const CreateImageTab = () => {
               required
               value={selectedLinodeId}
             />
+            {linodeIsInDistributedRegion && (
+              <Notice variant="warning">
+                This Linode is in a distributed compute region. These regions
+                can't store images. The image is stored in the core compute
+                region that is{' '}
+                <Link to="https://www.linode.com/global-infrastructure/">
+                  geographically closest
+                </Link>
+                . After it's stored, you can replicate it to other core compute
+                regions.
+              </Notice>
+            )}
             {showDiskEncryptionWarning && (
               <Notice variant="warning">
                 <Typography sx={(theme) => ({ fontFamily: theme.font.normal })}>
@@ -318,7 +316,7 @@ export const CreateImageTab = () => {
                               Many Linode supported operating systems are
                               compatible with cloud-init by default, or you may
                               have installed cloud-init.{' '}
-                              <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata/">
+                              <Link to="https://techdocs.akamai.com/cloud-computing/docs/overview-of-the-metadata-service">
                                 Learn more.
                               </Link>
                             </Typography>
@@ -377,20 +375,6 @@ export const CreateImageTab = () => {
               control={control}
               name="description"
             />
-            <Typography
-              sx={{ maxWidth: { md: '80%', sm: '100%' } }}
-              variant="body1"
-            >
-              Custom Images are billed at $0.10/GB per month.{' '}
-              <Link to="https://www.linode.com/docs/products/tools/images/guides/capture-an-image/">
-                Learn more about requirements and considerations.{' '}
-              </Link>
-              For information about how to check and clean a Linux
-              system&rsquo;s disk space,{' '}
-              <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
-                read this guide.
-              </Link>
-            </Typography>
           </Stack>
         </Paper>
         <Box

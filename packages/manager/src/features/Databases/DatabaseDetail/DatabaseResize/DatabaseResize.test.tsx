@@ -65,7 +65,7 @@ describe('database resize', () => {
   });
 
   describe('On rendering of page', () => {
-    const examplePlanType = 'g6-standard-60';
+    const examplePlanType = 'g6-dedicated-50';
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });
@@ -120,6 +120,17 @@ describe('database resize', () => {
       fireEvent.click(resizeButton);
       getByText(`Resize Database Cluster ${database.label}?`);
     });
+
+    it('Should disable the "Resize Database Cluster" button when disabled = true', async () => {
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseResize database={database} disabled={true} />
+      );
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      const resizeDatabaseBtn = getByText('Resize Database Cluster').closest(
+        'button'
+      );
+      expect(resizeDatabaseBtn).toBeDisabled();
+    });
   });
 
   describe('should be disabled smaller plans', () => {
@@ -164,6 +175,21 @@ describe('database resize', () => {
       expect(
         document.getElementById('g6-dedicated-4')?.hasAttribute('disabled')
       );
+    });
+  });
+
+  describe('should disable Shared Plans Tab for 2 nodes cluster', () => {
+    const database = databaseFactory.build({
+      cluster_size: 2,
+      type: 'g6-dedicated-8',
+    });
+    it('should disable Shared Plans Tab', async () => {
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseResize database={database} />
+      );
+      expect(getByTestId(loadingTestId)).toBeInTheDocument();
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      expect(getByText('Shared CPU')).toHaveAttribute('aria-disabled', 'true');
     });
   });
 });

@@ -1,5 +1,3 @@
-import { Engine } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
@@ -7,18 +5,24 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { useEditableLabelState } from 'src/hooks/useEditableLabelState';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useDatabaseMutation,
   useDatabaseQuery,
   useDatabaseTypesQuery,
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { Engine } from '@linode/api-v4/lib/databases/types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -41,9 +45,17 @@ export const DatabaseDetail = () => {
   const id = Number(databaseId);
 
   const { data: database, error, isLoading } = useDatabaseQuery(engine, id);
-  const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery({
+    platform: database?.platform,
+  });
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
+
+  const isDatabasesGrantReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'database',
+    id,
+  });
 
   const {
     editableLabelError,
@@ -150,27 +162,48 @@ export const DatabaseDetail = () => {
           },
           pathname: location.pathname,
         }}
+        disabledBreadcrumbEditButton={isDatabasesGrantReadOnly}
         title={database.label}
       />
       <Tabs index={getTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
+        {isDatabasesGrantReadOnly && (
+          <Notice
+            text={
+              "You don't have permissions to modify this Database. Please contact an account administrator for details."
+            }
+            important
+            variant="warning"
+          />
+        )}
+
         <TabPanels>
           <SafeTabPanel index={0}>
-            <DatabaseSummary database={database} />
+            <DatabaseSummary
+              database={database}
+              disabled={isDatabasesGrantReadOnly}
+            />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            <DatabaseBackups />
+            <DatabaseBackups disabled={isDatabasesGrantReadOnly} />
           </SafeTabPanel>
           {flags.databaseResize ? (
             <SafeTabPanel index={2}>
-              <DatabaseResize database={database} />
+              <DatabaseResize
+                database={database}
+                disabled={isDatabasesGrantReadOnly}
+              />
             </SafeTabPanel>
           ) : null}
           <SafeTabPanel index={flags.databaseResize ? 3 : 2}>
-            <DatabaseSettings database={database} />
+            <DatabaseSettings
+              database={database}
+              disabled={isDatabasesGrantReadOnly}
+            />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
+      {database.platform === 'rdbms-default' && <DatabaseLogo />}
     </>
   );
 };

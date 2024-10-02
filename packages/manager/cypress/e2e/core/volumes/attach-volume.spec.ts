@@ -50,6 +50,9 @@ describe('volume attach and detach flows', () => {
   before(() => {
     cleanUp(['volumes', 'linodes']);
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Clicks "Attach" action menu item for volume, selects Linode with common region, and submits form.
@@ -114,7 +117,9 @@ describe('volume attach and detach flows', () => {
 
         // Confirm that volume has been attached to Linode.
         cy.wait('@attachVolume').its('response.statusCode').should('eq', 200);
-        ui.toast.assertMessage(`Volume ${volume.label} successfully attached.`);
+        ui.toast.assertMessage(
+          `Volume ${volume.label} has been attached to Linode ${linode.label}.`
+        );
         cy.findByText(volume.label)
           .should('be.visible')
           .closest('tr')

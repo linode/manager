@@ -15,12 +15,12 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Use Node.js v18.14.0
-        uses: actions/setup-node@v3
+      - name: Use Node.js v20.17 LTS
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.14"
+          node-version: "20.17"
 
       - name: Download PR Number Artifact
         uses: dawidd6/action-download-artifact@268677152d06ba59fcec7a7f0b5d961b6ccd7e1e #v2.28.0
@@ -45,7 +45,7 @@ jobs:
 
       - name: Set PR Number Environment Variables
         run: |
-            echo "PR_NUMBER=$(cat pr_number.txt)" >> $GITHUB_ENV
+          echo "PR_NUMBER=$(cat pr_number.txt)" >> $GITHUB_ENV
 
       - name: Generate Coverage Comment
         run: |

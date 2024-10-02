@@ -12,13 +12,6 @@ import {
   mockGetRegionAvailability,
 } from 'support/intercepts/regions';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
-import {
-  mockAppendFeatureFlags,
-  mockGetFeatureFlagClientstream,
-} from 'support/intercepts/feature-flags';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
-
-import type { Flags } from 'src/featureFlags';
 
 const mockRegions = [
   regionFactory.build({
@@ -131,7 +124,7 @@ const notices = {
 
 authenticate();
 describe('displays linode plans panel based on availability', () => {
-  before(() => {
+  beforeEach(() => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
     mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
@@ -227,7 +220,7 @@ describe('displays linode plans panel based on availability', () => {
 });
 
 describe('displays kubernetes plans panel based on availability', () => {
-  before(() => {
+  beforeEach(() => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
     mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
@@ -357,18 +350,12 @@ describe('displays kubernetes plans panel based on availability', () => {
 });
 
 describe('displays specific linode plans for GPU', () => {
-  before(() => {
+  beforeEach(() => {
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
     mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
       'getRegionAvailability'
     );
-    mockAppendFeatureFlags({
-      placementGroups: makeFeatureFlagData<Flags['gpuv2']>({
-        planDivider: true,
-      }),
-    });
-    mockGetFeatureFlagClientstream();
   });
 
   it('Should render divided tables when GPU divider enabled', () => {
@@ -381,7 +368,7 @@ describe('displays specific linode plans for GPU', () => {
     // Should display two separate tables
     cy.findByText('GPU').click();
     cy.get(linodePlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {

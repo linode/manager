@@ -1,15 +1,5 @@
 # Getting Started
 
-## Using the getting_started.sh script
-
-1. Open the terminal application
-2. Paste this into the terminal appliation `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/linode/manager/develop/scripts/getting_started.sh)"`
-3. Press `Enter` to run the command
-4. The script will ask you to enter your password. This is likely the same password you use to login to your computer.
-5. Follow the prompts the scripts presents.
-
-## Manually
-
 1. Fork this repository.
 2. Clone your fork to your local machine.
 3. Go to [cloud.linode.com/profile/clients](https://cloud.linode.com/profile/clients) and click "Add an OAuth App".
@@ -17,7 +7,7 @@
 5. After your OAuth App has been created, copy the ID (not the secret).
 6. In `packages/manager`, copy the contents of `.env.example` and paste them into a new file called `.env`.
 7. In `.env` set `REACT_APP_CLIENT_ID` to the ID from step 5.
-8. Install Node.js 18.14.1. We recommend using [Volta](https://volta.sh/):
+8. Install Node.js 20.17 LTS. We recommend using [Volta](https://volta.sh/):
 
    ```bash
 
@@ -25,10 +15,10 @@
 
    ## Add volta to your .*rc file, or open a new terminal window.
 
-   $ volta install node@18.14.1
+   $ volta install node@20.17
 
    $ node --version
-   ## v18.14.1
+   ## v20.17.0
 
    ```
 

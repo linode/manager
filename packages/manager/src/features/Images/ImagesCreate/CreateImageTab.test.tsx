@@ -158,7 +158,8 @@ describe('CreateImageTab', () => {
 
     // Verify distributed compute region notice renders
     await findByText(
-      'This Linode is in a distributed compute region. Images captured from this Linode will be stored in the closest core site.'
+      "This Linode is in a distributed compute region. These regions can't store images.",
+      { exact: false }
     );
   });
 

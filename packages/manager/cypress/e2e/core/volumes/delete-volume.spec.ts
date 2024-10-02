@@ -20,6 +20,9 @@ describe('volume delete flow', () => {
   before(() => {
     cleanUp('volumes');
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Clicks "Delete" action menu item for volume but cancels operation.
@@ -87,7 +90,7 @@ describe('volume delete flow', () => {
         // Confirm that volume is deleted.
         cy.wait('@deleteVolume').its('response.statusCode').should('eq', 200);
         cy.findByText(volume.label).should('not.exist');
-        ui.toast.assertMessage('Volume successfully deleted.');
+        ui.toast.assertMessage(`Volume ${volume.label} has been deleted.`);
       }
     );
   });

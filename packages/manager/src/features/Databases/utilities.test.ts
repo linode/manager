@@ -1,11 +1,14 @@
 import { renderHook, waitFor } from '@testing-library/react';
+import { DateTime } from 'luxon';
 
 import { accountFactory } from 'src/factories';
+import {
+  isOutsideBackupTimeframe,
+  useIsDatabasesEnabled,
+} from 'src/features/Databases/utilities';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-
-import { useIsDatabasesEnabled } from './utilities';
 
 describe('useIsDatabasesEnabled', () => {
   it('should return true for an unrestricted user with the account capability V1', async () => {
@@ -29,13 +32,14 @@ describe('useIsDatabasesEnabled', () => {
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
       expect(result.current.isDatabasesV1Enabled).toBe(true);
+      expect(result.current.isDatabasesV2Beta).toBe(false);
       expect(result.current.isDatabasesV2Enabled).toBe(false);
     });
   });
 
-  it('should return true for an unrestricted user with the account capability V2', async () => {
+  it('should return true for an unrestricted user with the account capability Beta', async () => {
     const account = accountFactory.build({
-      capabilities: ['Managed Databases V2'],
+      capabilities: ['Managed Databases Beta'],
     });
 
     server.use(
@@ -54,6 +58,7 @@ describe('useIsDatabasesEnabled', () => {
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
       expect(result.current.isDatabasesV1Enabled).toBe(false);
+      expect(result.current.isDatabasesV2Beta).toBe(true);
       expect(result.current.isDatabasesV2Enabled).toBe(true);
     });
   });
@@ -108,5 +113,30 @@ describe('useIsDatabasesEnabled', () => {
     });
 
     await waitFor(() => expect(result.current.isDatabasesEnabled).toBe(false));
+  });
+});
+
+describe('isOutsideBackupTimeframe', () => {
+  it('should return true if date is before the oldest backup', () => {
+    const date = DateTime.now().minus({ days: 10 });
+    const oldestBackup = DateTime.now().minus({ days: 5 });
+    expect(isOutsideBackupTimeframe(date, oldestBackup)).toBe(true);
+  });
+
+  it('should return true if date is after today', () => {
+    const date = DateTime.now().plus({ days: 1 });
+    const oldestBackup = DateTime.now().minus({ days: 5 });
+    expect(isOutsideBackupTimeframe(date, oldestBackup)).toBe(true);
+  });
+
+  it('should return false if date is between the oldest backup and today', () => {
+    const date = DateTime.now().minus({ days: 3 });
+    const oldestBackup = DateTime.now().minus({ days: 5 });
+    expect(isOutsideBackupTimeframe(date, oldestBackup)).toBe(false);
+  });
+
+  it('should return true if there is no oldest backup', () => {
+    const date = DateTime.now().minus({ days: 3 });
+    expect(isOutsideBackupTimeframe(date, null)).toBe(true);
   });
 });

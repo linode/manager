@@ -17,7 +17,7 @@ import { pluralize } from 'src/utilities/pluralize';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { nodeWarning } from '../../kubeUtils';
@@ -80,9 +80,10 @@ export const AddNodePoolDrawer = (props: Props) => {
   const { data: types } = useAllTypes(open);
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
+  const drawerRef = React.useRef<HTMLDivElement>(null);
 
   // Only want to use current types here.
   const extendedTypes = filterCurrentTypes(types?.map(extendType));
@@ -90,6 +91,7 @@ export const AddNodePoolDrawer = (props: Props) => {
   const [selectedTypeInfo, setSelectedTypeInfo] = React.useState<
     { count: number; planId: string } | undefined
   >(undefined);
+  const [addNodePoolError, setAddNodePoolError] = React.useState<string>('');
 
   const getTypeCount = React.useCallback(
     (planId: string) =>
@@ -114,12 +116,14 @@ export const AddNodePoolDrawer = (props: Props) => {
   React.useEffect(() => {
     if (open) {
       resetDrawer();
+      setAddNodePoolError('');
     }
   }, [open]);
 
   React.useEffect(() => {
     if (error) {
-      scrollErrorIntoView();
+      setAddNodePoolError(error?.[0].reason);
+      scrollErrorIntoViewV2(drawerRef);
     }
   }, [error]);
 
@@ -159,14 +163,15 @@ export const AddNodePoolDrawer = (props: Props) => {
       }}
       onClose={onClose}
       open={open}
+      ref={drawerRef}
       title={`Add a Node Pool: ${clusterLabel}`}
       wide
     >
-      {error && (
+      {addNodePoolError && (
         <Notice spacingBottom={0} spacingTop={12} variant="error">
           <ErrorMessage
-            entityType="lkecluster_id"
-            message={error?.[0].reason}
+            entity={{ id: clusterId, type: 'lkecluster_id' }}
+            message={addNodePoolError}
           />
         </Notice>
       )}
@@ -186,7 +191,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          isSubmitting={isLoading}
+          isSubmitting={isPending}
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}
@@ -237,7 +242,7 @@ export const AddNodePoolDrawer = (props: Props) => {
             primaryButtonProps={{
               disabled: !selectedTypeInfo || hasInvalidPrice,
               label: 'Add pool',
-              loading: isLoading,
+              loading: isPending,
               onClick: handleAdd,
             }}
           />

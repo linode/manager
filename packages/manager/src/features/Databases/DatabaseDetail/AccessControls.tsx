@@ -1,11 +1,8 @@
-import { Database } from '@linode/api-v4/lib/databases';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
+import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Notice } from 'src/components/Notice/Notice';
@@ -15,9 +12,13 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
+import { stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
+
+import type { APIError, Database } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {
@@ -81,12 +82,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   database: Database;
   description?: JSX.Element;
+  disabled?: boolean;
 }
 
 export const AccessControls = (props: Props) => {
   const {
     database: { allow_list: allowList, engine, id },
     description,
+    disabled,
   } = props;
 
   const { classes } = useStyles();
@@ -107,7 +110,7 @@ export const AccessControls = (props: Props) => {
   const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
 
   const {
-    isLoading: databaseUpdating,
+    isPending: databaseUpdating,
     mutateAsync: updateDatabase,
   } = useDatabaseMutation(engine, id);
 
@@ -163,6 +166,7 @@ export const AccessControls = (props: Props) => {
                 <InlineMenuAction
                   actionText="Remove"
                   className={classes.removeButton}
+                  disabled={disabled}
                   onClick={() => handleClickRemove(accessControl)}
                 />
               </TableCell>
@@ -193,11 +197,14 @@ export const AccessControls = (props: Props) => {
           </div>
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
-        <AddNewLink
+        <Button
+          buttonType="primary"
           className={classes.addAccessControlBtn}
-          label="Manage Access Controls"
+          disabled={disabled}
           onClick={() => setAddAccessControlDrawerOpen(true)}
-        />
+        >
+          Manage Access Controls
+        </Button>
       </div>
       {ipTable(allowList)}
       <ConfirmationDialog

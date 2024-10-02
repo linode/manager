@@ -9,7 +9,7 @@ import type {
   RegionFilterValue,
 } from './RegionSelect.types';
 import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreatev2/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
@@ -163,15 +163,15 @@ export const getNewRegionLabel = (region: Region) => {
 
 export const useIsGeckoEnabled = () => {
   const flags = useFlags();
-  const isGeckoGA = flags?.gecko2?.enabled && flags.gecko2.ga;
-  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.ga;
+  const isGeckoLA = flags?.gecko2?.enabled && flags.gecko2.la;
+  const isGeckoBeta = flags.gecko2?.enabled && !flags.gecko2?.la;
   const { data: regions } = useRegionsQuery();
 
   const hasDistributedRegionCapability = regions?.some((region: Region) =>
     region.capabilities.includes('Distributed Plans')
   );
-  const isGeckoGAEnabled = hasDistributedRegionCapability && isGeckoGA;
+  const isGeckoLAEnabled = hasDistributedRegionCapability && isGeckoLA;
   const isGeckoBetaEnabled = hasDistributedRegionCapability && isGeckoBeta;
 
-  return { isGeckoBetaEnabled, isGeckoGAEnabled };
+  return { isGeckoBetaEnabled, isGeckoLAEnabled };
 };

@@ -1,30 +1,34 @@
-import { omit } from 'lodash';
+import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
 import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { omitProps } from 'src/utilities/omittedProps';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { utoa } from '../LinodesCreate/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
-import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
+import type { LinodeCreateType } from './types';
 import type {
   CreateLinodeRequest,
   InterfacePayload,
   Linode,
+  Profile,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
+import type { FieldErrors } from 'react-hook-form';
 
 /**
  * This is the ID of the Image of the default OS.
  */
-const DEFAULT_OS = 'linode/debian11';
+const DEFAULT_OS = 'linode/ubuntu24.04';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -144,7 +148,11 @@ export const tabs: LinodeCreateType[] = [
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues
 ): CreateLinodeRequest => {
-  const values = omit(formValues, ['linode', 'hasSignedEUAgreement']);
+  const values = omitProps(formValues, [
+    'linode',
+    'hasSignedEUAgreement',
+    'firewallOverride',
+  ]);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
   }
@@ -257,6 +265,18 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
   linode?: Linode | null;
 }
 
+export interface LinodeCreateFormContext {
+  /**
+   * Profile data is used in the Linode Create v2 resolver because
+   * restricted users are subject to different validation.
+   */
+  profile: Profile | undefined;
+  /**
+   * Used for dispaying warnings to internal Akamai employees.
+   */
+  secureVMNoticesEnabled: boolean;
+}
+
 /**
  * This function initializes the Linode Create flow form
  * when the form mounts.
@@ -284,6 +304,7 @@ export const defaultValues = async (
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
+    backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
     interfaces: defaultInterfaces,
     linode,
@@ -501,4 +522,45 @@ export const captureLinodeCreateAnalyticsEvent = async (
       secureVMCompliant,
     });
   }
+};
+
+/**
+ * Custom hook to send a Adobe Analytics form error event with error messages in the Linode Create flow.
+ */
+export const useHandleLinodeCreateAnalyticsFormError = (
+  createType: LinodeCreateType
+) => {
+  const handleLinodeCreateAnalyticsFormError = useCallback(
+    (errors: FieldErrors<LinodeCreateFormValues>) => {
+      let errorString = '';
+
+      if (!errors) {
+        return;
+      }
+
+      if (errors.region) {
+        errorString += errors.region.message;
+      }
+      if (errors.type) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.type.message
+        }`;
+      }
+      if (errors.root_pass) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.root_pass.message
+        }`;
+      }
+      if (errors.root) {
+        errorString += `${errorString.length > 0 ? `|` : ''}${
+          errors.root.message
+        }`;
+      }
+
+      sendLinodeCreateFormErrorEvent(errorString, createType);
+    },
+    [createType]
+  );
+
+  return { handleLinodeCreateAnalyticsFormError };
 };

@@ -19,7 +19,7 @@ export const SMSMessaging = () => {
   const { data: profile } = useProfile();
   const {
     error,
-    isLoading,
+    isPending,
     mutateAsync: optOut,
     reset,
   } = useSMSOptOutMutation();
@@ -80,7 +80,7 @@ export const SMSMessaging = () => {
           <ActionsPanel
             primaryButtonProps={{
               label: 'Opt Out',
-              loading: isLoading,
+              loading: isPending,
               onClick: onOptOut,
             }}
             secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
@@ -94,7 +94,7 @@ export const SMSMessaging = () => {
         <Typography>
           Opting out of SMS messaging will reduce security and limit the ways
           you can securely access your account.{' '}
-          <Link to="https://www.linode.com/docs/guides/linode-manager-security-controls/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/security-controls-for-user-accounts">
             Learn more about security options.
           </Link>
         </Typography>

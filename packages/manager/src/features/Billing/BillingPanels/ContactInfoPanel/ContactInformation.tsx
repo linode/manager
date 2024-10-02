@@ -9,6 +9,7 @@ import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
+import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 
@@ -83,8 +84,8 @@ const ContactInformation = (props: Props) => {
 
   const isChildUser = Boolean(profile?.user_type === 'child');
 
-  const invalidTaxIdNotification = notifications?.find((notification) => {
-    return notification.type === 'tax_id_invalid';
+  const taxIdIsVerifyingNotification = notifications?.find((notification) => {
+    return notification.type === 'tax_id_verifying';
   });
 
   const isReadOnly =
@@ -237,17 +238,11 @@ const ContactInformation = (props: Props) => {
                 >
                   <strong>Tax ID</strong> {taxId}
                 </StyledTypography>
-                {invalidTaxIdNotification && (
+                {taxIdIsVerifyingNotification && (
                   <TooltipIcon
-                    sxTooltipIcon={{
-                      '& > svg': {
-                        fontSize: '18px',
-                      },
-                      paddingBottom: 0,
-                      paddingTop: 0,
-                    }}
-                    status="warning"
-                    text={invalidTaxIdNotification.label}
+                    icon={<StyledAutorenewIcon />}
+                    status="other"
+                    text={taxIdIsVerifyingNotification.label}
                   />
                 )}
               </Box>

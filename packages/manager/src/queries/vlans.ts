@@ -16,7 +16,7 @@ export const vlanQueries = createQueryKeys('vlans', {
   },
   infinite: (filter: Filter = {}) => ({
     queryFn: ({ pageParam = 1 }) =>
-      getVlans({ page: pageParam, page_size: 25 }, filter),
+      getVlans({ page: pageParam as number, page_size: 25 }, filter),
     queryKey: [filter],
   }),
 });
@@ -33,7 +33,7 @@ export const useVLANsInfiniteQuery = (filter: Filter = {}, enabled = true) => {
       }
       return page + 1;
     },
-    keepPreviousData: true,
+    initialPageParam: 1,
     ...vlanQueries.infinite(filter),
     enabled,
   });

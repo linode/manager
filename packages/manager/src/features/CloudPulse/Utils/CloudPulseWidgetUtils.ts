@@ -1,3 +1,6 @@
+import { styled } from '@mui/material';
+
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
@@ -93,6 +96,11 @@ interface graphDataOptionsProps {
   unit: string;
 
   /**
+   * widget chart type
+   */
+  widgetChartType: string;
+
+  /**
    * preferred color for the widget's graph
    */
   widgetColor: string | undefined;
@@ -150,6 +158,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
     serviceType,
     status,
     unit,
+    widgetChartType,
     widgetColor,
   } = props;
 
@@ -190,8 +199,9 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
 
         const dimension = {
           backgroundColor: color,
-          borderColor: '',
+          borderColor: color,
           data: seriesDataFormatter(transformedData.values, start, end),
+          fill: widgetChartType === 'area',
           label: getLabelName(labelOptions),
         };
         // construct a legend row with the dimension
@@ -305,9 +315,10 @@ export const mapResourceIdToName = (
   id: string | undefined,
   resources: CloudPulseResources[]
 ): string => {
-  return (
-    resources.find((resourceObj) => resourceObj?.id === id)?.label ?? id ?? ''
+  const resourcesObj = resources.find(
+    (resourceObj) => String(resourceObj.id) === id
   );
+  return resourcesObj?.label ?? id ?? '';
 };
 
 /**
@@ -323,3 +334,18 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
       thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
+
+/**
+ * Returns an autocomplete with updated styles according to UX, this will be used at widget level
+ */
+export const StyledWidgetAutocomplete = styled(Autocomplete, {
+  label: 'StyledAutocomplete',
+})(({ theme }) => ({
+  '&& .MuiFormControl-root': {
+    minWidth: '90px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%', // 100% width for xs and small screens
+    },
+    width: '90px',
+  },
+}));

@@ -2,13 +2,7 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-import { TIME_DURATION } from '../Utils/constants';
-import {
-  getUserPreferenceObject,
-  updateGlobalFilterPreference,
-} from '../Utils/UserPreference';
-
-import type { TimeDuration } from '@linode/api-v4';
+import type { FilterValue, TimeDuration } from '@linode/api-v4';
 import type {
   BaseSelectProps,
   Item,
@@ -19,32 +13,37 @@ export interface CloudPulseTimeRangeSelectProps
     BaseSelectProps<Item<Labels, Labels>, false>,
     'defaultValue' | 'onChange'
   > {
-  handleStatsChange?: (timeDuration: TimeDuration) => void;
-  placeholder?: string;
+  defaultValue?: Partial<FilterValue>;
+  handleStatsChange?: (
+    timeDuration: TimeDuration,
+    timeDurationValue?: string,
+    savePref?: boolean
+  ) => void;
   savePreferences?: boolean;
 }
 
-const PAST_7_DAYS = 'Past 7 Days';
-const PAST_12_HOURS = 'Past 12 Hours';
-const PAST_24_HOURS = 'Past 24 Hours';
-const PAST_30_DAYS = 'Past 30 Days';
-const PAST_30_MINUTES = 'Past 30 Minutes';
+const PAST_7_DAYS = 'Last 7 Days';
+const PAST_12_HOURS = 'Last 12 Hours';
+const PAST_24_HOURS = 'Last 24 Hours';
+const PAST_30_DAYS = 'Last 30 Days';
+const PAST_30_MINUTES = 'Last 30 Minutes';
 export type Labels =
-  | 'Past 7 Days'
-  | 'Past 12 Hours'
-  | 'Past 24 Hours'
-  | 'Past 30 Days'
-  | 'Past 30 Minutes';
+  | 'Last 7 Days'
+  | 'Last 12 Hours'
+  | 'Last 24 Hours'
+  | 'Last 30 Days'
+  | 'Last 30 Minutes';
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
-    const { handleStatsChange, placeholder } = props;
+    const { defaultValue, handleStatsChange, savePreferences } = props;
     const options = generateSelectOptions();
     const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
-      const defaultValue = getUserPreferenceObject().timeDuration;
-
+      if (!savePreferences) {
+        return options[0];
+      }
       return options.find((o) => o.label === defaultValue) || options[0];
-    }, [options]);
+    }, []);
     const [selectedTimeRange, setSelectedTimeRange] = React.useState<
       Item<Labels, Labels>
     >(getDefaultValue());
@@ -53,24 +52,28 @@ export const CloudPulseTimeRangeSelect = React.memo(
       const item = getDefaultValue();
 
       if (handleStatsChange) {
-        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+        handleStatsChange(
+          getTimeDurationFromTimeRange(item.value),
+          item.value,
+          false
+        );
       }
-      setSelectedTimeRange(item);
-    }, [handleStatsChange, getDefaultValue]);
-
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // need to execute only once, during mounting of this component
     const handleChange = (item: Item<Labels, Labels>) => {
-      updateGlobalFilterPreference({
-        [TIME_DURATION]: item.value,
-      });
+      setSelectedTimeRange(item);
 
       if (handleStatsChange) {
-        handleStatsChange(getTimeDurationFromTimeRange(item.value));
+        handleStatsChange(
+          getTimeDurationFromTimeRange(item.value),
+          item.value,
+          savePreferences
+        );
       }
     };
-
     return (
       <Autocomplete
-        onChange={(_: any, value: Item<Labels, Labels>) => {
+        onChange={(e, value: Item<Labels, Labels>) => {
           handleChange(value);
         }}
         textFieldProps={{
@@ -83,7 +86,6 @@ export const CloudPulseTimeRangeSelect = React.memo(
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Select Time Duration"
         options={options}
-        placeholder={placeholder ?? 'Select Time Duration'}
         value={selectedTimeRange}
       />
     );
@@ -165,11 +167,11 @@ const getTimeDurationFromTimeRange = (label: string): TimeDuration => {
   }
 
   if (label === PAST_7_DAYS) {
-    return { unit: 'day', value: 7 };
+    return { unit: 'days', value: 7 };
   }
 
   if (label === PAST_30_DAYS) {
-    return { unit: 'day', value: 30 };
+    return { unit: 'days', value: 30 };
   }
 
   return { unit: 'min', value: 30 };

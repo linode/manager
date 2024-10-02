@@ -40,7 +40,7 @@ import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
-import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import {
@@ -69,6 +69,7 @@ export const CreateCluster = () => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
+  const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
 
@@ -148,7 +149,7 @@ export const CreateCluster = () => {
       .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
         setSubmitting(false);
-        scrollErrorIntoView();
+        scrollErrorIntoViewV2(formContainerRef);
       });
   };
 
@@ -202,18 +203,18 @@ export const CreateCluster = () => {
   }
 
   return (
-    <Grid className={classes.root} container>
+    <Grid className={classes.root} container ref={formContainerRef}>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <LandingHeader
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         title="Create Cluster"
       />
       <Grid className={`mlMain py0`}>
         {generalError && (
           <Notice variant="error">
             <ErrorMessage
-              entityType="lkecluster_id"
+              entity={{ type: 'lkecluster_id' }}
               formPayloadValues={{ node_pools: nodePools }}
               message={generalError}
             />

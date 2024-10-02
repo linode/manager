@@ -1,4 +1,3 @@
-import { Database } from '@linode/api-v4/lib/databases/types';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -11,19 +10,22 @@ import AccessControls from '../AccessControls';
 import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
 import ConnectionDetails from './DatabaseSummaryConnectionDetails';
 
+import type { Database } from '@linode/api-v4/lib/databases/types';
+
 interface Props {
   database: Database;
+  disabled?: boolean;
 }
 
 export const DatabaseSummary: React.FC<Props> = (props) => {
-  const { database } = props;
+  const { database, disabled } = props;
 
   const description = (
     <>
       <Typography>
         Add IPv4 addresses or ranges that should be authorized to access this
         cluster. All other public and private connections are denied.{' '}
-        <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls">
           Learn more
         </Link>
         .
@@ -46,7 +48,11 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
         </Grid>
       </Grid>
       <Divider spacingBottom={16} spacingTop={28} />
-      <AccessControls database={database} description={description} />
+      <AccessControls
+        database={database}
+        description={description}
+        disabled={disabled}
+      />
     </Paper>
   );
 };

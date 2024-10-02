@@ -60,7 +60,7 @@ export const BackupDrawer = (props: Props) => {
 
   const {
     error: updateAccountSettingsError,
-    isLoading: isUpdatingAccountSettings,
+    isPending: isUpdatingAccountSettings,
     mutateAsync: updateAccountSettings,
   } = useMutateAccountSettings();
 
@@ -70,7 +70,7 @@ export const BackupDrawer = (props: Props) => {
 
   const {
     data: enableBackupsResult,
-    isLoading: isEnablingBackups,
+    isPending: isEnablingBackups,
     mutateAsync: enableBackups,
   } = useEnableBackupsOnLinodesMutation();
 
@@ -151,7 +151,7 @@ all new Linodes will automatically be backed up.`
           Three backup slots are executed and rotated automatically: a daily
           backup, a 2-7 day old backup, and an 8-14 day old backup. See our
           {` `}
-          <Link to="https://www.linode.com/docs/platform/disk-images/linode-backup-service/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/backup-service">
             guide on Backups
           </Link>{' '}
           for more information on features and limitations.{' '}

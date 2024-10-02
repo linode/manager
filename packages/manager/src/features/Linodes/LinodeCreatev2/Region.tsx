@@ -21,12 +21,15 @@ import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
+  sendLinodeCreateFormInputEvent,
+  sendLinodeCreateFormStartEvent,
+} from 'src/utilities/analytics/formEventAnalytics';
+import {
   DIFFERENT_PRICE_STRUCTURE_WARNING,
   DOCS_LINK_LABEL_DC_PRICING,
 } from 'src/utilities/pricing/constants';
 import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
-import { CROSS_DATA_CENTER_CLONE_WARNING } from '../LinodesCreate/constants';
 import { getDisabledRegions } from './Region.utils';
 import { TwoStepRegion } from './TwoStepRegion';
 import {
@@ -37,7 +40,7 @@ import {
 import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
 
-export const Region = () => {
+export const Region = React.memo(() => {
   const {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
@@ -82,9 +85,9 @@ export const Region = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoGAEnabled } = useIsGeckoEnabled();
+  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
   const showTwoStepRegion =
-    isGeckoGAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
+    isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
   const onChange = async (region: RegionType) => {
     const values = getValues();
@@ -150,6 +153,11 @@ export const Region = () => {
 
       setValue('label', label);
     }
+
+    // Begin tracking the Linode Create form.
+    sendLinodeCreateFormStartEvent({
+      createType: params.type ?? 'OS',
+    });
   };
 
   const showCrossDataCenterCloneWarning =
@@ -167,18 +175,16 @@ export const Region = () => {
 
   const hideDistributedRegions =
     !flags.gecko2?.enabled ||
-    flags.gecko2?.ga ||
     !isDistributedRegionSupported(params.type ?? 'OS');
 
   const showDistributedRegionIconHelperText =
-    !hideDistributedRegions &&
-    regions?.some(
-      (region) =>
-        region.site_type === 'distributed' || region.site_type === 'edge'
-    );
+    isGeckoBetaEnabled && !hideDistributedRegions;
+  regions?.some(
+    (region) =>
+      region.site_type === 'distributed' || region.site_type === 'edge'
+  );
 
   const disabledRegions = getDisabledRegions({
-    linodeCreateTab: params.type,
     regions: regions ?? [],
     selectedImage: image,
   });
@@ -210,6 +216,14 @@ export const Region = () => {
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
+          onClick={() =>
+            sendLinodeCreateFormInputEvent({
+              createType: params.type ?? 'OS',
+              headerName: 'Region',
+              interaction: 'click',
+              label: DOCS_LINK_LABEL_DC_PRICING,
+            })
+          }
           href="https://www.linode.com/pricing"
           label={DOCS_LINK_LABEL_DC_PRICING}
         />
@@ -218,7 +232,8 @@ export const Region = () => {
       {showCrossDataCenterCloneWarning && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
           <Typography fontFamily={(theme) => theme.font.bold}>
-            {CROSS_DATA_CENTER_CLONE_WARNING}
+            Cloning a powered off instance across data centers may cause long
+            periods of down time.
           </Typography>
         </Notice>
       )}
@@ -252,4 +267,4 @@ export const Region = () => {
       )}
     </Paper>
   );
-};
+});

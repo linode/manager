@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import { eventFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -9,7 +11,6 @@ import {
 } from './utils';
 
 import type { Event } from '@linode/api-v4';
-import { DateTime } from 'luxon';
 
 describe('getEventMessage', () => {
   const mockEvent1: Event = eventFactory.build({
@@ -115,7 +116,7 @@ describe('getEventUsername', () => {
       username: 'test-user',
     });
 
-    expect(getEventUsername(mockEvent)).toBe('Linode');
+    expect(getEventUsername(mockEvent)).toBe('Akamai');
   });
 
   it('returns "Linode" if the username does not exist', () => {
@@ -124,7 +125,7 @@ describe('getEventUsername', () => {
       username: null,
     });
 
-    expect(getEventUsername(mockEvent)).toBe('Linode');
+    expect(getEventUsername(mockEvent)).toBe('Akamai');
   });
 
   it('returns "Linode" if the username does not exist and action is in ACTIONS_WITHOUT_USERNAMES', () => {
@@ -139,7 +140,7 @@ describe('getEventUsername', () => {
       username: null,
     });
 
-    expect(getEventUsername(mockEvent)).toBe('Linode');
+    expect(getEventUsername(mockEvent)).toBe('Akamai');
   });
 });
 

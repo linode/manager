@@ -42,7 +42,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const theme = useTheme();
 
   const {
-    isLoading: addDeviceIsLoading,
+    isPending: addDeviceIsLoading,
     mutateAsync: addDevice,
   } = useAddFirewallDeviceMutation(Number(id));
 

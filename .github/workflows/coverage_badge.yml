@@ -11,14 +11,14 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Use Node.js v18.14.0
-        uses: actions/setup-node@v3
+      - name: Use Node.js v20.17 LTS
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.14"
+          node-version: "20.17"
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
@@ -39,7 +39,7 @@ jobs:
       - name: Generate Coverage Badge
         uses: jaywcjlove/coverage-badges-cli@7f0781807ef3e7aba97a145beca881d36451b7b7 # v1.1.1
         with:
-          label: '@linode/manager coverage'
+          label: "@linode/manager coverage"
           source: ./packages/manager/coverage/coverage-summary.json
           output: ./packages/manager/coverage/badges.svg
 

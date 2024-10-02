@@ -1,5 +1,3 @@
-import { oneClickAppFactory } from 'src/factories/stackscripts';
-
 import type { OCA } from './types';
 
 /**
@@ -9,11 +7,6 @@ import type { OCA } from './types';
  * for it to be visible to users.
  */
 export const oneClickApps: Record<number, OCA> = {
-  0: {
-    ...oneClickAppFactory.build({
-      name: 'E2E Test App',
-    }),
-  },
   401697: {
     alt_description: 'Popular website content management system.',
     alt_name: 'CMS: content management system',
@@ -2590,5 +2583,28 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'High-performance database for analytics, monitoring and IoT.',
     website: 'https://influxdata.com/',
+  },
+  1403818: {
+    alt_description:
+      'Distributed data processing engine for large-scale analytics.',
+    alt_name: 'Big Data processing framework.',
+    categories: ['Stacks'],
+    colors: {
+      end: 'E25A1B',
+      start: '1D678F',
+    },
+    description: `Fast, open-source unified analytics engine for large-scale data processing.`,
+    isNew: true,
+    logo_url: 'apachespark.svg',
+    name: 'Apache Spark Cluster',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/marketplace-docs/guides/apache-spark-cluster/',
+        title: 'Deploy Apache Spark through the Linode Marketplace',
+      },
+    ],
+    summary: 'Unified analytics engine for big data processing.',
+    website: 'https://spark.apache.org/',
   },
 };

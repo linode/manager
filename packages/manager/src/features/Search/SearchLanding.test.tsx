@@ -1,4 +1,4 @@
-import { render, waitForElementToBeRemoved } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
@@ -9,8 +9,10 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { SearchLandingProps as Props, SearchLanding } from './SearchLanding';
+import { SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
+
+import type { SearchLandingProps as Props } from './SearchLanding';
 
 const props: Props = {
   combinedResults: [],
@@ -50,10 +52,7 @@ describe('Component', () => {
       '?query=search',
       propsWithResults
     );
-    const { getByTestId, getByText } = renderWithTheme(
-      <SearchLanding {...newProps} />
-    );
-    await waitForElementToBeRemoved(getByTestId('loading'));
+    const { getByText } = renderWithTheme(<SearchLanding {...newProps} />);
     getByText(/search/i);
     expect(props.search).toHaveBeenCalled();
   });

@@ -24,9 +24,9 @@ export const External: StoryObj<LinkProps> = {
   render: (args: LinkProps) => (
     <Link
       {...args}
-      to="https://www.linode.com/docs/products/compute/compute-instances/faqs"
+      to="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
     >
-      https://www.linode.com/docs/products/compute/compute-instances/faqs
+      https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances
     </Link>
   ),
 };
@@ -130,7 +130,7 @@ const meta: Meta<LinkProps> = {
     to: '/internal-link',
   },
   component: Link,
-  title: 'Components/Link',
+  title: 'Foundations/Link',
 };
 
 export default meta;

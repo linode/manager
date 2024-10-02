@@ -5,9 +5,9 @@ import * as React from 'react';
 
 import timezones from 'src/assets/timezones/timezones';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CircleProgress } from 'src/components/CircleProgress';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
@@ -21,6 +21,11 @@ interface Timezone {
   offset: number;
 }
 
+export interface TimezoneOption<T = string, L = string> {
+  label: L;
+  value: T;
+}
+
 export const formatOffset = ({ label, offset }: Timezone) => {
   const minutes = (Math.abs(offset) % 60).toLocaleString(undefined, {
     minimumIntegerDigits: 2,
@@ -32,7 +37,7 @@ export const formatOffset = ({ label, offset }: Timezone) => {
   return `\(GMT ${isPositive}${hours}:${minutes}\) ${label}`;
 };
 
-const renderTimeZonesList = (): Item<string>[] => {
+const renderTimezonesList = (): TimezoneOption<string>[] => {
   return timezones
     .map((tz) => ({ ...tz, offset: DateTime.now().setZone(tz.name).offset }))
     .sort((a, b) => a.offset - b.offset)
@@ -42,35 +47,38 @@ const renderTimeZonesList = (): Item<string>[] => {
     });
 };
 
-const timezoneList = renderTimeZonesList();
+const timezoneList = renderTimezonesList();
 
 export const TimezoneForm = (props: Props) => {
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const { error, isLoading, mutateAsync: updateProfile } = useMutateProfile();
-  const [value, setValue] = React.useState<Item<string> | null>(null);
+  const [timezoneValue, setTimezoneValue] = React.useState<
+    TimezoneOption<string> | string
+  >('');
+  const { error, isPending, mutateAsync: updateProfile } = useMutateProfile();
   const timezone = profile?.timezone ?? '';
 
-  const handleTimezoneChange = (timezone: Item<string>) => {
-    setValue(timezone);
+  const handleTimezoneChange = (timezone: TimezoneOption<string>) => {
+    setTimezoneValue(timezone);
   };
 
   const onSubmit = () => {
-    if (value === null) {
+    if (timezoneValue === '') {
       return;
     }
 
-    updateProfile({ timezone: String(value.value) }).then(() => {
+    updateProfile({ timezone: String(timezoneValue) }).then(() => {
       enqueueSnackbar('Successfully updated timezone', { variant: 'success' });
     });
   };
 
-  const defaultTimeZone = timezoneList.find((eachZone) => {
+  const defaultTimezone = timezoneList.find((eachZone) => {
     return eachZone.value === timezone;
   });
 
-  const disabled = value === null || defaultTimeZone?.value === value?.value;
+  const disabled =
+    timezoneValue === '' || defaultTimezone?.value === timezoneValue;
 
   if (!profile) {
     return <CircleProgress />;
@@ -86,32 +94,37 @@ export const TimezoneForm = (props: Props) => {
           </Typography>
         </StyledLoggedInAsCustomerNotice>
       ) : null}
-      <StyledRootContainer
-        sx={(theme) => ({
-          [theme.breakpoints.down('md')]: {
-            alignItems: 'flex-start',
-            flexDirection: 'column',
-          },
-        })}
-        alignItems="flex-end"
-        display="flex"
-        justifyContent="space-between"
-      >
-        <Select
-          data-qa-tz-select
-          defaultValue={defaultTimeZone}
-          errorText={error?.[0].reason}
-          isClearable={false}
-          label="Timezone"
-          onChange={handleTimezoneChange}
-          options={timezoneList}
-          placeholder={'Choose a Timezone'}
-        />
+      <StyledRootContainer>
+        <Stack>
+          <Autocomplete
+            slotProps={{
+              popper: {
+                sx: {
+                  maxHeight: '285px',
+                  overflow: 'hidden',
+                },
+              },
+            }}
+            value={timezoneList.find(
+              (option) => option.value === timezoneValue
+            )}
+            autoHighlight
+            data-qa-tz-select
+            defaultValue={defaultTimezone}
+            disableClearable
+            errorText={error?.[0].reason}
+            label="Timezone"
+            onChange={(_, option) => handleTimezoneChange(option)}
+            options={timezoneList}
+            placeholder="Choose a Timezone"
+            sx={{ width: '416px' }}
+          />
+        </Stack>
         <ActionsPanel
           primaryButtonProps={{
             disabled,
             label: 'Update Timezone',
-            loading: isLoading,
+            loading: isPending,
             onClick: onSubmit,
             sx: {
               margin: '0',
@@ -127,10 +140,14 @@ export const TimezoneForm = (props: Props) => {
   );
 };
 
-const StyledRootContainer = styled(Box, {
+const StyledRootContainer = styled('div', {
   label: 'StyledRootContainer',
 })(({ theme }) => ({
+  alignItems: 'flex-end',
+  display: 'flex',
+  justifyContent: 'space-between',
   [theme.breakpoints.down('md')]: {
+    alignItems: 'flex-start',
     flexDirection: 'column',
   },
 }));

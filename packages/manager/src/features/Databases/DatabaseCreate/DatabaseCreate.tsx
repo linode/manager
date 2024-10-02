@@ -32,10 +32,11 @@ import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { EngineOption } from 'src/features/Databases/DatabaseCreate/EngineOption';
+import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -187,6 +188,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 };
 
 interface NodePricing {
+  double: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
   single: DatabasePriceObject | undefined;
 }
@@ -194,7 +196,7 @@ interface NodePricing {
 const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
-  const flags = useFlags();
+  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
 
   const {
     data: regionsData,
@@ -212,7 +214,9 @@ const DatabaseCreate = () => {
     data: dbtypes,
     error: typesError,
     isLoading: typesLoading,
-  } = useDatabaseTypesQuery();
+  } = useDatabaseTypesQuery({
+    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+  });
 
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
@@ -220,6 +224,7 @@ const DatabaseCreate = () => {
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
+  const [selectedTab, setSelectedTab] = React.useState(0);
 
   const engineOptions = React.useMemo(() => {
     if (!engines) {
@@ -273,7 +278,9 @@ const DatabaseCreate = () => {
       ...values,
       allow_list: _allow_list,
     };
-
+    if (isDatabasesV2Beta) {
+      delete createPayload.replication_type;
+    }
     try {
       const response = await createDatabase(createPayload);
       history.push(`/databases/${response.engine}/${response.id}`);
@@ -335,7 +342,7 @@ const DatabaseCreate = () => {
     return dbtypes.map((type) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-      const singleNodePricing = type.engines[selectedEngine].find(
+      const singleNodePricing = type.engines[selectedEngine]?.find(
         (cluster) => cluster.quantity === 1
       );
       const price = singleNodePricing?.price ?? {
@@ -356,33 +363,46 @@ const DatabaseCreate = () => {
     });
   }, [dbtypes, selectedEngine]);
 
-  const labelToolTip = (
-    <div className={classes.labelToolTipCtn}>
-      <strong>Label must:</strong>
-      <ul>
-        <li>Begin with an alpha character</li>
-        <li>Contain only alpha characters or single hyphens</li>
-        <li>Be between 3 - 32 characters</li>
-      </ul>
-    </div>
-  );
+  const nodeOptions = React.useMemo(() => {
+    const hasDedicated = displayTypes.some(
+      (type) => type.class === 'dedicated'
+    );
 
-  const nodeOptions = [
-    {
-      label: (
-        <Typography>
-          1 Node {` `}
-          <br />
-          <span style={{ fontSize: '12px' }}>
-            {`$${nodePricing?.single?.monthly || 0}/month $${
-              nodePricing?.single?.hourly || 0
-            }/hr`}
-          </span>
-        </Typography>
-      ),
-      value: 1,
-    },
-    {
+    const options = [
+      {
+        label: (
+          <Typography>
+            1 Node {` `}
+            <br />
+            <span style={{ fontSize: '12px' }}>
+              {`$${nodePricing?.single?.monthly || 0}/month $${
+                nodePricing?.single?.hourly || 0
+              }/hr`}
+            </span>
+          </Typography>
+        ),
+        value: 1,
+      },
+    ];
+
+    if (hasDedicated && selectedTab === 0 && isDatabasesV2Enabled) {
+      options.push({
+        label: (
+          <Typography>
+            2 Nodes - High Availability
+            <br />
+            <span style={{ fontSize: '12px' }}>
+              {`$${nodePricing?.double?.monthly || 0}/month $${
+                nodePricing?.double?.hourly || 0
+              }/hr`}
+            </span>
+          </Typography>
+        ),
+        value: 2,
+      });
+    }
+
+    options.push({
       label: (
         <Typography>
           3 Nodes - High Availability (recommended)
@@ -395,8 +415,25 @@ const DatabaseCreate = () => {
         </Typography>
       ),
       value: 3,
-    },
-  ];
+    });
+
+    return options;
+  }, [selectedTab, nodePricing, displayTypes, isDatabasesV2Enabled]);
+
+  const labelToolTip = (
+    <div className={classes.labelToolTipCtn}>
+      <strong>Label must:</strong>
+      <ul>
+        <li>Begin with an alpha character</li>
+        <li>Contain only alpha characters or single hyphens</li>
+        <li>Be between 3 - 32 characters</li>
+      </ul>
+    </div>
+  );
+
+  const handleTabChange = (index: number) => {
+    setSelectedTab(index);
+  };
 
   React.useEffect(() => {
     if (values.type.length === 0 || !dbtypes) {
@@ -411,10 +448,13 @@ const DatabaseCreate = () => {
     const engineType = values.engine.split('/')[0] as Engine;
 
     setNodePricing({
-      multi: type.engines[engineType].find(
+      double: type.engines[engineType]?.find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 2
+      )?.price,
+      multi: type.engines[engineType]?.find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
       )?.price,
-      single: type.engines[engineType].find(
+      single: type.engines[engineType]?.find(
         (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
       )?.price,
     });
@@ -422,17 +462,26 @@ const DatabaseCreate = () => {
       'cluster_size',
       values.cluster_size < 1 ? 3 : values.cluster_size
     );
-    setFieldValue(
-      'replication_type',
-      determineReplicationType(values.cluster_size, values.engine)
-    );
-    setFieldValue(
-      'replication_commit_type',
-      determineReplicationCommitType(values.engine)
-    );
+    if (!isDatabasesV2Enabled) {
+      setFieldValue(
+        'replication_type',
+        determineReplicationType(values.cluster_size, values.engine)
+      );
+      setFieldValue(
+        'replication_commit_type',
+        determineReplicationCommitType(values.engine)
+      );
+    }
     setFieldValue('storage_engine', determineStorageEngine(values.engine));
     setFieldValue('compression_type', determineCompressionType(values.engine));
-  }, [dbtypes, setFieldValue, values.cluster_size, values.type, values.engine]);
+  }, [
+    dbtypes,
+    setFieldValue,
+    values.cluster_size,
+    values.type,
+    values.engine,
+    isDatabasesV2Enabled,
+  ]);
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
@@ -453,7 +502,7 @@ const DatabaseCreate = () => {
             },
           ],
           labelOptions: {
-            suffixComponent: flags.dbaasV2?.beta ? (
+            suffixComponent: isDatabasesV2Beta ? (
               <BetaChip className={classes.chip} component="span" />
             ) : null,
           },
@@ -464,7 +513,10 @@ const DatabaseCreate = () => {
       <Paper>
         {createError && (
           <Notice variant="error">
-            <ErrorMessage entityType="database_id" message={createError} />
+            <ErrorMessage
+              entity={{ type: 'database_id' }}
+              message={createError}
+            />
           </Notice>
         )}
         <Grid>
@@ -519,6 +571,7 @@ const DatabaseCreate = () => {
             className={classes.selectPlanPanel}
             data-qa-select-plan
             error={errors.type}
+            handleTabChange={handleTabChange}
             header="Choose a Plan"
             isCreate
             regionsData={regionsData}
@@ -539,10 +592,11 @@ const DatabaseCreate = () => {
           <FormControl
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFieldValue('cluster_size', +e.target.value);
-              setFieldValue(
-                'replication_type',
-                +e.target.value === 1 ? 'none' : 'semi_synch'
-              );
+              !isDatabasesV2Enabled &&
+                setFieldValue(
+                  'replication_type',
+                  +e.target.value === 1 ? 'none' : 'semi_synch'
+                );
             }}
             data-testid="database-nodes"
           >
@@ -577,7 +631,7 @@ const DatabaseCreate = () => {
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
-            <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls">
               Learn more
             </Link>
             .
@@ -620,6 +674,7 @@ const DatabaseCreate = () => {
           Create Database Cluster
         </Button>
       </Grid>
+      {isDatabasesV2Enabled && <DatabaseLogo />}
     </form>
   );
 };

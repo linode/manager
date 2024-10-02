@@ -32,7 +32,7 @@ interface Context {
   regions: Region[] | undefined;
 }
 
-export const ManageImageRegionsForm = (props: Props) => {
+export const ManageImageReplicasForm = (props: Props) => {
   const { image, onClose } = props;
 
   const imageRegionIds = image?.regions.map(({ region }) => region) ?? [];
@@ -103,7 +103,7 @@ export const ManageImageRegionsForm = (props: Props) => {
         <Notice text={errors.root.message} variant="error" />
       )}
       <Typography>
-        Custom images are billed monthly, at $.10/GB. Check out{' '}
+        Custom images are billed monthly, at $0.10/GB. Check out{' '}
         <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
           this guide
         </Link>{' '}
@@ -116,7 +116,7 @@ export const ManageImageRegionsForm = (props: Props) => {
             shouldValidate: true,
           })
         }
-        currentCapability={undefined}
+        currentCapability="Object Storage" // Images use Object Storage as the storage backend
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         label="Add Regions"
@@ -126,7 +126,7 @@ export const ManageImageRegionsForm = (props: Props) => {
         selectedIds={values.regions}
       />
       <Typography sx={{ mb: 1, mt: 2 }}>
-        Image will be available in these regions ({values.regions.length})
+        Image will be replicated in these regions ({values.regions.length})
       </Typography>
       <Paper
         sx={(theme) => ({

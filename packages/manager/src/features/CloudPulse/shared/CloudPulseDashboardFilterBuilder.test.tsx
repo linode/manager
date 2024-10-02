@@ -21,7 +21,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     expect(getByTestId('region-select')).toBeDefined();
   });
 
-  it('it should render successfully when the required props are passed for service type dbass', async () => {
+  it('it should render successfully when the required props are passed for service type dbaas', async () => {
     const { getByPlaceholderText } = renderWithTheme(
       <CloudPulseDashboardFilterBuilder
         dashboard={dashboardFactory.build({
@@ -32,7 +32,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
       />
     );
 
-    expect(getByPlaceholderText('Select DB Cluster Names')).toBeDefined();
+    expect(getByPlaceholderText('Select an Engine')).toBeDefined();
     expect(getByPlaceholderText('Select a Region')).toBeDefined();
   });
 });

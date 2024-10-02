@@ -1,4 +1,3 @@
-import { Domain } from '@linode/api-v4/lib/domains';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -32,12 +31,14 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';
 import { DisableDomainDialog } from './DisableDomainDialog';
-import { Handlers as DomainHandlers } from './DomainActionMenu';
 import { DomainBanner } from './DomainBanner';
+import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 import { DomainTableRow } from './DomainTableRow';
 import { DomainZoneImportDrawer } from './DomainZoneImportDrawer';
-import { DomainsEmptyLandingState } from './DomainsEmptyLandingPage';
 import { EditDomainDrawer } from './EditDomainDrawer';
+
+import type { Handlers as DomainHandlers } from './DomainActionMenu';
+import type { Domain } from '@linode/api-v4';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
@@ -99,7 +100,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
 
   const {
     error: deleteError,
-    isLoading: isDeleting,
+    isPending: isDeleting,
     mutateAsync: deleteDomain,
   } = useDeleteDomainMutation(selectedDomain?.id ?? 0);
 
@@ -231,7 +232,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
             Import a Zone
           </StyledButon>
         }
-        docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         entity="Domain"
         onButtonClick={navigateToCreate}
         title="Domains"

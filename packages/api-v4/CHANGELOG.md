@@ -1,3 +1,53 @@
+## [2024-09-30] - v0.127.0
+
+
+### Changed:
+
+- Make `replication_type` and `replication_commit_type` optional in MySQL and Postgres interfaces ([#10980](https://github.com/linode/manager/pull/10980))
+- DBaaS restore method name ([#10988](https://github.com/linode/manager/pull/10988))
+
+### Fixed:
+
+- Include `standby` field in `DatabaseHosts` interface ([#10989](https://github.com/linode/manager/pull/10989))
+
+### Upcoming Features:
+
+- DBaaS V2 readonly hosts ([#10939](https://github.com/linode/manager/pull/10939))
+
+## [2024-09-16] - v0.126.0
+
+
+### Added:
+
+- LinodeCapabilities type used for `capabilities` property of Linode interface ([#10920](https://github.com/linode/manager/pull/10920))
+
+### Tech Stories:
+
+- Update vitest to latest ([#10843](https://github.com/linode/manager/pull/10843))
+
+### Upcoming Features:
+
+- Change 'bs_encryption_supported' property on Linode object to 'capabilities' ([#10837](https://github.com/linode/manager/pull/10837))
+- Add beta API root for CloudPulse endpoints ([#10851](https://github.com/linode/manager/pull/10851))
+
+## [2024-09-03] - v0.125.0
+
+
+### Added:
+
+- Managed Databases V2 capability and types ([#10786](https://github.com/linode/manager/pull/10786))
+
+### Changed:
+
+- Deprecate `getClusters` ([#10801](https://github.com/linode/manager/pull/10801))
+- Increase block storage max volume size to 16TB ([#10865](https://github.com/linode/manager/pull/10865))
+
+### Upcoming Features:
+
+- Update `AclpConfig` type ([#10769](https://github.com/linode/manager/pull/10769))
+- Add service types and `getCloudPulseServiceTypes` request ([#10805](https://github.com/linode/manager/pull/10805))
+
+
 ## [2024-08-19] - v0.124.0
 
 ### Added:

@@ -126,7 +126,7 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
     <>
       <LandingHeader
         createButtonText="Add Client"
-        docsLink="https://www.linode.com/docs/platform/longview/longview/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
         entity="Client"
         loading={newClientLoading}
         onButtonClick={handleAddClient}

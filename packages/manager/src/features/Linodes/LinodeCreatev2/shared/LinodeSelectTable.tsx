@@ -19,7 +19,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import { SelectLinodeCard } from 'src/features/Linodes/LinodesCreate/SelectLinodePanel/SelectLinodeCard';
+import { SelectLinodeCard } from 'src/features/Linodes/LinodeCreatev2/shared/SelectLinodeCard';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -109,6 +109,7 @@ export const LinodeSelectTable = (props: Props) => {
     reset((prev) => ({
       ...prev,
       backup_id: null,
+      backups_enabled: linode.backups.enabled,
       linode,
       private_ip: hasPrivateIP,
       region: linode.region,
@@ -140,20 +141,19 @@ export const LinodeSelectTable = (props: Props) => {
         <Notice text={fieldState.error?.message} variant="error" />
       )}
       <DebouncedSearchTextField
-        customValue={{
-          onChange: (value) => {
-            if (preselectedLinodeId) {
-              setPreselectedLinodeId(undefined);
-            }
-            setQuery(value ?? '');
-          },
-          value: preselectedLinodeId ? field.value?.label ?? '' : query,
+        onSearch={(value) => {
+          if (preselectedLinodeId) {
+            setPreselectedLinodeId(undefined);
+          }
+          setQuery(value);
         }}
         clearable
+        debounceTime={250}
         hideLabel
         isSearching={isFetching}
         label="Search"
         placeholder="Search"
+        value={preselectedLinodeId ? field.value?.label ?? '' : query}
       />
       <Box>
         {matchesMdUp ? (

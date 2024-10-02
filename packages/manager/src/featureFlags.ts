@@ -54,8 +54,9 @@ interface BetaFeatureFlag extends BaseFeatureFlag {
   beta: boolean;
 }
 
-interface GaFeatureFlag extends BaseFeatureFlag {
+interface GeckoFeatureFlag extends BaseFeatureFlag {
   ga: boolean;
+  la: boolean;
 }
 
 interface AclpFlag {
@@ -69,6 +70,7 @@ export interface CloudPulseResourceTypeMapFlag {
 }
 
 interface gpuV2 {
+  egressBanner: boolean;
   planDivider: boolean;
 }
 
@@ -84,6 +86,7 @@ export interface Flags {
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
+  apicliButtonCopy: string;
   apicliDxToolsAdditions: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
@@ -92,14 +95,10 @@ export interface Flags {
   databases: boolean;
   dbaasV2: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
-  eventMessagesV2: boolean;
-  gecko: boolean; // @TODO gecko: delete this after next release
-  gecko2: GaFeatureFlag;
+  gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
   ipv6Sharing: boolean;
-  linodeCreateRefactor: boolean;
-  linodeCreateWithFirewall: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
@@ -108,7 +107,6 @@ export interface Flags {
   objectStorageGen2: BaseFeatureFlag;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
-  placementGroups: BetaFeatureFlag;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -121,6 +119,7 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxId: BaseFeatureFlag;
   taxes: Taxes;
+  testdxtoolabexperiment: string;
   tpaProviders: Provider[];
 }
 

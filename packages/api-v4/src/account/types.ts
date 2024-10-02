@@ -72,7 +72,7 @@ export type AccountCapability =
   | 'LKE HA Control Planes'
   | 'Machine Images'
   | 'Managed Databases'
-  | 'Managed Databases V2'
+  | 'Managed Databases Beta'
   | 'NodeBalancers'
   | 'Object Storage Access Key Regions'
   | 'Object Storage Endpoint Types'
@@ -179,6 +179,7 @@ export interface Grant {
 }
 export type GlobalGrantTypes =
   | 'account_access'
+  | 'add_databases'
   | 'add_domains'
   | 'add_firewalls'
   | 'add_images'
@@ -255,6 +256,7 @@ export type NotificationType =
   | 'reboot_scheduled'
   | 'outage'
   | 'maintenance'
+  | 'maintenance_scheduled'
   | 'payment_due'
   | 'ticket_important'
   | 'ticket_abuse'
@@ -263,7 +265,7 @@ export type NotificationType =
   | 'user_email_bounce'
   | 'volume_migration_scheduled'
   | 'volume_migration_imminent'
-  | 'tax_id_invalid';
+  | 'tax_id_verifying';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 

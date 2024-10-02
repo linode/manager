@@ -4,6 +4,7 @@ import { CreateLinodeSchema } from '@linode/validation';
 import { accountQueries } from 'src/queries/account/queries';
 import { regionQueries } from 'src/queries/regions/regions';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
+import { isNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import {
   CreateLinodeFromBackupSchema,
@@ -12,15 +13,18 @@ import {
 } from './schemas';
 import { getLinodeCreatePayload } from './utilities';
 
-import type { LinodeCreateType } from '../LinodesCreate/types';
-import type { LinodeCreateFormValues } from './utilities';
+import type { LinodeCreateType } from './types';
+import type {
+  LinodeCreateFormContext,
+  LinodeCreateFormValues,
+} from './utilities';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors, Resolver } from 'react-hook-form';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
   queryClient: QueryClient
-): Resolver<LinodeCreateFormValues, { secureVMNoticesEnabled: boolean }> => {
+): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
   return async (values, context, options) => {
     const transformedValues = getLinodeCreatePayload(structuredClone(values));
@@ -46,7 +50,7 @@ export const getLinodeCreateResolver = (
       getRegionCountryGroup(selectedRegion)
     );
 
-    if (hasSelectedAnEURegion) {
+    if (hasSelectedAnEURegion && !context?.profile?.restricted) {
       const agreements = await queryClient.ensureQueryData(
         accountQueries.agreements
       );
@@ -67,7 +71,7 @@ export const getLinodeCreateResolver = (
     const secureVMViolation =
       context?.secureVMNoticesEnabled &&
       !values.firewallOverride &&
-      !values.firewall_id;
+      isNullOrUndefined(values.firewall_id);
 
     if (secureVMViolation) {
       (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {

@@ -6,24 +6,23 @@ import { Typography } from 'src/components/Typography';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
-import { DASHBOARD_ID } from '../Utils/constants';
-import {
-  getUserPreferenceObject,
-  updateGlobalFilterPreference,
-} from '../Utils/UserPreference';
 import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
 
-import type { Dashboard } from '@linode/api-v4';
+import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
+  defaultValue?: Partial<FilterValue>;
   handleDashboardChange: (
     dashboard: Dashboard | undefined,
-    isDefault?: boolean
+    savePref?: boolean
   ) => void;
+  savePreferences?: boolean;
 }
 
 export const CloudPulseDashboardSelect = React.memo(
   (props: CloudPulseDashboardSelectProps) => {
+    const { defaultValue, handleDashboardChange, savePreferences } = props;
+
     const {
       data: serviceTypesList,
       error: serviceTypesError,
@@ -63,36 +62,31 @@ export const CloudPulseDashboardSelect = React.memo(
 
     // sorts dashboards by service type. Required due to unexpected autocomplete grouping behaviour
     const getSortedDashboardsList = (options: Dashboard[]): Dashboard[] => {
-      return options.sort(
+      return [...options].sort(
         (a, b) => -b.service_type.localeCompare(a.service_type)
       );
     };
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
       // only call this code when the component is rendered initially
-      if (dashboardsList.length > 0 && selectedDashboard === undefined) {
-        const dashboardId = getUserPreferenceObject()?.dashboardId;
-
-        if (dashboardId) {
-          const dashboard = dashboardsList.find(
-            (obj: Dashboard) => obj.id === dashboardId
-          );
-          setSelectedDashboard(dashboard);
-          props.handleDashboardChange(dashboard, true);
-        } else {
-          props.handleDashboardChange(undefined, true);
-        }
+      if (
+        savePreferences &&
+        dashboardsList.length > 0 &&
+        selectedDashboard === undefined
+      ) {
+        const dashboard = defaultValue
+          ? dashboardsList.find((obj: Dashboard) => obj.id === defaultValue)
+          : undefined;
+        setSelectedDashboard(dashboard);
+        handleDashboardChange(dashboard);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dashboardsList]);
     return (
       <Autocomplete
-        onChange={(_: any, dashboard: Dashboard) => {
-          updateGlobalFilterPreference({
-            [DASHBOARD_ID]: dashboard?.id,
-          });
+        onChange={(e, dashboard: Dashboard) => {
           setSelectedDashboard(dashboard);
-          props.handleDashboardChange(dashboard);
+          handleDashboardChange(dashboard, savePreferences);
         }}
         renderGroup={(params) => (
           <Box key={params.key}>
@@ -116,7 +110,7 @@ export const CloudPulseDashboardSelect = React.memo(
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Select a Dashboard"
+        label="Select Dashboard"
         loading={dashboardsLoading || serviceTypesLoading}
         options={getSortedDashboardsList(dashboardsList ?? [])}
         placeholder={placeHolder}

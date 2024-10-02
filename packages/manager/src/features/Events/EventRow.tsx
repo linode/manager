@@ -1,19 +1,23 @@
-// TODO eventMessagesV2: delete when flag is removed
-import { Event, EventAction } from '@linode/api-v4/lib/account';
-import { DateTime } from 'luxon';
-import { pathOr } from 'ramda';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 
+import { Avatar } from 'src/components/Avatar/Avatar';
+import { BarPercent } from 'src/components/BarPercent';
+import { Box } from 'src/components/Box';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { generateEventMessage } from 'src/features/Events/eventMessageGenerator';
+import { useProfile } from 'src/queries/profile/profile';
 import { getEventTimestamp } from 'src/utilities/eventUtils';
-import { getLinkForEvent } from 'src/utilities/getEventsActionLink';
 
-import { StyledGravatar } from './EventRow.styles';
+import {
+  formatProgressEvent,
+  getEventMessage,
+  getEventUsername,
+} from './utils';
+
+import type { Event } from '@linode/api-v4/lib/account';
 
 interface EventRowProps {
   entityId?: number;
@@ -21,71 +25,63 @@ interface EventRowProps {
 }
 
 export const EventRow = (props: EventRowProps) => {
-  const { entityId, event } = props;
-  const link = getLinkForEvent(event.action, event.entity);
-  const type = pathOr<string>('linode', ['entity', 'type'], event);
+  const { event } = props;
+  const theme = useTheme();
   const timestamp = getEventTimestamp(event);
-
-  const rowProps = {
+  const { action, message, username } = {
     action: event.action,
-    entityId,
-    link,
-    message: generateEventMessage(event),
-    timestamp,
-    type,
-    username: event.username,
+    message: getEventMessage(event),
+    username: getEventUsername(event),
   };
+  const { data: profile } = useProfile();
 
-  return <Row {...rowProps} data-qa-events-row={event.id} />;
-};
-
-export interface RowProps {
-  action: EventAction;
-  link?: (() => void) | string;
-  message?: string | void;
-  status?: string;
-  timestamp: DateTime;
-  type:
-    | 'database'
-    | 'domain'
-    | 'linode'
-    | 'nodebalancer'
-    | 'placement_group'
-    | 'stackscript'
-    | 'subnet'
-    | 'volume'
-    | 'vpc';
-  username: null | string;
-}
-
-export const Row = (props: RowProps) => {
-  const { action, message, timestamp, username } = props;
-
-  /** Some event types may not be handled by our system (or new types
-   * may be added). Filter these out so we don't display blank messages to the user.
-   */
   if (!message) {
     return null;
   }
 
+  const { progressEventDisplay, showProgress } = formatProgressEvent(event);
+
   return (
     <TableRow data-qa-event-row data-test-id={action}>
+      <TableCell data-qa-event-message-cell parentColumn="Event">
+        <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
+        {showProgress && (
+          <BarPercent
+            max={100}
+            narrow
+            rounded
+            sx={{ mb: 1, mt: 0.5 }}
+            value={event.percent_complete ?? 0}
+          />
+        )}
+      </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-event-icon-cell>
-          <StyledGravatar username={username ?? ''} />
+        <TableCell data-qa-event-username-cell parentColumn="Username">
+          <Box alignItems="center" display="flex" gap={1}>
+            <Avatar
+              color={
+                username !== profile?.username
+                  ? theme.palette.primary.dark
+                  : undefined
+              }
+              height={24}
+              username={username}
+              width={24}
+            />
+            {username}
+          </Box>
         </TableCell>
       </Hidden>
-      <TableCell data-qa-event-message-cell parentColumn="Event">
-        <HighlightedMarkdown
-          sanitizeOptions={{
-            ALLOWED_TAGS: ['a'],
-            disallowedTagsMode: 'discard',
-          }}
-          textOrMarkdown={message}
-        />
-      </TableCell>
       <TableCell parentColumn="Relative Date">
-        {timestamp.toRelative()}
+        {progressEventDisplay}
+        {username && (
+          <Hidden smUp>
+            <br />
+            <Box component="span" sx={{ fontSize: '.8rem', lineHeight: 1 }}>
+              by {username}
+            </Box>
+          </Hidden>
+        )}
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-event-created-cell parentColumn="Absolute Date">

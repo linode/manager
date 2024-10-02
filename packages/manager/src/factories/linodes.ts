@@ -117,6 +117,20 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
   },
 });
 
+export const linodeBackupFactory = Factory.Sync.makeFactory<LinodeBackup>({
+  available: true,
+  configs: ['My Alpine 3.17 Disk Profile'],
+  created: '2020-01-01',
+  disks: [],
+  finished: '2020-01-01',
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `Backup ${i}`),
+  region: 'us-east',
+  status: 'successful',
+  type: 'auto',
+  updated: '2020-01-01',
+});
+
 export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   enabled: true,
   last_successful: '2020-01-01',
@@ -255,6 +269,7 @@ export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   alerts: linodeAlertsFactory.build(),
   backups: linodeBackupsFactory.build(),
+  capabilities: [],
   created: '2020-01-01',
   disk_encryption: 'enabled',
   group: '',

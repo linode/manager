@@ -1,10 +1,3 @@
-import {
-  Database,
-  DatabaseClusterSizeObject,
-  DatabasePriceObject,
-  DatabaseType,
-  Engine,
-} from '@linode/api-v4/lib/databases/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -16,7 +9,6 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
-import { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
@@ -30,11 +22,21 @@ import {
 } from './DatabaseResize.style';
 import { DatabaseResizeCurrentConfiguration } from './DatabaseResizeCurrentConfiguration';
 
+import type {
+  Database,
+  DatabaseClusterSizeObject,
+  DatabasePriceObject,
+  DatabaseType,
+  Engine,
+} from '@linode/api-v4';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+
 interface Props {
   database: Database;
+  disabled?: boolean;
 }
 
-export const DatabaseResize = ({ database }: Props) => {
+export const DatabaseResize = ({ database, disabled = false }: Props) => {
   const history = useHistory();
 
   const [planSelected, setPlanSelected] = React.useState<string>();
@@ -57,7 +59,7 @@ export const DatabaseResize = ({ database }: Props) => {
 
   const {
     error: resizeError,
-    isLoading: submitInProgress,
+    isPending: submitInProgress,
     mutateAsync: updateDatabase,
   } = useDatabaseMutation(database.engine, database.id);
 
@@ -65,7 +67,7 @@ export const DatabaseResize = ({ database }: Props) => {
     data: dbTypes,
     error: typesError,
     isLoading: typesLoading,
-  } = useDatabaseTypesQuery();
+  } = useDatabaseTypesQuery({ platform: database.platform });
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -209,6 +211,8 @@ export const DatabaseResize = ({ database }: Props) => {
       : type.disk <= currentPlanDisk
   );
 
+  const isDisabledSharedTab = database.cluster_size === 2;
+
   if (typesLoading) {
     return <CircleProgress />;
   }
@@ -228,10 +232,13 @@ export const DatabaseResize = ({ database }: Props) => {
         <StyledPlansPanel
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
+          disabled={disabled}
           disabledSmallerPlans={disabledPlans}
+          disabledTabs={isDisabledSharedTab ? ['shared'] : []}
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
           selectedId={planSelected}
+          tabDisabledMessage="Resizing a 2-nodes cluster is only allowed with Dedicated plans."
           types={displayTypes}
         />
       </Paper>
@@ -242,7 +249,7 @@ export const DatabaseResize = ({ database }: Props) => {
             setIsResizeConfirmationDialogOpen(true);
           }}
           buttonType="primary"
-          disabled={shouldSubmitBeDisabled}
+          disabled={shouldSubmitBeDisabled || disabled}
           type="submit"
         >
           Resize Database Cluster
