@@ -220,7 +220,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
       cy.get(widgetSelector)
         .should('be.visible')
-        .first()
         .within(() => {
           // check for all available granularity in popper
           ui.autocomplete
@@ -279,7 +278,6 @@ describe('Integration Tests for Linode Dashboard ', () => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
      cy.get(widgetSelector)
         .should('be.visible')
-        .first()
         .within(() => {
           mockCloudPulseCreateMetrics(
             metricsAPIResponsePayload,
