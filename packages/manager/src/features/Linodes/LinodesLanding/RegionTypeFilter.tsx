@@ -1,6 +1,9 @@
+import { Typography } from '@mui/material';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Box } from 'src/components/Box';
+import { FormLabel } from 'src/components/FormLabel';
 import { storage } from 'src/utilities/storage';
 
 import type { RegionFilter } from 'src/utilities/storage';
@@ -25,6 +28,8 @@ const regionFilterOptions: RegionFilterOption[] = [
   },
 ];
 
+const ariaIdentifier = 'region-type-filter';
+
 interface Props {
   handleRegionFilter: (regionFilter: RegionFilter) => void;
 }
@@ -33,8 +38,12 @@ export const RegionTypeFilter = (props: Props) => {
   const { handleRegionFilter } = props;
 
   return (
-    <label style={{ alignItems: 'center', display: 'flex' }}>
-      <span style={{ marginLeft: 8, marginRight: 8 }}>Region Type:</span>{' '}
+    <Box alignItems="end" display="flex">
+      <FormLabel htmlFor={ariaIdentifier}>
+        <Typography ml={1} mr={1}>
+          Region Type:
+        </Typography>
+      </FormLabel>
       <Autocomplete
         defaultValue={
           regionFilterOptions.find(
@@ -54,9 +63,10 @@ export const RegionTypeFilter = (props: Props) => {
           hideLabel: true,
         }}
         disableClearable
+        id={ariaIdentifier}
         label="Region Type"
         options={regionFilterOptions}
       />
-    </label>
+    </Box>
   );
 };
