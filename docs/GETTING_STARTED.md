@@ -1,15 +1,5 @@
 # Getting Started
 
-## Using the getting_started.sh script
-
-1. Open the terminal application
-2. Paste this into the terminal appliation `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/linode/manager/develop/scripts/getting_started.sh)"`
-3. Press `Enter` to run the command
-4. The script will ask you to enter your password. This is likely the same password you use to login to your computer.
-5. Follow the prompts the scripts presents.
-
-## Manually
-
 1. Fork this repository.
 2. Clone your fork to your local machine.
 3. Go to [cloud.linode.com/profile/clients](https://cloud.linode.com/profile/clients) and click "Add an OAuth App".
