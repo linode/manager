@@ -3,6 +3,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 import { CloudPulseAggregateFunction } from './CloudPulseAggregateFunction';
 
 import type { AggregateFunctionProperties } from './CloudPulseAggregateFunction';
@@ -25,15 +26,18 @@ describe('Cloud Pulse Aggregate Function', () => {
 
     const dropdown = getByRole('combobox');
 
-    expect(dropdown).toHaveAttribute('value', defaultAggregateFunction);
+    expect(dropdown).toHaveAttribute(
+      'value',
+      convertStringToCamelCasesWithSpaces(defaultAggregateFunction)
+    );
   });
 
   it('should select the aggregate function on click', () => {
     renderWithTheme(<CloudPulseAggregateFunction {...props} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'min' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Min' }));
 
-    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'min');
+    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Min');
   });
 });
