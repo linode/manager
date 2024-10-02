@@ -3,12 +3,12 @@
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockCloudPulseJWEToken,
-  mockCloudPulseDashboardServicesResponse,
-  mockCloudPulseCreateMetrics,
-  mockCloudPulseGetDashboards,
-  mockCloudPulseGetMetricDefinitions,
-  mockCloudPulseServices,
+  mockCreateCloudPulseJWEToken,
+  mockGetCloudPulseDashboard,
+  mockCreateCloudPulseMetrics,
+  mockGetCloudPulseDashboards,
+  mockGetCloudPulseMetricDefinitions,
+  mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
@@ -46,14 +46,8 @@ import { generateRandomMetricsData } from 'support/util/cloudpulse';
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
-const {
-  metrics,
-  id,
-  serviceType,
-  dashboardName,
-  region,
-  resource,
-} = widgetDetails.linode;
+const { metrics, id, serviceType, dashboardName, region, resource } =
+  widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -149,7 +143,7 @@ const compareWidgetValues = (
     expectedValues.last,
     `Expected ${expectedValues.last} for last, but got ${actualValues.last}`
   );
-  expect( actualValues.title).startWith(
+  expect(actualValues.title).startWith(
     title,
     `Expected ${title} for title ${actualValues.title}`
   );
@@ -162,20 +156,19 @@ describe('Integration Tests for Linode Dashboard ', () => {
     });
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
-    mockCloudPulseGetMetricDefinitions(metricDefinitions, serviceType);
-    mockCloudPulseGetDashboards([dashboard], serviceType);
-    mockCloudPulseServices(serviceType);
-    mockCloudPulseDashboardServicesResponse(dashboard, id);
-    mockCloudPulseJWEToken(serviceType);
-    mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as(
+    mockGetCloudPulseMetricDefinitions(metricDefinitions, serviceType);
+    mockGetCloudPulseDashboards([dashboard], serviceType);
+    mockGetCloudPulseServices(serviceType);
+    mockGetCloudPulseDashboard(dashboard, id);
+    mockCreateCloudPulseJWEToken(serviceType);
+    mockCreateCloudPulseMetrics(metricsAPIResponsePayload, serviceType).as(
       'getMetrics'
     );
     mockGetRegions([mockRegion]);
     mockGetUserPreferences({});
 
     // navigate to the cloudpulse page
-    cy.visitWithLogin('monitor/cloudpulse').as('cloudPulsePage');
-    cy.get('@cloudPulsePage');
+    cy.visitWithLogin('monitor/cloudpulse');
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
@@ -202,22 +195,16 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .click();
 
     cy.findByText(resource).should('be.visible');
-
-    // Iterate over each metric to find the corresponding widget and verify the title and unit are displayed and visible
-    for (const { title, unit } of metrics) {
-      const widgetSelector = `[data-qa-widget="${title}"]`;
-      cy.get(widgetSelector)
-        .find('h2')
-        .should('have.text', `${title} (${unit.trim()})`)
-        .should('be.visible');
-    }
   });
-
 
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
     // validate the widget level granularity selection and its metrics
-    for (const testData of metrics) {
+    metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
+      cy.get(widgetSelector)
+        .should('be.visible')
+        .find('h2')
+        .should('have.text', `${testData.title} (${testData.unit.trim()})`);
       cy.get(widgetSelector)
         .should('be.visible')
         .within(() => {
@@ -231,7 +218,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
             ui.autocompletePopper.findByTitle(option).should('exist');
           });
 
-          mockCloudPulseCreateMetrics( metricsAPIResponsePayload, serviceType ).as('getGranularityMetrics');
+          mockCreateCloudPulseMetrics(
+            metricsAPIResponsePayload,
+            serviceType
+          ).as('getGranularityMetrics');
 
           //find the interval component and select the expected granularity
           ui.autocomplete
@@ -250,36 +240,33 @@ describe('Integration Tests for Linode Dashboard ', () => {
           });
 
           //validate the widget linegrah is present
-          cy.findByTestId('linegraph-wrapper')
-            .should('be.visible')
-            .find('tbody tr')
-            .each(($tr) => {
-              const cells = $tr
-                .find('td')
-                .map((i, el) => {
-                  const text = Cypress.$(el).text().trim();
-                  return text;
-                })
-                .get();
-              const [title, actualMax, actualAvg, actualLast] = cells; // the average, max and last present in the widget
-              const expectedWidgetValues = getWidgetLegendRowValuesFromResponse( metricsAPIResponsePayload); 
-              // the average, max and last from the response payload
-              compareWidgetValues({title, max: parseFloat(actualMax),average: parseFloat(actualAvg),last: parseFloat(actualLast)},
-              expectedWidgetValues,
-                testData.title
-              );
-           
-            });
+          cy.findByTestId('linegraph-wrapper').within(() => {
+            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+              metricsAPIResponsePayload
+            );
+            cy.findByText(`${testData.title} (${testData.unit})`).should(
+              'be.visible'
+            );
+            cy.findByText(
+              `${expectedWidgetValues.max} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.average} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.last} ${testData.unit}`
+            ).should('be.visible');
+          });
         });
-    }
+    });
   });
   it('should allow users to select the desired aggregation and view the latest data from the API displayed in the graph', () => {
-    for (const testData of metrics) {
+    metrics.forEach((testData) => {
       const widgetSelector = `[data-qa-widget="${testData.title}"]`;
-     cy.get(widgetSelector)
+      cy.get(widgetSelector)
         .should('be.visible')
         .within(() => {
-          mockCloudPulseCreateMetrics(
+          mockCreateCloudPulseMetrics(
             metricsAPIResponsePayload,
             serviceType
           ).as('getAggregationMetrics');
@@ -301,29 +288,28 @@ describe('Integration Tests for Linode Dashboard ', () => {
           });
 
           //validate the widget linegrah is present
-          cy.findByTestId('linegraph-wrapper')
-            .should('be.visible')
-            .find('tbody tr')
-            .each(($tr) => {
-              const cells = $tr
-                .find('td')
-                .map((i, el) => {
-                  const text = Cypress.$(el).text().trim();
-                  return text;
-                })
-                .get();
-              const [title, actualMax, actualAvg, actualLast] = cells; // the average, max and last present in the widget
-              const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-                metricsAPIResponsePayload
-              ); // the average, max and last from the response payload
-              compareWidgetValues( { title,max: parseFloat(actualMax),average: parseFloat(actualAvg),last: parseFloat(actualLast)},
-              expectedWidgetValues, testData.title );
-            });
+          cy.findByTestId('linegraph-wrapper').within(() => {
+            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+              metricsAPIResponsePayload
+            );
+            cy.findByText(`${testData.title} (${testData.unit})`).should(
+              'be.visible'
+            );
+            cy.findByText(
+              `${expectedWidgetValues.max} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.average} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.last} ${testData.unit}`
+            ).should('be.visible');
+          });
         });
-    }
+    });
   });
   it('should trigger the global refresh button and verify the corresponding network calls', () => {
-    mockCloudPulseCreateMetrics(metricsAPIResponsePayload, serviceType).as(
+    mockCreateCloudPulseMetrics(metricsAPIResponsePayload, serviceType).as(
       'refreshMetrics'
     );
     // click the global refresh button
@@ -365,15 +351,22 @@ describe('Integration Tests for Linode Dashboard ', () => {
             .should('be.enabled')
             .click();
           cy.get('@widget').should('be.visible');
-          cy.findByTestId('linegraph-wrapper')
-          .within(() => {
+          cy.findByTestId('linegraph-wrapper').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload
             );
-            cy.findByText(`${testData.title} (${testData.unit})`).should( 'be.visible');
-            cy.findByText( `${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
-            cy.findByText(`${expectedWidgetValues.average} ${testData.unit}` ).should('be.visible');
-            cy.findByText( `${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
+            cy.findByText(`${testData.title} (${testData.unit})`).should(
+              'be.visible'
+            );
+            cy.findByText(
+              `${expectedWidgetValues.max} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.average} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.last} ${testData.unit}`
+            ).should('be.visible');
           });
 
           // click zoom out and validate the same
@@ -384,18 +377,24 @@ describe('Integration Tests for Linode Dashboard ', () => {
             .scrollIntoView()
             .click({ force: true });
           cy.get('@widget').should('be.visible');
-          cy.findByTestId('linegraph-wrapper')
-            .within(() => {
-              const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-                metricsAPIResponsePayload
-              );
-              cy.findByText(`${testData.title} (${testData.unit})`).should( 'be.visible');
-              cy.findByText( `${expectedWidgetValues.max} ${testData.unit}`).should('be.visible');
-              cy.findByText(`${expectedWidgetValues.average} ${testData.unit}` ).should('be.visible');
-              cy.findByText( `${expectedWidgetValues.last} ${testData.unit}`).should('be.visible');
-            });
+          cy.findByTestId('linegraph-wrapper').within(() => {
+            const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
+              metricsAPIResponsePayload
+            );
+            cy.findByText(`${testData.title} (${testData.unit})`).should(
+              'be.visible'
+            );
+            cy.findByText(
+              `${expectedWidgetValues.max} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.average} ${testData.unit}`
+            ).should('be.visible');
+            cy.findByText(
+              `${expectedWidgetValues.last} ${testData.unit}`
+            ).should('be.visible');
+          });
         });
     });
   });
 });
-

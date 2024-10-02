@@ -24,7 +24,7 @@ import type {
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 
-export const mockCloudPulseGetMetricDefinitions = (
+export const mockGetCloudPulseMetricDefinitions = (
   metricDefinitions: MetricDefinitions,
   serviceType: string
 ): Cypress.Chainable<null> => {
@@ -44,7 +44,7 @@ export const mockCloudPulseGetMetricDefinitions = (
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
 
-export const mockCloudPulseServices = (
+export const mockGetCloudPulseServices = (
   serviceType: string
 ): Cypress.Chainable<null> => {
   return cy.intercept(
@@ -63,7 +63,7 @@ export const mockCloudPulseServices = (
 + * @returns The chainable Cypress object.
 + */
 
-export const mockCloudPulseGetDashboards = (
+export const mockGetCloudPulseDashboards = (
   dashboards: Dashboard[],
   serviceType: string
 ): Cypress.Chainable<null> => {
@@ -82,7 +82,7 @@ export const mockCloudPulseGetDashboards = (
  * @param {any} mockResponse - The mock response to return for the intercepted request.
  * @returns {Cypress.Chainable<null>} The chainable Cypress object.
  */
-export const mockCloudPulseCreateMetrics = (
+export const mockCreateCloudPulseMetrics = (
   mockResponse: CloudPulseMetricsResponse,
   serviceType: string
 ): Cypress.Chainable<null> => {
@@ -105,7 +105,7 @@ export const mockCloudPulseCreateMetrics = (
  * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object, allowing for command chaining in tests.
  */
 
-export const mockCloudPulseDashboardServicesResponse = (
+export const mockGetCloudPulseDashboard = (
   dashboard: Dashboard,
   id: number
 ): Cypress.Chainable<null> => {
@@ -128,7 +128,7 @@ export const mockCloudPulseDashboardServicesResponse = (
  * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object, enabling command chaining in tests.
  */
 
-export const mockCloudPulseJWEToken = (
+export const mockCreateCloudPulseJWEToken = (
   serviceType: string,
   token?: string
 ): Cypress.Chainable<null> => {
