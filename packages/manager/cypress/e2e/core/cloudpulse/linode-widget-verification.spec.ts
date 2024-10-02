@@ -112,42 +112,6 @@ const getWidgetLegendRowValuesFromResponse = (
   const roundedMax = Math.round(max * 100) / 100;
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
-/**
- * Compares actual widget values to the expected values and asserts their equality.
- *
- * @param actualValues - The actual values retrieved from the widget, consisting of:
- *   @param actualValues.max - The maximum value shown on the widget.
- *   @param actualValues.average - The average value shown on the widget.
- *   @param actualValues.last - The last or most recent value shown on the widget.
- *
- * @param expectedValues - The expected values that the widget should display, consisting of:
- *   @param expectedValues.max - The expected maximum value.
- *   @param expectedValues.average - The expected average value.
- *   @param expectedValues.last - The expected last or most recent value.
- */
-
-const compareWidgetValues = (
-  actualValues: { title: string; max: number; average: number; last: number },
-  expectedValues: { max: number; average: number; last: number },
-  title: string
-) => {
-  expect(actualValues.max).to.equal(
-    expectedValues.max,
-    `Expected ${expectedValues.max} for max, but got ${actualValues.max}`
-  );
-  expect(actualValues.average).to.equal(
-    expectedValues.average,
-    `Expected ${expectedValues.average} for average, but got ${actualValues.average}`
-  );
-  expect(actualValues.last).to.equal(
-    expectedValues.last,
-    `Expected ${expectedValues.last} for last, but got ${actualValues.last}`
-  );
-  expect(actualValues.title).startWith(
-    title,
-    `Expected ${title} for title ${actualValues.title}`
-  );
-};
 
 describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
