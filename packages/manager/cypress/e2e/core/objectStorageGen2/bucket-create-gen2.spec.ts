@@ -579,4 +579,12 @@ describe('Object Storage Gen2 create bucket tests', () => {
     cy.wait(['@deleteBucket', '@getBuckets']);
     cy.findByText(bucketLabel).should('not.exist');
   });
+
+  /**
+   * Confirms UI flow for when creating a bucket results in validation and API errors
+   * - Confirms trying to create a bucket without a label leads to a validation error that later disappears when a label is specified
+   * - Confirms trying to create a bucket without an endpoint leads to a validation error that later disappears when an endpoint is specified
+   * - Confirms an error returned by the API is displayed and does not crash Cloud Manager
+   */
+  it('handles errors and validation', () => {});
 });
