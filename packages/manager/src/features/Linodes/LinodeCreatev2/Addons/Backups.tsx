@@ -89,7 +89,7 @@ export const Backups = () => {
               variant="warning"
             />
           )}
-          <Typography>
+          <Typography component="span" id="backupsDesc" variant="body1">
             {isAccountBackupsEnabled ? (
               <React.Fragment>
                 You have enabled automatic backups for your account. This Linode
@@ -106,6 +106,7 @@ export const Backups = () => {
           </Typography>
         </Stack>
       }
+      aria-labelledby="backupsDesc"
       checked={checked}
       control={<Checkbox />}
       data-testid="backups"

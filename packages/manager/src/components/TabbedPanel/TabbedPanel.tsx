@@ -118,8 +118,9 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           <TabPanels>
             {tabs.map((tab, idx) => (
               <TabPanel
-                key={`tabs-panel-${tab.title}-${idx}`}
+                aria-labelledby="planInformationDesc"
                 data-qa-tp-tab={tab.title}
+                key={`tabs-panel-${tab.title}-${idx}`}
               >
                 {tab.render(rest.children)}
               </TabPanel>

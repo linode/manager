@@ -200,7 +200,9 @@ export const VPCPanel = (props: VPCPanelProps) => {
           </Typography>
         )}
         <Stack>
-          <Typography>{getMainCopyVPC()}</Typography>
+          <Typography component="span" display="inline-block" variant="body1">
+            {getMainCopyVPC()}
+          </Typography>
           <Autocomplete
             onChange={(_, selectedVPC) => {
               handleSelectVPC(selectedVPC?.value || -1);

@@ -69,7 +69,7 @@ export const Firewall = () => {
     <Paper>
       <Stack spacing={2}>
         <Typography variant="h2">Firewall</Typography>
-        <Typography>
+        <Typography component="span" id="firewallDesc" variant="body1">
           Assign an existing Firewall to this Linode to control inbound and
           outbound network traffic.{' '}
           <Link
@@ -121,6 +121,7 @@ export const Firewall = () => {
                 });
               }
             }}
+            aria-labelledby="firewallDesc"
             disabled={isLinodeCreateRestricted}
             errorText={fieldState.error?.message ?? error?.[0].reason}
             label="Assign Firewall"

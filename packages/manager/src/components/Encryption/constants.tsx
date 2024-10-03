@@ -1,18 +1,24 @@
 import React from 'react';
 
 import { Link } from 'src/components/Link';
+import { Typography } from 'src/components/Typography';
 
 /* Disk Encryption constants */
 const DISK_ENCRYPTION_GUIDE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/local-disk-encryption';
 
 export const DISK_ENCRYPTION_GENERAL_DESCRIPTION = (
-  <>
+  <Typography
+    component="span"
+    display="block"
+    id="diskEncryptionDesc"
+    variant="body1"
+  >
     Secure this Linode using data at rest encryption. Data center systems take
     care of encrypting and decrypting for you. After the Linode is created, use
     Rebuild to enable or disable this feature.{' '}
     <Link to={DISK_ENCRYPTION_GUIDE_LINK}>Learn more</Link>.
-  </>
+  </Typography>
 );
 
 export const DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION =

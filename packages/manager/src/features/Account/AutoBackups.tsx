@@ -55,7 +55,7 @@ const AutoBackups = (props: Props) => {
               already automatically backed up - no need to toggle this setting.
             </Notice>
           ) : null}
-          <Typography variant="body1">
+          <Typography component="span" variant="body1">
             This controls whether Linode Backups are enabled, by default, for
             all Linodes when they are initially created. For each Linode with
             Backups enabled, your account will be billed the additional hourly

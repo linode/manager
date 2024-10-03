@@ -43,8 +43,11 @@ export const Encryption = (props: EncryptionProps) => {
         <Notice spacingBottom={0} spacingTop={8} text={error} variant="error" />
       )}
       <Typography
+        component="span"
         data-testid={descriptionTestId}
+        display="block"
         sx={(theme) => ({ padding: `${theme.spacing()} 0` })}
+        variant="body1"
       >
         {descriptionCopy}
       </Typography>
@@ -79,6 +82,7 @@ export const Encryption = (props: EncryptionProps) => {
         flexDirection="row"
       >
         <Checkbox
+          aria-labelledby="diskEncryptionDesc"
           checked={disabled ? false : isEncryptEntityChecked} // in Create flows, this will be defaulted to be checked. Otherwise, we will rely on the current encryption status for the initial value
           data-testid={checkboxTestId}
           disabled={disabled}

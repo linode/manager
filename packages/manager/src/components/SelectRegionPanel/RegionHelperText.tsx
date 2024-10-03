@@ -17,7 +17,12 @@ export const RegionHelperText = (props: RegionHelperTextProps) => {
 
   return (
     <Box {...rest}>
-      <Typography data-testid="region-select-helper-test" variant="body1">
+      <Typography
+        component="span"
+        data-testid="region-select-helper-test"
+        id="regionDesc"
+        variant="body1"
+      >
         {showCoreHelperText &&
           `Data centers in central locations support a robust set of cloud computing services. `}
         You can use

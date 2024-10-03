@@ -157,6 +157,10 @@ export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
         marginBottom: theme.spacing(3),
         marginTop: theme.spacing(1),
       })}
+      component="span"
+      display="block"
+      id="planInformationDesc"
+      variant="body1"
     >
       {
         planTabInfoContent[planType as keyof typeof planTabInfoContent]

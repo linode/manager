@@ -90,7 +90,12 @@ export const VPC = () => {
     <Paper data-testid="vpc-panel">
       <Stack spacing={2}>
         <Typography variant="h2">VPC</Typography>
-        <Typography>
+        <Typography
+          component="span"
+          display="block"
+          id="vpcDesc"
+          variant="body1"
+        >
           {copy}{' '}
           <Link
             onClick={() =>
@@ -137,6 +142,7 @@ export const VPC = () => {
                   }),
                   tooltipText: REGION_CAVEAT_HELPER_TEXT,
                 }}
+                aria-labelledby="vpcDesc"
                 disabled={!regionSupportsVPCs}
                 errorText={fieldState.error?.message}
                 filter={{ region: regionId }}

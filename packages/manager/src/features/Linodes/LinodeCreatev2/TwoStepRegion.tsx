@@ -122,7 +122,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <Box mt={2}>
-              <Typography>
+              <Typography component="span" variant="body1">
                 Data centers in distributed locations enable you to place
                 workloads closer to users.
               </Typography>

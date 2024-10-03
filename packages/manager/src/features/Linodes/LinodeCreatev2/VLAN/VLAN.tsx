@@ -68,7 +68,7 @@ export const VLAN = () => {
       sx={{ margin: '0 !important', padding: 1 }}
     >
       <VLANAvailabilityNotice />
-      <Typography variant="body1">
+      <Typography component="span" variant="body1">
         VLANs are used to create a private L2 Virtual Local Area Network between
         Linodes. A VLAN created or attached in this section will be assigned to
         the eth1 interface, with eth0 being used for connections to the public

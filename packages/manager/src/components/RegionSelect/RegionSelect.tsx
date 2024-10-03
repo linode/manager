@@ -160,6 +160,7 @@ export const RegionSelect = <
           },
           tooltipText,
         }}
+        aria-labelledby="regionDesc"
         autoHighlight
         clearOnBlur
         data-testid="region-select"
@@ -170,6 +171,7 @@ export const RegionSelect = <
         getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
+        id="regionInputID"
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
