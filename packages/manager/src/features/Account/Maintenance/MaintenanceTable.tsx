@@ -136,6 +136,7 @@ const MaintenanceTable = ({ type }: Props) => {
 
   const downloadCSV = async () => {
     await getCSVData();
+    // This approach is not particularly elegant, but setTimeout may be the best way to make this click async without adding a lot of logic.
     setTimeout(() => {
       csvRef.current.link.click();
     }, 0);
