@@ -11,6 +11,7 @@ import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
+import { createDisplayPage } from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -324,10 +325,12 @@ export const BillingActivityPanel = React.memo((props: Props) => {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
-    const start = (pagination.page - 1) * pagination.pageSize;
-    const end = start + pagination.pageSize;
+    const displayPage = createDisplayPage<ActivityFeedItem>(
+      pagination.page,
+      pagination.pageSize
+    );
 
-    return orderedData.slice(start, end);
+    return displayPage(orderedData);
   }, [data, orderBy, order, pagination.page, pagination.pageSize]);
 
   const renderTableContent = () => {
