@@ -89,6 +89,7 @@ export interface LinodesLandingProps {
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;
+  /** Keep track of total number of linodes for filtering and empty state landing page logic */
   totalNumLinodes: number;
 }
 

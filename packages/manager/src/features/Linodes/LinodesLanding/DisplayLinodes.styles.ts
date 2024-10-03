@@ -27,7 +27,7 @@ export const StyledTagHeader = styled(Typography, {
 
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
-  shouldForwardProp: omittedProps(['isGroupedByTag', 'isGeckoLAEnabled']),
+  shouldForwardProp: omittedProps(['isGroupedByTag']),
 })<{ isGroupedByTag: boolean }>(({ isGroupedByTag, theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.bg.tableHeader,
