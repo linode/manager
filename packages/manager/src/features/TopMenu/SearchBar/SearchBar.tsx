@@ -315,9 +315,6 @@ const SearchBar = (props: SearchProps) => {
           Main search
         </label>
         <EnhancedSelect
-          placeholder={
-            'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
-          }
           blurInputOnSelect
           components={{ Control, Option }}
           filterOption={filterResults}
@@ -337,6 +334,7 @@ const SearchBar = (props: SearchProps) => {
           openMenuOnClick={false}
           openMenuOnFocus={false}
           options={finalOptions}
+          placeholder="Search Products, IP Addresses, Tags..."
           styles={selectStyles}
           value={value}
         />
