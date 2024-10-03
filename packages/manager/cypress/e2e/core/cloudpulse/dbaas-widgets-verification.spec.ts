@@ -140,7 +140,7 @@ const databaseMock: Database = databaseFactory.build({
   },
 });
 
-describe('Integration Tests for dbaas Dashboard ', () => {
+describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclp: { beta: true, enabled: true },
@@ -148,8 +148,8 @@ describe('Integration Tests for dbaas Dashboard ', () => {
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
-    mockGetCloudPulseDashboards(serviceType, [dashboard]);
-    mockGetCloudPulseServices(serviceType);
+    mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
+    mockGetCloudPulseServices(serviceType).as('fetchServices'); 
     mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
@@ -160,8 +160,9 @@ describe('Integration Tests for dbaas Dashboard ', () => {
     mockGetDatabases([databaseMock]).as('getDatabases');
 
     // navigate to the cloudpulse page
-    cy.visitWithLogin('monitor/cloudpulse').as('cloudPulsePage');
-    cy.get('@cloudPulsePage');
+    cy.visitWithLogin('monitor/cloudpulse')
+    cy.wait('@fetchServices'); // Wait for services
+    cy.wait('@fetchDashboard'); // Wait for dashboard
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
@@ -200,6 +201,8 @@ describe('Integration Tests for dbaas Dashboard ', () => {
       .findByLabel('Select a Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
+
+      cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);// Wait for all metrics query requests to resolve. 
   });
 
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
@@ -252,15 +255,17 @@ describe('Integration Tests for dbaas Dashboard ', () => {
             cy.findByText(`${testData.title} (${testData.unit})`).should(
               'be.visible'
             );
-            cy.findByText(
-              `${expectedWidgetValues.max} ${testData.unit}`
-            ).should('be.visible');
-            cy.findByText(
-              `${expectedWidgetValues.average} ${testData.unit}`
-            ).should('be.visible');
-            cy.findByText(
-              `${expectedWidgetValues.last} ${testData.unit}`
-            ).should('be.visible');
+            cy.get(`[data-qa-graph-column-title="Max"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.max} ${testData.unit}`);
+          
+          cy.get(`[data-qa-graph-column-title="Avg"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.average} ${testData.unit}`);
+          
+          cy.get(`[data-qa-graph-column-title="Last"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.last} ${testData.unit}`);
           });
         });
     });
@@ -300,15 +305,17 @@ describe('Integration Tests for dbaas Dashboard ', () => {
             cy.findByText(`${testData.title} (${testData.unit})`).should(
               'be.visible'
             );
-            cy.findByText(
-              `${expectedWidgetValues.max} ${testData.unit}`
-            ).should('be.visible');
-            cy.findByText(
-              `${expectedWidgetValues.average} ${testData.unit}`
-            ).should('be.visible');
-            cy.findByText(
-              `${expectedWidgetValues.last} ${testData.unit}`
-            ).should('be.visible');
+            cy.get(`[data-qa-graph-column-title="Max"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.max} ${testData.unit}`);
+          
+          cy.get(`[data-qa-graph-column-title="Avg"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.average} ${testData.unit}`);
+          
+          cy.get(`[data-qa-graph-column-title="Last"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.last} ${testData.unit}`);
           });
         });
     });
@@ -317,6 +324,7 @@ describe('Integration Tests for dbaas Dashboard ', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
+    
     // click the global refresh button
     ui.button
       .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
@@ -363,15 +371,17 @@ describe('Integration Tests for dbaas Dashboard ', () => {
             cy.findByText(`${testData.title} (${testData.unit})`).should(
               'be.visible'
             );
-            cy.findByText(
-              `${expectedWidgetValues.max} ${testData.unit}`
-            ).should('be.visible');
-            cy.findByText(
-              `${expectedWidgetValues.average} ${testData.unit}`
-            ).should('be.visible');
-            cy.findByText(
-              `${expectedWidgetValues.last} ${testData.unit}`
-            ).should('be.visible');
+            cy.get(`[data-qa-graph-column-title="Max"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.max} ${testData.unit}`);
+          
+          cy.get(`[data-qa-graph-column-title="Avg"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.average} ${testData.unit}`);
+          
+          cy.get(`[data-qa-graph-column-title="Last"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.last} ${testData.unit}`);
           });
 
           // click zoom out and validate the same
@@ -389,15 +399,17 @@ describe('Integration Tests for dbaas Dashboard ', () => {
             cy.findByText(`${testData.title} (${testData.unit})`).should(
               'be.visible'
             );
-            cy.findByText(
-              `${expectedWidgetValues.max} ${testData.unit}`
-            ).should('be.visible');
-            cy.findByText(
-              `${expectedWidgetValues.average} ${testData.unit}`
-            ).should('be.visible');
-            cy.findByText(
-              `${expectedWidgetValues.last} ${testData.unit}`
-            ).should('be.visible');
+            cy.get(`[data-qa-graph-column-title="Max"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.max} ${testData.unit}`);
+          
+          cy.get(`[data-qa-graph-column-title="Avg"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.average} ${testData.unit}`);
+          
+          cy.get(`[data-qa-graph-column-title="Last"]`)
+            .should('be.visible')
+            .should('have.text', `${expectedWidgetValues.last} ${testData.unit}`);
           });
         });
     });
