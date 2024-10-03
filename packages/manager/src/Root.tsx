@@ -26,8 +26,8 @@ import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
-import { useStyles } from './MainContent.styles';
 import { useProfile } from './queries/profile/profile';
+import { useStyles } from './Root.styles';
 
 export const Root = () => {
   const { classes, cx } = useStyles();
