@@ -1,7 +1,7 @@
 import { sha256 } from 'js-sha256';
 import React from 'react';
 
-import { PENDO_API_KEY } from 'src/constants';
+import { APP_ROOT, PENDO_API_KEY } from 'src/constants';
 import { useAccount } from 'src/queries/account/account.js';
 import { useProfile } from 'src/queries/profile/profile';
 
@@ -14,18 +14,30 @@ declare global {
 }
 
 /**
+ * This function prevents address ID collisions leading to muddled data between environments. Account and visitor IDs must be unique per API-key.
+ * See: https://support.pendo.io/hc/en-us/articles/360031862352-Pendo-in-multiple-environments-for-development-and-testing
+ * @returns Unique SHA256 hash of ID and the environment; else, undefined if missing values to hash.
+ */
+const hashUniquePendoId = (id: string | undefined) => {
+  const pendoEnv =
+    APP_ROOT === 'https://cloud.linode.com' ? 'production' : 'non-production';
+
+  if (!id || !APP_ROOT) {
+    return;
+  }
+
+  return sha256(id + pendoEnv);
+};
+
+/**
  * Initializes our Pendo analytics script on mount.
  */
 export const usePendo = () => {
-  const { data: profile } = useProfile();
   const { data: account } = useAccount();
+  const { data: profile } = useProfile();
 
-  const visitorId: string | undefined = profile?.uid
-    ? sha256(profile.uid.toString())
-    : undefined;
-  const accountId: string | undefined = account?.euuid
-    ? sha256(account.euuid)
-    : undefined;
+  const accountId = hashUniquePendoId(account?.euuid);
+  const visitorId = hashUniquePendoId(profile?.uid.toString());
 
   const PENDO_URL = `https://cdn.pendo.io/agent/static/${PENDO_API_KEY}/pendo.js`;
 
