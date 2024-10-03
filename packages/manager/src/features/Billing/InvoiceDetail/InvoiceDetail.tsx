@@ -159,7 +159,7 @@ export const InvoiceDetail = () => {
                   breadcrumbProps={{
                     crumbOverrides: [{ label: 'Billing Info', position: 1 }],
                     firstAndLastOnly: true,
-                    labelTitle: `Invoice ${invoice.id}`,
+                    labelTitle: `Invoice #${invoice.id}`,
                     pathname: location.pathname,
                   }}
                 />
