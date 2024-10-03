@@ -60,7 +60,7 @@ export const CloudPulseAggregateFunction = React.memo(
             return convertStringToCamelCasesWithSpaces(option.label); // options needed to be display in Caps first
           }}
           isOptionEqualToValue={(option, value) => {
-            return option.label == value.label;
+            return option.label === value.label;
           }}
           onChange={(e, selectedAggregateFunc: AggregateFunction) => {
             setSelectedAggregateFunction(selectedAggregateFunc);
