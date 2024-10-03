@@ -11,6 +11,7 @@ import {
   PaginationFooter,
   getMinimumPageSizeForNumberOfItems,
 } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -105,16 +106,15 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     return (
       <>
         <Grid className={'px0'} xs={12}>
-          <StyledControlHeader
-            isGeckoLAEnabled={isGeckoLAEnabled ?? false}
-            isGroupedByTag={linodesAreGrouped}
-          >
+          {isGeckoLAEnabled && (
+            <Paper sx={{ padding: 1 }}>
+              <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+            </Paper>
+          )}
+          <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
             <div className="visually-hidden" id={displayViewDescriptionId}>
               Currently in {linodeViewPreference} view
             </div>
-            {isGeckoLAEnabled && (
-              <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
-            )}
             <Box>
               <Tooltip placement="top" title="List view">
                 <StyledToggleButton
@@ -223,79 +223,88 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
 
   if (display === 'list') {
     return (
-      <TableWrapper
-        {...tableWrapperProps}
-        linodeViewPreference="list"
-        linodesAreGrouped={true}
-        toggleGroupLinodes={toggleGroupLinodes}
-        toggleLinodeView={toggleLinodeView}
-      >
-        {orderedGroupedLinodes.length === 0 ? (
-          <TableBody>
-            <TableRowEmpty colSpan={12} />
-          </TableBody>
-        ) : null}
-        {orderedGroupedLinodes.map(([tag, linodes]) => {
-          return (
-            <React.Fragment key={tag}>
-              <Paginate
-                data={linodes}
-                pageSize={infinitePageSize}
-                pageSizeSetter={setInfinitePageSize}
-              >
-                {({
-                  count,
-                  data: paginatedData,
-                  handlePageChange,
-                  handlePageSizeChange,
-                  page,
-                  pageSize,
-                }) => {
-                  const finalProps = {
-                    ...rest,
+      <>
+        {isGeckoLAEnabled && (
+          <Paper sx={{ padding: 1 }}>
+            <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+          </Paper>
+        )}
+        <TableWrapper
+          {...tableWrapperProps}
+          linodeViewPreference="list"
+          linodesAreGrouped={true}
+          toggleGroupLinodes={toggleGroupLinodes}
+          toggleLinodeView={toggleLinodeView}
+        >
+          {orderedGroupedLinodes.length === 0 ? (
+            <TableBody>
+              <TableRowEmpty colSpan={12} />
+            </TableBody>
+          ) : null}
+          {orderedGroupedLinodes.map(([tag, linodes]) => {
+            return (
+              <React.Fragment key={tag}>
+                <Paginate
+                  data={linodes}
+                  pageSize={infinitePageSize}
+                  pageSizeSetter={setInfinitePageSize}
+                >
+                  {({
                     count,
                     data: paginatedData,
-                    handleOrderChange,
                     handlePageChange,
                     handlePageSizeChange,
-                    isVLAN,
-                    order,
-                    orderBy,
                     page,
                     pageSize,
-                  };
-                  return (
-                    <TableBody data-qa-tag-header={tag}>
-                      <StyledTagHeaderRow>
-                        <TableCell colSpan={7}>
-                          <StyledTagHeader variant="h2">{tag}</StyledTagHeader>
-                        </TableCell>
-                      </StyledTagHeaderRow>
-                      <Component {...finalProps} />
-                      {count > MIN_PAGE_SIZE && (
-                        <TableRow>
-                          <TableCell colSpan={7} sx={{ padding: 0 }}>
-                            <PaginationFooter
-                              count={count}
-                              eventCategory={'linodes landing'}
-                              handlePageChange={handlePageChange}
-                              handleSizeChange={handlePageSizeChange}
-                              page={page}
-                              pageSize={pageSize}
-                              // Disabling showAll as it is impacting page performance.
-                              showAll={false}
-                            />
+                  }) => {
+                    const finalProps = {
+                      ...rest,
+                      count,
+                      data: paginatedData,
+                      handleOrderChange,
+                      handlePageChange,
+                      handlePageSizeChange,
+                      isVLAN,
+                      order,
+                      orderBy,
+                      page,
+                      pageSize,
+                    };
+                    return (
+                      <TableBody data-qa-tag-header={tag}>
+                        <StyledTagHeaderRow>
+                          <TableCell colSpan={7}>
+                            <StyledTagHeader variant="h2">
+                              {tag}
+                            </StyledTagHeader>
                           </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  );
-                }}
-              </Paginate>
-            </React.Fragment>
-          );
-        })}
-      </TableWrapper>
+                        </StyledTagHeaderRow>
+                        <Component {...finalProps} />
+                        {count > MIN_PAGE_SIZE && (
+                          <TableRow>
+                            <TableCell colSpan={7} sx={{ padding: 0 }}>
+                              <PaginationFooter
+                                count={count}
+                                eventCategory={'linodes landing'}
+                                handlePageChange={handlePageChange}
+                                handleSizeChange={handlePageSizeChange}
+                                page={page}
+                                pageSize={pageSize}
+                                // Disabling showAll as it is impacting page performance.
+                                showAll={false}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    );
+                  }}
+                </Paginate>
+              </React.Fragment>
+            );
+          })}
+        </TableWrapper>
+      </>
     );
   }
 

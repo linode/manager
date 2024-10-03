@@ -28,16 +28,14 @@ export const StyledTagHeader = styled(Typography, {
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
   shouldForwardProp: omittedProps(['isGroupedByTag', 'isGeckoLAEnabled']),
-})<{ isGeckoLAEnabled: boolean; isGroupedByTag: boolean }>(
-  ({ isGeckoLAEnabled, isGroupedByTag, theme }) => ({
-    alignItems: 'center',
-    backgroundColor: theme.bg.tableHeader,
-    display: 'flex',
-    height: 46,
-    justifyContent: isGeckoLAEnabled ? 'space-between' : 'flex-end',
-    marginBottom: isGroupedByTag ? theme.spacing(4) : 0,
-  })
-);
+})<{ isGroupedByTag: boolean }>(({ isGroupedByTag, theme }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.bg.tableHeader,
+  display: 'flex',
+  height: 46,
+  justifyContent: 'flex-end',
+  marginBottom: isGroupedByTag ? theme.spacing(4) : 0,
+}));
 
 export const StyledToggleButton = styled(IconButton, {
   label: 'StyledToggleButton',

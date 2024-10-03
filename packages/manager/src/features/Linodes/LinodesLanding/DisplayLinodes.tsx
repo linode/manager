@@ -165,21 +165,20 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             {display === 'grid' && (
               <>
                 <Grid className={'px0'} xs={12}>
-                  <StyledControlHeader
-                    isGeckoLAEnabled={isGeckoLAEnabled ?? false}
-                    isGroupedByTag={linodesAreGrouped}
-                  >
+                  {isGeckoLAEnabled && (
+                    <Paper sx={{ padding: 1 }}>
+                      <RegionTypeFilter
+                        handleRegionFilter={handleRegionFilter}
+                      />
+                    </Paper>
+                  )}
+                  <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
                     <div
                       className="visually-hidden"
                       id={displayViewDescriptionId}
                     >
                       Currently in {linodeViewPreference} view
                     </div>
-                    {isGeckoLAEnabled && (
-                      <RegionTypeFilter
-                        handleRegionFilter={handleRegionFilter}
-                      />
-                    )}
                     <Box>
                       <Tooltip placement="top" title="List view">
                         <StyledToggleButton
