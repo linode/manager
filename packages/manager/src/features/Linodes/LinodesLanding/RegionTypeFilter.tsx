@@ -32,7 +32,6 @@ const regionFilterMap = {
   all: 'All',
   core: 'Core',
   distributed: 'Distributed',
-  edge: 'Edge',
 };
 
 const ariaIdentifier = 'region-type-filter';

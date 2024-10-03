@@ -114,7 +114,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
       (type) =>
         type.id.includes('dedicated-edge') ||
         type.id.includes('nanode-edge') ||
-        type.class === 'edge'
+        type.class === 'dedicated'
     );
   };
 
@@ -194,7 +194,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
             </>
           );
         },
-        title: planTabInfoContent[plan === 'edge' ? 'dedicated' : plan]?.title,
+        title: planTabInfoContent[plan]?.title,
       };
     }
   );
