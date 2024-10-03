@@ -23,6 +23,7 @@ import { bucketACLOptions, objectACLOptions } from '../utilities';
 import { copy } from './AccessSelect.data';
 
 import type {
+  ACLType,
   ObjectStorageBucketAccess,
   ObjectStorageEndpointTypes,
   ObjectStorageObjectACL,
@@ -85,7 +86,7 @@ export const AccessSelect = React.memo((props: Props) => {
 
   const {
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isDirty, isSubmitting },
     handleSubmit,
     reset,
     watch,
@@ -160,18 +161,27 @@ export const AccessSelect = React.memo((props: Props) => {
     <form onSubmit={onSubmit}>
       {(updateBucketAccessSuccess || updateObjectAccessSuccess) && (
         <Notice
+          spacingBottom={0}
+          spacingTop={8}
           text={`${label} access updated successfully.`}
           variant="success"
         />
       )}
 
-      {errorText && <Notice text={errorText} variant="error" />}
+      {errorText && (
+        <Notice
+          spacingBottom={0}
+          spacingTop={8}
+          text={'An error has occured'}
+          variant="error"
+        />
+      )}
 
       <Controller
         render={({ field }) => (
           <Autocomplete
             {...field}
-            onChange={(_, selected) => {
+            onChange={(_, selected: { label: string; value: ACLType }) => {
               if (selected) {
                 field.onChange(selected.value);
               }
@@ -253,7 +263,8 @@ export const AccessSelect = React.memo((props: Props) => {
 
       <ActionsPanel
         primaryButtonProps={{
-          disabled: bucketAccessIsFetching || objectAccessIsFetching,
+          disabled:
+            bucketAccessIsFetching || objectAccessIsFetching || !isDirty,
           label: 'Save',
           loading: isSubmitting,
           onClick: () => {
