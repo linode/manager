@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import BetasLanding from './BetasLanding';
+import { BetasLanding } from './BetasLanding';
 
 describe('BetasLanding', () => {
   it('should be defined', () => {

@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -14,7 +15,7 @@ import { Typography } from 'src/components/Typography';
 import { useCreateAccountBetaMutation } from 'src/queries/account/betas';
 import { useBetaQuery } from 'src/queries/betas';
 
-const BetaSignup = () => {
+export const BetaSignup = () => {
   const betaAgreement = `# Early Adopter Testing Program
 This Early Adopter Testing Program Service Level Agreement (the “EAP”) is between Linode LLC (“Linode”) and
 you, the customer who requests access and participation (the “Participant”) to the Linode Early Access Program
@@ -183,4 +184,6 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
   );
 };
 
-export default BetaSignup;
+export const betaSignupLazyRoute = createLazyRoute('/betas/signup')({
+  component: BetaSignup,
+});
