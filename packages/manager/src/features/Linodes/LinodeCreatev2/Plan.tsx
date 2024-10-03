@@ -44,7 +44,7 @@ export const Plan = () => {
               label: 'Choosing a Plan',
             });
           }}
-          href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
+          href="https://techdocs.akamai.com/cloud-computing/docs/how-to-choose-a-compute-instance-plan"
           label="Choosing a Plan"
         />
       }

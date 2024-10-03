@@ -63,7 +63,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
 
   const { endpoint_type } = bucket ?? {};
 
-  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type === 'E3';
+  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type !== 'E3';
 
   const tabs = [
     {
@@ -82,7 +82,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
           },
         ]
       : []),
-    ...(!isSSLEnabled
+    ...(isSSLEnabled
       ? [
           {
             routeName: `${props.match.url}/ssl`,

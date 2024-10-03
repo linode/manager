@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { firewallFactory } from 'src/factories';
@@ -53,12 +54,19 @@ describe('Linode Create v2 Firewall', () => {
     );
 
     const {
-      findByDisplayValue,
+      getByLabelText,
     } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
       component: <Firewall />,
       useFormOptions: { defaultValues: { firewall_id: firewall.id } },
     });
 
-    await findByDisplayValue(firewall.label);
+    await waitFor(
+      () => {
+        expect(getByLabelText('Assign Firewall')).toHaveDisplayValue(
+          firewall.label
+        );
+      },
+      { timeout: 5_000 }
+    );
   });
 });

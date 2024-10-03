@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -264,13 +264,13 @@ describe('NodeBalancerConfigPanel', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('adds another backend node', () => {
+  it('adds another backend node', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     const addNodeButton = getByText('Add a Node');
-    fireEvent.click(addNodeButton);
+    await userEvent.click(addNodeButton);
     expect(nbConfigPanelMockPropsForTest.addNode).toHaveBeenCalled();
   });
 
@@ -282,7 +282,7 @@ describe('NodeBalancerConfigPanel', () => {
     expect(queryByText('Remove')).not.toBeInTheDocument();
   });
 
-  it('removes a backend node', () => {
+  it('removes a backend node', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerConfigPanel
         {...nbConfigPanelMockPropsForTest}
@@ -291,21 +291,21 @@ describe('NodeBalancerConfigPanel', () => {
     );
 
     const removeNodeButton = getByText('Remove');
-    fireEvent.click(removeNodeButton);
+    await userEvent.click(removeNodeButton);
     expect(nbConfigPanelMockPropsForTest.removeNode).toHaveBeenCalled();
   });
 
-  it('deletes the configuration panel', () => {
+  it('deletes the configuration panel', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
     );
 
     const deleteConfigButton = getByText('Delete');
-    fireEvent.click(deleteConfigButton);
+    await userEvent.click(deleteConfigButton);
     expect(nbConfigPanelMockPropsForTest.onDelete).toHaveBeenCalled();
   });
 
-  it('saves the input after editing the configuration', () => {
+  it('saves the input after editing the configuration', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerConfigPanel
         {...nbConfigPanelMockPropsForTest}
@@ -314,7 +314,7 @@ describe('NodeBalancerConfigPanel', () => {
     );
 
     const editConfigButton = getByText('Save');
-    fireEvent.click(editConfigButton);
+    await userEvent.click(editConfigButton);
     expect(nbConfigPanelMockPropsForTest.onSave).toHaveBeenCalled();
   });
 });

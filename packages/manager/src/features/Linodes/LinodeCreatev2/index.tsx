@@ -55,7 +55,7 @@ import {
   useHandleLinodeCreateAnalyticsFormError,
   useLinodeCreateQueryParams,
 } from './utilities';
-import { VLAN } from './VLAN';
+import { VLAN } from './VLAN/VLAN';
 import { VPC } from './VPC/VPC';
 
 import type {
@@ -188,7 +188,7 @@ export const LinodeCreatev2 = () => {
           })
         }
         docsLabel="Getting Started"
-        docsLink="https://www.linode.com/docs/guides/platform/get-started/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         title="Create"
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>

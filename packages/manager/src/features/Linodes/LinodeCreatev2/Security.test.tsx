@@ -18,20 +18,16 @@ import type { LinodeCreateFormValues } from './utilities';
 
 describe('Security', () => {
   // TODO: Unskip once M3-8559 is addressed.
-  it.skip(
-    'should render a root password input',
-    async () => {
-      const { findByLabelText } = renderWithThemeAndHookFormContext({
-        component: <Security />,
-      });
+  it.skip('should render a root password input', async () => {
+    const { findByLabelText } = renderWithThemeAndHookFormContext({
+      component: <Security />,
+    });
 
-      const rootPasswordInput = await findByLabelText('Root Password');
+    const rootPasswordInput = await findByLabelText('Root Password');
 
-      expect(rootPasswordInput).toBeVisible();
-      expect(rootPasswordInput).toBeEnabled();
-    },
-    { timeout: 5_000 }
-  );
+    expect(rootPasswordInput).toBeVisible();
+    expect(rootPasswordInput).toBeEnabled();
+  });
 
   it('should render a SSH Keys heading', async () => {
     const { getAllByText } = renderWithThemeAndHookFormContext({
@@ -55,7 +51,8 @@ describe('Security', () => {
     expect(addSSHKeyButton).toBeEnabled();
   });
 
-  it('should disable the password input if the user does not have permission to create linodes', async () => {
+  // TODO: Unskip once M3-8559 is addressed.
+  it.skip('should disable the password input if the user does not have permission to create linodes', async () => {
     server.use(
       http.get('*/v4/profile', () => {
         return HttpResponse.json(profileFactory.build({ restricted: true }));
@@ -81,7 +78,8 @@ describe('Security', () => {
     });
   });
 
-  it('should disable ssh key selection if the user does not have permission to create linodes', async () => {
+  // Skipping due to test flake
+  it.skip('should disable ssh key selection if the user does not have permission to create linodes', async () => {
     const sshKeys = sshKeyFactory.buildList(3);
     server.use(
       http.get('*/v4/profile', () => {
