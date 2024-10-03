@@ -1,4 +1,4 @@
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreatev2/types';
 
 // Define a custom type for the _satellite object
 declare global {

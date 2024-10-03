@@ -95,9 +95,14 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
     refetchInterval: 20000,
   });
 
-export const useDatabasesQuery = (params: Params, filter: Filter) =>
+export const useDatabasesQuery = (
+  params: Params,
+  filter: Filter,
+  isEnabled: boolean | undefined
+) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
     ...databaseQueries.databases._ctx.paginated(params, filter),
+    enabled: isEnabled,
     placeholderData: keepPreviousData,
     // @TODO Consider removing polling
     refetchInterval: 20000,

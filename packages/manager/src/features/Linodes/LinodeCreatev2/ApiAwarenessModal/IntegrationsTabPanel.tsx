@@ -7,7 +7,7 @@ import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { generateAnsibleConfig } from 'src/utilities/codesnippets/generate-ansibleConfig';
 import { generateTerraformConfig } from 'src/utilities/codesnippets/generate-terraformConfig';
 
-import { CodeBlock } from '../CodeBlock/CodeBlock';
+import { CodeBlock } from './CodeBlock/CodeBlock';
 import { AnsibleIntegrationResources } from './AnsibleIntegrationResources';
 import { TerraformIntegrationResources } from './TerraformIntegrationResources';
 
