@@ -64,7 +64,7 @@ interface Props {
   stackScriptId: number | undefined;
 }
 
-export const AppDetailDrawerv2 = (props: Props) => {
+export const AppDetailDrawer = (props: Props) => {
   const { onClose, open, stackScriptId } = props;
   const { classes } = useStyles();
   const { apps } = useMarketplaceApps();

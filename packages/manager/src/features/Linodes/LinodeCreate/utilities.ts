@@ -267,7 +267,7 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
 
 export interface LinodeCreateFormContext {
   /**
-   * Profile data is used in the Linode Create v2 resolver because
+   * Profile data is used in the Linode Create resolver because
    * restricted users are subject to different validation.
    */
   profile: Profile | undefined;
