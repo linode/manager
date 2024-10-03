@@ -41,7 +41,7 @@ jobs:
           echo "$pct" > ref_code_coverage.txt
 
       - name: Upload Base Coverage Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ref_code_coverage
           path: ref_code_coverage.txt
