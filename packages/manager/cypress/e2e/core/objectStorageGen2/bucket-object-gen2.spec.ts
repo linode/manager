@@ -136,7 +136,7 @@ describe('Object Storage Gen2 bucket object tests', () => {
   it('can check Object details drawer with E0 endpoint type', () => {
     const endpointTypeE0 = 'Legacy (E0)';
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-iad-12';
+    const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
       label: bucketLabel,
       region: mockRegion.id,
@@ -196,7 +196,7 @@ describe('Object Storage Gen2 bucket object tests', () => {
   it('can check Object details drawer with E1 endpoint type', () => {
     const endpointTypeE1 = 'Standard (E1)';
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-iad-12';
+    const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
       label: bucketLabel,
       region: mockRegion.id,
@@ -253,10 +253,10 @@ describe('Object Storage Gen2 bucket object tests', () => {
     checkBucketObjectDetailsDrawer(bucketFilename, endpointTypeE1);
   });
 
-  it.only('can check Object details drawer with E2 endpoint type', () => {
+  it('can check Object details drawer with E2 endpoint type', () => {
     const endpointTypeE2 = 'Standard (E2)';
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-iad-12';
+    const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
       label: bucketLabel,
       region: mockRegion.id,
@@ -316,7 +316,7 @@ describe('Object Storage Gen2 bucket object tests', () => {
   it('can check Object details drawer with E3 endpoint type', () => {
     const endpointTypeE3 = 'Standard (E3)';
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-iad-12';
+    const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
       label: bucketLabel,
       region: mockRegion.id,
