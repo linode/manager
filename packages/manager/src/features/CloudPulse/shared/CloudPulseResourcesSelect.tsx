@@ -39,6 +39,8 @@ export const CloudPulseResourcesSelect = React.memo(
       xFilter,
     } = props;
 
+    const isAutocompleteOpen = React.useRef(false);
+
     const { data: resources, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
@@ -79,9 +81,22 @@ export const CloudPulseResourcesSelect = React.memo(
 
     return (
       <Autocomplete
-        onChange={(e, resourceSelections: CloudPulseResources[]) => {
+        onChange={(
+          _: React.SyntheticEvent,
+          resourceSelections: CloudPulseResources[]
+        ) => {
           setSelectedResources(resourceSelections);
-          handleResourcesSelection(resourceSelections, savePreferences);
+
+          if (!isAutocompleteOpen.current) {
+            handleResourcesSelection(resourceSelections, savePreferences);
+          }
+        }}
+        onClose={() => {
+          isAutocompleteOpen.current = false;
+          handleResourcesSelection(selectedResources ?? [], savePreferences);
+        }}
+        onOpen={() => {
+          isAutocompleteOpen.current = true;
         }}
         placeholder={
           selectedResources?.length ? '' : placeholder || 'Select a Resource'

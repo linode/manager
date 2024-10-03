@@ -1,8 +1,10 @@
-import { useTheme } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import ZoomInMap from 'src/assets/icons/zoomin.svg';
 import ZoomOutMap from 'src/assets/icons/zoomout.svg';
+
+import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
 
 export interface ZoomIconProperties {
   className?: string;
@@ -20,28 +22,38 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
   const ToggleZoomer = () => {
     if (props.zoomIn) {
       return (
-        <ZoomInMap
-          sx={{
-            color: theme.color.grey1,
-            fontSize: 'x-large',
-            height: '34px',
-          }}
-          data-testid="zoom-in"
-          onClick={() => handleClick(false)}
-        />
+        <CloudPulseTooltip placement="bottom-end" title="Minimize">
+          <IconButton
+            sx={{
+              color: theme.color.grey1,
+              fontSize: 'x-large',
+              height: '34px',
+              padding: '0',
+            }}
+            data-testid="zoom-in"
+            onClick={() => handleClick(false)}
+          >
+            <ZoomInMap />
+          </IconButton>
+        </CloudPulseTooltip>
       );
     }
 
     return (
-      <ZoomOutMap
-        sx={{
-          color: theme.color.grey1,
-          fontSize: 'x-large',
-          height: '34px',
-        }}
-        data-testid="zoom-out"
-        onClick={() => handleClick(true)}
-      />
+      <CloudPulseTooltip placement="bottom-end" title="Maximize">
+        <IconButton
+          sx={{
+            color: theme.color.grey1,
+            fontSize: 'x-large',
+            height: '34px',
+            padding: '0',
+          }}
+          data-testid="zoom-out"
+          onClick={() => handleClick(true)}
+        >
+          <ZoomOutMap />
+        </IconButton>
+      </CloudPulseTooltip>
     );
   };
 
