@@ -1,5 +1,6 @@
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { displayType } from 'src/features/Linodes/presentation';
+import { getFirewallDescription } from 'src/utilities/getFirewallDescription';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -169,7 +170,7 @@ export const firewallToSearchableItem = (
 ): SearchableItem => ({
   data: {
     created: firewall.created,
-    description: firewall.status.toUpperCase(),
+    description: getFirewallDescription(firewall),
     icon: 'firewall',
     path: `/firewalls/${firewall.id}`,
     tags: firewall.tags,
