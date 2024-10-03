@@ -1,3 +1,19 @@
+## [2024-09-30] - v0.127.0
+
+
+### Changed:
+
+- Make `replication_type` and `replication_commit_type` optional in MySQL and Postgres interfaces ([#10980](https://github.com/linode/manager/pull/10980))
+- DBaaS restore method name ([#10988](https://github.com/linode/manager/pull/10988))
+
+### Fixed:
+
+- Include `standby` field in `DatabaseHosts` interface ([#10989](https://github.com/linode/manager/pull/10989))
+
+### Upcoming Features:
+
+- DBaaS V2 readonly hosts ([#10939](https://github.com/linode/manager/pull/10939))
+
 ## [2024-09-16] - v0.126.0
 
 

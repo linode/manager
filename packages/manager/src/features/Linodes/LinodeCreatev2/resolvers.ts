@@ -13,7 +13,7 @@ import {
 } from './schemas';
 import { getLinodeCreatePayload } from './utilities';
 
-import type { LinodeCreateType } from '../LinodesCreate/types';
+import type { LinodeCreateType } from './types';
 import type {
   LinodeCreateFormContext,
   LinodeCreateFormValues,

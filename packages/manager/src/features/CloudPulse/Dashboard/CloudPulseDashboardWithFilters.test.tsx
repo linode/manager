@@ -10,7 +10,6 @@ const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardByIdQuery: vi.fn().mockReturnValue({}),
 }));
 
-const selectTimeDurationPlaceholder = 'Select Time Duration';
 const circleProgress = 'circle-progress';
 const mandatoryFiltersError = 'Mandatory Filters not Selected';
 
@@ -63,7 +62,6 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
     );
 
-    expect(screen.getByText(selectTimeDurationPlaceholder)).toBeDefined();
     expect(screen.getByTestId(circleProgress)).toBeDefined(); // the dashboards started to render
   });
 
@@ -79,7 +77,6 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
     );
 
-    expect(screen.getByText(selectTimeDurationPlaceholder)).toBeDefined();
     expect(screen.getByTestId(circleProgress)).toBeDefined(); // the dashboards started to render
   });
 

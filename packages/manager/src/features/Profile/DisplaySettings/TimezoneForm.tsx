@@ -3,30 +3,20 @@ import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import timezones from 'src/assets/timezones/timezones';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { timezones } from 'src/assets/timezones/timezones';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
+import { Notice } from 'src/components/Notice/Notice';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 interface Props {
   loggedInAsCustomer: boolean;
 }
 
-interface Timezone {
-  label: string;
-  name: string;
-  offset: number;
-}
+type Timezone = typeof timezones[number];
 
-export interface TimezoneOption<T = string, L = string> {
-  label: L;
-  value: T;
-}
-
-export const formatOffset = ({ label, offset }: Timezone) => {
+export const getOptionLabel = ({ label, offset }: Timezone) => {
   const minutes = (Math.abs(offset) % 60).toLocaleString(undefined, {
     minimumIntegerDigits: 2,
     useGrouping: false,
@@ -34,51 +24,41 @@ export const formatOffset = ({ label, offset }: Timezone) => {
   const hours = Math.floor(Math.abs(offset) / 60);
   const isPositive = Math.abs(offset) === offset ? '+' : '-';
 
-  return `\(GMT ${isPositive}${hours}:${minutes}\) ${label}`;
+  return `(GMT ${isPositive}${hours}:${minutes}) ${label}`;
 };
 
-const renderTimezonesList = (): TimezoneOption<string>[] => {
+const getTimezoneOptions = () => {
   return timezones
-    .map((tz) => ({ ...tz, offset: DateTime.now().setZone(tz.name).offset }))
-    .sort((a, b) => a.offset - b.offset)
-    .map((tz: Timezone) => {
-      const label = formatOffset(tz);
-      return { label, value: tz.name };
-    });
+    .map((tz) => {
+      // We use Luxon to get the offset because it correctly factors in Daylight Savings Time (see https://github.com/linode/manager/pull/8526)
+      const offset = DateTime.now().setZone(tz.name).offset;
+      const label = getOptionLabel({ ...tz, offset });
+      return { label, offset, value: tz.name };
+    })
+    .sort((a, b) => a.offset - b.offset);
 };
 
-const timezoneList = renderTimezonesList();
+const timezoneOptions = getTimezoneOptions();
 
 export const TimezoneForm = (props: Props) => {
   const { loggedInAsCustomer } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const [timezoneValue, setTimezoneValue] = React.useState<
-    TimezoneOption<string> | string
-  >('');
   const { error, isPending, mutateAsync: updateProfile } = useMutateProfile();
-  const timezone = profile?.timezone ?? '';
 
-  const handleTimezoneChange = (timezone: TimezoneOption<string>) => {
-    setTimezoneValue(timezone);
-  };
+  const [timezoneValue, setTimezoneValue] = React.useState(profile?.timezone);
 
   const onSubmit = () => {
-    if (timezoneValue === '') {
-      return;
+    if (!timezoneValue) {
+      enqueueSnackbar('Please select a valid timezone.', { variant: 'error' });
     }
 
-    updateProfile({ timezone: String(timezoneValue) }).then(() => {
+    updateProfile({ timezone: timezoneValue }).then(() => {
       enqueueSnackbar('Successfully updated timezone', { variant: 'success' });
     });
   };
 
-  const defaultTimezone = timezoneList.find((eachZone) => {
-    return eachZone.value === timezone;
-  });
-
-  const disabled =
-    timezoneValue === '' || defaultTimezone?.value === timezoneValue;
+  const disabled = !timezoneValue || profile?.timezone === timezoneValue;
 
   if (!profile) {
     return <CircleProgress />;
@@ -86,58 +66,42 @@ export const TimezoneForm = (props: Props) => {
 
   return (
     <>
-      {loggedInAsCustomer ? (
-        <StyledLoggedInAsCustomerNotice data-testid="admin-notice">
-          <Typography variant="h2">
-            While you are logged in as a customer, all times, dates, and graphs
-            will be displayed in your browser&rsquo;s timezone ({timezone}).
-          </Typography>
-        </StyledLoggedInAsCustomerNotice>
-      ) : null}
-      <StyledRootContainer>
-        <Stack>
-          <Autocomplete
-            sxPopperComponent={{
-              maxHeight: '285px',
-              overflow: 'hidden',
-            }}
-            value={timezoneList.find(
-              (option) => option.value === timezoneValue
-            )}
-            autoHighlight
-            data-qa-tz-select
-            defaultValue={defaultTimezone}
-            disableClearable
-            errorText={error?.[0].reason}
-            label="Timezone"
-            onChange={(_, option) => handleTimezoneChange(option)}
-            options={timezoneList}
-            placeholder="Choose a Timezone"
-            sx={{ width: '416px' }}
-          />
-        </Stack>
-        <ActionsPanel
-          primaryButtonProps={{
-            disabled,
-            label: 'Update Timezone',
-            loading: isPending,
-            onClick: onSubmit,
-            sx: {
-              margin: '0',
-              minWidth: 180,
-            },
-          }}
-          sx={{
-            padding: 0,
-          }}
+      {loggedInAsCustomer && (
+        <Notice dataTestId="admin-notice" variant="error">
+          While you are logged in as a customer, all times, dates, and graphs
+          will be displayed in the user&rsquo;s timezone ({profile.timezone}).
+        </Notice>
+      )}
+      <TimezoneFormContainer>
+        <Autocomplete
+          value={timezoneOptions.find(
+            (option) => option.value === timezoneValue
+          )}
+          autoHighlight
+          disableClearable
+          errorText={error?.[0].reason}
+          fullWidth
+          label="Timezone"
+          onChange={(e, option) => setTimezoneValue(option.value)}
+          options={timezoneOptions}
+          placeholder="Choose a Timezone"
         />
-      </StyledRootContainer>
+        <Button
+          buttonType="primary"
+          disabled={disabled}
+          loading={isPending}
+          onClick={onSubmit}
+          sx={{ minWidth: 180 }}
+        >
+          Update Timezone
+        </Button>
+      </TimezoneFormContainer>
     </>
   );
 };
 
-const StyledRootContainer = styled('div', {
-  label: 'StyledRootContainer',
+const TimezoneFormContainer = styled('div', {
+  label: 'TimezoneFormContainer',
 })(({ theme }) => ({
   alignItems: 'flex-end',
   display: 'flex',
@@ -145,14 +109,6 @@ const StyledRootContainer = styled('div', {
   [theme.breakpoints.down('md')]: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+    gap: theme.spacing(),
   },
-}));
-
-const StyledLoggedInAsCustomerNotice = styled('div', {
-  label: 'StyledLoggedInAsCustomerNotice',
-})(({ theme }) => ({
-  backgroundColor: theme.color.red,
-  marginBottom: 8,
-  padding: 16,
-  textAlign: 'center',
 }));

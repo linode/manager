@@ -31,7 +31,6 @@ import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils'
 import { useFlags } from 'src/hooks/useFlags';
 import { usePrefetch } from 'src/hooks/usePreFetch';
 import { useAccountSettings } from 'src/queries/account/settings';
-import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';
 
 import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
@@ -88,33 +87,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const flags = useFlags();
   const location = useLocation();
 
-  const [
-    enableMarketplacePrefetch,
-    setEnableMarketplacePrefetch,
-  ] = React.useState(false);
-
   const { data: accountSettings } = useAccountSettings();
   const isManaged = accountSettings?.managed ?? false;
-
-  const {
-    data: oneClickApps,
-    error: oneClickAppsError,
-    isLoading: oneClickAppsLoading,
-  } = useMarketplaceAppsQuery(enableMarketplacePrefetch);
-
-  const allowMarketplacePrefetch =
-    !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
 
   const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
-
-  const prefetchMarketplace = () => {
-    if (!enableMarketplacePrefetch) {
-      setEnableMarketplacePrefetch(true);
-    }
-  };
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
     () => [
@@ -220,8 +199,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Marketplace',
           href: '/linodes/create?type=One-Click',
           icon: <OCA />,
-          prefetchRequestCondition: allowMarketplacePrefetch,
-          prefetchRequestFn: prefetchMarketplace,
         },
       ],
       [
@@ -248,7 +225,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       isDatabasesEnabled,
       isDatabasesV2Beta,
       isManaged,
-      allowMarketplacePrefetch,
       isPlacementGroupsEnabled,
       isACLPEnabled,
     ]
@@ -318,7 +294,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               const props = {
                 closeMenu,
                 isCollapsed,
-                key: thisLink.display,
                 locationPathname: location.pathname,
                 locationSearch: location.search,
                 ...thisLink,
@@ -331,11 +306,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 thisLink.prefetchRequestCondition !== undefined ? (
                 <PrefetchPrimaryLink
                   {...props}
+                  key={thisLink.display}
                   prefetchRequestCondition={thisLink.prefetchRequestCondition}
                   prefetchRequestFn={thisLink.prefetchRequestFn}
                 />
               ) : (
-                <PrimaryLink {...props} />
+                <PrimaryLink {...props} key={thisLink.display} />
               );
             })}
           </div>

@@ -5,12 +5,9 @@ import { dashboardFactory } from 'src/factories';
 import * as utils from 'src/features/CloudPulse/Utils/utils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DASHBOARD_ID } from '../Utils/constants';
-import * as preferences from '../Utils/UserPreference';
 import { CloudPulseDashboardSelect } from './CloudPulseDashboardSelect';
 
 import type { CloudPulseDashboardSelectProps } from './CloudPulseDashboardSelect';
-import type { AclpConfig } from '@linode/api-v4';
 
 const dashboardLabel = 'Factory Dashboard-1';
 const props: CloudPulseDashboardSelectProps = {
@@ -66,7 +63,7 @@ describe('CloudPulse Dashboard select', () => {
     );
 
     expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
-    expect(getByPlaceholderText('Select Dashboard')).toBeInTheDocument();
+    expect(getByPlaceholderText('Select a Dashboard')).toBeInTheDocument();
   }),
     it('Should render dashboard select component with data', () => {
       renderWithTheme(<CloudPulseDashboardSelect {...props} />);
@@ -89,10 +86,13 @@ describe('CloudPulse Dashboard select', () => {
       );
     }),
     it('Should select the default value from preferences', () => {
-      const mockFunction = vi.spyOn(preferences, 'getUserPreferenceObject');
-      mockFunction.mockReturnValue({ [DASHBOARD_ID]: 1 } as AclpConfig);
-
-      renderWithTheme(<CloudPulseDashboardSelect {...props} />);
+      renderWithTheme(
+        <CloudPulseDashboardSelect
+          {...props}
+          defaultValue={1}
+          savePreferences
+        />
+      );
 
       expect(screen.getByRole('combobox')).toHaveAttribute(
         'value',
