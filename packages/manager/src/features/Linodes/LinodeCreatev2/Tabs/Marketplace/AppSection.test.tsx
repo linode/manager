@@ -1,8 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { stackScriptFactory } from 'src/factories';
-import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
+import { oneClickAppFactory, stackScriptFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AppSection } from './AppSection';
@@ -24,7 +23,7 @@ describe('AppSection', () => {
 
   it('should render apps', () => {
     const app = {
-      details: oneClickApps[0],
+      details: oneClickAppFactory.build(),
       stackscript: stackScriptFactory.build({
         id: 0,
         label: 'Linode Marketplace App',
@@ -46,8 +45,8 @@ describe('AppSection', () => {
 
   it('should call `onOpenDetailsDrawer` when the details button is clicked for an app', async () => {
     const app = {
-      details: oneClickApps[0],
-      stackscript: stackScriptFactory.build({ id: 0 }),
+      details: oneClickAppFactory.build(),
+      stackscript: stackScriptFactory.build(),
     };
 
     const onOpenDetailsDrawer = vi.fn();
@@ -71,8 +70,8 @@ describe('AppSection', () => {
 
   it('should call `onSelect` when an app is clicked', async () => {
     const app = {
-      details: oneClickApps[0],
-      stackscript: stackScriptFactory.build({ id: 0 }),
+      details: oneClickAppFactory.build(),
+      stackscript: stackScriptFactory.build(),
     };
 
     const onSelect = vi.fn();

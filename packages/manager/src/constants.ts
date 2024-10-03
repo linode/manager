@@ -289,8 +289,39 @@ export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
 
 // Firewall links
 export const CREATE_FIREWALL_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/guides/create-a-cloud-firewall/';
+  'https://techdocs.akamai.com/cloud-computing/docs/create-a-cloud-firewall';
 export const FIREWALL_GET_STARTED_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/get-started/';
+  'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls';
 export const FIREWALL_LIMITS_CONSIDERATIONS_LINK =
-  'https://www.linode.com/docs/products/networking/cloud-firewall/#limits-and-considerations';
+  'https://techdocs.akamai.com/cloud-computing/docs/cloud-firewall#limits-and-considerations';
+
+// A/B Testing LD metrics keys for DX Tools
+export const LD_DX_TOOLS_METRICS_KEYS = {
+  CURL_CODE_SNIPPET: 'A/B Test: Step 2 : cURL copy code snippet (copy icon)',
+  CURL_RESOURCE_LINKS: 'A/B Test: Step 2 : DX Tools cURL resources links',
+  CURL_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools cURL tab selection',
+  INTEGRATION_ANSIBLE_CODE_SNIPPET:
+    'A/B Test: Step 2 : Integrations: Ansible copy code snippet (copy icon)',
+  INTEGRATION_ANSIBLE_RESOURCE_LINKS:
+    'a-b-test-step-2-dx-tools-integrations-ansible-resources-links',
+  INTEGRATION_TAB_SELECTION:
+    'A/B Test: Step 2 : DX Tools Integrations tab selection',
+  INTEGRATION_TERRAFORM_CODE_SNIPPET:
+    'A/B Test: Step 2 : Integrations: Terraform copy code snippet (copy icon)',
+  INTEGRATION_TERRAFORM_RESOURCE_LINKS:
+    'A/B Test: Step 2 : DX Tools integrations terraform resources links',
+  LINODE_CLI_CODE_SNIPPET:
+    'A/B Test: Step 2 : Linode CLI Tab selection and copy code snippet (copy icon)',
+  LINODE_CLI_RESOURCE_LINKS:
+    'A/B Test: Step 2 : DX Tools Linode CLI resources links',
+  LINODE_CLI_TAB_SELECTION: 'A/B Test: Step 2 : Linode CLI Tab Selection',
+  OPEN_MODAL: 'A/B Test: Step 1 : DX Tools Open Modal',
+  SDK_GO_CODE_SNIPPET:
+    'A/B Test: Step 2 : SDK: GO copy code snippet (copy icon)',
+  SDK_GO_RESOURCE_LINKS: 'A/B Test: Step 2 : DX Tools SDK GO resources links',
+  SDK_PYTHON_CODE_SNIPPET:
+    'A/B Test: Step 2 : SDK: Python copy code snippet (copy icon)',
+  SDK_PYTHON_RESOURCE_LINKS:
+    'A/B Test: Step 2 : DX Tools SDK Python resources links',
+  SDK_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools SDK tab selection',
+};

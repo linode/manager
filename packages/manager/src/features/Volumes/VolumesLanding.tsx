@@ -179,7 +179,7 @@ export const VolumesLanding = () => {
           }),
         }}
         disabledCreateButton={isRestricted}
-        docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => history.push('/volumes/create')}
         title="Volumes"

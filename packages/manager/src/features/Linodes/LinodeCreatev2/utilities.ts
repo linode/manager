@@ -7,15 +7,15 @@ import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { omitProps } from 'src/utilities/omittedProps';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
-import { utoa } from '../LinodesCreate/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
-import type { LinodeCreateType } from '../LinodesCreate/types';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
+import type { LinodeCreateType } from './types';
 import type {
   CreateLinodeRequest,
   InterfacePayload,
@@ -28,7 +28,7 @@ import type { FieldErrors } from 'react-hook-form';
 /**
  * This is the ID of the Image of the default OS.
  */
-const DEFAULT_OS = 'linode/debian11';
+const DEFAULT_OS = 'linode/ubuntu24.04';
 
 /**
  * This interface is used to type the query params on the Linode Create flow.
@@ -304,6 +304,7 @@ export const defaultValues = async (
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
+    backups_enabled: linode?.backups.enabled,
     image: getDefaultImageId(params),
     interfaces: defaultInterfaces,
     linode,

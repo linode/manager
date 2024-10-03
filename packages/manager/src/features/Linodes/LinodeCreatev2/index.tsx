@@ -35,7 +35,6 @@ import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
 import { Plan } from './Plan';
-import { Region } from './Region';
 import { getLinodeCreateResolver } from './resolvers';
 import { Security } from './Security';
 import { SMTP } from './SMTP';
@@ -56,7 +55,7 @@ import {
   useHandleLinodeCreateAnalyticsFormError,
   useLinodeCreateQueryParams,
 } from './utilities';
-import { VLAN } from './VLAN';
+import { VLAN } from './VLAN/VLAN';
 import { VPC } from './VPC/VPC';
 
 import type {
@@ -189,7 +188,7 @@ export const LinodeCreatev2 = () => {
           })
         }
         docsLabel="Getting Started"
-        docsLink="https://www.linode.com/docs/guides/platform/get-started/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         title="Create"
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -225,7 +224,6 @@ export const LinodeCreatev2 = () => {
               </SafeTabPanel>
             </TabPanels>
           </Tabs>
-          {params.type !== 'Backups' && <Region />}
           <Plan />
           <Details />
           {params.type !== 'Clone Linode' && <Security />}

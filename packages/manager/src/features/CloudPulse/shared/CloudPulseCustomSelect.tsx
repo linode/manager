@@ -1,4 +1,3 @@
-import deepEqual from 'fast-deep-equal';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -14,6 +13,7 @@ import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
 } from '../Utils/models';
+import type { AclpConfig, FilterValue } from '@linode/api-v4';
 
 /**
  * These are the properties requires for CloudPulseCustomSelect Components
@@ -41,6 +41,11 @@ export interface CloudPulseCustomSelectProps {
   clearDependentSelections?: string[];
 
   /**
+   * Last selected values from user preferences
+   */
+  defaultValue?: FilterValue;
+
+  /**
    * This property says, whether or not to disable the selection component
    */
   disabled?: boolean;
@@ -54,7 +59,6 @@ export interface CloudPulseCustomSelectProps {
    * The filterKey that needs to be used
    */
   filterKey: string;
-
   /**
    * The type of the filter like string, number etc.,
    */
@@ -65,7 +69,13 @@ export interface CloudPulseCustomSelectProps {
    * @param filterKey - The filterKey of the component
    * @param value - The selected filter value
    */
-  handleSelectionChange: (filterKey: string, value: FilterValueType) => void;
+  handleSelectionChange: (
+    filterKey: string,
+    value: FilterValueType,
+    savePref?: boolean,
+    updatedPreferenceData?: AclpConfig
+  ) => void;
+
   /**
    * If true, multiselect is allowed, otherwise false
    */
@@ -85,6 +95,8 @@ export interface CloudPulseCustomSelectProps {
    * The placeholder that needs to displayed
    */
   placeholder?: string;
+
+  preferences?: AclpConfig;
 
   /**
    * This property controls whether to save the preferences or not
@@ -109,6 +121,7 @@ export const CloudPulseCustomSelect = React.memo(
       apiResponseLabelField,
       apiV4QueryKey,
       clearDependentSelections,
+      defaultValue,
       disabled,
       filterKey,
       handleSelectionChange,
@@ -116,6 +129,7 @@ export const CloudPulseCustomSelect = React.memo(
       maxSelections,
       options,
       placeholder,
+      preferences,
       savePreferences,
       type,
     } = props;
@@ -142,10 +156,12 @@ export const CloudPulseCustomSelect = React.memo(
       if (!selectedResource) {
         setResource(
           getInitialDefaultSelections({
+            defaultValue,
             filterKey,
             handleSelectionChange,
             isMultiSelect: isMultiSelect ?? false,
             options: options || queriedResources || [],
+            preferences,
             savePreferences: savePreferences ?? false,
           })
         );
@@ -165,6 +181,7 @@ export const CloudPulseCustomSelect = React.memo(
         filterKey,
         handleSelectionChange,
         maxSelections,
+        savePreferences,
         value,
       });
       setResource(
@@ -175,7 +192,6 @@ export const CloudPulseCustomSelect = React.memo(
     };
 
     let staticErrorText = '';
-
     // check for input prop errors
     if (
       (CloudPulseSelectTypes.static === type &&
@@ -205,6 +221,12 @@ export const CloudPulseCustomSelect = React.memo(
             ? options ?? []
             : queriedResources ?? []
         }
+        placeholder={
+          selectedResource &&
+          (!Array.isArray(selectedResource) || selectedResource.length)
+            ? ''
+            : placeholder || 'Select a Value'
+        }
         textFieldProps={{
           hideLabel: true,
         }}
@@ -214,7 +236,6 @@ export const CloudPulseCustomSelect = React.memo(
         label="Select a Value"
         multiple={isMultiSelect}
         onChange={handleChange}
-        placeholder={placeholder ?? 'Select a Value'}
         value={selectedResource ?? (isMultiSelect ? [] : null)}
       />
     );
@@ -236,11 +257,6 @@ function compareProps(
     if (prevProps[key] !== nextProps[key]) {
       return false;
     }
-  }
-
-  // Deep comparison for options
-  if (!deepEqual(prevProps.options, nextProps.options)) {
-    return false;
   }
 
   // Ignore function props in comparison

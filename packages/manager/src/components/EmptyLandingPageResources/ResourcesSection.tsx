@@ -111,7 +111,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
     wide = false,
     youtubeLinkData,
   } = props;
-  const { description, subtitle, title } = headers;
+  const { description, logo, subtitle, title } = headers;
 
   return (
     <Placeholder
@@ -171,6 +171,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
       subtitle={subtitle}
       title={title}
     >
+      {logo}
       <Typography variant="subtitle1">{description}</Typography>
     </Placeholder>
   );

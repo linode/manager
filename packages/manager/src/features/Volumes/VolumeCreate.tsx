@@ -245,11 +245,11 @@ export const VolumeCreate = () => {
 
   const { data: linode } = useLinodeQuery(
     linode_id ?? -1,
-    isBlockStorageEncryptionFeatureEnabled
+    isBlockStorageEncryptionFeatureEnabled && linode_id !== null
   );
 
   const linodeSupportsBlockStorageEncryption = Boolean(
-    linode?.capabilities?.includes('blockstorage_encryption')
+    linode?.capabilities?.includes('Block Storage Encryption')
   );
 
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
@@ -297,7 +297,7 @@ export const VolumeCreate = () => {
 
   const shouldDisplayClientLibraryCopy =
     isBlockStorageEncryptionFeatureEnabled &&
-    values.linode_id !== null &&
+    linode_id !== null &&
     !linodeSupportsBlockStorageEncryption;
 
   return (
@@ -439,7 +439,7 @@ export const VolumeCreate = () => {
                 onBlur={handleBlur}
                 onChange={(id: number) => setFieldValue('config_id', id)}
                 value={config_id}
-                width={[theme.breakpoints.down('sm')] ? 320 : 400}
+                width={320}
               />
             </Box>
             <Box alignItems="flex-end" display="flex" position="relative">
@@ -502,7 +502,8 @@ export const VolumeCreate = () => {
             <Button
               disabled={
                 disabled ||
-                (isBlockStorageEncryptionFeatureEnabled &&
+                (isBlockStorageEncryptionFeatureEnabled && // @TODO BSE: Once BSE is fully rolled out, remove feature enabled check/condition
+                  linode_id !== null &&
                   !linodeSupportsBlockStorageEncryption &&
                   values.encryption === 'enabled')
               }

@@ -127,12 +127,7 @@ packages/manager/test-report.xml
 **/manager/cypress/videos/
 **/manager/cypress/downloads/
 **/manager/cypress/results/
-
-# ignore all screenshots except records
-# we ignore the png files, not the whole folder recursively
-# or the record files are ignored too
-**/manager/cypress/screenshots/**/*.png
-!**/manager/cypress/screenshots/**/record*.png
+**/manager/cypress/screenshots/
 
 packages/manager/cypress/fixtures/example.json
 
