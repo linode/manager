@@ -6,9 +6,9 @@ import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { Region } from 'src/features/Linodes/LinodeCreatev2/Region';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';

@@ -18,7 +18,7 @@ const LinodesDetail = React.lazy(() =>
   }))
 );
 const LinodesCreatev2 = React.lazy(() =>
-  import('./LinodeCreatev2').then((module) => ({
+  import('./LinodeCreate').then((module) => ({
     default: module.LinodeCreatev2,
   }))
 );

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import { Stack } from 'src/components/Stack';
-import { Region } from 'src/features/Linodes/LinodeCreatev2/Region';
 
+import { Region } from '../../Region';
 import { StackScriptImages } from '../StackScripts/StackScriptImages';
 import { UserDefinedFields } from '../StackScripts/UserDefinedFields/UserDefinedFields';
 import { AppDetailDrawerv2 } from './AppDetailDrawer';
