@@ -1,3 +1,9 @@
+import {
+  type CreateKubeClusterPayLoadBeta,
+  type CreateKubeClusterPayload,
+  type CreateNodePoolData,
+  type KubeNodePoolResponse,
+} from '@linode/api-v4/lib/kubernetes';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { pick, remove, update } from 'ramda';
@@ -18,17 +24,17 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import {
-  getAPLAvailability,
   getKubeHighAvailability,
   getLatestVersion,
+  useGetAPLAvailability,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import {
+  useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
   useKubernetesVersionQuery,
@@ -39,11 +45,11 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import {
   DOCS_LINK_LABEL_APL_APPLICATIONS,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
@@ -57,11 +63,6 @@ import {
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
-import type {
-  CreateKubeClusterPayload,
-  CreateNodePoolData,
-  KubeNodePoolResponse,
-} from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 export const CreateCluster = () => {
@@ -78,14 +79,13 @@ export const CreateCluster = () => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
-  const [APL, setAPL] = React.useState<boolean>();
+  const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
 
-  const flags = useFlags();
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
-  const { showAPL } = getAPLAvailability(account);
+  const showAPL = useGetAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
 
   const {
@@ -112,6 +112,10 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterMutation();
 
   const {
+    mutateAsync: createKubernetesClusterBeta,
+  } = useCreateKubernetesClusterBetaMutation();
+
+  const {
     data: versionData,
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
@@ -127,41 +131,44 @@ export const CreateCluster = () => {
     }
   }, [versionData]);
 
-  const createCluster = () => {
-    const { push } = history;
-    setErrors(undefined);
-    setSubmitting(true);
+const createCluster = () => {
+  const { push } = history;
+  setErrors(undefined);
+  setSubmitting(true);
 
-    // Only type and count to the API.
-    const node_pools = nodePools.map(
-      pick(['type', 'count'])
-    ) as CreateNodePoolData[];
+  const node_pools = nodePools.map(pick(['type', 'count'])) as CreateNodePoolData[];
 
-    const payload: CreateKubeClusterPayload = {
-      apl_enabled: APL,
-      control_plane: { high_availability: highAvailability ?? false },
-      k8s_version: version,
-      label,
-      node_pools,
-      region: selectedRegionId,
-    };
-
-    createKubernetesCluster(payload)
-      .then((cluster) => {
-        push(`/kubernetes/clusters/${cluster.id}`);
-        if (hasAgreed) {
-          updateAccountAgreements({
-            eu_model: true,
-            privacy_policy: true,
-          }).catch(reportAgreementSigningError);
-        }
-      })
-      .catch((err) => {
-        setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
-        setSubmitting(false);
-        scrollErrorIntoViewV2(formContainerRef);
-      });
+  let payload: CreateKubeClusterPayLoadBeta | CreateKubeClusterPayload = {
+    control_plane: { high_availability: highAvailability ?? false },
+    k8s_version: version,
+    label,
+    node_pools,
+    region: selectedRegionId,
   };
+
+  if (showAPL) {
+    payload = { ...payload, apl_enabled };
+  }
+
+  const createClusterFn = showAPL ? createKubernetesClusterBeta : createKubernetesCluster;
+
+  createClusterFn(payload)
+    .then((cluster) => {
+      push(`/kubernetes/clusters/${cluster.id}`);
+      if (hasAgreed) {
+        updateAccountAgreements({
+          eu_model: true,
+          privacy_policy: true,
+        }).catch(reportAgreementSigningError);
+      }
+    })
+    .catch((err) => {
+      setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
+      setSubmitting(false);
+      scrollErrorIntoViewV2(formContainerRef);
+    });
+};
+
 
   const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
 
@@ -275,13 +282,13 @@ export const CreateCluster = () => {
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
           />
-          {showAPL && flags.apl ? (
+          {showAPL && (
             <>
               <Divider sx={{ marginTop: 4 }} />
               <StyledFieldWithDocsStack>
                 <Stack>
                   <ApplicationPlatform
-                    setAPL={setAPL}
+                    setAPL={setApl_enabled}
                     setHighAvailability={setHighAvailability}
                   />
                 </Stack>
@@ -293,7 +300,7 @@ export const CreateCluster = () => {
                 </StyledDocsLinkContainer>
               </StyledFieldWithDocsStack>
             </>
-          ) : null}
+          )}
           <Divider sx={{ marginTop: 4 }} />
           {showHighAvailability ? (
             <Box data-testid="ha-control-plane">
@@ -303,7 +310,7 @@ export const CreateCluster = () => {
                     ? UNKNOWN_PRICE
                     : highAvailabilityPrice
                 }
-                isAPLEnabled={APL}
+                isAPLEnabled={apl_enabled}
                 isErrorKubernetesTypes={isErrorKubernetesTypes}
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                 selectedRegionId={selectedRegionId}
@@ -324,7 +331,7 @@ export const CreateCluster = () => {
             addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
             apiError={errorMap.node_pools}
             hasSelectedRegion={hasSelectedRegion}
-            isAPLEnabled={APL}
+            isAPLEnabled={apl_enabled}
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}

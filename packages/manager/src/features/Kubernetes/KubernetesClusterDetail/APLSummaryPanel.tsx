@@ -53,8 +53,6 @@ const checkConsoleURL = async (
             'APL is still being deployed, please check back in a minute.',
           resolved: false,
         });
-      } else {
-        console.error('An error occurred:', error.message);
       }
     }
   };

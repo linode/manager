@@ -1,5 +1,6 @@
 import {
   createKubernetesCluster,
+  createKubernetesClusterBeta,
   createNodePool,
   deleteKubernetesCluster,
   deleteNodePool,
@@ -33,9 +34,11 @@ import { profileQueries } from './profile/profile';
 
 import type {
   CreateKubeClusterPayload,
+  CreateKubeClusterPayLoadBeta,
   CreateNodePoolData,
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesClusterBeta,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
   KubernetesVersion,
@@ -182,6 +185,26 @@ export const useCreateKubernetesClusterMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>({
     mutationFn: createKubernetesCluster,
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: kubernetesQueries.lists.queryKey,
+      });
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
+    },
+  });
+};
+
+export const useCreateKubernetesClusterBetaMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    KubernetesClusterBeta,
+    APIError[],
+    CreateKubeClusterPayLoadBeta
+  >({
+    mutationFn: createKubernetesClusterBeta,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: kubernetesQueries.lists.queryKey,

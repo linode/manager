@@ -1,3 +1,4 @@
+import { useFlags } from 'src/hooks/useFlags';
 import { sortByVersion } from 'src/utilities/sort-by';
 
 import type { Account } from '@linode/api-v4/lib/account';
@@ -112,15 +113,15 @@ export const getKubeHighAvailability = (
   };
 };
 
-export const getAPLAvailability = (account: Account | undefined) => {
+export const useGetAPLAvailability = (): boolean => {
   // const showAPL = account?.capabilities.includes('LKE APL');
-  const showAPL = true;
-  // return {
-  //   showAPL,
-  // };
-  return {
-    showAPL,
-  };
+  const flags = useFlags();
+
+  if (!flags) {
+    return false;
+  }
+
+  return Boolean(flags.apl);
 };
 
 /**

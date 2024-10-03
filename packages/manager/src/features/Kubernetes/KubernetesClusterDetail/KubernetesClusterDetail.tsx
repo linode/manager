@@ -7,6 +7,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useGetAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesClusterMutation,
@@ -26,6 +27,7 @@ export const KubernetesClusterDetail = () => {
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
   const location = useLocation();
+  const showAPL = useGetAPLAvailability();
   const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
   const { data: regionsData } = useRegionsQuery();
 
@@ -109,7 +111,7 @@ export const KubernetesClusterDetail = () => {
       <Grid>
         <KubeSummaryPanel cluster={cluster} />
       </Grid>
-      {cluster.apl_enabled && (
+      {showAPL && (
         <>
           <LandingHeader
             docsLabel="Docs"

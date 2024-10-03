@@ -2,19 +2,16 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
-import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
-import { DOCS_LINK_LABEL_APL_APPLICATIONS } from 'src/utilities/pricing/constants';
 
 export interface APLProps {
-  setAPL: (apl: boolean | undefined) => void;
+  setAPL: (apl: boolean) => void;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
 

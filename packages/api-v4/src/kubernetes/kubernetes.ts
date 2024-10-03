@@ -10,11 +10,13 @@ import Request, {
 import type { Filter, Params, ResourcePage as Page, PriceType } from '../types';
 import type {
   CreateKubeClusterPayload,
+  CreateKubeClusterPayLoadBeta,
   KubeConfigResponse,
   KubernetesCluster,
   KubernetesEndpointResponse,
   KubernetesDashboardResponse,
   KubernetesVersion,
+  KubernetesClusterBeta,
 } from './types';
 
 /**
@@ -38,6 +40,17 @@ export const getKubernetesClusters = (params?: Params, filters?: Filter) =>
 export const getKubernetesCluster = (clusterID: number) =>
   Request<KubernetesCluster>(
     setMethod('GET'),
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
+  );
+
+/**
+ * getKubernetesClusterBeta
+ *
+ * Return details about a single Kubernetes cluster from beta API
+ */
+export const getKubernetesClusterBeta = (clusterID: number) =>
+  Request<KubernetesClusterBeta>(
+    setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
   );
 
@@ -47,11 +60,24 @@ export const getKubernetesCluster = (clusterID: number) =>
  * Create a new cluster.
  */
 export const createKubernetesCluster = (data: CreateKubeClusterPayload) => {
-  const apiRoot = data.apl_enabled ? BETA_API_ROOT : API_ROOT;
-
   return Request<KubernetesCluster>(
     setMethod('POST'),
-    setURL(`${apiRoot}/lke/clusters`),
+    setURL(`${API_ROOT}/lke/clusters`),
+    setData(data, createKubeClusterSchema)
+  );
+};
+
+/**
+ * createKubernetesClustersBeta
+ *
+ * Create a new cluster. With the beta APL feature parameter enabled.
+ */
+export const createKubernetesClusterBeta = (
+  data: CreateKubeClusterPayLoadBeta
+) => {
+  return Request<KubernetesClusterBeta>(
+    setMethod('POST'),
+    setURL(`${BETA_API_ROOT}/lke/clusters`),
     setData(data, createKubeClusterSchema)
   );
 };

@@ -10,7 +10,10 @@ export interface KubernetesCluster {
   id: number;
   tags: string[];
   control_plane: ControlPlaneOptions;
-  apl_enabled?: boolean;
+}
+
+export interface KubernetesClusterBeta extends KubernetesCluster {
+  apl_enabled: boolean;
 }
 
 export interface KubeNodePoolResponse {
@@ -67,8 +70,11 @@ export interface ControlPlaneOptions {
 export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   region?: string; // Will be caught by Yup if undefined
-  apl_enabled?: boolean;
   node_pools: CreateNodePoolData[];
   k8s_version?: string; // Will be caught by Yup if undefined
   control_plane?: ControlPlaneOptions;
+}
+
+export interface CreateKubeClusterPayLoadBeta extends CreateKubeClusterPayload {
+  apl_enabled: boolean;
 }
