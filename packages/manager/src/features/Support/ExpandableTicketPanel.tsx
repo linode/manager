@@ -24,13 +24,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       opacity: 1,
     },
   },
-  avatar: {
-    paddingTop: theme.spacing(0.5),
-    [theme.breakpoints.down('sm')]: {
-      paddingRight: theme.spacing(1),
-      paddingTop: theme.spacing(1),
-    },
-  },
   content: {
     backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.color.grey2}`,
@@ -73,11 +66,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     height: 32,
     justifyContent: 'center',
-    marginTop: theme.spacing(0.5),
+    marginRight: theme.spacing(1),
+    marginTop: theme.spacing(1.5),
     position: 'relative',
     [theme.breakpoints.up('sm')]: {
       height: 40,
-      marginRight: theme.spacing(1),
+      marginTop: theme.spacing(1),
       width: 40,
     },
     top: -2,
@@ -174,7 +168,7 @@ export const ExpandableTicketPanel = React.memo((props: Props) => {
 
   return (
     <Grid container wrap="nowrap">
-      <Grid className={classes.avatar}>{renderAvatar()}</Grid>
+      <Grid>{renderAvatar()}</Grid>
       <Grid className={classes.content}>
         <Grid className={classes.header} container>
           <Grid className={classes.headerInner}>
