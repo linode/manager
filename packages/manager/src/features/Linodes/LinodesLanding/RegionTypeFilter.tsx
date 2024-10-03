@@ -28,14 +28,21 @@ const regionFilterOptions: RegionFilterOption[] = [
   },
 ];
 
+const regionFilterMap = {
+  all: 'All',
+  core: 'Core',
+  distributed: 'Distributed',
+  edge: 'Edge',
+};
+
 const ariaIdentifier = 'region-type-filter';
 
 interface Props {
   handleRegionFilter: (regionFilter: RegionFilter) => void;
 }
 
-export const RegionTypeFilter = (props: Props) => {
-  const { handleRegionFilter } = props;
+export const RegionTypeFilter = ({ handleRegionFilter }: Props) => {
+  const regionFilter = storage.regionFilter.get();
 
   return (
     <Box alignItems="end" display="flex">
@@ -46,9 +53,8 @@ export const RegionTypeFilter = (props: Props) => {
       </FormLabel>
       <Autocomplete
         defaultValue={
-          regionFilterOptions.find(
-            (filter) => filter.value === storage.regionFilter.get()
-          ) ?? regionFilterOptions[0]
+          regionFilterOptions.find((filter) => filter.value === regionFilter) ??
+          regionFilterOptions[0]
         }
         onChange={(_, selectedOption) => {
           if (selectedOption?.value) {
@@ -66,6 +72,7 @@ export const RegionTypeFilter = (props: Props) => {
         id={ariaIdentifier}
         label="Region Type"
         options={regionFilterOptions}
+        placeholder={regionFilterMap[regionFilter]}
       />
     </Box>
   );
