@@ -1,5 +1,4 @@
 import { isEmpty } from '@linode/api-v4';
-import * as Sentry from '@sentry/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
@@ -64,7 +63,7 @@ import type {
 } from './utilities';
 import type { SubmitHandler } from 'react-hook-form';
 
-export const LinodeCreatev2 = () => {
+export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { data: profile } = useProfile();
@@ -162,19 +161,6 @@ export const LinodeCreatev2 = () => {
     }
     previousSubmitCount.current = form.formState.submitCount;
   }, [form.formState, handleLinodeCreateAnalyticsFormError]);
-
-  /**
-   * Add a Sentry tag when Linode Create v2 is mounted
-   * so we differentiate errors.
-   *
-   * @todo remove once Linode Create v2 is live for all users
-   */
-  useEffect(() => {
-    Sentry.setTag('Linode Create Version', 'v2');
-    return () => {
-      Sentry.setTag('Linode Create Version', undefined);
-    };
-  }, []);
 
   return (
     <FormProvider {...form}>

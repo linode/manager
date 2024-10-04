@@ -10,7 +10,7 @@ import { Firewall } from './Firewall';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-describe('Linode Create v2 Firewall', () => {
+describe('Linode Create Firewall', () => {
   it('should render a header', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <Firewall />,

@@ -9,7 +9,7 @@ import { Summary } from './Summary';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-describe('Linode Create v2 Summary', () => {
+describe('Linode Create Summary', () => {
   it('should render a heading based on the Linode label', async () => {
     const label = 'my-linode-1';
     const { findByText } = renderWithThemeAndHookFormContext({

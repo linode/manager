@@ -11,7 +11,7 @@ import { PrivateIP } from './PrivateIP';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-describe('Linode Create V2 Private IP Add-on', () => {
+describe('Linode Create Private IP Add-on', () => {
   it('should render a label and checkbox', () => {
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: <PrivateIP />,
