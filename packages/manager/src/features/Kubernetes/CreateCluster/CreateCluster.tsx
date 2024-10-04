@@ -325,7 +325,6 @@ export const CreateCluster = () => {
               />
             </Box>
           )}
-          <Divider />
           {showControlPlaneACL && (
             <>
               <Divider />
