@@ -3,10 +3,10 @@ import * as React from 'react';
 
 import Download from 'src/assets/icons/download.svg';
 import { Box } from 'src/components/Box';
+import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
 import { Typography } from 'src/components/Typography';
-import { CodeBlock } from 'src/features/Linodes/LinodesCreate/CodeBlock/CodeBlock';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 
@@ -60,6 +60,7 @@ export const KubeConfigDrawer = (props: Props) => {
         <CodeBlock
           command={data ?? ''}
           commandType="Kube Config Yaml"
+          handleCopyIconClick={() => null}
           language="yaml"
         />
       </DrawerContent>

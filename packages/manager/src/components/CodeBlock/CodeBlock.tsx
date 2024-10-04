@@ -16,6 +16,7 @@ import type { SupportedLanguage } from 'src/components/HighlightedMarkdown/Highl
 export interface CodeBlockProps {
   command: string;
   commandType: string;
+  handleCopyIconClick?: () => void;
   language: SupportedLanguage;
   ldTrackingKey?: string;
 }
@@ -25,11 +26,17 @@ export const CodeBlock = (props: CodeBlockProps) => {
   const ldClient = useLDClient();
   const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
 
-  const { command, commandType, language, ldTrackingKey } = props;
+  const {
+    command,
+    commandType,
+    handleCopyIconClick,
+    language,
+    ldTrackingKey,
+  } = props;
 
   const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
-  const handleCopyIconClick = () => {
+  const _handleCopyIconClick = () => {
     sendApiAwarenessClickEvent('Copy Icon', commandType);
     if (ldTrackingKey && !isInternalAccount) {
       ldClient?.track(ldTrackingKey, {
@@ -45,7 +52,10 @@ export const CodeBlock = (props: CodeBlockProps) => {
         language={language}
         textOrMarkdown={'```\n' + command + '\n```'}
       />
-      <StyledCopyTooltip onClickCallback={handleCopyIconClick} text={command} />
+      <StyledCopyTooltip
+        onClickCallback={handleCopyIconClick ?? _handleCopyIconClick}
+        text={command}
+      />
     </StyledCommandDiv>
   );
 };
