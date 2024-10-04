@@ -560,7 +560,7 @@ describe('linode landing checks for non-empty state with restricted user', () =>
       .should('be.visible');
   });
 
-  it.only('checks restricted user with no access cannot see existing linode and cannot create linode landing', () => {
+  it.only('checks restricted user with no access cannot see existing linode and cannot create linode', () => {
     const mockProfile = profileFactory.build({
       username: randomLabel(),
       restricted: true,
