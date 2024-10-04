@@ -14,9 +14,11 @@ import {
 import type { SupportedLanguage } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 
 export interface CodeBlockProps {
+  /** The CodeBlock command to be displayed */
   command: string;
   /** Label for analytics */
   commandType: string;
+  /** Function to optionally override the component's internal handling of the copy icon */
   handleCopyIconClick?: () => void;
   /** The command language */
   language: SupportedLanguage;
