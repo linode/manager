@@ -114,7 +114,6 @@ export const getKubeHighAvailability = (
 };
 
 export const useGetAPLAvailability = (): boolean => {
-  // const showAPL = account?.capabilities.includes('LKE APL');
   const flags = useFlags();
 
   if (!flags) {

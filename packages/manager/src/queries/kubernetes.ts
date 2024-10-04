@@ -6,6 +6,7 @@ import {
   deleteNodePool,
   getKubeConfig,
   getKubernetesCluster,
+  getKubernetesClusterBeta,
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
@@ -34,11 +35,9 @@ import { profileQueries } from './profile/profile';
 
 import type {
   CreateKubeClusterPayload,
-  CreateKubeClusterPayLoadBeta,
   CreateNodePoolData,
   KubeNodePoolResponse,
   KubernetesCluster,
-  KubernetesClusterBeta,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
   KubernetesVersion,
@@ -55,6 +54,10 @@ import type {
 export const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({
     contextQueries: {
+      beta: {
+        queryFn: () => getKubernetesClusterBeta(id),
+        queryKey: [id],
+      },
       dashboard: {
         queryFn: () => getKubernetesClusterDashboard(id),
         queryKey: null,
@@ -101,6 +104,16 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
+export const useKubernetesClusterQuery = (id: number) => {
+  return useQuery<KubernetesCluster, APIError[]>(kubernetesQueries.cluster(id));
+};
+
+export const useKubernetesClusterBetaQuery = (id: number) => {
+  return useQuery<KubernetesCluster, APIError[]>(
+    kubernetesQueries.cluster(id)._ctx.beta
+  );
+};
+
 export const useKubernetesClustersQuery = (
   params: Params,
   filter: Filter,
@@ -111,10 +124,6 @@ export const useKubernetesClustersQuery = (
     enabled,
     placeholderData: keepPreviousData,
   });
-};
-
-export const useKubernetesClusterQuery = (id: number) => {
-  return useQuery<KubernetesCluster, APIError[]>(kubernetesQueries.cluster(id));
 };
 
 export const useKubernetesClusterMutation = (id: number) => {
@@ -199,11 +208,7 @@ export const useCreateKubernetesClusterMutation = () => {
 
 export const useCreateKubernetesClusterBetaMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<
-    KubernetesClusterBeta,
-    APIError[],
-    CreateKubeClusterPayLoadBeta
-  >({
+  return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>({
     mutationFn: createKubernetesClusterBeta,
     onSuccess() {
       queryClient.invalidateQueries({

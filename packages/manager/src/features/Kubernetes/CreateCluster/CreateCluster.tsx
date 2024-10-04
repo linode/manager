@@ -1,5 +1,4 @@
 import {
-  type CreateKubeClusterPayLoadBeta,
   type CreateKubeClusterPayload,
   type CreateNodePoolData,
   type KubeNodePoolResponse,
@@ -138,7 +137,7 @@ const createCluster = () => {
 
   const node_pools = nodePools.map(pick(['type', 'count'])) as CreateNodePoolData[];
 
-  let payload: CreateKubeClusterPayLoadBeta | CreateKubeClusterPayload = {
+  let payload: CreateKubeClusterPayload = {
     control_plane: { high_availability: highAvailability ?? false },
     k8s_version: version,
     label,
@@ -292,12 +291,6 @@ const createCluster = () => {
                     setHighAvailability={setHighAvailability}
                   />
                 </Stack>
-                <StyledDocsLinkContainer>
-                  <DocsLink
-                    href="https://apl-docs.net/docs/apps/alertmanager"
-                    label={DOCS_LINK_LABEL_APL_APPLICATIONS}
-                  />
-                </StyledDocsLinkContainer>
               </StyledFieldWithDocsStack>
             </>
           )}

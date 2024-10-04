@@ -27,7 +27,7 @@ interface Props {
   getTypeCount: (planId: string) => number;
   hasSelectedRegion: boolean;
   header?: string;
-  isAPLEnabled?: boolean | undefined;
+  isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;
@@ -80,19 +80,20 @@ export const KubernetesPlansPanel = (props: Props) => {
       : _types
   );
 
-  const tabs = Object.keys(plans).map((plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
-    const plansMap: PlanSelectionType[] = plans[plan];
-    const {
-      allDisabledPlans,
-      hasMajorityOfPlansDisabled,
-      plansForThisLinodeTypeClass,
-    } = extractPlansInformation({
-      disableLargestGbPlansFlag: flags.disableLargestGbPlans,
-      isAPLEnabled,
-      plans: plansMap,
-      regionAvailabilities,
-      selectedRegionId,
-    });
+  const tabs = Object.keys(plans).map(
+    (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
+      const plansMap: PlanSelectionType[] = plans[plan];
+      const {
+        allDisabledPlans,
+        hasMajorityOfPlansDisabled,
+        plansForThisLinodeTypeClass,
+      } = extractPlansInformation({
+        disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+        isAPLEnabled,
+        plans: plansMap,
+        regionAvailabilities,
+        selectedRegionId,
+      });
 
       return {
         render: () => {

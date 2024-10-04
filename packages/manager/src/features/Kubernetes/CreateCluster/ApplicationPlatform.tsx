@@ -19,7 +19,9 @@ export const APLCopy = () => (
   <Typography>
     Add a pre-paved path to build, deploy, monitor and secure applications.
     <br />
-    <Link to="https://otomi.io">Learn more about APL.</Link>
+    <Link to="https://otomi.io">
+      Learn more about Application Platform for LKE.
+    </Link>
   </Typography>
 );
 
@@ -42,7 +44,7 @@ export const ApplicationPlatform = (props: APLProps) => {
       >
         <Box display="flex" flexDirection="row">
           <Typography variant="inherit">
-            Application Platform for LKE (APL)
+            Application Platform for LKE
           </Typography>
           <Chip color="primary" label="BETA" sx={{ ml: 1 }} />
         </Box>
