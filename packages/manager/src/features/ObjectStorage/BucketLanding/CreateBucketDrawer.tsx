@@ -128,7 +128,7 @@ export const CreateBucketDrawer = (props: Props) => {
   };
 
   const clusterRegion = watchCluster
-    ? regions?.find((region) => watchCluster.includes(region.id))
+    ? regions?.find((region) => watchCluster === region.id)
     : undefined;
 
   const { showGDPRCheckbox } = getGDPRDetails({
