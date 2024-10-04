@@ -4,9 +4,11 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { styled } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import React from 'react';
 import { Provider } from 'react-redux';
 
+import { migrationRouter } from 'src/routes';
 import { getRoot } from 'src/utilities/rootManager';
 
 import { Draggable } from './components/Draggable';
@@ -19,7 +21,7 @@ import { isMSWEnabled } from './utils';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ApplicationStore } from 'src/store';
 
-export type DevToolsView = 'mocks' | 'react-query';
+export type DevToolsView = 'mocks' | 'react-query' | 'routing';
 
 const reactQueryDevtoolsStyle = {
   border: '1px solid rgba(255, 255, 255, 0.25)',
@@ -40,6 +42,10 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
 
     const handleOpenMocks = () => {
       setView('mocks');
+    };
+
+    const handleOpenRouting = () => {
+      setView('routing');
     };
 
     const handleDraggableToggle = () => {
@@ -127,6 +133,14 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                   >
                     React Query
                   </button>
+                  <button
+                    className={`toggle-button ${
+                      view === 'routing' && 'toggle-button--on'
+                    }`}
+                    onClick={handleOpenRouting}
+                  >
+                    Routing
+                  </button>
                 </div>
                 <div>
                   <button onClick={handleGoToPreferences}>
@@ -153,6 +167,12 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                       <ReactQueryDevtools initialIsOpen={true} />
                     </QueryClientProvider>
                   </StyledReactQueryDevtoolsContainer>
+                )}
+                {view === 'routing' && (
+                  <TanStackRouterDevtools
+                    initialIsOpen={true}
+                    router={migrationRouter}
+                  />
                 )}
               </div>
             </div>
