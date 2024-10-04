@@ -496,3 +496,108 @@ describe('linode landing checks for empty state', () => {
       .should('be.visible');
   });
 });
+
+describe('linode landing checks for non-empty state with restricted user', () => {
+  beforeEach(() => {
+    // Mock setup to display the Linode landing page in an empty state
+    const mockLinodes = new Array(1).fill(null).map(
+      (_item: null, index: number): Linode => {
+        return linodeFactory.build({
+          label: `Linode ${index}`,
+          region: chooseRegion().id,
+          tags: [index % 2 == 0 ? 'even' : 'odd', 'nums'],
+        });
+      }
+    );
+
+    const mockLinodesData = makeResourcePage(mockLinodes);
+    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
+      req.reply(mockLinodesData);
+    }).as('getLinodes');
+  });
+
+  it('checks restricted user with read access has no access to create linode on linode landing page', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: true,
+    });
+
+    const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
+      restricted: true,
+      user_type: 'default',
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_linodes: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+
+    // Login and wait for application to load
+    cy.visitWithLogin(routes.linodeLanding);
+    cy.wait('@getLinodes');
+    cy.url().should('endWith', routes.linodeLanding);
+
+    // Assert that Create Linode button is visible and disabled
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .and('be.disabled')
+      .trigger('mouseover');
+
+    // Assert that tooltip is visible with message
+    ui.tooltip
+      .findByText(
+        "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
+      )
+      .should('be.visible');
+  });
+
+  it.only('checks restricted user with no access cannot see existing linode and cannot create linode landing', () => {
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: true,
+    });
+
+    const mockUser = accountUserFactory.build({
+      username: mockProfile.username,
+      restricted: true,
+      user_type: 'default',
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_linodes: false,
+      },
+      linode: [
+        {
+          id: 0,
+          permissions: null,
+        },
+      ],
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+
+    // Login and wait for application to load
+    cy.visitWithLogin(routes.linodeLanding);
+    cy.wait('@getLinodes');
+    cy.url().should('endWith', routes.linodeLanding);
+
+    // Assert that Create Linode button is visible and disabled
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .and('be.disabled')
+      .trigger('mouseover');
+  });
+});
