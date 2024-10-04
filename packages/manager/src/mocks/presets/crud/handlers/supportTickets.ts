@@ -31,13 +31,14 @@ export const createSupportTicket = (mockState: MockState) => [
         description: payload['description'],
         // TODO: handle dynamic entity selection
         entity: {
-          id: 10400,
-          label: 'linode123456',
+          id: 1,
+          label: 'mock-linode-1',
           type: 'linode',
-          url: '/v4/linode/instances/123456',
+          url: '/v4/linode/instances/1',
         },
         opened: DateTime.now().toISO(),
         severity: 1,
+        status: 'open',
         summary: payload['summary'],
         updated: DateTime.now().toISO(),
       });
