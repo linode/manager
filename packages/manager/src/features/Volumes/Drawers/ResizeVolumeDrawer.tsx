@@ -19,8 +19,8 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
-import { PricePanel } from './VolumeDrawer/PricePanel';
-import { SizeField } from './VolumeDrawer/SizeField';
+import { PricePanel } from '../VolumeDrawer/PricePanel';
+import { SizeField } from '../VolumeDrawer/SizeField';
 
 interface Props {
   onClose: () => void;

@@ -26,14 +26,15 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { AttachVolumeDrawer } from './AttachVolumeDrawer';
-import { CloneVolumeDrawer } from './CloneVolumeDrawer';
-import { DeleteVolumeDialog } from './DeleteVolumeDialog';
-import { DetachVolumeDialog } from './DetachVolumeDialog';
-import { EditVolumeDrawer } from './EditVolumeDrawer';
-import { ResizeVolumeDrawer } from './ResizeVolumeDrawer';
-import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
-import { VolumeDetailsDrawer } from './VolumeDetailsDrawer';
+import { DeleteVolumeDialog } from './Dialogs/DeleteVolumeDialog';
+import { DetachVolumeDialog } from './Dialogs/DetachVolumeDialog';
+import { UpgradeVolumeDialog } from './Dialogs/UpgradeVolumeDialog';
+import { AttachVolumeDrawer } from './Drawers/AttachVolumeDrawer';
+import { CloneVolumeDrawer } from './Drawers/CloneVolumeDrawer';
+import { EditVolumeDrawer } from './Drawers/EditVolumeDrawer';
+import { ManageTagsDrawer } from './Drawers/ManageTagsDrawer';
+import { ResizeVolumeDrawer } from './Drawers/ResizeVolumeDrawer';
+import { VolumeDetailsDrawer } from './Drawers/VolumeDetailsDrawer';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 import { VolumeTableRow } from './VolumeTableRow';
 
@@ -84,6 +85,9 @@ export const VolumesLanding = () => {
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(
     Boolean(location.state?.volume)
   );
+  const [isManageTagsDrawerOpen, setisManageTagsDrawerOpen] = React.useState(
+    false
+  );
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = React.useState(false);
   const [isCloneDrawerOpen, setIsCloneDrawerOpen] = React.useState(false);
@@ -107,6 +111,11 @@ export const VolumesLanding = () => {
   const handleDetails = (volume: Volume) => {
     setSelectedVolumeId(volume.id);
     setIsDetailsDrawerOpen(true);
+  };
+
+  const handleManageTags = (volume: Volume) => {
+    setSelectedVolumeId(volume.id);
+    setisManageTagsDrawerOpen(true);
   };
 
   const handleEdit = (volume: Volume) => {
@@ -258,6 +267,7 @@ export const VolumesLanding = () => {
                 handleDetach: () => handleDetach(volume),
                 handleDetails: () => handleDetails(volume),
                 handleEdit: () => handleEdit(volume),
+                handleManageTags: () => handleManageTags(volume),
                 handleResize: () => handleResize(volume),
                 handleUpgrade: () => handleUpgrade(volume),
               }}
@@ -292,6 +302,11 @@ export const VolumesLanding = () => {
         }}
         open={isDetailsDrawerOpen}
         volume={selectedVolume ?? location.state?.volume}
+      />
+      <ManageTagsDrawer
+        onClose={() => setisManageTagsDrawerOpen(false)}
+        open={isManageTagsDrawerOpen}
+        volume={selectedVolume}
       />
       <EditVolumeDrawer
         onClose={() => setIsEditDrawerOpen(false)}

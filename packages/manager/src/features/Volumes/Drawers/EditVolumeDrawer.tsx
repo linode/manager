@@ -9,7 +9,6 @@ import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Notice } from 'src/components/Notice/Notice';
-import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { useGrants } from 'src/queries/profile/profile';
 import { useUpdateVolumeMutation } from 'src/queries/volumes/volumes';
@@ -50,17 +49,15 @@ export const EditVolumeDrawer = (props: Props) => {
     handleSubmit,
     isSubmitting,
     resetForm,
-    setFieldValue,
     status: error,
-    touched,
     values,
   } = useFormik({
     enableReinitialize: true,
-    initialValues: { label: volume?.label, tags: volume?.tags },
+    initialValues: { label: volume?.label ?? '', tags: volume?.tags ?? [] },
     async onSubmit(values, { setErrors, setStatus }) {
       try {
         await updateVolume({
-          label: values.label ?? '',
+          label: values.label,
           tags: values.tags,
           volumeId: volume?.id ?? -1,
         });
@@ -94,6 +91,7 @@ export const EditVolumeDrawer = (props: Props) => {
           />
         )}
         {error && <Notice text={error} variant="error" />}
+
         <TextField
           disabled={isReadOnly}
           errorText={errors.label}
@@ -104,25 +102,7 @@ export const EditVolumeDrawer = (props: Props) => {
           required
           value={values.label}
         />
-        <TagsInput
-          onChange={(selected) =>
-            setFieldValue(
-              'tags',
-              selected.map((item) => item.value)
-            )
-          }
-          tagError={
-            touched.tags
-              ? errors.tags
-                ? 'Unable to tag volume.'
-                : undefined
-              : undefined
-          }
-          disabled={isReadOnly}
-          label="Tags"
-          name="tags"
-          value={values.tags?.map((t) => ({ label: t, value: t })) ?? []}
-        />
+
         {isBlockStorageEncryptionFeatureEnabled && (
           <Box
             sx={{
@@ -138,6 +118,7 @@ export const EditVolumeDrawer = (props: Props) => {
             />
           </Box>
         )}
+
         <ActionsPanel
           primaryButtonProps={{
             disabled: isReadOnly || !dirty,

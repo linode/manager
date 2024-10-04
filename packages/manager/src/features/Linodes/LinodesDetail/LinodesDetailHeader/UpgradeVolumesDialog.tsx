@@ -6,7 +6,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
+import { VolumeUpgradeCopy } from 'src/features/Volumes/Dialogs/UpgradeVolumeDialog';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import {

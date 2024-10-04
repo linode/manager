@@ -1,11 +1,7 @@
-import { Volume } from '@linode/api-v4';
-import { Theme, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { splitAt } from 'ramda';
 import * as React from 'react';
+import { Volume } from '@linode/api-v4';
 
 import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
@@ -16,6 +12,7 @@ export interface ActionHandlers {
   handleDetach: () => void;
   handleDetails: () => void;
   handleEdit: () => void;
+  handleManageTags: () => void;
   handleResize: () => void;
   handleUpgrade: () => void;
 }
@@ -30,9 +27,6 @@ export const VolumesActionMenu = (props: Props) => {
   const { handlers, isVolumesLanding, volume } = props;
 
   const attached = volume.linode_id !== null;
-
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const isVolumeReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -56,6 +50,10 @@ export const VolumesActionMenu = (props: Props) => {
             resourceType: 'Volumes',
           })
         : undefined,
+    },
+    {
+      onClick: handlers.handleManageTags,
+      title: 'Manage Tags',
     },
     {
       disabled: isVolumeReadOnly,
@@ -126,27 +124,10 @@ export const VolumesActionMenu = (props: Props) => {
       : undefined,
   });
 
-  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
   return (
-    <>
-      {!matchesSmDown &&
-        inlineActions.map((action) => {
-          return (
-            <InlineMenuAction
-              actionText={action.title}
-              disabled={action.disabled}
-              key={action.title}
-              onClick={action.onClick}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      <ActionMenu
-        actionsList={menuActions}
-        ariaLabel={`Action menu for Volume ${volume.label}`}
-      />
-    </>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Volume ${volume.label}`}
+    />
   );
 };
