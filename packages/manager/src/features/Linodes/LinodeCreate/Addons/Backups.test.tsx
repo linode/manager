@@ -15,7 +15,7 @@ import { Backups } from './Backups';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
-describe('Linode Create V2 Backups Addon', () => {
+describe('Linode Create Backups Addon', () => {
   it('should render a label and checkbox', () => {
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: <Backups />,

@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Stack } from 'src/components/Stack';
-import { Region } from 'src/features/Linodes/LinodeCreatev2/Region';
 
+import { Region } from '../../Region';
 import { StackScriptImages } from './StackScriptImages';
 import { StackScriptSelection } from './StackScriptSelection';
 import { UserDefinedFields } from './UserDefinedFields/UserDefinedFields';

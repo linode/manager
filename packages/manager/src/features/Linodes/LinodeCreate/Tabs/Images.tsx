@@ -12,11 +12,11 @@ import { Paper } from 'src/components/Paper';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { Region } from 'src/features/Linodes/LinodeCreatev2/Region';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';

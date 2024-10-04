@@ -2,11 +2,11 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeCreatev2 } from '.';
+import { LinodeCreate } from '.';
 
 describe('Linode Create', () => {
   it('Should not render VLANs when cloning', () => {
-    const { queryByText } = renderWithTheme(<LinodeCreatev2 />, {
+    const { queryByText } = renderWithTheme(<LinodeCreate />, {
       MemoryRouter: { initialEntries: ['/linodes/create?type=Clone+Linode'] },
     });
 
@@ -14,7 +14,7 @@ describe('Linode Create', () => {
   });
 
   it('Should not render access panel items when cloning', () => {
-    const { queryByText } = renderWithTheme(<LinodeCreatev2 />, {
+    const { queryByText } = renderWithTheme(<LinodeCreate />, {
       MemoryRouter: { initialEntries: ['/linodes/create?type=Clone+Linode'] },
     });
 
@@ -23,7 +23,7 @@ describe('Linode Create', () => {
   });
 
   it('Should not render the region select when creating from a backup', () => {
-    const { queryByText } = renderWithTheme(<LinodeCreatev2 />, {
+    const { queryByText } = renderWithTheme(<LinodeCreate />, {
       MemoryRouter: { initialEntries: ['/linodes/create?type=Backups'] },
     });
 

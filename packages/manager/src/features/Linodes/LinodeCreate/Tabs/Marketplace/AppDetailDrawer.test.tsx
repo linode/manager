@@ -6,7 +6,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AppDetailDrawerv2 } from './AppDetailDrawer';
+import { AppDetailDrawer } from './AppDetailDrawer';
 
 describe('AppDetailDrawer', () => {
   it('should render an app', async () => {
@@ -19,7 +19,7 @@ describe('AppDetailDrawer', () => {
     );
 
     const { findByText, getByText } = renderWithTheme(
-      <AppDetailDrawerv2 onClose={vi.fn()} open stackScriptId={401697} />
+      <AppDetailDrawer onClose={vi.fn()} open stackScriptId={401697} />
     );
 
     // Verify title renders
@@ -49,7 +49,7 @@ describe('AppDetailDrawer', () => {
   it('should call onClose if the close button is clicked', async () => {
     const onClose = vi.fn();
     const { getByLabelText } = renderWithTheme(
-      <AppDetailDrawerv2 onClose={onClose} open={true} stackScriptId={1} />
+      <AppDetailDrawer onClose={onClose} open={true} stackScriptId={1} />
     );
 
     await userEvent.click(getByLabelText('Close drawer'));
@@ -59,7 +59,7 @@ describe('AppDetailDrawer', () => {
 
   it('should not render if open is false', async () => {
     const { container } = renderWithTheme(
-      <AppDetailDrawerv2 onClose={vi.fn()} open={false} stackScriptId={1} />
+      <AppDetailDrawer onClose={vi.fn()} open={false} stackScriptId={1} />
     );
 
     expect(container).toBeEmptyDOMElement();

@@ -19,7 +19,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import { SelectLinodeCard } from 'src/features/Linodes/LinodeCreatev2/shared/SelectLinodeCard';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -33,6 +32,7 @@ import {
   useLinodeCreateQueryParams,
 } from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';
+import { SelectLinodeCard } from './SelectLinodeCard';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { Linode } from '@linode/api-v4';

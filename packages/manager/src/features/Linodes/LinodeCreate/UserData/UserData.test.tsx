@@ -8,7 +8,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { UserData } from './UserData';
 
-describe('Linode Create v2 UserData', () => {
+describe('Linode Create UserData', () => {
   it('should render if the selected image supports cloud-init and the region supports metadata', async () => {
     const image = imageFactory.build({ capabilities: ['cloud-init'] });
     const region = regionFactory.build({ capabilities: ['Metadata'] });
