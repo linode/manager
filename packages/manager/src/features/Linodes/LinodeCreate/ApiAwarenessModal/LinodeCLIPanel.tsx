@@ -1,6 +1,7 @@
 import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React, { useMemo } from 'react';
 
+import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Link } from 'src/components/Link';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
@@ -9,8 +10,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCLICommand } from 'src/utilities/codesnippets/generate-cli';
-
-import { CodeBlock } from './CodeBlock/CodeBlock';
 
 import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
