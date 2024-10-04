@@ -255,7 +255,7 @@ interface ExtractPlansInformationProps {
   disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
   disabledClasses?: LinodeTypeClass[];
   disabledSmallerPlans?: PlanSelectionType[];
-  isAPLEnabled: boolean;
+  isAPLEnabled?: boolean;
   plans: PlanSelectionType[];
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
@@ -368,7 +368,7 @@ export const getDisabledPlanReasonCopy = ({
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
   planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
   planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
-  planIsTooSmallForAPL: DisabledTooltipReasons['planIsTooSmallForAPL'];
+  planIsTooSmallForAPL?: DisabledTooltipReasons['planIsTooSmallForAPL'];
   wholePanelIsDisabled?: DisabledTooltipReasons['wholePanelIsDisabled'];
 }): string => {
   if (wholePanelIsDisabled) {
