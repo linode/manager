@@ -33,21 +33,46 @@ export const PrivateIP = () => {
     selectedRegion?.site_type === 'edge';
 
   return (
-    <FormControlLabel
-      label={
-        <Stack sx={{ pl: 2 }}>
-          <Typography variant="h3">Private IP</Typography>
-          <Typography component="span" id="privateIPDesc" variant="body1">
-            Use Private IP for a backend node to a NodeBalancer. Use VPC instead
-            for private communication between your Linodes.
-          </Typography>
-        </Stack>
-      }
-      aria-labelledby="privateIPDesc"
-      checked={field.value ?? false}
-      control={<Checkbox />}
-      disabled={isDistributedRegionSelected || isLinodeCreateRestricted}
-      onChange={field.onChange}
-    />
+    <Stack>
+      <FormControlLabel
+        control={
+          <Checkbox
+            inputProps={{
+              'aria-labelledby': 'privateIPDesc',
+            }}
+            checked={field.value ?? false}
+            disabled={isDistributedRegionSelected || isLinodeCreateRestricted}
+            onChange={field.onChange}
+            sx={{ pr: 3 }}
+          />
+        }
+        slotProps={{
+          typography: {
+            sx: (theme) => ({
+              fontFamily: theme.font.bold,
+              fontSize: '1rem',
+              pl: 0,
+            }),
+          },
+        }}
+        sx={(theme) => ({
+          fontFamily: `${theme.font.bold} !important`,
+          fontSize: '1rem',
+          pl: 1,
+        })}
+        label="Private IP"
+      />
+      <Stack sx={{ pl: 7 }}>
+        <Typography
+          component="span"
+          display="block"
+          id="privateIPDesc"
+          variant="body1"
+        >
+          Use Private IP for a backend node to a NodeBalancer. Use VPC instead
+          for private communication between your Linodes.
+        </Typography>
+      </Stack>
+    </Stack>
   );
 };
