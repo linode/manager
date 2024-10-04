@@ -27,7 +27,7 @@ interface Props {
   getTypeCount: (planId: string) => number;
   hasSelectedRegion: boolean;
   header?: string;
-  isAPLEnabled?: boolean;
+  isAPLEnabled: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;

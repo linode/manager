@@ -12,7 +12,7 @@ import { Typography } from 'src/components/Typography';
 
 export interface HAControlPlaneProps {
   highAvailabilityPrice: string;
-  isAPLEnabled: boolean | undefined;
+  isAPLEnabled: boolean;
   isErrorKubernetesTypes: boolean;
   isLoadingKubernetesTypes: boolean;
   selectedRegionId: string | undefined;
