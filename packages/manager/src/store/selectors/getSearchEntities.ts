@@ -1,6 +1,6 @@
+import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { displayType } from 'src/features/Linodes/presentation';
-import { getFirewallDescription } from 'src/utilities/getFirewallDescription';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { readableBytes } from 'src/utilities/unitConversions';
 
