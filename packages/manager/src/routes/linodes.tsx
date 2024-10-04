@@ -30,8 +30,8 @@ const linodesCreateRoute = createRoute({
   getParentRoute: () => linodesRoute,
   path: 'create',
 }).lazy(() =>
-  import('src/features/Linodes/LinodeCreatev2').then(
-    (m) => m.linodeCreatev2LazyRoute
+  import('src/features/Linodes/LinodeCreate').then(
+    (m) => m.linodeCreateLazyRoute
   )
 );
 

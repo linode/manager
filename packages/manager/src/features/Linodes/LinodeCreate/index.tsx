@@ -230,6 +230,6 @@ export const LinodeCreate = () => {
   );
 };
 
-export const linodeCreatev2LazyRoute = createLazyRoute('/linodes/create')({
-  component: LinodeCreatev2,
+export const linodeCreateLazyRoute = createLazyRoute('/linodes/create')({
+  component: LinodeCreate,
 });
