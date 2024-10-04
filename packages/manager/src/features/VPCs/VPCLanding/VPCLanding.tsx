@@ -1,4 +1,4 @@
-import { VPC } from '@linode/api-v4/lib/vpcs/types';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -23,6 +23,8 @@ import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { VPCEditDrawer } from './VPCEditDrawer';
 import { VPCEmptyState } from './VPCEmptyState';
 import { VPCRow } from './VPCRow';
+
+import type { VPC } from '@linode/api-v4/lib/vpcs/types';
 
 const preferenceKey = 'vpcs';
 const VPC_CREATE_ROUTE = 'vpcs/create';
@@ -168,5 +170,9 @@ const VPCLanding = () => {
     </>
   );
 };
+
+export const vpcLandingLazyRoute = createLazyRoute('/')({
+  component: VPCLanding,
+});
 
 export default VPCLanding;

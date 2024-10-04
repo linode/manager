@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
@@ -207,5 +208,11 @@ export const DatabaseDetail = () => {
     </>
   );
 };
+
+export const databaseDetailLazyRoute = createLazyRoute(
+  '/databases/$engine/$databaseId'
+)({
+  component: DatabaseDetail,
+});
 
 export default DatabaseDetail;

@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
@@ -206,5 +207,9 @@ const OAuthClients = () => {
     </>
   );
 };
+
+export const OAuthClientsLazyRoute = createLazyRoute('/profile/clients')({
+  component: OAuthClients,
+});
 
 export default OAuthClients;

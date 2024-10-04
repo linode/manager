@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -163,5 +164,9 @@ export const NodeBalancersLanding = () => {
     </>
   );
 };
+
+export const nodeBalancersLandingLazyRoute = createLazyRoute('/nodebalancers')({
+  component: NodeBalancersLanding,
+});
 
 export default NodeBalancersLanding;

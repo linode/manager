@@ -1,12 +1,15 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
+import { NavTabs } from 'src/components/NavTabs/NavTabs';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
+
+import type { NavTab } from 'src/components/NavTabs/NavTabs';
 
 const Contacts = React.lazy(() => import('./Contacts/Contacts'));
 const Monitors = React.lazy(() => import('./Monitors'));
@@ -57,5 +60,9 @@ export const ManagedLanding = () => {
     </React.Fragment>
   );
 };
+
+export const managedLandingLazyRoute = createLazyRoute('/managed')({
+  component: ManagedLanding,
+});
 
 export default ManagedLanding;

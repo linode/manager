@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -210,5 +211,9 @@ const FirewallLanding = () => {
     </React.Fragment>
   );
 };
+
+export const firewallLandingLazyRoute = createLazyRoute('/firewalls')({
+  component: FirewallLanding,
+});
 
 export default React.memo(FirewallLanding);
