@@ -1,5 +1,6 @@
 import { isEmpty } from '@linode/api-v4';
 import { useQueryClient } from '@tanstack/react-query';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -228,3 +229,7 @@ export const LinodeCreate = () => {
     </FormProvider>
   );
 };
+
+export const linodeCreateLazyRoute = createLazyRoute('/linodes/create')({
+  component: LinodeCreate,
+});
