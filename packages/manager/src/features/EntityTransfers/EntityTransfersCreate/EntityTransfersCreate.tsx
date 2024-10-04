@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
+import { createLazyRoute } from '@tanstack/react-router';
 import { curry } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -123,3 +124,9 @@ export const EntityTransfersCreate = () => {
     </>
   );
 };
+
+export const entityTransfersCreateLazyRoute = createLazyRoute(
+  '/account/service-transfers/create'
+)({
+  component: EntityTransfersCreate,
+});

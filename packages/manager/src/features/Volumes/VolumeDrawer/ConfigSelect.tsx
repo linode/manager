@@ -10,7 +10,7 @@ interface Props {
   linodeId: null | number;
   name: string;
   onBlur: (e: any) => void;
-  onChange: (value: number) => void;
+  onChange: (value: number | undefined) => void;
   value: null | number;
   width?: number;
 }
@@ -36,6 +36,9 @@ export const ConfigSelect = React.memo((props: Props) => {
     return { label: config.label, value: config.id };
   });
 
+  // This used to be in a useEffect. We are reverting that because it caused a
+  // page crash - see [PDI-3054] for more information. Note that [M3-8578] will
+  // need to be looked into again as a result.
   if (configList?.length === 1) {
     const newValue = configList[0].value;
     if (value !== newValue) {
@@ -60,14 +63,12 @@ export const ConfigSelect = React.memo((props: Props) => {
             : 'No options.'
         }
         onChange={(_, selected) => {
-          onChange(+selected.value);
+          onChange(selected !== null ? +selected?.value : undefined);
         }}
         value={
-          value && value !== -1
-            ? configList?.find((thisConfig) => thisConfig.value === value)
-            : { label: '', value: -1 }
+          configList?.find((thisConfig) => thisConfig.value === value) ?? null
         }
-        disableClearable
+        clearIcon={null}
         id={name}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Config"

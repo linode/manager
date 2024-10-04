@@ -1,4 +1,3 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -24,6 +23,8 @@ import { sendEvent } from 'src/utilities/analytics/utils';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { calculateDiskFree } from './CreateDiskDrawer';
+
+import type { Disk } from '@linode/api-v4/lib/linodes';
 
 export interface Props {
   disk: Disk | undefined;
@@ -103,7 +104,7 @@ export const ResizeDiskDrawer = (props: Props) => {
               handleLinkClick('Learn more about restrictions to keep in mind.');
             }}
             to={
-              'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
+              'https://techdocs.akamai.com/cloud-computing/docs/manage-disks-on-a-compute-instance'
             }
           >
             Learn more about restrictions to keep in mind.
@@ -166,7 +167,7 @@ const MaxSizeTooltipText = (
       onClick={() => {
         handleLinkClick('Lish');
       }}
-      to="https://www.linode.com/docs/products/compute/compute-instances/guides/lish/"
+      to="https://techdocs.akamai.com/cloud-computing/docs/access-your-system-console-using-lish"
     >
       Lish
     </Link>

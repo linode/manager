@@ -70,6 +70,7 @@ export interface CloudPulseResourceTypeMapFlag {
 }
 
 interface gpuV2 {
+  egressBanner: boolean;
   planDivider: boolean;
 }
 
@@ -98,7 +99,6 @@ export interface Flags {
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
   ipv6Sharing: boolean;
-  linodeCreateWithFirewall: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];

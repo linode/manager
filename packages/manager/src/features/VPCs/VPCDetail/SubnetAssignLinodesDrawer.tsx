@@ -17,7 +17,6 @@ import { RemovableSelectionsListTable } from 'src/components/RemovableSelections
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { defaultPublicInterface } from 'src/features/Linodes/LinodesCreate/LinodeCreate';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
@@ -579,4 +578,10 @@ export const SubnetAssignLinodesDrawer = (
       </StyledButtonBox>
     </Drawer>
   );
+};
+
+const defaultPublicInterface: InterfacePayload = {
+  ipam_address: '',
+  label: '',
+  purpose: 'public',
 };

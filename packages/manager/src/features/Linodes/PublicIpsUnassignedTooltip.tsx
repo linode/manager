@@ -17,7 +17,7 @@ export const PublicIpsUnassignedTooltip = (
     text={
       <Typography>
         {PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT}{' '}
-        <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance">
           Learn more
         </Link>
         .

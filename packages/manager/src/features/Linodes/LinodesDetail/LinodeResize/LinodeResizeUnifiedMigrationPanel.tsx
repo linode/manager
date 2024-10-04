@@ -71,7 +71,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
                   During a <strong>warm resize</strong>, your Linode will remain
                   up and running for the duration of the process and will be
                   rebooted to complete the resize.{' '}
-                  <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/resize/">
+                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/resize-a-compute-instance">
                     Learn more.
                   </Link>
                   {isLinodeOffline && (
@@ -83,7 +83,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
               }
               status="help"
               tooltipPosition="right"
-              width={[theme.breakpoints.up('sm')] ? 375 : 300}
+              width={375}
             />
           </Box>
           <Box width="100%">
@@ -105,14 +105,14 @@ export const UnifiedMigrationPanel = (props: Props) => {
                   shut down, migrated to a new host machine, and restored to its
                   previous state (booted or powered off) once the resize is
                   complete.{' '}
-                  <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/resize/">
+                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/resize-a-compute-instance">
                     Learn more.
                   </Link>
                 </>
               }
               status="help"
               tooltipPosition="right"
-              width={[theme.breakpoints.up('sm')] ? 450 : 300}
+              width={450}
             />
           </Box>
         </RadioGroup>

@@ -270,7 +270,7 @@ describe('displays kubernetes plans panel based on availability', () => {
         cy.get('[data-qa-plan-row="dedicated-3"]').within(() => {
           cy.get('[data-testid="decrement-button"]').should('be.disabled');
           cy.get('[data-testid="increment-button"]').should('be.disabled');
-          cy.get('[data-testid="Button"]')
+          cy.get('[data-testid="button"]')
             .should(
               'have.attr',
               'aria-label',
@@ -368,7 +368,7 @@ describe('displays specific linode plans for GPU', () => {
     // Should display two separate tables
     cy.findByText('GPU').click();
     cy.get(linodePlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {

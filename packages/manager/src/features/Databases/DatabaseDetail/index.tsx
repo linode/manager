@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
@@ -45,7 +46,9 @@ export const DatabaseDetail = () => {
   const id = Number(databaseId);
 
   const { data: database, error, isLoading } = useDatabaseQuery(engine, id);
-  const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery({
+    platform: database?.platform,
+  });
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
 
@@ -205,5 +208,11 @@ export const DatabaseDetail = () => {
     </>
   );
 };
+
+export const databaseDetailLazyRoute = createLazyRoute(
+  '/databases/$engine/$databaseId'
+)({
+  component: DatabaseDetail,
+});
 
 export default DatabaseDetail;

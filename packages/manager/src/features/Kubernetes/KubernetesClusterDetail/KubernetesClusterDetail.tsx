@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -101,7 +102,7 @@ export const KubernetesClusterDetail = () => {
         }
         createButtonText="Upgrade to HA"
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         title="Kubernetes Cluster Details"
       />
       <Grid>
@@ -124,3 +125,9 @@ export const KubernetesClusterDetail = () => {
     </>
   );
 };
+
+export const kubernetesClusterDetailLazyRoute = createLazyRoute(
+  '/kubernetes/clusters/$clusterID'
+)({
+  component: KubernetesClusterDetail,
+});

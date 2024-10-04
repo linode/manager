@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -179,7 +180,7 @@ export const KubernetesLanding = () => {
         </DismissibleBanner>
       )}
       <LandingHeader
-        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         entity="Cluster"
         onButtonClick={() => push('/kubernetes/create')}
         removeCrumbX={1}
@@ -279,5 +280,11 @@ export const KubernetesLanding = () => {
     </>
   );
 };
+
+export const kubernetesLandingLazyRoute = createLazyRoute(
+  '/kubernetes/clusters'
+)({
+  component: KubernetesLanding,
+});
 
 export default KubernetesLanding;

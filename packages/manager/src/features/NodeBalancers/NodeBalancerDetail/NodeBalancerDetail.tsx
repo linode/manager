@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
   matchPath,
@@ -24,7 +25,7 @@ import { useGrants } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
-import NodeBalancerSettings from './NodeBalancerSettings';
+import { NodeBalancerSettings } from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 
 export const NodeBalancerDetail = () => {
@@ -114,7 +115,7 @@ export const NodeBalancerDetail = () => {
           pathname: `/nodebalancers/${nodeBalancerLabel}`,
         }}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         title={nodeBalancerLabel}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
@@ -155,3 +156,11 @@ export const NodeBalancerDetail = () => {
     </React.Fragment>
   );
 };
+
+export const nodeBalancerDetailLazyRoute = createLazyRoute(
+  '/nodebalancers/$nodeBalancerId'
+)({
+  component: NodeBalancerDetail,
+});
+
+export default NodeBalancerDetail;

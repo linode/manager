@@ -1,4 +1,3 @@
-import type { PlanSelectionType } from './types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const LIMITED_AVAILABILITY_COPY =
@@ -13,15 +12,15 @@ export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
 export const DEDICATED_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/dedicated-cpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/dedicated-cpu-compute-instances';
 export const SHARED_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/shared-cpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/shared-cpu-compute-instances';
 export const HIGH_MEMORY_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/high-memory/';
+  'https://techdocs.akamai.com/cloud-computing/docs/high-memory-compute-instances';
 export const PREMIUM_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/premium/';
+  'https://techdocs.akamai.com/cloud-computing/docs/premium-compute-instances';
 export const GPU_COMPUTE_INSTANCES_LINK =
-  'https://www.linode.com/docs/products/compute/compute-instances/plans/gpu/';
+  'https://techdocs.akamai.com/cloud-computing/docs/gpu-compute-instances';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   addons: {
@@ -78,70 +77,6 @@ export const DEDICATED_512_GB_PLAN: ExtendedType = {
   ],
   successor: null,
   transfer: 12000,
-  vcpus: 64,
-};
-
-export const DBAAS_DEDICATED_512_GB_PLAN: PlanSelectionType = {
-  class: 'dedicated',
-  disk: 7372800,
-  // engines: {
-  //   mysql: [
-  //     {
-  //       price: {
-  //         hourly: 12.48,
-  //         monthly: 8320,
-  //       },
-  //       quantity: 1,
-  //     },
-  //     {
-  //       price: {
-  //         hourly: 24.96,
-  //         monthly: 16640,
-  //       },
-  //       quantity: 2,
-  //     },
-  //     {
-  //       price: {
-  //         hourly: 37.44,
-  //         monthly: 24960,
-  //       },
-  //       quantity: 3,
-  //     },
-  //   ],
-  //   postgresql: [
-  //     {
-  //       price: {
-  //         hourly: 12.48,
-  //         monthly: 8320,
-  //       },
-  //       quantity: 1,
-  //     },
-  //     {
-  //       price: {
-  //         hourly: 24.96,
-  //         monthly: 16640,
-  //       },
-  //       quantity: 2,
-  //     },
-  //     {
-  //       price: {
-  //         hourly: 37.44,
-  //         monthly: 24960,
-  //       },
-  //       quantity: 3,
-  //     },
-  //   ],
-  // },
-  formattedLabel: 'Dedicated 512 GB',
-  heading: 'Dedicated 512 GB',
-  id: 'g6-dedicated-64',
-  label: 'DBaaS - Dedicated 512GB',
-  memory: 524288,
-  price: {
-    hourly: 12.48,
-    monthly: 8320,
-  },
-  subHeadings: ['$8320/mo ($12.48/hr)', '64 CPU, 7200 GB Storage, 512 GB RAM'],
   vcpus: 64,
 };
 

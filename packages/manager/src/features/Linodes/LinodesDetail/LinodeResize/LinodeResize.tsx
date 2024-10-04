@@ -216,7 +216,7 @@ export const LinodeResize = (props: Props) => {
             website, or if you&rsquo;re not using your Linode as much as you
             thought, you can temporarily or permanently resize your Linode to a
             different plan.{' '}
-            <Link to="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/resize-a-compute-instance">
               Learn more.
             </Link>
           </Typography>
