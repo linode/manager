@@ -1,28 +1,26 @@
+import { Divider, Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
+import { FormControlLabel } from 'src/components/FormControlLabel';
+import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
+import { Notice } from 'src/components/Notice/Notice';
+import { TextField } from 'src/components/TextField';
+import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import {
+  useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
   useKubernetesControlPlaneACLQuery,
-  useKubernetesClusterMutation,
 } from 'src/queries/kubernetes';
-import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import {
-  ExtendedIP,
-  validateIPs,
-  stringToExtendedIP,
-} from 'src/utilities/ipUtils';
-import { TextField } from 'src/components/TextField';
-import { Stack, Divider } from '@mui/material';
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
-import { Notice } from 'src/components/Notice/Notice';
-import { Box } from '@mui/material';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Toggle } from 'src/components/Toggle/Toggle';
+import { stringToExtendedIP, validateIPs } from 'src/utilities/ipUtils';
+
+import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
   closeDrawer: () => void;
@@ -41,8 +39,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   const {
     data: data,
     error: isErrorKubernetesACL,
-    isLoading: isLoadingKubernetesACL,
     isFetching: isFetchingKubernetesACL,
+    isLoading: isLoadingKubernetesACL,
     refetch: refetchKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(clusterId);
 
@@ -191,13 +189,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   const ClusterNeedsMigration = () => {
     if (!clusterMigrated) {
       return (
-        <>
-          <Notice spacingTop={24} variant="warning">
-            IPACL has not yet been installed on this cluster. During
-            installation, it may take up to 20 minutes before ACLs are fully
-            enforced for the first time.
-          </Notice>
-        </>
+        <Notice spacingTop={24} variant="warning">
+          IPACL has not yet been installed on this cluster. During installation,
+          it may take up to 20 minutes before ACLs are fully enforced for the
+          first time.
+        </Notice>
       );
     } else {
       return <></>;
@@ -206,21 +202,19 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
   const EnabledCopy = () => {
     return (
-      <>
-        <Grid container>
-          <Grid>
-            <Typography variant="h3">Enabled</Typography>
-          </Grid>
-          <Grid>
-            <Typography variant="body1">
-              A value of true results in a default policy of DENY. A value of
-              false results in a default policy of ALLOW (i.e., access controls
-              are disabled). When enabled, control plane access controls can
-              only be accessible through the defined IP CIDRs.
-            </Typography>
-          </Grid>
+      <Grid container>
+        <Grid>
+          <Typography variant="h3">Enabled</Typography>
         </Grid>
-      </>
+        <Grid>
+          <Typography variant="body1">
+            A value of true results in a default policy of DENY. A value of
+            false results in a default policy of ALLOW (i.e., access controls
+            are disabled). When enabled, control plane access controls can only
+            be accessible through the defined IP CIDRs.
+          </Typography>
+        </Grid>
+      </Grid>
     );
   };
 
@@ -232,10 +226,10 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           <TextField
             data-qa-label-input
             label="Revision ID"
-            value={revisionID}
             onBlur={(e) => setRevisionID(e.target.value)}
+            value={revisionID}
           />
-          <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+          <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
         </>
       );
     } else {
@@ -245,20 +239,18 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
   const RevisionIDCopy = () => {
     return (
-      <>
-        <Grid container>
-          <Grid>
-            <Typography variant="h3">Revision ID</Typography>
-          </Grid>
-          <Grid>
-            <Typography variant="body1">
-              Enables clients to track events related to ACL update requests and
-              enforcements. Optional field. If omitted, defaults to a randomly
-              generated string.
-            </Typography>
-          </Grid>
+      <Grid container>
+        <Grid>
+          <Typography variant="h3">Revision ID</Typography>
         </Grid>
-      </>
+        <Grid>
+          <Typography variant="body1">
+            Enables clients to track events related to ACL update requests and
+            enforcements. Optional field. If omitted, defaults to a randomly
+            generated string.
+          </Typography>
+        </Grid>
+      </Grid>
     );
   };
 
@@ -301,7 +293,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               </Typography>
             </Grid>
           </Grid>
-          <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+          <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
 
           {!_hideEnableFromUI && (
             <>
@@ -310,19 +302,19 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                 <FormControlLabel
                   control={
                     <Toggle
-                      checked={clusterMigrated ? controlPlaneACL : true}
-                      name="ipacl-checkbox"
                       onChange={(e) => {
                         if (clusterMigrated) {
                           return setControlPlaneACL(e.target.checked);
                         }
                       }}
+                      checked={clusterMigrated ? controlPlaneACL : true}
+                      name="ipacl-checkbox"
                     />
                   }
                   label={'IPACL Enabled'}
                 />
               </Box>
-              <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+              <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
             </>
           )}
           <RevisionID />
@@ -330,9 +322,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           <ErrorMessage />
           <Box sx={{ maxWidth: 450 }}>
             <MultipleIPInput
-              buttonText="Add IP Address"
-              ips={ipV4Addr}
-              onChange={handleIPv4ChangeCB}
               onBlur={(_ips: ExtendedIP[]) => {
                 const validatedIPs = validateIPs(_ips, {
                   allowEmptyAddress: false,
@@ -340,23 +329,30 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                 });
                 handleIPv4ChangeCB(validatedIPs);
               }}
+              buttonText="Add IPv4 Address"
+              ips={ipV4Addr}
+              isLinkStyled
+              onChange={handleIPv4ChangeCB}
               placeholder="0.0.0.0/0"
               title="IPv4 Addresses or CIDRs"
             />
-            <MultipleIPInput
-              buttonText="Add IP Address"
-              ips={ipV6Addr}
-              onChange={handleIPv6ChangeCB}
-              onBlur={(_ips: ExtendedIP[]) => {
-                const validatedIPs = validateIPs(_ips, {
-                  allowEmptyAddress: false,
-                  errorMessage: 'Must be a valid IPv6 address.',
-                });
-                handleIPv6ChangeCB(validatedIPs);
-              }}
-              placeholder="::/0"
-              title="IPv6 Addresses or CIDRs"
-            />
+            <Box marginTop={2}>
+              <MultipleIPInput
+                onBlur={(_ips: ExtendedIP[]) => {
+                  const validatedIPs = validateIPs(_ips, {
+                    allowEmptyAddress: false,
+                    errorMessage: 'Must be a valid IPv6 address.',
+                  });
+                  handleIPv6ChangeCB(validatedIPs);
+                }}
+                buttonText="Add IPv6 Address"
+                ips={ipV6Addr}
+                isLinkStyled
+                onChange={handleIPv6ChangeCB}
+                placeholder="::/0"
+                title="IPv6 Addresses or CIDRs"
+              />
+            </Box>
           </Box>
           <ActionsPanel
             primaryButtonProps={{

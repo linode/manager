@@ -15,8 +15,8 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Stack } from 'src/components/Stack';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
-import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { KubeClusterControlPlaneACL } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterControlPlaneACL';
+import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
@@ -29,16 +29,15 @@ import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
 import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
-
-import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import type { Theme } from '@mui/material/styles';
-
 import {
   StyledBox,
   StyledLabelBox,
   StyledListItem,
   sxListItemFirstChild,
 } from './KubeSummaryPanel.styles';
+
+import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionRow: {
@@ -230,6 +229,48 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             </Grid>
           </Grid>
         }
+        footer={
+          <Grid
+            sx={{
+              display: 'flex',
+              padding: 0,
+              [theme.breakpoints.down('lg')]: {
+                padding: '8px',
+              },
+              [theme.breakpoints.down('md')]: {
+                display: 'grid',
+                gridTemplateColumns: '50% 2fr',
+              },
+            }}
+            alignItems="flex-start"
+            lg={8}
+            xs={12}
+          >
+            <StyledBox sx={{ marginLeft: -1, padding: 1 }}>
+              <StyledListItem
+                sx={{
+                  ...sxListItemFirstChild,
+                  [theme.breakpoints.down('lg')]: {
+                    paddingLeft: 0,
+                  },
+                }}
+              >
+                <StyledLabelBox component="span">IPACL: </StyledLabelBox>{' '}
+                <Box
+                  sx={{
+                    display: 'flex',
+                  }}
+                >
+                  <KubeClusterControlPlaneACL
+                    cluster={cluster}
+                    handleOpenDrawer={() => setControlPlaneACLDrawerOpen(true)}
+                    setControlPlaneACLMigrated={setControlPlaneACLMigrated}
+                  />
+                </Box>
+              </StyledListItem>
+            </StyledBox>
+          </Grid>
+        }
         header={
           <EntityHeader>
             <Box
@@ -260,49 +301,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               </StyledActionButton>
             </Box>
           </EntityHeader>
-        }
-        footer={
-          <Grid
-            sx={{
-              display: 'flex',
-              padding: 0,
-              [theme.breakpoints.down('lg')]: {
-                padding: '8px',
-              },
-              [theme.breakpoints.down('md')]: {
-                display: 'grid',
-                gridTemplateColumns: '50% 2fr',
-              },
-            }}
-            alignItems="flex-start"
-            lg={8}
-            xs={12}
-          >
-            <StyledBox sx={{ padding: 1, marginLeft: -1 }}>
-              <StyledListItem
-                sx={{
-                  ...sxListItemFirstChild,
-                  [theme.breakpoints.down('lg')]: {
-                    paddingLeft: 0,
-                  },
-                }}
-              >
-                <StyledLabelBox component="span">IPACL: </StyledLabelBox>{' '}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    marginLeft: '4px',
-                  }}
-                >
-                  <KubeClusterControlPlaneACL
-                    cluster={cluster}
-                    setControlPlaneACLMigrated={setControlPlaneACLMigrated}
-                    handleOpenDrawer={() => setControlPlaneACLDrawerOpen(true)}
-                  />
-                </Box>
-              </StyledListItem>
-            </StyledBox>
-          </Grid>
         }
         noBodyBottomBorder
       />

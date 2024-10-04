@@ -37,22 +37,22 @@ import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
+import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
   StyledRegionSelectStack,
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
-import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import { NodePoolPanel } from './NodePoolPanel';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import type {
   CreateKubeClusterPayload,
@@ -60,6 +60,7 @@ import type {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -161,7 +162,6 @@ export const CreateCluster = () => {
 
     const payload: CreateKubeClusterPayload = {
       control_plane: {
-        high_availability: highAvailability ?? false,
         acl: {
           enabled: controlPlaneACL,
           'revision-id': '',
@@ -172,6 +172,7 @@ export const CreateCluster = () => {
             },
           }),
         },
+        high_availability: highAvailability ?? false,
       },
       k8s_version: version,
       label,
@@ -309,7 +310,7 @@ export const CreateCluster = () => {
             value={versions.find((v) => v.value === version) ?? null}
           />
           <Divider sx={{ marginTop: 4 }} />
-          {showHighAvailability ? (
+          {showHighAvailability && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
                 highAvailabilityPrice={
@@ -323,24 +324,27 @@ export const CreateCluster = () => {
                 setHighAvailability={setHighAvailability}
               />
             </Box>
-          ) : null}
-          <Divider sx={{ marginTop: 4 }} />
-          {showControlPlaneACL ? (
-            <Box data-testid="control-plane-acl">
-              <ControlPlaneACLPane
-                enableControlPlaneACL={controlPlaneACL}
-                setControlPlaneACL={setControlPlaneACL}
-                ipV4Addr={ipV4Addr}
-                handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
-                  setIPv4Addr(newIpV4Addr);
-                }}
-                ipV6Addr={ipV6Addr}
-                handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
-                  setIPv6Addr(newIpV6Addr);
-                }}
-              />
-            </Box>
-          ) : null}
+          )}
+          <Divider />
+          {showControlPlaneACL && (
+            <>
+              <Divider />
+              <Box data-testid="control-plane-acl">
+                <ControlPlaneACLPane
+                  handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
+                    setIPv4Addr(newIpV4Addr);
+                  }}
+                  handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
+                    setIPv6Addr(newIpV6Addr);
+                  }}
+                  enableControlPlaneACL={controlPlaneACL}
+                  ipV4Addr={ipV4Addr}
+                  ipV6Addr={ipV6Addr}
+                  setControlPlaneACL={setControlPlaneACL}
+                />
+              </Box>
+            </>
+          )}
           <Divider sx={{ marginBottom: 4 }} />
           <NodePoolPanel
             typesError={

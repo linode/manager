@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Unstable_Grid2';
-import { Box } from 'src/components/Box';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Typography } from 'src/components/Typography';
 import { useKubernetesControlPlaneACLQuery } from 'src/queries/kubernetes';
@@ -13,11 +13,28 @@ import type { Theme } from '@mui/material/styles';
 
 interface Props {
   cluster: KubernetesCluster;
-  setControlPlaneACLMigrated: (s: boolean) => void;
   handleOpenDrawer: () => void;
+  setControlPlaneACLMigrated: (s: boolean) => void;
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
+  aclElement: {
+    '&:hover': {
+      opacity: 0.7,
+    },
+    '&:last-child': {
+      borderRight: 'none',
+    },
+    alignItems: 'center',
+    borderRight: '1px solid #c4c4c4',
+    cursor: 'pointer',
+    display: 'flex',
+  },
+  aclElementText: {
+    color: theme.textColors.linkActiveLight,
+    marginRight: theme.spacing(1),
+    whiteSpace: 'nowrap',
+  },
   iconTextOuter: {
     flexBasis: '72%',
     minWidth: 115,
@@ -47,23 +64,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       minWidth: 320,
     },
   },
-  aclElement: {
-    '&:hover': {
-      opacity: 0.7,
-    },
-    '&:last-child': {
-      borderRight: 'none',
-    },
-    alignItems: 'center',
-    borderRight: '1px solid #c4c4c4',
-    cursor: 'pointer',
-    display: 'flex',
-  },
-  aclElementText: {
-    color: theme.textColors.linkActiveLight,
-    marginRight: theme.spacing(1),
-    whiteSpace: 'nowrap',
-  },
 }));
 
 export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
@@ -77,7 +77,7 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
   } = useKubernetesControlPlaneACLQuery(cluster.id);
 
   const enabledACL = acl_response ? acl_response.acl.enabled : false;
-  //const revisionIDACL = acl_response ? acl_response.acl['revision-id'] : '';
+  // const revisionIDACL = acl_response ? acl_response.acl['revision-id'] : '';
   const totalIPv4 = acl_response?.acl.addresses?.ipv4?.length
     ? acl_response?.acl.addresses?.ipv4?.length
     : 0;
@@ -94,43 +94,35 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
 
   const EnabledCopy = () => {
     return (
-      <>
-        <Box className={classes.aclElement} onClick={handleOpenDrawer}>
-          <Typography className={classes.aclElementText}>
-            {pluralize('IP Address', 'IP Addresses', totalNumberIPs)}
-          </Typography>
-        </Box>
-      </>
+      <Box className={classes.aclElement} onClick={handleOpenDrawer}>
+        <Typography className={classes.aclElementText}>
+          {pluralize('IP Address', 'IP Addresses', totalNumberIPs)}
+        </Typography>
+      </Box>
     );
   };
 
   const DisabledCopy = () => {
     return (
-      <>
-        <Box className={classes.aclElement} onClick={handleOpenDrawer}>
-          <Typography className={classes.aclElementText}>
-            Enable IPACL
-          </Typography>
-        </Box>
-      </>
+      <Box className={classes.aclElement} onClick={handleOpenDrawer}>
+        <Typography className={classes.aclElementText}>Enable IPACL</Typography>
+      </Box>
     );
   };
 
   const NotMigratedCopy = () => {
     return (
-      <>
-        <Box className={classes.aclElement} onClick={handleOpenDrawer}>
-          <Typography className={classes.aclElementText}>
-            Install IPACL
-          </Typography>
-        </Box>
-      </>
+      <Box className={classes.aclElement} onClick={handleOpenDrawer}>
+        <Typography className={classes.aclElementText}>
+          Install IPACL
+        </Typography>
+      </Box>
     );
   };
 
   const availableActions = [
     isLoadingKubernetesACL ? (
-      <CircleProgress size="sm" noPadding />
+      <CircleProgress noPadding size="sm" />
     ) : failedMigrationStatus() ? (
       <NotMigratedCopy />
     ) : enabledACL ? (
@@ -142,11 +134,11 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
 
   return (
     <Grid
+      alignItems="center"
+      className={classes.item}
       container
       direction="row"
       lg={10}
-      alignItems="center"
-      className={classes.item}
       wrap="nowrap"
     >
       <Typography>{availableActions}</Typography>

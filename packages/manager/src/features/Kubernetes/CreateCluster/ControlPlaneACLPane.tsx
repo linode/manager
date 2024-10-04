@@ -2,20 +2,22 @@ import { Box, FormLabel } from '@mui/material';
 import * as React from 'react';
 
 import { FormControl } from 'src/components/FormControl';
-import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
-import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { ExtendedIP, validateIPs } from 'src/utilities/ipUtils';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Link } from 'src/components/Link';
+import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Toggle } from 'src/components/Toggle/Toggle';
+import { Typography } from 'src/components/Typography';
+import { validateIPs } from 'src/utilities/ipUtils';
+
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface ControlPlaneACLProps {
   enableControlPlaneACL: boolean;
-  setControlPlaneACL: (enabled: boolean) => void;
-  ipV4Addr: ExtendedIP[];
   handleIPv4Change: (ips: ExtendedIP[]) => void;
-  ipV6Addr: ExtendedIP[];
   handleIPv6Change: (ips: ExtendedIP[]) => void;
+  ipV4Addr: ExtendedIP[];
+  ipV6Addr: ExtendedIP[];
+  setControlPlaneACL: (enabled: boolean) => void;
 }
 
 export const IPACLCopy = () => (
@@ -30,11 +32,11 @@ export const IPACLCopy = () => (
 export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
   const {
     enableControlPlaneACL,
-    setControlPlaneACL,
-    ipV4Addr,
     handleIPv4Change,
-    ipV6Addr,
     handleIPv6Change,
+    ipV4Addr,
+    ipV6Addr,
+    setControlPlaneACL,
   } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,9 +85,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
       {enableControlPlaneACL && (
         <Box sx={{ marginBottom: 3, maxWidth: 450 }}>
           <MultipleIPInput
-            buttonText="Add IP Address"
-            ips={ipV4Addr}
-            onChange={handleIPv4ChangeCB}
             onBlur={(_ips: ExtendedIP[]) => {
               const validatedIPs = validateIPs(_ips, {
                 allowEmptyAddress: false,
@@ -93,23 +92,30 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               });
               handleIPv4ChangeCB(validatedIPs);
             }}
+            buttonText="Add IPv4 Address"
+            ips={ipV4Addr}
+            isLinkStyled
+            onChange={handleIPv4ChangeCB}
             placeholder="0.0.0.0/0"
             title="IPv4 Addresses or CIDRs"
           />
-          <MultipleIPInput
-            buttonText="Add IP Address"
-            ips={ipV6Addr}
-            onChange={handleIPv6ChangeCB}
-            onBlur={(_ips: ExtendedIP[]) => {
-              const validatedIPs = validateIPs(_ips, {
-                allowEmptyAddress: false,
-                errorMessage: 'Must be a valid IPv6 address.',
-              });
-              handleIPv6ChangeCB(validatedIPs);
-            }}
-            placeholder="::/0"
-            title="IPv6 Addresses or CIDRs"
-          />
+          <Box marginTop={2}>
+            <MultipleIPInput
+              onBlur={(_ips: ExtendedIP[]) => {
+                const validatedIPs = validateIPs(_ips, {
+                  allowEmptyAddress: false,
+                  errorMessage: 'Must be a valid IPv6 address.',
+                });
+                handleIPv6ChangeCB(validatedIPs);
+              }}
+              buttonText="Add IPv6 Address"
+              ips={ipV6Addr}
+              isLinkStyled
+              onChange={handleIPv6ChangeCB}
+              placeholder="::/0"
+              title="IPv6 Addresses or CIDRs"
+            />
+          </Box>
         </Box>
       )}
     </>
