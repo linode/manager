@@ -111,7 +111,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
               <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
             </Paper>
           )}
-          <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
+          <StyledControlHeader>
             <div className="visually-hidden" id={displayViewDescriptionId}>
               Currently in {linodeViewPreference} view
             </div>
@@ -137,7 +137,7 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
               <Tooltip placement="top-end" title="Ungroup by tag">
                 <StyledToggleButton
                   aria-describedby={groupByDescriptionId}
-                  aria-label={`Toggle group by tag`}
+                  aria-label="Toggle group by tag"
                   disableRipple
                   isActive={linodesAreGrouped}
                   onClick={toggleGroupLinodes}

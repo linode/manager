@@ -172,7 +172,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                       />
                     </Paper>
                   )}
-                  <StyledControlHeader isGroupedByTag={linodesAreGrouped}>
+                  <StyledControlHeader>
                     <div
                       className="visually-hidden"
                       id={displayViewDescriptionId}
@@ -203,7 +203,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                       <Tooltip placement="top-end" title="Group by tag">
                         <StyledToggleButton
                           aria-describedby={groupByDescriptionId}
-                          aria-label={`Toggle group by tag`}
+                          aria-label="Toggle group by tag"
                           disableRipple
                           isActive={linodesAreGrouped}
                           onClick={toggleGroupLinodes}
