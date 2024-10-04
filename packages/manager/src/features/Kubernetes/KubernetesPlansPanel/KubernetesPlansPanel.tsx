@@ -82,7 +82,7 @@ export const KubernetesPlansPanel = (props: Props) => {
 
   const tabs = Object.keys(plans).map(
     (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
-      const plansMap: PlanSelectionType[] = plans[plan];
+      const plansMap: PlanSelectionType[] = plans[plan]!;
       const {
         allDisabledPlans,
         hasMajorityOfPlansDisabled,
