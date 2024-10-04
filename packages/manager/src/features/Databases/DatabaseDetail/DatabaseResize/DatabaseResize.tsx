@@ -62,13 +62,17 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
   const { classes } = useStyles();
   const history = useHistory();
 
-  const [planSelected, setPlanSelected] = React.useState<string>();
+  const [planSelected, setPlanSelected] = React.useState<string | undefined>(
+    database.type
+  );
   const [summaryText, setSummaryText] = React.useState<{
-    numberOfNodes: number;
+    numberOfNodes: ClusterSize;
     plan: string;
     price: string;
   }>();
-  const [nodePricing, setNodePricing] = React.useState<NodePricing>();
+  const [nodePricing, setNodePricing] = React.useState<
+    NodePricing | undefined
+  >();
   // This will be set to `false` once one of the configuration is selected from available plan. This is used to disable the
   // "Resize" button unless there have been changes to the form.
   const [
@@ -86,7 +90,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     isDatabasesV2Enabled,
     isDatabasesGAEnabled,
   } = useIsDatabasesEnabled();
-  const [clusterSize, setClusterSize] = React.useState<ClusterSize>(
+  const [clusterSize, setClusterSize] = React.useState<ClusterSize | undefined>(
     database.cluster_size
   );
 
@@ -107,7 +111,11 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
   const onResize = () => {
     const payload: UpdateDatabasePayload = {};
 
-    if (clusterSize > database.cluster_size && isDatabasesGAEnabled) {
+    if (
+      clusterSize &&
+      clusterSize > database.cluster_size &&
+      isDatabasesGAEnabled
+    ) {
       payload.cluster_size = clusterSize;
     }
 
@@ -121,10 +129,6 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       });
       history.push(`/databases/${database.engine}/${database.id}`);
     });
-  };
-
-  const handleTabChange = (index: number) => {
-    setSelectedTab(index);
   };
 
   const resizeDescription = (
@@ -191,9 +195,26 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     const selectedPlanType = dbTypes.find(
       (type: DatabaseType) => type.id === databaseTypeId
     );
-
-    if (!selectedPlanType) {
+    if (selectedPlanType) {
+      // When plan is found, set node pricing
+      const nodePricingDetails = {
+        double: selectedPlanType.engines[engine]?.find(
+          (cluster: DatabaseClusterSizeObject) => cluster.quantity === 2
+        )?.price,
+        multi: selectedPlanType.engines[engine]?.find(
+          (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
+        )?.price,
+        single: selectedPlanType.engines[engine]?.find(
+          (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
+        )?.price,
+      };
+      setNodePricing(nodePricingDetails);
+    } else {
+      // If plan is not found, clear plan selection
       setPlanSelected(undefined);
+    }
+
+    if (!selectedPlanType || !clusterSize) {
       setSummaryText(undefined);
       setShouldSubmitBeDisabled(true);
       return;
@@ -209,40 +230,28 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       price: `$${price?.monthly}/month or $${price?.hourly}/hour`,
     });
 
-    const nodePricingDetails = {
-      double: selectedPlanType.engines[engine]?.find(
-        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 2
-      )?.price,
-      multi: selectedPlanType.engines[engine]?.find(
-        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
-      )?.price,
-      single: selectedPlanType.engines[engine]?.find(
-        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
-      )?.price,
-    };
-
-    setNodePricing(nodePricingDetails);
     setShouldSubmitBeDisabled(false);
     return;
   };
 
   React.useEffect(() => {
-    const nodeSelected = clusterSize > database.cluster_size;
+    const nodeSelected = clusterSize && clusterSize > database.cluster_size;
+    const isSamePlanSelected = planSelected === database.type;
     if (!dbTypes) {
       return;
     }
     // Set default message and disable submit when no new selection is made
-    if (!nodeSelected && !planSelected) {
+    if (!nodeSelected && (!planSelected || isSamePlanSelected)) {
       setShouldSubmitBeDisabled(true);
       setSummaryText(undefined);
       return;
     }
-    // When only a higher node selection is made and plan has not changed
-    if (isDatabasesGAEnabled && nodeSelected && !planSelected) {
+    // When only a higher node selection is made and plan has not been changed
+    if (isDatabasesGAEnabled && nodeSelected && isSamePlanSelected) {
       setSummaryAndPrices(database.type, database.engine, dbTypes);
     }
-
-    if (!planSelected) {
+    // No plan selection or plan selection is unchanged
+    if (!planSelected || isSamePlanSelected) {
       return;
     }
     // When a new plan is selected
@@ -327,11 +336,31 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const size = Number(event.currentTarget.value) as ClusterSize;
+    const selectedPlanTab = determineInitialPlanCategoryTab(
+      displayTypes,
+      planSelected
+    );
+    // If 2 Nodes is selected for an incompatible plan, clear selected plan and related information
+    if (size === 2 && selectedPlanTab !== 0) {
+      setNodePricing(undefined);
+      setPlanSelected(undefined);
+      setSummaryText(undefined);
+    }
     setClusterSize(size);
   };
 
-  const handlePlanSelect = (selected: string) => {
-    setPlanSelected(selected);
+  const handleTabChange = (index: number) => {
+    if (selectedTab === index) {
+      return;
+    }
+    // Clear plan and related info when when 2 nodes option is selected for incompatible plan.
+    if (isDatabasesGAEnabled && selectedTab === 0 && clusterSize === 2) {
+      setClusterSize(undefined);
+      setPlanSelected(undefined);
+      setNodePricing(undefined);
+      setSummaryText(undefined);
+    }
+    setSelectedTab(index);
   };
 
   const nodeOptions = React.useMemo(() => {
@@ -437,7 +466,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           disabledSmallerPlans={disabledPlans}
           disabledTabs={isDisabledSharedTab ? ['shared'] : []}
           header="Choose a Plan"
-          onSelect={handlePlanSelect}
+          onSelect={(selected: string) => setPlanSelected(selected)}
           handleTabChange={handleTabChange}
           selectedId={planSelected}
           tabDisabledMessage="Resizing a 2-nodes cluster is only allowed with Dedicated plans."
@@ -457,7 +486,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
 
             <RadioGroup
               style={{ marginBottom: 0, marginTop: 0 }}
-              value={clusterSize}
+              value={clusterSize ?? ''}
               onChange={handleNodeChange}
               data-testid="database-nodes"
             >
