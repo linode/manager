@@ -17,14 +17,14 @@ export const StackScriptsRoutes = () => {
   );
 };
 
-const StackScriptsRoute = createRoute({
+const stackScriptsRoute = createRoute({
   component: StackScriptsRoutes,
   getParentRoute: () => rootRoute,
   path: 'stackscripts',
 });
 
-const StackScriptsLandingRoute = createRoute({
-  getParentRoute: () => StackScriptsRoute,
+const stackScriptsLandingRoute = createRoute({
+  getParentRoute: () => stackScriptsRoute,
   path: '/',
 }).lazy(() =>
   import('src/features/StackScripts/StackScriptsLanding').then(
@@ -32,8 +32,8 @@ const StackScriptsLandingRoute = createRoute({
   )
 );
 
-const StackScriptsAccountRoute = createRoute({
-  getParentRoute: () => StackScriptsRoute,
+const stackScriptsAccountRoute = createRoute({
+  getParentRoute: () => stackScriptsRoute,
   path: 'account',
 }).lazy(() =>
   import('src/features/StackScripts/StackScriptsLanding').then(
@@ -41,8 +41,8 @@ const StackScriptsAccountRoute = createRoute({
   )
 );
 
-const StackScriptsCommunityRoute = createRoute({
-  getParentRoute: () => StackScriptsRoute,
+const stackScriptsCommunityRoute = createRoute({
+  getParentRoute: () => stackScriptsRoute,
   path: 'community',
 }).lazy(() =>
   import('src/features/StackScripts/StackScriptsLanding').then(
@@ -50,38 +50,38 @@ const StackScriptsCommunityRoute = createRoute({
   )
 );
 
-const StackScriptsCreateRoute = createRoute({
+const stackScriptsCreateRoute = createRoute({
   // TODO: TanStack Router - broken, perhaps due to being a class component.
   component: () => <StackScriptCreate mode="create" />,
-  getParentRoute: () => StackScriptsRoute,
+  getParentRoute: () => stackScriptsRoute,
   path: 'create',
 });
 
-const StackScriptsDetailRoute = createRoute({
+const stackScriptsDetailRoute = createRoute({
   // TODO: TanStack Router - broken, perhaps due to being a class component.
   component: () => <StackScriptDetail />,
-  getParentRoute: () => StackScriptsRoute,
+  getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
     stackScriptID: Number(params.stackScriptID),
   }),
   path: '$stackScriptID',
 });
 
-const StackScriptsEditRoute = createRoute({
+const stackScriptsEditRoute = createRoute({
   // TODO: TanStack Router - broken, perhaps due to being a class component.
   component: () => <StackScriptCreate mode="edit" />,
-  getParentRoute: () => StackScriptsRoute,
+  getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
     stackScriptID: Number(params.stackScriptID),
   }),
   path: '$stackScriptID/edit',
 });
 
-export const stackScriptsRouteTree = StackScriptsRoute.addChildren([
-  StackScriptsLandingRoute,
-  StackScriptsAccountRoute,
-  StackScriptsCommunityRoute,
-  StackScriptsCreateRoute,
-  StackScriptsDetailRoute,
-  StackScriptsEditRoute,
+export const stackScriptsRouteTree = stackScriptsRoute.addChildren([
+  stackScriptsLandingRoute,
+  stackScriptsAccountRoute,
+  stackScriptsCommunityRoute,
+  stackScriptsCreateRoute,
+  stackScriptsDetailRoute,
+  stackScriptsEditRoute,
 ]);

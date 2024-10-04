@@ -1,5 +1,7 @@
 import { routeTree } from '..';
 
+import type { AnyRoute } from '@tanstack/react-router';
+
 /**
  * This function is meant to be used for testing purposes only.
  * It allows us to generate a list of all unique @tanstack/router paths defined in the routing factory.
@@ -7,7 +9,10 @@ import { routeTree } from '..';
  * We import this util in cypress to loop through all routes and test them.
  * It probably should not be used for anything else.
  */
-export const getAllRoutePaths = (route: any, parentPath = ''): string[] => {
+export const getAllRoutePaths = (
+  route: AnyRoute,
+  parentPath = ''
+): string[] => {
   let currentPath = parentPath
     ? `${parentPath}/${route.path || ''}`
     : route.path || '';
@@ -15,15 +20,15 @@ export const getAllRoutePaths = (route: any, parentPath = ''): string[] => {
   // Remove leading and trailing slashes
   currentPath = currentPath.replace(/^\/+|\/+$/g, '');
 
-  const paths: Set<string> = new Set();
+  const paths = new Set<string>();
 
   // Check if the current path is valid
   if (currentPath && currentPath !== '//') {
     paths.add('/' + currentPath);
   }
 
-  if (route.children) {
-    route.children.forEach((childRoute: any) => {
+  if (route.children && Array.isArray(route.children)) {
+    route.children.forEach((childRoute) => {
       getAllRoutePaths(childRoute, currentPath).forEach((path) =>
         paths.add(path)
       );

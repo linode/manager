@@ -15,22 +15,22 @@ export const SupportTicketsRoutes = () => {
   );
 };
 
-const SupportRoute = createRoute({
+const supportRoute = createRoute({
   // TODO: TanStackRouter - got to handle the MainContent.tsx `globalErrors.account_unactivated` logic.
   component: SupportTicketsRoutes,
   getParentRoute: () => rootRoute,
   path: 'support',
 });
 
-const SupportLandingRoute = createRoute({
-  getParentRoute: () => SupportRoute,
+const supportLandingRoute = createRoute({
+  getParentRoute: () => supportRoute,
   path: '/',
 }).lazy(() =>
   import('src/features/Help/HelpLanding').then((m) => m.helpLandingLazyRoute)
 );
 
-const SupportTicketsRoute = createRoute({
-  getParentRoute: () => SupportRoute,
+const supportTicketsRoute = createRoute({
+  getParentRoute: () => supportRoute,
   path: 'tickets',
 }).lazy(() =>
   import('src/features/Support/SupportTickets/SupportTicketsLanding').then(
@@ -38,8 +38,8 @@ const SupportTicketsRoute = createRoute({
   )
 );
 
-const SupportTicketDetailRoute = createRoute({
-  getParentRoute: () => SupportRoute,
+const supportTicketDetailRoute = createRoute({
+  getParentRoute: () => supportRoute,
   parseParams: (params) => ({
     ticketId: Number(params.ticketId),
   }),
@@ -50,8 +50,8 @@ const SupportTicketDetailRoute = createRoute({
   )
 );
 
-const SupportSearchLandingRoute = createRoute({
-  getParentRoute: () => SupportRoute,
+const supportSearchLandingRoute = createRoute({
+  getParentRoute: () => supportRoute,
   path: 'search',
 }).lazy(() =>
   import('src/features/Help/SupportSearchLanding/SupportSearchLanding').then(
@@ -59,8 +59,8 @@ const SupportSearchLandingRoute = createRoute({
   )
 );
 
-export const supportRouteTree = SupportRoute.addChildren([
-  SupportLandingRoute,
-  SupportTicketsRoute.addChildren([SupportTicketDetailRoute]),
-  SupportSearchLandingRoute,
+export const supportRouteTree = supportRoute.addChildren([
+  supportLandingRoute,
+  supportTicketsRoute.addChildren([supportTicketDetailRoute]),
+  supportSearchLandingRoute,
 ]);

@@ -6,23 +6,20 @@ import {
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
+import { accountSettingsFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { allPaths } from './utils/allPaths';
 import { routeTree } from './index';
+import { allPaths } from './utils/allPaths';
+
+import type { RouterContext } from './types';
 
 // Mock any context or dependencies your routes might need
-const mockContext = {
-  accountSettings: {},
-  app: {
-    features: {},
-    flags: {},
-    notifications: [],
-  },
+const mockContext: RouterContext = {
+  accountSettings: accountSettingsFactory.build(),
   isACLPEnabled: false,
   isDatabasesEnabled: false,
   isPlacementGroupsEnabled: false,
-  selfServeBetas: false,
 };
 
 // Helper function to create a test router

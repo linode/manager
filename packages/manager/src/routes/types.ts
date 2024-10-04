@@ -1,6 +1,7 @@
-// TODO: TanStackRouter - type this better
+import type { AccountSettings } from '@linode/api-v4';
+
 export type RouterContext = {
-  accountSettings?: any;
+  accountSettings?: AccountSettings;
   globalErrors?: {
     account_unactivated?: boolean;
   };
