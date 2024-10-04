@@ -122,8 +122,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices'); 
-    mockGetCloudPulseDashboard(id, dashboard)
+    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseDashboard(id, dashboard);
     mockCreateCloudPulseJWEToken(serviceType);
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'getMetrics'
@@ -133,8 +133,9 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     // navigate to the cloudpulse page
     cy.visitWithLogin('monitor/cloudpulse');
-    cy.wait('@fetchServices'); // Wait for services
-    cy.wait('@fetchDashboard'); // Wait for dashboard
+
+    // Wait for the services and dashboard API calls to complete before proceeding
+    cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
@@ -161,7 +162,8 @@ describe('Integration Tests for Linode Dashboard ', () => {
       .click();
 
     cy.findByText(resource).should('be.visible');
-    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);// Wait for all metrics query requests to resolve. 
+    // Wait for all metrics query requests to resolve.
+    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
   });
 
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
@@ -215,16 +217,25 @@ describe('Integration Tests for Linode Dashboard ', () => {
               'be.visible'
             );
             cy.get(`[data-qa-graph-column-title="Max"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.max} ${testData.unit}`);
-          
-          cy.get(`[data-qa-graph-column-title="Avg"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.average} ${testData.unit}`);
-          
-          cy.get(`[data-qa-graph-column-title="Last"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.last} ${testData.unit}`);
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.max} ${testData.unit}`
+              );
+
+            cy.get(`[data-qa-graph-column-title="Avg"]`)
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.average} ${testData.unit}`
+              );
+
+            cy.get(`[data-qa-graph-column-title="Last"]`)
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.last} ${testData.unit}`
+              );
           });
         });
     });
@@ -265,16 +276,25 @@ describe('Integration Tests for Linode Dashboard ', () => {
               'be.visible'
             );
             cy.get(`[data-qa-graph-column-title="Max"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.max} ${testData.unit}`);
-          
-          cy.get(`[data-qa-graph-column-title="Avg"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.average} ${testData.unit}`);
-          
-          cy.get(`[data-qa-graph-column-title="Last"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.last} ${testData.unit}`);
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.max} ${testData.unit}`
+              );
+
+            cy.get(`[data-qa-graph-column-title="Avg"]`)
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.average} ${testData.unit}`
+              );
+
+            cy.get(`[data-qa-graph-column-title="Last"]`)
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.last} ${testData.unit}`
+              );
           });
         });
     });
@@ -283,7 +303,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
       'refreshMetrics'
     );
-    
+
     // click the global refresh button
     ui.button
       .findByAttribute('aria-label', 'Refresh Dashboard Metrics')
@@ -331,16 +351,25 @@ describe('Integration Tests for Linode Dashboard ', () => {
               'be.visible'
             );
             cy.get(`[data-qa-graph-column-title="Max"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.max} ${testData.unit}`);
-          
-          cy.get(`[data-qa-graph-column-title="Avg"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.average} ${testData.unit}`);
-          
-          cy.get(`[data-qa-graph-column-title="Last"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.last} ${testData.unit}`);
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.max} ${testData.unit}`
+              );
+
+            cy.get(`[data-qa-graph-column-title="Avg"]`)
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.average} ${testData.unit}`
+              );
+
+            cy.get(`[data-qa-graph-column-title="Last"]`)
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.last} ${testData.unit}`
+              );
           });
 
           // click zoom out and validate the same
@@ -359,16 +388,25 @@ describe('Integration Tests for Linode Dashboard ', () => {
               'be.visible'
             );
             cy.get(`[data-qa-graph-column-title="Max"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.max} ${testData.unit}`);
-          
-          cy.get(`[data-qa-graph-column-title="Avg"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.average} ${testData.unit}`);
-          
-          cy.get(`[data-qa-graph-column-title="Last"]`)
-            .should('be.visible')
-            .should('have.text', `${expectedWidgetValues.last} ${testData.unit}`);
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.max} ${testData.unit}`
+              );
+
+            cy.get(`[data-qa-graph-column-title="Avg"]`)
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.average} ${testData.unit}`
+              );
+
+            cy.get(`[data-qa-graph-column-title="Last"]`)
+              .should('be.visible')
+              .should(
+                'have.text',
+                `${expectedWidgetValues.last} ${testData.unit}`
+              );
           });
         });
     });
