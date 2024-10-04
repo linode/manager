@@ -51,6 +51,16 @@ const useStyles = makeStyles()((theme: Theme) => ({
     color:
       theme.palette.mode === 'dark' ? theme.color.grey6 : theme.color.grey1,
   },
+  summarySpanBorder: {
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    color: theme.textColors.tableStatic,
+    paddingRight: '10px',
+    marginRight: '10px;',
+    marginLeft: '10px;',
+  },
+  nodeSpanSpacing: {
+    marginRight: '10px',
+  },
 }));
 
 interface Props {
@@ -69,6 +79,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     numberOfNodes: ClusterSize;
     plan: string;
     price: string;
+    basePrice: string;
   }>();
   const [nodePricing, setNodePricing] = React.useState<
     NodePricing | undefined
@@ -141,23 +152,45 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     </>
   );
 
-  const summaryPanel = (
+  const resizeSummary = (
     <>
-      <Typography variant="h2">Summary</Typography>
       <Box
         sx={(theme) => ({
           marginTop: theme.spacing(2),
         })}
-        data-testid="summary"
+        data-testid="resizeSummary"
       >
         {summaryText ? (
           <>
-            <StyledPlanSummarySpan>{summaryText.plan}</StyledPlanSummarySpan>{' '}
-            {summaryText.numberOfNodes} Node
-            {summaryText.numberOfNodes > 1 ? 's' : ''}: {summaryText.price}
+            <StyledPlanSummarySpan>
+              {isDatabasesGAEnabled
+                ? 'Resized Cluster: ' + summaryText.plan
+                : summaryText.plan}
+            </StyledPlanSummarySpan>{' '}
+            {isDatabasesGAEnabled ? (
+              <span
+                className={
+                  isDatabasesGAEnabled ? classes.summarySpanBorder : ''
+                }
+              >
+                {summaryText.basePrice}
+              </span>
+            ) : null}
+            <span
+              className={isDatabasesGAEnabled ? classes.nodeSpanSpacing : ''}
+            >
+              {' '}
+              {summaryText.numberOfNodes} Node
+              {summaryText.numberOfNodes > 1 ? 's' : ''}
+              {!isDatabasesGAEnabled ? ': ' : ' - HA '}
+            </span>
+            {summaryText.price}
           </>
         ) : isDatabasesGAEnabled ? (
-          'Please select a plan or set the number of nodes.'
+          <>
+            <StyledPlanSummarySpan>Resized Cluster:</StyledPlanSummarySpan>{' '}
+            Please select a plan or set the number of nodes.
+          </>
         ) : (
           'Please select a plan.'
         )}
@@ -223,11 +256,17 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     const price = selectedPlanType.engines[engine].find(
       (cluster: DatabaseClusterSizeObject) => cluster.quantity === clusterSize
     )?.price as DatabasePriceObject;
+    const resizeBasePrice = selectedPlanType.engines[engine][0]
+      .price as DatabasePriceObject;
+    const currentPlanPrice = `$${resizeBasePrice?.monthly}/month`;
 
     setSummaryText({
       numberOfNodes: clusterSize,
       plan: formatStorageUnits(selectedPlanType.label),
-      price: `$${price?.monthly}/month or $${price?.hourly}/hour`,
+      price: isDatabasesGAEnabled
+        ? `$${price?.monthly}/month`
+        : `$${price?.monthly}/month or $${price?.hourly}/hour`,
+      basePrice: currentPlanPrice,
     });
 
     setShouldSubmitBeDisabled(false);
@@ -246,16 +285,16 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       setSummaryText(undefined);
       return;
     }
+    const engineType = database.engine.split('/')[0] as Engine;
     // When only a higher node selection is made and plan has not been changed
     if (isDatabasesGAEnabled && nodeSelected && isSamePlanSelected) {
-      setSummaryAndPrices(database.type, database.engine, dbTypes);
+      setSummaryAndPrices(database.type, engineType, dbTypes);
     }
     // No plan selection or plan selection is unchanged
     if (!planSelected || isSamePlanSelected) {
       return;
     }
     // When a new plan is selected
-    const engineType = database.engine.split('/')[0] as Engine;
     setSummaryAndPrices(planSelected, engineType, dbTypes);
   }, [
     dbTypes,
@@ -303,6 +342,31 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     type.class === 'dedicated'
       ? type.disk < currentPlanDisk
       : type.disk <= currentPlanDisk
+  );
+  const currentEngine = database.engine.split('/')[0] as Engine;
+  const currentPrice = currentPlan?.engines[currentEngine].find(
+    (cluster: DatabaseClusterSizeObject) =>
+      cluster.quantity === database.cluster_size
+  )?.price as DatabasePriceObject;
+  const currentBasePrice = currentPlan?.engines[currentEngine][0]
+    .price as DatabasePriceObject;
+  const currentNodePrice = `$${currentPrice?.monthly}/month`;
+  const currentPlanPrice = `$${currentBasePrice?.monthly}/month`;
+  const currentSummary = (
+    <Box data-testid="currentSummary">
+      <StyledPlanSummarySpan>
+        Current Cluster: {currentPlan?.heading}
+      </StyledPlanSummarySpan>{' '}
+      <span className={isDatabasesGAEnabled ? classes.summarySpanBorder : ''}>
+        {currentPlanPrice}
+      </span>
+      <span className={classes.nodeSpanSpacing}>
+        {' '}
+        {database.cluster_size} Node
+        {database.cluster_size > 1 ? 's - HA ' : ' - HA '}
+      </span>
+      {currentNodePrice}
+    </Box>
   );
 
   const isDisabledSharedTab = database.cluster_size === 2;
@@ -384,7 +448,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
         label: (
           <Typography
             component={'div'}
-            className={isDisabled(1) ? classes.disabledOptionLabel : undefined}
+            className={isDisabled(1) ? classes.disabledOptionLabel : ''}
           >
             <span>1 Node {` `}</span>
             {database.cluster_size === 1 && currentChip}
@@ -405,7 +469,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
         label: (
           <Typography
             component={'div'}
-            className={isDisabled(2) ? classes.disabledOptionLabel : undefined}
+            className={isDisabled(2) ? classes.disabledOptionLabel : ''}
           >
             <span>2 Nodes - High Availability</span>
             {database.cluster_size === 2 && currentChip}
@@ -425,7 +489,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       label: (
         <Typography
           component={'div'}
-          className={isDisabled(3) ? classes.disabledOptionLabel : undefined}
+          className={isDisabled(3) ? classes.disabledOptionLabel : ''}
         >
           <span>3 Nodes - High Availability (recommended)</span>
           {database.cluster_size === 3 && currentChip}
@@ -506,7 +570,18 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           </>
         )}
       </Paper>
-      <Paper sx={{ marginTop: 2 }}>{summaryPanel}</Paper>
+      <Paper sx={{ marginTop: 2 }}>
+        <Typography
+          sx={(theme) => ({
+            marginBottom: isDatabasesGAEnabled ? theme.spacing(2) : 0,
+          })}
+          variant="h2"
+        >
+          Summary {isDatabasesGAEnabled ? database.label : ''}
+        </Typography>
+        {isDatabasesGAEnabled && currentPlan ? currentSummary : null}
+        {resizeSummary}
+      </Paper>
       <StyledGrid>
         <StyledResizeButton
           onClick={() => {
