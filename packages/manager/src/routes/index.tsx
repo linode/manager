@@ -74,6 +74,11 @@ declare module '@tanstack/react-router' {
     // This infers the type of our router and registers it across the entire project
     router: typeof router;
   }
+  interface HistoryState {
+    state: {
+      betaId: string;
+    };
+  }
 }
 
 /**

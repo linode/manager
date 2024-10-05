@@ -1,7 +1,10 @@
-import { createLazyRoute } from '@tanstack/react-router';
+import {
+  createLazyRoute,
+  useNavigate,
+  useRouterState,
+} from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
@@ -108,10 +111,10 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
 10. Feedback, Data Analysis. Tester agrees to provide reasonably prompt Project Feedback regarding Tester’s experience with a Project Service in accordance to the appropriate Project Addendum, and that Linode may use and store Tester’s Project Feedback for any purpose relating to the development of Linode services. Linode, with Participant’s consent, may publicize Tester’s Project Feedback for promotional or marketing purposes.
 `;
 
-  const location = useLocation<{ betaId: string }>();
-  const history = useHistory();
-  const betaId = location?.state?.betaId;
-  const { data: beta, isError, isLoading } = useBetaQuery(betaId);
+  const routerState = useRouterState();
+  const navigate = useNavigate();
+  const betaId = routerState.location.state?.state?.betaId;
+  const { data: beta, isError, isLoading } = useBetaQuery(betaId, !!betaId);
   const [hasAgreed, setHasAgreed] = React.useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
   const { mutateAsync: createAccountBeta } = useCreateAccountBetaMutation();
@@ -121,7 +124,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
     setIsSubmitting(true);
     try {
       await createAccountBeta({ id: betaId });
-      history.push('/betas');
+      navigate({ to: '/betas' });
     } catch (errors) {
       enqueueSnackbar(errors[0]?.reason, {
         autoHideDuration: 10000,
@@ -173,7 +176,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
                 'data-testid': 'cancel',
                 label: 'Cancel',
                 onClick: () => {
-                  history.push('/betas');
+                  navigate({ to: '/betas' });
                 },
               }}
             />

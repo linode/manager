@@ -84,6 +84,31 @@ module.exports = {
         'testing-library/await-async-query': 'off',
       },
     },
+    // restrict usage of react-router-dom during migration to tanstack/react-router
+    // TODO: TanStack Router - remove this override when migration is complete
+    {
+      files: ['src/features/Betas/*'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                importNames: [
+                  'useNavigate',
+                  'useParams',
+                  'useLocation',
+                  'useHistory',
+                ],
+                message:
+                  'Please use routing utilities from @tanstack/react-router.',
+                name: 'react-router-dom',
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
