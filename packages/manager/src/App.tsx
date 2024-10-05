@@ -9,13 +9,14 @@ import {
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
-import { GoTo } from './GoTo';
-import { MainContent } from './MainContent';
 import { SplashScreen } from './components/SplashScreen';
+import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
+import { MainContent } from './MainContent';
 import { useEventsPoller } from './queries/events/events';
+// import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 // Ensure component's display name is 'App'
@@ -47,6 +48,12 @@ const BaseApp = withDocumentTitleProvider(
         <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
         <MainContent />
+        {/*
+          * This will be our new entry point
+          * Leaving this commented out so reviewers can test the app with the new routing at any point by replacing
+          * MainContent with <Router />.
+          <Router />
+        */}
         <GlobalListeners />
       </ErrorBoundary>
     );
