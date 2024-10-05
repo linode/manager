@@ -32,7 +32,7 @@ const betaLandingRoute = createRoute({
 
 const betaSignupRoute = createRoute({
   getParentRoute: () => betaRoute,
-  path: 'signup',
+  path: 'signup/$betaId',
 }).lazy(() =>
   import('src/features/Betas/BetaSignup').then((m) => m.betaSignupLazyRoute)
 );

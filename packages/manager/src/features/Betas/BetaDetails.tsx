@@ -1,20 +1,21 @@
-import { AccountBeta } from '@linode/api-v4/lib/account';
-import { Beta } from '@linode/api-v4/lib/betas';
-import { Stack } from 'src/components/Stack';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
+
+import type { AccountBeta } from '@linode/api-v4/lib/account';
+import type { Beta } from '@linode/api-v4/lib/betas';
 
 interface Props {
   beta: AccountBeta | Beta;
 }
 
 const BetaDetails = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   let more_info = undefined;
   let enrolled = undefined;
   if ('more_info' in props.beta) {
@@ -63,7 +64,7 @@ const BetaDetails = (props: Props) => {
         {enrolled ? null : (
           <Button
             onClick={() => {
-              history.push('/betas/signup', { betaId: id });
+              navigate({ to: `/betas/signup/${id}` });
             }}
             buttonType="primary"
           >

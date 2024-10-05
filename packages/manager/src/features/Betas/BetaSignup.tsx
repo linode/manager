@@ -1,7 +1,7 @@
 import {
   createLazyRoute,
   useNavigate,
-  useRouterState,
+  useParams,
 } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -111,9 +111,8 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
 10. Feedback, Data Analysis. Tester agrees to provide reasonably prompt Project Feedback regarding Tester’s experience with a Project Service in accordance to the appropriate Project Addendum, and that Linode may use and store Tester’s Project Feedback for any purpose relating to the development of Linode services. Linode, with Participant’s consent, may publicize Tester’s Project Feedback for promotional or marketing purposes.
 `;
 
-  const routerState = useRouterState();
   const navigate = useNavigate();
-  const betaId = routerState.location.state?.state?.betaId;
+  const { betaId } = useParams({ from: '/betas/signup/$betaId' });
   const { data: beta, isError, isLoading } = useBetaQuery(betaId, !!betaId);
   const [hasAgreed, setHasAgreed] = React.useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
@@ -140,7 +139,12 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
 
   return (
     <>
-      <LandingHeader title="Sign Up" />
+      <LandingHeader
+        breadcrumbProps={{
+          pathname: `/betas/${betaId}`,
+        }}
+        title={beta?.label}
+      />
       <Paper>
         {isLoading || !beta ? (
           <CircleProgress />
@@ -187,6 +191,6 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
   );
 };
 
-export const betaSignupLazyRoute = createLazyRoute('/betas/signup')({
+export const betaSignupLazyRoute = createLazyRoute('/betas/signup/$betaId')({
   component: BetaSignup,
 });
