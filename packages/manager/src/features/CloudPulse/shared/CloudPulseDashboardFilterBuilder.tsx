@@ -65,17 +65,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       preferences,
     } = props;
 
-    const [, setDependentFilters] = React.useState<{
+    const [dependentFilters, setDependentFilters] = React.useState<{
       [key: string]: FilterValueType;
     }>({});
 
     const [showFilter, setShowFilter] = React.useState<boolean>(true);
 
     const theme = useTheme();
-
-    const dependentFilterReference: React.MutableRefObject<{
-      [key: string]: FilterValueType;
-    }> = React.useRef({});
 
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
@@ -86,13 +82,16 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           for (const filter of filters) {
             if (
               Boolean(filter?.configuration.dependency?.length) &&
-              filter?.configuration.dependency?.includes(filterKey) &&
-              dependentFilterReference.current[filterKey] !== value
+              filter?.configuration.dependency?.includes(filterKey)
             ) {
-              dependentFilterReference.current[filterKey] = value;
-              setDependentFilters(() => ({
-                ...dependentFilterReference.current,
-              }));
+              // Use the functional form to ensure you're always working with the latest state
+              setDependentFilters((prev) => {
+                // Only update if the value is different
+                if (prev[filterKey] !== value) {
+                  return { ...prev, [filterKey]: value };
+                }
+                return prev; // If no change, return the previous state
+              });
               break;
             }
           }
@@ -185,7 +184,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
-              dependentFilters: dependentFilterReference.current,
+              dependentFilters: dependentFilters,
               isServiceAnalyticsIntegration,
               preferences,
             },
@@ -196,7 +195,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
-              dependentFilters: dependentFilterReference.current,
+              dependentFilters: dependentFilters,
               isServiceAnalyticsIntegration,
               preferences,
             },
@@ -211,6 +210,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
         preferences,
+        dependentFilters,
       ]
     );
 
@@ -218,7 +218,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       setShowFilter((showFilterPrev) => !showFilterPrev);
     };
 
-    const RenderFilters = React.useCallback(() => {
+    const RenderFilters = React.useMemo(() => {
       const filters = FILTER_CONFIG.get(dashboard.service_type)?.filters || [];
 
       if (!filters || filters.length === 0) {
@@ -251,7 +251,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             })}
           </Grid>
         ));
-    }, [dashboard, getProps, isServiceAnalyticsIntegration]);
+    }, [dashboard, getProps, isServiceAnalyticsIntegration, dependentFilters]);
 
     if (
       !dashboard ||
@@ -315,7 +315,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           rowGap={2}
           xs={12}
         >
-          <RenderFilters />
+          {RenderFilters}
         </Grid>
       </Grid>
     );
@@ -330,6 +330,6 @@ function compareProps(
   return (
     oldProps.dashboard?.id === newProps.dashboard?.id &&
     oldProps.preferences?.[DASHBOARD_ID] ===
-      newProps.preferences?.[DASHBOARD_ID]
+    newProps.preferences?.[DASHBOARD_ID]
   );
 }
