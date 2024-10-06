@@ -55,6 +55,17 @@ vi.mock('highlight.js/lib/highlight', () => ({
 }));
 
 /**
+ * Mocks for @tanstack/react-router
+ */
+const mockNavigate = vi.fn();
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => mockNavigate,
+  useRouter: () => ({
+    navigate: mockNavigate,
+  }),
+}));
+
+/**
  ***************************************
  *  Custom matchers & matchers overrides
  ***************************************
