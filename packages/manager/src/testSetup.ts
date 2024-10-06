@@ -58,12 +58,20 @@ vi.mock('highlight.js/lib/highlight', () => ({
  * Mocks for @tanstack/react-router
  */
 const mockNavigate = vi.fn();
-vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => mockNavigate,
-  useRouter: () => ({
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn().mockReturnValue(mockNavigate),
+  useRouter: vi.fn().mockReturnValue({
     navigate: mockNavigate,
   }),
 }));
+vi.mock(import('@tanstack/react-router'), async () => {
+  const actual = await import('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useRouter: queryMocks.useRouter,
+  };
+});
 
 /**
  ***************************************

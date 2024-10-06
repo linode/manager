@@ -20,7 +20,6 @@ import {
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
-  betaFactory,
   contactFactory,
   credentialFactory,
   creditPaymentResponseFactory,
@@ -2053,15 +2052,6 @@ export const handlers = [
   }),
   http.post('*/account/betas', () => {
     return HttpResponse.json({});
-  }),
-  http.get('*/betas/:id', ({ params }) => {
-    if (params.id !== 'undefined') {
-      return HttpResponse.json(betaFactory.build({ id: params.id as string }));
-    }
-    return HttpResponse.json({}, { status: 404 });
-  }),
-  http.get('*/betas', () => {
-    return HttpResponse.json(makeResourcePage(betaFactory.buildList(5)));
   }),
   http.get('*regions/availability', () => {
     return HttpResponse.json(
