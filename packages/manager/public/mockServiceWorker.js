@@ -92,6 +92,11 @@ self.addEventListener('message', async function (event) {
 self.addEventListener('fetch', function (event) {
   const { request } = event
 
+  // Bypass launch darkly
+  if (request.url.includes("launchdarkly.com")) {
+    return
+  }
+
   // Bypass navigation requests.
   if (request.mode === 'navigate') {
     return
