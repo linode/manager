@@ -251,7 +251,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             })}
           </Grid>
         ));
-    }, [dashboard, getProps, isServiceAnalyticsIntegration, dependentFilters]);
+    }, [dashboard, getProps, isServiceAnalyticsIntegration]);
 
     if (
       !dashboard ||
