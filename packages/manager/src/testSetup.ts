@@ -57,11 +57,10 @@ vi.mock('highlight.js/lib/highlight', () => ({
 /**
  * Mocks for @tanstack/react-router
  */
-const mockNavigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
-  useNavigate: vi.fn().mockReturnValue(mockNavigate),
+  useNavigate: vi.fn().mockReturnValue({}),
   useRouter: vi.fn().mockReturnValue({
-    navigate: mockNavigate,
+    navigate: {},
   }),
 }));
 vi.mock(import('@tanstack/react-router'), async () => {
