@@ -11,10 +11,17 @@ import {
   StyledHighlightedMarkdown,
 } from './CodeBlock.styles';
 
+import type { SupportedLanguage } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
+
 export interface CodeBlockProps {
+  /** The CodeBlock command to be displayed */
   command: string;
+  /** Label for analytics */
   commandType: string;
-  language: 'bash';
+  /** Function to optionally override the component's internal handling of the copy icon */
+  handleCopyIconClick?: () => void;
+  /** The command language */
+  language: SupportedLanguage;
   ldTrackingKey?: string;
 }
 
@@ -23,11 +30,17 @@ export const CodeBlock = (props: CodeBlockProps) => {
   const ldClient = useLDClient();
   const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
 
-  const { command, commandType, language, ldTrackingKey } = props;
+  const {
+    command,
+    commandType,
+    handleCopyIconClick,
+    language,
+    ldTrackingKey,
+  } = props;
 
   const apicliButtonCopy = flags?.testdxtoolabexperiment;
 
-  const handleCopyIconClick = () => {
+  const _handleCopyIconClick = () => {
     sendApiAwarenessClickEvent('Copy Icon', commandType);
     if (ldTrackingKey && !isInternalAccount) {
       ldClient?.track(ldTrackingKey, {
@@ -43,7 +56,10 @@ export const CodeBlock = (props: CodeBlockProps) => {
         language={language}
         textOrMarkdown={'```\n' + command + '\n```'}
       />
-      <StyledCopyTooltip onClickCallback={handleCopyIconClick} text={command} />
+      <StyledCopyTooltip
+        onClickCallback={handleCopyIconClick ?? _handleCopyIconClick}
+        text={command}
+      />
     </StyledCommandDiv>
   );
 };
