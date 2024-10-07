@@ -30,6 +30,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
               height: '34px',
               padding: '0',
             }}
+            aria-label="Zoom In"
             data-testid="zoom-in"
             onClick={() => handleClick(false)}
           >
@@ -48,6 +49,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
             height: '34px',
             padding: '0',
           }}
+          aria-label="Zoom Out"
           data-testid="zoom-out"
           onClick={() => handleClick(true)}
         >

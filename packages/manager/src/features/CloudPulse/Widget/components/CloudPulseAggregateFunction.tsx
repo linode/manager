@@ -69,7 +69,8 @@ export const CloudPulseAggregateFunction = React.memo(
           textFieldProps={{
             hideLabel: true,
           }}
-          disableClearable
+          autoHighlight
+        disableClearable
           fullWidth={false}
           label="Select an Aggregate Function"
           noMarginTop={true}
