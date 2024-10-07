@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
 import { Typography } from 'src/components/Typography';
-import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { useAccount } from 'src/queries/account/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
@@ -23,9 +22,9 @@ export const SMTPRestrictionText = (props: SMTPRestrictionTextProps) => {
   const { data: account } = useAccount();
 
   const displayRestrictionText =
-    accountCreatedAfterRestrictions(account?.active_since) &&
-    !account?.capabilities.includes('SMTP Enabled') &&
-    (linode === undefined || !linode.capabilities?.includes('SMTP Enabled'));
+    linode === undefined
+      ? !account?.capabilities.includes('SMTP Enabled')
+      : !linode.capabilities?.includes('SMTP Enabled');
 
   // If there account was created before restrictions were put into place,
   // there's no need to display anything.
@@ -55,22 +54,4 @@ export const SMTPRestrictionText = (props: SMTPRestrictionTextProps) => {
   ) : null;
 
   return props.children({ text });
-};
-
-export const accountCreatedAfterRestrictions = (_accountCreated?: string) => {
-  // Default to `true` for bad input.
-  if (!_accountCreated) {
-    return true;
-  }
-
-  const restrictionsImplemented = new Date(
-    MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED
-  ).getTime();
-  const accountCreated = new Date(_accountCreated).getTime();
-
-  if (isNaN(accountCreated)) {
-    return true;
-  }
-
-  return accountCreated >= restrictionsImplemented;
 };

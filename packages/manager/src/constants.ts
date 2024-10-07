@@ -233,11 +233,6 @@ export const PAYMENT_HARD_MAX = 50_000;
 
 export const DB_ROOT_USERNAME = 'linroot';
 
-// "In an effort to fight spam, Linode restricts outbound connections on ports 25, 465, and 587 on all Linodes for new accounts created after November 5th, 2019."
-// https://www.linode.com/docs/email/best-practices/running-a-mail-server/
-export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
-  '2022-11-30T00:00:00.000Z'; // Date of release for Manager v1.81.0.
-
 // The date Linode switching to Akamai (for purposes of billing)
 export const AKAMAI_DATE = '2022-12-15 00:00:00';
 
