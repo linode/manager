@@ -64,11 +64,15 @@ export const StyledVPCBox = styled(Box, { label: 'StyledVPCBox' })(
 export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
-  marginLeft: `-${theme.spacing(1)}`,
-  minHeight: theme.spacing(3),
+  [theme.breakpoints.down('lg')]: {
+    minHeight: theme.spacing(3),
+  },
   [theme.breakpoints.down('md')]: {
     alignItems: 'flex-start',
     flexDirection: 'column',
+  },
+  [theme.breakpoints.up('lg')]: {
+    minHeight: theme.spacing(5),
   },
 }));
 
