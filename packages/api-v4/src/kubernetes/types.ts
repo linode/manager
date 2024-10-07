@@ -10,7 +10,7 @@ export interface KubernetesCluster {
   id: number;
   tags: string[];
   control_plane: ControlPlaneOptions;
-  apl_enabled?: boolean;
+  apl_enabled?: boolean; // this is not the ideal solution, but a necessary compromise to prevent a lot of duplicated code.
 }
 
 export interface KubeNodePoolResponse {
@@ -70,5 +70,5 @@ export interface CreateKubeClusterPayload {
   node_pools: CreateNodePoolData[];
   k8s_version?: string; // Will be caught by Yup if undefined
   control_plane?: ControlPlaneOptions;
-  apl_enabled?: boolean;
+  apl_enabled?: boolean; // this is not the ideal solution, but a necessary compromise to prevent a lot of duplicated code.
 }

@@ -108,6 +108,10 @@ export const useKubernetesClusterQuery = (id: number) => {
   return useQuery<KubernetesCluster, APIError[]>(kubernetesQueries.cluster(id));
 };
 
+/**
+ * duplicated function of useKubernetesClusterQuery
+ * necessary to call BETA_API_ROOT in a seperate function based on feature flag
+ */
 export const useKubernetesClusterBetaQuery = (id: number) => {
   return useQuery<KubernetesCluster, APIError[]>(
     kubernetesQueries.cluster(id)._ctx.beta
@@ -205,6 +209,11 @@ export const useCreateKubernetesClusterMutation = () => {
     },
   });
 };
+
+/**
+ * duplicated function of useCreateKubernetesClusterMutation
+ * necessary to call BETA_API_ROOT in a seperate function based on feature flag
+ */
 
 export const useCreateKubernetesClusterBetaMutation = () => {
   const queryClient = useQueryClient();

@@ -68,7 +68,11 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) => {
 /**
  * createKubernetesClustersBeta
  *
- * Create a new cluster. With the beta APL feature parameter enabled.
+ * Create a new cluster with the BETA api whenever feature flag for APL is enabled
+ * and APL is set to enabled in the UI
+ *
+ * duplicated function of createKubernetesCluster
+ * necessary to call BETA_API_ROOT in a seperate function based on feature flag
  */
 export const createKubernetesClusterBeta = (data: CreateKubeClusterPayload) => {
   return Request<KubernetesCluster>(

@@ -42,7 +42,7 @@ export const ApplicationPlatform = (props: APLProps) => {
           },
         })}
       >
-        <Box display="flex" flexDirection="row">
+        <Box alignItems="center" display="flex" flexDirection="row">
           <Typography variant="inherit">
             Application Platform for LKE
           </Typography>

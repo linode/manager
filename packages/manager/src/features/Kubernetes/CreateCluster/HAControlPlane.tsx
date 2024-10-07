@@ -1,6 +1,7 @@
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -8,6 +9,7 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
 export interface HAControlPlaneProps {
@@ -86,19 +88,27 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
       >
         <FormControlLabel
           label={
-            <Typography>
-              Yes, enable HA control plane. (Enabled by default when APL is
-              enabled.){' '}
-              {selectedRegionId
-                ? `For this region, HA control plane costs $${highAvailabilityPrice}/month.`
-                : '(Select a region to view price information.)'}
-            </Typography>
+            <Box alignItems="center" display="flex" flexDirection="row">
+              <Typography>
+                Yes, enable HA control plane.{' '}
+                {selectedRegionId
+                  ? `For this region, HA control plane costs $${highAvailabilityPrice}/month.`
+                  : '(Select a region to view price information.)'}
+              </Typography>
+              {isAPLEnabled && (
+                <TooltipIcon
+                  status="help"
+                  text={'Enabled by default when APL is enabled.'}
+                />
+              )}
+            </Box>
           }
           checked={isAPLEnabled ? true : undefined}
           control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"
           value="yes"
         />
+
         <FormControlLabel
           checked={isAPLEnabled ? false : undefined}
           control={<Radio />}
