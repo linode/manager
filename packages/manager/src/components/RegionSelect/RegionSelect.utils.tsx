@@ -38,11 +38,10 @@ export const getRegionOptions = ({
         if (distributedContinentCode && distributedContinentCode !== 'ALL') {
           const group = getRegionCountryGroup(region);
           return (
-            region.site_type === 'edge' ||
-            (region.site_type === 'distributed' &&
-              CONTINENT_CODE_TO_CONTINENT[
-                distributedContinentCode as keyof typeof CONTINENT_CODE_TO_CONTINENT
-              ] === group)
+            region.site_type === 'distributed' &&
+            CONTINENT_CODE_TO_CONTINENT[
+              distributedContinentCode as keyof typeof CONTINENT_CODE_TO_CONTINENT
+            ] === group
           );
         }
         return regionFilter.includes(region.site_type);
@@ -149,7 +148,7 @@ export const getIsDistributedRegion = (
   const region = regionsData.find(
     (region) => region.id === selectedRegion || region.label === selectedRegion
   );
-  return region?.site_type === 'distributed' || region?.site_type === 'edge';
+  return region?.site_type === 'distributed';
 };
 
 export const getNewRegionLabel = (region: Region) => {

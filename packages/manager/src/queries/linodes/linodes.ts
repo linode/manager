@@ -176,6 +176,7 @@ export const useAllLinodesQuery = (
     ...linodeQueries.linodes._ctx.all(params, filter),
     ...queryPresets.longLived,
     enabled,
+    placeholderData: keepPreviousData,
   });
 };
 
