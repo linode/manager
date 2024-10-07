@@ -87,7 +87,10 @@ module.exports = {
     // restrict usage of react-router-dom during migration to tanstack/react-router
     // TODO: TanStack Router - remove this override when migration is complete
     {
-      files: ['src/features/Betas/*'],
+      files: [
+        // for each new features added to the migration router, add its directory here
+        'src/features/Betas/*',
+      ],
       rules: {
         'no-restricted-imports': [
           'error',
@@ -95,10 +98,20 @@ module.exports = {
             paths: [
               {
                 importNames: [
+                  // intentionally not including <Link> in this list as this will be updated last globally
                   'useNavigate',
                   'useParams',
                   'useLocation',
                   'useHistory',
+                  'useRouteMatch',
+                  'matchPath',
+                  'MemoryRouter',
+                  'Route',
+                  'RouteProps',
+                  'Switch',
+                  'Redirect',
+                  'RouteComponentProps',
+                  'withRouter',
                 ],
                 message:
                   'Please use routing utilities from @tanstack/react-router.',
