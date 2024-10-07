@@ -1,4 +1,5 @@
 import { useMediaQuery, useTheme } from '@mui/material';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
@@ -279,4 +280,10 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
     </>
   );
+});
+
+export const placementGroupsLandingLazyRoute = createLazyRoute(
+  '/placement-groups'
+)({
+  component: PlacementGroupsLanding,
 });

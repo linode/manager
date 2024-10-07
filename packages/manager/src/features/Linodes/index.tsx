@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
@@ -21,9 +22,9 @@ const LinodesDetail = React.lazy(() =>
     default: module.LinodeDetail,
   }))
 );
-const LinodesCreatev2 = React.lazy(() =>
-  import('./LinodeCreatev2').then((module) => ({
-    default: module.LinodeCreatev2,
+const LinodesCreate = React.lazy(() =>
+  import('./LinodeCreate').then((module) => ({
+    default: module.LinodeCreate,
   }))
 );
 
@@ -31,7 +32,7 @@ export const LinodesRoutes = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={LinodesCreatev2} path="/linodes/create" />
+        <Route component={LinodesCreate} path="/linodes/create" />
         <Route component={LinodesDetail} path="/linodes/:linodeId" />
         <Route component={LinodesLandingWrapper} exact path="/linodes" strict />
         <Redirect to="/linodes" />
@@ -45,7 +46,7 @@ export const LinodesRoutes = () => {
 // mapStateToProps, but since I wanted to use a query (for accountMaintenance)
 // I needed a Function Component. It seemed safer to do it this way instead of
 // refactoring LinodesLanding.
-const LinodesLandingWrapper = React.memo(() => {
+export const LinodesLandingWrapper = React.memo(() => {
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
     { status: { '+or': ['pending, started'] } }
@@ -103,3 +104,7 @@ const generateLinodesXFilter = (regionFilter: RegionFilter | undefined) => {
   }
   return {};
 };
+
+export const linodesLandingLazyRoute = createLazyRoute('/linodes')({
+  component: LinodesLandingWrapper,
+});

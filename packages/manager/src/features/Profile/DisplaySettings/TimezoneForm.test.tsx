@@ -6,7 +6,7 @@ import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TimezoneForm, formatOffset } from './TimezoneForm';
+import { TimezoneForm, getOptionLabel } from './TimezoneForm';
 
 const queryClient = queryClientFactory();
 
@@ -75,7 +75,7 @@ describe('formatOffset', () => {
     ];
 
     testMap.forEach(({ expectedOffset, timezone }) =>
-      expect(formatOffset(timezone)).toBe(
+      expect(getOptionLabel(timezone)).toBe(
         `(GMT ${expectedOffset}) ${timezone.label}`
       )
     );
