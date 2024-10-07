@@ -29,7 +29,7 @@ export const firewallRulesFactory = Factory.Sync.makeFactory<FirewallRules>({
 });
 
 export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
-  created_dt: '2020-01-01 00:00:00',
+  created: '2020-01-01 00:00:00',
   entities: [
     {
       id: 1,
@@ -43,7 +43,7 @@ export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
   rules: firewallRulesFactory.build(),
   status: 'enabled',
   tags: [],
-  updated_dt: '2020-01-01 00:00:00',
+  updated: '2020-01-01 00:00:00',
 });
 
 export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({

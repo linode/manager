@@ -1,3 +1,4 @@
+import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { displayType } from 'src/features/Linodes/presentation';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
@@ -5,6 +6,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import type {
   Domain,
+  Firewall,
   Image,
   KubernetesCluster,
   Linode,
@@ -161,4 +163,19 @@ export const bucketToSearchableItem = (
   entityType: 'bucket',
   label: bucket.label,
   value: `${bucket.cluster}/${bucket.label}`,
+});
+
+export const firewallToSearchableItem = (
+  firewall: Firewall
+): SearchableItem => ({
+  data: {
+    created: firewall.created,
+    description: getFirewallDescription(firewall),
+    icon: 'firewall',
+    path: `/firewalls/${firewall.id}`,
+    tags: firewall.tags,
+  },
+  entityType: 'firewall',
+  label: firewall.label,
+  value: firewall.id,
 });
