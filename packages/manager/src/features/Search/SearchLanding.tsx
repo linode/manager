@@ -9,6 +9,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
+import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -45,6 +46,7 @@ import type { RouteComponentProps } from 'react-router-dom';
 
 const displayMap = {
   buckets: 'Buckets',
+  databases: 'Databases',
   domains: 'Domains',
   firewalls: 'Firewalls',
   images: 'Images',
@@ -80,6 +82,12 @@ export const SearchLanding = (props: SearchLandingProps) => {
     error: bucketsError,
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(shouldFetchAllEntities);
+
+  const {
+    data: databases,
+    error: databasesError,
+    isLoading: areDatabasesLoading,
+  } = useAllDatabasesQuery(shouldFetchAllEntities);
 
   const {
     data: domains,
@@ -186,7 +194,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
         regions ?? [],
         searchableLinodes ?? [],
         nodebalancers ?? [],
-        firewalls ?? []
+        firewalls ?? [],
+        databases ?? []
       );
     }
   }, [
@@ -204,6 +213,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
     nodebalancers,
     linodes,
     firewalls,
+    databases,
   ]);
 
   const getErrorMessage = () => {
@@ -216,6 +226,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
       [nodebalancersError, 'NodeBalancers'],
       [kubernetesClustersError, 'Kubernetes'],
       [firewallsError, 'Firewalls'],
+      [databasesError, 'Databases'],
       [
         objectStorageBuckets && objectStorageBuckets.errors.length > 0,
         `Object Storage in ${objectStorageBuckets?.errors
@@ -250,7 +261,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
       areKubernetesClustersLoading ||
       areImagesLoading ||
       areNodeBalancersLoading ||
-      areFirewallsLoading;
+      areFirewallsLoading ||
+      areDatabasesLoading;
 
   const errorMessage = getErrorMessage();
 

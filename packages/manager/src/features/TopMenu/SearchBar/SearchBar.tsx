@@ -11,6 +11,7 @@ import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
 import withStoreSearch from 'src/features/Search/withStoreSearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
+import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -103,6 +104,7 @@ const SearchBar = (props: SearchProps) => {
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
   const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
   const { data: firewalls } = useAllFirewallsQuery(shouldMakeRequests);
+  const { data: databases } = useAllDatabasesQuery(shouldMakeRequests);
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
@@ -186,7 +188,8 @@ const SearchBar = (props: SearchProps) => {
         regions ?? [],
         searchableLinodes ?? [],
         nodebalancers ?? [],
-        firewalls ?? []
+        firewalls ?? [],
+        databases ?? []
       );
     }
   }, [
@@ -202,6 +205,7 @@ const SearchBar = (props: SearchProps) => {
     regions,
     nodebalancers,
     firewalls,
+    databases,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {

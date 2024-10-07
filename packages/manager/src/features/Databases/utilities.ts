@@ -4,6 +4,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
 
+import { databaseEngineMap } from './DatabaseLanding/DatabaseRow';
+
+import type { DatabaseInstance } from '@linode/api-v4';
+
 /**
  * A hook to determine if Databases should be visible to the user.
  *
@@ -95,4 +99,13 @@ export const isOutsideBackupTimeframe = (
   const dateStart = date.startOf('day');
 
   return dateStart < backupStart || dateStart > today;
+};
+
+export const getDatabasesDescription = (database: DatabaseInstance) => {
+  const dbEngineLabel = `${databaseEngineMap[database.engine]} v${
+    database.version
+  }`;
+  const clusterSize = database.cluster_size + ' GB';
+  const description = [dbEngineLabel, clusterSize];
+  return description.join(', ');
 };
