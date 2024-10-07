@@ -85,7 +85,7 @@ declare module '@tanstack/react-router' {
 export const migrationRouteTree = rootRoute.addChildren([betaRouteTree]);
 export const migrationRouter: AnyRouter = createRouter({
   Wrap: ({ children }) => {
-    return <div data-qa-migration-router>{children}</div>;
+    return <div data-testid="migration-router">{children}</div>;
   },
   context: {},
   defaultNotFoundComponent: () => <NotFound />,

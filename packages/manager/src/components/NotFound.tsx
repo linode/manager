@@ -11,7 +11,6 @@ export const NotFound = (props: Props) => {
   return (
     <Placeholder
       className={props.className}
-      data-qa-not-found
       icon={ErrorOutline}
       title="Not Found"
     />
