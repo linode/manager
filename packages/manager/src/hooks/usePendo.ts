@@ -105,7 +105,11 @@ export const usePendo = () => {
               data(url: string) {
                 const idMatchingRegex = /\d+$/;
                 const userPathMatchingRegex = /(users\/).*/;
-                if (idMatchingRegex.test(url)) {
+                const oauthPathMatchingRegex = /oauth\/callback#access_token/;
+                if (
+                  idMatchingRegex.test(url) ||
+                  oauthPathMatchingRegex.test(url)
+                ) {
                   // Removes everything after the last /
                   return url.replace(/\/[^\/]*$/, '/');
                 } else if (userPathMatchingRegex.test(url)) {
