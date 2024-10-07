@@ -4,8 +4,8 @@ import type { AnyRouter } from '@tanstack/react-router';
  * This function is meant to be used for testing purposes only.
  * It allows us to generate a list of all unique @tanstack/router paths defined in the routing factory.
  *
- * We import this util in cypress to loop through all routes and test them.
- * It probably should not be used for anything else.
+ * We import this util in routes.test.tsx to loop through all routes and test them.
+ * It probably should not be used for anything else than testing.
  */
 export const getAllRoutePaths = (router: AnyRouter): string[] => {
   return router.flatRoutes

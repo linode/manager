@@ -7,8 +7,7 @@ import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
-import type { AccountBeta } from '@linode/api-v4/lib/account';
-import type { Beta } from '@linode/api-v4/lib/betas';
+import type { AccountBeta, Beta } from '@linode/api-v4';
 
 interface Props {
   beta: AccountBeta | Beta;
