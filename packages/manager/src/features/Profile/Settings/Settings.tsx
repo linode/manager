@@ -122,11 +122,10 @@ export const ProfileSettings = () => {
       </Paper>
       <Paper>
         <Typography marginBottom={1} variant="h2">
-          Redact Sensitive Data
+          Mask Sensitive Data
         </Typography>
         <Typography marginBottom={1} variant="body1">
-          Replace IP addresses and user contact information with redacted
-          placeholder data for privacy.
+          Mask IP addresses and user contact information for data for privacy.
         </Typography>
         <FormControlLabel
           control={
@@ -138,7 +137,7 @@ export const ProfileSettings = () => {
             />
           }
           label={`Sensitive data is ${
-            isSensitiveDataRedacted ? 'redacted' : 'visible'
+            isSensitiveDataRedacted ? 'masked' : 'visible'
           }`}
         />
       </Paper>
