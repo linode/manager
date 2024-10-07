@@ -271,7 +271,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           {enabledExists && (
             <>
               {EnabledCopy}
-              <Box sx={{ marginTop: 2 }}>
+              <Box sx={{ marginTop: 1 }}>
                 <FormControlLabel
                   control={
                     <Toggle
@@ -287,7 +287,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                   label={'IPACL Enabled'}
                 />
               </Box>
-              <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
+              <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
             </>
           )}
           {RevisionID}

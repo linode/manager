@@ -64,6 +64,8 @@ export const StyledVPCBox = styled(Box, { label: 'StyledVPCBox' })(
 export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
+  marginLeft: `-${theme.spacing(1)}`,
+  minHeight: theme.spacing(3),
   [theme.breakpoints.down('md')]: {
     alignItems: 'flex-start',
     flexDirection: 'column',
@@ -72,6 +74,8 @@ export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
 
 export const StyledLabelBox = styled(Box, { label: 'StyledLabelBox' })(
   ({ theme }) => ({
+    alignItems: 'center',
+    display: 'flex',
     fontFamily: theme.font.bold,
     marginRight: theme.spacing(0.5),
   })

@@ -246,7 +246,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             lg={8}
             xs={12}
           >
-            <StyledBox sx={{ marginLeft: -1, padding: 1 }}>
+            <StyledBox>
               <StyledListItem
                 sx={{
                   ...sxListItemFirstChild,

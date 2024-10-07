@@ -122,7 +122,9 @@ export const KubeClusterControlPlaneACL = React.memo((props: Props) => {
 
   const availableActions = [
     isLoadingKubernetesACL ? (
-      <CircleProgress noPadding size="sm" />
+      <Box sx={{ paddingLeft: 1 }}>
+        <CircleProgress noPadding size="sm" />
+      </Box>
     ) : failedMigrationStatus() ? (
       <NotMigratedCopy />
     ) : enabledACL ? (
