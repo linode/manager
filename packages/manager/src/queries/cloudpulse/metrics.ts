@@ -84,7 +84,7 @@ export const fetchCloudPulseMetrics = (
       Authorization: `Bearer ${token}`,
     },
     method: 'POST',
-    url: `${readApiEndpoint}${encodeURIComponent(serviceType!)}/metrics`,
+    url: `${readApiEndpoint}${encodeURIComponent(serviceType)}/metrics`,
   };
 
   return axiosInstance
