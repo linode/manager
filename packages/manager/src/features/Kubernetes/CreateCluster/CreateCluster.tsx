@@ -165,12 +165,13 @@ export const CreateCluster = () => {
         acl: {
           enabled: controlPlaneACL,
           'revision-id': '',
-          ...((_ipv4.length > 0 || _ipv6.length > 0) && {
-            addresses: {
-              ...addressIPv4Payload,
-              ...addressIPv6Payload,
-            },
-          }),
+          ...(controlPlaneACL && // only send the IPs if we are enabling IPACL
+            (_ipv4.length > 0 || _ipv6.length > 0) && {
+              addresses: {
+                ...addressIPv4Payload,
+                ...addressIPv6Payload,
+              },
+            }),
         },
         high_availability: highAvailability ?? false,
       },
@@ -226,7 +227,14 @@ export const CreateCluster = () => {
   });
 
   const errorMap = getErrorMap(
-    ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
+    [
+      'region',
+      'node_pools',
+      'label',
+      'k8s_version',
+      'versionLoad',
+      'control_plane',
+    ],
     errors
   );
 
@@ -337,6 +345,7 @@ export const CreateCluster = () => {
                     setIPv6Addr(newIpV6Addr);
                   }}
                   enableControlPlaneACL={controlPlaneACL}
+                  errorText={errorMap.control_plane}
                   ipV4Addr={ipV4Addr}
                   ipV6Addr={ipV6Addr}
                   setControlPlaneACL={setControlPlaneACL}
