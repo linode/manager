@@ -116,7 +116,7 @@ export interface LegendRow {
   legendTitle: string;
 }
 
-export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
+export const CloudPulseWidget = React.memo((props: CloudPulseWidgetProperties) => {
   const { updateWidgetPreference: updatePreferences } = useAclpPreference();
   const { data: profile } = useProfile();
   const timezone = profile?.timezone ?? DateTime.local().zoneName;
@@ -140,6 +140,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     widget: widgetProp,
   } = props;
   const flags = useFlags();
+  const scaledWidgetUnit = React.useRef(unit === 'Bytes' ? 'B' : unit);
 
   const jweTokenExpiryError = 'Token expired';
 
@@ -237,8 +238,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   let legendRows: LegendRow[] = [];
   let today: boolean = false;
-
-  let currentUnit = unit;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       flags,
@@ -255,7 +254,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     data = generatedData.dimensions;
     legendRows = generatedData.legendRowsData;
     today = generatedData.today;
-    currentUnit = generatedData.unit;
+    scaledWidgetUnit.current = generatedData.unit; // here state doesn't matter, as this is always the latest re-render
   }
 
   const metricsApiCallError = error?.[0]?.reason;
@@ -273,7 +272,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             padding={1}
           >
             <Typography marginLeft={1} variant="h2">
-              {convertStringToCamelCasesWithSpaces(widget.label)} ({currentUnit}
+              {convertStringToCamelCasesWithSpaces(widget.label)} ({scaledWidgetUnit.current}
               {unit.endsWith('ps') ? '/s' : ''})
             </Typography>
             <Stack
@@ -294,14 +293,14 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               {Boolean(
                 availableMetrics?.available_aggregate_functions?.length
               ) && (
-                <CloudPulseAggregateFunction
-                  availableAggregateFunctions={
-                    availableMetrics!.available_aggregate_functions
-                  }
-                  defaultAggregateFunction={widgetProp?.aggregate_function}
-                  onAggregateFuncChange={handleAggregateFunctionChange}
-                />
-              )}
+                  <CloudPulseAggregateFunction
+                    availableAggregateFunctions={
+                      availableMetrics!.available_aggregate_functions
+                    }
+                    defaultAggregateFunction={widgetProp?.aggregate_function}
+                    onAggregateFuncChange={handleAggregateFunctionChange}
+                  />
+                )}
               <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
@@ -321,7 +320,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             }
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
-            formatData={(data: number) => convertValueToUnit(data, currentUnit)}
+            formatData={(data: number) => convertValueToUnit(data, scaledWidgetUnit.current)}
             formatTooltip={(value: number) => formatToolTip(value, unit)}
             gridSize={widget.size}
             loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
@@ -333,4 +332,4 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       </Stack>
     </Grid>
   );
-};
+});
