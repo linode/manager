@@ -33,6 +33,9 @@ jobs:
       - name: Build @linode/api-v4
         run: yarn build:sdk
 
+      - name: Build @linode/ui
+        run: yarn build:ui
+
       - name: Run Base Branch Coverage
         run: yarn coverage:summary
 

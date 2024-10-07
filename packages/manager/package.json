@@ -20,6 +20,7 @@
     "@linode/api-v4": "*",
     "@linode/design-language-system": "^2.6.1",
     "@linode/search": "*",
+    "@linode/ui": "*",
     "@linode/validation": "*",
     "@lukemorales/query-key-factory": "^1.3.4",
     "@mui/icons-material": "^5.14.7",
