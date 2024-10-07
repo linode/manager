@@ -10,6 +10,7 @@ import { Typography } from 'src/components/Typography';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -45,6 +46,7 @@ import type { RouteComponentProps } from 'react-router-dom';
 const displayMap = {
   buckets: 'Buckets',
   domains: 'Domains',
+  firewalls: 'Firewalls',
   images: 'Images',
   kubernetesClusters: 'Kubernetes',
   linodes: 'Linodes',
@@ -84,6 +86,12 @@ export const SearchLanding = (props: SearchLandingProps) => {
     error: domainsError,
     isLoading: areDomainsLoading,
   } = useAllDomainsQuery(shouldFetchAllEntities);
+
+  const {
+    data: firewalls,
+    error: firewallsError,
+    isLoading: areFirewallsLoading,
+  } = useAllFirewallsQuery(shouldFetchAllEntities);
 
   const {
     data: kubernetesClusters,
@@ -177,7 +185,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
         _privateImages ?? [],
         regions ?? [],
         searchableLinodes ?? [],
-        nodebalancers ?? []
+        nodebalancers ?? [],
+        firewalls ?? []
       );
     }
   }, [
@@ -194,6 +203,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
     regions,
     nodebalancers,
     linodes,
+    firewalls,
   ]);
 
   const getErrorMessage = () => {
@@ -205,6 +215,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
       [imagesError, 'Images'],
       [nodebalancersError, 'NodeBalancers'],
       [kubernetesClustersError, 'Kubernetes'],
+      [firewallsError, 'Firewalls'],
       [
         objectStorageBuckets && objectStorageBuckets.errors.length > 0,
         `Object Storage in ${objectStorageBuckets?.errors
@@ -238,7 +249,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
       areVolumesLoading ||
       areKubernetesClustersLoading ||
       areImagesLoading ||
-      areNodeBalancersLoading;
+      areNodeBalancersLoading ||
+      areFirewallsLoading;
 
   const errorMessage = getErrorMessage();
 

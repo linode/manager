@@ -2,7 +2,6 @@ import { arrayToList } from 'src/utilities/arrayToList';
 import { ExtendedType } from 'src/utilities/extendType';
 
 import {
-  DBAAS_DEDICATED_512_GB_PLAN,
   DEDICATED_512_GB_PLAN,
   LIMITED_AVAILABILITY_COPY,
   PLAN_IS_CURRENTLY_UNAVAILABLE_COPY,
@@ -224,7 +223,11 @@ export const planTabInfoContent = {
 export const replaceOrAppendPlaceholder512GbPlans = (
   types: (ExtendedType | PlanSelectionType)[]
 ) => {
+  // DBaaS does not currently offer a 512 GB plan
   const isInDatabasesFlow = types.some((type) => type.label.includes('DBaaS'));
+  if (isInDatabasesFlow) {
+    return types;
+  }
 
   // Function to replace or append a specific plan
   const replaceOrAppendPlan = <T extends ExtendedType | PlanSelectionType>(
@@ -240,13 +243,9 @@ export const replaceOrAppendPlaceholder512GbPlans = (
     }
   };
 
-  if (isInDatabasesFlow) {
-    replaceOrAppendPlan('DBaaS - Dedicated 512GB', DBAAS_DEDICATED_512_GB_PLAN);
-  } else {
-    // For Linodes and LKE
-    replaceOrAppendPlan('Dedicated 512GB', DEDICATED_512_GB_PLAN);
-    replaceOrAppendPlan('Premium 512GB', PREMIUM_512_GB_PLAN);
-  }
+  // For Linodes and LKE
+  replaceOrAppendPlan('Dedicated 512GB', DEDICATED_512_GB_PLAN);
+  replaceOrAppendPlan('Premium 512GB', PREMIUM_512_GB_PLAN);
 
   return types;
 };
