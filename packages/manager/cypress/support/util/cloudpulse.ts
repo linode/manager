@@ -1,13 +1,9 @@
 // Function to generate random values based on the number of points
 
 import type { CloudPulseMetricsResponseData } from '@linode/api-v4';
+import type { Labels } from 'src/features/CloudPulse/shared/CloudPulseTimeRangeSelect';
 export const generateRandomMetricsData = (
-  time:
-    | 'Last 7 Days'
-    | 'Last 12 Hours'
-    | 'Last 24 Hours'
-    | 'Last 30 Days'
-    | 'Last 30 Minutes',
+  time: Labels,
   granularityData: '1 day' | '1 hr' | '5 min' | 'Auto'
 ): CloudPulseMetricsResponseData => {
   const currentTime = Math.floor(Date.now() / 1000);
