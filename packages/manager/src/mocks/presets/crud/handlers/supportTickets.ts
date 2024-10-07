@@ -156,7 +156,10 @@ export const createSupportTicketReply = (mockState: MockState) => [
       const supportTicket = await mswDB.get('supportTickets', id);
 
       const supportTicketReply = supportReplyFactory.build({
+        created_by: 'test-account',
         description: payload['description'],
+        friendly_name: 'test-account',
+        from_linode: false,
       });
 
       await mswDB.add('supportReplies', supportTicketReply, mockState);
