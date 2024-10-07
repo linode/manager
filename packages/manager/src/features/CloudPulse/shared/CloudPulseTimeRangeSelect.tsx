@@ -84,7 +84,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
         disableClearable
         fullWidth
         isOptionEqualToValue={(option, value) => option.value === value.value}
-        label="Select Time Duration"
+        label="Select a Time Duration"
         options={options}
         value={selectedTimeRange}
       />
