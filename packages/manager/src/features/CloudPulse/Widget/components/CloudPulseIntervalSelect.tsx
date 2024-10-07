@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
 import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
 
 import type { TimeGranularity } from '@linode/api-v4';
@@ -119,35 +120,35 @@ export const CloudPulseIntervalSelect = React.memo(
     );
 
     return (
-      <StyledWidgetAutocomplete
-        isOptionEqualToValue={(
-          option: IntervalOptions,
-          value: IntervalOptions
-        ) => {
-          return option?.value === value?.value && option?.unit === value?.unit;
-        }}
-        onChange={(
-          _: React.SyntheticEvent,
-          selectedInterval: IntervalOptions
-        ) => {
-          setSelectedInterval(selectedInterval);
-          onIntervalChange({
-            unit: selectedInterval?.unit,
-            value: selectedInterval?.value,
-          });
-        }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
-        autoHighlight
-        disableClearable
-        fullWidth={false}
-        label="Select an Interval"
-        noMarginTop={true}
-        options={[autoIntervalOption, ...availableIntervalOptions]}
-        sx={{ width: { xs: '100%' } }}
-        value={selectedInterval}
-      />
+      <CloudPulseTooltip title={'Data aggregation interval'}>
+        <StyledWidgetAutocomplete
+          isOptionEqualToValue={(
+            option: IntervalOptions,
+            value: IntervalOptions
+          ) => option?.value === value?.value && option?.unit === value?.unit}
+          onChange={(
+            _: React.SyntheticEvent,
+            selectedInterval: IntervalOptions
+          ) => {
+            setSelectedInterval(selectedInterval);
+            onIntervalChange({
+              unit: selectedInterval?.unit,
+              value: selectedInterval?.value,
+            });
+          }}
+          textFieldProps={{
+            hideLabel: true,
+          }}
+          autoHighlight
+          disableClearable
+          fullWidth={false}
+          label="Select an Interval"
+          noMarginTop={true}
+          options={[autoIntervalOption, ...availableIntervalOptions]}
+          sx={{ width: { xs: '100%' } }}
+          value={selectedInterval}
+        />
+      </CloudPulseTooltip>
     );
   }
 );

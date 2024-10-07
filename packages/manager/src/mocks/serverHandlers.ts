@@ -1574,21 +1574,37 @@ export const handlers = [
       ])
     );
   }),
-
+  http.post('*/seen', () => {
+    return HttpResponse.json({});
+  }),
   http.get(
     '*/events',
     () => {
       const events = eventFactory.buildList(1, {
         action: 'lke_node_create',
-        entity: { id: 999, label: 'linode-1', type: 'linode' },
+        entity: {
+          id: 1,
+          label: 'linode-1',
+          type: 'linode',
+          url: 'https://google.com',
+        },
         message:
           'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
         percent_complete: 15,
+        secondary_entity: {
+          id: 1,
+          label: 'my config',
+          type: 'linode',
+          url: 'https://google.com',
+        },
+        status: 'notification',
       });
+
       const dbEvents = eventFactory.buildList(1, {
         action: 'database_low_disk_space',
         entity: { id: 999, label: 'database-1', type: 'database' },
         message: 'Low disk space.',
+        status: 'notification',
       });
       const oldEvents = eventFactory.buildList(20, {
         action: 'account_update',
@@ -1631,15 +1647,15 @@ export const handlers = [
         makeResourcePage([
           ...events,
           ...dbEvents,
-          ...oldEvents,
           ...placementGroupAssignedEvent,
           ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
+          ...oldEvents,
         ])
       );
     },
     {
-      once: true,
+      once: false,
     }
   ),
 

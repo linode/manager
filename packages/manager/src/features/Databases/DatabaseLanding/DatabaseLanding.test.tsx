@@ -207,39 +207,45 @@ describe('Database Table', () => {
     expect(screen.queryByText('New Database Clusters')).toBeNull();
     expect(screen.queryByText('Powered by')).toBeNull();
   });
-});
 
-describe('Database Landing', () => {
-  it('should have the "Create Database Cluster" button disabled for restricted users', async () => {
-    queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
+  it('should render a single new database table ', async () => {
+    const account = accountFactory.build({
+      capabilities: ['Managed Databases Beta'],
+    });
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json(account);
+      })
+    );
+    server.use(
+      http.get('*/databases/instances', () => {
+        const databases = databaseInstanceFactory.buildList(5, {
+          platform: 'rdbms-default',
+          status: 'active',
+        });
+        return HttpResponse.json(makeResourcePage(databases));
+      })
+    );
 
-    const { container, getByTestId } = renderWithTheme(<DatabaseLanding />);
+    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
+      flags: { dbaasV2: { beta: true, enabled: true } },
+    });
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const createClusterButton = container.querySelector('button');
+    const tables = screen.getAllByRole('table');
+    expect(tables).toHaveLength(1);
 
-    expect(createClusterButton).toBeInTheDocument();
-    expect(createClusterButton).toHaveTextContent('Create Database Cluster');
-    expect(createClusterButton).toBeDisabled();
-  });
+    const table = tables[0];
 
-  it('should have the "Create Database Cluster" button enabled for users with full access', async () => {
-    queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
+    const headers = within(table).getAllByRole('columnheader');
+    expect(headers.some((header) => header.textContent === 'Plan')).toBe(true);
 
-    const { container, getByTestId } = renderWithTheme(<DatabaseLanding />);
-
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const createClusterButton = container.querySelector('button');
-
-    expect(createClusterButton).toBeInTheDocument();
-    expect(createClusterButton).toHaveTextContent('Create Database Cluster');
-    expect(createClusterButton).not.toBeDisabled();
+    expect(screen.queryByText('Legacy Database Clusters')).toBeNull();
+    expect(screen.queryByText('New Database Clusters')).toBeNull();
+    expect(screen.queryByText('Powered by')).toBeTruthy();
   });
 });
 

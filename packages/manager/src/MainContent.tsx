@@ -360,12 +360,12 @@ export const MainContent = () => {
                             <Route component={BetaRoutes} path="/betas" />
                           )}
                           <Route component={VPC} path="/vpcs" />
-                          {isACLPEnabled && (
+                          {/* {isACLPEnabled && ( */}
                             <Route
                               component={CloudPulse}
                               path="/monitor/cloudpulse"
                             />
-                          )}
+                          {/* )} */}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />

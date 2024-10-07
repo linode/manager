@@ -146,7 +146,7 @@ export const Autocomplete = <
         return renderOption ? (
           renderOption(props, option, state, ownerState)
         ) : (
-          <ListItem {...props} data-qa-option>
+          <ListItem {...props} data-qa-option key={props.key}>
             <>
               <Box
                 sx={{
