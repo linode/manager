@@ -120,7 +120,7 @@ export const KubernetesPlansPanel = (props: Props) => {
             </>
           );
         },
-        title: planTabInfoContent[plan === 'edge' ? 'dedicated' : plan]?.title,
+        title: planTabInfoContent[plan]?.title,
       };
     }
   );
