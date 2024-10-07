@@ -254,7 +254,7 @@ export const CloudPulseWidget = React.memo((props: CloudPulseWidgetProperties) =
     data = generatedData.dimensions;
     legendRows = generatedData.legendRowsData;
     today = generatedData.today;
-    scaledWidgetUnit.current = scaledWidgetUnit.current !== generatedData.unit ? generatedData.unit : scaledWidgetUnit.current; // here state doesn't matter, as this is always the latest re-render
+    scaledWidgetUnit.current = generatedData.unit; // here state doesn't matter, as this is always the latest re-render
   }
 
   const metricsApiCallError = error?.[0]?.reason;
