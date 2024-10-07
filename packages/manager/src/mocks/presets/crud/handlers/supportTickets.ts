@@ -29,7 +29,6 @@ export const createSupportTicket = (mockState: MockState) => [
       const supportTicket = supportTicketFactory.build({
         closable: true,
         description: payload['description'],
-        // TODO: handle dynamic entity selection
         entity: {
           id: 1,
           label: 'mock-linode-1',
