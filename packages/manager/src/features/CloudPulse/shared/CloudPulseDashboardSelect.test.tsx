@@ -46,7 +46,16 @@ queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
 
 queryMocks.useCloudPulseServiceTypes.mockReturnValue({
   data: {
-    data: [{ service_type: 'linode' }],
+    data: [
+      {
+        label: 'Linode',
+        service_type: 'linode',
+      },
+      {
+        label: 'Databases',
+        service_type: 'dbaas',
+      },
+    ],
   },
 });
 

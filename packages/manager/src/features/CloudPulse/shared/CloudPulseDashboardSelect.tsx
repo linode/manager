@@ -8,7 +8,7 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
 
-import type { Dashboard, FilterValue } from '@linode/api-v4';
+import type { Dashboard, FilterValue, ServiceTypes } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
   defaultValue?: Partial<FilterValue>;
@@ -66,6 +66,7 @@ export const CloudPulseDashboardSelect = React.memo(
         (a, b) => -b.service_type.localeCompare(a.service_type)
       );
     };
+
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
       // only call this code when the component is rendered initially
@@ -90,11 +91,12 @@ export const CloudPulseDashboardSelect = React.memo(
         }}
         renderGroup={(params) => (
           <Box key={params.key}>
-            <Typography
-              sx={{ marginLeft: '3.5%', textTransform: 'capitalize' }}
-              variant="h3"
-            >
-              {params.group}
+            <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
+              {
+                serviceTypesList?.data.find(
+                  (type: ServiceTypes) => type.service_type === params.group
+                )?.label
+              }
             </Typography>
             {params.children}
           </Box>

@@ -256,8 +256,8 @@ const databases = [
         params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
           : params.engine === 'postgresql'
-          ? pickRandom(possiblePostgresReplicationTypes)
-          : (undefined as any),
+            ? pickRandom(possiblePostgresReplicationTypes)
+            : (undefined as any),
       ssl_connection: true,
       storage_engine: params.engine === 'mongodb' ? 'wiredtiger' : undefined,
     });
@@ -1295,9 +1295,9 @@ export const handlers = [
       headers.status === 'completed'
         ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-            ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
-            ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
-          ];
+          ...accountMaintenanceFactory.buildList(90, { status: 'pending' }),
+          ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
+        ];
 
     if (request.headers.get('x-filter')) {
       accountMaintenance.sort((a, b) => {
@@ -1506,9 +1506,9 @@ export const handlers = [
       const grantsResponse = grantsFactory.build({
         global: parentAccountNonAdminUser.restricted
           ? {
-              cancel_account: false,
-              child_account_access: true,
-            }
+            cancel_account: false,
+            child_account_access: true,
+          }
           : undefined,
       });
       return HttpResponse.json(grantsResponse);
@@ -2306,24 +2306,39 @@ export const handlers = [
   }),
   http.get('*/monitor/services', () => {
     const response = {
-      data: [{ service_type: 'linode' }],
+      data: [
+        {
+          label: 'Linode',
+          service_type: 'linode',
+        },
+        {
+          label: 'Databases',
+          service_type: 'dbaas',
+        },
+      ],
     };
 
     return HttpResponse.json(response);
   }),
-  http.get('*/monitor/services/:serviceType/dashboards', () => {
+  http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {
-      data: [
+      data: [] as any[],
+    };
+    if (params.serviceType == 'linode') {
+      response.data.push(
         dashboardFactory.build({
           label: 'Linode Dashboard',
           service_type: 'linode',
-        }),
+        })
+      );
+    } else if (params.serviceType == 'dbaas') {
+      response.data.push(
         dashboardFactory.build({
           label: 'DBaaS Dashboard',
           service_type: 'dbaas',
-        }),
-      ],
-    };
+        })
+      );
+    }
 
     return HttpResponse.json(response);
   }),
