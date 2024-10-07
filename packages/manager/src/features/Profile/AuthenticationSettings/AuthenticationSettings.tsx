@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -13,8 +14,8 @@ import { useProfile } from 'src/queries/profile/profile';
 
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import { ResetPassword } from './ResetPassword';
-import { SMSMessaging } from './SMSMessaging';
 import { SecurityQuestions } from './SecurityQuestions/SecurityQuestions';
+import { SMSMessaging } from './SMSMessaging';
 import { TPAProviders } from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import { TwoFactor } from './TwoFactor/TwoFactor';
@@ -126,6 +127,12 @@ export const AuthenticationSettings = () => {
     </>
   );
 };
+
+export const authenticationSettingsLazyRoute = createLazyRoute('/profile/auth')(
+  {
+    component: AuthenticationSettings,
+  }
+);
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',
