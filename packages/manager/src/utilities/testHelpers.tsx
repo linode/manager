@@ -1,5 +1,10 @@
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
+import {
+  RouterProvider,
+  createMemoryHistory,
+  createRouter,
+} from '@tanstack/react-router';
+import { act, render, waitFor } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
 import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
@@ -15,9 +20,11 @@ import thunk from 'redux-thunk';
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
+import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
 
 import type { QueryClient } from '@tanstack/react-query';
+import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction, RenderResult } from '@testing-library/react';
 import type { FormikConfig, FormikValues } from 'formik';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
@@ -113,6 +120,94 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       </QueryClientProvider>
     </Provider>
   );
+};
+
+interface OptionsV2 {
+  customStore?: DeepPartial<ApplicationState>;
+  flags?: FlagSet;
+  initialRoute?: string;
+  queryClient?: QueryClient;
+  routeTree?: AnyRootRoute;
+  router?: AnyRouter;
+  theme?: 'dark' | 'light';
+}
+
+/**
+ * V2 versions of `wrapWithTheme` and `renderWithTheme` to work with Tanstack Router and access
+ * new router internals.
+ *
+ * TODO Tanstack Router - use the full router once migration is complete
+ */
+export const wrapWithThemeV2 = (ui: any, options: OptionsV2 = {}) => {
+  const {
+    customStore,
+    initialRoute = '/',
+    queryClient: passedQueryClient,
+    routeTree = migrationRouteTree,
+  } = options;
+  const queryClient = passedQueryClient ?? queryClientFactory();
+  const storeToPass = customStore ? baseStore(customStore) : storeFactory();
+
+  setupInterceptors(
+    configureStore<ApplicationState>([thunk])(defaultState)
+  );
+
+  const history = createMemoryHistory({
+    initialEntries: [initialRoute],
+  });
+
+  const router: AnyRouter = createRouter({
+    history,
+    routeTree,
+  });
+
+  return (
+    <Provider store={storeToPass}>
+      <QueryClientProvider client={passedQueryClient || queryClient}>
+        <LinodeThemeWrapper theme={options.theme}>
+          <LDProvider
+            clientSideID={''}
+            deferInitialization
+            flags={options.flags ?? {}}
+            options={{ bootstrap: options.flags }}
+          >
+            <SnackbarProvider>
+              <RouterProvider router={router} />
+              {ui}
+            </SnackbarProvider>
+          </LDProvider>
+        </LinodeThemeWrapper>
+      </QueryClientProvider>
+    </Provider>
+  );
+};
+
+export const renderWithThemeV2 = async (
+  ui: React.ReactNode,
+  options: OptionsV2 = {}
+): Promise<RenderResult & { router: ReturnType<typeof createRouter> }> => {
+  const router: AnyRouter = createRouter({
+    history: createMemoryHistory({
+      initialEntries: [options.initialRoute || '/'],
+    }),
+    routeTree: options.routeTree || migrationRouteTree,
+  });
+
+  let renderResult: RenderResult;
+
+  await act(async () => {
+    renderResult = render(wrapWithThemeV2(ui, { ...options, router }));
+
+    // Wait for the router to be ready
+    await waitFor(() => expect(router.state.status).toBe('idle'));
+  });
+
+  return {
+    ...renderResult!,
+    rerender: (ui) =>
+      renderResult.rerender(wrapWithThemeV2(ui, { ...options, router })),
+    router,
+  };
 };
 
 /**
