@@ -245,13 +245,14 @@ describe('LKE cluster updates', () => {
       )
       .should('be.visible');
 
+    mockGetClusters([updatedCluster]).as('getClusters');
+
     ui.button
       .findByTitle('Upgrade Version')
       .should('be.visible')
       .should('be.enabled')
       .click();
 
-    mockGetClusters([updatedCluster]).as('getClusters');
     cy.wait(['@updateCluster', '@getClusters']);
 
     ui.dialog
