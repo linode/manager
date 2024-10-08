@@ -255,6 +255,11 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <RegionSelect
+                  currentCapability={
+                    flags.disallowImageUploadToNonObjRegions
+                      ? 'Object Storage'
+                      : undefined
+                  }
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
@@ -262,9 +267,9 @@ export const ImageUpload = () => {
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
-                  currentCapability={undefined}
                   disableClearable
                   errorText={fieldState.error?.message}
+                  ignoreAccountAvailability
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta
