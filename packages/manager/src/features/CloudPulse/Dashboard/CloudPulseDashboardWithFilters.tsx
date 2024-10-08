@@ -148,7 +148,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
             })}
           />
         ) : (
-          renderPlaceHolder('Mandatory Filters not Selected')
+          renderPlaceHolder('Select filters to visualize metrics.')
         )}
       </>
     );
