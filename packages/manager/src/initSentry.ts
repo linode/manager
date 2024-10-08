@@ -12,9 +12,11 @@ export const initSentry = () => {
   if (SENTRY_URL) {
     init({
       allowUrls: [
-        /** anything from either *.linode.com/* or localhost:3000 */
-        /linode.com{1}/g,
-        /localhost:3000{1}/g,
+        /**
+         * anything from either *linode.com* or *localhost:3000*
+         */
+        'linode.com',
+        'localhost:3000',
       ],
       autoSessionTracking: false,
       beforeSend,
