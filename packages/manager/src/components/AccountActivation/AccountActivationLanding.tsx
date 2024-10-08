@@ -1,4 +1,5 @@
 import Warning from '@mui/icons-material/CheckCircle';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -68,5 +69,11 @@ const AccountActivationLanding = () => {
     />
   );
 };
+
+export const accountActivationLandingLazyRoute = createLazyRoute(
+  '/account-activation'
+)({
+  component: AccountActivationLanding,
+});
 
 export default React.memo(AccountActivationLanding);

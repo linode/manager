@@ -112,9 +112,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
   const getDedicatedDistributedRegionPlanType = () => {
     return types.filter(
       (type) =>
-        type.id.includes('dedicated-edge') ||
-        type.id.includes('nanode-edge') ||
-        type.class === 'edge'
+        type.id.includes('dedicated-edge') || type.id.includes('nanode-edge')
     );
   };
 
@@ -194,7 +192,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
             </>
           );
         },
-        title: planTabInfoContent[plan === 'edge' ? 'dedicated' : plan]?.title,
+        title: planTabInfoContent[plan]?.title,
       };
     }
   );

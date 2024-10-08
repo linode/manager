@@ -25,7 +25,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   content: {
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.color.grey2}`,
     borderRadius: theme.shape.borderRadius,
     marginTop: theme.spacing(1),
@@ -36,7 +36,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   header: {
-    backgroundColor: theme.color.grey2,
+    backgroundColor:
+      theme.name === 'light' ? theme.color.grey2 : theme.color.grey7,
     borderTopLeftRadius: theme.shape.borderRadius,
     borderTopRightRadius: theme.shape.borderRadius,
     minHeight: 40,
@@ -65,11 +66,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     height: 32,
     justifyContent: 'center',
-    marginTop: theme.spacing(0.5),
+    marginRight: theme.spacing(1),
+    marginTop: theme.spacing(1.5),
     position: 'relative',
     [theme.breakpoints.up('sm')]: {
       height: 40,
-      marginRight: theme.spacing(1),
+      marginTop: theme.spacing(1),
       width: 40,
     },
     top: -2,

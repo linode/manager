@@ -9,7 +9,7 @@ import type {
   RegionFilterValue,
 } from './RegionSelect.types';
 import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreatev2/types';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 
@@ -38,11 +38,10 @@ export const getRegionOptions = ({
         if (distributedContinentCode && distributedContinentCode !== 'ALL') {
           const group = getRegionCountryGroup(region);
           return (
-            region.site_type === 'edge' ||
-            (region.site_type === 'distributed' &&
-              CONTINENT_CODE_TO_CONTINENT[
-                distributedContinentCode as keyof typeof CONTINENT_CODE_TO_CONTINENT
-              ] === group)
+            region.site_type === 'distributed' &&
+            CONTINENT_CODE_TO_CONTINENT[
+              distributedContinentCode as keyof typeof CONTINENT_CODE_TO_CONTINENT
+            ] === group
           );
         }
         return regionFilter.includes(region.site_type);
@@ -149,7 +148,7 @@ export const getIsDistributedRegion = (
   const region = regionsData.find(
     (region) => region.id === selectedRegion || region.label === selectedRegion
   );
-  return region?.site_type === 'distributed' || region?.site_type === 'edge';
+  return region?.site_type === 'distributed';
 };
 
 export const getNewRegionLabel = (region: Region) => {

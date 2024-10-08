@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -16,10 +17,11 @@ import {
 } from 'src/queries/profile/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
-import { ThemeChoice } from 'src/utilities/theme';
 import { isOSMac } from 'src/utilities/userAgent';
 
 import { PreferenceEditor } from './PreferenceEditor';
+
+import type { ThemeChoice } from 'src/utilities/theme';
 
 export const ProfileSettings = () => {
   const location = useLocation();
@@ -130,3 +132,7 @@ const ThemeKeyboardShortcut = (
     <Code>D</Code>
   </>
 );
+
+export const SettingsLazyRoute = createLazyRoute('/profile/settings')({
+  component: ProfileSettings,
+});
