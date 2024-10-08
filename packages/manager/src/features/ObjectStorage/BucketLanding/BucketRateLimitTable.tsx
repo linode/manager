@@ -84,7 +84,11 @@ export const BucketRateLimitTable = ({
         ) : (
           'This endpoint type supports up to 750 Requests Per Second (RPS). '
         )}
-        Understand <Link to="#">bucket rate limits</Link>.
+        Understand{' '}
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/create-and-manage-buckets">
+          bucket rate limits
+        </Link>
+        .
       </Typography>
 
       {isGen2EndpointType && (

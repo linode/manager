@@ -146,8 +146,7 @@ export const ConfigureForm = React.memo((props: Props) => {
   );
 
   const linodeIsInDistributedRegion =
-    currentActualRegion?.site_type === 'distributed' ||
-    currentActualRegion?.site_type === 'edge';
+    currentActualRegion?.site_type === 'distributed';
 
   const { isGeckoBetaEnabled } = useIsGeckoEnabled();
 

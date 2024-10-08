@@ -1,5 +1,5 @@
 import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -43,16 +43,45 @@ export const getKubernetesCluster = (clusterID: number) =>
   );
 
 /**
+ * getKubernetesClusterBeta
+ *
+ * Return details about a single Kubernetes cluster from beta API
+ */
+export const getKubernetesClusterBeta = (clusterID: number) =>
+  Request<KubernetesCluster>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}`)
+  );
+
+/**
  * createKubernetesClusters
  *
  * Create a new cluster.
  */
-export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
-  Request<KubernetesCluster>(
+export const createKubernetesCluster = (data: CreateKubeClusterPayload) => {
+  return Request<KubernetesCluster>(
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters`),
     setData(data, createKubeClusterSchema)
   );
+};
+
+/**
+ * createKubernetesClustersBeta
+ *
+ * Create a new cluster with the BETA api whenever feature flag for APL is enabled
+ * and APL is set to enabled in the UI
+ *
+ * duplicated function of createKubernetesCluster
+ * necessary to call BETA_API_ROOT in a seperate function based on feature flag
+ */
+export const createKubernetesClusterBeta = (data: CreateKubeClusterPayload) => {
+  return Request<KubernetesCluster>(
+    setMethod('POST'),
+    setURL(`${BETA_API_ROOT}/lke/clusters`),
+    setData(data, createKubeClusterSchema)
+  );
+};
 
 /**
  * updateKubernetesCluster

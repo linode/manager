@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { linodeQueries } from './linodes';
 
@@ -15,7 +15,7 @@ export const STATS_NOT_READY_MESSAGE =
   'Stats for this Linode are not available yet';
 
 const queryOptions = {
-  keepPreviousData: true,
+  placeholderData: keepPreviousData,
   refetchInterval: 300_000, // 5 minutes
   refetchOnMount: false,
   refetchOnWindowFocus: false,

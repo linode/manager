@@ -1,5 +1,6 @@
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -21,6 +22,7 @@ import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
   getLatestVersion,
+  useGetAPLAvailability,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -28,6 +30,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import {
+  useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
   useKubernetesVersionQuery,
@@ -45,10 +48,11 @@ import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
+import { ApplicationPlatform } from './ApplicationPlatform';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
-  StyledRegionSelectStack,
+  StyledFieldWithDocsStack,
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
@@ -77,11 +81,13 @@ export const CreateCluster = () => {
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
   const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(true);
+  const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
+  const showAPL = useGetAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
@@ -115,6 +121,10 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterMutation();
 
   const {
+    mutateAsync: createKubernetesClusterBeta,
+  } = useCreateKubernetesClusterBetaMutation();
+
+  const {
     data: versionData,
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
@@ -135,7 +145,6 @@ export const CreateCluster = () => {
     setErrors(undefined);
     setSubmitting(true);
 
-    // Only type and count to the API.
     const node_pools = nodePools.map(
       pick(['type', 'count'])
     ) as CreateNodePoolData[];
@@ -160,7 +169,7 @@ export const CreateCluster = () => {
       ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
     };
 
-    const payload: CreateKubeClusterPayload = {
+    let payload: CreateKubeClusterPayload = {
       control_plane: {
         acl: {
           enabled: controlPlaneACL,
@@ -181,7 +190,15 @@ export const CreateCluster = () => {
       region: selectedRegionId,
     };
 
-    createKubernetesCluster(payload)
+    if (showAPL) {
+      payload = { ...payload, apl_enabled };
+    }
+
+    const createClusterFn = showAPL
+      ? createKubernetesClusterBeta
+      : createKubernetesCluster;
+
+    createClusterFn(payload)
       .then((cluster) => {
         push(`/kubernetes/clusters/${cluster.id}`);
         if (hasAgreed) {
@@ -283,7 +300,7 @@ export const CreateCluster = () => {
             value={label || ''}
           />
           <Divider sx={{ marginTop: 4 }} />
-          <StyledRegionSelectStack>
+          <StyledFieldWithDocsStack>
             <Stack>
               <RegionSelect
                 textFieldProps={{
@@ -304,7 +321,7 @@ export const CreateCluster = () => {
                 label={DOCS_LINK_LABEL_DC_PRICING}
               />
             </StyledDocsLinkContainer>
-          </StyledRegionSelectStack>
+          </StyledFieldWithDocsStack>
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
             onChange={(_, selected) => {
@@ -317,6 +334,19 @@ export const CreateCluster = () => {
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
           />
+          {showAPL && (
+            <>
+              <Divider sx={{ marginTop: 4 }} />
+              <StyledFieldWithDocsStack>
+                <Stack>
+                  <ApplicationPlatform
+                    setAPL={setApl_enabled}
+                    setHighAvailability={setHighAvailability}
+                  />
+                </Stack>
+              </StyledFieldWithDocsStack>
+            </>
+          )}
           <Divider sx={{ marginTop: 4 }} />
           {showHighAvailability && (
             <Box data-testid="ha-control-plane">
@@ -326,6 +356,7 @@ export const CreateCluster = () => {
                     ? UNKNOWN_PRICE
                     : highAvailabilityPrice
                 }
+                isAPLEnabled={apl_enabled}
                 isErrorKubernetesTypes={isErrorKubernetesTypes}
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                 selectedRegionId={selectedRegionId}
@@ -366,6 +397,7 @@ export const CreateCluster = () => {
             addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
             apiError={errorMap.node_pools}
             hasSelectedRegion={hasSelectedRegion}
+            isAPLEnabled={apl_enabled}
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}
@@ -413,3 +445,7 @@ export const CreateCluster = () => {
     </Grid>
   );
 };
+
+export const createClusterLazyRoute = createLazyRoute('/kubernetes/create')({
+  component: CreateCluster,
+});

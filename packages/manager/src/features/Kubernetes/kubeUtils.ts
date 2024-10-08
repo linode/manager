@@ -1,3 +1,4 @@
+import { useFlags } from 'src/hooks/useFlags';
 import { sortByVersion } from 'src/utilities/sort-by';
 
 import type { Account } from '@linode/api-v4/lib/account';
@@ -112,6 +113,16 @@ export const getKubeHighAvailability = (
   };
 };
 
+export const useGetAPLAvailability = (): boolean => {
+  const flags = useFlags();
+
+  if (!flags) {
+    return false;
+  }
+
+  return Boolean(flags.apl);
+};
+
 export const getKubeControlPlaneACL = (
   account: Account | undefined,
   cluster?: KubernetesCluster | null
@@ -129,6 +140,7 @@ export const getKubeControlPlaneACL = (
     showControlPlaneACL,
   };
 };
+
 /**
  * Retrieves the latest version from an array of version objects.
  *
