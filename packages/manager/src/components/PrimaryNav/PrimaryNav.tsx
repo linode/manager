@@ -1,4 +1,4 @@
-import { BetaChip } from '@linode/ui/src/components/BetaChip/BetaChip';
+import { BetaChip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
