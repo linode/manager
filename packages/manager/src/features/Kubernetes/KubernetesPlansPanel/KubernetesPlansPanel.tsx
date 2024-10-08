@@ -27,6 +27,7 @@ interface Props {
   getTypeCount: (planId: string) => number;
   hasSelectedRegion: boolean;
   header?: string;
+  isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;
@@ -48,6 +49,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     getTypeCount,
     hasSelectedRegion,
     header,
+    isAPLEnabled,
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
     onAdd,
@@ -87,6 +89,7 @@ export const KubernetesPlansPanel = (props: Props) => {
         plansForThisLinodeTypeClass,
       } = extractPlansInformation({
         disableLargestGbPlansFlag: flags.disableLargestGbPlans,
+        isAPLEnabled,
         plans: plansMap,
         regionAvailabilities,
         selectedRegionId,
