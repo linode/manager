@@ -618,7 +618,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.enabled')
           .click();
 
-        cy.contains('Endpoint Type is required').should('be.visible');
+        cy.contains('Endpoint Type is required.').should('be.visible');
 
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
@@ -631,7 +631,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.enabled')
           .click();
 
-        cy.contains('Endpoint Type is required').should('not.exist');
+        cy.contains('Endpoint Type is required.').should('not.exist');
 
         // confirms error appears when label isn't filled in and disappears once a label is entered
         ui.buttonGroup
