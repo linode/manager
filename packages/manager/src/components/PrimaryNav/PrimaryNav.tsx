@@ -1,3 +1,4 @@
+import { BetaChip } from '@linode/ui/src/components/BetaChip/BetaChip';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -22,7 +23,6 @@ import VPC from 'src/assets/icons/entityIcons/vpc.svg';
 import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';

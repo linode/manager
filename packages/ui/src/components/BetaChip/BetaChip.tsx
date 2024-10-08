@@ -51,8 +51,8 @@ const StyledBetaChip = styled(Chip, {
   '& .MuiChip-label': {
     padding: 0,
   },
-  fontFamily: theme.font.bold,
   fontSize: '0.625rem',
+  fontFamily: '"LatoWebBold", sans-serif', // TODO: remove hardcoded font once theme is added to this package
   height: 16,
   letterSpacing: '.25px',
   marginLeft: theme.spacing(0.5),

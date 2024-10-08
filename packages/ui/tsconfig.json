@@ -1,47 +1,15 @@
 {
   "compilerOptions": {
-    /* Language and Environment */
     "jsx": "react",
-    "lib": ["dom", "dom.iterable", "es2020"],
-    "target": "es5",
-
-    /* Modules */
-    "baseUrl": ".",
-    "moduleResolution": "node",
-    "paths": {
-      "src/*": ["src/*"]
-    },
-    "resolveJsonModule": true,
-    "rootDir": ".",
-
-    /* JavaScript Support */
-    "allowJs": false,
-
-    /* Emit */
-    "sourceMap": true,
-    "noEmit": true,
-
-    /* Interop Constraints */
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-
-    /* Type Checking */
-    "allowUnreachableCode": false,
-    "module": "esnext",
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
-
-    /* Completeness */
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "skipLibCheck": true,
-
-    /* Optimizations */
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "forceConsistentCasingInFileNames": true,
     "incremental": true
   },
-  "include": [
-    "src",
-  ]
+  "include": ["src"],
 }

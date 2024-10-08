@@ -3,6 +3,9 @@ import React from 'react';
 
 import { BetaChip } from './BetaChip';
 
+import { expect, vi, describe, it } from 'vitest';
+import '@testing-library/jest-dom/vitest';
+
 describe('BetaChip', () => {
   it('renders with default color', () => {
     const { getByTestId } = render(<BetaChip />);
