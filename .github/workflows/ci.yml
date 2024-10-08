@@ -289,7 +289,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_ICON_EMOJI: ":package:"
           MSG_MINIMAL: true
-        
+
   build-storybook:
     runs-on: ubuntu-latest
     needs: build-sdk

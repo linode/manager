@@ -42,7 +42,7 @@
   "devDependencies": {
     "@linode/eslint-plugin-cloud-manager": "^0.0.5",
     "@testing-library/dom": "^10.1.0",
-    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",
     "@types/node": "^12.7.1",
     "@types/react": "^18.2.55",
