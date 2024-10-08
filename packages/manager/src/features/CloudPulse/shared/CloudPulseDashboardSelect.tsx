@@ -30,6 +30,9 @@ export const CloudPulseDashboardSelect = React.memo(
     } = useCloudPulseServiceTypes(true);
 
     const serviceTypes: string[] = formattedServiceTypes(serviceTypesList);
+    const serviceTypeMap: Map<string, string> = new Map(
+      serviceTypesList?.data.map(item => [item.service_type, item.label])
+    );
 
     const {
       data: dashboardsList,
@@ -92,11 +95,7 @@ export const CloudPulseDashboardSelect = React.memo(
         renderGroup={(params) => (
           <Box key={params.key}>
             <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
-              {
-                serviceTypesList?.data.find(
-                  (type: ServiceTypes) => type.service_type === params.group
-                )?.label
-              }
+              {serviceTypeMap.get(params.group)}
             </Typography>
             {params.children}
           </Box>
