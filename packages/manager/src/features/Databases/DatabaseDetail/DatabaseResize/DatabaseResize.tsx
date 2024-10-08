@@ -54,12 +54,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
   summarySpanBorder: {
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     color: theme.textColors.tableStatic,
-    paddingRight: '10px',
-    marginRight: '10px;',
-    marginLeft: '10px;',
+    paddingRight: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
   },
   nodeSpanSpacing: {
-    marginRight: '10px',
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -363,7 +363,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       <span className={classes.nodeSpanSpacing}>
         {' '}
         {database.cluster_size} Node
-        {database.cluster_size > 1 ? 's - HA ' : ' - HA '}
+        {database.cluster_size > 1 ? 's - HA ' : ' '}
       </span>
       {currentNodePrice}
     </Box>
