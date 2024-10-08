@@ -583,11 +583,11 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
   /**
    * Confirms UI flow for when creating a bucket results in validation and API errors
-   * - Confirms trying to create a bucket without a label leads to a validation error that later disappears when a label is specified
    * - Confirms trying to create a bucket without an endpoint leads to a validation error that later disappears when an endpoint is specified
+   * - Confirms trying to create a bucket without a label leads to a validation error that later disappears when a label is specified
    * - Confirms an error returned by the API is displayed and does not crash Cloud Manager
    */
-  it.only('handles errors and validation', () => {
+  it('handles errors and validation', () => {
     const bucketLabel = randomLabel();
     const mockErrorMessage = 'An unknown error has occurred.';
     mockGetBuckets([]).as('getBuckets');
@@ -644,7 +644,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
         cy.findByText('Label').click().type(bucketLabel);
         cy.contains('Label is required.').should('not.exist');
 
-        // confirms (mock) error appears
+        // confirms (mock) API error appears
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
