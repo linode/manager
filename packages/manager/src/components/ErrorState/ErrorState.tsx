@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 
 import { SvgIconProps } from '../SvgIcon';
@@ -28,10 +29,19 @@ export interface ErrorStateProps {
    * Styles applied to the error text
    */
   typographySx?: SxProps<Theme>;
+  /**
+   * Optional Action Button: Text
+   */
+  actionButtonText?: string;
+  /**
+   * Optional Action Button: Click handler
+   */
+  onActionButtonClick?: ()=>void;
 }
 
 export const ErrorState = (props: ErrorStateProps) => {
-  const { CustomIcon, compact, typographySx } = props;
+  const { CustomIcon, compact, typographySx,
+          actionButtonText, onActionButtonClick } = props;
   const theme = useTheme();
 
   const sxIcon = {
@@ -72,6 +82,16 @@ export const ErrorState = (props: ErrorStateProps) => {
         ) : (
           <div style={{ textAlign: 'center' }}>{props.errorText}</div>
         )}
+        {actionButtonText ? (
+          <div style={{ textAlign: 'center' }}>
+            <Button
+              title={actionButtonText}
+              onClick={() => { onActionButtonClick?.() }}
+            >
+              {actionButtonText}
+            </Button>
+          </div>
+        ): ( null )}
       </Grid>
     </ErrorStateRoot>
   );

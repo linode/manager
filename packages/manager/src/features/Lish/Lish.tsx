@@ -23,10 +23,48 @@ import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
+export class RetryLimiter {
+  maxTries: number;
+  perTimeWindowMs: number;
+  retryTimes: number[];
+
+  constructor(maxTries: number, perTimeWindowMs: number) {
+    this.maxTries = maxTries;
+    this.perTimeWindowMs = perTimeWindowMs;
+    this.retryTimes = [];
+  }
+  retryAllowed(): boolean {
+    const now = Date.now();
+    this.retryTimes.push(now);
+    const cutOffTime = now-this.perTimeWindowMs;
+    while (this.retryTimes.length && this.retryTimes[0] < cutOffTime)
+      this.retryTimes.shift();
+    return this.retryTimes.length < this.maxTries;
+  }
+  reset(): void {
+    this.retryTimes = [];
+  }
+}
+
+export function formatError(errObj: any, defaultError: string): string {
+  let error = defaultError;
+  if (typeof errObj === 'string') {
+    error = errObj;
+  } else if (errObj?.reason) {
+    error = `${errObj?.reason}`;
+  } else if (errObj?.errors?.[0]?.reason) {
+    error = `Error code: ${errObj.errors[0].reason}`;
+  }
+  if (errObj?.grn) {
+    error = `${error} (${errObj?.grn})`;
+  }
+  return error;
+}
+
 const Lish = () => {
   const history = useHistory();
 
-  const { isLoading: isMakingInitalRequests } = useInitialRequests();
+  const { isLoading: isMakingInitialRequests } = useInitialRequests();
 
   const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
   const id = Number(linodeId);
@@ -44,7 +82,7 @@ const Lish = () => {
     refetch,
   } = useLinodeLishQuery(id);
 
-  const isLoading = isLinodeLoading || isTokenLoading || isMakingInitalRequests;
+  const isLoading = isLinodeLoading || isTokenLoading || isMakingInitialRequests;
 
   React.useEffect(() => {
     const interval = setInterval(checkAuthentication, AUTH_POLLING_INTERVAL);
