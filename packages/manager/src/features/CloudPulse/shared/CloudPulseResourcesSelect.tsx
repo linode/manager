@@ -48,7 +48,7 @@ export const CloudPulseResourcesSelect = React.memo(
 
     const [selectedResources, setSelectedResources] = React.useState<
       CloudPulseResources[]
-    >([]);
+    >();
 
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 

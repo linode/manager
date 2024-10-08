@@ -28,7 +28,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
               color: theme.color.grey1,
               fontSize: 'x-large',
               height: '34px',
-              padding: '0',
+              padding: 0,
             }}
             data-testid="zoom-in"
             onClick={() => handleClick(false)}
@@ -46,7 +46,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
             color: theme.color.grey1,
             fontSize: 'x-large',
             height: '34px',
-            padding: '0',
+            padding: 0,
           }}
           data-testid="zoom-out"
           onClick={() => handleClick(true)}

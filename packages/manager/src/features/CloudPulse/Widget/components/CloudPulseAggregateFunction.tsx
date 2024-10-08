@@ -28,7 +28,11 @@ interface AggregateFunction {
 
 export const CloudPulseAggregateFunction = React.memo(
   (props: AggregateFunctionProperties) => {
-    const { availableAggregateFunctions, defaultAggregateFunction } = props;
+    const {
+      availableAggregateFunctions,
+      defaultAggregateFunction,
+      onAggregateFuncChange,
+    } = props;
 
     // Convert list of availableAggregateFunc into a proper response structure accepted by Autocomplete component
     const availableAggregateFunc: AggregateFunction[] = availableAggregateFunctions?.map(
@@ -40,10 +44,15 @@ export const CloudPulseAggregateFunction = React.memo(
       }
     );
 
-    const defaultAggregateFunc =
+    const defaultValue =
       availableAggregateFunc.find(
-        (obj) => obj.label === props.defaultAggregateFunction
-      ) || props.availableAggregateFunctions[0];
+        (obj) => obj.label === defaultAggregateFunction
+      ) || availableAggregateFunc[0];
+
+    const [
+      selectedAggregateFunction,
+      setSelectedAggregateFunction,
+    ] = React.useState<AggregateFunction>(defaultValue);
 
     return (
       <CloudPulseTooltip title={'Aggregation function'}>
@@ -55,18 +64,20 @@ export const CloudPulseAggregateFunction = React.memo(
             return option.label === value.label;
           }}
           onChange={(_: any, selectedAggregateFunc: any) => {
-            props.onAggregateFuncChange(selectedAggregateFunc.label);
+            setSelectedAggregateFunction(selectedAggregateFunc);
+            onAggregateFuncChange(selectedAggregateFunc.label);
           }}
           textFieldProps={{
             hideLabel: true,
           }}
-          defaultValue={defaultAggregateFunc}
+          autoHighlight
           disableClearable
           fullWidth={false}
           label="Select an Aggregate Function"
           noMarginTop={true}
           options={availableAggregateFunc}
           sx={{ width: '100%' }}
+          value={selectedAggregateFunction}
         />
       </CloudPulseTooltip>
     );
