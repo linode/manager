@@ -11,7 +11,7 @@ import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
-import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
@@ -243,7 +243,7 @@ export const RebuildFromImage = (props: Props) => {
           <StyledGrid>
             <form>
               <Typography variant="h2">Select Image</Typography>
-              <ImageSelectv2
+              <ImageSelect
                 data-qa-select-image
                 disabled={disabled}
                 errorText={errors.image}

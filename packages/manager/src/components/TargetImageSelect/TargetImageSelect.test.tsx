@@ -5,7 +5,7 @@ import { imageFactory } from 'src/factories/images';
 import { getImageGroup } from 'src/utilities/images';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ImageSelect } from './ImageSelect';
+import { TargetImageSelect } from './TargetImageSelect';
 
 const recommendedImage = imageFactory.build({
   created_by: 'linode',
@@ -37,7 +37,7 @@ describe('getImageGroup', () => {
 describe('ImageSelect', () => {
   it('should display an error', () => {
     const { getByText } = renderWithTheme(
-      <ImageSelect
+      <TargetImageSelect
         errorText="An error"
         images={imageFactory.buildList(3)}
         onSelect={vi.fn()}
@@ -55,7 +55,7 @@ describe('ImageSelect', () => {
     ];
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <ImageSelect images={images} onSelect={onSelect} />
+      <TargetImageSelect images={images} onSelect={onSelect} />
     );
 
     await userEvent.click(getByLabelText('Image'));
@@ -74,7 +74,12 @@ describe('ImageSelect', () => {
     ];
 
     const { getByLabelText, getByText } = renderWithTheme(
-      <ImageSelect anyAllOption images={images} isMulti onSelect={onSelect} />
+      <TargetImageSelect
+        anyAllOption
+        images={images}
+        isMulti
+        onSelect={onSelect}
+      />
     );
 
     await userEvent.click(getByLabelText('Image'));

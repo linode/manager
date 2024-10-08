@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
-import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
@@ -44,7 +44,7 @@ export const StackScriptImages = () => {
       <Typography variant="h2">Select an Image</Typography>
       <Controller<CreateLinodeRequest, 'image'>
         render={({ field, fieldState }) => (
-          <ImageSelectv2
+          <ImageSelect
             disabled={!hasStackScriptSelected}
             errorText={fieldState.error?.message}
             filter={imageFilter}

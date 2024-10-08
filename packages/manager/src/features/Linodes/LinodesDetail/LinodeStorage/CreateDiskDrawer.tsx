@@ -188,7 +188,6 @@ export const CreateDiskDrawer = (props: Props) => {
             authorizedUsers={formik.values.authorized_users}
             linodeId={linodeId}
             password={formik.values.root_pass}
-            selectedImage={formik.values.image}
           />
         )}
         <TextField
