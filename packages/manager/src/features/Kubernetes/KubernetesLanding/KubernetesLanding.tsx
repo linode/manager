@@ -98,7 +98,7 @@ export const KubernetesLanding = () => {
 
   const isRestricted = profile?.restricted ?? false;
 
-  const { data, error, isFetching } = useKubernetesClustersQuery(
+  const { data, error, isLoading } = useKubernetesClustersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -157,7 +157,7 @@ export const KubernetesLanding = () => {
     );
   }
 
-  if (isFetching) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
