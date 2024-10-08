@@ -185,6 +185,7 @@ export const RenderWidgets = React.memo(
       'jweToken',
       'duration',
       'resources',
+      'additionalFilters',
     ];
 
     for (const key of keysToCompare) {
