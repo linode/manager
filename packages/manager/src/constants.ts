@@ -67,10 +67,15 @@ export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 export const SENTRY_URL = import.meta.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
+
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
 export const NUM_ADOBE_SCRIPTS = 3;
+
+/** Pendo */
+export const PENDO_API_KEY = import.meta.env.REACT_APP_PENDO_API_KEY;
+
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
 

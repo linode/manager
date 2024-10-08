@@ -1,5 +1,5 @@
-import { Image } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,6 +11,8 @@ import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import StackScriptPanel from './StackScriptPanel/StackScriptPanel';
+
+import type { Image } from '@linode/api-v4';
 
 export const StackScriptsLanding = () => {
   const history = useHistory<{
@@ -63,3 +65,7 @@ export const StackScriptsLanding = () => {
 };
 
 export default StackScriptsLanding;
+
+export const stackScriptsLandingLazyRoute = createLazyRoute('/stackscripts')({
+  component: StackScriptsLanding,
+});
