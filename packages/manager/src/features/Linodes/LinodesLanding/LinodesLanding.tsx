@@ -48,6 +48,7 @@ import type { WithFeatureFlagProps } from 'src/containers/flags.container';
 import type { WithProfileProps } from 'src/containers/profile.container';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
+import type { RegionFilter } from 'src/utilities/storage';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -82,11 +83,14 @@ type RouteProps = RouteComponentProps<Params>;
 
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
+  handleRegionFilter: (regionFilter: RegionFilter) => void;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   someLinodesHaveScheduledMaintenance: boolean;
+  /** Keep track of total number of linodes for filtering and empty state landing page logic */
+  totalNumLinodes: number;
 }
 
 type CombinedProps = LinodesLandingProps &
@@ -187,11 +191,13 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
       grants,
+      handleRegionFilter,
       linodesData,
       linodesInTransition,
       linodesRequestError,
       linodesRequestLoading,
       profile,
+      totalNumLinodes,
     } = this.props;
 
     const isLinodesGrantReadOnly =
@@ -241,7 +247,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    if (this.props.linodesData.length === 0) {
+    if (totalNumLinodes === 0 && linodesData.length === 0) {
       return (
         <>
           <ProductInformationBanner bannerLocation="Linodes" />
@@ -402,6 +408,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   : ListView
                               }
                               display={linodeViewPreference}
+                              handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={true}
                               toggleGroupLinodes={toggleGroupLinodes}
@@ -416,6 +423,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   : ListView
                               }
                               display={linodeViewPreference}
+                              handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={false}
                               toggleGroupLinodes={toggleGroupLinodes}
