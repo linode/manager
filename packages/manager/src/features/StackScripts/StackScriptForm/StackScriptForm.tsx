@@ -3,9 +3,9 @@ import * as React from 'react';
 
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Paper } from 'src/components/Paper';
+import { TargetImageSelect } from 'src/components/TargetImageSelect/TargetImageSelect';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { ImageSelect } from 'src/features/Images/ImageSelect';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import {
@@ -103,7 +103,7 @@ export const StackScriptForm = React.memo((props: Props) => {
             rows={1}
             value={description.value}
           />
-          <ImageSelect
+          <TargetImageSelect
             helperText={
               'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.'
             }

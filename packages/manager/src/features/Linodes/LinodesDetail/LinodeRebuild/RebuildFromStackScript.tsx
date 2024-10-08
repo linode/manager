@@ -9,7 +9,7 @@ import * as React from 'react';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
@@ -310,7 +310,7 @@ export const RebuildFromStackScript = (props: Props) => {
               )}
 
               {ss.images && ss.images.length > 0 ? (
-                <ImageSelectv2
+                <ImageSelect
                   errorText={errors.image}
                   onChange={(selected) => setFieldValue('image', selected)}
                   title="Choose Image"

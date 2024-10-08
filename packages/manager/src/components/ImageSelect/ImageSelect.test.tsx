@@ -1,121 +1,142 @@
-import { DateTime } from 'luxon';
+import userEvent from '@testing-library/user-event';
+import { Settings } from 'luxon';
 import React from 'react';
 
 import { imageFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ImageSelect, imagesToGroupedItems } from './ImageSelect';
-
-describe('imagesToGroupedItems', () => {
-  it('should filter deprecated images when end of life is past beyond 6 months ', () => {
-    const images = [
-      ...imageFactory.buildList(2, {
-        created: '2017-06-16T20:02:29',
-        deprecated: true,
-        eol: '2022-01-01T14:05:30',
-        label: 'Debian 9',
-      }),
-      ...imageFactory.buildList(2, {
-        created: '2017-06-16T20:02:29',
-        deprecated: false,
-        eol: '1970-01-01T14:05:30',
-        label: 'Debian 10',
-      }),
-      ...imageFactory.buildList(2, {
-        created: '2022-10-20T14:05:30',
-        deprecated: true,
-        eol: null,
-        label: 'Slackware 14.1',
-      }),
-    ];
-    const expected = [
-      {
-        label: 'My Images',
-        options: [
-          {
-            className: 'fl-tux',
-            created: '2022-10-20T14:05:30',
-            isCloudInitCompatible: false,
-            isDistributedCompatible: false,
-            label: 'Slackware 14.1',
-            value: 'private/5',
-          },
-          {
-            className: 'fl-tux',
-            created: '2022-10-20T14:05:30',
-            isCloudInitCompatible: false,
-            isDistributedCompatible: false,
-            label: 'Slackware 14.1',
-            value: 'private/6',
-          },
-        ],
-      },
-    ];
-
-    expect(imagesToGroupedItems(images)).toStrictEqual(expected);
-  });
-
-  it('should add suffix `deprecated` to images at end of life ', () => {
-    const images = [
-      ...imageFactory.buildList(2, {
-        created: '2017-06-16T20:02:29',
-        deprecated: true,
-        eol: DateTime.now().toISODate(),
-        label: 'Debian 9',
-      }),
-      ...imageFactory.buildList(2, {
-        created: '2017-06-16T20:02:29',
-        deprecated: false,
-        eol: '1970-01-01T14:05:30',
-        label: 'Debian 10',
-      }),
-    ];
-    const expected = [
-      {
-        label: 'My Images',
-        options: [
-          {
-            className: 'fl-tux',
-            created: '2017-06-16T20:02:29',
-            isCloudInitCompatible: false,
-            isDistributedCompatible: false,
-            label: 'Debian 9 (deprecated)',
-            value: 'private/7',
-          },
-          {
-            className: 'fl-tux',
-            created: '2017-06-16T20:02:29',
-            isCloudInitCompatible: false,
-            isDistributedCompatible: false,
-            label: 'Debian 9 (deprecated)',
-            value: 'private/8',
-          },
-        ],
-      },
-    ];
-    expect(imagesToGroupedItems(images)).toStrictEqual(expected);
-  });
-});
+import { ImageSelect } from './ImageSelect';
 
 describe('ImageSelect', () => {
-  it('renders a "Indicates compatibility with distributed compute regions." notice if the user has at least one image with the distributed capability', async () => {
-    const images = [
-      imageFactory.build({ capabilities: [] }),
-      imageFactory.build({ capabilities: ['distributed-sites'] }),
-      imageFactory.build({ capabilities: [] }),
-    ];
+  it('should render a default "Images" label', () => {
+    const { getByLabelText } = renderWithTheme(<ImageSelect value={null} />);
 
-    const { getByText } = renderWithTheme(
-      <ImageSelect
-        handleSelectImage={vi.fn()}
-        images={images}
-        title="Images"
-        variant="private"
-      />
+    expect(getByLabelText('Images')).toBeVisible();
+  });
+
+  it('should render default placeholder text', () => {
+    const { getByPlaceholderText } = renderWithTheme(
+      <ImageSelect value={null} />
     );
 
-    expect(
-      getByText('Indicates compatibility with distributed compute regions.')
-    ).toBeVisible();
+    expect(getByPlaceholderText('Choose an image')).toBeVisible();
+  });
+
+  it('should render items returned by the API', async () => {
+    const images = imageFactory.buildList(5, { eol: null });
+
+    server.use(
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const { getByPlaceholderText, getByText } = renderWithTheme(
+      <ImageSelect value={null} />
+    );
+
+    await userEvent.click(getByPlaceholderText('Choose an image'));
+
+    for (const image of images) {
+      expect(getByText(image.label)).toBeVisible();
+    }
+  });
+
+  it('should call onChange when a value is selected', async () => {
+    const image = imageFactory.build({ eol: null });
+    const onChange = vi.fn();
+
+    server.use(
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage([image]));
+      })
+    );
+
+    const { getByPlaceholderText, getByText } = renderWithTheme(
+      <ImageSelect onChange={onChange} value={null} />
+    );
+
+    await userEvent.click(getByPlaceholderText('Choose an image'));
+
+    const imageOption = getByText(image.label);
+
+    expect(imageOption).toBeVisible();
+
+    await userEvent.click(imageOption);
+
+    expect(onChange).toHaveBeenCalledWith(image);
+  });
+
+  it('should correctly initialize with a default value', async () => {
+    const image = imageFactory.build();
+
+    server.use(
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage([image]));
+      })
+    );
+
+    const { findByDisplayValue } = renderWithTheme(
+      <ImageSelect value={image.id} />
+    );
+
+    await findByDisplayValue(image.label);
+  });
+
+  it('should render an OS icon for the selected Image', async () => {
+    const image = imageFactory.build();
+
+    server.use(
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage([image]));
+      })
+    );
+
+    const { findByTestId } = renderWithTheme(<ImageSelect value={image.id} />);
+
+    await findByTestId('os-icon');
+  });
+
+  it('does not render images that are more than 6 months past their eol', async () => {
+    // Mock the current date
+    Settings.now = () => new Date(2018, 1, 1).valueOf();
+
+    const images = [
+      imageFactory.build({
+        eol: '2018-04-01T00:00:00', // should show because this image is not EOL yet
+        label: 'linode/image-1',
+      }),
+      imageFactory.build({
+        eol: '2017-01-01T00:00:00', // should not show because it is > 6 months past this EOL
+        label: 'linode/image-2',
+      }),
+      imageFactory.build({
+        eol: null, // should show because this images does not have an EOL
+        label: 'linode/image-3',
+      }),
+      imageFactory.build({
+        eol: '2017-11-01T00:00:00', // should show as deprecated because it is < 6 months past this EOL
+        label: 'linode/image-4',
+      }),
+    ];
+
+    server.use(
+      http.get('*/v4/images', () => {
+        return HttpResponse.json(makeResourcePage(images));
+      })
+    );
+
+    const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
+      <ImageSelect value={null} />
+    );
+
+    await userEvent.click(getByPlaceholderText('Choose an image'));
+
+    expect(getByText('linode/image-1')).toBeVisible();
+    expect(queryByText('linode/image-2')).toBeNull();
+    expect(getByText('linode/image-3')).toBeVisible();
+    expect(getByText('linode/image-4 (deprecated)')).toBeVisible();
   });
 });

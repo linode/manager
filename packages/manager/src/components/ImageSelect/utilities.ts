@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 
-import type { ImageSelectVariant } from './ImageSelectv2';
+import type { ImageSelectVariant } from './ImageSelect';
 import type { Image } from '@linode/api-v4';
 
 /**
