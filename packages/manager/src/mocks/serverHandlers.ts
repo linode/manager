@@ -110,6 +110,7 @@ import { pickRandom } from 'src/utilities/random';
 import type {
   AccountMaintenance,
   CreateObjectStorageKeyPayload,
+  Dashboard,
   FirewallStatus,
   NotificationType,
   ObjectStorageEndpointTypes,
@@ -2322,16 +2323,16 @@ export const handlers = [
   }),
   http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {
-      data: [] as any[],
+      data: [] as Dashboard[],
     };
-    if (params.serviceType == 'linode') {
+    if (params.serviceType === 'linode') {
       response.data.push(
         dashboardFactory.build({
           label: 'Linode Dashboard',
           service_type: 'linode',
         })
       );
-    } else if (params.serviceType == 'dbaas') {
+    } else if (params.serviceType === 'dbaas') {
       response.data.push(
         dashboardFactory.build({
           label: 'DBaaS Dashboard',
