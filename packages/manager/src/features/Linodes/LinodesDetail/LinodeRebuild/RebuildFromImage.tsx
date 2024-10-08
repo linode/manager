@@ -11,14 +11,13 @@ import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Divider } from 'src/components/Divider';
-import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
+import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
+import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -35,7 +34,7 @@ import {
 } from './RebuildFromImage.styles';
 import { UserDataAccordion } from './UserDataAccordion/UserDataAccordion';
 
-import type { RebuildRequest, UserData } from '@linode/api-v4';
+import type { Image, RebuildRequest, UserData } from '@linode/api-v4';
 import type { FormikProps } from 'formik';
 
 interface Props {
@@ -95,17 +94,13 @@ export const RebuildFromImage = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 
-  const {
-    data: _imagesData,
-    error: imagesError,
-    isLoading: isLoadingImages,
-  } = useAllImagesQuery();
   const { data: regionsData, isLoading: isLoadingRegions } = useRegionsQuery();
-  const isLoading = isLoadingPreferences || isLoadingImages || isLoadingRegions;
+  const isLoading = isLoadingPreferences || isLoadingRegions;
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
+  const [isCloudInit, setIsCloudInit] = React.useState(false);
 
   const [userData, setUserData] = React.useState<string | undefined>('');
   const [shouldReuseUserData, setShouldReuseUserData] = React.useState<boolean>(
@@ -201,10 +196,6 @@ export const RebuildFromImage = (props: Props) => {
       });
   };
 
-  const _imagesError = imagesError
-    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].reason
-    : undefined;
-
   return (
     <Formik
       initialValues={{ ...initialValues, image: preselectedImageId }}
@@ -234,6 +225,11 @@ export const RebuildFromImage = (props: Props) => {
           });
         };
 
+        const handleImageChange = (image: Image | null) => {
+          setFieldValue('image', image);
+          setIsCloudInit(image?.capabilities?.includes('cloud-init') ?? false);
+        };
+
         if (status) {
           handleRebuildError(status.generalError);
         }
@@ -241,26 +237,19 @@ export const RebuildFromImage = (props: Props) => {
         const shouldDisplayUserDataAccordion =
           flags.metadata &&
           regionSupportsMetadata(regionsData ?? [], linodeRegion ?? '') &&
-          Boolean(
-            values.image &&
-              _imagesData
-                ?.find((image) => image.id === values.image)
-                ?.capabilities?.includes('cloud-init')
-          );
+          isCloudInit;
 
         return (
           <StyledGrid>
             <form>
-              <ImageSelect
-                handleSelectImage={(selected) =>
-                  setFieldValue('image', selected)
-                }
+              <Typography variant="h2">Select Image</Typography>
+              <ImageSelectv2
                 data-qa-select-image
                 disabled={disabled}
-                error={_imagesError || errors.image}
-                images={_imagesData ?? []}
-                selectedImageID={values.image}
-                title="Select Image"
+                errorText={errors.image}
+                label="Images"
+                onChange={handleImageChange}
+                value={values.image}
                 variant="all"
               />
               <AccessPanel
