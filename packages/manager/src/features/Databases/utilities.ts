@@ -102,10 +102,5 @@ export const isOutsideBackupTimeframe = (
 };
 
 export const getDatabasesDescription = (database: DatabaseInstance) => {
-  const dbEngineLabel = `${databaseEngineMap[database.engine]} v${
-    database.version
-  }`;
-  const clusterSize = database.cluster_size + ' GB';
-  const description = [dbEngineLabel, clusterSize];
-  return description.join(', ');
+  return `${databaseEngineMap[database.engine]} v${database.version}`;
 };
