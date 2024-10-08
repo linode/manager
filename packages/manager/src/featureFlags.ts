@@ -80,8 +80,14 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
   link: string;
 }
 
+interface AclpAlerting {
+  alertDefinitions: boolean;
+  notificationChannels: boolean;
+  recentActivity: boolean;
+}
 export interface Flags {
   aclp: AclpFlag;
+  aclpAlerting: AclpAlerting;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
