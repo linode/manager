@@ -13,6 +13,8 @@ export default defineConfig({
   plugins: [react(), svgr({ exportAsDefault: true })] as UserConfig['plugins'],
   build: {
     rollupOptions: {
+      logLevel: 'debug',
+      onLog: console.log,
       // Suppress "SOURCEMAP_ERROR" warnings.
       // This is necessary because MUI contains React SSR "use client" module-level
       // directive, and Rollup does not support module-level directives.
