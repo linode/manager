@@ -19,7 +19,7 @@ import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './object-storage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
-import { rootRoute } from './root';
+import { migrationRootRoute, rootRoute } from './root';
 import { searchRouteTree } from './search';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
@@ -82,7 +82,9 @@ declare module '@tanstack/react-router' {
  * This is a temporary solution until we are ready to fully migrate to TanStack Router.
  * Eventually we will only use the router exported above.
  */
-export const migrationRouteTree = rootRoute.addChildren([betaRouteTree]);
+export const migrationRouteTree = migrationRootRoute.addChildren([
+  betaRouteTree,
+]);
 export const migrationRouter: AnyRouter = createRouter({
   Wrap: ({ children }) => {
     return <div data-testid="migration-router">{children}</div>;

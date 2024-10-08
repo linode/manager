@@ -356,12 +356,16 @@ const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   )
 )(LongviewDetail);
 
-export const longviewDetailLazyRoute = createLazyRoute('/longview')({
-  component: React.lazy(() =>
-    import('src/features/Longview/LongviewDetail/LongviewDetail').then(() => ({
-      default: (props: any) => <EnhancedLongviewDetail {...props} />,
-    }))
-  ),
-});
+export const longviewDetailLazyRoute = createLazyRoute('/longview/clients/$id')(
+  {
+    component: React.lazy(() =>
+      import('src/features/Longview/LongviewDetail/LongviewDetail').then(
+        () => ({
+          default: (props: any) => <EnhancedLongviewDetail {...props} />,
+        })
+      )
+    ),
+  }
+);
 
 export default EnhancedLongviewDetail;
