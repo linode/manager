@@ -123,8 +123,8 @@
   outline: none;
 }
 
- /* avoid overriding TanStack React Query & TanStack Router Devtools styles */
-.dev-tools__body button:not(.tsqd-parent-container button):not(.TanStackRouterDevtoolsPanel button) {
+ /* avoid overriding TanStack React Query Devtools styles */
+.dev-tools__body button:not(.tsqd-parent-container button) {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 1000px;
@@ -533,11 +533,4 @@
   height: 100% !important;
   width: 100% !important;
   position: relative !important;
-}
-
-/* TanStack Router Devtools */
-.TanStackRouterDevtoolsPanel {
-  height: calc(100% - 60px) !important;
-  width: 100% !important;
-  /* position: relative !important; */
 }

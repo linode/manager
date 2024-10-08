@@ -4,13 +4,3 @@
  * @see https://github.com/Microsoft/TypeScript-React-Starter/issues/12#issuecomment-326370098
  */
 declare module '*.png';
-
-/**
- * Declare module for logic-query-parser
- */
-declare module 'logic-query-parser';
-
-/**
- * Declare module for search-string
- */
-declare module 'search-string';
