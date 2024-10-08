@@ -69,7 +69,7 @@ export const allIntervalOptions: IntervalOptions[] = [
   },
 ];
 
-const autoIntervalOption: IntervalOptions = {
+export const autoIntervalOption: IntervalOptions = {
   label: 'Auto',
   unit: 'Auto',
   value: -1,
