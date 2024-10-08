@@ -179,10 +179,7 @@ export const Region = React.memo(() => {
 
   const showDistributedRegionIconHelperText =
     isGeckoBetaEnabled && !hideDistributedRegions;
-  regions?.some(
-    (region) =>
-      region.site_type === 'distributed' || region.site_type === 'edge'
-  );
+  regions?.some((region) => region.site_type === 'distributed');
 
   const disabledRegions = getDisabledRegions({
     regions: regions ?? [],
