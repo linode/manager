@@ -84,23 +84,9 @@ export const AccessSelect = React.memo((props: Props) => {
     mutateAsync: updateObjectAccess,
   } = useUpdateObjectAccessMutation(clusterOrRegion, bucketName || '', name);
 
-  const {
-    control,
-    formState: { errors, isDirty, isSubmitting },
-    handleSubmit,
-    reset,
-    watch,
-  } = useForm<Required<UpdateObjectStorageBucketAccessPayload>>({
-    defaultValues: {
-      acl: 'private',
-      cors_enabled: true,
-    },
-  });
-
-  const selectedACL = watch('acl');
-
-  React.useEffect(() => {
+  const formValues = React.useMemo(() => {
     const data = variant === 'object' ? objectAccessData : bucketAccessData;
+
     if (data) {
       const { acl } = data;
       // Don't show "public-read-write" for Objects here; use "custom" instead
@@ -108,11 +94,24 @@ export const AccessSelect = React.memo((props: Props) => {
       const _acl =
         variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
       const cors_enabled = isUpdateObjectStorageBucketAccessPayload(data)
-        ? data.cors_enabled ?? undefined
+        ? data.cors_enabled ?? false
         : true;
-      reset({ acl: _acl || undefined, cors_enabled });
+      return { acl: _acl as ACLType, cors_enabled };
     }
-  }, [bucketAccessData, objectAccessData, variant, reset]);
+    return { acl: 'private' as ACLType, cors_enabled: true };
+  }, [bucketAccessData, objectAccessData, , variant]);
+
+  const {
+    control,
+    formState: { errors, isDirty, isSubmitting },
+    handleSubmit,
+    watch,
+  } = useForm<Required<UpdateObjectStorageBucketAccessPayload>>({
+    defaultValues: formValues,
+    values: formValues,
+  });
+
+  const selectedACL = watch('acl');
 
   const aclOptions = variant === 'bucket' ? bucketACLOptions : objectACLOptions;
 
