@@ -24,6 +24,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
+import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -103,6 +104,11 @@ export const DatabaseDetail = () => {
       title: 'Resize',
     });
   }
+
+  tabs.push({
+    routeName: `/databases/${engine}/${id}/monitor`,
+    title: 'Monitor',
+  });
 
   const getTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
@@ -200,6 +206,12 @@ export const DatabaseDetail = () => {
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
+            />
+          </SafeTabPanel>
+          <SafeTabPanel index={flags.databaseResize ? 4 : 3}>
+            <CloudPulseDashboardWithFilters
+              dashboardId={2}
+              resource={database.id}
             />
           </SafeTabPanel>
         </TabPanels>
