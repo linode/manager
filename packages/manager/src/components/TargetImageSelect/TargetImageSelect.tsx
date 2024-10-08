@@ -29,7 +29,7 @@ interface MultiProps extends BaseProps {
   value?: string[];
 }
 
-export const ImageSelect = (props: MultiProps | Props) => {
+export const TargetImageSelect = (props: MultiProps | Props) => {
   const {
     anyAllOption,
     disabled,

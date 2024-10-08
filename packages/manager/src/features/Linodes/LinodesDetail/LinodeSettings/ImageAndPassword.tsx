@@ -2,8 +2,10 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
-import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
+import { TargetImageSelect } from 'src/components/TargetImageSelect/TargetImageSelect';
+import { useAllImagesQuery } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodePermissionsError } from '../LinodePermissionsError';
 
@@ -17,7 +19,6 @@ interface Props {
   onPasswordChange: (password: string) => void;
   password: string;
   passwordError?: string;
-  selectedImage: string;
   setAuthorizedUsers: (usernames: string[]) => void;
 }
 
@@ -30,12 +31,17 @@ export const ImageAndPassword = (props: Props) => {
     onPasswordChange,
     password,
     passwordError,
-    selectedImage,
     setAuthorizedUsers,
   } = props;
 
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
+
+  const { data: imagesData, error: imagesError } = useAllImagesQuery();
+
+  const _imagesError = imagesError
+    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0]?.reason
+    : undefined;
 
   const disabled =
     profile?.restricted &&
@@ -44,11 +50,11 @@ export const ImageAndPassword = (props: Props) => {
   return (
     <React.Fragment>
       {disabled && <LinodePermissionsError />}
-      <ImageSelectv2
+      <TargetImageSelect
         disabled={disabled}
-        errorText={imageFieldError}
-        onChange={onImageChange}
-        value={selectedImage}
+        errorText={imageFieldError ?? _imagesError}
+        images={imagesData ?? []}
+        onSelect={onImageChange}
       />
       <StyledAccessPanel
         disabledReason={
