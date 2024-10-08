@@ -517,7 +517,7 @@ describe('linode landing checks for non-empty state with restricted user', () =>
     cy.wrap(mockLinodes).as('mockLinodes');
   });
 
-  it.only('checks restricted user with read access has no access to create linode and can see existing linodes', () => {
+  it('checks restricted user with read access has no access to create linode and can see existing linodes', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     // simulating a default user without the ability to add Linodes.
     const mockProfile = profileFactory.build({
