@@ -31,6 +31,7 @@ import { usePrefetch } from 'src/hooks/usePreFetch';
 import { useAccountSettings } from 'src/queries/account/settings';
 
 import {
+  StyledAccordion,
   StyledActiveLink,
   StyledAkamaiLogo,
   StyledGrid,
@@ -117,15 +118,56 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Linode />,
         },
         {
+          activeLinks: [
+            '/images/create/create-image',
+            '/images/create/upload-image',
+          ],
+          display: 'Images',
+          href: '/images',
+          icon: <Image />,
+        },
+        {
+          activeLinks: ['/kubernetes/create'],
+          display: 'Kubernetes',
+          href: '/kubernetes/clusters',
+          icon: <Kubernetes />,
+        },
+        {
+          display: 'StackScripts',
+          href: '/stackscripts',
+          icon: <StackScript />,
+        },
+        {
+          betaChipClassName: 'beta-chip-placement-groups',
+          display: 'Placement Groups',
+          hide: !isPlacementGroupsEnabled,
+          href: '/placement-groups',
+          icon: <PlacementGroups />,
+        },
+        {
+          attr: { 'data-qa-one-click-nav-btn': true },
+          display: 'Marketplace',
+          href: '/linodes/create?type=One-Click',
+          icon: <OCA />,
+        },
+      ],
+      [
+        {
+          activeLinks: [
+            '/object-storage/buckets',
+            '/object-storage/access-keys',
+          ],
+          display: 'Object Storage',
+          href: '/object-storage/buckets',
+          icon: <Storage />,
+        },
+        {
           display: 'Volumes',
           href: '/volumes',
           icon: <Volume />,
         },
-        {
-          display: 'NodeBalancers',
-          href: '/nodebalancers',
-          icon: <NodeBalancer />,
-        },
+      ],
+      [
         {
           display: 'VPC',
           href: '/vpcs',
@@ -137,33 +179,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Firewall />,
         },
         {
-          display: 'StackScripts',
-          href: '/stackscripts',
-          icon: <StackScript />,
+          display: 'NodeBalancers',
+          href: '/nodebalancers',
+          icon: <NodeBalancer />,
         },
-        {
-          activeLinks: [
-            '/images/create/create-image',
-            '/images/create/upload-image',
-          ],
-          display: 'Images',
-          href: '/images',
-          icon: <Image />,
-        },
-        {
-          betaChipClassName: 'beta-chip-placement-groups',
-          display: 'Placement Groups',
-          hide: !isPlacementGroupsEnabled,
-          href: '/placement-groups',
-          icon: <PlacementGroups />,
-        },
-      ],
-      [
         {
           display: 'Domains',
           href: '/domains',
           icon: <Domain />,
         },
+      ],
+      [
         {
           display: 'Databases',
           hide: !isDatabasesEnabled,
@@ -171,21 +197,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <Database />,
           isBeta: isDatabasesV2Beta,
         },
-        {
-          activeLinks: ['/kubernetes/create'],
-          display: 'Kubernetes',
-          href: '/kubernetes/clusters',
-          icon: <Kubernetes />,
-        },
-        {
-          activeLinks: [
-            '/object-storage/buckets',
-            '/object-storage/access-keys',
-          ],
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
-          icon: <Storage />,
-        },
+      ],
+      [
         {
           display: 'Longview',
           href: '/longview',
@@ -198,24 +211,18 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           icon: <CloudPulse />,
           isBeta: flags.aclp?.beta,
         },
-        {
-          attr: { 'data-qa-one-click-nav-btn': true },
-          display: 'Marketplace',
-          href: '/linodes/create?type=One-Click',
-          icon: <OCA />,
-        },
       ],
       [
-        {
-          display: 'Account',
-          href: '/account',
-          icon: <Account />,
-        },
         {
           display: 'Betas',
           hide: !flags.selfServeBetas,
           href: '/betas',
           icon: <Beta />,
+        },
+        {
+          display: 'Account',
+          href: '/account',
+          icon: <Account />,
         },
         {
           display: 'Help & Support',
@@ -233,6 +240,19 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       isACLPEnabled,
     ]
   );
+
+  interface IdxMap {
+    [key: number]: string;
+  }
+
+  const idxMap: IdxMap = {
+    1: 'Compute',
+    2: 'Storage',
+    3: 'Networking',
+    4: 'Databases',
+    5: 'Monitor',
+    6: 'More',
+  };
 
   return (
     <StyledGrid
@@ -265,7 +285,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           return null;
         }
         return (
-          <div key={idx}>
+          <div key={idx} style={{ width: 'inherit' }}>
             <Divider
               sx={(theme) => ({
                 backgroundColor: 'rgba(0, 0, 0, 0.12)',
@@ -278,30 +298,31 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               spacingBottom={11}
               spacingTop={isManaged ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11}
             />
-            {filteredLinks.map((thisLink) => {
-              const props = {
-                closeMenu,
-                isCollapsed,
-                locationPathname: location.pathname,
-                locationSearch: location.search,
-                ...thisLink,
-              };
-
-              // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
-              // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
-              // that includes the usePrefetch hook.
-              return thisLink.prefetchRequestFn &&
-                thisLink.prefetchRequestCondition !== undefined ? (
-                <PrefetchPrimaryLink
-                  {...props}
-                  key={thisLink.display}
-                  prefetchRequestCondition={thisLink.prefetchRequestCondition}
-                  prefetchRequestFn={thisLink.prefetchRequestFn}
-                />
-              ) : (
-                <PrimaryLink {...props} key={thisLink.display} />
-              );
-            })}
+            <StyledAccordion defaultExpanded={true} heading={idxMap[idx]}>
+              {filteredLinks.map((thisLink) => {
+                const props = {
+                  closeMenu,
+                  isCollapsed,
+                  locationPathname: location.pathname,
+                  locationSearch: location.search,
+                  ...thisLink,
+                };
+                // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
+                // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
+                // that includes the usePrefetch hook.
+                return thisLink.prefetchRequestFn &&
+                  thisLink.prefetchRequestCondition !== undefined ? (
+                  <PrefetchPrimaryLink
+                    {...props}
+                    key={thisLink.display}
+                    prefetchRequestCondition={thisLink.prefetchRequestCondition}
+                    prefetchRequestFn={thisLink.prefetchRequestFn}
+                  />
+                ) : (
+                  <PrimaryLink {...props} key={thisLink.display} />
+                );
+              })}
+            </StyledAccordion>
           </div>
         );
       })}

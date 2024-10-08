@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'react-router-dom';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
+import { Accordion } from 'src/components/Accordion';
 import { Box } from 'src/components/Box';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { omittedProps } from 'src/utilities/omittedProps';
@@ -141,4 +142,28 @@ export const StyledPrimaryLinkBox = styled(Box, {
     maxHeight: 36,
     opacity: 0,
   }),
+}));
+
+export const StyledAccordion = styled(Accordion, {
+  label: 'StyledAccordion',
+})(({ theme }) => ({
+  '& h3': {
+    color: '#B8B8B8',
+    fontSize: '0.8rem',
+    letterSpacing: '1px',
+    padding: 10,
+    textTransform: 'uppercase',
+  },
+  '& svg': {
+    fill: '#fff',
+    stroke: 'transparent',
+  },
+  '.MuiAccordionSummary-content, .Mui-expanded': {
+    margin: 0,
+  },
+  '.MuiButtonBase-root.MuiAccordionSummary-root': {
+    minHeight: '40px',
+  },
+  backgroundColor: theme.name === 'dark' ? theme.bg.appBar : 'transparent',
+  minHeight: '40px',
 }));
