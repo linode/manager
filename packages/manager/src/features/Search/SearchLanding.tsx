@@ -43,6 +43,7 @@ import withStoreSearch from './withStoreSearch';
 
 import type { SearchProps } from './withStoreSearch';
 import type { RouteComponentProps } from 'react-router-dom';
+import { useIsDatabasesEnabled } from '../Databases/utilities';
 
 const displayMap = {
   buckets: 'Buckets',
@@ -65,11 +66,17 @@ export const SearchLanding = (props: SearchLandingProps) => {
   const { data: regions } = useRegionsQuery();
 
   const isLargeAccount = useIsLargeAccount();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
   // We only want to fetch all entities if we know they
   // are not a large account. We do this rather than `!isLargeAccount`
   // because we don't want to fetch all entities if isLargeAccount is loading (undefined).
   const shouldFetchAllEntities = isLargeAccount === false;
+
+  const shouldMakeDBRequests =
+    shouldFetchAllEntities &&
+    isDatabasesEnabled !== undefined &&
+    isDatabasesEnabled;
 
   /*
    @TODO OBJ Multicluster:'region' will become required, and the
@@ -87,7 +94,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
     data: databases,
     error: databasesError,
     isLoading: areDatabasesLoading,
-  } = useAllDatabasesQuery(shouldFetchAllEntities);
+  } = useAllDatabasesQuery(shouldMakeDBRequests);
 
   const {
     data: domains,
