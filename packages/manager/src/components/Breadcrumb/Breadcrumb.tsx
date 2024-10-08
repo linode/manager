@@ -40,7 +40,7 @@ export interface BreadcrumbProps {
   /**
    * A number indicating the position of the crumb to remove. Not zero indexed.
    */
-  removeCrumbX?: number;
+  removeCrumbX?: number | number[];
 }
 
 /**
@@ -64,10 +64,19 @@ export const Breadcrumb = (props: BreadcrumbProps) => {
   const url = pathname && pathname.slice(1);
   const allPaths = url.split('/');
 
-  const pathMap = removeCrumbX
-    ? removeByIndex(allPaths, removeCrumbX - 1)
-    : allPaths;
+  let pathMap;
 
+  if (Array.isArray(removeCrumbX)) {
+    // Sort the indices in descending order
+    const indicesToRemove = new Set(removeCrumbX.map((index) => index - 1));
+
+    // Filter out the indices to remove
+    pathMap = allPaths.filter((_, index) => !indicesToRemove.has(index));
+  } else if (removeCrumbX != null) {
+    pathMap = removeByIndex(allPaths, removeCrumbX - 1);
+  } else {
+    pathMap = allPaths;
+  }
   const hasError = Boolean(onEditHandlers?.errorText);
 
   return (

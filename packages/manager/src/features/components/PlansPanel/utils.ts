@@ -5,6 +5,7 @@ import {
   DEDICATED_512_GB_PLAN,
   LIMITED_AVAILABILITY_COPY,
   PLAN_IS_CURRENTLY_UNAVAILABLE_COPY,
+  PLAN_IS_TOO_SMALL_FOR_APL_COPY,
   PLAN_NOT_AVAILABLE_IN_REGION_COPY,
   PREMIUM_512_GB_PLAN,
   SMALLER_PLAN_DISABLED_COPY,
@@ -253,6 +254,7 @@ interface ExtractPlansInformationProps {
   disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
   disabledClasses?: LinodeTypeClass[];
   disabledSmallerPlans?: PlanSelectionType[];
+  isAPLEnabled?: boolean;
   plans: PlanSelectionType[];
   regionAvailabilities: RegionAvailability[] | undefined;
   selectedRegionId: Region['id'] | undefined;
@@ -274,6 +276,7 @@ export const extractPlansInformation = ({
   disableLargestGbPlansFlag,
   disabledClasses,
   disabledSmallerPlans,
+  isAPLEnabled,
   plans,
   regionAvailabilities,
   selectedRegionId,
@@ -298,6 +301,7 @@ export const extractPlansInformation = ({
           (disabledPlan) => disabledPlan.id === plan.id
         )
       );
+      const planIsTooSmallForAPL = isAPLEnabled && Boolean(plan.memory < 16000);
 
       return {
         ...plan,
@@ -305,6 +309,7 @@ export const extractPlansInformation = ({
         planHasLimitedAvailability,
         planIsDisabled512Gb,
         planIsTooSmall,
+        planIsTooSmallForAPL,
       };
     }
   );
@@ -315,6 +320,7 @@ export const extractPlansInformation = ({
       planHasLimitedAvailability,
       planIsDisabled512Gb,
       planIsTooSmall,
+      planIsTooSmallForAPL,
     } = plan;
 
     // Determine if the plan should be disabled due to
@@ -325,7 +331,8 @@ export const extractPlansInformation = ({
       planBelongsToDisabledClass ||
       planHasLimitedAvailability ||
       planIsDisabled512Gb ||
-      planIsTooSmall
+      planIsTooSmall ||
+      planIsTooSmallForAPL
     ) {
       return [...acc, plan];
     }
@@ -353,12 +360,14 @@ export const getDisabledPlanReasonCopy = ({
   planHasLimitedAvailability,
   planIsDisabled512Gb,
   planIsTooSmall,
+  planIsTooSmallForAPL,
   wholePanelIsDisabled,
 }: {
   planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
   planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
   planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
+  planIsTooSmallForAPL?: DisabledTooltipReasons['planIsTooSmallForAPL'];
   wholePanelIsDisabled?: DisabledTooltipReasons['wholePanelIsDisabled'];
 }): string => {
   if (wholePanelIsDisabled) {
@@ -371,6 +380,10 @@ export const getDisabledPlanReasonCopy = ({
 
   if (planIsTooSmall) {
     return SMALLER_PLAN_DISABLED_COPY;
+  }
+
+  if (planIsTooSmallForAPL) {
+    return PLAN_IS_TOO_SMALL_FOR_APL_COPY;
   }
 
   if (planHasLimitedAvailability || planIsDisabled512Gb) {
