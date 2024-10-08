@@ -14,7 +14,6 @@ const props = {
   onImageChange: vi.fn(),
   onPasswordChange: vi.fn(),
   password: '',
-  selectedImage: '',
   setAuthorizedUsers: vi.fn(),
 };
 
