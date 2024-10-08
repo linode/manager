@@ -11,6 +11,9 @@ describe('delete firewall', () => {
   before(() => {
     cleanUp('firewalls');
   });
+  beforeEach(() => {
+    cy.tag('method:e2e');
+  });
 
   /*
    * - Clicks "Delete" action menu item for firewall but cancels operation.

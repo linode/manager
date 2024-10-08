@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
@@ -33,14 +35,34 @@ export const useIsDatabasesEnabled = () => {
     );
 
     const isDatabasesV2Enabled =
-      account.capabilities.includes('Managed Databases V2') &&
+      account.capabilities.includes('Managed Databases Beta') &&
       flags.dbaasV2?.enabled;
+
+    const isV2ExistingBetaUser =
+      account.capabilities.includes('Managed Databases') &&
+      account.capabilities.includes('Managed Databases Beta') &&
+      flags.dbaasV2?.enabled &&
+      flags.dbaasV2?.beta;
+
+    const isV2NewBetaUser =
+      account.capabilities.includes('Managed Databases Beta') &&
+      !account.capabilities.includes('Managed Databases') &&
+      flags.dbaasV2?.enabled &&
+      flags.dbaasV2?.beta;
+
+    const isV2GAUser =
+      account.capabilities.includes('Managed Databases') &&
+      flags.dbaasV2?.enabled &&
+      !flags.dbaasV2?.beta;
 
     return {
       isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
       isDatabasesV1Enabled,
       isDatabasesV2Beta: isDatabasesV2Enabled && flags.dbaasV2?.beta,
       isDatabasesV2Enabled,
+      isV2ExistingBetaUser,
+      isV2GAUser,
+      isV2NewBetaUser,
     };
   }
 
@@ -49,4 +71,28 @@ export const useIsDatabasesEnabled = () => {
   return {
     isDatabasesEnabled: userCouldLoadDatabaseEngines,
   };
+};
+
+/**
+ * Checks if a given date is outside the timeframe between the oldest backup and today.
+ *
+ * @param {DateTime} date - The date you want to check.
+ * @param {DateTime | null} oldestBackup - The date of the oldest backup. If there are no backups (i.e., `null`), the function will return `true`.
+ * @returns {boolean}
+ *   - `true` if the date is before the oldest backup or after today.
+ *   - `false` if the date is within the range between the oldest backup and today.
+ */
+export const isOutsideBackupTimeframe = (
+  date: DateTime,
+  oldestBackup: DateTime | null
+) => {
+  if (!oldestBackup) {
+    return true;
+  }
+
+  const today = DateTime.now().startOf('day');
+  const backupStart = oldestBackup.startOf('day');
+  const dateStart = date.startOf('day');
+
+  return dateStart < backupStart || dateStart > today;
 };

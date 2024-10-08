@@ -5,7 +5,6 @@ import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { makeFeatureFlagData } from 'support/util/feature-flags';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomPhrase } from 'support/util/random';
 import { mockGetRegions } from 'support/intercepts/regions';
@@ -23,9 +22,9 @@ const mockRegions: Region[] = [
   }),
   regionFactory.build({
     capabilities: ['Linodes', 'Disk Encryption'],
-    id: 'us-den-edge-1',
-    label: 'Edge - Denver, CO',
-    site_type: 'edge',
+    id: 'us-den-1',
+    label: 'Distributed - Denver, CO',
+    site_type: 'distributed',
   }),
 ];
 
@@ -35,7 +34,7 @@ const mockLinodes: Linode[] = [
     region: mockRegions[0].id,
   }),
   linodeFactory.build({
-    label: 'edge-region-linode',
+    label: 'distributed-region-linode',
     region: mockRegions[1].id,
   }),
 ];
@@ -50,6 +49,7 @@ describe('create image (e2e)', () => {
   });
 
   it('create image from a linode', () => {
+    cy.tag('method:e2e');
     const label = randomLabel();
     const description = randomPhrase();
 
@@ -124,10 +124,10 @@ describe('create image (e2e)', () => {
     });
   });
 
-  it('displays notice informing user that Images are not encrypted, provided the LDE feature is enabled and the selected linode is not in an Edge region', () => {
+  it('displays notice informing user that Images are not encrypted, provided the LDE feature is enabled and the selected linode is not in a distributed region', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
+      linodeDiskEncryption: true,
     }).as('getFeatureFlags');
 
     // Mock responses
@@ -164,7 +164,7 @@ describe('create image (e2e)', () => {
   it('does not display a notice informing user that Images are not encrypted if the LDE feature is disabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(false),
+      linodeDiskEncryption: false,
     }).as('getFeatureFlags');
 
     // Mock responses
@@ -198,10 +198,10 @@ describe('create image (e2e)', () => {
     cy.findByText(DISK_ENCRYPTION_IMAGES_CAVEAT_COPY).should('not.exist');
   });
 
-  it('does not display a notice informing user that Images are not encrypted if the selected linode is in an Edge region', () => {
+  it('does not display a notice informing user that Images are not encrypted if the selected linode is in a distributed region', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
-      linodeDiskEncryption: makeFeatureFlagData(true),
+      linodeDiskEncryption: true,
     }).as('getFeatureFlags');
 
     // Mock responses

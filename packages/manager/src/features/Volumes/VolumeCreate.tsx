@@ -1,5 +1,6 @@
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -11,6 +12,7 @@ import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   BLOCK_STORAGE_CHOOSE_REGION_COPY,
+  BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY,
   BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION,
   BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
   BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY,
@@ -23,6 +25,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -35,6 +38,7 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
+import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
@@ -240,6 +244,15 @@ export const VolumeCreate = () => {
 
   const { config_id, linode_id } = values;
 
+  const { data: linode } = useLinodeQuery(
+    linode_id ?? -1,
+    isBlockStorageEncryptionFeatureEnabled && linode_id !== null
+  );
+
+  const linodeSupportsBlockStorageEncryption = Boolean(
+    linode?.capabilities?.includes('Block Storage Encryption')
+  );
+
   const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
   const { showGDPRCheckbox } = getGDPRDetails({
@@ -282,6 +295,11 @@ export const VolumeCreate = () => {
       setFieldValue('encryption', 'enabled');
     }
   };
+
+  const shouldDisplayClientLibraryCopy =
+    isBlockStorageEncryptionFeatureEnabled &&
+    linode_id !== null &&
+    !linodeSupportsBlockStorageEncryption;
 
   return (
     <>
@@ -363,47 +381,57 @@ export const VolumeCreate = () => {
               )}
             </Box>
             <Box
-              alignItems="flex-end"
+              alignItems="baseline"
               className={classes.linodeConfigSelectWrapper}
               display="flex"
             >
-              <Box
-                alignItems="flex-end"
-                className={classes.linodeSelect}
-                display="flex"
-              >
-                <LinodeSelect
-                  optionsFilter={(linode: Linode) => {
-                    const linodeRegion = linode.region;
-                    const valuesRegion = values.region;
+              <Stack>
+                <Box
+                  alignItems="flex-end"
+                  className={classes.linodeSelect}
+                  display="flex"
+                >
+                  <LinodeSelect
+                    optionsFilter={(linode: Linode) => {
+                      const linodeRegion = linode.region;
+                      const valuesRegion = values.region;
 
-                    /** When values.region is empty, all Linodes with
-                     * block storage support will be displayed, regardless
-                     * of their region. However, if a region is selected,
-                     * only Linodes from the chosen region with block storage
-                     * support will be shown. */
-                    return isNilOrEmpty(valuesRegion)
-                      ? regionsWithBlockStorage.includes(linodeRegion)
-                      : regionsWithBlockStorage.includes(linodeRegion) &&
-                          linodeRegion === valuesRegion;
-                  }}
-                  sx={{
-                    [theme.breakpoints.down('sm')]: {
-                      width: 320,
-                    },
-                    width: '400px',
-                  }}
-                  clearable
-                  disabled={doesNotHavePermission}
-                  errorText={linodeError}
-                  onBlur={handleBlur}
-                  onSelectionChange={handleLinodeChange}
-                  value={values.linode_id}
-                />
-                {renderSelectTooltip(
-                  'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
-                )}
-              </Box>
+                      /** When values.region is empty, all Linodes with
+                       * block storage support will be displayed, regardless
+                       * of their region. However, if a region is selected,
+                       * only Linodes from the chosen region with block storage
+                       * support will be shown. */
+                      return isNilOrEmpty(valuesRegion)
+                        ? regionsWithBlockStorage.includes(linodeRegion)
+                        : regionsWithBlockStorage.includes(linodeRegion) &&
+                            linodeRegion === valuesRegion;
+                    }}
+                    sx={{
+                      [theme.breakpoints.down('sm')]: {
+                        width: 320,
+                      },
+                      width: '400px',
+                    }}
+                    clearable
+                    disabled={doesNotHavePermission}
+                    errorText={linodeError}
+                    onBlur={handleBlur}
+                    onSelectionChange={handleLinodeChange}
+                    value={values.linode_id}
+                  />
+                  {renderSelectTooltip(
+                    'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
+                  )}
+                </Box>
+                {shouldDisplayClientLibraryCopy &&
+                  values.encryption === 'enabled' && (
+                    <Notice spacingBottom={0} spacingTop={16} variant="warning">
+                      <Typography maxWidth="416px">
+                        {BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY}
+                      </Typography>
+                    </Notice>
+                  )}
+              </Stack>
               <ConfigSelect
                 disabled={doesNotHavePermission || config_id === null}
                 error={touched.config_id ? errors.config_id : undefined}
@@ -412,7 +440,7 @@ export const VolumeCreate = () => {
                 onBlur={handleBlur}
                 onChange={(id: number) => setFieldValue('config_id', id)}
                 value={config_id}
-                width={[theme.breakpoints.down('sm')] ? 320 : 400}
+                width={320}
               />
             </Box>
             <Box alignItems="flex-end" display="flex" position="relative">
@@ -473,6 +501,13 @@ export const VolumeCreate = () => {
           </Paper>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              disabled={
+                disabled ||
+                (isBlockStorageEncryptionFeatureEnabled && // @TODO BSE: Once BSE is fully rolled out, remove feature enabled check/condition
+                  linode_id !== null &&
+                  !linodeSupportsBlockStorageEncryption &&
+                  values.encryption === 'enabled')
+              }
               tooltipText={
                 !isLoading && isInvalidPrice
                   ? PRICES_RELOAD_ERROR_NOTICE_TEXT
@@ -481,7 +516,6 @@ export const VolumeCreate = () => {
               buttonType="primary"
               className={classes.button}
               data-qa-deploy-linode
-              disabled={disabled}
               loading={isSubmitting}
               style={{ marginLeft: 12 }}
               type="submit"
@@ -512,3 +546,7 @@ const initialValues: FormState = {
   region: '',
   size: 20,
 };
+
+export const volumeCreateLazyRoute = createLazyRoute('/volumes/create')({
+  component: VolumeCreate,
+});

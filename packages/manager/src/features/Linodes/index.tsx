@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import { createLazyRoute } from '@tanstack/react-router';
+import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useFlags } from 'src/hooks/useFlags';
 import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { addMaintenanceToLinodes } from 'src/utilities/linodes';
+import { storage } from 'src/utilities/storage';
 
 import { linodesInTransition } from './transitions';
+
+import type { RegionFilter } from 'src/utilities/storage';
 
 const LinodesLanding = React.lazy(
   () => import('./LinodesLanding/LinodesLanding')
@@ -18,33 +22,17 @@ const LinodesDetail = React.lazy(() =>
     default: module.LinodeDetail,
   }))
 );
-const LinodesCreate = React.lazy(
-  () => import('./LinodesCreate/LinodeCreateContainer')
-);
-const LinodesCreatev2 = React.lazy(() =>
-  import('./LinodeCreatev2').then((module) => ({
-    default: module.LinodeCreatev2,
+const LinodesCreate = React.lazy(() =>
+  import('./LinodeCreate').then((module) => ({
+    default: module.LinodeCreate,
   }))
 );
 
 export const LinodesRoutes = () => {
-  const flags = useFlags();
-
-  // Hold this feature flag in state so that the user's Linode creation
-  // isn't interupted when the flag is toggled.
-  const [isLinodeCreateV2EnabledStale] = useState(flags.linodeCreateRefactor);
-
-  const isLinodeCreateV2Enabled = import.meta.env.DEV
-    ? flags.linodeCreateRefactor
-    : isLinodeCreateV2EnabledStale;
-
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route
-          component={isLinodeCreateV2Enabled ? LinodesCreatev2 : LinodesCreate}
-          path="/linodes/create"
-        />
+        <Route component={LinodesCreate} path="/linodes/create" />
         <Route component={LinodesDetail} path="/linodes/:linodeId" />
         <Route component={LinodesLandingWrapper} exact path="/linodes" strict />
         <Redirect to="/linodes" />
@@ -58,13 +46,24 @@ export const LinodesRoutes = () => {
 // mapStateToProps, but since I wanted to use a query (for accountMaintenance)
 // I needed a Function Component. It seemed safer to do it this way instead of
 // refactoring LinodesLanding.
-const LinodesLandingWrapper = React.memo(() => {
+export const LinodesLandingWrapper = React.memo(() => {
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
     { status: { '+or': ['pending, started'] } }
   );
 
-  const { data: linodes, error, isLoading } = useAllLinodesQuery();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+
+  const [regionFilter, setRegionFilter] = React.useState<
+    RegionFilter | undefined
+  >(storage.regionFilter.get());
+
+  // We need to grab all linodes so a filtered result of 0 does not display the empty state landing page
+  const { data: allLinodes } = useAllLinodesQuery();
+  const { data: filteredLinodes, error, isLoading } = useAllLinodesQuery(
+    {},
+    isGeckoLAEnabled ? generateLinodesXFilter(regionFilter) : {}
+  );
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(
     (thisAccountMaintenance) => thisAccountMaintenance.entity.type === 'linode'
@@ -72,20 +71,40 @@ const LinodesLandingWrapper = React.memo(() => {
 
   const { data: events } = useInProgressEvents();
 
-  const linodesData = addMaintenanceToLinodes(
+  const filteredLinodesData = addMaintenanceToLinodes(
     accountMaintenanceData ?? [],
-    linodes ?? []
+    filteredLinodes ?? []
   );
+
+  const handleRegionFilter = (regionFilter: RegionFilter) => {
+    setRegionFilter(regionFilter);
+    storage.regionFilter.set(regionFilter);
+  };
 
   return (
     <LinodesLanding
       someLinodesHaveScheduledMaintenance={Boolean(
         someLinodesHaveScheduledMaintenance
       )}
-      linodesData={linodesData}
+      handleRegionFilter={handleRegionFilter}
+      linodesData={filteredLinodesData}
       linodesInTransition={linodesInTransition(events ?? [])}
       linodesRequestError={error ?? undefined}
       linodesRequestLoading={isLoading}
+      totalNumLinodes={allLinodes?.length ?? 0}
     />
   );
+});
+
+const generateLinodesXFilter = (regionFilter: RegionFilter | undefined) => {
+  if (regionFilter === 'core' || regionFilter === 'distributed') {
+    return {
+      site_type: regionFilter,
+    };
+  }
+  return {};
+};
+
+export const linodesLandingLazyRoute = createLazyRoute('/linodes')({
+  component: LinodesLandingWrapper,
 });

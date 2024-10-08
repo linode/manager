@@ -1,10 +1,10 @@
-import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
@@ -136,7 +136,6 @@ const RangeRDNSCell = (props: {
   range: IPRange;
 }) => {
   const { linodeId, onViewDetails, range } = props;
-  const theme = useTheme();
 
   const { data: linode } = useLinodeQuery(linodeId);
 
@@ -169,21 +168,12 @@ const RangeRDNSCell = (props: {
   }
 
   return (
-    <button
+    <LinkButton
       aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
       onClick={onViewDetails}
     >
-      <Typography
-        sx={{
-          '&:hover': {
-            color: theme.palette.primary.light,
-          },
-          color: theme.palette.primary.main,
-        }}
-      >
-        {ipsWithRDNS.length} Addresses2
-      </Typography>
-    </button>
+      {ipsWithRDNS.length} Addresses
+    </LinkButton>
   );
 };
 

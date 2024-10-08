@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -18,9 +18,11 @@ import { useAccountUsers } from 'src/queries/account/users';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile/profile';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
-import { GravatarByEmail } from '../GravatarByEmail';
+import { Avatar } from '../Avatar/Avatar';
 import { PaginationFooter } from '../PaginationFooter/PaginationFooter';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
+
+import type { Theme } from '@mui/material/styles';
 
 export const MAX_SSH_KEYS_DISPLAY = 25;
 
@@ -32,12 +34,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   cellUser: {
     width: '30%',
-  },
-  gravatar: {
-    borderRadius: '50%',
-    height: 24,
-    marginRight: theme.spacing(1),
-    width: 24,
   },
   title: {
     marginBottom: theme.spacing(2),
@@ -57,6 +53,7 @@ interface Props {
 
 const UserSSHKeyPanel = (props: Props) => {
   const { classes } = useStyles();
+  const theme = useTheme();
   const { authorizedUsers, disabled, setAuthorizedUsers } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
@@ -145,10 +142,7 @@ const UserSSHKeyPanel = (props: Props) => {
           </TableCell>
           <TableCell className={classes.cellUser}>
             <div className={classes.userWrapper}>
-              <GravatarByEmail
-                className={classes.gravatar}
-                email={profile.email}
-              />
+              <Avatar sx={{ borderRadius: '50%', marginRight: 1 }} />
               {profile.username}
             </div>
           </TableCell>
@@ -177,7 +171,16 @@ const UserSSHKeyPanel = (props: Props) => {
         </TableCell>
         <TableCell className={classes.cellUser}>
           <div className={classes.userWrapper}>
-            <GravatarByEmail className={classes.gravatar} email={user.email} />
+            <Avatar
+              color={
+                user.username !== profile?.username
+                  ? theme.palette.primary.dark
+                  : undefined
+              }
+              sx={{ borderRadius: '50%', marginRight: 1 }}
+              username={user.username}
+            />
+
             {user.username}
           </div>
         </TableCell>

@@ -22,8 +22,8 @@ describe('CheckoutBar', () => {
     );
 
     expect(getByText('Checkout')).toBeVisible();
-    expect(getByTestId('Button')).toBeInTheDocument();
-    expect(getByTestId('Button')).toHaveTextContent('Submit');
+    expect(getByTestId('button')).toBeInTheDocument();
+    expect(getByTestId('button')).toHaveTextContent('Submit');
     expect(getByText('Child items can go here!')).toBeInTheDocument();
   });
 
@@ -54,7 +54,7 @@ describe('CheckoutBar', () => {
       <CheckoutBar {...defaultArgs} isMakingRequest={true} />
     );
 
-    expect(getByTestId('Button')).toBeDisabled();
+    expect(getByTestId('button')).toBeDisabled();
     expect(getByTestId('loadingIcon')).toBeInTheDocument();
   });
 
@@ -63,7 +63,7 @@ describe('CheckoutBar', () => {
       <CheckoutBar {...defaultArgs} disabled />
     );
 
-    const button = getByTestId('Button');
+    const button = getByTestId('button');
     expect(button).toBeDisabled();
     expect(button).toHaveTextContent('Submit');
   });

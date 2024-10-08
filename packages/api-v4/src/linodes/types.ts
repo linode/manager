@@ -19,7 +19,7 @@ export interface Linode {
   id: number;
   alerts: LinodeAlerts;
   backups: LinodeBackups;
-  capabilities?: string[]; // @TODO BSE: Remove optionality once BSE is fully rolled out
+  capabilities?: LinodeCapabilities[]; // @TODO BSE: Remove optionality once BSE is fully rolled out
   created: string;
   disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
   region: string;
@@ -53,6 +53,8 @@ export interface LinodeBackups {
   schedule: LinodeBackupSchedule;
   last_successful: string | null;
 }
+
+export type LinodeCapabilities = 'Block Storage Encryption';
 
 export type Window =
   | 'Scheduling'
@@ -335,8 +337,7 @@ export type LinodeTypeClass =
   | 'gpu'
   | 'metal'
   | 'prodedicated'
-  | 'premium'
-  | 'edge';
+  | 'premium';
 
 export interface IPAllocationRequest {
   type: 'ipv4';

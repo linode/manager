@@ -118,6 +118,8 @@ describe('Create Linode with user data', () => {
       vendor: 'Debian',
       // `cloud-init` is omitted from Image capabilities.
       capabilities: [],
+      // null eol so that the image is not deprecated
+      eol: null,
     });
 
     mockGetImage(mockImage.id, mockImage);

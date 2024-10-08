@@ -6,7 +6,7 @@ import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TimezoneForm, formatOffset } from './TimezoneForm';
+import { TimezoneForm, getOptionLabel } from './TimezoneForm';
 
 const queryClient = queryClientFactory();
 
@@ -53,13 +53,11 @@ describe('Timezone change form', () => {
   });
 
   it("should include text with the user's current time zone", async () => {
-    const { getByText } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <TimezoneForm loggedInAsCustomer={true} />,
       { queryClient }
     );
-
-    expect(getByText('New York', { exact: false })).toBeInTheDocument();
-    expect(getByText('Eastern Time', { exact: false })).toBeInTheDocument();
+    expect(queryByTestId('admin-notice')).toHaveTextContent('America/New_York');
   });
 });
 
@@ -77,7 +75,7 @@ describe('formatOffset', () => {
     ];
 
     testMap.forEach(({ expectedOffset, timezone }) =>
-      expect(formatOffset(timezone)).toBe(
+      expect(getOptionLabel(timezone)).toBe(
         `(GMT ${expectedOffset}) ${timezone.label}`
       )
     );

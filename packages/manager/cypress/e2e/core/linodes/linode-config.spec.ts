@@ -91,6 +91,9 @@ describe('Linode Config management', () => {
         }
       );
     });
+    beforeEach(() => {
+      cy.tag('method:e2e');
+    });
 
     /*
      * - Tests Linode config creation end-to-end using real API requests.

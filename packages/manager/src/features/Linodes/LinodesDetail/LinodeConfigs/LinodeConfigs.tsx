@@ -2,8 +2,8 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import AddNewLink from 'src/components/AddNewLink';
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -90,18 +90,16 @@ const LinodeConfigs = () => {
       >
         <DocsLink
           href={
-            'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/'
+            'https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance'
           }
           onClick={() => {
             sendLinodeConfigurationDocsEvent('Configuration Profiles');
           }}
           label={'Configuration Profiles'}
         />
-        <AddNewLink
-          disabled={isReadOnly}
-          label="Add Configuration"
-          onClick={onCreate}
-        />
+        <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
+          Add Configuration
+        </Button>
       </Box>
       <OrderBy data={configs ?? []} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
@@ -129,7 +127,7 @@ const LinodeConfigs = () => {
                           handleClick={handleOrderChange}
                           label={'label'}
                         >
-                          <strong>Config</strong>
+                          <strong>Configuration</strong>
                         </TableSortCell>
                         <TableCell
                           sx={{

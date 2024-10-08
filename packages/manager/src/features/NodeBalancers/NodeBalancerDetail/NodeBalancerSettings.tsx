@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -140,6 +141,7 @@ export const NodeBalancerSettings = () => {
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
           buttonType="primary"
+          data-testid="delete-nodebalancer"
           disabled={isNodeBalancerReadOnly}
           onClick={() => setIsDeleteDialogOpen(true)}
         >
@@ -156,4 +158,8 @@ export const NodeBalancerSettings = () => {
   );
 };
 
-export default NodeBalancerSettings;
+export const nodeBalancerSettingsLazyRoute = createLazyRoute(
+  '/nodebalancers/$nodeBalancerId/settings'
+)({
+  component: NodeBalancerSettings,
+});
