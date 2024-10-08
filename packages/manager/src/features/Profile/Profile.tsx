@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
@@ -98,3 +99,7 @@ export const Profile = () => {
     </React.Fragment>
   );
 };
+
+export const ProfileLazyRoute = createLazyRoute('/profile')({
+  component: Profile,
+});

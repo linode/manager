@@ -12,7 +12,7 @@ import { StyledBodyTypography } from './VPCCreateForm.styles';
 
 import type { Region } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreatev2/types';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { CreateVPCFieldState } from 'src/hooks/useCreateVPC';
 

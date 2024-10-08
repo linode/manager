@@ -265,7 +265,7 @@ export type NotificationType =
   | 'user_email_bounce'
   | 'volume_migration_scheduled'
   | 'volume_migration_imminent'
-  | 'tax_id_invalid';
+  | 'tax_id_verifying';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
