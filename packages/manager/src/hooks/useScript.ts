@@ -27,7 +27,7 @@ export const loadScript = (
       return resolve({ status: 'idle' });
     }
     // Fetch existing script element by src
-    // It may have been added by another intance of this hook
+    // It may have been added by another instance of this hook
     let script = document.querySelector(
       `script[src='${src}']`
     ) as HTMLScriptElement;

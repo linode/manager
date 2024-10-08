@@ -24,8 +24,7 @@ export const Addons = () => {
   );
 
   const isDistributedRegionSelected =
-    selectedRegion?.site_type === 'distributed' ||
-    selectedRegion?.site_type === 'edge';
+    selectedRegion?.site_type === 'distributed';
 
   return (
     <Paper data-qa-add-ons>
