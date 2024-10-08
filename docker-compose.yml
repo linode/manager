@@ -89,7 +89,7 @@ x-e2e-runners:
   volumes: *default-volumes
   # TODO Stop using entrypoint, use CMD instead.
   # (Or just make `yarn` the entrypoint, but either way stop forcing `cy:e2e`).
-  # entrypoint: ['yarn', 'cy:e2e']
+  entrypoint: 'yarn'
 
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
@@ -149,7 +149,10 @@ services:
 
   # --> ! DEPRECATION NOTICE ! <--
   # The services below this line are deprecated, and will be deleted soon.
-  # Don't build any pipelines are write any scripts that depend on these.
+  # Don't build any pipelines or write any scripts that depend on these.
+  # Instead, opt to use `cypress_local` in places where you would've used `e2e`,
+  # use `cypress_remote` in places where you would've used `e2e_heimdall`, and
+  # use `cypress_component` in places where you would've used `component`.
 
   # Generic end-to-end test runner for Cloud's primary testing pipeline.
   # Configured to run against a local Cloud instance.
