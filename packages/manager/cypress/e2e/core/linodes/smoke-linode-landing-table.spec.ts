@@ -569,8 +569,6 @@ describe('linode landing checks for non-empty state with restricted user', () =>
     ).should('exist');
 
     // Assert that the correct number of Linode entries are present in the table
-    // Assert that the correct number of Linode entries are present in the table
-    // cy.get('table[aria-label="List of Linodes"] tbody tr').should('have.length', mockLinodes.length);
     cy.get<Linode[]>('@mockLinodes').then((mockLinodes) => {
       // Assert that the correct number of Linode entries are present in the table
       cy.get('table[aria-label="List of Linodes"] tbody tr').should(
