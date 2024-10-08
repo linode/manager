@@ -603,6 +603,7 @@ export const handlers = [
       image: 'distributed-region-test-image',
       label: 'Gecko Distributed Region Test',
       region: 'us-den-10',
+      site_type: 'distributed',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
