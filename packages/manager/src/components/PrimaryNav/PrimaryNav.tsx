@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
 import Beta from 'src/assets/icons/entityIcons/beta.svg';
@@ -21,9 +21,7 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import VPC from 'src/assets/icons/entityIcons/vpc.svg';
 import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
-import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
@@ -32,7 +30,14 @@ import { useFlags } from 'src/hooks/useFlags';
 import { usePrefetch } from 'src/hooks/usePreFetch';
 import { useAccountSettings } from 'src/queries/account/settings';
 
-import useStyles from './PrimaryNav.styles';
+import {
+  StyledActiveLink,
+  StyledAkamaiLogo,
+  StyledGrid,
+  StyledLink,
+  StyledLogoBox,
+  StyledPrimaryLinkBox,
+} from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
 
 import type { LinkProps } from 'react-router-dom';
@@ -82,7 +87,6 @@ export interface PrimaryNavProps {
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
   const { closeMenu, isCollapsed } = props;
-  const { classes, cx } = useStyles();
 
   const flags = useFlags();
   const location = useLocation();
@@ -231,10 +235,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   );
 
   return (
-    <Grid
+    <StyledGrid
       alignItems="flex-start"
-      className={classes.menuGrid}
-      component="nav"
       container
       direction="column"
       id="main-navigation"
@@ -244,32 +246,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       wrap="nowrap"
     >
       <Grid sx={{ width: '100%' }}>
-        <Box
-          className={cx(classes.logoItemAkamai, {
-            [classes.logoItemAkamaiCollapsed]: isCollapsed,
-          })}
-        >
-          <Link
-            className={cx({
-              [classes.logoContainer]: isCollapsed,
-              [classes.navLinkItem]: !isCollapsed,
-            })}
+        <StyledLogoBox isCollapsed={isCollapsed}>
+          <StyledLink
             aria-label="Akamai - Dashboard"
+            isCollapsed={isCollapsed}
             onClick={closeMenu}
             title="Akamai - Dashboard"
             to={`/dashboard`}
           >
-            <AkamaiLogo
-              className={cx(
-                {
-                  [classes.logoAkamaiCollapsed]: isCollapsed,
-                },
-                classes.logo
-              )}
-              width={83}
-            />
-          </Link>
-        </Box>
+            <StyledAkamaiLogo width={83} />
+          </StyledLink>
+        </StyledLogoBox>
       </Grid>
 
       {primaryLinkGroups.map((thisGroup, idx) => {
@@ -281,12 +268,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           <div key={idx}>
             <Divider
               sx={(theme) => ({
+                backgroundColor: 'rgba(0, 0, 0, 0.12)',
                 borderColor:
                   theme.name === 'light'
                     ? theme.borderColors.dividerDark
                     : 'rgba(0, 0, 0, 0.19)',
+                color: '#222',
               })}
-              className={classes.divider}
               spacingBottom={11}
               spacingTop={isManaged ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11}
             />
@@ -317,7 +305,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           </div>
         );
       })}
-    </Grid>
+    </StyledGrid>
   );
 };
 
@@ -338,8 +326,6 @@ interface PrimaryLinkProps extends PrimaryLink {
 }
 
 const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
-  const { classes, cx } = useStyles();
-
   const {
     activeLinks,
     attr,
@@ -361,7 +347,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
   );
 
   return (
-    <Link
+    <StyledActiveLink
       onClick={(e: React.ChangeEvent<any>) => {
         closeMenu();
         if (onClick) {
@@ -371,41 +357,29 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
       to={href}
       {...prefetchProps}
       {...attr}
-      className={cx({
-        [classes.active]: isActiveLink,
-        [classes.listItem]: true,
-      })}
       aria-current={isActiveLink}
       data-testid={`menu-item-${display}`}
+      isActiveLink={isActiveLink}
     >
       {icon && (
         <div aria-hidden className="icon">
           {icon}
         </div>
       )}
-      <Box
-        className={cx({
-          [classes.linkItem]: true,
-          hiddenWhenCollapsed: isCollapsed,
-          primaryNavLink: true,
-        })}
-        sx={{
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
+      <StyledPrimaryLinkBox
+        className="primaryNavLink"
+        isCollapsed={isCollapsed}
       >
         {display}
         {isBeta ? (
           <BetaChip
-            className={cx(betaChipClassName ? betaChipClassName : '', {
-              [classes.chip]: true,
-            })}
+            className={`${betaChipClassName ? betaChipClassName : ''}`}
             color="primary"
             component="span"
           />
         ) : null}
-      </Box>
-    </Link>
+      </StyledPrimaryLinkBox>
+    </StyledActiveLink>
   );
 });
 
