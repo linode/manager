@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -336,8 +336,14 @@ export const SearchLanding = (props: SearchLandingProps) => {
   );
 };
 
-const enhanced = compose<SearchLandingProps, {}>(withStoreSearch())(
-  SearchLanding
-);
+const EnhancedSearchLanding = withStoreSearch()(SearchLanding);
 
-export default enhanced;
+export const searchLandingLazyRoute = createLazyRoute('/search')({
+  component: React.lazy(() =>
+    import('./SearchLanding').then(() => ({
+      default: (props: any) => <EnhancedSearchLanding {...props} />,
+    }))
+  ),
+});
+
+export default EnhancedSearchLanding;
