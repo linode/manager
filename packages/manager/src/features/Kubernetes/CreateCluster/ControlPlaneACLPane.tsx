@@ -23,15 +23,6 @@ export interface ControlPlaneACLProps {
   setControlPlaneACL: (enabled: boolean) => void;
 }
 
-export const IPACLCopy = () => (
-  <Typography>
-    This is the text for Control Plane Access Control.{' '}
-    <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
-      Learn more.
-    </Link>
-  </Typography>
-);
-
 export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
   const {
     enableControlPlaneACL,
@@ -43,7 +34,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     setControlPlaneACL,
   } = props;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = () => {
     setControlPlaneACL(!enableControlPlaneACL);
   };
 
@@ -85,7 +76,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             <Toggle
               checked={enableControlPlaneACL}
               name="ipacl-checkbox"
-              onChange={(e) => handleChange(e)}
+              onChange={() => handleChange()}
             />
           }
           label="Enable IPACL"

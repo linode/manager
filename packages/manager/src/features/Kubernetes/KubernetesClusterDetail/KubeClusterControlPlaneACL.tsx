@@ -35,10 +35,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginRight: theme.spacing(1),
     whiteSpace: 'nowrap',
   },
-  iconTextOuter: {
-    flexBasis: '72%',
-    minWidth: 115,
-  },
   item: {
     '&:first-of-type': {
       paddingTop: 0,
@@ -48,21 +44,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     paddingBottom: theme.spacing(1),
     paddingTop: theme.spacing(1),
-  },
-  mainGridContainer: {
-    position: 'relative',
-    [theme.breakpoints.up('lg')]: {
-      justifyContent: 'space-between',
-    },
-  },
-  root: {
-    marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
-  },
-  tooltip: {
-    '& .MuiTooltip-tooltip': {
-      minWidth: 320,
-    },
   },
 }));
 

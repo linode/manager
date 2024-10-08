@@ -227,7 +227,6 @@ export const getKubernetesTypes = (params?: Params) =>
  * getKubernetesClusterControlPlaneACL
  *
  * Return control plane access list about a single Kubernetes cluster
- *
  */
 export const getKubernetesClusterControlPlaneACL = (clusterID: number) =>
   Request<KubernetesControlPlaneACLPayload>(
