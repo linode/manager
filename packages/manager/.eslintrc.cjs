@@ -117,6 +117,12 @@ module.exports = {
                   'Please use routing utilities from @tanstack/react-router.',
                 name: 'react-router-dom',
               },
+              {
+                importNames: ['renderWithTheme'],
+                message:
+                  'Please use wrapWithThemeV2 from src/utilities/testHelpers.',
+                name: 'src/utilities/testHelpers',
+              },
             ],
           },
         ],

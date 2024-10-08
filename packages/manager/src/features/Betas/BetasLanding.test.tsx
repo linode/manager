@@ -1,22 +1,38 @@
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeV2 } from 'src/utilities/testHelpers';
 
 import { BetasLanding } from './BetasLanding';
+
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn().mockReturnValue({}),
+  useRouter: vi.fn().mockReturnValue({
+    navigate: {},
+  }),
+}));
+
+vi.mock(import('@tanstack/react-router'), async () => {
+  const actual = await import('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useRouter: queryMocks.useRouter,
+  };
+});
 
 describe('BetasLanding', () => {
   it('should be defined', () => {
     expect(BetasLanding).toBeDefined();
   });
 
-  it('should have the page title of Betas', () => {
-    const { getByText } = renderWithTheme(<BetasLanding />);
+  it('should have the page title of Betas', async () => {
+    const { getByText } = await renderWithThemeV2(<BetasLanding />);
     const pageTitle = getByText('Betas', { selector: 'h1' });
     expect(pageTitle).not.toBeNull();
   });
 
-  it('should have a paper for enrolled, active, and expired betas', () => {
-    const { getByText } = renderWithTheme(<BetasLanding />);
+  it('should have a paper for enrolled, active, and expired betas', async () => {
+    const { getByText } = await renderWithThemeV2(<BetasLanding />);
     const enrolledPageHeader = getByText('Currently Enrolled Betas', {
       selector: 'h2',
     });
