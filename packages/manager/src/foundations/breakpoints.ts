@@ -1,6 +1,4 @@
-import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
-
-export const breakpoints = createBreakpoints({
+export const breakpoints = {
   values: {
     lg: 1280,
     md: 960,
@@ -8,4 +6,4 @@ export const breakpoints = createBreakpoints({
     xl: 1920,
     xs: 0,
   },
-});
+};

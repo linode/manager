@@ -1,13 +1,14 @@
-import { APIError, Filter, Linode } from '@linode/api-v4';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { SxProps } from '@mui/system';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { mapIdsToDevices } from 'src/utilities/mapIdsToDevices';
+
+import type { APIError, Filter, Linode } from '@linode/api-v4';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface LinodeSelectProps {
   /** Determine whether isOptionEqualToValue prop should be defined for Autocomplete
@@ -52,7 +53,7 @@ interface LinodeSelectProps {
   /* Displays an indication that the input is required. */
   required?: boolean;
   /* Adds custom styles to the component. */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export interface LinodeMultiSelectProps extends LinodeSelectProps {

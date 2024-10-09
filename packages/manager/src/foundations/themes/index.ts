@@ -3,7 +3,6 @@ import { createTheme } from '@mui/material/styles';
 // Themes & Brands
 import { darkTheme } from 'src/foundations/themes/dark';
 import { lightTheme } from 'src/foundations/themes/light';
-import { deepMerge } from 'src/utilities/deepMerge';
 
 import type { Chart as ChartLight } from '@linode/design-language-system';
 import type { Chart as ChartDark } from '@linode/design-language-system/themes/dark';
@@ -104,4 +103,4 @@ declare module '@mui/material/styles/createTheme' {
 }
 
 export const light = createTheme(lightTheme);
-export const dark = createTheme(deepMerge(lightTheme, darkTheme));
+export const dark = createTheme(lightTheme, darkTheme);
