@@ -58,16 +58,9 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                   ) : null}
                   <StyledTableCell>
                     <StyledGradientDiv>
-                      <CopyTooltip
-                        copyableText
-                        disabled={isVPCOnlyLinode}
-                        text={thisRow.text}
-                      />
+                      <CopyTooltip copyableText text={thisRow.text} />
                     </StyledGradientDiv>
-                    <StyledCopyTooltip
-                      disabled={isVPCOnlyLinode}
-                      text={thisRow.text}
-                    />
+                    <StyledCopyTooltip text={thisRow.text} />
                   </StyledTableCell>
                 </StyledTableRow>
               ) : null;
