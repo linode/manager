@@ -85,6 +85,7 @@ import {
   promoFactory,
   regionAvailabilityFactory,
   securityQuestionsFactory,
+  serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -115,6 +116,7 @@ import type {
   NotificationType,
   ObjectStorageEndpointTypes,
   SecurityQuestionsPayload,
+  ServiceTypesList,
   TokenRequest,
   UpdateImageRegionsPayload,
   User,
@@ -2306,16 +2308,16 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services', () => {
-    const response = {
+    const response: ServiceTypesList = {
       data: [
-        {
+        serviceTypesFactory.build({
           label: 'Linode',
           service_type: 'linode',
-        },
-        {
+        }),
+        serviceTypesFactory.build({
           label: 'Databases',
           service_type: 'dbaas',
-        },
+        }),
       ],
     };
 

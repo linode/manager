@@ -95,7 +95,9 @@ export const CloudPulseDashboardSelect = React.memo(
         renderGroup={(params) => (
           <Box key={params.key}>
             <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
-              {serviceTypeMap.get(params.group)}
+              {serviceTypeMap.has(params.group)
+                ? serviceTypeMap.get(params.group)
+                : params.group}
             </Typography>
             {params.children}
           </Box>
