@@ -17,12 +17,9 @@ import type { ThemeOptions } from '@mui/material/styles';
 
 export const inputMaxWidth = 416;
 
-export const charts = { ...Chart } as const;
-
 export const bg = {
   app: Color.Neutrals[5],
   appBar: 'transparent',
-  bgAccessRow: Color.Neutrals[5],
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
   bgPaper: Color.Neutrals.White,
   interactionBgPrimary: Interaction.Background.Secondary,
@@ -242,8 +239,9 @@ export const lightTheme: ThemeOptions = {
   bg,
   borderColors,
   breakpoints,
-  charts,
+  chartTokens: Chart,
   color,
+  colorTokens: Color,
   components: {
     MuiAccordion: {
       styleOverrides: {
@@ -1574,6 +1572,7 @@ export const lightTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
+  interactionTokens: Interaction,
   name: 'light', // @todo remove this because we leverage pallete.mode now
   notificationToast,
   palette: {

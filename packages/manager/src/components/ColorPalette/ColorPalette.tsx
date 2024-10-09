@@ -124,10 +124,6 @@ export const ColorPalette = () => {
       color: theme.bg.bgPaper,
     },
     {
-      alias: 'theme.bg.bgAccessRow',
-      color: theme.bg.bgAccessRow,
-    },
-    {
       alias: 'theme.bg.bgAccessRowTransparentGradient',
       color: theme.bg.bgAccessRowTransparentGradient,
     },
