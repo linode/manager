@@ -1,9 +1,9 @@
+import { PRIVATE_IPv4_REGEX } from '@linode/validation';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
-import { privateIPRegex } from 'src/utilities/ipUtils';
 import { tail } from 'src/utilities/tail';
 
 import {
@@ -55,7 +55,8 @@ export interface IPAddressProps {
 }
 
 export const sortIPAddress = (ip1: string, ip2: string) =>
-  (privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1);
+  (PRIVATE_IPv4_REGEX.test(ip1) ? 1 : -1) -
+  (PRIVATE_IPv4_REGEX.test(ip2) ? 1 : -1);
 
 export const IPAddress = (props: IPAddressProps) => {
   const {

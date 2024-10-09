@@ -1,4 +1,4 @@
-import { getIsPrivateIP } from 'src/utilities/ipUtils';
+import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -26,7 +26,7 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
 
   for (const linode of linodes) {
     for (const ip of linode.ipv4) {
-      if (getIsPrivateIP(ip)) {
+      if (isPrivateIP(ip)) {
         options.push({ label: ip, linode });
       }
     }
