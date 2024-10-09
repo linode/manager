@@ -45,7 +45,6 @@ interface DisplayGroupedLinodesProps
   data: LinodeWithMaintenance[];
   display: 'grid' | 'list';
   handleRegionFilter: (regionFilter: RegionFilter) => void;
-  isVLAN?: boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
@@ -67,7 +66,6 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     display,
     handleOrderChange,
     handleRegionFilter,
-    isVLAN,
     linodeViewPreference,
     linodesAreGrouped,
     order,
@@ -86,7 +84,6 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
   const tableWrapperProps = {
     dataLength,
     handleOrderChange,
-    isVLAN,
     order,
     orderBy,
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
@@ -190,7 +187,6 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                     handleOrderChange,
                     handlePageChange,
                     handlePageSizeChange,
-                    isVLAN,
                     order,
                     orderBy,
                     page,
@@ -264,7 +260,6 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                       handleOrderChange,
                       handlePageChange,
                       handlePageSizeChange,
-                      isVLAN,
                       order,
                       orderBy,
                       page,
