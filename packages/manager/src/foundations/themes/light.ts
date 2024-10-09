@@ -241,7 +241,6 @@ export const lightTheme: ThemeOptions = {
   breakpoints,
   chartTokens: Chart,
   color,
-  colorTokens: Color,
   components: {
     MuiAccordion: {
       styleOverrides: {

@@ -7,7 +7,6 @@ import { deepMerge } from 'src/utilities/deepMerge';
 
 import type {
   ChartTypes,
-  ColorTypes,
   InteractionTypes as InteractionTypesLight,
 } from '@linode/design-language-system';
 import type { InteractionTypes as InteractionTypesDark } from '@linode/design-language-system/themes/dark';
@@ -76,7 +75,6 @@ declare module '@mui/material/styles/createTheme' {
     borderColors: BorderColors;
     chartTokens: ChartTypes;
     color: Colors;
-    colorTokens: ColorTypes;
     font: Fonts;
     graphs: any;
     inputStyles: any;
@@ -97,7 +95,6 @@ declare module '@mui/material/styles/createTheme' {
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
     chartTokens?: ChartTypes;
     color?: DarkModeColors | LightModeColors;
-    colorTokens?: ColorTypes;
     font?: Fonts;
     graphs?: any;
     inputStyles?: any;
