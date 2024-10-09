@@ -3,6 +3,7 @@ import { compose, withStateHandlers } from 'recompose';
 
 import {
   bucketToSearchableItem,
+  databaseToSearchableItem,
   domainToSearchableItem,
   firewallToSearchableItem,
   imageToSearchableItem,
@@ -20,6 +21,7 @@ import type {
   SearchableItem,
 } from './search.interfaces';
 import type {
+  DatabaseInstance,
   Firewall,
   Image,
   KubernetesCluster,
@@ -41,7 +43,8 @@ interface HandlerProps {
     regions: Region[],
     searchableLinodes: SearchableItem<number | string>[],
     nodebalancers: NodeBalancer[],
-    firewalls: Firewall[]
+    firewalls: Firewall[],
+    databases: DatabaseInstance[]
   ) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
@@ -88,7 +91,8 @@ export default () => (Component: React.ComponentType<any>) => {
           regions: Region[],
           searchableLinodes: SearchableItem<number | string>[],
           nodebalancers: NodeBalancer[],
-          firewalls: Firewall[]
+          firewalls: Firewall[],
+          databases: DatabaseInstance[]
         ) => {
           const searchableBuckets = objectStorageBuckets.map((bucket) =>
             bucketToSearchableItem(bucket)
@@ -111,6 +115,9 @@ export default () => (Component: React.ComponentType<any>) => {
           const searchableFirewalls = firewalls.map((firewall) =>
             firewallToSearchableItem(firewall)
           );
+          const searchableDatabases = databases.map((database) =>
+            databaseToSearchableItem(database)
+          );
           const results = search(
             [
               ...searchableLinodes,
@@ -121,6 +128,7 @@ export default () => (Component: React.ComponentType<any>) => {
               ...searchableClusters,
               ...searchableNodebalancers,
               ...searchableFirewalls,
+              ...searchableDatabases,
             ],
             query
           );

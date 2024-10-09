@@ -9,6 +9,7 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
+import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -42,9 +43,11 @@ import withStoreSearch from './withStoreSearch';
 
 import type { SearchProps } from './withStoreSearch';
 import type { RouteComponentProps } from 'react-router-dom';
+import { useIsDatabasesEnabled } from '../Databases/utilities';
 
 const displayMap = {
   buckets: 'Buckets',
+  databases: 'Databases',
   domains: 'Domains',
   firewalls: 'Firewalls',
   images: 'Images',
@@ -63,11 +66,15 @@ export const SearchLanding = (props: SearchLandingProps) => {
   const { data: regions } = useRegionsQuery();
 
   const isLargeAccount = useIsLargeAccount();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
   // We only want to fetch all entities if we know they
   // are not a large account. We do this rather than `!isLargeAccount`
   // because we don't want to fetch all entities if isLargeAccount is loading (undefined).
   const shouldFetchAllEntities = isLargeAccount === false;
+
+  const shouldMakeDBRequests =
+    shouldFetchAllEntities && Boolean(isDatabasesEnabled);
 
   /*
    @TODO OBJ Multicluster:'region' will become required, and the
@@ -80,6 +87,16 @@ export const SearchLanding = (props: SearchLandingProps) => {
     error: bucketsError,
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(shouldFetchAllEntities);
+
+  /*
+  @TODO DBaaS: Change the passed argument to 'shouldFetchAllEntities' and
+  remove 'isDatabasesEnabled' once DBaaS V2 is fully rolled out.
+  */
+  const {
+    data: databases,
+    error: databasesError,
+    isLoading: areDatabasesLoading,
+  } = useAllDatabasesQuery(shouldMakeDBRequests);
 
   const {
     data: domains,
@@ -186,7 +203,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
         regions ?? [],
         searchableLinodes ?? [],
         nodebalancers ?? [],
-        firewalls ?? []
+        firewalls ?? [],
+        databases ?? []
       );
     }
   }, [
@@ -204,6 +222,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
     nodebalancers,
     linodes,
     firewalls,
+    databases,
   ]);
 
   const getErrorMessage = () => {
@@ -216,6 +235,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
       [nodebalancersError, 'NodeBalancers'],
       [kubernetesClustersError, 'Kubernetes'],
       [firewallsError, 'Firewalls'],
+      [databasesError, 'Databases'],
       [
         objectStorageBuckets && objectStorageBuckets.errors.length > 0,
         `Object Storage in ${objectStorageBuckets?.errors
@@ -250,7 +270,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
       areKubernetesClustersLoading ||
       areImagesLoading ||
       areNodeBalancersLoading ||
-      areFirewallsLoading;
+      areFirewallsLoading ||
+      areDatabasesLoading;
 
   const errorMessage = getErrorMessage();
 

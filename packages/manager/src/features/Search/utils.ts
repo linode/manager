@@ -5,6 +5,7 @@ import type {
 
 export const emptyResults: SearchResultsByEntity = {
   buckets: [],
+  databases: [],
   domains: [],
   firewalls: [],
   images: [],
@@ -19,6 +20,7 @@ export const separateResultsByEntity = (
 ): SearchResultsByEntity => {
   const separatedResults: SearchResultsByEntity = {
     buckets: [],
+    databases: [],
     domains: [],
     firewalls: [],
     images: [],
