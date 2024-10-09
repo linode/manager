@@ -74,9 +74,7 @@ export const SearchLanding = (props: SearchLandingProps) => {
   const shouldFetchAllEntities = isLargeAccount === false;
 
   const shouldMakeDBRequests =
-    shouldFetchAllEntities &&
-    isDatabasesEnabled !== undefined &&
-    isDatabasesEnabled;
+    shouldFetchAllEntities && Boolean(isDatabasesEnabled);
 
   /*
    @TODO OBJ Multicluster:'region' will become required, and the

@@ -96,9 +96,7 @@ const SearchBar = (props: SearchProps) => {
     searchActive && isLargeAccount !== undefined && !isLargeAccount;
 
   const shouldMakeDBRequests =
-    shouldMakeRequests &&
-    isDatabasesEnabled !== undefined &&
-    isDatabasesEnabled;
+    shouldMakeRequests && Boolean(isDatabasesEnabled);
 
   const { data: regions } = useRegionsQuery();
 
