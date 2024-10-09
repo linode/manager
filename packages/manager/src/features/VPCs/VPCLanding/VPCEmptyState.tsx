@@ -13,7 +13,7 @@ import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
 export const VPCEmptyState = () => {
   const { push } = useHistory();
 
-  const isVPCReadOnly = useRestrictedGlobalGrantCheck({
+  const isVPCCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_vpcs',
   });
 
@@ -22,7 +22,7 @@ export const VPCEmptyState = () => {
       buttonProps={[
         {
           children: 'Create VPC',
-          disabled: isVPCReadOnly,
+          disabled: isVPCCreationRestricted,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
