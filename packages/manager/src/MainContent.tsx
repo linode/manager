@@ -231,8 +231,6 @@ export const MainContent = () => {
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
-  const { isACLPEnabled } = useIsACLPEnabled();
-
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
