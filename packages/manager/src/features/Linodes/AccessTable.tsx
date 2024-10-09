@@ -37,6 +37,7 @@ interface AccessTableProps {
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
   const { footer, gridSize, isVPCOnlyLinode, rows, sx, title } = props;
+
   return (
     <Grid lg={gridSize.lg} sx={sx} xs={gridSize.xs}>
       <StyledColumnLabelGrid>

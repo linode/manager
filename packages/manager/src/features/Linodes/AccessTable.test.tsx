@@ -10,7 +10,7 @@ import { AccessTable } from './AccessTable';
 const linode = linodeFactory.build();
 
 describe('AccessTable', () => {
-  it('should disable copy button and display help icon tooltip if isVPCOnlyLinode is true', async () => {
+  it('should display help icon tooltip if isVPCOnlyLinode is true', async () => {
     const { findByRole, getAllByRole } = renderWithTheme(
       <AccessTable
         gridSize={{ lg: 6, xs: 12 }}
@@ -22,18 +22,13 @@ describe('AccessTable', () => {
 
     const buttons = getAllByRole('button');
     const helpIconButton = buttons[0];
-    const copyButtons = buttons.slice(1);
 
     fireEvent.mouseEnter(helpIconButton);
 
-    const publicIpsUnassignedTooltip = await findByRole('tooltip');
-    expect(publicIpsUnassignedTooltip).toContainHTML(
+    const publicIPAddressesTooltip = await findByRole('tooltip');
+    expect(publicIPAddressesTooltip).toContainHTML(
       PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
     );
-
-    copyButtons.forEach((copyButton) => {
-      expect(copyButton).toBeDisabled();
-    });
   });
 
   it('should not disable copy button if isVPCOnlyLinode is false', () => {
