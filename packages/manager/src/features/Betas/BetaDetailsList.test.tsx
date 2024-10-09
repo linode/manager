@@ -1,14 +1,13 @@
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 
-import { renderWithThemeV2 } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BetaDetailsList } from './BetaDetailsList';
 
-import type { APIError } from '@linode/api-v4';
-
 describe('BetaDetails', () => {
-  it('should display the title supplied in the props as an h2 component', async () => {
-    const { queryByRole } = await renderWithThemeV2(
+  it('should display the title supplied in the props as an h2 component', () => {
+    const { queryByRole } = renderWithTheme(
       <BetaDetailsList
         betas={[]}
         errors={null}
@@ -19,8 +18,8 @@ describe('BetaDetails', () => {
     expect(queryByRole('heading')?.textContent).toBe('Available');
   });
 
-  it('should dispaly the circle progress component if the isLoading prop is set to true', async () => {
-    const { queryByTestId: queryBetasList } = await renderWithThemeV2(
+  it('should dispaly the circle progress component if the isLoading prop is set to true', () => {
+    const { queryByTestId: queryBetasList } = renderWithTheme(
       <BetaDetailsList
         betas={[]}
         errors={null}
@@ -30,17 +29,17 @@ describe('BetaDetails', () => {
     );
     expect(queryBetasList('circle-progress')).toBeFalsy();
 
-    const { queryByTestId: queryLoadingBetasList } = await renderWithThemeV2(
+    const { queryByTestId: queryLoadingBetasList } = renderWithTheme(
       <BetaDetailsList betas={[]} errors={null} isLoading title="Available" />
     );
     expect(queryLoadingBetasList('circle-progress')).not.toBeFalsy();
   });
 
-  it("should display the error state component with the error's reason as the error text", async () => {
+  it("should display the error state component with the error's reason as the error text", () => {
     const error: APIError = {
       reason: 'You do not have permissions to access this resource.',
     };
-    const betasList = await renderWithThemeV2(
+    const betasList = renderWithTheme(
       <BetaDetailsList
         betas={[]}
         errors={null}
@@ -51,7 +50,7 @@ describe('BetaDetails', () => {
     expect(betasList.queryByTestId('error-state')).toBeFalsy();
     expect(betasList.queryByText(error.reason)).toBeFalsy();
 
-    const errorBetasList = await renderWithThemeV2(
+    const errorBetasList = renderWithTheme(
       <BetaDetailsList
         betas={[]}
         errors={[error]}

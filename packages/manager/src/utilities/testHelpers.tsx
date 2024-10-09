@@ -83,6 +83,11 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
     mergeDeepRight(defaultState, customStore)
   );
 
+const defaultRouterMock = {
+  navigate: vi.fn(),
+  state: { status: 'idle' },
+};
+
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore, queryClient: passedQueryClient, routePath } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
@@ -107,6 +112,9 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
             options={{ bootstrap: options.flags }}
           >
             <SnackbarProvider>
+              {/**
+               * TODO Tanstack Router - remove amy routing  routing wrapWithTheme
+               */}
               <MemoryRouter {...options.MemoryRouter}>
                 {routePath ? (
                   <Route path={routePath}>{uiToRender}</Route>
@@ -122,23 +130,48 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   );
 };
 
-interface OptionsV2 {
-  customStore?: DeepPartial<ApplicationState>;
-  flags?: FlagSet;
+interface OptionsWithRouter
+  extends Omit<Options, 'MemoryRouter' | 'routePath'> {
   initialRoute?: string;
-  queryClient?: QueryClient;
   routeTree?: AnyRootRoute;
   router?: AnyRouter;
-  theme?: 'dark' | 'light';
 }
 
 /**
- * V2 versions of `wrapWithTheme` and `renderWithTheme` to work with Tanstack Router and access
- * new router internals.
+ * We don't always need to use the router in our tests. When we do, due to the async nature of TanStack Router, we need to use this helper function.
+ * The reason we use this instead of extending renderWithTheme is because of having to make all tests async.
+ * It seems unnecessary to refactor all tests to async when we don't need to access the router at all.
  *
- * TODO Tanstack Router - use the full router once migration is complete
+ * In order to use this, you must await the result of the function.
+ *
+ * @example
+ * const { getByText, router } = await renderWithThemeAndRouter(
+ *   <Component />, {
+ *     initialRoute: '/route',
+ *   }
+ * );
+ *
+ * // Assert the initial route
+ * expect(router.state.location.pathname).toBe('/route');
+ *
+ * // from here, you can use the router to navigate
+ * await waitFor(() =>
+ *   router.navigate({
+ *    params: { betaId: beta.id },
+ *    to: '/path/to/something',
+ *  })
+ * );
+ *
+ * // And assert
+ * expect(router.state.location.pathname).toBe('/path/to/something');
+ *
+ * // and test the UI
+ * getByText('Some text');
  */
-export const wrapWithThemeV2 = (ui: any, options: OptionsV2 = {}) => {
+export const wrapWithThemeAndRouter = (
+  ui: any,
+  options: OptionsWithRouter = {}
+) => {
   const {
     customStore,
     initialRoute = '/',
@@ -147,6 +180,15 @@ export const wrapWithThemeV2 = (ui: any, options: OptionsV2 = {}) => {
   } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
   const storeToPass = customStore ? baseStore(customStore) : storeFactory();
+
+  vi.mock('@tanstack/react-router', async () => {
+    const actual = await vi.importActual('@tanstack/react-router');
+    return {
+      ...actual,
+      useNavigate: () => defaultRouterMock.navigate,
+      useRouter: () => defaultRouterMock,
+    };
+  });
 
   setupInterceptors(
     configureStore<ApplicationState>([thunk])(defaultState)
@@ -182,9 +224,9 @@ export const wrapWithThemeV2 = (ui: any, options: OptionsV2 = {}) => {
   );
 };
 
-export const renderWithThemeV2 = async (
+export const renderWithThemeAndRouter = async (
   ui: React.ReactNode,
-  options: OptionsV2 = {}
+  options: OptionsWithRouter = {}
 ): Promise<RenderResult & { router: ReturnType<typeof createRouter> }> => {
   const router: AnyRouter = createRouter({
     history: createMemoryHistory({
@@ -196,7 +238,7 @@ export const renderWithThemeV2 = async (
   let renderResult: RenderResult;
 
   await act(async () => {
-    renderResult = render(wrapWithThemeV2(ui, { ...options, router }));
+    renderResult = render(wrapWithThemeAndRouter(ui, { ...options, router }));
 
     // Wait for the router to be ready
     await waitFor(() => expect(router.state.status).toBe('idle'));
@@ -205,7 +247,7 @@ export const renderWithThemeV2 = async (
   return {
     ...renderResult!,
     rerender: (ui) =>
-      renderResult.rerender(wrapWithThemeV2(ui, { ...options, router })),
+      renderResult.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
     router,
   };
 };
