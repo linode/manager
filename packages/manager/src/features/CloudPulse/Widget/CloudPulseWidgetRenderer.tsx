@@ -111,11 +111,7 @@ export const RenderWidgets = React.memo(
       } else {
         return {
           ...widgetObj,
-          time_granularity: {
-            label: 'Auto',
-            unit: 'Auto',
-            value: -1,
-          },
+          time_granularity: autoIntervalOption,
         };
       }
     };
