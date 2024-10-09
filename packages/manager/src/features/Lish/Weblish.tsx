@@ -166,12 +166,8 @@ export class Weblish extends React.Component<Props, State> {
     const { linode } = this.props;
     const { group, label } = linode;
 
-    if (this.socket === null) {
-      return;
-    }
-    const socket: WebSocket = this.socket;
-
-    if (socket !== origSocket) {
+    const socket: WebSocket | null = this.socket;
+    if (socket === null || socket !== origSocket) {
       return;
     }
 
