@@ -78,7 +78,7 @@ export class Weblish extends React.Component<Props, State> {
     });
 
     this.socket.addEventListener('close', (evt) => {
-      if (this.socket != origSocket) {
+      if (this.socket !== origSocket) {
         return;
       }
       this.socket = null;
@@ -171,7 +171,7 @@ export class Weblish extends React.Component<Props, State> {
     }
     const socket: WebSocket = this.socket;
 
-    if (socket != origSocket) {
+    if (socket !== origSocket) {
       return;
     }
 
