@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { Chip, ChipProps } from '../Chip';
+import { Chip } from '../Chip';
+import type { ChipProps } from '@mui/material';
 
 export interface BetaChipProps
   extends Omit<
