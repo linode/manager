@@ -65,7 +65,14 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     <Autocomplete
       renderOption={(props, option, { selected }) => (
         <li {...props} key={props.key}>
-          <Box alignItems="center" display="flex" flexDirection="row" gap={1}>
+          <Box
+            alignItems="center"
+            display="flex"
+            flexDirection="row"
+            gap={1}
+            justifyContent="space-between"
+            width="100%"
+          >
             <Stack>
               <Typography
                 color="inherit"
