@@ -1,3 +1,4 @@
+import { Chart } from '@linode/design-language-system';
 import { createTheme } from '@mui/material';
 
 export const breakpoints = createTheme({
@@ -10,7 +11,6 @@ export const breakpoints = createTheme({
       xs: 0,
     },
   },
-  // @ts-expect-error doesn't matter'
-  charts: {},
+  charts: Chart,
   name: 'light',
 }).breakpoints;
