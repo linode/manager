@@ -116,7 +116,7 @@ export interface LegendRow {
   legendTitle: string;
 }
 
-export const CloudPulseWidget = React.memo((props: CloudPulseWidgetProperties) => {
+export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { updateWidgetPreference: updatePreferences } = useAclpPreference();
   const { data: profile } = useProfile();
   const timezone = profile?.timezone ?? DateTime.local().zoneName;
@@ -275,7 +275,8 @@ export const CloudPulseWidget = React.memo((props: CloudPulseWidgetProperties) =
             padding={1}
           >
             <Typography marginLeft={1} variant="h2">
-              {convertStringToCamelCasesWithSpaces(widget.label)} ({scaledWidgetUnit.current}
+              {convertStringToCamelCasesWithSpaces(widget.label)} (
+              {scaledWidgetUnit.current}
               {unit.endsWith('ps') ? '/s' : ''})
             </Typography>
             <Stack
@@ -296,14 +297,14 @@ export const CloudPulseWidget = React.memo((props: CloudPulseWidgetProperties) =
               {Boolean(
                 availableMetrics?.available_aggregate_functions?.length
               ) && (
-                  <CloudPulseAggregateFunction
-                    availableAggregateFunctions={
-                      availableMetrics!.available_aggregate_functions
-                    }
-                    defaultAggregateFunction={widgetProp?.aggregate_function}
-                    onAggregateFuncChange={handleAggregateFunctionChange}
-                  />
-                )}
+                <CloudPulseAggregateFunction
+                  availableAggregateFunctions={
+                    availableMetrics!.available_aggregate_functions
+                  }
+                  defaultAggregateFunction={widgetProp?.aggregate_function}
+                  onAggregateFuncChange={handleAggregateFunctionChange}
+                />
+              )}
               <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
@@ -318,12 +319,14 @@ export const CloudPulseWidget = React.memo((props: CloudPulseWidgetProperties) =
                 ? metricsApiCallError ?? 'Error while rendering graph'
                 : undefined
             }
+            formatData={(data: number) =>
+              convertValueToUnit(data, scaledWidgetUnit.current)
+            }
             legendRows={
               legendRows && legendRows.length > 0 ? legendRows : undefined
             }
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
-            formatData={(data: number) => convertValueToUnit(data, scaledWidgetUnit.current)}
             formatTooltip={(value: number) => formatToolTip(value, unit)}
             gridSize={widget.size}
             loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
@@ -335,4 +338,4 @@ export const CloudPulseWidget = React.memo((props: CloudPulseWidgetProperties) =
       </Stack>
     </Grid>
   );
-});
+};
