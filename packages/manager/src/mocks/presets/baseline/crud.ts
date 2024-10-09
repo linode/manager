@@ -5,6 +5,7 @@ import {
 import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes';
 
 import { placementGroupsCrudPreset } from '../crud/placementGroups';
+import { supportTicketCrudPreset } from '../crud/supportTickets';
 import { volumeCrudPreset } from '../crud/volumes';
 
 import type { MockPresetBaseline } from 'src/mocks/types';
@@ -14,6 +15,7 @@ export const baselineCrudPreset: MockPresetBaseline = {
   handlers: [
     ...linodeCrudPreset.handlers,
     ...placementGroupsCrudPreset.handlers,
+    ...supportTicketCrudPreset.handlers,
     ...volumeCrudPreset.handlers,
 
     // Events.

@@ -10,35 +10,36 @@ import { useRestoreFromBackupMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Database } from '@linode/api-v4/lib/databases';
+import { DateTime } from 'luxon';
+import { useState } from 'react';
 import type { DialogProps } from 'src/components/Dialog/Dialog';
+import { toDatabaseFork, toFormatedDate } from '../../utilities';
 
 interface Props extends Omit<DialogProps, 'title'> {
   database: Database;
   onClose: () => void;
   open: boolean;
-  restoreTime?: string;
+  selectedDate?: DateTime | null;
+  selectedTime?: number;
 }
 
-export const RestoreNewFromBackupDialog = (props: Props) => {
-  const { database, onClose, open, restoreTime } = props;
+export const DatabaseBackupDialog = (props: Props) => {
+  const { database, onClose, open, selectedDate, selectedTime } = props;
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const [isRestoring, setIsRestoring] = useState(false);
 
-  const formatedDate =
-    restoreTime &&
-    `${restoreTime?.split('T')[0]} ${restoreTime?.split('T')[1].slice(0, 5)}`;
+  const formatedDate = toFormatedDate(selectedDate, selectedTime);
 
   const { error, mutateAsync: restore } = useRestoreFromBackupMutation(
     database.engine,
-    {
-      restore_time: restoreTime,
-      source: database.id,
-    }
+    toDatabaseFork(database.id, selectedDate, selectedTime)
   );
 
-  const handleNewRestoreDatabase = () => {
-    restore().then(() => {
-      history.push('summary');
+  const handleRestoreDatabase = () => {
+    setIsRestoring(true);
+    restore().then((database: Database) => {
+      history.push(`/databases/${database.engine}/${database.id}`);
       enqueueSnackbar('Your database is being restored.', {
         variant: 'success',
       });
@@ -55,15 +56,16 @@ export const RestoreNewFromBackupDialog = (props: Props) => {
     >
       <Typography sx={(theme) => ({ marginBottom: theme.spacing(4) })}>
         Restoring a backup creates a fork from this backup. If you proceed and
-        the fork is created successfully, you have 10 days to delete the
-        original database cluster. Failing to do so will lead to additional
-        billing caused by two running clusters instead of one.
+        the fork is created successfully, you should remove the original
+        database cluster. Failing to do so will lead to additional billing
+        caused by two running clusters instead of one.
       </Typography>
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'submit',
           label: 'Restore',
-          onClick: handleNewRestoreDatabase,
+          loading: isRestoring,
+          onClick: handleRestoreDatabase,
         }}
         secondaryButtonProps={{
           'data-testid': 'cancel',
@@ -89,4 +91,4 @@ export const RestoreNewFromBackupDialog = (props: Props) => {
   );
 };
 
-export default RestoreNewFromBackupDialog;
+export default DatabaseBackupDialog;

@@ -113,6 +113,14 @@ export async function loadDevTools(
         ...(seedContext?.regionAvailability || []),
       ],
       regions: [...initialContext.regions, ...(seedContext?.regions || [])],
+      supportReplies: [
+        ...initialContext.supportReplies,
+        ...(seedContext?.supportReplies || []),
+      ],
+      supportTickets: [
+        ...initialContext.supportTickets,
+        ...(seedContext?.supportTickets || []),
+      ],
       volumes: [...initialContext.volumes, ...(seedContext?.volumes || [])],
     };
 
