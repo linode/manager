@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { formatError, RetryLimiter } from 'src/features/Lish/Lish';
+import { formatError, RetryLimiter, RetryLimiterInterface } from 'src/features/Lish/Lish';
 
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
@@ -23,7 +23,7 @@ interface State {
 export class Weblish extends React.Component<Props, State> {
   mounted: boolean = false;
   socket: WebSocket | null;
-  retryLimiter: RetryLimiter = new RetryLimiter(3, 60000);
+  retryLimiter: RetryLimiterInterface = RetryLimiter(3, 60000);
   lastMessage: string = '';
 
   state: State = {

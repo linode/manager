@@ -23,26 +23,26 @@ import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
-export class RetryLimiter {
-  maxTries: number;
-  perTimeWindowMs: number;
-  retryTimes: number[];
+export interface RetryLimiterInterface {
+  retryAllowed: ()=>boolean
+  reset: ()=>void
+}
 
-  constructor(maxTries: number, perTimeWindowMs: number) {
-    this.maxTries = maxTries;
-    this.perTimeWindowMs = perTimeWindowMs;
-    this.retryTimes = [];
-  }
-  retryAllowed(): boolean {
-    const now = Date.now();
-    this.retryTimes.push(now);
-    const cutOffTime = now-this.perTimeWindowMs;
-    while (this.retryTimes.length && this.retryTimes[0] < cutOffTime)
-      this.retryTimes.shift();
-    return this.retryTimes.length < this.maxTries;
-  }
-  reset(): void {
-    this.retryTimes = [];
+export const RetryLimiter = (maxTries: number, perTimeWindowMs: number): RetryLimiterInterface => {
+  let retryTimes: number[] = [];
+
+  return {
+    retryAllowed: (): boolean => {
+      const now = Date.now();
+      retryTimes.push(now);
+      const cutOffTime = now-perTimeWindowMs;
+      while (retryTimes.length && retryTimes[0] < cutOffTime)
+        retryTimes.shift();
+      return retryTimes.length < maxTries;
+    },
+    reset: (): void => {
+      retryTimes = [];
+    }
   }
 }
 
