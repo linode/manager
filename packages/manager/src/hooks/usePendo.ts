@@ -105,16 +105,16 @@ export const usePendo = () => {
               attr: 'pathname',
               data(url: string) {
                 const idMatchingRegex = /(\/\d+)/;
-                const bucketMatchingRegex = /(buckets\/[^\/]+\/[^\/]+)/;
+                const bucketPathMatchingRegex = /(buckets\/[^\/]+\/[^\/]+)/;
                 const userPathMatchingRegex = /(users\/).*/;
                 const oauthPathMatchingRegex = /(#access_token).*/;
 
                 if (idMatchingRegex.test(url)) {
                   // Replace any ids with XXXX and keep the rest of the URL intact
                   return url.replace(idMatchingRegex, '/XXXX');
-                } else if (bucketMatchingRegex.test(url)) {
+                } else if (bucketPathMatchingRegex.test(url)) {
                   // Replace the region and bucket names with XXXX and keep the rest of the URL intact
-                  return url.replace(bucketMatchingRegex, 'XXXX/XXXX');
+                  return url.replace(bucketPathMatchingRegex, 'XXXX/XXXX');
                 } else if (oauthPathMatchingRegex.test(url)) {
                   // Remove everything after access_token/
                   url.replace(oauthPathMatchingRegex, '$1');
