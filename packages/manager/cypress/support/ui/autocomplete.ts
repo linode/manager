@@ -30,6 +30,17 @@ export const autocomplete = {
   find: (): Cypress.Chainable => {
     return cy.get('[data-qa-autocomplete] input');
   },
+
+  /**
+   * Finds an autocomplete element by its label.
+   *
+   * @param label - Label of the autocomplete to select.
+   *
+   * @returns A Cypress chainable object that represents the located element.
+   */
+  findByLabel: (label: string): Cypress.Chainable => {
+    return cy.get(`[data-qa-autocomplete="${label}"] input`);
+  },
 };
 
 /**
