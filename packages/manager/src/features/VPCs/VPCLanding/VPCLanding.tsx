@@ -111,7 +111,7 @@ const VPCLanding = () => {
             resourceType: 'VPCs',
           }),
         }}
-        disabledCreateButton={isVPCSReadOnly}
+        disabledCreateButton={isVPCCreationRestricted}
       />
       <Table>
         <TableHead>
