@@ -75,7 +75,7 @@ const VPCLanding = () => {
     history.push(VPC_CREATE_ROUTE);
   };
 
-  const isVPCSReadOnly = useRestrictedGlobalGrantCheck({
+  const isVPCCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_vpcs',
   });
 
