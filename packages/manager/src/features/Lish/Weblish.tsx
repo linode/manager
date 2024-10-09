@@ -89,17 +89,14 @@ export class Weblish extends React.Component<Props, State> {
       }
 
       let parsed = null;
-      if (evt?.reason) {
-        try {
+      try {
+        if (evt?.reason) {
           parsed = JSON.parse(evt.reason);
-        } catch {
         }
-      }
-      if (parsed === null) {
-        try {
+        if (parsed === null) {
           parsed = JSON.parse(this.lastMessage);
-        } catch {
         }
+      } catch {
       }
 
       if (this.retryLimiter.retryAllowed()) {
@@ -122,7 +119,7 @@ export class Weblish extends React.Component<Props, State> {
     const { error } = this.state;
 
     if (error) {
-      const actionButton = {
+      const actionButtonProps = {
         text: 'Retry Connection',
         onClick: ()=>{
           this.retryLimiter.reset();
@@ -133,7 +130,7 @@ export class Weblish extends React.Component<Props, State> {
         <ErrorState
           errorText={error}
           typographySx={(theme) => ({ color: theme.palette.common.white })}
-          actionButton={actionButton}
+          actionButtonProps={actionButtonProps}
         />
       );
     }
