@@ -8,6 +8,17 @@ import { Typography } from 'src/components/Typography';
 
 import { SvgIconProps } from '../SvgIcon';
 
+export interface ActionButtonProps {
+  /**
+   * Text
+   */
+  text: string;
+  /**
+   * Click handler
+   */
+  onClick: ()=>void;
+}
+
 export interface ErrorStateProps {
   /**
    * An SVG to display in place of the error icon.
@@ -30,18 +41,13 @@ export interface ErrorStateProps {
    */
   typographySx?: SxProps<Theme>;
   /**
-   * Optional Action Button: Text
+   * Optional Action Button
    */
-  actionButtonText?: string;
-  /**
-   * Optional Action Button: Click handler
-   */
-  onActionButtonClick?: ()=>void;
+  actionButton?: ActionButtonProps;
 }
 
 export const ErrorState = (props: ErrorStateProps) => {
-  const { CustomIcon, compact, typographySx,
-          actionButtonText, onActionButtonClick } = props;
+  const { CustomIcon, compact, typographySx, actionButton } = props;
   const theme = useTheme();
 
   const sxIcon = {
@@ -82,13 +88,13 @@ export const ErrorState = (props: ErrorStateProps) => {
         ) : (
           <div style={{ textAlign: 'center' }}>{props.errorText}</div>
         )}
-        {actionButtonText ? (
+        {actionButton ? (
           <div style={{ textAlign: 'center' }}>
             <Button
-              title={actionButtonText}
-              onClick={() => { onActionButtonClick?.() }}
+              title={actionButton.text}
+              onClick={() => { actionButton.onClick?.() }}
             >
-              {actionButtonText}
+              {actionButton.text}
             </Button>
           </div>
         ): ( null )}

@@ -122,15 +122,18 @@ export class Weblish extends React.Component<Props, State> {
     const { error } = this.state;
 
     if (error) {
+      const actionButton = {
+        text: 'Retry Connection',
+        onClick: ()=>{
+          this.retryLimiter.reset();
+          this.props.refreshToken();
+        }
+      };
       return (
         <ErrorState
           errorText={error}
           typographySx={(theme) => ({ color: theme.palette.common.white })}
-          actionButtonText='Retry Connection'
-          onActionButtonClick={()=>{
-            this.retryLimiter.reset();
-            this.props.refreshToken();
-          }}
+          actionButton={actionButton}
         />
       );
     }

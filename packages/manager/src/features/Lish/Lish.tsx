@@ -66,7 +66,7 @@ const formatErrorSuffix = (errObj: any): string => {
   return '';
 }
 
-export function formatError(errObj: any, defaultError: string): string {
+export const formatError = (errObj: any, defaultError: string): string => {
   return formatErrorPrefix(errObj, defaultError) + formatErrorSuffix(errObj);
 }
 
