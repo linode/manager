@@ -206,6 +206,22 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/ui run test
 
+  typecheck-ui:
+    runs-on: ubuntu-latest
+    needs: build-sdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn --frozen-lockfile
+      - run: yarn workspace @linode/ui run typecheck
+
   typecheck-manager:
     runs-on: ubuntu-latest
     needs: build-sdk

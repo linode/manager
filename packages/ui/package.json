@@ -25,7 +25,7 @@
   "scripts": {
     "start": "tsc -w --preserveWatchOutput",
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
-    "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
+    "typecheck": "tsc",
     "precommit": "lint-staged",
     "test": "vitest run",
     "test:watch": "vitest",
