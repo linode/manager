@@ -110,7 +110,7 @@ export const StyledActiveLink = styled(Link, {
   cursor: 'pointer',
   display: 'flex',
   minWidth: SIDEBAR_WIDTH,
-  padding: '8px 13px',
+  padding: '8px 16px',
   position: 'relative',
   ...(props.isActiveLink && {
     '& div.icon': {
@@ -148,21 +148,37 @@ export const StyledAccordion = styled(Accordion, {
   label: 'StyledAccordion',
 })(({ theme }) => ({
   '& h3': {
+    '& p': {
+      color: '#B8B8B8',
+    },
+    /** Product family icon */
+    '& svg': {
+      color: '#8E9195',
+      marginRight: 14,
+    },
+    alignItems: 'center',
     color: '#B8B8B8',
-    fontSize: '0.8rem',
+    display: 'flex',
+    fontSize: '0.7rem',
     letterSpacing: '1px',
-    padding: 10,
+    lineheight: 20,
+    padding: '0 10px',
     textTransform: 'uppercase',
   },
-  '& svg': {
-    fill: '#fff',
-    stroke: 'transparent',
+  '.MuiAccordionDetails-root': {
+    padding: 0,
   },
-  '.MuiAccordionSummary-content, .Mui-expanded': {
-    margin: 0,
+  '.MuiAccordionSummary-contentGutters, .Mui-expanded': {
+    margin: '0 !important',
   },
-  '.MuiButtonBase-root.MuiAccordionSummary-root': {
-    minHeight: '40px',
+  '.MuiButtonBase-root, MuiAccordionSummary-root': {
+    minHeight: 40,
+    paddingLeft: 4,
+    /** Accordion arrow */
+    svg: {
+      fill: '#fff',
+      stroke: 'transparent',
+    },
   },
   backgroundColor: theme.name === 'dark' ? theme.bg.appBar : 'transparent',
   minHeight: '40px',

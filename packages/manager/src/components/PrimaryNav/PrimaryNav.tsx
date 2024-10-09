@@ -3,23 +3,10 @@ import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
-import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
-import Domain from 'src/assets/icons/entityIcons/domain.svg';
-import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
-import Image from 'src/assets/icons/entityIcons/image.svg';
-import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
-import Managed from 'src/assets/icons/entityIcons/managed.svg';
-import CloudPulse from 'src/assets/icons/entityIcons/monitor.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
-import PlacementGroups from 'src/assets/icons/entityIcons/placement-groups.svg';
-import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
-import Volume from 'src/assets/icons/entityIcons/volume.svg';
-import VPC from 'src/assets/icons/entityIcons/vpc.svg';
-import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Divider } from 'src/components/Divider';
@@ -107,7 +94,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Managed',
           hide: !isManaged,
           href: '/managed',
-          icon: <Managed />,
         },
       ],
       [
@@ -115,7 +101,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           activeLinks: ['/linodes', '/linodes/create'],
           display: 'Linodes',
           href: '/linodes',
-          icon: <Linode />,
         },
         {
           activeLinks: [
@@ -124,31 +109,26 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           ],
           display: 'Images',
           href: '/images',
-          icon: <Image />,
         },
         {
           activeLinks: ['/kubernetes/create'],
           display: 'Kubernetes',
           href: '/kubernetes/clusters',
-          icon: <Kubernetes />,
         },
         {
           display: 'StackScripts',
           href: '/stackscripts',
-          icon: <StackScript />,
         },
         {
           betaChipClassName: 'beta-chip-placement-groups',
           display: 'Placement Groups',
           hide: !isPlacementGroupsEnabled,
           href: '/placement-groups',
-          icon: <PlacementGroups />,
         },
         {
           attr: { 'data-qa-one-click-nav-btn': true },
           display: 'Marketplace',
           href: '/linodes/create?type=One-Click',
-          icon: <OCA />,
         },
       ],
       [
@@ -159,34 +139,28 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           ],
           display: 'Object Storage',
           href: '/object-storage/buckets',
-          icon: <Storage />,
         },
         {
           display: 'Volumes',
           href: '/volumes',
-          icon: <Volume />,
         },
       ],
       [
         {
           display: 'VPC',
           href: '/vpcs',
-          icon: <VPC />,
         },
         {
           display: 'Firewalls',
           href: '/firewalls',
-          icon: <Firewall />,
         },
         {
           display: 'NodeBalancers',
           href: '/nodebalancers',
-          icon: <NodeBalancer />,
         },
         {
           display: 'Domains',
           href: '/domains',
-          icon: <Domain />,
         },
       ],
       [
@@ -194,7 +168,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Databases',
           hide: !isDatabasesEnabled,
           href: '/databases',
-          icon: <Database />,
+
           isBeta: isDatabasesV2Beta,
         },
       ],
@@ -202,13 +176,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         {
           display: 'Longview',
           href: '/longview',
-          icon: <Longview />,
         },
         {
           display: 'Monitor',
           hide: !isACLPEnabled,
           href: '/monitor/cloudpulse',
-          icon: <CloudPulse />,
+
           isBeta: flags.aclp?.beta,
         },
       ],
@@ -217,17 +190,14 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           display: 'Betas',
           hide: !flags.selfServeBetas,
           href: '/betas',
-          icon: <Beta />,
         },
         {
           display: 'Account',
           href: '/account',
-          icon: <Account />,
         },
         {
           display: 'Help & Support',
           href: '/support',
-          icon: <TooltipIcon status="help" />,
         },
       ],
     ],
@@ -241,17 +211,40 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ]
   );
 
-  interface IdxMap {
-    [key: number]: string;
+  interface AccordionHeading {
+    icon: React.JSX.Element;
+    title: string;
   }
 
-  const idxMap: IdxMap = {
-    1: 'Compute',
-    2: 'Storage',
-    3: 'Networking',
-    4: 'Databases',
-    5: 'Monitor',
-    6: 'More',
+  interface HeadingIdxMap {
+    [key: number]: AccordionHeading;
+  }
+
+  const headingIdxMap: HeadingIdxMap = {
+    1: {
+      icon: <Linode height={20} width={20} />,
+      title: 'Compute',
+    },
+    2: {
+      icon: <Storage height={20} width={20} />,
+      title: 'Storage',
+    },
+    3: {
+      icon: <NodeBalancer height={20} width={20} />,
+      title: 'Networking',
+    },
+    4: {
+      icon: <Database height={20} width={20} />,
+      title: 'Databases',
+    },
+    5: {
+      icon: <Longview height={20} width={20} />,
+      title: 'Monitor',
+    },
+    6: {
+      icon: <Account height={20} width={20} />,
+      title: 'More',
+    },
   };
 
   return (
@@ -295,10 +288,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                     : 'rgba(0, 0, 0, 0.19)',
                 color: '#222',
               })}
-              spacingBottom={11}
-              spacingTop={isManaged ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11}
+              spacingBottom={0}
             />
-            <StyledAccordion defaultExpanded={true} heading={idxMap[idx]}>
+            <StyledAccordion
+              heading={
+                <>
+                  {headingIdxMap[idx].icon}
+                  <p>{headingIdxMap[idx].title}</p>
+                </>
+              }
+              defaultExpanded={true}
+            >
               {filteredLinks.map((thisLink) => {
                 const props = {
                   closeMenu,
