@@ -170,8 +170,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             )}
           </StyledSummaryGrid>
         </Grid>
+
         <Grid container sm={isDisplayingEncryptedStatus ? 8 : 9} xs={12}>
           <Grid container xs={12}>
+            {/* ---------------------- CHANGES GO HERE ---------------------- */}
             <AccessTable
               footer={
                 numIPAddresses > 2 ? (
@@ -193,6 +195,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
             />
+            {/* ---------------------- CHANGES GO HERE ---------------------- */}
+
             <AccessTable
               rows={[
                 { heading: 'SSH Access', text: sshLink(ipv4[0]) },

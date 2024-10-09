@@ -4,7 +4,7 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 
 import {
   StyledColumnLabelGrid,
@@ -43,7 +43,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
         {title}{' '}
         {isVPCOnlyLinode &&
           title.includes('Public IP Address') &&
-          PublicIpsUnassignedTooltip}
+          PublicIPAddressesTooltip}
       </StyledColumnLabelGrid>
       <StyledTableGrid>
         <StyledTable>
