@@ -7,7 +7,7 @@ import {
   longviewLatestStatsFactory,
   longviewPackageFactory,
 } from 'src/factories';
-// import { authenticate } from 'support/api/authentication';
+import { authenticate } from 'support/api/authentication';
 import {
   longviewStatusTimeout,
   longviewEmptyStateMessage,
@@ -22,7 +22,7 @@ import {
   mockUpdateLongviewClient,
 } from 'support/intercepts/longview';
 import { ui } from 'support/ui';
-// import { cleanUp } from 'support/util/cleanup';
+import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 
 /**
@@ -128,11 +128,11 @@ const longviewGetLatestValueInstalled = longviewResponseFactory.build({
   VERSION: 0.4,
 });
 
-// authenticate();
+authenticate();
 describe('longview', () => {
-  // before(() => {
-  //   cleanUp(['linodes', 'longview-clients']);
-  // });
+  before(() => {
+    cleanUp(['linodes', 'longview-clients']);
+  });
 
   /*
    * - Tests Longview installation end-to-end using mock API data.

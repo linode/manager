@@ -63,7 +63,7 @@ const BetaDetails = (props: Props) => {
         {enrolled ? null : (
           <Button
             onClick={() => {
-              navigate({ to: `/betas/signup/${id}` });
+              navigate({ params: { betaId: id }, to: '/betas/signup/$betaId' });
             }}
             buttonType="primary"
           >
