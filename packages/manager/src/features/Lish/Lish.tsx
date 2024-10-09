@@ -46,19 +46,28 @@ export class RetryLimiter {
   }
 }
 
-export function formatError(errObj: any, defaultError: string): string {
-  let error = defaultError;
+const formatErrorPrefix = (errObj: any, defaultError: string): string => {
   if (typeof errObj === 'string') {
-    error = errObj;
-  } else if (errObj?.reason) {
-    error = `${errObj?.reason}`;
-  } else if (errObj?.errors?.[0]?.reason) {
-    error = `Error code: ${errObj.errors[0].reason}`;
+    return errObj;
   }
+  if (errObj?.reason) {
+    return `${errObj?.reason}`;
+  }
+  if (errObj?.errors?.[0]?.reason) {
+    return `Error code: ${errObj.errors[0].reason}`;
+  }
+  return defaultError;
+}
+
+const formatErrorSuffix = (errObj: any): string => {
   if (errObj?.grn) {
-    error = `${error} (${errObj?.grn})`;
+    return ` (${errObj?.grn})`;
   }
-  return error;
+  return '';
+}
+
+export function formatError(errObj: any, defaultError: string): string {
+  return formatErrorPrefix(errObj, defaultError) + formatErrorSuffix(errObj);
 }
 
 const Lish = () => {
