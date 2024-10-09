@@ -166,6 +166,9 @@ const genericStatusPillStyle = {
     width: 16,
   },
   backgroundColor: 'transparent',
+  [breakpoints.down('sm')]: {
+    fontSize: 14,
+  },
   color: customDarkModeOptions.textColors.tableStatic,
   fontSize: '1rem',
   padding: 0,

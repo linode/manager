@@ -645,14 +645,14 @@ export const lightTheme: ThemeOptions = {
     },
     MuiDialog: {
       styleOverrides: {
-        paper: ({ theme }) => ({
+        paper: {
           boxShadow: `0 0 5px ${Color.Neutrals[50]}`, // TODO: This was the closest color according to our palette
-          [theme.breakpoints.down('sm')]: {
+          [breakpoints.down('sm')]: {
             margin: 24,
             maxHeight: 'calc(100% - 48px)',
             maxWidth: '100% !important',
           },
-        }),
+        },
         paperScrollPaper: {
           maxHeight: 'calc(100% - 48px)',
         },
@@ -714,16 +714,16 @@ export const lightTheme: ThemeOptions = {
     },
     MuiFormControl: {
       styleOverrides: {
-        root: ({ theme }) => ({
+        root: {
           '&.copy > div': {
             backgroundColor: Color.Neutrals[5],
           },
-          [theme.breakpoints.down('xs')]: {
+          [breakpoints.down('xs')]: {
             width: '100%',
           },
           marginTop: 16,
           minWidth: 120,
-        }),
+        },
       },
     },
     MuiFormControlLabel: {
@@ -807,23 +807,23 @@ export const lightTheme: ThemeOptions = {
             marginTop: 0,
           },
         },
-        input: ({ theme }) => ({
+        input: {
           '&::placeholder': {
             color: Color.Neutrals[50],
           },
           boxSizing: 'border-box',
-          [theme.breakpoints.only('xs')]: {
+          [breakpoints.only('xs')]: {
             fontSize: '1rem',
           },
           fontSize: '0.9rem',
           padding: 8,
-        }),
+        },
         inputMultiline: {
           lineHeight: 1.4,
           minHeight: 125,
           padding: '9px 12px',
         },
-        root: ({ theme }) => ({
+        root: {
           '& svg': {
             '&:hover': {
               color: Color.Brand[60],
@@ -857,7 +857,7 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: Color.Neutrals.White,
           border: `1px solid ${Color.Neutrals[40]}`,
           boxSizing: 'border-box',
-          [theme.breakpoints.down('xs')]: {
+          [breakpoints.down('xs')]: {
             maxWidth: '100%',
             width: '100%',
           },
@@ -866,7 +866,7 @@ export const lightTheme: ThemeOptions = {
           maxWidth: inputMaxWidth,
           minHeight: 34,
           transition: 'border-color 225ms ease-in-out',
-        }),
+        },
       },
     },
     MuiInputAdornment: {
@@ -874,21 +874,21 @@ export const lightTheme: ThemeOptions = {
         positionEnd: {
           marginRight: 10,
         },
-        root: ({ theme }) => ({
+        root: {
           '& p': {
-            [theme.breakpoints.only('xs')]: {
+            [breakpoints.only('xs')]: {
               fontSize: '1rem',
             },
             color: Color.Neutrals[70],
             fontSize: '0.9rem',
           },
-          [theme.breakpoints.only('xs')]: {
+          [breakpoints.only('xs')]: {
             fontSize: '1rem',
           },
           color: Color.Neutrals[70],
           fontSize: '0.9rem',
           whiteSpace: 'nowrap',
-        }),
+        },
       },
     },
     MuiInputBase: {
@@ -974,14 +974,14 @@ export const lightTheme: ThemeOptions = {
     },
     MuiMenu: {
       styleOverrides: {
-        paper: ({ theme }) => ({
+        paper: {
           '& .selectMenuList': {
             '& li': {
               paddingLeft: 10,
               paddingRight: 10,
             },
             boxSizing: 'content-box',
-            [theme.breakpoints.down('xs')]: {
+            [breakpoints.down('xs')]: {
               minWidth: 200,
             },
             maxHeight: 250,
@@ -1002,7 +1002,7 @@ export const lightTheme: ThemeOptions = {
           borderLeft: 0,
           borderRight: 0,
           maxWidth: 350,
-        }),
+        },
       },
     },
     MuiMenuItem: {
@@ -1050,14 +1050,14 @@ export const lightTheme: ThemeOptions = {
     },
     MuiPopover: {
       styleOverrides: {
-        paper: ({ theme }) => ({
+        paper: {
           borderRadius: 0,
           boxShadow: `0 2px 6px 0 rgba(0, 0, 0, 0.18)`, // TODO: Fix Elevation.S to remove `inset`
-          [theme.breakpoints.up('lg')]: {
+          [breakpoints.up('lg')]: {
             minWidth: 250,
           },
           minWidth: 200,
-        }),
+        },
       },
     },
     MuiRadio: {
@@ -1241,7 +1241,7 @@ export const lightTheme: ThemeOptions = {
     },
     MuiTab: {
       styleOverrides: {
-        root: ({ theme }) => ({
+        root: {
           '&$selected, &$selected:hover': {
             color: primaryColors.headline,
             fontFamily: latoWeb.bold,
@@ -1252,7 +1252,7 @@ export const lightTheme: ThemeOptions = {
           alignItems: 'center',
           appearance: 'none',
           boxSizing: 'border-box',
-          [theme.breakpoints.up('md')]: {
+          [breakpoints.up('md')]: {
             minWidth: 75,
           },
           color: 'rgba(0, 0, 0, 0.54)',
@@ -1269,7 +1269,7 @@ export const lightTheme: ThemeOptions = {
           position: 'relative',
           textTransform: 'inherit',
           verticalAlign: 'middle',
-        }),
+        },
         selected: {},
         textColorPrimary: {
           '&$selected': {
@@ -1412,23 +1412,23 @@ export const lightTheme: ThemeOptions = {
         popper: {
           opacity: 1,
         },
-        tooltip: ({ theme }) => ({
+        tooltip: {
           backgroundColor: 'white',
           borderRadius: 0,
           boxShadow: `0 0 5px ${Color.Neutrals[50]}`, // TODO: This was the closest color according to our palette
-          [theme.breakpoints.up('sm')]: {
+          [breakpoints.up('sm')]: {
             fontSize: '.9rem',
             padding: '8px 10px',
           },
           color: Color.Neutrals[70],
           maxWidth: 200,
           textAlign: 'left',
-        }),
+        },
       },
     },
     MuiTypography: {
       styleOverrides: {
-        button: ({ theme }) => ({
+        button: {
           '&$colorSecondary': {
             '&:active': {
               backgroundColor: 'transparent',
@@ -1450,7 +1450,7 @@ export const lightTheme: ThemeOptions = {
           backgroundColor: primaryColors.main,
           border: 'none',
           borderRadius: '3px',
-          [theme.breakpoints.down('sm')]: {
+          [breakpoints.down('sm')]: {
             marginLeft: 8,
             maxHeight: 34,
             minWidth: 100,
@@ -1465,7 +1465,7 @@ export const lightTheme: ThemeOptions = {
           padding: `8px 20px`,
           position: 'relative',
           textTransform: 'inherit',
-        }),
+        },
       },
     },
   },
@@ -1651,6 +1651,10 @@ export const lightTheme: ThemeOptions = {
     fontFamily: latoWeb.normal,
     fontSize: 16,
     h1: {
+      [breakpoints.up('lg')]: {
+        fontSize: '1.5rem',
+        lineHeight: '1.875rem',
+      },
       color: primaryColors.headline,
       fontFamily: latoWeb.bold,
       fontSize: '1.25rem',
