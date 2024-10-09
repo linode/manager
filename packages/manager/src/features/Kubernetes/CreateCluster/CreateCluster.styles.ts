@@ -41,8 +41,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export const StyledRegionSelectStack = styled(Stack, {
-  label: 'StyledRegionSelectStack',
+export const StyledFieldWithDocsStack = styled(Stack, {
+  label: 'StyledFieldWithDocsStack',
 })(({ theme }) => ({
   flexDirection: 'row',
   [theme.breakpoints.down('md')]: {

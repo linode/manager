@@ -42,7 +42,6 @@ import {
 import { createTestLinode } from 'support/util/linodes';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
-import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import {
   mockCreateLinodeAccountLimitError,
   mockGetLinodes,
@@ -227,7 +226,6 @@ describe('open support tickets', () => {
       first_name: 'Jane',
       last_name: 'Doe',
       company: 'Acme Co.',
-      active_since: MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED,
     });
 
     const mockFormFields = {

@@ -27,7 +27,9 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
-const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
+const DatabaseBackups = React.lazy(
+  () => import('./DatabaseBackups/DatabaseBackups')
+);
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 const DatabaseResize = React.lazy(() =>
   import('./DatabaseResize/DatabaseResize').then(({ DatabaseResize }) => ({

@@ -37,7 +37,7 @@ import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   StyledDocsLinkContainer,
-  StyledRegionSelectStack,
+  StyledFieldWithDocsStack,
 } from 'src/features/Kubernetes/CreateCluster/CreateCluster.styles';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
@@ -528,7 +528,7 @@ const NodeBalancerCreate = () => {
           onChange={tagsChange}
           tagError={hasErrorFor('tags')}
         />
-        <StyledRegionSelectStack sx={{ marginTop: 1 }}>
+        <StyledFieldWithDocsStack sx={{ marginTop: 1 }}>
           <Stack>
             <RegionSelect
               textFieldProps={{
@@ -549,7 +549,7 @@ const NodeBalancerCreate = () => {
               label={DOCS_LINK_LABEL_DC_PRICING}
             />
           </StyledDocsLinkContainer>
-        </StyledRegionSelectStack>
+        </StyledFieldWithDocsStack>
       </Paper>
       <SelectFirewallPanel
         handleFirewallChange={(firewallId: number) => {
