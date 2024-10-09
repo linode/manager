@@ -189,7 +189,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         },
         {
           display: 'Monitor',
-          // hide: !isACLPEnabled,
           href: '/monitor/cloudpulse',
           icon: <CloudPulse />,
           isBeta: flags.aclp?.beta,
