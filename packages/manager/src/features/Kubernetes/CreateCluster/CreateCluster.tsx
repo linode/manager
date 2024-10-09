@@ -367,21 +367,19 @@ export const CreateCluster = () => {
           {showControlPlaneACL && (
             <>
               <Divider />
-              <Box data-testid="control-plane-acl">
-                <ControlPlaneACLPane
-                  handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
-                    setIPv4Addr(newIpV4Addr);
-                  }}
-                  handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
-                    setIPv6Addr(newIpV6Addr);
-                  }}
-                  enableControlPlaneACL={controlPlaneACL}
-                  errorText={errorMap.control_plane}
-                  ipV4Addr={ipV4Addr}
-                  ipV6Addr={ipV6Addr}
-                  setControlPlaneACL={setControlPlaneACL}
-                />
-              </Box>
+              <ControlPlaneACLPane
+                handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
+                  setIPv4Addr(newIpV4Addr);
+                }}
+                handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
+                  setIPv6Addr(newIpV6Addr);
+                }}
+                enableControlPlaneACL={controlPlaneACL}
+                errorText={errorMap.control_plane}
+                ipV4Addr={ipV4Addr}
+                ipV6Addr={ipV6Addr}
+                setControlPlaneACL={setControlPlaneACL}
+              />
             </>
           )}
           <Divider sx={{ marginBottom: 4 }} />

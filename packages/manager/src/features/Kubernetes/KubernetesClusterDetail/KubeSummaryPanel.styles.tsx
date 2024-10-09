@@ -1,10 +1,8 @@
 // This component was built asuming an unmodified MUI <Table />
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 
 import { Box } from 'src/components/Box';
-import { Typography } from 'src/components/Typography';
-
-import type { Theme } from '@mui/material/styles';
 
 export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
   alignItems: 'center',
@@ -12,12 +10,9 @@ export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
   [theme.breakpoints.down('lg')]: {
     minHeight: theme.spacing(3),
   },
-  [theme.breakpoints.down('md')]: {
-    alignItems: 'flex-start',
-    flexDirection: 'column',
-  },
   [theme.breakpoints.up('lg')]: {
     minHeight: theme.spacing(5),
+    padding: `0px 10px`,
   },
 }));
 
@@ -30,28 +25,55 @@ export const StyledLabelBox = styled(Box, { label: 'StyledLabelBox' })(
   })
 );
 
-export const sxListItemMdBp = {
-  borderRight: 0,
-  flex: '50%',
-  padding: 0,
-};
+export const StyledActionRowGrid = styled(Grid, {
+  label: 'StyledActionRowGrid',
+})({
+  '& button': {
+    alignItems: 'flex-start',
+  },
+  alignItems: 'flex-end',
+  alignSelf: 'stretch',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  padding: '8px 0px',
+});
 
-export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
+export const StyledTagGrid = styled(Grid, { label: 'StyledTagGrid' })(
   ({ theme }) => ({
-    color: theme.textColors.tableStatic,
-    display: 'flex',
-    padding: `0px 10px`,
-    [theme.breakpoints.down('md')]: {
-      ...sxListItemMdBp,
+    // Tags Panel wrapper
+    '& > div:last-child': {
+      marginBottom: 0,
+      marginTop: 2,
+      width: '100%',
     },
+    '&.MuiGrid-item': {
+      paddingBottom: 0,
+    },
+    alignItems: 'flex-end',
+    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    [theme.breakpoints.down('lg')]: {
+      width: '100%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      '& .MuiChip-root': {
+        marginLeft: 4,
+        marginRight: 0,
+      },
+      // Add a Tag button
+      '& > div:first-of-type': {
+        justifyContent: 'flex-end',
+        marginTop: theme.spacing(4),
+      },
+      // Tags Panel wrapper
+      '& > div:last-child': {
+        display: 'flex',
+        justifyContent: 'flex-end',
+      },
+    },
+    width: '100%',
   })
 );
-
-export const sxListItemFirstChild = (theme: Theme) => ({
-  [theme.breakpoints.down('md')]: {
-    ...sxListItemMdBp,
-    '&:first-of-type': {
-      paddingBottom: theme.spacing(0.5),
-    },
-  },
-});

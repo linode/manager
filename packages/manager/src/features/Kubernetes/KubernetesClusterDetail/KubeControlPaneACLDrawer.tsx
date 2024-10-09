@@ -1,7 +1,7 @@
 import { Divider, Stack } from '@mui/material';
 import { Box } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -30,59 +30,39 @@ interface Props {
   open: boolean;
 }
 
+// wondering if I should get the data from a parent component instead?
+
 export const KubeControlPlaneACLDrawer = (props: Props) => {
   const { closeDrawer, clusterId, clusterLabel, clusterMigrated, open } = props;
-
-  const [updateError, setUpdateACLError] = React.useState<string>();
-  const [updating, setUpdating] = React.useState<boolean>(false);
 
   const {
     data: data,
     error: isErrorKubernetesACL,
     isFetching: isFetchingKubernetesACL,
     isLoading: isLoadingKubernetesACL,
-    refetch: refetchKubernetesACL,
+    // refetch: refetchKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(clusterId);
 
-  // dynamic variables mapped to JSON queried for this cluster
-  const _ipv4 = data?.acl?.addresses?.ipv4?.map((ip) => {
+  const ipv4 = data?.acl?.addresses?.ipv4?.map((ip) => {
     return stringToExtendedIP(ip);
   });
-
-  const _ipv6 = data?.acl?.addresses?.ipv6?.map((ip) => {
+  const ipv6 = data?.acl?.addresses?.ipv6?.map((ip) => {
     return stringToExtendedIP(ip);
   });
+  const enabled = data?.acl?.enabled;
+  const revisionID = data?.acl?.['revision-id'];
 
-  const _enabled = data?.acl?.enabled;
+  const enabledExists = enabled !== undefined;
+  const shouldDefaultToEnabled = !clusterMigrated || !enabled;
 
-  const _revisionID = data?.acl?.['revision-id'];
-
-  const enabledExists = _enabled !== undefined;
-  const shouldDefaultToEnabled = !clusterMigrated || !_enabled;
-
-  // respective react states
-  const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([]);
-  const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([]);
-  const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
-  const [revisionID, setRevisionID] = React.useState<string | undefined>();
-
-  const [submitButtonLabel, setSubmitButtonLabel] = React.useState<string>('');
-
+  // check if we really want this?
   // refetchOnMount isnt good enough for this query because
   // it is already mounted in the rendered Drawer
-  React.useEffect(() => {
-    if (open && !isLoadingKubernetesACL && !isFetchingKubernetesACL) {
-      // updates states based on queried data
-      setIPv4Addr(_ipv4 ? _ipv4 : [stringToExtendedIP('')]);
-      setIPv6Addr(_ipv6 ? _ipv6 : [stringToExtendedIP('')]);
-      setControlPlaneACL(_enabled ? _enabled : false);
-      setRevisionID(_revisionID ? _revisionID : '');
-      setUpdateACLError(isErrorKubernetesACL?.[0].reason);
-      setUpdating(false);
-      setSubmitButtonLabel(enabledExists ? 'Update IPACL' : 'Install IPACL');
-      refetchKubernetesACL();
-    }
-  }, [open]);
+  // React.useEffect(() => {
+  //   if (open && !isLoadingKubernetesACL && !isFetchingKubernetesACL) {
+  //     refetchKubernetesACL(); // makes it fetch again
+  //   }
+  // }, [open]);
 
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
@@ -92,17 +72,39 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     clusterId
   );
 
-  const updateCluster = () => {
-    setUpdateACLError(undefined);
-    setUpdating(true);
+  const {
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    reset,
+    setError,
+    setValue,
+    watch,
+  } = useForm({
+    // need to make this eventually match the shape of KubernetesControlPlaneACLPayload hopefully
+    // defaultValues: {
+    //   enabled: !!enabled,
+    //   ipv4: ipv4 ?? [stringToExtendedIP('')],
+    //   ipv6: ipv6 ?? [stringToExtendedIP('')],
+    //   'revision-id': revisionID,
+    // },
+    values: {
+      enabled: !!enabled,
+      ipv4: ipv4 ?? [stringToExtendedIP('')],
+      ipv6: ipv6 ?? [stringToExtendedIP('')],
+      'revision-id': revisionID,
+    },
+  });
 
-    const _ipv4 = ipV4Addr
+  const values = watch();
+
+  const updateCluster = handleSubmit(() => {
+    const _ipv4 = values.ipv4
       .map((ip) => {
         return ip.address;
       })
       .filter((ip) => ip != '');
 
-    const _ipv6 = ipV6Addr
+    const _ipv6 = values.ipv6
       .map((ip) => {
         return ip.address;
       })
@@ -119,9 +121,9 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
         enabled: enabledExists
-          ? controlPlaneACL
-          : shouldDefaultToEnabled || controlPlaneACL, // both new cluster installations as well as all the states where the UI disabled the option for the user to enable, we default to true
-        'revision-id': revisionID,
+          ? values.enabled
+          : shouldDefaultToEnabled || values.enabled, // both new cluster installations as well as all the states where the UI disabled the option for the user to enable, we default to true
+        'revision-id': values['revision-id'],
         ...((_ipv4.length > 0 || _ipv6.length > 0) && {
           addresses: {
             ...addressIPv4Payload,
@@ -131,122 +133,34 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       },
     };
 
-    if (clusterMigrated) {
-      updateKubernetesClusterControlPlaneACL(payload)
-        .then(() => {
-          closeDrawer();
-          setUpdating(false);
-        })
-        .catch((err) => {
-          const regex = /(?<=\bControl\b: ).*/;
-          setUpdateACLError(err[0].reason.match(regex));
-          setUpdating(false);
+    try {
+      if (clusterMigrated) {
+        updateKubernetesClusterControlPlaneACL(payload);
+      } else {
+        updateKubernetesCluster({
+          control_plane: payload,
         });
-    } else {
-      updateKubernetesCluster({
-        control_plane: payload,
-      })
-        .then((_) => {
-          closeDrawer();
-          setUpdating(false);
-        })
-        .catch((err) => {
-          const regex = /(?<=\bControl\b: ).*/;
-          setUpdateACLError(err[0].reason.match(regex));
-          setUpdating(false);
-        });
+      }
+      closeDrawer();
+    } catch (errors) {
+      // .catch((err) => {
+      //   const regex = /(?<=\bControl\b: ).*/;
+      //   setUpdateACLError(err[0].reason.match(regex));
+      // });
+      for (const error of errors) {
+        if (error.field) {
+          setError(error.field, { message: error.reason });
+        } else {
+          setError('root', { message: error.reason });
+        }
+      }
     }
-  };
-
-  const handleIPv4ChangeCB = React.useCallback(
-    (_ips: ExtendedIP[]) => {
-      setIPv4Addr(_ips);
-    },
-    [setIPv4Addr]
-  );
-
-  const handleIPv6ChangeCB = React.useCallback(
-    (_ips: ExtendedIP[]) => {
-      setIPv6Addr(_ips);
-    },
-    [setIPv6Addr]
-  );
-
-  const ErrorMessage = !!updateError && clusterMigrated && (
-    <Notice spacingTop={8} variant="error">
-      {updateError}
-    </Notice>
-  );
-
-  const ClusterNeedsMigration = !clusterMigrated && (
-    <Notice spacingTop={24} variant="warning">
-      IPACL has not yet been installed on this cluster. During installation, it
-      may take up to 20 minutes before ACLs are fully enforced for the first
-      time.
-    </Notice>
-  );
-
-  const EnabledCopy = (
-    <Grid container>
-      <Grid>
-        <Typography variant="h3">Enabled</Typography>
-      </Grid>
-      <Grid>
-        <Typography variant="body1">
-          A value of true results in a default policy of DENY. A value of false
-          results in a default policy of ALLOW (i.e., access controls are
-          disabled). When enabled, control plane access controls can only be
-          accessible through the defined IP CIDRs.
-        </Typography>
-      </Grid>
-    </Grid>
-  );
-
-  const RevisionIDCopy = (
-    <Grid container>
-      <Grid>
-        <Typography variant="h3">Revision ID</Typography>
-      </Grid>
-      <Grid>
-        <Typography variant="body1">
-          Enables clients to track events related to ACL update requests and
-          enforcements. Optional field. If omitted, defaults to a randomly
-          generated string.
-        </Typography>
-      </Grid>
-    </Grid>
-  );
-
-  const RevisionID = clusterMigrated && (
-    <>
-      {RevisionIDCopy}
-      <TextField
-        data-qa-label-input
-        label="Revision ID"
-        onBlur={(e) => setRevisionID(e.target.value)}
-        value={revisionID}
-      />
-      <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
-    </>
-  );
-
-  const AddressesCopy = (
-    <>
-      <Grid>
-        <Typography variant="h3">Addresses</Typography>
-      </Grid>
-      <Grid sx={{ marginBottom: 1 }}>
-        <Typography variant="body1">
-          A list of individual ipv4 and ipv6 addresses or CIDRs to ALLOW access
-          to the control plane.
-        </Typography>
-      </Grid>
-    </>
-  );
+  });
 
   return (
     <Drawer
       onClose={closeDrawer}
+      onExited={() => reset()}
       open={open}
       title={'Control Plane Access Control (IPACL)'}
       wide
@@ -258,29 +172,31 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         title={clusterLabel}
       >
         <Stack sx={{ marginTop: 4 }}>
-          <Grid container spacing={2}>
-            <Grid>
-              <Typography variant="body1">
-                When a cluster is equipped with an ACL, the apiserver and
-                dashboard endpoints get mapped to a NodeBalancer address where
-                all traffic is protected through a Cloud Firewall.
-              </Typography>
-            </Grid>
-          </Grid>
+          <Typography variant="body1">
+            When a cluster is equipped with an ACL, the apiserver and dashboard
+            endpoints get mapped to a NodeBalancer address where all traffic is
+            protected through a Cloud Firewall.
+          </Typography>
           <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
           {enabledExists && (
             <>
-              {EnabledCopy}
+              <Typography variant="h3">Enabled</Typography>
+              <Typography variant="body1">
+                A value of true results in a default policy of DENY. A value of
+                false results in a default policy of ALLOW (i.e., access
+                controls are disabled). When enabled, control plane access
+                controls can only be accessible through the defined IP CIDRs.
+              </Typography>
               <Box sx={{ marginTop: 1 }}>
                 <FormControlLabel
                   control={
                     <Toggle
                       onChange={(e) => {
                         if (clusterMigrated) {
-                          setControlPlaneACL(e.target.checked);
+                          setValue('enabled', e.target.checked);
                         }
                       }}
-                      checked={clusterMigrated ? controlPlaneACL : true}
+                      checked={clusterMigrated ? values.enabled : true}
                       name="ipacl-checkbox"
                     />
                   }
@@ -290,38 +206,67 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
             </>
           )}
-          {RevisionID}
-          {AddressesCopy}
-          {ErrorMessage}
+          {clusterMigrated && (
+            <>
+              <Typography variant="h3">Revision ID</Typography>
+              <Typography variant="body1">
+                Enables clients to track events related to ACL update requests
+                and enforcements. Optional field. If omitted, defaults to a
+                randomly generated string.
+              </Typography>
+              <TextField
+                data-qa-label-input
+                label="Revision ID"
+                onBlur={(e) => setValue('revision-id', e.target.value)}
+                value={values['revision-id']}
+              />
+              <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
+            </>
+          )}
+          <Typography variant="h3">Addresses</Typography>
+          <Typography sx={{ marginBottom: 1 }} variant="body1">
+            A list of individual ipv4 and ipv6 addresses or CIDRs to ALLOW
+            access to the control plane.
+          </Typography>
+          {/* I am not sure if this matches - will need to check */}
+          {errors.root?.message && clusterMigrated && (
+            <Notice spacingTop={8} variant="error">
+              {errors.root.message}
+            </Notice>
+          )}
           <Box sx={{ maxWidth: 450 }}>
             <MultipleIPInput
-              onBlur={(_ips: ExtendedIP[]) => {
-                const validatedIPs = validateIPs(_ips, {
-                  allowEmptyAddress: false,
-                  errorMessage: 'Must be a valid IPv4 address.',
-                });
-                handleIPv4ChangeCB(validatedIPs);
-              }}
+              onBlur={(ips: ExtendedIP[]) =>
+                setValue(
+                  'ipv4',
+                  validateIPs(ips, {
+                    allowEmptyAddress: false,
+                    errorMessage: 'Must be a valid IPv4 address.',
+                  })
+                )
+              }
               buttonText="Add IPv4 Address"
-              ips={ipV4Addr}
+              ips={values.ipv4}
               isLinkStyled
-              onChange={handleIPv4ChangeCB}
+              onChange={(ips: ExtendedIP[]) => setValue('ipv4', ips)}
               placeholder="0.0.0.0/0"
               title="IPv4 Addresses or CIDRs"
             />
             <Box marginTop={2}>
               <MultipleIPInput
-                onBlur={(_ips: ExtendedIP[]) => {
-                  const validatedIPs = validateIPs(_ips, {
-                    allowEmptyAddress: false,
-                    errorMessage: 'Must be a valid IPv6 address.',
-                  });
-                  handleIPv6ChangeCB(validatedIPs);
-                }}
+                onBlur={(ips: ExtendedIP[]) =>
+                  setValue(
+                    'ipv6',
+                    validateIPs(ips, {
+                      allowEmptyAddress: false,
+                      errorMessage: 'Must be a valid IPv4 address.',
+                    })
+                  )
+                }
                 buttonText="Add IPv6 Address"
-                ips={ipV6Addr}
+                ips={values.ipv6}
                 isLinkStyled
-                onChange={handleIPv6ChangeCB}
+                onChange={(ips: ExtendedIP[]) => setValue('ipv6', ips)}
                 placeholder="::/0"
                 title="IPv6 Addresses or CIDRs"
               />
@@ -330,14 +275,20 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'update-acl-button',
-              label: submitButtonLabel,
-              loading: updating,
+              label: enabledExists ? 'Update IPACL' : 'Install IPACL',
+              loading: isSubmitting,
               onClick: updateCluster,
               type: 'submit',
             }}
             secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
           />
-          {ClusterNeedsMigration}
+          {!clusterMigrated && (
+            <Notice spacingTop={24} variant="warning">
+              IPACL has not yet been installed on this cluster. During
+              installation, it may take up to 20 minutes before ACLs are fully
+              enforced for the first time.
+            </Notice>
+          )}
         </Stack>
       </DrawerContent>
     </Drawer>
