@@ -47,6 +47,11 @@ export interface DatabaseBackup {
   created: string;
 }
 
+export interface DatabaseFork {
+  source: number;
+  restore_time?: string;
+}
+
 export interface DatabaseCredentials {
   username: string;
   password: string;
