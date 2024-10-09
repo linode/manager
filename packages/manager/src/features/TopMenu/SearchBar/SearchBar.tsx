@@ -109,7 +109,13 @@ const SearchBar = (props: SearchProps) => {
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
   const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
   const { data: firewalls } = useAllFirewallsQuery(shouldMakeRequests);
+
+  /*
+  @TODO DBaaS: Change the passed argument to 'shouldMakeRequests' and
+  remove 'isDatabasesEnabled' once DBaaS V2 is fully rolled out.
+  */
   const { data: databases } = useAllDatabasesQuery(shouldMakeDBRequests);
+
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)

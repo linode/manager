@@ -88,6 +88,10 @@ export const SearchLanding = (props: SearchLandingProps) => {
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(shouldFetchAllEntities);
 
+  /*
+  @TODO DBaaS: Change the passed argument to 'shouldFetchAllEntities' and
+  remove 'isDatabasesEnabled' once DBaaS V2 is fully rolled out.
+  */
   const {
     data: databases,
     error: databasesError,
