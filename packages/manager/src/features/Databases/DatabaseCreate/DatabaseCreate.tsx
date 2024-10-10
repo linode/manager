@@ -1,5 +1,7 @@
+import { BetaChip } from '@linode/ui';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
@@ -9,7 +11,6 @@ import { makeStyles } from 'tss-react/mui';
 import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
@@ -187,7 +188,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
   );
 };
 
-interface NodePricing {
+export interface NodePricing {
   double: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
   single: DatabasePriceObject | undefined;
@@ -196,6 +197,7 @@ interface NodePricing {
 const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
+  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
 
   const {
     data: regionsData,
@@ -213,9 +215,9 @@ const DatabaseCreate = () => {
     data: dbtypes,
     error: typesError,
     isLoading: typesLoading,
-  } = useDatabaseTypesQuery();
-
-  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  } = useDatabaseTypesQuery({
+    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+  });
 
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
@@ -722,5 +724,9 @@ const determineCompressionType = (engine: string) => {
 
   return undefined;
 };
+
+export const databaseCreateLazyRoute = createLazyRoute('/databases/create')({
+  component: DatabaseCreate,
+});
 
 export default DatabaseCreate;

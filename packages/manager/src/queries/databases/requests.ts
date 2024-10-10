@@ -27,7 +27,7 @@ export const getAllDatabaseEngines = () =>
     (data) => data.data
   );
 
-export const getAllDatabaseTypes = () =>
-  getAll<DatabaseType>((params) => getDatabaseTypes(params))().then(
-    (data) => data.data
-  );
+export const getAllDatabaseTypes = (passedFilter: Filter = {}) =>
+  getAll<DatabaseType>((params, filter) =>
+    getDatabaseTypes(params, { ...filter, ...passedFilter })
+  )().then((data) => data.data);

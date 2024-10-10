@@ -12,7 +12,7 @@ export interface DatabaseClusterSizeObject {
   price: DatabasePriceObject;
 }
 
-type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
+export type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
   engines: Engines;
@@ -45,6 +45,11 @@ export interface DatabaseBackup {
   type: DatabaseBackupType;
   label: string;
   created: string;
+}
+
+export interface DatabaseFork {
+  source: number;
+  restore_time?: string;
 }
 
 export interface DatabaseCredentials {
@@ -192,6 +197,7 @@ export type Database = BaseDatabase &
   Partial<MongoDatabase>;
 
 export interface UpdateDatabasePayload {
+  cluster_size?: number;
   label?: string;
   allow_list?: string[];
   updates?: UpdatesSchedule;

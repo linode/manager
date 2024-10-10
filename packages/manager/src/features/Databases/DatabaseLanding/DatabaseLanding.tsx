@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -35,8 +36,16 @@ const DatabaseLanding = () => {
     globalGrantType: 'add_databases',
   });
 
-  const { isLoading: isTypeLoading } = useDatabaseTypesQuery();
-  const { isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  const {
+    isDatabasesV1Enabled,
+    isDatabasesV2Enabled,
+    isV2ExistingBetaUser,
+    isV2GAUser,
+    isV2NewBetaUser,
+  } = useIsDatabasesEnabled();
+  const { isLoading: isTypeLoading } = useDatabaseTypesQuery({
+    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+  });
 
   const {
     handleOrderChange: newDatabaseHandleOrderChange,
@@ -55,7 +64,7 @@ const DatabaseLanding = () => {
     ['+order_by']: newDatabaseOrderBy,
   };
 
-  if (isDatabasesV2Enabled) {
+  if (isV2ExistingBetaUser || isV2NewBetaUser || isV2GAUser) {
     newDatabasesFilter['platform'] = 'rdbms-default';
   }
 
@@ -68,7 +77,8 @@ const DatabaseLanding = () => {
       page: newDatabasesPagination.page,
       page_size: newDatabasesPagination.pageSize,
     },
-    newDatabasesFilter
+    newDatabasesFilter,
+    isV2ExistingBetaUser || isV2NewBetaUser || isV2GAUser
   );
 
   const {
@@ -88,7 +98,7 @@ const DatabaseLanding = () => {
     ['+order_by']: legacyDatabaseOrderBy,
   };
 
-  if (isDatabasesV2Enabled) {
+  if (isDatabasesV2Enabled && isV2ExistingBetaUser) {
     legacyDatabasesFilter['platform'] = 'rdbms-legacy';
   }
 
@@ -101,7 +111,8 @@ const DatabaseLanding = () => {
       page: legacyDatabasesPagination.page,
       page_size: legacyDatabasesPagination.pageSize,
     },
-    legacyDatabasesFilter
+    legacyDatabasesFilter,
+    isV2ExistingBetaUser || isDatabasesV1Enabled
   );
 
   const error = newDatabasesError || legacyDatabasesError;
@@ -119,10 +130,11 @@ const DatabaseLanding = () => {
     return <CircleProgress />;
   }
 
-  const showTabs = isDatabasesV2Enabled && legacyDatabases?.data.length !== 0;
+  const showTabs = isV2ExistingBetaUser && legacyDatabases?.data.length !== 0;
 
   const showEmpty =
-    newDatabases?.data.length === 0 && legacyDatabases?.data.length === 0;
+    (newDatabases?.data.length === 0 || newDatabases === undefined) &&
+    (legacyDatabases?.data.length === 0 || legacyDatabases === undefined);
 
   if (showEmpty) {
     return <DatabaseEmptyState />;
@@ -195,5 +207,9 @@ const DatabaseLanding = () => {
     </React.Fragment>
   );
 };
+
+export const databaseLandingLazyRoute = createLazyRoute('/databases')({
+  component: DatabaseLanding,
+});
 
 export default React.memo(DatabaseLanding);

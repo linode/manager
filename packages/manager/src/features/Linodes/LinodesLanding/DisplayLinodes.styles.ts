@@ -27,14 +27,13 @@ export const StyledTagHeader = styled(Typography, {
 
 export const StyledControlHeader = styled('div', {
   label: 'StyledControlHeader',
-  shouldForwardProp: omittedProps(['isGroupedByTag']),
-})<{ isGroupedByTag: boolean }>(({ isGroupedByTag, theme }) => ({
+})(({ theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.bg.tableHeader,
   display: 'flex',
   height: 46,
   justifyContent: 'flex-end',
-  marginBottom: isGroupedByTag ? theme.spacing(4) : 0,
+  marginBottom: theme.spacing(4),
 }));
 
 export const StyledToggleButton = styled(IconButton, {

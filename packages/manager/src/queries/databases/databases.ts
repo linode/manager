@@ -33,6 +33,7 @@ import type {
   DatabaseBackup,
   DatabaseCredentials,
   DatabaseEngine,
+  DatabaseFork,
   DatabaseInstance,
   DatabaseType,
   Engine,
@@ -75,7 +76,12 @@ export const databaseQueries = createQueryKeys('databases', {
     queryKey: null,
   },
   types: {
-    queryFn: getAllDatabaseTypes,
+    contextQueries: {
+      all: (filter: Filter = {}) => ({
+        queryFn: () => getAllDatabaseTypes(filter),
+        queryKey: [filter],
+      }),
+    },
     queryKey: null,
   },
 });
@@ -90,9 +96,14 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
     refetchInterval: 20000,
   });
 
-export const useDatabasesQuery = (params: Params, filter: Filter) =>
+export const useDatabasesQuery = (
+  params: Params,
+  filter: Filter,
+  isEnabled: boolean | undefined
+) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
     ...databaseQueries.databases._ctx.paginated(params, filter),
+    enabled: isEnabled,
     placeholderData: keepPreviousData,
     // @TODO Consider removing polling
     refetchInterval: 20000,
@@ -176,8 +187,10 @@ export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDatabaseTypesQuery = () =>
-  useQuery<DatabaseType[], APIError[]>(databaseQueries.types);
+export const useDatabaseTypesQuery = (filter: Filter = {}) =>
+  useQuery<DatabaseType[], APIError[]>({
+    ...databaseQueries.types._ctx.all(filter),
+  });
 
 export const useDatabaseCredentialsQuery = (
   engine: Engine,
@@ -228,13 +241,10 @@ export const useLegacyRestoreFromBackupMutation = (
 
 export const useRestoreFromBackupMutation = (
   engine: Engine,
-  fork: {
-    restore_time?: string;
-    source: number;
-  }
+  fork: DatabaseFork
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
+  return useMutation<Database, APIError[]>({
     mutationFn: () => restoreWithBackup(engine, fork),
     onSuccess() {
       queryClient.invalidateQueries({

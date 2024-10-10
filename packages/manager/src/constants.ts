@@ -67,10 +67,15 @@ export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 export const SENTRY_URL = import.meta.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
+
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
 export const NUM_ADOBE_SCRIPTS = 3;
+
+/** Pendo */
+export const PENDO_API_KEY = import.meta.env.REACT_APP_PENDO_API_KEY;
+
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
 
@@ -232,11 +237,6 @@ export const PAYMENT_SOFT_MAX = 2_000;
 export const PAYMENT_HARD_MAX = 50_000;
 
 export const DB_ROOT_USERNAME = 'linroot';
-
-// "In an effort to fight spam, Linode restricts outbound connections on ports 25, 465, and 587 on all Linodes for new accounts created after November 5th, 2019."
-// https://www.linode.com/docs/email/best-practices/running-a-mail-server/
-export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
-  '2022-11-30T00:00:00.000Z'; // Date of release for Manager v1.81.0.
 
 // The date Linode switching to Akamai (for purposes of billing)
 export const AKAMAI_DATE = '2022-12-15 00:00:00';

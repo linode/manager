@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { createLazyRoute } from '@tanstack/react-router';
 import {
   append,
   clone,
@@ -36,7 +37,7 @@ import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   StyledDocsLinkContainer,
-  StyledRegionSelectStack,
+  StyledFieldWithDocsStack,
 } from 'src/features/Kubernetes/CreateCluster/CreateCluster.styles';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
@@ -54,8 +55,8 @@ import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEvent
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,
@@ -527,7 +528,7 @@ const NodeBalancerCreate = () => {
           onChange={tagsChange}
           tagError={hasErrorFor('tags')}
         />
-        <StyledRegionSelectStack sx={{ marginTop: 1 }}>
+        <StyledFieldWithDocsStack sx={{ marginTop: 1 }}>
           <Stack>
             <RegionSelect
               textFieldProps={{
@@ -548,7 +549,7 @@ const NodeBalancerCreate = () => {
               label={DOCS_LINK_LABEL_DC_PRICING}
             />
           </StyledDocsLinkContainer>
-        </StyledRegionSelectStack>
+        </StyledFieldWithDocsStack>
       </Paper>
       <SelectFirewallPanel
         handleFirewallChange={(firewallId: number) => {
@@ -795,5 +796,11 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
     ];
   }, []);
 };
+
+export const nodeBalancerCreateLazyRoute = createLazyRoute(
+  '/nodebalancers/create'
+)({
+  component: NodeBalancerCreate,
+});
 
 export default NodeBalancerCreate;

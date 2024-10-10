@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -97,7 +98,7 @@ export const KubernetesLanding = () => {
 
   const isRestricted = profile?.restricted ?? false;
 
-  const { data, error, isFetching } = useKubernetesClustersQuery(
+  const { data, error, isLoading } = useKubernetesClustersQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -156,7 +157,7 @@ export const KubernetesLanding = () => {
     );
   }
 
-  if (isFetching) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
@@ -279,5 +280,11 @@ export const KubernetesLanding = () => {
     </>
   );
 };
+
+export const kubernetesLandingLazyRoute = createLazyRoute(
+  '/kubernetes/clusters'
+)({
+  component: KubernetesLanding,
+});
 
 export default KubernetesLanding;

@@ -127,7 +127,7 @@ const LinodeConfigs = () => {
                           handleClick={handleOrderChange}
                           label={'label'}
                         >
-                          <strong>Config</strong>
+                          <strong>Configuration</strong>
                         </TableSortCell>
                         <TableCell
                           sx={{

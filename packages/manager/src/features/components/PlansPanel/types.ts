@@ -1,5 +1,9 @@
-import type { BaseType, RegionPriceObject } from '@linode/api-v4';
+import type { BaseType, Engines, RegionPriceObject } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
+
+export interface PlanSelectionWithDatabaseType extends PlanSelectionType {
+  engines: Engines;
+}
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
@@ -29,6 +33,7 @@ export interface PlanSelectionAvailabilityTypes {
   planHasLimitedAvailability: boolean;
   planIsDisabled512Gb: boolean;
   planIsTooSmall: boolean;
+  planIsTooSmallForAPL?: boolean;
 }
 
 export interface DisabledTooltipReasons extends PlanSelectionAvailabilityTypes {
