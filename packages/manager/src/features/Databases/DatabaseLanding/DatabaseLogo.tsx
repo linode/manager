@@ -1,9 +1,9 @@
+import { BetaChip } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import LogoWhite from 'src/assets/icons/db-logo-white.svg';
 import Logo from 'src/assets/icons/db-logo.svg';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 
