@@ -20,7 +20,9 @@ describe('BetaDetails', () => {
       started: dates.started.toISO(),
     };
 
-    const { getByText } = renderWithTheme(<BetaDetails beta={beta} />);
+    const { getByText } = renderWithTheme(
+      <BetaDetails beta={beta} dataQA="beta-details" />
+    );
     getByText(RegExp(beta.label));
     getByText(RegExp(dates.started.toISODate()));
     getByText(RegExp(dates.ended.toISODate()));
@@ -36,7 +38,9 @@ describe('BetaDetails', () => {
       more_info: 'https://linode.com',
       started: DateTime.now().minus({ days: 60 }).toISO(),
     };
-    const { queryByText } = renderWithTheme(<BetaDetails beta={beta} />);
+    const { queryByText } = renderWithTheme(
+      <BetaDetails beta={beta} dataQA="beta-details" />
+    );
     expect(queryByText(/End Date:/i)).toBeNull();
   });
 
@@ -47,7 +51,9 @@ describe('BetaDetails', () => {
       label: 'Beta',
       started: DateTime.now().minus({ days: 60 }).toISO(),
     };
-    const { queryByText } = renderWithTheme(<BetaDetails beta={beta} />);
+    const { queryByText } = renderWithTheme(
+      <BetaDetails beta={beta} dataQA="beta-details" />
+    );
     expect(queryByText(/More Info:/i)).toBeNull();
   });
 
@@ -68,13 +74,13 @@ describe('BetaDetails', () => {
     };
 
     const { queryByText: queryAccountBetaByText } = renderWithTheme(
-      <BetaDetails beta={accountBeta} />
+      <BetaDetails beta={accountBeta} dataQA="beta-details" />
     );
     const accountBetaSignUpButton = queryAccountBetaByText('Sign Up');
     expect(accountBetaSignUpButton).toBeNull();
 
     const { queryByText: queryBetaByText } = renderWithTheme(
-      <BetaDetails beta={beta} />
+      <BetaDetails beta={beta} dataQA="beta-details" />
     );
     const betaSignUpButton = queryBetaByText('Sign Up');
     expect(betaSignUpButton).not.toBeNull();
@@ -97,13 +103,13 @@ describe('BetaDetails', () => {
     };
 
     const { queryByText: queryAccountBetaByText } = renderWithTheme(
-      <BetaDetails beta={accountBeta} />
+      <BetaDetails beta={accountBeta} dataQA="beta-details" />
     );
     const accountBetaStartDate = queryAccountBetaByText('Start Date:');
     expect(accountBetaStartDate).toBeNull();
 
     const { queryByText: queryBetaByText } = renderWithTheme(
-      <BetaDetails beta={beta} />
+      <BetaDetails beta={beta} dataQA="beta-details" />
     );
     const betaStartDate = queryBetaByText('Start Date:');
     expect(betaStartDate).not.toBeNull();

@@ -11,6 +11,7 @@ import type { AccountBeta, Beta } from '@linode/api-v4';
 
 interface Props {
   beta: AccountBeta | Beta;
+  dataQA: string;
 }
 
 const BetaDetails = (props: Props) => {
@@ -25,6 +26,7 @@ const BetaDetails = (props: Props) => {
   }
   const {
     beta: { description, ended, id, label, started },
+    dataQA,
   } = props;
   const startDate = !enrolled ? (
     <Typography>
@@ -41,6 +43,7 @@ const BetaDetails = (props: Props) => {
 
   return (
     <Stack
+      data-qa-beta-details={dataQA}
       direction="row"
       justifyContent="space-between"
       minHeight={66}

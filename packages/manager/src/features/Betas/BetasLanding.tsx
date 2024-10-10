@@ -50,18 +50,21 @@ export const BetasLanding = () => {
       <Stack spacing={2}>
         <BetaDetailsList
           betas={active}
+          dataQA="enrolled-beta"
           errors={accountBetasErrors}
           isLoading={areAccountBetasLoading}
           title="Currently Enrolled Betas"
         />
         <BetaDetailsList
           betas={available}
+          dataQA="available-beta"
           errors={betasErrors}
           isLoading={areBetasLoading}
           title="Available & Upcoming Betas"
         />
         <BetaDetailsList
           betas={historical}
+          dataQA="historical-beta"
           errors={accountBetasErrors}
           isLoading={areAccountBetasLoading}
           title="Beta Participation History"

@@ -20,6 +20,7 @@ import {
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
+  betaFactory,
   contactFactory,
   credentialFactory,
   creditPaymentResponseFactory,
@@ -2033,7 +2034,7 @@ export const handlers = [
   http.delete('*/profile/tokens/:id', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/v4*/betas', () => {
+  http.get('*/v4*/account/betas', () => {
     return HttpResponse.json(
       makeResourcePage([
         ...accountBetaFactory.buildList(5),
@@ -2045,13 +2046,16 @@ export const handlers = [
       ])
     );
   }),
-  http.get('*/v4*/betas/:id', ({ params }) => {
+  http.get('*/v4*/account/betas/:id', ({ params }) => {
     if (params.id !== 'undefined') {
       return HttpResponse.json(
         accountBetaFactory.build({ id: params.id as string })
       );
     }
     return HttpResponse.json({}, { status: 404 });
+  }),
+  http.get('*/v4*/betas', () => {
+    return HttpResponse.json(makeResourcePage(betaFactory.buildList(5)));
   }),
   http.get('*regions/availability', () => {
     return HttpResponse.json(
