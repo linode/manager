@@ -88,6 +88,8 @@ export const slackFormatter: Formatter = (
     return `${rerunTip}\n${cypressCommand}`;
   })();
 
+  const extra = metadata.extra ? `${metadata.extra}\n` : null;
+
   // Display test run details (author, PR number, run number, etc.) when applicable.
   const footer = (() => {
     const authorIdentifier = (metadata.authorSlack ? `@${metadata.authorSlack}` : null)
@@ -116,6 +118,10 @@ export const slackFormatter: Formatter = (
     // well as a command that can be used to re-run failed tests locally.
     runInfo.failing > 0 ? `${failedTestSummary}\n` : null,
     runInfo.failing > 0 ? `${rerunNote}\n` : null,
+
+    // If extra information has been supplied,
+    // display it above the footer.
+    extra,
 
     // Show run details footer.
     `:cypress: ${footer}`,

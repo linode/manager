@@ -37,6 +37,7 @@ program
   .option('--meta:artifacts-url <str>', 'CI artifacts URL')
   .option('--meta:results-url <str>', 'CI results URL')
   .option('--meta:rerun-url <str>', 'CI rerun URL')
+  .option('--meta:extra <str>', 'Extra information to display in output')
   .action((junitPath) => {
     return main(junitPath);
   });
