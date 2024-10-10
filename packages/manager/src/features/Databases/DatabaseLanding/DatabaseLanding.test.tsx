@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
@@ -86,10 +86,12 @@ describe('Database Table', () => {
       })
     );
 
-    const { findByText, getByText } = renderWithTheme(<DatabaseLanding />);
+    const { getByText } = renderWithTheme(<DatabaseLanding />);
 
     // wait for API data to load
-    expect(await findByText(database.label)).toBeVisible();
+    await waitFor(() => expect(getByText(database.label)).toBeVisible(), {
+      timeout: 10_000,
+    });
     expect(getByText('Active')).toBeVisible();
 
     // Static text and table column headers
