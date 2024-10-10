@@ -60,8 +60,12 @@ export const useIsDatabasesEnabled = () => {
         account?.capabilities ?? []
       );
 
+    const isDatabasesGA =
+      flags.dbaasV2?.enabled && flags.dbaasV2.beta === false;
+
     return {
       isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
+      isDatabasesGAEnabled: isDatabasesV1Enabled && isDatabasesGA,
       isDatabasesV1Enabled,
       isDatabasesV2Beta: isDatabasesV2Enabled && flags.dbaasV2?.beta,
       isDatabasesV2Enabled,
