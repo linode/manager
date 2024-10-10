@@ -1,31 +1,20 @@
 import Close from '@mui/icons-material/Close';
 import Grid from '@mui/material/Unstable_Grid2';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import {
-  DismissibleNotificationOptions,
-  useDismissibleNotifications,
-} from 'src/hooks/useDismissibleNotifications';
+import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 
 import { StyledButton, StyledNotice } from './DismissibleBanner.styles';
 
 import type { NoticeProps } from 'src/components/Notice/Notice';
+import type { DismissibleNotificationOptions } from 'src/hooks/useDismissibleNotifications';
 
-interface Props {
+interface Props extends NoticeProps {
   /**
    * Optional element to pass to the banner to trigger actions
    */
   actionButton?: JSX.Element;
-  /**
-   * Child element to pass to the banner
-   */
-  children: JSX.Element;
-  /**
-   * Additional classes to the root element
-   */
-  className?: string;
   /**
    * Additional controls to pass to the Dismissible Banner
    */
@@ -34,15 +23,7 @@ interface Props {
    * Used to check if this banner has already been dismissed
    */
   preferenceKey: string;
-  /**
-   * Additional styles to apply to the root element
-   */
-  sx?: SxProps;
 }
-
-interface DismissibleBannerProps
-  extends Omit<Partial<NoticeProps>, 'children'>,
-    Props {}
 
 /**
  * ## Usage
@@ -60,7 +41,7 @@ interface DismissibleBannerProps
  * - Warning: Informs users of an impending change that will have an impact on their service(s).
  * - Call to action: Primary Button or text link allows a user to take action directly from the banner.
  */
-export const DismissibleBanner = (props: DismissibleBannerProps) => {
+export const DismissibleBanner = (props: Props) => {
   const {
     actionButton,
     children,
