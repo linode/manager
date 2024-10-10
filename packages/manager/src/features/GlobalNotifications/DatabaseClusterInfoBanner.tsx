@@ -28,12 +28,12 @@ export const DatabaseClusterInfoBanner = () => {
         <ul style={{ margin: '10px 0' }}>
           <li>
             <Typography variant="body2">
-              As a Beta customer you can only create Aiven Database clusters.
+              As a Beta customer you can only create New Database clusters
             </Typography>
           </li>
           <li>
             <Typography variant="body2">
-              You won’t be charged for Aiven Database clusters created during
+              You won’t be charged for New Database clusters created during
               duration of the Beta phase. If you decide to keep the new clusters
               later on, you’ll be charged according to the new payment. You can
               always delete unwanted clusters.
