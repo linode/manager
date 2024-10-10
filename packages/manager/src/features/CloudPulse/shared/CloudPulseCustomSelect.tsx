@@ -81,6 +81,8 @@ export interface CloudPulseCustomSelectProps {
    */
   isMultiSelect?: boolean;
 
+  label: string;
+
   /**
    * The maximum selections that the user can make incase of multiselect
    */
@@ -126,6 +128,7 @@ export const CloudPulseCustomSelect = React.memo(
       filterKey,
       handleSelectionChange,
       isMultiSelect,
+      label,
       maxSelections,
       options,
       placeholder,
@@ -228,16 +231,17 @@ export const CloudPulseCustomSelect = React.memo(
             : placeholder || 'Select a Value'
         }
         textFieldProps={{
-          hideLabel: true,
+          // hideLabel: true,
         }}
         autoHighlight
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
-        label={placeholder || 'Select a Value'}
+        label={label || 'Select a Value'}
         multiple={isMultiSelect}
         onChange={handleChange}
         value={selectedResource ?? (isMultiSelect ? [] : null)}
+        noMarginTop
       />
     );
   },
