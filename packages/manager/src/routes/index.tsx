@@ -26,8 +26,6 @@ import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
 
-import type { AnyRouter } from '@tanstack/react-router';
-
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
     const { accountSettings } = context;
@@ -72,7 +70,8 @@ export const router = createRouter({
 declare module '@tanstack/react-router' {
   interface Register {
     // This infers the type of our router and registers it across the entire project
-    router: typeof router;
+    // router: typeof router;
+    migrationRouter: MigrationRouter;
   }
 }
 
@@ -82,10 +81,11 @@ declare module '@tanstack/react-router' {
  * This is a temporary solution until we are ready to fully migrate to TanStack Router.
  * Eventually we will only use the router exported above.
  */
+export type MigrationRouter = typeof migrationRouter;
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
 ]);
-export const migrationRouter: AnyRouter = createRouter({
+export const migrationRouter = createRouter({
   Wrap: ({ children }) => {
     return <div data-testid="migration-router">{children}</div>;
   },

@@ -1,12 +1,15 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import BetaDetails from './BetaDetails';
 
 describe('BetaDetails', () => {
-  it('should be able to display all fields for an AccountBeta type', () => {
+  it('should be able to display all fields for an AccountBeta type', async () => {
     const dates = {
       ended: DateTime.now().minus({ days: 30 }),
       started: DateTime.now().minus({ days: 60 }),
@@ -20,7 +23,9 @@ describe('BetaDetails', () => {
       started: dates.started.toISO(),
     };
 
-    const { getByText } = renderWithTheme(<BetaDetails beta={beta} />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <BetaDetails beta={beta} />
+    );
     getByText(RegExp(beta.label));
     getByText(RegExp(dates.started.toISODate()));
     getByText(RegExp(dates.ended.toISODate()));

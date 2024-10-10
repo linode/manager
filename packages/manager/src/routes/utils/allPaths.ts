@@ -1,4 +1,4 @@
-import type { AnyRouter } from '@tanstack/react-router';
+import type { MigrationRouter } from 'src/routes';
 
 /**
  * This function is meant to be used for testing purposes only.
@@ -7,7 +7,7 @@ import type { AnyRouter } from '@tanstack/react-router';
  * We import this util in routes.test.tsx to loop through all routes and test them.
  * It probably should not be used for anything else than testing.
  */
-export const getAllRoutePaths = (router: AnyRouter): string[] => {
+export const getAllRoutePaths = (router: MigrationRouter): string[] => {
   return router.flatRoutes
     .map((route) => {
       let path: string = route.id;
