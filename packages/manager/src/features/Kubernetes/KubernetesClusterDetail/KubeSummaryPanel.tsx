@@ -82,7 +82,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const {
     data: aclData,
     error: isErrorKubernetesACL,
-    //isFetching: isFetchingKubernetesACL,
+    // isFetching: isFetchingKubernetesACL,
     isLoading: isLoadingKubernetesACL,
     // refetch: refetchKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(cluster.id);
@@ -206,11 +206,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                   {determineIPACLButtonCopy}
                 </StyledLinkButton>
               )}
-              {/* <KubeClusterControlPlaneACL
-                cluster={cluster}
-                handleOpenDrawer={() => setControlPlaneACLDrawerOpen(true)}
-                setControlPlaneACLMigrated={setControlPlaneACLMigrated}
-              /> */}
             </StyledBox>
           </Grid>
         }

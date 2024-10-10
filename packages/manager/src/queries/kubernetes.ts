@@ -7,20 +7,20 @@ import {
   getKubeConfig,
   getKubernetesCluster,
   getKubernetesClusterBeta,
+  getKubernetesClusterControlPlaneACL,
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
   getKubernetesTypes,
   getKubernetesVersions,
-  getKubernetesClusterControlPlaneACL,
   getNodePools,
   recycleAllNodes,
   recycleClusterNodes,
   recycleNode,
   resetKubeConfig,
   updateKubernetesCluster,
-  updateNodePool,
   updateKubernetesClusterControlPlaneACL,
+  updateNodePool,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
@@ -57,6 +57,10 @@ import type {
 export const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({
     contextQueries: {
+      acl: {
+        queryFn: () => getKubernetesClusterControlPlaneACL(id),
+        queryKey: [id],
+      },
       beta: {
         queryFn: () => getKubernetesClusterBeta(id),
         queryKey: [id],
@@ -78,10 +82,6 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
       },
       pools: {
         queryFn: () => getAllNodePoolsForCluster(id),
-        queryKey: null,
-      },
-      acl: {
-        queryFn: () => getKubernetesClusterControlPlaneACL(id),
         queryKey: null,
       },
     },
@@ -145,6 +145,9 @@ export const useKubernetesClusterMutation = (id: number) => {
       onSuccess(data) {
         queryClient.invalidateQueries({
           queryKey: kubernetesQueries.lists.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: kubernetesQueries.cluster(id)._ctx.acl.queryKey,
         });
         queryClient.setQueryData(kubernetesQueries.cluster(id).queryKey, data);
       },

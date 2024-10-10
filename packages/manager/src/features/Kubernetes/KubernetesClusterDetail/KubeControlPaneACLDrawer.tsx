@@ -41,7 +41,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     error: isErrorKubernetesACL,
     isFetching: isFetchingKubernetesACL,
     isLoading: isLoadingKubernetesACL,
-    // refetch: refetchKubernetesACL,
+    refetch: refetchKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(clusterId);
 
   const ipv4 = data?.acl?.addresses?.ipv4?.map((ip) => {
@@ -51,7 +51,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     return stringToExtendedIP(ip);
   });
   const enabled = data?.acl?.enabled;
-  const revisionID = data?.acl?.['revision-id'];
+  const revisionID = data?.acl?.['revision-id'] ?? '';
 
   const enabledExists = enabled !== undefined;
   const shouldDefaultToEnabled = !clusterMigrated || !enabled;
@@ -59,11 +59,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   // check if we really want this?
   // refetchOnMount isnt good enough for this query because
   // it is already mounted in the rendered Drawer
-  // React.useEffect(() => {
-  //   if (open && !isLoadingKubernetesACL && !isFetchingKubernetesACL) {
-  //     refetchKubernetesACL(); // makes it fetch again
-  //   }
-  // }, [open]);
+  React.useEffect(() => {
+    if (open && !isLoadingKubernetesACL && !isFetchingKubernetesACL) {
+      refetchKubernetesACL(); // makes it fetch again
+    }
+  }, [open]);
 
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
@@ -171,7 +171,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       //   setUpdateACLError(err[0].reason.match(regex));
       // });
       for (const error of errors) {
-        if (error.field) {
+        if (error.field && error.field !== 'acl') {
           setError(error.field, { message: error.reason });
         } else {
           setError('root', { message: error.reason });
