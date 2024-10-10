@@ -5,6 +5,7 @@ import {
   mockGetBuckets,
   mockDeleteBucket,
   mockCreateBucket,
+  mockCreateBucketError,
 } from 'support/intercepts/object-storage';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -546,5 +547,80 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     cy.wait(['@deleteBucket', '@getBuckets']);
     cy.findByText(bucketLabel).should('not.exist');
+  });
+
+  /**
+   * Confirms UI flow for when creating a bucket results in validation and API errors
+   * - Confirms trying to create a bucket without an endpoint leads to a validation error that later disappears when an endpoint is specified
+   * - Confirms trying to create a bucket without a label leads to a validation error that later disappears when a label is specified
+   * - Confirms an error returned by the API is displayed and does not crash Cloud Manager
+   */
+  it('handles errors and validation', () => {
+    const bucketLabel = randomLabel();
+    const mockErrorMessage = 'An unknown error has occurred.';
+    mockGetBuckets([]).as('getBuckets');
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
+      'getObjectStorageEndpoints'
+    );
+    mockGetRegions(mockRegions);
+    mockCreateBucketError(mockErrorMessage).as('createBucket');
+
+    cy.visitWithLogin('/object-storage/buckets/create');
+    cy.wait([
+      '@getFeatureFlags',
+      '@getAccount',
+      '@getBuckets',
+      '@getObjectStorageEndpoints',
+    ]);
+
+    ui.drawer
+      .findByTitle('Create Bucket')
+      .should('be.visible')
+      .within(() => {
+        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+
+        // Confirms error appears when an endpoint isn't selected, and disappears after one is selected
+        ui.buttonGroup
+          .findButtonByTitle('Create Bucket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.contains('Endpoint Type is required.').should('be.visible');
+
+        cy.findByLabelText('Object Storage Endpoint Type')
+          .should('be.visible')
+          .click();
+
+        ui.autocompletePopper
+          .findByTitle('Standard (E3)')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.contains('Endpoint Type is required.').should('not.exist');
+
+        // confirms error appears when label isn't filled in and disappears once a label is entered
+        ui.buttonGroup
+          .findButtonByTitle('Create Bucket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.contains('Label is required.').should('be.visible');
+        cy.findByText('Label').click().type(bucketLabel);
+        cy.contains('Label is required.').should('not.exist');
+
+        // confirms (mock) API error appears
+        ui.buttonGroup
+          .findButtonByTitle('Create Bucket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        cy.wait('@createBucket');
+        cy.findByText(mockErrorMessage).should('be.visible');
+      });
   });
 });

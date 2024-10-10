@@ -165,7 +165,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     // since this is optional in the schema.
     if (Boolean(endpoints) && !formValues.endpoint_type) {
       setError('endpoint_type', {
-        message: 'Endpoint Type is required',
+        message: 'Endpoint Type is required.',
         type: 'manual',
       });
       return;
