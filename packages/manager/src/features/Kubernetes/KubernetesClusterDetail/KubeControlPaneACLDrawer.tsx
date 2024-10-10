@@ -98,6 +98,28 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   const values = watch();
 
   const updateCluster = handleSubmit(() => {
+    // A quick note on the following code:
+    //
+    //   - A non-IPACL'd cluster (denominated 'traditional') does not have IPACLs natively.
+    //     The customer must then install IPACL (or 'migrate') on this cluster.
+    //     This is done through a call to the updateKubernetesCluster endpoint.
+    //     Only after a migration will the call to the updateKubernetesClusterControlPlaneACL
+    //     endpoint be accepted.
+    //
+    //     Do note that all new clusters automatically have IPACLs installed (even if the customer
+    //     chooses to disable it during creation).
+    //
+    //     For this reason, further in this code, we check whether the cluster has migrated or not
+    //     before choosing which endpoint to use.
+    //
+    //   - The address stanza of the JSON payload is optional. If provided though, that stanza must
+    //     contain either/or/both IPv4 and IPv6. This is why there is additional code to properly
+    //     check whether either exists, and only if they do, do we provide the addresses stanza
+    //     to the payload
+    //
+    //   - Hopefully this explains the behavior of this code, and why one must be very careful
+    //     before introducing any clever/streamlined code - there's a reason to the mess :)
+    //
     const _ipv4 = values.ipv4
       .map((ip) => {
         return ip.address;
