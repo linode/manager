@@ -3,6 +3,9 @@
  */
 export interface Metadata {
 
+  /** Job or pipeline title. */
+  pipelineTitle?: string;
+
   /** Code author name. */
   authorName?: string;
 

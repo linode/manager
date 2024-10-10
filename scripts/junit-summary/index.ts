@@ -24,6 +24,7 @@ program
   .version('0.1.0')
   .arguments('<junitPath>')
   .option('-f, --format <str>', 'JUnit summary output format', 'json')
+  .option('--meta:title <string>', 'Pipeline title')
   .option('--meta:author-name <str>', 'Author name')
   .option('--meta:author-slack <str>', 'Author Slack name')
   .option('--meta:author-github <str>', 'Author GitHub name')

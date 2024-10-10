@@ -23,9 +23,11 @@ export const slackFormatter: Formatter = (
   _junitData: TestSuites[]
 ) => {
   const indicator = runInfo.failing ? ':x-mark:' : ':check-mark:';
+  const runTitle = metadata.pipelineTitle ?? 'Cypress test results';
+
   const headline = (metadata.runId && metadata.runUrl)
-    ? `*Cypress test results for run <${metadata.runUrl}|#${metadata.runId}>*\n`
-    : `*Cypress test results*\n`;
+    ? `*${runTitle}* (<${metadata.runUrl}|#${metadata.runId}>)\n`
+    : `*${runTitle}*\n`;
 
   const breakdown = `:small_red_triangle: ${runInfo.failing} Failing | :thumbs_up_green: ${runInfo.passing} Passing | :small_blue_diamond: ${runInfo.skipped} Skipped\n\n`;
 
