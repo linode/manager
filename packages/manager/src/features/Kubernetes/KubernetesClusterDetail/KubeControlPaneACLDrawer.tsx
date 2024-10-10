@@ -23,6 +23,7 @@ import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
+  // aclData?: KubernetesControlPlaneACLPayload;
   closeDrawer: () => void;
   clusterId: number;
   clusterLabel: string;

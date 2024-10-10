@@ -7,22 +7,25 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { StyledActionButton } from 'src/components/Button/StyledActionButton';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Chip } from 'src/components/Chip';
+import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Stack } from 'src/components/Stack';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
-import { KubeClusterControlPlaneACL } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterControlPlaneACL';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
+  useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,
   useResetKubeConfigMutation,
 } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { pluralize } from 'src/utilities/pluralize';
 
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
@@ -53,10 +56,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     isControlPlaneACLDrawerOpen,
     setControlPlaneACLDrawerOpen,
   ] = React.useState<boolean>(false);
-  const [
-    isControlPlaneACLMigrated,
-    setControlPlaneACLMigrated,
-  ] = React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
@@ -79,6 +78,26 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     grantType: 'linode',
     id: cluster.id,
   });
+
+  const {
+    data: aclData,
+    error: isErrorKubernetesACL,
+    //isFetching: isFetchingKubernetesACL,
+    isLoading: isLoadingKubernetesACL,
+    // refetch: refetchKubernetesACL,
+  } = useKubernetesControlPlaneACLQuery(cluster.id);
+
+  const enabledACL = aclData?.acl.enabled ?? false;
+  // const revisionIDACL = acl_response ? acl_response.acl['revision-id'] : '';
+  const totalIPv4 = aclData?.acl.addresses?.ipv4?.length ?? 0;
+  const totalIPv6 = aclData?.acl.addresses?.ipv6?.length ?? 0;
+  const totalNumberIPs = totalIPv4 + totalIPv6;
+
+  const determineIPACLButtonCopy = isErrorKubernetesACL
+    ? 'Install IPACL'
+    : enabledACL
+    ? pluralize('IP Address', 'IP Addresses', totalNumberIPs)
+    : 'Enable IPACL';
 
   const [
     resetKubeConfigDialogOpen,
@@ -176,11 +195,22 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
           >
             <StyledBox>
               <StyledLabelBox component="span">IPACL: </StyledLabelBox>
-              <KubeClusterControlPlaneACL
+              {isLoadingKubernetesACL ? (
+                <Box sx={{ paddingLeft: 1 }}>
+                  <CircleProgress noPadding size="sm" />
+                </Box>
+              ) : (
+                <StyledLinkButton
+                  onClick={() => setControlPlaneACLDrawerOpen(true)}
+                >
+                  {determineIPACLButtonCopy}
+                </StyledLinkButton>
+              )}
+              {/* <KubeClusterControlPlaneACL
                 cluster={cluster}
                 handleOpenDrawer={() => setControlPlaneACLDrawerOpen(true)}
                 setControlPlaneACLMigrated={setControlPlaneACLMigrated}
-              />
+              /> */}
             </StyledBox>
           </Grid>
         }
@@ -239,7 +269,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         closeDrawer={() => setControlPlaneACLDrawerOpen(false)}
         clusterId={cluster.id}
         clusterLabel={cluster.label}
-        clusterMigrated={isControlPlaneACLMigrated}
+        clusterMigrated={!isErrorKubernetesACL}
         open={isControlPlaneACLDrawerOpen}
       />
       <DeleteKubernetesClusterDialog
