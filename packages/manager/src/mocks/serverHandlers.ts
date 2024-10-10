@@ -85,6 +85,7 @@ import {
   promoFactory,
   regionAvailabilityFactory,
   securityQuestionsFactory,
+  serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -110,10 +111,12 @@ import { pickRandom } from 'src/utilities/random';
 import type {
   AccountMaintenance,
   CreateObjectStorageKeyPayload,
+  Dashboard,
   FirewallStatus,
   NotificationType,
   ObjectStorageEndpointTypes,
   SecurityQuestionsPayload,
+  ServiceTypesList,
   TokenRequest,
   UpdateImageRegionsPayload,
   User,
@@ -2306,25 +2309,40 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services', () => {
-    const response = {
-      data: [{ service_type: 'linode' }],
-    };
-
-    return HttpResponse.json(response);
-  }),
-  http.get('*/monitor/services/:serviceType/dashboards', () => {
-    const response = {
+    const response: ServiceTypesList = {
       data: [
-        dashboardFactory.build({
-          label: 'Linode Dashboard',
+        serviceTypesFactory.build({
+          label: 'Linode',
           service_type: 'linode',
         }),
-        dashboardFactory.build({
-          label: 'DBaaS Dashboard',
+        serviceTypesFactory.build({
+          label: 'Databases',
           service_type: 'dbaas',
         }),
       ],
     };
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
+    const response = {
+      data: [] as Dashboard[],
+    };
+    if (params.serviceType === 'linode') {
+      response.data.push(
+        dashboardFactory.build({
+          label: 'Linode Dashboard',
+          service_type: 'linode',
+        })
+      );
+    } else if (params.serviceType === 'dbaas') {
+      response.data.push(
+        dashboardFactory.build({
+          label: 'DBaaS Dashboard',
+          service_type: 'dbaas',
+        })
+      );
+    }
 
     return HttpResponse.json(response);
   }),
