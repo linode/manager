@@ -69,9 +69,8 @@ describe('VPC', () => {
 
   it('renders VPC IPv4, NAT checkboxes, and IP Ranges inputs when a subnet is selected', async () => {
     const {
-      getByLabelText,
-      getByText,
       getByRole,
+      getByText,
     } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
       component: <VPC />,
       useFormOptions: {
