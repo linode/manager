@@ -1272,7 +1272,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `High-performance open source web server with Node and CertBot, in addition to features like HTTP/3 support and easy SSL setup.`,
     logo_url: 'openlitespeednodejs.svg',
-    name: 'OpenLiteSpeed NodeJS',
+    name: 'OpenLiteSpeed Node.js',
     related_guides: [
       {
         href:
@@ -1280,7 +1280,7 @@ export const oneClickApps: Record<number, OCA> = {
         title: 'Deploy OpenLiteSpeed Node.js through the Linode Marketplace',
       },
     ],
-    summary: 'OLS web server with NodeJS JavaScript runtime environment.',
+    summary: 'OLS web server with Node.js JavaScript runtime environment.',
     website: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
   },
   923032: {
@@ -1507,14 +1507,14 @@ export const oneClickApps: Record<number, OCA> = {
       end: '333333',
       start: '3d853c',
     },
-    description: `NodeJS is a free, open-source, and cross-platform JavaScript run-time environment that lets developers write command line tools and server-side scripts outside of a browser.`,
+    description: `Node.js is a free, open-source, and cross-platform JavaScript run-time environment that lets developers write command line tools and server-side scripts outside of a browser.`,
     logo_url: 'nodejs.svg',
-    name: 'NodeJS',
+    name: 'Node.js',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/nodejs/',
-        title: 'Deploy NodeJS through the Linode Marketplace',
+        title: 'Deploy Node.js through the Linode Marketplace',
       },
     ],
     summary:
