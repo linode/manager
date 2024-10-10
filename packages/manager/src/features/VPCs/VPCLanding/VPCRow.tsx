@@ -9,7 +9,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useGrants } from 'src/queries/profile/profile';
 
 interface Props {
   handleDeleteVPC: () => void;
@@ -27,11 +27,14 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
     0
   );
 
-  const isVPCReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'vpc',
-    id: vpc.id,
-  });
+  const { data: grants } = useGrants();
+
+  const isVPCReadOnly =
+    grants &&
+    (grants['vpc'].some(
+      (grant) => grant.id === vpc.id && grant.permissions === 'read_only'
+    ) ||
+      !grants['vpc'].some((grant) => grant.id === vpc.id));
 
   const actions: Action[] = [
     {
