@@ -57,6 +57,10 @@ export const splitCypressRun: CypressPlugin = (_on, config) => {
 
   // Override configuration spec pattern to reflect test subset for this runner...
   const specs = globSync(config.specPattern);
+  console.log({
+    specPattern: config.specPattern,
+    specs,
+  });
 
   let totalWeight = 0;
   let weightedSpecs: SpecWeight[] = [];
