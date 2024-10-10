@@ -88,6 +88,7 @@ export interface DatabaseInstance {
    */
   members: Record<string, MemberType>;
   platform?: string;
+  allow_list: string[];
 }
 
 export type ClusterSize = 1 | 2 | 3;
