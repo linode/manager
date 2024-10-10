@@ -14,9 +14,7 @@ const confirmDeletion = (linodeLabel: string) => {
   cy.findByText(linodeLabel).should('not.exist');
 
   // Confirm the linode instance is removed
-  cy.findByText(
-    'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
-  )
+  cy.findByText('Search Products, IP Addresses, Tags...')
     .click()
     .type(`${linodeLabel}{enter}`);
   cy.findByText('You searched for ...').should('be.visible');
@@ -48,7 +46,7 @@ const deleteLinodeFromActionMenu = (linodeLabel: string) => {
     });
 
   cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
-  cy.findByText(linodeLabel).should('not.exist');
+  cy.findAllByText(linodeLabel).should('not.exist');
 };
 
 const preferenceOverrides = {

@@ -165,7 +165,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     // since this is optional in the schema.
     if (Boolean(endpoints) && !formValues.endpoint_type) {
       setError('endpoint_type', {
-        message: 'Endpoint Type is required',
+        message: 'Endpoint Type is required.',
         type: 'manual',
       });
       return;
@@ -179,7 +179,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   };
 
   const selectedRegion = watchRegion
-    ? regions?.find((region) => watchRegion.includes(region.id))
+    ? regions?.find((region) => watchRegion === region.id)
     : undefined;
 
   const filteredEndpoints = endpoints?.filter(
@@ -341,7 +341,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                       <Typography component="span">
                         Endpoint types impact the performance, capacity, and
                         rate limits for your bucket. Understand{' '}
-                        <Link to="#">endpoint types</Link>.
+                        <Link to="https://techdocs.akamai.com/cloud-computing/docs/object-storage">
+                          endpoint types
+                        </Link>
+                        .
                       </Typography>
                     ),
                     helperTextPosition: 'top',

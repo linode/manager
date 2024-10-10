@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
@@ -88,3 +89,7 @@ export const UserDetail = () => {
     </>
   );
 };
+
+export const userDetailLazyRoute = createLazyRoute('/account/users/$username')({
+  component: UserDetail,
+});

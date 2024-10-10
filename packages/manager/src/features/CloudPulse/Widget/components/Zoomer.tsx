@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import ZoomInMap from 'src/assets/icons/zoomin.svg';
@@ -20,28 +20,37 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
   const ToggleZoomer = () => {
     if (props.zoomIn) {
       return (
-        <ZoomInMap
+        <IconButton
           sx={{
             color: theme.color.grey1,
             fontSize: 'x-large',
             height: '34px',
+            padding: 0,
           }}
+          aria-label="Zoom In"
           data-testid="zoom-in"
           onClick={() => handleClick(false)}
-        />
+        >
+          <ZoomInMap />
+        </IconButton>
       );
     }
 
     return (
-      <ZoomOutMap
+      <IconButton
         sx={{
           color: theme.color.grey1,
           fontSize: 'x-large',
           height: '34px',
+          minWidth: 'auto',
+          padding: 0,
         }}
+        aria-label="Zoom Out"
         data-testid="zoom-out"
         onClick={() => handleClick(true)}
-      />
+      >
+        <ZoomOutMap />
+      </IconButton>
     );
   };
 

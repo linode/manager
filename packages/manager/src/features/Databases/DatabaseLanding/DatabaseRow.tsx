@@ -48,7 +48,9 @@ export const DatabaseRow = ({ database, events, isNewDatabase }: Props) => {
 
   const { data: regions } = useRegionsQuery();
   const { data: profile } = useProfile();
-  const { data: types } = useDatabaseTypesQuery();
+  const { data: types } = useDatabaseTypesQuery({
+    platform: database.platform,
+  });
   const plan = types?.find((t: DatabaseType) => t.id === type);
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);

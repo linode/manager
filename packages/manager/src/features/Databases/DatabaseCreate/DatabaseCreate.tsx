@@ -1,5 +1,7 @@
+import { BetaChip } from '@linode/ui';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
@@ -9,7 +11,6 @@ import { makeStyles } from 'tss-react/mui';
 import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
@@ -187,7 +188,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
   );
 };
 
-interface NodePricing {
+export interface NodePricing {
   double: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
   single: DatabasePriceObject | undefined;
@@ -196,6 +197,7 @@ interface NodePricing {
 const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
+  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
 
   const {
     data: regionsData,
@@ -213,9 +215,9 @@ const DatabaseCreate = () => {
     data: dbtypes,
     error: typesError,
     isLoading: typesLoading,
-  } = useDatabaseTypesQuery();
-
-  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  } = useDatabaseTypesQuery({
+    platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
+  });
 
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
@@ -277,7 +279,9 @@ const DatabaseCreate = () => {
       ...values,
       allow_list: _allow_list,
     };
-
+    if (isDatabasesV2Beta) {
+      delete createPayload.replication_type;
+    }
     try {
       const response = await createDatabase(createPayload);
       history.push(`/databases/${response.engine}/${response.id}`);
@@ -459,17 +463,26 @@ const DatabaseCreate = () => {
       'cluster_size',
       values.cluster_size < 1 ? 3 : values.cluster_size
     );
-    setFieldValue(
-      'replication_type',
-      determineReplicationType(values.cluster_size, values.engine)
-    );
-    setFieldValue(
-      'replication_commit_type',
-      determineReplicationCommitType(values.engine)
-    );
+    if (!isDatabasesV2Enabled) {
+      setFieldValue(
+        'replication_type',
+        determineReplicationType(values.cluster_size, values.engine)
+      );
+      setFieldValue(
+        'replication_commit_type',
+        determineReplicationCommitType(values.engine)
+      );
+    }
     setFieldValue('storage_engine', determineStorageEngine(values.engine));
     setFieldValue('compression_type', determineCompressionType(values.engine));
-  }, [dbtypes, setFieldValue, values.cluster_size, values.type, values.engine]);
+  }, [
+    dbtypes,
+    setFieldValue,
+    values.cluster_size,
+    values.type,
+    values.engine,
+    isDatabasesV2Enabled,
+  ]);
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
@@ -580,10 +593,11 @@ const DatabaseCreate = () => {
           <FormControl
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFieldValue('cluster_size', +e.target.value);
-              setFieldValue(
-                'replication_type',
-                +e.target.value === 1 ? 'none' : 'semi_synch'
-              );
+              !isDatabasesV2Enabled &&
+                setFieldValue(
+                  'replication_type',
+                  +e.target.value === 1 ? 'none' : 'semi_synch'
+                );
             }}
             data-testid="database-nodes"
           >
@@ -618,7 +632,7 @@ const DatabaseCreate = () => {
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
-            <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls">
               Learn more
             </Link>
             .
@@ -710,5 +724,9 @@ const determineCompressionType = (engine: string) => {
 
   return undefined;
 };
+
+export const databaseCreateLazyRoute = createLazyRoute('/databases/create')({
+  component: DatabaseCreate,
+});
 
 export default DatabaseCreate;

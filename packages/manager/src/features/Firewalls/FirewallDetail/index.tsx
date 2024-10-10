@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -15,8 +16,8 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -134,7 +135,7 @@ export const FirewallDetail = () => {
           pathname: `/firewalls/${firewall.label}`,
         }}
         docsLabel="Docs"
-        docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         title="Firewall Details"
       />
       {secureVMFirewallBanner && secureVMFirewallBanner.firewallDetails && (
@@ -189,3 +190,7 @@ export const FirewallDetail = () => {
     </React.Fragment>
   );
 };
+
+export const firewallDetailLazyRoute = createLazyRoute('/firewalls/$id')({
+  component: FirewallDetail,
+});

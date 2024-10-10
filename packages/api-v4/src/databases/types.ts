@@ -12,7 +12,7 @@ export interface DatabaseClusterSizeObject {
   price: DatabasePriceObject;
 }
 
-type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
+export type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
   engines: Engines;
@@ -47,6 +47,11 @@ export interface DatabaseBackup {
   created: string;
 }
 
+export interface DatabaseFork {
+  source: number;
+  restore_time?: string;
+}
+
 export interface DatabaseCredentials {
   username: string;
   password: string;
@@ -54,7 +59,8 @@ export interface DatabaseCredentials {
 
 interface DatabaseHosts {
   primary: string;
-  secondary: string;
+  secondary?: string;
+  standby?: string;
 }
 
 export interface SSLFields {
@@ -156,7 +162,7 @@ export interface BaseDatabase {
 }
 
 export interface MySQLDatabase extends BaseDatabase {
-  replication_type: MySQLReplicationType;
+  replication_type?: MySQLReplicationType;
 }
 
 export type PostgresReplicationType = 'none' | 'synch' | 'asynch';
@@ -169,8 +175,8 @@ type ReplicationCommitTypes =
   | 'off';
 
 export interface PostgresDatabase extends BaseDatabase {
-  replication_type: PostgresReplicationType;
-  replication_commit_type: ReplicationCommitTypes;
+  replication_type?: PostgresReplicationType;
+  replication_commit_type?: ReplicationCommitTypes;
 }
 
 type MongoStorageEngine = 'wiredtiger' | 'mmapv1';
@@ -191,6 +197,7 @@ export type Database = BaseDatabase &
   Partial<MongoDatabase>;
 
 export interface UpdateDatabasePayload {
+  cluster_size?: number;
   label?: string;
   allow_list?: string[];
   updates?: UpdatesSchedule;

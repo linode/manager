@@ -692,23 +692,6 @@ class NodeBalancerConfigurations extends React.Component<
     );
   };
 
-  renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
-    <ActionsPanel
-      primaryButtonProps={{
-        'data-testid': 'confirm-cancel',
-        label: 'Delete',
-        loading: this.state.deleteConfigConfirmDialog.submitting,
-        onClick: this.deleteConfig,
-      }}
-      secondaryButtonProps={{
-        'data-testid': 'cancel-cancel',
-        label: 'Cancel',
-        onClick: onClose,
-      }}
-      style={{ padding: 0 }}
-    />
-  );
-
   resetSubmitting = (configIdx: number) => {
     // reset submitting
     const newSubmitting = clone(this.state.configSubmitting);
@@ -1146,13 +1129,28 @@ class NodeBalancerConfigurations extends React.Component<
         )}
 
         <ConfirmationDialog
+          actions={
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'confirm-cancel',
+                label: 'Delete',
+                loading: this.state.deleteConfigConfirmDialog.submitting,
+                onClick: this.deleteConfig,
+              }}
+              secondaryButtonProps={{
+                'data-testid': 'cancel-cancel',
+                label: 'Cancel',
+                onClick: this.onCloseConfirmation,
+              }}
+              style={{ padding: 0 }}
+            />
+          }
           title={
             typeof this.state.deleteConfigConfirmDialog.portToDelete !==
             'undefined'
               ? `Delete this configuration on port ${this.state.deleteConfigConfirmDialog.portToDelete}?`
               : 'Delete this configuration?'
           }
-          actions={this.renderConfigConfirmationActions}
           error={this.confirmationConfigError()}
           onClose={this.onCloseConfirmation}
           open={this.state.deleteConfigConfirmDialog.open}

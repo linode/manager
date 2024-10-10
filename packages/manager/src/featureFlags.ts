@@ -70,6 +70,7 @@ export interface CloudPulseResourceTypeMapFlag {
 }
 
 interface gpuV2 {
+  egressBanner: boolean;
   planDivider: boolean;
 }
 
@@ -85,6 +86,7 @@ export interface Flags {
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
+  apl: boolean;
   apicliButtonCopy: string;
   apicliDxToolsAdditions: boolean;
   blockStorageEncryption: boolean;
@@ -94,11 +96,11 @@ export interface Flags {
   databases: boolean;
   dbaasV2: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
+  disallowImageUploadToNonObjRegions: boolean;
   gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
   ipv6Sharing: boolean;
-  linodeCreateWithFirewall: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];

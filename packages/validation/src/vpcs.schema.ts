@@ -125,7 +125,8 @@ export const createSubnetSchema = object().shape(
   {
     label: labelValidation.required(LABEL_REQUIRED),
     ipv4: string().when('ipv6', {
-      is: '' || null || undefined,
+      is: (value: unknown) =>
+        value === '' || value === null || value === undefined,
       then: string()
         .required(IP_EITHER_BOTH_NOT_NEITHER)
         .test({
@@ -163,7 +164,8 @@ export const createSubnetSchema = object().shape(
       }),
     }),
     ipv6: string().when('ipv4', {
-      is: '' || null || undefined,
+      is: (value: unknown) =>
+        value === '' || value === null || value === undefined,
       then: string()
         .required(IP_EITHER_BOTH_NOT_NEITHER)
         .test({

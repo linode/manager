@@ -41,10 +41,10 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
     error,
     isPending,
     mutateAsync: unassignLinodes,
-  } = useUnassignLinodesFromPlacementGroup(+placementGroupId ?? -1);
+  } = useUnassignLinodesFromPlacementGroup(+placementGroupId);
 
   const { data: linodeFromQuery, isFetching } = useLinodeQuery(
-    +linodeId ?? -1,
+    +linodeId,
     open && selectedLinode === undefined
   );
 
