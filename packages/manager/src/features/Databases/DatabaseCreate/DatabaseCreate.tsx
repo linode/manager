@@ -188,7 +188,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
   );
 };
 
-interface NodePricing {
+export interface NodePricing {
   double: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
   single: DatabasePriceObject | undefined;
