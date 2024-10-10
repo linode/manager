@@ -504,7 +504,47 @@ export const mockGetObjectStorageEndpoints = (
 };
 
 /**
- * Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket, and mocks response.
+ * Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket and mock the response.
+ *
+ *
+ * @param label - Object storage bucket label.
+ * @param cluster - Object storage bucket cluster.
+ * @param bucketFilename - uploaded bucketFilename
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetBucketObjectFilename = (
+  label: string,
+  cluster: string,
+  bucketFilename: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(
+      `object-storage/buckets/${cluster}/${label}/object-acl?name=${bucketFilename}`
+    ),
+    {
+      body: {},
+      statusCode: 200,
+    }
+  );
+};
+
+export const mockGetBucket = (
+  label: string,
+  cluster: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/buckets/${cluster}/${label}`),
+    {
+      body: {},
+      statusCode: 200,
+    }
+  );
+};
+
+ /* Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket, and mocks response.
  *
  * @param label - Object storage bucket label.
  * @param cluster - Object storage bucket cluster.
