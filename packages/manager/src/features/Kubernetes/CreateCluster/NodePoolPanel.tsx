@@ -24,6 +24,7 @@ export interface NodePoolPanelProps {
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
   apiError?: string;
   hasSelectedRegion: boolean;
+  isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
@@ -56,6 +57,7 @@ const Panel = (props: NodePoolPanelProps) => {
     addNodePool,
     apiError,
     hasSelectedRegion,
+    isAPLEnabled,
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
     regionsData,
@@ -113,6 +115,7 @@ const Panel = (props: NodePoolPanelProps) => {
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
+          isAPLEnabled={isAPLEnabled}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           onAdd={addPool}
