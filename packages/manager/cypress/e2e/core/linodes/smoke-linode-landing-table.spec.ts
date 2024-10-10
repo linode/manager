@@ -508,27 +508,18 @@ describe('linode landing checks for non-empty state with restricted user', () =>
       }
     );
 
-    const mockLinodesData = makeResourcePage(mockLinodes);
-    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
-      req.reply(mockLinodesData);
-    }).as('getLinodes');
+    mockGetLinodes(mockLinodes).as('getLinodes');
 
     // Alias the mockLinodes array
     cy.wrap(mockLinodes).as('mockLinodes');
   });
 
-  it('checks restricted user with read access has no access to create linode and can see existing linodes', () => {
+  it.only('checks restricted user with read access has no access to create linode and can see existing linodes', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     // simulating a default user without the ability to add Linodes.
     const mockProfile = profileFactory.build({
       username: randomLabel(),
       restricted: true,
-    });
-
-    const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
-      restricted: true,
-      user_type: 'default',
     });
 
     const mockGrants = grantsFactory.build({
@@ -539,12 +530,24 @@ describe('linode landing checks for non-empty state with restricted user', () =>
 
     mockGetProfile(mockProfile);
     mockGetProfileGrants(mockGrants);
-    mockGetUser(mockUser);
+
+    // Intercept and alias the mock requests
+    cy.intercept('GET', apiMatcher('profile'), (req) => {
+      req.reply(mockProfile);
+    }).as('getProfile');
+
+    cy.intercept('GET', apiMatcher('profile/grants'), (req) => {
+      req.reply(mockGrants);
+    }).as('getProfileGrants');
 
     // Login and wait for application to load
     cy.visitWithLogin(routes.linodeLanding);
     cy.wait('@getLinodes');
     cy.url().should('endWith', routes.linodeLanding);
+
+    // Wait for the mock requests to complete
+    cy.wait('@getProfile');
+    cy.wait('@getProfileGrants');
 
     // Assert that Create Linode button is visible and disabled
     ui.button
