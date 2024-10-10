@@ -23,6 +23,7 @@ export default defineConfig({
     port: 3000,
   },
   test: {
+    isolate: false,
     coverage: {
       exclude: [
         'src/**/*.constants.{js,jsx,ts,tsx}',
