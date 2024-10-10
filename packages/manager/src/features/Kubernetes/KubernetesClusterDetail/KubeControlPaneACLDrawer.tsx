@@ -1,5 +1,5 @@
-import { Divider, Stack } from '@mui/material';
 import { Box } from '@mui/material';
+import { Divider, Stack } from '@mui/material';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -7,7 +7,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
@@ -19,19 +18,18 @@ import {
 } from 'src/queries/kubernetes';
 import { stringToExtendedIP, validateIPs } from 'src/utilities/ipUtils';
 
+import { ControlPlaneACLIPInputs } from '../CreateCluster/ControlPlaneACLIPInputs';
+
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
-  // aclData?: KubernetesControlPlaneACLPayload;
   closeDrawer: () => void;
   clusterId: number;
   clusterLabel: string;
   clusterMigrated: boolean;
   open: boolean;
 }
-
-// wondering if I should get the data from a parent component instead?
 
 export const KubeControlPlaneACLDrawer = (props: Props) => {
   const { closeDrawer, clusterId, clusterLabel, clusterMigrated, open } = props;
@@ -56,7 +54,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   const enabledExists = enabled !== undefined;
   const shouldDefaultToEnabled = !clusterMigrated || !enabled;
 
-  // check if we really want this?
   // refetchOnMount isnt good enough for this query because
   // it is already mounted in the rendered Drawer
   React.useEffect(() => {
@@ -81,13 +78,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     setValue,
     watch,
   } = useForm({
-    // need to make this eventually match the shape of KubernetesControlPlaneACLPayload hopefully
-    // defaultValues: {
-    //   enabled: !!enabled,
-    //   ipv4: ipv4 ?? [stringToExtendedIP('')],
-    //   ipv6: ipv6 ?? [stringToExtendedIP('')],
-    //   'revision-id': revisionID,
-    // },
     values: {
       enabled: !!enabled,
       ipv4: ipv4 ?? [stringToExtendedIP('')],
@@ -121,6 +111,13 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     //   - Hopefully this explains the behavior of this code, and why one must be very careful
     //     before introducing any clever/streamlined code - there's a reason to the mess :)
     //
+    if (
+      values.ipv4.some((ip) => ip.error) ||
+      values.ipv6.some((ip) => ip.error)
+    ) {
+      return;
+    }
+
     const _ipv4 = values.ipv4
       .map((ip) => {
         return ip.address;
@@ -166,10 +163,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       }
       closeDrawer();
     } catch (errors) {
-      // .catch((err) => {
-      //   const regex = /(?<=\bControl\b: ).*/;
-      //   setUpdateACLError(err[0].reason.match(regex));
-      // });
       for (const error of errors) {
         if (error.field && error.field !== 'acl') {
           setError(error.field, { message: error.reason });
@@ -239,6 +232,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               </Typography>
               <TextField
                 data-qa-label-input
+                errorText={errors['revision-id']?.message}
                 label="Revision ID"
                 onBlur={(e) => setValue('revision-id', e.target.value)}
                 value={values['revision-id']}
@@ -251,50 +245,35 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             A list of individual ipv4 and ipv6 addresses or CIDRs to ALLOW
             access to the control plane.
           </Typography>
-          {/* I am not sure if this matches - will need to check */}
           {errors.root?.message && clusterMigrated && (
             <Notice spacingTop={8} variant="error">
               {errors.root.message}
             </Notice>
           )}
-          <Box sx={{ maxWidth: 450 }}>
-            <MultipleIPInput
-              onBlur={(ips: ExtendedIP[]) =>
-                setValue(
-                  'ipv4',
-                  validateIPs(ips, {
-                    allowEmptyAddress: false,
-                    errorMessage: 'Must be a valid IPv4 address.',
-                  })
-                )
-              }
-              buttonText="Add IPv4 Address"
-              ips={values.ipv4}
-              isLinkStyled
-              onChange={(ips: ExtendedIP[]) => setValue('ipv4', ips)}
-              placeholder="0.0.0.0/0"
-              title="IPv4 Addresses or CIDRs"
-            />
-            <Box marginTop={2}>
-              <MultipleIPInput
-                onBlur={(ips: ExtendedIP[]) =>
-                  setValue(
-                    'ipv6',
-                    validateIPs(ips, {
-                      allowEmptyAddress: false,
-                      errorMessage: 'Must be a valid IPv4 address.',
-                    })
-                  )
-                }
-                buttonText="Add IPv6 Address"
-                ips={values.ipv6}
-                isLinkStyled
-                onChange={(ips: ExtendedIP[]) => setValue('ipv6', ips)}
-                placeholder="::/0"
-                title="IPv6 Addresses or CIDRs"
-              />
-            </Box>
-          </Box>
+          <ControlPlaneACLIPInputs
+            handleIPv4Blur={(ips: ExtendedIP[]) =>
+              setValue(
+                'ipv4',
+                validateIPs(ips, {
+                  allowEmptyAddress: false,
+                  errorMessage: 'Must be a valid IPv4 address.',
+                })
+              )
+            }
+            handleIPv6Blur={(ips: ExtendedIP[]) =>
+              setValue(
+                'ipv6',
+                validateIPs(ips, {
+                  allowEmptyAddress: false,
+                  errorMessage: 'Must be a valid IPv4 address.',
+                })
+              )
+            }
+            handleIPv4Change={(ips: ExtendedIP[]) => setValue('ipv4', ips)}
+            handleIPv6Change={(ips: ExtendedIP[]) => setValue('ipv6', ips)}
+            ipV4Addr={values.ipv4}
+            ipV6Addr={values.ipv6}
+          />
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'update-acl-button',

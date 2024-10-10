@@ -141,6 +141,11 @@ export const CreateCluster = () => {
   }, [versionData]);
 
   const createCluster = () => {
+    if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
+      scrollErrorIntoViewV2(formContainerRef);
+      return;
+    }
+
     const { push } = history;
     setErrors(undefined);
     setSubmitting(true);
