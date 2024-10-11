@@ -4,8 +4,11 @@ import { createTheme } from '@mui/material/styles';
 import { darkTheme } from 'src/foundations/themes/dark';
 import { lightTheme } from 'src/foundations/themes/light';
 
-import type { Chart as ChartLight } from '@linode/design-language-system';
-import type { Chart as ChartDark } from '@linode/design-language-system/themes/dark';
+import type {
+  ChartTypes,
+  InteractionTypes as InteractionTypesLight,
+} from '@linode/design-language-system';
+import type { InteractionTypes as InteractionTypesDark } from '@linode/design-language-system/themes/dark';
 import type { latoWeb } from 'src/foundations/fonts';
 // Types & Interfaces
 import type {
@@ -22,9 +25,7 @@ import type {
 
 export type ThemeName = 'dark' | 'light';
 
-type ChartLightTypes = typeof ChartLight;
-type ChartDarkTypes = typeof ChartDark;
-type ChartTypes = MergeTypes<ChartLightTypes, ChartDarkTypes>;
+type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
 
 type Fonts = typeof latoWeb;
 
@@ -71,11 +72,12 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg: BgColors;
     borderColors: BorderColors;
-    charts: ChartTypes;
+    chartTokens: ChartTypes;
     color: Colors;
     font: Fonts;
     graphs: any;
     inputStyles: any;
+    interactionTokens: InteractionTypes;
     name: ThemeName;
     notificationToast: NotificationToast;
     textColors: TextColors;
@@ -90,11 +92,12 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
-    charts: ChartTypes;
+    chartTokens?: ChartTypes;
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
     inputStyles?: any;
+    interactionTokens?: InteractionTypes;
     name: ThemeName;
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;

@@ -61,7 +61,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& span': {
       fontFamily: theme.font.bold,
     },
-    background: theme.bg.bgAccessRow,
+    background: theme.interactionTokens.Background.Secondary,
     border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
     padding: '8px 15px',
   },
