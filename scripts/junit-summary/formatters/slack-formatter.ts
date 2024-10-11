@@ -9,6 +9,14 @@ import * as path from 'path';
 import { cypressRunCommand } from '../util/cypress';
 
 /**
+ * The maximum number of failures that will be listed in the Slack notification.
+ *
+ * The Slack notification has a maximum character limit, so we must truncate
+ * the failure results to reduce the risk of hitting that limit.
+ */
+const FAILURE_SUMMARY_LIMIT = 6;
+
+/**
  * Outputs test result summary formatted as a Slack message.
  *
  * @param info - Run info.
@@ -53,10 +61,15 @@ export const slackFormatter: Formatter = (
   const failedTestSummary = (() => {
     const failedTestLines = results
       .filter((result: TestResult) => result.failing)
+      .slice(0, FAILURE_SUMMARY_LIMIT)
       .map((result: TestResult) => {
         const specFile = path.basename(result.testFilename);
         return `• \`${specFile}\` — _${result.groupName}_ » _${result.testName}_`;
       });
+
+    const truncationNote = (runInfo.failing > FAILURE_SUMMARY_LIMIT)
+      ? `and ${runInfo.failing - FAILURE_SUMMARY_LIMIT} more...\n`
+      : null;
 
     // When applicable, display actions that can be taken by the user.
     const failedTestActions = [
@@ -70,6 +83,7 @@ export const slackFormatter: Formatter = (
     return [
       '',
       ...failedTestLines,
+      truncationNote,
       '',
       failedTestActions ? failedTestActions : null,
     ]
