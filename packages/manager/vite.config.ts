@@ -37,11 +37,6 @@ export default defineConfig({
         'src/**/*.utils.{js,jsx,ts,tsx}',
       ],
     },
-    poolOptions: {
-      forks: {
-        maxForks: 6,
-      }
-    },
     environment: 'happy-dom',
     globals: true,
     setupFiles: './src/testSetup.ts',
