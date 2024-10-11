@@ -23,28 +23,30 @@ export const slackFormatter: Formatter = (
   _junitData: TestSuites[]
 ) => {
   const indicator = runInfo.failing ? ':x-mark:' : ':check-mark:';
-  const runTitle = metadata.pipelineTitle ?? 'Cypress test results';
+  const headline = metadata.pipelineTitle
+    ? `*${metadata.pipelineTitle}*\n`
+    : '*Cypress test results*\n';
 
-  const headline = (metadata.runId && metadata.runUrl)
-    ? `*${runTitle}* (<${metadata.runUrl}|#${metadata.runId}>)\n`
-    : `*${runTitle}*\n`;
+  const prInfo = (metadata.changeId && metadata.changeUrl && metadata.changeTitle)
+    ? `:pull-request: _${metadata.changeTitle}_ (<${metadata.changeUrl}|#${metadata.changeId}>)\n`
+    : null;
 
   const breakdown = `:small_red_triangle: ${runInfo.failing} Failing | :thumbs_up_green: ${runInfo.passing} Passing | :small_blue_diamond: ${runInfo.skipped} Skipped\n\n`;
 
   // Show a human-readable summary of what was tested and whether it succeeded.
   const summary = (() => {
-    const info = !runInfo.failing
+    const statusInfo = !runInfo.failing
      ? `> ${indicator} ${runInfo.passing} passing ${pluralize(runInfo.passing, 'test', 'tests')}`
      : `> ${indicator} ${runInfo.failing} failed ${pluralize(runInfo.failing, 'test', 'tests')}`;
 
-    const prInfo = (metadata.changeId && metadata.changeUrl)
-      ? ` on PR <${metadata.changeUrl}|#${metadata.changeId}>${metadata.changeTitle ? ` - _${metadata.changeTitle}_` : ''}`
+    const buildInfo = (metadata.runId && metadata.runUrl)
+      ? `on run <${metadata.runUrl}|#${metadata.runId}>`
       : '';
 
     const runLength = `(${secondsToTimeString(runInfo.time)})`;
     const endingPunctuation = !runInfo.failing ? '.' : ':';
 
-    return `${info}${prInfo} ${runLength}${endingPunctuation}`
+    return `${statusInfo}${buildInfo} ${runLength}${endingPunctuation}`
   })();
 
   // Display a list of failed tests and collection of actions when applicable.
@@ -108,6 +110,7 @@ export const slackFormatter: Formatter = (
 
   return [
     headline,
+    prInfo,
     breakdown,
     summary,
 
@@ -119,8 +122,7 @@ export const slackFormatter: Formatter = (
     runInfo.failing > 0 ? `${failedTestSummary}\n` : null,
     runInfo.failing > 0 ? `${rerunNote}\n` : null,
 
-    // If extra information has been supplied,
-    // display it above the footer.
+    // If extra information has been supplied, display it above the footer.
     extra,
 
     // Show run details footer.
