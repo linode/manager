@@ -24,6 +24,10 @@ import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 type IPACLDrawerFormState = {
+  acl: IPACLDrawerACLState;
+};
+
+type IPACLDrawerACLState = {
   enabled: boolean;
   ipv4: ExtendedIP[];
   ipv6: ExtendedIP[];
@@ -63,10 +67,12 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   }) ?? [stringToExtendedIP('')];
 
   const initialValues: IPACLDrawerFormState = {
-    enabled: data?.acl?.enabled ?? false,
-    ipv4,
-    ipv6,
-    'revision-id': data?.acl?.['revision-id'] ?? '',
+    acl: {
+      enabled: data?.acl?.enabled ?? false,
+      ipv4,
+      ipv6,
+      'revision-id': data?.acl?.['revision-id'] ?? '',
+    },
   };
 
   const {
@@ -84,8 +90,9 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   });
 
   const values = watch();
+  const { acl } = values;
 
-  const updateCluster = () => {
+  const updateCluster = async () => {
     // A quick note on the following code:
     //
     //   - A non-IPACL'd cluster (denominated 'traditional') does not have IPACLs natively.
@@ -108,20 +115,17 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     //   - Hopefully this explains the behavior of this code, and why one must be very careful
     //     before introducing any clever/streamlined code - there's a reason to the mess :)
     //
-    if (
-      values.ipv4.some((ip) => ip.error) ||
-      values.ipv6.some((ip) => ip.error)
-    ) {
+    if (acl.ipv4.some((ip) => ip.error) || acl.ipv6.some((ip) => ip.error)) {
       return;
     }
 
-    const _ipv4 = values.ipv4
+    const _ipv4 = acl.ipv4
       .map((ip) => {
         return ip.address;
       })
       .filter((ip) => ip != '');
 
-    const _ipv6 = values.ipv6
+    const _ipv6 = acl.ipv6
       .map((ip) => {
         return ip.address;
       })
@@ -137,8 +141,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
-        enabled: values.enabled,
-        'revision-id': values['revision-id'],
+        enabled: acl.enabled,
+        'revision-id': acl['revision-id'],
         ...((_ipv4.length > 0 || _ipv6.length > 0) && {
           addresses: {
             ...addressIPv4Payload,
@@ -150,18 +154,19 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
     try {
       if (clusterMigrated) {
-        updateKubernetesClusterControlPlaneACL(payload);
+        await updateKubernetesClusterControlPlaneACL(payload);
       } else {
-        updateKubernetesCluster({
+        await updateKubernetesCluster({
           control_plane: payload,
         });
       }
       closeDrawer();
     } catch (errors) {
-      const regex = /(?<=\bcontrol\b: ).*/;
       for (const error of errors) {
-        if (error.reason.match(regex)) {
-          setError('root', { message: error.reason });
+        if (error.field) {
+          setError(error.field, { message: error.message });
+        } else {
+          setError('root', { message: error.message });
         }
       }
     }
@@ -182,7 +187,12 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         title={clusterLabel}
       >
         <form onSubmit={handleSubmit(updateCluster)}>
-          <Stack sx={{ marginTop: 4 }}>
+          {errors.root?.message && (
+            <Notice spacingTop={8} variant="error">
+              {errors.root.message}
+            </Notice>
+          )}
+          <Stack sx={{ marginTop: 3 }}>
             <Typography variant="body1">
               When a cluster is equipped with an ACL, the apiserver and
               dashboard endpoints get mapped to a NodeBalancer address where all
@@ -201,11 +211,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                 control={
                   <Toggle
                     onChange={(e) => {
-                      setValue('enabled', e.target.checked, {
+                      setValue('acl.enabled', e.target.checked, {
                         shouldDirty: true,
                       });
                     }}
-                    checked={values.enabled ?? false}
+                    checked={acl.enabled ?? false}
                     name="ipacl-checkbox"
                   />
                 }
@@ -223,14 +233,13 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                 </Typography>
                 <TextField
                   onBlur={(e) =>
-                    setValue('revision-id', e.target.value, {
+                    setValue('acl.revision-id', e.target.value, {
                       shouldDirty: true,
                     })
                   }
                   data-qa-label-input
-                  errorText={errors['revision-id']?.message}
                   label="Revision ID"
-                  value={values['revision-id']}
+                  value={acl['revision-id']}
                 />
                 <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
               </>
@@ -240,15 +249,15 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               A list of individual ipv4 and ipv6 addresses or CIDRs to ALLOW
               access to the control plane.
             </Typography>
-            {errors.root?.message && clusterMigrated && (
+            {errors.acl?.message && clusterMigrated && (
               <Notice spacingTop={8} variant="error">
-                {errors.root.message}
+                {errors.acl.message}
               </Notice>
             )}
             <ControlPlaneACLIPInputs
               handleIPv4Blur={(ips: ExtendedIP[]) =>
                 setValue(
-                  'ipv4',
+                  'acl.ipv4',
                   validateIPs(ips, {
                     allowEmptyAddress: false,
                     errorMessage: 'Must be a valid IPv4 address.',
@@ -256,11 +265,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                 )
               }
               handleIPv4Change={(ips: ExtendedIP[]) =>
-                setValue('ipv4', ips, { shouldDirty: true })
+                setValue('acl.ipv4', ips, { shouldDirty: true })
               }
               handleIPv6Blur={(ips: ExtendedIP[]) =>
                 setValue(
-                  'ipv6',
+                  'acl.ipv6',
                   validateIPs(ips, {
                     allowEmptyAddress: false,
                     errorMessage: 'Must be a valid IPv4 address.',
@@ -268,10 +277,10 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                 )
               }
               handleIPv6Change={(ips: ExtendedIP[]) =>
-                setValue('ipv6', ips, { shouldDirty: true })
+                setValue('acl.ipv6', ips, { shouldDirty: true })
               }
-              ipV4Addr={values.ipv4}
-              ipV6Addr={values.ipv6}
+              ipV4Addr={acl.ipv4}
+              ipV6Addr={acl.ipv6}
             />
             <ActionsPanel
               primaryButtonProps={{
