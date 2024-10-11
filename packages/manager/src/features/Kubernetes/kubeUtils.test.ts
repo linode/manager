@@ -3,11 +3,15 @@ import {
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
+import * as flaggers from 'src/hooks/useFlags';
+import * as betaUtils from 'src/utilities/betaUtils';
+import * as kubeUtils from './kubeUtils';
 import { extendType } from 'src/utilities/extendType';
 
 import {
   getLatestVersion,
   getTotalClusterMemoryCPUAndStorage,
+  useGetAPLAvailability,
 } from './kubeUtils';
 
 describe('helper functions', () => {
@@ -65,6 +69,31 @@ describe('helper functions', () => {
         RAM: 0,
         Storage: 0,
       });
+    });
+  });
+  describe('APL availability', () => {
+    function useAccountBetaAPLQuery() {
+      return {
+        apl: true,
+      };
+    }
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+    it('flag set and in beta', () => {
+      vi.mock('src/kubeUtils', () => ({
+        useAccountBetaAPLQuery: vi.fn(),
+      }));
+      vi.spyOn(flaggers, 'useFlags').mockReturnValue({ apl: true });
+      vi.spyOn(kubeUtils, 'useAccountBetaAPLQuery').mockImplementation(
+        vi.fn().mockReturnValue({ data: { apl: true } })
+      );
+
+      vi.spyOn(betaUtils, 'getBetaStatus').mockReturnValue('active');
+
+      const aplAvailability = useGetAPLAvailability();
+
+      expect(aplAvailability).toBe(true);
     });
   });
   describe('getLatestVersion', () => {
