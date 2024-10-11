@@ -5,6 +5,7 @@ import type { MockSeeder, MockState } from 'src/mocks/types';
 
 /**
  * Removes the seeds from the database.
+ * This function is called upon unchecking an individual seeder in the MSW.
  *
  * @param seederId - The ID of the seeder to remove.
  *
