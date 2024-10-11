@@ -48,7 +48,7 @@ export const slackFormatter: Formatter = (
      : `> ${indicator} ${runInfo.failing} failed ${pluralize(runInfo.failing, 'test', 'tests')}`;
 
     const buildInfo = (metadata.runId && metadata.runUrl)
-      ? `on run <${metadata.runUrl}|#${metadata.runId}>`
+      ? ` on run <${metadata.runUrl}|#${metadata.runId}>`
       : '';
 
     const runLength = `(${secondsToTimeString(runInfo.time)})`;
