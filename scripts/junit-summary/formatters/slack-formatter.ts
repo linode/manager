@@ -36,7 +36,7 @@ export const slackFormatter: Formatter = (
     : '*Cypress test results*\n';
 
   const prInfo = (metadata.changeId && metadata.changeUrl && metadata.changeTitle)
-    ? `:pull-request: _${metadata.changeTitle}_ (<${metadata.changeUrl}|#${metadata.changeId}>)\n`
+    ? `:pull-request: ${metadata.changeTitle} (<${metadata.changeUrl}|#${metadata.changeId}>)\n`
     : null;
 
   const breakdown = `:small_red_triangle: ${runInfo.failing} Failing | :thumbs_up_green: ${runInfo.passing} Passing | :small_blue_diamond: ${runInfo.skipped} Skipped\n\n`;
