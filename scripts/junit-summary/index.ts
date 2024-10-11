@@ -67,6 +67,8 @@ const main = async (junitPath: string) => {
       artifactsUrl: program.opts()['meta:artifactsUrl'],
       resultsUrl: program.opts()['meta:resultsUrl'],
       rerunUrl: program.opts()['meta:rerunUrl'],
+
+      extra: program.opts()['meta:extra'],
     };
 
     // Create an array of absolute file paths to JUnit XML report files.
