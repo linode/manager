@@ -10,8 +10,7 @@ import { rotate360 } from '../../styles/keyframes';
 import { omittedProps } from '../../utilities/omittedProps';
 
 import type { ButtonProps as _ButtonProps } from '@mui/material/Button';
-import type { Theme } from '@mui/material/styles';
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export type ButtonType = 'outlined' | 'primary' | 'secondary';
 

@@ -200,12 +200,9 @@ export const darkTheme: ThemeOptions = {
   components: {
     MuiAppBar: {
       styleOverrides: {
-        colorDefault: {
-          backgroundColor: 'transparent',
-        },
         root: {
           backgroundColor: tempReplacementforColorNeutralsBlack,
-          border: 0,
+          color: primaryColors.text,
         },
       },
     },

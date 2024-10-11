@@ -6,7 +6,7 @@ import AkamaiWave from 'src/assets/logo/akamai-wave.svg';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 
-import type { SxProps } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 
 export const DEFAULT_AVATAR_SIZE = 28;
 
@@ -23,7 +23,7 @@ export interface AvatarProps {
   /**
    * Optional styles
    * */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   /**
    * Optional username to override the profile username; will display the first letter
    * */

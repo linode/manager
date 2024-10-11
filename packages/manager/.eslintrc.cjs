@@ -162,6 +162,7 @@ module.exports = {
       'error',
       'rxjs',
       '@mui/core',
+      '@mui/system',
       '@mui/icons-material',
     ],
     'no-throw-literal': 'warn',

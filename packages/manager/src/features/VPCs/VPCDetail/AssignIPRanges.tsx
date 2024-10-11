@@ -13,16 +13,16 @@ import {
   ASSIGN_IPV4_RANGES_DESCRIPTION,
   ASSIGN_IPV4_RANGES_TITLE,
 } from 'src/features/VPCs/constants';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 
-import type { SxProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
   handleIPRangeChange: (ips: ExtendedIP[]) => void;
   includeDescriptionInTooltip?: boolean;
   ipRanges: ExtendedIP[];
   ipRangesError?: string;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export const AssignIPRanges = (props: Props) => {

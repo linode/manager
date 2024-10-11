@@ -1,4 +1,3 @@
-import { Stack } from '@mui/system';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -10,6 +9,7 @@ import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/Highligh
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { Paper } from 'src/components/Paper';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useCreateAccountBetaMutation } from 'src/queries/account/betas';
 import { useBetaQuery } from 'src/queries/betas';

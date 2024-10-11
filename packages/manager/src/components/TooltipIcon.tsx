@@ -11,7 +11,7 @@ import { IconButton } from 'src/components/IconButton';
 import { Tooltip, tooltipClasses } from 'src/components/Tooltip';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { TooltipProps } from 'src/components/Tooltip';
 
 type TooltipIconStatus =
@@ -52,11 +52,11 @@ export interface TooltipIconProps
   /**
    * Pass specific styles to the Tooltip
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   /**
    * Pass specific CSS styling for the SVG icon.
    */
-  sxTooltipIcon?: SxProps;
+  sxTooltipIcon?: SxProps<Theme>;
   /**
    * The tooltip's contents
    */
