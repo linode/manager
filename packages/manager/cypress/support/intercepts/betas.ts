@@ -24,7 +24,7 @@ export const mockGetAccountBetas = (betas: Beta[]): Cypress.Chainable => {
 };
 
 /**
- * Intercepts GET request to fetch account betas (all betas available to the user, excluding the ones they have opted into) and mocks response.
+ * Intercepts GET request to fetch available betas (all betas available to the user).
  *
  * @param betas - Array of Betas with which to mock response.
  *
