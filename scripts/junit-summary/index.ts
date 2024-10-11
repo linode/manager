@@ -78,10 +78,6 @@ const main = async (junitPath: string) => {
         return path.resolve(reportPath, dirItem);
       });
 
-    if (reportFiles.length < 1) {
-      throw new Error(`No JUnit report files found in '${reportPath}'.`)
-    }
-
     // Read JUnit report file contents.
     const loadReportFileContents = reportFiles.map((reportFile: string) => {
       return fs.readFile(reportFile, 'utf8');
