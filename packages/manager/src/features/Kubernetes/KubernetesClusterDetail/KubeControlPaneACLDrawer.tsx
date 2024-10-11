@@ -23,6 +23,13 @@ import { ControlPlaneACLIPInputs } from '../CreateCluster/ControlPlaneACLIPInput
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
+type IPACLDrawerFormState = {
+  enabled: boolean;
+  ipv4: ExtendedIP[];
+  ipv6: ExtendedIP[];
+  'revision-id': string;
+};
+
 interface Props {
   closeDrawer: () => void;
   clusterId: number;
@@ -37,30 +44,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   const {
     data: data,
     error: isErrorKubernetesACL,
-    isFetching: isFetchingKubernetesACL,
     isLoading: isLoadingKubernetesACL,
-    refetch: refetchKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(clusterId);
-
-  const ipv4 = data?.acl?.addresses?.ipv4?.map((ip) => {
-    return stringToExtendedIP(ip);
-  });
-  const ipv6 = data?.acl?.addresses?.ipv6?.map((ip) => {
-    return stringToExtendedIP(ip);
-  });
-  const enabled = data?.acl?.enabled;
-  const revisionID = data?.acl?.['revision-id'] ?? '';
-
-  const enabledExists = enabled !== undefined;
-  const shouldDefaultToEnabled = !clusterMigrated || !enabled;
-
-  // refetchOnMount isnt good enough for this query because
-  // it is already mounted in the rendered Drawer
-  React.useEffect(() => {
-    if (open && !isLoadingKubernetesACL && !isFetchingKubernetesACL) {
-      refetchKubernetesACL(); // makes it fetch again
-    }
-  }, [open]);
 
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
@@ -70,25 +55,37 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     clusterId
   );
 
+  const ipv4 = data?.acl?.addresses?.ipv4?.map((ip) => {
+    return stringToExtendedIP(ip);
+  }) ?? [stringToExtendedIP('')];
+  const ipv6 = data?.acl?.addresses?.ipv6?.map((ip) => {
+    return stringToExtendedIP(ip);
+  }) ?? [stringToExtendedIP('')];
+
+  const initialValues: IPACLDrawerFormState = {
+    enabled: data?.acl?.enabled ?? false,
+    ipv4,
+    ipv6,
+    'revision-id': data?.acl?.['revision-id'] ?? '',
+  };
+
   const {
-    formState: { errors, isSubmitting },
+    formState: { errors, isDirty, isSubmitting },
     handleSubmit,
     reset,
     setError,
     setValue,
     watch,
-  } = useForm({
+  } = useForm<IPACLDrawerFormState>({
+    defaultValues: initialValues,
     values: {
-      enabled: !!enabled,
-      ipv4: ipv4 ?? [stringToExtendedIP('')],
-      ipv6: ipv6 ?? [stringToExtendedIP('')],
-      'revision-id': revisionID,
+      ...initialValues,
     },
   });
 
   const values = watch();
 
-  const updateCluster = handleSubmit(() => {
+  const updateCluster = () => {
     // A quick note on the following code:
     //
     //   - A non-IPACL'd cluster (denominated 'traditional') does not have IPACLs natively.
@@ -140,9 +137,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
-        enabled: enabledExists
-          ? values.enabled
-          : shouldDefaultToEnabled || values.enabled, // both new cluster installations as well as all the states where the UI disabled the option for the user to enable, we default to true
+        enabled: values.enabled,
         'revision-id': values['revision-id'],
         ...((_ipv4.length > 0 || _ipv6.length > 0) && {
           addresses: {
@@ -163,135 +158,140 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       }
       closeDrawer();
     } catch (errors) {
+      const regex = /(?<=\bcontrol\b: ).*/;
       for (const error of errors) {
-        if (error.field && error.field !== 'acl') {
-          setError(error.field, { message: error.reason });
-        } else {
+        if (error.reason.match(regex)) {
           setError('root', { message: error.reason });
         }
       }
     }
-  });
+  };
 
   return (
     <Drawer
       onClose={closeDrawer}
       onExited={() => reset()}
       open={open}
-      title={'Control Plane Access Control (IPACL)'}
+      title={'Control Plane Access Control List'}
       wide
     >
       <DrawerContent
         error={!!isErrorKubernetesACL && clusterMigrated} // when cluster has not migrated, we expect an error from the query
         errorMessage={isErrorKubernetesACL?.[0].reason} // only on initial loading error do we disable the drawer altogether
-        loading={isLoadingKubernetesACL || isFetchingKubernetesACL}
+        loading={isLoadingKubernetesACL}
         title={clusterLabel}
       >
-        <Stack sx={{ marginTop: 4 }}>
-          <Typography variant="body1">
-            When a cluster is equipped with an ACL, the apiserver and dashboard
-            endpoints get mapped to a NodeBalancer address where all traffic is
-            protected through a Cloud Firewall.
-          </Typography>
-          <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
-          {enabledExists && (
-            <>
-              <Typography variant="h3">Enabled</Typography>
-              <Typography variant="body1">
-                A value of true results in a default policy of DENY. A value of
-                false results in a default policy of ALLOW (i.e., access
-                controls are disabled). When enabled, control plane access
-                controls can only be accessible through the defined IP CIDRs.
-              </Typography>
-              <Box sx={{ marginTop: 1 }}>
-                <FormControlLabel
-                  control={
-                    <Toggle
-                      onChange={(e) => {
-                        if (clusterMigrated) {
-                          setValue('enabled', e.target.checked);
-                        }
-                      }}
-                      checked={clusterMigrated ? values.enabled : true}
-                      name="ipacl-checkbox"
-                    />
-                  }
-                  label={'IPACL Enabled'}
-                />
-              </Box>
-              <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
-            </>
-          )}
-          {clusterMigrated && (
-            <>
-              <Typography variant="h3">Revision ID</Typography>
-              <Typography variant="body1">
-                Enables clients to track events related to ACL update requests
-                and enforcements. Optional field. If omitted, defaults to a
-                randomly generated string.
-              </Typography>
-              <TextField
-                data-qa-label-input
-                errorText={errors['revision-id']?.message}
-                label="Revision ID"
-                onBlur={(e) => setValue('revision-id', e.target.value)}
-                value={values['revision-id']}
+        <form onSubmit={handleSubmit(updateCluster)}>
+          <Stack sx={{ marginTop: 4 }}>
+            <Typography variant="body1">
+              When a cluster is equipped with an ACL, the apiserver and
+              dashboard endpoints get mapped to a NodeBalancer address where all
+              traffic is protected through a Cloud Firewall.
+            </Typography>
+            <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
+            <Typography variant="h3">Enabled</Typography>
+            <Typography variant="body1">
+              A value of true results in a default policy of DENY. A value of
+              false results in a default policy of ALLOW (i.e., access controls
+              are disabled). When enabled, control plane access controls can
+              only be accessible through the defined IP CIDRs.
+            </Typography>
+            <Box sx={{ marginTop: 1 }}>
+              <FormControlLabel
+                control={
+                  <Toggle
+                    onChange={(e) => {
+                      setValue('enabled', e.target.checked, {
+                        shouldDirty: true,
+                      });
+                    }}
+                    checked={values.enabled ?? false}
+                    name="ipacl-checkbox"
+                  />
+                }
+                label={'IPACL Enabled'}
               />
-              <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
-            </>
-          )}
-          <Typography variant="h3">Addresses</Typography>
-          <Typography sx={{ marginBottom: 1 }} variant="body1">
-            A list of individual ipv4 and ipv6 addresses or CIDRs to ALLOW
-            access to the control plane.
-          </Typography>
-          {errors.root?.message && clusterMigrated && (
-            <Notice spacingTop={8} variant="error">
-              {errors.root.message}
-            </Notice>
-          )}
-          <ControlPlaneACLIPInputs
-            handleIPv4Blur={(ips: ExtendedIP[]) =>
-              setValue(
-                'ipv4',
-                validateIPs(ips, {
-                  allowEmptyAddress: false,
-                  errorMessage: 'Must be a valid IPv4 address.',
-                })
-              )
-            }
-            handleIPv6Blur={(ips: ExtendedIP[]) =>
-              setValue(
-                'ipv6',
-                validateIPs(ips, {
-                  allowEmptyAddress: false,
-                  errorMessage: 'Must be a valid IPv4 address.',
-                })
-              )
-            }
-            handleIPv4Change={(ips: ExtendedIP[]) => setValue('ipv4', ips)}
-            handleIPv6Change={(ips: ExtendedIP[]) => setValue('ipv6', ips)}
-            ipV4Addr={values.ipv4}
-            ipV6Addr={values.ipv6}
-          />
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'update-acl-button',
-              label: enabledExists ? 'Update IPACL' : 'Install IPACL',
-              loading: isSubmitting,
-              onClick: updateCluster,
-              type: 'submit',
-            }}
-            secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
-          />
-          {!clusterMigrated && (
-            <Notice spacingTop={24} variant="warning">
-              IPACL has not yet been installed on this cluster. During
-              installation, it may take up to 20 minutes before ACLs are fully
-              enforced for the first time.
-            </Notice>
-          )}
-        </Stack>
+            </Box>
+            <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
+            {clusterMigrated && (
+              <>
+                <Typography variant="h3">Revision ID</Typography>
+                <Typography variant="body1">
+                  Enables clients to track events related to ACL update requests
+                  and enforcements. Optional field. If omitted, defaults to a
+                  randomly generated string.
+                </Typography>
+                <TextField
+                  onBlur={(e) =>
+                    setValue('revision-id', e.target.value, {
+                      shouldDirty: true,
+                    })
+                  }
+                  data-qa-label-input
+                  errorText={errors['revision-id']?.message}
+                  label="Revision ID"
+                  value={values['revision-id']}
+                />
+                <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
+              </>
+            )}
+            <Typography variant="h3">Addresses</Typography>
+            <Typography sx={{ marginBottom: 1 }} variant="body1">
+              A list of individual ipv4 and ipv6 addresses or CIDRs to ALLOW
+              access to the control plane.
+            </Typography>
+            {errors.root?.message && clusterMigrated && (
+              <Notice spacingTop={8} variant="error">
+                {errors.root.message}
+              </Notice>
+            )}
+            <ControlPlaneACLIPInputs
+              handleIPv4Blur={(ips: ExtendedIP[]) =>
+                setValue(
+                  'ipv4',
+                  validateIPs(ips, {
+                    allowEmptyAddress: false,
+                    errorMessage: 'Must be a valid IPv4 address.',
+                  })
+                )
+              }
+              handleIPv4Change={(ips: ExtendedIP[]) =>
+                setValue('ipv4', ips, { shouldDirty: true })
+              }
+              handleIPv6Blur={(ips: ExtendedIP[]) =>
+                setValue(
+                  'ipv6',
+                  validateIPs(ips, {
+                    allowEmptyAddress: false,
+                    errorMessage: 'Must be a valid IPv4 address.',
+                  })
+                )
+              }
+              handleIPv6Change={(ips: ExtendedIP[]) =>
+                setValue('ipv6', ips, { shouldDirty: true })
+              }
+              ipV4Addr={values.ipv4}
+              ipV6Addr={values.ipv6}
+            />
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'update-acl-button',
+                disabled: !isDirty,
+                label: 'Update',
+                loading: isSubmitting,
+                type: 'submit',
+              }}
+              secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
+            />
+            {!clusterMigrated && (
+              <Notice spacingTop={24} variant="warning">
+                IPACL has not yet been installed on this cluster. During
+                installation, it may take up to 20 minutes before ACLs are fully
+                enforced for the first time.
+              </Notice>
+            )}
+          </Stack>
+        </form>
       </DrawerContent>
     </Drawer>
   );

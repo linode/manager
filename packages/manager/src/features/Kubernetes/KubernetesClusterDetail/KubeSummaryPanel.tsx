@@ -93,11 +93,9 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const totalIPv6 = aclData?.acl.addresses?.ipv6?.length ?? 0;
   const totalNumberIPs = totalIPv4 + totalIPv6;
 
-  const determineIPACLButtonCopy = isErrorKubernetesACL
-    ? 'Install IPACL'
-    : enabledACL
+  const determineIPACLButtonCopy = enabledACL
     ? pluralize('IP Address', 'IP Addresses', totalNumberIPs)
-    : 'Enable IPACL';
+    : 'Enable';
 
   const [
     resetKubeConfigDialogOpen,
@@ -194,7 +192,9 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             xs={12}
           >
             <StyledBox>
-              <StyledLabelBox component="span">IPACL: </StyledLabelBox>
+              <StyledLabelBox component="span">
+                Control Plane ACL:
+              </StyledLabelBox>
               {isLoadingKubernetesACL ? (
                 <Box sx={{ paddingLeft: 1 }}>
                   <CircleProgress noPadding size="sm" />
