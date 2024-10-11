@@ -1,4 +1,3 @@
-import { Linode } from '@linode/api-v4';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -8,49 +7,12 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeSelect } from './LinodeSelect';
 
-const fakeLinodeData = linodeFactory.build({
-  id: 1,
-  image: 'metadata-test-image',
-  label: 'metadata-test-region',
-  region: 'eu-west',
-});
+import type { Linode } from '@linode/api-v4';
+
 
 const TEXTFIELD_ID = 'textfield-input';
 
 describe('LinodeSelect', () => {
-  test('renders custom options using renderOption', async () => {
-    // Create a mock renderOption function
-    const mockRenderOption = (linode: Linode, selected: boolean) => (
-      <span data-testid={`custom-option-${linode.id}`}>
-        {`${linode.label} - ${selected ? 'Selected' : 'Not Selected'}`}
-      </span>
-    );
-
-    // Render the component with the custom renderOption function
-    renderWithTheme(
-      <LinodeSelect
-        multiple={false}
-        onSelectionChange={vi.fn()} // Placeholder, as there's no callback
-        options={[fakeLinodeData]}
-        renderOption={mockRenderOption}
-        value={null}
-      />
-    );
-
-    const input = screen.getByTestId(TEXTFIELD_ID);
-
-    // Open the dropdown
-    await userEvent.click(input);
-
-    // Wait for the options to load (use some unique identifier for the options)
-    await waitFor(() => {
-      const customOption = screen.getByTestId('custom-option-1');
-      expect(customOption).toBeInTheDocument();
-      expect(customOption).toHaveTextContent(
-        'metadata-test-region - Not Selected'
-      );
-    });
-  });
   test('should display custom no options message', async () => {
     const customNoOptionsMessage = 'Custom No Options Message';
     const options: Linode[] = []; // Assuming no options are available

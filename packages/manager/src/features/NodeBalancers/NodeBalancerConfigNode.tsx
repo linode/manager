@@ -134,18 +134,13 @@ export const NodeBalancerConfigNode = React.memo(
           <Grid container data-qa-node key={idx} spacing={2}>
             <Grid lg={forEdit ? 2 : 4} sm={3} xs={12}>
               <ConfigNodeIPSelect
-                textfieldProps={{
-                  dataAttrs: {
-                    'data-qa-backend-ip-address': true,
-                  },
-                }}
                 disabled={disabled}
                 errorText={nodesErrorMap.address}
                 handleChange={onNodeAddressChange}
                 inputId={`ip-select-node-${configIdx}-${idx}`}
                 nodeAddress={node.address}
                 nodeIndex={idx}
-                selectedRegion={nodeBalancerRegion}
+                region={nodeBalancerRegion}
               />
             </Grid>
             <Grid lg={2} sm={3} xs={6}>

@@ -45,10 +45,6 @@ interface LinodeSelectProps {
   optionsFilter?: (linode: Linode) => boolean;
   /* Displayed when the input is blank. */
   placeholder?: string;
-  /* Render a custom option. */
-  renderOption?: (linode: Linode, selected: boolean) => JSX.Element;
-  /* Render a custom option label. */
-  renderOptionLabel?: (linode: Linode) => string;
   /* Displays an indication that the input is required. */
   required?: boolean;
   /* Adds custom styles to the component. */
@@ -98,8 +94,6 @@ export const LinodeSelect = (
     options,
     optionsFilter,
     placeholder,
-    renderOption,
-    renderOptionLabel,
     sx,
     value,
   } = props;
@@ -122,9 +116,6 @@ export const LinodeSelect = (
 
   return (
     <Autocomplete
-      getOptionLabel={(linode: Linode) =>
-        renderOptionLabel ? renderOptionLabel(linode) : linode.label
-      }
       isOptionEqualToValue={
         checkIsOptionEqualToValue
           ? (option, value) => option.id === value.id
@@ -144,17 +135,6 @@ export const LinodeSelect = (
           : multiple
           ? 'Select Linodes'
           : 'Select a Linode'
-      }
-      renderOption={
-        renderOption
-          ? (props, option, { selected }) => {
-              return (
-                <li {...props} data-qa-linode-option>
-                  {renderOption(option, selected)}
-                </li>
-              );
-            }
-          : undefined
       }
       value={
         typeof value === 'function'
