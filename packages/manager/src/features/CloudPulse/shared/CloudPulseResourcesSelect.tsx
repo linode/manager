@@ -41,8 +41,6 @@ export const CloudPulseResourcesSelect = React.memo(
       xFilter,
     } = props;
 
-    const isAutocompleteOpen = React.useRef(false);
-
     const { data: resources, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
@@ -53,6 +51,9 @@ export const CloudPulseResourcesSelect = React.memo(
     const [selectedResources, setSelectedResources] = React.useState<
       CloudPulseResources[]
     >();
+
+    // here we track the open state with ref to avoid unwanted re-renders, as we are any re-rendering while updating the selected values itself
+    const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       return resources && resources.length > 0 ? resources : [];
