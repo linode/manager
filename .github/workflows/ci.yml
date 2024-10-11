@@ -153,7 +153,7 @@ jobs:
       - run: cd test-sdk-cjs && node ./sdk-commonjs.cjs
 
   test-manager:
-    runs-on: macos-14
+    runs-on: macos-15
     needs: build-sdk
     steps:
       - uses: actions/checkout@v4

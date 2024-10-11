@@ -37,6 +37,8 @@ export default defineConfig({
         'src/**/*.utils.{js,jsx,ts,tsx}',
       ],
     },
+    maxWorkers: 16,
+    maxConcurrency: 16,
     environment: 'happy-dom',
     globals: true,
     setupFiles: './src/testSetup.ts',
