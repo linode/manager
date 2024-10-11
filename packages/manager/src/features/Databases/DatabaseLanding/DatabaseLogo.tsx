@@ -8,10 +8,10 @@ import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 
-import type { SxProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface Props {
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export const DatabaseLogo = ({ sx }: Props) => {
