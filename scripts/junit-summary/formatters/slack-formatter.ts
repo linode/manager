@@ -67,8 +67,9 @@ export const slackFormatter: Formatter = (
         return `• \`${specFile}\` — _${result.groupName}_ » _${result.testName}_`;
       });
 
+    const remainingFailures = runInfo.failing - FAILURE_SUMMARY_LIMIT;
     const truncationNote = (runInfo.failing > FAILURE_SUMMARY_LIMIT)
-      ? `and ${runInfo.failing - FAILURE_SUMMARY_LIMIT} more...\n`
+      ? `and ${remainingFailures} more ${pluralize(remainingFailures, 'failure', 'failures')}...\n`
       : null;
 
     // When applicable, display actions that can be taken by the user.
