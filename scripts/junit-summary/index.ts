@@ -51,6 +51,8 @@ const main = async (junitPath: string) => {
     const reportPath = path.resolve(junitPath);
     const summaryFormat = program.opts().format;
     const metadata: Metadata = {
+      pipelineTitle: program.opts()['meta:title'],
+
       authorName: program.opts()['meta:authorName'],
       authorSlack: program.opts()['meta:authorSlack'],
       authorGitHub: program.opts()['meta:auhtorGithub'],
