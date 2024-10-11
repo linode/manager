@@ -140,7 +140,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E0
    * Confirms all endpoints are displayed regardless if there's multiple of the same type
    * Confirms S3 endpoint hostname displayed to differentiate between identical options in the dropdown
-   * Confirms correct information displays in the details drawer for all endpoint types
+   * Confirms correct information displays in the details drawer for a bucket with endpoint E0
    */
   it('can create a bucket with E0 endpoint type', () => {
     const endpointTypeE0 = 'Legacy (E0)';
@@ -161,7 +161,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     mockGetRegions(mockRegions);
-    mockGetBucketAccess(bucketLabel, bucketCluster, mockAccess).as('getBucketAccess');
+    mockGetBucketAccess(bucketLabel, bucketCluster, mockAccess).as(
+      'getBucketAccess'
+    );
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
@@ -279,7 +281,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E1
-   * Confirms correct information displays in the details drawer for all endpoint types
+   * Confirms correct information displays in the details drawer for a bucket with endpoint E1
    */
   it('can create a bucket with E1 endpoint type', () => {
     const endpointTypeE1 = 'Standard (E1)';
@@ -300,7 +302,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     mockGetRegions(mockRegions);
-    mockGetBucketAccess(bucketLabel, bucketCluster, mockAccess).as('getBucketAccess');
+    mockGetBucketAccess(bucketLabel, bucketCluster, mockAccess).as(
+      'getBucketAccess'
+    );
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
@@ -403,7 +407,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E2
-   * Confirms correct information displays in the details drawer for all endpoint types
+   * Confirms correct information displays in the details drawer for a bucket with endpoint E2
    */
   it('can create a bucket with E2 endpoint type', () => {
     const endpointTypeE2 = 'Standard (E2)';
@@ -424,7 +428,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     mockGetRegions(mockRegions);
-    mockGetBucketAccess(bucketLabel, bucketCluster, mockAccess).as('getBucketAccess');
+    mockGetBucketAccess(bucketLabel, bucketCluster, mockAccess).as(
+      'getBucketAccess'
+    );
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
@@ -525,7 +531,7 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
   /**
    * Confirms UI flow for creating a gen2 Object Storage bucket with endpoint E3
-   * Confirms correct information displays in the details drawer for all endpoint types
+   * Confirms correct information displays in the details drawer for a bucket with endpoint E3
    */
   it('can create a bucket with E3 endpoint type', () => {
     const endpointTypeE3 = 'Standard (E3)';
@@ -546,7 +552,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     );
 
     mockGetRegions(mockRegions);
-    mockGetBucketAccess(bucketLabel, bucketCluster, mockAccess).as('getBucketAccess');
+    mockGetBucketAccess(bucketLabel, bucketCluster, mockAccess).as(
+      'getBucketAccess'
+    );
 
     cy.visitWithLogin('/object-storage/buckets/create');
     cy.wait([
