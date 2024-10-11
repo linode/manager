@@ -1,3 +1,4 @@
+import { breakpoints } from '@linode/ui';
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
@@ -6,10 +7,9 @@ import {
   planSelectionTypeFactory,
 } from 'src/factories/types';
 import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
-import { breakpoints } from 'src/foundations/breakpoints';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlanSelection } from './PlanSelection';
 
