@@ -305,13 +305,8 @@ export const lightTheme: ThemeOptions = {
     },
     MuiAppBar: {
       styleOverrides: {
-        colorDefault: {
-          backgroundColor: 'inherit',
-        },
         root: {
           backgroundColor: bg.bgPaper,
-          borderLeft: 0,
-          borderTop: 0,
           color: primaryColors.text,
           position: 'relative',
         },
