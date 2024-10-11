@@ -16,15 +16,6 @@ export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
   },
 }));
 
-export const StyledLabelBox = styled(Box, { label: 'StyledLabelBox' })(
-  ({ theme }) => ({
-    alignItems: 'center',
-    display: 'flex',
-    fontFamily: theme.font.bold,
-    marginRight: theme.spacing(0.5),
-  })
-);
-
 export const StyledActionRowGrid = styled(Grid, {
   label: 'StyledActionRowGrid',
 })({

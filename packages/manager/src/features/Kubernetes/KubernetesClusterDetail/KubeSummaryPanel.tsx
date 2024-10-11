@@ -34,7 +34,6 @@ import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 import {
   StyledActionRowGrid,
   StyledBox,
-  StyledLabelBox,
   StyledTagGrid,
 } from './KubeSummaryPanel.styles';
 
@@ -82,13 +81,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const {
     data: aclData,
     error: isErrorKubernetesACL,
-    // isFetching: isFetchingKubernetesACL,
     isLoading: isLoadingKubernetesACL,
-    // refetch: refetchKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(cluster.id);
 
   const enabledACL = aclData?.acl.enabled ?? false;
-  // const revisionIDACL = acl_response ? acl_response.acl['revision-id'] : '';
   const totalIPv4 = aclData?.acl.addresses?.ipv4?.length ?? 0;
   const totalIPv6 = aclData?.acl.addresses?.ipv6?.length ?? 0;
   const totalNumberIPs = totalIPv4 + totalIPv6;
@@ -192,9 +188,14 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             xs={12}
           >
             <StyledBox>
-              <StyledLabelBox component="span">
+              <Typography
+                sx={{
+                  fontFamily: theme.font.bold,
+                  marginRight: theme.spacing(0.5),
+                }}
+              >
                 Control Plane ACL:
-              </StyledLabelBox>
+              </Typography>
               {isLoadingKubernetesACL ? (
                 <Box sx={{ paddingLeft: 1 }}>
                   <CircleProgress noPadding size="sm" />
