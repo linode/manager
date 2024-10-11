@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
@@ -42,11 +42,11 @@ describe('HAControlPlane', () => {
     await findByText(/\$60\.00/);
   });
 
-  it('should call the handleChange function on change', () => {
+  it('should call the handleChange function on change', async () => {
     const { getByTestId } = renderWithTheme(<HAControlPlane {...props} />);
     const haRadioButton = getByTestId('ha-radio-button-yes');
 
-    fireEvent.click(haRadioButton);
+    await userEvent.click(haRadioButton);
     expect(props.setHighAvailability).toHaveBeenCalled();
   });
 });

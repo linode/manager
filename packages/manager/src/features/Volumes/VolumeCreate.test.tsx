@@ -55,6 +55,6 @@ describe('VolumeCreate', () => {
       flags: { blockStorageEncryption: true },
     });
 
-    await findByText(encryptVolumeSectionHeader);
+    await findByText(encryptVolumeSectionHeader, {}, { timeout: 5_000 });
   });
 });

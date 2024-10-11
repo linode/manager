@@ -44,13 +44,15 @@ describe('NodeBalancerConfigurations', () => {
       })
     );
 
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />,
-      {
-        MemoryRouter: memoryRouter,
-        routePath,
-      }
-    );
+    const {
+      getAllByLabelText,
+      getByLabelText,
+      getByTestId,
+      getByText,
+    } = renderWithTheme(<NodeBalancerConfigurations {...props} />, {
+      MemoryRouter: memoryRouter,
+      routePath,
+    });
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -65,7 +67,11 @@ describe('NodeBalancerConfigurations', () => {
     expect(getByLabelText('Label')).toBeInTheDocument();
     expect(getByLabelText('IP Address')).toBeInTheDocument();
     expect(getByLabelText('Weight')).toBeInTheDocument();
-    expect(getByLabelText('Port')).toBeInTheDocument();
+    const portTextFields = getAllByLabelText('Port');
+    expect(portTextFields).toHaveLength(2); // There is a port field for the config and a port field for the one node
+    for (const field of portTextFields) {
+      expect(field).toBeInTheDocument();
+    }
     expect(getByText('Listen on this port.')).toBeInTheDocument();
     expect(getByText('Active Health Checks')).toBeInTheDocument();
     expect(
