@@ -43,5 +43,5 @@ export interface Metadata {
   rerunUrl?: string;
 
   /** Arbitrary extra information that can be added to output. */
-  extra: string;
+  extra?: string;
 }
