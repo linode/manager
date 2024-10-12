@@ -230,18 +230,15 @@ export const CloudPulseCustomSelect = React.memo(
             ? ''
             : placeholder || 'Select a Value'
         }
-        textFieldProps={{
-          // hideLabel: true,
-        }}
         autoHighlight
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label={label || 'Select a Value'}
         multiple={isMultiSelect}
+        noMarginTop
         onChange={handleChange}
         value={selectedResource ?? (isMultiSelect ? [] : null)}
-        noMarginTop
       />
     );
   },

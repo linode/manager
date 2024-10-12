@@ -126,9 +126,9 @@ export const CloudPulseResourcesSelect = React.memo(
         label={label ?? 'Resources'}
         limitTags={2}
         multiple
+        noMarginTop
         options={getResourcesList}
         value={selectedResources ?? []}
-        noMarginTop
       />
     );
   },
