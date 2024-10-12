@@ -293,6 +293,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             sx={{
               justifyContent: 'start',
               m: 0,
+              marginBottom: showFilter ? 1 : 0,
               minHeight: 'auto',
               minWidth: 'auto',
               p: 0,
@@ -330,6 +331,6 @@ function compareProps(
   return (
     oldProps.dashboard?.id === newProps.dashboard?.id &&
     oldProps.preferences?.[DASHBOARD_ID] ===
-    newProps.preferences?.[DASHBOARD_ID]
+      newProps.preferences?.[DASHBOARD_ID]
   );
 }
