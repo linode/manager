@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.129.1",
+  "version": "1.130.0",
   "private": true,
   "type": "module",
   "bugs": {
@@ -86,7 +86,7 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "start": "concurrently --raw \"vite\" \"tsc --watch --preserveWatchOutput\"",
+    "start": "concurrently --raw \"NODE_OPTIONS='--max-old-space-size=4096' vite\" \"NODE_OPTIONS='--max-old-space-size=4096' tsc --watch --preserveWatchOutput\"",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
     "start:ci": "vite preview --port 3000 --host",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
@@ -95,7 +95,7 @@
     "precommit": "lint-staged && yarn typecheck",
     "test": "vitest run",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",
     "build-storybook": "storybook build",
     "cy:run": "cypress run -b chrome",
@@ -195,7 +195,7 @@
     "eslint-plugin-xss": "^0.1.10",
     "factory.ts": "^0.5.1",
     "glob": "^10.3.1",
-    "jsdom": "^24.1.1",
+    "happy-dom": "^15.7.4",
     "junit2json": "^3.1.4",
     "lint-staged": "^15.2.9",
     "mocha-junit-reporter": "^2.2.1",
