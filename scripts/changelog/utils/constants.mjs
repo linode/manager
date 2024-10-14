@@ -24,7 +24,7 @@ export const REPO = "manager";
 const baseDir = path.resolve(__dirname, "../../../packages");
 
 // Sanitize input to allow only alphanumeric, dashes, and underscores
-const sanitizeInput = (input) => {
+export const sanitizeInput = (input) => {
   return input.replace(/[^a-zA-Z0-9-_]/g, "");
 };
 

@@ -4,20 +4,12 @@ import { logger } from "./logger.mjs";
 import { promisify } from "util";
 import { changesetDirectory } from "./constants.mjs";
 import simpleGit from "simple-git";
+import { sanitizeFileName } from "../generate-changelogs.mjs";
 
 const readdir = promisify(fs.readdir);
 const unlink = promisify(fs.unlink);
 
 const git = simpleGit();
-
-/**
- * Sanitize the file name to remove potentially dangerous characters
- * @param {string} fileName - The file name to sanitize
- * @returns {string} - Sanitized file name
- */
-const sanitizeFileName = (fileName) => {
-  return fileName.replace(/[^a-zA-Z0-9-_\.]/g, ""); // Only allow alphanumeric, dashes, underscores, and dots
-};
 
 /**
  * Safe path concatenation using string methods to avoid path traversal vulnerabilities.
