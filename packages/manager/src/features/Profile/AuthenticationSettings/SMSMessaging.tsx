@@ -94,7 +94,7 @@ export const SMSMessaging = () => {
         <Typography>
           Opting out of SMS messaging will reduce security and limit the ways
           you can securely access your account.{' '}
-          <Link to="https://www.linode.com/docs/guides/linode-manager-security-controls/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/security-controls-for-user-accounts">
             Learn more about security options.
           </Link>
         </Typography>

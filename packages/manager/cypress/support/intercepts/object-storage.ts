@@ -13,6 +13,7 @@ import { objectStorageBucketFactoryGen2 } from 'src/factories';
 import type {
   CreateObjectStorageBucketPayload,
   ObjectStorageBucket,
+  ObjectStorageBucketAccess,
   ObjectStorageCluster,
   ObjectStorageEndpoint,
   ObjectStorageKey,
@@ -452,11 +453,8 @@ export const mockGetClusters = (
 /**
  * Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket.
  *
- *
  * @param label - Object storage bucket label.
  * @param cluster - Object storage bucket cluster.
- * @param data -  response data.
- * @param statusCode - response status code.
  *
  * @returns Cypress chainable.
  */
@@ -489,7 +487,7 @@ export const interceptUpdateBucketAccess = (
 };
 
 /**
- * Intercepts GET request to get object storage endpoints.
+ * Intercepts GET request to get object storage endpoints and mocks response.
  *
  * @param endpoints - Object Storage endpoints for which to mock response
  *
@@ -502,5 +500,66 @@ export const mockGetObjectStorageEndpoints = (
     'GET',
     apiMatcher(`object-storage/endpoints*`),
     paginateResponse(endpoints)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket and mock the response.
+ *
+ *
+ * @param label - Object storage bucket label.
+ * @param cluster - Object storage bucket cluster.
+ * @param bucketFilename - uploaded bucketFilename
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetBucketObjectFilename = (
+  label: string,
+  cluster: string,
+  bucketFilename: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(
+      `object-storage/buckets/${cluster}/${label}/object-acl?name=${bucketFilename}`
+    ),
+    {
+      body: {},
+      statusCode: 200,
+    }
+  );
+};
+
+export const mockGetBucket = (
+  label: string,
+  cluster: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/buckets/${cluster}/${label}`),
+    {
+      body: {},
+      statusCode: 200,
+    }
+  );
+};
+
+/* Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket, and mocks response.
+ *
+ * @param label - Object storage bucket label.
+ * @param cluster - Object storage bucket cluster.
+ * @param bucketAccess - Access details for which to mock the response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetBucketAccess = (
+  label: string,
+  cluster: string,
+  bucketAccess: ObjectStorageBucketAccess
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/buckets/${cluster}/${label}/access`),
+    makeResponse(bucketAccess)
   );
 };

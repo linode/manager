@@ -9,6 +9,7 @@
  * - `<manager-version>`    (Optional) Desired Cloud Manager package version.
  * - `<api-version>`        (Optional) Desired APIv4 package version.
  * - `<validation-version>` (Optional) Desired Validation package version.
+ * - `<ui-version>`         (Optional) Desired UI package version.
  *
  * Optional Flags:
  * - `-f | --force`         Forces the script to update package versions without
@@ -125,6 +126,7 @@ const [
   desiredManagerVersion,
   desiredApiVersion,
   desiredValidationVersion,
+  desiredUiVersion,
 ] = desiredVersions;
 
 // Describes packages that should be modified by this script.
@@ -144,6 +146,7 @@ const jobs = [
     path: getPackagePath("validation"),
     desiredVersion: desiredValidationVersion,
   },
+  { name: "ui", path: getPackagePath("ui"), desiredVersion: desiredUiVersion },
 ];
 
 // Describes the files that will be written to, and the changes that will be made.

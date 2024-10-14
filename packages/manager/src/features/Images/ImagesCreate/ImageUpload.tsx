@@ -237,7 +237,7 @@ export const ImageUpload = () => {
                           Only check this box if your Custom Image is compatible
                           with cloud-init, or has cloud-init installed, and the
                           config has been changed to use our data service.{' '}
-                          <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/metadata-cloud-config/">
+                          <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-cloud-config-files-to-configure-a-server">
                             Learn how.
                           </Link>
                         </Typography>
@@ -255,6 +255,11 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <RegionSelect
+                  currentCapability={
+                    flags.disallowImageUploadToNonObjRegions
+                      ? 'Object Storage'
+                      : undefined
+                  }
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
@@ -262,9 +267,9 @@ export const ImageUpload = () => {
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
-                  currentCapability={undefined}
                   disableClearable
                   errorText={fieldState.error?.message}
+                  ignoreAccountAvailability
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta

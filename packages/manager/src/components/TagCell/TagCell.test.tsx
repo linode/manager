@@ -14,7 +14,7 @@ describe('TagCell Component', () => {
       const { getByTestId } = renderWithTheme(
         <TagCell disabled tags={tags} updateTags={updateTags} view="panel" />
       );
-      const disabledButton = getByTestId('Button');
+      const disabledButton = getByTestId('button');
       expect(disabledButton).toHaveAttribute('aria-disabled', 'true');
     });
 
@@ -22,7 +22,7 @@ describe('TagCell Component', () => {
       const { getByTestId } = renderWithTheme(
         <TagCell disabled tags={tags} updateTags={updateTags} view="panel" />
       );
-      const disabledButton = getByTestId('Button');
+      const disabledButton = getByTestId('button');
       expect(disabledButton).toBeInTheDocument();
 
       fireEvent.mouseOver(disabledButton);

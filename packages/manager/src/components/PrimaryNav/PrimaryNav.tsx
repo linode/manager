@@ -1,3 +1,4 @@
+import { BetaChip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -22,7 +23,6 @@ import VPC from 'src/assets/icons/entityIcons/vpc.svg';
 import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
@@ -294,7 +294,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               const props = {
                 closeMenu,
                 isCollapsed,
-                key: thisLink.display,
                 locationPathname: location.pathname,
                 locationSearch: location.search,
                 ...thisLink,
@@ -307,11 +306,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 thisLink.prefetchRequestCondition !== undefined ? (
                 <PrefetchPrimaryLink
                   {...props}
+                  key={thisLink.display}
                   prefetchRequestCondition={thisLink.prefetchRequestCondition}
                   prefetchRequestFn={thisLink.prefetchRequestFn}
                 />
               ) : (
-                <PrimaryLink {...props} />
+                <PrimaryLink {...props} key={thisLink.display} />
               );
             })}
           </div>

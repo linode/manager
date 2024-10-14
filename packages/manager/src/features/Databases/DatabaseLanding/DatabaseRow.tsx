@@ -6,6 +6,8 @@ import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
+import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -15,11 +17,11 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 import type { Event } from '@linode/api-v4';
 import type {
-  Database,
   DatabaseInstance,
   DatabaseType,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
+import type { ActionHandlers } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 
 export const databaseEngineMap: Record<Engine, string> = {
   mongodb: 'MongoDB',
@@ -29,12 +31,22 @@ export const databaseEngineMap: Record<Engine, string> = {
 };
 
 interface Props {
-  database: Database | DatabaseInstance;
+  database: DatabaseInstance;
   events?: Event[];
+  /**
+   * Not used for V1, will be required once migration is complete
+   * @since DBaaS V2 GA
+   */
+  handlers?: ActionHandlers;
   isNewDatabase?: boolean;
 }
 
-export const DatabaseRow = ({ database, events, isNewDatabase }: Props) => {
+export const DatabaseRow = ({
+  database,
+  events,
+  handlers,
+  isNewDatabase,
+}: Props) => {
   const {
     cluster_size,
     created,
@@ -48,10 +60,13 @@ export const DatabaseRow = ({ database, events, isNewDatabase }: Props) => {
 
   const { data: regions } = useRegionsQuery();
   const { data: profile } = useProfile();
-  const { data: types } = useDatabaseTypesQuery();
+  const { data: types } = useDatabaseTypesQuery({
+    platform: database.platform,
+  });
   const plan = types?.find((t: DatabaseType) => t.id === type);
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
+  const { isV2GAUser } = useIsDatabasesEnabled();
 
   const configuration =
     cluster_size === 1 ? (
@@ -67,7 +82,6 @@ export const DatabaseRow = ({ database, events, isNewDatabase }: Props) => {
         />
       </>
     );
-
   return (
     <TableRow data-qa-database-cluster-id={id} key={`database-row-${id}`}>
       <TableCell>
@@ -93,6 +107,16 @@ export const DatabaseRow = ({ database, events, isNewDatabase }: Props) => {
               })}
         </TableCell>
       </Hidden>
+      {isV2GAUser && isNewDatabase && (
+        <TableCell actionCell>
+          <DatabaseActionMenu
+            databaseEngine={engine}
+            databaseId={id}
+            databaseLabel={label}
+            handlers={handlers!}
+          />
+        </TableCell>
+      )}
     </TableRow>
   );
 };

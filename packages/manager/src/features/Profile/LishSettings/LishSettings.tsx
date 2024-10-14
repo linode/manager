@@ -12,6 +12,8 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { createLazyRoute } from '@tanstack/react-router';
+
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -221,3 +223,7 @@ export const LishSettings = () => {
     </>
   );
 };
+
+export const lishSettingsLazyRoute = createLazyRoute('/profile/lish')({
+  component: LishSettings,
+});
