@@ -56,8 +56,10 @@ export const CloudPulseAggregateFunction = React.memo(
     return (
       <CloudPulseTooltip title={'Aggregation function'}>
         <StyledWidgetAutocomplete
-          getOptionLabel={(option: { label: string }) => {
-            return convertStringToCamelCasesWithSpaces(option.label); // options needed to be display in Caps first
+          getOptionLabel={(option) => {
+            return convertStringToCamelCasesWithSpaces(
+              typeof option === 'string' ? option : option.label
+            ); // options needed to be display in Caps first
           }}
           isOptionEqualToValue={(option, value) => {
             return option.label === value.label;
