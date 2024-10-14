@@ -1,6 +1,6 @@
 {
   "name": "@linode/validation",
-  "version": "0.53.0",
+  "version": "0.54.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
   "type": "module",
   "main": "lib/index.cjs",
@@ -44,9 +44,8 @@
   },
   "devDependencies": {
     "@types/node": "^12.7.1",
-    "concurrently": "^4.1.1",
+    "concurrently": "^9.0.1",
     "eslint": "^6.8.0",
-    "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "lint-staged": "^15.2.9",
     "prettier": "~2.2.1",

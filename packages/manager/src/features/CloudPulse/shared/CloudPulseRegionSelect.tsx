@@ -3,16 +3,11 @@ import * as React from 'react';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import { REGION, RESOURCES } from '../Utils/constants';
-import {
-  getUserPreferenceObject,
-  updateGlobalFilterPreference,
-} from '../Utils/UserPreference';
-
-import type { Dashboard } from '@linode/api-v4';
+import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
-  handleRegionChange: (region: string | undefined) => void;
+  defaultValue?: FilterValue;
+  handleRegionChange: (region: string | undefined, savePref?: boolean) => void;
   placeholder?: string;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
@@ -22,36 +17,32 @@ export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
     const { data: regions } = useRegionsQuery();
 
-    const { handleRegionChange, placeholder, selectedDashboard } = props;
+    const {
+      defaultValue,
+      handleRegionChange,
+      placeholder,
+      savePreferences,
+      selectedDashboard,
+    } = props;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
-
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
-      const defaultRegion = getUserPreferenceObject()?.region;
-
-      if (regions) {
-        if (defaultRegion) {
-          const region = regions.find((obj) => obj.id === defaultRegion)?.id;
-          handleRegionChange(region);
-          setSelectedRegion(region);
-        } else {
-          setSelectedRegion(undefined);
-          handleRegionChange(undefined);
-        }
+      if (regions && savePreferences) {
+        const region = defaultValue
+          ? regions.find((regionObj) => regionObj.id === defaultValue)?.id
+          : undefined;
+        handleRegionChange(region);
+        setSelectedRegion(region);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [regions, selectedDashboard]);
+    }, [regions]);
 
     return (
       <RegionSelect
         onChange={(_, region) => {
-          updateGlobalFilterPreference({
-            [REGION]: region?.id,
-            [RESOURCES]: undefined,
-          });
           setSelectedRegion(region?.id);
-          handleRegionChange(region?.id);
+          handleRegionChange(region?.id, savePreferences);
         }}
         textFieldProps={{
           hideLabel: true,
@@ -67,5 +58,7 @@ export const CloudPulseRegionSelect = React.memo(
         value={selectedRegion}
       />
     );
-  }
+  },
+  (prevProps, nextProps) =>
+    prevProps.selectedDashboard?.id === nextProps.selectedDashboard?.id
 );

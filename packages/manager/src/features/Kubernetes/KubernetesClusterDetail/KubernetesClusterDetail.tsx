@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -7,14 +8,17 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useGetAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
+  useKubernetesClusterBetaQuery,
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { APLSummaryPanel } from './APLSummaryPanel';
 import { KubeSummaryPanel } from './KubeSummaryPanel';
 import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
@@ -25,7 +29,13 @@ export const KubernetesClusterDetail = () => {
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
   const location = useLocation();
-  const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
+  const showAPL = useGetAPLAvailability();
+  const kubernetesClusterBetaQuery = useKubernetesClusterBetaQuery(id);
+  const kubernetesClusterQuery = useKubernetesClusterQuery(id);
+
+  const { data: cluster, error, isLoading } = showAPL
+    ? kubernetesClusterBetaQuery
+    : kubernetesClusterQuery;
   const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
@@ -82,6 +92,7 @@ export const KubernetesClusterDetail = () => {
           currentVersion={cluster?.k8s_version}
         />
       </Grid>
+
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
@@ -101,12 +112,25 @@ export const KubernetesClusterDetail = () => {
         }
         createButtonText="Upgrade to HA"
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         title="Kubernetes Cluster Details"
       />
       <Grid>
         <KubeSummaryPanel cluster={cluster} />
       </Grid>
+      {showAPL && cluster.apl_enabled && (
+        <>
+          <LandingHeader
+            docsLabel="Docs"
+            docsLink="https://otomi.io/docs/get-started/overview"
+            removeCrumbX={[1, 2, 3]}
+            title="Application platform for LKE"
+          />
+          <Grid>
+            <APLSummaryPanel cluster={cluster} />
+          </Grid>
+        </>
+      )}
       <Grid>
         <NodePoolsDisplay
           clusterID={cluster.id}
@@ -124,3 +148,9 @@ export const KubernetesClusterDetail = () => {
     </>
   );
 };
+
+export const kubernetesClusterDetailLazyRoute = createLazyRoute(
+  '/kubernetes/clusters/$clusterID'
+)({
+  component: KubernetesClusterDetail,
+});

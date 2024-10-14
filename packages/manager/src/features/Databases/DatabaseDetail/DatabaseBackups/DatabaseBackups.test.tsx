@@ -95,6 +95,35 @@ describe('Database Backups', () => {
     });
   });
 
+  it('should enable the restore button if disabled = false', async () => {
+    const mockDatabase = databaseFactory.build({
+      platform: 'rdbms-legacy',
+    });
+    const backups = databaseBackupFactory.buildList(7);
+
+    server.use(
+      http.get('*/profile', () => {
+        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
+      }),
+      http.get('*/databases/:engine/instances/:id', () => {
+        return HttpResponse.json(mockDatabase);
+      }),
+      http.get('*/databases/:engine/instances/:id/backups', () => {
+        return HttpResponse.json(makeResourcePage(backups));
+      })
+    );
+
+    const { findAllByText } = renderWithTheme(
+      <DatabaseBackups disabled={false} />
+    );
+    const buttonSpans = await findAllByText('Restore');
+    expect(buttonSpans.length).toEqual(7);
+    buttonSpans.forEach((span: HTMLSpanElement) => {
+      const button = span.closest('button');
+      expect(button).toBeEnabled();
+    });
+  });
+
   it('should disable the restore button if no oldest_restore_time is returned', async () => {
     const mockDatabase = databaseFactory.build({
       oldest_restore_time: undefined,
@@ -125,36 +154,24 @@ describe('Database Backups', () => {
     });
   });
 
-  it('should enable the restore button if disabled = false', async () => {
+  it('should render a date picker when it is a default database', async () => {
     const mockDatabase = databaseFactory.build({
-      platform: 'rdbms-legacy',
+      platform: 'rdbms-default',
     });
-    const backups = databaseBackupFactory.buildList(7);
 
     server.use(
-      http.get('*/profile', () => {
-        return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
-      }),
       http.get('*/databases/:engine/instances/:id', () => {
         return HttpResponse.json(mockDatabase);
-      }),
-      http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json(makeResourcePage(backups));
       })
     );
 
-    const { findAllByText } = renderWithTheme(
-      <DatabaseBackups disabled={false} />
-    );
-    const buttonSpans = await findAllByText('Restore');
-    expect(buttonSpans.length).toEqual(7);
-    buttonSpans.forEach((span: HTMLSpanElement) => {
-      const button = span.closest('button');
-      expect(button).toBeEnabled();
-    });
+    const rendered = renderWithTheme(<DatabaseBackups disabled={false} />);
+    expect(
+      rendered.container.getElementsByClassName('MuiDateCalendar-root')
+    ).toBeDefined();
   });
 
-  it('should render a time picker when it is a new database', async () => {
+  it('should render a time picker when it is a default database', async () => {
     const mockDatabase = databaseFactory.build({
       platform: 'rdbms-default',
     });

@@ -204,7 +204,7 @@ export const AccessSelect = React.memo((props: Props) => {
         <Typography>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
-          <Link to="https://www.linode.com/docs/guides/how-to-use-object-storage/#object-storage-tools">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools">
             S3-compatible tool
           </Link>
           .
@@ -218,7 +218,11 @@ export const AccessSelect = React.memo((props: Props) => {
             })}
           >
             CORS (Cross Origin Sharing) is not available for endpoint types E2
-            and E3. <Link to="#">Learn more</Link>.
+            and E3.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/define-access-and-permissions-using-acls-access-control-lists">
+              Learn more
+            </Link>
+            .
           </Typography>
         </Notice>
       )}

@@ -173,6 +173,7 @@ const adb10 = (i: number) => i % 2 === 0;
 
 export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
   {
+    allow_list: [],
     cluster_size: Factory.each((i) =>
       adb10(i)
         ? ([1, 3][i % 2] as ClusterSize)
