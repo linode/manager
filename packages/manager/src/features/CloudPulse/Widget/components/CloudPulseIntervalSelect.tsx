@@ -1,9 +1,11 @@
 import React from 'react';
 
 import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
-import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
 
 import type { TimeGranularity } from '@linode/api-v4';
+import { useTheme } from '@mui/material';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { getAutocompleteWidgetStyles } from '../../Utils/CloudPulseWidgetUtils';
 
 interface IntervalOptions {
   label: string;
@@ -119,9 +121,11 @@ export const CloudPulseIntervalSelect = React.memo(
       defaultValue
     );
 
+    const theme = useTheme();
+
     return (
       <CloudPulseTooltip title={'Data aggregation interval'}>
-        <StyledWidgetAutocomplete
+        <Autocomplete
           isOptionEqualToValue={(
             option: IntervalOptions,
             value: IntervalOptions
@@ -149,7 +153,7 @@ export const CloudPulseIntervalSelect = React.memo(
           label="Select an Interval"
           noMarginTop={true}
           options={[autoIntervalOption, ...availableIntervalOptions]}
-          sx={{ width: { xs: '100%' } }}
+          sx={getAutocompleteWidgetStyles(theme)}
           value={selectedInterval}
         />
       </CloudPulseTooltip>
