@@ -51,7 +51,7 @@ export const CloudPulseRegionSelect = React.memo(
         disableClearable={false}
         disabled={!selectedDashboard || !regions}
         fullWidth
-        label={label ?? 'Select a Region'}
+        label={Boolean(label && label.length) ? label : 'Region'}
         noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
         regions={regions ? regions : []}
