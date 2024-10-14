@@ -2,6 +2,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import {
   RouterProvider,
   createMemoryHistory,
+  createRootRoute,
+  createRoute,
   createRouter,
 } from '@tanstack/react-router';
 import { act, render, waitFor } from '@testing-library/react';
@@ -84,11 +86,6 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
     mergeDeepRight(defaultState, customStore)
   );
 
-const defaultRouterMock = {
-  navigate: vi.fn(),
-  state: { status: 'idle' },
-};
-
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore, queryClient: passedQueryClient, routePath } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
@@ -170,38 +167,32 @@ interface OptionsWithRouter
  * getByText('Some text');
  */
 export const wrapWithThemeAndRouter = (
-  ui: any,
+  ui: React.ReactNode,
   options: OptionsWithRouter = {}
 ) => {
   const {
     customStore,
     initialRoute = '/',
     queryClient: passedQueryClient,
-    routeTree = migrationRouteTree,
   } = options;
   const queryClient = passedQueryClient ?? queryClientFactory();
   const storeToPass = customStore ? baseStore(customStore) : storeFactory();
-
-  vi.mock('@tanstack/react-router', async () => {
-    const actual = await vi.importActual('@tanstack/react-router');
-    return {
-      ...actual,
-      useNavigate: () => defaultRouterMock.navigate,
-      useRouter: () => defaultRouterMock,
-    };
-  });
 
   setupInterceptors(
     configureStore<ApplicationState>([thunk])(defaultState)
   );
 
-  const history = createMemoryHistory({
-    initialEntries: [initialRoute],
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => ui,
+    getParentRoute: () => rootRoute,
+    path: initialRoute,
   });
-
-  const router: MigrationRouter = createRouter({
-    history,
-    routeTree,
+  const router = createRouter({
+    history: createMemoryHistory({
+      initialEntries: [initialRoute],
+    }),
+    routeTree: rootRoute.addChildren([indexRoute]),
   });
 
   return (
@@ -216,7 +207,6 @@ export const wrapWithThemeAndRouter = (
           >
             <SnackbarProvider>
               <RouterProvider router={router} />
-              {ui}
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>
