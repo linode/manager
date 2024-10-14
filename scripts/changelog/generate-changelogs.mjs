@@ -43,10 +43,13 @@ try {
       packageJsonPath(linodePackage),
       "utf-8"
     );
+    // Parse the package.json file
     const parsedPackageJsonFile = JSON.parse(packageJsonFile);
+    // Get the current version from package.json
     const currentSemver = parsedPackageJsonFile.version;
 
     try {
+      // Check if there are any changeset files in the .changeset directories
       const files = await new Promise((resolve, reject) => {
         fs.readdir(changesetDirectory(linodePackage), (err, files) => {
           if (err) {
@@ -56,12 +59,15 @@ try {
           }
         });
       });
-
+      // If only README.md in there, no changeset(s)
       if (files.length === 1) {
         logger.success({
           message: `No Changeset file(s) found for @linode/${linodePackage}. Skipping...`,
         });
       } else {
+        /**
+         * Prompt the user for the release date and the type of version bump.
+         */
         const { releaseDate } = await inquirer.prompt([
           {
             type: "input",
@@ -75,6 +81,7 @@ try {
               if (!input.match(/^\d{4}-\d{2}-\d{2}$/)) {
                 return "Please enter a valid date in the format YYYY-MM-DD.";
               }
+
               return true;
             },
             default: today,
@@ -83,6 +90,7 @@ try {
 
         try {
           files.forEach((file) => {
+            // Skipping the README file
             if (file === "README.md") {
               return;
             }
@@ -118,16 +126,20 @@ try {
           releaseDate,
           currentSemver
         );
+        // Generate the final changelog content
         populateChangelogEntry(changesetEntries, changelogContent);
 
         try {
+          // Read the existing changelog content
           const existingChangelogContent = fs.readFileSync(
             changelogPath(linodePackage),
             "utf-8"
           );
 
+          // Find the index of the first entry
           const firstEntryIndex = existingChangelogContent.indexOf("## [");
 
+          // Prepare the updated changelog content
           const updatedChangelogContent =
             firstEntryIndex === -1
               ? `${changelogContent.join("\n")}\n\n${existingChangelogContent}`
@@ -138,6 +150,7 @@ try {
                   "\n"
                 )}\n\n${existingChangelogContent.slice(firstEntryIndex)}`;
 
+          // Write the updated changelog content
           fs.writeFileSync(
             changelogPath(linodePackage),
             updatedChangelogContent
@@ -153,6 +166,7 @@ try {
           });
         }
 
+        // Delete the changeset files for each package
         await deleteChangesets(linodePackage);
       }
     } catch (error) {
