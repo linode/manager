@@ -1,13 +1,15 @@
-import Grid, { Grid2Props } from '@mui/material/Unstable_Grid2';
-import { SxProps } from '@mui/system';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Warning from 'src/assets/icons/warning.svg';
-import { Typography, TypographyProps } from 'src/components/Typography';
+import { Typography } from 'src/components/Typography';
 
 import { useStyles } from './Notice.styles';
+
+import type { Grid2Props } from '@mui/material/Unstable_Grid2';
+import type { TypographyProps } from 'src/components/Typography';
 
 export type NoticeVariant =
   | 'error'
@@ -24,10 +26,6 @@ export interface NoticeProps extends Grid2Props {
    */
   bypassValidation?: boolean;
   /**
-   * Additional classes to be applied to the root element.
-   */
-  className?: string;
-  /**
    * The data-qa attribute to apply to the root element.
    */
   dataTestId?: string;
@@ -40,10 +38,6 @@ export interface NoticeProps extends Grid2Props {
    */
   important?: boolean;
   /**
-   * The function to execute when/if the error is clicked.
-   */
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  /**
    * The amount of spacing to apply to the bottom of the error.
    */
   spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
@@ -55,10 +49,6 @@ export interface NoticeProps extends Grid2Props {
    * The amount of spacing to apply to the top of the error.
    */
   spacingTop?: 0 | 4 | 8 | 12 | 16 | 24 | 32;
-  /**
-   * Additional styles to apply to the root element.
-   */
-  sx?: SxProps;
   /**
    * The text to display in the error. If this is not provided, props.children will be used.
    */

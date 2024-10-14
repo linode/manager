@@ -1,8 +1,13 @@
-import { SearchResultsByEntity, SearchableItem } from './search.interfaces';
+import type {
+  SearchResultsByEntity,
+  SearchableItem,
+} from './search.interfaces';
 
 export const emptyResults: SearchResultsByEntity = {
   buckets: [],
+  databases: [],
   domains: [],
+  firewalls: [],
   images: [],
   kubernetesClusters: [],
   linodes: [],
@@ -15,7 +20,9 @@ export const separateResultsByEntity = (
 ): SearchResultsByEntity => {
   const separatedResults: SearchResultsByEntity = {
     buckets: [],
+    databases: [],
     domains: [],
+    firewalls: [],
     images: [],
     kubernetesClusters: [],
     linodes: [],

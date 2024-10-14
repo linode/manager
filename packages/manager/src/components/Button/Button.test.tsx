@@ -31,13 +31,13 @@ describe('Button', () => {
 
   it('should be disabled if loading', () => {
     const { getByTestId } = renderWithTheme(<Button loading>Test</Button>);
-    const button = getByTestId('Button');
+    const button = getByTestId('button');
     expect(button).toBeDisabled();
   });
 
   it('should have the aria-disabled attribute, instead of disabled attribute', () => {
     const { getByTestId } = renderWithTheme(<Button disabled>Test</Button>);
-    const button = getByTestId('Button');
+    const button = getByTestId('button');
     expect(button).not.toHaveAttribute('disabled');
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });
@@ -49,7 +49,7 @@ describe('Button', () => {
       </Button>
     );
 
-    const button = getByTestId('Button');
+    const button = getByTestId('button');
     expect(button).toHaveAttribute('aria-describedby', 'button-tooltip');
 
     fireEvent.mouseOver(button);

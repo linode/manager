@@ -28,7 +28,7 @@ export interface LandingHeaderProps {
   onButtonClick?: () => void;
   onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onDocsClick?: () => void;
-  removeCrumbX?: number;
+  removeCrumbX?: number | number[];
   shouldHideDocsAndCreateButtons?: boolean;
   title?: JSX.Element | string;
 }

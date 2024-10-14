@@ -506,7 +506,7 @@ export const linode: PartialEventMap<'linode'> = {
       <>
         Snapshot backup <strong>failed</strong> on Linode{' '}
         <EventLink event={e} to="entity" />.{' '}
-        <Link to="https://www.linode.com/docs/products/storage/backups/#limits-and-considerations">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/backup-service#limits-and-considerations">
           Learn more about limits and considerations
         </Link>
         .

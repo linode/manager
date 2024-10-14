@@ -1,18 +1,11 @@
-import {
-  Image,
-  KubernetesCluster,
-  NodeBalancer,
-  Region,
-  Volume,
-} from '@linode/api-v4';
-import { Domain } from '@linode/api-v4/lib/domains';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
 
 import {
   bucketToSearchableItem,
+  databaseToSearchableItem,
   domainToSearchableItem,
+  firewallToSearchableItem,
   imageToSearchableItem,
   kubernetesClusterToSearchableItem,
   nodeBalToSearchableItem,
@@ -20,12 +13,24 @@ import {
 } from 'src/store/selectors/getSearchEntities';
 
 import { refinedSearch } from './refinedSearch';
-import {
+import { emptyResults, separateResultsByEntity } from './utils';
+
+import type {
   SearchResults,
   SearchResultsByEntity,
   SearchableItem,
 } from './search.interfaces';
-import { emptyResults, separateResultsByEntity } from './utils';
+import type {
+  DatabaseInstance,
+  Firewall,
+  Image,
+  KubernetesCluster,
+  NodeBalancer,
+  Region,
+  Volume,
+} from '@linode/api-v4';
+import type { Domain } from '@linode/api-v4/lib/domains';
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
 interface HandlerProps {
   search: (
@@ -37,7 +42,9 @@ interface HandlerProps {
     images: Image[],
     regions: Region[],
     searchableLinodes: SearchableItem<number | string>[],
-    nodebalancers: NodeBalancer[]
+    nodebalancers: NodeBalancer[],
+    firewalls: Firewall[],
+    databases: DatabaseInstance[]
   ) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
@@ -83,7 +90,9 @@ export default () => (Component: React.ComponentType<any>) => {
           images: Image[],
           regions: Region[],
           searchableLinodes: SearchableItem<number | string>[],
-          nodebalancers: NodeBalancer[]
+          nodebalancers: NodeBalancer[],
+          firewalls: Firewall[],
+          databases: DatabaseInstance[]
         ) => {
           const searchableBuckets = objectStorageBuckets.map((bucket) =>
             bucketToSearchableItem(bucket)
@@ -97,13 +106,17 @@ export default () => (Component: React.ComponentType<any>) => {
           const searchableImages = images.map((image) =>
             imageToSearchableItem(image)
           );
-
           const searchableClusters = clusters.map((cluster) =>
             kubernetesClusterToSearchableItem(cluster, regions)
           );
-
           const searchableNodebalancers = nodebalancers.map((nodebalancer) =>
             nodeBalToSearchableItem(nodebalancer)
+          );
+          const searchableFirewalls = firewalls.map((firewall) =>
+            firewallToSearchableItem(firewall)
+          );
+          const searchableDatabases = databases.map((database) =>
+            databaseToSearchableItem(database)
           );
           const results = search(
             [
@@ -114,6 +127,8 @@ export default () => (Component: React.ComponentType<any>) => {
               ...searchableVolumes,
               ...searchableClusters,
               ...searchableNodebalancers,
+              ...searchableFirewalls,
+              ...searchableDatabases,
             ],
             query
           );

@@ -72,7 +72,7 @@ export const MySQLLanding = React.memo((props: Props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-mysql/#troubleshooting">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-mysql-metrics-with-linode-longview#troubleshooting">
             guide
           </Link>{' '}
           for help troubleshooting the MySQL Longview app.

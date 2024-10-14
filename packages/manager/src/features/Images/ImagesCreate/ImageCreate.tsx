@@ -1,9 +1,12 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { NavTab, NavTabs } from 'src/components/NavTabs/NavTabs';
+import { NavTabs } from 'src/components/NavTabs/NavTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+
+import type { NavTab } from 'src/components/NavTabs/NavTabs';
 
 const ImageUpload = React.lazy(() =>
   import('./ImageUpload').then((module) => ({ default: module.ImageUpload }))
@@ -40,5 +43,9 @@ export const ImageCreate = () => {
     </>
   );
 };
+
+export const imageCreateLazyRoute = createLazyRoute('/images/create')({
+  component: ImageCreate,
+});
 
 export default ImageCreate;

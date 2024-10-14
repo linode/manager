@@ -12,7 +12,9 @@ export interface SearchableItem<T = number | string> {
 
 export type SearchableEntityType =
   | 'bucket'
+  | 'database'
   | 'domain'
+  | 'firewall'
   | 'image'
   | 'kubernetesCluster'
   | 'linode'
@@ -24,7 +26,9 @@ export type SearchField = 'ips' | 'label' | 'tags' | 'type';
 
 export interface SearchResultsByEntity {
   buckets: SearchableItem[];
+  databases: SearchableItem[];
   domains: SearchableItem[];
+  firewalls: SearchableItem[];
   images: SearchableItem[];
   kubernetesClusters: SearchableItem[];
   linodes: SearchableItem[];

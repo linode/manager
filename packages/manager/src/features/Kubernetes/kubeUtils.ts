@@ -1,3 +1,4 @@
+import { useFlags } from 'src/hooks/useFlags';
 import { sortByVersion } from 'src/utilities/sort-by';
 
 import type { Account } from '@linode/api-v4/lib/account';
@@ -110,6 +111,16 @@ export const getKubeHighAvailability = (
     isClusterHighlyAvailable,
     showHighAvailability,
   };
+};
+
+export const useGetAPLAvailability = (): boolean => {
+  const flags = useFlags();
+
+  if (!flags) {
+    return false;
+  }
+
+  return Boolean(flags.apl);
 };
 
 /**

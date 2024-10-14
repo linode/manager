@@ -1,10 +1,12 @@
 import {
   createKubernetesCluster,
+  createKubernetesClusterBeta,
   createNodePool,
   deleteKubernetesCluster,
   deleteNodePool,
   getKubeConfig,
   getKubernetesCluster,
+  getKubernetesClusterBeta,
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
@@ -52,6 +54,10 @@ import type {
 export const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({
     contextQueries: {
+      beta: {
+        queryFn: () => getKubernetesClusterBeta(id),
+        queryKey: [id],
+      },
       dashboard: {
         queryFn: () => getKubernetesClusterDashboard(id),
         queryKey: null,
@@ -98,6 +104,20 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
+export const useKubernetesClusterQuery = (id: number) => {
+  return useQuery<KubernetesCluster, APIError[]>(kubernetesQueries.cluster(id));
+};
+
+/**
+ * duplicated function of useKubernetesClusterQuery
+ * necessary to call BETA_API_ROOT in a seperate function based on feature flag
+ */
+export const useKubernetesClusterBetaQuery = (id: number) => {
+  return useQuery<KubernetesCluster, APIError[]>(
+    kubernetesQueries.cluster(id)._ctx.beta
+  );
+};
+
 export const useKubernetesClustersQuery = (
   params: Params,
   filter: Filter,
@@ -108,10 +128,6 @@ export const useKubernetesClustersQuery = (
     enabled,
     placeholderData: keepPreviousData,
   });
-};
-
-export const useKubernetesClusterQuery = (id: number) => {
-  return useQuery<KubernetesCluster, APIError[]>(kubernetesQueries.cluster(id));
 };
 
 export const useKubernetesClusterMutation = (id: number) => {
@@ -182,6 +198,27 @@ export const useCreateKubernetesClusterMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>({
     mutationFn: createKubernetesCluster,
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: kubernetesQueries.lists.queryKey,
+      });
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
+    },
+  });
+};
+
+/**
+ * duplicated function of useCreateKubernetesClusterMutation
+ * necessary to call BETA_API_ROOT in a seperate function based on feature flag
+ */
+
+export const useCreateKubernetesClusterBetaMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>({
+    mutationFn: createKubernetesClusterBeta,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: kubernetesQueries.lists.queryKey,

@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
@@ -25,7 +26,9 @@ import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
-const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
+const DatabaseBackups = React.lazy(
+  () => import('./DatabaseBackups/DatabaseBackups')
+);
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 const DatabaseResize = React.lazy(() =>
   import('./DatabaseResize/DatabaseResize').then(({ DatabaseResize }) => ({
@@ -207,5 +210,11 @@ export const DatabaseDetail = () => {
     </>
   );
 };
+
+export const databaseDetailLazyRoute = createLazyRoute(
+  '/databases/$engine/$databaseId'
+)({
+  component: DatabaseDetail,
+});
 
 export default DatabaseDetail;

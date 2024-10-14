@@ -1,4 +1,9 @@
-import { RELATIVE_TIME_DURATION, RESOURCE_ID, RESOURCES } from './constants';
+import {
+  REGION,
+  RELATIVE_TIME_DURATION,
+  RESOURCE_ID,
+  RESOURCES,
+} from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 import { CloudPulseSelectTypes } from './models';
 
@@ -12,7 +17,13 @@ import type {
 import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { CloudPulseServiceTypeFilters } from './models';
-import type { Dashboard, Filter, Filters, TimeDuration } from '@linode/api-v4';
+import type {
+  AclpConfig,
+  Dashboard,
+  Filter,
+  Filters,
+  TimeDuration,
+} from '@linode/api-v4';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
@@ -21,6 +32,7 @@ interface CloudPulseFilterProperties {
     [key: string]: FilterValueType;
   };
   isServiceAnalyticsIntegration: boolean;
+  preferences?: AclpConfig;
 }
 
 interface CloudPulseMandatoryFilterCheckProps {
@@ -42,11 +54,12 @@ interface CloudPulseMandatoryFilterCheckProps {
  */
 export const getRegionProperties = (
   props: CloudPulseFilterProperties,
-  handleRegionChange: (region: string | undefined) => void
+  handleRegionChange: (region: string | undefined, savePref?: boolean) => void
 ): CloudPulseRegionSelectProps => {
   const { placeholder } = props.config.configuration;
-  const { dashboard, isServiceAnalyticsIntegration } = props;
+  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
   return {
+    defaultValue: preferences?.[REGION],
     handleRegionChange,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
@@ -66,7 +79,10 @@ export const getRegionProperties = (
  */
 export const getResourcesProperties = (
   props: CloudPulseFilterProperties,
-  handleResourceChange: (resourceId: CloudPulseResources[]) => void
+  handleResourceChange: (
+    resourceId: CloudPulseResources[],
+    savePref?: boolean
+  ) => void
 ): CloudPulseResourcesSelectProps => {
   const { filterKey, placeholder } = props.config.configuration;
   const {
@@ -74,8 +90,10 @@ export const getResourcesProperties = (
     dashboard,
     dependentFilters,
     isServiceAnalyticsIntegration,
+    preferences,
   } = props;
   return {
+    defaultValue: preferences?.[RESOURCES],
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
@@ -96,7 +114,12 @@ export const getResourcesProperties = (
  */
 export const getCustomSelectProperties = (
   props: CloudPulseFilterProperties,
-  handleCustomSelectChange: (filterKey: string, value: FilterValueType) => void
+  handleCustomSelectChange: (
+    filterKey: string,
+    value: FilterValueType,
+    savePref?: boolean,
+    updatedPreferenceData?: {}
+  ) => void
 ): CloudPulseCustomSelectProps => {
   const {
     apiIdField,
@@ -109,7 +132,12 @@ export const getCustomSelectProperties = (
     options,
     placeholder,
   } = props.config.configuration;
-  const { dashboard, dependentFilters, isServiceAnalyticsIntegration } = props;
+  const {
+    dashboard,
+    dependentFilters,
+    isServiceAnalyticsIntegration,
+    preferences,
+  } = props;
   return {
     apiResponseIdField: apiIdField,
     apiResponseLabelField: apiLabelField,
@@ -118,6 +146,7 @@ export const getCustomSelectProperties = (
       filterKey,
       dashboard
     ),
+    defaultValue: preferences?.[filterKey],
     disabled: checkIfWeNeedToDisableFilterByFilterKey(
       filterKey,
       dependentFilters ?? {},
@@ -130,6 +159,7 @@ export const getCustomSelectProperties = (
     maxSelections,
     options,
     placeholder,
+    preferences,
     savePreferences: !isServiceAnalyticsIntegration,
     type: options
       ? CloudPulseSelectTypes.static
@@ -147,11 +177,18 @@ export const getCustomSelectProperties = (
  */
 export const getTimeDurationProperties = (
   props: CloudPulseFilterProperties,
-  handleTimeRangeChange: (timeDuration: TimeDuration) => void
+  handleTimeRangeChange: (
+    timeDuration: TimeDuration,
+    timeDurationValue?: string,
+    savePref?: boolean
+  ) => void
 ): CloudPulseTimeRangeSelectProps => {
   const { placeholder } = props.config.configuration;
-  const { isServiceAnalyticsIntegration } = props;
+  const { isServiceAnalyticsIntegration, preferences } = props;
+
+  const timeDuration = preferences?.timeDuration;
   return {
+    defaultValue: timeDuration,
     handleStatsChange: handleTimeRangeChange,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
@@ -267,9 +304,11 @@ export const getMetricsCallCustomFilters = (
   selectedFilters: {
     [key: string]: FilterValueType;
   },
-  serviceType: string
+  serviceType?: string
 ): CloudPulseMetricsAdditionalFilters[] => {
-  const serviceTypeConfig = FILTER_CONFIG.get(serviceType);
+  const serviceTypeConfig = serviceType
+    ? FILTER_CONFIG.get(serviceType)
+    : undefined;
 
   // If configuration exists, filter and map it to the desired CloudPulseMetricsAdditionalFilters format
   return (

@@ -886,6 +886,8 @@ export const shouldResolve = (type: string, field: string) => {
       return field === 'target';
     case 'CNAME':
       return field === 'target';
+    case 'TXT':
+      return field === 'name';
     default:
       return false;
   }

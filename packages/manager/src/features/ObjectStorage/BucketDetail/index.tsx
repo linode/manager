@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath } from 'react-router-dom';
 
@@ -63,7 +64,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
 
   const { endpoint_type } = bucket ?? {};
 
-  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type === 'E3';
+  const isSSLEnabled = endpoint_type !== 'E2' && endpoint_type !== 'E3';
 
   const tabs = [
     {
@@ -82,7 +83,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
           },
         ]
       : []),
-    ...(!isSSLEnabled
+    ...(isSSLEnabled
       ? [
           {
             routeName: `${props.match.url}/ssl`,
@@ -148,6 +149,12 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       </Tabs>
     </>
   );
+});
+
+export const bucketDetailLandingLazyRoute = createLazyRoute(
+  '/object-storage/buckets/$clusterId/$bucketName'
+)({
+  component: BucketDetailLanding,
 });
 
 export default BucketDetailLanding;

@@ -7,16 +7,16 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }} # The base branch of the PR (develop)
 
       - name: Use Node.js v20.17 LTS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20.17"
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
@@ -41,7 +41,7 @@ jobs:
           echo "$pct" > ref_code_coverage.txt
 
       - name: Upload Base Coverage Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ref_code_coverage
           path: ref_code_coverage.txt
@@ -52,14 +52,14 @@ jobs:
     needs: base_branch
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use Node.js v20.17 LTS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20.17"
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
@@ -88,13 +88,13 @@ jobs:
           echo "$pct" > current_code_coverage.txt
 
       - name: Upload PR Number Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pr_number
           path: pr_number.txt
 
       - name: Upload Current Coverage Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: current_code_coverage
           path: current_code_coverage.txt

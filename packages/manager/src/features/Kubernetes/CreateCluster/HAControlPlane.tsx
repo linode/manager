@@ -1,6 +1,7 @@
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
+import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -8,10 +9,12 @@ import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
 export interface HAControlPlaneProps {
   highAvailabilityPrice: string;
+  isAPLEnabled?: boolean;
   isErrorKubernetesTypes: boolean;
   isLoadingKubernetesTypes: boolean;
   selectedRegionId: string | undefined;
@@ -23,7 +26,7 @@ export const HACopy = () => (
     Recommended for production workloads, a high availability (HA) control plane
     is replicated on multiple master nodes to 99.99% uptime.
     <br />
-    <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
+    <Link to="https://techdocs.akamai.com/cloud-computing/docs/high-availability-ha-control-plane-on-lke">
       Learn more about the HA control plane
     </Link>
     .
@@ -42,6 +45,7 @@ export const getRegionPriceLink = (selectedRegionId: string) => {
 export const HAControlPlane = (props: HAControlPlaneProps) => {
   const {
     highAvailabilityPrice,
+    isAPLEnabled,
     isErrorKubernetesTypes,
     isLoadingKubernetesTypes,
     selectedRegionId,
@@ -53,7 +57,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
   };
 
   return (
-    <FormControl data-testid="ha-control-plane-form">
+    <FormControl data-testid="ha-control-plane-form" disabled={isAPLEnabled}>
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
@@ -80,21 +84,38 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
         aria-labelledby="ha-radio-buttons-group-label"
         name="ha-radio-buttons-group"
         onChange={(e) => handleChange(e)}
+        value={isAPLEnabled ? 'yes' : undefined}
       >
         <FormControlLabel
           label={
-            <Typography>
-              Yes, enable HA control plane.{' '}
-              {selectedRegionId
-                ? `For this region, HA control plane costs $${highAvailabilityPrice}/month.`
-                : '(Select a region to view price information.)'}
-            </Typography>
+            <Box alignItems="center" display="flex" flexDirection="row">
+              <Typography>
+                Yes, enable HA control plane.{' '}
+                {selectedRegionId
+                  ? `For this region, HA control plane costs $${highAvailabilityPrice}/month.`
+                  : '(Select a region to view price information.)'}
+              </Typography>
+              {isAPLEnabled && (
+                <TooltipIcon
+                  status="help"
+                  text={'Enabled by default when APL is enabled.'}
+                />
+              )}
+            </Box>
           }
+          checked={isAPLEnabled ? true : undefined}
           control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"
           value="yes"
         />
-        <FormControlLabel control={<Radio />} label="No" name="no" value="no" />
+
+        <FormControlLabel
+          checked={isAPLEnabled ? false : undefined}
+          control={<Radio />}
+          label="No"
+          name="no"
+          value="no"
+        />
       </RadioGroup>
     </FormControl>
   );

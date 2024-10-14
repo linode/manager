@@ -314,7 +314,7 @@ const IPSharingPanel = (props: Props) => {
                     IPv6 range to a shared range will break existing IPv6
                     connectivity unless each Linode that shares the range has
                     BGP set up to advertise that range. Follow{' '}
-                    <Link to="https://www.linode.com/docs/guides/ip-failover/">
+                    <Link to="https://techdocs.akamai.com/cloud-computing/docs/configure-failover-on-a-compute-instance">
                       this guide
                     </Link>{' '}
                     to set up BGP on a Linode.

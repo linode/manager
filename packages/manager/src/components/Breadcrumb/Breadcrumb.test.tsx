@@ -22,6 +22,13 @@ describe('Breadcrumb component', () => {
     expect(getAllByTestId('link-text')).toHaveLength(2);
   });
 
+  it('removes multiple crumbs when given an array of indices', () => {
+    const { getAllByTestId } = render(
+      wrapWithTheme(<Breadcrumb {...props} removeCrumbX={[1, 2]} />)
+    );
+    expect(getAllByTestId('link-text')).toHaveLength(1);
+  });
+
   it('renders an editable text field given editable props', () => {
     const { queryByTestId } = render(
       wrapWithTheme(

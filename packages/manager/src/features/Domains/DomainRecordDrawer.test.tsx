@@ -25,6 +25,14 @@ describe('Domain record helper methods', () => {
       expect(shouldResolve('AAAA', 'target')).toBe(false);
     });
 
+    it('should return true for the name of an TXT record', () => {
+      expect(shouldResolve('TXT', 'name')).toBe(true);
+    });
+
+    it('should return false for other fields of an TXT', () => {
+      expect(shouldResolve('TXT', 'target')).toBe(false);
+    });
+
     // @todo: test for fields we know will be ignored under all cases, once we know what those are.
   });
 

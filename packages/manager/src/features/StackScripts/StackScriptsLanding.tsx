@@ -1,5 +1,5 @@
-import { Image } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,6 +11,8 @@ import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import StackScriptPanel from './StackScriptPanel/StackScriptPanel';
+
+import type { Image } from '@linode/api-v4';
 
 export const StackScriptsLanding = () => {
   const history = useHistory<{
@@ -38,7 +40,7 @@ export const StackScriptsLanding = () => {
         />
       ) : null}
       <LandingHeader
-        docsLink="https://www.linode.com/docs/platform/stackscripts"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         entity="StackScript"
         onButtonClick={goToCreateStackScript}
         removeCrumbX={1}
@@ -63,3 +65,7 @@ export const StackScriptsLanding = () => {
 };
 
 export default StackScriptsLanding;
+
+export const stackScriptsLandingLazyRoute = createLazyRoute('/stackscripts')({
+  component: StackScriptsLanding,
+});

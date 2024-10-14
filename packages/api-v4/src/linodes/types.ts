@@ -54,7 +54,7 @@ export interface LinodeBackups {
   last_successful: string | null;
 }
 
-export type LinodeCapabilities = 'Block Storage Encryption';
+export type LinodeCapabilities = 'Block Storage Encryption' | 'SMTP Enabled';
 
 export type Window =
   | 'Scheduling'
@@ -337,8 +337,7 @@ export type LinodeTypeClass =
   | 'gpu'
   | 'metal'
   | 'prodedicated'
-  | 'premium'
-  | 'edge';
+  | 'premium';
 
 export interface IPAllocationRequest {
   type: 'ipv4';

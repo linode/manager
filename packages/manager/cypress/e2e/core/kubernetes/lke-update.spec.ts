@@ -20,6 +20,7 @@ import {
   mockRecycleAllNodes,
   mockGetDashboardUrl,
   mockGetApiEndpoints,
+  mockGetClusters,
 } from 'support/intercepts/lke';
 import {
   mockGetLinodeType,
@@ -113,7 +114,7 @@ describe('LKE cluster updates', () => {
    * - Confirms that Kubernetes upgrade prompt is shown when not up-to-date.
    * - Confirms that Kubernetes upgrade prompt is hidden when up-to-date.
    */
-  it('can upgrade Kubernetes engine version', () => {
+  it('can upgrade kubernetes version from the details page', () => {
     const oldVersion = '1.25';
     const newVersion = '1.26';
 
@@ -213,6 +214,62 @@ describe('LKE cluster updates', () => {
     cy.findByText(`Version ${newVersion}`);
 
     ui.toast.findByMessage('Recycle started successfully.');
+  });
+
+  it('can upgrade the kubernetes version from the landing page', () => {
+    const oldVersion = '1.25';
+    const newVersion = '1.26';
+
+    const cluster = kubernetesClusterFactory.build({
+      k8s_version: oldVersion,
+    });
+
+    const updatedCluster = { ...cluster, k8s_version: newVersion };
+
+    mockGetClusters([cluster]).as('getClusters');
+    mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
+    mockUpdateCluster(cluster.id, updatedCluster).as('updateCluster');
+    mockRecycleAllNodes(cluster.id).as('recycleAllNodes');
+
+    cy.visitWithLogin(`/kubernetes/clusters`);
+
+    cy.wait(['@getClusters', '@getVersions']);
+
+    cy.findByText(oldVersion).should('be.visible');
+
+    cy.findByText('UPGRADE').should('be.visible').should('be.enabled').click();
+
+    ui.dialog
+      .findByTitle(
+        `Step 1: Upgrade ${cluster.label} to Kubernetes ${newVersion}`
+      )
+      .should('be.visible');
+
+    mockGetClusters([updatedCluster]).as('getClusters');
+
+    ui.button
+      .findByTitle('Upgrade Version')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait(['@updateCluster', '@getClusters']);
+
+    ui.dialog
+      .findByTitle('Step 2: Recycle All Cluster Nodes')
+      .should('be.visible');
+
+    ui.button
+      .findByTitle('Recycle All Nodes')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.wait('@recycleAllNodes');
+
+    ui.toast.assertMessage('Recycle started successfully.');
+
+    cy.findByText(newVersion).should('be.visible');
   });
 
   /*

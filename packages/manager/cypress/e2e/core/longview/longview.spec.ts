@@ -316,7 +316,7 @@ describe('longview', () => {
     mockUpdateLongviewClient(newClient.id, newClient).as('updateLongview');
 
     // Confirms that Cloud Manager UI can rename longview client.
-    cy.get(`[data-testid="editable-text"] > [data-testid="Button"]`)
+    cy.get(`[data-testid="editable-text"] > [data-testid="button"]`)
       .should('be.visible')
       .click();
 

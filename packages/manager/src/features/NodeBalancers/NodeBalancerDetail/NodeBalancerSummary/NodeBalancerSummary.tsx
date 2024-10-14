@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -44,3 +45,9 @@ const StyledSidebarGridItem = styled(Grid, {
     order: 2,
   },
 }));
+
+export const nodeBalancerSummaryLazyRoute = createLazyRoute(
+  '/nodebalancers/$nodeBalancerId'
+)({
+  component: NodeBalancerSummary,
+});

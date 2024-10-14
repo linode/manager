@@ -270,7 +270,7 @@ describe('displays kubernetes plans panel based on availability', () => {
         cy.get('[data-qa-plan-row="dedicated-3"]').within(() => {
           cy.get('[data-testid="decrement-button"]').should('be.disabled');
           cy.get('[data-testid="increment-button"]').should('be.disabled');
-          cy.get('[data-testid="Button"]')
+          cy.get('[data-testid="button"]')
             .should(
               'have.attr',
               'aria-label',

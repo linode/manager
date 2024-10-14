@@ -289,7 +289,7 @@ export const NodeBalancerConfigPanel = (
             <FormHelperText>
               Proxy Protocol preserves initial TCP connection information.
               Please consult{' '}
-              <Link to="https://www.linode.com/docs/platform/nodebalancer/nodebalancer-proxypass-configuration/">
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-proxy-protocol-with-nodebalancers">
                 our Proxy Protocol guide
               </Link>
               {` `}

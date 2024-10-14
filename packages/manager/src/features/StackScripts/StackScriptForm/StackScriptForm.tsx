@@ -5,7 +5,7 @@ import { InputAdornment } from 'src/components/InputAdornment';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import ImageSelect from 'src/features/Images/ImageSelect';
+import { ImageSelect } from 'src/features/Images/ImageSelect';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import {
@@ -174,5 +174,3 @@ export const StackScriptForm = React.memo((props: Props) => {
     </Paper>
   );
 });
-
-export default React.memo(StackScriptForm);

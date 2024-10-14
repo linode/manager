@@ -20,26 +20,25 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Custom Images',
-      to: 'https://www.linode.com/docs/products/tools/images/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/images',
     },
     {
       text: 'Getting Started with Custom Images',
-      to: 'https://www.linode.com/docs/products/tools/images/get-started/',
+      to:
+        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-custom-images',
     },
     {
       text: 'Capture an Image from a Linode',
-      to:
-        'https://www.linode.com/docs/products/tools/images/guides/capture-an-image/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/capture-an-image',
     },
     {
       text: 'Upload a Custom Image',
-      to:
-        'https://www.linode.com/docs/products/tools/images/guides/upload-an-image/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/upload-an-image',
     },
   ],
   moreInfo: {
     text: 'View additional Images guides',
-    to: 'https://www.linode.com/docs/products/tools/images/guides/',
+    to: 'https://techdocs.akamai.com/cloud-computing/docs/images',
   },
   title: 'Getting Started Guides',
 };

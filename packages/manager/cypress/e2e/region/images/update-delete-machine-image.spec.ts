@@ -18,7 +18,7 @@ import { testRegions } from 'support/util/regions';
  *
  * See Linode API v4 documentation for more information.
  *
- * @link https://www.linode.com/docs/api/images/#image-upload
+ * @link https://techdocs.akamai.com/linode-api/reference/post-upload-image
  *
  * @param region - Image upload region.
  * @param data - Data to upload.
