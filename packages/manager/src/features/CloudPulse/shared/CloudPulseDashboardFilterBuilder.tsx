@@ -330,6 +330,6 @@ function compareProps(
   return (
     oldProps.dashboard?.id === newProps.dashboard?.id &&
     oldProps.preferences?.[DASHBOARD_ID] ===
-    newProps.preferences?.[DASHBOARD_ID]
+      newProps.preferences?.[DASHBOARD_ID]
   );
 }
