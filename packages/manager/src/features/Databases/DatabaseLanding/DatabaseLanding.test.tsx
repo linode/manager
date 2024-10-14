@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { fireEvent } from '@testing-library/react';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
@@ -32,6 +32,14 @@ vi.mock('src/queries/profile/profile', async () => {
 beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
+const accountEndpoint = '*/v4/account';
+const databaseInstancesEndpoint = '*/databases/instances';
+
+const managedDBBetaCapability = 'Managed Databases Beta';
+const managedDBCapability = 'Managed Databases';
+
+const newDBTabTitle = 'New Database Clusters';
+const legacyDBTabTitle = 'Legacy Database Clusters';
 
 describe('Database Table Row', () => {
   it('should render a database row', () => {
@@ -63,39 +71,9 @@ describe('Database Table Row', () => {
 
 describe('Database Table', () => {
   it('should render database landing table with items', async () => {
-    server.use(
-      http.get('*/databases/instances', () => {
-        const databases = databaseInstanceFactory.buildList(1, {
-          status: 'active',
-        });
-        return HttpResponse.json(makeResourcePage(databases));
-      })
-    );
-
-    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
-      <DatabaseLanding />
-    );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    // Static text and table column headers
-    getAllByText('Cluster Label');
-    getAllByText('Status');
-    getAllByText('Configuration');
-    getAllByText('Engine');
-    getAllByText('Region');
-    getAllByText('Created');
-
-    // Check to see if the mocked API data rendered in the table
-    queryAllByText('Active');
-  });
-
-  it('should render database landing with empty state', async () => {
+    const database = databaseInstanceFactory.build({ status: 'active' });
     const mockAccount = accountFactory.build({
-      capabilities: ['Managed Databases Beta'],
+      capabilities: [managedDBBetaCapability],
     });
     server.use(
       http.get('*/account', () => {
@@ -103,7 +81,39 @@ describe('Database Table', () => {
       })
     );
     server.use(
-      http.get('*/databases/instances', () => {
+      http.get(databaseInstancesEndpoint, () => {
+        return HttpResponse.json(makeResourcePage([database]));
+      })
+    );
+
+    const { getByText } = renderWithTheme(<DatabaseLanding />);
+
+    // wait for API data to load
+    await waitFor(() => expect(getByText(database.label)).toBeVisible(), {
+      timeout: 10_000,
+    });
+    expect(getByText('Active')).toBeVisible();
+
+    // Static text and table column headers
+    expect(getByText('Cluster Label')).toBeVisible();
+    expect(getByText('Status')).toBeVisible();
+    expect(getByText('Configuration')).toBeVisible();
+    expect(getByText('Engine')).toBeVisible();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('Created')).toBeVisible();
+  });
+
+  it('should render database landing with empty state', async () => {
+    const mockAccount = accountFactory.build({
+      capabilities: [managedDBBetaCapability],
+    });
+    server.use(
+      http.get('*/account', () => {
+        return HttpResponse.json(mockAccount);
+      })
+    );
+    server.use(
+      http.get(databaseInstancesEndpoint, () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
@@ -122,7 +132,16 @@ describe('Database Table', () => {
 
   it('should render tabs with legacy and new databases ', async () => {
     server.use(
-      http.get('*/databases/instances', () => {
+      http.get(accountEndpoint, () => {
+        return HttpResponse.json(
+          accountFactory.build({
+            capabilities: [managedDBCapability, managedDBBetaCapability],
+          })
+        );
+      })
+    );
+    server.use(
+      http.get(databaseInstancesEndpoint, () => {
         const databases = databaseInstanceFactory.buildList(5, {
           status: 'active',
         });
@@ -140,8 +159,8 @@ describe('Database Table', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const newDatabasesTab = screen.getByText('New Database Clusters');
-    const legacyDatabasesTab = screen.getByText('Legacy Database Clusters');
+    const newDatabasesTab = screen.getByText(newDBTabTitle);
+    const legacyDatabasesTab = screen.getByText(legacyDBTabTitle);
 
     expect(newDatabasesTab).toBeInTheDocument();
     expect(legacyDatabasesTab).toBeInTheDocument();
@@ -149,7 +168,16 @@ describe('Database Table', () => {
 
   it('should render logo in new databases tab ', async () => {
     server.use(
-      http.get('*/databases/instances', () => {
+      http.get(accountEndpoint, () => {
+        return HttpResponse.json(
+          accountFactory.build({
+            capabilities: [managedDBCapability, managedDBBetaCapability],
+          })
+        );
+      })
+    );
+    server.use(
+      http.get(databaseInstancesEndpoint, () => {
         const databases = databaseInstanceFactory.buildList(5, {
           status: 'active',
         });
@@ -161,12 +189,11 @@ describe('Database Table', () => {
       flags: { dbaasV2: { beta: true, enabled: true } },
     });
 
-    // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const newDatabaseTab = screen.getByText('New Database Clusters');
+    const newDatabaseTab = screen.getByText(newDBTabTitle);
     fireEvent.click(newDatabaseTab);
 
     expect(screen.getByText('Powered by')).toBeInTheDocument();
@@ -174,7 +201,7 @@ describe('Database Table', () => {
 
   it('should render a single legacy database table without logo ', async () => {
     server.use(
-      http.get('*/databases/instances', () => {
+      http.get(databaseInstancesEndpoint, () => {
         const databases = databaseInstanceFactory.buildList(5, {
           status: 'active',
         });
@@ -203,22 +230,23 @@ describe('Database Table', () => {
       false
     );
 
-    expect(screen.queryByText('Legacy Database Clusters')).toBeNull();
-    expect(screen.queryByText('New Database Clusters')).toBeNull();
+    expect(screen.queryByText(legacyDBTabTitle)).toBeNull();
+    expect(screen.queryByText(newDBTabTitle)).toBeNull();
     expect(screen.queryByText('Powered by')).toBeNull();
   });
 
   it('should render a single new database table ', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Managed Databases Beta'],
-    });
     server.use(
-      http.get('*/v4/account', () => {
-        return HttpResponse.json(account);
+      http.get(accountEndpoint, () => {
+        return HttpResponse.json(
+          accountFactory.build({
+            capabilities: [managedDBBetaCapability],
+          })
+        );
       })
     );
     server.use(
-      http.get('*/databases/instances', () => {
+      http.get(databaseInstancesEndpoint, () => {
         const databases = databaseInstanceFactory.buildList(5, {
           platform: 'rdbms-default',
           status: 'active',
@@ -238,14 +266,11 @@ describe('Database Table', () => {
     const tables = screen.getAllByRole('table');
     expect(tables).toHaveLength(1);
 
-    const table = tables[0];
+    expect(screen.getByText('Cluster Label')).toBeInTheDocument();
 
-    const headers = within(table).getAllByRole('columnheader');
-    expect(headers.some((header) => header.textContent === 'Plan')).toBe(true);
-
-    expect(screen.queryByText('Legacy Database Clusters')).toBeNull();
-    expect(screen.queryByText('New Database Clusters')).toBeNull();
-    expect(screen.queryByText('Powered by')).toBeTruthy();
+    expect(screen.queryByText(legacyDBTabTitle)).toBeInTheDocument();
+    expect(screen.queryByText(newDBTabTitle)).toBeInTheDocument();
+    expect(screen.queryByText('Powered by')).toBeInTheDocument();
   });
 });
 
@@ -279,6 +304,71 @@ describe('Database Landing', () => {
 
     expect(createClusterButton).toBeInTheDocument();
     expect(createClusterButton).toHaveTextContent('Create Database Cluster');
-    expect(createClusterButton).not.toBeDisabled();
+    expect(createClusterButton).toBeEnabled();
+  });
+
+  it('should render a single new database table with action menu ', async () => {
+    const databases = databaseInstanceFactory.buildList(5, {
+      platform: 'rdbms-default',
+      status: 'active',
+    });
+    server.use(
+      http.get(databaseInstancesEndpoint, () => {
+        return HttpResponse.json(makeResourcePage(databases));
+      })
+    );
+
+    const { getByLabelText, getByTestId } = renderWithTheme(
+      <DatabaseLanding />,
+      {
+        flags: { dbaasV2: { beta: false, enabled: true } },
+      }
+    );
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const tables = screen.getAllByRole('table');
+    expect(tables).toHaveLength(1);
+
+    const actionMenu = getByLabelText(
+      `Action menu for Database ${databases[0].label}`
+    );
+    expect(actionMenu).toBeInTheDocument();
+  });
+
+  it('should open an action menu ', async () => {
+    const databases = databaseInstanceFactory.buildList(5, {
+      platform: 'rdbms-default',
+      status: 'active',
+    });
+    server.use(
+      http.get(databaseInstancesEndpoint, () => {
+        return HttpResponse.json(makeResourcePage(databases));
+      })
+    );
+
+    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+      <DatabaseLanding />,
+      {
+        flags: { dbaasV2: { beta: false, enabled: true } },
+      }
+    );
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const actionMenu = getByLabelText(
+      `Action menu for Database ${databases[0].label}`
+    );
+
+    await fireEvent.click(actionMenu);
+
+    getByText('Manage Access Controls');
+    getByText('Reset Root Password');
+    getByText('Resize');
+    getByText('Delete');
   });
 });

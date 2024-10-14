@@ -1,21 +1,15 @@
 import { styled } from '@mui/material/styles';
-import { DateCalendar, TimePicker } from '@mui/x-date-pickers';
-
-import { Box } from 'src/components/Box';
+import { DateCalendar } from '@mui/x-date-pickers';
 import { Typography } from 'src/components/Typography';
+import { makeStyles } from 'tss-react/mui';
 
-export const StyledTimePicker = styled(TimePicker)(() => ({
-  '.MuiInputAdornment-root': { marginRight: '0' },
-  '.MuiInputBase-input': { padding: '8px 0 8px 12px' },
-  '.MuiInputBase-root': { borderRadius: '0', padding: '0px' },
-
-  'button.MuiButtonBase-root': {
-    marginRight: '0',
-    padding: '8px',
+export const useStyles = makeStyles()(() => ({
+  timeAutocomplete: {
+    width: '140px',
+    '.MuiBox-root': {
+      marginTop: '0',
+    },
   },
-  height: '34px',
-  marginTop: '8px',
-  width: '120px',
 }));
 
 export const StyledDateCalendar = styled(DateCalendar, {
@@ -54,25 +48,6 @@ export const StyledDateCalendar = styled(DateCalendar, {
   },
   marginLeft: '0px',
   width: '260px',
-}));
-
-export const StyledBox = styled(Box)(({ theme }) => ({
-  '& h6': {
-    fontSize: '0.875rem',
-  },
-  '& span': {
-    marginBottom: '5px',
-    marginTop: '7px',
-  },
-  alignItems: 'flex-start',
-
-  border: '1px solid #F4F4F4',
-  color: theme.name === 'light' ? '#555555' : theme.color.headline,
-  display: 'flex',
-  flexDirection: 'column',
-  height: '100%',
-  padding: '8px 15px',
-  background: theme.name === 'light' ? '#FBFBFB' : theme.color.grey2,
 }));
 
 export const StyledTypography = styled(Typography)(() => ({
