@@ -34,7 +34,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Users unable to upgrade Kubernetes version from landing page ([#11056](https://github.com/linode/manager/pull/11056))
 - Toasts not consistently dismissible with the 'X' button ([#11073](https://github.com/linode/manager/pull/11073))
 - TypeScript performance of `DismissibleBanner.tsx` ([#11075](https://github.com/linode/manager/pull/11075))
-- Spelling of `maximum` on image upload page ([#11096](https://github.com/linode/manager/pull/11096))
+- Spelling and grammar mistakes on image create pages ([#11096](https://github.com/linode/manager/pull/11096))
 
 ### Removed:
 
