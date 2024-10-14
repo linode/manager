@@ -23,7 +23,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Update docs links to use latest techdocs.akamai.com URLs ([#11003](https://github.com/linode/manager/pull/11003))
 - Use CodeBlock component in KubeConfigDrawer ([#11019](https://github.com/linode/manager/pull/11019))
 - Spell out "Configuration" in the Linodes Configurations table ([#11046](https://github.com/linode/manager/pull/11046))
-- Disable VPC Action Buttons for Restricted Users ([#11072](https://github.com/linode/manager/pull/11072))
 - Improve ActionMenu styling and accessibility ([#10964](https://github.com/linode/manager/pull/10964))
 
 ### Fixed:
@@ -32,7 +31,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Value selection issue in ImageSelect ([#11007](https://github.com/linode/manager/pull/11007))
 - Empty data for Account Maintenance CSVs on the first download attempt ([#11025](https://github.com/linode/manager/pull/11025))
 - ActionPanel PrimaryButton `data-qa` attribute ([#11035](https://github.com/linode/manager/pull/11035))
-- Console warnings for Autocomplete due to spreading ([#11041](https://github.com/linode/manager/pull/11041))
 - Users unable to upgrade Kubernetes version from landing page ([#11056](https://github.com/linode/manager/pull/11056))
 - Toasts not consistently dismissible with the 'X' button ([#11073](https://github.com/linode/manager/pull/11073))
 - TypeScript performance of `DismissibleBanner.tsx` ([#11075](https://github.com/linode/manager/pull/11075))
