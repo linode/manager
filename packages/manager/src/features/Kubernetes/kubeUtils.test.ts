@@ -3,9 +3,7 @@ import {
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
-import * as flaggers from 'src/hooks/useFlags';
-import * as betaUtils from 'src/utilities/betaUtils';
-import * as kubeUtils from './kubeUtils';
+import * as useFlags from 'src/hooks/useFlags';
 import { extendType } from 'src/utilities/extendType';
 
 import {
@@ -72,24 +70,24 @@ describe('helper functions', () => {
     });
   });
   describe('APL availability', () => {
-    function useAccountBetaAPLQuery() {
-      return {
-        apl: true,
-      };
-    }
     afterEach(() => {
       vi.resetAllMocks();
     });
-    it('flag set and in beta', () => {
-      vi.mock('src/kubeUtils', () => ({
-        useAccountBetaAPLQuery: vi.fn(),
+    it('should return true id apl flag is true and beta is active', () => {
+      vi.mock('@tanstack/react-query', () => ({
+        useQuery: vi.fn().mockReturnValue({
+          data: {
+            ended: '2099-01-01T00:00:00Z',
+            enrolled: '2023-01-15T00:00:00Z',
+            id: 'apl',
+            label: 'APL Beta',
+            started: '2023-01-01T00:00:00Z',
+          },
+          error: null,
+          isLoading: false,
+        }),
       }));
-      vi.spyOn(flaggers, 'useFlags').mockReturnValue({ apl: true });
-      vi.spyOn(kubeUtils, 'useAccountBetaAPLQuery').mockImplementation(
-        vi.fn().mockReturnValue({ data: { apl: true } })
-      );
-
-      vi.spyOn(betaUtils, 'getBetaStatus').mockReturnValue('active');
+      vi.spyOn(useFlags, 'useFlags').mockReturnValue({ apl: true });
 
       const aplAvailability = useGetAPLAvailability();
 
