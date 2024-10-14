@@ -19,7 +19,6 @@ import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
-  NETWORK_INTERFACES_GUIDE_URL,
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
 } from '../constants';
@@ -121,12 +120,9 @@ export const SubnetLinodeRow = (props: Props) => {
       <TooltipIcon
         text={
           <Typography>
-            This Linode is using an unrecommended configuration profile. Update
-            its configuration profile to avoid connectivity issues. Read our{' '}
-            <Link to={NETWORK_INTERFACES_GUIDE_URL}>
-              Configuration Profiles
-            </Link>{' '}
-            guide for more information.
+            This Linode is using a configuration profile with a Networking
+            setting that is not recommended. To avoid potential connectivity
+            issues, edit the Linode's configuration.
           </Typography>
         }
         icon={<StyledWarningIcon />}
