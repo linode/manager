@@ -76,7 +76,7 @@ export const TaxCollectionBanner = () => {
       <Typography>
         Starting {bannerDateString}, tax may be applied to your Linode services.
         For more information, please see the{' '}
-        <Link to="https://www.linode.com/docs/platform/billing-and-support/tax-information/">
+        <Link to="https://techdocs.akamai.com/cloud-computing/docs/tax-information">
           Tax Information Guide
         </Link>
         .

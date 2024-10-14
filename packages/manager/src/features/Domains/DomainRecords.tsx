@@ -549,7 +549,10 @@ class DomainRecords extends React.Component<Props, State> {
     /** TXT Record */
     {
       columns: [
-        { render: (r: DomainRecord) => r.name, title: 'Hostname' },
+        {
+          render: (r: DomainRecord) => r.name || this.props.domain.domain,
+          title: 'Hostname',
+        },
         {
           render: (r: DomainRecord) => truncateEnd(r.target, 100),
           title: 'Value',

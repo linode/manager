@@ -8,8 +8,6 @@ export interface OCA {
   /**
    * Set isNew to `true` if you want the app to show up in the "New apps"
    * section on the Linode Create flow.
-   *
-   * @note this value only affects Linode Create v2
    */
   isNew?: boolean;
   logo_url: string;

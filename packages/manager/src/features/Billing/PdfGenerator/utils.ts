@@ -1,11 +1,4 @@
-import {
-  Invoice,
-  InvoiceItem,
-  Payment,
-  TaxSummary,
-} from '@linode/api-v4/lib/account';
-import JSPDF from 'jspdf';
-import autoTable, { CellHookData } from 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import { pathOr } from 'ramda';
 
 import { ADDRESSES } from 'src/constants';
@@ -15,6 +8,14 @@ import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utiliti
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 
 import type { Region } from '@linode/api-v4';
+import type {
+  Invoice,
+  InvoiceItem,
+  Payment,
+  TaxSummary,
+} from '@linode/api-v4/lib/account';
+import type JSPDF from 'jspdf';
+import type { CellHookData } from 'jspdf-autotable';
 
 /**
  * Margin that has to be applied to every item added to the PDF.
@@ -241,7 +242,7 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
       }
 
       const footerText =
-        'This invoice may include Linode Compute Instances that have been powered off as the data is maintained and resources are still reserved. If you no longer need powered-down Linodes, you can remove the service (https://www.linode.com/docs/products/platform/billing/guides/stop-billing/) from your account.';
+        'This invoice may include Linode Compute Instances that have been powered off as the data is maintained and resources are still reserved. If you no longer need powered-down Linodes, you can remove the service (https://techdocs.akamai.com/cloud-computing/docs/stop-further-billing) from your account.';
       const textHeight = doc.getTextDimensions(footerText).h;
       const bottomMargin = pageMargin;
       const pageHeight = doc.internal.pageSize.height;

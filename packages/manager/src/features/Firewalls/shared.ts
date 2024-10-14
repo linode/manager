@@ -1,11 +1,14 @@
+import { capitalize } from 'src/utilities/capitalize';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
+
+import { PORT_PRESETS } from './FirewallDetail/Rules/shared';
 
 import type { Grants, Profile } from '@linode/api-v4';
 import type {
+  Firewall,
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls/types';
-import { PORT_PRESETS } from './FirewallDetail/Rules/shared';
 
 export type FirewallPreset = 'dns' | 'http' | 'https' | 'mysql' | 'ssh';
 
@@ -257,4 +260,12 @@ export const checkIfUserCanModifyFirewall = (
     grants?.firewall?.find((firewall) => firewall.id === firewallId)
       ?.permissions === 'read_write'
   );
+};
+
+export const getFirewallDescription = (firewall: Firewall) => {
+  const description = [
+    `Status: ${capitalize(firewall.status)}`,
+    `Services Assigned: ${firewall.entities.length}`,
+  ];
+  return description.join(', ');
 };

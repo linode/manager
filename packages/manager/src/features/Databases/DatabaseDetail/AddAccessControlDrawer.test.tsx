@@ -3,9 +3,9 @@ import * as React from 'react';
 
 import { databaseFactory } from 'src/factories';
 import { IPv4List } from 'src/factories/databases';
-import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
+import { DatabaseInstance } from '@linode/api-v4';
 import AccessControls from './AccessControls';
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 
@@ -27,13 +27,13 @@ describe('Add Access Controls drawer', () => {
 
   it('Should open with a full list of current inbound sources that are allow listed', async () => {
     const IPv4ListWithMasks = IPv4List.map((ip) => `${ip}/32`);
+    const db = {
+      id: 123,
+      engine: 'postgresql',
+      allow_list: IPv4ListWithMasks,
+    } as DatabaseInstance;
     const { getAllByTestId } = renderWithTheme(
-      <AddAccessControlDrawer
-        allowList={IPv4ListWithMasks.map(stringToExtendedIP)}
-        onClose={() => null}
-        open={true}
-        updateDatabase={() => null}
-      />
+      <AddAccessControlDrawer database={db} onClose={() => null} open={true} />
     );
 
     expect(getAllByTestId('domain-transfer-input')).toHaveLength(
@@ -46,13 +46,13 @@ describe('Add Access Controls drawer', () => {
   });
 
   it('Should have a disabled Add Inbound Sources button until an inbound source field is touched', () => {
+    const db = {
+      id: 123,
+      engine: 'postgresql',
+      allow_list: IPv4List,
+    } as DatabaseInstance;
     const { getByText } = renderWithTheme(
-      <AddAccessControlDrawer
-        allowList={IPv4List.map(stringToExtendedIP)}
-        onClose={() => null}
-        open={true}
-        updateDatabase={() => null}
-      />
+      <AddAccessControlDrawer database={db} onClose={() => null} open={true} />
     );
 
     const addAccessControlsButton = getByText('Update Access Controls').closest(

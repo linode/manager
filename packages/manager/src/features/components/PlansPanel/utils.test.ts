@@ -10,6 +10,7 @@ import {
   getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
   planTypeOrder,
+  replaceOrAppendPlaceholder512GbPlans,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -415,6 +416,41 @@ describe('extractPlansInformation', () => {
       const result = getDisabledPlanReasonCopy({} as any);
 
       expect(result).toBe(PLAN_IS_CURRENTLY_UNAVAILABLE_COPY);
+    });
+  });
+
+  describe('replaceOrAppendPlaceholder512GbPlans', () => {
+    it('should not append to DBaaS plans', () => {
+      const plans = [
+        {
+          id: 'g6-dedicated-56',
+          label: 'DBaaS - Dedicated 256GB',
+        },
+      ] as PlanSelectionType[];
+      const results = replaceOrAppendPlaceholder512GbPlans(plans);
+      expect(results.length).toEqual(1);
+    });
+
+    it('should append to Linode plans', () => {
+      const plans = [
+        {
+          id: 'g6-dedicated-56',
+          label: 'Dedicated 256GB',
+        },
+      ] as PlanSelectionType[];
+      const results = replaceOrAppendPlaceholder512GbPlans(plans);
+      expect(results.length).toEqual(3);
+    });
+
+    it('should replace the Linode plan', () => {
+      const plans = [
+        {
+          id: 'not-the-right-id',
+          label: 'Premium 512GB',
+        },
+      ] as PlanSelectionType[];
+      const results = replaceOrAppendPlaceholder512GbPlans(plans);
+      expect(results[0].id).toEqual('g7-premium-64');
     });
   });
 });

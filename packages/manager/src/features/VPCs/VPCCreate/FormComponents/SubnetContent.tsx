@@ -14,7 +14,7 @@ import {
 } from './VPCCreateForm.styles';
 
 import type { APIError } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 import type { SubnetFieldState } from 'src/utilities/subnets';
 
@@ -53,7 +53,7 @@ export const SubnetContent = (props: Props) => {
               subheaderName: 'Subnets',
             })
           }
-          to="https://www.linode.com/docs/products/networking/vpc/guides/subnets/"
+          to="https://techdocs.akamai.com/cloud-computing/docs/manage-vpc-subnets"
         >
           Learn more
         </Link>

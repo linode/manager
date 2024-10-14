@@ -1,5 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -394,7 +395,7 @@ export const ImagesLanding = () => {
           }),
         }}
         disabledCreateButton={isImagesReadOnly}
-        docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
         onButtonClick={() => history.push('/images/create')}
         title="Images"
@@ -639,5 +640,9 @@ export const ImagesLanding = () => {
     </React.Fragment>
   );
 };
+
+export const imagesLandingLazyRoute = createLazyRoute('/images')({
+  component: ImagesLanding,
+});
 
 export default ImagesLanding;

@@ -1,10 +1,3 @@
-import { Region } from '@linode/api-v4';
-import {
-  Database,
-  DatabaseInstance,
-  DatabaseType,
-} from '@linode/api-v4/lib/databases/types';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -19,6 +12,14 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
 import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
+
+import type { Region } from '@linode/api-v4';
+import type {
+  Database,
+  DatabaseInstance,
+  DatabaseType,
+} from '@linode/api-v4/lib/databases/types';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   configs: {

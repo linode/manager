@@ -459,6 +459,8 @@ export const LineGraph = (props: LineGraphProps) => {
                               rowHeaders ? rowHeaders[idx] : undefined
                             }
                             data-qa-body-cell
+                            data-qa-graph-column-title={finalRowHeaders[i]}
+                            data-qa-graph-row-title={title}
                             key={i}
                           >
                             <Typography

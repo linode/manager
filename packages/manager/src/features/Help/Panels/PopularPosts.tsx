@@ -35,17 +35,17 @@ export const PopularPosts = () => {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <Link to="https://www.linode.com/docs/getting-started/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started">
             Getting Started with Linode
           </Link>
         </div>
         <div className={classes.post}>
-          <Link to="https://www.linode.com/docs/security/securing-your-server/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/set-up-and-secure-a-compute-instance">
             How to Secure Your Server
           </Link>
         </div>
         <div className={classes.post}>
-          <Link to="https://www.linode.com/docs/troubleshooting/troubleshooting/">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/troubleshooting-general-issues-on-compute-instances">
             Troubleshooting
           </Link>
         </div>

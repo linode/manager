@@ -1,13 +1,14 @@
-import { Stack } from 'src/components/Stack';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { Stack } from 'src/components/Stack';
 import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
 import { useAccountBetasQuery } from 'src/queries/account/betas';
 import { useBetasQuery } from 'src/queries/betas';
 import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
-import { AccountBeta, Beta } from '@linode/api-v4';
+
+import type { AccountBeta, Beta } from '@linode/api-v4';
 
 const BetasLanding = () => {
   const {

@@ -15,29 +15,30 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Virtual Private Clouds (VPCs)',
-      to: 'https://www.linode.com/docs/products/networking/vpc/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/vpc',
     },
     {
       text: 'Getting Started with VPCs',
-      to: 'https://www.linode.com/docs/products/networking/vpc/get-started/',
+      to:
+        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-vpc',
     },
     {
       text: 'Create a VPC',
-      to: 'https://www.linode.com/docs/products/networking/vpc/guides/create/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/create-a-vpc',
     },
     {
       text: 'Manage VPC Subnets',
-      to: 'https://www.linode.com/docs/products/networking/vpc/guides/subnets/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/manage-vpc-subnets',
     },
     {
       text: 'Assign (and Remove) Services',
       to:
-        'https://www.linode.com/docs/products/networking/vpc/guides/assign-services/',
+        'https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc',
     },
   ],
   moreInfo: {
     text: 'View additional VPC guides',
-    to: 'https://www.linode.com/docs/products/networking/vpc/guides/',
+    to: 'https://techdocs.akamai.com/cloud-computing/docs/vpc',
   },
   title: 'Getting Started Guides',
 };

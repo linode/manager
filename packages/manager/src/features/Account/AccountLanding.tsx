@@ -1,11 +1,9 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import {
-  LandingHeader,
-  LandingHeaderProps,
-} from 'src/components/LandingHeader';
+import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -22,6 +20,8 @@ import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnaly
 import AccountLogins from './AccountLogins';
 import { SwitchAccountButton } from './SwitchAccountButton';
 import { SwitchAccountDrawer } from './SwitchAccountDrawer';
+
+import type { LandingHeaderProps } from 'src/components/LandingHeader';
 
 const Billing = React.lazy(() =>
   import('src/features/Billing/BillingDetail').then((module) => ({
@@ -160,7 +160,7 @@ const AccountLanding = () => {
   if (isBillingTabSelected) {
     landingHeaderProps.docsLabel = 'How Linode Billing Works';
     landingHeaderProps.docsLink =
-      'https://www.linode.com/docs/guides/how-linode-billing-works/';
+      'https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works';
     landingHeaderProps.createButtonText = 'Make a Payment';
     if (!isAkamaiAccount) {
       landingHeaderProps.onButtonClick = () =>
@@ -216,5 +216,9 @@ const AccountLanding = () => {
     </React.Fragment>
   );
 };
+
+export const accountLandingLazyRoute = createLazyRoute('/account')({
+  component: AccountLanding,
+});
 
 export default AccountLanding;

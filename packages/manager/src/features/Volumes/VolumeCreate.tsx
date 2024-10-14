@@ -1,5 +1,6 @@
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
+import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -439,7 +440,7 @@ export const VolumeCreate = () => {
                 onBlur={handleBlur}
                 onChange={(id: number) => setFieldValue('config_id', id)}
                 value={config_id}
-                width={[theme.breakpoints.down('sm')] ? 320 : 400}
+                width={320}
               />
             </Box>
             <Box alignItems="flex-end" display="flex" position="relative">
@@ -545,3 +546,7 @@ const initialValues: FormState = {
   region: '',
   size: 20,
 };
+
+export const volumeCreateLazyRoute = createLazyRoute('/volumes/create')({
+  component: VolumeCreate,
+});

@@ -8,6 +8,8 @@ import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuActi
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 interface Props {
   handleDeleteVPC: () => void;
@@ -25,14 +27,36 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
     0
   );
 
+  const isVPCReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'vpc',
+    id: vpc.id,
+  });
+
   const actions: Action[] = [
     {
       onClick: handleEditVPC,
       title: 'Edit',
+      disabled: isVPCReadOnly,
+      tooltip: isVPCReadOnly
+        ? getRestrictedResourceText({
+            action: 'edit',
+            isSingular: true,
+            resourceType: 'VPCs',
+          })
+        : undefined,
     },
     {
       onClick: handleDeleteVPC,
       title: 'Delete',
+      disabled: isVPCReadOnly,
+      tooltip: isVPCReadOnly
+        ? getRestrictedResourceText({
+            action: 'delete',
+            isSingular: true,
+            resourceType: 'VPCs',
+          })
+        : undefined,
     },
   ];
 
@@ -55,8 +79,10 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
         {actions.map((action) => (
           <InlineMenuAction
             actionText={action.title}
+            disabled={action.disabled}
             key={action.title}
             onClick={action.onClick}
+            tooltip={action.tooltip}
           />
         ))}
       </TableCell>

@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { Waypoint } from 'react-waypoint';
 
@@ -123,3 +124,7 @@ export const EventsLanding = (props: Props) => {
     </>
   );
 };
+
+export const eventsLandingLazyRoute = createLazyRoute('/events')({
+  component: EventsLanding,
+});

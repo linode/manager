@@ -7,11 +7,14 @@ import { components } from 'react-select';
 import { debounce } from 'throttle-debounce';
 
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { getImageLabelForLinode } from 'src/features/Images/utils';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
 import withStoreSearch from 'src/features/Search/withStoreSearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
+import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -85,11 +88,15 @@ const SearchBar = (props: SearchProps) => {
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
   const history = useHistory();
   const isLargeAccount = useIsLargeAccount(searchActive);
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
   // Only request things if the search bar is open/active and we
   // know if the account is large or not
   const shouldMakeRequests =
     searchActive && isLargeAccount !== undefined && !isLargeAccount;
+
+  const shouldMakeDBRequests =
+    shouldMakeRequests && Boolean(isDatabasesEnabled);
 
   const { data: regions } = useRegionsQuery();
 
@@ -101,6 +108,14 @@ const SearchBar = (props: SearchProps) => {
   const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
   const { data: nodebalancers } = useAllNodeBalancersQuery(shouldMakeRequests);
+  const { data: firewalls } = useAllFirewallsQuery(shouldMakeRequests);
+
+  /*
+  @TODO DBaaS: Change the passed argument to 'shouldMakeRequests' and
+  remove 'isDatabasesEnabled' once DBaaS V2 is fully rolled out.
+  */
+  const { data: databases } = useAllDatabasesQuery(shouldMakeDBRequests);
+
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
@@ -183,7 +198,9 @@ const SearchBar = (props: SearchProps) => {
         _privateImages ?? [],
         regions ?? [],
         searchableLinodes ?? [],
-        nodebalancers ?? []
+        nodebalancers ?? [],
+        firewalls ?? [],
+        databases ?? []
       );
     }
   }, [
@@ -198,6 +215,8 @@ const SearchBar = (props: SearchProps) => {
     _privateImages,
     regions,
     nodebalancers,
+    firewalls,
+    databases,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
@@ -311,9 +330,6 @@ const SearchBar = (props: SearchProps) => {
           Main search
         </label>
         <EnhancedSelect
-          placeholder={
-            'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
-          }
           blurInputOnSelect
           components={{ Control, Option }}
           filterOption={filterResults}
@@ -333,6 +349,7 @@ const SearchBar = (props: SearchProps) => {
           openMenuOnClick={false}
           openMenuOnFocus={false}
           options={finalOptions}
+          placeholder="Search Products, IP Addresses, Tags..."
           styles={selectStyles}
           value={value}
         />

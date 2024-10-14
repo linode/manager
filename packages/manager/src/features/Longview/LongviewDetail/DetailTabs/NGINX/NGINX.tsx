@@ -83,7 +83,7 @@ export const NGINX = React.memo((props: Props) => {
         <Typography>{notice}</Typography>
         <Typography>
           See our{' '}
-          <Link to="https://www.linode.com/docs/platform/longview/longview-app-for-nginx/#troubleshooting">
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-nginx-metrics-with-linode-longview#troubleshooting">
             guide
           </Link>{' '}
           for help troubleshooting the NGINX Longview app.

@@ -681,7 +681,7 @@ export const regions: Region[] = [
     status: 'ok',
   },
   {
-    capabilities: ['Linodes'],
+    capabilities: ['Linodes', 'Distributed Plans'],
     country: 'us',
     id: 'us-den-10',
     label: 'Gecko Distributed Region Test',

@@ -21,22 +21,21 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of DNS Manager',
-      to: 'https://www.linode.com/docs/products/networking/dns-manager/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/dns-manager',
     },
     {
       text: 'Getting Started with DNS Manager',
       to:
-        'https://www.linode.com/docs/products/networking/dns-manager/get-started/',
+        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-dns-manager',
     },
     {
       text: 'Create a Domain Zone',
-      to:
-        'https://www.linode.com/docs/products/networking/dns-manager/guides/create-domain/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/create-a-domain',
     },
   ],
   moreInfo: {
     text: 'View additional DNS Manager guides',
-    to: 'https://www.linode.com/docs/products/networking/dns-manager/guides/',
+    to: 'https://techdocs.akamai.com/cloud-computing/docs/dns-manager',
   },
   title: 'Getting Started Guides',
 };

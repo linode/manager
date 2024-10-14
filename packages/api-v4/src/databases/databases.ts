@@ -22,6 +22,7 @@ import {
   Engine,
   SSLFields,
   UpdateDatabasePayload,
+  DatabaseFork,
 } from './types';
 
 /**
@@ -248,14 +249,8 @@ export const legacyRestoreWithBackup = (
  *
  * Fully restore a backup to the cluster
  */
-export const restoreWithBackup = (
-  engine: Engine,
-  fork: {
-    source: number;
-    restore_time?: string;
-  }
-) =>
-  Request<{}>(
+export const restoreWithBackup = (engine: Engine, fork: DatabaseFork) =>
+  Request<Database>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
     setData({ fork })

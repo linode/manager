@@ -11,7 +11,7 @@ export const ImagesCreateContainer = () => {
       <LandingHeader
         breadcrumbDataAttrs={{ 'data-qa-create-image-header': true }}
         docsLabel="Docs"
-        docsLink="https://www.linode.com/docs/products/tools/images/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         removeCrumbX={2}
         title="Create"
       />

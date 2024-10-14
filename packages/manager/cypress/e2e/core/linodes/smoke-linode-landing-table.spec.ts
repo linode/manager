@@ -113,9 +113,7 @@ describe('linode landing checks', () => {
       getVisible('[aria-label="open menu"]');
       getVisible('[data-qa-add-new-menu-button="true"]');
       getVisible('[data-qa-search-icon="true"]');
-      fbtVisible(
-        'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
-      );
+      fbtVisible('Search Products, IP Addresses, Tags...');
 
       cy.findByLabelText('Help & Support')
         .should('be.visible')

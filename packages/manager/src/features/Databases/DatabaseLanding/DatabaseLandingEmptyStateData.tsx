@@ -26,17 +26,17 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Managed Databases',
-      to: 'https://www.linode.com/docs/products/databases/managed-databases/',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/managed-databases',
     },
     {
       text: 'Get Started with Managed Databases',
       to:
-        'https://www.linode.com/docs/products/databases/managed-databases/get-started/',
+        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-managed-databases',
     },
     {
       text: 'Choosing a Database Engine',
       to:
-        'https://www.linode.com/docs/products/databases/managed-databases/guides/database-engines/',
+        'https://techdocs.akamai.com/cloud-computing/docs/database-engines-and-plans',
     },
   ],
   moreInfo: {

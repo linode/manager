@@ -117,7 +117,10 @@ const LinodesDetailNavigation = () => {
           tabs[getIndex()]?.title ?? 'Detail View'
         }`}
       />
-      <SMTPRestrictionText supportLink={{ id, label: linode?.label }}>
+      <SMTPRestrictionText
+        linode={linode}
+        supportLink={{ id, label: linode?.label }}
+      >
         {({ text }) =>
           text !== null ? (
             <DismissibleBanner
