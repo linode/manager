@@ -3,8 +3,6 @@ import {
   Redirect,
   Route,
   Switch,
-  matchPath,
-  useHistory,
   useLocation,
   useRouteMatch,
 } from 'react-router-dom';
@@ -19,30 +17,30 @@ import { AlertDefinitionLanding } from './AlertsDefinitionLanding';
 
 export const AlertsLanding = React.memo(() => {
   const flags = useFlags();
-  const { path } = useRouteMatch();
-  const history = useHistory();
-  const tabs = [
-    {
-      accessible: flags.aclpAlerting?.alertDefinitions,
-      routeName: `${path}/definitions`,
-      title: 'Definitions',
-    },
-  ];
+  const { url } = useRouteMatch();
+  const { pathname } = useLocation();
+  const tabs = React.useMemo(
+    () => [
+      {
+        accessible: flags.aclpAlerting?.alertDefinitions,
+        routeName: `${url}/definitions`,
+        title: 'Definitions',
+      },
+    ],
+    [url, flags.aclpAlerting]
+  );
   const accessibleTabs = tabs.filter((tab) => tab.accessible);
-  const location = useLocation();
-  const navToURL = (index: number) => {
-    history.push(accessibleTabs[index].routeName);
-  };
-  const matches = (p: string) => {
-    return Boolean(matchPath(location.pathname, { exact: false, path: p }));
-  };
+  const activeTabIndex = React.useMemo(
+    () =>
+      Math.max(
+        accessibleTabs.findIndex((tab) => pathname.startsWith(tab.routeName)),
+        0
+      ),
+    [accessibleTabs, pathname]
+  );
   return (
-    <Paper>
-      <Tabs
-        index={accessibleTabs.findIndex((tab) => matches(tab.routeName))}
-        onChange={navToURL}
-        style={{ width: '100%' }}
-      >
+    <Paper sx={{ padding: 2 }}>
+      <Tabs index={activeTabIndex} style={{ width: '100%' }}>
         <Box
           sx={{
             aligneItems: 'center',

@@ -1,6 +1,11 @@
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { Redirect, Route, Switch, matchPath } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useLocation,
+  useRouteMatch,
+} from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -10,54 +15,48 @@ import { useFlags } from 'src/hooks/useFlags';
 import { AlertsLanding } from './Alerts/AlertsLanding/AlertsLanding';
 import { CloudPulseDashboardLanding } from './Dashboard/CloudPulseDashboardLanding';
 
-import type { RouteComponentProps } from 'react-router-dom';
-type Props = RouteComponentProps<{}>;
-
-export const CloudPulseTabs = React.memo((props: Props) => {
+export const CloudPulseTabs = () => {
   const flags = useFlags();
-  const tabs = [
-    {
-      accessible: true,
-      routeName: `${props.match.url}/dashboards`,
-      title: 'Dashboards',
-    },
-    {
-      accessible:
-        flags.aclpAlerting?.alertDefinitions ||
-        flags.aclpAlerting?.recentActivity ||
-        flags.aclpAlerting?.notificationChannels,
-      routeName: `${props.match.url}/alerts`,
-      title: 'Alerts',
-    },
-  ];
+  const { url } = useRouteMatch();
+  const { pathname } = useLocation();
+  const tabs = React.useMemo(
+    () => [
+      {
+        accessible: true,
+        routeName: `${url}/dashboards`,
+        title: 'Dashboards',
+      },
+      {
+        accessible:
+          flags.aclpAlerting?.alertDefinitions ||
+          flags.aclpAlerting?.recentActivity ||
+          flags.aclpAlerting?.notificationChannels,
+        routeName: `${url}/alerts`,
+        title: 'Alerts',
+      },
+    ],
+    [url, flags.aclpAlerting]
+  );
   const accessibleTabs = tabs.filter((tab) => tab.accessible);
-  const matches = (p: string) => {
-    return Boolean(
-      matchPath(props.location.pathname, { exact: false, path: p })
-    );
-  };
-
-  const navToURL = (index: number) => {
-    props.history.push(accessibleTabs[index].routeName);
-  };
-
-  return (
-    <StyledTabs
-      index={Math.max(
-        accessibleTabs.findIndex((tab) => matches(tab.routeName)),
+  const activeTabIndex = React.useMemo(
+    () =>
+      Math.max(
+        accessibleTabs.findIndex((tab) => pathname.startsWith(tab.routeName)),
         0
-      )}
-      onChange={navToURL}
-    >
+      ),
+    [accessibleTabs, pathname]
+  );
+  return (
+    <Tabs index={activeTabIndex} marginTop={0}>
       <TabLinkList tabs={accessibleTabs} />
 
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route
             component={CloudPulseDashboardLanding}
-            path={`${props.match.url}/dashboards`}
+            path={`${url}/dashboards`}
           />
-          <Route component={AlertsLanding} path={`${props.match.url}/alerts`} />
+          <Route component={AlertsLanding} path={`${url}/alerts`} />
           <Redirect
             exact
             from="/monitor/cloudpulse"
@@ -65,12 +64,6 @@ export const CloudPulseTabs = React.memo((props: Props) => {
           />
         </Switch>
       </React.Suspense>
-    </StyledTabs>
+    </Tabs>
   );
-});
-
-const StyledTabs = styled(Tabs, {
-  label: 'StyledTabs',
-})(() => ({
-  marginTop: 0,
-}));
+};
