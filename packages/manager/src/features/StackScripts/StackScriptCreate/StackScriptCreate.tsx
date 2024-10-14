@@ -542,4 +542,6 @@ const enhanced = compose<CombinedProps, Props>(
   withQueryClient
 );
 
-export default enhanced(StackScriptCreate);
+export const EnhancedStackScriptCreate = enhanced(StackScriptCreate);
+
+export default EnhancedStackScriptCreate;

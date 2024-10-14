@@ -1,4 +1,4 @@
-import type { LinodeCreateType } from 'src/features/Linodes/LinodesCreate/types';
+import type { LinodeCreateType } from './LinodeCreate/types';
 import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 export type DialogType =

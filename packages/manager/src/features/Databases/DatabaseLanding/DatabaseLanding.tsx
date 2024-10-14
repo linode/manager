@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,6 +12,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { DatabaseEmptyState } from 'src/features/Databases/DatabaseLanding/DatabaseEmptyState';
 import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { DatabaseClusterInfoBanner } from 'src/features/GlobalNotifications/DatabaseClusterInfoBanner';
@@ -23,8 +25,6 @@ import {
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { DatabaseEmptyState } from './DatabaseEmptyState';
-
 const preferenceKey = 'databases';
 
 const DatabaseLanding = () => {
@@ -36,15 +36,18 @@ const DatabaseLanding = () => {
   });
 
   const {
-    isDatabasesV1Enabled,
     isDatabasesV2Enabled,
     isV2ExistingBetaUser,
     isV2GAUser,
     isV2NewBetaUser,
   } = useIsDatabasesEnabled();
+
   const { isLoading: isTypeLoading } = useDatabaseTypesQuery({
     platform: isDatabasesV2Enabled ? 'rdbms-default' : 'rdbms-legacy',
   });
+
+  const isDefaultEnabled =
+    isV2ExistingBetaUser || isV2NewBetaUser || isV2GAUser;
 
   const {
     handleOrderChange: newDatabaseHandleOrderChange,
@@ -61,11 +64,8 @@ const DatabaseLanding = () => {
   const newDatabasesFilter: Record<string, string> = {
     ['+order']: newDatabaseOrder,
     ['+order_by']: newDatabaseOrderBy,
+    ['platform']: 'rdbms-default',
   };
-
-  if (isV2ExistingBetaUser || isV2NewBetaUser || isV2GAUser) {
-    newDatabasesFilter['platform'] = 'rdbms-default';
-  }
 
   const {
     data: newDatabases,
@@ -77,7 +77,7 @@ const DatabaseLanding = () => {
       page_size: newDatabasesPagination.pageSize,
     },
     newDatabasesFilter,
-    isV2ExistingBetaUser || isV2NewBetaUser || isV2GAUser
+    isDefaultEnabled
   );
 
   const {
@@ -97,7 +97,7 @@ const DatabaseLanding = () => {
     ['+order_by']: legacyDatabaseOrderBy,
   };
 
-  if (isDatabasesV2Enabled && isV2ExistingBetaUser) {
+  if (isV2ExistingBetaUser || isV2GAUser) {
     legacyDatabasesFilter['platform'] = 'rdbms-legacy';
   }
 
@@ -111,7 +111,7 @@ const DatabaseLanding = () => {
       page_size: legacyDatabasesPagination.pageSize,
     },
     legacyDatabasesFilter,
-    isV2ExistingBetaUser || isDatabasesV1Enabled
+    !isV2NewBetaUser
   );
 
   const error = newDatabasesError || legacyDatabasesError;
@@ -129,15 +129,41 @@ const DatabaseLanding = () => {
     return <CircleProgress />;
   }
 
-  const showTabs = isV2ExistingBetaUser && legacyDatabases?.data.length !== 0;
-
-  const showEmpty =
-    (newDatabases?.data.length === 0 || newDatabases === undefined) &&
-    (legacyDatabases?.data.length === 0 || legacyDatabases === undefined);
-
+  const showEmpty = !newDatabases?.data.length && !legacyDatabases?.data.length;
   if (showEmpty) {
     return <DatabaseEmptyState />;
   }
+
+  const isV2Enabled = isDatabasesV2Enabled || isV2GAUser;
+  const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
+  const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
+
+  const legacyTable = () => {
+    return (
+      <DatabaseLandingTable
+        data={legacyDatabases?.data}
+        handleOrderChange={legacyDatabaseHandleOrderChange}
+        order={legacyDatabaseOrder}
+        orderBy={legacyDatabaseOrderBy}
+      />
+    );
+  };
+
+  const defaultTable = () => {
+    return (
+      <DatabaseLandingTable
+        data={newDatabases?.data}
+        handleOrderChange={newDatabaseHandleOrderChange}
+        isNewDatabase={true}
+        order={newDatabaseOrder}
+        orderBy={newDatabaseOrderBy}
+      />
+    );
+  };
+
+  const singleTable = () => {
+    return isNewDatabase ? defaultTable() : legacyTable();
+  };
 
   return (
     <React.Fragment>
@@ -151,7 +177,7 @@ const DatabaseLanding = () => {
         }}
         createButtonText="Create Database Cluster"
         disabledCreateButton={isRestricted}
-        docsLink="https://www.linode.com/docs/products/databases/managed-databases/"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/managed-databases"
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
@@ -160,51 +186,24 @@ const DatabaseLanding = () => {
         {showTabs ? (
           <Tabs>
             <TabList>
-              <Tab>Legacy Database Clusters</Tab>
               <Tab>New Database Clusters</Tab>
+              <Tab>Legacy Database Clusters</Tab>
             </TabList>
             <TabPanels>
-              <SafeTabPanel index={0}>
-                <DatabaseLandingTable
-                  data={legacyDatabases?.data}
-                  handleOrderChange={legacyDatabaseHandleOrderChange}
-                  order={legacyDatabaseOrder}
-                  orderBy={legacyDatabaseOrderBy}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={1}>
-                <DatabaseLandingTable
-                  data={newDatabases?.data}
-                  handleOrderChange={newDatabaseHandleOrderChange}
-                  isNewDatabase={true}
-                  order={newDatabaseOrder}
-                  orderBy={newDatabaseOrderBy}
-                />
-              </SafeTabPanel>
+              <SafeTabPanel index={0}>{defaultTable()}</SafeTabPanel>
+              <SafeTabPanel index={1}>{legacyTable()}</SafeTabPanel>
             </TabPanels>
           </Tabs>
         ) : (
-          <DatabaseLandingTable
-            data={
-              isDatabasesV2Enabled ? newDatabases?.data : legacyDatabases?.data
-            }
-            handleOrderChange={
-              isDatabasesV2Enabled
-                ? newDatabaseHandleOrderChange
-                : legacyDatabaseHandleOrderChange
-            }
-            order={
-              isDatabasesV2Enabled ? newDatabaseOrder : legacyDatabaseOrder
-            }
-            orderBy={
-              isDatabasesV2Enabled ? newDatabaseOrderBy : legacyDatabaseOrderBy
-            }
-            isNewDatabase={isDatabasesV2Enabled}
-          />
+          singleTable()
         )}
       </Box>
     </React.Fragment>
   );
 };
+
+export const databaseLandingLazyRoute = createLazyRoute('/databases')({
+  component: DatabaseLanding,
+});
 
 export default React.memo(DatabaseLanding);

@@ -12,14 +12,14 @@ jobs:
   lint:
     strategy:
       matrix:
-        package: ["linode-manager", "@linode/api-v4", "@linode/validation"]
+        package: ["linode-manager", "@linode/api-v4", "@linode/validation", "@linode/ui"]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
@@ -30,35 +30,32 @@ jobs:
   build-validation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: packages-validation-lib
-          path: |
-            packages/validation/index.js
-            packages/validation/lib
+          path: packages/validation/lib
 
   publish-validation:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
-    needs:
-      - build-validation
+    needs: build-validation
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
@@ -80,69 +77,64 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-validation
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - run: yarn workspace @linode/api-v4 run test
 
   build-sdk:
     runs-on: ubuntu-latest
-    needs:
-      - build-validation
+    needs: build-validation
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: |
-            packages/api-v4/index.js
-            packages/api-v4/index.node.js
-            packages/api-v4/lib
+          path: packages/api-v4/lib
 
   validate-sdk:
     runs-on: ubuntu-latest
-    needs:
-      - build-sdk
+    needs: build-sdk
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
 
       # Download the validation and api-v4 artifacts (built packages)
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
-      - uses: actions/download-artifact@v3
+          path: packages/validation/lib
+      - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
 
       # Create an api-v4 tarball
       - run: cd packages/api-v4 && npm pack --pack-destination ../../
@@ -162,37 +154,36 @@ jobs:
 
   test-manager:
     runs-on: ubuntu-latest
-    needs:
-      - build-sdk
+    needs: build-sdk
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
-      - uses: actions/download-artifact@v3
+          path: packages/validation/lib
+      - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
   test-search:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
@@ -200,57 +191,86 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/search run test
 
-  typecheck-manager:
+  test-ui:
     runs-on: ubuntu-latest
-    needs:
-      - build-sdk
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - run: yarn --frozen-lockfile
+      - run: yarn workspace @linode/ui run test
+
+  typecheck-ui:
+    runs-on: ubuntu-latest
+    needs: build-sdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn --frozen-lockfile
+      - run: yarn workspace @linode/ui run typecheck
+
+  typecheck-manager:
+    runs-on: ubuntu-latest
+    needs: build-sdk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.17"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
-      - uses: actions/download-artifact@v3
+          path: packages/validation/lib
+      - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run typecheck
 
   build-manager:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
-    needs:
-      - build-sdk
+    needs: build-sdk
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
-      - uses: actions/download-artifact@v3
+          path: packages/validation/lib
+      - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: packages-manager-build
           path: packages/manager/build
@@ -264,11 +284,11 @@ jobs:
       # If the validation publish failed we could have mismatched versions and a broken JS client
       - publish-validation
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
@@ -288,31 +308,30 @@ jobs:
 
   build-storybook:
     runs-on: ubuntu-latest
-    needs:
-      - build-sdk
+    needs: build-sdk
     env:
       NODE_OPTIONS: --max-old-space-size=4096
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packages-validation-lib
-          path: packages/validation
-      - uses: actions/download-artifact@v3
+          path: packages/validation/lib
+      - uses: actions/download-artifact@v4
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build-storybook
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: storybook-build
           path: packages/manager/storybook-static
@@ -320,11 +339,10 @@ jobs:
   publish-storybook:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
-    needs:
-      - build-storybook
+    needs: build-storybook
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
           name: storybook-build
           path: storybook/build

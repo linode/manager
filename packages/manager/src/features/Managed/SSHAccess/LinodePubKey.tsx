@@ -23,7 +23,7 @@ import {
 
 // @todo: is this URL correct? Are there new docs being written?
 const DOC_URL =
-  'https://www.linode.com/docs/platform/linode-managed/#adding-the-public-key';
+  'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-managed-service#adding-the-public-key';
 
 const LinodePubKey = () => {
   const { data, error, isLoading } = useManagedSSHKey();

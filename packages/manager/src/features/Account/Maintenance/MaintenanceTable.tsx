@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -28,6 +27,7 @@ import {
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 const preferenceKey = 'account-maintenance';
 
@@ -136,7 +136,10 @@ const MaintenanceTable = ({ type }: Props) => {
 
   const downloadCSV = async () => {
     await getCSVData();
-    csvRef.current.link.click();
+    // This approach is not particularly elegant, but setTimeout may be the best way to make this click async without adding a lot of logic.
+    setTimeout(() => {
+      csvRef.current.link.click();
+    }, 0);
   };
 
   return (

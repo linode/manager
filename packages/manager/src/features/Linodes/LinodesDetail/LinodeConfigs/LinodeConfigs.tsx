@@ -90,7 +90,7 @@ const LinodeConfigs = () => {
       >
         <DocsLink
           href={
-            'https://www.linode.com/docs/products/compute/compute-instances/guides/configuration-profiles/'
+            'https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance'
           }
           onClick={() => {
             sendLinodeConfigurationDocsEvent('Configuration Profiles');
@@ -127,7 +127,7 @@ const LinodeConfigs = () => {
                           handleClick={handleOrderChange}
                           label={'label'}
                         >
-                          <strong>Config</strong>
+                          <strong>Configuration</strong>
                         </TableSortCell>
                         <TableCell
                           sx={{

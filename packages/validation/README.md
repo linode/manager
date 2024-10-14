@@ -3,7 +3,7 @@
 ## Usage
 
 This library consists of [Yup](https://github.com/jquense/yup) schemas corresponding to the endpoints of the
-[Linode API](https://www.linode.com/docs/api/), intended to be used for client-side validation.
+[Linode API](https://techdocs.akamai.com/linode-api/reference/api), intended to be used for client-side validation.
 They closely (though not exactly) match the validation that is run by the API back-end when a
 request is received. They can be used to validate API request payloads manually or to validate forms (for example through
 Formik&rsquo;s `validationSchema`). They also work well with the [@linode/api-v4](https://npmjs.com/@linode/api-v4) package.
