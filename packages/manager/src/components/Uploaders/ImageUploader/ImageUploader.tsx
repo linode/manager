@@ -54,7 +54,7 @@ export const ImageUploader = React.memo((props: Props) => {
               compressed using gzip.
             </Typography>
             <Typography variant="subtitle2">
-              The maxiumum compressed file size is 5 GB and the file can&rsquo;t
+              The maximum compressed file size is 5 GB and the file can&rsquo;t
               exceed 6 GB when uncompressed.
             </Typography>
           </>

@@ -1,3 +1,10 @@
+## [2024-10-14] - v0.54.0
+
+
+### Changed:
+
+- Update validation schema to account for clearing value in ImageSelect ([#11007](https://github.com/linode/manager/pull/11007))
+
 ## [2024-09-30] - v0.53.0
 
 
