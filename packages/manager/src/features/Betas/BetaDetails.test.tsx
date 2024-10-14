@@ -15,7 +15,7 @@ describe('BetaDetails', () => {
     vi.useRealTimers();
   });
 
-  it.only('should be able to display all fields for an AccountBeta type', async () => {
+  it('should be able to display all fields for an AccountBeta type', async () => {
     const date = new Date(2024, 9, 1);
 
     vi.useFakeTimers();
