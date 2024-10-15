@@ -4,11 +4,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseIntervalSelect } from './CloudPulseIntervalSelect';
 
-import type { TimeGranularity } from '@linode/api-v4';
-
 describe('Interval select component', () => {
-  const intervalSelectionChange = (_selectedInterval: TimeGranularity) => { };
-
   it('should check for the selected value in interval select dropdown', () => {
     const scrape_interval = '30s';
     const default_interval = { unit: 'min', value: 5 };
@@ -16,7 +12,7 @@ describe('Interval select component', () => {
     const { getByRole, getByTestId } = renderWithTheme(
       <CloudPulseIntervalSelect
         defaultInterval={default_interval}
-        onIntervalChange={intervalSelectionChange}
+        onIntervalChange={vi.fn()}
         scrapeInterval={scrape_interval}
       />
     );

@@ -9,7 +9,7 @@ import type { ZoomIconProperties } from './Zoomer';
 describe('Cloud Pulse Zoomer', () => {
   it('Should render zoomer with zoom-out button', () => {
     const props: ZoomIconProperties = {
-      handleZoomToggle: (_zoomInValue: boolean) => {},
+      handleZoomToggle: vi.fn(),
       zoomIn: false,
     };
     const { getByTestId } = renderWithTheme(<ZoomIcon {...props} />);
@@ -19,7 +19,7 @@ describe('Cloud Pulse Zoomer', () => {
   }),
     it('Should render zoomer with zoom-in button', () => {
       const props: ZoomIconProperties = {
-        handleZoomToggle: (_zoomInValue: boolean) => {},
+        handleZoomToggle: vi.fn(),
         zoomIn: true,
       };
       const { getByTestId } = renderWithTheme(<ZoomIcon {...props} />);

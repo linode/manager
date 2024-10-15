@@ -8,14 +8,13 @@ import { CloudPulseAggregateFunction } from './CloudPulseAggregateFunction';
 
 import type { AggregateFunctionProperties } from './CloudPulseAggregateFunction';
 
-const aggregateFunctionChange = (_selectedAggregateFunction: string) => {};
 const availableAggregateFunctions = ['max', 'min', 'avg'];
 const defaultAggregateFunction = 'avg';
 
 const props: AggregateFunctionProperties = {
   availableAggregateFunctions,
   defaultAggregateFunction,
-  onAggregateFuncChange: aggregateFunctionChange,
+  onAggregateFuncChange: vi.fn(),
 };
 
 describe('Cloud Pulse Aggregate Function', () => {
