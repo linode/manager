@@ -14,7 +14,6 @@ import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { usePrefetch } from 'src/hooks/usePreFetch';
 import { useAccountSettings } from 'src/queries/account/settings';
 
 import {
@@ -27,8 +26,6 @@ import {
   StyledPrimaryLinkBox,
 } from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
-
-import type { LinkProps } from 'react-router-dom';
 
 type NavEntity =
   | 'Account'
@@ -64,8 +61,6 @@ interface PrimaryLink {
   icon?: JSX.Element;
   isBeta?: boolean;
   onClick?: (e: React.ChangeEvent<any>) => void;
-  prefetchRequestCondition?: boolean;
-  prefetchRequestFn?: () => void;
 }
 
 export interface PrimaryNavProps {
@@ -307,20 +302,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                   locationSearch: location.search,
                   ...thisLink,
                 };
-                // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
-                // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
-                // that includes the usePrefetch hook.
-                return thisLink.prefetchRequestFn &&
-                  thisLink.prefetchRequestCondition !== undefined ? (
-                  <PrefetchPrimaryLink
-                    {...props}
-                    key={thisLink.display}
-                    prefetchRequestCondition={thisLink.prefetchRequestCondition}
-                    prefetchRequestFn={thisLink.prefetchRequestFn}
-                  />
-                ) : (
-                  <PrimaryLink {...props} key={thisLink.display} />
-                );
+                return <PrimaryLink {...props} key={thisLink.display} />;
               })}
             </StyledAccordion>
           </div>
@@ -338,12 +320,6 @@ interface PrimaryLinkProps extends PrimaryLink {
   isCollapsed: boolean;
   locationPathname: string;
   locationSearch: string;
-  prefetchProps?: {
-    onBlur: LinkProps['onBlur'];
-    onFocus: LinkProps['onFocus'];
-    onMouseEnter: LinkProps['onMouseEnter'];
-    onMouseLeave: LinkProps['onMouseLeave'];
-  };
 }
 
 const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
@@ -360,7 +336,6 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
     locationPathname,
     locationSearch,
     onClick,
-    prefetchProps,
   } = props;
 
   const isActiveLink = Boolean(
@@ -376,7 +351,6 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
         }
       }}
       to={href}
-      {...prefetchProps}
       {...attr}
       aria-current={isActiveLink}
       data-testid={`menu-item-${display}`}
@@ -403,27 +377,3 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
     </StyledActiveLink>
   );
 });
-
-interface PrefetchPrimaryLinkProps extends PrimaryLinkProps {
-  prefetchRequestCondition: boolean;
-  prefetchRequestFn: () => void;
-}
-
-// Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink = React.memo(
-  (props: PrefetchPrimaryLinkProps) => {
-    const { cancelRequest, makeRequest } = usePrefetch(
-      props.prefetchRequestFn,
-      props.prefetchRequestCondition
-    );
-
-    const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-      onBlur: cancelRequest,
-      onFocus: makeRequest,
-      onMouseEnter: makeRequest,
-      onMouseLeave: cancelRequest,
-    };
-
-    return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
-  }
-);
