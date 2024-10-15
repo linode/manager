@@ -9,6 +9,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
@@ -18,8 +19,6 @@ import {
   useKubernetesControlPlaneACLMutation,
   useKubernetesControlPlaneACLQuery,
 } from 'src/queries/kubernetes';
-
-import { ControlPlaneACLIPInputsV2 } from './ControlPlaneACLIPInputsV2';
 
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 
@@ -134,9 +133,9 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
-          setError(error.field, { message: error.message });
+          setError(error.field, { message: error.reason });
         } else {
-          setError('root', { message: error.message });
+          setError('root', { message: error.reason });
         }
       }
     }
@@ -227,18 +226,32 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                 {errors.acl.message}
               </Notice>
             )}
-            <ControlPlaneACLIPInputsV2
-              handleIPv4Change={(ips: string[]) =>
-                setValue('acl.addresses.ipv4', ips, { shouldDirty: true })
-              }
-              handleIPv6Change={(ips: string[]) =>
-                setValue('acl.addresses.ipv6', ips, { shouldDirty: true })
-              }
-              ipV4Addr={acl.addresses?.ipv4 ?? []}
-              ipV6Addr={acl.addresses?.ipv6 ?? []}
-              ipv4Errors={errors.acl?.addresses?.ipv4}
-              ipv6Errors={errors.acl?.addresses?.ipv6}
-            />
+            <Box sx={{ maxWidth: 450 }}>
+              <MultipleNonExtendedIPInput
+                onNonExtendedIPChange={(ips: string[]) =>
+                  setValue('acl.addresses.ipv4', ips, { shouldDirty: true })
+                }
+                buttonText="Add IPv4 Address"
+                ipErrors={errors.acl?.addresses?.ipv4}
+                isLinkStyled
+                nonExtendedIPs={acl.addresses?.ipv4 ?? ['']}
+                placeholder="0.0.0.0/0"
+                title="IPv4 Addresses or CIDRs"
+              />
+              <Box marginTop={2}>
+                <MultipleNonExtendedIPInput
+                  onNonExtendedIPChange={(ips: string[]) =>
+                    setValue('acl.addresses.ipv6', ips, { shouldDirty: true })
+                  }
+                  buttonText="Add IPv6 Address"
+                  ipErrors={errors.acl?.addresses?.ipv6}
+                  isLinkStyled
+                  nonExtendedIPs={acl.addresses?.ipv6 ?? ['']}
+                  placeholder="::/0"
+                  title="IPv6 Addresses or CIDRs"
+                />
+              </Box>
+            </Box>
             <ActionsPanel
               primaryButtonProps={{
                 'data-testid': 'update-acl-button',

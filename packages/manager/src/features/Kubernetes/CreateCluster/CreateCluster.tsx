@@ -158,13 +158,13 @@ export const CreateCluster = () => {
       .map((ip) => {
         return ip.address;
       })
-      .filter((ip) => ip != '');
+      .filter((ip) => ip !== '');
 
     const _ipv6 = ipV6Addr
       .map((ip) => {
         return ip.address;
       })
-      .filter((ip) => ip != '');
+      .filter((ip) => ip !== '');
 
     const addressIPv4Payload = {
       ...(_ipv4.length > 0 && { ipv4: _ipv4 }),

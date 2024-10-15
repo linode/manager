@@ -58,7 +58,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface MultipeIPInputProps {
   buttonText?: string;
   className?: string;
   error?: string;
@@ -76,7 +76,7 @@ interface Props {
   tooltip?: string;
 }
 
-export const MultipleIPInput = React.memo((props: Props) => {
+export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   const {
     buttonText,
     className,
