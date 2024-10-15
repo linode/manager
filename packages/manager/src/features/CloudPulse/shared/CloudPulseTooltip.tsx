@@ -20,7 +20,7 @@ export const CloudPulseTooltip = React.memo((props: TooltipProps) => {
         ],
       }}
       data-qa-tooltip={title}
-      data-test-id={title}
+      data-testid={title}
       placement={placement ?? 'top-start'}
       title={title}
     >

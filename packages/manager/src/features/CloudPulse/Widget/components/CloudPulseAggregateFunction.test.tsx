@@ -20,7 +20,7 @@ const props: AggregateFunctionProperties = {
 
 describe('Cloud Pulse Aggregate Function', () => {
   it('should check for the selected value in aggregate function dropdown', () => {
-    const { getByRole } = renderWithTheme(
+    const { getByRole, getByTestId } = renderWithTheme(
       <CloudPulseAggregateFunction {...props} />
     );
 
@@ -30,6 +30,8 @@ describe('Cloud Pulse Aggregate Function', () => {
       'value',
       convertStringToCamelCasesWithSpaces(defaultAggregateFunction)
     );
+
+    expect(getByTestId('Aggregation function')).toBeInTheDocument(); // test id for tooltip
   });
 
   it('should select the aggregate function on click', () => {
