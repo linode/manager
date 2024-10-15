@@ -1,11 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
-import { Box } from '@mui/material';
 import { Divider, Stack } from '@mui/material';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -95,16 +95,12 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     //
     //   - Hopefully this explains the behavior of this code, and why one must be very careful
     //     before introducing any clever/streamlined code - there's a reason to the mess :)
-    //
-    // if (acl.ipv4.some((ip) => ip.error) || acl.ipv6.some((ip) => ip.error)) {
-    //   return;
-    // }
 
-    const _ipv4 = acl.addresses?.ipv4
+    const ipv4 = acl.addresses?.ipv4
       ? acl.addresses.ipv4.filter((ip) => ip !== '')
       : [];
 
-    const _ipv6 = acl.addresses?.ipv6
+    const ipv6 = acl.addresses?.ipv6
       ? acl.addresses.ipv6.filter((ip) => ip !== '')
       : [];
 
@@ -112,10 +108,10 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       acl: {
         enabled: acl.enabled,
         'revision-id': acl['revision-id'],
-        ...((_ipv4.length > 0 || _ipv6.length > 0) && {
+        ...((ipv4.length > 0 || ipv6.length > 0) && {
           addresses: {
-            ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
-            ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
+            ...(ipv4.length > 0 && { ipv4 }),
+            ...(ipv6.length > 0 && { ipv6 }),
           },
         }),
       },
@@ -132,16 +128,10 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       closeDrawer();
     } catch (errors) {
       for (const error of errors) {
-        if (error.field) {
-          setError(error.field, { message: error.reason });
-        } else {
-          setError('root', { message: error.reason });
-        }
+        setError(error?.field ?? 'root', { message: error.reason });
       }
     }
   };
-
-  // console.log('the errors', values, errors);
 
   return (
     <Drawer
