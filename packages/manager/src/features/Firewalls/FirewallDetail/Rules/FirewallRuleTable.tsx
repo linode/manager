@@ -27,6 +27,7 @@ import {
   StyledFirewallRuleButton,
   StyledFirewallTableButton,
   StyledHeaderDiv,
+  StyledHeaderItemBox,
   StyledInnerBox,
   StyledUl,
   StyledUlBox,
@@ -40,7 +41,6 @@ import type { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
 import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import type { Theme } from '@mui/material/styles';
-import type { DropResult } from 'react-beautiful-dnd';
 import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
@@ -98,6 +98,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
 
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const betweenSmAndLg = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
@@ -144,32 +145,31 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           sx={sxBox}
           tabIndex={0}
         >
-          <Box
+          <StyledHeaderItemBox
             sx={{
-              ...sxItemSpacing,
               paddingLeft: '27px',
-              width: xsDown ? '50%' : '32%',
+              width: xsDown ? '50%' : '30%',
             }}
           >
             Label
-          </Box>
+          </StyledHeaderItemBox>
           <Hidden lgDown>
-            <Box sx={{ ...sxItemSpacing, width: '10%' }}>Protocol</Box>
+            <StyledHeaderItemBox sx={{ width: '10%' }}>
+              Protocol
+            </StyledHeaderItemBox>
           </Hidden>
           <Hidden smDown>
-            <Box
-              sx={{
-                ...sxItemSpacing,
-                width: '15%',
-              }}
-            >
+            <StyledHeaderItemBox sx={{ width: betweenSmAndLg ? '14%' : '10%' }}>
               Port Range
-            </Box>
-            <Box sx={{ ...sxItemSpacing, width: '15%' }}>
+            </StyledHeaderItemBox>
+            <StyledHeaderItemBox sx={{ width: betweenSmAndLg ? '20%' : '14%' }}>
               {capitalize(addressColumnLabel)}
-            </Box>
+            </StyledHeaderItemBox>
           </Hidden>
-          <Box sx={{ ...sxItemSpacing, width: '5%' }}>Action</Box>
+          <StyledHeaderItemBox sx={{ width: xsDown ? '30%' : '10%' }}>
+            Action
+          </StyledHeaderItemBox>
+          <StyledHeaderItemBox sx={{ width: xsDown ? '20%' : '26%' }} />
         </StyledInnerBox>
         <Box sx={{ ...sxBox, flexDirection: 'column' }}>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -256,6 +256,7 @@ export interface FirewallRuleTableRowProps extends RuleRow {
 const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const betweenSmAndLg = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 
   const {
     action,
@@ -296,7 +297,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
           ...sxItemSpacing,
           overflowWrap: 'break-word',
           paddingLeft: '8px',
-          width: xsDown ? '50%' : '32%',
+          width: xsDown ? '50%' : '30%',
         }}
         aria-label={`Label: ${label}`}
       >
@@ -322,14 +323,18 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       <Hidden smDown>
         <Box
           aria-label={`Ports: ${ports}`}
-          sx={{ ...sxItemSpacing, width: '15%' }}
+          sx={{ ...sxItemSpacing, width: betweenSmAndLg ? '14%' : '10%' }}
         >
           {ports === '1-65535' ? 'All Ports' : ports}
           <ConditionalError errors={errors} formField="ports" />
         </Box>
         <Box
+          sx={{
+            ...sxItemSpacing,
+            overflowWrap: 'break-word',
+            width: betweenSmAndLg ? '20%' : '14%',
+          }}
           aria-label={`Addresses: ${addresses}`}
-          sx={{ ...sxItemSpacing, overflowWrap: 'break-word', width: '15%' }}
         >
           <MaskableText text={addresses} />
           <ConditionalError errors={errors} formField="addresses" />
@@ -337,7 +342,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       </Hidden>
       <Box
         aria-label={`Action: ${action}`}
-        sx={{ ...sxItemSpacing, width: '5%' }}
+        sx={{ ...sxItemSpacing, width: '10%' }}
       >
         {capitalize(action?.toLocaleLowerCase() ?? '')}
       </Box>
@@ -389,33 +394,32 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   );
 
   // Using a grid here to keep the Select and the helper text aligned
-  // with the Action column.
+  // with the last column for screens >= 'lg', and with the Action column for screens < 'lg'.
   const sxBoxGrid = {
     alignItems: 'center',
     backgroundColor: theme.bg.bgPaper,
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    border: `1px solid ${theme.borderColors.borderTable}`,
     color: theme.textColors.tableStatic,
     display: 'grid',
     fontSize: '.875rem',
-    gridTemplateAreas: `'one two three four five'`,
-    gridTemplateColumns: '32% 10% 10% 15% 120px',
+    gridTemplateAreas: `'one two three four five six'`,
+    gridTemplateColumns: '30% 10% 10% 14% 10% 120px',
     height: '40px',
     marginTop: '10px',
     [theme.breakpoints.down('lg')]: {
-      gridTemplateAreas: `'one two three four'`,
-      gridTemplateColumns: '32% 15% 15% 120px',
+      gridTemplateAreas: `'one two three four five'`,
+      gridTemplateColumns: '30% 14% 20% 10% 120px',
     },
     [theme.breakpoints.down('sm')]: {
-      gridTemplateAreas: `'one two'`,
-      gridTemplateColumns: '50% 50%',
+      gridTemplateAreas: `'one two three'`,
+      gridTemplateColumns: '50% 30% 20%',
     },
     width: '100%',
   };
 
   const sxBoxPolicyText = {
-    gridArea: '1 / 1 / 1 / 5',
+    gridArea: '1 / 1 / 1 / 6',
     padding: '0px 15px 0px 15px',
-
     textAlign: 'right',
     [theme.breakpoints.down('lg')]: {
       gridArea: '1 / 1 / 1 / 4',
@@ -426,7 +430,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   };
 
   const sxBoxPolicySelect = {
-    gridArea: 'five',
+    gridArea: 'six',
     [theme.breakpoints.down('lg')]: {
       gridArea: 'four',
     },

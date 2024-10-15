@@ -35,6 +35,8 @@ export const StyledFirewallRuleBox = styled(Box, {
 })<StyledFirewallRuleBoxProps>(
   ({ disabled, originalIndex, ruleId, status, theme }) => ({
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
     color: theme.textColors.tableStatic,
     fontSize: '0.875rem',
     margin: 0,
@@ -59,12 +61,24 @@ export const StyledFirewallRuleBox = styled(Box, {
 export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
   ({ theme }) => ({
     backgroundColor: theme.bg.tableHeader,
-    color: theme.textColors.tableHeader,
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
-    height: '46px',
   })
 );
+
+export const StyledHeaderItemBox = styled(Box, {
+  label: 'StyledHeaderItemBox',
+})(({ theme }) => ({
+  ...sxItemSpacing,
+  '&:first-child': {
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+  },
+  alignContent: 'center',
+  borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+  borderRight: `1px solid ${theme.borderColors.borderTable}`,
+  borderTop: `1px solid ${theme.borderColors.borderTable}`,
+  height: '46px',
+}));
 
 export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
   ({ theme }) => ({
