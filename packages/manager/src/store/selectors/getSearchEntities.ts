@@ -1,3 +1,4 @@
+import { getDatabasesDescription } from 'src/features/Databases/utilities';
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { displayType } from 'src/features/Linodes/presentation';
@@ -5,6 +6,7 @@ import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import type {
+  DatabaseInstance,
   Domain,
   Firewall,
   Image,
@@ -178,4 +180,20 @@ export const firewallToSearchableItem = (
   entityType: 'firewall',
   label: firewall.label,
   value: firewall.id,
+});
+
+export const databaseToSearchableItem = (
+  database: DatabaseInstance
+): SearchableItem => ({
+  data: {
+    created: database.created,
+    description: getDatabasesDescription(database),
+    icon: 'database',
+    path: `/databases/${database.engine}/${database.id}`,
+    region: database.region,
+    status: database.status,
+  },
+  entityType: 'database',
+  label: database.label,
+  value: `${database.engine}/${database.id}`,
 });
