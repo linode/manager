@@ -33,6 +33,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
     const { getByPlaceholderText, getByTestId } = renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
+        label="Resources"
         region={undefined}
         resourceType={undefined}
       />
@@ -50,6 +51,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
       renderWithTheme(
         <CloudPulseResourcesSelect
           handleResourcesSelection={mockResourceHandler}
+          label="Resources"
           region={'us-east'}
           resourceType={'us-east'}
         />
@@ -77,6 +79,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
     renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
+        label="Resources"
         region={'us-east'}
         resourceType={'linode'}
       />
@@ -105,6 +108,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
     renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
+        label="Resources"
         region={'us-east'}
         resourceType={'linode'}
       />
@@ -134,6 +138,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
     renderWithTheme(
       <CloudPulseResourcesSelect
         handleResourcesSelection={mockResourceHandler}
+        label="Resources"
         region={'us-east'}
         resourceType={'linode'}
       />
@@ -175,6 +180,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
       <CloudPulseResourcesSelect
         defaultValue={['12']}
         handleResourcesSelection={mockResourceHandler}
+        label="Resources"
         region={'us-east'}
         resourceType={'linode'}
         savePreferences
