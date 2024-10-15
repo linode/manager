@@ -38,20 +38,19 @@ interface AccessTableProps {
 export const AccessTable = React.memo((props: AccessTableProps) => {
   const { footer, gridSize, isVPCOnlyLinode, rows, sx, title } = props;
 
+  const isDisabled = isVPCOnlyLinode && title.includes('Public IP Address');
+
   return (
     <Grid lg={gridSize.lg} sx={sx} xs={gridSize.xs}>
       <StyledColumnLabelGrid>
-        {title}{' '}
-        {isVPCOnlyLinode &&
-          title.includes('Public IP Address') &&
-          PublicIPAddressesTooltip}
+        {title} {isDisabled && PublicIPAddressesTooltip}
       </StyledColumnLabelGrid>
       <StyledTableGrid>
         <StyledTable>
           <TableBody>
             {rows.map((thisRow) => {
               return thisRow.text ? (
-                <StyledTableRow disabled={isVPCOnlyLinode} key={thisRow.text}>
+                <StyledTableRow disabled={isDisabled} key={thisRow.text}>
                   {thisRow.heading ? (
                     <TableCell component="th" scope="row">
                       {thisRow.heading}
@@ -59,9 +58,16 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                   ) : null}
                   <StyledTableCell>
                     <StyledGradientDiv>
-                      <CopyTooltip copyableText text={thisRow.text} />
+                      <CopyTooltip
+                        copyableText
+                        disabled={isDisabled}
+                        text={thisRow.text}
+                      />
                     </StyledGradientDiv>
-                    <StyledCopyTooltip text={thisRow.text} />
+                    <StyledCopyTooltip
+                      disabled={isDisabled}
+                      text={thisRow.text}
+                    />
                   </StyledTableCell>
                 </StyledTableRow>
               ) : null;
