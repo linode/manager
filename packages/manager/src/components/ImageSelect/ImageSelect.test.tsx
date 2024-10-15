@@ -139,4 +139,33 @@ describe('ImageSelect', () => {
     expect(getByText('linode/image-3')).toBeVisible();
     expect(getByText('linode/image-4 (deprecated)')).toBeVisible();
   });
+
+  it('should display an error', () => {
+    const { getByText } = renderWithTheme(
+      <ImageSelect errorText="An error" onChange={vi.fn()} value={null} />
+    );
+    expect(getByText('An error')).toBeInTheDocument();
+  });
+
+  it('should handle any/all', async () => {
+    const onSelect = vi.fn();
+
+    const { getByLabelText, getByText } = renderWithTheme(
+      <ImageSelect
+        anyAllOption
+        isMulti
+        label="Images"
+        onChange={onSelect}
+        value={[]}
+      />
+    );
+
+    await userEvent.click(getByLabelText('Images'));
+
+    await userEvent.click(getByText('Any/All'));
+
+    expect(onSelect).toHaveBeenCalledWith([
+      expect.objectContaining({ id: 'any/all' }),
+    ]);
+  });
 });
