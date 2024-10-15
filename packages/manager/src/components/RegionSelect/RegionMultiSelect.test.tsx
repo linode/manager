@@ -1,4 +1,3 @@
-import { Region } from '@linode/api-v4';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
@@ -16,24 +15,6 @@ const regionAtlanta = regionFactory.build({
   id: 'us-southeast',
   label: 'Atlanta, GA',
 });
-
-interface SelectedRegionsProps {
-  onRemove: (region: string) => void;
-  selectedRegions: Region[];
-}
-const SelectedRegionsList = ({
-  onRemove,
-  selectedRegions,
-}: SelectedRegionsProps) => (
-  <ul>
-    {selectedRegions.map((region, index) => (
-      <li aria-label={region.label} key={index}>
-        {region.label} ({region.id})
-        <button onClick={() => onRemove(region.id)}>Remove</button>
-      </li>
-    ))}
-  </ul>
-);
 
 const mockHandleSelection = vi.fn();
 
@@ -92,12 +73,6 @@ describe('RegionMultiSelect', () => {
   it('should render selected regions correctly', () => {
     renderWithTheme(
       <RegionMultiSelect
-        SelectedRegionsList={({ onRemove, selectedRegions }) => (
-          <SelectedRegionsList
-            onRemove={onRemove}
-            selectedRegions={selectedRegions}
-          />
-        )}
         currentCapability="Block Storage"
         onChange={mockHandleSelection}
         regions={[regionNewark, regionAtlanta]}

@@ -4,7 +4,6 @@ import type {
   Region,
   RegionSite,
 } from '@linode/api-v4';
-import type React from 'react';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export interface DisableRegionOption {
@@ -74,10 +73,6 @@ export interface RegionMultiSelectProps
     EnhancedAutocompleteProps<Region, true>,
     'label' | 'onChange' | 'options'
   > {
-  SelectedRegionsList?: React.ComponentType<{
-    onRemove: (region: string) => void;
-    selectedRegions: Region[];
-  }>;
   currentCapability: Capabilities | undefined;
   disabledRegions?: Record<string, DisableRegionOption>;
   helperText?: string;

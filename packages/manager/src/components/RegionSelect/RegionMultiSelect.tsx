@@ -10,10 +10,7 @@ import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { StyledListItem } from '../Autocomplete/Autocomplete.styles';
 import { RegionOption } from './RegionOption';
-import {
-  StyledAutocompleteContainer,
-  StyledFlagContainer,
-} from './RegionSelect.styles';
+import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
@@ -25,27 +22,14 @@ import type {
 } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
 
-interface LabelComponentProps {
+interface RegionChipLabelProps {
   region: Region;
 }
 
-const SelectedRegion = ({ region }: LabelComponentProps) => {
+const RegionChipLabel = ({ region }: RegionChipLabelProps) => {
   return (
-    <Box
-      sx={{
-        alignItems: 'center',
-        display: 'flex',
-        flexGrow: 1,
-      }}
-    >
-      <StyledFlagContainer
-        sx={(theme) => ({
-          marginRight: theme.spacing(1 / 2),
-          transform: 'scale(0.8)',
-        })}
-      >
-        <Flag country={region.country} />
-      </StyledFlagContainer>
+    <Box>
+      <Flag country={region.country} sx={{ fontSize: '1rem', mr: 1 }} />
       {region.label} ({region.id})
     </Box>
   );
@@ -53,9 +37,9 @@ const SelectedRegion = ({ region }: LabelComponentProps) => {
 
 export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   const {
-    SelectedRegionsList,
     currentCapability,
     disabled,
+    disabledRegions: disabledRegionsFromProps,
     errorText,
     helperText,
     isClearable,
@@ -67,7 +51,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     selectedIds,
     sortRegionOptions,
     width,
-    disabledRegions: disabledRegionsFromProps,
     ...rest
   } = props;
 
@@ -108,86 +91,74 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   }, {});
 
   return (
-    <>
-      <StyledAutocompleteContainer sx={{ width }}>
-        <Autocomplete
-          groupBy={(option) => {
-            if (!option.site_type) {
-              // Render empty group for "Select All / Deselect All"
-              return '';
-            }
-            return getRegionCountryGroup(option);
-          }}
-          onChange={(_, selectedOptions) =>
-            onChange(selectedOptions?.map((region) => region.id) ?? [])
+    <StyledAutocompleteContainer sx={{ width }}>
+      <Autocomplete
+        groupBy={(option) => {
+          if (!option.site_type) {
+            // Render empty group for "Select All / Deselect All"
+            return '';
           }
-          renderOption={(props, option, { selected }) => {
-            if (!option.site_type) {
-              // Render options like "Select All / Deselect All"
-              return <StyledListItem {...props}>{option.label}</StyledListItem>;
-            }
+          return getRegionCountryGroup(option);
+        }}
+        onChange={(_, selectedOptions) =>
+          onChange(selectedOptions?.map((region) => region.id) ?? [])
+        }
+        renderOption={(props, option, { selected }) => {
+          if (!option.site_type) {
+            // Render options like "Select All / Deselect All"
+            return <StyledListItem {...props}>{option.label}</StyledListItem>;
+          }
 
-            // Render regular options
-            return (
-              <RegionOption
-                disabledOptions={disabledRegions[option.id]}
-                key={option.id}
-                props={props}
-                region={option}
-                selected={selected}
-              />
-            );
-          }}
-          renderTags={(tagValue, getTagProps) => {
-            return tagValue.map((option, index) => (
-              <Chip
-                {...getTagProps({ index })}
-                data-testid={option.id}
-                deleteIcon={<CloseIcon />}
-                key={index}
-                label={<SelectedRegion region={option} />}
-                onDelete={() => handleRemoveOption(option.id)}
-              />
-            ));
-          }}
-          sx={(theme) => ({
-            [theme.breakpoints.up('md')]: {
-              width: '416px',
-            },
-          })}
-          textFieldProps={{
-            InputProps: {
-              required,
-            },
-            tooltipText: helperText,
-          }}
-          autoHighlight
-          clearOnBlur
-          data-testid="region-select"
-          disableClearable={!isClearable}
-          disabled={disabled}
-          errorText={errorText}
-          getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
-          label={label ?? 'Regions'}
-          loading={accountAvailabilityLoading}
-          multiple
-          noOptionsText="No results"
-          options={regionOptions}
-          placeholder={placeholder ?? 'Select Regions'}
-          value={selectedRegions}
-          {...rest}
-        />
-      </StyledAutocompleteContainer>
-      {selectedRegions.length > 0 && SelectedRegionsList && (
-        <SelectedRegionsList
-          selectedRegions={
-            sortRegionOptions
-              ? [...selectedRegions].sort(sortRegionOptions)
-              : selectedRegions
-          }
-          onRemove={handleRemoveOption}
-        />
-      )}
-    </>
+          // Render regular options
+          return (
+            <RegionOption
+              disabledOptions={disabledRegions[option.id]}
+              key={option.id}
+              props={props}
+              region={option}
+              selected={selected}
+            />
+          );
+        }}
+        renderTags={(tagValue, getTagProps) => {
+          return tagValue.map((option, index) => (
+            <Chip
+              {...getTagProps({ index })}
+              data-testid={option.id}
+              deleteIcon={<CloseIcon />}
+              key={index}
+              label={<RegionChipLabel region={option} />}
+              onDelete={() => handleRemoveOption(option.id)}
+            />
+          ));
+        }}
+        sx={(theme) => ({
+          [theme.breakpoints.up('md')]: {
+            width: '416px',
+          },
+        })}
+        textFieldProps={{
+          InputProps: {
+            required,
+          },
+          tooltipText: helperText,
+        }}
+        autoHighlight
+        clearOnBlur
+        data-testid="region-select"
+        disableClearable={!isClearable}
+        disabled={disabled}
+        errorText={errorText}
+        getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
+        label={label ?? 'Regions'}
+        loading={accountAvailabilityLoading}
+        multiple
+        noOptionsText="No results"
+        options={regionOptions}
+        placeholder={placeholder ?? 'Select Regions'}
+        value={selectedRegions}
+        {...rest}
+      />
+    </StyledAutocompleteContainer>
   );
 });

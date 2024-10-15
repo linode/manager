@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import { regions } from 'src/__data__/regionsData';
 import { Box } from 'src/components/Box';
-import { SelectedRegionsList } from 'src/features/ObjectStorage/AccessKeyLanding/AccessKeyRegions/SelectedRegionsList';
 import { sortByString } from 'src/utilities/sort-by';
 
 import { RegionMultiSelect } from './RegionMultiSelect';
@@ -43,7 +42,6 @@ export const Default: StoryObj<RegionMultiSelectProps> = {
 
 const meta: Meta<RegionMultiSelectProps> = {
   args: {
-    SelectedRegionsList,
     currentCapability: 'Linodes',
     disabled: false,
     errorText: '',
