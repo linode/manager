@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -57,8 +56,6 @@ export const CloudPulseAggregateFunction = React.memo(
       setSelectedAggregateFunction,
     ] = React.useState<AggregateFunction>(defaultValue);
 
-    const theme = useTheme();
-
     return (
       <CloudPulseTooltip title={'Aggregation function'}>
         <Autocomplete
@@ -77,11 +74,10 @@ export const CloudPulseAggregateFunction = React.memo(
           }}
           autoHighlight
           disableClearable
-          fullWidth={false}
           label="Select an Aggregate Function"
           noMarginTop={true}
           options={availableAggregateFunc}
-          sx={getAutocompleteWidgetStyles(theme)}
+          sx={getAutocompleteWidgetStyles}
           value={selectedAggregateFunction}
         />
       </CloudPulseTooltip>
