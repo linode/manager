@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
@@ -29,8 +29,8 @@ const handlers: IPAddressRowHandlers = {
 };
 
 describe('LinodeIPAddressRow', () => {
-  it('should render a Linode IP Address row', () => {
-    const { getAllByText } = renderWithTheme(
+  it('should render a Linode IP Address row', async () => {
+    const { getAllByText, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
           isVPCOnlyLinode={false}
@@ -40,6 +40,11 @@ describe('LinodeIPAddressRow', () => {
           {...ipDisplay}
         />
       )
+    );
+
+    // open the action menu
+    await userEvent.click(
+      getByLabelText('Action menu for IP Address [object Object]')
     );
 
     getAllByText(ipDisplay.address);
@@ -72,7 +77,7 @@ describe('LinodeIPAddressRow', () => {
   });
 
   it('should disable the row if disabled is true and display a tooltip', async () => {
-    const { findByRole, getByTestId } = renderWithTheme(
+    const { getAllByLabelText, getByLabelText, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
           isVPCOnlyLinode={true}
@@ -84,26 +89,22 @@ describe('LinodeIPAddressRow', () => {
       )
     );
 
-    const deleteBtn = getByTestId('action-menu-item-delete');
-    expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
-    fireEvent.mouseEnter(deleteBtn);
-    const publicIpsUnassignedTooltip = await findByRole('tooltip');
-    expect(publicIpsUnassignedTooltip).toContainHTML(
-      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+    // open the action menu
+    await userEvent.click(
+      getByLabelText('Action menu for IP Address [object Object]')
     );
 
-    const editRDNSBtn = getByTestId('action-menu-item-edit-rdns');
+    const deleteBtn = getByTestId('Delete');
+    expect(deleteBtn).toHaveAttribute('aria-disabled', 'true');
+
+    const editRDNSBtn = getByTestId('Edit RDNS');
     expect(editRDNSBtn).toHaveAttribute('aria-disabled', 'true');
 
-    fireEvent.mouseEnter(editRDNSBtn);
-    const publicIpsUnassignedTooltip2 = await findByRole('tooltip');
-    expect(publicIpsUnassignedTooltip2).toContainHTML(
-      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
-    );
+    expect(getAllByLabelText(PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT)).toHaveLength(2);
   });
 
-  it('should not disable the row if disabled is false', () => {
-    const { getAllByRole } = renderWithTheme(
+  it('should not disable the row if disabled is false', async () => {
+    const { getByLabelText, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
           isVPCOnlyLinode={false}
@@ -115,13 +116,14 @@ describe('LinodeIPAddressRow', () => {
       )
     );
 
-    const buttons = getAllByRole('button');
+    // open the action menu
+    await userEvent.click(
+      getByLabelText('Action menu for IP Address [object Object]')
+    );
 
-    const deleteBtn = buttons[1];
-    expect(deleteBtn).not.toHaveAttribute('aria-disabled', 'true');
+    expect(getByTestId('Delete')).toBeEnabled();
 
-    const editRDNSBtn = buttons[3];
-    expect(editRDNSBtn).not.toHaveAttribute('aria-disabled', 'true');
+    expect(getByTestId('Edit RDNS')).toBeEnabled();
   });
 });
 

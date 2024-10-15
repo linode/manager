@@ -149,7 +149,7 @@ describe('Resizing existing clusters', () => {
                 if (!desiredPlanPrice) {
                   throw new Error('Unable to find mock plan type');
                 }
-                cy.get('[data-testid="summary"]').within(() => {
+                cy.get('[data-testid="resizeSummary"]').within(() => {
                   cy.contains(`${nodeType.label}`).should('be.visible');
                   cy.contains(`$${desiredPlanPrice.monthly}/month`).should(
                     'be.visible'

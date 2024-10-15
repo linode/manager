@@ -24,7 +24,7 @@ describe('File Uploader', () => {
     ).toBeVisible();
     expect(
       screen.getByText(
-        'The maxiumum compressed file size is 5 GB and the file can’t exceed 6 GB when uncompressed.'
+        'The maximum compressed file size is 5 GB and the file can’t exceed 6 GB when uncompressed.'
       )
     ).toBeVisible();
   });

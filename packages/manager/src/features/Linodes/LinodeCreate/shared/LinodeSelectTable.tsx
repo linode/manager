@@ -24,7 +24,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { privateIPRegex } from 'src/utilities/ipUtils';
+import { isPrivateIP } from 'src/utilities/ipUtils';
 import { isNumeric } from 'src/utilities/stringUtils';
 
 import {
@@ -105,7 +105,7 @@ export const LinodeSelectTable = (props: Props) => {
   const queryClient = useQueryClient();
 
   const handleSelect = async (linode: Linode) => {
-    const hasPrivateIP = linode.ipv4.some((ipv4) => privateIPRegex.test(ipv4));
+    const hasPrivateIP = linode.ipv4.some(isPrivateIP);
     reset((prev) => ({
       ...prev,
       backup_id: null,
