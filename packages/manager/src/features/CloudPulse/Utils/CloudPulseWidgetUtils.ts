@@ -1,6 +1,3 @@
-import { styled } from '@mui/material';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
