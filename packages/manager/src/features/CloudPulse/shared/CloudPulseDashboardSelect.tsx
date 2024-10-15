@@ -8,7 +8,7 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { formattedServiceTypes, getAllDashboards } from '../Utils/utils';
 
-import type { Dashboard, FilterValue, ServiceTypes } from '@linode/api-v4';
+import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseDashboardSelectProps {
   defaultValue?: Partial<FilterValue>;
@@ -31,7 +31,7 @@ export const CloudPulseDashboardSelect = React.memo(
 
     const serviceTypes: string[] = formattedServiceTypes(serviceTypesList);
     const serviceTypeMap: Map<string, string> = new Map(
-      serviceTypesList?.data.map(item => [item.service_type, item.label])
+      serviceTypesList?.data.map((item) => [item.service_type, item.label])
     );
 
     const {
