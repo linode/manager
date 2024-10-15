@@ -374,7 +374,6 @@ const getDependentFiltersByFilterKey = (
     );
 };
 
-
 /**
  * @param obj1 The first object to be compared
  * @param obj2 The second object to be compared
