@@ -73,11 +73,12 @@ describe('testHelpers', () => {
 
       await waitFor(() => {
         router.navigate({
-          to: '/betas/beta',
+          params: { betaId: 'beta' },
+          to: '/betas/signup/$betaId',
         });
       });
 
-      expect(router.state.location.pathname).toBe('/betas/beta');
+      expect(router.state.location.pathname).toBe('/betas/signup/beta');
       expect(getByText('Test')).toBeInTheDocument();
     });
   });

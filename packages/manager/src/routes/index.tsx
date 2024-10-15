@@ -70,8 +70,7 @@ export const router = createRouter({
 declare module '@tanstack/react-router' {
   interface Register {
     // This infers the type of our router and registers it across the entire project
-    // router: typeof router;
-    migrationRouter: MigrationRouter;
+    router: typeof router;
   }
 }
 
@@ -81,7 +80,6 @@ declare module '@tanstack/react-router' {
  * This is a temporary solution until we are ready to fully migrate to TanStack Router.
  * Eventually we will only use the router exported above.
  */
-export type MigrationRouter = typeof migrationRouter;
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
 ]);

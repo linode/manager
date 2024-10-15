@@ -26,14 +26,14 @@ import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
 
 import type { QueryClient } from '@tanstack/react-query';
-import type { AnyRootRoute } from '@tanstack/react-router';
+// TODO: Tanstack Router - replace AnyRouter once migration is complete.
+import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction, RenderResult } from '@testing-library/react';
 import type { FormikConfig, FormikValues } from 'formik';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
 import type { MemoryRouterProps } from 'react-router';
 import type { DeepPartial } from 'redux';
 import type { FlagSet } from 'src/featureFlags';
-import type { MigrationRouter } from 'src/routes';
 import type { ApplicationState, ApplicationStore } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
@@ -132,7 +132,7 @@ interface OptionsWithRouter
   extends Omit<Options, 'MemoryRouter' | 'routePath'> {
   initialRoute?: string;
   routeTree?: AnyRootRoute;
-  router?: MigrationRouter;
+  router?: AnyRouter;
 }
 
 /**
@@ -188,7 +188,7 @@ export const wrapWithThemeAndRouter = (
     getParentRoute: () => rootRoute,
     path: initialRoute,
   });
-  const router = createRouter({
+  const router: AnyRouter = createRouter({
     history: createMemoryHistory({
       initialEntries: [initialRoute],
     }),
@@ -218,7 +218,7 @@ export const wrapWithThemeAndRouter = (
 export const renderWithThemeAndRouter = async (
   ui: React.ReactNode,
   options: OptionsWithRouter = {}
-): Promise<RenderResult & { router: MigrationRouter }> => {
+): Promise<RenderResult & { router: AnyRouter }> => {
   const router = createRouter({
     history: createMemoryHistory({
       initialEntries: [options.initialRoute || '/'],

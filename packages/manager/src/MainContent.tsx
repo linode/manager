@@ -37,6 +37,7 @@ import { useProfile } from './queries/profile/profile';
 import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';
+import type { AnyRouter } from '@tanstack/react-router';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -371,7 +372,9 @@ export const MainContent = () => {
                            * This is a temporary solution until we are ready to fully migrate to TanStack Router.
                            */}
                           <Route path="*">
-                            <RouterProvider router={migrationRouter} />
+                            <RouterProvider
+                              router={migrationRouter as AnyRouter}
+                            />
                           </Route>
                         </Switch>
                       </React.Suspense>

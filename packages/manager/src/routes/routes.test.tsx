@@ -7,13 +7,10 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { migrationRouter } from './index';
 import { getAllRoutePaths } from './utils/allPaths';
 
-const allMigrationPaths = getAllRoutePaths(migrationRouter);
+// TODO: Tanstack Router - replace AnyRouter once migration is complete.
+import type { AnyRouter } from '@tanstack/react-router';
 
-vi.mock('src/hooks/useFlags', () => ({
-  useFlags: () => ({
-    selfServeBetas: true,
-  }),
-}));
+const allMigrationPaths = getAllRoutePaths(migrationRouter);
 
 describe('Migration Router', () => {
   const renderWithRouter = (initialEntry: string) => {
@@ -21,9 +18,12 @@ describe('Migration Router', () => {
     migrationRouter.navigate({ replace: true, to: initialEntry });
 
     return renderWithTheme(
-      <React.Suspense>
-        <RouterProvider router={migrationRouter} />
-      </React.Suspense>
+      <RouterProvider router={migrationRouter as AnyRouter} />,
+      {
+        flags: {
+          selfServeBetas: true,
+        },
+      }
     );
   };
 

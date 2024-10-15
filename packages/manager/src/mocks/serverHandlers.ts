@@ -2057,6 +2057,13 @@ export const handlers = [
   http.get('*/v4*/betas', () => {
     return HttpResponse.json(makeResourcePage(betaFactory.buildList(5)));
   }),
+  http.get('*/v4*/betas/:id', ({ params }) => {
+    const id = params.id.toString();
+    if (params.id !== 'undefined') {
+      return HttpResponse.json(betaFactory.build({ id }));
+    }
+    return HttpResponse.json({}, { status: 404 });
+  }),
   http.get('*regions/availability', () => {
     return HttpResponse.json(
       makeResourcePage([
