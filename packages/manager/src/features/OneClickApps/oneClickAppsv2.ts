@@ -1272,7 +1272,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `High-performance open source web server with Node and CertBot, in addition to features like HTTP/3 support and easy SSL setup.`,
     logo_url: 'openlitespeednodejs.svg',
-    name: 'OpenLiteSpeed Node.js',
+    name: 'OpenLiteSpeed NodeJS',
     related_guides: [
       {
         href:
@@ -1509,7 +1509,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Node.js is a free, open-source, and cross-platform JavaScript run-time environment that lets developers write command line tools and server-side scripts outside of a browser.`,
     logo_url: 'nodejs.svg',
-    name: 'Node.js',
+    name: 'NodeJS',
     related_guides: [
       {
         href:
