@@ -1,3 +1,4 @@
+import ipaddr from 'ipaddr.js';
 import { array, number, object, string, boolean } from 'yup';
 
 export const nodePoolSchema = object().shape({
@@ -57,4 +58,47 @@ export const createKubeClusterSchema = object().shape({
   node_pools: array()
     .of(nodePoolSchema)
     .min(1, 'Please add at least one node pool.'),
+});
+
+const ipv4Validation = string().test({
+  message: 'Must be a valid IPv4 address.',
+  test: (value) => {
+    if (value !== '' && value === undefined) {
+      return false;
+    }
+
+    return (
+      value === '' ||
+      ipaddr.IPv4.isValid(value) ||
+      ipaddr.IPv4.isValidCIDR(value)
+    );
+  },
+});
+
+const ipv6Validation = string().test({
+  message: 'Must be a valid IPv6 address.',
+  test: (value) => {
+    if (value !== '' && value === undefined) {
+      return false;
+    }
+
+    return (
+      value === '' ||
+      ipaddr.IPv6.isValid(value) ||
+      ipaddr.IPv6.isValidCIDR(value)
+    );
+  },
+});
+
+const controlPlaneACLOptionsSchema = object().shape({
+  enabled: boolean(),
+  'revision-id': string(),
+  addresses: object().shape({
+    ipv4: array().of(ipv4Validation),
+    ipv6: array().of(ipv6Validation),
+  }),
+});
+
+export const kubernetesControlPlaneACLPayloadSchema = object().shape({
+  acl: controlPlaneACLOptionsSchema,
 });

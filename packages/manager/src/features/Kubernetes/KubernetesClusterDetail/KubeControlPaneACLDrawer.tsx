@@ -1,3 +1,5 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
 import { Box } from '@mui/material';
 import { Divider, Stack } from '@mui/material';
 import * as React from 'react';
@@ -16,23 +18,10 @@ import {
   useKubernetesControlPlaneACLMutation,
   useKubernetesControlPlaneACLQuery,
 } from 'src/queries/kubernetes';
-import { stringToExtendedIP, validateIPs } from 'src/utilities/ipUtils';
 
-import { ControlPlaneACLIPInputs } from '../CreateCluster/ControlPlaneACLIPInputs';
+import { ControlPlaneACLIPInputsV2 } from './ControlPlaneACLIPInputsV2';
 
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
-
-type IPACLDrawerFormState = {
-  acl: IPACLDrawerACLState;
-};
-
-type IPACLDrawerACLState = {
-  enabled: boolean;
-  ipv4: ExtendedIP[];
-  ipv6: ExtendedIP[];
-  'revision-id': string;
-};
 
 interface Props {
   closeDrawer: () => void;
@@ -59,22 +48,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     clusterId
   );
 
-  const ipv4 = data?.acl?.addresses?.ipv4?.map((ip) => {
-    return stringToExtendedIP(ip);
-  }) ?? [stringToExtendedIP('')];
-  const ipv6 = data?.acl?.addresses?.ipv6?.map((ip) => {
-    return stringToExtendedIP(ip);
-  }) ?? [stringToExtendedIP('')];
-
-  const initialValues: IPACLDrawerFormState = {
-    acl: {
-      enabled: data?.acl?.enabled ?? false,
-      ipv4,
-      ipv6,
-      'revision-id': data?.acl?.['revision-id'] ?? '',
-    },
-  };
-
   const {
     formState: { errors, isDirty, isSubmitting },
     handleSubmit,
@@ -82,10 +55,19 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     setError,
     setValue,
     watch,
-  } = useForm<IPACLDrawerFormState>({
-    defaultValues: initialValues,
+  } = useForm<KubernetesControlPlaneACLPayload>({
+    defaultValues: data,
+    mode: 'onBlur',
+    resolver: yupResolver(kubernetesControlPlaneACLPayloadSchema),
     values: {
-      ...initialValues,
+      acl: {
+        addresses: {
+          ipv4: data?.acl?.addresses?.ipv4 ?? [''],
+          ipv6: data?.acl?.addresses?.ipv6 ?? [''],
+        },
+        enabled: data?.acl?.enabled ?? false,
+        'revision-id': data?.acl?.['revision-id'] ?? '',
+      },
     },
   });
 
@@ -115,29 +97,17 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     //   - Hopefully this explains the behavior of this code, and why one must be very careful
     //     before introducing any clever/streamlined code - there's a reason to the mess :)
     //
-    if (acl.ipv4.some((ip) => ip.error) || acl.ipv6.some((ip) => ip.error)) {
-      return;
-    }
+    // if (acl.ipv4.some((ip) => ip.error) || acl.ipv6.some((ip) => ip.error)) {
+    //   return;
+    // }
 
-    const _ipv4 = acl.ipv4
-      .map((ip) => {
-        return ip.address;
-      })
-      .filter((ip) => ip != '');
+    const _ipv4 = acl.addresses?.ipv4
+      ? acl.addresses.ipv4.filter((ip) => ip !== '')
+      : [];
 
-    const _ipv6 = acl.ipv6
-      .map((ip) => {
-        return ip.address;
-      })
-      .filter((ip) => ip != '');
-
-    const addressIPv4Payload = {
-      ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
-    };
-
-    const addressIPv6Payload = {
-      ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
-    };
+    const _ipv6 = acl.addresses?.ipv6
+      ? acl.addresses.ipv6.filter((ip) => ip !== '')
+      : [];
 
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
@@ -145,8 +115,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         'revision-id': acl['revision-id'],
         ...((_ipv4.length > 0 || _ipv6.length > 0) && {
           addresses: {
-            ...addressIPv4Payload,
-            ...addressIPv6Payload,
+            ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
+            ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
           },
         }),
       },
@@ -171,6 +141,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       }
     }
   };
+
+  // console.log('the errors', values, errors);
 
   return (
     <Drawer
@@ -238,6 +210,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                     })
                   }
                   data-qa-label-input
+                  errorText={errors.acl?.['revision-id']?.message}
                   label="Revision ID"
                   value={acl['revision-id']}
                 />
@@ -254,33 +227,17 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                 {errors.acl.message}
               </Notice>
             )}
-            <ControlPlaneACLIPInputs
-              handleIPv4Blur={(ips: ExtendedIP[]) =>
-                setValue(
-                  'acl.ipv4',
-                  validateIPs(ips, {
-                    allowEmptyAddress: false,
-                    errorMessage: 'Must be a valid IPv4 address.',
-                  })
-                )
+            <ControlPlaneACLIPInputsV2
+              handleIPv4Change={(ips: string[]) =>
+                setValue('acl.addresses.ipv4', ips, { shouldDirty: true })
               }
-              handleIPv4Change={(ips: ExtendedIP[]) =>
-                setValue('acl.ipv4', ips, { shouldDirty: true })
+              handleIPv6Change={(ips: string[]) =>
+                setValue('acl.addresses.ipv6', ips, { shouldDirty: true })
               }
-              handleIPv6Blur={(ips: ExtendedIP[]) =>
-                setValue(
-                  'acl.ipv6',
-                  validateIPs(ips, {
-                    allowEmptyAddress: false,
-                    errorMessage: 'Must be a valid IPv4 address.',
-                  })
-                )
-              }
-              handleIPv6Change={(ips: ExtendedIP[]) =>
-                setValue('acl.ipv6', ips, { shouldDirty: true })
-              }
-              ipV4Addr={acl.ipv4}
-              ipV6Addr={acl.ipv6}
+              ipV4Addr={acl.addresses?.ipv4 ?? []}
+              ipV6Addr={acl.addresses?.ipv6 ?? []}
+              ipv4Errors={errors.acl?.addresses?.ipv4}
+              ipv6Errors={errors.acl?.addresses?.ipv6}
             />
             <ActionsPanel
               primaryButtonProps={{
