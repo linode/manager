@@ -1,4 +1,3 @@
-import { styled, tooltipClasses } from '@mui/material';
 import React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
@@ -9,7 +8,7 @@ export const CloudPulseTooltip = React.memo((props: TooltipProps) => {
   const { children, placement, title } = props;
 
   return (
-    <StyledTooltip
+    <Tooltip
       PopperProps={{
         modifiers: [
           {
@@ -27,22 +26,6 @@ export const CloudPulseTooltip = React.memo((props: TooltipProps) => {
       title={title}
     >
       <span>{children}</span>
-    </StyledTooltip>
+    </Tooltip>
   );
 });
-
-const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.common.black,
-  },
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    fontSize: theme.spacing(1.75),
-    maxHeight: theme.spacing(3.5),
-    maxWidth: theme.spacing(30),
-    padding: theme.spacing(0.75),
-  },
-}));
