@@ -2,7 +2,6 @@ import {
   Action,
   Badge,
   Button,
-  Chart,
   Color,
   Dropdown,
   Interaction,
@@ -38,7 +37,6 @@ export const customDarkModeOptions = {
   bg: {
     app: Color.Neutrals[100],
     appBar: tempReplacementforColorNeutralsBlack,
-    bgAccessRow: Color.Neutrals[80],
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: Color.Neutrals[90],
     interactionBgPrimary: Interaction.Background.Secondary,
@@ -58,7 +56,6 @@ export const customDarkModeOptions = {
     borderTypography: Color.Neutrals[80],
     divider: Color.Neutrals[80],
   },
-  charts: { ...Chart },
   color: {
     black: Color.Neutrals.White,
     blueDTwhite: Color.Neutrals.White,
@@ -199,17 +196,13 @@ export const darkTheme: ThemeOptions = {
   bg: customDarkModeOptions.bg,
   borderColors: customDarkModeOptions.borderColors,
   breakpoints,
-  charts: customDarkModeOptions.charts,
   color: customDarkModeOptions.color,
   components: {
     MuiAppBar: {
       styleOverrides: {
-        colorDefault: {
-          backgroundColor: 'transparent',
-        },
         root: {
           backgroundColor: tempReplacementforColorNeutralsBlack,
-          border: 0,
+          color: primaryColors.text,
         },
       },
     },
@@ -856,6 +849,7 @@ export const darkTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
+  interactionTokens: Interaction,
   name: 'dark',
   notificationToast,
   palette: {

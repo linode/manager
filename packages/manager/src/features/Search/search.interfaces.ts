@@ -12,6 +12,7 @@ export interface SearchableItem<T = number | string> {
 
 export type SearchableEntityType =
   | 'bucket'
+  | 'database'
   | 'domain'
   | 'firewall'
   | 'image'
@@ -25,6 +26,7 @@ export type SearchField = 'ips' | 'label' | 'tags' | 'type';
 
 export interface SearchResultsByEntity {
   buckets: SearchableItem[];
+  databases: SearchableItem[];
   domains: SearchableItem[];
   firewalls: SearchableItem[];
   images: SearchableItem[];

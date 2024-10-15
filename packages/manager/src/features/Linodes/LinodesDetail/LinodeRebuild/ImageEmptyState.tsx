@@ -1,14 +1,16 @@
-import { SxProps, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
+import type { SxProps, Theme } from '@mui/material/styles';
+
 interface Props {
   className?: string;
   errorText: string | undefined;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export const ImageEmptyState = (props: Props) => {

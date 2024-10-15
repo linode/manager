@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { MaterialDesignContent } from 'notistack';
+import { MaterialDesignContent, closeSnackbar } from 'notistack';
 import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 
@@ -45,18 +45,11 @@ export const Snackbar = (props: SnackbarProviderProps) => {
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
    */
-  const notistackRef: React.Ref<SnackbarProvider> = React.createRef();
-  const onClickDismiss = (key: number | string | undefined) => () => {
-    if (notistackRef.current) {
-      notistackRef.current.closeSnackbar(key);
-    }
-  };
 
   const { children, ...rest } = props;
 
   return (
     <SnackbarProvider
-      ref={notistackRef}
       {...rest}
       Components={{
         default: StyledMaterialDesignContent,
@@ -65,9 +58,9 @@ export const Snackbar = (props: SnackbarProviderProps) => {
         success: StyledMaterialDesignContent,
         warning: StyledMaterialDesignContent,
       }}
-      action={(key) => (
+      action={(snackbarId) => (
         <CloseSnackbar
-          onClick={onClickDismiss(key)}
+          onClick={() => closeSnackbar(snackbarId)}
           text="Dismiss Notification"
         />
       )}
