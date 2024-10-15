@@ -1,9 +1,9 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { Paper } from 'src/components/Paper';
-import { TargetImageSelect } from 'src/components/TargetImageSelect/TargetImageSelect';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -103,19 +103,21 @@ export const StackScriptForm = React.memo((props: Props) => {
             rows={1}
             value={description.value}
           />
-          <TargetImageSelect
+          <ImageSelect
             helperText={
               'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.'
             }
+            textFieldProps={{
+              required: true,
+            }}
             anyAllOption
             data-qa-stackscript-target-select
             disabled={disabled}
             errorText={hasErrorFor('images')}
-            images={images.available}
             isMulti
             label="Target Images"
-            onSelect={onSelectChange}
-            required
+            onChange={onSelectChange}
+            selectAllLabel="Select Any/All"
             value={images.selected}
           />
         </StyledGridWithTips>
