@@ -60,7 +60,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: false, // isFilterable -- this determines whethere you need to pass it metrics api
         isMetricsFilter: false, // if it is false, it will go as a part of filter params, else global filter
         isMultiSelect: false,
-        name: 'DB Engine',
+        name: 'Engine',
         neededInServicePage: false,
         options: [
           {
@@ -98,7 +98,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: true,
         isMetricsFilter: true,
         isMultiSelect: true,
-        name: 'Resources',
+        name: 'DB Cluster',
         neededInServicePage: false,
         placeholder: 'Select a DB Cluster',
         priority: 3,
