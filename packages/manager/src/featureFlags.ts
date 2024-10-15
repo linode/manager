@@ -95,6 +95,7 @@ export interface Flags {
   databaseResize: boolean;
   databases: boolean;
   dbaasV2: BetaFeatureFlag;
+  dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   disallowImageUploadToNonObjRegions: boolean;
   gecko2: GeckoFeatureFlag;
