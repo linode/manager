@@ -4,8 +4,8 @@ import React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
-import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 import { getAutocompleteWidgetStyles } from '../../Utils/CloudPulseWidgetUtils';
+import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 
 export interface AggregateFunctionProperties {
   /**

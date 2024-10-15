@@ -1,11 +1,12 @@
+import { useTheme } from '@mui/material';
 import React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+
 import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
+import { getAutocompleteWidgetStyles } from '../../Utils/CloudPulseWidgetUtils';
 
 import type { TimeGranularity } from '@linode/api-v4';
-import { useTheme } from '@mui/material';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { getAutocompleteWidgetStyles } from '../../Utils/CloudPulseWidgetUtils';
 
 interface IntervalOptions {
   label: string;
