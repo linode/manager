@@ -122,7 +122,7 @@ export const SubnetLinodeRow = (props: Props) => {
           <Typography>
             This Linode is using a configuration profile with a Networking
             setting that is not recommended. To avoid potential connectivity
-            issues, edit the Linode's configuration.
+            issues, edit the Linode’s configuration.
           </Typography>
         }
         icon={<StyledWarningIcon />}
