@@ -10,8 +10,8 @@ import {
   TextField,
 } from '@linode/design-language-system/themes/dark';
 
-import { breakpoints } from 'src/foundations/breakpoints';
-import { latoWeb } from 'src/foundations/fonts';
+import { breakpoints } from '../breakpoints';
+import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
