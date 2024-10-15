@@ -1,4 +1,4 @@
-import { ipAddress } from './firewalls.schema';
+import { validateIP } from './firewalls.schema';
 import { array, number, object, string, boolean } from 'yup';
 
 export const nodePoolSchema = object().shape({
@@ -60,12 +60,24 @@ export const createKubeClusterSchema = object().shape({
     .min(1, 'Please add at least one node pool.'),
 });
 
+export const ipv4Address = string().test({
+  name: 'validateIP',
+  message: 'Must be a valid IPv4 address.',
+  test: validateIP,
+});
+
+export const ipv6Address = string().test({
+  name: 'validateIP',
+  message: 'Must be a valid IPv6 address.',
+  test: validateIP,
+});
+
 const controlPlaneACLOptionsSchema = object().shape({
   enabled: boolean(),
   'revision-id': string(),
   addresses: object().shape({
-    ipv4: array().of(ipAddress),
-    ipv6: array().of(ipAddress),
+    ipv4: array().of(ipv4Address).nullable(true),
+    ipv6: array().of(ipv6Address).nullable(true),
   }),
 });
 
