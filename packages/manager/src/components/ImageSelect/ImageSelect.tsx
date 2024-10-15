@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { imageFactory } from 'src/factories/images';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import { OSIcon } from '../OSIcon';
@@ -15,47 +16,38 @@ import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Auto
 
 export type ImageSelectVariant = 'all' | 'private' | 'public';
 
-interface Props
+interface BaseProps
   extends Omit<
     Partial<EnhancedAutocompleteProps<Image>>,
     'onChange' | 'value'
   > {
-  /**
-   * Optional filter function applied to the options.
-   */
+  anyAllOption?: boolean;
   filter?: (image: Image) => boolean;
-  /**
-   * Set a custom select label
-   */
   label?: string;
-  /**
-   * Called when the value is changed
-   */
-  onChange?: (image: Image | null) => void;
-  /**
-   * Set custom placeholder text
-   */
   placeholder?: string;
-  /**
-   * If there is only one available option, selected it by default.
-   */
   selectIfOnlyOneOption?: boolean;
-  /**
-   * The ID of the selected image
-   */
-  value: null | string | undefined;
-  /**
-   * Determines what images are fetched and shown
-   * - Public - Includes all public Linux distributions
-   * - Private - Includes images the customer captured or uploaded
-   * - All - shows all images (no API filtering)
-   */
   variant?: ImageSelectVariant;
 }
 
+interface SingleProps extends BaseProps {
+  isMulti?: false;
+  onChange?: (image: Image | null) => void;
+  value: null | string | undefined;
+}
+
+interface MultiProps extends BaseProps {
+  isMulti: true;
+  onChange?: (images: Image[]) => void;
+  value: string[];
+}
+
+export type Props = MultiProps | SingleProps;
+
 export const ImageSelect = (props: Props) => {
   const {
+    anyAllOption,
     filter,
+    isMulti,
     label,
     onChange,
     placeholder,
@@ -69,23 +61,57 @@ export const ImageSelect = (props: Props) => {
     getAPIFilterForImageSelect(variant)
   );
 
-  // We can't filter out Kubernetes images using the API so we filter them here
-  const options = getFilteredImagesForImageSelect(images, variant);
+  const _options = useMemo(() => {
+    const filteredOptions =
+      getFilteredImagesForImageSelect(images, variant) ?? [];
 
-  const filteredOptions = filter ? options?.filter(filter) : options;
+    return (filter ? filteredOptions.filter(filter) : filteredOptions).sort(
+      (a, b) => {
+        // Sort by vendor first
+        const vendorA = a.vendor ?? '';
+        const vendorB = b.vendor ?? '';
+        if (vendorA < vendorB) {
+          return -1;
+        }
+        if (vendorA > vendorB) {
+          return 1;
+        }
 
-  const value = images?.find((i) => i.id === props.value);
+        return a.label.localeCompare(b.label);
+      }
+    );
+  }, [images, variant, filter]);
 
-  if (
-    filteredOptions?.length === 1 &&
-    props.onChange &&
-    selectIfOnlyOneOption
-  ) {
-    props.onChange(filteredOptions[0]);
+  const options = useMemo(() => {
+    if (anyAllOption) {
+      return [
+        imageFactory.build({
+          eol: undefined,
+          id: 'any/all',
+          label: 'Any/All',
+        }),
+        ..._options,
+      ];
+    }
+    return _options;
+  }, [anyAllOption, _options]);
+
+  const value = useMemo(() => {
+    if (isMulti) {
+      return options.filter((option) => props.value.includes(option.id));
+    }
+    return options.find((i) => i.id === props.value) ?? null;
+  }, [isMulti, options, props.value]);
+
+  if (options.length === 1 && onChange && selectIfOnlyOneOption && !isMulti) {
+    onChange(options[0]);
   }
 
   return (
     <Autocomplete
+      groupBy={(option) =>
+        option.id === 'any/all' ? '' : option.vendor ?? 'My Images'
+      }
       renderOption={(props, option, state) => (
         <ImageOption
           image={option}
@@ -96,35 +122,41 @@ export const ImageSelect = (props: Props) => {
       )}
       textFieldProps={{
         InputProps: {
-          startAdornment: value && (
-            <OSIcon
-              fontSize="24px"
-              height="24px"
-              os={value.vendor}
-              pl={1}
-              pr={2}
-            />
-          ),
+          startAdornment:
+            !isMulti && value && !Array.isArray(value) ? (
+              <OSIcon
+                fontSize="24px"
+                height="24px"
+                os={value.vendor ?? ''}
+                pl={1}
+                pr={2}
+              />
+            ) : null,
         },
       }}
       clearOnBlur
-      groupBy={(option) => option.vendor ?? 'My Images'}
       label={label || 'Images'}
       loading={isLoading}
-      options={filteredOptions ?? []}
+      options={options}
       placeholder={placeholder || 'Choose an image'}
       {...rest}
       disableClearable={
         rest.disableClearable ??
-        (selectIfOnlyOneOption && filteredOptions?.length === 1)
+        (selectIfOnlyOneOption && options.length === 1 && !isMulti)
       }
-      onChange={(e, image) => {
+      onChange={(e, selectedValue) => {
         if (onChange) {
-          onChange(image);
+          if (isMulti && Array.isArray(selectedValue)) {
+            onChange(selectedValue as Image[]);
+          } else if (!isMulti) {
+            onChange(selectedValue as Image | null);
+          }
         }
       }}
+      disableSelectAll
       errorText={rest.errorText ?? error?.[0].reason}
-      value={value ?? null}
+      multiple={isMulti}
+      value={value}
     />
   );
 };

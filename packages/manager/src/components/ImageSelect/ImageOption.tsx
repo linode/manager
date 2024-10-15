@@ -35,20 +35,22 @@ export const ImageOption = ({ image, isSelected, listItemProps }: Props) => {
       }}
     >
       <Stack alignItems="center" direction="row" spacing={2}>
-        <OSIcon fontSize="1.8em" lineHeight="1.8em" os={image.vendor} />
+        {image?.id !== 'any/all' && (
+          <OSIcon fontSize="1.8em" lineHeight="1.8em" os={image.vendor} />
+        )}
         <Typography color="inherit">
           {image.label} {isImageDeprecated(image) && '(deprecated)'}
         </Typography>
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
-        {image.capabilities.includes('distributed-sites') && (
+        {image.capabilities?.includes('distributed-sites') && (
           <Tooltip title="This image is compatible with distributed compute regions.">
             <div style={{ display: 'flex' }}>
               <DistributedRegionIcon height="24px" width="24px" />
             </div>
           </Tooltip>
         )}
-        {flags.metadata && image.capabilities.includes('cloud-init') && (
+        {flags.metadata && image.capabilities?.includes('cloud-init') && (
           <Tooltip title="This image is compatible with cloud-init.">
             <CloudInitIcon />
           </Tooltip>
