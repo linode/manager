@@ -20,10 +20,10 @@ interface Props {
 
 export const AppSection = (props: Props) => {
   const {
+    apps,
     onOpenDetailsDrawer,
     onSelect,
     selectedStackscriptId,
-    apps,
     title,
   } = props;
 

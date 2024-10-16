@@ -116,7 +116,6 @@ const getDoesMarketplaceAppMatchQuery = (
   const searchableAppFields = [
     String(app.stackscript.id),
     app.stackscript.label,
-    app.details.name,
     app.details.alt_name,
     app.details.alt_description,
     ...app.details.categories,
