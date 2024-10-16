@@ -1,9 +1,12 @@
-import * as React from 'react';
+import React from 'react';
 
+import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import { Hidden } from 'src/components/Hidden';
 import { LinkButton } from 'src/components/LinkButton';
+import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile/profile';
@@ -94,8 +97,26 @@ export const ImageRow = (props: Props) => {
 
   return (
     <TableRow data-qa-image-cell={id} key={id}>
-      <TableCell data-qa-image-label>
-        {label}
+      <TableCell data-qa-image-label noWrap>
+        {capabilities.includes('cloud-init') &&
+        flags.imageServiceGen2 &&
+        flags.imageServiceGen2Ga ? (
+          <Stack
+            alignItems="center"
+            direction="row"
+            gap={1}
+            justifyContent="space-between"
+          >
+            {label}
+            <Tooltip title="This image is compatible with cloud-init.">
+              <div style={{ display: 'flex' }}>
+                <CloudInitIcon />
+              </div>
+            </Tooltip>
+          </Stack>
+        ) : (
+          label
+        )}
       </TableCell>
       <Hidden smDown>
         <TableCell>{getStatusForImage(status)}</TableCell>
@@ -103,9 +124,13 @@ export const ImageRow = (props: Props) => {
       {multiRegionsEnabled && (
         <Hidden smDown>
           <TableCell>
-            <LinkButton onClick={() => handlers.onManageRegions?.(image)}>
-              {pluralize('Region', 'Regions', regions.length)}
-            </LinkButton>
+            {regions.length > 0 ? (
+              <LinkButton onClick={() => handlers.onManageRegions?.(image)}>
+                {pluralize('Region', 'Regions', regions.length)}
+              </LinkButton>
+            ) : (
+              'N/A'
+            )}
           </TableCell>
         </Hidden>
       )}
