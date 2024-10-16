@@ -80,15 +80,13 @@ export const CloudPulseTimeRangeSelect = React.memo(
         onChange={(e, value: Item<Labels, Labels>) => {
           handleChange(value);
         }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
         autoHighlight
         data-testid="cloudpulse-time-duration"
         disableClearable
         fullWidth
         isOptionEqualToValue={(option, value) => option.value === value.value}
-        label="Select a Time Duration"
+        label="Time Range"
+        noMarginTop
         options={options}
         value={selectedTimeRange}
       />
