@@ -15,29 +15,46 @@ import { useFlags } from 'src/hooks/useFlags';
 import { AlertsLanding } from './Alerts/AlertsLanding/AlertsLanding';
 import { CloudPulseDashboardLanding } from './Dashboard/CloudPulseDashboardLanding';
 
+import type { Tab } from 'src/components/Tabs/TabLinkList';
+
+export type EnabledTab = {
+  isEnabled: boolean;
+  tab: Tab;
+};
 export const CloudPulseTabs = () => {
   const flags = useFlags();
   const { url } = useRouteMatch();
   const { pathname } = useLocation();
-  const tabs = React.useMemo(
+  const tabFlags = React.useMemo<EnabledTab[]>(
     () => [
       {
-        accessible: true,
-        routeName: `${url}/dashboards`,
-        title: 'Dashboards',
+        isEnabled: true,
+        tab: {
+          routeName: `${url}/dashboards`,
+          title: 'Dashboards',
+        },
       },
       {
-        accessible:
+        isEnabled: Boolean(
           flags.aclpAlerting?.alertDefinitions ||
-          flags.aclpAlerting?.recentActivity ||
-          flags.aclpAlerting?.notificationChannels,
-        routeName: `${url}/alerts`,
-        title: 'Alerts',
+            flags.aclpAlerting?.recentActivity ||
+            flags.aclpAlerting?.notificationChannels
+        ),
+        tab: {
+          routeName: `${url}/alerts`,
+          title: 'Alerts',
+        },
       },
     ],
     [url, flags.aclpAlerting]
   );
-  const accessibleTabs = tabs.filter((tab) => tab.accessible);
+  const accessibleTabs = React.useMemo(
+    () =>
+      tabFlags
+        .filter((tabFlag) => tabFlag.isEnabled)
+        .map((tabFlag) => tabFlag.tab),
+    [tabFlags]
+  );
   const activeTabIndex = React.useMemo(
     () =>
       Math.max(
