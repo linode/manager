@@ -24,8 +24,8 @@ import type { Tab } from 'src/components/Tabs/TabLinkList';
 const AUTH_POLLING_INTERVAL = 2000;
 
 export interface RetryLimiterInterface {
-  retryAllowed: ()=>boolean
-  reset: ()=>void
+  retryAllowed: () => boolean
+  reset: () => void
 }
 
 export const RetryLimiter = (maxTries: number, perTimeWindowMs: number): RetryLimiterInterface => {
@@ -46,28 +46,49 @@ export const RetryLimiter = (maxTries: number, perTimeWindowMs: number): RetryLi
   }
 }
 
-const formatErrorPrefix = (errObj: any, defaultError: string): string => {
-  if (typeof errObj === 'string') {
-    return errObj;
-  }
-  if (errObj?.reason) {
-    return `${errObj?.reason}`;
-  }
-  if (errObj?.errors?.[0]?.reason) {
-    return `Error code: ${errObj.errors[0].reason}`;
-  }
-  return defaultError;
+export interface LishErrorInterface {
+  reason: string;
+  grn: string;
+  formatted: string;
+  isExpired: boolean;
 }
 
-const formatErrorSuffix = (errObj: any): string => {
-  if (errObj?.grn) {
-    return ` (${errObj?.grn})`;
-  }
-  return '';
-}
+export const ParsePotentialLishErrorString = (s: string | null): LishErrorInterface | null => {
+  if (!s) return null;
 
-export const formatError = (errObj: any, defaultError: string): string => {
-  return formatErrorPrefix(errObj, defaultError) + formatErrorSuffix(errObj);
+  let parsed = null;
+  try {
+    parsed = JSON.parse(s);
+  } catch {
+    return null;
+  }
+
+  let grn = (typeof parsed?.grn === "string" ? parsed?.grn : '');
+  let grnFormatted = (grn ? ` (${grn})` : '');
+
+  {
+    let reason = parsed?.reason;
+    if (parsed?.type === "error" && typeof reason === "string") {
+      return {
+        reason: reason,
+        grn: grn,
+        formatted: reason + grnFormatted,
+        isExpired: reason.toLowerCase() === "your session has expired."
+      };
+    }
+  }
+  {
+    let reason = parsed?.errors?.[0]?.reason;
+    if (typeof reason === "string") {
+      return {
+        reason: reason,
+        grn: grn,
+        formatted: `Error code: ${reason}${grnFormatted}`,
+        isExpired: reason === "expired"
+      };
+    }
+  }
+  return null;
 }
 
 const Lish = () => {

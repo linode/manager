@@ -4,7 +4,8 @@ import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { formatError, RetryLimiter, RetryLimiterInterface } from 'src/features/Lish/Lish';
+import { RetryLimiter, RetryLimiterInterface,
+         ParsePotentialLishErrorString, LishErrorInterface } from 'src/features/Lish/Lish';
 
 import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
@@ -78,40 +79,34 @@ export class Weblish extends React.Component<Props, State> {
     });
 
     this.socket.addEventListener('close', (evt) => {
+      /* If this event is not for the currently active socket, just
+       * ignore it. */
       if (this.socket !== origSocket) {
         return;
       }
       this.socket = null;
       this.terminal?.dispose();
       this.setState({ renderingLish: false });
+      /* If the control has been unmounted, the cleanup above is
+       * sufficient. */
       if (!this.mounted) {
         return;
       }
 
-      let parsed = null;
-      try {
-        if (evt?.reason) {
-          parsed = JSON.parse(evt.reason);
-        }
-        if (parsed === null) {
-          parsed = JSON.parse(this.lastMessage);
-        }
-      } catch {
-      }
+      let parsed: LishErrorInterface | null =
+          (ParsePotentialLishErrorString(evt?.reason) ||
+           ParsePotentialLishErrorString(this.lastMessage));
 
-      if (this.retryLimiter.retryAllowed()) {
-        if (parsed?.errors?.[0]?.reason === "expired" ||
-            (parsed?.type === "error" &&
-             typeof parsed?.reason === "string" &&
-             parsed?.reason.toLowerCase() === "your session has expired.")) {
-          const { refreshToken } = this.props;
-          refreshToken();
-        } else {
-          this.connect();
-        }
-      } else {
-        this.setState({error: formatError(parsed, "Unexpected WebSocket close")});
+      if (!this.retryLimiter.retryAllowed()) {
+        this.setState({error: parsed?.formatted || "Unexpected WebSocket close"});
+        return;
       }
+      if (parsed?.isExpired) {
+        const { refreshToken } = this.props;
+        refreshToken();
+        return;
+      }
+      this.connect();
     });
   }
 

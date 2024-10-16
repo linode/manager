@@ -10,7 +10,7 @@ import { SvgIconProps } from '../SvgIcon';
 
 export interface ActionButtonProps {
   text: string;
-  onClick: ()=>void;
+  onClick: () => void;
 }
 
 export interface ErrorStateProps {
@@ -34,9 +34,7 @@ export interface ErrorStateProps {
    * Styles applied to the error text
    */
   typographySx?: SxProps<Theme>;
-  /**
-   * Optional Action Button
-   */
+
   actionButtonProps?: ActionButtonProps;
 }
 
