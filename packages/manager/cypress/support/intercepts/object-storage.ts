@@ -544,7 +544,7 @@ export const mockGetBucket = (
   );
 };
 
- /* Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket, and mocks response.
+/* Intercepts GET request to fetch access information (ACL, CORS) for a given Bucket, and mocks response.
  *
  * @param label - Object storage bucket label.
  * @param cluster - Object storage bucket cluster.

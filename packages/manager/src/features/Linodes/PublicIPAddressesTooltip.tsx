@@ -9,14 +9,14 @@ const sxTooltipIcon = {
   paddingLeft: '4px',
 };
 
-export const PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT =
-  'The Public IP Addresses have been unassigned from the configuration profile.';
+export const PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT =
+  'The noted Public IP Addresses are provisionally reserved but not assigned to the network interfaces in this configuration profile.';
 
-export const PublicIpsUnassignedTooltip = (
+export const PublicIPAddressesTooltip = (
   <TooltipIcon
     text={
       <Typography>
-        {PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT}{' '}
+        {PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT}{' '}
         <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance">
           Learn more
         </Link>

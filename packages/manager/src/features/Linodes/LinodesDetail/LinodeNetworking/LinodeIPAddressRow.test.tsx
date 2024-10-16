@@ -7,12 +7,12 @@ import {
   ipResponseToDisplayRows,
   vpcConfigInterfaceToDisplayRows,
 } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
-import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { LinodeIPAddressRow } from './LinodeIPAddressRow';
 
-import type { IPAddressRowHandlers} from './LinodeIPAddressRow';
+import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
 
 const ips = linodeIPFactory.build();
 const ipDisplay = ipResponseToDisplayRows(ips)[0];
@@ -100,7 +100,7 @@ describe('LinodeIPAddressRow', () => {
     const editRDNSBtn = getByTestId('Edit RDNS');
     expect(editRDNSBtn).toHaveAttribute('aria-disabled', 'true');
 
-    expect(getAllByLabelText(PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT)).toHaveLength(2);
+    expect(getAllByLabelText(PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT)).toHaveLength(2);
   });
 
   it('should not disable the row if disabled is false', async () => {
@@ -115,7 +115,6 @@ describe('LinodeIPAddressRow', () => {
         />
       )
     );
-
 
     // open the action menu
     await userEvent.click(

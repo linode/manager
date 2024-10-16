@@ -41,7 +41,6 @@ interface Props {
   region: string | undefined;
 }
 
-
 export const ConfigNodeIPSelect = React.memo((props: Props) => {
   const {
     disabled,

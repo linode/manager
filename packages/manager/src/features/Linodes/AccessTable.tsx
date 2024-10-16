@@ -4,7 +4,7 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
-import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 
 import {
   StyledColumnLabelGrid,
@@ -37,20 +37,20 @@ interface AccessTableProps {
 
 export const AccessTable = React.memo((props: AccessTableProps) => {
   const { footer, gridSize, isVPCOnlyLinode, rows, sx, title } = props;
+
+  const isDisabled = isVPCOnlyLinode && title.includes('Public IP Address');
+
   return (
     <Grid lg={gridSize.lg} sx={sx} xs={gridSize.xs}>
       <StyledColumnLabelGrid>
-        {title}{' '}
-        {isVPCOnlyLinode &&
-          title.includes('Public IP Address') &&
-          PublicIpsUnassignedTooltip}
+        {title} {isDisabled && PublicIPAddressesTooltip}
       </StyledColumnLabelGrid>
       <StyledTableGrid>
         <StyledTable>
           <TableBody>
             {rows.map((thisRow) => {
               return thisRow.text ? (
-                <StyledTableRow disabled={isVPCOnlyLinode} key={thisRow.text}>
+                <StyledTableRow disabled={isDisabled} key={thisRow.text}>
                   {thisRow.heading ? (
                     <TableCell component="th" scope="row">
                       {thisRow.heading}
@@ -60,12 +60,12 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                     <StyledGradientDiv>
                       <CopyTooltip
                         copyableText
-                        disabled={isVPCOnlyLinode}
+                        disabled={isDisabled}
                         text={thisRow.text}
                       />
                     </StyledGradientDiv>
                     <StyledCopyTooltip
-                      disabled={isVPCOnlyLinode}
+                      disabled={isDisabled}
                       text={thisRow.text}
                     />
                   </StyledTableCell>
