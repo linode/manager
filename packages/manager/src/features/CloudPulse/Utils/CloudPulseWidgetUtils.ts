@@ -145,11 +145,33 @@ interface DimensionNameProperties {
   resources: CloudPulseResources[];
 }
 
+interface GraphData {
+  /**
+   * array of area props to be shown on graph
+   */
+  areas: AreaProps[];
+
+  /**
+   * plots to be shown of each dimension
+   */
+  dimensions: DataSet[];
+
+  /**
+   * legends rows available for each dimension
+   */
+  legendRowsData: MetricsDisplayRow[];
+
+  /**
+   * maximum possible rolled up unit for the data
+   */
+  unit: string;
+}
+
 /**
  *
  * @returns parameters which will be necessary to populate graph & legends
  */
-export const generateGraphData = (props: GraphDataOptionsProps) => {
+export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   const {
     flags,
     label,
@@ -194,15 +216,15 @@ export const generateGraphData = (props: GraphDataOptionsProps) => {
         };
         const labelName = getLabelName(labelOptions);
         const data = seriesDataFormatter(transformedData.values, start, end);
-        const color = colors[index]?.Primary ?? Alias.Chart.Neutral;
+        const color = colors[index].Primary;
         areas.push({
           color,
           dataKey: labelName,
         });
 
-        data.forEach((d) => {
-          const timestamp = d[0];
-          const value = d[1];
+        data.forEach((dataPoint) => {
+          const timestamp = dataPoint[0];
+          const value = dataPoint[1];
           if (value !== null) {
             dimension[timestamp] = {
               ...dimension[timestamp],
@@ -223,14 +245,19 @@ export const generateGraphData = (props: GraphDataOptionsProps) => {
   }
 
   const maxUnit = generateMaxUnit(legendRowsData, unit);
-  const dimensions: DataSet[] = Object.entries(dimension).map(
-    ([key, value]) => {
-      const rolledUpData: { [resource: string]: number } = {};
-      Object.entries(value).forEach(
-        ([resource, data]) =>
-          (rolledUpData[resource] = convertValueToUnit(data, maxUnit))
+  const dimensions = Object.entries(dimension).map(
+    ([timestamp, resource]): DataSet => {
+      const rolledUpData = Object.entries(resource).reduce(
+        (previousValue, newValue) => {
+          return {
+            ...previousValue,
+            [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
+          };
+        },
+        {}
       );
-      return { timestamp: Number(key), ...rolledUpData };
+
+      return { timestamp: Number(timestamp), ...rolledUpData };
     }
   );
   return {
