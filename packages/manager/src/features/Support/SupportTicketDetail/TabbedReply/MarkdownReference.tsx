@@ -31,7 +31,7 @@ export const MarkdownReference = (props: Props) => {
       <Typography>
         You can use Markdown to format your{' '}
         {props.isReply ? 'reply' : 'question'}. For more examples see this{' '}
-        <Link external to="https://daringfireball.net/projects/markdown/syntax">
+        <Link external to="https://commonmark.org/help/">
           Markdown cheatsheet
         </Link>
       </Typography>
