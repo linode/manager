@@ -226,7 +226,7 @@ export const RebuildFromImage = (props: Props) => {
         };
 
         const handleImageChange = (image: Image | null) => {
-          setFieldValue('image', image);
+          setFieldValue('image', image?.id ?? '');
           setIsCloudInit(image?.capabilities?.includes('cloud-init') ?? false);
         };
 
