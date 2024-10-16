@@ -148,6 +148,9 @@ export const CreateImageTab = () => {
   const linodeIsInDistributedRegion =
     selectedLinodeRegion?.site_type === 'distributed';
 
+  /**
+   * The 'Object Storage' capability indicates a region can store images
+   */
   const linodeRegionSupportsImageStorage = selectedLinodeRegion?.capabilities.includes(
     'Object Storage'
   );

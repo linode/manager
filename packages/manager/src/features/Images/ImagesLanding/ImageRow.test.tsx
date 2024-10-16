@@ -80,6 +80,34 @@ describe('Image Table Row', () => {
     ).toBeVisible();
   });
 
+  it('does not show the compatibility column when Image Service Gen2 GA is enabled', () => {
+    const image = imageFactory.build({
+      capabilities: ['cloud-init', 'distributed-sites'],
+    });
+
+    const { queryByText } = renderWithTheme(
+      wrapWithTableBody(
+        <ImageRow handlers={handlers} image={image} multiRegionsEnabled />,
+        { flags: { imageServiceGen2: true, imageServiceGen2Ga: true } }
+      )
+    );
+
+    expect(queryByText('Cloud-init, Distributed')).not.toBeInTheDocument();
+  });
+
+  it('should show N/A if multiRegionsEnabled is true, but the Image does not have any regions', () => {
+    const image = imageFactory.build({ regions: [] });
+
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(
+        <ImageRow handlers={handlers} image={image} multiRegionsEnabled />,
+        { flags: { imageServiceGen2: true } }
+      )
+    );
+
+    expect(getByText('N/A')).toBeVisible();
+  });
+
   it('calls handlers when performing actions', async () => {
     const image = imageFactory.build({
       regions: [{ region: 'us-east', status: 'available' }],

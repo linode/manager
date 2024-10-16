@@ -163,7 +163,7 @@ describe('CreateImageTab', () => {
     );
   });
 
-  it('should render a notice if the user selects a Linode in a region that does not support image service and Image Service Gen 2 is GA', async () => {
+  it('should render a notice if the user selects a Linode in a region that does not support image storage and Image Service Gen 2 GA is enabled', async () => {
     const region = regionFactory.build({ capabilities: [] });
     const linode = linodeFactory.build({ region: region.id });
 
