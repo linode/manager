@@ -21,6 +21,7 @@ import { TextField } from 'src/components/TextField';
 import {
   getKubeHighAvailability,
   getLatestVersion,
+  useGetAPLAvailability,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -28,6 +29,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/account/agreements';
 import {
+  useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
   useKubernetesVersionQuery,
@@ -38,15 +40,16 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
+import { ApplicationPlatform } from './ApplicationPlatform';
 import {
   StyledDocsLinkContainer,
-  StyledRegionSelectStack,
+  StyledFieldWithDocsStack,
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
@@ -73,11 +76,13 @@ export const CreateCluster = () => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
+  const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
+  const showAPL = useGetAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
 
   const {
@@ -104,6 +109,10 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterMutation();
 
   const {
+    mutateAsync: createKubernetesClusterBeta,
+  } = useCreateKubernetesClusterBetaMutation();
+
+  const {
     data: versionData,
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
@@ -124,12 +133,11 @@ export const CreateCluster = () => {
     setErrors(undefined);
     setSubmitting(true);
 
-    // Only type and count to the API.
     const node_pools = nodePools.map(
       pick(['type', 'count'])
     ) as CreateNodePoolData[];
 
-    const payload: CreateKubeClusterPayload = {
+    let payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability ?? false },
       k8s_version: version,
       label,
@@ -137,7 +145,15 @@ export const CreateCluster = () => {
       region: selectedRegionId,
     };
 
-    createKubernetesCluster(payload)
+    if (showAPL) {
+      payload = { ...payload, apl_enabled };
+    }
+
+    const createClusterFn = showAPL
+      ? createKubernetesClusterBeta
+      : createKubernetesCluster;
+
+    createClusterFn(payload)
       .then((cluster) => {
         push(`/kubernetes/clusters/${cluster.id}`);
         if (hasAgreed) {
@@ -232,7 +248,7 @@ export const CreateCluster = () => {
             value={label || ''}
           />
           <Divider sx={{ marginTop: 4 }} />
-          <StyledRegionSelectStack>
+          <StyledFieldWithDocsStack>
             <Stack>
               <RegionSelect
                 textFieldProps={{
@@ -253,7 +269,7 @@ export const CreateCluster = () => {
                 label={DOCS_LINK_LABEL_DC_PRICING}
               />
             </StyledDocsLinkContainer>
-          </StyledRegionSelectStack>
+          </StyledFieldWithDocsStack>
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
             onChange={(_, selected) => {
@@ -266,6 +282,19 @@ export const CreateCluster = () => {
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
           />
+          {showAPL && (
+            <>
+              <Divider sx={{ marginTop: 4 }} />
+              <StyledFieldWithDocsStack>
+                <Stack>
+                  <ApplicationPlatform
+                    setAPL={setApl_enabled}
+                    setHighAvailability={setHighAvailability}
+                  />
+                </Stack>
+              </StyledFieldWithDocsStack>
+            </>
+          )}
           <Divider sx={{ marginTop: 4 }} />
           {showHighAvailability ? (
             <Box data-testid="ha-control-plane">
@@ -275,6 +304,7 @@ export const CreateCluster = () => {
                     ? UNKNOWN_PRICE
                     : highAvailabilityPrice
                 }
+                isAPLEnabled={apl_enabled}
                 isErrorKubernetesTypes={isErrorKubernetesTypes}
                 isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                 selectedRegionId={selectedRegionId}
@@ -295,6 +325,7 @@ export const CreateCluster = () => {
             addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
             apiError={errorMap.node_pools}
             hasSelectedRegion={hasSelectedRegion}
+            isAPLEnabled={apl_enabled}
             isPlanPanelDisabled={isPlanPanelDisabled}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
             regionsData={regionsData}

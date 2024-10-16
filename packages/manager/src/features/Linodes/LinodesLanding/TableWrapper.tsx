@@ -1,15 +1,16 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { OrderByProps } from 'src/components/OrderBy';
-import { Table, TableProps } from 'src/components/Table';
+import { Table } from 'src/components/Table';
 
 import { SortableTableHead } from './SortableTableHead';
+
+import type { OrderByProps } from 'src/components/OrderBy';
+import type { TableProps } from 'src/components/Table';
 
 interface Props {
   children: React.ReactNode;
   dataLength: number;
-  isVLAN?: boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
   tableProps?: TableProps;
@@ -23,7 +24,6 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
   const {
     dataLength,
     handleOrderChange,
-    isVLAN,
     linodeViewPreference,
     linodesAreGrouped,
     order,
@@ -45,7 +45,6 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
         >
           <SortableTableHead
             handleOrderChange={handleOrderChange}
-            isVLAN={isVLAN}
             linodeViewPreference={linodeViewPreference}
             linodesAreGrouped={linodesAreGrouped}
             order={order}

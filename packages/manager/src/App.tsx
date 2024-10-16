@@ -14,6 +14,7 @@ import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
+import { usePendo } from './hooks/usePendo';
 import { MainContent } from './MainContent';
 import { useEventsPoller } from './queries/events/events';
 // import { Router } from './Router';
@@ -63,6 +64,7 @@ const BaseApp = withDocumentTitleProvider(
 const GlobalListeners = () => {
   useEventsPoller();
   useAdobeAnalytics();
+  usePendo();
   useNewRelic();
   return null;
 };

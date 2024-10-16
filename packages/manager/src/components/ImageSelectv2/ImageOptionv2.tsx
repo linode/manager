@@ -1,6 +1,6 @@
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import React from 'react';
 
+import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -47,7 +47,9 @@ export const ImageOptionv2 = ({ image, isSelected, listItemProps }: Props) => {
         )}
         {flags.metadata && image.capabilities.includes('cloud-init') && (
           <Tooltip title="This image is compatible with cloud-init.">
-            <DescriptionOutlinedIcon />
+            <div style={{ display: 'flex' }}>
+              <CloudInitIcon />
+            </div>
           </Tooltip>
         )}
         {isSelected && <SelectedIcon visible />}
