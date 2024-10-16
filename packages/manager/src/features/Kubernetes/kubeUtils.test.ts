@@ -73,7 +73,7 @@ describe('helper functions', () => {
     afterEach(() => {
       vi.resetAllMocks();
     });
-    it('should return true id apl flag is true and beta is active', () => {
+    it('should return true if apl flag is true and beta is active', () => {
       vi.mock('@tanstack/react-query', () => ({
         useQuery: vi.fn().mockReturnValue({
           data: {
