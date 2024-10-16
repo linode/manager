@@ -5,6 +5,7 @@ import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
@@ -15,8 +16,6 @@ import { ImagesActionMenu } from './ImagesActionMenu';
 
 import type { Handlers } from './ImagesActionMenu';
 import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
-import { useFlags } from 'src/hooks/useFlags';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 
 const capabilityMap: Record<ImageCapabilities, string> = {
   'cloud-init': 'Cloud-init',
