@@ -52,7 +52,7 @@ export const StackScriptImages = () => {
             noOptionsText="No Compatible Images Available"
             onChange={(image) => field.onChange(image?.id ?? null)}
             selectIfOnlyOneOption
-            value={field.value}
+            value={field.value ?? null}
             variant={imageSelectVariant}
           />
         )}

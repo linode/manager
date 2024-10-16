@@ -19,7 +19,7 @@ export type ImageSelectVariant = 'all' | 'private' | 'public';
 interface BaseProps
   extends Omit<
     Partial<EnhancedAutocompleteProps<Image>>,
-    'onChange' | 'value'
+    'multiple' | 'onChange' | 'value'
   > {
   anyAllOption?: boolean;
   filter?: (image: Image) => boolean;
@@ -30,15 +30,15 @@ interface BaseProps
 }
 
 interface SingleProps extends BaseProps {
-  isMulti?: false;
-  onChange?: (image: Image | null) => void;
-  value: null | string | undefined;
+  multiple?: false;
+  onChange: (selected: Image | null) => void;
+  value: ((image: Image) => boolean) | null | string;
 }
 
 interface MultiProps extends BaseProps {
-  isMulti: true;
-  onChange?: (images: Image[]) => void;
-  value: string[];
+  multiple: true;
+  onChange: (selected: Image[]) => void;
+  value: ((image: Image) => boolean) | null | string[];
 }
 
 export type Props = MultiProps | SingleProps;
@@ -47,8 +47,8 @@ export const ImageSelect = (props: Props) => {
   const {
     anyAllOption,
     filter,
-    isMulti,
     label,
+    multiple,
     onChange,
     placeholder,
     selectIfOnlyOneOption,
@@ -96,14 +96,17 @@ export const ImageSelect = (props: Props) => {
     return _options;
   }, [anyAllOption, _options]);
 
+  const selected = props.value;
   const value = useMemo(() => {
-    if (isMulti) {
-      return options.filter((option) => props.value.includes(option.id));
+    if (multiple) {
+      return options.filter((option) =>
+        Array.isArray(selected) ? selected.includes(option.id) : false
+      );
     }
-    return options.find((i) => i.id === props.value) ?? null;
-  }, [isMulti, options, props.value]);
+    return options.find((i) => i.id === selected) ?? null;
+  }, [multiple, options, selected]);
 
-  if (options.length === 1 && onChange && selectIfOnlyOneOption && !isMulti) {
+  if (options.length === 1 && onChange && selectIfOnlyOneOption && !multiple) {
     onChange(options[0]);
   }
 
@@ -123,7 +126,7 @@ export const ImageSelect = (props: Props) => {
       textFieldProps={{
         InputProps: {
           startAdornment:
-            !isMulti && value && !Array.isArray(value) ? (
+            !multiple && value && !Array.isArray(value) ? (
               <OSIcon
                 fontSize="24px"
                 height="24px"
@@ -142,20 +145,16 @@ export const ImageSelect = (props: Props) => {
       {...rest}
       disableClearable={
         rest.disableClearable ??
-        (selectIfOnlyOneOption && options.length === 1 && !isMulti)
+        (selectIfOnlyOneOption && options.length === 1 && !multiple)
       }
-      onChange={(e, selectedValue) => {
-        if (onChange) {
-          if (isMulti && Array.isArray(selectedValue)) {
-            onChange(selectedValue as Image[]);
-          } else if (!isMulti) {
-            onChange(selectedValue as Image | null);
-          }
-        }
-      }}
+      onChange={(_, value) =>
+        multiple && Array.isArray(value)
+          ? onChange(value)
+          : !multiple && !Array.isArray(value) && onChange(value)
+      }
       disableSelectAll
       errorText={rest.errorText ?? error?.[0].reason}
-      multiple={isMulti}
+      multiple={multiple}
       value={value}
     />
   );

@@ -114,8 +114,8 @@ export const StackScriptForm = React.memo((props: Props) => {
             data-qa-stackscript-target-select
             disabled={disabled}
             errorText={hasErrorFor('images')}
-            isMulti
             label="Target Images"
+            multiple
             onChange={onSelectChange}
             selectAllLabel="Select Any/All"
             value={images.selected}

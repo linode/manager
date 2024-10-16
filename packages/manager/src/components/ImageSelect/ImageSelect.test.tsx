@@ -11,14 +11,16 @@ import { ImageSelect } from './ImageSelect';
 
 describe('ImageSelect', () => {
   it('should render a default "Images" label', () => {
-    const { getByLabelText } = renderWithTheme(<ImageSelect value={null} />);
+    const { getByLabelText } = renderWithTheme(
+      <ImageSelect onChange={vi.fn()} value={null} />
+    );
 
     expect(getByLabelText('Images')).toBeVisible();
   });
 
   it('should render default placeholder text', () => {
     const { getByPlaceholderText } = renderWithTheme(
-      <ImageSelect value={null} />
+      <ImageSelect onChange={vi.fn()} value={null} />
     );
 
     expect(getByPlaceholderText('Choose an image')).toBeVisible();
@@ -34,7 +36,7 @@ describe('ImageSelect', () => {
     );
 
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <ImageSelect value={null} />
+      <ImageSelect onChange={vi.fn()} value={null} />
     );
 
     await userEvent.click(getByPlaceholderText('Choose an image'));
@@ -79,7 +81,7 @@ describe('ImageSelect', () => {
     );
 
     const { findByDisplayValue } = renderWithTheme(
-      <ImageSelect value={image.id} />
+      <ImageSelect onChange={vi.fn()} value={image.id} />
     );
 
     await findByDisplayValue(image.label);
@@ -94,7 +96,9 @@ describe('ImageSelect', () => {
       })
     );
 
-    const { findByTestId } = renderWithTheme(<ImageSelect value={image.id} />);
+    const { findByTestId } = renderWithTheme(
+      <ImageSelect onChange={vi.fn()} value={image.id} />
+    );
 
     await findByTestId('os-icon');
   });
@@ -129,7 +133,7 @@ describe('ImageSelect', () => {
     );
 
     const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
-      <ImageSelect value={null} />
+      <ImageSelect onChange={vi.fn()} value={null} />
     );
 
     await userEvent.click(getByPlaceholderText('Choose an image'));
@@ -153,8 +157,8 @@ describe('ImageSelect', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <ImageSelect
         anyAllOption
-        isMulti
         label="Images"
+        multiple
         onChange={onSelect}
         value={[]}
       />

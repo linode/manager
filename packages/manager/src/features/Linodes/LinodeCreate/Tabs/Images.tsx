@@ -107,7 +107,7 @@ export const Images = () => {
             onBlur={field.onBlur}
             onChange={onChange}
             sx={{ width: '416px' }}
-            value={field.value}
+            value={field.value ?? null}
             variant="private"
           />
           {showDistributedCapabilityNotice && (
