@@ -41,7 +41,7 @@
 
 ## Overview
 
-This repository is home to the Akamai Connected **[Cloud Manager](https://cloud.linode.com)** and related [`@linode/api-v4`](packages/api-v4/) and [`@linode/validation`](packages/validation/) Typescript packages.
+This repository is home to the Akamai Connected **[Cloud Manager](https://cloud.linode.com)** and related [`@linode/api-v4`](packages/api-v4/), [`@linode/validation`](packages/validation/) and [`@linode/ui`](packages/ui/) Typescript packages.
 
 ## Developing Locally
 

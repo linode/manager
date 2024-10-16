@@ -21,6 +21,7 @@ export interface CloudPulseResourcesSelectProps {
     resources: CloudPulseResources[],
     savePref?: boolean
   ) => void;
+  label: string;
   placeholder?: string;
   region?: string;
   resourceType: string | undefined;
@@ -34,14 +35,13 @@ export const CloudPulseResourcesSelect = React.memo(
       defaultValue,
       disabled,
       handleResourcesSelection,
+      label,
       placeholder,
       region,
       resourceType,
       savePreferences,
       xFilter,
     } = props;
-
-    const isAutocompleteOpen = React.useRef(false);
 
     const { data: resources, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
@@ -53,6 +53,9 @@ export const CloudPulseResourcesSelect = React.memo(
     const [selectedResources, setSelectedResources] = React.useState<
       CloudPulseResources[]
     >();
+
+    // here we track the open state with ref to avoid unwanted re-renders, as we are any re-rendering while updating the selected values itself
+    const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       return resources && resources.length > 0 ? resources : [];
@@ -83,10 +86,7 @@ export const CloudPulseResourcesSelect = React.memo(
 
     return (
       <Autocomplete
-        onChange={(
-          _: React.SyntheticEvent,
-          resourceSelections: CloudPulseResources[]
-        ) => {
+        onChange={(e, resourceSelections) => {
           setSelectedResources(resourceSelections);
 
           if (!isAutocompleteOpen.current) {
@@ -113,16 +113,16 @@ export const CloudPulseResourcesSelect = React.memo(
               },
             },
           },
-          hideLabel: true,
         }}
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
         disabled={disabled || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Select a Resource"
+        label={Boolean(label?.length) ? label : 'Resources'}
         limitTags={2}
         multiple
+        noMarginTop
         options={getResourcesList}
         value={selectedResources ?? []}
       />

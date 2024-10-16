@@ -52,6 +52,7 @@ export const RegionSelect = <
     helperText,
     ignoreAccountAvailability,
     label,
+    noMarginTop,
     onChange,
     placeholder,
     regionFilter,
@@ -175,6 +176,7 @@ export const RegionSelect = <
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
+        noMarginTop={noMarginTop}
         noOptionsText="No results"
         onChange={onChange}
         options={regionOptions}

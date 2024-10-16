@@ -26,6 +26,7 @@ import type {
 } from '@linode/api-v4';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
+import type { Theme } from '@mui/material';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
@@ -341,11 +342,11 @@ export const mapResourceIdToName = (
 };
 
 /**
- * Returns an autocomplete with updated styles according to UX, this will be used at widget level
+ *
+ * @param theme mui theme
+ * @returns The style needed for widget level autocomplete filters
  */
-export const StyledWidgetAutocomplete = styled(Autocomplete, {
-  label: 'StyledAutocomplete',
-})(({ theme }) => ({
+export const getAutocompleteWidgetStyles = (theme: Theme) => ({
   '&& .MuiFormControl-root': {
     minWidth: '90px',
     [theme.breakpoints.down('sm')]: {
@@ -353,4 +354,4 @@ export const StyledWidgetAutocomplete = styled(Autocomplete, {
     },
     width: '90px',
   },
-}));
+});

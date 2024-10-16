@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+
 import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
-import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
+import { getAutocompleteWidgetStyles } from '../../Utils/CloudPulseWidgetUtils';
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 
 export interface AggregateFunctionProperties {
@@ -55,14 +57,14 @@ export const CloudPulseAggregateFunction = React.memo(
 
     return (
       <CloudPulseTooltip title={'Aggregation function'}>
-        <StyledWidgetAutocomplete
-          getOptionLabel={(option: { label: string }) => {
+        <Autocomplete
+          getOptionLabel={(option) => {
             return convertStringToCamelCasesWithSpaces(option.label); // options needed to be display in Caps first
           }}
           isOptionEqualToValue={(option, value) => {
             return option.label === value.label;
           }}
-          onChange={(e, selectedAggregateFunc: AggregateFunction) => {
+          onChange={(e, selectedAggregateFunc) => {
             setSelectedAggregateFunction(selectedAggregateFunc);
             onAggregateFuncChange(selectedAggregateFunc.label);
           }}
@@ -71,11 +73,10 @@ export const CloudPulseAggregateFunction = React.memo(
           }}
           autoHighlight
           disableClearable
-          fullWidth={false}
           label="Select an Aggregate Function"
           noMarginTop={true}
           options={availableAggregateFunc}
-          sx={{ width: '100%' }}
+          sx={getAutocompleteWidgetStyles}
           value={selectedAggregateFunction}
         />
       </CloudPulseTooltip>

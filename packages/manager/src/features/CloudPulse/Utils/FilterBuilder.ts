@@ -56,11 +56,12 @@ export const getRegionProperties = (
   props: CloudPulseFilterProperties,
   handleRegionChange: (region: string | undefined, savePref?: boolean) => void
 ): CloudPulseRegionSelectProps => {
-  const { placeholder } = props.config.configuration;
+  const { name: label, placeholder } = props.config.configuration;
   const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
   return {
     defaultValue: preferences?.[REGION],
     handleRegionChange,
+    label,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
     selectedDashboard: dashboard,
@@ -84,7 +85,7 @@ export const getResourcesProperties = (
     savePref?: boolean
   ) => void
 ): CloudPulseResourcesSelectProps => {
-  const { filterKey, placeholder } = props.config.configuration;
+  const { filterKey, name: label, placeholder } = props.config.configuration;
   const {
     config,
     dashboard,
@@ -100,6 +101,7 @@ export const getResourcesProperties = (
       dashboard
     ),
     handleResourcesSelection: handleResourceChange,
+    label,
     placeholder,
     resourceType: dashboard.service_type,
     savePreferences: !isServiceAnalyticsIntegration,
@@ -129,6 +131,7 @@ export const getCustomSelectProperties = (
     filterType,
     isMultiSelect,
     maxSelections,
+    name: label,
     options,
     placeholder,
   } = props.config.configuration;
@@ -156,6 +159,7 @@ export const getCustomSelectProperties = (
     filterType,
     handleSelectionChange: handleCustomSelectChange,
     isMultiSelect,
+    label,
     maxSelections,
     options,
     placeholder,
@@ -373,7 +377,6 @@ const getDependentFiltersByFilterKey = (
         : configuration.filterKey
     );
 };
-
 
 /**
  * @param obj1 The first object to be compared

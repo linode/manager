@@ -6,6 +6,10 @@ import { useAccount } from 'src/queries/account/account';
 import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
+import { databaseEngineMap } from './DatabaseLanding/DatabaseRow';
+
+import type { DatabaseInstance } from '@linode/api-v4';
+
 /**
  * A hook to determine if Databases should be visible to the user.
  *
@@ -56,8 +60,12 @@ export const useIsDatabasesEnabled = () => {
         account?.capabilities ?? []
       );
 
+    const isDatabasesGA =
+      flags.dbaasV2?.enabled && flags.dbaasV2.beta === false;
+
     return {
       isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
+      isDatabasesGAEnabled: isDatabasesV1Enabled && isDatabasesGA,
       isDatabasesV1Enabled,
       isDatabasesV2Beta: isDatabasesV2Enabled && flags.dbaasV2?.beta,
       isDatabasesV2Enabled,
@@ -179,4 +187,8 @@ export const toDatabaseFork = (
     fork.restore_time = toISOString(selectedDate!, selectedTime)!;
   }
   return fork;
+};
+
+export const getDatabasesDescription = (database: DatabaseInstance) => {
+  return `${databaseEngineMap[database.engine]} v${database.version}`;
 };
