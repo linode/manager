@@ -38,15 +38,13 @@ describe('OneClick Apps (OCA)', () => {
             (stackScript) => stackScript.id === +stackscriptId
           );
 
-          const displayLabel = stackscript
-            ? getMarketplaceAppLabel(stackscript.label)
-            : '';
-
           if (!stackscript) {
             throw new Error(
-              `Cloud Manager's fetch to GET /v4/linode/stackscripts did not recieve a StackScript with ID ${stackscriptId}. We expected that StackScript to be in the response for the Marketplace app named "${displayLabel}".`
+              `Cloud Manager's fetch to GET /v4/linode/stackscripts did not receive a StackScript with ID ${stackscriptId}. We expected a StackScript to be in the response.`
             );
           }
+
+          const displayLabel = getMarketplaceAppLabel(stackscript.label);
 
           // Using `findAllByText` because some apps may be duplicatd under different sections
           cy.findAllByText(displayLabel).should('exist');
