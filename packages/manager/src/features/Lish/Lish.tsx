@@ -63,11 +63,11 @@ export const ParsePotentialLishErrorString = (s: string | null): LishErrorInterf
     return null;
   }
 
-  let grn = (typeof parsed?.grn === "string" ? parsed?.grn : '');
-  let grnFormatted = (grn ? ` (${grn})` : '');
+  const grn = (typeof parsed?.grn === "string" ? parsed?.grn : '');
+  const grnFormatted = (grn ? ` (${grn})` : '');
 
   {
-    let reason = parsed?.reason;
+    const reason = parsed?.reason;
     if (parsed?.type === "error" && typeof reason === "string") {
       return {
         reason: reason,
@@ -78,7 +78,7 @@ export const ParsePotentialLishErrorString = (s: string | null): LishErrorInterf
     }
   }
   {
-    let reason = parsed?.errors?.[0]?.reason;
+    const reason = parsed?.errors?.[0]?.reason;
     if (typeof reason === "string") {
       return {
         reason: reason,

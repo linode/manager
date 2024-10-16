@@ -93,7 +93,7 @@ export class Weblish extends React.Component<Props, State> {
         return;
       }
 
-      let parsed: LishErrorInterface | null =
+      const parsed: LishErrorInterface | null =
           (ParsePotentialLishErrorString(evt?.reason) ||
            ParsePotentialLishErrorString(this.lastMessage));
 
