@@ -70,7 +70,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
           <MultipleIPInput
             onBlur={(_ips: ExtendedIP[]) => {
               const validatedIPs = validateIPs(_ips, {
-                allowEmptyAddress: false,
+                allowEmptyAddress: true,
                 errorMessage: 'Must be a valid IPv4 address.',
               });
               handleIPv4Change(validatedIPs);
@@ -86,7 +86,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             <MultipleIPInput
               onBlur={(_ips: ExtendedIP[]) => {
                 const validatedIPs = validateIPs(_ips, {
-                  allowEmptyAddress: false,
+                  allowEmptyAddress: true,
                   errorMessage: 'Must be a valid IPv6 address.',
                 });
                 handleIPv6Change(validatedIPs);

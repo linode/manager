@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
@@ -48,11 +48,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   );
 
   const {
+    control,
     formState: { errors, isDirty, isSubmitting },
     handleSubmit,
     reset,
     setError,
-    setValue,
     watch,
   } = useForm<KubernetesControlPlaneACLPayload>({
     defaultValues: data,
@@ -70,8 +70,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     },
   });
 
-  const values = watch();
-  const { acl } = values;
+  const { acl } = watch();
 
   const updateCluster = async () => {
     // A quick note on the following code:
@@ -168,19 +167,22 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               only be accessible through the defined IP CIDRs.
             </Typography>
             <Box sx={{ marginTop: 1 }}>
-              <FormControlLabel
-                control={
-                  <Toggle
-                    onChange={(e) => {
-                      setValue('acl.enabled', e.target.checked, {
-                        shouldDirty: true,
-                      });
-                    }}
-                    checked={acl.enabled ?? false}
-                    name="ipacl-checkbox"
+              <Controller
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Toggle
+                        checked={field.value ?? false}
+                        name="ipacl-checkbox"
+                        onBlur={field.onBlur}
+                        onChange={field.onChange}
+                      />
+                    }
+                    label={'IPACL Enabled'}
                   />
-                }
-                label={'IPACL Enabled'}
+                )}
+                control={control}
+                name="acl.enabled"
               />
             </Box>
             <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
@@ -192,16 +194,18 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                   and enforcements. Optional field. If omitted, defaults to a
                   randomly generated string.
                 </Typography>
-                <TextField
-                  onBlur={(e) =>
-                    setValue('acl.revision-id', e.target.value, {
-                      shouldDirty: true,
-                    })
-                  }
-                  data-qa-label-input
-                  errorText={errors.acl?.['revision-id']?.message}
-                  label="Revision ID"
-                  value={acl['revision-id']}
+                <Controller
+                  render={({ field, fieldState }) => (
+                    <TextField
+                      errorText={fieldState.error?.message}
+                      label="Revision ID"
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  )}
+                  control={control}
+                  name="acl.revision-id"
                 />
                 <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
               </>
@@ -217,28 +221,38 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               </Notice>
             )}
             <Box sx={{ maxWidth: 450 }}>
-              <MultipleNonExtendedIPInput
-                onNonExtendedIPChange={(ips: string[]) =>
-                  setValue('acl.addresses.ipv4', ips, { shouldDirty: true })
-                }
-                buttonText="Add IPv4 Address"
-                ipErrors={errors.acl?.addresses?.ipv4}
-                isLinkStyled
-                nonExtendedIPs={acl.addresses?.ipv4 ?? ['']}
-                placeholder="0.0.0.0/0"
-                title="IPv4 Addresses or CIDRs"
+              <Controller
+                render={({ field }) => (
+                  <MultipleNonExtendedIPInput
+                    buttonText="Add IPv4 Address"
+                    ipErrors={errors.acl?.addresses?.ipv4}
+                    isLinkStyled
+                    nonExtendedIPs={field.value ?? ['']}
+                    onBlur={field.onBlur}
+                    onNonExtendedIPChange={field.onChange}
+                    placeholder="0.0.0.0/0"
+                    title="IPv4 Addresses or CIDRs"
+                  />
+                )}
+                control={control}
+                name="acl.addresses.ipv4"
               />
               <Box marginTop={2}>
-                <MultipleNonExtendedIPInput
-                  onNonExtendedIPChange={(ips: string[]) =>
-                    setValue('acl.addresses.ipv6', ips, { shouldDirty: true })
-                  }
-                  buttonText="Add IPv6 Address"
-                  ipErrors={errors.acl?.addresses?.ipv6}
-                  isLinkStyled
-                  nonExtendedIPs={acl.addresses?.ipv6 ?? ['']}
-                  placeholder="::/0"
-                  title="IPv6 Addresses or CIDRs"
+                <Controller
+                  render={({ field }) => (
+                    <MultipleNonExtendedIPInput
+                      buttonText="Add IPv6 Address"
+                      ipErrors={errors.acl?.addresses?.ipv6}
+                      isLinkStyled
+                      nonExtendedIPs={field.value ?? ['']}
+                      onBlur={field.onBlur}
+                      onNonExtendedIPChange={field.onChange}
+                      placeholder="::/0"
+                      title="IPv6 Addresses or CIDRs"
+                    />
+                  )}
+                  control={control}
+                  name="acl.addresses.ipv6"
                 />
               </Box>
             </Box>
