@@ -1,7 +1,5 @@
 import { Alias } from '@linode/design-language-system';
-import { styled } from '@mui/material';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { getMetrics } from 'src/utilities/statMetrics';
 
 import {
@@ -24,9 +22,9 @@ import type {
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
-import type { Theme } from '@mui/material';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
