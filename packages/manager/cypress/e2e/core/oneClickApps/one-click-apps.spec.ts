@@ -34,17 +34,20 @@ describe('OneClick Apps (OCA)', () => {
         // For every Marketplace app defined in Cloud Manager, make sure the API returns
         // the nessesary StackScript and that the app renders on the page.
         for (const stackscriptId in oneClickApps) {
-          const stackscript = stackScripts.find((s) => s.id === +stackscriptId);
-          const app = oneClickApps[stackscriptId];
+          const stackscript = stackScripts.find(
+            (stackScript) => stackScript.id === +stackscriptId
+          );
 
           if (!stackscript) {
             throw new Error(
-              `Cloud Manager's fetch to GET /v4/linode/stackscripts did not recieve a StackScript with ID ${stackscriptId}. We expected that StackScript to be in the response for the Marketplace app named "${app.name}".`
+              `Cloud Manager's fetch to GET /v4/linode/stackscripts did not receive a StackScript with ID ${stackscriptId}. We expected a StackScript to be in the response.`
             );
           }
 
+          const displayLabel = getMarketplaceAppLabel(stackscript.label);
+
           // Using `findAllByText` because some apps may be duplicatd under different sections
-          cy.findAllByText(getMarketplaceAppLabel(app.name)).should('exist');
+          cy.findAllByText(displayLabel).should('exist');
         }
       });
     });
@@ -81,7 +84,9 @@ describe('OneClick Apps (OCA)', () => {
       }
 
       cy.findByTestId('one-click-apps-container').within(() => {
-        cy.findAllByLabelText(`Info for "${candidateApp.name}"`)
+        cy.findAllByLabelText(
+          `Info for "${getMarketplaceAppLabel(candidateStackScript.label)}"`
+        )
           .first()
           .scrollIntoView()
           .should('be.visible')
@@ -90,7 +95,7 @@ describe('OneClick Apps (OCA)', () => {
       });
 
       ui.drawer
-        .findByTitle(candidateApp.name)
+        .findByTitle(getMarketplaceAppLabel(candidateStackScript.label))
         .should('be.visible')
         .within(() => {
           cy.findByText(candidateApp.description).should('be.visible');
