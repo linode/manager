@@ -158,12 +158,9 @@ export const generateGraphData = (props: GraphDataOptionsProps) => {
     serviceType,
     status,
     unit,
-    // widgetChartType,
-    // widgetColor,
   } = props;
   const legendRowsData: MetricsDisplayRow[] = [];
   // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-  // const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
