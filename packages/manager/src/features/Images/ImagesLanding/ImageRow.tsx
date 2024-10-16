@@ -15,6 +15,8 @@ import { ImagesActionMenu } from './ImagesActionMenu';
 
 import type { Handlers } from './ImagesActionMenu';
 import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
+import { useFlags } from 'src/hooks/useFlags';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 
 const capabilityMap: Record<ImageCapabilities, string> = {
   'cloud-init': 'Cloud-init',
@@ -44,6 +46,7 @@ export const ImageRow = (props: Props) => {
   } = image;
 
   const { data: profile } = useProfile();
+  const flags = useFlags();
 
   const isFailed = status === 'pending_upload' && event?.status === 'failed';
 
@@ -92,23 +95,25 @@ export const ImageRow = (props: Props) => {
 
   return (
     <TableRow data-qa-image-cell={id} key={id}>
-      <TableCell data-qa-image-label>{label}</TableCell>
+      <TableCell data-qa-image-label>
+        {label}
+      </TableCell>
       <Hidden smDown>
         <TableCell>{getStatusForImage(status)}</TableCell>
       </Hidden>
       {multiRegionsEnabled && (
-        <>
-          <Hidden smDown>
-            <TableCell>
-              <LinkButton onClick={() => handlers.onManageRegions?.(image)}>
-                {pluralize('Region', 'Regions', regions.length)}
-              </LinkButton>
-            </TableCell>
-          </Hidden>
-          <Hidden smDown>
-            <TableCell>{compatibilitiesList}</TableCell>
-          </Hidden>
-        </>
+        <Hidden smDown>
+          <TableCell>
+            <LinkButton onClick={() => handlers.onManageRegions?.(image)}>
+              {pluralize('Region', 'Regions', regions.length)}
+            </LinkButton>
+          </TableCell>
+        </Hidden>
+      )}
+      {multiRegionsEnabled && !flags.imageServiceGen2Ga && (
+        <Hidden smDown>
+          <TableCell>{compatibilitiesList}</TableCell>
+        </Hidden>
       )}
       <TableCell data-qa-image-size>
         {getSizeForImage(size, status, event?.status)}
