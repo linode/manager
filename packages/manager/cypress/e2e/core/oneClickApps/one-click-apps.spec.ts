@@ -86,7 +86,9 @@ describe('OneClick Apps (OCA)', () => {
       }
 
       cy.findByTestId('one-click-apps-container').within(() => {
-        cy.findAllByLabelText(`Info for "${candidateApp.name}"`)
+        cy.findAllByLabelText(
+          `Info for "${getMarketplaceAppLabel(candidateStackScript.label)}"`
+        )
           .first()
           .scrollIntoView()
           .should('be.visible')
@@ -95,7 +97,7 @@ describe('OneClick Apps (OCA)', () => {
       });
 
       ui.drawer
-        .findByTitle(candidateApp.name)
+        .findByTitle(getMarketplaceAppLabel(candidateStackScript.label))
         .should('be.visible')
         .within(() => {
           cy.findByText(candidateApp.description).should('be.visible');
