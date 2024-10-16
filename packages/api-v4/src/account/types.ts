@@ -79,6 +79,7 @@ export type AccountCapability =
   | 'Object Storage Endpoint Types'
   | 'Object Storage'
   | 'Placement Group'
+  | 'SMTP Enabled'
   | 'Support Ticket Severity'
   | 'Vlans'
   | 'VPCs';

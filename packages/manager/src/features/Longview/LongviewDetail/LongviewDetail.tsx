@@ -1,7 +1,7 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { createLazyRoute } from '@tanstack/react-router';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, matchPath } from 'react-router-dom';
+import { matchPath } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -14,28 +14,31 @@ import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
-import withLongviewClients, {
-  DispatchProps,
-  Props as LVProps,
-} from 'src/containers/longview.container';
-import withClientStats, {
-  Props as LVDataProps,
-} from 'src/containers/longview.stats.container';
+import withLongviewClients from 'src/containers/longview.container';
+import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';
-import {
-  LongviewPortsResponse,
-  LongviewTopProcesses,
-} from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useProfile } from 'src/queries/profile/profile';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { Apache } from './DetailTabs/Apache/Apache';
 import { MySQLLanding } from './DetailTabs/MySQL/MySQLLanding';
-import { NGINX } from './DetailTabs/NGINX/NGINX';
 import { NetworkLanding } from './DetailTabs/Network/NetworkLanding';
+import { NGINX } from './DetailTabs/NGINX/NGINX';
 import { ProcessesLanding } from './DetailTabs/Processes/ProcessesLanding';
 import { StyledTabs } from './LongviewDetail.styles';
+
+import type { LongviewClient } from '@linode/api-v4/lib/longview';
+import type { RouteComponentProps } from 'react-router-dom';
+import type {
+  DispatchProps,
+  Props as LVProps,
+} from 'src/containers/longview.container';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
+import type {
+  LongviewPortsResponse,
+  LongviewTopProcesses,
+} from 'src/features/Longview/request.types';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -323,7 +326,7 @@ export const LongviewDetail = (props: CombinedProps) => {
   );
 };
 
-export default compose<CombinedProps, {}>(
+const EnhancedLongviewDetail = compose<CombinedProps, {}>(
   React.memo,
   withClientStats<RouteComponentProps<{ id: string }>>((ownProps) => {
     return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
@@ -352,3 +355,17 @@ export default compose<CombinedProps, {}>(
     }
   )
 )(LongviewDetail);
+
+export const longviewDetailLazyRoute = createLazyRoute('/longview/clients/$id')(
+  {
+    component: React.lazy(() =>
+      import('src/features/Longview/LongviewDetail/LongviewDetail').then(
+        () => ({
+          default: (props: any) => <EnhancedLongviewDetail {...props} />,
+        })
+      )
+    ),
+  }
+);
+
+export default EnhancedLongviewDetail;

@@ -9,6 +9,7 @@ import { Divider } from 'src/components/Divider';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import { DASHBOARD_ID, REFRESH, TIME_DURATION } from '../Utils/constants';
 import { useAclpPreference } from '../Utils/UserPreference';
 
@@ -109,18 +110,20 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               label="Select Time Range"
               savePreferences
             />
-            <IconButton
-              sx={{
-                marginBlockEnd: 'auto',
-              }}
-              data-testid="global-refresh"
-              aria-label="Refresh Dashboard Metrics"
-              disabled={!selectedDashboard}
-              onClick={handleGlobalRefresh}
-              size="small"
-            >
-              <StyledReload />
-            </IconButton>
+            <CloudPulseTooltip placement="bottom-end" title="Refresh">
+              <IconButton
+                sx={{
+                  marginBlockEnd: 'auto',
+                }}
+                aria-label="Refresh Dashboard Metrics"
+                data-testid="global-refresh"
+                disabled={!selectedDashboard}
+                onClick={handleGlobalRefresh}
+                size="small"
+              >
+                <StyledReload />
+              </IconButton>
+            </CloudPulseTooltip>
           </Grid>
         </Grid>
       </Grid>

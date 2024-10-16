@@ -4,6 +4,8 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { themes } from 'src/utilities/theme';
 
+import { deepEqual } from '../Utils/FilterBuilder';
+
 import type { Filter, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
@@ -50,6 +52,13 @@ export const CloudPulseResourcesSelect = React.memo(
       CloudPulseResources[]
     >();
 
+    /**
+     * This is used to track the open state of the autocomplete and useRef optimizes the re-renders that this component goes through and it is used for below
+     * When the autocomplete is already closed, we should publish the resources on clear action and deselect action as well since onclose will not be triggered at that time
+     * When the autocomplete is open, we should publish any resources on clear action until the autocomplete is close
+     */
+    const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
+
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       return resources && resources.length > 0 ? resources : [];
     }, [resources]);
@@ -79,9 +88,19 @@ export const CloudPulseResourcesSelect = React.memo(
 
     return (
       <Autocomplete
-        onChange={(e, resourceSelections: CloudPulseResources[]) => {
+        onChange={(e, resourceSelections) => {
           setSelectedResources(resourceSelections);
-          handleResourcesSelection(resourceSelections, savePreferences);
+
+          if (!isAutocompleteOpen.current) {
+            handleResourcesSelection(resourceSelections, savePreferences);
+          }
+        }}
+        onClose={() => {
+          isAutocompleteOpen.current = false;
+          handleResourcesSelection(selectedResources ?? [], savePreferences);
+        }}
+        onOpen={() => {
+          isAutocompleteOpen.current = true;
         }}
         placeholder={
           selectedResources?.length ? '' : placeholder || 'Select a Resource'
@@ -129,7 +148,7 @@ function compareProps(
       return false;
     }
   }
-  if (prevProps.xFilter !== nextProps.xFilter) {
+  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
     return false;
   }
 
