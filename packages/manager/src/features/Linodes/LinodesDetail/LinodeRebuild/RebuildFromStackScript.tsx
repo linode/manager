@@ -311,8 +311,10 @@ export const RebuildFromStackScript = (props: Props) => {
 
               {ss.images && ss.images.length > 0 ? (
                 <ImageSelect
+                  onChange={(image) =>
+                    setFieldValue('image', image?.id ?? null)
+                  }
                   errorText={errors.image}
-                  onChange={(selected) => setFieldValue('image', selected)}
                   title="Choose Image"
                   value={values.image}
                   variant="public"
