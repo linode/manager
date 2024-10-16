@@ -17,7 +17,7 @@ import { CloudPulseDashboardLanding } from './Dashboard/CloudPulseDashboardLandi
 
 import type { Tab } from 'src/components/Tabs/TabLinkList';
 
-export type EnabledTab = {
+export type EnabledAlertTab = {
   isEnabled: boolean;
   tab: Tab;
 };
@@ -25,7 +25,7 @@ export const CloudPulseTabs = () => {
   const flags = useFlags();
   const { url } = useRouteMatch();
   const { pathname } = useLocation();
-  const tabFlags = React.useMemo<EnabledTab[]>(
+  const alertTabs = React.useMemo<EnabledAlertTab[]>(
     () => [
       {
         isEnabled: true,
@@ -50,10 +50,10 @@ export const CloudPulseTabs = () => {
   );
   const accessibleTabs = React.useMemo(
     () =>
-      tabFlags
-        .filter((tabFlag) => tabFlag.isEnabled)
-        .map((tabFlag) => tabFlag.tab),
-    [tabFlags]
+      alertTabs
+        .filter((alertTab) => alertTab.isEnabled)
+        .map((alertTab) => alertTab.tab),
+    [alertTabs]
   );
   const activeTabIndex = React.useMemo(
     () =>

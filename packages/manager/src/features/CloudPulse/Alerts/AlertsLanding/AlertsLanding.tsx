@@ -15,13 +15,13 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { AlertDefinitionLanding } from './AlertsDefinitionLanding';
 
-import type { EnabledTab } from '../../CloudPulseTabs';
+import type { EnabledAlertTab } from '../../CloudPulseTabs';
 
 export const AlertsLanding = React.memo(() => {
   const flags = useFlags();
   const { url } = useRouteMatch();
   const { pathname } = useLocation();
-  const tabFlags = React.useMemo<EnabledTab[]>(
+  const alertTabs = React.useMemo<EnabledAlertTab[]>(
     () => [
       {
         isEnabled: Boolean(flags.aclpAlerting?.alertDefinitions),
@@ -32,10 +32,10 @@ export const AlertsLanding = React.memo(() => {
   );
   const accessibleTabs = React.useMemo(
     () =>
-      tabFlags
-        .filter((tabFlag) => tabFlag.isEnabled)
-        .map((tabFlag) => tabFlag.tab),
-    [tabFlags]
+      alertTabs
+        .filter((alertTab) => alertTab.isEnabled)
+        .map((alertTab) => alertTab.tab),
+    [alertTabs]
   );
   const activeTabIndex = React.useMemo(
     () =>
