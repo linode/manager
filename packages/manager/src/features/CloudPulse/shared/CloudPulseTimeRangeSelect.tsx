@@ -43,7 +43,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
         return options[0];
       }
       return options.find((o) => o.label === defaultValue) || options[0];
-    }, []);
+    }, [defaultValue]);
     const [selectedTimeRange, setSelectedTimeRange] = React.useState<
       Item<Labels, Labels>
     >(getDefaultValue());
@@ -58,8 +58,12 @@ export const CloudPulseTimeRangeSelect = React.memo(
           false
         );
       }
+
+      if (item !== selectedTimeRange) {
+        setSelectedTimeRange(item);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // need to execute only once, during mounting of this component
+    }, [defaultValue]); // need to execute when there is change in default value
     const handleChange = (item: Item<Labels, Labels>) => {
       setSelectedTimeRange(item);
 
