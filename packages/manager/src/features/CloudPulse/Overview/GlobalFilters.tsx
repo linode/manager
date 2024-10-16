@@ -114,7 +114,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               <IconButton
                 sx={{
                   marginBlockEnd: 'auto',
-                  marginTop: 3.5,
+                  marginTop: theme.spacing(3.5),
                 }}
                 aria-label="Refresh Dashboard Metrics"
                 data-testid="global-refresh"
