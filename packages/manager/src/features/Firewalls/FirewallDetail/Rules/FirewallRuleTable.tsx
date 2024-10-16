@@ -411,8 +411,8 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
       gridTemplateColumns: '30% 14% 20% 10% 120px',
     },
     [theme.breakpoints.down('sm')]: {
-      gridTemplateAreas: `'one two three'`,
-      gridTemplateColumns: '50% 30% 20%',
+      gridTemplateAreas: `'one two'`,
+      gridTemplateColumns: '50% 50%',
     },
     width: '100%',
   };
