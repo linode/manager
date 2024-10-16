@@ -182,4 +182,10 @@ export const useMarketplaceApps = () => {
   return { apps, ...query };
 };
 
-export const getMarketplaceAppLabel = (label: string) => decode(label);
+export const getMarketplaceAppLabel = (label: string) =>
+  decode(
+    label
+      .replace(' Null One-Click', '')
+      .replace(' One-Click', '')
+      .replace(' Cluster', '')
+  ).trim();
