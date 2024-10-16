@@ -1,27 +1,27 @@
 import { createTheme } from '@mui/material/styles';
 
 // Themes & Brands
-import { darkTheme } from 'src/foundations/themes/dark';
-import { lightTheme } from 'src/foundations/themes/light';
+import { darkTheme } from './dark';
+import { lightTheme, inputMaxWidth as _inputMaxWidth } from './light';
 
 import type {
   ChartTypes,
   InteractionTypes as InteractionTypesLight,
 } from '@linode/design-language-system';
 import type { InteractionTypes as InteractionTypesDark } from '@linode/design-language-system/themes/dark';
-import type { latoWeb } from 'src/foundations/fonts';
+import type { latoWeb } from '../fonts';
 // Types & Interfaces
 import type {
   customDarkModeOptions,
   notificationToast as notificationToastDark,
-} from 'src/foundations/themes/dark';
+} from './dark';
 import type {
   bg,
   borderColors,
   color,
   notificationToast,
   textColors,
-} from 'src/foundations/themes/light';
+} from './light';
 
 export type ThemeName = 'dark' | 'light';
 
@@ -105,5 +105,6 @@ declare module '@mui/material/styles/createTheme' {
   }
 }
 
+export const inputMaxWidth = _inputMaxWidth;
 export const light = createTheme(lightTheme);
 export const dark = createTheme(lightTheme, darkTheme);
