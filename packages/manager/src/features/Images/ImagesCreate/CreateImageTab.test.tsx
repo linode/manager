@@ -180,7 +180,7 @@ describe('CreateImageTab', () => {
     );
 
     const { findByText, getByLabelText } = renderWithTheme(<CreateImageTab />, {
-      flags: { imageServiceGen2Ga: true },
+      flags: { imageServiceGen2: true, imageServiceGen2Ga: true },
     });
 
     const linodeSelect = getByLabelText('Linode');

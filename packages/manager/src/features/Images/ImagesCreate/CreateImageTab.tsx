@@ -230,6 +230,7 @@ export const CreateImageTab = () => {
             />
             {selectedLinode &&
               !linodeRegionSupportsImageStorage &&
+              flags.imageServiceGen2 &&
               flags.imageServiceGen2Ga && (
                 <Notice variant="warning">
                   This Linode’s region doesn’t support local image storage. This
