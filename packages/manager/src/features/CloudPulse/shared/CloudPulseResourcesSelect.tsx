@@ -4,6 +4,8 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { themes } from 'src/utilities/theme';
 
+import { deepEqual } from '../Utils/FilterBuilder';
+
 import type { Filter, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseResources {
@@ -146,7 +148,7 @@ function compareProps(
       return false;
     }
   }
-  if (prevProps.xFilter !== nextProps.xFilter) {
+  if (!deepEqual(prevProps.xFilter, nextProps.xFilter)) {
     return false;
   }
 
