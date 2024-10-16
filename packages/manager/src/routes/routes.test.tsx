@@ -1,54 +1,70 @@
-import {
-  RouterProvider,
-  createMemoryHistory,
-  createRouter,
-} from '@tanstack/react-router';
-import { waitFor } from '@testing-library/react';
+import { RouterProvider } from '@tanstack/react-router';
+import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountSettingsFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { routeTree } from './index';
-import { allPaths } from './utils/allPaths';
+import { migrationRouter } from './index';
+import { getAllRoutePaths } from './utils/allPaths';
 
-import type { RouterContext } from './types';
+// TODO: Tanstack Router - replace AnyRouter once migration is complete.
+import type { AnyRouter } from '@tanstack/react-router';
 
-// Mock any context or dependencies your routes might need
-const mockContext: RouterContext = {
-  accountSettings: accountSettingsFactory.build(),
-  isACLPEnabled: false,
-  isDatabasesEnabled: false,
-  isPlacementGroupsEnabled: false,
-};
+const allMigrationPaths = getAllRoutePaths(migrationRouter);
 
-// Helper function to create a test router
-const createTestRouter = (initialPath: string) => {
-  return createRouter({
-    context: mockContext,
-    history: createMemoryHistory({ initialEntries: [initialPath] }),
-    routeTree,
-  });
-};
+describe('Migration Router', () => {
+  const renderWithRouter = (initialEntry: string) => {
+    migrationRouter.invalidate();
+    migrationRouter.navigate({ replace: true, to: initialEntry });
 
-describe.skip('Route Tests', () => {
-  test.each(allPaths)('renders %s route correctly', async (path) => {
-    const router = createTestRouter(path);
-
-    const { findByRole, getByRole } = renderWithTheme(
-      <RouterProvider router={router} />
+    return renderWithTheme(
+      <RouterProvider router={migrationRouter as AnyRouter} />,
+      {
+        flags: {
+          selfServeBetas: true,
+        },
+      }
     );
+  };
+
+  /**
+   * This test is meant to incrementally test all routes being added to the migration router.
+   * It will hopefully catch any issues with routes not being added or set up correctly:
+   * - Route is not found in the router
+   * - Route is found in the router but the component is not rendered
+   * - Route is found in the router and the component is rendered but missing a heading (which should be a requirement for all routes)
+   */
+  test.each(allMigrationPaths)('route: %s', async (path) => {
+    renderWithRouter(path);
 
     await waitFor(
-      () => {
-        const h1 = getByRole('heading', { level: 1 });
+      async () => {
+        const migrationRouter = screen.getByTestId('migration-router');
+        const h1 = screen.getByRole('heading', { level: 1 });
+        expect(migrationRouter).toBeInTheDocument();
         expect(h1).toBeInTheDocument();
+        expect(h1).not.toHaveTextContent('Not Found');
       },
-      { timeout: 10_000 }
+      {
+        timeout: 5000,
+      }
     );
-    // Wait for any async operations to complete
-    await findByRole('main', {}, { timeout: 2000 });
-    // Check if the page has rendered without throwing an error
-    expect(getByRole('main')).toBeInTheDocument();
+  });
+
+  it('should render the NotFound component for broken routes', async () => {
+    renderWithRouter('/broken-route');
+
+    await waitFor(
+      async () => {
+        const migrationRouter = screen.getByTestId('migration-router');
+        const h1 = screen.getByRole('heading', { level: 1 });
+        expect(migrationRouter).toBeInTheDocument();
+        expect(h1).toBeInTheDocument();
+        expect(h1).toHaveTextContent('Not Found');
+      },
+      {
+        timeout: 5000,
+      }
+    );
   });
 });
