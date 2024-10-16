@@ -26,9 +26,7 @@ export interface ErrorStateProps {
    * Reduces the padding on the root element.
    */
   compact?: boolean;
-  /**
-   * The error text to display.
-   */
+
   errorText: JSX.Element | string;
   /**
    * Styles applied to the error text
