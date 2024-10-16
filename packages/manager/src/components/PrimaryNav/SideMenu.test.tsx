@@ -1,7 +1,7 @@
+import { breakpoints } from '@linode/ui';
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
-import { breakpoints } from 'src/foundations/breakpoints';
 import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
 import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH, SideMenu } from './SideMenu';

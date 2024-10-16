@@ -10,8 +10,8 @@ import {
   Select,
 } from '@linode/design-language-system';
 
-import { breakpoints } from 'src/foundations/breakpoints';
-import { latoWeb } from 'src/foundations/fonts';
+import { breakpoints } from '../breakpoints';
+import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
