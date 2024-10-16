@@ -2,6 +2,7 @@ import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCES } from './constants';
+import { deepEqual } from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -263,4 +264,40 @@ it('test constructAdditionalRequestFilters method', () => {
 
   expect(result).toBeDefined();
   expect(result.length).toEqual(0);
+});
+
+it('returns true for identical primitive values', () => {
+  expect(deepEqual(1, 1)).toBe(true);
+  expect(deepEqual('test', 'test')).toBe(true);
+  expect(deepEqual(true, true)).toBe(true);
+});
+
+it('returns false for different primitive values', () => {
+  expect(deepEqual(1, 2)).toBe(false);
+  expect(deepEqual('test', 'other')).toBe(false);
+  expect(deepEqual(true, false)).toBe(false);
+});
+
+it('returns true for identical objects', () => {
+  const obj1 = { a: 1, b: { c: 2 } };
+  const obj2 = { a: 1, b: { c: 2 } };
+  expect(deepEqual(obj1, obj2)).toBe(true);
+});
+
+it('returns false for different objects', () => {
+  const obj1 = { a: 1, b: { c: 2 } };
+  const obj2 = { a: 1, b: { c: 3 } };
+  expect(deepEqual(obj1, obj2)).toBe(false);
+});
+
+it('returns true for identical arrays', () => {
+  const arr1 = [1, 2, 3];
+  const arr2 = [1, 2, 3];
+  expect(deepEqual(arr1, arr2)).toBe(true);
+});
+
+it('returns false for different arrays', () => {
+  const arr1 = [1, 2, 3];
+  const arr2 = [1, 2, 4];
+  expect(deepEqual(arr1, arr2)).toBe(false);
 });
