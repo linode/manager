@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
@@ -122,19 +121,15 @@ export const CloudPulseIntervalSelect = React.memo(
       defaultValue
     );
 
-    const theme = useTheme();
-
     return (
       <CloudPulseTooltip title={'Data aggregation interval'}>
         <Autocomplete
-          isOptionEqualToValue={(
-            option: IntervalOptions,
-            value: IntervalOptions
-          ) => option?.value === value?.value && option?.unit === value?.unit}
-          onChange={(
-            _: React.SyntheticEvent,
-            selectedInterval: IntervalOptions
-          ) => {
+          isOptionEqualToValue={(option, value) => {
+            return (
+              option?.value === value?.value && option?.unit === value?.unit
+            );
+          }}
+          onChange={(e, selectedInterval) => {
             setSelectedInterval(selectedInterval);
             onIntervalChange({
               unit: selectedInterval?.unit,
@@ -146,11 +141,10 @@ export const CloudPulseIntervalSelect = React.memo(
           }}
           autoHighlight
           disableClearable
-          fullWidth={false}
           label="Select an Interval"
           noMarginTop={true}
           options={[autoIntervalOption, ...availableIntervalOptions]}
-          sx={getAutocompleteWidgetStyles(theme)}
+          sx={getAutocompleteWidgetStyles}
           value={selectedInterval}
         />
       </CloudPulseTooltip>
