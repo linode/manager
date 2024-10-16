@@ -11,7 +11,7 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 const circleProgress = 'circle-progress';
-const mandatoryFiltersError = 'Mandatory Filters not Selected';
+const mandatoryFiltersError = 'Select filters to visualize metrics.';
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');

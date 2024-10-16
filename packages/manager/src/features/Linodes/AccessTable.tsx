@@ -16,7 +16,7 @@ import {
   StyledTableRow,
 } from './LinodeEntityDetail.styles';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface AccessTableRow {
   heading?: string;
@@ -31,7 +31,7 @@ interface AccessTableProps {
   };
   isVPCOnlyLinode: boolean;
   rows: AccessTableRow[];
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   title: string;
 }
 
