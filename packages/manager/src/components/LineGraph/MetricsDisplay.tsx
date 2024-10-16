@@ -5,13 +5,14 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { Metrics } from 'src/utilities/statMetrics';
 
 import {
   StyledButton,
   StyledTable,
   StyledTableCell,
 } from './MetricDisplay.styles';
+
+import type { Metrics } from 'src/utilities/statMetrics';
 
 interface Props {
   hiddenRows?: string[];
@@ -22,14 +23,7 @@ export interface MetricsDisplayRow {
   data: Metrics;
   format: (n: number) => string;
   handleLegendClick?: () => void;
-  legendColor:
-    | 'blue'
-    | 'darkGreen'
-    | 'green'
-    | 'lightGreen'
-    | 'purple'
-    | 'red'
-    | 'yellow';
+  legendColor: string;
   legendTitle: string;
 }
 

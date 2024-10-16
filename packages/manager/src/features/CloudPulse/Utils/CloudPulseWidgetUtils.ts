@@ -1,11 +1,11 @@
+import { Alias } from '@linode/design-language-system';
 import { styled } from '@mui/material';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
-import { COLOR_MAP } from './CloudPulseWidgetColorPalette';
 import {
+  convertValueToUnit,
   formatToolTip,
   generateUnitByBaseUnit,
   transformData,
@@ -16,15 +16,16 @@ import {
 } from './utils';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { LegendRow } from '../Widget/CloudPulseWidget';
 import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
+  DataSet,
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
-import type { DataSet } from 'src/components/LineGraph/LineGraph';
+import type { AreaProps } from 'src/components/AreaChart/AreaChart';
+import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
@@ -59,7 +60,7 @@ interface LabelNameOptionsProps {
   unit: string;
 }
 
-interface graphDataOptionsProps {
+interface GraphDataOptionsProps {
   /**
    * flags associated with metricsList
    */
@@ -149,7 +150,7 @@ interface DimensionNameProperties {
  *
  * @returns parameters which will be necessary to populate graph & legends
  */
-export const generateGraphData = (props: graphDataOptionsProps) => {
+export const generateGraphData = (props: GraphDataOptionsProps) => {
   const {
     flags,
     label,
@@ -158,28 +159,27 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
     serviceType,
     status,
     unit,
-    widgetChartType,
-    widgetColor,
+    // widgetChartType,
+    // widgetColor,
   } = props;
-
-  const dimensions: DataSet[] = [];
-  const legendRowsData: LegendRow[] = [];
-
+  const legendRowsData: MetricsDisplayRow[] = [];
   // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-  const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
-  let today = false;
-
+  // const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
+  const dimension: { [timestamp: number]: { [label: string]: number } } = {};
+  const areas: AreaProps[] = [];
+  const colors = Object.values(Alias.Chart.Categorical);
   if (status === 'success') {
     metricsList?.data?.result?.forEach(
       (graphData: CloudPulseMetricsList, index) => {
         if (!graphData) {
           return;
         }
+
         const transformedData = {
           metric: graphData.metric,
           values: transformData(graphData.values, unit),
         };
-        const color = colors[index];
+        // const color = colors[index];
         const { end, start } = convertTimeDurationToStartAndEndTimeRange({
           unit: 'min',
           value: 30,
@@ -196,33 +196,52 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
           serviceType,
           unit,
         };
+        const labelName = getLabelName(labelOptions);
+        const data = seriesDataFormatter(transformedData.values, start, end);
+        const color = colors[index]?.Primary ?? Alias.Chart.Neutral;
+        areas.push({
+          color,
+          dataKey: labelName,
+        });
 
-        const dimension = {
-          backgroundColor: color,
-          borderColor: color,
-          data: seriesDataFormatter(transformedData.values, start, end),
-          fill: widgetChartType === 'area',
-          label: getLabelName(labelOptions),
-        };
+        data.forEach((d) => {
+          const timestamp = d[0];
+          const value = d[1];
+          if (value !== null) {
+            dimension[timestamp] = {
+              ...dimension[timestamp],
+              [labelName]: value,
+            };
+          }
+        });
         // construct a legend row with the dimension
-        const legendRow = {
-          data: getMetrics(dimension.data as number[][]),
+        const legendRow: MetricsDisplayRow = {
+          data: getMetrics(data as number[][]),
           format: (value: number) => formatToolTip(value, unit),
           legendColor: color,
-          legendTitle: dimension.label,
+          legendTitle: labelName,
         };
         legendRowsData.push(legendRow);
-        dimensions.push(dimension);
-        today ||= isToday(start, end);
       }
     );
   }
 
+  const maxUnit = generateMaxUnit(legendRowsData, unit);
+  const dimensions: DataSet[] = Object.entries(dimension).map(
+    ([key, value]) => {
+      const rolledUpData: { [resource: string]: number } = {};
+      Object.entries(value).forEach(
+        ([resource, data]) =>
+          (rolledUpData[resource] = convertValueToUnit(data, maxUnit))
+      );
+      return { timestamp: Number(key), ...rolledUpData };
+    }
+  );
   return {
+    areas,
     dimensions,
     legendRowsData,
-    today,
-    unit: generateMaxUnit(legendRowsData, unit),
+    unit: maxUnit,
   };
 };
 
@@ -232,7 +251,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
  * @param unit base unit of the values
  * @returns maximum possible rolled up unit based on the unit
  */
-const generateMaxUnit = (legendRowsData: LegendRow[], unit: string) => {
+const generateMaxUnit = (legendRowsData: MetricsDisplayRow[], unit: string) => {
   const maxValue = Math.max(
     0,
     ...legendRowsData?.map((row) => row?.data.max ?? 0)
@@ -319,20 +338,6 @@ export const mapResourceIdToName = (
     (resourceObj) => String(resourceObj.id) === id
   );
   return resourcesObj?.label ?? id ?? '';
-};
-
-/**
- *
- * @param data data set to be checked for empty
- * @returns true if data is not empty or contains all the null values otherwise false
- */
-export const isDataEmpty = (data: DataSet[]): boolean => {
-  return data.every(
-    (thisSeries) =>
-      thisSeries.data.length === 0 ||
-      // If we've padded the data, every y value will be null
-      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
-  );
 };
 
 /**
