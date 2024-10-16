@@ -53,7 +53,7 @@ interface XAxisProps {
   tickGap: number;
 }
 
-interface AreaChartProps {
+export interface AreaChartProps {
   /**
    * list of areas to be displayed
    */
