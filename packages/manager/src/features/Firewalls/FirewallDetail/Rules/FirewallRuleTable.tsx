@@ -397,7 +397,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   );
 
   // Using a grid here to keep the Select and the helper text aligned
-  // with the last column for screens >= 'lg', and with the Action column for screens < 'lg'.
+  // with the Action column for screens < 'lg', and with the last column for screens >= 'lg'.
   const sxBoxGrid = {
     alignItems: 'center',
     backgroundColor: theme.bg.bgPaper,
