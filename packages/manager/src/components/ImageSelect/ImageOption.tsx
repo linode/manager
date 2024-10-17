@@ -81,7 +81,7 @@ export const ImageOption = (props: ImageOptionProps) => {
           </Tooltip>
         )}
         {flags.metadata && data.isCloudInitCompatible && (
-          <Tooltip title="This image is compatible with cloud-init.">
+          <Tooltip title="This image supports our Metadata service via cloud-init.">
             <CloudInitIcon />
           </Tooltip>
         )}
