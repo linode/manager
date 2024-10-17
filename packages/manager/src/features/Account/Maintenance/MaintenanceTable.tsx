@@ -6,6 +6,7 @@ import { Box } from 'src/components/Box';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -143,11 +144,18 @@ const MaintenanceTable = ({ type }: Props) => {
   };
 
   return (
-    <>
-      <Box
-        className={classes.headingContainer}
-        display="flex"
-        justifyContent="space-between"
+    <Box>
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          justifyContent: 'space-between',
+          minHeight: '42px',
+          padding: 0.75,
+          paddingLeft: 2,
+        }}
       >
         <Typography style={{ textTransform: 'capitalize' }} variant="h3">
           {type}
@@ -161,7 +169,7 @@ const MaintenanceTable = ({ type }: Props) => {
             onClick={downloadCSV}
           />
         </Box>
-      </Box>
+      </Paper>
       <Table aria-label={`List of ${type} maintenance`}>
         <TableHead>
           <TableRow>
@@ -222,7 +230,7 @@ const MaintenanceTable = ({ type }: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-    </>
+    </Box>
   );
 };
 
