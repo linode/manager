@@ -1,6 +1,4 @@
-import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
@@ -17,7 +15,6 @@ import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
 import { Typography } from 'src/components/Typography';
 import {
-  FirewallOptionItem,
   generateAddressesLabel,
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
@@ -25,25 +22,30 @@ import {
 import { capitalize } from 'src/utilities/capitalize';
 
 import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
-import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import {
   MoreStyledLinkButton,
   StyledButtonDiv,
+  StyledCellItemBox,
   StyledDragIndicator,
   StyledErrorDiv,
   StyledFirewallRuleBox,
   StyledFirewallRuleButton,
   StyledFirewallTableButton,
   StyledHeaderDiv,
+  StyledHeaderItemBox,
   StyledInnerBox,
   StyledUl,
   StyledUlBox,
   sxBox,
-  sxItemSpacing,
 } from './FirewallRuleTable.styles';
-import { Category, FirewallRuleError, sortPortString } from './shared';
+import { sortPortString } from './shared';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
+import type { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
+import type { Category, FirewallRuleError } from './shared';
+import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import type { Theme } from '@mui/material/styles';
+import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
   action?: string;
@@ -100,6 +102,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
 
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const betweenSmAndLg = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
@@ -146,32 +149,30 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           sx={sxBox}
           tabIndex={0}
         >
-          <Box
+          <StyledHeaderItemBox
             sx={{
-              ...sxItemSpacing,
-              paddingLeft: '27px',
-              width: xsDown ? '50%' : '32%',
+              width: xsDown ? '50%' : '30%',
             }}
           >
             Label
-          </Box>
+          </StyledHeaderItemBox>
           <Hidden lgDown>
-            <Box sx={{ ...sxItemSpacing, width: '10%' }}>Protocol</Box>
+            <StyledHeaderItemBox sx={{ width: '10%' }}>
+              Protocol
+            </StyledHeaderItemBox>
           </Hidden>
           <Hidden smDown>
-            <Box
-              sx={{
-                ...sxItemSpacing,
-                width: '15%',
-              }}
-            >
+            <StyledHeaderItemBox sx={{ width: betweenSmAndLg ? '14%' : '10%' }}>
               Port Range
-            </Box>
-            <Box sx={{ ...sxItemSpacing, width: '15%' }}>
+            </StyledHeaderItemBox>
+            <StyledHeaderItemBox sx={{ width: betweenSmAndLg ? '20%' : '14%' }}>
               {capitalize(addressColumnLabel)}
-            </Box>
+            </StyledHeaderItemBox>
           </Hidden>
-          <Box sx={{ ...sxItemSpacing, width: '5%' }}>Action</Box>
+          <StyledHeaderItemBox sx={{ width: xsDown ? '30%' : '12%' }}>
+            Action
+          </StyledHeaderItemBox>
+          <StyledHeaderItemBox flexGrow={1} />
         </StyledInnerBox>
         <Box sx={{ ...sxBox, flexDirection: 'column' }}>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -258,6 +259,7 @@ export interface FirewallRuleTableRowProps extends RuleRow {
 const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const betweenSmAndLg = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 
   const {
     action,
@@ -293,12 +295,11 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       ruleId={id}
       status={status}
     >
-      <Box
+      <StyledCellItemBox
         sx={{
-          ...sxItemSpacing,
           overflowWrap: 'break-word',
-          paddingLeft: '8px',
-          width: xsDown ? '50%' : '32%',
+          paddingLeft: '10px !important',
+          width: xsDown ? '50%' : '30%',
         }}
         aria-label={`Label: ${label}`}
       >
@@ -311,38 +312,41 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
             Add a label
           </MoreStyledLinkButton>
         )}{' '}
-      </Box>
+      </StyledCellItemBox>
       <Hidden lgDown>
-        <Box
+        <StyledCellItemBox
           aria-label={`Protocol: ${protocol}`}
-          sx={{ ...sxItemSpacing, width: '10%' }}
+          sx={{ width: '10%' }}
         >
           {protocol}
           <ConditionalError errors={errors} formField="protocol" />
-        </Box>
+        </StyledCellItemBox>
       </Hidden>
       <Hidden smDown>
-        <Box
+        <StyledCellItemBox
           aria-label={`Ports: ${ports}`}
-          sx={{ ...sxItemSpacing, width: '15%' }}
+          sx={{ width: betweenSmAndLg ? '14%' : '10%' }}
         >
           {ports === '1-65535' ? 'All Ports' : ports}
           <ConditionalError errors={errors} formField="ports" />
-        </Box>
-        <Box
+        </StyledCellItemBox>
+        <StyledCellItemBox
+          sx={{
+            overflowWrap: 'break-word',
+            width: betweenSmAndLg ? '20%' : '14%',
+          }}
           aria-label={`Addresses: ${addresses}`}
-          sx={{ ...sxItemSpacing, overflowWrap: 'break-word', width: '15%' }}
         >
           {addresses} <ConditionalError errors={errors} formField="addresses" />
-        </Box>
+        </StyledCellItemBox>
       </Hidden>
-      <Box
+      <StyledCellItemBox
         aria-label={`Action: ${action}`}
-        sx={{ ...sxItemSpacing, width: '5%' }}
+        sx={{ width: xsDown ? '30%' : '12%' }}
       >
         {capitalize(action?.toLocaleLowerCase() ?? '')}
-      </Box>
-      <Box sx={{ ...sxItemSpacing, marginLeft: 'auto' }}>
+      </StyledCellItemBox>
+      <StyledCellItemBox sx={{ marginLeft: 'auto' }}>
         {status !== 'NOT_MODIFIED' ? (
           <StyledButtonDiv>
             <StyledFirewallRuleButton
@@ -358,7 +362,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
         ) : (
           <FirewallRuleActionMenu {...actionMenuProps} />
         )}
-      </Box>
+      </StyledCellItemBox>
     </StyledFirewallRuleBox>
   );
 });
@@ -390,21 +394,21 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   );
 
   // Using a grid here to keep the Select and the helper text aligned
-  // with the Action column.
+  // with the Action column for screens < 'lg', and with the last column for screens >= 'lg'.
   const sxBoxGrid = {
     alignItems: 'center',
     backgroundColor: theme.bg.bgPaper,
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    border: `1px solid ${theme.borderColors.borderTable}`,
     color: theme.textColors.tableStatic,
     display: 'grid',
     fontSize: '.875rem',
-    gridTemplateAreas: `'one two three four five'`,
-    gridTemplateColumns: '32% 10% 10% 15% 120px',
+    gridTemplateAreas: `'one two three four five six'`,
+    gridTemplateColumns: '30% 10% 10% 14% 12% 120px',
     height: '40px',
     marginTop: '10px',
     [theme.breakpoints.down('lg')]: {
-      gridTemplateAreas: `'one two three four'`,
-      gridTemplateColumns: '32% 15% 15% 120px',
+      gridTemplateAreas: `'one two three four five'`,
+      gridTemplateColumns: '30% 14% 20% 12% 120px',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateAreas: `'one two'`,
@@ -414,9 +418,8 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   };
 
   const sxBoxPolicyText = {
-    gridArea: '1 / 1 / 1 / 5',
+    gridArea: '1 / 1 / 1 / 6',
     padding: '0px 15px 0px 15px',
-
     textAlign: 'right',
     [theme.breakpoints.down('lg')]: {
       gridArea: '1 / 1 / 1 / 4',
@@ -427,7 +430,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   };
 
   const sxBoxPolicySelect = {
-    gridArea: 'five',
+    gridArea: 'six',
     [theme.breakpoints.down('lg')]: {
       gridArea: 'four',
     },
@@ -444,14 +447,14 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
           textFieldProps={{
             hideLabel: true,
           }}
-          autoHighlight
-          onChange={(_, selected) => handlePolicyChange(selected?.value)}
           value={policyOptions.find(
             (thisOption) => thisOption.value === policy
           )}
-          disabled={disabled}
+          autoHighlight
           disableClearable
+          disabled={disabled}
           label={`${category} policy`}
+          onChange={(_, selected) => handlePolicyChange(selected?.value)}
           options={policyOptions}
         />
       </Box>

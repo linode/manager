@@ -26,16 +26,14 @@ export const sxBox = {
   width: '100%',
 };
 
-export const sxItemSpacing = {
-  padding: `0 8px`,
-};
-
 export const StyledFirewallRuleBox = styled(Box, {
   label: 'StyledFirewallRuleBox',
   shouldForwardProp: omittedProps(['originalIndex', 'ruleId']),
 })<StyledFirewallRuleBoxProps>(
   ({ disabled, originalIndex, ruleId, status, theme }) => ({
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
     color: theme.textColors.tableStatic,
     fontSize: '0.875rem',
     margin: 0,
@@ -60,12 +58,41 @@ export const StyledFirewallRuleBox = styled(Box, {
 export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
   ({ theme }) => ({
     backgroundColor: theme.bg.tableHeader,
-    color: theme.textColors.tableHeader,
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
-    height: '46px',
   })
 );
+
+export const StyledHeaderItemBox = styled(Box, {
+  label: 'StyledHeaderItemBox',
+})(({ theme }) => ({
+  '&:last-child': {
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
+    paddingRight: '0px',
+  },
+  alignContent: 'center',
+  borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+  borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+  borderTop: `1px solid ${theme.borderColors.borderTable}`,
+  height: '46px',
+  lineHeight: '12px',
+  padding: '10px 15px',
+}));
+
+export const StyledCellItemBox = styled(Box, {
+  label: 'StyledCellItemBox',
+})(({ theme }) => ({
+  '&:not(:last-child)': {
+    padding: '0px 15px',
+  },
+  alignContent: 'center',
+  minHeight: '40px',
+  [theme.breakpoints.down('sm')]: {
+    '&:last-child': {
+      paddingLeft: '15px',
+    },
+  },
+}));
 
 export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
   ({ theme }) => ({
