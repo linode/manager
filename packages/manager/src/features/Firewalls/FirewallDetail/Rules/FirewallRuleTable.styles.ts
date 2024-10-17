@@ -81,13 +81,12 @@ export const StyledHeaderItemBox = styled(Box, {
 
 export const StyledCellItemBox = styled(Box, {
   label: 'StyledCellItemBox',
-})(() => ({
-  '&:last-child': {
-    paddingRight: '0px',
+})(({ theme }) => ({
+  '&:not(:last-child)': {
+    padding: '0px 15px',
   },
   alignContent: 'center',
   minHeight: '40px',
-  padding: '0px 15px',
 }));
 
 export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
