@@ -23,7 +23,8 @@ describe('CloudPulseRegionSelect', () => {
     const { getByLabelText, getByTestId } = renderWithTheme(
       <CloudPulseRegionSelect {...props} />
     );
-    expect(getByLabelText(props.label)).toBeInTheDocument();
+    const { label } = props;
+    expect(getByLabelText(label)).toBeInTheDocument();
     expect(getByTestId('region-select')).toBeInTheDocument();
   });
 });
