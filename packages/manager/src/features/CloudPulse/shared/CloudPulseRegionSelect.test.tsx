@@ -20,9 +20,10 @@ describe('CloudPulseRegionSelect', () => {
   } as ReturnType<typeof regions.useRegionsQuery>);
 
   it('should render a Region Select component', () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByLabelText, getByTestId } = renderWithTheme(
       <CloudPulseRegionSelect {...props} />
     );
+    expect(getByLabelText(props.label)).toBeInTheDocument();
     expect(getByTestId('region-select')).toBeInTheDocument();
   });
 });
