@@ -30,7 +30,7 @@ const hashUniquePendoId = (id: string | undefined) => {
 };
 
 /**
- * Initializes our Pendo analytics script on mount.
+ * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists.
  */
 export const usePendo = () => {
   const { data: account } = useAccount();
