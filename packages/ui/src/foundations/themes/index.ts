@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 // Themes & Brands
 import { darkTheme } from './dark';
-import { lightTheme, inputMaxWidth as _inputMaxWidth } from './light';
+import { lightTheme } from './light';
 
 import type {
   ChartTypes,
@@ -76,6 +76,7 @@ declare module '@mui/material/styles/createTheme' {
     color: Colors;
     font: Fonts;
     graphs: any;
+    inputMaxWidth: number;
     inputStyles: any;
     interactionTokens: InteractionTypes;
     name: ThemeName;
@@ -96,6 +97,7 @@ declare module '@mui/material/styles/createTheme' {
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
+    inputMaxWidth?: number;
     inputStyles?: any;
     interactionTokens?: InteractionTypes;
     name: ThemeName;
@@ -105,6 +107,5 @@ declare module '@mui/material/styles/createTheme' {
   }
 }
 
-export const inputMaxWidth = _inputMaxWidth;
 export const light = createTheme(lightTheme);
 export const dark = createTheme(lightTheme, darkTheme);

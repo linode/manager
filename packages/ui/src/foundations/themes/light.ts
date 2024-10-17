@@ -15,7 +15,7 @@ import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
-export const inputMaxWidth = 416;
+const inputMaxWidth = 416;
 
 export const bg = {
   app: Color.Neutrals[5],
@@ -1526,6 +1526,7 @@ export const lightTheme: ThemeOptions = {
     },
     yellow: `rgba(255, 220, 125, ${graphTransparency})`,
   },
+  inputMaxWidth,
   inputStyles: {
     default: {
       backgroundColor: Select.Default.Background,

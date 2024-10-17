@@ -1,4 +1,3 @@
-import { inputMaxWidth } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -133,7 +132,9 @@ export const VPC = () => {
                 }}
                 textFieldProps={{
                   sx: (theme) => ({
-                    [theme.breakpoints.up('sm')]: { minWidth: inputMaxWidth },
+                    [theme.breakpoints.up('sm')]: {
+                      minWidth: theme.inputMaxWidth,
+                    },
                   }),
                   tooltipText: REGION_CAVEAT_HELPER_TEXT,
                 }}
