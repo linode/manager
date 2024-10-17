@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
@@ -51,7 +51,7 @@ export const OperatingSystems = () => {
       <Region />
       <Paper>
         <Typography variant="h2">Choose an OS</Typography>
-        <ImageSelectv2
+        <ImageSelect
           disabled={isCreateLinodeRestricted}
           errorText={fieldState.error?.message}
           label="Linux Distribution"
