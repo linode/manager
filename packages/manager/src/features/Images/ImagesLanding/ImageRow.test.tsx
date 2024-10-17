@@ -76,7 +76,7 @@ describe('Image Table Row', () => {
     );
 
     expect(
-      getByLabelText('This image is compatible with cloud-init.')
+      getByLabelText('This image supports our Metadata service via cloud-init.')
     ).toBeVisible();
   });
 

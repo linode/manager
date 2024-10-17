@@ -108,7 +108,7 @@ export const ImageRow = (props: Props) => {
             justifyContent="space-between"
           >
             {label}
-            <Tooltip title="This image is compatible with cloud-init.">
+            <Tooltip title="This image supports our Metadata service via cloud-init.">
               <div style={{ display: 'flex' }}>
                 <CloudInitIcon />
               </div>
