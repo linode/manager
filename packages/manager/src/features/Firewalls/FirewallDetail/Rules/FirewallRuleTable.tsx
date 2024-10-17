@@ -25,6 +25,7 @@ import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
 import {
   MoreStyledLinkButton,
   StyledButtonDiv,
+  StyledCellItemBox,
   StyledDragIndicator,
   StyledErrorDiv,
   StyledFirewallRuleBox,
@@ -36,7 +37,6 @@ import {
   StyledUl,
   StyledUlBox,
   sxBox,
-  sxItemSpacing,
 } from './FirewallRuleTable.styles';
 import { sortPortString } from './shared';
 
@@ -151,7 +151,6 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
         >
           <StyledHeaderItemBox
             sx={{
-              paddingLeft: '27px',
               width: xsDown ? '50%' : '30%',
             }}
           >
@@ -173,7 +172,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           <StyledHeaderItemBox sx={{ width: xsDown ? '30%' : '10%' }}>
             Action
           </StyledHeaderItemBox>
-          <StyledHeaderItemBox sx={{ width: xsDown ? '20%' : '26%' }} />
+          <StyledHeaderItemBox flexGrow={1} />
         </StyledInnerBox>
         <Box sx={{ ...sxBox, flexDirection: 'column' }}>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -296,11 +295,10 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       ruleId={id}
       status={status}
     >
-      <Box
+      <StyledCellItemBox
         sx={{
-          ...sxItemSpacing,
           overflowWrap: 'break-word',
-          paddingLeft: '8px',
+          paddingLeft: '10px',
           width: xsDown ? '50%' : '30%',
         }}
         aria-label={`Label: ${label}`}
@@ -314,42 +312,41 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
             Add a label
           </MoreStyledLinkButton>
         )}{' '}
-      </Box>
+      </StyledCellItemBox>
       <Hidden lgDown>
-        <Box
+        <StyledCellItemBox
           aria-label={`Protocol: ${protocol}`}
-          sx={{ ...sxItemSpacing, width: '10%' }}
+          sx={{ width: '10%' }}
         >
           {protocol}
           <ConditionalError errors={errors} formField="protocol" />
-        </Box>
+        </StyledCellItemBox>
       </Hidden>
       <Hidden smDown>
-        <Box
+        <StyledCellItemBox
           aria-label={`Ports: ${ports}`}
-          sx={{ ...sxItemSpacing, width: betweenSmAndLg ? '14%' : '10%' }}
+          sx={{ width: betweenSmAndLg ? '14%' : '10%' }}
         >
           {ports === '1-65535' ? 'All Ports' : ports}
           <ConditionalError errors={errors} formField="ports" />
-        </Box>
-        <Box
+        </StyledCellItemBox>
+        <StyledCellItemBox
           sx={{
-            ...sxItemSpacing,
             overflowWrap: 'break-word',
             width: betweenSmAndLg ? '20%' : '14%',
           }}
           aria-label={`Addresses: ${addresses}`}
         >
           {addresses} <ConditionalError errors={errors} formField="addresses" />
-        </Box>
+        </StyledCellItemBox>
       </Hidden>
-      <Box
+      <StyledCellItemBox
         aria-label={`Action: ${action}`}
-        sx={{ ...sxItemSpacing, width: '10%' }}
+        sx={{ width: xsDown ? '30%' : '10%' }}
       >
         {capitalize(action?.toLocaleLowerCase() ?? '')}
-      </Box>
-      <Box sx={{ ...sxItemSpacing, marginLeft: 'auto' }}>
+      </StyledCellItemBox>
+      <StyledCellItemBox sx={{ marginLeft: 'auto' }}>
         {status !== 'NOT_MODIFIED' ? (
           <StyledButtonDiv>
             <StyledFirewallRuleButton
@@ -365,7 +362,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
         ) : (
           <FirewallRuleActionMenu {...actionMenuProps} />
         )}
-      </Box>
+      </StyledCellItemBox>
     </StyledFirewallRuleBox>
   );
 });
