@@ -39,6 +39,8 @@ export const githubFormatter: Formatter = (
 
   const breakdown = `:x: ${runInfo.failing} Failing | :green_heart: ${runInfo.passing} Passing | :arrow_right_hook: ${runInfo.skipped} Skipped | :clock1: ${secondsToTimeString(runInfo.time)}\n\n`;
 
+  const extra = metadata.extra ? `${metadata.extra}\n\n` : null;
+
   const failedTestSummary = (() => {
     const heading = `### Details`;
     const failedTestHeader = `<table><thead><tr><th colspan="3">Failing Tests</th></tr><tr><th></th><th>Spec</th><th>Test</th></tr></thead><tbody>`;
@@ -82,6 +84,7 @@ export const githubFormatter: Formatter = (
     headline,
     '',
     breakdown,
+    extra,
     runInfo.failing > 0 ? failedTestSummary : null,
     runInfo.failing > 0 ? rerunNote : null,
   ]
