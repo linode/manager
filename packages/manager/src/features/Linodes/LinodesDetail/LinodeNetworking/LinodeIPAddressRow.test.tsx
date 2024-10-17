@@ -7,7 +7,7 @@ import {
   ipResponseToDisplayRows,
   vpcConfigInterfaceToDisplayRows,
 } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
-import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { LinodeIPAddressRow } from './LinodeIPAddressRow';
@@ -100,9 +100,7 @@ describe('LinodeIPAddressRow', () => {
     const editRDNSBtn = getByTestId('Edit RDNS');
     expect(editRDNSBtn).toHaveAttribute('aria-disabled', 'true');
 
-    expect(getAllByLabelText(PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT)).toHaveLength(
-      2
-    );
+    expect(getAllByLabelText(PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT)).toHaveLength(2);
   });
 
   it('should not disable the row if disabled is false', async () => {
