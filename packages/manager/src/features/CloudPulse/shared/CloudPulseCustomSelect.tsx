@@ -222,7 +222,7 @@ export const CloudPulseCustomSelect = React.memo(
     return (
       <Autocomplete
         PopperComponent={(props: PopperProps) => (
-          <CustomPopper placement="top" {...props} />
+          <CustomPopper {...props} placement="bottom" />
         )}
         options={
           type === CloudPulseSelectTypes.static
