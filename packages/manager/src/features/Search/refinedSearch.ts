@@ -5,7 +5,7 @@ import searchString from 'search-string';
 import type { SearchField, SearchableItem } from './search.interfaces';
 
 export const COMPRESSED_IPV6_REGEX = /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
-const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips'];
+const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips', 'value'];
 
 // =============================================================================
 // REFINED SEARCH
@@ -166,6 +166,11 @@ export const doesSearchTermMatchItemField = (
 
   const fieldValue = ensureValueIsString(flattenedItem[field]);
 
+  // Handle numeric comparison (e.g., for the "value" field to search linode by id)
+  if (typeof fieldValue === 'number') {
+    return fieldValue === Number(query); // Ensure exact match for numeric fields
+  }
+
   if (caseSensitive) {
     return fieldValue.includes(query);
   } else {
@@ -177,6 +182,7 @@ export const doesSearchTermMatchItemField = (
 export const flattenSearchableItem = (item: SearchableItem) => ({
   label: item.label,
   type: item.entityType,
+  value: item.value,
   ...item.data,
 });
 
@@ -203,7 +209,7 @@ export const getQueryInfo = (parsedQuery: any) => {
   };
 };
 
-// Our entities have several fields we'd like to search: "tags", "label", "ips".
+// Our entities have several fields we'd like to search: "tags", "label", "ips", "value".
 // A user might submit the query "tag:my-app". In this case, we want to trade
 // "tag" for "tags", since "tags" is the actual name of the intended property.
 export const getRealEntityKey = (key: string): SearchField | string => {
@@ -211,9 +217,11 @@ export const getRealEntityKey = (key: string): SearchField | string => {
   const LABEL: SearchField = 'label';
   const IPS: SearchField = 'ips';
   const TYPE: SearchField = 'type';
+  const VALUE: SearchField = 'value';
 
   const substitutions = {
     group: TAGS,
+    id: VALUE,
     ip: IPS,
     is: TYPE,
     name: LABEL,
