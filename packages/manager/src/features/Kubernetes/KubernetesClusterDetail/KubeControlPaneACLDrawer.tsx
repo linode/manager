@@ -279,9 +279,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             />
             {!clusterMigrated && (
               <Notice spacingTop={24} variant="warning">
-                Control Plane ACL has not yet been installed on this cluster.
-                During installation, it may take up to 15 minutes for the access
-                control list to be fully enforced.
+                <Typography sx={{ width: '90%' }}>
+                  Control Plane ACL has not yet been installed on this cluster.
+                  During installation, it may take up to 15 minutes for the
+                  access control list to be fully enforced.
+                </Typography>
               </Notice>
             )}
           </Stack>
