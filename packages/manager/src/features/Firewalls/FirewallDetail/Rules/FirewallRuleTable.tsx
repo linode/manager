@@ -294,7 +294,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       <StyledCellItemBox
         sx={{
           overflowWrap: 'break-word',
-          paddingLeft: '10px',
+          paddingLeft: '10px !important',
           width: xsDown ? '50%' : '30%',
         }}
         aria-label={`Label: ${label}`}
