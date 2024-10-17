@@ -11,7 +11,6 @@ import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useGetAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
-  useKubernetesClusterBetaQuery,
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
@@ -30,12 +29,8 @@ export const KubernetesClusterDetail = () => {
   const id = Number(clusterID);
   const location = useLocation();
   const showAPL = useGetAPLAvailability();
-  const kubernetesClusterBetaQuery = useKubernetesClusterBetaQuery(id);
-  const kubernetesClusterQuery = useKubernetesClusterQuery(id);
 
-  const { data: cluster, error, isLoading } = showAPL
-    ? kubernetesClusterBetaQuery
-    : kubernetesClusterQuery;
+  const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
   const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
