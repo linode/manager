@@ -25,10 +25,6 @@ export const sxBox = {
   width: '100%',
 };
 
-export const sxItemSpacing = {
-  padding: `0 8px`,
-};
-
 export const StyledFirewallRuleBox = styled(Box, {
   label: 'StyledFirewallRuleBox',
   shouldForwardProp: omittedProps(['originalIndex', 'ruleId']),
@@ -69,15 +65,27 @@ export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
 export const StyledHeaderItemBox = styled(Box, {
   label: 'StyledHeaderItemBox',
 })(({ theme }) => ({
-  ...sxItemSpacing,
-  '&:first-child': {
-    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+  '&:last-child': {
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
+    paddingRight: '0px',
   },
   alignContent: 'center',
   borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-  borderRight: `1px solid ${theme.borderColors.borderTable}`,
+  borderLeft: `1px solid ${theme.borderColors.borderTable}`,
   borderTop: `1px solid ${theme.borderColors.borderTable}`,
   height: '46px',
+  padding: '10px 15px',
+}));
+
+export const StyledCellItemBox = styled(Box, {
+  label: 'StyledCellItemBox',
+})(() => ({
+  '&:last-child': {
+    paddingRight: '0px',
+  },
+  alignContent: 'center',
+  minHeight: '40px',
+  padding: '0px 15px',
 }));
 
 export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
