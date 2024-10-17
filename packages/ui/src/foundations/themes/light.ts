@@ -240,6 +240,7 @@ export const lightTheme: ThemeOptions = {
   borderColors,
   breakpoints,
   chartTokens: Chart,
+  colorTokens: Color,
   color,
   components: {
     MuiAccordion: {
