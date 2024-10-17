@@ -23,7 +23,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     alignItems: 'center',
     backgroundColor: '#2575d0',
     borderRadius: '50%',
-    color: '#fff',
+    color: theme.colorTokens?.Neutrals.White,
     display: 'flex',
     fontFamily: theme.font.bold,
     fontSize: '0.875rem',
