@@ -63,6 +63,7 @@ describe('CloudPulseCustomSelect component tests', () => {
       />
     );
     expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
+    expect(screen.getByLabelText('Test')).toBeInTheDocument();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     fireEvent.click(screen.getByText('Test1'));
@@ -77,13 +78,14 @@ describe('CloudPulseCustomSelect component tests', () => {
         filterType="number"
         handleSelectionChange={vi.fn()}
         isMultiSelect={true}
-        label="Test"
+        label="CustomTest"
         options={[...mockOptions]}
         placeholder={testFilter}
         type={CloudPulseSelectTypes.static}
       />
     );
     expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
+    expect(screen.getByLabelText('CustomTest')).toBeInTheDocument();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     expect(screen.getAllByText('Test1').length).toEqual(2); // here it should be 2
@@ -113,6 +115,7 @@ describe('CloudPulseCustomSelect component tests', () => {
       />
     );
     expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
+    expect(screen.getByLabelText('Test')).toBeInTheDocument();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     fireEvent.click(screen.getByText('Test1'));
@@ -140,6 +143,7 @@ describe('CloudPulseCustomSelect component tests', () => {
       />
     );
     expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
+    expect(screen.getByLabelText('Test')).toBeInTheDocument();
     const keyDown = screen.getByTestId(keyboardArrowDownIcon);
     fireEvent.click(keyDown);
     expect(screen.getAllByText('Test1').length).toEqual(2); // here it should be 2

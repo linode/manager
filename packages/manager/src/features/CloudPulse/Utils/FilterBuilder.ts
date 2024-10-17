@@ -187,13 +187,14 @@ export const getTimeDurationProperties = (
     savePref?: boolean
   ) => void
 ): CloudPulseTimeRangeSelectProps => {
-  const { placeholder } = props.config.configuration;
+  const { name: label, placeholder } = props.config.configuration;
   const { isServiceAnalyticsIntegration, preferences } = props;
 
   const timeDuration = preferences?.timeDuration;
   return {
     defaultValue: timeDuration,
     handleStatsChange: handleTimeRangeChange,
+    label,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,
   };

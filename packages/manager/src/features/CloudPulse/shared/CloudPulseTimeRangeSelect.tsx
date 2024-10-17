@@ -36,7 +36,7 @@ export type Labels =
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
-    const { defaultValue, handleStatsChange, savePreferences } = props;
+    const { defaultValue, handleStatsChange, label, savePreferences } = props;
     const options = generateSelectOptions();
     const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
       if (!savePreferences) {
@@ -85,7 +85,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
         disableClearable
         fullWidth
         isOptionEqualToValue={(option, value) => option.value === value.value}
-        label="Time Range"
+        label={label || 'Time Range'}
         noMarginTop
         options={options}
         value={selectedTimeRange}

@@ -2,7 +2,7 @@ import { CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
 
-const TIME_DURATION = 'Time Duration';
+const TIME_DURATION = 'Time Range';
 
 export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
