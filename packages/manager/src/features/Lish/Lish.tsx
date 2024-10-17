@@ -69,22 +69,12 @@ export const ParsePotentialLishErrorString = (s: string | null): LishErrorInterf
   {
     const reason = parsed?.reason;
     if (parsed?.type === "error" && typeof reason === "string") {
+      const formattedPrefix = (reason.indexOf(" ") >=0 ? "" : "Error code: ");
       return {
         reason: reason,
         grn: grn,
-        formatted: reason + grnFormatted,
+        formatted: formattedPrefix + reason + grnFormatted,
         isExpired: reason.toLowerCase() === "your session has expired."
-      };
-    }
-  }
-  {
-    const reason = parsed?.errors?.[0]?.reason;
-    if (typeof reason === "string") {
-      return {
-        reason: reason,
-        grn: grn,
-        formatted: `Error code: ${reason}${grnFormatted}`,
-        isExpired: reason === "expired"
       };
     }
   }
