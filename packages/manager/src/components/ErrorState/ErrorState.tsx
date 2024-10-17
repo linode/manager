@@ -3,9 +3,15 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 
 import { SvgIconProps } from '../SvgIcon';
+
+export interface ActionButtonProps {
+  text: string;
+  onClick: () => void;
+}
 
 export interface ErrorStateProps {
   /**
@@ -20,18 +26,18 @@ export interface ErrorStateProps {
    * Reduces the padding on the root element.
    */
   compact?: boolean;
-  /**
-   * The error text to display.
-   */
+
   errorText: JSX.Element | string;
   /**
    * Styles applied to the error text
    */
   typographySx?: SxProps<Theme>;
+
+  actionButtonProps?: ActionButtonProps;
 }
 
 export const ErrorState = (props: ErrorStateProps) => {
-  const { CustomIcon, compact, typographySx } = props;
+  const { CustomIcon, compact, typographySx, actionButtonProps } = props;
   const theme = useTheme();
 
   const sxIcon = {
@@ -72,6 +78,16 @@ export const ErrorState = (props: ErrorStateProps) => {
         ) : (
           <div style={{ textAlign: 'center' }}>{props.errorText}</div>
         )}
+        {actionButtonProps ? (
+          <div style={{ textAlign: 'center' }}>
+            <Button
+              title={actionButtonProps.text}
+              onClick={() => { actionButtonProps.onClick?.() }}
+            >
+              {actionButtonProps.text}
+            </Button>
+          </div>
+        ): ( null )}
       </Grid>
     </ErrorStateRoot>
   );
