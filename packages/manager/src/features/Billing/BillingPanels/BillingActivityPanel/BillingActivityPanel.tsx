@@ -49,7 +49,6 @@ import { getTaxID } from '../../billingUtils';
 
 import type { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
 import type { Theme } from '@mui/material/styles';
-import { useTheme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
@@ -185,7 +184,6 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
-  const theme = useTheme();
 
   const pagination = usePagination(1, 'billing-activity');
   const { handleOrderChange, order, orderBy } = useOrder();
@@ -377,12 +375,12 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   return (
     <Grid data-qa-billing-activity-panel xs={12}>
       <Paper
-        sx={{
+        sx={(theme) => ({
           border:
             theme.name === 'light'
               ? `1px solid ${theme.borderColors.divider}`
               : 0,
-        }}
+        })}
       >
         <StyledBillingAndPaymentHistoryHeader
           className={classes.headerContainer}
