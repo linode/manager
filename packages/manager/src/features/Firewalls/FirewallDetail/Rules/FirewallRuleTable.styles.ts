@@ -87,6 +87,11 @@ export const StyledCellItemBox = styled(Box, {
   },
   alignContent: 'center',
   minHeight: '40px',
+  [theme.breakpoints.down('sm')]: {
+    '&:last-child': {
+      paddingLeft: '15px',
+    },
+  },
 }));
 
 export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
