@@ -1,8 +1,12 @@
+import { styled } from '@mui/material/styles';
 import React, { useMemo } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { List } from 'src/components/List';
+import { Typography } from 'src/components/Typography';
 import { imageFactory } from 'src/factories/images';
 import { useAllImagesQuery } from 'src/queries/images';
+import { filterImageForStackScript } from 'src/utilities/images';
 
 import { OSIcon } from '../OSIcon';
 import { ImageOption } from './ImageOption';
@@ -23,6 +27,8 @@ interface BaseProps
   > {
   anyAllOption?: boolean;
   filter?: (image: Image) => boolean;
+  filterForStackScript?: boolean;
+  groupBy?: (image: Image) => string;
   label?: string;
   placeholder?: string;
   selectIfOnlyOneOption?: boolean;
@@ -47,12 +53,14 @@ export const ImageSelect = (props: Props) => {
   const {
     anyAllOption,
     filter,
+    filterForStackScript,
+    groupBy,
     label,
     multiple,
     onChange,
     placeholder,
     selectIfOnlyOneOption,
-    variant,
+    variant = 'all',
     ...rest
   } = props;
 
@@ -65,22 +73,14 @@ export const ImageSelect = (props: Props) => {
     const filteredOptions =
       getFilteredImagesForImageSelect(images, variant) ?? [];
 
-    return (filter ? filteredOptions.filter(filter) : filteredOptions).sort(
-      (a, b) => {
-        // Sort by vendor first
-        const vendorA = a.vendor ?? '';
-        const vendorB = b.vendor ?? '';
-        if (vendorA < vendorB) {
-          return -1;
-        }
-        if (vendorA > vendorB) {
-          return 1;
-        }
+    if (filterForStackScript) {
+      return filteredOptions.filter((image) =>
+        filterImageForStackScript(image, variant)
+      );
+    }
 
-        return a.label.localeCompare(b.label);
-      }
-    );
-  }, [images, variant, filter]);
+    return filter ? filteredOptions.filter(filter) : filteredOptions;
+  }, [images, filter, filterForStackScript, variant]);
 
   const options = useMemo(() => {
     if (anyAllOption) {
@@ -103,7 +103,7 @@ export const ImageSelect = (props: Props) => {
         Array.isArray(selected) ? selected.includes(option.id) : false
       );
     }
-    return options.find((i) => i.id === selected) ?? null;
+    return options.find((option) => option.id === selected) ?? null;
   }, [multiple, options, selected]);
 
   if (options.length === 1 && onChange && selectIfOnlyOneOption && !multiple) {
@@ -112,9 +112,38 @@ export const ImageSelect = (props: Props) => {
 
   return (
     <Autocomplete
-      groupBy={(option) =>
-        option.id === 'any/all' ? '' : option.vendor ?? 'My Images'
-      }
+      groupBy={(option) => {
+        if (groupBy) {
+          return groupBy(option);
+        }
+        if (option.id === 'any/all') {
+          return '';
+        }
+        if (!option.is_public) {
+          return 'My Images';
+        }
+
+        return option.vendor ?? '';
+      }}
+      renderGroup={(params) => (
+        <li key={params.key}>
+          <Typography
+            sx={(theme) => ({
+              backgroundColor: theme.palette.background.paper,
+              pl: 1,
+              py: 0.75,
+            })}
+            variant="h3"
+          >
+            {params.group}
+          </Typography>
+          <StyledList>
+            {React.Children.map(params.children, (child) => (
+              <li key={`${params.key}-${child}`}>{child}</li>
+            ))}
+          </StyledList>
+        </li>
+      )}
       renderOption={(props, option, state) => (
         <ImageOption
           image={option}
@@ -159,3 +188,11 @@ export const ImageSelect = (props: Props) => {
     />
   );
 };
+
+const StyledList = styled(
+  List,
+  {}
+)({
+  listStyle: 'none',
+  padding: 0,
+});

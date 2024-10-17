@@ -7,6 +7,7 @@ import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
+import { getImageGroup } from 'src/utilities/images';
 
 import {
   StyledActionsPanel,
@@ -104,21 +105,26 @@ export const StackScriptForm = React.memo((props: Props) => {
             value={description.value}
           />
           <ImageSelect
-            helperText={
-              'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.'
-            }
+            groupBy={(option) => {
+              return getImageGroup(option);
+            }}
             textFieldProps={{
               required: true,
+              tooltipText:
+                'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.',
             }}
             anyAllOption
             data-qa-stackscript-target-select
             disabled={disabled}
             errorText={hasErrorFor('images')}
+            filterForStackScript
             label="Target Images"
             multiple
             onChange={onSelectChange}
+            placeholder="Select image(s)"
             selectAllLabel="Select Any/All"
             value={images.selected}
+            variant="public"
           />
         </StyledGridWithTips>
         <StyledGridWithTips>
