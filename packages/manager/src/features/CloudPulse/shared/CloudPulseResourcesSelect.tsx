@@ -105,7 +105,7 @@ export const CloudPulseResourcesSelect = React.memo(
           isAutocompleteOpen.current = true;
         }}
         placeholder={
-          selectedResources?.length ? '' : placeholder || 'Select a Resource'
+          selectedResources?.length ? '' : placeholder || 'Select Resources'
         }
         textFieldProps={{
           InputProps: {
