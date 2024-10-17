@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { CustomPopper } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useGetCustomFiltersQuery } from 'src/queries/cloudpulse/customfilters';
 
 import {
@@ -14,6 +15,7 @@ import type {
   QueryFunctionAndKey,
 } from '../Utils/models';
 import type { AclpConfig, FilterValue } from '@linode/api-v4';
+import type { PopperProps } from '@mui/material';
 
 /**
  * These are the properties requires for CloudPulseCustomSelect Components
@@ -219,6 +221,9 @@ export const CloudPulseCustomSelect = React.memo(
 
     return (
       <Autocomplete
+        PopperComponent={(props: PopperProps) => (
+          <CustomPopper {...props} placement="bottom" />
+        )}
         options={
           type === CloudPulseSelectTypes.static
             ? options ?? []
@@ -234,7 +239,7 @@ export const CloudPulseCustomSelect = React.memo(
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
-        label={Boolean(label?.length) ? label : 'Select a Value'}
+        label={label || 'Select a Value'}
         multiple={isMultiSelect}
         noMarginTop
         onChange={handleChange}

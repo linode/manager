@@ -31,7 +31,11 @@ it('test getRegionProperties method', () => {
   expect(regionConfig).toBeDefined();
 
   if (regionConfig) {
-    const result = getRegionProperties(
+    const {
+      handleRegionChange,
+      label,
+      selectedDashboard,
+    } = getRegionProperties(
       {
         config: regionConfig,
         dashboard: mockDashboard,
@@ -39,20 +43,26 @@ it('test getRegionProperties method', () => {
       },
       vi.fn()
     );
-    expect(result['handleRegionChange']).toBeDefined();
-    expect(result['selectedDashboard']).toEqual(mockDashboard);
+    const { name } = regionConfig.configuration;
+    expect(handleRegionChange).toBeDefined();
+    expect(selectedDashboard).toEqual(mockDashboard);
+    expect(label).toEqual(name);
   }
 });
 
 it('test getTimeDuratonProperties method', () => {
   const timeDurationConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Time Duration'
+    (filterObj) => filterObj.name === 'Time Range'
   );
 
   expect(timeDurationConfig).toBeDefined();
 
   if (timeDurationConfig) {
-    const result = getTimeDurationProperties(
+    const {
+      handleStatsChange,
+      label,
+      savePreferences,
+    } = getTimeDurationProperties(
       {
         config: timeDurationConfig,
         dashboard: mockDashboard,
@@ -60,8 +70,10 @@ it('test getTimeDuratonProperties method', () => {
       },
       vi.fn()
     );
-    expect(result['handleStatsChange']).toBeDefined();
-    expect(result['savePreferences']).toEqual(true);
+    const { name } = timeDurationConfig.configuration;
+    expect(handleStatsChange).toBeDefined();
+    expect(savePreferences).toEqual(true);
+    expect(label).toEqual(name);
   }
 });
 
@@ -73,7 +85,13 @@ it('test getResourceSelectionProperties method', () => {
   expect(resourceSelectionConfig).toBeDefined();
 
   if (resourceSelectionConfig) {
-    const result = getResourcesProperties(
+    const {
+      disabled,
+      handleResourcesSelection,
+      label,
+      savePreferences,
+      xFilter,
+    } = getResourcesProperties(
       {
         config: resourceSelectionConfig,
         dashboard: mockDashboard,
@@ -82,12 +100,12 @@ it('test getResourceSelectionProperties method', () => {
       },
       vi.fn()
     );
-    expect(result['handleResourcesSelection']).toBeDefined();
-    expect(result['savePreferences']).toEqual(false);
-    expect(result['disabled']).toEqual(false);
-    expect(JSON.stringify(result['xFilter'])).toEqual(
-      '{"+and":[{"region":"us-east"}]}'
-    );
+    const { name } = resourceSelectionConfig.configuration;
+    expect(handleResourcesSelection).toBeDefined();
+    expect(savePreferences).toEqual(false);
+    expect(disabled).toEqual(false);
+    expect(JSON.stringify(xFilter)).toEqual('{"+and":[{"region":"us-east"}]}');
+    expect(label).toEqual(name);
   }
 });
 
@@ -99,7 +117,13 @@ it('test getResourceSelectionProperties method with disabled true', () => {
   expect(resourceSelectionConfig).toBeDefined();
 
   if (resourceSelectionConfig) {
-    const result = getResourcesProperties(
+    const {
+      disabled,
+      handleResourcesSelection,
+      label,
+      savePreferences,
+      xFilter,
+    } = getResourcesProperties(
       {
         config: resourceSelectionConfig,
         dashboard: mockDashboard,
@@ -108,10 +132,12 @@ it('test getResourceSelectionProperties method with disabled true', () => {
       },
       vi.fn()
     );
-    expect(result['handleResourcesSelection']).toBeDefined();
-    expect(result['savePreferences']).toEqual(false);
-    expect(result['disabled']).toEqual(true);
-    expect(JSON.stringify(result['xFilter'])).toEqual('{"+and":[]}');
+    const { name } = resourceSelectionConfig.configuration;
+    expect(handleResourcesSelection).toBeDefined();
+    expect(savePreferences).toEqual(false);
+    expect(disabled).toEqual(true);
+    expect(JSON.stringify(xFilter)).toEqual('{"+and":[]}');
+    expect(label).toEqual(name);
   }
 });
 
@@ -201,7 +227,14 @@ it('test getCustomSelectProperties method', () => {
   expect(customSelectEngineConfig).toBeDefined();
 
   if (customSelectEngineConfig) {
-    let result = getCustomSelectProperties(
+    const {
+      clearDependentSelections,
+      disabled,
+      isMultiSelect,
+      label,
+      options,
+      savePreferences,
+    } = getCustomSelectProperties(
       {
         config: customSelectEngineConfig,
         dashboard: { ...mockDashboard, service_type: 'dbaas' },
@@ -210,13 +243,14 @@ it('test getCustomSelectProperties method', () => {
       vi.fn()
     );
 
-    expect(result.options).toBeDefined();
-    expect(result.options?.length).toEqual(2);
-    expect(result.savePreferences).toEqual(false);
-    expect(result.isMultiSelect).toEqual(false);
-    expect(result.disabled).toEqual(false);
-    expect(result.clearDependentSelections).toBeDefined();
-    expect(result.clearDependentSelections?.includes(RESOURCES)).toBe(true);
+    expect(options).toBeDefined();
+    expect(options?.length).toEqual(2);
+    expect(savePreferences).toEqual(false);
+    expect(isMultiSelect).toEqual(false);
+    expect(label).toEqual(customSelectEngineConfig.configuration.name);
+    expect(disabled).toEqual(false);
+    expect(clearDependentSelections).toBeDefined();
+    expect(clearDependentSelections?.includes(RESOURCES)).toBe(true);
 
     customSelectEngineConfig.configuration.type = CloudPulseSelectTypes.dynamic;
     customSelectEngineConfig.configuration.apiV4QueryKey =
@@ -224,7 +258,12 @@ it('test getCustomSelectProperties method', () => {
     customSelectEngineConfig.configuration.isMultiSelect = true;
     customSelectEngineConfig.configuration.options = undefined;
 
-    result = getCustomSelectProperties(
+    const {
+      apiV4QueryKey,
+      isMultiSelect: isMultiSelectApi,
+      savePreferences: savePreferencesApi,
+      type,
+    } = getCustomSelectProperties(
       {
         config: customSelectEngineConfig,
         dashboard: mockDashboard,
@@ -233,10 +272,13 @@ it('test getCustomSelectProperties method', () => {
       vi.fn()
     );
 
-    expect(result.apiV4QueryKey).toEqual(databaseQueries.engines);
-    expect(result.type).toEqual(CloudPulseSelectTypes.dynamic);
-    expect(result.savePreferences).toEqual(false);
-    expect(result.isMultiSelect).toEqual(true);
+    const { name } = customSelectEngineConfig.configuration;
+
+    expect(apiV4QueryKey).toEqual(databaseQueries.engines);
+    expect(type).toEqual(CloudPulseSelectTypes.dynamic);
+    expect(savePreferencesApi).toEqual(false);
+    expect(isMultiSelectApi).toEqual(true);
+    expect(label).toEqual(name);
   }
 });
 

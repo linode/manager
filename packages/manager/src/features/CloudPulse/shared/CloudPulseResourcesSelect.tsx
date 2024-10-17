@@ -101,7 +101,7 @@ export const CloudPulseResourcesSelect = React.memo(
           isAutocompleteOpen.current = true;
         }}
         placeholder={
-          selectedResources?.length ? '' : placeholder || 'Select a Resource'
+          selectedResources?.length ? '' : placeholder || 'Select Resources'
         }
         textFieldProps={{
           InputProps: {
@@ -119,7 +119,7 @@ export const CloudPulseResourcesSelect = React.memo(
         data-testid="resource-select"
         disabled={disabled || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label={Boolean(label?.length) ? label : 'Resources'}
+        label={label || 'Resources'}
         limitTags={2}
         multiple
         noMarginTop
