@@ -64,7 +64,7 @@ export const CustomPopper = (props: PopperProps) => {
       ]}
       data-qa-autocomplete-popper
       data-testid="autocomplete-popper"
-      placement={placement || undefined}
+      placement={placement}
       style={updatedStyle}
     />
   );
