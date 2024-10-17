@@ -1,24 +1,25 @@
-import { APIWarning } from '@linode/api-v4/lib/types';
+import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Tooltip } from 'src/components/Tooltip';
-import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import {
   gPay,
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
-import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import { useScript } from 'src/hooks/useScript';
 import { useAccount } from 'src/queries/account/account';
 import { useClientToken } from 'src/queries/account/payment';
 
-import { SetSuccess } from './types';
+import type { SetSuccess } from './types';
+import type { APIWarning } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { QueryClient } from '@tanstack/react-query';
+import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
