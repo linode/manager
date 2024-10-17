@@ -165,7 +165,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
               {capitalize(addressColumnLabel)}
             </StyledHeaderItemBox>
           </Hidden>
-          <StyledHeaderItemBox sx={{ width: xsDown ? '30%' : '10%' }}>
+          <StyledHeaderItemBox sx={{ width: xsDown ? '30%' : '12%' }}>
             Action
           </StyledHeaderItemBox>
           <StyledHeaderItemBox flexGrow={1} />
@@ -339,7 +339,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       </Hidden>
       <StyledCellItemBox
         aria-label={`Action: ${action}`}
-        sx={{ width: xsDown ? '30%' : '10%' }}
+        sx={{ width: xsDown ? '30%' : '12%' }}
       >
         {capitalize(action?.toLocaleLowerCase() ?? '')}
       </StyledCellItemBox>
@@ -400,12 +400,12 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     display: 'grid',
     fontSize: '.875rem',
     gridTemplateAreas: `'one two three four five six'`,
-    gridTemplateColumns: '30% 10% 10% 14% 10% 120px',
+    gridTemplateColumns: '30% 10% 10% 14% 12% 120px',
     height: '40px',
     marginTop: '10px',
     [theme.breakpoints.down('lg')]: {
       gridTemplateAreas: `'one two three four five'`,
-      gridTemplateColumns: '30% 14% 20% 10% 120px',
+      gridTemplateColumns: '30% 14% 20% 12% 120px',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateAreas: `'one two'`,
