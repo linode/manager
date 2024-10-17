@@ -147,6 +147,9 @@ export const useKubernetesClusterMutation = (id: number) => {
           queryKey: kubernetesQueries.lists.queryKey,
         });
         queryClient.invalidateQueries({
+          queryKey: kubernetesQueries.cluster(id).queryKey,
+        });
+        queryClient.invalidateQueries({
           queryKey: kubernetesQueries.cluster(id)._ctx.acl.queryKey,
         });
         queryClient.setQueryData(kubernetesQueries.cluster(id).queryKey, data);
@@ -378,9 +381,6 @@ export const useKubernetesControlPlaneACLMutation = (id: number) => {
   >({
     mutationFn: (data) => updateKubernetesClusterControlPlaneACL(id, data),
     onSuccess(data) {
-      queryClient.invalidateQueries({
-        queryKey: kubernetesQueries.cluster(id)._ctx.acl.queryKey,
-      });
       queryClient.setQueryData(
         kubernetesQueries.cluster(id)._ctx.acl.queryKey,
         data

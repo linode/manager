@@ -7,37 +7,29 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
 import { StyledActionButton } from 'src/components/Button/StyledActionButton';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Chip } from 'src/components/Chip';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Stack } from 'src/components/Stack';
-import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { getKubeControlPlaneACL } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useAccount } from 'src/queries/account/account';
 import {
-  useKubernetesClusterMutation,
   useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,
   useResetKubeConfigMutation,
 } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { pluralize } from 'src/utilities/pluralize';
 
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
 import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
-import {
-  StyledActionRowGrid,
-  StyledBox,
-  StyledTagGrid,
-} from './KubeSummaryPanel.styles';
+import { KubeEntityDetailFooter } from './KubeEntityDetailFooter';
+import { StyledActionRowGrid } from './KubeSummaryPanel.styles';
 
 import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 
@@ -62,10 +54,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   ] = React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    cluster.id
-  );
-
   const {
     data: dashboard,
     error: dashboardError,
@@ -89,15 +77,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     isLoading: isLoadingKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(cluster.id, !!showControlPlaneACL);
 
-  const enabledACL = aclData?.acl.enabled ?? false;
-  const totalIPv4 = aclData?.acl.addresses?.ipv4?.length ?? 0;
-  const totalIPv6 = aclData?.acl.addresses?.ipv6?.length ?? 0;
-  const totalNumberIPs = totalIPv4 + totalIPv6;
-
-  const determineIPACLButtonCopy = enabledACL
-    ? pluralize('IP Address', 'IP Addresses', totalNumberIPs)
-    : 'Enable';
-
   const [
     resetKubeConfigDialogOpen,
     setResetKubeConfigDialogOpen,
@@ -114,12 +93,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
 
   const handleOpenDrawer = () => {
     setDrawerOpen(true);
-  };
-
-  const handleUpdateTags = (newTags: string[]) => {
-    return updateKubernetesCluster({
-      tags: newTags,
-    });
   };
 
   const sxSpacing = {
@@ -169,54 +142,22 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                   />
                 )}
               </StyledActionRowGrid>
-              <StyledTagGrid>
-                <TagCell
-                  disabled={isClusterReadOnly}
-                  entityLabel={cluster.label}
-                  tags={cluster.tags}
-                  updateTags={handleUpdateTags}
-                  view="inline"
-                />
-              </StyledTagGrid>
             </Grid>
           </Grid>
         }
         footer={
-          showControlPlaneACL ? (
-            <Grid
-              sx={{
-                [theme.breakpoints.down('lg')]: {
-                  padding: theme.spacing(1),
-                },
-              }}
-              alignItems="flex-start"
-              lg={8}
-              xs={12}
-            >
-              <StyledBox>
-                <Typography
-                  sx={{
-                    fontFamily: theme.font.bold,
-                    marginRight: theme.spacing(0.5),
-                  }}
-                >
-                  Control Plane ACL:
-                </Typography>
-                {isLoadingKubernetesACL ? (
-                  <Box sx={{ paddingLeft: 1 }}>
-                    <CircleProgress noPadding size="sm" />
-                  </Box>
-                ) : (
-                  <StyledLinkButton
-                    disabled={isClusterReadOnly}
-                    onClick={() => setControlPlaneACLDrawerOpen(true)}
-                  >
-                    {determineIPACLButtonCopy}
-                  </StyledLinkButton>
-                )}
-              </StyledBox>
-            </Grid>
-          ) : undefined
+          <KubeEntityDetailFooter
+            aclData={aclData}
+            clusterCreated={cluster.created}
+            clusterId={cluster.id}
+            clusterLabel={cluster.label}
+            clusterTags={cluster.tags}
+            clusterUpdated={cluster.updated}
+            isClusterReadOnly={isClusterReadOnly}
+            isLoadingKubernetesACL={isLoadingKubernetesACL}
+            setControlPlaneACLDrawerOpen={setControlPlaneACLDrawerOpen}
+            showControlPlaneACL={!!showControlPlaneACL}
+          />
         }
         header={
           <EntityHeader>

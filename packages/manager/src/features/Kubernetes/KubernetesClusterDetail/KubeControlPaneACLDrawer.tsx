@@ -226,8 +226,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               notion. This cluster's control plane will only be accessible from
               IP addresses within this list.
             </Typography>
-            {errors.acl?.message && clusterMigrated && (
-              <Notice spacingTop={8} variant="error">
+            {errors.acl?.message && (
+              <Notice spacingBottom={12} spacingTop={8} variant="error">
                 {errors.acl.message}
               </Notice>
             )}
