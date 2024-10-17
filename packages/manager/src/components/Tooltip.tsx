@@ -5,6 +5,12 @@ import type { TooltipProps } from '@mui/material/Tooltip';
 
 /**
  * Tooltips display informative text when users hover over, focus on, or tap an element.
+ *
+ * @deprecated Use the component from the `@linode/ui` package instead:
+ *
+ * ```
+ * import { Tooltip } from '@linode/ui';
+ * ```
  */
 export const Tooltip = (props: TooltipProps) => {
   // Avoiding displaying [object Object] in the data-qa-tooltip attribute when the title is an JSX element.
