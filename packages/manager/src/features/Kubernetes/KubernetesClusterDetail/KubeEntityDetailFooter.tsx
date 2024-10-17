@@ -97,6 +97,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
     >
       <Grid
         sx={{
+          alignItems: 'center',
           display: 'flex',
           padding: 0,
           [theme.breakpoints.down('lg')]: {

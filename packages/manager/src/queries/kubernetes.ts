@@ -30,6 +30,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { useGetAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -59,10 +60,6 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
     contextQueries: {
       acl: {
         queryFn: () => getKubernetesClusterControlPlaneACL(id),
-        queryKey: [id],
-      },
-      beta: {
-        queryFn: () => getKubernetesClusterBeta(id),
         queryKey: [id],
       },
       dashboard: {
@@ -112,17 +109,13 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 });
 
 export const useKubernetesClusterQuery = (id: number) => {
-  return useQuery<KubernetesCluster, APIError[]>(kubernetesQueries.cluster(id));
-};
-
-/**
- * duplicated function of useKubernetesClusterQuery
- * necessary to call BETA_API_ROOT in a seperate function based on feature flag
- */
-export const useKubernetesClusterBetaQuery = (id: number) => {
-  return useQuery<KubernetesCluster, APIError[]>(
-    kubernetesQueries.cluster(id)._ctx.beta
-  );
+  const showAPL = useGetAPLAvailability();
+  return useQuery<KubernetesCluster, APIError[]>({
+    ...kubernetesQueries.cluster(id),
+    queryFn: showAPL
+      ? () => getKubernetesClusterBeta(id) // necessary to call BETA_API_ROOT in a seperate function based on feature flag
+      : () => getKubernetesCluster(id),
+  });
 };
 
 export const useKubernetesClustersQuery = (
@@ -145,9 +138,6 @@ export const useKubernetesClusterMutation = (id: number) => {
       onSuccess(data) {
         queryClient.invalidateQueries({
           queryKey: kubernetesQueries.lists.queryKey,
-        });
-        queryClient.invalidateQueries({
-          queryKey: kubernetesQueries.cluster(id).queryKey,
         });
         queryClient.invalidateQueries({
           queryKey: kubernetesQueries.cluster(id)._ctx.acl.queryKey,

@@ -47,7 +47,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             <ErrorMessage message={errorText} />{' '}
           </Notice>
         )}
-        <Typography mb={1}>
+        <Typography mb={1} sx={{ width: '85%' }}>
           Enable an access control list (ACL) on your LKE cluster to restrict
           access to your cluster’s control plane. When enabled, only the IP
           addresses and ranges specified by you can connect to the control
