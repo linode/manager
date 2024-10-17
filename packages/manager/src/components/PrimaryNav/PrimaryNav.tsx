@@ -63,6 +63,12 @@ interface PrimaryLink {
   onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
+interface PrimaryLinkGroup {
+  icon?: React.JSX.Element;
+  title?: string;
+  links: PrimaryLink[];
+}
+
 export interface PrimaryNavProps {
   closeMenu: () => void;
   isCollapsed: boolean;
@@ -82,119 +88,145 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
-  const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
+  const primaryLinkGroups: PrimaryLinkGroup[] = React.useMemo(
     () => [
-      [
-        {
-          display: 'Managed',
-          hide: !isManaged,
-          href: '/managed',
-        },
-      ],
-      [
-        {
-          activeLinks: ['/linodes', '/linodes/create'],
-          display: 'Linodes',
-          href: '/linodes',
-        },
-        {
-          activeLinks: [
-            '/images/create/create-image',
-            '/images/create/upload-image',
-          ],
-          display: 'Images',
-          href: '/images',
-        },
-        {
-          activeLinks: ['/kubernetes/create'],
-          display: 'Kubernetes',
-          href: '/kubernetes/clusters',
-        },
-        {
-          display: 'StackScripts',
-          href: '/stackscripts',
-        },
-        {
-          betaChipClassName: 'beta-chip-placement-groups',
-          display: 'Placement Groups',
-          hide: !isPlacementGroupsEnabled,
-          href: '/placement-groups',
-        },
-        {
-          attr: { 'data-qa-one-click-nav-btn': true },
-          display: 'Marketplace',
-          href: '/linodes/create?type=One-Click',
-        },
-      ],
-      [
-        {
-          activeLinks: [
-            '/object-storage/buckets',
-            '/object-storage/access-keys',
-          ],
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
-        },
-        {
-          display: 'Volumes',
-          href: '/volumes',
-        },
-      ],
-      [
-        {
-          display: 'VPC',
-          href: '/vpcs',
-        },
-        {
-          display: 'Firewalls',
-          href: '/firewalls',
-        },
-        {
-          display: 'NodeBalancers',
-          href: '/nodebalancers',
-        },
-        {
-          display: 'Domains',
-          href: '/domains',
-        },
-      ],
-      [
-        {
-          display: 'Databases',
-          hide: !isDatabasesEnabled,
-          href: '/databases',
+      {
+        links: [
+          {
+            display: 'Managed',
+            hide: !isManaged,
+            href: '/managed',
+          },
+        ],
+      },
+      {
+        icon: <Linode height={20} width={20} />,
+        title: 'Compute',
+        links: [
+          {
+            activeLinks: ['/linodes', '/linodes/create'],
+            display: 'Linodes',
+            href: '/linodes',
+          },
+          {
+            activeLinks: [
+              '/images/create/create-image',
+              '/images/create/upload-image',
+            ],
+            display: 'Images',
+            href: '/images',
+          },
+          {
+            activeLinks: ['/kubernetes/create'],
+            display: 'Kubernetes',
+            href: '/kubernetes/clusters',
+          },
+          {
+            display: 'StackScripts',
+            href: '/stackscripts',
+          },
+          {
+            betaChipClassName: 'beta-chip-placement-groups',
+            display: 'Placement Groups',
+            hide: !isPlacementGroupsEnabled,
+            href: '/placement-groups',
+          },
+          {
+            attr: { 'data-qa-one-click-nav-btn': true },
+            display: 'Marketplace',
+            href: '/linodes/create?type=One-Click',
+          },
+        ],
+      },
+      {
+        icon: <Storage height={20} width={20} />,
+        title: 'Storage',
+        links: [
+          {
+            activeLinks: [
+              '/object-storage/buckets',
+              '/object-storage/access-keys',
+            ],
+            display: 'Object Storage',
+            href: '/object-storage/buckets',
+          },
+          {
+            display: 'Volumes',
+            href: '/volumes',
+          },
+        ],
+      },
+      {
+        icon: <NodeBalancer height={20} width={20} />,
+        title: 'Networking',
+        links: [
+          {
+            display: 'VPC',
+            href: '/vpcs',
+          },
+          {
+            display: 'Firewalls',
+            href: '/firewalls',
+          },
+          {
+            display: 'NodeBalancers',
+            href: '/nodebalancers',
+          },
+          {
+            display: 'Domains',
+            href: '/domains',
+          },
+        ],
+      },
+      {
+        icon: <Database height={20} width={20} />,
+        title: 'Databases',
+        links: [
+          {
+            display: 'Databases',
+            hide: !isDatabasesEnabled,
+            href: '/databases',
 
-          isBeta: isDatabasesV2Beta,
-        },
-      ],
-      [
-        {
-          display: 'Longview',
-          href: '/longview',
-        },
-        {
-          display: 'Monitor',
-          hide: !isACLPEnabled,
-          href: '/monitor/cloudpulse',
+            isBeta: isDatabasesV2Beta,
+          },
+        ],
+      },
+      {
+        icon: <Longview height={20} width={20} />,
+        title: 'Monitor',
+        links: [
+          {
+            display: 'Longview',
+            href: '/longview',
+          },
+          {
+            display: 'Monitor',
+            hide: !isACLPEnabled,
+            href: '/monitor/cloudpulse',
 
-          isBeta: flags.aclp?.beta,
-        },
-      ],
-      [
-        {
-          display: 'Betas',
-          hide: !flags.selfServeBetas,
-          href: '/betas',
-        },
-        {
-          display: 'Account',
-          href: '/account',
-        },
-        {
-          display: 'Help & Support',
-          href: '/support',
-        },
-      ],
+            isBeta: flags.aclp?.beta,
+          },
+        ],
+      },
+      {
+        icon: <Account height={20} width={20} />,
+        title: 'More',
+        links: [
+          {
+            display: 'Betas',
+            hide: !flags.selfServeBetas,
+            href: '/betas',
+          },
+          {
+            display: 'Account',
+            href: '/account',
+          },
+          {
+            display: 'Help & Support',
+            href: '/support',
+          },
+        ],
+      },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
@@ -205,42 +237,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       isACLPEnabled,
     ]
   );
-
-  interface AccordionHeading {
-    icon: React.JSX.Element;
-    title: string;
-  }
-
-  interface HeadingIdxMap {
-    [key: number]: AccordionHeading;
-  }
-
-  const headingIdxMap: HeadingIdxMap = {
-    1: {
-      icon: <Linode height={20} width={20} />,
-      title: 'Compute',
-    },
-    2: {
-      icon: <Storage height={20} width={20} />,
-      title: 'Storage',
-    },
-    3: {
-      icon: <NodeBalancer height={20} width={20} />,
-      title: 'Networking',
-    },
-    4: {
-      icon: <Database height={20} width={20} />,
-      title: 'Databases',
-    },
-    5: {
-      icon: <Longview height={20} width={20} />,
-      title: 'Monitor',
-    },
-    6: {
-      icon: <Account height={20} width={20} />,
-      title: 'More',
-    },
-  };
 
   return (
     <StyledGrid
@@ -267,11 +263,22 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         </StyledLogoBox>
       </Grid>
 
-      {primaryLinkGroups.map((thisGroup, idx) => {
-        const filteredLinks = thisGroup.filter((thisLink) => !thisLink.hide);
+      {primaryLinkGroups.map((linkGroup, idx) => {
+        const filteredLinks = linkGroup.links.filter((link) => !link.hide);
         if (filteredLinks.length === 0) {
           return null;
         }
+        const PrimaryLinks = filteredLinks.map((link) => {
+          const props = {
+            closeMenu,
+            isCollapsed,
+            locationPathname: location.pathname,
+            locationSearch: location.search,
+            ...link,
+          };
+          return <PrimaryLink {...props} key={link.display} />;
+        });
+
         return (
           <div key={idx} style={{ width: 'inherit' }}>
             <Divider
@@ -285,26 +292,21 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               })}
               spacingBottom={0}
             />
-            <StyledAccordion
-              heading={
-                <>
-                  {headingIdxMap[idx].icon}
-                  <p>{headingIdxMap[idx].title}</p>
-                </>
-              }
-              defaultExpanded={true}
-            >
-              {filteredLinks.map((thisLink) => {
-                const props = {
-                  closeMenu,
-                  isCollapsed,
-                  locationPathname: location.pathname,
-                  locationSearch: location.search,
-                  ...thisLink,
-                };
-                return <PrimaryLink {...props} key={thisLink.display} />;
-              })}
-            </StyledAccordion>
+            {linkGroup.title ? (
+              <StyledAccordion
+                heading={
+                  <>
+                    {linkGroup.icon}
+                    <p>{linkGroup.title}</p>
+                  </>
+                }
+                defaultExpanded={true}
+              >
+                {PrimaryLinks}
+              </StyledAccordion>
+            ) : (
+              PrimaryLinks
+            )}
           </div>
         );
       })}
