@@ -19,6 +19,8 @@ import withLongviewClients from 'src/containers/longview.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';
 
@@ -70,6 +72,10 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
       title: 'Plan Details',
     },
   ];
+
+  const isLongviewCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_longview',
+  });
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
@@ -134,6 +140,14 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
         onButtonClick={handleAddClient}
         removeCrumbX={1}
         title="Longview"
+        disabledCreateButton={isLongviewCreationRestricted}
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Longview Clients',
+          }),
+        }}
       />
       <StyledTabs
         index={Math.max(
