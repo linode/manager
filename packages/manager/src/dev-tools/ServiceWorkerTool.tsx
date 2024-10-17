@@ -1,6 +1,6 @@
+import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
-import { Tooltip } from 'src/components/Tooltip';
 import { mswDB } from 'src/mocks/indexedDB';
 import { extraMockPresets } from 'src/mocks/presets';
 import { dbSeeders } from 'src/mocks/presets/crud/seeds';

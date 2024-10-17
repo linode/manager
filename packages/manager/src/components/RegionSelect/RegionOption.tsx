@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
@@ -6,7 +7,6 @@ import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
-import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import {

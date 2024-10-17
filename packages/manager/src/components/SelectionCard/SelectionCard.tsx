@@ -1,8 +1,7 @@
+import { Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-
-import { Tooltip } from 'src/components/Tooltip';
 
 import { CardBase } from './CardBase';
 
@@ -148,9 +147,9 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
   const cardGrid = (
     <StyledGrid
       className={className}
-      data-testid="selection-card"
       data-qa-selection-card
       data-qa-selection-card-checked={checked}
+      data-testid="selection-card"
       disabled={disabled}
       id={id}
       lg={4}

@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -8,7 +9,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Tooltip } from 'src/components/Tooltip';
 
 import { StyledToggleButton } from './DisplayLinodes.styles';
 
