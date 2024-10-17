@@ -374,7 +374,14 @@ export const BillingActivityPanel = React.memo((props: Props) => {
 
   return (
     <Grid data-qa-billing-activity-panel xs={12}>
-      <Paper variant="outlined">
+      <Paper
+        sx={(theme) => ({
+          border:
+            theme.name === 'light'
+              ? `1px solid ${theme.borderColors.divider}`
+              : 0,
+        })}
+      >
         <StyledBillingAndPaymentHistoryHeader
           className={classes.headerContainer}
         >
