@@ -17,7 +17,9 @@ import { Stack } from 'src/components/Stack';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
+import { getKubeControlPlaneACL } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLQuery,
@@ -45,6 +47,9 @@ interface Props {
 
 export const KubeSummaryPanel = React.memo((props: Props) => {
   const { cluster } = props;
+
+  const { data: account } = useAccount();
+  const { showControlPlaneACL } = getKubeControlPlaneACL(account);
 
   const theme = useTheme();
 
@@ -82,7 +87,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     data: aclData,
     error: isErrorKubernetesACL,
     isLoading: isLoadingKubernetesACL,
-  } = useKubernetesControlPlaneACLQuery(cluster.id);
+  } = useKubernetesControlPlaneACLQuery(cluster.id, !!showControlPlaneACL);
 
   const enabledACL = aclData?.acl.enabled ?? false;
   const totalIPv4 = aclData?.acl.addresses?.ipv4?.length ?? 0;
@@ -177,38 +182,41 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
           </Grid>
         }
         footer={
-          <Grid
-            sx={{
-              [theme.breakpoints.down('lg')]: {
-                padding: theme.spacing(1),
-              },
-            }}
-            alignItems="flex-start"
-            lg={8}
-            xs={12}
-          >
-            <StyledBox>
-              <Typography
-                sx={{
-                  fontFamily: theme.font.bold,
-                  marginRight: theme.spacing(0.5),
-                }}
-              >
-                Control Plane ACL:
-              </Typography>
-              {isLoadingKubernetesACL ? (
-                <Box sx={{ paddingLeft: 1 }}>
-                  <CircleProgress noPadding size="sm" />
-                </Box>
-              ) : (
-                <StyledLinkButton
-                  onClick={() => setControlPlaneACLDrawerOpen(true)}
+          showControlPlaneACL ? (
+            <Grid
+              sx={{
+                [theme.breakpoints.down('lg')]: {
+                  padding: theme.spacing(1),
+                },
+              }}
+              alignItems="flex-start"
+              lg={8}
+              xs={12}
+            >
+              <StyledBox>
+                <Typography
+                  sx={{
+                    fontFamily: theme.font.bold,
+                    marginRight: theme.spacing(0.5),
+                  }}
                 >
-                  {determineIPACLButtonCopy}
-                </StyledLinkButton>
-              )}
-            </StyledBox>
-          </Grid>
+                  Control Plane ACL:
+                </Typography>
+                {isLoadingKubernetesACL ? (
+                  <Box sx={{ paddingLeft: 1 }}>
+                    <CircleProgress noPadding size="sm" />
+                  </Box>
+                ) : (
+                  <StyledLinkButton
+                    disabled={isClusterReadOnly}
+                    onClick={() => setControlPlaneACLDrawerOpen(true)}
+                  >
+                    {determineIPACLButtonCopy}
+                  </StyledLinkButton>
+                )}
+              </StyledBox>
+            </Grid>
+          ) : undefined
         }
         header={
           <EntityHeader>
@@ -267,6 +275,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         clusterLabel={cluster.label}
         clusterMigrated={!isErrorKubernetesACL}
         open={isControlPlaneACLDrawerOpen}
+        showControlPlaneACL={!!showControlPlaneACL}
       />
       <DeleteKubernetesClusterDialog
         clusterId={cluster.id}

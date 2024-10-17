@@ -352,7 +352,7 @@ export const CreateCluster = () => {
               </StyledFieldWithDocsStack>
             </>
           )}
-          <Divider sx={{ marginTop: 4 }} />
+          <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
           {showHighAvailability && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane

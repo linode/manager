@@ -5,7 +5,6 @@ import { Box } from 'src/components/Box';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle/Toggle';
@@ -40,7 +39,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
       <FormControl data-testid="control-plane-ipacl-form">
         <FormLabel id="ipacl-radio-buttons-group-label">
           <Typography variant="inherit">
-            Control Plane Access Control (IPACL)
+            Control Plane ACL (Access Control List)
           </Typography>
         </FormLabel>
         {errorText && (
@@ -49,10 +48,10 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
           </Notice>
         )}
         <Typography mb={1}>
-          This is the text for Control Plane Access Control.{' '}
-          <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
-            Learn more.
-          </Link>
+          Enable an access control list (ACL) on your LKE cluster to restrict
+          access to your cluster’s control plane. When enabled, only the IP
+          addresses and ranges specified by you can connect to the control
+          plane.
         </Typography>
         <FormControlLabel
           control={
@@ -62,7 +61,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
             />
           }
-          label="Enable IPACL"
+          label="Enable Control Plane ACL"
         />
       </FormControl>
       {enableControlPlaneACL && (

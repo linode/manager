@@ -359,10 +359,14 @@ export const useAllKubernetesClustersQuery = (enabled = false) => {
   });
 };
 
-export const useKubernetesControlPlaneACLQuery = (clusterId: number) => {
-  return useQuery<KubernetesControlPlaneACLPayload, APIError[]>(
-    kubernetesQueries.cluster(clusterId)._ctx.acl
-  );
+export const useKubernetesControlPlaneACLQuery = (
+  clusterId: number,
+  enabled: boolean = true
+) => {
+  return useQuery<KubernetesControlPlaneACLPayload, APIError[]>({
+    enabled,
+    ...kubernetesQueries.cluster(clusterId)._ctx.acl,
+  });
 };
 
 export const useKubernetesControlPlaneACLMutation = (id: number) => {

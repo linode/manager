@@ -28,16 +28,24 @@ interface Props {
   clusterLabel: string;
   clusterMigrated: boolean;
   open: boolean;
+  showControlPlaneACL: boolean;
 }
 
 export const KubeControlPlaneACLDrawer = (props: Props) => {
-  const { closeDrawer, clusterId, clusterLabel, clusterMigrated, open } = props;
+  const {
+    closeDrawer,
+    clusterId,
+    clusterLabel,
+    clusterMigrated,
+    open,
+    showControlPlaneACL,
+  } = props;
 
   const {
     data: data,
     error: isErrorKubernetesACL,
     isLoading: isLoadingKubernetesACL,
-  } = useKubernetesControlPlaneACLQuery(clusterId);
+  } = useKubernetesControlPlaneACLQuery(clusterId, showControlPlaneACL);
 
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
@@ -137,7 +145,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       onClose={closeDrawer}
       onExited={() => reset()}
       open={open}
-      title={'Control Plane Access Control List'}
+      title={'Control Plane ACL'}
       wide
     >
       <DrawerContent
@@ -154,17 +162,17 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           )}
           <Stack sx={{ marginTop: 3 }}>
             <Typography variant="body1">
-              When a cluster is equipped with an ACL, the apiserver and
-              dashboard endpoints get mapped to a NodeBalancer address where all
-              traffic is protected through a Cloud Firewall.
+              Control Plane ACL secures network access to your LKE cluster's
+              control plane. When not enabled, any public IP address can be used
+              to access your control plane. When enabled, all network access is
+              denied except for the IP addresses and CIDR ranges defined on the
+              ACL.
             </Typography>
             <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
-            <Typography variant="h3">Enabled</Typography>
+            <Typography variant="h3">Control Plane ACL</Typography>
             <Typography variant="body1">
-              A value of true results in a default policy of DENY. A value of
-              false results in a default policy of ALLOW (i.e., access controls
-              are disabled). When enabled, control plane access controls can
-              only be accessible through the defined IP CIDRs.
+              Once enabled, all network access is denied except for the IP
+              addresses and CIDR ranges defined on the ACL.
             </Typography>
             <Box sx={{ marginTop: 1 }}>
               <Controller
@@ -178,7 +186,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                         onChange={field.onChange}
                       />
                     }
-                    label={'IPACL Enabled'}
+                    label={'Enable Control Plane ACL'}
                   />
                 )}
                 control={control}
@@ -190,9 +198,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               <>
                 <Typography variant="h3">Revision ID</Typography>
                 <Typography variant="body1">
-                  Enables clients to track events related to ACL update requests
-                  and enforcements. Optional field. If omitted, defaults to a
-                  randomly generated string.
+                  A unique identifing string for this particular revision to the
+                  ACL, used by clients to track events related to ACL update
+                  requests and enforcement. This defaults to a randomly
+                  generated string but can be edited if you prefer to specify
+                  your own string to use for tracking this change.
                 </Typography>
                 <Controller
                   render={({ field, fieldState }) => (
@@ -212,8 +222,9 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             )}
             <Typography variant="h3">Addresses</Typography>
             <Typography sx={{ marginBottom: 1 }} variant="body1">
-              A list of individual ipv4 and ipv6 addresses or CIDRs to ALLOW
-              access to the control plane.
+              A list of allowed IPv4 and IPv6 addresses and ranges in CIDR
+              notion. This cluster's control plane will only be accessible from
+              IP addresses within this list.
             </Typography>
             {errors.acl?.message && clusterMigrated && (
               <Notice spacingTop={8} variant="error">
@@ -268,9 +279,9 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             />
             {!clusterMigrated && (
               <Notice spacingTop={24} variant="warning">
-                IPACL has not yet been installed on this cluster. During
-                installation, it may take up to 20 minutes before ACLs are fully
-                enforced for the first time.
+                Control Plane ACL has not yet been installed on this cluster.
+                During installation, it may take up to 15 minutes for the access
+                control list to be fully enforced.
               </Notice>
             )}
           </Stack>
