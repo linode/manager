@@ -14,7 +14,7 @@ describe('Search Linodes', () => {
   /*
    * - Confirm that linodes are searchable and filtered in the UI.
    */
-  it('create a linode and make sure it show up in the table and searchable in main search tool', () => {
+  it('create a linode and make sure it shows up in the table and is searchable in main search tool', () => {
     cy.defer(() => createTestLinode({ booted: true })).then(
       (linode: Linode) => {
         cy.visitWithLogin('/linodes');
