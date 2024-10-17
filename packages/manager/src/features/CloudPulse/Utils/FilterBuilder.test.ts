@@ -43,9 +43,10 @@ it('test getRegionProperties method', () => {
       },
       vi.fn()
     );
+    const { name } = regionConfig.configuration;
     expect(handleRegionChange).toBeDefined();
     expect(selectedDashboard).toEqual(mockDashboard);
-    expect(label).toEqual(regionConfig.configuration.name);
+    expect(label).toEqual(name);
   }
 });
 
@@ -69,9 +70,10 @@ it('test getTimeDuratonProperties method', () => {
       },
       vi.fn()
     );
+    const { name } = timeDurationConfig.configuration;
     expect(handleStatsChange).toBeDefined();
     expect(savePreferences).toEqual(true);
-    expect(label).toEqual(timeDurationConfig.configuration.name);
+    expect(label).toEqual(name);
   }
 });
 
@@ -98,11 +100,12 @@ it('test getResourceSelectionProperties method', () => {
       },
       vi.fn()
     );
+    const { name } = resourceSelectionConfig.configuration;
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(false);
     expect(JSON.stringify(xFilter)).toEqual('{"+and":[{"region":"us-east"}]}');
-    expect(label).toEqual(resourceSelectionConfig.configuration.name);
+    expect(label).toEqual(name);
   }
 });
 
@@ -129,11 +132,12 @@ it('test getResourceSelectionProperties method with disabled true', () => {
       },
       vi.fn()
     );
+    const { name } = resourceSelectionConfig.configuration;
     expect(handleResourcesSelection).toBeDefined();
     expect(savePreferences).toEqual(false);
     expect(disabled).toEqual(true);
     expect(JSON.stringify(xFilter)).toEqual('{"+and":[]}');
-    expect(label).toEqual(resourceSelectionConfig.configuration.name);
+    expect(label).toEqual(name);
   }
 });
 
@@ -268,11 +272,13 @@ it('test getCustomSelectProperties method', () => {
       vi.fn()
     );
 
+    const { name } = customSelectEngineConfig.configuration;
+
     expect(apiV4QueryKey).toEqual(databaseQueries.engines);
     expect(type).toEqual(CloudPulseSelectTypes.dynamic);
     expect(savePreferencesApi).toEqual(false);
     expect(isMultiSelectApi).toEqual(true);
-    expect(label).toEqual(customSelectEngineConfig.configuration.name);
+    expect(label).toEqual(name);
   }
 });
 
