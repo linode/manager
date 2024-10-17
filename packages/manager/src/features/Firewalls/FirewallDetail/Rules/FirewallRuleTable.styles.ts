@@ -74,6 +74,7 @@ export const StyledHeaderItemBox = styled(Box, {
   borderLeft: `1px solid ${theme.borderColors.borderTable}`,
   borderTop: `1px solid ${theme.borderColors.borderTable}`,
   height: '46px',
+  lineHeight: '12px',
   padding: '10px 15px',
 }));
 
