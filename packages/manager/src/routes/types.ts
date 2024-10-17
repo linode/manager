@@ -8,5 +8,4 @@ export type RouterContext = {
   isACLPEnabled?: boolean;
   isDatabasesEnabled?: boolean;
   isPlacementGroupsEnabled?: boolean;
-  selfServeBetas?: boolean;
 };

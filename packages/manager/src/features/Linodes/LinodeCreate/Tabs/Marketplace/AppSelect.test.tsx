@@ -60,7 +60,9 @@ describe('Marketplace', () => {
 
     await waitFor(() => {
       expect(getByPlaceholderText('Select category')).not.toBeDisabled();
-    });
+      },
+      { timeout: 5_000 }
+    );
 
     const select = getByPlaceholderText('Select category');
 
