@@ -32,7 +32,7 @@ import {
 } from './LinodeRow.styles';
 
 import type { LinodeHandlers } from '../LinodesLanding';
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface Props extends LinodeWithMaintenance {
@@ -210,7 +210,7 @@ RenderFlag.displayName = `RenderFlag`;
 export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   text: string | undefined;
 }> = (props) => {
   const { className, progress, sx, text } = props;
