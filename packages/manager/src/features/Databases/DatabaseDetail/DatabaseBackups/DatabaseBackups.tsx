@@ -78,7 +78,7 @@ export const DatabaseBackups = (props: Props) => {
     databaseId: string;
     engine: Engine;
   }>();
-  const { isV2GAUser } = useIsDatabasesEnabled();
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<DateTime | null>(null);
@@ -86,7 +86,7 @@ export const DatabaseBackups = (props: Props) => {
     null
   );
   const [versionOption, setVersionOption] = React.useState<VersionOption>(
-    isV2GAUser ? 'newest' : 'dateTime'
+    isDatabasesV2GA ? 'newest' : 'dateTime'
   );
 
   const {
@@ -143,7 +143,7 @@ export const DatabaseBackups = (props: Props) => {
       <Divider spacingBottom={25} spacingTop={25} />
       <Typography variant="h2">Restore a Backup</Typography>
       <StyledTypography>
-        {isV2GAUser ? (
+        {isDatabasesV2GA ? (
           <span>
             The newest full backup plus incremental is selected by default. Or,
             select any date and time within the last 10 days you want to create
@@ -159,7 +159,7 @@ export const DatabaseBackups = (props: Props) => {
       {unableToRestoreCopy && (
         <Notice spacingTop={16} text={unableToRestoreCopy} variant="info" />
       )}
-      {isV2GAUser && (
+      {isDatabasesV2GA && (
         <RadioGroup
           aria-label="type"
           name="type"

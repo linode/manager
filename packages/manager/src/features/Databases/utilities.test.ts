@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
 import { AccountCapability } from '@linode/api-v4';
-import { accountFactory } from 'src/factories';
+import { accountFactory, databaseTypeFactory } from 'src/factories';
 import { TimeOption } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups';
 import {
   isDateOutsideBackup,
@@ -10,7 +10,6 @@ import {
   toISOString,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -28,8 +27,16 @@ const setup = (capabilities: AccountCapability[], flags: any) => {
   });
 };
 
+const queryMocks = vi.hoisted(() => ({
+  useDatabaseTypesQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/databases/databases', () => ({
+  useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
+}));
+
 describe('useIsDatabasesEnabled', () => {
-  it('should return false for an unrestricted user without the account capability', async () => {
+  it('should return correctly for non V1/V2 user', async () => {
     const { result } = setup([], { dbaasV2: { beta: true, enabled: true } });
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(false);
@@ -37,14 +44,14 @@ describe('useIsDatabasesEnabled', () => {
       expect(result.current.isDatabasesV2Enabled).toBe(false);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isV2ExistingBetaUser).toBe(false);
-      expect(result.current.isV2NewBetaUser).toBe(false);
+      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(false);
 
-      expect(result.current.isV2GAUser).toBe(false);
+      expect(result.current.isDatabasesV2GA).toBe(false);
     });
   });
 
-  it('should return true for an unrestricted user with the account capability V1', async () => {
+  it('should return correctly for V1 user', async () => {
     const { result } = setup(['Managed Databases'], {
       dbaasV2: { beta: false, enabled: false },
     });
@@ -55,14 +62,14 @@ describe('useIsDatabasesEnabled', () => {
       expect(result.current.isDatabasesV2Enabled).toBe(false);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isV2ExistingBetaUser).toBe(false);
-      expect(result.current.isV2NewBetaUser).toBe(false);
+      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(false);
 
-      expect(result.current.isV2GAUser).toBe(false);
+      expect(result.current.isDatabasesV2GA).toBe(false);
     });
   });
 
-  it('should return true for a new unrestricted user with the account capability V2 and beta feature flag', async () => {
+  it('should return correctly for V2 new user beta', async () => {
     const { result } = setup(['Managed Databases Beta'], {
       dbaasV2: { beta: true, enabled: true },
     });
@@ -73,16 +80,16 @@ describe('useIsDatabasesEnabled', () => {
       expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(true);
-      expect(result.current.isV2ExistingBetaUser).toBe(false);
-      expect(result.current.isV2NewBetaUser).toBe(true);
+      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(true);
 
-      expect(result.current.isV2GAUser).toBe(false);
+      expect(result.current.isDatabasesV2GA).toBe(false);
     });
   });
 
-  it('should return false for a new unrestricted user with the account capability V2 and no beta feature flag', async () => {
+  it('should return correctly for V2 new user no beta', async () => {
     const { result } = setup(['Managed Databases Beta'], {
-      dbaasV2: { beta: true, enabled: false },
+      dbaasV2: { beta: false, enabled: false },
     });
 
     await waitFor(() => {
@@ -91,14 +98,14 @@ describe('useIsDatabasesEnabled', () => {
       expect(result.current.isDatabasesV2Enabled).toBe(false);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isV2ExistingBetaUser).toBe(false);
-      expect(result.current.isV2NewBetaUser).toBe(false);
+      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(false);
 
-      expect(result.current.isV2GAUser).toBe(false);
+      expect(result.current.isDatabasesV2GA).toBe(false);
     });
   });
 
-  it('should return true for an existing unrestricted user with the account capability V1 & V2 and beta feature flag', async () => {
+  it('should return correctly for V1 & V2 existing user beta', async () => {
     const { result } = setup(['Managed Databases', 'Managed Databases Beta'], {
       dbaasV2: { beta: true, enabled: true },
     });
@@ -109,14 +116,14 @@ describe('useIsDatabasesEnabled', () => {
       expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(true);
-      expect(result.current.isV2ExistingBetaUser).toBe(true);
-      expect(result.current.isV2NewBetaUser).toBe(false);
+      expect(result.current.isUserExistingBeta).toBe(true);
+      expect(result.current.isUserNewBeta).toBe(false);
 
-      expect(result.current.isV2GAUser).toBe(false);
+      expect(result.current.isDatabasesV2GA).toBe(false);
     });
   });
 
-  it('should return true for an existing unrestricted user with the account capability V1 and no beta feature flag', async () => {
+  it('should return correctly for V1 existing user GA', async () => {
     const { result } = setup(['Managed Databases'], {
       dbaasV2: { beta: false, enabled: true },
     });
@@ -127,45 +134,195 @@ describe('useIsDatabasesEnabled', () => {
       expect(result.current.isDatabasesV2Enabled).toBe(false);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isV2ExistingBetaUser).toBe(false);
-      expect(result.current.isV2NewBetaUser).toBe(false);
+      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(false);
 
-      expect(result.current.isV2GAUser).toBe(true);
+      expect(result.current.isDatabasesV2GA).toBe(true);
     });
   });
 
-  it('should return true for a restricted user who can not load account but can load database engines', async () => {
+  it('should return correctly for V1 restricted user non-beta', async () => {
     server.use(
       http.get('*/v4/account', () => {
         return HttpResponse.json({}, { status: 403 });
-      }),
-      http.get('*/v4beta/databases/engines', () => {
-        return HttpResponse.json(makeResourcePage([]));
       })
     );
 
-    const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: wrapWithTheme,
+    // default
+    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
+      data: null,
     });
 
-    await waitFor(() => expect(result.current.isDatabasesEnabled).toBe(true));
+    // legacy
+    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
+      data: databaseTypeFactory.buildList(1),
+    });
+
+    const flags = { dbaasV2: { beta: true, enabled: true } };
+
+    const { result } = renderHook(() => useIsDatabasesEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+    });
+
+    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
+      1,
+      ...[{ platform: 'rdbms-default' }, true]
+    );
+
+    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
+      2,
+      ...[{ platform: 'rdbms-legacy' }, true]
+    );
+
+    await waitFor(() => {
+      expect(result.current.isDatabasesEnabled).toBe(true);
+      expect(result.current.isDatabasesV1Enabled).toBe(true);
+      expect(result.current.isDatabasesV2Enabled).toBe(false);
+
+      expect(result.current.isDatabasesV2Beta).toBe(false);
+      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(false);
+
+      expect(result.current.isDatabasesV2GA).toBe(false);
+    });
   });
 
-  it('should return false for a restricted user who can not load account and database engines', async () => {
+  it('should return correctly for V1 & V2 restricted user existing beta', async () => {
     server.use(
       http.get('*/v4/account', () => {
         return HttpResponse.json({}, { status: 403 });
-      }),
-      http.get('*/v4beta/databases/engines', () => {
-        return HttpResponse.json({}, { status: 404 });
       })
     );
 
-    const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: wrapWithTheme,
+    // default
+    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
+      data: databaseTypeFactory.buildList(1),
     });
 
-    await waitFor(() => expect(result.current.isDatabasesEnabled).toBe(false));
+    // legacy
+    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
+      data: databaseTypeFactory.buildList(1),
+    });
+
+    const flags = { dbaasV2: { beta: true, enabled: true } };
+
+    const { result } = renderHook(() => useIsDatabasesEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+    });
+
+    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
+      1,
+      ...[{ platform: 'rdbms-default' }, true]
+    );
+
+    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
+      2,
+      ...[{ platform: 'rdbms-legacy' }, true]
+    );
+
+    await waitFor(() => {
+      expect(result.current.isDatabasesEnabled).toBe(true);
+      expect(result.current.isDatabasesV1Enabled).toBe(true);
+      expect(result.current.isDatabasesV2Enabled).toBe(true);
+
+      expect(result.current.isDatabasesV2Beta).toBe(true);
+      expect(result.current.isUserExistingBeta).toBe(true);
+      expect(result.current.isUserNewBeta).toBe(false);
+
+      expect(result.current.isDatabasesV2GA).toBe(false);
+    });
+  });
+
+  it('should return correctly for V2 restricted user new beta', async () => {
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json({}, { status: 403 });
+      })
+    );
+
+    // default
+    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
+      data: databaseTypeFactory.buildList(1),
+    });
+
+    // legacy
+    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
+      data: null,
+    });
+
+    const flags = { dbaasV2: { beta: true, enabled: true } };
+
+    const { result } = renderHook(() => useIsDatabasesEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+    });
+
+    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
+      1,
+      ...[{ platform: 'rdbms-default' }, true]
+    );
+
+    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
+      2,
+      ...[{ platform: 'rdbms-legacy' }, true]
+    );
+
+    await waitFor(() => {
+      expect(result.current.isDatabasesEnabled).toBe(true);
+      expect(result.current.isDatabasesV1Enabled).toBe(false);
+      expect(result.current.isDatabasesV2Enabled).toBe(true);
+
+      expect(result.current.isDatabasesV2Beta).toBe(true);
+      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(true);
+
+      expect(result.current.isDatabasesV2GA).toBe(false);
+    });
+  });
+
+  it('should return correctly for V2 restricted user GA', async () => {
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json({}, { status: 403 });
+      })
+    );
+
+    // default
+    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
+      data: databaseTypeFactory.buildList(1),
+    });
+
+    // legacy
+    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
+      data: null,
+    });
+
+    const flags = { dbaasV2: { beta: false, enabled: true } };
+
+    const { result } = renderHook(() => useIsDatabasesEnabled(), {
+      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+    });
+
+    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
+      1,
+      ...[{ platform: 'rdbms-default' }, true]
+    );
+
+    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
+      2,
+      ...[{ platform: 'rdbms-legacy' }, true]
+    );
+
+    await waitFor(() => {
+      expect(result.current.isDatabasesEnabled).toBe(true);
+      expect(result.current.isDatabasesV1Enabled).toBe(false);
+      expect(result.current.isDatabasesV2Enabled).toBe(true);
+
+      expect(result.current.isDatabasesV2Beta).toBe(false);
+      expect(result.current.isUserExistingBeta).toBe(false);
+      expect(result.current.isUserNewBeta).toBe(false);
+
+      expect(result.current.isDatabasesV2GA).toBe(true);
+    });
   });
 });
 
