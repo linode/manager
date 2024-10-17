@@ -1,7 +1,12 @@
+import { useQuery } from '@tanstack/react-query';
+
 import { useFlags } from 'src/hooks/useFlags';
+import { accountQueries } from 'src/queries/account/queries';
+import { getBetaStatus } from 'src/utilities/betaUtils';
 import { sortByVersion } from 'src/utilities/sort-by';
 
-import type { Account } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4';
+import type { Account, AccountBeta } from '@linode/api-v4/lib/account';
 import type {
   KubeNodePoolResponse,
   KubernetesCluster,
@@ -113,14 +118,31 @@ export const getKubeHighAvailability = (
   };
 };
 
+export const useAccountBetaAPLQuery = (
+  id: string,
+  enabled: boolean = false
+) => {
+  return useQuery<AccountBeta, APIError[]>({
+    enabled,
+    ...accountQueries.betas._ctx.beta(id),
+  });
+};
+
 export const useGetAPLAvailability = (): boolean => {
   const flags = useFlags();
-
+  const hasBetaCapabilities = useAccountBetaAPLQuery('apl', Boolean(flags.apl));
   if (!flags) {
     return false;
   }
 
-  return Boolean(flags.apl);
+  const { data, error, isLoading } = hasBetaCapabilities;
+  if (!data || isLoading || error) {
+    return false;
+  }
+
+  const isBetaActiveAndEnrolled = getBetaStatus(data);
+
+  return Boolean(flags.apl && isBetaActiveAndEnrolled === 'active');
 };
 
 /**
