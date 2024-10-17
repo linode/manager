@@ -96,14 +96,14 @@ export const Placeholder = (props: PlaceholderProps) => {
       fill: theme.palette.primary.main,
     },
     '& .circle': {
-      fill: theme.name === 'light' ? '#fff' : '#000',
+      fill: theme.name === 'light' ? theme.colorTokens?.Neutrals.White : '#000',
     },
     '& .insidePath path': {
       opacity: 0,
       stroke: theme.palette.primary.main,
     },
     '& .outerCircle': {
-      fill: theme.name === 'light' ? '#fff' : '#000',
+      fill: theme.name === 'light' ? theme.colorTokens?.Neutrals.White : '#000',
       stroke: theme.bg.offWhite,
     },
     height: '160px',

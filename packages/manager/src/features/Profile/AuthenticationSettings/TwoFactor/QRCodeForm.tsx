@@ -42,7 +42,7 @@ const StyledInstructions = styled(Typography, {
 const StyledQRCodeContainer = styled('div', {
   label: 'StyledQRCodeContainer',
 })(({ theme }) => ({
-  border: `5px solid #fff`,
+  border: `5px solid ${theme.colorTokens?.Neutrals.White}`,
   display: 'inline-block',
   margin: `${theme.spacing(2)} 0`,
 }));
