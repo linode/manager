@@ -81,7 +81,7 @@ const StyledDrawer = styled(Drawer, {
     [theme.breakpoints.up('md')]: {
       '& .MuiDrawer-paper': {
         '&:hover': {
-          '& .primaryNavLink': {
+          '& .primaryNavLink, .akamai-logo-name': {
             opacity: 1,
           },
           overflowY: 'auto',

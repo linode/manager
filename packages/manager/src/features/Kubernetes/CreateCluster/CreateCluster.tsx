@@ -1,8 +1,3 @@
-import {
-  type CreateKubeClusterPayload,
-  type CreateNodePoolData,
-  type KubeNodePoolResponse,
-} from '@linode/api-v4/lib/kubernetes';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -45,8 +40,8 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
@@ -60,6 +55,11 @@ import {
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
+import type {
+  CreateKubeClusterPayload,
+  CreateNodePoolData,
+  KubeNodePoolResponse,
+} from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 export const CreateCluster = () => {
@@ -128,44 +128,47 @@ export const CreateCluster = () => {
     }
   }, [versionData]);
 
-const createCluster = () => {
-  const { push } = history;
-  setErrors(undefined);
-  setSubmitting(true);
+  const createCluster = () => {
+    const { push } = history;
+    setErrors(undefined);
+    setSubmitting(true);
 
-  const node_pools = nodePools.map(pick(['type', 'count'])) as CreateNodePoolData[];
+    const node_pools = nodePools.map(
+      pick(['type', 'count'])
+    ) as CreateNodePoolData[];
 
-  let payload: CreateKubeClusterPayload = {
-    control_plane: { high_availability: highAvailability ?? false },
-    k8s_version: version,
-    label,
-    node_pools,
-    region: selectedRegionId,
+    let payload: CreateKubeClusterPayload = {
+      control_plane: { high_availability: highAvailability ?? false },
+      k8s_version: version,
+      label,
+      node_pools,
+      region: selectedRegionId,
+    };
+
+    if (showAPL) {
+      payload = { ...payload, apl_enabled };
+    }
+
+    const createClusterFn = showAPL
+      ? createKubernetesClusterBeta
+      : createKubernetesCluster;
+
+    createClusterFn(payload)
+      .then((cluster) => {
+        push(`/kubernetes/clusters/${cluster.id}`);
+        if (hasAgreed) {
+          updateAccountAgreements({
+            eu_model: true,
+            privacy_policy: true,
+          }).catch(reportAgreementSigningError);
+        }
+      })
+      .catch((err) => {
+        setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
+        setSubmitting(false);
+        scrollErrorIntoViewV2(formContainerRef);
+      });
   };
-
-  if (showAPL) {
-    payload = { ...payload, apl_enabled };
-  }
-
-  const createClusterFn = showAPL ? createKubernetesClusterBeta : createKubernetesCluster;
-
-  createClusterFn(payload)
-    .then((cluster) => {
-      push(`/kubernetes/clusters/${cluster.id}`);
-      if (hasAgreed) {
-        updateAccountAgreements({
-          eu_model: true,
-          privacy_policy: true,
-        }).catch(reportAgreementSigningError);
-      }
-    })
-    .catch((err) => {
-      setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
-      setSubmitting(false);
-      scrollErrorIntoViewV2(formContainerRef);
-    });
-};
-
 
   const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
 

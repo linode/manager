@@ -58,8 +58,9 @@ describe('Marketplace', () => {
       component: <AppSelect onOpenDetailsDrawer={vi.fn()} />,
     });
 
-    await waitFor(() => {
-      expect(getByPlaceholderText('Select category')).not.toBeDisabled();
+    await waitFor(
+      () => {
+        expect(getByPlaceholderText('Select category')).not.toBeDisabled();
       },
       { timeout: 5_000 }
     );

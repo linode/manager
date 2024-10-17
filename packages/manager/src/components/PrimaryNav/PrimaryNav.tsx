@@ -1,41 +1,31 @@
 import { BetaChip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import Account from 'src/assets/icons/account.svg';
-import Beta from 'src/assets/icons/entityIcons/beta.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
-import Domain from 'src/assets/icons/entityIcons/domain.svg';
-import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
-import Image from 'src/assets/icons/entityIcons/image.svg';
-import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
-import Managed from 'src/assets/icons/entityIcons/managed.svg';
-import CloudPulse from 'src/assets/icons/entityIcons/monitor.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
-import PlacementGroups from 'src/assets/icons/entityIcons/placement-groups.svg';
-import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
-import Volume from 'src/assets/icons/entityIcons/volume.svg';
-import VPC from 'src/assets/icons/entityIcons/vpc.svg';
-import TooltipIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { usePrefetch } from 'src/hooks/usePreFetch';
 import { useAccountSettings } from 'src/queries/account/settings';
 
-import useStyles from './PrimaryNav.styles';
+import {
+  StyledAccordion,
+  StyledActiveLink,
+  StyledAkamaiLogo,
+  StyledGrid,
+  StyledLink,
+  StyledLogoBox,
+  StyledPrimaryLinkBox,
+} from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
-
-import type { LinkProps } from 'react-router-dom';
 
 type NavEntity =
   | 'Account'
@@ -71,8 +61,12 @@ interface PrimaryLink {
   icon?: JSX.Element;
   isBeta?: boolean;
   onClick?: (e: React.ChangeEvent<any>) => void;
-  prefetchRequestCondition?: boolean;
-  prefetchRequestFn?: () => void;
+}
+
+interface PrimaryLinkGroup {
+  icon?: React.JSX.Element;
+  title?: string;
+  links: PrimaryLink[];
 }
 
 export interface PrimaryNavProps {
@@ -82,7 +76,6 @@ export interface PrimaryNavProps {
 
 export const PrimaryNav = (props: PrimaryNavProps) => {
   const { closeMenu, isCollapsed } = props;
-  const { classes, cx } = useStyles();
 
   const flags = useFlags();
   const location = useLocation();
@@ -95,130 +88,145 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
-  const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
+  const primaryLinkGroups: PrimaryLinkGroup[] = React.useMemo(
     () => [
-      [
-        {
-          display: 'Managed',
-          hide: !isManaged,
-          href: '/managed',
-          icon: <Managed />,
-        },
-      ],
-      [
-        {
-          activeLinks: ['/linodes', '/linodes/create'],
-          display: 'Linodes',
-          href: '/linodes',
-          icon: <Linode />,
-        },
-        {
-          display: 'Volumes',
-          href: '/volumes',
-          icon: <Volume />,
-        },
-        {
-          display: 'NodeBalancers',
-          href: '/nodebalancers',
-          icon: <NodeBalancer />,
-        },
-        {
-          display: 'VPC',
-          href: '/vpcs',
-          icon: <VPC />,
-        },
-        {
-          display: 'Firewalls',
-          href: '/firewalls',
-          icon: <Firewall />,
-        },
-        {
-          display: 'StackScripts',
-          href: '/stackscripts',
-          icon: <StackScript />,
-        },
-        {
-          activeLinks: [
-            '/images/create/create-image',
-            '/images/create/upload-image',
-          ],
-          display: 'Images',
-          href: '/images',
-          icon: <Image />,
-        },
-        {
-          betaChipClassName: 'beta-chip-placement-groups',
-          display: 'Placement Groups',
-          hide: !isPlacementGroupsEnabled,
-          href: '/placement-groups',
-          icon: <PlacementGroups />,
-        },
-      ],
-      [
-        {
-          display: 'Domains',
-          href: '/domains',
-          icon: <Domain />,
-        },
-        {
-          display: 'Databases',
-          hide: !isDatabasesEnabled,
-          href: '/databases',
-          icon: <Database />,
-          isBeta: isDatabasesV2Beta,
-        },
-        {
-          activeLinks: ['/kubernetes/create'],
-          display: 'Kubernetes',
-          href: '/kubernetes/clusters',
-          icon: <Kubernetes />,
-        },
-        {
-          activeLinks: [
-            '/object-storage/buckets',
-            '/object-storage/access-keys',
-          ],
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
-          icon: <Storage />,
-        },
-        {
-          display: 'Longview',
-          href: '/longview',
-          icon: <Longview />,
-        },
-        {
-          display: 'Monitor',
-          hide: !isACLPEnabled,
-          href: '/monitor/cloudpulse',
-          icon: <CloudPulse />,
-          isBeta: flags.aclp?.beta,
-        },
-        {
-          attr: { 'data-qa-one-click-nav-btn': true },
-          display: 'Marketplace',
-          href: '/linodes/create?type=One-Click',
-          icon: <OCA />,
-        },
-      ],
-      [
-        {
-          display: 'Account',
-          href: '/account',
-          icon: <Account />,
-        },
-        {
-          display: 'Betas',
-          hide: !flags.selfServeBetas,
-          href: '/betas',
-          icon: <Beta />,
-        },
-        {
-          display: 'Help & Support',
-          href: '/support',
-          icon: <TooltipIcon status="help" />,
-        },
-      ],
+      {
+        links: [
+          {
+            display: 'Managed',
+            hide: !isManaged,
+            href: '/managed',
+          },
+        ],
+      },
+      {
+        icon: <Linode height={20} width={20} />,
+        title: 'Compute',
+        links: [
+          {
+            activeLinks: ['/linodes', '/linodes/create'],
+            display: 'Linodes',
+            href: '/linodes',
+          },
+          {
+            activeLinks: [
+              '/images/create/create-image',
+              '/images/create/upload-image',
+            ],
+            display: 'Images',
+            href: '/images',
+          },
+          {
+            activeLinks: ['/kubernetes/create'],
+            display: 'Kubernetes',
+            href: '/kubernetes/clusters',
+          },
+          {
+            display: 'StackScripts',
+            href: '/stackscripts',
+          },
+          {
+            betaChipClassName: 'beta-chip-placement-groups',
+            display: 'Placement Groups',
+            hide: !isPlacementGroupsEnabled,
+            href: '/placement-groups',
+          },
+          {
+            attr: { 'data-qa-one-click-nav-btn': true },
+            display: 'Marketplace',
+            href: '/linodes/create?type=One-Click',
+          },
+        ],
+      },
+      {
+        icon: <Storage height={20} width={20} />,
+        title: 'Storage',
+        links: [
+          {
+            activeLinks: [
+              '/object-storage/buckets',
+              '/object-storage/access-keys',
+            ],
+            display: 'Object Storage',
+            href: '/object-storage/buckets',
+          },
+          {
+            display: 'Volumes',
+            href: '/volumes',
+          },
+        ],
+      },
+      {
+        icon: <NodeBalancer height={20} width={20} />,
+        title: 'Networking',
+        links: [
+          {
+            display: 'VPC',
+            href: '/vpcs',
+          },
+          {
+            display: 'Firewalls',
+            href: '/firewalls',
+          },
+          {
+            display: 'NodeBalancers',
+            href: '/nodebalancers',
+          },
+          {
+            display: 'Domains',
+            href: '/domains',
+          },
+        ],
+      },
+      {
+        icon: <Database height={20} width={20} />,
+        title: 'Databases',
+        links: [
+          {
+            display: 'Databases',
+            hide: !isDatabasesEnabled,
+            href: '/databases',
+
+            isBeta: isDatabasesV2Beta,
+          },
+        ],
+      },
+      {
+        icon: <Longview height={20} width={20} />,
+        title: 'Monitor',
+        links: [
+          {
+            display: 'Longview',
+            href: '/longview',
+          },
+          {
+            display: 'Monitor',
+            hide: !isACLPEnabled,
+            href: '/monitor/cloudpulse',
+
+            isBeta: flags.aclp?.beta,
+          },
+        ],
+      },
+      {
+        icon: <Account height={20} width={20} />,
+        title: 'More',
+        links: [
+          {
+            display: 'Betas',
+            hide: !flags.selfServeBetas,
+            href: '/betas',
+          },
+          {
+            display: 'Account',
+            href: '/account',
+          },
+          {
+            display: 'Help & Support',
+            href: '/support',
+          },
+        ],
+      },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
@@ -231,10 +239,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   );
 
   return (
-    <Grid
+    <StyledGrid
       alignItems="flex-start"
-      className={classes.menuGrid}
-      component="nav"
       container
       direction="column"
       id="main-navigation"
@@ -244,80 +250,67 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       wrap="nowrap"
     >
       <Grid sx={{ width: '100%' }}>
-        <Box
-          className={cx(classes.logoItemAkamai, {
-            [classes.logoItemAkamaiCollapsed]: isCollapsed,
-          })}
-        >
-          <Link
-            className={cx({
-              [classes.logoContainer]: isCollapsed,
-              [classes.navLinkItem]: !isCollapsed,
-            })}
+        <StyledLogoBox isCollapsed={isCollapsed}>
+          <StyledLink
             aria-label="Akamai - Dashboard"
+            isCollapsed={isCollapsed}
             onClick={closeMenu}
             title="Akamai - Dashboard"
             to={`/dashboard`}
           >
-            <AkamaiLogo
-              className={cx(
-                {
-                  [classes.logoAkamaiCollapsed]: isCollapsed,
-                },
-                classes.logo
-              )}
-              width={83}
-            />
-          </Link>
-        </Box>
+            <StyledAkamaiLogo width={83} />
+          </StyledLink>
+        </StyledLogoBox>
       </Grid>
 
-      {primaryLinkGroups.map((thisGroup, idx) => {
-        const filteredLinks = thisGroup.filter((thisLink) => !thisLink.hide);
+      {primaryLinkGroups.map((linkGroup, idx) => {
+        const filteredLinks = linkGroup.links.filter((link) => !link.hide);
         if (filteredLinks.length === 0) {
           return null;
         }
+        const PrimaryLinks = filteredLinks.map((link) => {
+          const props = {
+            closeMenu,
+            isCollapsed,
+            locationPathname: location.pathname,
+            locationSearch: location.search,
+            ...link,
+          };
+          return <PrimaryLink {...props} key={link.display} />;
+        });
+
         return (
-          <div key={idx}>
+          <div key={idx} style={{ width: 'inherit' }}>
             <Divider
               sx={(theme) => ({
+                backgroundColor: 'rgba(0, 0, 0, 0.12)',
                 borderColor:
                   theme.name === 'light'
                     ? theme.borderColors.dividerDark
                     : 'rgba(0, 0, 0, 0.19)',
+                color: '#222',
               })}
-              className={classes.divider}
-              spacingBottom={11}
-              spacingTop={isManaged ? (idx === 0 ? 0 : 11) : idx === 1 ? 0 : 11}
+              spacingBottom={0}
             />
-            {filteredLinks.map((thisLink) => {
-              const props = {
-                closeMenu,
-                isCollapsed,
-                locationPathname: location.pathname,
-                locationSearch: location.search,
-                ...thisLink,
-              };
-
-              // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
-              // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
-              // that includes the usePrefetch hook.
-              return thisLink.prefetchRequestFn &&
-                thisLink.prefetchRequestCondition !== undefined ? (
-                <PrefetchPrimaryLink
-                  {...props}
-                  key={thisLink.display}
-                  prefetchRequestCondition={thisLink.prefetchRequestCondition}
-                  prefetchRequestFn={thisLink.prefetchRequestFn}
-                />
-              ) : (
-                <PrimaryLink {...props} key={thisLink.display} />
-              );
-            })}
+            {linkGroup.title ? (
+              <StyledAccordion
+                heading={
+                  <>
+                    {linkGroup.icon}
+                    <p>{linkGroup.title}</p>
+                  </>
+                }
+                defaultExpanded={true}
+              >
+                {PrimaryLinks}
+              </StyledAccordion>
+            ) : (
+              PrimaryLinks
+            )}
           </div>
         );
       })}
-    </Grid>
+    </StyledGrid>
   );
 };
 
@@ -329,17 +322,9 @@ interface PrimaryLinkProps extends PrimaryLink {
   isCollapsed: boolean;
   locationPathname: string;
   locationSearch: string;
-  prefetchProps?: {
-    onBlur: LinkProps['onBlur'];
-    onFocus: LinkProps['onFocus'];
-    onMouseEnter: LinkProps['onMouseEnter'];
-    onMouseLeave: LinkProps['onMouseLeave'];
-  };
 }
 
 const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
-  const { classes, cx } = useStyles();
-
   const {
     activeLinks,
     attr,
@@ -353,7 +338,6 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
     locationPathname,
     locationSearch,
     onClick,
-    prefetchProps,
   } = props;
 
   const isActiveLink = Boolean(
@@ -361,7 +345,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
   );
 
   return (
-    <Link
+    <StyledActiveLink
       onClick={(e: React.ChangeEvent<any>) => {
         closeMenu();
         if (onClick) {
@@ -369,66 +353,29 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
         }
       }}
       to={href}
-      {...prefetchProps}
       {...attr}
-      className={cx({
-        [classes.active]: isActiveLink,
-        [classes.listItem]: true,
-      })}
       aria-current={isActiveLink}
       data-testid={`menu-item-${display}`}
+      isActiveLink={isActiveLink}
     >
       {icon && (
         <div aria-hidden className="icon">
           {icon}
         </div>
       )}
-      <Box
-        className={cx({
-          [classes.linkItem]: true,
-          hiddenWhenCollapsed: isCollapsed,
-          primaryNavLink: true,
-        })}
-        sx={{
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
+      <StyledPrimaryLinkBox
+        className="primaryNavLink"
+        isCollapsed={isCollapsed}
       >
         {display}
         {isBeta ? (
           <BetaChip
-            className={cx(betaChipClassName ? betaChipClassName : '', {
-              [classes.chip]: true,
-            })}
+            className={`${betaChipClassName ? betaChipClassName : ''}`}
             color="primary"
             component="span"
           />
         ) : null}
-      </Box>
-    </Link>
+      </StyledPrimaryLinkBox>
+    </StyledActiveLink>
   );
 });
-
-interface PrefetchPrimaryLinkProps extends PrimaryLinkProps {
-  prefetchRequestCondition: boolean;
-  prefetchRequestFn: () => void;
-}
-
-// Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink = React.memo(
-  (props: PrefetchPrimaryLinkProps) => {
-    const { cancelRequest, makeRequest } = usePrefetch(
-      props.prefetchRequestFn,
-      props.prefetchRequestCondition
-    );
-
-    const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-      onBlur: cancelRequest,
-      onFocus: makeRequest,
-      onMouseEnter: makeRequest,
-      onMouseLeave: cancelRequest,
-    };
-
-    return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
-  }
-);
