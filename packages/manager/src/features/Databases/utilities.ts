@@ -1,14 +1,29 @@
+import type { DatabaseInstance } from '@linode/api-v4';
 import { DatabaseFork } from '@linode/api-v4';
 import { DateTime } from 'luxon';
-
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
-import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
+import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
-
 import { databaseEngineMap } from './DatabaseLanding/DatabaseRow';
 
-import type { DatabaseInstance } from '@linode/api-v4';
+export interface IsDatabasesEnabled {
+  isDatabasesEnabled: boolean;
+  isDatabasesV1Enabled: boolean;
+  isDatabasesV2Enabled: boolean;
+  isDatabasesV2Beta: boolean;
+  isDatabasesV2GA: boolean;
+  /**
+   * Temporary variable to be removed post GA release
+   */
+  isUserExistingBeta: boolean;
+  /**
+   * Temporary variable to be removed post GA release
+   */
+  isUserNewBeta: boolean;
+  isDatabasesMonitorEnabled: boolean;
+  isDatabasesMonitorBeta: boolean;
+}
 
 /**
  * A hook to determine if Databases should be visible to the user.
@@ -18,20 +33,30 @@ import type { DatabaseInstance } from '@linode/api-v4';
  *
  * For users who don't have permission to load /v4/account
  * (who are restricted users without account read access),
- * we must check if they can load Database Engines as a workaround.
- * If these users can successfully fetch database engines, we will
+ * we must check if they can load Database Types as a workaround.
+ * If these users can successfully fetch database types, we will
  * show databases.
  */
-export const useIsDatabasesEnabled = () => {
-  const { data: account } = useAccount();
+export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
+  const flags = useFlags();
+  const hasV2Flag: boolean = !!flags.dbaasV2?.enabled;
+  const hasV2BetaFlag: boolean = hasV2Flag && flags.dbaasV2?.beta === true;
+  const hasV2GAFlag: boolean = hasV2Flag && flags.dbaasV2?.beta === false;
 
+  const { data: account } = useAccount();
   // If we don't have permission to GET /v4/account,
   // we need to try fetching Database engines to know if the user has databases enabled.
   const checkRestrictedUser = !account;
 
-  const { data: engines } = useDatabaseEnginesQuery(checkRestrictedUser);
-  const flags = useFlags();
-  const isBeta = !!flags.dbaasV2?.beta;
+  const { data: types } = useDatabaseTypesQuery(
+    { platform: 'rdbms-default' },
+    checkRestrictedUser
+  );
+
+  const { data: legacyTypes } = useDatabaseTypesQuery(
+    { platform: 'rdbms-legacy' },
+    checkRestrictedUser
+  );
 
   if (account) {
     const isDatabasesV1Enabled = isFeatureEnabledV2(
@@ -42,43 +67,45 @@ export const useIsDatabasesEnabled = () => {
 
     const isDatabasesV2Enabled = isFeatureEnabledV2(
       'Managed Databases Beta',
-      !!flags.dbaasV2?.enabled,
+      hasV2Flag,
       account?.capabilities ?? []
     );
 
-    const isV2ExistingBetaUser =
-      isBeta && isDatabasesV1Enabled && isDatabasesV2Enabled;
-
-    const isV2NewBetaUser =
-      isBeta && !isDatabasesV1Enabled && isDatabasesV2Enabled;
-
-    const isV2GAUser =
-      !isBeta &&
-      isFeatureEnabledV2(
-        'Managed Databases',
-        !!flags.dbaasV2?.enabled,
-        account?.capabilities ?? []
-      );
-
-    const isDatabasesGA =
-      flags.dbaasV2?.enabled && flags.dbaasV2.beta === false;
+    const isDatabasesV2Beta: boolean = isDatabasesV2Enabled && hasV2BetaFlag;
 
     return {
       isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
-      isDatabasesGAEnabled: isDatabasesV1Enabled && isDatabasesGA,
       isDatabasesV1Enabled,
-      isDatabasesV2Beta: isDatabasesV2Enabled && flags.dbaasV2?.beta,
       isDatabasesV2Enabled,
-      isV2ExistingBetaUser,
-      isV2GAUser,
-      isV2NewBetaUser,
+
+      isDatabasesV2Beta,
+      isUserExistingBeta: isDatabasesV2Beta && isDatabasesV1Enabled,
+      isUserNewBeta: isDatabasesV2Beta && !isDatabasesV1Enabled,
+
+      isDatabasesV2GA:
+        (isDatabasesV1Enabled || isDatabasesV2Enabled) && hasV2GAFlag,
+
+      isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
+      isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
     };
   }
 
-  const userCouldLoadDatabaseEngines = engines !== undefined;
+  const hasLegacyTypes: boolean = !!legacyTypes;
+  const hasDefaultTypes: boolean = !!types && hasV2Flag;
 
   return {
-    isDatabasesEnabled: userCouldLoadDatabaseEngines,
+    isDatabasesEnabled: hasLegacyTypes || hasDefaultTypes,
+    isDatabasesV1Enabled: hasLegacyTypes,
+    isDatabasesV2Enabled: hasDefaultTypes,
+
+    isDatabasesV2Beta: hasDefaultTypes && hasV2BetaFlag,
+    isUserExistingBeta: hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
+    isUserNewBeta: !hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
+
+    isDatabasesV2GA: (hasLegacyTypes || hasDefaultTypes) && hasV2GAFlag,
+
+    isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
+    isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
   };
 };
 
