@@ -1,14 +1,32 @@
+import {
+  DndContext,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import Undo from 'src/assets/icons/undo.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { Typography } from 'src/components/Typography';
 import {
   generateAddressesLabel,
@@ -21,26 +39,20 @@ import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
 import {
   MoreStyledLinkButton,
   StyledButtonDiv,
-  StyledCellItemBox,
   StyledDragIndicator,
   StyledErrorDiv,
-  StyledFirewallRuleBox,
   StyledFirewallRuleButton,
   StyledFirewallTableButton,
   StyledHeaderDiv,
-  StyledHeaderItemBox,
-  StyledInnerBox,
-  StyledUl,
-  StyledUlBox,
-  sxBox,
+  StyledTableRow,
 } from './FirewallRuleTable.styles';
 import { sortPortString } from './shared';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
+import type { DragEndEvent } from '@dnd-kit/core';
 import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import type { Theme } from '@mui/material/styles';
 import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
@@ -49,6 +61,7 @@ interface RuleRow {
   description?: null | string;
   errors?: FirewallRuleError[];
   id: number;
+  index: number;
   label?: null | string;
   originalIndex: number;
   ports: string;
@@ -96,10 +109,6 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
     triggerUndo,
   } = props;
 
-  const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const betweenSmAndLg = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
-
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
 
@@ -114,15 +123,32 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
   const screenReaderMessage =
     'Some screen readers may require you to enter focus mode to interact with firewall rule list items. In focus mode, press spacebar to begin a drag or tab to access item actions.';
 
-  const onDragEnd = (result: DropResult) => {
-    if (result.destination) {
-      triggerReorder(result.source.index, result.destination?.index);
+  const getRowDataIndex = React.useMemo(() => {
+    return (id: number) => rowData.findIndex((data) => data.id === id);
+  }, [rowData]);
+
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active && over && active.id !== over.id) {
+      const sourceIndex = getRowDataIndex(Number(active.id));
+      const destinationIndex = getRowDataIndex(Number(over.id));
+      triggerReorder(sourceIndex, destinationIndex);
     }
   };
 
   const onPolicyChange = (newPolicy: FirewallPolicyType) => {
     handlePolicyChange(category, newPolicy);
   };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor)
+  );
 
   return (
     <>
@@ -140,97 +166,64 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
         aria-label={`${category} Rules List`}
         sx={{ margin: 0, width: '100%' }}
       >
-        <StyledInnerBox
-          aria-label={`${category} Rules List Headers`}
-          sx={sxBox}
-          tabIndex={0}
-        >
-          <StyledHeaderItemBox
-            sx={{
-              width: xsDown ? '50%' : '30%',
-            }}
-          >
-            Label
-          </StyledHeaderItemBox>
-          <Hidden lgDown>
-            <StyledHeaderItemBox sx={{ width: '10%' }}>
-              Protocol
-            </StyledHeaderItemBox>
-          </Hidden>
-          <Hidden smDown>
-            <StyledHeaderItemBox sx={{ width: betweenSmAndLg ? '14%' : '10%' }}>
-              Port Range
-            </StyledHeaderItemBox>
-            <StyledHeaderItemBox sx={{ width: betweenSmAndLg ? '20%' : '14%' }}>
-              {capitalize(addressColumnLabel)}
-            </StyledHeaderItemBox>
-          </Hidden>
-          <StyledHeaderItemBox sx={{ width: xsDown ? '30%' : '12%' }}>
-            Action
-          </StyledHeaderItemBox>
-          <StyledHeaderItemBox flexGrow={1} />
-        </StyledInnerBox>
-        <Box sx={{ ...sxBox, flexDirection: 'column' }}>
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="droppable" isDropDisabled={disabled}>
-              {(provided) => (
-                <StyledUl ref={provided.innerRef} {...provided.droppableProps}>
-                  {rowData.length === 0 ? (
-                    <StyledUlBox data-testid={'table-row-empty'}>
-                      <Box>{zeroRulesMessage}</Box>
-                    </StyledUlBox>
-                  ) : (
-                    rowData.map((thisRuleRow: RuleRow, index) => (
-                      <Draggable
-                        draggableId={String(thisRuleRow.id)}
-                        index={index}
-                        key={thisRuleRow.id}
-                      >
-                        {(provided) => (
-                          <li
-                            aria-label={
-                              thisRuleRow.label ??
-                              `firewall rule ${thisRuleRow.id}`
-                            }
-                            aria-roledescription={screenReaderMessage}
-                            aria-selected={false}
-                            key={thisRuleRow.id}
-                            ref={provided.innerRef}
-                            role="option"
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <FirewallRuleTableRow
-                              triggerCloneFirewallRule={
-                                triggerCloneFirewallRule
-                              }
-                              triggerDeleteFirewallRule={
-                                triggerDeleteFirewallRule
-                              }
-                              triggerOpenRuleDrawerForEditing={
-                                triggerOpenRuleDrawerForEditing
-                              }
-                              disabled={disabled}
-                              triggerUndo={triggerUndo}
-                              {...thisRuleRow}
-                            />
-                          </li>
-                        )}
-                      </Draggable>
-                    ))
-                  )}
-                  {provided.placeholder}
-                </StyledUl>
+        <DndContext onDragEnd={onDragEnd} sensors={sensors}>
+          <Table>
+            <TableHead aria-label={`${category} Rules List Headers`}>
+              <TableRow>
+                <TableCell>Label</TableCell>
+                <Hidden lgDown>
+                  <TableCell>Protocol</TableCell>
+                </Hidden>
+                <Hidden smDown>
+                  <TableCell>Port Range</TableCell>
+                  <TableCell> {capitalize(addressColumnLabel)}</TableCell>
+                </Hidden>
+                <TableCell>Action</TableCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rowData.length === 0 ? (
+                <TableRowEmpty
+                  colSpan={6}
+                  data-testid={'table-row-empty'}
+                  message={zeroRulesMessage}
+                />
+              ) : (
+                <SortableContext
+                  items={rowData}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {rowData.map((thisRuleRow: RuleRow) => (
+                    <FirewallRuleTableRow
+                      aria-label={
+                        thisRuleRow.label ?? `firewall rule ${thisRuleRow.id}`
+                      }
+                      triggerOpenRuleDrawerForEditing={
+                        triggerOpenRuleDrawerForEditing
+                      }
+                      aria-roledescription={screenReaderMessage}
+                      aria-selected={false}
+                      disabled={disabled}
+                      key={thisRuleRow.id}
+                      triggerCloneFirewallRule={triggerCloneFirewallRule}
+                      triggerDeleteFirewallRule={triggerDeleteFirewallRule}
+                      triggerUndo={triggerUndo}
+                      {...thisRuleRow}
+                      id={thisRuleRow.id}
+                    />
+                  ))}
+                </SortableContext>
               )}
-            </Droppable>
-          </DragDropContext>
-          <PolicyRow
-            category={category}
-            disabled={disabled}
-            handlePolicyChange={onPolicyChange}
-            policy={policy}
-          />
-        </Box>
+            </TableBody>
+          </Table>
+        </DndContext>
+        <PolicyRow
+          category={category}
+          disabled={disabled}
+          handlePolicyChange={onPolicyChange}
+          policy={policy}
+        />
       </Box>
     </>
   );
@@ -253,16 +246,13 @@ export interface FirewallRuleTableRowProps extends RuleRow {
 }
 
 const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
-  const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const betweenSmAndLg = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
-
   const {
     action,
     addresses,
     disabled,
     errors,
     id,
+    index,
     label,
     originalIndex,
     ports,
@@ -276,91 +266,81 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
 
   const actionMenuProps = {
     disabled: status === 'PENDING_DELETION' || disabled,
-    idx: id,
+    idx: index,
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
   };
 
+  const { attributes, listeners, setNodeRef, transform } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+  };
+
   return (
-    <StyledFirewallRuleBox
+    <StyledTableRow
       aria-label={label ?? `firewall rule ${id}`}
       disabled={disabled}
+      domRef={setNodeRef}
       key={id}
       originalIndex={originalIndex}
-      ruleId={id}
+      ruleIndex={index}
       status={status}
+      {...attributes}
+      {...listeners}
+      sx={style}
     >
-      <StyledCellItemBox
-        sx={{
-          overflowWrap: 'break-word',
-          paddingLeft: '10px !important',
-          width: xsDown ? '50%' : '30%',
-        }}
-        aria-label={`Label: ${label}`}
-      >
+      <TableCell aria-label={`Label: ${label}`}>
         <StyledDragIndicator aria-label="Drag indicator icon" />
         {label || (
           <MoreStyledLinkButton
             disabled={disabled}
-            onClick={() => triggerOpenRuleDrawerForEditing(id)}
+            onClick={() => triggerOpenRuleDrawerForEditing(index)}
           >
             Add a label
           </MoreStyledLinkButton>
-        )}{' '}
-      </StyledCellItemBox>
+        )}
+      </TableCell>
       <Hidden lgDown>
-        <StyledCellItemBox
-          aria-label={`Protocol: ${protocol}`}
-          sx={{ width: '10%' }}
-        >
+        <TableCell aria-label={`Protocol: ${protocol}`}>
           {protocol}
           <ConditionalError errors={errors} formField="protocol" />
-        </StyledCellItemBox>
+        </TableCell>
       </Hidden>
       <Hidden smDown>
-        <StyledCellItemBox
-          aria-label={`Ports: ${ports}`}
-          sx={{ width: betweenSmAndLg ? '14%' : '10%' }}
-        >
+        <TableCell aria-label={`Ports: ${ports}`}>
           {ports === '1-65535' ? 'All Ports' : ports}
           <ConditionalError errors={errors} formField="ports" />
-        </StyledCellItemBox>
-        <StyledCellItemBox
-          sx={{
-            overflowWrap: 'break-word',
-            width: betweenSmAndLg ? '20%' : '14%',
-          }}
-          aria-label={`Addresses: ${addresses}`}
-        >
+        </TableCell>
+        <TableCell aria-label={`Addresses: ${addresses}`}>
           <MaskableText text={addresses} />
           <ConditionalError errors={errors} formField="addresses" />
-        </StyledCellItemBox>
+        </TableCell>
       </Hidden>
-      <StyledCellItemBox
-        aria-label={`Action: ${action}`}
-        sx={{ width: xsDown ? '30%' : '12%' }}
-      >
+      <TableCell aria-label={`Action: ${action}`}>
         {capitalize(action?.toLocaleLowerCase() ?? '')}
-      </StyledCellItemBox>
-      <StyledCellItemBox sx={{ marginLeft: 'auto' }}>
-        {status !== 'NOT_MODIFIED' ? (
-          <StyledButtonDiv>
-            <StyledFirewallRuleButton
-              aria-label="Undo change to Firewall Rule"
-              disabled={disabled}
-              onClick={() => triggerUndo(id)}
-              status={status}
-            >
-              <Undo />
-            </StyledFirewallRuleButton>
+      </TableCell>
+      <TableCell>
+        <Box sx={{ float: 'right' }}>
+          {status !== 'NOT_MODIFIED' ? (
+            <StyledButtonDiv>
+              <StyledFirewallRuleButton
+                aria-label="Undo change to Firewall Rule"
+                disabled={disabled}
+                onClick={() => triggerUndo(index)}
+                status={status}
+              >
+                <Undo />
+              </StyledFirewallRuleButton>
+              <FirewallRuleActionMenu {...actionMenuProps} />
+            </StyledButtonDiv>
+          ) : (
             <FirewallRuleActionMenu {...actionMenuProps} />
-          </StyledButtonDiv>
-        ) : (
-          <FirewallRuleActionMenu {...actionMenuProps} />
-        )}
-      </StyledCellItemBox>
-    </StyledFirewallRuleBox>
+          )}
+        </Box>
+      </TableCell>
+    </StyledTableRow>
   );
 });
 
@@ -390,8 +370,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     </span>
   );
 
-  // Using a grid here to keep the Select and the helper text aligned
-  // with the Action column for screens < 'lg', and with the last column for screens >= 'lg'.
+  // Using a grid here to keep the Select and the helper text aligned.
   const sxBoxGrid = {
     alignItems: 'center',
     backgroundColor: theme.bg.bgPaper,
@@ -400,16 +379,16 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     display: 'grid',
     fontSize: '.875rem',
     gridTemplateAreas: `'one two three four five six'`,
-    gridTemplateColumns: '30% 10% 10% 14% 12% 120px',
+    gridTemplateColumns: '22% 10% 10% 16% 10% 120px',
     height: '40px',
     marginTop: '10px',
     [theme.breakpoints.down('lg')]: {
       gridTemplateAreas: `'one two three four five'`,
-      gridTemplateColumns: '30% 14% 20% 12% 120px',
+      gridTemplateColumns: '22% 10% 16% 10% 120px',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateAreas: `'one two'`,
-      gridTemplateColumns: '50% 50%',
+      gridTemplateColumns: '60% 40%',
     },
     width: '100%',
   };
@@ -504,7 +483,8 @@ export const firewallRuleToRowData = (
     return {
       ...thisRule,
       addresses: generateAddressesLabel(thisRule.addresses),
-      id: idx,
+      id: idx + 1, // ids are 1-indexed, as id given to the useSortable hook cannot be 0
+      index: idx,
       ports: sortPortString(thisRule.ports || ''),
       type: generateRuleLabel(ruleType),
     };

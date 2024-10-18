@@ -4,42 +4,30 @@ import { styled } from '@mui/material/styles';
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { TableRow } from 'src/components/TableRow';
 
 import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 
 type StyledFirewallRuleButtonProps = Pick<FirewallRuleTableRowProps, 'status'>;
 
-interface FirewallRuleTableRowPropsWithRuleId
+interface FirewallRuleTableRowPropsWithRuleIndex
   extends Pick<FirewallRuleTableRowProps, 'disabled' | 'originalIndex'> {
-  ruleId: number;
+  ruleIndex: number;
 }
 
-interface StyledFirewallRuleBoxProps
-  extends FirewallRuleTableRowPropsWithRuleId {
+interface StyledFirewallRuleTableRowProps
+  extends FirewallRuleTableRowPropsWithRuleIndex {
   status: FirewallRuleTableRowProps['status'];
 }
 
-export const sxBox = {
-  alignItems: 'center',
-  display: 'flex',
-  width: '100%',
-};
-
-export const StyledFirewallRuleBox = styled(Box, {
-  label: 'StyledFirewallRuleBox',
-  shouldForwardProp: omittedProps(['originalIndex', 'ruleId']),
-})<StyledFirewallRuleBoxProps>(
-  ({ disabled, originalIndex, ruleId, status, theme }) => ({
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-    borderRight: `1px solid ${theme.borderColors.borderTable}`,
-    color: theme.textColors.tableStatic,
-    fontSize: '0.875rem',
-    margin: 0,
-    ...sxBox,
-
+export const StyledTableRow = styled(TableRow, {
+  label: 'StyledTableRow',
+  shouldForwardProp: omittedProps(['originalIndex', 'ruleIndex']),
+})<StyledFirewallRuleTableRowProps>(
+  ({ disabled, originalIndex, ruleIndex, status, theme }) => ({
+    cursor: 'grab',
     // Conditional styles
-    // Highlight the row if it's been modified or reordered. ID is the current index,
+    // Highlight the row if it's been modified or reordered. ruleIndex is the current index,
     // so if it doesn't match the original index we know that the rule has been moved.
     ...(status === 'PENDING_DELETION' || disabled
       ? {
@@ -47,7 +35,7 @@ export const StyledFirewallRuleBox = styled(Box, {
           backgroundColor: 'rgba(247, 247, 247, 0.25)',
         }
       : {}),
-    ...(status === 'MODIFIED' || status === 'NEW' || originalIndex !== ruleId
+    ...(status === 'MODIFIED' || status === 'NEW' || originalIndex !== ruleIndex
       ? { backgroundColor: theme.bg.lightBlue1 }
       : {}),
     ...(status === 'NOT_MODIFIED' ? { backgroundColor: theme.bg.bgPaper } : {}),
@@ -59,51 +47,6 @@ export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
     backgroundColor: theme.bg.tableHeader,
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
-  })
-);
-
-export const StyledHeaderItemBox = styled(Box, {
-  label: 'StyledHeaderItemBox',
-})(({ theme }) => ({
-  '&:last-child': {
-    borderRight: `1px solid ${theme.borderColors.borderTable}`,
-    paddingRight: '0px',
-  },
-  alignContent: 'center',
-  borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-  borderLeft: `1px solid ${theme.borderColors.borderTable}`,
-  borderTop: `1px solid ${theme.borderColors.borderTable}`,
-  height: '46px',
-  lineHeight: '12px',
-  padding: '10px 15px',
-}));
-
-export const StyledCellItemBox = styled(Box, {
-  label: 'StyledCellItemBox',
-})(({ theme }) => ({
-  '&:not(:last-child)': {
-    padding: '0px 15px',
-  },
-  alignContent: 'center',
-  minHeight: '40px',
-  [theme.breakpoints.down('sm')]: {
-    '&:last-child': {
-      paddingLeft: '15px',
-    },
-  },
-}));
-
-export const StyledUlBox = styled(Box, { label: 'StyledUlBox' })(
-  ({ theme }) => ({
-    alignItems: 'center',
-    backgroundColor: theme.bg.bgPaper,
-    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    color: theme.textColors.tableStatic,
-    display: 'flex',
-    fontSize: '0.875rem',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-    width: '100%',
   })
 );
 
@@ -165,12 +108,4 @@ export const StyledDragIndicator = styled(DragIndicator, {
   marginRight: theme.spacing(1.5),
   position: 'relative',
   top: 2,
-}));
-
-export const StyledUl = styled('ul', { label: 'StyledUl' })(({ theme }) => ({
-  backgroundColor: theme.color.border3,
-  listStyle: 'none',
-  margin: 0,
-  paddingLeft: 0,
-  width: '100%',
 }));
