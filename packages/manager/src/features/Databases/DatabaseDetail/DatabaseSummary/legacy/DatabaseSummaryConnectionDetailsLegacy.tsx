@@ -1,10 +1,11 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import type { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
+import { useTheme } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
+import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -15,11 +16,6 @@ import { useDatabaseCredentialsQuery } from 'src/queries/databases/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { makeStyles } from 'tss-react/mui';
-import {
-  StyledGridContainer,
-  StyledLabelTypography,
-  StyledValueBox,
-} from './DatabaseSummaryClusterConfiguration.style';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionBtnsCtn: {
@@ -65,7 +61,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& span': {
       fontFamily: theme.font.bold,
     },
-    background: theme.interactionTokens.Background.Secondary,
+    background: theme.bg.bgAccessRow,
     border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
     padding: '8px 15px',
   },
@@ -129,11 +125,17 @@ const sxTooltipIcon = {
 const privateHostCopy =
   'A private network host and a private IP can only be used to access a Database Cluster from Linodes in the same data center and will not incur transfer costs.';
 
-export const DatabaseSummaryConnectionDetails = (props: Props) => {
+const mongoHostHelperCopy =
+  'This is a public hostname. Coming soon: connect to your MongoDB clusters using private IPs';
+
+/**
+ * Deprecated @since DBaaS V2 GA. Will be removed remove post GA release ~ Dec 2024
+ */
+export const DatabaseSummaryConnectionDetailsLegacy = (props: Props) => {
   const { database } = props;
   const { classes } = useStyles();
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
-  const isLegacy = database.platform === 'rdbms-legacy';
 
   const [showCredentials, setShowPassword] = React.useState<boolean>(false);
   const [isCACertDownloading, setIsCACertDownloading] = React.useState<boolean>(
@@ -196,29 +198,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
 
   const disableShowBtn = ['failed', 'provisioning'].includes(database.status);
   const disableDownloadCACertificateBtn = database.status === 'provisioning';
-  const readOnlyHostValue =
-    database?.hosts?.standby ?? database?.hosts?.secondary ?? '';
-
-  const readOnlyHost = () => {
-    const defaultValue = isLegacy ? '-' : 'not available';
-    const value = readOnlyHostValue ?? defaultValue;
-    return (
-      <>
-        {value}
-        <CopyTooltip
-          className={classes.inlineCopyToolTip}
-          text={readOnlyHostValue}
-        />
-        {isLegacy && (
-          <TooltipIcon
-            status="help"
-            sxTooltipIcon={sxTooltipIcon}
-            text={privateHostCopy}
-          />
-        )}
-      </>
-    );
-  };
+  const readOnlyHost = database?.hosts?.standby || database?.hosts?.secondary;
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (
@@ -260,100 +240,123 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Connection Details
       </Typography>
-      <StyledGridContainer container lg={7} md={10} spacing={0}>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Username</StyledLabelTypography>
-        </Grid>
-        <Grid md={8} xs={9}>
-          <StyledValueBox>{username}</StyledValueBox>
-        </Grid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Password</StyledLabelTypography>
-        </Grid>
-        <Grid md={8} xs={9}>
-          <StyledValueBox>
-            {password}
-            {showCredentials && credentialsLoading ? (
-              <div className={classes.progressCtn}>
-                <CircleProgress noPadding size="xs" />
-              </div>
-            ) : credentialsError ? (
-              <>
-                <span className={classes.error}>
-                  Error retrieving credentials.
-                </span>
-                {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
-              </>
-            ) : (
-              credentialsBtn(
-                handleShowPasswordClick,
-                showCredentials && credentials ? 'Hide' : 'Show'
-              )
+      <Box className={classes.connectionDetailsCtn} data-qa-connection-details>
+        <Typography>
+          <span>username</span> = {username}
+        </Typography>
+        <Box display="flex">
+          <Typography>
+            <span>password</span> = {password}
+          </Typography>
+          {showCredentials && credentialsLoading ? (
+            <div className={classes.progressCtn}>
+              <CircleProgress noPadding size="xs" />
+            </div>
+          ) : credentialsError ? (
+            <>
+              <span className={classes.error}>
+                Error retrieving credentials.
+              </span>
+              {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
+            </>
+          ) : (
+            credentialsBtn(
+              handleShowPasswordClick,
+              showCredentials && credentials ? 'Hide' : 'Show'
+            )
+          )}
+          {disableShowBtn && (
+            <TooltipIcon
+              text={
+                database.status === 'provisioning'
+                  ? 'Your Database Cluster is currently provisioning.'
+                  : 'Your root password is unavailable when your Database Cluster has failed.'
+              }
+              status="help"
+              sxTooltipIcon={sxTooltipIcon}
+            />
+          )}
+          {showCredentials && credentials && (
+            <CopyTooltip
+              className={classes.inlineCopyToolTip}
+              text={password}
+            />
+          )}
+        </Box>
+        <Box>
+          <Typography>
+            <span>hosts</span> ={' '}
+            {(!database.peers || database.peers.length === 0) && (
+              <span className={classes.provisioningText}>
+                Your hostnames will appear here once they are available.
+              </span>
             )}
-            {disableShowBtn && (
-              <TooltipIcon
-                text={
-                  database.status === 'provisioning'
-                    ? 'Your Database Cluster is currently provisioning.'
-                    : 'Your root password is unavailable when your Database Cluster has failed.'
-                }
-                status="help"
-                sxTooltipIcon={sxTooltipIcon}
-              />
-            )}
-            {showCredentials && credentials && (
-              <CopyTooltip
-                className={classes.inlineCopyToolTip}
-                text={password}
-              />
-            )}
-          </StyledValueBox>
-        </Grid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Host</StyledLabelTypography>
-        </Grid>
-        <Grid md={8} xs={9}>
-          <StyledValueBox>
-            {database.hosts?.primary ? (
-              <>
-                {database.hosts?.primary}
+          </Typography>
+          {database.peers &&
+            database.peers.length > 0 &&
+            database.peers.map((hostname, i) => (
+              <Box
+                alignItems="center"
+                display="flex"
+                flexDirection="row"
+                key={hostname}
+              >
+                <Typography
+                  style={{
+                    marginBottom: 0,
+                    marginLeft: 16,
+                    marginTop: 0,
+                  }}
+                >
+                  <span style={{ fontFamily: theme.font.normal }}>
+                    {hostname}
+                  </span>
+                </Typography>
                 <CopyTooltip
                   className={classes.inlineCopyToolTip}
-                  text={database.hosts?.primary}
+                  text={hostname}
                 />
-              </>
-            ) : (
-              <Typography>
-                <span className={classes.provisioningText}>
-                  Your hostname will appear here once it is available.
-                </span>
-              </Typography>
+                {/*  Display the helper text on the first hostname */}
+                {i === 0 && (
+                  <TooltipIcon
+                    status="help"
+                    sxTooltipIcon={sxTooltipIcon}
+                    text={mongoHostHelperCopy}
+                  />
+                )}
+              </Box>
+            ))}
+        </Box>
+        {readOnlyHost && (
+          <Box alignItems="center" display="flex" flexDirection="row">
+            <Typography>
+              {database.platform === 'rdbms-default' ? (
+                <span>read-only host</span>
+              ) : (
+                <span>private network host </span>
+              )}
+              = {readOnlyHost}
+            </Typography>
+            <CopyTooltip
+              className={classes.inlineCopyToolTip}
+              text={readOnlyHost}
+            />
+            {database.platform === 'rdbms-legacy' && (
+              <TooltipIcon
+                status="help"
+                sxTooltipIcon={sxTooltipIcon}
+                text={privateHostCopy}
+              />
             )}
-          </StyledValueBox>
-        </Grid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>
-            {isLegacy ? 'Private Network Host' : 'Read-only Host'}
-          </StyledLabelTypography>
-        </Grid>
-        <Grid md={8} xs={9}>
-          <StyledValueBox>{readOnlyHost()}</StyledValueBox>
-        </Grid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>Port</StyledLabelTypography>
-        </Grid>
-        <Grid md={8} xs={9}>
-          <StyledValueBox>{database.port}</StyledValueBox>
-        </Grid>
-        <Grid md={4} xs={3}>
-          <StyledLabelTypography>SSL</StyledLabelTypography>
-        </Grid>
-        <Grid md={8} xs={9}>
-          <StyledValueBox>
-            {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
-          </StyledValueBox>
-        </Grid>
-      </StyledGridContainer>
+          </Box>
+        )}
+        <Typography>
+          <span>port</span> = {database.port}
+        </Typography>
+        <Typography>
+          <span>ssl</span> = {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
+        </Typography>
+      </Box>
       <div className={classes.actionBtnsCtn}>
         {database.ssl_connection ? caCertificateJSX : null}
       </div>
@@ -361,4 +364,4 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
   );
 };
 
-export default DatabaseSummaryConnectionDetails;
+export default DatabaseSummaryConnectionDetailsLegacy;
