@@ -274,10 +274,10 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
 
   const {
     attributes,
+    isDragging,
     listeners,
     setNodeRef,
     transform,
-    isDragging,
   } = useSortable({ id });
 
   const style = {
