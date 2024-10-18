@@ -272,9 +272,17 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     triggerOpenRuleDrawerForEditing,
   };
 
-  const { attributes, listeners, setNodeRef, transform } = useSortable({ id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    isDragging,
+  } = useSortable({ id });
 
   const style = {
+    cursor: isDragging ? 'grabbing' : 'grab',
+    touchAction: 'none',
     transform: CSS.Transform.toString(transform),
   };
 

@@ -25,7 +25,6 @@ export const StyledTableRow = styled(TableRow, {
   shouldForwardProp: omittedProps(['originalIndex', 'ruleIndex']),
 })<StyledFirewallRuleTableRowProps>(
   ({ disabled, originalIndex, ruleIndex, status, theme }) => ({
-    cursor: 'grab',
     // Conditional styles
     // Highlight the row if it's been modified or reordered. ruleIndex is the current index,
     // so if it doesn't match the original index we know that the rule has been moved.
