@@ -293,7 +293,7 @@ describe('rebuild linode', () => {
    * - Confirms UI error flow when attempting to rebuild a Linode that is provisioning.
    * - Confirms that API error message is displayed in the rebuild dialog.
    */
-  it.only('cannot rebuild a provisioning linode', () => {
+  it('cannot rebuild a provisioning linode', () => {
     const mockLinode = linodeFactory.build({
       label: randomLabel(),
       region: chooseRegion().id,
@@ -308,7 +308,11 @@ describe('rebuild linode', () => {
     cy.visitWithLogin(`/linodes/${mockLinode.id}?rebuild=true`);
     findRebuildDialog(mockLinode.label).within(() => {
       ui.autocomplete.findByLabel('From Image').should('be.visible');
-      ui.autocomplete.findByLabel('Images').should('be.visible').click().type(image);
+      ui.autocomplete
+        .findByLabel('Images')
+        .should('be.visible')
+        .click()
+        .type(image);
       ui.autocompletePopper.findByTitle(image).should('be.visible').click();
 
       assertPasswordComplexity(rootPassword, 'Good');
