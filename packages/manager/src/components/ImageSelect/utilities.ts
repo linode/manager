@@ -13,7 +13,11 @@ export const getAPIFilterForImageSelect = (
   variant: ImageSelectVariant | undefined
 ) => {
   if (variant === 'public') {
-    return { '+order': 'desc', '+order_by': 'label', is_public: true };
+    return {
+      '+order': 'desc',
+      '+order_by': 'label',
+      is_public: true,
+    };
   }
 
   if (variant === 'private') {

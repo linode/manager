@@ -6,7 +6,6 @@ import { List } from 'src/components/List';
 import { Typography } from 'src/components/Typography';
 import { imageFactory } from 'src/factories/images';
 import { useAllImagesQuery } from 'src/queries/images';
-import { filterImageForStackScript } from 'src/utilities/images';
 
 import { OSIcon } from '../OSIcon';
 import { ImageOption } from './ImageOption';
@@ -27,7 +26,6 @@ interface BaseProps
   > {
   anyAllOption?: boolean;
   filter?: (image: Image) => boolean;
-  filterForStackScript?: boolean;
   groupBy?: (image: Image) => string;
   label?: string;
   placeholder?: string;
@@ -53,8 +51,6 @@ export const ImageSelect = (props: Props) => {
   const {
     anyAllOption,
     filter,
-    filterForStackScript,
-    groupBy,
     label,
     multiple,
     onChange,
@@ -70,17 +66,12 @@ export const ImageSelect = (props: Props) => {
   );
 
   const _options = useMemo(() => {
+    // We can't filter out Kubernetes images using the API so we do it client side
     const filteredOptions =
       getFilteredImagesForImageSelect(images, variant) ?? [];
 
-    if (filterForStackScript) {
-      return filteredOptions.filter((image) =>
-        filterImageForStackScript(image, variant)
-      );
-    }
-
     return filter ? filteredOptions.filter(filter) : filteredOptions;
-  }, [images, filter, filterForStackScript, variant]);
+  }, [images, filter, variant]);
 
   const options = useMemo(() => {
     if (anyAllOption) {
@@ -113,9 +104,6 @@ export const ImageSelect = (props: Props) => {
   return (
     <Autocomplete
       groupBy={(option) => {
-        if (groupBy) {
-          return groupBy(option);
-        }
         if (option.id === 'any/all') {
           return '';
         }
@@ -135,13 +123,9 @@ export const ImageSelect = (props: Props) => {
             })}
             variant="h3"
           >
-            {params.group}
+            <span>{params.group}</span>
           </Typography>
-          <StyledList>
-            {React.Children.map(params.children, (child) => (
-              <li key={`${params.key}-${child}`}>{child}</li>
-            ))}
-          </StyledList>
+          <StyledList>{params.children}</StyledList>
         </li>
       )}
       renderOption={(props, option, state) => (

@@ -52,7 +52,9 @@ export const ImageOption = ({ image, isSelected, listItemProps }: Props) => {
         )}
         {flags.metadata && image.capabilities.includes('cloud-init') && (
           <Tooltip title="This image supports our Metadata service via cloud-init.">
-            <CloudInitIcon />
+            <span style={{ display: 'flex' }}>
+              <CloudInitIcon />
+            </span>
           </Tooltip>
         )}
         {isSelected && <SelectedIcon visible />}

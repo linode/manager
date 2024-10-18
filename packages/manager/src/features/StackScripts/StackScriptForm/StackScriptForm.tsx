@@ -7,7 +7,6 @@ import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { getImageGroup } from 'src/utilities/images';
 
 import {
   StyledActionsPanel,
@@ -24,20 +23,12 @@ interface TextFieldHandler {
   value: string;
 }
 
-interface Images {
-  // available to select in the dropdown
-  available: Image[];
-  // image ids that are already selected
-  selected: string[];
-}
-
 interface Props {
   currentUser: string;
   description: TextFieldHandler;
   disableSubmit: boolean;
   disabled?: boolean;
   errors?: APIError[];
-  images: Images;
   isSubmitting: boolean;
   label: TextFieldHandler;
   mode: 'create' | 'edit';
@@ -46,6 +37,7 @@ interface Props {
   onSubmit: () => void;
   revision: TextFieldHandler;
   script: TextFieldHandler;
+  selectedImages: string[];
 }
 
 const errorResources = {
@@ -61,7 +53,6 @@ export const StackScriptForm = React.memo((props: Props) => {
     disableSubmit,
     disabled,
     errors,
-    images,
     isSubmitting,
     label,
     mode,
@@ -70,6 +61,7 @@ export const StackScriptForm = React.memo((props: Props) => {
     onSubmit,
     revision,
     script,
+    selectedImages,
   } = props;
 
   const hasErrorFor = getAPIErrorFor(errorResources, errors);
@@ -105,9 +97,6 @@ export const StackScriptForm = React.memo((props: Props) => {
             value={description.value}
           />
           <ImageSelect
-            groupBy={(option) => {
-              return getImageGroup(option);
-            }}
             textFieldProps={{
               required: true,
               tooltipText:
@@ -117,13 +106,11 @@ export const StackScriptForm = React.memo((props: Props) => {
             data-qa-stackscript-target-select
             disabled={disabled}
             errorText={hasErrorFor('images')}
-            filterForStackScript
             label="Target Images"
             multiple
             onChange={onSelectChange}
             placeholder="Select image(s)"
-            selectAllLabel="Select Any/All"
-            value={images.selected}
+            value={selectedImages}
             variant="public"
           />
         </StyledGridWithTips>
