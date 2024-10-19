@@ -1,7 +1,9 @@
 import {
   DndContext,
+  MouseSensor,
   PointerSensor,
   TouchSensor,
+  closestCorners,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -144,7 +146,12 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8,
+        distance: 4,
+      },
+    }),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 4,
       },
     }),
     useSensor(TouchSensor)
@@ -166,7 +173,11 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
         aria-label={`${category} Rules List`}
         sx={{ margin: 0, width: '100%' }}
       >
-        <DndContext onDragEnd={onDragEnd} sensors={sensors}>
+        <DndContext
+          collisionDetection={closestCorners}
+          onDragEnd={onDragEnd}
+          sensors={sensors}
+        >
           <Table>
             <TableHead aria-label={`${category} Rules List Headers`}>
               <TableRow>
@@ -280,9 +291,15 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     transform,
   } = useSortable({ id });
 
-  const style = {
+  // dnd-kit styles
+  const styles = {
+    '& td': {
+      // Highly recommend to set the `touch-action: none` for all the draggable elements-
+      // in order to prevent scrolling on mobile devices.
+      // refer to https://docs.dndkit.com/api-documentation/sensors/pointer#touch-action
+      touchAction: 'none',
+    },
     cursor: isDragging ? 'grabbing' : 'grab',
-    touchAction: 'none',
     transform: CSS.Transform.toString(transform),
   };
 
@@ -297,7 +314,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       status={status}
       {...attributes}
       {...listeners}
-      sx={style}
+      sx={styles}
     >
       <TableCell aria-label={`Label: ${label}`}>
         <StyledDragIndicator aria-label="Drag indicator icon" />
