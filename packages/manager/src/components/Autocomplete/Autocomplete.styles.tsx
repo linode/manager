@@ -60,7 +60,7 @@ export const CustomPopper = (props: PopperProps) => {
       {...rest}
       modifiers={[
         { enabled: false, name: 'preventOverflow' },
-        { enabled: !placement, name: 'flip' }, // if the placement is explicitly passed, no need to flip
+        { enabled: !placement, name: 'flip' },
       ]}
       data-qa-autocomplete-popper
       data-testid="autocomplete-popper"
