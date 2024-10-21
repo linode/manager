@@ -134,11 +134,6 @@ export const DatabaseDetail = () => {
     });
   }
 
-  tabs.push({
-    routeName: `/databases/${engine}/${id}/monitor`,
-    title: 'Monitor',
-  });
-
   const getTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
       Boolean(matchPath(tab.routeName, { path: location.pathname }))
@@ -240,12 +235,6 @@ export const DatabaseDetail = () => {
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={flags.databaseResize ? 4 : 3}>
-            <CloudPulseDashboardWithFilters
-              dashboardId={2}
-              resource={database.id}
             />
           </SafeTabPanel>
         </TabPanels>
