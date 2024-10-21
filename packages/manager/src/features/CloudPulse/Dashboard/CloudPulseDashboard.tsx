@@ -73,11 +73,13 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const {
     data: dashboard,
+    isError: isDashboardApiError,
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
   const {
     data: resourceList,
+    isError: isResourceLoadingError,
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(dashboard?.service_type),
@@ -104,6 +106,22 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     getJweTokenPayload(),
     Boolean(resourceList)
   );
+
+  if (isDashboardApiError) {
+    return (
+      <Grid item xs>
+        <ErrorState errorText="Failed to load selected dashboard" />
+      </Grid>
+    );
+  }
+
+  if (isResourceLoadingError) {
+    return (
+      <Grid item xs>
+        <ErrorState errorText="Failed to load resources for generating jwe token" />
+      </Grid>
+    );
+  }
 
   if (isJweTokenError) {
     return (
