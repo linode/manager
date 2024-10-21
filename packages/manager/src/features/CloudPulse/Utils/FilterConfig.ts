@@ -2,7 +2,7 @@ import { CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
 
-const TIME_DURATION = 'Time Duration';
+const TIME_DURATION = 'Time Range';
 
 export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
@@ -28,7 +28,7 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMultiSelect: true,
         name: 'Resources',
         neededInServicePage: false,
-        placeholder: 'Select a Resource',
+        placeholder: 'Select Resources',
         priority: 2,
       },
       name: 'Resources',
@@ -98,9 +98,9 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: true,
         isMetricsFilter: true,
         isMultiSelect: true,
-        name: 'DB Cluster',
+        name: 'DB Clusters',
         neededInServicePage: false,
-        placeholder: 'Select a DB Cluster',
+        placeholder: 'Select DB Clusters',
         priority: 3,
       },
       name: 'Resources',

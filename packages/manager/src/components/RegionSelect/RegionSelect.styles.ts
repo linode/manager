@@ -68,12 +68,6 @@ export const StyledDistributedRegionBox = styled(Box, {
   },
 }));
 
-export const StyledFlagContainer = styled('div', {
-  label: 'RegionSelectFlagContainer',
-})(({ theme }) => ({
-  marginRight: theme.spacing(1),
-}));
-
 export const StyledLParentListItem = styled(ListItem, {
   label: 'RegionSelectParentListItem',
 })(() => ({

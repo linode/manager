@@ -8,19 +8,18 @@ import { CloudPulseAggregateFunction } from './CloudPulseAggregateFunction';
 
 import type { AggregateFunctionProperties } from './CloudPulseAggregateFunction';
 
-const aggregateFunctionChange = (_selectedAggregateFunction: string) => {};
 const availableAggregateFunctions = ['max', 'min', 'avg'];
 const defaultAggregateFunction = 'avg';
 
 const props: AggregateFunctionProperties = {
   availableAggregateFunctions,
   defaultAggregateFunction,
-  onAggregateFuncChange: aggregateFunctionChange,
+  onAggregateFuncChange: vi.fn(),
 };
 
 describe('Cloud Pulse Aggregate Function', () => {
   it('should check for the selected value in aggregate function dropdown', () => {
-    const { getByRole } = renderWithTheme(
+    const { getByRole, getByTestId } = renderWithTheme(
       <CloudPulseAggregateFunction {...props} />
     );
 
@@ -30,6 +29,8 @@ describe('Cloud Pulse Aggregate Function', () => {
       'value',
       convertStringToCamelCasesWithSpaces(defaultAggregateFunction)
     );
+
+    expect(getByTestId('Aggregation function')).toBeInTheDocument(); // test id for tooltip
   });
 
   it('should select the aggregate function on click', () => {

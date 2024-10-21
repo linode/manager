@@ -1,7 +1,7 @@
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import * as React from 'react';
+import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Box } from 'src/components/Box';
 import { Option } from 'src/components/EnhancedSelect/components/Option';
@@ -82,7 +82,7 @@ export const ImageOption = (props: ImageOptionProps) => {
         )}
         {flags.metadata && data.isCloudInitCompatible && (
           <Tooltip title="This image is compatible with cloud-init.">
-            <DescriptionOutlinedIcon />
+            <CloudInitIcon />
           </Tooltip>
         )}
       </Stack>

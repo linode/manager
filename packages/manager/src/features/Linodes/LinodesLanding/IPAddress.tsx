@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
-import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 import { tail } from 'src/utilities/tail';
 
@@ -90,7 +90,7 @@ export const IPAddress = (props: IPAddressProps) => {
 
   const renderCopyIcon = (ip: string) => {
     if (disabled) {
-      return PublicIpsUnassignedTooltip;
+      return PublicIPAddressesTooltip;
     }
 
     return (
