@@ -41,19 +41,16 @@ describe('Database Backups', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument()
     );
 
-    // Use a more flexible matcher for dates
     await waitFor(
       async () => {
-        const renderedBackups = await findAllByText((content, element) => {
-          // This regex matches any text that looks like a date
+        const renderedBackups = await findAllByText((content) => {
           return /\d{4}-\d{2}-\d{2}/.test(content);
         });
         expect(renderedBackups).toHaveLength(backups.length);
       },
       { timeout: 5000 }
-    ); // Increase timeout if necessary
+    );
 
-    // Verify each backup's formatted date
     await waitFor(
       () => {
         backups.forEach((backup) => {
