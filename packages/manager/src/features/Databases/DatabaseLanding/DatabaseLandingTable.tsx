@@ -38,7 +38,7 @@ const DatabaseLandingTable = ({
   orderBy,
 }: Props) => {
   const { data: events } = useInProgressEvents();
-  const { isV2GAUser } = useIsDatabasesEnabled();
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const dbPlatformType = isNewDatabase ? 'new' : 'legacy';
   const pagination = usePagination(1, preferenceKey, dbPlatformType);
@@ -146,7 +146,7 @@ const DatabaseLandingTable = ({
                 Created
               </TableSortCell>
             </Hidden>
-            {isV2GAUser && isNewDatabase && <TableCell></TableCell>}
+            {isDatabasesV2GA && isNewDatabase && <TableCell></TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
