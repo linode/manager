@@ -184,7 +184,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           <Table>
             <TableHead aria-label={`${category} Rules List Headers`}>
               <TableRow>
-                <TableCell sx={{ width: smDown ? '50%' : '28%' }}>
+                <TableCell sx={{ width: smDown ? '50%' : '26%' }}>
                   Label
                 </TableCell>
                 <Hidden lgDown>
@@ -413,12 +413,12 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     display: 'grid',
     fontSize: '.875rem',
     gridTemplateAreas: `'one two three four five six'`,
-    gridTemplateColumns: '28% 10% 15% 15% 10% 120px',
+    gridTemplateColumns: '26% 10% 15% 15% 10% 120px',
     height: '40px',
     marginTop: '10px',
     [theme.breakpoints.down('lg')]: {
       gridTemplateAreas: `'one two three four five'`,
-      gridTemplateColumns: '28% 15% 15% 10% 120px',
+      gridTemplateColumns: '26% 15% 15% 10% 120px',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateAreas: `'one two'`,
