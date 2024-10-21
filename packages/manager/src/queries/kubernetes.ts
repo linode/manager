@@ -358,6 +358,7 @@ export const useKubernetesControlPlaneACLQuery = (
 ) => {
   return useQuery<KubernetesControlPlaneACLPayload, APIError[]>({
     enabled,
+    retry: 1,
     ...kubernetesQueries.cluster(clusterId)._ctx.acl,
   });
 };

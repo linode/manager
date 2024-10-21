@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -19,6 +20,7 @@ import {
   useKubernetesControlPlaneACLMutation,
   useKubernetesControlPlaneACLQuery,
 } from 'src/queries/kubernetes';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 
@@ -32,6 +34,7 @@ interface Props {
 }
 
 export const KubeControlPlaneACLDrawer = (props: Props) => {
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
   const {
     closeDrawer,
     clusterId,
@@ -137,6 +140,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
       }
+      scrollErrorIntoViewV2(formContainerRef);
     }
   };
 
@@ -154,26 +158,26 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
         loading={isLoadingKubernetesACL}
         title={clusterLabel}
       >
-        <form onSubmit={handleSubmit(updateCluster)}>
+        <form onSubmit={handleSubmit(updateCluster)} ref={formContainerRef}>
           {errors.root?.message && (
             <Notice spacingTop={8} variant="error">
               {errors.root.message}
             </Notice>
           )}
           <Stack sx={{ marginTop: 3 }}>
-            <Typography sx={{ width: '90%' }} variant="body1">
+            <StyledTypography variant="body1">
               Control Plane ACL secures network access to your LKE cluster's
               control plane. When not enabled, any public IP address can be used
               to access your control plane. When enabled, all network access is
               denied except for the IP addresses and CIDR ranges defined on the
               ACL.
-            </Typography>
+            </StyledTypography>
             <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
             <Typography variant="h3">Control Plane ACL</Typography>
-            <Typography sx={{ width: '90%' }} variant="body1">
+            <StyledTypography variant="body1">
               Once enabled, all network access is denied except for the IP
               addresses and CIDR ranges defined on the ACL.
-            </Typography>
+            </StyledTypography>
             <Box sx={{ marginTop: 1 }}>
               <Controller
                 render={({ field }) => (
@@ -197,13 +201,13 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             {clusterMigrated && (
               <>
                 <Typography variant="h3">Revision ID</Typography>
-                <Typography sx={{ width: '90%' }} variant="body1">
+                <StyledTypography variant="body1">
                   A unique identifing string for this particular revision to the
                   ACL, used by clients to track events related to ACL update
                   requests and enforcement. This defaults to a randomly
                   generated string but can be edited if you prefer to specify
                   your own string to use for tracking this change.
-                </Typography>
+                </StyledTypography>
                 <Controller
                   render={({ field, fieldState }) => (
                     <TextField
@@ -221,11 +225,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               </>
             )}
             <Typography variant="h3">Addresses</Typography>
-            <Typography sx={{ marginBottom: 1, width: '90%' }} variant="body1">
+            <StyledTypography sx={{ marginBottom: 1 }} variant="body1">
               A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This
               cluster's control plane will only be accessible from IP addresses
               within this list.
-            </Typography>
+            </StyledTypography>
             {errors.acl?.message && (
               <Notice spacingBottom={12} spacingTop={8} variant="error">
                 {errors.acl.message}
@@ -279,11 +283,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             />
             {!clusterMigrated && (
               <Notice spacingTop={24} variant="warning">
-                <Typography sx={{ width: '90%' }}>
+                <StyledTypography>
                   Control Plane ACL has not yet been installed on this cluster.
                   During installation, it may take up to 15 minutes for the
                   access control list to be fully enforced.
-                </Typography>
+                </StyledTypography>
               </Notice>
             )}
           </Stack>
@@ -292,3 +296,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
     </Drawer>
   );
 };
+
+const StyledTypography = styled(Typography, { label: 'StyledTypography' })({
+  width: '90%',
+});

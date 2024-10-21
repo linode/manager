@@ -228,12 +228,12 @@ export const getKubernetesTypes = (params?: Params) =>
  *
  * Return control plane access list about a single Kubernetes cluster
  */
-export const getKubernetesClusterControlPlaneACL = (clusterID: number) =>
+export const getKubernetesClusterControlPlaneACL = (clusterId: number) =>
   Request<KubernetesControlPlaneACLPayload>(
     setMethod('GET'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID
+        clusterId
       )}/control_plane_acl`
     )
   );
