@@ -15,7 +15,6 @@ import { RegionOption } from './RegionOption';
 import {
   StyledAutocompleteContainer,
   StyledDistributedRegionBox,
-  StyledFlagContainer,
   sxDistributedRegionIcon,
 } from './RegionSelect.styles';
 import {
@@ -156,9 +155,7 @@ export const RegionSelect = <
             endAdornment: EndAdornment,
             required,
             startAdornment: selectedRegion && (
-              <StyledFlagContainer>
-                <Flag country={selectedRegion?.country} />
-              </StyledFlagContainer>
+              <Flag country={selectedRegion?.country} mr={1} />
             ),
           },
           tooltipText,

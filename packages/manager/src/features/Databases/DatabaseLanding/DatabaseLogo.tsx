@@ -17,7 +17,7 @@ interface Props {
 export const DatabaseLogo = ({ sx }: Props) => {
   const theme = useTheme();
 
-  const { isV2GAUser } = useIsDatabasesEnabled();
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
   return (
     <Box
       display="flex"
@@ -25,7 +25,7 @@ export const DatabaseLogo = ({ sx }: Props) => {
       sx={sx ? sx : { margin: '20px' }}
     >
       <Typography sx={{ display: 'inline-block', textAlign: 'center' }}>
-        {!isV2GAUser && (
+        {!isDatabasesV2GA && (
           <BetaChip
             sx={{
               backgroundColor:
@@ -42,7 +42,7 @@ export const DatabaseLogo = ({ sx }: Props) => {
           sx={{
             color: theme.palette.mode === 'light' ? theme.color.headline : '',
             display: 'flex',
-            marginTop: !isV2GAUser ? theme.spacing(1) : '',
+            marginTop: !isDatabasesV2GA ? theme.spacing(1) : '',
           }}
           component="span"
         >

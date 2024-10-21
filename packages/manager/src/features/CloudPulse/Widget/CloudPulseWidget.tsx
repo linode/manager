@@ -13,7 +13,11 @@ import {
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
 import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
-import { convertValueToUnit, formatToolTip } from '../Utils/unitConversion';
+import {
+  convertValueToUnit,
+  formatToolTip,
+  generateCurrentUnit,
+} from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
 import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
@@ -140,7 +144,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     widget: widgetProp,
   } = props;
   const flags = useFlags();
-  const scaledWidgetUnit = React.useRef(unit === 'Bytes' ? 'B' : unit);
+  const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
 

@@ -45,6 +45,7 @@ export const CloudPulseAggregateFunction = React.memo(
         };
       }
     );
+
     const defaultValue =
       availableAggregateFunc.find(
         (obj) => obj.label === defaultAggregateFunction
