@@ -1,4 +1,4 @@
-import type { Doc, OCA } from './features/OneClickApps/types';
+import type { OCA } from './features/OneClickApps/types';
 import type { TPAProvider } from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from 'src/components/Notice/Notice';
 
@@ -74,8 +74,6 @@ interface gpuV2 {
   planDivider: boolean;
 }
 
-type OneClickApp = Record<string, string>;
-
 interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
   key: string;
   link: string;
@@ -114,8 +112,6 @@ export interface Flags {
   metadata: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
-  oneClickApps: OneClickApp;
-  oneClickAppsDocsOverride: Record<string, Doc[]>;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
