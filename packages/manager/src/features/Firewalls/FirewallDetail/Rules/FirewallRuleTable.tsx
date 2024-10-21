@@ -193,7 +193,6 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                 <Hidden smDown>
                   <TableCell sx={{ width: '15%' }}>Port Range</TableCell>
                   <TableCell sx={{ width: '15%' }}>
-                    {' '}
                     {capitalize(addressColumnLabel)}
                   </TableCell>
                 </Hidden>

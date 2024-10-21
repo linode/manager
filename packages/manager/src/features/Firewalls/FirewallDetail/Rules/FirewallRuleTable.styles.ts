@@ -29,10 +29,7 @@ export const StyledTableRow = styled(TableRow, {
     // Highlight the row if it's been modified or reordered. ruleIndex is the current index,
     // so if it doesn't match the original index we know that the rule has been moved.
     ...(status === 'PENDING_DELETION' || disabled
-      ? {
-          '& td': { color: '#D2D3D4' },
-          backgroundColor: 'rgba(247, 247, 247, 0.25)',
-        }
+      ? { backgroundColor: theme.color.grey7 }
       : {}),
     ...(status === 'MODIFIED' || status === 'NEW' || originalIndex !== ruleIndex
       ? { backgroundColor: theme.bg.lightBlue1 }
@@ -51,15 +48,10 @@ export const StyledInnerBox = styled(Box, { label: 'StyledInnerBox' })(
 
 export const StyledFirewallRuleButton = styled('button', {
   label: 'StyledFirewallRuleButton',
-})<StyledFirewallRuleButtonProps>(({ status, theme }) => ({
+})<StyledFirewallRuleButtonProps>(() => ({
   backgroundColor: 'transparent',
   border: 'none',
   cursor: 'pointer',
-
-  // Conditional styles
-  ...(status !== 'PENDING_DELETION'
-    ? { backgroundColor: theme.bg.lightBlue1 }
-    : {}),
 }));
 
 export const StyledFirewallTableButton = styled(Button, {
