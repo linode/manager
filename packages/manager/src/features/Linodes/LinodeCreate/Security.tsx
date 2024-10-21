@@ -1,4 +1,3 @@
-import { inputMaxWidth } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -56,7 +55,11 @@ export const Security = () => {
         Security
       </Typography>
       <React.Suspense
-        fallback={<Skeleton sx={{ height: '89px', maxWidth: inputMaxWidth }} />}
+        fallback={
+          <Skeleton
+            sx={(theme) => ({ height: '89px', maxWidth: theme.inputMaxWidth })}
+          />
+        }
       >
         <Controller
           render={({ field, fieldState }) => (
