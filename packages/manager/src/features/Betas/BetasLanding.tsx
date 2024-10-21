@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
@@ -10,7 +11,7 @@ import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
 
 import type { AccountBeta, Beta } from '@linode/api-v4';
 
-const BetasLanding = () => {
+export const BetasLanding = () => {
   const {
     data: accountBetasRequest,
     error: accountBetasErrors,
@@ -49,18 +50,21 @@ const BetasLanding = () => {
       <Stack spacing={2}>
         <BetaDetailsList
           betas={active}
+          dataQA="enrolled-beta"
           errors={accountBetasErrors}
           isLoading={areAccountBetasLoading}
           title="Currently Enrolled Betas"
         />
         <BetaDetailsList
           betas={available}
+          dataQA="available-beta"
           errors={betasErrors}
           isLoading={areBetasLoading}
           title="Available & Upcoming Betas"
         />
         <BetaDetailsList
           betas={historical}
+          dataQA="historical-beta"
           errors={accountBetasErrors}
           isLoading={areAccountBetasLoading}
           title="Beta Participation History"
@@ -70,4 +74,6 @@ const BetasLanding = () => {
   );
 };
 
-export default BetasLanding;
+export const betasLandingLazyRoute = createLazyRoute('/betas')({
+  component: BetasLanding,
+});
