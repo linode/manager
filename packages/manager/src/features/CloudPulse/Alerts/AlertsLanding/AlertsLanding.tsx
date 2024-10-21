@@ -3,11 +3,13 @@ import {
   Redirect,
   Route,
   Switch,
+  useHistory,
   useLocation,
   useRouteMatch,
 } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
+import { Button } from 'src/components/Button/Button';
 import { Paper } from 'src/components/Paper';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { Tabs } from 'src/components/Tabs/Tabs';
@@ -21,6 +23,7 @@ export const AlertsLanding = React.memo(() => {
   const flags = useFlags();
   const { url } = useRouteMatch();
   const { pathname } = useLocation();
+  const history = useHistory();
   const alertTabs = React.useMemo<EnabledAlertTab[]>(
     () => [
       {
@@ -58,6 +61,19 @@ export const AlertsLanding = React.memo(() => {
           }}
         >
           <TabLinkList tabs={accessibleTabs} />
+          {pathname === `${url}/definitions` && (
+            <Box>
+              <Button
+                onClick={(_) => {
+                  history.push(`${url}/definitions/create`);
+                }}
+                buttonType="primary"
+                variant="contained"
+              >
+                Create
+              </Button>
+            </Box>
+          )}
         </Box>
         <Switch>
           <Route

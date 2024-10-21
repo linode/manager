@@ -64,7 +64,7 @@ export const CloudPulseTabs = () => {
     [accessibleTabs, pathname]
   );
   return (
-    <Tabs index={activeTabIndex} marginTop={0}>
+    <Tabs index={activeTabIndex} margintop={0}>
       <TabLinkList tabs={accessibleTabs} />
 
       <React.Suspense fallback={<SuspenseLoader />}>
