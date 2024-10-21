@@ -12,14 +12,13 @@ const props = {
 };
 
 describe('NodeBalancerActionMenu', () => {
-  it('renders the NodeBalancerActionMenu', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
-      <NodeBalancerActionMenu {...props} />
-    );
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
 
-    // Open the Action Menu
-    await userEvent.click(
-      getByLabelText(`Action menu for NodeBalancer ${props.nodeBalancerId}`)
+  it('renders the NodeBalancerActionMenu', () => {
+    const { getByText } = renderWithTheme(
+      <NodeBalancerActionMenu {...props} />
     );
 
     expect(getByText('Configurations')).toBeVisible();
@@ -28,13 +27,8 @@ describe('NodeBalancerActionMenu', () => {
   });
 
   it('triggers the action to delete the NodeBalancer', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <NodeBalancerActionMenu {...props} />
-    );
-
-    // Open the Action Menu
-    await userEvent.click(
-      getByLabelText(`Action menu for NodeBalancer ${props.nodeBalancerId}`)
     );
 
     const deleteButton = getByText('Delete');

@@ -32,7 +32,7 @@ describe('Description List', () => {
   it('has it title bolded', () => {
     const { getByText } = renderWithTheme(<DescriptionList items={items} />);
     const title = getByText('Random title');
-    expect(title).toHaveStyle('font-family: LatoWebBold, sans-serif');
+    expect(title).toHaveStyle('font-family: "LatoWebBold",sans-serif');
   });
 
   it('renders a column by default', () => {

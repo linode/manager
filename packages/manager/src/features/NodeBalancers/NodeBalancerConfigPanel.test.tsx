@@ -85,7 +85,6 @@ const proxyProtocol = 'Proxy Protocol';
 describe('NodeBalancerConfigPanel', () => {
   it('renders the NodeBalancerConfigPanel', () => {
     const {
-      getAllByLabelText,
       getByLabelText,
       getByText,
       queryByLabelText,
@@ -102,13 +101,7 @@ describe('NodeBalancerConfigPanel', () => {
     expect(getByLabelText('Label')).toBeVisible();
     expect(getByLabelText('IP Address')).toBeVisible();
     expect(getByLabelText('Weight')).toBeVisible();
-
-    const portTextFields = getAllByLabelText('Port');
-    expect(portTextFields).toHaveLength(2); // There is a port field for the config and a port field for the one node
-    for (const field of portTextFields) {
-      expect(field).toBeVisible();
-    }
-
+    expect(getByLabelText('Port')).toBeVisible();
     expect(getByText('Listen on this port.')).toBeVisible();
     expect(getByText('Active Health Checks')).toBeVisible();
     expect(

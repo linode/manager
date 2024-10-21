@@ -35,7 +35,7 @@ describe('omittedProps utility', () => {
 
     expect(component).not.toHaveAttribute('extraProp');
     expect(component).not.toHaveAttribute('anotherProp');
-    expect(component).toHaveStyle('color: red');
+    expect(component).toHaveStyle('color: rgb(255, 0, 0)');
   });
 });
 

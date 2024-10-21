@@ -11,8 +11,8 @@ describe('Notice Component', () => {
     const notice = container.firstChild;
 
     expect(notice).toHaveStyle('margin-bottom: 24px');
-    expect(notice).toHaveStyle('margin-left: 0px');
-    expect(notice).toHaveStyle('margin-top: 0px');
+    expect(notice).toHaveStyle('margin-left: 0');
+    expect(notice).toHaveStyle('margin-top: 0');
   });
 
   it('renders with text', () => {

@@ -31,7 +31,7 @@ describe('Avatar', () => {
     const avatarStyles = getComputedStyle(avatar);
 
     expect(getByTestId('avatar-letter')).toHaveTextContent('M');
-    expect(avatarStyles.backgroundColor).toBe('#0174bc'); // theme.color.primary.dark (#0174bc)
+    expect(avatarStyles.backgroundColor).toBe('rgb(1, 116, 188)'); // theme.color.primary.dark (#0174bc)
   });
 
   it('should render a background color from props', () => {
@@ -48,8 +48,8 @@ describe('Avatar', () => {
     const avatarTextStyles = getComputedStyle(avatarText);
 
     // Confirm background color contrasts with text color.
-    expect(avatarStyles.backgroundColor).toBe('#000000'); // black
-    expect(avatarTextStyles.color).toBe('#fff'); // white
+    expect(avatarStyles.backgroundColor).toBe('rgb(0, 0, 0)'); // black
+    expect(avatarTextStyles.color).toBe('rgb(255, 255, 255)'); // white
   });
 
   it('should render the first letter of username from props', async () => {

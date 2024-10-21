@@ -20,19 +20,11 @@ describe('NodeBalancerTableRow', () => {
     vi.resetAllMocks();
   });
 
-  it('renders the NodeBalancer table row', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
-      <NodeBalancerTableRow {...props} />
-    );
+  it('renders the NodeBalancer table row', () => {
+    const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
     expect(getByText('nodebalancer-id-1')).toBeVisible();
     expect(getByText('0.0.0.0')).toBeVisible();
-
-    // Open the Action Menu
-    await userEvent.click(
-      getByLabelText(`Action menu for NodeBalancer ${props.id}`)
-    );
-
     expect(getByText('Configurations')).toBeVisible();
     expect(getByText('Settings')).toBeVisible();
     expect(getByText('Delete')).toBeVisible();

@@ -212,9 +212,9 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        wrapper.getByRole('checkbox', {
-          name: 'Auto-assign a VPC IPv4 address for this Linode in the VPC',
-        })
+        wrapper.getByLabelText(
+          'Auto-assign a VPC IPv4 address for this Linode in the VPC'
+        )
       ).not.toBeChecked();
       // Using regex here to account for the "(required)" indicator.
       expect(wrapper.getByLabelText(/^VPC IPv4.*/)).toHaveValue('10.0.4.3');
@@ -244,9 +244,7 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        wrapper.getByRole('checkbox', {
-          name: 'Assign a public IPv4 address for this Linode',
-        })
+        wrapper.getByLabelText('Assign a public IPv4 address for this Linode')
       ).toBeChecked();
     });
   });

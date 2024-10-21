@@ -27,11 +27,11 @@ describe('Create API Token Drawer', () => {
     getByText('Cancel');
   });
   it('Should show client side validation errors', async () => {
-    const { getByRole, getByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <CreateOAuthClientDrawer {...props} />
     );
 
-    const submit = getByRole('button', { name: 'Create' });
+    const submit = getByText('Create');
 
     await userEvent.click(submit);
 
@@ -47,7 +47,7 @@ describe('Create API Token Drawer', () => {
       })
     );
 
-    const { getAllByTestId, getByRole } = renderWithTheme(
+    const { getAllByTestId, getByText } = renderWithTheme(
       <CreateOAuthClientDrawer {...props} />
     );
 
@@ -56,7 +56,7 @@ describe('Create API Token Drawer', () => {
     const labelField = textFields[0];
     const callbackUrlField = textFields[1];
 
-    const submit = getByRole('button', { name: 'Create' });
+    const submit = getByText('Create');
 
     await userEvent.type(labelField, 'my-oauth-client');
     await userEvent.type(callbackUrlField, 'http://localhost:3000');

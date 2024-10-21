@@ -24,9 +24,7 @@ describe('Database Create', () => {
     const { getAllByTestId, getAllByText } = renderWithTheme(
       <DatabaseCreate />
     );
-    await waitForElementToBeRemoved(getAllByTestId(loadingTestId), {
-      timeout: 10_000,
-    });
+    await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
 
     getAllByText('Cluster Label');
     getAllByText('Database Engine');

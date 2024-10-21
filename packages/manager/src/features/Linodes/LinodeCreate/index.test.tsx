@@ -23,10 +23,10 @@ describe('Linode Create', () => {
   });
 
   it('Should not render the region select when creating from a backup', () => {
-    const { queryByLabelText } = renderWithTheme(<LinodeCreate />, {
+    const { queryByText } = renderWithTheme(<LinodeCreate />, {
       MemoryRouter: { initialEntries: ['/linodes/create?type=Backups'] },
     });
 
-    expect(queryByLabelText('Region')).toBeNull();
+    expect(queryByText('Region')).toBeNull();
   });
 });
