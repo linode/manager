@@ -293,7 +293,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             sx={{
               justifyContent: 'start',
               m: theme.spacing(0),
-              marginBottom: showFilter ? theme.spacing(1) : theme.spacing(0),
+              marginBottom: theme.spacing(showFilter ? 1 : 0),
               minHeight: 'auto',
               minWidth: 'auto',
               p: theme.spacing(0),
