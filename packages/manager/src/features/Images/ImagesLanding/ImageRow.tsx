@@ -101,18 +101,13 @@ export const ImageRow = (props: Props) => {
         {capabilities.includes('cloud-init') &&
         flags.imageServiceGen2 &&
         flags.imageServiceGen2Ga ? (
-          <Stack
-            alignItems="center"
-            direction="row"
-            gap={1}
-            justifyContent="space-between"
-          >
-            {label}
+          <Stack alignItems="center" direction="row" gap={2}>
             <Tooltip title="This image supports our Metadata service via cloud-init.">
               <div style={{ display: 'flex' }}>
                 <CloudInitIcon />
               </div>
             </Tooltip>
+            {label}
           </Stack>
         ) : (
           label
