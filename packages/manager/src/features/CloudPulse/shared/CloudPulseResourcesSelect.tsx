@@ -54,7 +54,11 @@ export const CloudPulseResourcesSelect = React.memo(
       CloudPulseResources[]
     >();
 
-    // here we track the open state with ref to avoid unwanted re-renders, as we are any re-rendering while updating the selected values itself
+    /**
+     * This is used to track the open state of the autocomplete and useRef optimizes the re-renders that this component goes through and it is used for below
+     * When the autocomplete is already closed, we should publish the resources on clear action and deselect action as well since onclose will not be triggered at that time
+     * When the autocomplete is open, we should publish any resources on clear action until the autocomplete is close
+     */
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {

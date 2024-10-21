@@ -187,9 +187,13 @@ export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDatabaseTypesQuery = (filter: Filter = {}) =>
+export const useDatabaseTypesQuery = (
+  filter: Filter = {},
+  enabled: boolean = true
+) =>
   useQuery<DatabaseType[], APIError[]>({
     ...databaseQueries.types._ctx.all(filter),
+    enabled,
   });
 
 export const useDatabaseCredentialsQuery = (

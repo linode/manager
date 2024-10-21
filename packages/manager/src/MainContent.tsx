@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -7,7 +8,6 @@ import Logo from 'src/assets/logo/akamai-logo.svg';
 import { Box } from 'src/components/Box';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
-import { NotFound } from 'src/components/NotFound';
 import { SideMenu } from 'src/components/PrimaryNav/SideMenu';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -19,7 +19,6 @@ import {
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   useMutatePreferences,
   usePreferences,
@@ -34,8 +33,10 @@ import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { useAccountSettings } from './queries/account/settings';
 import { useProfile } from './queries/profile/profile';
+import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';
+import type { AnyRouter } from '@tanstack/react-router';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -181,7 +182,6 @@ const AccountActivationLanding = React.lazy(
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
-const BetaRoutes = React.lazy(() => import('src/features/Betas'));
 const VPC = React.lazy(() => import('src/features/VPCs'));
 const PlacementGroups = React.lazy(() =>
   import('src/features/PlacementGroups').then((module) => ({
@@ -197,7 +197,6 @@ const CloudPulse = React.lazy(() =>
 
 export const MainContent = () => {
   const { classes, cx } = useStyles();
-  const flags = useFlags();
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
@@ -353,9 +352,6 @@ export const MainContent = () => {
                           {isDatabasesEnabled && (
                             <Route component={Databases} path="/databases" />
                           )}
-                          {flags.selfServeBetas && (
-                            <Route component={BetaRoutes} path="/betas" />
-                          )}
                           <Route component={VPC} path="/vpcs" />
                           {/* {isACLPEnabled && ( */}
                             <Route
@@ -366,7 +362,17 @@ export const MainContent = () => {
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />
-                          <Route component={NotFound} />
+                          {/**
+                           * This is the catch all routes that allows TanStack Router to take over.
+                           * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
+                           * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
+                           * This is a temporary solution until we are ready to fully migrate to TanStack Router.
+                           */}
+                          <Route path="*">
+                            <RouterProvider
+                              router={migrationRouter as AnyRouter}
+                            />
+                          </Route>
                         </Switch>
                       </React.Suspense>
                     </Grid>
