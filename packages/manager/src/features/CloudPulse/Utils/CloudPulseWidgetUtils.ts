@@ -1,8 +1,9 @@
-import { isToday } from 'src/utilities/isToday';
+import { Alias } from '@linode/design-language-system';
+
 import { getMetrics } from 'src/utilities/statMetrics';
 
-import { COLOR_MAP } from './CloudPulseWidgetColorPalette';
 import {
+  convertValueToUnit,
   formatToolTip,
   generateUnitByBaseUnit,
   transformData,
@@ -13,16 +14,17 @@ import {
 } from './utils';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { LegendRow } from '../Widget/CloudPulseWidget';
 import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
+  DataSet,
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { DataSet } from 'src/components/LineGraph/LineGraph';
+import type { AreaProps } from 'src/components/AreaChart/AreaChart';
+import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
@@ -57,7 +59,7 @@ interface LabelNameOptionsProps {
   unit: string;
 }
 
-interface graphDataOptionsProps {
+interface GraphDataOptionsProps {
   /**
    * flags associated with metricsList
    */
@@ -143,11 +145,33 @@ interface DimensionNameProperties {
   resources: CloudPulseResources[];
 }
 
+interface GraphData {
+  /**
+   * array of area props to be shown on graph
+   */
+  areas: AreaProps[];
+
+  /**
+   * plots to be shown of each dimension
+   */
+  dimensions: DataSet[];
+
+  /**
+   * legends rows available for each dimension
+   */
+  legendRowsData: MetricsDisplayRow[];
+
+  /**
+   * maximum possible rolled up unit for the data
+   */
+  unit: string;
+}
+
 /**
  *
  * @returns parameters which will be necessary to populate graph & legends
  */
-export const generateGraphData = (props: graphDataOptionsProps) => {
+export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   const {
     flags,
     label,
@@ -156,28 +180,24 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
     serviceType,
     status,
     unit,
-    widgetChartType,
-    widgetColor,
   } = props;
-
-  const dimensions: DataSet[] = [];
-  const legendRowsData: LegendRow[] = [];
-
+  const legendRowsData: MetricsDisplayRow[] = [];
   // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-  const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
-  let today = false;
-
+  const dimension: { [timestamp: number]: { [label: string]: number } } = {};
+  const areas: AreaProps[] = [];
+  const colors = Object.values(Alias.Chart.Categorical);
   if (status === 'success') {
     metricsList?.data?.result?.forEach(
       (graphData: CloudPulseMetricsList, index) => {
         if (!graphData) {
           return;
         }
+
         const transformedData = {
           metric: graphData.metric,
           values: transformData(graphData.values, unit),
         };
-        const color = colors[index];
+        // const color = colors[index];
         const { end, start } = convertTimeDurationToStartAndEndTimeRange({
           unit: 'min',
           value: 30,
@@ -194,33 +214,57 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
           serviceType,
           unit,
         };
+        const labelName = getLabelName(labelOptions);
+        const data = seriesDataFormatter(transformedData.values, start, end);
+        const color = colors[index].Primary;
+        areas.push({
+          color,
+          dataKey: labelName,
+        });
 
-        const dimension = {
-          backgroundColor: color,
-          borderColor: color,
-          data: seriesDataFormatter(transformedData.values, start, end),
-          fill: widgetChartType === 'area',
-          label: getLabelName(labelOptions),
-        };
+        data.forEach((dataPoint) => {
+          const timestamp = dataPoint[0];
+          const value = dataPoint[1];
+          if (value !== null) {
+            dimension[timestamp] = {
+              ...dimension[timestamp],
+              [labelName]: value,
+            };
+          }
+        });
         // construct a legend row with the dimension
-        const legendRow = {
-          data: getMetrics(dimension.data as number[][]),
+        const legendRow: MetricsDisplayRow = {
+          data: getMetrics(data as number[][]),
           format: (value: number) => formatToolTip(value, unit),
           legendColor: color,
-          legendTitle: dimension.label,
+          legendTitle: labelName,
         };
         legendRowsData.push(legendRow);
-        dimensions.push(dimension);
-        today ||= isToday(start, end);
       }
     );
   }
 
+  const maxUnit = generateMaxUnit(legendRowsData, unit);
+  const dimensions = Object.entries(dimension).map(
+    ([timestamp, resource]): DataSet => {
+      const rolledUpData = Object.entries(resource).reduce(
+        (previousValue, newValue) => {
+          return {
+            ...previousValue,
+            [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
+          };
+        },
+        {}
+      );
+
+      return { timestamp: Number(timestamp), ...rolledUpData };
+    }
+  );
   return {
+    areas,
     dimensions,
     legendRowsData,
-    today,
-    unit: generateMaxUnit(legendRowsData, unit),
+    unit: maxUnit,
   };
 };
 
@@ -230,7 +274,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
  * @param unit base unit of the values
  * @returns maximum possible rolled up unit based on the unit
  */
-const generateMaxUnit = (legendRowsData: LegendRow[], unit: string) => {
+const generateMaxUnit = (legendRowsData: MetricsDisplayRow[], unit: string) => {
   const maxValue = Math.max(
     0,
     ...legendRowsData?.map((row) => row?.data.max ?? 0)
@@ -317,20 +361,6 @@ export const mapResourceIdToName = (
     (resourceObj) => String(resourceObj.id) === id
   );
   return resourcesObj?.label ?? id ?? '';
-};
-
-/**
- *
- * @param data data set to be checked for empty
- * @returns true if data is not empty or contains all the null values otherwise false
- */
-export const isDataEmpty = (data: DataSet[]): boolean => {
-  return data.every(
-    (thisSeries) =>
-      thisSeries.data.length === 0 ||
-      // If we've padded the data, every y value will be null
-      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
-  );
 };
 
 /**
