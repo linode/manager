@@ -81,13 +81,8 @@ x-e2e-runners:
     context: .
     dockerfile: ./packages/manager/Dockerfile
     target: e2e
-  # depends_on:
-  #   web:
-  #     condition: service_healthy
   env_file: ./packages/manager/.env
   volumes: *default-volumes
-  # TODO Stop using entrypoint, use CMD instead.
-  # (Or just make `yarn` the entrypoint, but either way stop forcing `cy:e2e`).
   entrypoint: 'yarn'
 
 services:
