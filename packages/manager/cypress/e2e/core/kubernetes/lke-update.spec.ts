@@ -1,10 +1,14 @@
 import {
+  accountFactory,
   kubernetesClusterFactory,
   nodePoolFactory,
   kubeLinodeFactory,
   linodeFactory,
+  kubernetesControlPlaneACLFactory,
+  kubernetesControlPlaneACLOptionsFactory,
 } from 'src/factories';
 import { extendType } from 'src/utilities/extendType';
+import { mockGetAccount } from 'support/intercepts/account';
 import { latestKubernetesVersion } from 'support/constants/lke';
 import {
   mockGetCluster,
@@ -21,6 +25,10 @@ import {
   mockGetDashboardUrl,
   mockGetApiEndpoints,
   mockGetClusters,
+  mockUpdateControlPlaneACL,
+  mockGetControlPlaneACL,
+  mockUpdateControlPlaneACLError,
+  mockGetControlPlaneACLError,
 } from 'support/intercepts/lke';
 import {
   mockGetLinodeType,
@@ -33,6 +41,7 @@ import { randomIp, randomLabel } from 'support/util/random';
 import { getRegionById } from 'support/util/regions';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { randomString } from 'support/util/random';
 
 const mockNodePools = nodePoolFactory.buildList(2);
 
@@ -1338,6 +1347,569 @@ describe('LKE cluster updates', () => {
 
       // Confirm total price is still $0 in Kube Specs.
       cy.findByText('$0.00/month').should('be.visible');
+    });
+  });
+});
+
+// NOTE TO SELF COPIES MAY CHANGE (but the structure will remain the same)
+describe('LKE ACL updates', () => {
+  const mockCluster = kubernetesClusterFactory.build();
+  const mockRevisionId = randomString(20);
+
+  it('does not show ACL without the LKE ACL capability', () => {
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: [],
+      })
+    ).as('getAccount');
+
+    mockGetCluster(mockCluster).as('getCluster');
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getAccount', '@getCluster']);
+
+    cy.contains('Control Plane ACL').should('not.exist');
+  });
+
+  describe('with LKE ACL account capability', () => {
+    beforeEach(() => {
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['LKE Network Access Control List (IP ACL)'],
+        })
+      ).as('getAccount');
+    });
+
+    /**
+     * - Confirms ACL can be enabled from the summary page
+     * - Confirms revision ID can be updated
+     * - Confirms both IPv4 and IPv6 can be updated and that summary page and drawer updates as a result
+     */
+    it('can enable ACL on an LKE cluster with ACL pre-installed and edit IPs', () => {
+      const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
+        enabled: false,
+        addresses: { ipv4: ['10.0.3.0/24'], ipv6: undefined },
+      });
+      const mockUpdatedACLOptions1 = kubernetesControlPlaneACLOptionsFactory.build(
+        {
+          enabled: true,
+          'revision-id': mockRevisionId,
+          addresses: { ipv4: ['10.0.0.0/24'], ipv6: undefined },
+        }
+      );
+      const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
+        acl: mockACLOptions,
+      });
+      const mockUpdatedControlPlaneACL1 = kubernetesControlPlaneACLFactory.build(
+        {
+          acl: mockUpdatedACLOptions1,
+        }
+      );
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetControlPlaneACL(mockCluster.id, mockControlPaneACL).as(
+        'getControlPlaneACL'
+      );
+      mockUpdateControlPlaneACL(mockCluster.id, mockUpdatedControlPlaneACL1).as(
+        'updateControlPlaneACL'
+      );
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getAccount', '@getCluster', '@getControlPlaneACL']);
+
+      // confirm summary panel
+      cy.contains('Control Plane ACL').should('be.visible');
+      ui.button
+        .findByTitle('Enable')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle('Control Plane ACL')
+        .should('be.visible')
+        .within(() => {
+          // Confirm submit button is disabled if form has not been changed
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('not.be.enabled');
+
+          cy.contains(
+            "Control Plane ACL secures network access to your LKE cluster's control plane. When not enabled, any public IP address can be used to access your control plane. When enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL."
+          ).should('be.visible');
+
+          // confirm Enabled section and toggle on 'Enabled'
+          cy.contains('Control Plane ACL').should('be.visible');
+          cy.contains(
+            'Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
+          ).should('be.visible');
+          cy.findByText('Enable Control Plane ACL');
+          ui.toggle
+            .find()
+            .should('have.attr', 'data-qa-toggle', 'false')
+            .should('be.visible')
+            .click();
+
+          // confirm submit button is now enabled
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('be.enabled');
+
+          // confirm Revision ID section and edit Revision ID
+          cy.findAllByText('Revision ID').should('have.length', 2);
+          cy.contains(
+            'A unique identifing string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
+          ).should('be.visible');
+          cy.findByLabelText('Revision ID').should(
+            'have.value',
+            mockACLOptions['revision-id']
+          );
+          cy.findByLabelText('Revision ID').clear().type(mockRevisionId);
+
+          // confirm Addresses section
+          cy.findByText('Addresses').should('be.visible');
+          cy.findByText(
+            "A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This cluster's control plane will only be accessible from IP addresses within this list."
+          ).should('be.visible');
+          cy.findByText('IPv4 Addresses or CIDRs').should('be.visible');
+          cy.findByText('Add IPv4 Address')
+            .should('be.visible')
+            .should('be.enabled');
+          // confirm current IPv4 value and enter new IP
+          cy.findByDisplayValue('10.0.3.0/24')
+            .should('be.visible')
+            .click()
+            .clear()
+            .type('10.0.0.0/24');
+          cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
+          cy.findByPlaceholderText('::/0').should('be.visible');
+          cy.findByText('Add IPv6 Address')
+            .should('be.visible')
+            .should('be.enabled');
+
+          // submit
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@updateControlPlaneACL']);
+
+      // confirm summary panel updates
+      cy.contains('Control Plane ACL').should('be.visible');
+      cy.findByText('Enable').should('not.exist');
+      ui.button
+        .findByTitle('Enabled (1 IP Address)')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // update mocks
+      const mockUpdatedACLOptions2 = kubernetesControlPlaneACLOptionsFactory.build(
+        {
+          enabled: true,
+          'revision-id': mockRevisionId,
+          addresses: {
+            ipv4: ['10.0.0.0/24'],
+            ipv6: [
+              '8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e',
+              'f4a2:b849:4a24:d0d9:15f0:704b:f943:718f',
+            ],
+          },
+        }
+      );
+      const mockUpdatedControlPlaneACL2 = kubernetesControlPlaneACLFactory.build(
+        {
+          acl: mockUpdatedACLOptions2,
+        }
+      );
+      mockUpdateControlPlaneACL(mockCluster.id, mockUpdatedControlPlaneACL2).as(
+        'updateControlPlaneACL'
+      );
+
+      // confirm data within drawer is updated and edit IPs again
+      ui.drawer
+        .findByTitle('Control Plane ACL')
+        .should('be.visible')
+        .within(() => {
+          // Confirm submit button is disabled if form has not been changed
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('not.be.enabled');
+
+          // confirm enable toggle was updated
+          ui.toggle
+            .find()
+            .should('have.attr', 'data-qa-toggle', 'true')
+            .should('be.visible');
+
+          // confirm Revision ID was updated
+          cy.findByLabelText('Revision ID').should(
+            'have.value',
+            mockRevisionId
+          );
+
+          // update IPv6 addresses
+          cy.findByDisplayValue('10.0.0.0/24').should('be.visible');
+          cy.findByPlaceholderText('::/0')
+            .should('be.visible')
+            .click()
+            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+          cy.findByText('Add IPv6 Address')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          cy.get('[id="domain-transfer-ip-1"]')
+            .should('be.visible')
+            .click()
+            .type('f4a2:b849:4a24:d0d9:15f0:704b:f943:718f');
+
+          // submit
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@updateControlPlaneACL']);
+
+      // confirm summary panel updates
+      cy.contains('Control Plane ACL').should('be.visible');
+      cy.findByText('Enable').should('not.exist');
+      ui.button
+        .findByTitle('Enabled (3 IP Addresses)')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // confirm data within drawer is updated again
+      ui.drawer
+        .findByTitle('Control Plane ACL')
+        .should('be.visible')
+        .within(() => {
+          // confirm updated IPv6 addresses display
+          cy.findByDisplayValue(
+            '8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'
+          ).should('be.visible');
+          cy.findByDisplayValue(
+            'f4a2:b849:4a24:d0d9:15f0:704b:f943:718f'
+          ).should('be.visible');
+        });
+    });
+
+    /**
+     * - Confirms ACL can be disabled from the summary page
+     * - Confirms both IPv4 and IPv6 can be updated and that drawer updates as a result
+     */
+    it('can disable ACL and edit IPs', () => {
+      const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
+        enabled: true,
+        addresses: { ipv4: undefined, ipv6: undefined },
+      });
+      const mockUpdatedACLOptions1 = kubernetesControlPlaneACLOptionsFactory.build(
+        {
+          enabled: false,
+          addresses: {
+            ipv4: ['10.0.0.0/24'],
+            ipv6: ['8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'],
+          },
+        }
+      );
+      const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
+        acl: mockACLOptions,
+      });
+      const mockUpdatedControlPlaneACL1 = kubernetesControlPlaneACLFactory.build(
+        {
+          acl: mockUpdatedACLOptions1,
+        }
+      );
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetControlPlaneACL(mockCluster.id, mockControlPaneACL).as(
+        'getControlPlaneACL'
+      );
+      mockUpdateControlPlaneACL(mockCluster.id, mockUpdatedControlPlaneACL1).as(
+        'updateControlPlaneACL'
+      );
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getAccount', '@getCluster', '@getControlPlaneACL']);
+
+      // confirm summary panel
+      cy.contains('Control Plane ACL').should('be.visible');
+      ui.button
+        .findByTitle('Enabled (0 IP Addresses)')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle('Control Plane ACL')
+        .should('be.visible')
+        .within(() => {
+          // Confirm submit button is disabled if form has not been changed
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('not.be.enabled');
+
+          cy.contains(
+            "Control Plane ACL secures network access to your LKE cluster's control plane. When not enabled, any public IP address can be used to access your control plane. When enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL."
+          ).should('be.visible');
+
+          // confirm Enabled section and toggle off 'Enabled'
+          cy.contains('Control Plane ACL').should('be.visible');
+          cy.contains(
+            'Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
+          ).should('be.visible');
+          cy.findByText('Enable Control Plane ACL');
+          ui.toggle
+            .find()
+            .should('have.attr', 'data-qa-toggle', 'true')
+            .should('be.visible')
+            .click();
+
+          // confirm submit button is now enabled
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('be.enabled');
+
+          // confirm Revision ID section exists
+          cy.findAllByText('Revision ID').should('have.length', 2);
+          cy.contains(
+            'A unique identifing string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
+          ).should('be.visible');
+          cy.findByLabelText('Revision ID').should(
+            'have.value',
+            mockACLOptions['revision-id']
+          );
+
+          // confirm Addresses section
+          cy.findByText('Addresses').should('be.visible');
+          cy.findByText(
+            "A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This cluster's control plane will only be accessible from IP addresses within this list."
+          ).should('be.visible');
+          cy.findByText('IPv4 Addresses or CIDRs').should('be.visible');
+          // update IPv4
+          cy.findByPlaceholderText('0.0.0.0/0')
+            .should('be.visible')
+            .click()
+            .type('10.0.0.0/24');
+          cy.findByText('Add IPv4 Address')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+          cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
+          // update IPv6
+          cy.findByPlaceholderText('::/0')
+            .should('be.visible')
+            .click()
+            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+          cy.findByText('Add IPv6 Address')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // submit
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@updateControlPlaneACL']);
+
+      // confirm summary panel updates
+      cy.contains('Control Plane ACL').should('be.visible');
+      cy.findByText('Enabled (O IP Addresses)').should('not.exist');
+      ui.button
+        .findByTitle('Enable')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // confirm data within drawer is updated
+      ui.drawer
+        .findByTitle('Control Plane ACL')
+        .should('be.visible')
+        .within(() => {
+          // confirm enable toggle was updated
+          ui.toggle
+            .find()
+            .should('have.attr', 'data-qa-toggle', 'false')
+            .should('be.visible');
+
+          // confirm updated IP addresses display
+          cy.findByDisplayValue('10.0.0.0/24').should('be.visible');
+          cy.findByDisplayValue(
+            '8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'
+          ).should('be.visible');
+        });
+    });
+
+    /**
+     * - Confirms ACL can be enabled from the summary page when cluster does not have ACL pre-installed
+     * - Confirms drawer appearance when APL is not pre-installed
+     * - Confirms that request to correct endpoint is sent
+     */
+    it('can enable ACL on an LKE cluster with ACL not pre-installed and edit IPs', () => {
+      const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
+        enabled: true,
+        addresses: { ipv4: ['10.0.0.0/24'] },
+      });
+      const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
+        acl: mockACLOptions,
+      });
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetControlPlaneACLError(mockCluster.id).as('getControlPlaneACLError');
+      mockUpdateCluster(mockCluster.id, {
+        ...mockCluster,
+        control_plane: mockControlPaneACL,
+      }).as('updateCluster');
+      mockGetClusterPools(mockCluster.id, mockNodePools).as('getNodePools');
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait([
+        '@getAccount',
+        '@getCluster',
+        '@getControlPlaneACLError',
+        '@getNodePools',
+      ]);
+
+      cy.contains('Control Plane ACL').should('be.visible');
+      cy.findAllByTestId('circle-progress').should('be.visible');
+
+      // query retries once if failed
+      cy.wait('@getControlPlaneACLError');
+
+      ui.button
+        .findByTitle('Enable')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      mockGetControlPlaneACL(mockCluster.id, mockControlPaneACL).as(
+        'getControlPlaneACL'
+      );
+
+      ui.drawer
+        .findByTitle('Control Plane ACL')
+        .should('be.visible')
+        .within(() => {
+          // Enable ACL
+          ui.toggle
+            .find()
+            .should('have.attr', 'data-qa-toggle', 'false')
+            .should('be.visible')
+            .click();
+
+          // Confirm revision ID section does not exist
+          cy.contains('Revision ID').should('not.exist');
+          cy.contains(
+            'A unique identifing string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
+          ).should('not.exist');
+
+          // Add IP addresses
+          cy.findByPlaceholderText('0.0.0.0/0')
+            .should('be.visible')
+            .click()
+            .type('10.0.0.0/24');
+
+          cy.findByPlaceholderText('::/0')
+            .should('be.visible')
+            .click()
+            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+
+          // submit
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@updateCluster', '@getControlPlaneACL']);
+
+      // confirm summary panel updates
+      cy.contains('Control Plane ACL').should('be.visible');
+      cy.findByText('Enabled (2 IP Addresses)').should('be.exist');
+    });
+
+    /**
+     * - Confirms IP validation error appears when a bad IP is entered
+     * - Confirms IP validation error disappears when a valid IP is entered
+     * - Confirms API error appears as expected and doesn't crash the page
+     */
+    it('can handle validation and API errors', () => {
+      const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
+        enabled: true,
+        addresses: { ipv4: undefined, ipv6: undefined },
+      });
+      const mockControlPaneACL = kubernetesControlPlaneACLFactory.build({
+        acl: mockACLOptions,
+      });
+      const mockErrorMessage = 'Control Plane ACL error: failed to update ACL';
+
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetControlPlaneACL(mockCluster.id, mockControlPaneACL).as(
+        'getControlPlaneACL'
+      );
+
+      mockUpdateControlPlaneACLError(mockCluster.id, mockErrorMessage, 400).as(
+        'updateControlPlaneACLError'
+      );
+
+      cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+      cy.wait(['@getAccount', '@getCluster', '@getControlPlaneACL']);
+
+      // confirm summary panel
+      cy.contains('Control Plane ACL').should('be.visible');
+      ui.button
+        .findByTitle('Enabled (0 IP Addresses)')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.drawer
+        .findByTitle('Control Plane ACL')
+        .should('be.visible')
+        .within(() => {
+          // Confirm ACL IP validation works as expected
+          cy.findByPlaceholderText('::/0')
+            .should('be.visible')
+            .click()
+            .type('invalid ip');
+          // click out of textbox and confirm error is visible
+          cy.findByText('Addresses').should('be.visible').click();
+          cy.contains('Must be a valid IPv6 address.').should('be.visible');
+          // enter valid IP
+          cy.findByPlaceholderText('::/0')
+            .should('be.visible')
+            .click()
+            .clear()
+            .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+          // Click out of textbox and confirm error is gone
+          cy.findByText('Addresses').should('be.visible').click();
+          cy.contains('Must be a valid IPv6 address.').should('not.exist');
+
+          // submit
+          ui.button
+            .findByTitle('Update')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait(['@updateControlPlaneACLError']);
+      cy.contains(mockErrorMessage).should('be.visible');
     });
   });
 });
