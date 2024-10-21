@@ -45,7 +45,13 @@ export const CloudPulseResourcesSelect = React.memo(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
-      xFilter ? xFilter : { region }
+      resourceType === 'dbaas'
+        ? xFilter
+          ? { platform: 'rdbms-default', ...xFilter }
+          : { platform: 'rdbms-default', region }
+        : xFilter
+        ? xFilter
+        : { region }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
