@@ -111,6 +111,9 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
     triggerUndo,
   } = props;
 
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
 
@@ -181,15 +184,20 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           <Table>
             <TableHead aria-label={`${category} Rules List Headers`}>
               <TableRow>
-                <TableCell>Label</TableCell>
+                <TableCell sx={{ width: smDown ? '50%' : '28%' }}>
+                  Label
+                </TableCell>
                 <Hidden lgDown>
-                  <TableCell>Protocol</TableCell>
+                  <TableCell sx={{ width: '10%' }}>Protocol</TableCell>
                 </Hidden>
                 <Hidden smDown>
-                  <TableCell>Port Range</TableCell>
-                  <TableCell> {capitalize(addressColumnLabel)}</TableCell>
+                  <TableCell sx={{ width: '15%' }}>Port Range</TableCell>
+                  <TableCell sx={{ width: '15%' }}>
+                    {' '}
+                    {capitalize(addressColumnLabel)}
+                  </TableCell>
                 </Hidden>
-                <TableCell>Action</TableCell>
+                <TableCell sx={{ width: '10%' }}>Action</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -395,7 +403,8 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     </span>
   );
 
-  // Using a grid here to keep the Select and the helper text aligned.
+  // Using a grid here to keep the Select and the helper text aligned
+  // with with the Action column for screens < 'sm', and with the last column for screens >= 'sm'.
   const sxBoxGrid = {
     alignItems: 'center',
     backgroundColor: theme.bg.bgPaper,
@@ -404,16 +413,16 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     display: 'grid',
     fontSize: '.875rem',
     gridTemplateAreas: `'one two three four five six'`,
-    gridTemplateColumns: '22% 10% 10% 16% 10% 120px',
+    gridTemplateColumns: '28% 10% 15% 15% 10% 120px',
     height: '40px',
     marginTop: '10px',
     [theme.breakpoints.down('lg')]: {
       gridTemplateAreas: `'one two three four five'`,
-      gridTemplateColumns: '22% 10% 16% 10% 120px',
+      gridTemplateColumns: '28% 15% 15% 10% 120px',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateAreas: `'one two'`,
-      gridTemplateColumns: '60% 40%',
+      gridTemplateColumns: '50% 50%',
     },
     width: '100%',
   };
@@ -423,7 +432,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
     padding: '0px 15px 0px 15px',
     textAlign: 'right',
     [theme.breakpoints.down('lg')]: {
-      gridArea: '1 / 1 / 1 / 4',
+      gridArea: '1 / 1 / 1 / 5',
     },
     [theme.breakpoints.down('sm')]: {
       gridArea: 'one',
@@ -433,7 +442,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   const sxBoxPolicySelect = {
     gridArea: 'six',
     [theme.breakpoints.down('lg')]: {
-      gridArea: 'four',
+      gridArea: 'five',
     },
     [theme.breakpoints.down('sm')]: {
       gridArea: 'two',
