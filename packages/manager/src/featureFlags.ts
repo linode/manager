@@ -132,7 +132,7 @@ interface MarketplaceAppOverride {
   /**
    * Define app details that should be overwritten
    *
-   * If you are adding an app that is not already defined in "oneClickAppsv2.ts",
+   * If you are adding an app that is not already defined in "oneClickApps.ts",
    * you *must* include all required OCA properties or Cloud Manager could crash.
    *
    * Pass `null` to hide the marketplace app
