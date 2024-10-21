@@ -1,3 +1,4 @@
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -6,7 +7,7 @@ import {
   profileFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -32,15 +33,33 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<DatabaseBackups />);
+    const { findAllByText, findByText, queryByText } = renderWithTheme(
+      <DatabaseBackups />
+    );
 
-    for (const backup of backups) {
-      // Check to see if all 7 backups are rendered
-      expect(
-        // eslint-disable-next-line no-await-in-loop
-        await findByText(formatDate(backup.created, { timezone: 'utc' }))
-      ).toBeInTheDocument();
+    // Check for loading state, but don't fail if it's already gone
+    const loadingElement = queryByText(/loading/i);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(() => loadingElement);
     }
+
+    // Check if all backups are rendered
+    const renderedBackups = await findAllByText(/\d{4}-\d{2}-\d{2}/);
+    expect(renderedBackups).toHaveLength(backups.length);
+
+    // Create an array of promises for finding each backup's formatted date
+    const datePromises = backups.map((backup) => {
+      const formattedDate = formatDate(backup.created, { timezone: 'utc' });
+      return findByText(formattedDate);
+    });
+
+    // Wait for all promises to resolve
+    const dateElements = await Promise.all(datePromises);
+
+    // Check that all date elements are in the document
+    dateElements.forEach((element) => {
+      expect(element).toBeInTheDocument();
+    });
   });
 
   it('should render an empty state if there are no backups', async () => {
