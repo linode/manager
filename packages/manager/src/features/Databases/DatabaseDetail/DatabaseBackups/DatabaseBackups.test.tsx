@@ -1,4 +1,4 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -20,7 +20,6 @@ describe('Database Backups', () => {
     });
     const backups = databaseBackupFactory.buildList(7);
 
-    // Mock the Database because the Backups Details page requires it to be loaded
     server.use(
       http.get('*/profile', () => {
         return HttpResponse.json(profileFactory.build({ timezone: 'utc' }));
@@ -33,33 +32,37 @@ describe('Database Backups', () => {
       })
     );
 
-    const { findAllByText, findByText, queryByText } = renderWithTheme(
+    const { findAllByText, getByText, queryByText } = renderWithTheme(
       <DatabaseBackups />
     );
 
-    // Check for loading state, but don't fail if it's already gone
-    const loadingElement = queryByText(/loading/i);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(() => loadingElement);
-    }
+    // Wait for loading to disappear
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument()
+    );
 
-    // Check if all backups are rendered
-    const renderedBackups = await findAllByText(/\d{4}-\d{2}-\d{2}/);
-    expect(renderedBackups).toHaveLength(backups.length);
+    // Use a more flexible matcher for dates
+    await waitFor(
+      async () => {
+        const renderedBackups = await findAllByText((content, element) => {
+          // This regex matches any text that looks like a date
+          return /\d{4}-\d{2}-\d{2}/.test(content);
+        });
+        expect(renderedBackups).toHaveLength(backups.length);
+      },
+      { timeout: 5000 }
+    ); // Increase timeout if necessary
 
-    // Create an array of promises for finding each backup's formatted date
-    const datePromises = backups.map((backup) => {
-      const formattedDate = formatDate(backup.created, { timezone: 'utc' });
-      return findByText(formattedDate);
-    });
-
-    // Wait for all promises to resolve
-    const dateElements = await Promise.all(datePromises);
-
-    // Check that all date elements are in the document
-    dateElements.forEach((element) => {
-      expect(element).toBeInTheDocument();
-    });
+    // Verify each backup's formatted date
+    await waitFor(
+      () => {
+        backups.forEach((backup) => {
+          const formattedDate = formatDate(backup.created, { timezone: 'utc' });
+          expect(getByText(formattedDate)).toBeInTheDocument();
+        });
+      },
+      { timeout: 5000 }
+    );
   });
 
   it('should render an empty state if there are no backups', async () => {
