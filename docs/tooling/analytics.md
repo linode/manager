@@ -79,6 +79,7 @@ Important notes:
 - We are hashing account and visitor IDs in a way that is consistent with Akamai's standards.
 - At initialization, we do string transformation on select URL patterns to **remove  sensitive data**. When new URL patterns are added to Cloud Manager, verify that existing transforms remove sensitive data; if not, update the transforms.
 - Pendo is currently not using any client-side (cookies or local) storage.
+- Pendo makes use of the existing `data-testid` properties, used in our automated testing, for tagging elements. They are more persistent and reliable than CSS properties, which are liable to change.
 
 ### Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo
 
