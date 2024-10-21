@@ -311,7 +311,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           container
           display={showFilter ? 'flex' : 'none'}
           item
-          maxHeight={theme.spacing(20)}
+          maxHeight={theme.spacing(22)}
           overflow={'auto'}
           rowGap={theme.spacing(2)}
           xs={12}
