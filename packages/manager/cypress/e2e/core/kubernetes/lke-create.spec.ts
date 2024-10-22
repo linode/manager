@@ -389,6 +389,9 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
 });
 
 describe('LKE Cluster Creation with ACL', () => {
+  /**
+   * - Confirms ACL flow does not exist if account doesn't have the corresponding capability
+   */
   it('does not show the ACL flow without the LKE ACL capability', () => {
     mockGetAccount(
       accountFactory.build({
@@ -407,7 +410,7 @@ describe('LKE Cluster Creation with ACL', () => {
     cy.url().should('endWith', '/kubernetes/create');
     cy.wait(['@getAccount']);
 
-    cy.contains('Control Plane ACL (Access Control List)').should('not.exist');
+    cy.contains('Control Plane ACL').should('not.exist');
     cy.contains(
       'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
     ).should('not.exist');
@@ -418,6 +421,7 @@ describe('LKE Cluster Creation with ACL', () => {
     cy.contains('Add IPv6 Address').should('not.exist');
   });
 
+  // setting up mocks
   const clusterLabel = randomLabel();
   const mockRegion = regionFactory.build({
     capabilities: ['Linodes', 'Kubernetes'],
@@ -508,9 +512,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       // Confirm ACL section and disable ACL
-      cy.contains('Control Plane ACL (Access Control List)').should(
-        'be.visible'
-      );
+      cy.contains('Control Plane ACL').should('be.visible');
       cy.contains(
         'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
       ).should('be.visible');
@@ -634,9 +636,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       // Confirm ACL section
-      cy.contains('Control Plane ACL (Access Control List)').should(
-        'be.visible'
-      );
+      cy.contains('Control Plane ACL').should('be.visible');
       cy.contains(
         'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
       ).should('be.visible');
@@ -768,9 +768,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click()
         .type('invalid ip');
       // click out of textbox and confirm error is visible
-      cy.contains('Control Plane ACL (Access Control List)')
-        .should('be.visible')
-        .click();
+      cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv4 address.').should('be.visible');
       // enter valid IP
       cy.findByPlaceholderText('0.0.0.0/0')
@@ -779,9 +777,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .clear()
         .type('10.0.0.0/24');
       // Click out of textbox and confirm error is gone
-      cy.contains('Control Plane ACL (Access Control List)')
-        .should('be.visible')
-        .click();
+      cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv4 address.').should('not.exist');
 
       // Add a node pool
