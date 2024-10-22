@@ -24,37 +24,45 @@ import type { Tab } from 'src/components/Tabs/TabLinkList';
 const AUTH_POLLING_INTERVAL = 2000;
 
 export interface RetryLimiterInterface {
-  retryAllowed: () => boolean
-  reset: () => void
+  reset: () => void;
+  retryAllowed: () => boolean;
 }
 
-export const RetryLimiter = (maxTries: number, perTimeWindowMs: number): RetryLimiterInterface => {
+export const RetryLimiter = (
+  maxTries: number,
+  perTimeWindowMs: number
+): RetryLimiterInterface => {
   let retryTimes: number[] = [];
 
   return {
+    reset: (): void => {
+      retryTimes = [];
+    },
     retryAllowed: (): boolean => {
       const now = Date.now();
       retryTimes.push(now);
-      const cutOffTime = now-perTimeWindowMs;
-      while (retryTimes.length && retryTimes[0] < cutOffTime)
+      const cutOffTime = now - perTimeWindowMs;
+      while (retryTimes.length && retryTimes[0] < cutOffTime) {
         retryTimes.shift();
+      }
       return retryTimes.length < maxTries;
     },
-    reset: (): void => {
-      retryTimes = [];
-    }
-  }
-}
+  };
+};
 
 export interface LishErrorInterface {
-  reason: string;
-  grn: string;
   formatted: string;
+  grn: string;
   isExpired: boolean;
+  reason: string;
 }
 
-export const ParsePotentialLishErrorString = (s: string | null): LishErrorInterface | null => {
-  if (!s) return null;
+export const ParsePotentialLishErrorString = (
+  s: null | string
+): LishErrorInterface | null => {
+  if (!s) {
+    return null;
+  }
 
   let parsed = null;
   try {
@@ -63,23 +71,23 @@ export const ParsePotentialLishErrorString = (s: string | null): LishErrorInterf
     return null;
   }
 
-  const grn = (typeof parsed?.grn === "string" ? parsed?.grn : '');
-  const grnFormatted = (grn ? ` (${grn})` : '');
+  const grn = typeof parsed?.grn === 'string' ? parsed?.grn : '';
+  const grnFormatted = grn ? ` (${grn})` : '';
 
   {
     const reason = parsed?.reason;
-    if (parsed?.type === "error" && typeof reason === "string") {
-      const formattedPrefix = (reason.indexOf(" ") >=0 ? "" : "Error code: ");
+    if (parsed?.type === 'error' && typeof reason === 'string') {
+      const formattedPrefix = reason.indexOf(' ') >= 0 ? '' : 'Error code: ';
       return {
-        reason: reason,
-        grn: grn,
         formatted: formattedPrefix + reason + grnFormatted,
-        isExpired: reason.toLowerCase() === "your session has expired."
+        grn,
+        isExpired: reason.toLowerCase() === 'your session has expired.',
+        reason,
       };
     }
   }
   return null;
-}
+};
 
 const Lish = () => {
   const history = useHistory();
@@ -102,7 +110,8 @@ const Lish = () => {
     refetch,
   } = useLinodeLishQuery(id);
 
-  const isLoading = isLinodeLoading || isTokenLoading || isMakingInitialRequests;
+  const isLoading =
+    isLinodeLoading || isTokenLoading || isMakingInitialRequests;
 
   React.useEffect(() => {
     const interval = setInterval(checkAuthentication, AUTH_POLLING_INTERVAL);

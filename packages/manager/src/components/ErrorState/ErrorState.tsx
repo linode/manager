@@ -1,16 +1,17 @@
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { SxProps, Theme, styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 
-import { SvgIconProps } from '../SvgIcon';
+import type { SvgIconProps } from '../SvgIcon';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface ActionButtonProps {
-  text: string;
   onClick: () => void;
+  text: string;
 }
 
 export interface ErrorStateProps {
@@ -22,22 +23,22 @@ export interface ErrorStateProps {
    * CSS properties to apply to the custom icon.
    */
   CustomIconStyles?: React.CSSProperties;
+  actionButtonProps?: ActionButtonProps;
+
   /**
    * Reduces the padding on the root element.
    */
   compact?: boolean;
-
   errorText: JSX.Element | string;
+
   /**
    * Styles applied to the error text
    */
   typographySx?: SxProps<Theme>;
-
-  actionButtonProps?: ActionButtonProps;
 }
 
 export const ErrorState = (props: ErrorStateProps) => {
-  const { CustomIcon, compact, typographySx, actionButtonProps } = props;
+  const { CustomIcon, actionButtonProps, compact, typographySx } = props;
   const theme = useTheme();
 
   const sxIcon = {
@@ -81,13 +82,15 @@ export const ErrorState = (props: ErrorStateProps) => {
         {actionButtonProps ? (
           <div style={{ textAlign: 'center' }}>
             <Button
+              onClick={() => {
+                actionButtonProps.onClick?.();
+              }}
               title={actionButtonProps.text}
-              onClick={() => { actionButtonProps.onClick?.() }}
             >
               {actionButtonProps.text}
             </Button>
           </div>
-        ): ( null )}
+        ) : null}
       </Grid>
     </ErrorStateRoot>
   );

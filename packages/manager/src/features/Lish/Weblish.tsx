@@ -4,11 +4,17 @@ import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { RetryLimiter, RetryLimiterInterface,
-         ParsePotentialLishErrorString, LishErrorInterface } from 'src/features/Lish/Lish';
+import {
+  ParsePotentialLishErrorString,
+  RetryLimiter,
+} from 'src/features/Lish/Lish';
 
-import type { Linode } from '@linode/api-v4/lib/linodes';
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type {
+  LishErrorInterface,
+  RetryLimiterInterface,
+} from 'src/features/Lish/Lish';
 
 interface Props extends Pick<LinodeLishData, 'weblish_url' | 'ws_protocols'> {
   linode: Linode;
@@ -22,10 +28,10 @@ interface State {
 }
 
 export class Weblish extends React.Component<Props, State> {
-  mounted: boolean = false;
-  socket: WebSocket | null;
-  retryLimiter: RetryLimiterInterface = RetryLimiter(3, 60000);
   lastMessage: string = '';
+  mounted: boolean = false;
+  retryLimiter: RetryLimiterInterface = RetryLimiter(3, 60000);
+  socket: WebSocket | null;
 
   state: State = {
     error: '',
@@ -69,13 +75,15 @@ export class Weblish extends React.Component<Props, State> {
     this.socket = origSocket;
 
     this.lastMessage = '';
-    this.setState({error: ''});
+    this.setState({ error: '' });
 
     this.socket.addEventListener('open', () => {
       if (!this.mounted) {
         return;
       }
-      this.setState({ renderingLish: true }, () => this.renderTerminal(origSocket));
+      this.setState({ renderingLish: true }, () =>
+        this.renderTerminal(origSocket)
+      );
     });
 
     this.socket.addEventListener('close', (evt) => {
@@ -94,11 +102,13 @@ export class Weblish extends React.Component<Props, State> {
       }
 
       const parsed: LishErrorInterface | null =
-          (ParsePotentialLishErrorString(evt?.reason) ||
-           ParsePotentialLishErrorString(this.lastMessage));
+        ParsePotentialLishErrorString(evt?.reason) ||
+        ParsePotentialLishErrorString(this.lastMessage);
 
       if (!this.retryLimiter.retryAllowed()) {
-        this.setState({error: parsed?.formatted || "Unexpected WebSocket close"});
+        this.setState({
+          error: parsed?.formatted || 'Unexpected WebSocket close',
+        });
         return;
       }
       if (parsed?.isExpired) {
@@ -115,17 +125,17 @@ export class Weblish extends React.Component<Props, State> {
 
     if (error) {
       const actionButtonProps = {
-        text: 'Retry Connection',
-        onClick: ()=>{
+        onClick: () => {
           this.retryLimiter.reset();
           this.props.refreshToken();
-        }
+        },
+        text: 'Retry Connection',
       };
       return (
         <ErrorState
+          actionButtonProps={actionButtonProps}
           errorText={error}
           typographySx={(theme) => ({ color: theme.palette.common.white })}
-          actionButtonProps={actionButtonProps}
         />
       );
     }
