@@ -1,17 +1,22 @@
-import type { DatabaseInstance } from '@linode/api-v4';
-import { DatabaseFork } from '@linode/api-v4';
 import { DateTime } from 'luxon';
+
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
+
 import { databaseEngineMap } from './DatabaseLanding/DatabaseRow';
+
+import type { DatabaseInstance } from '@linode/api-v4';
+import type { DatabaseFork } from '@linode/api-v4';
 
 export interface IsDatabasesEnabled {
   isDatabasesEnabled: boolean;
+  isDatabasesMonitorBeta?: boolean;
+  isDatabasesMonitorEnabled?: boolean;
   isDatabasesV1Enabled: boolean;
-  isDatabasesV2Enabled: boolean;
   isDatabasesV2Beta: boolean;
+  isDatabasesV2Enabled: boolean;
   isDatabasesV2GA: boolean;
   /**
    * Temporary variable to be removed post GA release
@@ -21,8 +26,6 @@ export interface IsDatabasesEnabled {
    * Temporary variable to be removed post GA release
    */
   isUserNewBeta: boolean;
-  isDatabasesMonitorEnabled: boolean;
-  isDatabasesMonitorBeta: boolean;
 }
 
 /**
@@ -75,18 +78,16 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
 
     return {
       isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
+      isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
+      isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
       isDatabasesV1Enabled,
-      isDatabasesV2Enabled,
-
       isDatabasesV2Beta,
-      isUserExistingBeta: isDatabasesV2Beta && isDatabasesV1Enabled,
-      isUserNewBeta: isDatabasesV2Beta && !isDatabasesV1Enabled,
-
+      isDatabasesV2Enabled,
       isDatabasesV2GA:
         (isDatabasesV1Enabled || isDatabasesV2Enabled) && hasV2GAFlag,
 
-      isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
-      isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
+      isUserExistingBeta: isDatabasesV2Beta && isDatabasesV1Enabled,
+      isUserNewBeta: isDatabasesV2Beta && !isDatabasesV1Enabled,
     };
   }
 
@@ -95,17 +96,14 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
 
   return {
     isDatabasesEnabled: hasLegacyTypes || hasDefaultTypes,
+    isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
+    isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
     isDatabasesV1Enabled: hasLegacyTypes,
-    isDatabasesV2Enabled: hasDefaultTypes,
-
     isDatabasesV2Beta: hasDefaultTypes && hasV2BetaFlag,
+    isDatabasesV2Enabled: hasDefaultTypes,
+    isDatabasesV2GA: (hasLegacyTypes || hasDefaultTypes) && hasV2GAFlag,
     isUserExistingBeta: hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
     isUserNewBeta: !hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
-
-    isDatabasesV2GA: (hasLegacyTypes || hasDefaultTypes) && hasV2GAFlag,
-
-    isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
-    isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
   };
 };
 
@@ -169,8 +167,7 @@ export const toSelectedDateTime = (
   const isoTime = DateTime.now()
     .set({ hour: time, minute: 0 })
     ?.toISOTime({ includeOffset: false });
-  const selectedDateTime = DateTime.fromISO(`${isoDate}T${isoTime}`);
-  return selectedDateTime;
+  return DateTime.fromISO(`${isoDate}T${isoTime}`);
 };
 
 /**

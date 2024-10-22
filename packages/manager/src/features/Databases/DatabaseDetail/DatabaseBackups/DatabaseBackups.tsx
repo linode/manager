@@ -136,7 +136,7 @@ export const DatabaseBackups = (props: Props) => {
       <Typography variant="h2">Summary</Typography>
       <StyledTypography>
         Databases are automatically backed-up with full daily backups for the
-        past 10 days, and binary logs recorded continuously. Full backups are
+        past 14 days, and binary logs recorded continuously. Full backups are
         version-specific binary backups, which when combined with binary
         logs allow for consistent recovery to a specific point in time (PITR).
       </StyledTypography>
@@ -146,13 +146,13 @@ export const DatabaseBackups = (props: Props) => {
         {isDatabasesV2GA ? (
           <span>
             The newest full backup plus incremental is selected by default. Or,
-            select any date and time within the last 10 days you want to create
+            select any date and time within the last 14 days you want to create
             a fork from.
           </span>
         ) : (
           <span>
-            Select a date and time within the last 10 days you want to create a
-            forkfrom.
+            Select a date and time within the last 14 days you want to create a
+            fork from.
           </span>
         )}
       </StyledTypography>
