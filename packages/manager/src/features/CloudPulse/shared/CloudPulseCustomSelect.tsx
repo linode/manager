@@ -221,9 +221,6 @@ export const CloudPulseCustomSelect = React.memo(
 
     return (
       <Autocomplete
-        PopperComponent={(props: PopperProps) => (
-          <CustomPopper {...props} placement="bottom" />
-        )}
         options={
           type === CloudPulseSelectTypes.static
             ? options ?? []
@@ -235,6 +232,11 @@ export const CloudPulseCustomSelect = React.memo(
             ? ''
             : placeholder || 'Select a Value'
         }
+        slotProps={{
+          popper: {
+            placement: 'bottom',
+          },
+        }}
         autoHighlight
         disabled={isAutoCompleteDisabled}
         errorText={staticErrorText}
