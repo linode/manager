@@ -8,11 +8,8 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
+import { useIsLoggedInAsCustomer } from 'src/hooks/useIsLoggedInAsCustomer';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
-
-interface Props {
-  loggedInAsCustomer: boolean;
-}
 
 type Timezone = typeof timezones[number];
 
@@ -40,8 +37,8 @@ const getTimezoneOptions = () => {
 
 const timezoneOptions = getTimezoneOptions();
 
-export const TimezoneForm = (props: Props) => {
-  const { loggedInAsCustomer } = props;
+export const TimezoneForm = () => {
+  const loggedInAsCustomer = useIsLoggedInAsCustomer();
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const { error, isPending, mutateAsync: updateProfile } = useMutateProfile();
@@ -72,7 +69,7 @@ export const TimezoneForm = (props: Props) => {
           will be displayed in the user&rsquo;s timezone ({profile.timezone}).
         </Notice>
       )}
-      <TimezoneFormContainer>
+      <SingleTextFieldFormContainer>
         <Autocomplete
           value={timezoneOptions.find(
             (option) => option.value === timezoneValue
@@ -82,6 +79,7 @@ export const TimezoneForm = (props: Props) => {
           errorText={error?.[0].reason}
           fullWidth
           label="Timezone"
+          noMarginTop
           onChange={(e, option) => setTimezoneValue(option.value)}
           options={timezoneOptions}
           placeholder="Choose a Timezone"
@@ -95,13 +93,13 @@ export const TimezoneForm = (props: Props) => {
         >
           Update Timezone
         </Button>
-      </TimezoneFormContainer>
+      </SingleTextFieldFormContainer>
     </>
   );
 };
 
-const TimezoneFormContainer = styled('div', {
-  label: 'TimezoneFormContainer',
+export const SingleTextFieldFormContainer = styled('div', {
+  label: 'SingleTextFieldFormContainer',
 })(({ theme }) => ({
   alignItems: 'flex-end',
   display: 'flex',
