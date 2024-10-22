@@ -5,7 +5,7 @@ import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 
 export const createAlertDefinition = (data: CreateAlertDefinitionPayload) =>
   Request<Alert>(
-    setURL(`${API_ROOT}/monitor/alerts`),
+    setURL(`${API_ROOT}/monitor/alert-definitions`),
     setMethod('POST'),
     setData(data, createAlertDefinitionSchema)
   );

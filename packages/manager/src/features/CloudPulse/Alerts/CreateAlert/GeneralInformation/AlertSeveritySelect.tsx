@@ -46,8 +46,10 @@ export const CloudPulseAlertSeveritySelect = (
               setSelectedSeverity(value);
             }}
             textFieldProps={{
-              labelTooltipText: 'Choose the alert severity',
+              labelTooltipText:
+                'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab',
             }}
+            data-testid={'severity'}
             label="Severity"
             onBlur={field.onBlur}
             options={AlertSeverityOptions}

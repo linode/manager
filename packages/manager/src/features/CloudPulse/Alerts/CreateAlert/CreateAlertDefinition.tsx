@@ -39,11 +39,11 @@ const criteriaInitialValues: MetricCriteria[] = [
 ];
 export const initialValues: CreateAlertDefinitionPayload = {
   channel_ids: [],
-  criteria: criteriaInitialValues,
   engineOption: '',
   name: '',
   region: '',
   resource_ids: [],
+  rule_criteria: { rules: criteriaInitialValues },
   service_type: '',
   severity: '',
   triggerCondition: triggerConditionInitialValues,

@@ -141,7 +141,9 @@ export interface CreateAlertDefinitionPayload {
   engineOption: string;
   resource_ids: string[];
   severity: string;
-  criteria: MetricCriteria[];
+  rule_criteria: {
+    rules: MetricCriteria[];
+  };
   triggerCondition: TriggerCondition;
   channel_ids: number[];
 }
