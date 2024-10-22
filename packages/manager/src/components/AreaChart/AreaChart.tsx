@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
   Tooltip,
-  TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -17,7 +16,6 @@ import {
 import { AccessibleAreaChart } from 'src/components/AreaChart/AccessibleAreaChart';
 import { Box } from 'src/components/Box';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
-import { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import { Paper } from 'src/components/Paper';
 import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
@@ -27,7 +25,10 @@ import {
   tooltipValueFormatter,
 } from './utils';
 
-interface AreaProps {
+import type { TooltipProps } from 'recharts';
+import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
+
+export interface AreaProps {
   color: string;
   dataKey: string;
 }
@@ -37,7 +38,7 @@ interface XAxisProps {
   tickGap: number;
 }
 
-interface AreaChartProps {
+export interface AreaChartProps {
   areas: AreaProps[];
   ariaLabel: string;
   data: any;
