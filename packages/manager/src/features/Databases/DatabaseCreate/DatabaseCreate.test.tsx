@@ -200,11 +200,12 @@ describe('Database Create', () => {
       expect(input).toBeDisabled();
     });
 
-    const selectPlaceholders = ['Select a Database Engine', 'Select a region'];
-    selectPlaceholders.forEach(async (placeholder: string) => {
-      const select = await findByPlaceholderText(placeholder);
-      expect(select).toBeDisabled();
-    });
+    const dbEngineSelect = await findByPlaceholderText(
+      'Select a Database Engine'
+    );
+    expect(dbEngineSelect).toBeDisabled();
+    const regionSelect = await findByPlaceholderText('Select a Region');
+    expect(regionSelect).toBeDisabled();
 
     const radioButtons = await findAllByRole('radio');
     radioButtons.forEach((radioButton: HTMLElement) => {
@@ -245,11 +246,12 @@ describe('Database Create', () => {
       expect(input).toBeEnabled();
     });
 
-    const selectPlaceholders = ['Select a Database Engine', 'Select a region'];
-    selectPlaceholders.forEach(async (placeholder: string) => {
-      const select = await findByPlaceholderText(placeholder);
-      expect(select).toBeEnabled();
-    });
+    const dbEngineSelect = await findByPlaceholderText(
+      'Select a Database Engine'
+    );
+    expect(dbEngineSelect).toBeEnabled();
+    const regionSelect = await findByPlaceholderText('Select a Region');
+    expect(regionSelect).toBeEnabled();
 
     const radioButtons = await findAllByRole('radio');
     radioButtons.forEach((radioButton: HTMLElement) => {
