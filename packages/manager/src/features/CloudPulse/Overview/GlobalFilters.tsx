@@ -107,13 +107,14 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
               defaultValue={preferences?.timeDuration}
               handleStatsChange={handleTimeRangeChange}
               hideLabel
-              label="Select Time Range"
+              label="Time Range"
               savePreferences
             />
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton
                 sx={{
                   marginBlockEnd: 'auto',
+                  marginTop: theme.spacing(3.5),
                 }}
                 aria-label="Refresh Dashboard Metrics"
                 data-testid="global-refresh"
