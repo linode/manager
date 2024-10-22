@@ -29,26 +29,86 @@ import type { TooltipProps } from 'recharts';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 interface AreaProps {
+  /**
+   * color for the area
+   */
   color: string;
+
+  /**
+   * datakey for the area
+   */
   dataKey: string;
 }
 
 interface XAxisProps {
+  /**
+   * format for the x-axis timestamp
+   * ex: 'hh' to convert timestamp into hour
+   */
   tickFormat: string;
+
+  /**
+   * represents the pixer gap between two x-axis ticks
+   */
   tickGap: number;
 }
 
 interface AreaChartProps {
+  /**
+   * list of areas to be displayed
+   */
   areas: AreaProps[];
+
+  /**
+   * arialabel for the graph
+   */
   ariaLabel: string;
+
+  /**
+   * data to be displayed on the graph
+   */
   data: any;
+
+  /**
+   *
+   */
   fillOpacity?: number;
+
+  /**
+   * maximum height of the chart container
+   */
   height: number;
-  hideFill?: boolean;
+
+  /**
+   * list of legends rows to be displayed
+   */
   legendRows?: Omit<MetricsDisplayRow[], 'handleLegendClick'>;
+
+  /**
+   * true to display legends rows else false to hide
+   * @default false
+   */
   showLegend?: boolean;
+
+  /**
+   * timezone for the timestamp of graph data
+   */
   timezone: string;
+
+  /**
+   * unit to be displayed with data
+   */
   unit: string;
+
+  /**
+   * make chart appear as a line or area chart
+   * @default area
+   */
+  variant?: 'area' | 'line';
+
+  /**
+   * x-axis properties
+   */
   xAxis: XAxisProps;
 }
 
@@ -59,11 +119,11 @@ export const AreaChart = (props: AreaChartProps) => {
     data,
     fillOpacity,
     height,
-    hideFill,
     legendRows,
     showLegend,
     timezone,
     unit,
+    variant,
     xAxis,
   } = props;
 
@@ -195,7 +255,7 @@ export const AreaChart = (props: AreaChartProps) => {
             <Area
               dataKey={dataKey}
               fill={color}
-              fillOpacity={hideFill ? 0 : fillOpacity ?? 1}
+              fillOpacity={variant === 'line' ? 0 : fillOpacity ?? 1}
               hide={activeSeries.includes(dataKey)}
               isAnimationActive={false}
               key={dataKey}
