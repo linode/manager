@@ -225,7 +225,7 @@ export const PhoneVerification = ({
                         : 'No Phone Number'
                     }
                     isMaskedPreferenceEnabled={Boolean(
-                      preferences?.redactSensitiveData
+                      preferences?.maskSensitiveData
                     )}
                     isToggleable
                   />

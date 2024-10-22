@@ -24,7 +24,7 @@ export const UserDetailsPanel = ({ user }: Props) => {
       label: 'Username',
       value: (
         <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.redactSensitiveData)}
+          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
           isToggleable
           text={user.username}
         />
@@ -34,7 +34,7 @@ export const UserDetailsPanel = ({ user }: Props) => {
       label: 'Email',
       value: (
         <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.redactSensitiveData)}
+          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
           isToggleable
           text={user.email}
         />
@@ -87,7 +87,7 @@ export const UserDetailsPanel = ({ user }: Props) => {
       label: 'Verified Phone Number',
       value: (
         <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.redactSensitiveData)}
+          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
           isToggleable
           text={user.verified_phone_number ?? 'None'}
         />

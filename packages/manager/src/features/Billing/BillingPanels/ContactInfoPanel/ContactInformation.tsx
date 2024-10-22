@@ -194,7 +194,7 @@ const ContactInformation = (props: Props) => {
               {(firstName || lastName) && (
                 <MaskableText
                   isMaskedPreferenceEnabled={Boolean(
-                    preferences?.redactSensitiveData
+                    preferences?.maskSensitiveData
                   )}
                   text={`${firstName} ${lastName}`}
                 >
@@ -209,7 +209,7 @@ const ContactInformation = (props: Props) => {
               {company && (
                 <MaskableText
                   isMaskedPreferenceEnabled={Boolean(
-                    preferences?.redactSensitiveData
+                    preferences?.maskSensitiveData
                   )}
                   text={company}
                 >
@@ -227,7 +227,7 @@ const ContactInformation = (props: Props) => {
               {(address1 || address2 || city || state || zip || country) && (
                 <MaskableText
                   isMaskedPreferenceEnabled={Boolean(
-                    preferences?.redactSensitiveData
+                    preferences?.maskSensitiveData
                   )}
                   text={`${address1} ${address2}`}
                 >
@@ -241,7 +241,7 @@ const ContactInformation = (props: Props) => {
               )}
               <MaskableText
                 isMaskedPreferenceEnabled={Boolean(
-                  preferences?.redactSensitiveData
+                  preferences?.maskSensitiveData
                 )}
                 text={`${city} ${state} ${zip}`}
               >
@@ -252,7 +252,7 @@ const ContactInformation = (props: Props) => {
               </MaskableText>
               <MaskableText
                 isMaskedPreferenceEnabled={Boolean(
-                  preferences?.redactSensitiveData
+                  preferences?.maskSensitiveData
                 )}
                 text={countryName}
               >
@@ -263,7 +263,7 @@ const ContactInformation = (props: Props) => {
           <Grid sx={sxGrid}>
             <MaskableText
               isMaskedPreferenceEnabled={Boolean(
-                preferences?.redactSensitiveData
+                preferences?.maskSensitiveData
               )}
               text={email}
             >
@@ -277,7 +277,7 @@ const ContactInformation = (props: Props) => {
             {phone && (
               <MaskableText
                 isMaskedPreferenceEnabled={Boolean(
-                  preferences?.redactSensitiveData
+                  preferences?.maskSensitiveData
                 )}
                 text={phone}
               >
@@ -289,7 +289,7 @@ const ContactInformation = (props: Props) => {
             {taxId && (
               <MaskableText
                 isMaskedPreferenceEnabled={Boolean(
-                  preferences?.redactSensitiveData
+                  preferences?.maskSensitiveData
                 )}
                 text={taxId}
               >

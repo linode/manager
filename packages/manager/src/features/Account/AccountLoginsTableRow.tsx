@@ -36,7 +36,7 @@ const AccountLoginsTableRow = (props: AccountLogin) => {
       </TableCell>
       <TableCell noWrap>
         <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.redactSensitiveData)}
+          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
           isToggleable
           text={username}
         >
@@ -46,9 +46,7 @@ const AccountLoginsTableRow = (props: AccountLogin) => {
       <Hidden smDown>
         <TableCell>
           <MaskableText
-            isMaskedPreferenceEnabled={Boolean(
-              preferences?.redactSensitiveData
-            )}
+            isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
             isToggleable
             text={ip}
           />

@@ -83,7 +83,7 @@ export const IPAddress = (props: IPAddressProps) => {
   const { data: preferences } = usePreferences();
 
   const [isMasked, setIsMasked] = React.useState(
-    Boolean(preferences?.redactSensitiveData)
+    Boolean(preferences?.maskSensitiveData)
   );
 
   React.useEffect(() => {
@@ -113,7 +113,7 @@ export const IPAddress = (props: IPAddressProps) => {
             text={ip}
           />
         </StyledIpLinkDiv>
-        {preferences?.redactSensitiveData && (
+        {preferences?.maskSensitiveData && (
           <MaskableTextTooltip
             handleClick={() => setIsMasked(!isMasked)}
             isMasked={isMasked}

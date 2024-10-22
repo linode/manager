@@ -29,7 +29,7 @@ export interface ManagerPreferences extends UserPreferences {
   main_content_banner_dismissal?: Record<string, boolean>;
   nodebalancers_group_by_tag?: boolean;
   pageSizes?: Record<string, number>;
-  redactSensitiveData?: boolean;
+  maskSensitiveData?: boolean;
   secure_vm_notices?: 'always' | 'header' | 'never';
   sortKeys?: Partial<Record<string, OrderSet>>;
   theme?: ThemeChoice;
