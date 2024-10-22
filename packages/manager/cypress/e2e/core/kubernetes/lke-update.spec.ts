@@ -1904,7 +1904,25 @@ describe('LKE ACL updates', () => {
         .findByTitle('Control Plane ACL')
         .should('be.visible')
         .within(() => {
-          // Confirm ACL IP validation works as expected
+          // Confirm ACL IP validation works as expected for IPv4
+          cy.findByPlaceholderText('0.0.0.0/0')
+            .should('be.visible')
+            .click()
+            .type('invalid ip');
+          // click out of textbox and confirm error is visible
+          cy.contains('Addresses').should('be.visible').click();
+          cy.contains('Must be a valid IPv4 address.').should('be.visible');
+          // enter valid IP
+          cy.findByPlaceholderText('0.0.0.0/0')
+            .should('be.visible')
+            .click()
+            .clear()
+            .type('10.0.0.0/24');
+          // Click out of textbox and confirm error is gone
+          cy.contains('Addresses').should('be.visible').click();
+          cy.contains('Must be a valid IPv4 address.').should('not.exist');
+
+          // Confirm ACL IP validation works as expected for IPv6
           cy.findByPlaceholderText('::/0')
             .should('be.visible')
             .click()
