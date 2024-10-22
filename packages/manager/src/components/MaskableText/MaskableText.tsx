@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import * as React from 'react';
 
 import { createMaskedText } from 'src/utilities/createMaskedText';
@@ -23,7 +24,7 @@ export const MaskableText = (props: Props) => {
   }
 
   if (!isRedacted) {
-    return text;
+    return children ? children : text;
   }
 
   return (
@@ -33,7 +34,15 @@ export const MaskableText = (props: Props) => {
       flexDirection="row"
       justifyContent="flex-start"
     >
-      {isMasked ? createMaskedText(text) : children ? children : text}
+      {isMasked ? (
+        <Typography sx={{ overflowWrap: 'anywhere' }}>
+          {createMaskedText(text)}
+        </Typography>
+      ) : children ? (
+        children
+      ) : (
+        text
+      )}
       {isToggleable && (
         <MaskableTextTooltip
           handleClick={() => setIsMasked(!isMasked)}

@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -12,6 +13,7 @@ import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import {
   BillingActionButton,
@@ -79,6 +81,7 @@ const ContactInformation = (props: Props) => {
   ] = React.useState<boolean>(false);
 
   const { data: notifications } = useNotificationsQuery();
+  const { data: preferences } = usePreferences();
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
@@ -189,63 +192,108 @@ const ContactInformation = (props: Props) => {
             country) && (
             <Grid sx={sxGrid}>
               {(firstName || lastName) && (
-                <StyledTypography
-                  data-qa-contact-name
-                  sx={{ wordBreak: 'break-all' }}
+                <MaskableText
+                  isRedacted={Boolean(preferences?.redactSensitiveData)}
+                  text={`${firstName} ${lastName}`}
                 >
-                  {firstName} {lastName}
-                </StyledTypography>
+                  <StyledTypography
+                    data-qa-contact-name
+                    sx={{ wordBreak: 'break-all' }}
+                  >
+                    {firstName} {lastName}
+                  </StyledTypography>
+                </MaskableText>
               )}
               {company && (
-                <StyledTypography
-                  data-qa-company
-                  sx={{ wordBreak: 'break-all' }}
+                <MaskableText
+                  isRedacted={Boolean(preferences?.redactSensitiveData)}
+                  text={company}
                 >
-                  {company}
-                </StyledTypography>
+                  <>
+                    {' '}
+                    <StyledTypography
+                      data-qa-company
+                      sx={{ wordBreak: 'break-all' }}
+                    >
+                      {company}
+                    </StyledTypography>
+                  </>
+                </MaskableText>
               )}
               {(address1 || address2 || city || state || zip || country) && (
-                <>
-                  <StyledTypography data-qa-contact-address>
-                    {address1}
-                  </StyledTypography>
-                  <StyledTypography>{address2}</StyledTypography>
-                </>
+                <MaskableText
+                  isRedacted={Boolean(preferences?.redactSensitiveData)}
+                  text={`${address1} ${address2}`}
+                >
+                  <>
+                    <StyledTypography data-qa-contact-address>
+                      {address1}
+                    </StyledTypography>
+                    <StyledTypography>{address2}</StyledTypography>
+                  </>
+                </MaskableText>
               )}
-              <StyledTypography>
-                {city}
-                {city && state && ','} {state} {zip}
-              </StyledTypography>
-              <StyledTypography>{countryName}</StyledTypography>
+              <MaskableText
+                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                text={`${city} ${state} ${zip}`}
+              >
+                <StyledTypography>
+                  {city}
+                  {city && state && ','} {state} {zip}
+                </StyledTypography>
+              </MaskableText>
+              <MaskableText
+                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                text={countryName}
+              >
+                <StyledTypography>{countryName}</StyledTypography>
+              </MaskableText>
             </Grid>
           )}
           <Grid sx={sxGrid}>
-            <StyledTypography
-              data-qa-contact-email
-              sx={{ wordBreak: 'break-all' }}
+            <MaskableText
+              isRedacted={Boolean(preferences?.redactSensitiveData)}
+              text={email}
             >
-              {email}
-            </StyledTypography>
+              <StyledTypography
+                data-qa-contact-email
+                sx={{ wordBreak: 'break-all' }}
+              >
+                {email}
+              </StyledTypography>
+            </MaskableText>
             {phone && (
-              <StyledTypography data-qa-contact-phone>{phone}</StyledTypography>
+              <MaskableText
+                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                text={phone}
+              >
+                <StyledTypography data-qa-contact-phone>
+                  {phone}
+                </StyledTypography>
+              </MaskableText>
             )}
             {taxId && (
-              <Box alignItems="center" display="flex">
-                <StyledTypography
-                  sx={{
-                    margin: 0,
-                  }}
-                >
-                  <strong>Tax ID</strong> {taxId}
-                </StyledTypography>
-                {taxIdIsVerifyingNotification && (
-                  <TooltipIcon
-                    icon={<StyledAutorenewIcon />}
-                    status="other"
-                    text={taxIdIsVerifyingNotification.label}
-                  />
-                )}
-              </Box>
+              <MaskableText
+                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                text={taxId}
+              >
+                <Box alignItems="center" display="flex">
+                  <StyledTypography
+                    sx={{
+                      margin: 0,
+                    }}
+                  >
+                    <strong>Tax ID</strong> {taxId}
+                  </StyledTypography>
+                  {taxIdIsVerifyingNotification && (
+                    <TooltipIcon
+                      icon={<StyledAutorenewIcon />}
+                      status="other"
+                      text={taxIdIsVerifyingNotification.label}
+                    />
+                  )}
+                </Box>
+              </MaskableText>
             )}
           </Grid>
         </Grid>
