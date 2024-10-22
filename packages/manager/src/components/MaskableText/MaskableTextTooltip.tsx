@@ -3,8 +3,8 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { Button } from './Button/Button';
-import { Tooltip } from './Tooltip';
+import { Button } from '../Button/Button';
+import { Tooltip } from '../Tooltip';
 
 interface Props {
   handleClick: () => void;
@@ -16,7 +16,7 @@ interface Props {
   showText?: boolean;
 }
 
-export const MaskedTextTooltip = (props: Props) => {
+export const MaskableTextTooltip = (props: Props) => {
   const { handleClick, isMasked, showText = false } = props;
 
   const maskedButtonText = showText ? (
@@ -32,10 +32,7 @@ export const MaskedTextTooltip = (props: Props) => {
 
   return (
     <Tooltip title={isMasked ? 'Show' : 'Hide'}>
-      <StyledToggleButton
-        // disabled={isDisabled}
-        onClick={handleClick}
-      >
+      <StyledToggleButton onClick={handleClick}>
         {isMasked ? maskedButtonText : visibleButtonText}
       </StyledToggleButton>
     </Tooltip>

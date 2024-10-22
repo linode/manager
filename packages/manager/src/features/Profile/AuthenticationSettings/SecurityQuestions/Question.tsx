@@ -1,9 +1,9 @@
+import { MaskableText } from 'linode-manager/src/components/MaskableText/MaskableText';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { InputLabel } from 'src/components/InputLabel';
 import { LinkButton } from 'src/components/LinkButton';
-import { RedactableText } from 'src/components/RedactableText';
 import { Typography } from 'src/components/Typography';
 import { usePreferences } from 'src/queries/profile/preferences';
 
@@ -56,12 +56,11 @@ export const Question = (props: Props) => {
           }}
           variant="body1"
         >
-          <RedactableText
+          <MaskableText
             isRedacted={Boolean(preferences?.redactSensitiveData)}
             isToggleable
-          >
-            {questionResponse?.question}
-          </RedactableText>
+            text={questionResponse?.question}
+          />
           <LinkButton onClick={onClickEdit} style={{ marginLeft: 10 }}>
             Edit
           </LinkButton>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { MaskedTextTooltip } from 'src/components/MaskedTextTooltip';
+import { MaskableTextTooltip } from 'src/components/MaskableText/MaskableTextTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { usePreferences } from 'src/queries/profile/preferences';
@@ -113,7 +113,7 @@ export const IPAddress = (props: IPAddressProps) => {
             text={ip}
           />
         </StyledIpLinkDiv>
-        <MaskedTextTooltip
+        <MaskableTextTooltip
           handleClick={() => setIsMasked(!isMasked)}
           isMasked={isMasked}
         />

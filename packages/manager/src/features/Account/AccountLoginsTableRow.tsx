@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { RedactableText } from 'src/components/RedactableText';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -35,21 +35,21 @@ const AccountLoginsTableRow = (props: AccountLogin) => {
         })}
       </TableCell>
       <TableCell noWrap>
-        <RedactableText
+        <MaskableText
           isRedacted={Boolean(preferences?.redactSensitiveData)}
           isToggleable
+          text={username}
         >
           <Link to={`/account/users/${username}`}>{username}</Link>
-        </RedactableText>
+        </MaskableText>
       </TableCell>
       <Hidden smDown>
         <TableCell>
-          <RedactableText
+          <MaskableText
             isRedacted={Boolean(preferences?.redactSensitiveData)}
             isToggleable
-          >
-            {ip}
-          </RedactableText>
+            text={ip}
+          />
         </TableCell>
       </Hidden>
       <Hidden mdDown>
