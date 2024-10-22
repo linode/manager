@@ -388,7 +388,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
   });
 });
 
-describe('LKE Cluster Creation with ACL', () => {
+describe.only('LKE Cluster Creation with ACL', () => {
   /**
    * - Confirms ACL flow does not exist if account doesn't have the corresponding capability
    */
@@ -762,7 +762,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .should('be.visible')
         .click();
 
-      // Confirm ACL IP validation works as expected
+      // Confirm ACL IPv4 validation works as expected
       cy.findByPlaceholderText('0.0.0.0/0')
         .should('be.visible')
         .click()
@@ -779,6 +779,24 @@ describe('LKE Cluster Creation with ACL', () => {
       // Click out of textbox and confirm error is gone
       cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv4 address.').should('not.exist');
+
+      // Confirm ACL IPv6 validation works as expected
+      cy.findByPlaceholderText('::/0')
+        .should('be.visible')
+        .click()
+        .type('invalid ip');
+      // click out of textbox and confirm error is visible
+      cy.contains('Control Plane ACL').should('be.visible').click();
+      cy.contains('Must be a valid IPv6 address.').should('be.visible');
+      // enter valid IP
+      cy.findByPlaceholderText('::/0')
+        .should('be.visible')
+        .click()
+        .clear()
+        .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+      // Click out of textbox and confirm error is gone
+      cy.contains('Control Plane ACL').should('be.visible').click();
+      cy.contains('Must be a valid IPv6 address.').should('not.exist');
 
       // Add a node pool
       cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
