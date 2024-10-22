@@ -44,5 +44,5 @@
   "include": [
     "src",
     "package.json"
-  ]
+, "../ui/src/components/FormControl.tsx", "../ui/src/components/FormControl.stories.tsx", "../ui/src/components/InputLabel.stories.tsx", "../ui/src/components/InputLabel.tsx", "../ui/src/components/InputAdornment.tsx", "../ui/src/components/InputAdornment.stories.tsx"  ]
 }
