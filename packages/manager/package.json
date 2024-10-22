@@ -64,7 +64,6 @@
     "qrcode.react": "^0.8.0",
     "ramda": "~0.25.0",
     "react": "^18.2.0",
-    "react-beautiful-dnd": "^13.0.0",
     "react-csv": "^2.0.3",
     "react-dom": "^18.2.0",
     "react-dropzone": "~11.2.0",
