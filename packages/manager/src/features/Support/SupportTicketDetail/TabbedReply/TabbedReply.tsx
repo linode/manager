@@ -12,10 +12,8 @@ import { TicketReply } from './TicketReply';
 import type { Props as ReplyProps } from './TicketReply';
 
 interface Props extends ReplyProps {
-  innerClass?: string;
   isReply?: boolean;
   required?: boolean;
-  rootClass?: string;
 }
 
 export const TabbedReply = (props: Props) => {
