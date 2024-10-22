@@ -1,8 +1,11 @@
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { MaskedTextTooltip } from 'src/components/MaskedTextTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { usePreferences } from 'src/queries/profile/preferences';
+import { createMaskedText } from 'src/utilities/createMaskedText';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 import { tail } from 'src/utilities/tail';
 
@@ -77,6 +80,12 @@ export const IPAddress = (props: IPAddressProps) => {
     false
   );
 
+  const { data: preferences } = usePreferences();
+
+  const [isMasked, setIsMasked] = React.useState(
+    Boolean(preferences?.redactSensitiveData)
+  );
+
   React.useEffect(() => {
     return () => {
       if (copiedTimeout !== null) {
@@ -94,19 +103,26 @@ export const IPAddress = (props: IPAddressProps) => {
     }
 
     return (
-      <StyledIpLinkDiv data-qa-copy-ip>
-        <StyledCopyTooltip
-          data-testid={`styled-copytooltip`}
-          isHovered={isHovered}
-          isIpHovered={isIpTooltipHovered}
-          showTooltipOnIpHover={showTooltipOnIpHover}
-          text={ip}
+      <>
+        <StyledIpLinkDiv data-qa-copy-ip>
+          <StyledCopyTooltip
+            data-testid={`styled-copytooltip`}
+            isHovered={isHovered}
+            isIpHovered={isIpTooltipHovered}
+            showTooltipOnIpHover={showTooltipOnIpHover}
+            text={ip}
+          />
+        </StyledIpLinkDiv>
+        <MaskedTextTooltip
+          handleClick={() => setIsMasked(!isMasked)}
+          isMasked={isMasked}
         />
-      </StyledIpLinkDiv>
+      </>
     );
   };
 
   const renderIP = (ip: string) => {
+    const displayIp = isMasked ? createMaskedText(ip) : ip;
     const handlers = showTooltipOnIpHover
       ? {
           onMouseEnter: handleMouseEnter,
@@ -123,9 +139,10 @@ export const IPAddress = (props: IPAddressProps) => {
           copyableText
           data-qa-copy-ip-text
           disabled={disabled}
+          displayText={displayIp}
           text={ip}
         />
-        {renderCopyIcon(ip)}
+        {renderCopyIcon(displayIp)}
       </StyledRenderIPDiv>
     );
   };
