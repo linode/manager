@@ -14,7 +14,10 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccountSettings } from 'src/queries/account/settings';
-
+import {
+  useMutatePreferences,
+  usePreferences,
+} from 'src/queries/profile/preferences';
 import {
   StyledAccordion,
   StyledAkamaiLogo,
@@ -74,6 +77,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
+
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const primaryLinkGroups: PrimaryLinkGroup[] = React.useMemo(
     () => [
@@ -225,6 +231,26 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     ]
   );
 
+  const [collapsedAccordions, setCollapsedAccordions] = React.useState<
+    number[]
+  >(preferences?.collapsedSideNavProductFamilies ?? []);
+
+  const accordionClicked = (index: number) => {
+    if (collapsedAccordions.includes(index)) {
+      setCollapsedAccordions(
+        collapsedAccordions.filter((number) => number !== index)
+      );
+    } else {
+      setCollapsedAccordions([...collapsedAccordions, index]);
+    }
+  };
+
+  React.useEffect(() => {
+    updatePreferences({
+      collapsedSideNavProductFamilies: collapsedAccordions,
+    });
+  }, [collapsedAccordions]);
+
   return (
     <StyledGrid
       alignItems="flex-start"
@@ -287,7 +313,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                     <p>{linkGroup.title}</p>
                   </>
                 }
-                defaultExpanded={true}
+                onChange={() => accordionClicked(idx)}
+                expanded={!collapsedAccordions.includes(idx)}
               >
                 {PrimaryLinks}
               </StyledAccordion>
