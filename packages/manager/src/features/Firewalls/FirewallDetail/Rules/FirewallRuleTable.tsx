@@ -140,6 +140,11 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
       const destinationIndex = getRowDataIndex(Number(over.id));
       triggerReorder(sourceIndex, destinationIndex);
     }
+
+    // Remove focus from the initial position when the drag ends.
+    if (document.activeElement) {
+      (document.activeElement as HTMLElement).blur();
+    }
   };
 
   const onPolicyChange = (newPolicy: FirewallPolicyType) => {
@@ -181,7 +186,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           onDragEnd={onDragEnd}
           sensors={sensors}
         >
-          <Table>
+          <Table sx={{ overflow: 'hidden' }}>
             <TableHead aria-label={`${category} Rules List Headers`}>
               <TableRow>
                 <TableCell sx={{ width: smDown ? '50%' : '26%' }}>
@@ -299,7 +304,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   } = useSortable({ id });
 
   // dnd-kit styles
-  const styles = {
+  const rowStyles = {
     '& td': {
       // Highly recommend to set the `touch-action: none` for all the draggable elements-
       // in order to prevent scrolling on mobile devices.
@@ -308,6 +313,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     },
     cursor: isDragging ? 'grabbing' : 'grab',
     transform: CSS.Transform.toString(transform),
+    zIndex: isDragging ? 999 : 'auto',
   };
 
   return (
@@ -321,7 +327,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       status={status}
       {...attributes}
       {...listeners}
-      sx={styles}
+      sx={rowStyles}
     >
       <TableCell aria-label={`Label: ${label}`}>
         <StyledDragIndicator aria-label="Drag indicator icon" />
@@ -403,7 +409,7 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
   );
 
   // Using a grid here to keep the Select and the helper text aligned
-  // with with the Action column for screens < 'sm', and with the last column for screens >= 'sm'.
+  // with the Action column for screens < 'sm', and with the last column for screens >= 'sm'.
   const sxBoxGrid = {
     alignItems: 'center',
     backgroundColor: theme.bg.bgPaper,
