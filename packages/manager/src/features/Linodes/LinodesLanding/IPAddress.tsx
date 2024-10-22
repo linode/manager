@@ -113,10 +113,12 @@ export const IPAddress = (props: IPAddressProps) => {
             text={ip}
           />
         </StyledIpLinkDiv>
-        <MaskableTextTooltip
-          handleClick={() => setIsMasked(!isMasked)}
-          isMasked={isMasked}
-        />
+        {preferences?.redactSensitiveData && (
+          <MaskableTextTooltip
+            handleClick={() => setIsMasked(!isMasked)}
+            isMasked={isMasked}
+          />
+        )}
       </>
     );
   };
