@@ -3,7 +3,7 @@ import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
 
-import { accountRouteTree } from './account';
+import { accountRouteTree } from './account/AccountRoute';
 import { betaRouteTree } from './betas';
 import { cloudPulseRouteTree } from './cloudPulse';
 import { databasesRouteTree } from './databases';
@@ -16,7 +16,7 @@ import { linodesRouteTree } from './linodes';
 import { longviewRouteTree } from './longview';
 import { managedRouteTree } from './managed';
 import { nodeBalancersRouteTree } from './nodeBalancers';
-import { objectStorageRouteTree } from './object-storage';
+import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
 import { migrationRootRoute, rootRoute } from './root';
