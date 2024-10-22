@@ -98,7 +98,7 @@ export const useMutateProfile = () => {
       });
 
       if (variables.email) {
-        // If  the user just updated their email, re-request notifications to
+        // If the user updates their email, re-request notifications to
         // potentially clear the email bounce notification.
         queryClient.invalidateQueries({
           queryKey: accountQueries.notifications.queryKey,
