@@ -191,7 +191,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     // Select a resource from the autocomplete input.
     ui.autocomplete
-      .findByLabel('DB Clusters')
+      .findByLabel('Database Clusters')
       .should('be.visible')
       .type(`${clusterName}{enter}`)
       .click();
