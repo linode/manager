@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { CloudPulseRoutes } from './CloudPulseRoute';
+import { CloudPulseRoute } from './CloudPulseRoute';
 
 const cloudPulseRoute = createRoute({
-  component: CloudPulseRoutes,
+  component: CloudPulseRoute,
   getParentRoute: () => rootRoute,
   path: 'monitor/cloudpulse',
 });

@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { DomainsRoutes } from './DomainsRoute';
+import { DomainsRoute } from './DomainsRoute';
 
 const domainsRoute = createRoute({
-  component: DomainsRoutes,
+  component: DomainsRoute,
   getParentRoute: () => rootRoute,
   path: 'domains',
 });

@@ -1,10 +1,10 @@
 import { createRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { NodeBalancersRoutes } from './NodeBalancersRoute';
+import { NodeBalancersRoute } from './NodeBalancersRoute';
 
 const nodeBalancersRoute = createRoute({
-  component: NodeBalancersRoutes,
+  component: NodeBalancersRoute,
   getParentRoute: () => rootRoute,
   path: 'nodebalancers',
 });

@@ -4,7 +4,7 @@ import React from 'react';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { StatusBanners } from 'src/features/Help/StatusBanners';
 
-export const SupportTicketsRoutes = () => {
+export const SupportTicketsRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <StatusBanners />

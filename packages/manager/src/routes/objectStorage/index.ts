@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { ObjectStorageRoutes } from './ObjectStorageRoute';
+import { ObjectStorageRoute } from './ObjectStorageRoute';
 
 export const objectStorageRoute = createRoute({
-  component: ObjectStorageRoutes,
+  component: ObjectStorageRoute,
   getParentRoute: () => rootRoute,
   path: 'object-storage',
 });

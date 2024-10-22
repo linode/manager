@@ -5,7 +5,7 @@ import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useFlags } from 'src/hooks/useFlags';
 
-export const BetaRoutes = () => {
+export const BetasRoute = () => {
   const flags = useFlags();
   const { selfServeBetas } = flags;
   return (

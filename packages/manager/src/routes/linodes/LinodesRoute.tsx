@@ -3,7 +3,7 @@ import React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-export const LinodesRoutes = () => {
+export const LinodesRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Outlet />

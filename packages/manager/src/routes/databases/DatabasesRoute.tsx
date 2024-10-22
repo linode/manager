@@ -5,7 +5,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-export const DatabasesRoutes = () => {
+export const DatabasesRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Databases" />

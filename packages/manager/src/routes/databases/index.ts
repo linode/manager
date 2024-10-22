@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { DatabasesRoutes } from './DatabasesRoute';
+import { DatabasesRoute } from './DatabasesRoute';
 
 const databasesRoute = createRoute({
-  component: DatabasesRoutes,
+  component: DatabasesRoute,
   getParentRoute: () => rootRoute,
   path: 'databases',
 });

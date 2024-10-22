@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { LinodesRoutes } from './LinodesRoute';
+import { LinodesRoute } from './LinodesRoute';
 
 export const linodesRoute = createRoute({
-  component: LinodesRoutes,
+  component: LinodesRoute,
   getParentRoute: () => rootRoute,
   path: 'linodes',
 });

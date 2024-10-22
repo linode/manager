@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { FirewallsRoutes } from './FirewallsRoute';
+import { FirewallsRoute } from './FirewallsRoute';
 
 const firewallsRoute = createRoute({
-  component: FirewallsRoutes,
+  component: FirewallsRoute,
   getParentRoute: () => rootRoute,
   path: 'firewalls',
 });

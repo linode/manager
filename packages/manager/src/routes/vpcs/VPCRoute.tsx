@@ -5,7 +5,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-export const VPCRoutes = () => {
+export const VPCRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="VPC" />

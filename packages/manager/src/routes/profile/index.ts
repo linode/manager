@@ -1,8 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
+import { ProfileRoute } from './ProfileRoute';
 
 const profileRoute = createRoute({
+  component: ProfileRoute,
   getParentRoute: () => rootRoute,
   path: 'profile',
 }).lazy(() =>

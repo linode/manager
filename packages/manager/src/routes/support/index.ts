@@ -1,11 +1,11 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { SupportTicketsRoutes } from './SupportRoute';
+import { SupportTicketsRoute } from './SupportRoute';
 
 const supportRoute = createRoute({
   // TODO: TanStackRouter - got to handle the MainContent.tsx `globalErrors.account_unactivated` logic.
-  component: SupportTicketsRoutes,
+  component: SupportTicketsRoute,
   getParentRoute: () => rootRoute,
   path: 'support',
 });

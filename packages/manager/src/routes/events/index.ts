@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { EventsRoutes } from './EventsRoute';
+import { EventsRoute } from './EventsRoute';
 
 const eventsRoute = createRoute({
-  component: EventsRoutes,
+  component: EventsRoute,
   getParentRoute: () => rootRoute,
   path: 'events',
 });

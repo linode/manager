@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { VPCRoutes } from './VPCRoute';
+import { VPCRoute } from './VPCRoute';
 
 const vpcsRoute = createRoute({
-  component: VPCRoutes,
+  component: VPCRoute,
   getParentRoute: () => rootRoute,
   path: 'vpcs',
 });

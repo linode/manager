@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { LongviewRoutes } from './LongviewRoute';
+import { LongviewRoute } from './LongviewRoute';
 
 const longviewRoute = createRoute({
-  component: LongviewRoutes,
+  component: LongviewRoute,
   getParentRoute: () => rootRoute,
   path: 'longview',
 });

@@ -4,7 +4,7 @@ import React from 'react';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-export const KubernetesRoutes = () => {
+export const KubernetesRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <ProductInformationBanner bannerLocation="Kubernetes" />

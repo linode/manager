@@ -1,10 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { ImagesRoutes } from './ImagesRoute';
+import { ImagesRoute } from './ImagesRoute';
 
 const imagesRoute = createRoute({
-  component: ImagesRoutes,
+  component: ImagesRoute,
   getParentRoute: () => rootRoute,
   path: 'images',
 });
