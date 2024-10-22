@@ -16,7 +16,7 @@ export interface CloudPulseRegionSelectProps {
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
-    const { data: regions } = useRegionsQuery();
+    const { data: regions, isError, isLoading: loading } = useRegionsQuery();
 
     const {
       defaultValue,
@@ -50,8 +50,10 @@ export const CloudPulseRegionSelect = React.memo(
         data-testid="region-select"
         disableClearable={false}
         disabled={!selectedDashboard || !regions}
+        errorText={isError ? `Failed to get ${label ?? 'Region'}` : ''}
         fullWidth
         label={label || 'Region'}
+        loading={loading}
         noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
         regions={regions ? regions : []}

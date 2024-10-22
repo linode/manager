@@ -204,6 +204,7 @@ const databases = [
   http.get('*/databases/instances', () => {
     const databases = databaseInstanceFactory.buildList(9);
     return HttpResponse.json(makeResourcePage(databases));
+    // return HttpResponse.error();
   }),
 
   http.get('*/databases/types', () => {
@@ -465,6 +466,7 @@ export const handlers = [
   ),
   http.get('*/regions', async () => {
     return HttpResponse.json(makeResourcePage(regions));
+    // return HttpResponse.error();
   }),
   http.get<{ id: string }>('*/v4/images/:id', ({ params }) => {
     const distributedImage = imageFactory.build({
@@ -2068,26 +2070,27 @@ export const handlers = [
     return HttpResponse.json({}, { status: 404 });
   }),
   http.get('*regions/availability', () => {
-    return HttpResponse.json(
-      makeResourcePage([
-        regionAvailabilityFactory.build({
-          plan: 'g6-standard-6',
-          region: 'us-east',
-        }),
-        regionAvailabilityFactory.build({
-          plan: 'g6-standard-7',
-          region: 'us-east',
-        }),
-        regionAvailabilityFactory.build({
-          plan: 'g6-dedicated-5',
-          region: 'us-central',
-        }),
-        regionAvailabilityFactory.build({
-          plan: 'g6-dedicated-6',
-          region: 'us-central',
-        }),
-      ])
-    );
+    // return HttpResponse.json(
+    //   makeResourcePage([
+    //     regionAvailabilityFactory.build({
+    //       plan: 'g6-standard-6',
+    //       region: 'us-east',
+    //     }),
+    //     regionAvailabilityFactory.build({
+    //       plan: 'g6-standard-7',
+    //       region: 'us-east',
+    //     }),
+    //     regionAvailabilityFactory.build({
+    //       plan: 'g6-dedicated-5',
+    //       region: 'us-central',
+    //     }),
+    //     regionAvailabilityFactory.build({
+    //       plan: 'g6-dedicated-6',
+    //       region: 'us-central',
+    //     }),
+    //   ])
+    // );
+    return HttpResponse.error();
   }),
   http.get('*regions/:regionId/availability', () => {
     return HttpResponse.json([
@@ -2313,11 +2316,11 @@ export const handlers = [
     const response: ServiceTypesList = {
       data: [
         serviceTypesFactory.build({
-          label: 'Linode',
+          label: undefined,
           service_type: 'linode',
         }),
         serviceTypesFactory.build({
-          label: 'Databases',
+          label: undefined,
           service_type: 'dbaas',
         }),
       ],
