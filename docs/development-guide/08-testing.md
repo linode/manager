@@ -191,12 +191,13 @@ Environment variables related to the general operation of the Cloud Manager Cypr
 | `CY_TEST_SUITE`      | Name of the Cloud Manager UI test suite to run. Possible values are `core`, `region`, or `synthetic`. | `region`     | Unset; defaults to `core` suite |
 | `CY_TEST_TAGS`       | Query identifying tests that should run by specifying allowed and disallowed tags.                    | `method:e2e` | Unset; all tests run by default |
 
-###### Regions
-These environment variables are used by Cloud Manager's UI tests to override region selection behavior. This can be useful for testing Cloud Manager functionality against a specific region.
+###### Overriding Behavior
+These environment variables can be used to override some behaviors of Cloud Manager's UI tests. This can be useful when testing Cloud Manager for nonstandard or work-in-progress functionality.
 
-| Environment Variable | Description                                     | Example   | Default                               |
-|----------------------|-------------------------------------------------|-----------|---------------------------------------|
-| `CY_TEST_REGION`     | ID of region to test (as used by Linode APIv4). | `us-east` | Unset; regions are selected at random |
+| Environment Variable    | Description                                     | Example   | Default                                    |
+|-------------------------|-------------------------------------------------|-----------|--------------------------------------------|
+| `CY_TEST_REGION`        | ID of region to test (as used by Linode APIv4). | `us-east` | Unset; regions are selected at random      |
+| `CY_TEST_FEATURE_FLAGS` | JSON string containing feature flag data        | `{}`      | Unset; feature flag data is not overridden |
 
 ###### Run Splitting
 These environment variables facilitate splitting the Cypress run between multiple runners without the use of any third party services. This can be useful for improving Cypress test performance in some circumstances. For additional performance gains, an optional test weights file can be specified using `CY_TEST_SPLIT_RUN_WEIGHTS` (see `CY_TEST_GENWEIGHTS` to generate test weights).
