@@ -38,9 +38,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
     <>
       <FormControl data-testid="control-plane-ipacl-form">
         <FormLabel id="ipacl-radio-buttons-group-label">
-          <Typography variant="inherit">
-            Control Plane ACL (Access Control List)
-          </Typography>
+          <Typography variant="inherit">Control Plane ACL</Typography>
         </FormLabel>
         {errorText && (
           <Notice spacingTop={8} variant="error">

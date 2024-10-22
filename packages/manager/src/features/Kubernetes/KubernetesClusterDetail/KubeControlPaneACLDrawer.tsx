@@ -166,17 +166,18 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
           )}
           <Stack sx={{ marginTop: 3 }}>
             <StyledTypography variant="body1">
-              Control Plane ACL secures network access to your LKE cluster's
-              control plane. When not enabled, any public IP address can be used
-              to access your control plane. When enabled, all network access is
-              denied except for the IP addresses and CIDR ranges defined on the
-              ACL.
+              Control Plane ACL secures network access to your LKE
+              cluster&apos;s control plane. Use this form to enable or disable
+              the ACL on your LKE cluster, update the list of allowed IP
+              addresses, and adjust other settings.
             </StyledTypography>
             <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
-            <Typography variant="h3">Control Plane ACL</Typography>
+            <Typography variant="h3">Activation Status</Typography>
             <StyledTypography variant="body1">
-              Once enabled, all network access is denied except for the IP
-              addresses and CIDR ranges defined on the ACL.
+              Enable or disable the Control Plane ACL. If the ACL is not
+              enabled, any public IP address can be used to access your control
+              plane. Once enabled, all network access is denied except for the
+              IP addresses and CIDR ranges defined on the ACL.
             </StyledTypography>
             <Box sx={{ marginTop: 1 }}>
               <Controller
@@ -227,8 +228,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             <Typography variant="h3">Addresses</Typography>
             <StyledTypography sx={{ marginBottom: 1 }} variant="body1">
               A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This
-              cluster's control plane will only be accessible from IP addresses
-              within this list.
+              cluster&apos;s control plane will only be accessible from IP
+              addresses within this list.
             </StyledTypography>
             {errors.acl?.message && (
               <Notice spacingBottom={12} spacingTop={8} variant="error">
