@@ -6,7 +6,7 @@ import * as React from 'react';
 import FileCopy from 'src/assets/icons/copy.svg';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-import type { TooltipProps } from 'src/components/Tooltip';
+import type { TooltipProps } from '@linode/ui';
 
 export interface CopyTooltipProps {
   /**
