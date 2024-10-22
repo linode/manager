@@ -60,6 +60,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 interface Props {
   buttonText?: string;
   className?: string;
+  disabled?: boolean;
   error?: string;
   forDatabaseAccessControls?: boolean;
   forVPCIPv4Ranges?: boolean;
@@ -78,6 +79,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
   const {
     buttonText,
     className,
+    disabled,
     error,
     forDatabaseAccessControls,
     forVPCIPv4Ranges,
@@ -137,6 +139,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
       buttonType="secondary"
       className={classes.addIP}
       compactX
+      disabled={disabled}
       onClick={addNewInput}
     >
       {buttonText ?? 'Add an IP'}
@@ -184,6 +187,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
             <TextField
               InputProps={{
                 'aria-label': `${title} ip-address-${idx}`,
+                disabled,
                 ...props.inputProps,
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -206,6 +210,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
             {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
               <Button
                 className={classes.button}
+                disabled={disabled}
                 onClick={() => removeInput(idx)}
               >
                 <Close data-testid={`delete-ip-${idx}`} />
