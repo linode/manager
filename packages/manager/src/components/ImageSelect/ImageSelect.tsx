@@ -128,14 +128,18 @@ export const ImageSelect = (props: Props) => {
           <StyledList>{params.children}</StyledList>
         </li>
       )}
-      renderOption={(props, option, state) => (
-        <ImageOption
-          image={option}
-          isSelected={state.selected}
-          key={option.id}
-          listItemProps={props}
-        />
-      )}
+      renderOption={(props, option, state) => {
+        const { key, ...rest } = props;
+
+        return (
+          <ImageOption
+            image={option}
+            isSelected={state.selected}
+            key={key}
+            listItemProps={rest}
+          />
+        );
+      }}
       textFieldProps={{
         InputProps: {
           startAdornment:

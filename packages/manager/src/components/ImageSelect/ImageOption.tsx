@@ -4,7 +4,6 @@ import React from 'react';
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { useFlags } from 'src/hooks/useFlags';
-import { omitProps } from 'src/utilities/omittedProps';
 
 import { SelectedIcon } from '../Autocomplete/Autocomplete.styles';
 import { OSIcon } from '../OSIcon';
@@ -17,17 +16,15 @@ import type { Image } from '@linode/api-v4';
 interface Props {
   image: Image;
   isSelected: boolean;
-  listItemProps: React.HTMLAttributes<HTMLLIElement> & { key?: string };
+  listItemProps: Omit<React.HTMLAttributes<HTMLLIElement>, 'key'>;
 }
 
 export const ImageOption = ({ image, isSelected, listItemProps }: Props) => {
   const flags = useFlags();
-  // prevents spread key console error
-  const props = omitProps(listItemProps, ['key']);
 
   return (
     <li
-      {...props}
+      {...listItemProps}
       style={{
         display: 'flex',
         justifyContent: 'space-between',
