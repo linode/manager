@@ -257,6 +257,12 @@ export const TextField = (props: TextFieldProps) => {
   const validInputId =
     inputId || (label ? convertToKebabCase(`${label}`) : undefined);
 
+  const labelSuffixText = required
+    ? '(required)'
+    : optional
+    ? '(optional)'
+    : null;
+
   return (
     <Box
       {...containerProps}
@@ -293,17 +299,12 @@ export const TextField = (props: TextFieldProps) => {
           htmlFor={validInputId}
         >
           {label}
-          {required ? (
+          {labelSuffixText && (
             <Box component="span" sx={{ fontFamily: theme.font.normal }}>
               {' '}
-              (required)
+              {labelSuffixText}
             </Box>
-          ) : optional ? (
-            <Box component="span" sx={{ fontFamily: theme.font.normal }}>
-              {' '}
-              (optional)
-            </Box>
-          ) : null}
+          )}
         </InputLabel>
         {labelTooltipText && (
           <TooltipIcon
