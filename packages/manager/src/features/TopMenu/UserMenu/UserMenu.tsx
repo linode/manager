@@ -231,7 +231,9 @@ export const UserMenu = React.memo(() => {
           <Hidden mdDown>
             <Stack alignItems={'flex-start'}>
               <MaskableText
-                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                isMaskedPreferenceEnabled={Boolean(
+                  preferences?.redactSensitiveData
+                )}
                 text={userName}
               >
                 <Typography
@@ -244,7 +246,9 @@ export const UserMenu = React.memo(() => {
               </MaskableText>
               {companyNameOrEmail && (
                 <MaskableText
-                  isRedacted={Boolean(preferences?.redactSensitiveData)}
+                  isMaskedPreferenceEnabled={Boolean(
+                    preferences?.redactSensitiveData
+                  )}
                   text={companyNameOrEmail}
                 >
                   <Typography
@@ -288,7 +292,9 @@ export const UserMenu = React.memo(() => {
             <Typography>Current account:</Typography>
           )}
           <MaskableText
-            isRedacted={Boolean(preferences?.redactSensitiveData)}
+            isMaskedPreferenceEnabled={Boolean(
+              preferences?.redactSensitiveData
+            )}
             isToggleable
             text={userHeadline}
           >

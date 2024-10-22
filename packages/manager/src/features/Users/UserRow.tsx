@@ -48,7 +48,9 @@ export const UserRow = ({ onDelete, user }: Props) => {
             username={user.username}
           />
           <MaskableText
-            isRedacted={Boolean(preferences?.redactSensitiveData)}
+            isMaskedPreferenceEnabled={Boolean(
+              preferences?.redactSensitiveData
+            )}
             isToggleable
             text={user.username}
           />
@@ -60,7 +62,9 @@ export const UserRow = ({ onDelete, user }: Props) => {
         <TableCell>
           {' '}
           <MaskableText
-            isRedacted={Boolean(preferences?.redactSensitiveData)}
+            isMaskedPreferenceEnabled={Boolean(
+              preferences?.redactSensitiveData
+            )}
             isToggleable
             text={user.email}
           />

@@ -224,7 +224,9 @@ export const PhoneVerification = ({
                         ? getFormattedNumber(profile.verified_phone_number)
                         : 'No Phone Number'
                     }
-                    isRedacted={Boolean(preferences?.redactSensitiveData)}
+                    isMaskedPreferenceEnabled={Boolean(
+                      preferences?.redactSensitiveData
+                    )}
                     isToggleable
                   />
                 </Typography>

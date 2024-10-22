@@ -7,23 +7,41 @@ import { Stack } from '../Stack';
 import { MaskableTextTooltip } from './MaskableTextTooltip';
 
 interface Props {
+  /**
+   * (Optional) original JSX element to render if the text is not masked.
+   */
   children?: JSX.Element;
-  isRedacted: boolean;
+  /**
+   * If true, the user has enabled masking sensitive data in their Profile settings.
+   */
+  isMaskedPreferenceEnabled: boolean;
+  /**
+   * If true, displays a MaskableTextTooltip icon to toggle the masked and unmasked text.
+   */
   isToggleable?: boolean;
+  /**
+   * The text to mask; if the text is not masked, render the original text or the styled text via children.
+   */
   text: string | undefined;
 }
 
 export const MaskableText = (props: Props) => {
-  const { children, isRedacted, isToggleable = false, text } = props;
+  const {
+    children,
+    isMaskedPreferenceEnabled,
+    isToggleable = false,
+    text,
+  } = props;
 
-  const [isMasked, setIsMasked] = React.useState(isRedacted);
+  const [isMasked, setIsMasked] = React.useState(isMaskedPreferenceEnabled);
 
-  // Return early based on the prop value and the original text.
+  // Return early based on the preference setting and the original text.
+
   if (!text) {
     return;
   }
 
-  if (!isRedacted) {
+  if (!isMaskedPreferenceEnabled) {
     return children ? children : <Typography>{text}</Typography>;
   }
 

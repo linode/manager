@@ -8,32 +8,20 @@ import { Tooltip } from '../Tooltip';
 
 interface Props {
   handleClick: () => void;
-  // isDisabled: boolean;
   isMasked: boolean;
-  /**
-   * Displays the button text rather than the visibility icons.
-   */
-  showText?: boolean;
 }
 
 export const MaskableTextTooltip = (props: Props) => {
-  const { handleClick, isMasked, showText = false } = props;
-
-  const maskedButtonText = showText ? (
-    'Show'
-  ) : (
-    <VisibilityIcon aria-label="Show" />
-  );
-  const visibleButtonText = showText ? (
-    'Hide'
-  ) : (
-    <VisibilityOffIcon aria-label="Hide" />
-  );
+  const { handleClick, isMasked } = props;
 
   return (
     <Tooltip title={isMasked ? 'Show' : 'Hide'}>
       <StyledToggleButton onClick={handleClick}>
-        {isMasked ? maskedButtonText : visibleButtonText}
+        {isMasked ? (
+          <VisibilityIcon aria-label="Show" />
+        ) : (
+          <VisibilityOffIcon aria-label="Hide" />
+        )}
       </StyledToggleButton>
     </Tooltip>
   );

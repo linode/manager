@@ -193,7 +193,9 @@ const ContactInformation = (props: Props) => {
             <Grid sx={sxGrid}>
               {(firstName || lastName) && (
                 <MaskableText
-                  isRedacted={Boolean(preferences?.redactSensitiveData)}
+                  isMaskedPreferenceEnabled={Boolean(
+                    preferences?.redactSensitiveData
+                  )}
                   text={`${firstName} ${lastName}`}
                 >
                   <StyledTypography
@@ -206,7 +208,9 @@ const ContactInformation = (props: Props) => {
               )}
               {company && (
                 <MaskableText
-                  isRedacted={Boolean(preferences?.redactSensitiveData)}
+                  isMaskedPreferenceEnabled={Boolean(
+                    preferences?.redactSensitiveData
+                  )}
                   text={company}
                 >
                   <>
@@ -222,7 +226,9 @@ const ContactInformation = (props: Props) => {
               )}
               {(address1 || address2 || city || state || zip || country) && (
                 <MaskableText
-                  isRedacted={Boolean(preferences?.redactSensitiveData)}
+                  isMaskedPreferenceEnabled={Boolean(
+                    preferences?.redactSensitiveData
+                  )}
                   text={`${address1} ${address2}`}
                 >
                   <>
@@ -234,7 +240,9 @@ const ContactInformation = (props: Props) => {
                 </MaskableText>
               )}
               <MaskableText
-                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                isMaskedPreferenceEnabled={Boolean(
+                  preferences?.redactSensitiveData
+                )}
                 text={`${city} ${state} ${zip}`}
               >
                 <StyledTypography>
@@ -243,7 +251,9 @@ const ContactInformation = (props: Props) => {
                 </StyledTypography>
               </MaskableText>
               <MaskableText
-                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                isMaskedPreferenceEnabled={Boolean(
+                  preferences?.redactSensitiveData
+                )}
                 text={countryName}
               >
                 <StyledTypography>{countryName}</StyledTypography>
@@ -252,7 +262,9 @@ const ContactInformation = (props: Props) => {
           )}
           <Grid sx={sxGrid}>
             <MaskableText
-              isRedacted={Boolean(preferences?.redactSensitiveData)}
+              isMaskedPreferenceEnabled={Boolean(
+                preferences?.redactSensitiveData
+              )}
               text={email}
             >
               <StyledTypography
@@ -264,7 +276,9 @@ const ContactInformation = (props: Props) => {
             </MaskableText>
             {phone && (
               <MaskableText
-                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                isMaskedPreferenceEnabled={Boolean(
+                  preferences?.redactSensitiveData
+                )}
                 text={phone}
               >
                 <StyledTypography data-qa-contact-phone>
@@ -274,7 +288,9 @@ const ContactInformation = (props: Props) => {
             )}
             {taxId && (
               <MaskableText
-                isRedacted={Boolean(preferences?.redactSensitiveData)}
+                isMaskedPreferenceEnabled={Boolean(
+                  preferences?.redactSensitiveData
+                )}
                 text={taxId}
               >
                 <Box alignItems="center" display="flex">

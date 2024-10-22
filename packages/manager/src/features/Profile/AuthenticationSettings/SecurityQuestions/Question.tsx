@@ -57,7 +57,9 @@ export const Question = (props: Props) => {
           variant="body1"
         >
           <MaskableText
-            isRedacted={Boolean(preferences?.redactSensitiveData)}
+            isMaskedPreferenceEnabled={Boolean(
+              preferences?.redactSensitiveData
+            )}
             isToggleable
             text={questionResponse?.question}
           />
