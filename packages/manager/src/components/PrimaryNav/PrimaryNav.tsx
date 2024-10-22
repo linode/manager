@@ -1,4 +1,3 @@
-import { BetaChip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -18,16 +17,16 @@ import { useAccountSettings } from 'src/queries/account/settings';
 
 import {
   StyledAccordion,
-  StyledActiveLink,
   StyledAkamaiLogo,
   StyledGrid,
   StyledLink,
   StyledLogoBox,
-  StyledPrimaryLinkBox,
 } from './PrimaryNav.styles';
-import { linkIsActive } from './utils';
+import PrimaryLink from './PrimaryLink';
 
-type NavEntity =
+import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
+
+export type NavEntity =
   | 'Account'
   | 'Account'
   | 'Betas'
@@ -51,22 +50,10 @@ type NavEntity =
   | 'VPC'
   | 'Volumes';
 
-interface PrimaryLink {
-  activeLinks?: Array<string>;
-  attr?: { [key: string]: any };
-  betaChipClassName?: string;
-  display: NavEntity;
-  hide?: boolean;
-  href: string;
-  icon?: JSX.Element;
-  isBeta?: boolean;
-  onClick?: (e: React.ChangeEvent<any>) => void;
-}
-
 interface PrimaryLinkGroup {
   icon?: React.JSX.Element;
   title?: string;
-  links: PrimaryLink[];
+  links: PrimaryLinkType[];
 }
 
 export interface PrimaryNavProps {
@@ -315,67 +302,3 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 };
 
 export default React.memo(PrimaryNav);
-
-interface PrimaryLinkProps extends PrimaryLink {
-  closeMenu: () => void;
-  isBeta?: boolean;
-  isCollapsed: boolean;
-  locationPathname: string;
-  locationSearch: string;
-}
-
-const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
-  const {
-    activeLinks,
-    attr,
-    betaChipClassName,
-    closeMenu,
-    display,
-    href,
-    icon,
-    isBeta,
-    isCollapsed,
-    locationPathname,
-    locationSearch,
-    onClick,
-  } = props;
-
-  const isActiveLink = Boolean(
-    linkIsActive(href, locationSearch, locationPathname, activeLinks)
-  );
-
-  return (
-    <StyledActiveLink
-      onClick={(e: React.ChangeEvent<any>) => {
-        closeMenu();
-        if (onClick) {
-          onClick(e);
-        }
-      }}
-      to={href}
-      {...attr}
-      aria-current={isActiveLink}
-      data-testid={`menu-item-${display}`}
-      isActiveLink={isActiveLink}
-    >
-      {icon && (
-        <div aria-hidden className="icon">
-          {icon}
-        </div>
-      )}
-      <StyledPrimaryLinkBox
-        className="primaryNavLink"
-        isCollapsed={isCollapsed}
-      >
-        {display}
-        {isBeta ? (
-          <BetaChip
-            className={`${betaChipClassName ? betaChipClassName : ''}`}
-            color="primary"
-            component="span"
-          />
-        ) : null}
-      </StyledPrimaryLinkBox>
-    </StyledActiveLink>
-  );
-});
