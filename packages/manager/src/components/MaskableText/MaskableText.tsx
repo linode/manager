@@ -24,7 +24,7 @@ export const MaskableText = (props: Props) => {
   }
 
   if (!isRedacted) {
-    return children ? children : text;
+    return children ? children : <Typography>{text}</Typography>;
   }
 
   return (
@@ -41,7 +41,7 @@ export const MaskableText = (props: Props) => {
       ) : children ? (
         children
       ) : (
-        text
+        <Typography>{text}</Typography>
       )}
       {isToggleable && (
         <MaskableTextTooltip

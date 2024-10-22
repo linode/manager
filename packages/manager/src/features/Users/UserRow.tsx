@@ -6,12 +6,14 @@ import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useAccountUserGrants } from 'src/queries/account/users';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalize } from 'src/utilities/capitalize';
 
@@ -28,6 +30,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const theme = useTheme();
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
+  const { data: preferences } = usePreferences();
 
   const isProxyUser = Boolean(user.user_type === 'proxy');
   const showChildAccountAccessCol = profile?.user_type === 'parent';
@@ -44,13 +47,24 @@ export const UserRow = ({ onDelete, user }: Props) => {
             }
             username={user.username}
           />
-          <Typography>{user.username}</Typography>
+          <MaskableText
+            isRedacted={Boolean(preferences?.redactSensitiveData)}
+            isToggleable
+            text={user.username}
+          />
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
       <Hidden smDown>
-        <TableCell>{user.email}</TableCell>
+        <TableCell>
+          {' '}
+          <MaskableText
+            isRedacted={Boolean(preferences?.redactSensitiveData)}
+            isToggleable
+            text={user.email}
+          />
+        </TableCell>
       </Hidden>
       <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>
       {showChildAccountAccessCol && (
