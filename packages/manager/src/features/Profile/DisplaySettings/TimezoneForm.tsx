@@ -2,14 +2,16 @@ import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { timezones } from 'src/assets/timezones/timezones';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { useIsLoggedInAsCustomer } from 'src/hooks/useIsLoggedInAsCustomer';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
+
+import type { Profile } from '@linode/api-v4';
 
 type Timezone = typeof timezones[number];
 
@@ -37,64 +39,78 @@ const getTimezoneOptions = () => {
 
 const timezoneOptions = getTimezoneOptions();
 
+type Values = Pick<Profile, 'timezone'>;
+
 export const TimezoneForm = () => {
   const loggedInAsCustomer = useIsLoggedInAsCustomer();
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const { error, isPending, mutateAsync: updateProfile } = useMutateProfile();
+  const { mutateAsync: updateProfile } = useMutateProfile();
 
-  const [timezoneValue, setTimezoneValue] = React.useState(profile?.timezone);
+  const values = { timezone: profile?.timezone ?? '' };
 
-  const onSubmit = () => {
-    if (!timezoneValue) {
-      enqueueSnackbar('Please select a valid timezone.', { variant: 'error' });
+  const {
+    control,
+    formState: { isDirty, isSubmitting },
+    handleSubmit,
+    setError,
+  } = useForm<Values>({
+    defaultValues: values,
+    values,
+  });
+
+  const onSubmit = async (values: Values) => {
+    try {
+      await updateProfile(values);
+      enqueueSnackbar('Successfully updated timezone.', { variant: 'success' });
+    } catch (error) {
+      setError('timezone', { message: error[0].reason });
     }
-
-    updateProfile({ timezone: timezoneValue }).then(() => {
-      enqueueSnackbar('Successfully updated timezone', { variant: 'success' });
-    });
   };
 
-  const disabled = !timezoneValue || profile?.timezone === timezoneValue;
-
-  if (!profile) {
-    return <CircleProgress />;
-  }
-
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       {loggedInAsCustomer && (
         <Notice dataTestId="admin-notice" variant="error">
           While you are logged in as a customer, all times, dates, and graphs
-          will be displayed in the user&rsquo;s timezone ({profile.timezone}).
+          will be displayed in the user&rsquo;s timezone ({profile?.timezone}).
         </Notice>
       )}
       <SingleTextFieldFormContainer>
-        <Autocomplete
-          value={timezoneOptions.find(
-            (option) => option.value === timezoneValue
+        <Controller
+          render={({ field, fieldState }) => (
+            <Autocomplete
+              // @ts-expect-error not sure what to do
+              value={
+                timezoneOptions.find(
+                  (option) => option.value === field.value
+                ) ?? null
+              }
+              autoHighlight
+              disableClearable
+              errorText={fieldState.error?.message}
+              fullWidth
+              label="Timezone"
+              noMarginTop
+              onChange={(e, option) => field.onChange(option.value)}
+              options={timezoneOptions}
+              placeholder="Choose a Timezone"
+            />
           )}
-          autoHighlight
-          disableClearable
-          errorText={error?.[0].reason}
-          fullWidth
-          label="Timezone"
-          noMarginTop
-          onChange={(e, option) => setTimezoneValue(option.value)}
-          options={timezoneOptions}
-          placeholder="Choose a Timezone"
+          control={control}
+          name="timezone"
         />
         <Button
           buttonType="primary"
-          disabled={disabled}
-          loading={isPending}
-          onClick={onSubmit}
+          disabled={!isDirty}
+          loading={isSubmitting}
           sx={{ minWidth: 180 }}
+          type="submit"
         >
           Update Timezone
         </Button>
       </SingleTextFieldFormContainer>
-    </>
+    </form>
   );
 };
 

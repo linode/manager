@@ -1,4 +1,4 @@
-import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories';
@@ -20,12 +20,8 @@ describe('Timezone change form', () => {
     );
   });
 
-  it('should render input label', async () => {
-    const { getByTestId, getByText } = renderWithTheme(<TimezoneForm />);
-
-    // This component depends on the /profile to be loaded. Wait for
-    // loading to finish before we check anything.
-    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+  it('should render input label', () => {
+    const { getByText } = renderWithTheme(<TimezoneForm />);
 
     expect(getByText('Timezone')).toBeInTheDocument();
   });
@@ -35,22 +31,16 @@ describe('Timezone change form', () => {
       customStore: { authentication: { loggedInAsCustomer: true } },
     });
 
-    await waitFor(() => {
-      expect(getByTestId('admin-notice')).toBeInTheDocument();
-    });
+    expect(getByTestId('admin-notice')).toBeInTheDocument();
   });
 
   it('should not show a message if the user is logged in normally', async () => {
-    const { queryByTestId, getByTestId } = renderWithTheme(<TimezoneForm />);
-
-    // This component depends on the /profile to be loaded. Wait for
-    // loading to finish before we check anything.
-    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+    const { queryByTestId } = renderWithTheme(<TimezoneForm />);
 
     expect(queryByTestId('admin-notice')).not.toBeInTheDocument();
   });
 
-  it("should include text with the user's current time zone", async () => {
+  it("should include text with the user's current time zone in the admin warning", async () => {
     const { queryByTestId } = renderWithTheme(<TimezoneForm />, {
       customStore: { authentication: { loggedInAsCustomer: true } },
     });
@@ -58,6 +48,16 @@ describe('Timezone change form', () => {
     await waitFor(() => {
       expect(queryByTestId('admin-notice')).toHaveTextContent(
         'America/New_York'
+      );
+    });
+  });
+
+  it("should show the user's currently selected timezone", async () => {
+    const { getByLabelText } = renderWithTheme(<TimezoneForm />);
+
+    await waitFor(() => {
+      expect(getByLabelText('Timezone')).toHaveDisplayValue(
+        /Eastern Time - New York/
       );
     });
   });
