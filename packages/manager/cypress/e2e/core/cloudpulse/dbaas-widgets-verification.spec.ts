@@ -181,7 +181,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
 
     //Select a Engine from the autocomplete input.
     ui.autocomplete
-      .findByLabel('Engine')
+      .findByLabel('Database Engine')
       .should('be.visible')
       .type(`${engine}{enter}`)
       .should('be.visible');
