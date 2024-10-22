@@ -8,10 +8,10 @@ import { timezones } from 'src/assets/timezones/timezones';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
+import { useAuthentication } from 'src/hooks/useAuthentication';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 
 import type { Profile } from '@linode/api-v4';
-import { useAuthentication } from 'src/hooks/useAuthentication';
 
 type Timezone = typeof timezones[number];
 
