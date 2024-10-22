@@ -43,11 +43,19 @@ export const CloudPulseResourcesSelect = React.memo(
       xFilter,
     } = props;
 
-    const { data: resources, isLoading } = useResourcesQuery(
+    const { data: resources, isError, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
-      xFilter ? xFilter : { region }
+      xFilter
+        ? {
+            ...(resourceType === 'dbaas' ? { platform: 'rdbms-default' } : {}),
+            ...xFilter,
+          }
+        : {
+            ...(resourceType === 'dbaas' ? { platform: 'rdbms-default' } : {}),
+            region,
+          }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
@@ -121,10 +129,12 @@ export const CloudPulseResourcesSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
-        disabled={disabled || isLoading}
+        disabled={disabled}
+        errorText={isError ? `Failed to fetch ${label || 'Resources'}` : ''}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
         limitTags={2}
+        loading={isLoading}
         multiple
         noMarginTop
         options={getResourcesList}
