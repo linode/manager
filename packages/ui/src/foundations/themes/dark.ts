@@ -1,13 +1,19 @@
 import {
+  Accent,
   Action,
+  Background,
   Badge,
+  Border,
   Button,
   Color,
+  Content,
   Dropdown,
+  Elevation,
   Interaction,
   NotificationToast,
   Select,
   TextField,
+  Typography,
 } from '@linode/design-language-system/themes/dark';
 
 import { breakpoints } from '../breakpoints';
@@ -48,6 +54,7 @@ export const customDarkModeOptions = {
     primaryNavPaper: Color.Neutrals[100],
     tableHeader: Color.Neutrals[100],
     white: Color.Neutrals[100],
+    ...Background,
   },
   borderColors: {
     borderFocus: Interaction.Border.Focus,
@@ -55,6 +62,7 @@ export const customDarkModeOptions = {
     borderTable: Color.Neutrals[80],
     borderTypography: Color.Neutrals[80],
     divider: Color.Neutrals[80],
+    ...Border,
   },
   color: {
     black: Color.Neutrals.White,
@@ -181,6 +189,8 @@ const genericTableHeaderStyle = {
 };
 
 export const darkTheme: ThemeOptions = {
+  accentTokens: Accent,
+  actionTokens: Action,
   animateCircleIcon: {
     ...iconCircleAnimation,
   },
@@ -791,6 +801,8 @@ export const darkTheme: ThemeOptions = {
       },
     },
   },
+  contentTokens: Content,
+  elevationTokens: Elevation,
   graphs: {
     cpu: {
       percent: `rgb(54, 131, 220)`,
@@ -889,5 +901,6 @@ export const darkTheme: ThemeOptions = {
     subtitle1: {
       color: primaryColors.text,
     },
+    ...Typography,
   },
 };

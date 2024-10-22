@@ -5,10 +5,21 @@ import { darkTheme } from './dark';
 import { lightTheme, inputMaxWidth as _inputMaxWidth } from './light';
 
 import type {
+  AccentTypes as AccentTypesLight,
+  ActionTypes as ActionTypesLight,
   ChartTypes,
+  ContentTypes as ContentTypesLight,
+  ElevationTypes as ElevationTypesLight,
   InteractionTypes as InteractionTypesLight,
+  RadiusTypes,
 } from '@linode/design-language-system';
-import type { InteractionTypes as InteractionTypesDark } from '@linode/design-language-system/themes/dark';
+import type {
+  AccentTypes as AccentTypesDark,
+  ActionTypes as ActionTypesDark,
+  ContentTypes as ContentTypesDark,
+  ElevationTypes as ElevationTypesDark,
+  InteractionTypes as InteractionTypesDark,
+} from '@linode/design-language-system/themes/dark';
 import type { latoWeb } from '../fonts';
 // Types & Interfaces
 import type {
@@ -25,6 +36,10 @@ import type {
 
 export type ThemeName = 'dark' | 'light';
 
+type AccentTypes = MergeTypes<AccentTypesLight, AccentTypesDark>;
+type ActionTypes = MergeTypes<ActionTypesLight, ActionTypesDark>;
+type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
+type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
 
 type Fonts = typeof latoWeb;
@@ -65,6 +80,8 @@ type NotificationToast = MergeTypes<
  */
 declare module '@mui/material/styles/createTheme' {
   interface Theme {
+    accentTokens: AccentTypes;
+    actionTokens: ActionTypes;
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
@@ -74,17 +91,22 @@ declare module '@mui/material/styles/createTheme' {
     borderColors: BorderColors;
     chartTokens: ChartTypes;
     color: Colors;
+    contentTokens: ContentTypes;
+    elevationTokens: ElevationTypes;
     font: Fonts;
     graphs: any;
     inputStyles: any;
     interactionTokens: InteractionTypes;
     name: ThemeName;
     notificationToast: NotificationToast;
+    radiusTokens: RadiusTypes;
     textColors: TextColors;
     visually: any;
   }
 
   interface ThemeOptions {
+    accentTokens?: AccentTypes;
+    actionTokens?: ActionTypes;
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
@@ -94,12 +116,15 @@ declare module '@mui/material/styles/createTheme' {
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
     chartTokens?: ChartTypes;
     color?: DarkModeColors | LightModeColors;
+    contentTokens?: ContentTypes;
+    elevationTokens?: ElevationTypes;
     font?: Fonts;
     graphs?: any;
     inputStyles?: any;
     interactionTokens?: InteractionTypes;
     name: ThemeName;
     notificationToast?: NotificationToast;
+    radiusTokens?: RadiusTypes;
     textColors?: DarkModeTextColors | LightModeTextColors;
     visually?: any;
   }
