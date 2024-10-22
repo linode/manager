@@ -42,7 +42,7 @@ describe('EmailForm', () => {
     expect(getByLabelText('This field can’t be modified.')).toBeVisible();
   });
 
-  it('enables the save button when the user has made changes to the form', async () => {
+  it('enables the save button when the user makes a change to the email', async () => {
     const profile = profileFactory.build({ email: 'user@linode.com' });
 
     server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));
