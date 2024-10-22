@@ -347,7 +347,7 @@ export const lightTheme: ThemeOptions = {
             opacity: 1,
           },
           '&::selection': {
-            backgroundColor: color.grey7,
+            backgroundColor: 'transparent',
           },
         },
         inputRoot: {
