@@ -388,7 +388,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
   });
 });
 
-describe.only('LKE Cluster Creation with ACL', () => {
+describe('LKE Cluster Creation with ACL', () => {
   /**
    * - Confirms ACL flow does not exist if account doesn't have the corresponding capability
    */
