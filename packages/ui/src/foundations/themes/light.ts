@@ -37,7 +37,6 @@ export const bg = {
   primaryNavPaper: Color.Neutrals[100],
   tableHeader: Color.Neutrals[10],
   white: Color.Neutrals.White,
-  ...Background,
 } as const;
 
 const primaryColors = {
@@ -106,7 +105,6 @@ export const borderColors = {
   borderTypography: Color.Neutrals[30],
   divider: Color.Neutrals[30],
   dividerDark: Color.Neutrals[80],
-  ...Border,
 } as const;
 
 export const notificationToast = {
@@ -246,8 +244,10 @@ export const lightTheme: ThemeOptions = {
   applyTableHeaderStyles: {
     ...genericTableHeaderStyle,
   },
+  backgroundTokens: Background,
   bg,
   borderColors,
+  borderTokens: Border,
   breakpoints,
   chartTokens: Chart,
   color,
@@ -1683,8 +1683,8 @@ export const lightTheme: ThemeOptions = {
       fontSize: '1.075rem',
       lineHeight: '1.5rem',
     },
-    ...Typography,
   },
+  typographyTokens: Typography,
   visually: {
     hidden: visuallyHidden,
     visible: visuallyVisible,

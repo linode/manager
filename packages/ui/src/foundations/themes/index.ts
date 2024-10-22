@@ -7,15 +7,20 @@ import { lightTheme, inputMaxWidth as _inputMaxWidth } from './light';
 import type {
   AccentTypes as AccentTypesLight,
   ActionTypes as ActionTypesLight,
+  BackgroundTypes as BackgroundTypesLight,
+  BorderTypes as BorderTypesLight,
   ChartTypes,
   ContentTypes as ContentTypesLight,
   ElevationTypes as ElevationTypesLight,
   InteractionTypes as InteractionTypesLight,
+  TypographyTypes,
   RadiusTypes,
 } from '@linode/design-language-system';
 import type {
   AccentTypes as AccentTypesDark,
   ActionTypes as ActionTypesDark,
+  BackgroundTypes as BackgroundTypesDark,
+  BorderTypes as BorderTypesDark,
   ContentTypes as ContentTypesDark,
   ElevationTypes as ElevationTypesDark,
   InteractionTypes as InteractionTypesDark,
@@ -38,6 +43,8 @@ export type ThemeName = 'dark' | 'light';
 
 type AccentTypes = MergeTypes<AccentTypesLight, AccentTypesDark>;
 type ActionTypes = MergeTypes<ActionTypesLight, ActionTypesDark>;
+type BackgroundTypes = MergeTypes<BackgroundTypesLight, BackgroundTypesDark>;
+type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
 type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
 type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
 type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
@@ -87,8 +94,10 @@ declare module '@mui/material/styles/createTheme' {
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
+    backgroundTokens: BackgroundTypes;
     bg: BgColors;
     borderColors: BorderColors;
+    borderTokens: BorderTypes;
     chartTokens: ChartTypes;
     color: Colors;
     contentTokens: ContentTypes;
@@ -101,6 +110,7 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast: NotificationToast;
     radiusTokens: RadiusTypes;
     textColors: TextColors;
+    typographyTokens: TypographyTypes;
     visually: any;
   }
 
@@ -112,8 +122,10 @@ declare module '@mui/material/styles/createTheme' {
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
+    backgroundTokens?: BackgroundTypes;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
+    borderTokens?: BorderTypes;
     chartTokens?: ChartTypes;
     color?: DarkModeColors | LightModeColors;
     contentTokens?: ContentTypes;
@@ -126,6 +138,7 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast?: NotificationToast;
     radiusTokens?: RadiusTypes;
     textColors?: DarkModeTextColors | LightModeTextColors;
+    typographyTokens?: TypographyTypes;
     visually?: any;
   }
 }

@@ -54,7 +54,6 @@ export const customDarkModeOptions = {
     primaryNavPaper: Color.Neutrals[100],
     tableHeader: Color.Neutrals[100],
     white: Color.Neutrals[100],
-    ...Background,
   },
   borderColors: {
     borderFocus: Interaction.Border.Focus,
@@ -62,7 +61,6 @@ export const customDarkModeOptions = {
     borderTable: Color.Neutrals[80],
     borderTypography: Color.Neutrals[80],
     divider: Color.Neutrals[80],
-    ...Border,
   },
   color: {
     black: Color.Neutrals.White,
@@ -203,8 +201,10 @@ export const darkTheme: ThemeOptions = {
   applyTableHeaderStyles: {
     ...genericTableHeaderStyle,
   },
+  backgroundTokens: Background,
   bg: customDarkModeOptions.bg,
   borderColors: customDarkModeOptions.borderColors,
+  borderTokens: Border,
   breakpoints,
   color: customDarkModeOptions.color,
   components: {
@@ -901,6 +901,6 @@ export const darkTheme: ThemeOptions = {
     subtitle1: {
       color: primaryColors.text,
     },
-    ...Typography,
   },
+  typographyTokens: Typography,
 };
