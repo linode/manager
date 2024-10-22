@@ -1351,8 +1351,7 @@ describe('LKE cluster updates', () => {
   });
 });
 
-// NOTE TO SELF COPIES MAY CHANGE (but the structure will remain the same)
-describe('LKE ACL updates', () => {
+describe.only('LKE ACL updates', () => {
   const mockCluster = kubernetesClusterFactory.build();
   const mockRevisionId = randomString(20);
 
@@ -1435,13 +1434,13 @@ describe('LKE ACL updates', () => {
             .should('not.be.enabled');
 
           cy.contains(
-            "Control Plane ACL secures network access to your LKE cluster's control plane. When not enabled, any public IP address can be used to access your control plane. When enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL."
+            "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
           ).should('be.visible');
 
-          // confirm Enabled section and toggle on 'Enabled'
-          cy.contains('Control Plane ACL').should('be.visible');
+          // confirm Activation Status section and toggle on 'Enable'
+          cy.contains('Activation Status').should('be.visible');
           cy.contains(
-            'Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
+            'Enable or disable the Control Plane ACL. If the ACL is not enabled, any public IP address can be used to access your control plane. Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
           ).should('be.visible');
           cy.findByText('Enable Control Plane ACL');
           ui.toggle
@@ -1659,13 +1658,13 @@ describe('LKE ACL updates', () => {
             .should('not.be.enabled');
 
           cy.contains(
-            "Control Plane ACL secures network access to your LKE cluster's control plane. When not enabled, any public IP address can be used to access your control plane. When enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL."
+            "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
           ).should('be.visible');
 
-          // confirm Enabled section and toggle off 'Enabled'
-          cy.contains('Control Plane ACL').should('be.visible');
+          // confirm Activation Status section and toggle off 'Enable'
+          cy.contains('Activation Status').should('be.visible');
           cy.contains(
-            'Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
+            'Enable or disable the Control Plane ACL. If the ACL is not enabled, any public IP address can be used to access your control plane. Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
           ).should('be.visible');
           cy.findByText('Enable Control Plane ACL');
           ui.toggle
@@ -1804,7 +1803,15 @@ describe('LKE ACL updates', () => {
         .findByTitle('Control Plane ACL')
         .should('be.visible')
         .within(() => {
-          // Enable ACL
+          cy.contains(
+            "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
+          ).should('be.visible');
+
+          // Confirm Activation Status section and Enable ACL
+          cy.contains('Activation Status').should('be.visible');
+          cy.contains(
+            'Enable or disable the Control Plane ACL. If the ACL is not enabled, any public IP address can be used to access your control plane. Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
+          ).should('be.visible');
           ui.toggle
             .find()
             .should('have.attr', 'data-qa-toggle', 'false')
@@ -1817,7 +1824,14 @@ describe('LKE ACL updates', () => {
             'A unique identifing string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
           ).should('not.exist');
 
-          // Add IP addresses
+          // Confirm Addresses section and add IP addresses
+          cy.findByText('Addresses').should('be.visible');
+          cy.findByText(
+            "A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This cluster's control plane will only be accessible from IP addresses within this list."
+          ).should('be.visible');
+          cy.findByText('IPv4 Addresses or CIDRs').should('be.visible');
+          cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
+
           cy.findByPlaceholderText('0.0.0.0/0')
             .should('be.visible')
             .click()
@@ -1827,6 +1841,11 @@ describe('LKE ACL updates', () => {
             .should('be.visible')
             .click()
             .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+
+          // Confirm installation notice is displayed
+          cy.contains(
+            'Control Plane ACL has not yet been installed on this cluster. During installation, it may take up to 15 minutes for the access control list to be fully enforced.'
+          ).should('be.visible');
 
           // submit
           ui.button
