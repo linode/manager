@@ -13,7 +13,6 @@ import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
@@ -23,7 +22,6 @@ import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';
-import { usePreferences } from 'src/queries/profile/preferences';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage, setStorage } from 'src/utilities/storage';
@@ -63,7 +61,6 @@ export const UserMenu = React.memo(() => {
   );
   const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
-  const { data: preferences } = usePreferences();
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -102,11 +99,6 @@ export const UserMenu = React.memo(() => {
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
 
   const userName = (isProxyUser ? parentProfile : profile)?.username ?? '';
-
-  const userHeadline =
-    canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
-      ? companyNameOrEmail
-      : userName;
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -230,36 +222,22 @@ export const UserMenu = React.memo(() => {
         >
           <Hidden mdDown>
             <Stack alignItems={'flex-start'}>
-              <MaskableText
-                isMaskedPreferenceEnabled={Boolean(
-                  preferences?.redactSensitiveData
-                )}
-                text={userName}
+              <Typography
+                sx={{
+                  fontSize: companyNameOrEmail ? '0.775rem' : '0.875rem',
+                }}
               >
-                <Typography
-                  sx={{
-                    fontSize: companyNameOrEmail ? '0.775rem' : '0.875rem',
-                  }}
-                >
-                  {userName}
-                </Typography>
-              </MaskableText>
+                {userName}
+              </Typography>
               {companyNameOrEmail && (
-                <MaskableText
-                  isMaskedPreferenceEnabled={Boolean(
-                    preferences?.redactSensitiveData
-                  )}
-                  text={companyNameOrEmail}
+                <Typography
+                  sx={(theme) => ({
+                    fontFamily: theme.font.bold,
+                    fontSize: '0.875rem',
+                  })}
                 >
-                  <Typography
-                    sx={(theme) => ({
-                      fontFamily: theme.font.bold,
-                      fontSize: '0.875rem',
-                    })}
-                  >
-                    {companyNameOrEmail}
-                  </Typography>
-                </MaskableText>
+                  {companyNameOrEmail}
+                </Typography>
               )}
             </Stack>
           </Hidden>
@@ -291,20 +269,16 @@ export const UserMenu = React.memo(() => {
           {canSwitchBetweenParentOrProxyAccount && (
             <Typography>Current account:</Typography>
           )}
-          <MaskableText
-            isMaskedPreferenceEnabled={Boolean(
-              preferences?.redactSensitiveData
-            )}
-            isToggleable
-            text={userHeadline}
+          <Typography
+            color={(theme) => theme.textColors.headlineStatic}
+            fontSize="1.1rem"
           >
-            <Typography
-              color={(theme) => theme.textColors.headlineStatic}
-              fontSize="1.1rem"
-            >
-              <strong>{userHeadline}</strong>
-            </Typography>
-          </MaskableText>
+            <strong>
+              {canSwitchBetweenParentOrProxyAccount && companyNameOrEmail
+                ? companyNameOrEmail
+                : userName}
+            </strong>
+          </Typography>
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
               onClick={() => {
