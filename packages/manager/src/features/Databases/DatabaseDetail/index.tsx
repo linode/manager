@@ -99,7 +99,7 @@ export const DatabaseDetail = () => {
   }
 
   const isDefault = database.platform === 'rdbms-default';
-  const isMonitorEnabled = isDefault && isDatabasesMonitorEnabled;
+  const isMonitorEnabled = isDatabasesMonitorEnabled;
 
   const tabs: Tab[] = [
     {
