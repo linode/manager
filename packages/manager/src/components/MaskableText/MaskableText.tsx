@@ -20,7 +20,7 @@ interface Props {
    */
   isToggleable?: boolean;
   /**
-   * The text to mask; if the text is not masked, render the original text or the styled text via children.
+   * The original, maskable text; if the text is not masked, render this text or the styled text via children.
    */
   text: string | undefined;
 }

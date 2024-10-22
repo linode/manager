@@ -125,7 +125,7 @@ export const ProfileSettings = () => {
           Mask Sensitive Data
         </Typography>
         <Typography marginBottom={1} variant="body1">
-          Mask IP addresses and user contact information for data for privacy.
+          Mask IP addresses and user contact information for data privacy.
         </Typography>
         <FormControlLabel
           control={

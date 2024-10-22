@@ -27,9 +27,9 @@ export interface ManagerPreferences extends UserPreferences {
   linodes_view_style?: 'grid' | 'list';
   longviewTimeRange?: string;
   main_content_banner_dismissal?: Record<string, boolean>;
+  maskSensitiveData?: boolean;
   nodebalancers_group_by_tag?: boolean;
   pageSizes?: Record<string, number>;
-  maskSensitiveData?: boolean;
   secure_vm_notices?: 'always' | 'header' | 'never';
   sortKeys?: Partial<Record<string, OrderSet>>;
   theme?: ThemeChoice;
