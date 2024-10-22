@@ -1,6 +1,7 @@
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
 import { TextField } from 'src/components/TextField';
@@ -17,6 +18,16 @@ export const EmailForm = () => {
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { enqueueSnackbar } = useSnackbar();
+
+  const location = useLocation<{ focusEmail: boolean }>();
+  const emailRef = React.createRef<HTMLInputElement>();
+
+  React.useEffect(() => {
+    if (location.state?.focusEmail && emailRef.current) {
+      emailRef.current.focus();
+      emailRef.current.scrollIntoView();
+    }
+  }, [emailRef, location.state]);
 
   const values = { email: profile?.email ?? '' };
 
@@ -58,6 +69,7 @@ export const EmailForm = () => {
               }}
               disabled={tooltipForDisabledEmailField !== undefined}
               errorText={fieldState.error?.message}
+              inputRef={emailRef}
               label="Email"
               noMarginTop
               onChange={field.onChange}
