@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
   Tooltip,
-  TooltipProps,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -17,7 +16,6 @@ import {
 import { AccessibleAreaChart } from 'src/components/AreaChart/AccessibleAreaChart';
 import { Box } from 'src/components/Box';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
-import { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import { Paper } from 'src/components/Paper';
 import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
@@ -26,6 +24,9 @@ import {
   tooltipLabelFormatter,
   tooltipValueFormatter,
 } from './utils';
+
+import type { TooltipProps } from 'recharts';
+import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 interface AreaProps {
   color: string;
@@ -41,7 +42,9 @@ interface AreaChartProps {
   areas: AreaProps[];
   ariaLabel: string;
   data: any;
+  fillOpacity?: number;
   height: number;
+  hideFill?: boolean;
   legendRows?: Omit<MetricsDisplayRow[], 'handleLegendClick'>;
   showLegend?: boolean;
   timezone: string;
@@ -54,7 +57,9 @@ export const AreaChart = (props: AreaChartProps) => {
     areas,
     ariaLabel,
     data,
+    fillOpacity,
     height,
+    hideFill,
     legendRows,
     showLegend,
     timezone,
@@ -190,6 +195,7 @@ export const AreaChart = (props: AreaChartProps) => {
             <Area
               dataKey={dataKey}
               fill={color}
+              fillOpacity={hideFill ? 0 : fillOpacity ?? 1}
               hide={activeSeries.includes(dataKey)}
               isAnimationActive={false}
               key={dataKey}
