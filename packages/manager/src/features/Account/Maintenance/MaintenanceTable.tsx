@@ -28,7 +28,6 @@ import {
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
 
 const preferenceKey = 'account-maintenance';
 
@@ -42,17 +41,9 @@ const headersForCSVDownload = [
   { key: 'reason', label: 'Reason' },
 ];
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   cell: {
     width: '12%',
-  },
-  headingContainer: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1.5),
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing(),
-      paddingRight: theme.spacing(),
-    },
   },
 }));
 
@@ -60,7 +51,7 @@ interface Props {
   type: 'completed' | 'pending';
 }
 
-const MaintenanceTable = ({ type }: Props) => {
+export const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const { classes } = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
@@ -233,5 +224,3 @@ const MaintenanceTable = ({ type }: Props) => {
     </Box>
   );
 };
-
-export { MaintenanceTable };
