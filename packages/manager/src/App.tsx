@@ -9,13 +9,15 @@ import {
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
-import { GoTo } from './GoTo';
-import { MainContent } from './MainContent';
 import { SplashScreen } from './components/SplashScreen';
+import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
+import { usePendo } from './hooks/usePendo';
+import { MainContent } from './MainContent';
 import { useEventsPoller } from './queries/events/events';
+// import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 // Ensure component's display name is 'App'
@@ -46,6 +48,10 @@ const BaseApp = withDocumentTitleProvider(
         </div>
         <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
+        {/**
+         * Eventually we will have the <Router /> here in place of <MainContent />
+         * <Router />
+         */}
         <MainContent />
         <GlobalListeners />
       </ErrorBoundary>
@@ -56,6 +62,7 @@ const BaseApp = withDocumentTitleProvider(
 const GlobalListeners = () => {
   useEventsPoller();
   useAdobeAnalytics();
+  usePendo();
   useNewRelic();
   return null;
 };

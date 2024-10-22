@@ -4,7 +4,6 @@ import * as React from 'react';
 import GridView from 'src/assets/icons/grid-view.svg';
 import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
 import { Hidden } from 'src/components/Hidden';
-import { OrderByProps } from 'src/components/OrderBy';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
@@ -13,11 +12,12 @@ import { Tooltip } from 'src/components/Tooltip';
 
 import { StyledToggleButton } from './DisplayLinodes.styles';
 
+import type { OrderByProps } from 'src/components/OrderBy';
+
 // There's nothing very scientific about the widths across the breakpoints
 // here, just a lot of trial and error based on maximum expected column sizes.
 
 interface Props {
-  isVLAN?: boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
   toggleGroupLinodes: () => boolean;
@@ -33,7 +33,6 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
 
   const {
     handleOrderChange,
-    isVLAN,
     linodeViewPreference,
     linodesAreGrouped,
     order,
@@ -85,82 +84,68 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         >
           Status
         </TableSortCell>
-        {isVLAN ? (
+        <Hidden smDown>
           <TableSortCell
-            active={isActive('_vlanIP')}
+            sx={{
+              ...theme.applyTableHeaderStyles,
+              [theme.breakpoints.only('sm')]: {
+                width: '15%',
+              },
+              width: '14%',
+            }}
+            active={isActive('type')}
             direction={order}
             handleClick={handleOrderChange}
-            label="_vlanIP"
+            label="type"
           >
-            VLAN IP
+            Plan
           </TableSortCell>
-        ) : null}
-        {isVLAN ? null : (
-          <>
-            <Hidden smDown>
-              <TableSortCell
-                sx={{
-                  ...theme.applyTableHeaderStyles,
-                  [theme.breakpoints.only('sm')]: {
-                    width: '15%',
-                  },
-                  width: '14%',
-                }}
-                active={isActive('type')}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="type"
-              >
-                Plan
-              </TableSortCell>
-              <TableSortCell
-                active={isActive('ipv4[0]')}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="ipv4[0]" // we want to sort by the first ipv4
-                noWrap
-              >
-                Public IP Address
-              </TableSortCell>
-              <Hidden lgDown>
-                <TableSortCell
-                  sx={{
-                    ...theme.applyTableHeaderStyles,
-                    [theme.breakpoints.down('sm')]: {
-                      width: '18%',
-                    },
-                    width: '14%',
-                  }}
-                  active={isActive('region')}
-                  data-qa-sort-region={order}
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  label="region"
-                >
-                  Region
-                </TableSortCell>
-              </Hidden>
-            </Hidden>
-            <Hidden lgDown>
-              <TableSortCell
-                sx={{
-                  ...theme.applyTableHeaderStyles,
-                  [theme.breakpoints.down('sm')]: {
-                    width: '18%',
-                  },
-                  width: '14%',
-                }}
-                active={isActive('backups:last_successful')}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="backups:last_successful"
-                noWrap
-              >
-                Last Backup
-              </TableSortCell>
-            </Hidden>
-          </>
-        )}
+          <TableSortCell
+            active={isActive('ipv4[0]')}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="ipv4[0]" // we want to sort by the first ipv4
+            noWrap
+          >
+            Public IP Address
+          </TableSortCell>
+          <Hidden lgDown>
+            <TableSortCell
+              sx={{
+                ...theme.applyTableHeaderStyles,
+                [theme.breakpoints.down('sm')]: {
+                  width: '18%',
+                },
+                width: '14%',
+              }}
+              active={isActive('region')}
+              data-qa-sort-region={order}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="region"
+            >
+              Region
+            </TableSortCell>
+          </Hidden>
+        </Hidden>
+        <Hidden lgDown>
+          <TableSortCell
+            sx={{
+              ...theme.applyTableHeaderStyles,
+              [theme.breakpoints.down('sm')]: {
+                width: '18%',
+              },
+              width: '14%',
+            }}
+            active={isActive('backups:last_successful')}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="backups:last_successful"
+            noWrap
+          >
+            Last Backup
+          </TableSortCell>
+        </Hidden>
         <TableCell sx={{ padding: '0 !important' }}>
           <div
             style={{

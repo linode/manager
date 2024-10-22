@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
+import { createLazyRoute } from '@tanstack/react-router';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -9,7 +9,9 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
+import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -41,10 +43,13 @@ import withStoreSearch from './withStoreSearch';
 
 import type { SearchProps } from './withStoreSearch';
 import type { RouteComponentProps } from 'react-router-dom';
+import { useIsDatabasesEnabled } from '../Databases/utilities';
 
 const displayMap = {
   buckets: 'Buckets',
+  databases: 'Databases',
   domains: 'Domains',
+  firewalls: 'Firewalls',
   images: 'Images',
   kubernetesClusters: 'Kubernetes',
   linodes: 'Linodes',
@@ -61,11 +66,15 @@ export const SearchLanding = (props: SearchLandingProps) => {
   const { data: regions } = useRegionsQuery();
 
   const isLargeAccount = useIsLargeAccount();
+  const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
   // We only want to fetch all entities if we know they
   // are not a large account. We do this rather than `!isLargeAccount`
   // because we don't want to fetch all entities if isLargeAccount is loading (undefined).
   const shouldFetchAllEntities = isLargeAccount === false;
+
+  const shouldMakeDBRequests =
+    shouldFetchAllEntities && Boolean(isDatabasesEnabled);
 
   /*
    @TODO OBJ Multicluster:'region' will become required, and the
@@ -79,11 +88,27 @@ export const SearchLanding = (props: SearchLandingProps) => {
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets(shouldFetchAllEntities);
 
+  /*
+  @TODO DBaaS: Change the passed argument to 'shouldFetchAllEntities' and
+  remove 'isDatabasesEnabled' once DBaaS V2 is fully rolled out.
+  */
+  const {
+    data: databases,
+    error: databasesError,
+    isLoading: areDatabasesLoading,
+  } = useAllDatabasesQuery(shouldMakeDBRequests);
+
   const {
     data: domains,
     error: domainsError,
     isLoading: areDomainsLoading,
   } = useAllDomainsQuery(shouldFetchAllEntities);
+
+  const {
+    data: firewalls,
+    error: firewallsError,
+    isLoading: areFirewallsLoading,
+  } = useAllFirewallsQuery(shouldFetchAllEntities);
 
   const {
     data: kubernetesClusters,
@@ -177,7 +202,9 @@ export const SearchLanding = (props: SearchLandingProps) => {
         _privateImages ?? [],
         regions ?? [],
         searchableLinodes ?? [],
-        nodebalancers ?? []
+        nodebalancers ?? [],
+        firewalls ?? [],
+        databases ?? []
       );
     }
   }, [
@@ -194,6 +221,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
     regions,
     nodebalancers,
     linodes,
+    firewalls,
+    databases,
   ]);
 
   const getErrorMessage = () => {
@@ -205,6 +234,8 @@ export const SearchLanding = (props: SearchLandingProps) => {
       [imagesError, 'Images'],
       [nodebalancersError, 'NodeBalancers'],
       [kubernetesClustersError, 'Kubernetes'],
+      [firewallsError, 'Firewalls'],
+      [databasesError, 'Databases'],
       [
         objectStorageBuckets && objectStorageBuckets.errors.length > 0,
         `Object Storage in ${objectStorageBuckets?.errors
@@ -238,7 +269,9 @@ export const SearchLanding = (props: SearchLandingProps) => {
       areVolumesLoading ||
       areKubernetesClustersLoading ||
       areImagesLoading ||
-      areNodeBalancersLoading;
+      areNodeBalancersLoading ||
+      areFirewallsLoading ||
+      areDatabasesLoading;
 
   const errorMessage = getErrorMessage();
 
@@ -303,8 +336,14 @@ export const SearchLanding = (props: SearchLandingProps) => {
   );
 };
 
-const enhanced = compose<SearchLandingProps, {}>(withStoreSearch())(
-  SearchLanding
-);
+const EnhancedSearchLanding = withStoreSearch()(SearchLanding);
 
-export default enhanced;
+export const searchLandingLazyRoute = createLazyRoute('/search')({
+  component: React.lazy(() =>
+    import('./SearchLanding').then(() => ({
+      default: (props: any) => <EnhancedSearchLanding {...props} />,
+    }))
+  ),
+});
+
+export default EnhancedSearchLanding;

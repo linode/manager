@@ -1,10 +1,14 @@
+import { getDatabasesDescription } from 'src/features/Databases/utilities';
+import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { displayType } from 'src/features/Linodes/presentation';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import type {
+  DatabaseInstance,
   Domain,
+  Firewall,
   Image,
   KubernetesCluster,
   Linode,
@@ -154,11 +158,42 @@ export const bucketToSearchableItem = (
     cluster: bucket.cluster,
     created: bucket.created,
     description: readableBytes(bucket.size).formatted,
-    icon: 'bucket',
+    icon: 'storage',
     label: bucket.label,
     path: `/object-storage/buckets/${bucket.cluster}/${bucket.label}`,
   },
   entityType: 'bucket',
   label: bucket.label,
   value: `${bucket.cluster}/${bucket.label}`,
+});
+
+export const firewallToSearchableItem = (
+  firewall: Firewall
+): SearchableItem => ({
+  data: {
+    created: firewall.created,
+    description: getFirewallDescription(firewall),
+    icon: 'firewall',
+    path: `/firewalls/${firewall.id}`,
+    tags: firewall.tags,
+  },
+  entityType: 'firewall',
+  label: firewall.label,
+  value: firewall.id,
+});
+
+export const databaseToSearchableItem = (
+  database: DatabaseInstance
+): SearchableItem => ({
+  data: {
+    created: database.created,
+    description: getDatabasesDescription(database),
+    icon: 'database',
+    path: `/databases/${database.engine}/${database.id}`,
+    region: database.region,
+    status: database.status,
+  },
+  entityType: 'database',
+  label: database.label,
+  value: `${database.engine}/${database.id}`,
 });

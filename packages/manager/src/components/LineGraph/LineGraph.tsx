@@ -108,7 +108,7 @@ export interface LineGraphProps {
   /**
    * Custom styles for the table.
    */
-  sxTableStyles?: SxProps;
+  sxTableStyles?: SxProps<Theme>;
   /**
    * The suggested maximum y-axis value passed to **Chart,js**.
    */
@@ -459,6 +459,8 @@ export const LineGraph = (props: LineGraphProps) => {
                               rowHeaders ? rowHeaders[idx] : undefined
                             }
                             data-qa-body-cell
+                            data-qa-graph-column-title={finalRowHeaders[i]}
+                            data-qa-graph-row-title={title}
                             key={i}
                           >
                             <Typography

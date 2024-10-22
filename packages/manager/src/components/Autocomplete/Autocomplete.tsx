@@ -146,7 +146,7 @@ export const Autocomplete = <
         return renderOption ? (
           renderOption(props, option, state, ownerState)
         ) : (
-          <ListItem {...props} data-qa-option>
+          <ListItem {...props} data-qa-option key={props.key}>
             <>
               <Box
                 sx={{
@@ -165,7 +165,7 @@ export const Autocomplete = <
       ChipProps={{ deleteIcon: <CloseIcon /> }}
       PopperComponent={CustomPopper}
       clearOnBlur={clearOnBlur}
-      data-qa-autocomplete
+      data-qa-autocomplete={label}
       defaultValue={defaultValue}
       disableCloseOnSelect={multiple}
       disablePortal={disablePortal}

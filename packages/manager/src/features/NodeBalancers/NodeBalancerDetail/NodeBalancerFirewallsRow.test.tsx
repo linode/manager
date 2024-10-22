@@ -69,7 +69,7 @@ describe('NodeBalancerFirewallsRow', () => {
       <NodeBalancerFirewallsRow {...props} />
     );
 
-    const unassignButton = getByTestId('Button');
+    const unassignButton = getByTestId('button');
     expect(unassignButton).toBeDisabled();
     await userEvent.click(unassignButton);
     expect(props.onClickUnassign).not.toHaveBeenCalled();

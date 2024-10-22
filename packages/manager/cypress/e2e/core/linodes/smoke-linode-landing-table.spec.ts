@@ -113,9 +113,7 @@ describe('linode landing checks', () => {
       getVisible('[aria-label="open menu"]');
       getVisible('[data-qa-add-new-menu-button="true"]');
       getVisible('[data-qa-search-icon="true"]');
-      fbtVisible(
-        'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
-      );
+      fbtVisible('Search Products, IP Addresses, Tags...');
 
       cy.findByLabelText('Help & Support')
         .should('be.visible')
@@ -494,5 +492,100 @@ describe('linode landing checks for empty state', () => {
         "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
       )
       .should('be.visible');
+  });
+});
+
+describe('linode landing checks for non-empty state with restricted user', () => {
+  beforeEach(() => {
+    // Mock setup to display the Linode landing page in an non-empty state
+    const mockLinodes: Linode[] = new Array(1).fill(null).map(
+      (_item: null, index: number): Linode => {
+        return linodeFactory.build({
+          label: `Linode ${index}`,
+          region: chooseRegion().id,
+          tags: [index % 2 == 0 ? 'even' : 'odd', 'nums'],
+        });
+      }
+    );
+
+    mockGetLinodes(mockLinodes).as('getLinodes');
+
+    // Alias the mockLinodes array
+    cy.wrap(mockLinodes).as('mockLinodes');
+  });
+
+  it('checks restricted user with read access has no access to create linode and can see existing linodes', () => {
+    // Mock setup for user profile, account user, and user grants with restricted permissions,
+    // simulating a default user without the ability to add Linodes.
+    const mockProfile = profileFactory.build({
+      username: randomLabel(),
+      restricted: true,
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_linodes: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+
+    // Intercept and alias the mock requests
+    cy.intercept('GET', apiMatcher('profile'), (req) => {
+      req.reply(mockProfile);
+    }).as('getProfile');
+
+    cy.intercept('GET', apiMatcher('profile/grants'), (req) => {
+      req.reply(mockGrants);
+    }).as('getProfileGrants');
+
+    // Login and wait for application to load
+    cy.visitWithLogin(routes.linodeLanding);
+    cy.wait('@getLinodes');
+    cy.url().should('endWith', routes.linodeLanding);
+
+    // Wait for the mock requests to complete
+    cy.wait('@getProfile');
+    cy.wait('@getProfileGrants');
+
+    // Assert that Create Linode button is visible and disabled
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .and('be.disabled')
+      .trigger('mouseover');
+
+    // Assert that tooltip is visible with message
+    ui.tooltip
+      .findByText(
+        "You don't have permissions to create Linodes. Please contact your account administrator to request the necessary permissions."
+      )
+      .should('be.visible');
+
+    // Assert that List of Liondes table exist
+    cy.get('table[aria-label="List of Linodes"]').should('exist');
+
+    // Assert that Docs link exist
+    cy.get(
+      'a[aria-label="Docs - link opens in a new tab"][data-testid="external-link"]'
+    ).should('exist');
+
+    // Assert that the correct number of Linode entries are present in the table
+    cy.get<Linode[]>('@mockLinodes').then((mockLinodes) => {
+      // Assert that the correct number of Linode entries are present in the table
+      cy.get('table[aria-label="List of Linodes"] tbody tr').should(
+        'have.length',
+        mockLinodes.length
+      );
+
+      // Assert that each Linode entry is present in the table
+      mockLinodes.forEach((linode) => {
+        cy.get('table[aria-label="List of Linodes"] tbody tr').should(
+          'contain',
+          linode.label
+        );
+      });
+    });
   });
 });

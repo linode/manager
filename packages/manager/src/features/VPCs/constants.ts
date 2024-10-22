@@ -11,6 +11,9 @@ export const WARNING_ICON_UNRECOMMENDED_CONFIG =
   'warning-icon-for-unrecommended-config';
 
 // Copy
+export const REGION_CAVEAT_HELPER_TEXT =
+  'A Linode may be assigned only to a VPC in the same region.';
+
 export const ASSIGN_LINODES_DRAWER_REBOOT_MESSAGE =
   'Assigning a Linode to a subnet requires you to reboot the Linode to update its configuration.';
 
@@ -56,9 +59,6 @@ export const NOT_NATTED_HELPER_TEXT =
   'The Linode will not be able to access the internet. If this Linode needs access to the internet, we recommend checking the “Assign a public IPv4 address for this Linode” checkbox which will enable 1:1 NAT on the VPC interface.';
 
 // Links
-export const NETWORK_INTERFACES_GUIDE_URL =
-  'https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance';
-
 export const VPC_DOCS_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/vpc';
 

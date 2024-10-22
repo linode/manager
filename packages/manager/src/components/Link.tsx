@@ -11,9 +11,10 @@ import {
 } from 'src/utilities/link';
 import { omitProps } from 'src/utilities/omittedProps';
 
+import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
 import type { LinkProps as _LinkProps } from 'react-router-dom';
 
-export interface LinkProps extends _LinkProps {
+export interface LinkProps extends Omit<_LinkProps, 'to'> {
   /**
    * This property can override the value of the copy passed by default to the aria label from the children.
    * This is useful when the text of the link is unavailable, not descriptive enough, or a single icon is used as the child.
@@ -45,7 +46,7 @@ export interface LinkProps extends _LinkProps {
    * @example "/profile/display"
    * @example "https://linode.com"
    */
-  to: string;
+  to: TanStackLinkProps['to'] | (string & {});
 }
 
 /**
@@ -101,6 +102,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       'accessibleAriaLabel',
       'external',
       'forceCopyColor',
+      'to',
     ]);
 
     return shouldOpenInNewTab ? (
@@ -144,6 +146,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           className
         )}
         ref={ref}
+        to={to as string}
       />
     );
   }

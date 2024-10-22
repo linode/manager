@@ -1,3 +1,4 @@
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -18,8 +19,10 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 import { FirewallDialog } from './FirewallDialog';
@@ -71,6 +74,10 @@ const FirewallLanding = () => {
   const selectedFirewall = data?.data.find(
     (firewall) => firewall.id === selectedFirewallId
   );
+
+  const isFirewallsCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_firewalls',
+  });
 
   const openModal = (mode: Mode, id: number) => {
     setSelectedFirewallId(id);
@@ -147,8 +154,16 @@ const FirewallLanding = () => {
         breadcrumbProps={{ pathname: '/firewalls' }}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         entity="Firewall"
+        disabledCreateButton={isFirewallsCreationRestricted}
         onButtonClick={onOpenCreateDrawer}
         title="Firewalls"
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Firewalls',
+          }),
+        }}
       />
       <Table aria-label="List of services attached to each firewall">
         <TableHead>
@@ -210,5 +225,9 @@ const FirewallLanding = () => {
     </React.Fragment>
   );
 };
+
+export const firewallLandingLazyRoute = createLazyRoute('/firewalls')({
+  component: FirewallLanding,
+});
 
 export default React.memo(FirewallLanding);

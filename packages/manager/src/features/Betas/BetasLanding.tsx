@@ -1,15 +1,17 @@
-import { Stack } from 'src/components/Stack';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { Stack } from 'src/components/Stack';
 import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
 import { useAccountBetasQuery } from 'src/queries/account/betas';
 import { useBetasQuery } from 'src/queries/betas';
 import { categorizeBetasByStatus } from 'src/utilities/betaUtils';
-import { AccountBeta, Beta } from '@linode/api-v4';
 
-const BetasLanding = () => {
+import type { AccountBeta, Beta } from '@linode/api-v4';
+
+export const BetasLanding = () => {
   const {
     data: accountBetasRequest,
     error: accountBetasErrors,
@@ -48,18 +50,21 @@ const BetasLanding = () => {
       <Stack spacing={2}>
         <BetaDetailsList
           betas={active}
+          dataQA="enrolled-beta"
           errors={accountBetasErrors}
           isLoading={areAccountBetasLoading}
           title="Currently Enrolled Betas"
         />
         <BetaDetailsList
           betas={available}
+          dataQA="available-beta"
           errors={betasErrors}
           isLoading={areBetasLoading}
           title="Available & Upcoming Betas"
         />
         <BetaDetailsList
           betas={historical}
+          dataQA="historical-beta"
           errors={accountBetasErrors}
           isLoading={areAccountBetasLoading}
           title="Beta Participation History"
@@ -69,4 +74,6 @@ const BetasLanding = () => {
   );
 };
 
-export default BetasLanding;
+export const betasLandingLazyRoute = createLazyRoute('/betas')({
+  component: BetasLanding,
+});

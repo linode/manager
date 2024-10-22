@@ -255,7 +255,11 @@ export const AccessSelect = React.memo((props: Props) => {
             })}
           >
             CORS (Cross Origin Sharing) is not available for endpoint types E2
-            and E3. <Link to="#">Learn more</Link>.
+            and E3.{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/define-access-and-permissions-using-acls-access-control-lists">
+              Learn more
+            </Link>
+            .
           </Typography>
         </Notice>
       ) : null}

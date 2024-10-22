@@ -85,6 +85,7 @@ import {
   promoFactory,
   regionAvailabilityFactory,
   securityQuestionsFactory,
+  serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -110,10 +111,12 @@ import { pickRandom } from 'src/utilities/random';
 import type {
   AccountMaintenance,
   CreateObjectStorageKeyPayload,
+  Dashboard,
   FirewallStatus,
   NotificationType,
   ObjectStorageEndpointTypes,
   SecurityQuestionsPayload,
+  ServiceTypesList,
   TokenRequest,
   UpdateImageRegionsPayload,
   User,
@@ -588,6 +591,9 @@ export const handlers = [
         return HttpResponse.json(type);
       })
   ),
+  http.get(`*/linode/types/*`, () => {
+    return HttpResponse.json(linodeTypeFactory.build());
+  }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
@@ -603,6 +609,7 @@ export const handlers = [
       image: 'distributed-region-test-image',
       label: 'Gecko Distributed Region Test',
       region: 'us-den-10',
+      site_type: 'distributed',
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
@@ -1574,21 +1581,37 @@ export const handlers = [
       ])
     );
   }),
-
+  http.post('*/seen', () => {
+    return HttpResponse.json({});
+  }),
   http.get(
     '*/events',
     () => {
       const events = eventFactory.buildList(1, {
         action: 'lke_node_create',
-        entity: { id: 999, label: 'linode-1', type: 'linode' },
+        entity: {
+          id: 1,
+          label: 'linode-1',
+          type: 'linode',
+          url: 'https://google.com',
+        },
         message:
           'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
         percent_complete: 15,
+        secondary_entity: {
+          id: 1,
+          label: 'my config',
+          type: 'linode',
+          url: 'https://google.com',
+        },
+        status: 'notification',
       });
+
       const dbEvents = eventFactory.buildList(1, {
         action: 'database_low_disk_space',
         entity: { id: 999, label: 'database-1', type: 'database' },
         message: 'Low disk space.',
+        status: 'notification',
       });
       const oldEvents = eventFactory.buildList(20, {
         action: 'account_update',
@@ -1631,15 +1654,15 @@ export const handlers = [
         makeResourcePage([
           ...events,
           ...dbEvents,
-          ...oldEvents,
           ...placementGroupAssignedEvent,
           ...placementGroupCreateEvent,
           eventWithSpecialCharacters,
+          ...oldEvents,
         ])
       );
     },
     {
-      once: true,
+      once: false,
     }
   ),
 
@@ -2014,7 +2037,7 @@ export const handlers = [
   http.delete('*/profile/tokens/:id', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/account/betas', () => {
+  http.get('*/v4*/account/betas', () => {
     return HttpResponse.json(
       makeResourcePage([
         ...accountBetaFactory.buildList(5),
@@ -2026,7 +2049,7 @@ export const handlers = [
       ])
     );
   }),
-  http.get('*/account/betas/:id', ({ params }) => {
+  http.get('*/v4*/account/betas/:id', ({ params }) => {
     if (params.id !== 'undefined') {
       return HttpResponse.json(
         accountBetaFactory.build({ id: params.id as string })
@@ -2034,17 +2057,15 @@ export const handlers = [
     }
     return HttpResponse.json({}, { status: 404 });
   }),
-  http.post('*/account/betas', () => {
-    return HttpResponse.json({});
+  http.get('*/v4*/betas', () => {
+    return HttpResponse.json(makeResourcePage(betaFactory.buildList(5)));
   }),
-  http.get('*/betas/:id', ({ params }) => {
+  http.get('*/v4*/betas/:id', ({ params }) => {
+    const id = params.id.toString();
     if (params.id !== 'undefined') {
-      return HttpResponse.json(betaFactory.build({ id: params.id as string }));
+      return HttpResponse.json(betaFactory.build({ id }));
     }
     return HttpResponse.json({}, { status: 404 });
-  }),
-  http.get('*/betas', () => {
-    return HttpResponse.json(makeResourcePage(betaFactory.buildList(5)));
   }),
   http.get('*regions/availability', () => {
     return HttpResponse.json(
@@ -2289,25 +2310,40 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services', () => {
-    const response = {
-      data: [{ service_type: 'linode' }],
-    };
-
-    return HttpResponse.json(response);
-  }),
-  http.get('*/monitor/services/:serviceType/dashboards', () => {
-    const response = {
+    const response: ServiceTypesList = {
       data: [
-        dashboardFactory.build({
-          label: 'Linode Dashboard',
+        serviceTypesFactory.build({
+          label: 'Linode',
           service_type: 'linode',
         }),
-        dashboardFactory.build({
-          label: 'DBaaS Dashboard',
+        serviceTypesFactory.build({
+          label: 'Databases',
           service_type: 'dbaas',
         }),
       ],
     };
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
+    const response = {
+      data: [] as Dashboard[],
+    };
+    if (params.serviceType === 'linode') {
+      response.data.push(
+        dashboardFactory.build({
+          label: 'Linode Dashboard',
+          service_type: 'linode',
+        })
+      );
+    } else if (params.serviceType === 'dbaas') {
+      response.data.push(
+        dashboardFactory.build({
+          label: 'DBaaS Dashboard',
+          service_type: 'dbaas',
+        })
+      );
+    }
 
     return HttpResponse.json(response);
   }),

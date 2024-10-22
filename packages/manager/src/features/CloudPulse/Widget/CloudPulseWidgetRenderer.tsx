@@ -8,6 +8,7 @@ import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from './CloudPulseWidget';
 import {
   allIntervalOptions,
+  autoIntervalOption,
   getInSeconds,
   getIntervalIndex,
 } from './components/CloudPulseIntervalSelect';
@@ -80,7 +81,7 @@ export const RenderWidgets = React.memo(
         serviceType: dashboard?.service_type ?? '',
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
-        widget: { ...widget },
+        widget: { ...widget, time_granularity: autoIntervalOption },
       };
       if (savePref) {
         graphProp.widget = setPreferredWidgetPlan(graphProp.widget);
@@ -104,17 +105,13 @@ export const RenderWidgets = React.memo(
             pref.aggregateFunction ?? widgetObj.aggregate_function,
           size: pref.size ?? widgetObj.size,
           time_granularity: {
-            ...(pref.timeGranularity ?? widgetObj.time_granularity),
+            ...(pref.timeGranularity ?? autoIntervalOption),
           },
         };
       } else {
         return {
           ...widgetObj,
-          time_granularity: {
-            label: 'Auto',
-            unit: 'Auto',
-            value: -1,
-          },
+          time_granularity: autoIntervalOption,
         };
       }
     };
@@ -185,6 +182,7 @@ export const RenderWidgets = React.memo(
       'jweToken',
       'duration',
       'resources',
+      'additionalFilters',
     ];
 
     for (const key of keysToCompare) {
