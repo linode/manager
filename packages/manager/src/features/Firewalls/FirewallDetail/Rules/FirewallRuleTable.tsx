@@ -23,6 +23,7 @@ import Undo from 'src/assets/icons/undo.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -45,7 +46,6 @@ import {
   StyledFirewallRuleButton,
   StyledFirewallTableButton,
   StyledHeaderDiv,
-  StyledTable,
   StyledTableRow,
 } from './FirewallRuleTable.styles';
 import { sortPortString } from './shared';
@@ -186,7 +186,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           onDragEnd={onDragEnd}
           sensors={sensors}
         >
-          <StyledTable>
+          <Table>
             <TableHead aria-label={`${category} Rules List Headers`}>
               <TableRow>
                 <TableCell sx={{ width: smDown ? '50%' : '26%' }}>
@@ -239,7 +239,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                 </SortableContext>
               )}
             </TableBody>
-          </StyledTable>
+          </Table>
         </DndContext>
         <PolicyRow
           category={category}
@@ -313,7 +313,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     },
     cursor: isDragging ? 'grabbing' : 'grab',
     transform: CSS.Transform.toString(transform),
-    zIndex: isDragging ? 999 : 'auto',
+    zIndex: isDragging ? 999 : 0,
   };
 
   return (
@@ -329,7 +329,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       {...listeners}
       sx={rowStyles}
     >
-      <TableCell aria-label={`Label: ${label}`}>
+      <TableCell aria-label={`Label: ${label}`} sx={{ whiteSpace: 'nowrap' }}>
         <StyledDragIndicator aria-label="Drag indicator icon" />
         {label || (
           <MoreStyledLinkButton

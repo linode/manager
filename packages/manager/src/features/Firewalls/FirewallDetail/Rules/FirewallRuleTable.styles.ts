@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { Table } from 'src/components/Table';
 import { TableRow } from 'src/components/TableRow';
 
 import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
@@ -20,11 +19,6 @@ interface StyledFirewallRuleTableRowProps
   extends FirewallRuleTableRowPropsWithRuleIndex {
   status: FirewallRuleTableRowProps['status'];
 }
-
-export const StyledTable = styled(Table, { label: 'StyledTable' })(() => ({
-  // Prevents horizontal scrolling while dragging rows.
-  overflow: 'hidden',
-}));
 
 export const StyledTableRow = styled(TableRow, {
   label: 'StyledTableRow',
