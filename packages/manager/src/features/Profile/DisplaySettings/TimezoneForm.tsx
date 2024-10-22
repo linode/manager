@@ -80,19 +80,18 @@ export const TimezoneForm = () => {
         <Controller
           render={({ field, fieldState }) => (
             <Autocomplete
-              // @ts-expect-error not sure what to do
               value={
                 timezoneOptions.find(
                   (option) => option.value === field.value
                 ) ?? null
               }
               autoHighlight
-              disableClearable
+              disableClearable={profile?.timezone !== undefined}
               errorText={fieldState.error?.message}
               fullWidth
               label="Timezone"
               noMarginTop
-              onChange={(e, option) => field.onChange(option.value)}
+              onChange={(e, option) => field.onChange(option?.value ?? '')}
               options={timezoneOptions}
               placeholder="Choose a Timezone"
             />
