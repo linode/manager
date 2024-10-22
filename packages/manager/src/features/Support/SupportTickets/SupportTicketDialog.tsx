@@ -48,11 +48,6 @@ import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  expPanelSummary: {
-    backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
-    borderTop: `1px solid ${theme.bg.main}`,
-    paddingTop: theme.spacing(1),
-  },
   innerReply: {
     '& div[role="tablist"]': {
       marginBottom: theme.spacing(),
@@ -508,8 +503,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 name="description"
               />
               <Accordion
-                detailProps={{ className: classes.expPanelSummary }}
+                detailProps={{ sx: { p: 0.25 } }}
                 heading="Formatting Tips"
+                summaryProps={{ sx: { paddingX: 0.25 } }}
               >
                 <MarkdownReference />
               </Accordion>
