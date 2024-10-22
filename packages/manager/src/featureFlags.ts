@@ -107,6 +107,7 @@ export interface Flags {
   gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
+  imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
