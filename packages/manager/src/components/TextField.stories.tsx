@@ -73,10 +73,6 @@ export const Default: Story = {
   },
 };
 
-/**
- * # Primary Button
- * This is the primary button
- */
 export const Error: Story = {
   args: {
     errorText: 'This input needs further attention!',
