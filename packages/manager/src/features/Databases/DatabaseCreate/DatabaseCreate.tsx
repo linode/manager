@@ -64,6 +64,7 @@ import type { Theme } from '@mui/material/styles';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -198,6 +199,9 @@ const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_databases',
+  });
 
   const {
     data: regionsData,
@@ -525,6 +529,7 @@ const DatabaseCreate = () => {
           <TextField
             data-qa-label-input
             errorText={errors.label}
+            disabled={isRestricted}
             label="Cluster Label"
             onChange={(e) => setFieldValue('label', e.target.value)}
             tooltipClasses={classes.tooltip}
@@ -545,6 +550,7 @@ const DatabaseCreate = () => {
             )}
             className={classes.engineSelect}
             components={{ Option: EngineOption, SingleValue: _SingleValue }}
+            disabled={isRestricted}
             errorText={errors.engine}
             isClearable={false}
             label="Database Engine"
@@ -556,6 +562,7 @@ const DatabaseCreate = () => {
           <RegionSelect
             currentCapability="Managed Databases"
             disableClearable
+            disabled={isRestricted}
             errorText={errors.region}
             onChange={(e, region) => setFieldValue('region', region.id)}
             regions={regionsData}
@@ -570,6 +577,8 @@ const DatabaseCreate = () => {
               setFieldValue('type', selected);
             }}
             className={classes.selectPlanPanel}
+            disabled={isRestricted}
+            disabledTabs={isRestricted ? ['shared', 'dedicated'] : []}
             data-qa-select-plan
             error={errors.type}
             handleTabChange={handleTabChange}
@@ -600,11 +609,13 @@ const DatabaseCreate = () => {
                 );
             }}
             data-testid="database-nodes"
+            disabled={isRestricted}
           >
             {errors.cluster_size ? (
               <Notice text={errors.cluster_size} variant="error" />
             ) : null}
             <RadioGroup
+              aria-disabled={isRestricted}
               style={{ marginBottom: 0, marginTop: 0 }}
               value={values.cluster_size}
             >
@@ -652,6 +663,7 @@ const DatabaseCreate = () => {
                 ))
               : null}
             <MultipleIPInput
+              inputProps={{ disabled: isRestricted }}
               ips={values.allow_list}
               onBlur={handleIPBlur}
               onChange={(address) => setFieldValue('allow_list', address)}
@@ -669,6 +681,7 @@ const DatabaseCreate = () => {
         <Button
           buttonType="primary"
           className={classes.createBtn}
+          disabled={isRestricted}
           loading={isSubmitting}
           type="submit"
         >
