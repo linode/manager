@@ -35,26 +35,5 @@ export const getDisabledRegions = (options: DisabledRegionOptions) => {
     return disabledRegions;
   }
 
-  // Disable distributed regions that do not have the StackScripts capability
-  const hasDistributedRegions = regions.some(
-    (region) => region.site_type === 'distributed'
-  );
-  if (hasDistributedRegions) {
-    const disabledRegions: Record<string, DisableRegionOption> = {};
-
-    for (const region of regions) {
-      if (
-        region.site_type === 'distributed' &&
-        !region.capabilities.includes('StackScripts')
-      ) {
-        disabledRegions[region.id] = {
-          reason: 'StackScripts cannot be deployed to this region.',
-        };
-      }
-    }
-
-    return disabledRegions;
-  }
-
   return {};
 };

@@ -35,23 +35,4 @@ describe('getDisabledRegions', () => {
 
     expect(result).toStrictEqual({});
   });
-
-  it('disables distributed regions that do not have the StackScripts capability', () => {
-    const distributedRegion = regionFactory.build({
-      capabilities: [],
-      site_type: 'distributed',
-    });
-    const coreRegion = regionFactory.build({ site_type: 'core' });
-
-    const result = getDisabledRegions({
-      regions: [distributedRegion, coreRegion],
-      selectedImage: undefined,
-    });
-
-    expect(result).toStrictEqual({
-      [distributedRegion.id]: {
-        reason: 'StackScripts cannot be deployed to this region.',
-      },
-    });
-  });
 });
