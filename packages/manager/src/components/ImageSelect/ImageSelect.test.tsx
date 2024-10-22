@@ -12,7 +12,7 @@ import { ImageSelect } from './ImageSelect';
 describe('ImageSelect', () => {
   it('should render a default "Images" label', () => {
     const { getByLabelText } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={null} />
+      <ImageSelect onChange={vi.fn()} value={null} variant="public" />
     );
 
     expect(getByLabelText('Images')).toBeVisible();
@@ -20,7 +20,7 @@ describe('ImageSelect', () => {
 
   it('should render default placeholder text', () => {
     const { getByPlaceholderText } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={null} />
+      <ImageSelect onChange={vi.fn()} value={null} variant="public" />
     );
 
     expect(getByPlaceholderText('Choose an image')).toBeVisible();
@@ -36,7 +36,7 @@ describe('ImageSelect', () => {
     );
 
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={null} />
+      <ImageSelect onChange={vi.fn()} value={null} variant="public" />
     );
 
     await userEvent.click(getByPlaceholderText('Choose an image'));
@@ -57,7 +57,7 @@ describe('ImageSelect', () => {
     );
 
     const { getByPlaceholderText, getByText } = renderWithTheme(
-      <ImageSelect onChange={onChange} value={null} />
+      <ImageSelect onChange={onChange} value={null} variant="public" />
     );
 
     await userEvent.click(getByPlaceholderText('Choose an image'));
@@ -81,7 +81,7 @@ describe('ImageSelect', () => {
     );
 
     const { findByDisplayValue } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={image.id} />
+      <ImageSelect onChange={vi.fn()} value={image.id} variant="public" />
     );
 
     await findByDisplayValue(image.label);
@@ -97,7 +97,7 @@ describe('ImageSelect', () => {
     );
 
     const { findByTestId } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={image.id} />
+      <ImageSelect onChange={vi.fn()} value={image.id} variant="public" />
     );
 
     await findByTestId('os-icon');
@@ -133,7 +133,7 @@ describe('ImageSelect', () => {
     );
 
     const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={null} />
+      <ImageSelect onChange={vi.fn()} value={null} variant="public" />
     );
 
     await userEvent.click(getByPlaceholderText('Choose an image'));
@@ -146,7 +146,12 @@ describe('ImageSelect', () => {
 
   it('should display an error', () => {
     const { getByText } = renderWithTheme(
-      <ImageSelect errorText="An error" onChange={vi.fn()} value={null} />
+      <ImageSelect
+        errorText="An error"
+        onChange={vi.fn()}
+        value={null}
+        variant="public"
+      />
     );
     expect(getByText('An error')).toBeInTheDocument();
   });
@@ -161,6 +166,7 @@ describe('ImageSelect', () => {
         multiple
         onChange={onSelect}
         value={[]}
+        variant="public"
       />
     );
 
@@ -171,5 +177,76 @@ describe('ImageSelect', () => {
     expect(onSelect).toHaveBeenCalledWith([
       expect.objectContaining({ id: 'any/all' }),
     ]);
+  });
+
+  it('should sort images by vendor, then by creation date, then "My Images" first', async () => {
+    const publicImages = [
+      imageFactory.build({
+        created: '2023-01-01T00:00:00',
+        is_public: true,
+        label: 'Public Image 1',
+        vendor: 'CentOS',
+      }),
+      imageFactory.build({
+        created: '2023-02-01T00:00:00',
+        is_public: true,
+        label: 'Public Image 2',
+        vendor: 'Debian',
+      }),
+      imageFactory.build({
+        created: '2023-03-01T00:00:00',
+        is_public: true,
+        label: 'Public Image 3',
+        vendor: 'Ubuntu',
+      }),
+    ];
+    const privateImages = [
+      imageFactory.build({
+        created: '2023-04-01T00:00:00',
+        is_public: false,
+        label: 'Private Image 1',
+      }),
+      imageFactory.build({
+        created: '2023-05-01T00:00:00',
+        is_public: false,
+        label: 'Private Image 2',
+      }),
+    ];
+
+    // The API returns private images first, then public images
+    // Granted this won't change, I don't think we need to filter them client side
+    // Therefore this test assumes the API initial sort order
+    const images = [...privateImages, ...publicImages];
+
+    const { getAllByRole, getByLabelText, getByText } = renderWithTheme(
+      <ImageSelect
+        onChange={vi.fn()}
+        options={images}
+        value={null}
+        variant="all"
+      />
+    );
+
+    await userEvent.click(getByLabelText('Images'));
+    expect(getByText('My Images')).toBeInTheDocument();
+    expect(getByText('CentOS')).toBeInTheDocument();
+    expect(getByText('Debian')).toBeInTheDocument();
+    expect(getByText('Ubuntu')).toBeInTheDocument();
+
+    const options = getAllByRole('option');
+
+    expect(getByText('My Images')).toBeInTheDocument();
+    expect(getByText('CentOS')).toBeInTheDocument();
+    expect(getByText('Debian')).toBeInTheDocument();
+    expect(getByText('Ubuntu')).toBeInTheDocument();
+
+    // Assert that private images ("My Images") come first
+    expect(options[0].textContent?.trim()).toContain('Private Image 1');
+    expect(options[1].textContent?.trim()).toContain('Private Image 2');
+
+    // Assert the order of public images by vendor
+    expect(options[2].textContent?.trim()).toContain('Public Image 1');
+    expect(options[3].textContent?.trim()).toContain('Public Image 2');
+    expect(options[4].textContent?.trim()).toContain('Public Image 3');
   });
 });

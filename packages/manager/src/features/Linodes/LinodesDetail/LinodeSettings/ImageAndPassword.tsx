@@ -49,6 +49,7 @@ export const ImageAndPassword = (props: Props) => {
         errorText={imageFieldError}
         onChange={onImageChange}
         value={selectedImage}
+        variant="all"
       />
       <StyledAccessPanel
         disabledReason={

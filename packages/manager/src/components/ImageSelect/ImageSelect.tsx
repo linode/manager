@@ -30,7 +30,7 @@ interface BaseProps
   label?: string;
   placeholder?: string;
   selectIfOnlyOneOption?: boolean;
-  variant?: ImageSelectVariant;
+  variant: ImageSelectVariant;
 }
 
 interface SingleProps extends BaseProps {
@@ -56,7 +56,7 @@ export const ImageSelect = (props: Props) => {
     onChange,
     placeholder,
     selectIfOnlyOneOption,
-    variant = 'all',
+    variant,
     ...rest
   } = props;
 
@@ -86,6 +86,35 @@ export const ImageSelect = (props: Props) => {
     }
     return _options;
   }, [anyAllOption, _options]);
+
+  // We need to sort options when grouping in order to avoid duplicate headers
+  // see https://mui.com/material-ui/react-autocomplete/#grouped
+  // We want:
+  // - Vendors to be sorted alphabetically
+  // - "My Images" to be first
+  // - Images to be sorted by creation date, newest first
+  const sortedOptions = useMemo(() => {
+    const myImages = options.filter((option) => !option.is_public);
+    const otherImages = options.filter((option) => option.is_public);
+
+    const sortedVendors = Array.from(
+      new Set(otherImages.map((img) => img.vendor))
+    ).sort((a, b) => (a ?? '').localeCompare(b ?? ''));
+
+    return [
+      ...myImages.sort(
+        (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+      ),
+      ...sortedVendors.flatMap((vendor) =>
+        otherImages
+          .filter((img) => img.vendor === vendor)
+          .sort(
+            (a, b) =>
+              new Date(b.created).getTime() - new Date(a.created).getTime()
+          )
+      ),
+    ];
+  }, [options]);
 
   const selected = props.value;
   const value = useMemo(() => {
@@ -157,7 +186,7 @@ export const ImageSelect = (props: Props) => {
       clearOnBlur
       label={label || 'Images'}
       loading={isLoading}
-      options={options}
+      options={sortedOptions}
       placeholder={placeholder || 'Choose an image'}
       {...rest}
       disableClearable={
@@ -177,10 +206,7 @@ export const ImageSelect = (props: Props) => {
   );
 };
 
-const StyledList = styled(
-  List,
-  {}
-)({
+const StyledList = styled(List, { label: 'ImageSelectStyledList' })({
   listStyle: 'none',
   padding: 0,
 });
