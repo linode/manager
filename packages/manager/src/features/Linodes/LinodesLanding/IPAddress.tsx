@@ -144,7 +144,7 @@ export const IPAddress = (props: IPAddressProps) => {
           displayText={displayIp}
           text={ip}
         />
-        {renderCopyIcon(displayIp)}
+        {renderCopyIcon(ip)}
       </StyledRenderIPDiv>
     );
   };

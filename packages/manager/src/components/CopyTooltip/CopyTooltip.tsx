@@ -60,7 +60,6 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   } = props;
 
   // Ensure we render displayText when text has been masked.
-  // TODO: debug copy icon button (but not text) copying the displayText instead of text.
   const _text = displayText ? displayText : text;
 
   const handleIconClick = () => {
