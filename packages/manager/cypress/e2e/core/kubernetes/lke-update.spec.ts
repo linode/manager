@@ -1351,10 +1351,13 @@ describe('LKE cluster updates', () => {
   });
 });
 
-describe.only('LKE ACL updates', () => {
+describe('LKE ACL updates', () => {
   const mockCluster = kubernetesClusterFactory.build();
   const mockRevisionId = randomString(20);
 
+  /**
+   * - Confirms LKE ACL is only rendered if an account has the corresponding capability
+   */
   it('does not show ACL without the LKE ACL capability', () => {
     mockGetAccount(
       accountFactory.build({
