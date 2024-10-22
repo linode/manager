@@ -194,7 +194,7 @@ export const ImageUpload = () => {
               Image Details
             </Typography>
             <Typography>
-              Custom images are billed monthly, at $0.10/GB. An uploaded image
+              Custom images are billed monthly at $0.10/GB. An uploaded image
               file needs to meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#requirements-and-considerations">
                 requirements
@@ -255,6 +255,11 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <RegionSelect
+                  currentCapability={
+                    flags.disallowImageUploadToNonObjRegions
+                      ? 'Object Storage'
+                      : undefined
+                  }
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
@@ -262,9 +267,9 @@ export const ImageUpload = () => {
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
-                  currentCapability={undefined}
                   disableClearable
                   errorText={fieldState.error?.message}
+                  ignoreAccountAvailability
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta

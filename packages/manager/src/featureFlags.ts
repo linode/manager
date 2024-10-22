@@ -81,11 +81,18 @@ interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
   link: string;
 }
 
+interface AclpAlerting {
+  alertDefinitions: boolean;
+  notificationChannels: boolean;
+  recentActivity: boolean;
+}
 export interface Flags {
   aclp: AclpFlag;
+  aclpAlerting: AclpAlerting;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
+  apl: boolean;
   apicliButtonCopy: string;
   apicliDxToolsAdditions: boolean;
   blockStorageEncryption: boolean;
@@ -94,10 +101,13 @@ export interface Flags {
   databaseResize: boolean;
   databases: boolean;
   dbaasV2: BetaFeatureFlag;
+  dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
+  disallowImageUploadToNonObjRegions: boolean;
   gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
+  imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
