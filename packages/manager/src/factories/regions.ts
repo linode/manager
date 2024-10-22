@@ -13,7 +13,7 @@ export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
 });
 
 export const regionFactory = Factory.Sync.makeFactory<Region>({
-  capabilities: ['Block Storage'],
+  capabilities: ['Block Storage', 'StackScripts'],
   country: 'us',
   id: Factory.each((id) => `us-${id}`),
   label: Factory.each((id) => `${id}, NJ`),
