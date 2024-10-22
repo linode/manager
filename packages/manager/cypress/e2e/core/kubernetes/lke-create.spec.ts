@@ -6,6 +6,8 @@ import {
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
+  linodeTypeFactory,
+  regionFactory,
 } from 'src/factories';
 import {
   mockCreateCluster,
@@ -14,6 +16,10 @@ import {
   mockGetControlPlaneACL,
 } from 'support/intercepts/lke';
 import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockGetRegions,
+  mockGetRegionAvailability,
+} from 'support/intercepts/regions';
 import { KubernetesCluster } from '@linode/api-v4';
 import { LkePlanDescription } from 'support/api/lke';
 import { lkeClusterPlans } from 'support/constants/lke';
@@ -412,6 +418,30 @@ describe('LKE Cluster Creation with ACL', () => {
     cy.contains('Add IPv6 Address').should('not.exist');
   });
 
+  const clusterLabel = randomLabel();
+  const mockRegion = regionFactory.build({
+    capabilities: ['Linodes', 'Kubernetes'],
+    id: 'us-east',
+    label: 'Newark, US',
+  });
+  const mockLinodeTypes = [
+    linodeTypeFactory.build({
+      id: 'dedicated-1',
+      label: 'dedicated-1',
+      class: 'dedicated',
+    }),
+    linodeTypeFactory.build({
+      id: 'dedicated-2',
+      label: 'dedicated-2',
+      class: 'dedicated',
+    }),
+  ];
+  const clusterVersion = '1.31';
+  const clusterPlan = { size: 2, tab: 'Dedicated CPU', type: 'Dedicated' };
+  const nodeCount = 1;
+  const planName = 'dedicated-1';
+  const checkoutName = 'dedicated-1 Plan';
+
   describe('with LKE IPACL account capability', () => {
     beforeEach(() => {
       mockGetAccount(
@@ -422,17 +452,10 @@ describe('LKE Cluster Creation with ACL', () => {
           ],
         })
       ).as('getAccount');
+      mockGetRegions([mockRegion]).as('getRegions');
+      mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+      mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
     });
-
-    const clusterLabel = randomLabel();
-    const clusterRegion = chooseRegion({
-      capabilities: ['Kubernetes'],
-    });
-    const clusterVersion = '1.31';
-    const clusterPlan = { size: 4, tab: 'Dedicated CPU', type: 'Dedicated' };
-    const nodeCount = 1;
-    const planName = getLkePlanName(clusterPlan);
-    const checkoutName = getLkePlanCheckoutName(clusterPlan);
 
     /**
      * - Confirms create flow when ACL is toggled off
@@ -445,10 +468,9 @@ describe('LKE Cluster Creation with ACL', () => {
           'revision-id': '',
         },
       });
-
       const mockCluster = kubernetesClusterFactory.build({
         label: clusterLabel,
-        region: clusterRegion.id,
+        region: mockRegion.id,
         k8s_version: clusterVersion,
         control_plane: mockACL,
       });
@@ -465,7 +487,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getAccount']);
+      cy.wait(['@getAccount', '@getRegions', '@getLinodeTypes']);
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label')
@@ -473,7 +495,8 @@ describe('LKE Cluster Creation with ACL', () => {
         .click()
         .type(`${clusterLabel}{enter}`);
 
-      ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
+      ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+      cy.wait(['@getRegionAvailability']);
 
       cy.findByText('Kubernetes Version')
         .should('be.visible')
@@ -574,7 +597,7 @@ describe('LKE Cluster Creation with ACL', () => {
 
       const mockCluster = kubernetesClusterFactory.build({
         label: clusterLabel,
-        region: clusterRegion.id,
+        region: mockRegion.id,
         k8s_version: clusterVersion,
         control_plane: mockACL,
       });
@@ -599,7 +622,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click()
         .type(`${clusterLabel}{enter}`);
 
-      ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
+      ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
 
       cy.findByText('Kubernetes Version')
         .should('be.visible')
@@ -728,7 +751,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click()
         .type(`${clusterLabel}{enter}`);
 
-      ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
+      ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
 
       cy.findByText('Kubernetes Version')
         .should('be.visible')
@@ -798,6 +821,7 @@ describe('LKE Cluster Creation with ACL', () => {
             .click();
         });
 
+      // Confirm API error displays
       cy.wait('@createClusterError');
       cy.contains(mockErrorMessage).should('be.visible');
     });
