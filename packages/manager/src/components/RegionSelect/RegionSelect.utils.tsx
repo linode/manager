@@ -129,7 +129,6 @@ export const isRegionOptionUnavailable = ({
 export const isDistributedRegionSupported = (createType: LinodeCreateType) => {
   const supportedDistributedRegionTypes = [
     'OS',
-    'StackScripts',
     'Images',
     undefined, // /linodes/create route
   ];
