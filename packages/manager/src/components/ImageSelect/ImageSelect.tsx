@@ -1,9 +1,6 @@
-import { styled } from '@mui/material/styles';
 import React, { useMemo } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { List } from 'src/components/List';
-import { Typography } from 'src/components/Typography';
 import { imageFactory } from 'src/factories/images';
 import { useAllImagesQuery } from 'src/queries/images';
 
@@ -142,21 +139,6 @@ export const ImageSelect = (props: Props) => {
 
         return option.vendor ?? '';
       }}
-      renderGroup={(params) => (
-        <li key={params.key}>
-          <Typography
-            sx={(theme) => ({
-              backgroundColor: theme.palette.background.paper,
-              pl: 1,
-              py: 0.75,
-            })}
-            variant="h3"
-          >
-            <span>{params.group}</span>
-          </Typography>
-          <StyledList>{params.children}</StyledList>
-        </li>
-      )}
       renderOption={(props, option, state) => {
         const { key, ...rest } = props;
 
@@ -198,15 +180,9 @@ export const ImageSelect = (props: Props) => {
           ? onChange(value)
           : !multiple && !Array.isArray(value) && onChange(value)
       }
-      disableSelectAll
       errorText={rest.errorText ?? error?.[0].reason}
       multiple={multiple}
       value={value}
     />
   );
 };
-
-const StyledList = styled(List, { label: 'ImageSelectStyledList' })({
-  listStyle: 'none',
-  padding: 0,
-});
