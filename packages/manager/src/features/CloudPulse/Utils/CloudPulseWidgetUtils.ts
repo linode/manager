@@ -1,6 +1,3 @@
-import { styled } from '@mui/material';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
@@ -24,6 +21,7 @@ import type {
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
@@ -336,11 +334,11 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
 };
 
 /**
- * Returns an autocomplete with updated styles according to UX, this will be used at widget level
+ *
+ * @param theme mui theme
+ * @returns The style needed for widget level autocomplete filters
  */
-export const StyledWidgetAutocomplete = styled(Autocomplete, {
-  label: 'StyledAutocomplete',
-})(({ theme }) => ({
+export const getAutocompleteWidgetStyles = (theme: Theme) => ({
   '&& .MuiFormControl-root': {
     minWidth: '90px',
     [theme.breakpoints.down('sm')]: {
@@ -348,4 +346,4 @@ export const StyledWidgetAutocomplete = styled(Autocomplete, {
     },
     width: '90px',
   },
-}));
+});

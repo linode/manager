@@ -1,8 +1,8 @@
+import { breakpoints } from '@linode/ui';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { nodeBalancerFactory } from 'src/factories';
-import { breakpoints } from 'src/foundations/breakpoints';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { renderWithTheme, resizeScreenSize } from 'src/utilities/testHelpers';
 
@@ -20,19 +20,11 @@ describe('NodeBalancerTableRow', () => {
     vi.resetAllMocks();
   });
 
-  it('renders the NodeBalancer table row', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
-      <NodeBalancerTableRow {...props} />
-    );
+  it('renders the NodeBalancer table row', () => {
+    const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
     expect(getByText('nodebalancer-id-1')).toBeVisible();
     expect(getByText('0.0.0.0')).toBeVisible();
-
-    // Open the Action Menu
-    await userEvent.click(
-      getByLabelText(`Action menu for NodeBalancer ${props.id}`)
-    );
-
     expect(getByText('Configurations')).toBeVisible();
     expect(getByText('Settings')).toBeVisible();
     expect(getByText('Delete')).toBeVisible();
