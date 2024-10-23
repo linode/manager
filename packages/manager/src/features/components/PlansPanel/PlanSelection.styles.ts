@@ -6,7 +6,7 @@ import { TableCell } from 'src/components/TableCell';
 export const StyledChip = styled(Chip, { label: 'StyledChip' })(
   ({ theme }) => ({
     backgroundColor: theme.color.green,
-    color: theme.colorTokens?.Neutrals.White,
+    color: theme.colorTokens.Neutrals.White,
     marginLeft: theme.spacing(),
     position: 'relative',
     textTransform: 'uppercase',

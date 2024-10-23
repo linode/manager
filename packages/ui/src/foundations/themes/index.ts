@@ -75,7 +75,7 @@ declare module '@mui/material/styles/createTheme' {
     bg: BgColors;
     borderColors: BorderColors;
     chartTokens: ChartTypes;
-    colorTokens?: ColorTypes; // Global token: theme agnostic
+    colorTokens: ColorTypes; // Global token: theme agnostic
     color: Colors;
     font: Fonts;
     graphs: any;

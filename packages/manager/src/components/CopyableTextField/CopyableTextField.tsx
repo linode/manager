@@ -65,7 +65,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
       color:
         theme.name === 'light'
           ? `${theme.palette.text.primary} !important`
-          : `${theme.colorTokens?.Neutrals.White} !important`,
+          : `${theme.colorTokens.Neutrals.White} !important`,
       opacity: theme.name === 'dark' ? 0.5 : 0.8,
     },
     '&& .MuiInput-root': {

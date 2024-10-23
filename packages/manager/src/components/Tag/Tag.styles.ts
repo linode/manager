@@ -92,7 +92,7 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
   },
   borderBottomRightRadius: 3,
   borderLeft: `1px solid ${
-    theme.name === 'light' ? theme.colorTokens?.Neutrals.White : '#2e3238'
+    theme.name === 'light' ? theme.colorTokens.Neutrals.White : '#2e3238'
   }`,
   borderRadius: 0,
   borderTopRightRadius: 3,

@@ -29,7 +29,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         opacity: 0,
       },
       alignItems: 'center',
-      color: theme.colorTokens?.Neutrals.White,
+      color: theme.colorTokens.Neutrals.White,
       display: 'flex',
       fontFamily: 'LatoWebBold',
       fontSize: '0.875rem',

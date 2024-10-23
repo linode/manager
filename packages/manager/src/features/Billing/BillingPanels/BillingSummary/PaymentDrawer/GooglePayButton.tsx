@@ -24,7 +24,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '& svg': {
       color:
-        theme.name === 'light' ? theme.colorTokens?.Neutrals.White : '#616161',
+        theme.name === 'light' ? theme.colorTokens.Neutrals.White : '#616161',
       height: 16,
     },
     '&:hover': {
@@ -33,7 +33,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'center',
     backgroundColor:
-      theme.name === 'light' ? '#000' : theme.colorTokens?.Neutrals.White,
+      theme.name === 'light' ? '#000' : theme.colorTokens.Neutrals.White,
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',
