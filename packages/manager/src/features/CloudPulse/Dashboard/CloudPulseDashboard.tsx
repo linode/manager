@@ -79,7 +79,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const {
     data: resourceList,
-    isError: isResourceLoadingError,
+    isError: isResourcesApiError,
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(dashboard?.service_type),
@@ -115,7 +115,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     );
   }
 
-  if (isResourceLoadingError) {
+  if (isResourcesApiError) {
     return (
       <Grid item xs>
         <ErrorState errorText="Failed to fetch resources for generating jwe token" />
