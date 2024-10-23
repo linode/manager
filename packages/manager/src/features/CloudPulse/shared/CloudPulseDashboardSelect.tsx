@@ -51,7 +51,7 @@ export const CloudPulseDashboardSelect = React.memo(
 
     const getErrorText = () => {
       if (serviceTypesError) {
-        return 'Failed to fetch supported services for CloudPulse';
+        return 'Failed to fetch services';
       }
 
       if (dashboardsError.length > 0) {
@@ -90,9 +90,6 @@ export const CloudPulseDashboardSelect = React.memo(
     }, [dashboardsList]);
     return (
       <Autocomplete
-        errorText={
-          Boolean(dashboardsList?.length && errorText?.length) ? '' : errorText
-        }
         onChange={(e, dashboard: Dashboard) => {
           setSelectedDashboard(dashboard);
           handleDashboardChange(dashboard, savePreferences);
@@ -109,6 +106,7 @@ export const CloudPulseDashboardSelect = React.memo(
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
         disabled={!dashboardsList}
+        errorText={Boolean(dashboardsList?.length) ? '' : errorText}
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}
