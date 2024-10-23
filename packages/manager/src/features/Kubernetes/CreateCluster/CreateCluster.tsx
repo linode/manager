@@ -26,7 +26,7 @@ import { TextField } from 'src/components/TextField';
 import {
   getKubeHighAvailability,
   getLatestVersion,
-  useGetAPLAvailability,
+  useAPLAvailability,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -82,7 +82,7 @@ export const CreateCluster = () => {
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
-  const showAPL = useGetAPLAvailability();
+  const showAPL = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
 
   const {

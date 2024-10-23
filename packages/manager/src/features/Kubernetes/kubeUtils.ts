@@ -115,21 +115,19 @@ export const getKubeHighAvailability = (
   };
 };
 
-export const useGetAPLAvailability = (): boolean => {
+export const useAPLAvailability = () => {
   const flags = useFlags();
-  const hasBetaCapabilities = useAccountBetaQuery('apl', Boolean(flags.apl));
-  if (!flags) {
+
+  // Only fetch the account beta if the APL flag is enabled
+  const { data: beta } = useAccountBetaQuery('apl', Boolean(flags.apl));
+
+  if (!beta) {
     return false;
   }
 
-  const { data, error, isLoading } = hasBetaCapabilities;
-  if (!data || isLoading || error) {
-    return false;
-  }
+  const isBetaActiveAndEnrolled = getBetaStatus(beta);
 
-  const isBetaActiveAndEnrolled = getBetaStatus(data);
-
-  return Boolean(flags.apl && isBetaActiveAndEnrolled === 'active');
+  return isBetaActiveAndEnrolled === 'active';
 };
 
 /**

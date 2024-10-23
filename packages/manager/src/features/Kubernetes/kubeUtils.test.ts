@@ -1,15 +1,19 @@
+import { renderHook, waitFor } from '@testing-library/react';
+
 import {
+  accountBetaFactory,
   kubeLinodeFactory,
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
-import * as useFlags from 'src/hooks/useFlags';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { extendType } from 'src/utilities/extendType';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   getLatestVersion,
   getTotalClusterMemoryCPUAndStorage,
-  useGetAPLAvailability,
+  useAPLAvailability,
 } from './kubeUtils';
 
 describe('helper functions', () => {
@@ -70,28 +74,22 @@ describe('helper functions', () => {
     });
   });
   describe('APL availability', () => {
-    afterEach(() => {
-      vi.resetAllMocks();
-    });
-    it('should return true if apl flag is true and beta is active', () => {
-      vi.mock('@tanstack/react-query', () => ({
-        useQuery: vi.fn().mockReturnValue({
-          data: {
-            ended: '2099-01-01T00:00:00Z',
-            enrolled: '2023-01-15T00:00:00Z',
-            id: 'apl',
-            label: 'APL Beta',
-            started: '2023-01-01T00:00:00Z',
-          },
-          error: null,
-          isLoading: false,
-        }),
-      }));
-      vi.spyOn(useFlags, 'useFlags').mockReturnValue({ apl: true });
-
-      const aplAvailability = useGetAPLAvailability();
-
-      expect(aplAvailability).toBe(true);
+    it('should return true if the apl flag is true and beta is active', async () => {
+      const accountBeta = accountBetaFactory.build({
+        enrolled: '2023-01-15T00:00:00Z',
+        id: 'apl',
+      });
+      server.use(
+        http.get('*/account/betas/apl', () => {
+          return HttpResponse.json(accountBeta);
+        })
+      );
+      const { result } = renderHook(() => useAPLAvailability(), {
+        wrapper: (ui) => wrapWithTheme(ui, { flags: { apl: true } }),
+      });
+      await waitFor(() => {
+        expect(result.current).toBe(true);
+      });
     });
   });
   describe('getLatestVersion', () => {
