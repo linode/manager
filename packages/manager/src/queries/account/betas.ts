@@ -29,15 +29,11 @@ export const useCreateAccountBetaMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], EnrollInBetaPayload>({
     mutationFn: enrollInBeta,
-    onSuccess(data, variables) {
+    onSuccess() {
       // Refetch the paginated list of account betas. If we just enrolled in a beta,
       // it will show up in account betas.
       queryClient.invalidateQueries({
         queryKey: accountQueries.betas._ctx.paginated._def,
-      });
-      // Invalidate the specific beta
-      queryClient.invalidateQueries({
-        queryKey: accountQueries.betas._ctx.beta(variables.id).queryKey,
       });
       // Refetch all regions data because enrolling in betas can enable new regions
       // or region capabilities.
