@@ -16,6 +16,12 @@ body {
   margin: 0;
   padding: 0 !important;
   font-family: 'LatoWeb', sans-serif;
+
+  strong,
+  b {
+  font-family: 'LatoWebBold', sans-serif;
+    font-weight: normal;
+  }
 }
 
 body.searchOverlay #main-content {
@@ -150,12 +156,6 @@ a.h-u:hover {
 
 .secondaryLink:hover {
   text-decoration: underline;
-}
-
-strong,
-b {
-  font-family: 'LatoWebBold', sans-serif;
-  font-weight: normal;
 }
 
 .visually-hidden {
