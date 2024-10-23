@@ -17,9 +17,8 @@ body {
   padding: 0 !important;
   font-family: 'LatoWeb', sans-serif;
 
-  strong,
-  b {
-  font-family: 'LatoWebBold', sans-serif;
+  strong, b {
+    font-family: 'LatoWebBold', sans-serif;
     font-weight: normal;
   }
 }
