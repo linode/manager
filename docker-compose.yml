@@ -35,6 +35,7 @@ x-e2e-env:
   # Cloud Manager-specific test configuration.
   CY_TEST_SUITE: ${CY_TEST_SUITE}
   CY_TEST_REGION: ${CY_TEST_REGION}
+  CY_TEST_FEATURE_FLAGS: ${CY_TEST_FEATURE_FLAGS}
   CY_TEST_TAGS: ${CY_TEST_TAGS}
   CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
 
@@ -80,14 +81,9 @@ x-e2e-runners:
     context: .
     dockerfile: ./packages/manager/Dockerfile
     target: e2e
-  depends_on:
-    web:
-      condition: service_healthy
   env_file: ./packages/manager/.env
   volumes: *default-volumes
-  # TODO Stop using entrypoint, use CMD instead.
-  # (Or just make `yarn` the entrypoint, but either way stop forcing `cy:e2e`).
-  entrypoint: ['yarn', 'cy:e2e']
+  entrypoint: 'yarn'
 
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
@@ -110,6 +106,48 @@ services:
       timeout: 10s
       retries: 10
 
+  # Cypress test runner service to run tests against a remotely-served Cloud instance.
+  #
+  # This is useful when testing against a standard Cloud Manager environment,
+  # like Production at cloud.linode.com, but can also be used to run tests against
+  # pre-Prod environments, PR preview links, and more.
+  cypress_remote:
+    <<: *default-runner
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+
+  # Cypress test runner service to run tests against a locally-served Cloud instance.
+  #
+  # This is useful when testing against a customized or in-development build of
+  # Cloud Manager.
+  cypress_local:
+    <<: *default-runner
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+    depends_on:
+      web:
+        condition: service_healthy
+
+  # Cypress component test runner service.
+  #
+  # Unlike other Cloud Manager Cypress tests, these tests can be run without
+  # requiring a Cloud Manager environment.
+  cypress_component:
+    <<: *default-runner
+    environment:
+      CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
+      CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
+
+
+  # --> ! DEPRECATION NOTICE ! <--
+  # The services below this line are deprecated, and will be deleted soon.
+  # Don't build any pipelines or write any scripts that depend on these.
+  # Instead, opt to use `cypress_local` in places where you would've used `e2e`,
+  # use `cypress_remote` in places where you would've used `e2e_heimdall`, and
+  # use `cypress_component` in places where you would've used `component`.
+
   # Generic end-to-end test runner for Cloud's primary testing pipeline.
   # Configured to run against a local Cloud instance.
   e2e:
@@ -117,6 +155,7 @@ services:
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
+    entrypoint: ['yarn', 'cy:e2e']
 
   # Component test runner.
   # Does not require any Cloud Manager environment to run.
@@ -136,14 +175,4 @@ services:
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
-
-  region-1:
-    build:
-      context: .
-      dockerfile: ./packages/manager/Dockerfile
-      target: e2e
-    env_file: ./packages/manager/.env
-    volumes: *default-volumes
-    environment:
-      <<: *default-env
-      MANAGER_OAUTH: ${MANAGER_OAUTH_1}
+    entrypoint: ['yarn', 'cy:e2e']
