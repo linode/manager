@@ -20,9 +20,17 @@ interface Props {
    */
   hasFixedLegendHeight?: boolean;
   /**
+   * Height of the legend
+   */
+  height?: number;
+  /**
    * Array of rows to hide. Each row should contain the legend title.
    */
   hiddenRows?: string[];
+  /**
+   * Maximum height of the legend
+   */
+  maxHeight?: number;
   /**
    * Array of rows to display. Each row should contain the data to display, the format function to use, the legend color, and the legend title.
    */
@@ -46,7 +54,9 @@ export interface MetricsDisplayRow {
 
 export const MetricsDisplay = ({
   hasFixedLegendHeight = false,
+  height = 160,
   hiddenRows,
+  maxHeight = 160,
   rows,
 }: Props) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
@@ -60,11 +70,11 @@ export const MetricsDisplay = ({
         '.MuiTable-root': {
           border: 0,
         },
-        maxHeight: 160,
+        maxHeight,
         overflowY: 'auto',
         ...(hasFixedLegendHeight && {
           [theme.breakpoints.up(1100)]: {
-            height: 160,
+            height,
           },
         }),
       })}
