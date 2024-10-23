@@ -44,7 +44,7 @@ interface Props {
 }
 
 export const DatabaseCreateAccessControls = (props: Props) => {
-  const { disabled, errors, ips, onBlur, onChange } = props;
+  const { disabled = false, errors, ips, onBlur, onChange } = props;
   const { classes } = useStyles();
   const [accessOption, setAccessOption] = useState<AccessOption>('specific');
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
