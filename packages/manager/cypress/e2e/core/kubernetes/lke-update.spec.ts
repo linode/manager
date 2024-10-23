@@ -1351,7 +1351,7 @@ describe('LKE cluster updates', () => {
   });
 });
 
-describe('LKE ACL updates', () => {
+describe.only('LKE ACL updates', () => {
   const mockCluster = kubernetesClusterFactory.build();
   const mockRevisionId = randomString(20);
 
@@ -1461,7 +1461,7 @@ describe('LKE ACL updates', () => {
           // confirm Revision ID section and edit Revision ID
           cy.findAllByText('Revision ID').should('have.length', 2);
           cy.contains(
-            'A unique identifing string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
+            'A unique identifying string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
           ).should('be.visible');
           cy.findByLabelText('Revision ID').should(
             'have.value',
@@ -1685,7 +1685,7 @@ describe('LKE ACL updates', () => {
           // confirm Revision ID section exists
           cy.findAllByText('Revision ID').should('have.length', 2);
           cy.contains(
-            'A unique identifing string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
+            'A unique identifying string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
           ).should('be.visible');
           cy.findByLabelText('Revision ID').should(
             'have.value',
@@ -1824,7 +1824,7 @@ describe('LKE ACL updates', () => {
           // Confirm revision ID section does not exist
           cy.contains('Revision ID').should('not.exist');
           cy.contains(
-            'A unique identifing string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
+            'A unique identifying string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
           ).should('not.exist');
 
           // Confirm Addresses section and add IP addresses
