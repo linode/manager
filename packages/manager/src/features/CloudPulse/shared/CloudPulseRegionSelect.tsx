@@ -50,7 +50,7 @@ export const CloudPulseRegionSelect = React.memo(
         data-testid="region-select"
         disableClearable={false}
         disabled={!selectedDashboard || !regions}
-        errorText={isError ? `Failed to get ${label || 'Region'}` : ''}
+        errorText={isError ? `Failed to get ${label || 'Regions'}` : ''}
         fullWidth
         label={label || 'Region'}
         loading={loading}
