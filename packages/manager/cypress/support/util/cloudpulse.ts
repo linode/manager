@@ -2,6 +2,7 @@
 
 import type { CloudPulseMetricsResponseData } from '@linode/api-v4';
 import type { Labels } from 'src/features/CloudPulse/shared/CloudPulseTimeRangeSelect';
+
 export const generateRandomMetricsData = (
   time: Labels,
   granularityData: '1 day' | '1 hr' | '5 min' | 'Auto'

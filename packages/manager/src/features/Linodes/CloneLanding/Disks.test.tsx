@@ -33,7 +33,7 @@ describe('Disks', () => {
     const { getByTestId } = render(wrapWithTheme(<Disks {...props} />));
     disks.forEach((eachDisk) => {
       const checkbox = getByTestId(`checkbox-${eachDisk.id}`).parentNode;
-      fireEvent.click(checkbox!);
+      fireEvent.click(checkbox as any);
       expect(mockHandleSelect).toHaveBeenCalledWith(eachDisk.id);
     });
   });
@@ -47,10 +47,10 @@ describe('Disks', () => {
   });
 
   it('checks the disk if the associated config is selected', () => {
-    const { getByRole } = render(
+    const { getByTestId } = render(
       wrapWithTheme(<Disks {...props} selectedConfigIds={[9859511]} />)
     );
-    const checkbox = getByRole('checkbox', { name: '512 MB Swap Image' });
-    expect(checkbox).toBeChecked();
+    const checkbox: any = getByTestId('checkbox-19040624').firstElementChild;
+    expect(checkbox).toHaveAttribute('checked');
   });
 });

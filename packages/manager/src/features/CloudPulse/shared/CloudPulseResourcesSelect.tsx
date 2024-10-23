@@ -42,12 +42,23 @@ export const CloudPulseResourcesSelect = React.memo(
       savePreferences,
       xFilter,
     } = props;
+    
+    const platformFilter =
+      resourceType === 'dbaas' ? { platform: 'rdbms-default' } : {};
 
-    const { data: resources, isError, isLoading } = useResourcesQuery(
+    const { data: resources, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
-      xFilter ? xFilter : { region }
+      xFilter
+        ? {
+            ...platformFilter,
+            ...xFilter,
+          }
+        : {
+            ...platformFilter,
+            region,
+          }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<

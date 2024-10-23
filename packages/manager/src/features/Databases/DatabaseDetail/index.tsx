@@ -99,7 +99,7 @@ export const DatabaseDetail = () => {
   }
 
   const isDefault = database.platform === 'rdbms-default';
-  const isMonitorEnabled = isDefault && isDatabasesMonitorEnabled;
+  const isMonitorEnabled = isDatabasesMonitorEnabled;
 
   const tabs: Tab[] = [
     {
@@ -133,11 +133,6 @@ export const DatabaseDetail = () => {
       title: 'Resize',
     });
   }
-
-  tabs.push({
-    routeName: `/databases/${engine}/${id}/monitor`,
-    title: 'Monitor',
-  });
 
   const getTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
@@ -240,12 +235,6 @@ export const DatabaseDetail = () => {
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={flags.databaseResize ? 4 : 3}>
-            <CloudPulseDashboardWithFilters
-              dashboardId={2}
-              resource={database.id}
             />
           </SafeTabPanel>
         </TabPanels>
