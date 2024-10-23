@@ -137,6 +137,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
       buttonType="secondary"
       className={classes.addIP}
       compactX
+      disabled={props.inputProps?.disabled}
       onClick={addNewInput}
     >
       {buttonText ?? 'Add an IP'}

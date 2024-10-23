@@ -65,6 +65,7 @@ import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -515,6 +516,17 @@ const DatabaseCreate = () => {
         }}
         title="Create"
       />
+      {isRestricted && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'create',
+            resourceType: 'Databases',
+          })}
+          important
+          spacingTop={16}
+          variant="error"
+        />
+      )}
       <Paper>
         {createError && (
           <Notice variant="error">
@@ -528,8 +540,8 @@ const DatabaseCreate = () => {
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
             data-qa-label-input
-            errorText={errors.label}
             disabled={isRestricted}
+            errorText={errors.label}
             label="Cluster Label"
             onChange={(e) => setFieldValue('label', e.target.value)}
             tooltipClasses={classes.tooltip}
@@ -577,9 +589,9 @@ const DatabaseCreate = () => {
               setFieldValue('type', selected);
             }}
             className={classes.selectPlanPanel}
+            data-qa-select-plan
             disabled={isRestricted}
             disabledTabs={isRestricted ? ['shared', 'dedicated'] : []}
-            data-qa-select-plan
             error={errors.type}
             handleTabChange={handleTabChange}
             header="Choose a Plan"
