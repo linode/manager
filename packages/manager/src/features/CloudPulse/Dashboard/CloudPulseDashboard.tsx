@@ -110,7 +110,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   if (isDashboardApiError) {
     return (
       <Grid item xs>
-        <ErrorState errorText="Failed to load selected dashboard" />
+        <ErrorState errorText="Failed to fetch selected dashboard" />
       </Grid>
     );
   }
@@ -118,7 +118,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   if (isResourceLoadingError) {
     return (
       <Grid item xs>
-        <ErrorState errorText="Failed to load resources for generating jwe token" />
+        <ErrorState errorText="Failed to fetch resources for generating jwe token" />
       </Grid>
     );
   }
