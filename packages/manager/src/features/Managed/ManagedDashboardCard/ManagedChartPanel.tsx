@@ -1,6 +1,4 @@
-import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
@@ -22,6 +20,9 @@ import {
   StyledGraphControlsDiv,
   StyledRootDiv,
 } from './ManagedChartPanel.styles';
+
+import type { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
+import type { Theme } from '@mui/material/styles';
 
 const chartHeight = 300;
 
@@ -78,7 +79,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={2}>
               <AreaChart
                 areas={[
                   {
@@ -107,7 +108,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={2}>
               <AreaChart
                 areas={[
                   {
@@ -141,7 +142,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={3}>
               <AreaChart
                 areas={[
                   {

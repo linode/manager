@@ -5,7 +5,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { Metrics } from 'src/utilities/statMetrics';
 
 import {
   StyledButton,
@@ -13,8 +12,20 @@ import {
   StyledTableCell,
 } from './MetricDisplay.styles';
 
+import type { Metrics } from 'src/utilities/statMetrics';
+
 interface Props {
+  /**
+   * If true, the legends across metrics will be the same height
+   */
+  hasFixedLegendHeight?: boolean;
+  /**
+   * Array of rows to hide. Each row should contain the legend title.
+   */
   hiddenRows?: string[];
+  /**
+   * Array of rows to display. Each row should contain the data to display, the format function to use, the legend color, and the legend title.
+   */
   rows: MetricsDisplayRow[];
 }
 
@@ -33,15 +44,35 @@ export interface MetricsDisplayRow {
   legendTitle: string;
 }
 
-export const MetricsDisplay = ({ hiddenRows, rows }: Props) => {
+export const MetricsDisplay = ({
+  hasFixedLegendHeight = false,
+  hiddenRows,
+  rows,
+}: Props) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
   const sxProps = {
     borderTop: 'none !important',
   };
 
   return (
-    <StyledTable aria-label="Stats and metrics">
-      <TableHead sx={sxProps}>
+    <StyledTable
+      sx={(theme) => ({
+        '.MuiTable-root': {
+          border: 0,
+        },
+        maxHeight: 160,
+        overflowY: 'auto',
+        ...(hasFixedLegendHeight && {
+          [theme.breakpoints.up(1100)]: {
+            height: 160,
+          },
+        }),
+      })}
+      aria-label="Stats and metrics"
+      noBorder
+      stickyHeader
+    >
+      <TableHead sx={{ ...sxProps, position: 'relative', zIndex: 2 }}>
         <TableRow sx={sxProps}>
           <TableCell sx={sxProps}>{''}</TableCell>
           {rowHeaders.map((section, idx) => (
@@ -52,7 +83,7 @@ export const MetricsDisplay = ({ hiddenRows, rows }: Props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {rows.map((row) => {
+        {rows.map((row, idx) => {
           const {
             data,
             format,
@@ -61,9 +92,21 @@ export const MetricsDisplay = ({ hiddenRows, rows }: Props) => {
             legendTitle,
           } = row;
           const hidden = hiddenRows?.includes(legendTitle);
-
+          const lastItem = idx === rows.length - 1;
           return (
-            <TableRow data-qa-metric-row key={legendTitle}>
+            <TableRow
+              sx={
+                lastItem
+                  ? {
+                      '.MuiTableCell-root': {
+                        borderBottom: 0,
+                      },
+                    }
+                  : {}
+              }
+              data-qa-metric-row
+              key={legendTitle}
+            >
               <StyledTableCell>
                 <StyledButton
                   data-testid="legend-title"
