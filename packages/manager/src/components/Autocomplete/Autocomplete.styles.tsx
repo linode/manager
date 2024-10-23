@@ -44,7 +44,7 @@ export const SelectedIcon = styled(DoneIcon, {
 }));
 
 export const CustomPopper = (props: PopperProps) => {
-  const { style, ...rest } = props;
+  const { placement, style, ...rest } = props;
 
   const updatedStyle = {
     ...style,
@@ -58,9 +58,13 @@ export const CustomPopper = (props: PopperProps) => {
   return (
     <Popper
       {...rest}
+      modifiers={[
+        { enabled: false, name: 'preventOverflow' },
+        { enabled: !placement, name: 'flip' },
+      ]}
       data-qa-autocomplete-popper
       data-testid="autocomplete-popper"
-      modifiers={[{ enabled: false, name: 'preventOverflow' }]}
+      placement={placement}
       style={updatedStyle}
     />
   );

@@ -235,7 +235,7 @@ const StyledTag = styled(Tag, {
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.primary.main,
-    color: '#ffff',
+    color: theme.colorTokens.Neutrals.White,
   },
   backgroundColor: theme.color.tagButtonBg,
   borderRadius: 0,
