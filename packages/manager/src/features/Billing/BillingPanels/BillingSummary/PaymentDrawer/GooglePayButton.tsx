@@ -24,7 +24,8 @@ import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentI
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '& svg': {
-      color: theme.name === 'light' ? '#fff' : '#616161',
+      color:
+        theme.name === 'light' ? theme.colorTokens.Neutrals.White : '#616161',
       height: 16,
     },
     '&:hover': {
@@ -32,7 +33,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
       transition: 'none',
     },
     alignItems: 'center',
-    backgroundColor: theme.name === 'light' ? '#000' : '#fff',
+    backgroundColor:
+      theme.name === 'light' ? '#000' : theme.colorTokens.Neutrals.White,
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',
