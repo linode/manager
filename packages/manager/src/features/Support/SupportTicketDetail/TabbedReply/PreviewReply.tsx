@@ -16,8 +16,7 @@ export const PreviewReply = (props: Props) => {
       sx={{
         height: '243px',
         overflowY: 'auto',
-        paddingX: 2.5,
-        paddingY: 0,
+        padding: 1.75,
       }}
       error={error}
       variant="outlined"
