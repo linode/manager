@@ -1,13 +1,19 @@
 import {
+  Accent,
   Action,
+  Background,
   Badge,
+  Border,
   Button,
   Color,
+  Content,
   Dropdown,
+  Elevation,
   Interaction,
   NotificationToast,
   Select,
   TextField,
+  Typography,
 } from '@linode/design-language-system/themes/dark';
 
 import { breakpoints } from '../breakpoints';
@@ -181,6 +187,8 @@ const genericTableHeaderStyle = {
 };
 
 export const darkTheme: ThemeOptions = {
+  accentTokens: Accent,
+  actionTokens: Action,
   animateCircleIcon: {
     ...iconCircleAnimation,
   },
@@ -193,8 +201,10 @@ export const darkTheme: ThemeOptions = {
   applyTableHeaderStyles: {
     ...genericTableHeaderStyle,
   },
+  backgroundTokens: Background,
   bg: customDarkModeOptions.bg,
   borderColors: customDarkModeOptions.borderColors,
+  borderTokens: Border,
   breakpoints,
   color: customDarkModeOptions.color,
   components: {
@@ -791,6 +801,8 @@ export const darkTheme: ThemeOptions = {
       },
     },
   },
+  contentTokens: Content,
+  elevationTokens: Elevation,
   graphs: {
     cpu: {
       percent: `rgb(54, 131, 220)`,
@@ -890,4 +902,5 @@ export const darkTheme: ThemeOptions = {
       color: primaryColors.text,
     },
   },
+  typographyTokens: Typography,
 };

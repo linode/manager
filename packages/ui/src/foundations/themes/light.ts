@@ -1,13 +1,19 @@
 import {
+  Accent,
   Action,
+  Background,
   Border,
   Button,
   Chart,
   Color,
+  Content,
   Dropdown,
+  Elevation,
   Interaction,
   NotificationToast,
+  Radius,
   Select,
+  Typography,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -221,6 +227,8 @@ const graphTransparency = '0.7';
 const spacing = 8;
 
 export const lightTheme: ThemeOptions = {
+  accentTokens: Accent,
+  actionTokens: Action,
   addCircleHoverEffect: {
     ...iconCircleHoverEffect,
   },
@@ -236,8 +244,10 @@ export const lightTheme: ThemeOptions = {
   applyTableHeaderStyles: {
     ...genericTableHeaderStyle,
   },
+  backgroundTokens: Background,
   bg,
   borderColors,
+  borderTokens: Border,
   breakpoints,
   chartTokens: Chart,
   color,
@@ -1461,6 +1471,8 @@ export const lightTheme: ThemeOptions = {
       },
     },
   },
+  contentTokens: Content,
+  elevationTokens: Elevation,
   font: {
     bold: latoWeb.bold,
     normal: latoWeb.normal,
@@ -1602,6 +1614,7 @@ export const lightTheme: ThemeOptions = {
       main: Color.Amber[40],
     },
   },
+  radiusTokens: Radius,
   shadows: [
     'none',
     'none',
@@ -1672,6 +1685,7 @@ export const lightTheme: ThemeOptions = {
       lineHeight: '1.5rem',
     },
   },
+  typographyTokens: Typography,
   visually: {
     hidden: visuallyHidden,
     visible: visuallyVisible,
