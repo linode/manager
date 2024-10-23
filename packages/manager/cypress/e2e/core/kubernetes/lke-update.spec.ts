@@ -1351,7 +1351,7 @@ describe('LKE cluster updates', () => {
   });
 });
 
-describe.only('LKE ACL updates', () => {
+describe('LKE ACL updates', () => {
   const mockCluster = kubernetesClusterFactory.build();
   const mockRevisionId = randomString(20);
 
