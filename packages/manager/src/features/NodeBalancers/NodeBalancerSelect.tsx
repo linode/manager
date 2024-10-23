@@ -132,8 +132,9 @@ export const NodeBalancerSelect = (
       renderOption={
         renderOption
           ? (props, option, { selected }) => {
+              const { key, ...rest } = props;
               return (
-                <li {...props} data-qa-linode-option>
+                <li {...rest} data-qa-linode-option key={key}>
                   {renderOption(option, selected)}
                 </li>
               );

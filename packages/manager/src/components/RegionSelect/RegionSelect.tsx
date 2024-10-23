@@ -136,14 +136,18 @@ export const RegionSelect = <
         getOptionLabel={(region) =>
           isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`
         }
-        renderOption={(props, region) => (
-          <RegionOption
-            disabledOptions={disabledRegions[region.id]}
-            key={region.id}
-            props={props}
-            region={region}
-          />
-        )}
+        renderOption={(props, region) => {
+          const { key, ...rest } = props;
+
+          return (
+            <RegionOption
+              disabledOptions={disabledRegions[region.id]}
+              key={key}
+              props={rest}
+              region={region}
+            />
+          );
+        }}
         sx={(theme) => ({
           [theme.breakpoints.up('md')]: {
             width: '416px',
