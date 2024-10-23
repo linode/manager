@@ -52,7 +52,7 @@ it('test getRegionProperties method', () => {
 
 it('test getTimeDuratonProperties method', () => {
   const timeDurationConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Time Range'
+    ({ name }) => name === 'Time Range'
   );
 
   expect(timeDurationConfig).toBeDefined();

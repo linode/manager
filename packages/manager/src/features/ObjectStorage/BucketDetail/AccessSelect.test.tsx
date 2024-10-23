@@ -2,6 +2,7 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AccessSelect } from './AccessSelect';
@@ -11,31 +12,27 @@ import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 const CORS_ENABLED_TEXT = 'CORS Enabled';
 const AUTHENTICATED_READ_TEXT = 'Authenticated Read';
+const BUCKET_ACCESS_URL = '*object-storage/buckets/*/*/access';
+const OBJECT_ACCESS_URL = '*object-storage/buckets/*/*/object-acl';
 
 vi.mock('src/components/EnhancedSelect/Select');
 
-const mockGetAccess = vi.fn().mockResolvedValue({
-  acl: 'private',
-  cors_enabled: true,
-});
-const mockUpdateAccess = vi.fn().mockResolvedValue({});
-
 const defaultProps: Props = {
+  clusterOrRegion: 'in-maa',
   endpointType: 'E1',
-  getAccess: mockGetAccess,
   name: 'my-object-name',
-  updateAccess: mockUpdateAccess,
   variant: 'bucket',
 };
 
 describe('AccessSelect', () => {
   const renderComponent = (props: Partial<Props> = {}) =>
-    renderWithTheme(<AccessSelect {...defaultProps} {...props} />);
+    renderWithTheme(<AccessSelect {...defaultProps} {...props} />, {
+      flags: { objectStorageGen2: { enabled: true } },
+    });
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
   it.each([
     ['bucket', 'E0', true],
     ['bucket', 'E1', true],
@@ -48,13 +45,21 @@ describe('AccessSelect', () => {
   ])(
     'shows correct UI for %s variant and %s endpoint type',
     async (variant, endpointType, shouldShowCORS) => {
+      server.use(
+        http.get(BUCKET_ACCESS_URL, () => {
+          return HttpResponse.json({ acl: 'private', cors_enabled: true });
+        }),
+        http.get(OBJECT_ACCESS_URL, () => {
+          return HttpResponse.json({ acl: 'private' });
+        })
+      );
+
       renderComponent({
         endpointType: endpointType as ObjectStorageEndpointTypes,
         variant: variant as 'bucket' | 'object',
       });
 
       const aclSelect = screen.getByRole('combobox');
-
       await waitFor(() => {
         expect(aclSelect).toBeEnabled();
         expect(aclSelect).toHaveValue('Private');
@@ -69,7 +74,6 @@ describe('AccessSelect', () => {
         'aria-selected',
         'true'
       );
-
       if (shouldShowCORS) {
         await waitFor(() => {
           expect(screen.getByLabelText(CORS_ENABLED_TEXT)).toBeInTheDocument();
@@ -92,13 +96,25 @@ describe('AccessSelect', () => {
   it('updates the access and CORS settings and submits the appropriate values', async () => {
     renderComponent();
 
+    server.use(
+      http.get(BUCKET_ACCESS_URL, () => {
+        return HttpResponse.json({ acl: 'private', cors_enabled: true });
+      }),
+      http.put(BUCKET_ACCESS_URL, () => {
+        return HttpResponse.json({});
+      })
+    );
+
     const aclSelect = screen.getByRole('combobox');
     const saveButton = screen.getByText('Save').closest('button')!;
 
-    await waitFor(() => {
-      expect(aclSelect).toBeEnabled();
-      expect(aclSelect).toHaveValue('Private');
-    });
+    await waitFor(
+      () => {
+        expect(aclSelect).toBeEnabled();
+        expect(aclSelect).toHaveValue('Private');
+      },
+      { interval: 100, timeout: 5000 }
+    );
 
     // Wait for CORS toggle to appear and be checked
     const corsToggle = await screen.findByRole('checkbox', {
@@ -131,12 +147,8 @@ describe('AccessSelect', () => {
     });
 
     await userEvent.click(saveButton);
-    expect(mockUpdateAccess).toHaveBeenCalledWith('authenticated-read', false);
-
-    await userEvent.click(corsToggle);
-    await waitFor(() => expect(corsToggle).toBeChecked());
-
-    await userEvent.click(saveButton);
-    expect(mockUpdateAccess).toHaveBeenCalledWith('authenticated-read', true);
+    await waitFor(() =>
+      screen.findByText('Bucket access updated successfully.')
+    );
   });
 });

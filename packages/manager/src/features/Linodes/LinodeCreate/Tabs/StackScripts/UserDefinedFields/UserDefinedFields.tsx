@@ -9,7 +9,7 @@ import { Paper } from 'src/components/Paper';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 
 import { getMarketplaceAppLabel } from '../../Marketplace/utilities';
