@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { TableRow } from 'src/components/TableRow';
 
 import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 
@@ -20,7 +19,7 @@ interface StyledFirewallRuleTableRowProps
   status: FirewallRuleTableRowProps['status'];
 }
 
-export const StyledTableRow = styled(TableRow, {
+export const StyledTableRow = styled('tr', {
   label: 'StyledTableRow',
   shouldForwardProp: omittedProps(['originalIndex', 'ruleIndex']),
 })<StyledFirewallRuleTableRowProps>(

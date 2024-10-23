@@ -296,12 +296,16 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
   };
 
   const {
+    active,
     attributes,
     isDragging,
     listeners,
     setNodeRef,
     transform,
+    transition,
   } = useSortable({ id });
+
+  const isActive = Boolean(active);
 
   // dnd-kit styles
   const rowStyles = {
@@ -312,17 +316,19 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       touchAction: 'none',
     },
     cursor: isDragging ? 'grabbing' : 'grab',
+    position: 'relative',
     transform: CSS.Transform.toString(transform),
+    transition: isActive ? transition : 'none',
     zIndex: isDragging ? 999 : 0,
-  };
+  } as const;
 
   return (
     <StyledTableRow
       aria-label={label ?? `firewall rule ${id}`}
       disabled={disabled}
-      domRef={setNodeRef}
       key={id}
       originalIndex={originalIndex}
+      ref={setNodeRef}
       ruleIndex={index}
       status={status}
       {...attributes}
