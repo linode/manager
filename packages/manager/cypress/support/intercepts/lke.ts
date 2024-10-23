@@ -362,7 +362,7 @@ export const mockGetApiEndpoints = (
 /**
  * Intercepts DELETE request to reset Kubeconfig and mocks the response.
  *
- * @param clusterId - Numberic ID of LKE cluster for which to mock response.
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
  *
  * @returns Cypress chainable.
  */
