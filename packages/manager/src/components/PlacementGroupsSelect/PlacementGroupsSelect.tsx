@@ -103,12 +103,14 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
         handlePlacementGroupChange(selectedOption ?? null);
       }}
       renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+
         return (
           <PlacementGroupSelectOption
             disabled={isDisabledPlacementGroup(option, selectedRegion)}
-            key={option.id}
+            key={key}
             label={option.label}
-            props={props}
+            props={rest}
             selected={selected}
             value={option}
           />

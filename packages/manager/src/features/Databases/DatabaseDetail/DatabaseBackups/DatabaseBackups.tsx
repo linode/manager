@@ -214,11 +214,14 @@ export const DatabaseBackups = (props: Props) => {
               onChange={(_, newTime) => setSelectedTime(newTime)}
               options={TIME_OPTIONS}
               placeholder="Choose a time"
-              renderOption={(props, option) => (
-                <li {...props} key={option.value}>
-                  {option.label}
-                </li>
-              )}
+              renderOption={(props, option) => {
+                const { key, ...rest } = props;
+                return (
+                  <li {...rest} key={key}>
+                    {option.label}
+                  </li>
+                );
+              }}
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-time-select': true,

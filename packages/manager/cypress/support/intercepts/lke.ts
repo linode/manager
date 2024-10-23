@@ -362,7 +362,7 @@ export const mockGetApiEndpoints = (
 /**
  * Intercepts DELETE request to reset Kubeconfig and mocks the response.
  *
- * @param clusterId - Numberic ID of LKE cluster for which to mock response.
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
  *
  * @returns Cypress chainable.
  */
@@ -379,7 +379,7 @@ export const mockResetKubeconfig = (
 /**
  * Intercepts GET request for a cluster's Control Plane ACL and mocks the response
  *
- * @param clusterId - Numberic ID of LKE cluster for which to mock response.
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
  * @param controlPlaneACL - control plane ACL data for which to mock response
  *
  * @returns Cypress chainable
@@ -398,7 +398,7 @@ export const mockGetControlPlaneACL = (
 /**
  * Intercepts GET request for a cluster's Control Plane ACL and mocks an error response
  *
- * @param clusterId - Numberic ID of LKE cluster for which to mock response.
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
  * @param errorMessage - Optional error message with which to mock response.
  * @param statusCode - HTTP status code with which to mock response.
  *
@@ -419,7 +419,7 @@ export const mockGetControlPlaneACLError = (
 /**
  * Intercepts PUT request for a cluster's Control Plane ACL and mocks the response
  *
- * @param clusterId - Numberic ID of LKE cluster for which to mock response.
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
  * @param controlPlaneACL - control plane ACL data for which to mock response
  *
  * @returns Cypress chainable
@@ -438,7 +438,7 @@ export const mockUpdateControlPlaneACL = (
 /**
  * Intercepts PUT request for a cluster's Control Plane ACL and mocks the response
  *
- * @param clusterId - Numberic ID of LKE cluster for which to mock response.
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
  * @param errorMessage - Optional error message with which to mock response.
  * @param statusCode - HTTP status code with which to mock response.
  *
