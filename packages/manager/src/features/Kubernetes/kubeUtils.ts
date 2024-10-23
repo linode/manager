@@ -125,9 +125,9 @@ export const useAPLAvailability = () => {
     return false;
   }
 
-  const isBetaActiveAndEnrolled = getBetaStatus(beta);
+  const betaStatus = getBetaStatus(beta);
 
-  return isBetaActiveAndEnrolled === 'active';
+  return betaStatus === 'active';
 };
 
 export const getKubeControlPlaneACL = (
