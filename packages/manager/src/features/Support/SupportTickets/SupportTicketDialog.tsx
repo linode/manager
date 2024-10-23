@@ -472,7 +472,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   render={({ field, fieldState }) => (
                     <TabbedReply
                       placeholder={
-                        "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                        'Tell us more about the trouble you’re having and any steps you’ve already taken to resolve it.'
                       }
                       error={fieldState.error?.message}
                       handleChange={field.onChange}

@@ -15,14 +15,12 @@ export const MarkdownReference = (props: Props) => {
     <Stack spacing={2}>
       <Typography>
         You can use Markdown to format your{' '}
-        {props.isReply ? 'reply' : 'question'}. For more examples see this{' '}
+        {props.isReply ? 'reply' : 'question'}. For more examples, see this{' '}
         <Link external to="https://commonmark.org/help/">
           Markdown cheatsheet
         </Link>
       </Typography>
-      <Typography fontFamily={(theme) => theme.font.bold} variant="h3">
-        Examples
-      </Typography>
+      <Typography fontFamily={(theme) => theme.font.bold}>Examples</Typography>
       <Paper
         sx={(theme) => ({
           backgroundColor: theme.palette.background.default,
