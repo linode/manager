@@ -34,7 +34,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
   { flag: 'databaseResize', label: 'Database Resize' },
-  { flag: 'apicliDxToolsAdditions', label: 'APICLI DX Tools Additions' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
 ];
 
