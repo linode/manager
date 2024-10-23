@@ -2,13 +2,16 @@ import { styled } from '@mui/material/styles';
 import 'flag-icons/css/flag-icons.min.css';
 import React from 'react';
 
+import { Box } from './Box';
+
+import type { BoxProps } from './Box';
 import type { Country } from '@linode/api-v4';
 
 const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',
 };
 
-interface Props {
+interface Props extends BoxProps {
   country: Country;
 }
 
@@ -16,9 +19,14 @@ interface Props {
  * Flag icons are provided by the [flag-icons](https://www.npmjs.com/package/flag-icon) package
  */
 export const Flag = (props: Props) => {
-  const country = props.country.toLowerCase();
+  const { country, ...rest } = props;
 
-  return <StyledFlag className={`fi fi-${getFlagClass(country)} fi-xx`} />;
+  return (
+    <StyledFlag
+      className={`fi fi-${getFlagClass(country.toLowerCase())} fi-xx`}
+      {...rest}
+    />
+  );
 };
 
 const getFlagClass = (country: Country | string) => {
@@ -30,7 +38,7 @@ const getFlagClass = (country: Country | string) => {
   return country;
 };
 
-const StyledFlag = styled('div', { label: 'StyledFlag' })(({ theme }) => ({
+const StyledFlag = styled(Box, { label: 'StyledFlag' })(({ theme }) => ({
   boxShadow:
     theme.palette.mode === 'light' ? `0px 0px 0px 1px #00000010` : undefined,
   fontSize: '1.5rem',

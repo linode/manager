@@ -36,14 +36,14 @@ export type Labels =
 
 export const CloudPulseTimeRangeSelect = React.memo(
   (props: CloudPulseTimeRangeSelectProps) => {
-    const { defaultValue, handleStatsChange, savePreferences } = props;
+    const { defaultValue, handleStatsChange, label, savePreferences } = props;
     const options = generateSelectOptions();
     const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
       if (!savePreferences) {
         return options[0];
       }
       return options.find((o) => o.label === defaultValue) || options[0];
-    }, []);
+    }, [defaultValue]);
     const [selectedTimeRange, setSelectedTimeRange] = React.useState<
       Item<Labels, Labels>
     >(getDefaultValue());
@@ -58,8 +58,12 @@ export const CloudPulseTimeRangeSelect = React.memo(
           false
         );
       }
+
+      if (item !== selectedTimeRange) {
+        setSelectedTimeRange(item);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // need to execute only once, during mounting of this component
+    }, [defaultValue]); // need to execute when there is change in default value
     const handleChange = (item: Item<Labels, Labels>) => {
       setSelectedTimeRange(item);
 
@@ -76,15 +80,13 @@ export const CloudPulseTimeRangeSelect = React.memo(
         onChange={(e, value: Item<Labels, Labels>) => {
           handleChange(value);
         }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
         autoHighlight
         data-testid="cloudpulse-time-duration"
         disableClearable
         fullWidth
         isOptionEqualToValue={(option, value) => option.value === value.value}
-        label="Select a Time Duration"
+        label={label || 'Time Range'}
+        noMarginTop
         options={options}
         value={selectedTimeRange}
       />

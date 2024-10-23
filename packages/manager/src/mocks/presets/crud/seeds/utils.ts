@@ -5,6 +5,7 @@ import type { MockSeeder, MockState } from 'src/mocks/types';
 
 /**
  * Removes the seeds from the database.
+ * This function is called upon unchecking an individual seeder in the MSW.
  *
  * @param seederId - The ID of the seeder to remove.
  *
@@ -21,6 +22,9 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
       break;
     case 'volumes:crud':
       await mswDB.deleteAll('volumes', mockState, 'seedState');
+      break;
+    case 'support-tickets:crud':
+      await mswDB.deleteAll('supportTickets', mockState, 'seedState');
       break;
     default:
       break;

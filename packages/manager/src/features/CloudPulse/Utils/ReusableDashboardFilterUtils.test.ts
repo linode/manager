@@ -71,7 +71,7 @@ it('test checkMandatoryFiltersSelected method for role', () => {
 
   result = checkMandatoryFiltersSelected({
     dashboardObj: { ...mockDashboard, service_type: 'dbaas' },
-    filterValue: { region: 'us-east', role: 'primary' },
+    filterValue: { node_type: 'primary', region: 'us-east' },
     resource: 1,
     timeDuration: { unit: 'min', value: 30 },
   });
@@ -83,12 +83,12 @@ it('test constructDimensionFilters method', () => {
   mockDashboard.service_type = 'dbaas';
   const result = constructDimensionFilters({
     dashboardObj: mockDashboard,
-    filterValue: { role: 'primary' },
+    filterValue: { node_type: 'primary' },
     resource: 1,
   });
 
   expect(result.length).toEqual(1);
-  expect(result[0].filterKey).toEqual('role');
+  expect(result[0].filterKey).toEqual('node_type');
   expect(result[0].filterValue).toEqual('primary');
 });
 
@@ -99,13 +99,13 @@ it('test checkIfFilterNeededInMetricsCall method', () => {
   result = checkIfFilterNeededInMetricsCall('resource_id', 'linode');
   expect(result).toEqual(false); // not needed as dimension filter
 
-  result = checkIfFilterNeededInMetricsCall('role', 'dbaas');
+  result = checkIfFilterNeededInMetricsCall('node_type', 'dbaas');
   expect(result).toEqual(true);
 
   result = checkIfFilterNeededInMetricsCall('engine', 'dbaas');
   expect(result).toEqual(false);
 
-  result = checkIfFilterNeededInMetricsCall('role', 'xyz'); // xyz service type
+  result = checkIfFilterNeededInMetricsCall('node_type', 'xyz'); // xyz service type
   expect(result).toEqual(false);
 });
 

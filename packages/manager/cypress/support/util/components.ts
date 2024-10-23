@@ -2,8 +2,8 @@
  * @file Utilities for component testing.
  */
 
-import { MountReturn } from 'cypress/react18';
-import type { ThemeName } from 'src/foundations/themes';
+import type { ThemeName } from '@linode/ui';
+import type { MountReturn } from 'cypress/react18';
 
 /**
  * Array of themes for which to test components.

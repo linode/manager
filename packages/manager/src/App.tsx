@@ -48,13 +48,11 @@ const BaseApp = withDocumentTitleProvider(
         </div>
         <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
+        {/**
+         * Eventually we will have the <Router /> here in place of <MainContent />
+         * <Router />
+         */}
         <MainContent />
-        {/*
-          * This will be our new entry point
-          * Leaving this commented out so reviewers can test the app with the new routing at any point by replacing
-          * MainContent with <Router />.
-          <Router />
-        */}
         <GlobalListeners />
       </ErrorBoundary>
     );

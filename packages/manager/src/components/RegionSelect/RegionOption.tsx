@@ -5,12 +5,12 @@ import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.s
 import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { Stack } from 'src/components/Stack';
 import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import {
   SelectedIcon,
-  StyledFlagContainer,
   StyledListItem,
   sxDistributedRegionIcon,
 } from './RegionSelect.styles';
@@ -70,24 +70,21 @@ export const RegionOption = ({
           isRegionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
         }
         aria-disabled={undefined}
-        data-qa-disabled-item={isRegionDisabled}
         className={isRegionDisabled ? `${className} Mui-disabled` : className}
+        data-qa-disabled-item={isRegionDisabled}
       >
-        <>
-          <Box alignItems="center" display="flex" flexGrow={1}>
-            <StyledFlagContainer>
-              <Flag country={region.country} />
-            </StyledFlagContainer>
-            {isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`}
-            {displayDistributedRegionIcon && (
-              <Box sx={visuallyHidden}>
-                &nbsp;(This region is a distributed region.)
-              </Box>
-            )}
-            {isRegionDisabled && isRegionDisabledReason && (
-              <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
-            )}
-          </Box>
+        <Stack alignItems="center" direction="row" gap={1} width="100%">
+          <Flag country={region.country} />
+          {isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`}
+          {displayDistributedRegionIcon && (
+            <Box sx={visuallyHidden}>
+              &nbsp;(This region is a distributed region.)
+            </Box>
+          )}
+          {isRegionDisabled && isRegionDisabledReason && (
+            <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
+          )}
+          <Box flexGrow={1} />
           {isGeckoLAEnabled && `(${region.id})`}
           {selected && <SelectedIcon visible />}
           {displayDistributedRegionIcon && (
@@ -98,7 +95,7 @@ export const RegionOption = ({
               text="This region is a distributed region."
             />
           )}
-        </>
+        </Stack>
       </StyledListItem>
     </Tooltip>
   );

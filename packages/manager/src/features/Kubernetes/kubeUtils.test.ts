@@ -1,13 +1,19 @@
+import { renderHook, waitFor } from '@testing-library/react';
+
 import {
+  accountBetaFactory,
   kubeLinodeFactory,
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { extendType } from 'src/utilities/extendType';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   getLatestVersion,
   getTotalClusterMemoryCPUAndStorage,
+  useAPLAvailability,
 } from './kubeUtils';
 
 describe('helper functions', () => {
@@ -64,6 +70,25 @@ describe('helper functions', () => {
         CPU: 0,
         RAM: 0,
         Storage: 0,
+      });
+    });
+  });
+  describe('APL availability', () => {
+    it('should return true if the apl flag is true and beta is active', async () => {
+      const accountBeta = accountBetaFactory.build({
+        enrolled: '2023-01-15T00:00:00Z',
+        id: 'apl',
+      });
+      server.use(
+        http.get('*/account/betas/apl', () => {
+          return HttpResponse.json(accountBeta);
+        })
+      );
+      const { result } = renderHook(() => useAPLAvailability(), {
+        wrapper: (ui) => wrapWithTheme(ui, { flags: { apl: true } }),
+      });
+      await waitFor(() => {
+        expect(result.current).toBe(true);
       });
     });
   });

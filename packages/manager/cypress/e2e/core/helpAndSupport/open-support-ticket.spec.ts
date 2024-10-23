@@ -39,11 +39,9 @@ import {
   EntityType,
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
-import { createTestLinode } from 'support/util/linodes';
-import { cleanUp } from 'support/util/cleanup';
-import { authenticate } from 'support/api/authentication';
 import {
   mockCreateLinodeAccountLimitError,
+  mockGetLinodeDetails,
   mockGetLinodes,
 } from 'support/intercepts/linodes';
 import { mockGetDomains } from 'support/intercepts/domains';
@@ -52,12 +50,6 @@ import { linodeCreatePage } from 'support/ui/pages';
 import { chooseRegion } from 'support/util/regions';
 
 describe('open support tickets', () => {
-  after(() => {
-    cleanUp(['linodes']);
-  });
-
-  authenticate();
-
   /*
    * - Opens a Help & Support ticket using mock API data.
    * - Confirms that "Severity" field is not present when feature flag is disabled.
@@ -250,94 +242,99 @@ describe('open support tickets', () => {
       status: 'new',
     });
 
+    // Mock a Linode instance that is lacking the `SMTP Enabled` capability.
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      capabilities: [],
+    });
+
     mockGetAccount(mockAccount);
     mockCreateSupportTicket(mockSMTPTicket).as('createTicket');
     mockGetSupportTickets([]);
     mockGetSupportTicket(mockSMTPTicket);
     mockGetSupportTicketReplies(mockSMTPTicket.id, []);
+    mockGetLinodes([mockLinode]);
+    mockGetLinodeDetails(mockLinode.id, mockLinode);
 
-    cy.visitWithLogin('/support/tickets');
+    cy.visitWithLogin(`/linodes/${mockLinode.id}`);
+    cy.findByText('open a support ticket').should('be.visible').click();
 
-    cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
-      cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.findByText('open a support ticket').should('be.visible').click();
+    // Fill out ticket form.
+    ui.dialog
+      .findByTitle('Contact Support: SMTP Restriction Removal')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(SMTP_DIALOG_TITLE).should('be.visible');
+        cy.findByText(SMTP_HELPER_TEXT).should('be.visible');
 
-      // Fill out ticket form.
-      ui.dialog
-        .findByTitle('Contact Support: SMTP Restriction Removal')
-        .should('be.visible')
-        .within(() => {
-          cy.findByText(SMTP_DIALOG_TITLE).should('be.visible');
-          cy.findByText(SMTP_HELPER_TEXT).should('be.visible');
+        // Confirm summary, customer name, and company name fields are pre-populated with user account data.
+        cy.findByLabelText('Title', { exact: false })
+          .should('be.visible')
+          .should('have.value', mockFormFields.summary + mockLinode.label);
 
-          // Confirm summary, customer name, and company name fields are pre-populated with user account data.
-          cy.findByLabelText('Title', { exact: false })
-            .should('be.visible')
-            .should('have.value', mockFormFields.summary + linode.label);
+        cy.findByLabelText('First and last name', { exact: false })
+          .should('be.visible')
+          .should('have.value', mockFormFields.customerName);
 
-          cy.findByLabelText('First and last name', { exact: false })
-            .should('be.visible')
-            .should('have.value', mockFormFields.customerName);
+        cy.findByLabelText('Business or company name', { exact: false })
+          .should('be.visible')
+          .should('have.value', mockFormFields.companyName);
 
-          cy.findByLabelText('Business or company name', { exact: false })
-            .should('be.visible')
-            .should('have.value', mockFormFields.companyName);
+        ui.button
+          .findByTitle('Open Ticket')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
 
-          ui.button
-            .findByTitle('Open Ticket')
-            .scrollIntoView()
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+        // Confirm validation errors display when trying to submit without required fields.
+        cy.findByText('Use case is required.');
+        cy.findByText('Email domains are required.');
+        cy.findByText('Links to public information are required.');
 
-          // Confirm validation errors display when trying to submit without required fields.
-          cy.findByText('Use case is required.');
-          cy.findByText('Email domains are required.');
-          cy.findByText('Links to public information are required.');
+        // Complete the rest of the form.
+        cy.get('[data-qa-ticket-use-case]')
+          .should('be.visible')
+          .click()
+          .type(mockFormFields.useCase);
 
-          // Complete the rest of the form.
-          cy.get('[data-qa-ticket-use-case]')
-            .should('be.visible')
-            .click()
-            .type(mockFormFields.useCase);
+        cy.get('[data-qa-ticket-email-domains]')
+          .should('be.visible')
+          .click()
+          .type(mockFormFields.emailDomains);
 
-          cy.get('[data-qa-ticket-email-domains]')
-            .should('be.visible')
-            .click()
-            .type(mockFormFields.emailDomains);
+        cy.get('[data-qa-ticket-public-info]')
+          .should('be.visible')
+          .click()
+          .type(mockFormFields.publicInfo);
 
-          cy.get('[data-qa-ticket-public-info]')
-            .should('be.visible')
-            .click()
-            .type(mockFormFields.publicInfo);
+        // Confirm there is no description field or file upload section.
+        cy.findByText('Description').should('not.exist');
+        cy.findByText('Attach a File').should('not.exist');
 
-          // Confirm there is no description field or file upload section.
-          cy.findByText('Description').should('not.exist');
-          cy.findByText('Attach a File').should('not.exist');
-
-          ui.button
-            .findByTitle('Open Ticket')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      // Confirm that ticket create payload contains the expected data.
-      cy.wait('@createTicket').then((xhr) => {
-        expect(xhr.request.body?.summary).to.eq(
-          mockSMTPTicket.summary + linode.label
-        );
-        expect(xhr.request.body?.description).to.eq(mockSMTPTicket.description);
+        ui.button
+          .findByTitle('Open Ticket')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
-      // Confirm the new ticket is listed with the expected information upon redirecting to the details page.
-      cy.url().should('endWith', `support/tickets/${mockSMTPTicket.id}`);
-      cy.contains(`#${mockSMTPTicket.id}: SMTP Restriction Removal`).should(
-        'be.visible'
+    // Confirm that ticket create payload contains the expected data.
+    cy.wait('@createTicket').then((xhr) => {
+      expect(xhr.request.body?.summary).to.eq(
+        mockSMTPTicket.summary + mockLinode.label
       );
-      Object.values(SMTP_FIELD_NAME_TO_LABEL_MAP).forEach((fieldLabel) => {
-        cy.findByText(fieldLabel).should('be.visible');
-      });
+      expect(xhr.request.body?.description).to.eq(mockSMTPTicket.description);
+    });
+
+    // Confirm the new ticket is listed with the expected information upon redirecting to the details page.
+    cy.url().should('endWith', `support/tickets/${mockSMTPTicket.id}`);
+    cy.contains(`#${mockSMTPTicket.id}: SMTP Restriction Removal`).should(
+      'be.visible'
+    );
+    Object.values(SMTP_FIELD_NAME_TO_LABEL_MAP).forEach((fieldLabel) => {
+      cy.findByText(fieldLabel).should('be.visible');
     });
   });
 

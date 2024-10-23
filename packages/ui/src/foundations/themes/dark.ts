@@ -2,7 +2,6 @@ import {
   Action,
   Badge,
   Button,
-  Chart,
   Color,
   Dropdown,
   Interaction,
@@ -11,8 +10,8 @@ import {
   TextField,
 } from '@linode/design-language-system/themes/dark';
 
-import { breakpoints } from 'src/foundations/breakpoints';
-import { latoWeb } from 'src/foundations/fonts';
+import { breakpoints } from '../breakpoints';
+import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -38,7 +37,6 @@ export const customDarkModeOptions = {
   bg: {
     app: Color.Neutrals[100],
     appBar: tempReplacementforColorNeutralsBlack,
-    bgAccessRow: Color.Neutrals[80],
     bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
     bgPaper: Color.Neutrals[90],
     interactionBgPrimary: Interaction.Background.Secondary,
@@ -58,7 +56,6 @@ export const customDarkModeOptions = {
     borderTypography: Color.Neutrals[80],
     divider: Color.Neutrals[80],
   },
-  charts: { ...Chart },
   color: {
     black: Color.Neutrals.White,
     blueDTwhite: Color.Neutrals.White,
@@ -199,17 +196,13 @@ export const darkTheme: ThemeOptions = {
   bg: customDarkModeOptions.bg,
   borderColors: customDarkModeOptions.borderColors,
   breakpoints,
-  charts: customDarkModeOptions.charts,
   color: customDarkModeOptions.color,
   components: {
     MuiAppBar: {
       styleOverrides: {
-        colorDefault: {
-          backgroundColor: 'transparent',
-        },
         root: {
           backgroundColor: tempReplacementforColorNeutralsBlack,
-          border: 0,
+          color: primaryColors.text,
         },
       },
     },
@@ -228,6 +221,11 @@ export const darkTheme: ThemeOptions = {
         tag: {
           '.MuiChip-deleteIcon': { color: primaryColors.text },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
+        },
+        input: {
+          '&::selection': {
+            backgroundColor: customDarkModeOptions.bg.appBar,
+          },
         },
       },
     },
@@ -856,6 +854,7 @@ export const darkTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
+  interactionTokens: Interaction,
   name: 'dark',
   notificationToast,
   palette: {

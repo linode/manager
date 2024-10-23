@@ -1,3 +1,4 @@
+import { breakpoints } from '@linode/ui';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
@@ -5,7 +6,6 @@ import {
   supportReplyFactory,
   supportTicketFactory,
 } from 'src/factories/support';
-import { breakpoints } from 'src/foundations/breakpoints';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import {

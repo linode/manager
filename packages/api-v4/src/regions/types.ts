@@ -19,7 +19,8 @@ export type Capabilities =
   | 'Placement Group'
   | 'Premium Plans'
   | 'Vlans'
-  | 'VPCs';
+  | 'VPCs'
+  | 'StackScripts';
 
 export interface DNSResolvers {
   ipv4: string; // Comma-separated IP addresses

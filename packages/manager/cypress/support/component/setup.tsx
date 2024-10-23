@@ -13,22 +13,21 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import * as React from 'react';
-import { mount } from 'cypress/react18';
-
-import { Provider } from 'react-redux';
-import { LDProvider } from 'launchdarkly-react-client-sdk';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientFactory } from '@src/queries/base';
-import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
+import { QueryClientProvider } from '@tanstack/react-query';
+import '@testing-library/cypress/add-commands';
+import 'cypress-axe';
+import { mount } from 'cypress/react18';
+import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
+import * as React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+
+import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { storeFactory } from 'src/store';
 
-import '@testing-library/cypress/add-commands';
-import { ThemeName } from 'src/foundations/themes';
-
-import 'cypress-axe';
+import type { ThemeName } from '@linode/ui';
 
 /**
  * Mounts a component with a Cloud Manager theme applied.

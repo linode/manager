@@ -158,7 +158,7 @@ export const bucketToSearchableItem = (
     cluster: bucket.cluster,
     created: bucket.created,
     description: readableBytes(bucket.size).formatted,
-    icon: 'bucket',
+    icon: 'storage',
     label: bucket.label,
     path: `/object-storage/buckets/${bucket.cluster}/${bucket.label}`,
   },

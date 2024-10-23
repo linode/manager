@@ -1,7 +1,5 @@
 import Close from '@mui/icons-material/Close';
-import { InputBaseProps } from '@mui/material/InputBase';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -13,7 +11,10 @@ import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFi
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { ExtendedIP } from 'src/utilities/ipUtils';
+
+import type { InputBaseProps } from '@mui/material/InputBase';
+import type { Theme } from '@mui/material/styles';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addIP: {
@@ -57,15 +58,17 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface MultipeIPInputProps {
   buttonText?: string;
   className?: string;
+  disabled?: boolean;
   error?: string;
   forDatabaseAccessControls?: boolean;
   forVPCIPv4Ranges?: boolean;
   helperText?: string;
   inputProps?: InputBaseProps;
   ips: ExtendedIP[];
+  isLinkStyled?: boolean;
   onBlur?: (ips: ExtendedIP[]) => void;
   onChange: (ips: ExtendedIP[]) => void;
   placeholder?: string;
@@ -74,15 +77,17 @@ interface Props {
   tooltip?: string;
 }
 
-export const MultipleIPInput = React.memo((props: Props) => {
+export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
   const {
     buttonText,
     className,
+    disabled,
     error,
     forDatabaseAccessControls,
     forVPCIPv4Ranges,
     helperText,
     ips,
+    isLinkStyled,
     onBlur,
     onChange,
     placeholder,
@@ -128,20 +133,22 @@ export const MultipleIPInput = React.memo((props: Props) => {
     return null;
   }
 
-  const addIPButton = forVPCIPv4Ranges ? (
-    <StyledLinkButtonBox>
-      <LinkButton onClick={addNewInput}>{buttonText}</LinkButton>
-    </StyledLinkButtonBox>
-  ) : (
-    <Button
-      buttonType="secondary"
-      className={classes.addIP}
-      compactX
-      onClick={addNewInput}
-    >
-      {buttonText ?? 'Add an IP'}
-    </Button>
-  );
+  const addIPButton =
+    forVPCIPv4Ranges || isLinkStyled ? (
+      <StyledLinkButtonBox sx={{ marginTop: isLinkStyled ? '8px' : '12px' }}>
+        <LinkButton onClick={addNewInput}>{buttonText}</LinkButton>
+      </StyledLinkButtonBox>
+    ) : (
+      <Button
+        buttonType="secondary"
+        className={classes.addIP}
+        compactX
+        disabled={disabled}
+        onClick={addNewInput}
+      >
+        {buttonText ?? 'Add an IP'}
+      </Button>
+    );
 
   return (
     <div className={cx(classes.root, className)}>
@@ -184,6 +191,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
             <TextField
               InputProps={{
                 'aria-label': `${title} ip-address-${idx}`,
+                disabled,
                 ...props.inputProps,
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -206,6 +214,7 @@ export const MultipleIPInput = React.memo((props: Props) => {
             {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
               <Button
                 className={classes.button}
+                disabled={disabled}
                 onClick={() => removeInput(idx)}
               >
                 <Close data-testid={`delete-ip-${idx}`} />

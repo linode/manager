@@ -1,6 +1,5 @@
+import { latoWeb } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { latoWeb } from 'src/foundations/fonts';
 
 import { Button } from './Button';
 

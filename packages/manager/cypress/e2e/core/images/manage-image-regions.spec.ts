@@ -47,9 +47,6 @@ describe('Manage Image Replicas', () => {
         // Verify total size is rendered
         cy.findByText(`0.1 GB`).should('be.visible'); // 100 / 1024 = 0.09765
 
-        // Verify capabilities are rendered
-        cy.findByText('Distributed').should('be.visible');
-
         // Verify the number of regions is rendered and click it
         cy.findByText(`${image.regions.length} Regions`)
           .should('be.visible')

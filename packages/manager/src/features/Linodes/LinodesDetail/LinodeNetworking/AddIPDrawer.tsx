@@ -19,10 +19,12 @@ import {
 } from 'src/queries/linodes/networking';
 import { useCreateIPv6RangeMutation } from 'src/queries/networking/networking';
 
+import { ExplainerCopy } from './ExplainerCopy';
+
 import type { IPv6Prefix } from '@linode/api-v4/lib/networking';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 
-type IPType = 'v4Private' | 'v4Public';
+export type IPType = 'v4Private' | 'v4Public';
 
 const ipOptions: Item<IPType>[] = [
   { label: 'Public', value: 'v4Public' },
@@ -33,27 +35,6 @@ const prefixOptions = [
   { label: '/64', value: '64' },
   { label: '/56', value: '56' },
 ];
-
-// @todo: Pre-fill support tickets.
-const explainerCopy: Record<IPType, JSX.Element> = {
-  v4Private: (
-    <>
-      Add a private IP address to your Linode. Data sent explicitly to and from
-      private IP addresses in the same data center does not incur transfer quota
-      usage. To ensure that the private IP is properly configured once added,
-      it&rsquo;s best to reboot your Linode.
-    </>
-  ),
-  v4Public: (
-    <>
-      Public IP addresses, over and above the one included with each Linode,
-      incur an additional monthly charge. If you need an additional Public IP
-      Address you must request one. Please open a{' '}
-      <Link to="support/tickets">Support Ticket</Link> if you have not done so
-      already.
-    </>
-  ),
-};
 
 const IPv6ExplanatoryCopy = {
   56: (
@@ -70,7 +51,7 @@ const IPv6ExplanatoryCopy = {
   ),
 };
 
-const tooltipCopy: Record<IPType, string | null> = {
+const tooltipCopy: Record<IPType, null | string> = {
   v4Private: 'This Linode already has a private IP address.',
   v4Public: null,
 };
@@ -197,11 +178,11 @@ export const AddIPDrawer = (props: Props) => {
           <Box>
             {ipOptions.map((option, idx) => (
               <FormControlLabel
-                control={<Radio />}
-                data-qa-radio={option.label}
                 disabled={
                   option.value === 'v4Private' && linodeIsInDistributedRegion
                 }
+                control={<Radio />}
+                data-qa-radio={option.label}
                 key={idx}
                 label={option.label}
                 value={option.value}
@@ -209,7 +190,11 @@ export const AddIPDrawer = (props: Props) => {
             ))}
           </Box>
         </StyledRadioGroup>
-        {selectedIPv4 && <Typography>{explainerCopy[selectedIPv4]}</Typography>}
+        {selectedIPv4 && (
+          <Typography>
+            <ExplainerCopy ipType={selectedIPv4} linodeId={linodeId} />
+          </Typography>
+        )}
 
         {_tooltipCopy ? (
           <Tooltip placement="bottom-end" title={_tooltipCopy}>

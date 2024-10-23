@@ -1,7 +1,6 @@
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
 import { useGlobalErrors } from 'src/hooks/useGlobalErrors';
 
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
@@ -16,7 +15,6 @@ export const Router = () => {
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
   const globalErrors = useGlobalErrors();
-  const flags = useFlags();
 
   // Update the router's context
   router.update({
@@ -26,7 +24,6 @@ export const Router = () => {
       isACLPEnabled,
       isDatabasesEnabled,
       isPlacementGroupsEnabled,
-      selfServeBetas: flags.selfServeBetas,
     },
   });
 

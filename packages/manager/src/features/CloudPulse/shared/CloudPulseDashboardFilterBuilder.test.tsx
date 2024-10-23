@@ -32,7 +32,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
       />
     );
 
-    expect(getByPlaceholderText('Select an Engine')).toBeDefined();
+    expect(getByPlaceholderText('Select a Database Engine')).toBeDefined();
     expect(getByPlaceholderText('Select a Region')).toBeDefined();
   });
 });

@@ -70,6 +70,7 @@ export type AccountCapability =
   | 'Kubernetes'
   | 'Linodes'
   | 'LKE HA Control Planes'
+  | 'LKE Network Access Control List (IP ACL)'
   | 'Machine Images'
   | 'Managed Databases'
   | 'Managed Databases Beta'
@@ -603,6 +604,10 @@ export interface AccountBeta {
   id: string;
   ended?: string;
   description?: string;
+  /**
+   * The datetime the account enrolled into the beta
+   * @example 2024-10-23T14:22:29
+   */
   enrolled: string;
 }
 

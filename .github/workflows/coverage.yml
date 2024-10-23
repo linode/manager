@@ -47,7 +47,9 @@ jobs:
           path: ref_code_coverage.txt
 
   current_branch:
-    if: github.event.pull_request.draft == false
+    # We want to make sure we only run on open PRs (not drafts), but also should run even if the base branch coverage job fails.
+    # If the base branch coverage job fails to create a report, the current branch coverage job will fail as well, but this may help us debug the CI on the current branch.
+    if: ${{ always() && github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     needs: base_branch
 

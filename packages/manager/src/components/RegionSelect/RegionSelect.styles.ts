@@ -68,12 +68,6 @@ export const StyledDistributedRegionBox = styled(Box, {
   },
 }));
 
-export const StyledFlagContainer = styled('div', {
-  label: 'RegionSelectFlagContainer',
-})(({ theme }) => ({
-  marginRight: theme.spacing(1),
-}));
-
 export const StyledLParentListItem = styled(ListItem, {
   label: 'RegionSelectParentListItem',
 })(() => ({
@@ -112,7 +106,7 @@ export const SelectedIcon = styled(DoneIcon, {
   width: 17,
 }));
 
-export const StyledChip = styled(Chip)(() => ({
+export const StyledChip = styled(Chip)(({ theme }) => ({
   '& .MuiChip-deleteIcon': {
     '& svg': {
       borderRadius: '50%',
@@ -121,10 +115,10 @@ export const StyledChip = styled(Chip)(() => ({
   },
   '& .MuiChip-deleteIcon.MuiSvgIcon-root': {
     '&:hover': {
-      backgroundColor: '#fff',
+      backgroundColor: theme.colorTokens.Neutrals.White,
       color: '#3683dc',
     },
     backgroundColor: '#3683dc',
-    color: '#fff',
+    color: theme.colorTokens.Neutrals.White,
   },
 }));

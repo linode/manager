@@ -37,9 +37,9 @@ const DatabaseLanding = () => {
 
   const {
     isDatabasesV2Enabled,
-    isV2ExistingBetaUser,
-    isV2GAUser,
-    isV2NewBetaUser,
+    isUserExistingBeta,
+    isDatabasesV2GA,
+    isUserNewBeta,
   } = useIsDatabasesEnabled();
 
   const { isLoading: isTypeLoading } = useDatabaseTypesQuery({
@@ -47,7 +47,7 @@ const DatabaseLanding = () => {
   });
 
   const isDefaultEnabled =
-    isV2ExistingBetaUser || isV2NewBetaUser || isV2GAUser;
+    isUserExistingBeta || isUserNewBeta || isDatabasesV2GA;
 
   const {
     handleOrderChange: newDatabaseHandleOrderChange,
@@ -97,7 +97,7 @@ const DatabaseLanding = () => {
     ['+order_by']: legacyDatabaseOrderBy,
   };
 
-  if (isV2ExistingBetaUser || isV2GAUser) {
+  if (isUserExistingBeta || isDatabasesV2GA) {
     legacyDatabasesFilter['platform'] = 'rdbms-legacy';
   }
 
@@ -111,7 +111,7 @@ const DatabaseLanding = () => {
       page_size: legacyDatabasesPagination.pageSize,
     },
     legacyDatabasesFilter,
-    !isV2NewBetaUser
+    !isUserNewBeta
   );
 
   const error = newDatabasesError || legacyDatabasesError;
@@ -134,7 +134,7 @@ const DatabaseLanding = () => {
     return <DatabaseEmptyState />;
   }
 
-  const isV2Enabled = isDatabasesV2Enabled || isV2GAUser;
+  const isV2Enabled = isDatabasesV2Enabled || isDatabasesV2GA;
   const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
   const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
 

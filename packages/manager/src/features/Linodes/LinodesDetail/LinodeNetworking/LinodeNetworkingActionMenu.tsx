@@ -1,5 +1,4 @@
-import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -7,10 +6,11 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 
-import { IPTypes } from './types';
-
+import type { IPTypes } from './types';
+import type { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
@@ -71,7 +71,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           tooltip: readOnly
             ? readOnlyTooltip
             : isVPCOnlyLinode
-            ? PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+            ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
             : isOnlyPublicIP
             ? isOnlyPublicIPTooltip
             : undefined,
@@ -88,7 +88,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           tooltip: readOnly
             ? readOnlyTooltip
             : isVPCOnlyLinode
-            ? PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+            ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
             : undefined,
         }
       : null,

@@ -11,7 +11,6 @@ export interface OCA {
    */
   isNew?: boolean;
   logo_url: string;
-  name: string;
   related_guides?: Doc[];
   summary: string;
   tips?: string[];

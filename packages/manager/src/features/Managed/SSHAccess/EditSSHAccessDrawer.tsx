@@ -15,7 +15,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
+import { isPrivateIP, removePrefixLength } from 'src/utilities/ipUtils';
 
 import {
   StyledIPGrid,
@@ -168,9 +168,7 @@ const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                             },
                             ...options
                               // Remove Private IPs
-                              .filter(
-                                (option) => !privateIPRegex.test(option.value)
-                              )
+                              .filter((option) => !isPrivateIP(option.value))
                               // Remove the prefix length from each option.
                               .map((option) => ({
                                 label: removePrefixLength(option.value),

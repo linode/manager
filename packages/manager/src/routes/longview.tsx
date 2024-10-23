@@ -3,7 +3,6 @@ import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { LongviewDetail } from 'src/features/Longview/LongviewDetail/LongviewDetail';
 
 import { rootRoute } from './root';
 
@@ -50,43 +49,61 @@ const longviewLandingPlanDetailsRoute = createRoute({
 );
 
 const longviewDetailRoute = createRoute({
-  component: LongviewDetail,
   getParentRoute: () => longviewRoute,
   parseParams: (params) => ({
     id: Number(params.id),
   }),
   path: 'clients/$id',
-});
+}).lazy(() =>
+  import('src/features/Longview/LongviewDetail/LongviewDetail').then(
+    (m) => m.longviewDetailLazyRoute
+  )
+);
 
 const longviewDetailOverviewRoute = createRoute({
-  component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'overview',
-});
+}).lazy(() =>
+  import('src/features/Longview/LongviewDetail/LongviewDetail').then(
+    (m) => m.longviewDetailLazyRoute
+  )
+);
 
 const longviewDetailProcessesRoute = createRoute({
-  component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'processes',
-});
+}).lazy(() =>
+  import('src/features/Longview/LongviewDetail/LongviewDetail').then(
+    (m) => m.longviewDetailLazyRoute
+  )
+);
 
 const longviewDetailNetworkRoute = createRoute({
-  component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'network',
-});
+}).lazy(() =>
+  import('src/features/Longview/LongviewDetail/LongviewDetail').then(
+    (m) => m.longviewDetailLazyRoute
+  )
+);
 
 const longviewDetailDisksRoute = createRoute({
-  component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'disks',
-});
+}).lazy(() =>
+  import('src/features/Longview/LongviewDetail/LongviewDetail').then(
+    (m) => m.longviewDetailLazyRoute
+  )
+);
 
 const longviewDetailInstallationRoute = createRoute({
-  component: LongviewDetail,
   getParentRoute: () => longviewDetailRoute,
   path: 'installation',
-});
+}).lazy(() =>
+  import('src/features/Longview/LongviewDetail/LongviewDetail').then(
+    (m) => m.longviewDetailLazyRoute
+  )
+);
 
 export const longviewRouteTree = longviewRoute.addChildren([
   longviewLandingRoute,

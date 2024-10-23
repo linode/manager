@@ -126,6 +126,7 @@ export interface CloudPulseMetricsList {
 
 export interface ServiceTypes {
   service_type: string;
+  label: string;
 }
 
 export interface ServiceTypesList {

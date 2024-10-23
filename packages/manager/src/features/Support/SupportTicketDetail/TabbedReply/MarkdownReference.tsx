@@ -1,9 +1,10 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   example: {
@@ -30,7 +31,7 @@ export const MarkdownReference = (props: Props) => {
       <Typography>
         You can use Markdown to format your{' '}
         {props.isReply ? 'reply' : 'question'}. For more examples see this{' '}
-        <Link external to="http://demo.showdownjs.com/">
+        <Link external to="https://commonmark.org/help/">
           Markdown cheatsheet
         </Link>
       </Typography>

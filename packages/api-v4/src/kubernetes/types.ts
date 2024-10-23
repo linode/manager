@@ -60,8 +60,22 @@ export interface KubernetesDashboardResponse {
   url: string;
 }
 
+export interface KubernetesControlPlaneACLPayload {
+  acl: ControlPlaneACLOptions;
+}
+
+export interface ControlPlaneACLOptions {
+  enabled?: boolean;
+  'revision-id'?: string;
+  addresses?: null | {
+    ipv4?: null | string[];
+    ipv6?: null | string[];
+  };
+}
+
 export interface ControlPlaneOptions {
   high_availability?: boolean;
+  acl?: ControlPlaneACLOptions;
 }
 
 export interface CreateKubeClusterPayload {

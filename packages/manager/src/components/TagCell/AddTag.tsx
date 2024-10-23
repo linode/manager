@@ -79,9 +79,15 @@ export const AddTag = (props: AddTagProps) => {
           handleAddTag(typeof value == 'string' ? value : value.label);
         }
       }}
-      renderOption={(props, option) => (
-        <li {...props}>{option.displayLabel ?? option.label}</li>
-      )}
+      renderOption={(props, option) => {
+        const { key, ...rest } = props;
+
+        return (
+          <li {...rest} key={key}>
+            {option.displayLabel ?? option.label}
+          </li>
+        );
+      }}
       disableClearable
       forcePopupIcon
       label={'Create or Select a Tag'}

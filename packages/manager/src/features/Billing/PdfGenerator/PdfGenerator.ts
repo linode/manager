@@ -301,7 +301,10 @@ export const printInvoice = async (
         doc,
         Math.max(leftHeaderYPosition, rightHeaderYPosition) + 12,
         {
-          text: `Invoice: #${invoiceId}`,
+          text:
+            account.country === 'AE'
+              ? `Tax Invoice: #${invoiceId}`
+              : `Invoice: #${invoiceId}`,
         }
       );
 

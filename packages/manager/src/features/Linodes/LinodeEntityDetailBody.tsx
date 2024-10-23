@@ -170,6 +170,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             )}
           </StyledSummaryGrid>
         </Grid>
+
         <Grid container sm={isDisplayingEncryptedStatus ? 8 : 9} xs={12}>
           <Grid container xs={12}>
             <AccessTable
