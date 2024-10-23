@@ -51,7 +51,7 @@ export const CloudPulseDashboardSelect = React.memo(
 
     const getErrorText = () => {
       if (serviceTypesError) {
-        return 'Failed to fetch service types';
+        return 'Failed to fetch supported services for CloudPulse';
       }
 
       if (dashboardsError.length > 0) {
