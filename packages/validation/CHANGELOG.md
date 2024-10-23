@@ -8,7 +8,7 @@
 
 ### Changed:
 
-- Updated `nodeBalancerConfigNodeSchema` to allow any private IPv4 rather than just \`192\.168\` IPs ([#11069](https://github.com/linode/manager/pull/11069))
+- Update `nodeBalancerConfigNodeSchema` to allow any private IPv4 rather than just \`192\.168\` IPs ([#11069](https://github.com/linode/manager/pull/11069))
 
 ## [2024-10-14] - v0.54.0
 
