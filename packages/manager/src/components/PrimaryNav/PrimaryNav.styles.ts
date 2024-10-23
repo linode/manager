@@ -11,6 +11,13 @@ import { omittedProps } from 'src/utilities/omittedProps';
 export const StyledGrid = styled(Grid, {
   label: 'StyledGrid',
 })(({ theme }) => ({
+  '&:hover': {
+    '.MuiButtonBase-root, MuiAccordionSummary-root': {
+      '& h3 > p': {
+        opacity: 1,
+      },
+    },
+  },
   height: '100%',
   margin: 0,
   minHeight: 64,
@@ -146,10 +153,15 @@ export const StyledPrimaryLinkBox = styled(Box, {
 
 export const StyledAccordion = styled(Accordion, {
   label: 'StyledAccordion',
-})(({ theme }) => ({
+  shouldForwardProp: omittedProps(['isCollapsed']),
+})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
   '& h3': {
     '& p': {
       color: '#B8B8B8',
+      transition: theme.transitions.create(['opacity']),
+      ...(props.isCollapsed && {
+        opacity: 0,
+      }),
     },
     /** Product family icon */
     '& svg': {

@@ -304,6 +304,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 color: '#222',
               })}
               spacingBottom={0}
+              spacingTop={0}
             />
             {linkGroup.title ? (
               <StyledAccordion
@@ -315,6 +316,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 }
                 onChange={() => accordionClicked(idx)}
                 expanded={!collapsedAccordions.includes(idx)}
+                isCollapsed={isCollapsed}
               >
                 {PrimaryLinks}
               </StyledAccordion>
