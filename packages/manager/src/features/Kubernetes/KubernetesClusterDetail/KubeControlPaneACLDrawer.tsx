@@ -203,8 +203,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               <>
                 <Typography variant="h3">Revision ID</Typography>
                 <StyledTypography variant="body1">
-                  A unique identifing string for this particular revision to the
-                  ACL, used by clients to track events related to ACL update
+                  A unique identifying string for this particular revision to
+                  the ACL, used by clients to track events related to ACL update
                   requests and enforcement. This defaults to a randomly
                   generated string but can be edited if you prefer to specify
                   your own string to use for tracking this change.
