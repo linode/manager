@@ -28,6 +28,7 @@ export const PlacementGroupTypeSelect = (props: Props) => {
         setFieldValue('placement_group_type', value?.value ?? '');
       }}
       renderOption={(props, option) => {
+        const { key, ...rest } = props;
         const isDisabledMenuItem = option.value === 'affinity:local';
 
         return (
@@ -49,10 +50,10 @@ export const PlacementGroupTypeSelect = (props: Props) => {
             enterDelay={200}
             enterNextDelay={200}
             enterTouchDelay={200}
-            key={option.value}
+            key={key}
           >
             <ListItem
-              {...props}
+              {...rest}
               className={
                 isDisabledMenuItem
                   ? `${props.className} Mui-disabled`
