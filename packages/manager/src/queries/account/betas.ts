@@ -29,11 +29,15 @@ export const useCreateAccountBetaMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[], EnrollInBetaPayload>({
     mutationFn: enrollInBeta,
-    onSuccess() {
+    onSuccess(data, variables) {
       // Refetch the paginated list of account betas. If we just enrolled in a beta,
       // it will show up in account betas.
       queryClient.invalidateQueries({
         queryKey: accountQueries.betas._ctx.paginated._def,
+      });
+      // Invalidate the specific beta
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.betas._ctx.beta(variables.id).queryKey,
       });
       // Refetch all regions data because enrolling in betas can enable new regions
       // or region capabilities.
@@ -41,5 +45,12 @@ export const useCreateAccountBetaMutation = () => {
         queryKey: regionQueries._def,
       });
     },
+  });
+};
+
+export const useAccountBetaQuery = (id: string, enabled: boolean = false) => {
+  return useQuery<AccountBeta, APIError[]>({
+    enabled,
+    ...accountQueries.betas._ctx.beta(id),
   });
 };
