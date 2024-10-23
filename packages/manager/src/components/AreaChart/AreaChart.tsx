@@ -75,6 +75,12 @@ interface AreaChartProps {
   fillOpacity?: number;
 
   /**
+   * If true, the legends across metrics will be the same height
+   * @default false
+   */
+  hasFixedLegendHeight?: boolean;
+
+  /**
    * maximum height of the chart container
    */
   height?: number;
@@ -123,6 +129,7 @@ export const AreaChart = (props: AreaChartProps) => {
     ariaLabel,
     data,
     fillOpacity,
+    hasFixedLegendHeight = false,
     height = '100%',
     legendRows,
     showLegend,
@@ -180,7 +187,11 @@ export const AreaChart = (props: AreaChartProps) => {
     return null;
   };
 
-  const CustomLegend = () => {
+  const CustomLegend = ({
+    hasFixedLegendHeight,
+  }: {
+    hasFixedLegendHeight?: boolean;
+  }) => {
     if (legendRows) {
       const legendRowsWithClickHandler = legendRows.map((legendRow) => ({
         ...legendRow,
@@ -190,6 +201,7 @@ export const AreaChart = (props: AreaChartProps) => {
       return (
         <StyledBottomLegend>
           <MetricsDisplay
+            hasFixedLegendHeight={hasFixedLegendHeight}
             hiddenRows={activeSeries}
             rows={legendRowsWithClickHandler}
           />
@@ -258,7 +270,12 @@ export const AreaChart = (props: AreaChartProps) => {
             />
           )}
           {showLegend && legendRows && (
-            <Legend content={<CustomLegend />} wrapperStyle={legendStyles} />
+            <Legend
+              content={
+                <CustomLegend hasFixedLegendHeight={hasFixedLegendHeight} />
+              }
+              wrapperStyle={legendStyles}
+            />
           )}
           {areas.map(({ color, dataKey }) => (
             <Area
