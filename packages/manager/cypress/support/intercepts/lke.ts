@@ -438,7 +438,7 @@ export const mockUpdateControlPlaneACL = (
 /**
  * Intercepts PUT request for a cluster's Control Plane ACL and mocks the response
  *
- * @param clusterId - Numberic ID of LKE cluster for which to mock response.
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
  * @param errorMessage - Optional error message with which to mock response.
  * @param statusCode - HTTP status code with which to mock response.
  *
