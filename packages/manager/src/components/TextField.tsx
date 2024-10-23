@@ -1,4 +1,6 @@
+import { InputLabel } from '@linode/ui';
 import { FormHelperText } from '@linode/ui';
+import { InputAdornment } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
@@ -8,8 +10,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { InputAdornment } from 'src/components/InputAdornment';
-import { InputLabel } from 'src/components/InputLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 

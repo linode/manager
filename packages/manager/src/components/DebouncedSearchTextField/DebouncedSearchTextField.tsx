@@ -1,3 +1,4 @@
+import { InputAdornment } from '@linode/ui';
 import Clear from '@mui/icons-material/Clear';
 import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
@@ -5,7 +6,6 @@ import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 
 import { IconButton } from '../IconButton';

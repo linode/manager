@@ -1,3 +1,4 @@
+import { InputAdornment } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { parsePhoneNumber } from 'libphonenumber-js';
@@ -6,7 +7,6 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { LinkButton } from 'src/components/LinkButton';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
