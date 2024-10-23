@@ -7,7 +7,7 @@
 
 ### Changed:
 
-- Moved `inputMaxWidth` into `Theme` ([#11116](https://github.com/linode/manager/pull/11116))
+- Move `inputMaxWidth` into `Theme` ([#11116](https://github.com/linode/manager/pull/11116))
 
 ## [2024-10-14] - v0.1.0
 
