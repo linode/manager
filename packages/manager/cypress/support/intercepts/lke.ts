@@ -379,7 +379,7 @@ export const mockResetKubeconfig = (
 /**
  * Intercepts GET request for a cluster's Control Plane ACL and mocks the response
  *
- * @param clusterId - Numberic ID of LKE cluster for which to mock response.
+ * @param clusterId - Numeric ID of LKE cluster for which to mock response.
  * @param controlPlaneACL - control plane ACL data for which to mock response
  *
  * @returns Cypress chainable
