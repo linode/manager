@@ -2,7 +2,7 @@ import { CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
 
-const TIME_DURATION = 'Time Duration';
+const TIME_DURATION = 'Time Range';
 
 export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
@@ -26,9 +26,9 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: true,
         isMetricsFilter: true,
         isMultiSelect: true,
-        name: 'Resource',
+        name: 'Resources',
         neededInServicePage: false,
-        placeholder: 'Select a Resource',
+        placeholder: 'Select Resources',
         priority: 2,
       },
       name: 'Resources',
@@ -60,7 +60,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: false, // isFilterable -- this determines whethere you need to pass it metrics api
         isMetricsFilter: false, // if it is false, it will go as a part of filter params, else global filter
         isMultiSelect: false,
-        name: 'DB Engine',
+        name: 'Database Engine',
         neededInServicePage: false,
         options: [
           {
@@ -72,7 +72,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
             label: 'PostgreSQL',
           },
         ],
-        placeholder: 'Select an Engine',
+        placeholder: 'Select a Database Engine',
         priority: 2,
         type: CloudPulseSelectTypes.static,
       },
@@ -98,9 +98,9 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: true,
         isMetricsFilter: true,
         isMultiSelect: true,
-        name: 'Resource',
+        name: 'Database Clusters',
         neededInServicePage: false,
-        placeholder: 'Select a DB Cluster',
+        placeholder: 'Select Database Clusters',
         priority: 3,
       },
       name: 'Resources',
