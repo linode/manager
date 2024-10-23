@@ -14,7 +14,6 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
-import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
@@ -140,11 +139,20 @@ export const CreateImageTab = () => {
 
   const isRawDisk = selectedDisk?.filesystem === 'raw';
 
-  const { data: regionsData } = useRegionsQuery();
+  const { data: regions } = useRegionsQuery();
 
-  const linodeIsInDistributedRegion = getIsDistributedRegion(
-    regionsData ?? [],
-    selectedLinode?.region ?? ''
+  const selectedLinodeRegion = regions?.find(
+    (r) => r.id === selectedLinode?.region
+  );
+
+  const linodeIsInDistributedRegion =
+    selectedLinodeRegion?.site_type === 'distributed';
+
+  /**
+   * The 'Object Storage' capability indicates a region can store images
+   */
+  const linodeRegionSupportsImageStorage = selectedLinodeRegion?.capabilities.includes(
+    'Object Storage'
   );
 
   /*
@@ -189,7 +197,7 @@ export const CreateImageTab = () => {
           <Stack spacing={2}>
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
-              Custom images are billed monthly, at $0.10/GB. The disk you target
+              Custom images are billed monthly at $0.10/GB. The disk you target
               for an image needs to meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image">
                 requirements
@@ -220,7 +228,24 @@ export const CreateImageTab = () => {
               required
               value={selectedLinodeId}
             />
-            {linodeIsInDistributedRegion && (
+            {selectedLinode &&
+              !linodeRegionSupportsImageStorage &&
+              flags.imageServiceGen2 &&
+              flags.imageServiceGen2Ga && (
+                <Notice variant="warning">
+                  This Linode’s region doesn’t support local image storage. This
+                  image will be stored in the core compute region that’s{' '}
+                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/images#regions-and-captured-custom-images">
+                    geographically closest
+                  </Link>
+                  . After it’s stored, you can replicate it to other{' '}
+                  <Link to="https://www.linode.com/global-infrastructure/">
+                    core compute regions
+                  </Link>
+                  .
+                </Notice>
+              )}
+            {linodeIsInDistributedRegion && !flags.imageServiceGen2Ga && (
               <Notice variant="warning">
                 This Linode is in a distributed compute region. These regions
                 can't store images. The image is stored in the core compute
