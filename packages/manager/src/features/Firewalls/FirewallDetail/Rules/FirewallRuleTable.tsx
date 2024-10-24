@@ -1,13 +1,14 @@
 import {
   DndContext,
-  MouseSensor,
   KeyboardSensor,
+  MouseSensor,
   PointerSensor,
   TouchSensor,
   closestCorners,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import {
   SortableContext,
   useSortable,
@@ -166,7 +167,9 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
       },
     }),
     useSensor(TouchSensor),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   return (
