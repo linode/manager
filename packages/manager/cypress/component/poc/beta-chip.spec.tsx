@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
-import { componentTests, visualTests } from 'support/util/components';
 import { checkComponentA11y } from 'support/util/accessibility';
+import { componentTests, visualTests } from 'support/util/components';
+
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 
 componentTests('BetaChip', () => {
   visualTests((mount) => {
