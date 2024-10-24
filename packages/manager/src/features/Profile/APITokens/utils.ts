@@ -8,6 +8,7 @@ export type Permission = [keyof typeof basePermNameMap, number];
 
 export const basePerms = [
   'account',
+  'aclp',
   'child_account',
   'databases',
   'domains',
@@ -27,6 +28,7 @@ export const basePerms = [
 
 export const basePermNameMap = {
   account: 'Account',
+  aclp: 'ACLP',
   child_account: 'Child Account Access',
   databases: 'Databases',
   domains: 'Domains',
