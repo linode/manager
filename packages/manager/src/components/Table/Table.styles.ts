@@ -31,8 +31,9 @@ export const StyledTableWrapper = styled('div', {
   },
   marginBottom: props.spacingBottom !== undefined ? props.spacingBottom : 0,
   marginTop: props.spacingTop !== undefined ? props.spacingTop : 0,
-  ...(props.noOverflow && {
-    overflow: 'hidden',
+  ...(!props.noOverflow && {
+    overflowX: 'auto',
+    overflowY: 'hidden',
   }),
   ...(props.noBorder && {
     '& thead th': {
