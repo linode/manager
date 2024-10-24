@@ -49,9 +49,9 @@ export const ProfileSettings = () => {
     preferences?.type_to_confirm === undefined ||
     preferences?.type_to_confirm === true;
 
+  // Email notifications and masking sensitive data are disabled by default until the user explicitly enables it.
   const areEmailNotificationsEnabled = profile?.email_notifications === true;
-
-  const isSensitiveDataRedacted = preferences?.maskSensitiveData === true;
+  const isSensitiveDataMasked = preferences?.maskSensitiveData === true;
 
   return (
     <Stack spacing={2}>
@@ -133,11 +133,11 @@ export const ProfileSettings = () => {
               onChange={(_, checked) =>
                 updatePreferences({ maskSensitiveData: checked })
               }
-              checked={isSensitiveDataRedacted}
+              checked={isSensitiveDataMasked}
             />
           }
           label={`Sensitive data is ${
-            isSensitiveDataRedacted ? 'masked' : 'visible'
+            isSensitiveDataMasked ? 'masked' : 'visible'
           }`}
         />
       </Paper>
