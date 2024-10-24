@@ -170,11 +170,11 @@ export const StyledAccordion = styled(Accordion, {
     '.MuiAccordionDetails-root': {
       padding: 0,
     },
-    '.MuiAccordionSummary-contentGutters, .Mui-expanded': {
-      margin: '0 !important',
-    },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
-      minHeight: 40,
+      '.MuiAccordionSummary-contentGutters, .Mui-expanded': {
+        margin: '0 !important',
+      },
+      minHeight: '40px !important',
       paddingLeft: 4,
       // accordion arrow
       svg: {
