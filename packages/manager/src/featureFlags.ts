@@ -124,7 +124,6 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxId: BaseFeatureFlag;
   taxes: Taxes;
-  testdxtoolabexperiment: string;
   tpaProviders: Provider[];
 }
 

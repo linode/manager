@@ -4,7 +4,6 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
-import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { generateGoLinodeSnippet } from 'src/utilities/codesnippets/generate-goSDKSnippet';
 import { generatePythonLinodeSnippet } from 'src/utilities/codesnippets/generate-pythonSDKSnippet';
 
@@ -24,7 +23,7 @@ const sdkOptions: OptionType[] = [
   { label: 'Python (linode_api4-python)', value: 'python' },
 ];
 
-export const SDKTabPanel = ({ payLoad, title }: SDKTabPanelProps) => {
+export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
   const [selectedSDK, setSelectedSDK] = useState<OptionType | undefined>();
 
   const linodegoSnippet = useMemo(() => generateGoLinodeSnippet(payLoad), [
@@ -66,12 +65,7 @@ export const SDKTabPanel = ({ payLoad, title }: SDKTabPanelProps) => {
             command={
               selectedSDK.value === 'go' ? linodegoSnippet : pythonLinodeSnippet
             }
-            ldTrackingKey={
-              selectedSDK.value === 'go'
-                ? LD_DX_TOOLS_METRICS_KEYS.SDK_GO_CODE_SNIPPET
-                : LD_DX_TOOLS_METRICS_KEYS.SDK_PYTHON_CODE_SNIPPET
-            }
-            commandType={title}
+            commandType={selectedSDK.value}
             language={'bash'}
           />
         </>
