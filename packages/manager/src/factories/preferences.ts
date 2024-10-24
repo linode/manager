@@ -21,7 +21,7 @@ export const preferencesFactory = Factory.Sync.makeFactory<ManagerPreferences>({
   linodes_view_style: 'grid',
   longviewTimeRange: '',
   main_content_banner_dismissal: { t: true },
-  maskSensitiveData: false,
+  maskSensitiveData: true,
   nodebalancers_group_by_tag: true,
   sortKeys: {},
   theme: 'light',

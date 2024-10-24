@@ -75,17 +75,7 @@ export const ThirdPartyPaymentBody = (props: Props) => {
         </MaskableText>
       );
     default:
-      return (
-        <MaskableText
-          text={`${paymentMethod.data.card_type || 'Card ending in'} ****${
-            paymentMethod.data.last_four
-          }`}
-          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-          isToggleable
-        >
-          <CreditCard creditCard={paymentMethod.data} showIcon={false} />
-        </MaskableText>
-      );
+      return <CreditCard creditCard={paymentMethod.data} showIcon={false} />;
   }
 };
 
