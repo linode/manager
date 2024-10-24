@@ -2,12 +2,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import Account from 'src/assets/icons/account.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
 import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import Longview from 'src/assets/icons/longview.svg';
+import More from 'src/assets/icons/more.svg';
 import { Divider } from 'src/components/Divider';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
@@ -26,6 +26,7 @@ import {
   StyledLogoBox,
 } from './PrimaryNav.styles';
 import PrimaryLink from './PrimaryLink';
+import { linkIsActive } from './utils';
 
 import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
 
@@ -179,7 +180,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Databases',
             hide: !isDatabasesEnabled,
             href: '/databases',
-
             isBeta: isDatabasesV2Beta,
           },
         ],
@@ -196,13 +196,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Monitor',
             hide: !isACLPEnabled,
             href: '/monitor/cloudpulse',
-
             isBeta: flags.aclp?.beta,
           },
         ],
       },
       {
-        icon: <Account height={20} width={20} />,
+        icon: <More height={20} width={20} />,
         title: 'More',
         links: [
           {
@@ -251,6 +250,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     });
   }, [collapsedAccordions]);
 
+  let activeProductFamily = '';
+
   return (
     <StyledGrid
       alignItems="flex-start"
@@ -261,6 +262,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       role="navigation"
       spacing={0}
       wrap="nowrap"
+      isCollapsed={isCollapsed}
     >
       <Grid sx={{ width: '100%' }}>
         <StyledLogoBox isCollapsed={isCollapsed}>
@@ -281,12 +283,23 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         if (filteredLinks.length === 0) {
           return null;
         }
+
         const PrimaryLinks = filteredLinks.map((link) => {
+          const isActiveLink = Boolean(
+            linkIsActive(
+              link.href,
+              location.search,
+              location.pathname,
+              link.activeLinks
+            )
+          );
+          if (isActiveLink) {
+            activeProductFamily = linkGroup.title ?? '';
+          }
           const props = {
             closeMenu,
             isCollapsed,
-            locationPathname: location.pathname,
-            locationSearch: location.search,
+            isActiveLink,
             ...link,
           };
           return <PrimaryLink {...props} key={link.display} />;
@@ -317,6 +330,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 onChange={() => accordionClicked(idx)}
                 expanded={!collapsedAccordions.includes(idx)}
                 isCollapsed={isCollapsed}
+                isActiveProductFamily={activeProductFamily === linkGroup.title}
               >
                 {PrimaryLinks}
               </StyledAccordion>

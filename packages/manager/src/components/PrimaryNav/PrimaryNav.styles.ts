@@ -10,14 +10,26 @@ import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledGrid = styled(Grid, {
   label: 'StyledGrid',
-})(({ theme }) => ({
+  shouldForwardProp: omittedProps(['isCollapsed']),
+})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
   '&:hover': {
+    '& a[aria-current="true"]': {
+      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+    },
+    '.MuiAccordion-region': {
+      height: 'auto',
+    },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
       '& h3 > p': {
         opacity: 1,
       },
     },
   },
+  ...(props.isCollapsed && {
+    '.MuiAccordion-region': {
+      height: 0,
+    },
+  }),
   height: '100%',
   margin: 0,
   minHeight: 64,
@@ -77,23 +89,8 @@ export const StyledLink = styled(Link, {
 
 export const StyledActiveLink = styled(Link, {
   label: 'StyledActiveLink',
-  shouldForwardProp: omittedProps(['isActiveLink']),
-})<{ isActiveLink: boolean }>(({ theme, ...props }) => ({
-  '& .icon': {
-    '& svg': {
-      '&:not(.wBorder) circle, & .circle': {
-        display: 'none',
-      },
-      alignItems: 'center',
-      display: 'flex',
-      height: 20,
-      width: 20,
-    },
-    color: '#CFD0D2',
-    marginRight: theme.spacing(1.5),
-    opacity: 0.5,
-    transition: 'max-height 1s linear, width .1s linear',
-  },
+  shouldForwardProp: omittedProps(['isActiveLink', 'isCollapsed']),
+})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ ...props }) => ({
   '& p': {
     marginBottom: 0,
     marginTop: 0,
@@ -102,15 +99,7 @@ export const StyledActiveLink = styled(Link, {
     textDecoration: 'none',
   },
   '&:hover': {
-    '& .icon': {
-      opacity: 1,
-    },
-    '& svg': {
-      color: theme.palette.success.dark,
-      fill: theme.palette.success.dark,
-    },
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-    border: 'red',
     textDecoration: 'none',
   },
   alignItems: 'center',
@@ -120,14 +109,11 @@ export const StyledActiveLink = styled(Link, {
   padding: '8px 16px',
   position: 'relative',
   ...(props.isActiveLink && {
-    '& div.icon': {
-      opacity: 1,
-    },
-    '& svg': {
-      color: theme.palette.success.dark,
-    },
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
     textDecoration: 'none',
+  }),
+  ...(props.isCollapsed && {
+    backgroundImage: 'none',
   }),
 }));
 
@@ -153,45 +139,47 @@ export const StyledPrimaryLinkBox = styled(Box, {
 
 export const StyledAccordion = styled(Accordion, {
   label: 'StyledAccordion',
-  shouldForwardProp: omittedProps(['isCollapsed']),
-})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
-  '& h3': {
-    '& p': {
+  shouldForwardProp: omittedProps(['isCollapsed', 'isActiveProductFamily']),
+})<{ isActiveProductFamily: boolean; isCollapsed: boolean }>(
+  ({ theme, ...props }) => ({
+    '& h3': {
+      '& p': {
+        color: '#B8B8B8',
+        transition: theme.transitions.create(['opacity']),
+        ...(props.isCollapsed && {
+          opacity: 0,
+        }),
+      },
+      /** Product family icon */
+      '& svg': {
+        color: props.isActiveProductFamily ? '#00B159' : '#8E9195',
+        marginRight: 14,
+      },
+      alignItems: 'center',
       color: '#B8B8B8',
-      transition: theme.transitions.create(['opacity']),
-      ...(props.isCollapsed && {
-        opacity: 0,
-      }),
+      display: 'flex',
+      fontSize: '0.7rem',
+      letterSpacing: '1px',
+      lineheight: 20,
+      padding: '0 10px',
+      textTransform: 'uppercase',
     },
-    /** Product family icon */
-    '& svg': {
-      color: '#8E9195',
-      marginRight: 14,
+    '.MuiAccordionDetails-root': {
+      padding: 0,
     },
-    alignItems: 'center',
-    color: '#B8B8B8',
-    display: 'flex',
-    fontSize: '0.7rem',
-    letterSpacing: '1px',
-    lineheight: 20,
-    padding: '0 10px',
-    textTransform: 'uppercase',
-  },
-  '.MuiAccordionDetails-root': {
-    padding: 0,
-  },
-  '.MuiAccordionSummary-contentGutters, .Mui-expanded': {
-    margin: '0 !important',
-  },
-  '.MuiButtonBase-root, MuiAccordionSummary-root': {
-    minHeight: 40,
-    paddingLeft: 4,
-    /** Accordion arrow */
-    svg: {
-      fill: '#fff',
-      stroke: 'transparent',
+    '.MuiAccordionSummary-contentGutters, .Mui-expanded': {
+      margin: '0 !important',
     },
-  },
-  backgroundColor: theme.name === 'dark' ? theme.bg.appBar : 'transparent',
-  minHeight: '40px',
-}));
+    '.MuiButtonBase-root, MuiAccordionSummary-root': {
+      minHeight: 40,
+      paddingLeft: 4,
+      /** Accordion arrow */
+      svg: {
+        fill: '#fff',
+        stroke: 'transparent !important',
+      },
+    },
+    backgroundColor: theme.name === 'dark' ? theme.bg.appBar : 'transparent',
+    minHeight: '40px',
+  })
+);
