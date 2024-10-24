@@ -35,8 +35,10 @@ export const PrivateIP = () => {
     <FormControlLabel
       label={
         <Stack sx={{ pl: 2 }}>
-          <Typography variant="h3">Private IP</Typography>
-          <Typography>
+          <Typography component="span" variant="h3">
+            Private IP
+          </Typography>
+          <Typography component="span" display="block" variant="body1">
             Use Private IP for a backend node to a NodeBalancer. Use VPC instead
             for private communication between your Linodes.
           </Typography>
