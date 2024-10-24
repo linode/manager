@@ -488,6 +488,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 detailProps={{ sx: { p: 0.25 } }}
                 heading="Formatting Tips"
                 summaryProps={{ sx: { paddingX: 0.25 } }}
+                sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
               >
                 <MarkdownReference />
               </Accordion>
