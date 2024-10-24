@@ -6,7 +6,9 @@ import { number, object } from 'yup';
  */
 export const CreateLinodeFromBackupSchema = CreateLinodeSchema.concat(
   object({
-    backup_id: number().required('You must select a Backup.'),
+    backup_id: number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .required('You must select a Backup.'),
   })
 );
 
