@@ -31,9 +31,7 @@ export const CloudPulseDashboardSelect = React.memo(
 
     const serviceTypes: string[] = formattedServiceTypes(serviceTypesList);
     const serviceTypeMap: Map<string, string> = new Map(
-      (serviceTypesList?.data || [])
-        .filter((item) => item?.service_type !== undefined)
-        .map((item) => [item.service_type, item.label ?? ''])
+      serviceTypesList?.data.map((item) => [item.service_type, item.label])
     );
 
     const {
