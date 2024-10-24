@@ -86,7 +86,7 @@ export const BackupSelect = () => {
       <Stack spacing={2}>
         <Typography variant="h2">Select Backup</Typography>
         {fieldState.error?.message && (
-          <Notice text={'A backup is required'} variant="error" />
+          <Notice text={fieldState.error.message} variant="error" />
         )}
         {renderContent()}
       </Stack>
