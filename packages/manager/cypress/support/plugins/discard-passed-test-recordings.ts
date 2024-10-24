@@ -1,4 +1,3 @@
-// @ts-expect-error for some reason, @node/types is v12 and it probably doesn't have this.
 import fs from 'fs/promises';
 
 import { CypressPlugin } from './plugin';
