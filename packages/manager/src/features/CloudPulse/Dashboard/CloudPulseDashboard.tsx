@@ -87,7 +87,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     dashboard?.service_type,
     {},
     {
-      ...platformFilter,
+      platformFilter,
     }
   );
 
