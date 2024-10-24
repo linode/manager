@@ -1,8 +1,4 @@
-import {
-  ThirdPartyPayment as _ThirdPartyPayment,
-  PaymentMethod,
-} from '@linode/api-v4/lib/account';
-import { Theme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -12,6 +8,15 @@ import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import { usePreferences } from 'src/queries/profile/preferences';
+
+import { MaskableText } from '../MaskableText/MaskableText';
+
+import type {
+  ThirdPartyPayment as _ThirdPartyPayment,
+  PaymentMethod,
+} from '@linode/api-v4/lib/account';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   icon: {
@@ -49,19 +54,38 @@ interface Props {
   paymentMethod: PaymentMethod;
 }
 
-export const renderThirdPartyPaymentBody = (paymentMethod: PaymentMethod) => {
+export const ThirdPartyPaymentBody = (props: Props) => {
+  const { data: preferences } = usePreferences();
+  const { paymentMethod } = props;
+
   // eslint-disable-next-line sonarjs/no-small-switch
   switch (paymentMethod.type) {
     case 'paypal':
       return (
-        <Typography>
-          <span style={{ wordBreak: 'break-all' }}>
-            {paymentMethod.data.email}
-          </span>
-        </Typography>
+        <MaskableText
+          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
+          isToggleable
+          text={paymentMethod.data.email}
+        >
+          <Typography>
+            <span style={{ wordBreak: 'break-all' }}>
+              {paymentMethod.data.email}
+            </span>
+          </Typography>
+        </MaskableText>
       );
     default:
-      return <CreditCard creditCard={paymentMethod.data} showIcon={false} />;
+      return (
+        <MaskableText
+          text={`${paymentMethod.data.card_type || 'Card ending in'} ****${
+            paymentMethod.data.last_four
+          }`}
+          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
+          isToggleable
+        >
+          <CreditCard creditCard={paymentMethod.data} showIcon={false} />
+        </MaskableText>
+      );
   }
 };
 
@@ -92,7 +116,7 @@ export const ThirdPartyPayment = (props: Props) => {
             }
           </Typography>
         )}
-        {renderThirdPartyPaymentBody(paymentMethod)}
+        <ThirdPartyPaymentBody paymentMethod={paymentMethod} />
       </Box>
     </>
   );
