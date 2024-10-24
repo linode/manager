@@ -30,7 +30,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { useGetAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -109,7 +109,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 });
 
 export const useKubernetesClusterQuery = (id: number) => {
-  const showAPL = useGetAPLAvailability();
+  const showAPL = useAPLAvailability();
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id),
     queryFn: showAPL

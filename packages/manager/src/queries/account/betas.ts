@@ -43,3 +43,10 @@ export const useCreateAccountBetaMutation = () => {
     },
   });
 };
+
+export const useAccountBetaQuery = (id: string, enabled: boolean = false) => {
+  return useQuery<AccountBeta, APIError[]>({
+    enabled,
+    ...accountQueries.betas._ctx.beta(id),
+  });
+};
