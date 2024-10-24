@@ -166,6 +166,7 @@ export const ImageSelect = (props: Props) => {
         },
       }}
       clearOnBlur
+      disableSelectAll
       label={label || 'Images'}
       loading={isLoading}
       options={sortedOptions}
