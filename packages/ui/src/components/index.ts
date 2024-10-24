@@ -5,3 +5,4 @@ export * from './FormHelperText';
 export * from './Input';
 export * from './InputAdornment';
 export * from './InputLabel';
+export * from './Tooltip';

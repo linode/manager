@@ -1,7 +1,7 @@
+import { Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
 import type { SxProps, Theme } from '@mui/material';
