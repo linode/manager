@@ -76,6 +76,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
+  const platformFilter =
+    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {};
+
   const {
     data: resourceList,
     isLoading: isResourcesLoading,
@@ -83,7 +86,9 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    {}
+    {
+      ...platformFilter,
+    }
   );
 
   const {
