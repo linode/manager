@@ -12,10 +12,6 @@ const props = {
   },
   disableSubmit: false,
   errors: [],
-  images: {
-    available: [],
-    selected: [],
-  },
   isSubmitting: false,
   label: {
     handler: vi.fn(),
@@ -33,6 +29,7 @@ const props = {
     handler: vi.fn(),
     value: '',
   },
+  selectedImages: [],
 };
 
 describe('StackScriptCreate', () => {
