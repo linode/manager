@@ -154,7 +154,9 @@ export const StyledAccordion = styled(Accordion, {
       // product family icon
       '& svg': {
         color: props.isActiveProductFamily ? '#00B159' : '#8E9195',
+        height: 20,
         marginRight: 14,
+        width: 20,
       },
       alignItems: 'center',
       color: '#B8B8B8',

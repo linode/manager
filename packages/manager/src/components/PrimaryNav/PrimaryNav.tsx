@@ -95,7 +95,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         ],
       },
       {
-        icon: <Linode height={20} width={20} />,
+        icon: <Linode />,
         links: [
           {
             activeLinks: ['/linodes', '/linodes/create'],
@@ -134,7 +134,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         title: 'Compute',
       },
       {
-        icon: <Storage height={20} width={20} />,
+        icon: <Storage />,
         links: [
           {
             activeLinks: [
@@ -152,7 +152,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         title: 'Storage',
       },
       {
-        icon: <NodeBalancer height={20} width={20} />,
+        icon: <NodeBalancer />,
         links: [
           {
             display: 'VPC',
@@ -174,7 +174,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         title: 'Networking',
       },
       {
-        icon: <Database height={20} width={20} />,
+        icon: <Database />,
         links: [
           {
             display: 'Databases',
@@ -186,7 +186,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         title: 'Databases',
       },
       {
-        icon: <Longview height={20} width={20} />,
+        icon: <Longview />,
         links: [
           {
             display: 'Longview',
@@ -202,7 +202,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         title: 'Monitor',
       },
       {
-        icon: <More height={20} width={20} />,
+        icon: <More />,
         links: [
           {
             display: 'Betas',
