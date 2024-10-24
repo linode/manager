@@ -57,7 +57,6 @@
     "lib"
   ],
   "devDependencies": {
-    "@types/node": "^12.7.1",
     "@types/yup": "^0.29.13",
     "axios-mock-adapter": "^1.22.0",
     "concurrently": "^9.0.1",
