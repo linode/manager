@@ -33,8 +33,9 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
   return (
     <Autocomplete
       renderOption={(props, kernel) => {
+        const { key, ...rest } = props;
         return (
-          <li {...props} data-testid="kernel-option">
+          <li {...rest} data-testid="kernel-option" key={key}>
             {kernel.label}
           </li>
         );
