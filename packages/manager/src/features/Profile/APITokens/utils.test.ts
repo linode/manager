@@ -28,6 +28,7 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('*');
       const expected = [
         ['account', 2],
+        ['aclp', 2],
         ['child_account', 2],
         ['databases', 2],
         ['domains', 2],
@@ -53,6 +54,7 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('');
       const expected = [
         ['account', 0],
+        ['aclp', 0],
         ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
@@ -79,6 +81,7 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:none');
       const expected = [
         ['account', 0],
+        ['aclp', 0],
         ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
@@ -105,6 +108,7 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:read_only');
       const expected = [
         ['account', 1],
+        ['aclp', 0],
         ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
@@ -131,6 +135,7 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:read_write');
       const expected = [
         ['account', 2],
+        ['aclp', 0],
         ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
@@ -159,6 +164,7 @@ describe('APIToken utils', () => {
       );
       const expected = [
         ['account', 0],
+        ['aclp', 0],
         ['child_account', 0],
         ['databases', 0],
         ['domains', 1],
@@ -189,6 +195,7 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:none,tokens:read_write');
       const expected = [
         ['account', 2],
+        ['aclp', 0],
         ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
@@ -219,6 +226,7 @@ describe('APIToken utils', () => {
       const result = scopeStringToPermTuples('account:read_only,tokens:none');
       const expected = [
         ['account', 1],
+        ['aclp', 0],
         ['child_account', 0],
         ['databases', 0],
         ['domains', 0],
@@ -245,6 +253,7 @@ describe('APIToken utils', () => {
       it('should return 0 if all scopes are 0', () => {
         const scopes: Permission[] = [
           ['account', 0],
+          ['aclp', 0],
           ['child_account', 0],
           ['databases', 0],
           ['domains', 0],
@@ -266,6 +275,7 @@ describe('APIToken utils', () => {
       it('should return 1 if all scopes are 1', () => {
         const scopes: Permission[] = [
           ['account', 1],
+          ['aclp', 1],
           ['child_account', 1],
           ['databases', 1],
           ['domains', 1],
@@ -286,6 +296,7 @@ describe('APIToken utils', () => {
       it('should return 2 if all scopes are 2', () => {
         const scopes: Permission[] = [
           ['account', 2],
+          ['aclp', 2],
           ['child_account', 2],
           ['databases', 2],
           ['domains', 2],
@@ -304,9 +315,10 @@ describe('APIToken utils', () => {
         ];
         expect(allScopesAreTheSame(scopes)).toBe(2);
       });
-      it('should return null if all scopes are different', () => {
+      it('should return null if all scopes are not same', () => {
         const scopes: Permission[] = [
           ['account', 1],
+          ['aclp', 2],
           ['child_account', 0],
           ['databases', 0],
           ['domains', 2],
@@ -329,6 +341,7 @@ describe('APIToken utils', () => {
     it('should return 1 if all scopes, except any exclusions, are 1', () => {
       const scopes: Permission[] = [
         ['account', 1],
+        ['aclp', 1],
         ['child_account', 1],
         ['databases', 1],
         ['domains', 1],
@@ -365,6 +378,7 @@ describe('APIToken utils', () => {
 describe('hasAccessBeenSelectedForAllScopes', () => {
   const defaultScopes: Permission[] = [
     ['account', -1],
+    ['aclp', -1],
     ['child_account', -1],
     ['databases', -1],
     ['domains', -1],
@@ -384,6 +398,7 @@ describe('hasAccessBeenSelectedForAllScopes', () => {
 
   const missingSelectionScopes: Permission[] = [
     ['account', -1],
+    ['aclp', -1],
     ['child_account', -1],
     ['databases', -1],
     ['domains', -1],
@@ -403,6 +418,7 @@ describe('hasAccessBeenSelectedForAllScopes', () => {
 
   const allSelectedScopes: Permission[] = [
     ['account', 1],
+    ['aclp', 0],
     ['child_account', 0],
     ['databases', 0],
     ['domains', 0],
