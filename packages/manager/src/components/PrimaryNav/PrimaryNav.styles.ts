@@ -25,6 +25,7 @@ export const StyledGrid = styled(Grid, {
       },
     },
   },
+  // when the nav is collapsed, we want to visually hide expanded content
   ...(props.isCollapsed && {
     '.MuiAccordion-region': {
       height: 0,
@@ -150,7 +151,7 @@ export const StyledAccordion = styled(Accordion, {
           opacity: 0,
         }),
       },
-      /** Product family icon */
+      // product family icon
       '& svg': {
         color: props.isActiveProductFamily ? '#00B159' : '#8E9195',
         marginRight: 14,
@@ -173,7 +174,7 @@ export const StyledAccordion = styled(Accordion, {
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
       minHeight: 40,
       paddingLeft: 4,
-      /** Accordion arrow */
+      // accordion arrow
       svg: {
         fill: '#fff',
         stroke: 'transparent !important',

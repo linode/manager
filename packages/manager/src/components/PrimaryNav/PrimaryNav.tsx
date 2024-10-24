@@ -18,6 +18,8 @@ import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
+
+import PrimaryLink from './PrimaryLink';
 import {
   StyledAccordion,
   StyledAkamaiLogo,
@@ -25,7 +27,6 @@ import {
   StyledLink,
   StyledLogoBox,
 } from './PrimaryNav.styles';
-import PrimaryLink from './PrimaryLink';
 import { linkIsActive } from './utils';
 
 import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
@@ -56,8 +57,8 @@ export type NavEntity =
 
 interface PrimaryLinkGroup {
   icon?: React.JSX.Element;
-  title?: string;
   links: PrimaryLinkType[];
+  title?: string;
 }
 
 export interface PrimaryNavProps {
@@ -95,7 +96,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       },
       {
         icon: <Linode height={20} width={20} />,
-        title: 'Compute',
         links: [
           {
             activeLinks: ['/linodes', '/linodes/create'],
@@ -131,10 +131,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/linodes/create?type=One-Click',
           },
         ],
+        title: 'Compute',
       },
       {
         icon: <Storage height={20} width={20} />,
-        title: 'Storage',
         links: [
           {
             activeLinks: [
@@ -149,10 +149,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/volumes',
           },
         ],
+        title: 'Storage',
       },
       {
         icon: <NodeBalancer height={20} width={20} />,
-        title: 'Networking',
         links: [
           {
             display: 'VPC',
@@ -171,10 +171,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/domains',
           },
         ],
+        title: 'Networking',
       },
       {
         icon: <Database height={20} width={20} />,
-        title: 'Databases',
         links: [
           {
             display: 'Databases',
@@ -183,10 +183,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             isBeta: isDatabasesV2Beta,
           },
         ],
+        title: 'Databases',
       },
       {
         icon: <Longview height={20} width={20} />,
-        title: 'Monitor',
         links: [
           {
             display: 'Longview',
@@ -199,10 +199,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             isBeta: flags.aclp?.beta,
           },
         ],
+        title: 'Monitor',
       },
       {
         icon: <More height={20} width={20} />,
-        title: 'More',
         links: [
           {
             display: 'Betas',
@@ -218,6 +218,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/support',
           },
         ],
+        title: 'More',
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -235,20 +236,23 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   >(preferences?.collapsedSideNavProductFamilies ?? []);
 
   const accordionClicked = (index: number) => {
+    let updatedCollapsedAccordions;
     if (collapsedAccordions.includes(index)) {
-      setCollapsedAccordions(
-        collapsedAccordions.filter((number) => number !== index)
+      updatedCollapsedAccordions = collapsedAccordions.filter(
+        (accIndex) => accIndex !== index
       );
+      updatePreferences({
+        collapsedSideNavProductFamilies: updatedCollapsedAccordions,
+      });
+      setCollapsedAccordions(updatedCollapsedAccordions);
     } else {
-      setCollapsedAccordions([...collapsedAccordions, index]);
+      updatedCollapsedAccordions = [...collapsedAccordions, index];
+      updatePreferences({
+        collapsedSideNavProductFamilies: updatedCollapsedAccordions,
+      });
+      setCollapsedAccordions(updatedCollapsedAccordions);
     }
   };
-
-  React.useEffect(() => {
-    updatePreferences({
-      collapsedSideNavProductFamilies: collapsedAccordions,
-    });
-  }, [collapsedAccordions]);
 
   let activeProductFamily = '';
 
@@ -258,11 +262,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       container
       direction="column"
       id="main-navigation"
+      isCollapsed={isCollapsed}
       justifyContent="flex-start"
       role="navigation"
       spacing={0}
       wrap="nowrap"
-      isCollapsed={isCollapsed}
     >
       <Grid sx={{ width: '100%' }}>
         <StyledLogoBox isCollapsed={isCollapsed}>
@@ -298,8 +302,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           }
           const props = {
             closeMenu,
-            isCollapsed,
             isActiveLink,
+            isCollapsed,
             ...link,
           };
           return <PrimaryLink {...props} key={link.display} />;
@@ -327,10 +331,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                     <p>{linkGroup.title}</p>
                   </>
                 }
-                onChange={() => accordionClicked(idx)}
                 expanded={!collapsedAccordions.includes(idx)}
-                isCollapsed={isCollapsed}
                 isActiveProductFamily={activeProductFamily === linkGroup.title}
+                isCollapsed={isCollapsed}
+                onChange={() => accordionClicked(idx)}
               >
                 {PrimaryLinks}
               </StyledAccordion>
