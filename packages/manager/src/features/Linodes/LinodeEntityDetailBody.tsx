@@ -13,7 +13,9 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
+import { createMaskedText } from 'src/utilities/createMaskedText';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -90,6 +92,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   } = props;
 
   const { data: profile } = useProfile();
+  const { data: preferences } = usePreferences();
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
@@ -188,16 +191,43 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   </Typography>
                 ) : undefined
               }
+              rows={[
+                {
+                  displayText: preferences?.maskSensitiveData
+                    ? createMaskedText(firstAddress)
+                    : undefined,
+                  text: firstAddress,
+                },
+                {
+                  displayText:
+                    secondAddress && preferences?.maskSensitiveData
+                      ? createMaskedText(secondAddress)
+                      : undefined,
+                  text: secondAddress,
+                },
+              ]}
               gridSize={{ lg: 5, xs: 12 }}
               isVPCOnlyLinode={isVPCOnlyLinode}
-              rows={[{ text: firstAddress }, { text: secondAddress }]}
               sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
             />
             <AccessTable
               rows={[
-                { heading: 'SSH Access', text: sshLink(ipv4[0]) },
                 {
+                  displayText: preferences?.maskSensitiveData
+                    ? createMaskedText(sshLink(ipv4[0]))
+                    : undefined,
+                  heading: 'SSH Access',
+                  text: sshLink(ipv4[0]),
+                },
+                {
+                  displayText:
+                    !linodeIsInDistributedRegion &&
+                    preferences?.maskSensitiveData
+                      ? createMaskedText(
+                          lishLink(username, region, linodeLabel)
+                        )
+                      : undefined,
                   heading: 'LISH Console via SSH',
                   text: linodeIsInDistributedRegion
                     ? 'N/A'
