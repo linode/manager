@@ -6,12 +6,21 @@ import React from 'react';
 import { Button } from '../Button/Button';
 import { Tooltip } from '../Tooltip';
 
-import type { SxProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface Props {
+  /**
+   * Toggles visibility icon on click
+   */
   handleClick: () => void;
+  /**
+   * If true, displays the icon to toggle visibility to hidden; if false, displays the icon to toggle visibility to shown.
+   */
   isVisible: boolean;
-  sx?: SxProps;
+  /**
+   * Additional styles to apply to the component.
+   */
+  sx?: SxProps<Theme>;
 }
 
 export const VisibilityTooltip = (props: Props) => {
