@@ -1,10 +1,6 @@
-import { queryByText } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { preferencesFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { usePreferences } from 'src/queries/profile/preferences';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { IPAddress, sortIPAddress } from './IPAddress';

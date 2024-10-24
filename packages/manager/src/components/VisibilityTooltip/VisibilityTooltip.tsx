@@ -10,17 +10,17 @@ import type { SxProps } from '@mui/material/styles';
 
 interface Props {
   handleClick: () => void;
-  isMasked: boolean;
+  isVisible: boolean;
   sx?: SxProps;
 }
 
-export const MaskableTextTooltip = (props: Props) => {
-  const { handleClick, isMasked, sx } = props;
+export const VisibilityTooltip = (props: Props) => {
+  const { handleClick, isVisible, sx } = props;
 
   return (
-    <Tooltip sx={sx} title={isMasked ? 'Show' : 'Hide'}>
+    <Tooltip sx={sx} title={!isVisible ? 'Show' : 'Hide'}>
       <StyledToggleButton onClick={handleClick}>
-        {isMasked ? (
+        {!isVisible ? (
           <VisibilityIcon aria-label="Show" />
         ) : (
           <VisibilityOffIcon aria-label="Hide" />

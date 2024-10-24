@@ -4,9 +4,9 @@ import * as React from 'react';
 import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import { Stack } from '../Stack';
-import { MaskableTextTooltip } from './MaskableTextTooltip';
+import { VisibilityTooltip } from '../VisibilityTooltip/VisibilityTooltip';
 
-interface Props {
+export interface MaskableTextProps {
   /**
    * (Optional) original JSX element to render if the text is not masked.
    */
@@ -16,7 +16,7 @@ interface Props {
    */
   isMaskedPreferenceEnabled: boolean;
   /**
-   * If true, displays a MaskableTextTooltip icon to toggle the masked and unmasked text.
+   * If true, displays a VisibilityTooltip icon to toggle the masked and unmasked text.
    */
   isToggleable?: boolean;
   /**
@@ -25,7 +25,7 @@ interface Props {
   text: string | undefined;
 }
 
-export const MaskableText = (props: Props) => {
+export const MaskableText = (props: MaskableTextProps) => {
   const {
     children,
     isMaskedPreferenceEnabled,
@@ -62,9 +62,9 @@ export const MaskableText = (props: Props) => {
         <Typography>{text}</Typography>
       )}
       {isToggleable && (
-        <MaskableTextTooltip
+        <VisibilityTooltip
           handleClick={() => setIsMasked(!isMasked)}
-          isMasked={isMasked}
+          isVisible={!isMasked}
         />
       )}
     </Stack>

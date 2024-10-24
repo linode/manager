@@ -2,8 +2,8 @@ import { Stack } from '@mui/material';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { MaskableTextTooltip } from 'src/components/MaskableText/MaskableTextTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
+import { VisibilityTooltip } from 'src/components/VisibilityTooltip/VisibilityTooltip';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { createMaskedText } from 'src/utilities/createMaskedText';
@@ -148,9 +148,9 @@ export const IPAddress = (props: IPAddressProps) => {
         <>
           {renderIP(formattedIPS[0])}
           {preferences?.maskSensitiveData && (
-            <MaskableTextTooltip
+            <VisibilityTooltip
               handleClick={() => setIsMasked(!isMasked)}
-              isMasked={isMasked}
+              isVisible={!isMasked}
               sx={{ paddingRight: showMore ? 1 : 0 }}
             />
           )}
@@ -161,9 +161,9 @@ export const IPAddress = (props: IPAddressProps) => {
             {formattedIPS.map(renderIP)}{' '}
           </Stack>
           {preferences?.maskSensitiveData && (
-            <MaskableTextTooltip
+            <VisibilityTooltip
               handleClick={() => setIsMasked(!isMasked)}
-              isMasked={isMasked}
+              isVisible={!isMasked}
               sx={{ marginLeft: 'auto' }}
             />
           )}
