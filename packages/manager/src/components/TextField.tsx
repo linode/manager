@@ -13,10 +13,10 @@ import { InputLabel } from 'src/components/InputLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
+import type { TooltipProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
 import type { StandardTextFieldProps } from '@mui/material/TextField';
 import type { BoxProps } from 'src/components/Box';
-import type { TooltipProps } from 'src/components/Tooltip';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   absolute: {

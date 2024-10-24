@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
@@ -6,7 +7,6 @@ import { LinkButton } from 'src/components/LinkButton';
 import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile/profile';

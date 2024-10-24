@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
@@ -7,7 +8,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { SelectedIcon } from '../Autocomplete/Autocomplete.styles';
 import { OSIcon } from '../OSIcon';
 import { Stack } from '../Stack';
-import { Tooltip } from '../Tooltip';
 import { Typography } from '../Typography';
 import { isImageDeprecated } from './utilities';
 

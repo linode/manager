@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -8,7 +9,6 @@ import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { Stack } from '../Stack';
-import { Tooltip } from '../Tooltip';
 
 import type { ImageItem } from './ImageSelect';
 import type { Theme } from '@mui/material/styles';

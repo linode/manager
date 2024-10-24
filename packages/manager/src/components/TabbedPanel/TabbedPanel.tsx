@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +10,6 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanel } from 'src/components/Tabs/TabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 
 import { Box } from '../Box';
@@ -119,8 +119,8 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           <TabPanels>
             {tabs.map((tab, idx) => (
               <TabPanel
-                key={`tabs-panel-${tab.title}-${idx}`}
                 data-qa-tp-tab={tab.title}
+                key={`tabs-panel-${tab.title}-${idx}`}
               >
                 {tab.render(rest.children)}
               </TabPanel>

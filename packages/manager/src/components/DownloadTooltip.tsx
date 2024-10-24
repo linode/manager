@@ -1,8 +1,8 @@
+import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import FileDownload from 'src/assets/icons/download.svg';
 import { StyledIconButton } from 'src/components/CopyTooltip/CopyTooltip';
-import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { downloadFile } from 'src/utilities/downloadFile';
 
