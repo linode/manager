@@ -1,140 +1,188 @@
-import { makeStyles } from 'tss-react/mui';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Link } from 'react-router-dom';
 
+import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
+import { Accordion } from 'src/components/Accordion';
+import { Box } from 'src/components/Box';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
+import { omittedProps } from 'src/utilities/omittedProps';
 
-import type { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles<void, 'linkItem'>()(
-  (theme: Theme, _params, classes) => ({
-    active: {
-      '& div.icon': {
+export const StyledGrid = styled(Grid, {
+  label: 'StyledGrid',
+  shouldForwardProp: omittedProps(['isCollapsed']),
+})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
+  '&:hover': {
+    '& a[aria-current="true"]': {
+      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+    },
+    '.MuiAccordion-region': {
+      height: 'auto',
+    },
+    '.MuiButtonBase-root, MuiAccordionSummary-root': {
+      '& h3 > p': {
         opacity: 1,
       },
-      '& svg': {
-        color: theme.palette.success.dark,
-      },
-      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-      textDecoration: 'none',
     },
-    chip: {
-      marginTop: 2,
+  },
+  // when the nav is collapsed, we want to visually hide expanded content
+  ...(props.isCollapsed && {
+    '.MuiAccordion-region': {
+      height: 0,
     },
-    divider: {
-      backgroundColor: 'rgba(0, 0, 0, 0.12)',
-      color: '#222',
+  }),
+  height: '100%',
+  margin: 0,
+  minHeight: 64,
+  padding: 0,
+  [theme.breakpoints.up('md')]: {
+    minHeight: 80,
+  },
+  [theme.breakpoints.up('sm')]: {
+    minHeight: 72,
+  },
+  width: '100%',
+}));
+
+export const StyledLogoBox = styled(Box, {
+  label: 'StyledLogoBox',
+  shouldForwardProp: omittedProps(['isCollapsed']),
+})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.name === 'dark' ? theme.bg.appBar : undefined,
+  display: 'flex',
+  height: 50,
+  paddingLeft: 13,
+  transition: 'padding-left .03s linear',
+  ...(props.isCollapsed && {
+    '& .akamai-logo-name': {
+      opacity: 0,
     },
-    linkItem: {
-      '&.hiddenWhenCollapsed': {
-        maxHeight: 36,
-        opacity: 0,
-      },
-      alignItems: 'center',
-      color: theme.colorTokens.Neutrals.White,
-      display: 'flex',
-      fontFamily: 'LatoWebBold',
-      fontSize: '0.875rem',
-      opacity: 1,
-      position: 'relative',
-      transition: theme.transitions.create(['color', 'opacity']),
-    },
-    listItem: {
-      '& .icon': {
-        '& svg': {
-          '&:not(.wBorder) circle, & .circle': {
-            display: 'none',
-          },
-          alignItems: 'center',
-          display: 'flex',
-          height: 20,
-          width: 20,
-        },
-        color: '#CFD0D2',
-        marginRight: theme.spacing(1.5),
-        opacity: 0.5,
-        transition: 'max-height 1s linear, width .1s linear',
-      },
-      '& p': {
-        marginBottom: 0,
-        marginTop: 0,
-      },
-      '&:focus': {
-        textDecoration: 'none',
-      },
-      '&:hover': {
-        '& .icon': {
-          opacity: 1,
-        },
-        '& svg': {
-          color: theme.palette.success.dark,
-          fill: theme.palette.success.dark,
-        },
-        [`& .${classes.linkItem}`]: {
-          color: 'white',
-        },
-        backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-        border: 'red',
-        textDecoration: 'none',
-      },
-      alignItems: 'center',
-      cursor: 'pointer',
-      display: 'flex',
-      minWidth: SIDEBAR_WIDTH,
-      padding: '8px 13px',
-      position: 'relative',
-    },
-    logo: {
+    paddingLeft: 8,
+  }),
+}));
+
+export const StyledAkamaiLogo = styled(AkamaiLogo, {
+  label: 'StyledAkamaiLogo',
+})(({ theme }) => ({
+  '& .akamai-logo-name': {
+    transition: theme.transitions.create(['opacity']),
+  },
+  // give the svg a transition so it smoothly resizes
+  transition: 'width .1s linear',
+}));
+
+export const StyledLink = styled(Link, {
+  label: 'StyledLink',
+  shouldForwardProp: omittedProps(['isCollapsed']),
+})<{ isCollapsed: boolean }>(({ ...props }) => ({
+  lineHeight: 0,
+  ...(props.isCollapsed && {
+    // when the nav is collapsed, but hovered by the user, make the logo full sized
+    'nav:hover & > svg ': {
       '& .akamai-logo-name': {
-        transition: theme.transitions.create(['opacity']),
+        opacity: 1,
       },
-      // give the svg a transition so it smoothly resizes
-      transition: 'width .1s linear',
-    },
-    logoAkamaiCollapsed: {
-      background: theme.bg.appBar,
       width: 83,
     },
-    logoContainer: {
-      lineHeight: 0,
-      // when the nav is collapsed, but hovered by the user, make the logo full sized
-      'nav:hover & > svg ': {
-        '& .akamai-logo-name': {
-          opacity: 1,
-        },
-        width: 83,
+  }),
+}));
+
+export const StyledActiveLink = styled(Link, {
+  label: 'StyledActiveLink',
+  shouldForwardProp: omittedProps(['isActiveLink', 'isCollapsed']),
+})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ ...props }) => ({
+  '& p': {
+    marginBottom: 0,
+    marginTop: 0,
+  },
+  '&:focus': {
+    textDecoration: 'none',
+  },
+  '&:hover': {
+    backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+    textDecoration: 'none',
+  },
+  alignItems: 'center',
+  cursor: 'pointer',
+  display: 'flex',
+  minWidth: SIDEBAR_WIDTH,
+  padding: '8px 16px',
+  position: 'relative',
+  ...(props.isActiveLink && {
+    backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+    textDecoration: 'none',
+  }),
+  ...(props.isCollapsed && {
+    backgroundImage: 'none',
+  }),
+}));
+
+export const StyledPrimaryLinkBox = styled(Box, {
+  label: 'StyledPrimaryLinkBox',
+  shouldForwardProp: omittedProps(['isCollapsed']),
+})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
+  alignItems: 'center',
+  color: '#fff',
+  display: 'flex',
+  fontFamily: 'LatoWebBold',
+  fontSize: '0.875rem',
+  justifyContent: 'space-between',
+  opacity: 1,
+  position: 'relative',
+  transition: theme.transitions.create(['color', 'opacity']),
+  width: '100%',
+  ...(props.isCollapsed && {
+    maxHeight: 36,
+    opacity: 0,
+  }),
+}));
+
+export const StyledAccordion = styled(Accordion, {
+  label: 'StyledAccordion',
+  shouldForwardProp: omittedProps(['isCollapsed', 'isActiveProductFamily']),
+})<{ isActiveProductFamily: boolean; isCollapsed: boolean }>(
+  ({ theme, ...props }) => ({
+    '& h3': {
+      '& p': {
+        color: '#B8B8B8',
+        transition: theme.transitions.create(['opacity']),
+        ...(props.isCollapsed && {
+          opacity: 0,
+        }),
       },
-    },
-    logoItemAkamai: {
+      // product family icon
+      '& svg': {
+        color: props.isActiveProductFamily ? '#00B159' : '#8E9195',
+        height: 20,
+        marginRight: 14,
+        width: 20,
+      },
       alignItems: 'center',
-      backgroundColor: theme.name === 'dark' ? theme.bg.appBar : undefined,
+      color: '#B8B8B8',
       display: 'flex',
-      height: 50,
-      paddingLeft: 13,
-      transition: 'padding-left .03s linear',
+      fontSize: '0.7rem',
+      letterSpacing: '1px',
+      lineheight: 20,
+      padding: '0 10px',
+      textTransform: 'uppercase',
     },
-    logoItemAkamaiCollapsed: {
-      '& .akamai-logo-name': {
-        opacity: 0,
-      },
-      paddingLeft: 8,
-    },
-    menuGrid: {
-      height: '100%',
-      margin: 0,
-      minHeight: 64,
+    '.MuiAccordionDetails-root': {
       padding: 0,
-      [theme.breakpoints.up('md')]: {
-        minHeight: 80,
-      },
-      [theme.breakpoints.up('sm')]: {
-        minHeight: 72,
-      },
-      width: '100%',
     },
-    navLinkItem: {
-      lineHeight: 0,
+    '.MuiButtonBase-root, MuiAccordionSummary-root': {
+      '.MuiAccordionSummary-contentGutters, .Mui-expanded': {
+        margin: '0 !important',
+      },
+      minHeight: '40px !important',
+      paddingLeft: 4,
+      // accordion arrow
+      svg: {
+        fill: '#fff',
+        stroke: 'transparent !important',
+      },
     },
+    backgroundColor: theme.name === 'dark' ? theme.bg.appBar : 'transparent',
+    minHeight: '40px',
   })
 );
-
-// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
-export default useStyles;
