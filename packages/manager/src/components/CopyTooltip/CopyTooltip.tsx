@@ -24,6 +24,10 @@ export interface CopyTooltipProps {
    */
   disabled?: boolean;
   /**
+   * The text to display to the user in cases where this differs from the text copied to clipboard.
+   */
+  displayText?: string;
+  /**
    * Callback to be executed when the icon is clicked.
    */
   onClickCallback?: () => void;
@@ -49,10 +53,14 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
     className,
     copyableText,
     disabled,
+    displayText,
     onClickCallback,
     placement,
     text,
   } = props;
+
+  // Ensure we render displayText when text has been masked.
+  const _text = displayText ? displayText : text;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -73,7 +81,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       type="button"
       {...props}
     >
-      {copyableText ? text : <FileCopy />}
+      {copyableText ? _text : <FileCopy />}
     </StyledIconButton>
   );
 
@@ -95,7 +103,12 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
 
 export const StyledIconButton = styled('button', {
   label: 'StyledIconButton',
-  shouldForwardProp: omittedProps(['copyableText', 'text', 'onClickCallback']),
+  shouldForwardProp: omittedProps([
+    'copyableText',
+    'text',
+    'onClickCallback',
+    'displayText',
+  ]),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
   '& svg': {
     color: theme.color.grey1,

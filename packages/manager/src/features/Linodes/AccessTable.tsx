@@ -19,6 +19,7 @@ import {
 import type { SxProps, Theme } from '@mui/material/styles';
 
 interface AccessTableRow {
+  displayText?: string;
   heading?: string;
   text: null | string;
 }
@@ -61,6 +62,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                       <CopyTooltip
                         copyableText
                         disabled={isDisabled}
+                        displayText={thisRow.displayText}
                         text={thisRow.text}
                       />
                     </StyledGradientDiv>

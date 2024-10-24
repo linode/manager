@@ -1,8 +1,12 @@
+import { Stack } from '@mui/material';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
+import { VisibilityTooltip } from 'src/components/VisibilityTooltip/VisibilityTooltip';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { usePreferences } from 'src/queries/profile/preferences';
+import { createMaskedText } from 'src/utilities/createMaskedText';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 import { tail } from 'src/utilities/tail';
 
@@ -77,6 +81,12 @@ export const IPAddress = (props: IPAddressProps) => {
     false
   );
 
+  const { data: preferences } = usePreferences();
+
+  const [isMasked, setIsMasked] = React.useState(
+    Boolean(preferences?.maskSensitiveData)
+  );
+
   React.useEffect(() => {
     return () => {
       if (copiedTimeout !== null) {
@@ -107,6 +117,7 @@ export const IPAddress = (props: IPAddressProps) => {
   };
 
   const renderIP = (ip: string) => {
+    const displayIp = isMasked ? createMaskedText(ip) : ip;
     const handlers = showTooltipOnIpHover
       ? {
           onMouseEnter: handleMouseEnter,
@@ -123,6 +134,7 @@ export const IPAddress = (props: IPAddressProps) => {
           copyableText
           data-qa-copy-ip-text
           disabled={disabled}
+          displayText={displayIp}
           text={ip}
         />
         {renderCopyIcon(ip)}
@@ -132,8 +144,31 @@ export const IPAddress = (props: IPAddressProps) => {
 
   return (
     <StyledRootDiv showAll={showAll}>
-      {!showAll ? renderIP(formattedIPS[0]) : formattedIPS.map(renderIP)}
-
+      {!showAll ? (
+        <>
+          {renderIP(formattedIPS[0])}
+          {preferences?.maskSensitiveData && (
+            <VisibilityTooltip
+              handleClick={() => setIsMasked(!isMasked)}
+              isVisible={!isMasked}
+              sx={{ paddingRight: showMore ? 1 : 0 }}
+            />
+          )}
+        </>
+      ) : (
+        <Stack display="flex" flexDirection="row">
+          <Stack display="flex" flexDirection="column">
+            {formattedIPS.map(renderIP)}{' '}
+          </Stack>
+          {preferences?.maskSensitiveData && (
+            <VisibilityTooltip
+              handleClick={() => setIsMasked(!isMasked)}
+              isVisible={!isMasked}
+              sx={{ marginLeft: 'auto' }}
+            />
+          )}
+        </Stack>
+      )}
       {formattedIPS.length > 1 && showMore && !showAll && (
         <ShowMore
           ariaItemType="IP addresses"
