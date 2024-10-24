@@ -90,12 +90,20 @@ export const useMutateProfile = () => {
   const queryClient = useQueryClient();
   return useMutation<Profile, APIError[], Partial<Profile>>({
     mutationFn: updateProfile,
-    onSuccess(newData) {
+    onSuccess(newData, variables) {
       updateProfileData(newData, queryClient);
 
       queryClient.invalidateQueries({
         queryKey: accountQueries.users.queryKey,
       });
+
+      if (variables.email) {
+        // If the user updates their email, re-request notifications to
+        // potentially clear the email bounce notification.
+        queryClient.invalidateQueries({
+          queryKey: accountQueries.notifications.queryKey,
+        });
+      }
     },
   });
 };
