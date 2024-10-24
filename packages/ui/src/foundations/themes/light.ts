@@ -15,7 +15,7 @@ import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
-export const inputMaxWidth = 416;
+const inputMaxWidth = 416;
 
 export const bg = {
   app: Color.Neutrals[5],
@@ -240,6 +240,7 @@ export const lightTheme: ThemeOptions = {
   borderColors,
   breakpoints,
   chartTokens: Chart,
+  colorTokens: Color,
   color,
   components: {
     MuiAccordion: {
@@ -347,7 +348,7 @@ export const lightTheme: ThemeOptions = {
             opacity: 1,
           },
           '&::selection': {
-            backgroundColor: color.grey7,
+            backgroundColor: color.grey10,
           },
         },
         inputRoot: {
@@ -1526,6 +1527,7 @@ export const lightTheme: ThemeOptions = {
     },
     yellow: `rgba(255, 220, 125, ${graphTransparency})`,
   },
+  inputMaxWidth,
   inputStyles: {
     default: {
       backgroundColor: Select.Default.Background,

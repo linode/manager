@@ -19,9 +19,10 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import {
+  getKubeControlPlaneACL,
   getKubeHighAvailability,
   getLatestVersion,
-  useGetAPLAvailability,
+  useAPLAvailability,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -39,6 +40,7 @@ import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
@@ -47,6 +49,7 @@ import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
+import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
   StyledFieldWithDocsStack,
@@ -61,6 +64,7 @@ import type {
   KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
   const { classes } = useStyles();
@@ -76,14 +80,22 @@ export const CreateCluster = () => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
+  const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(true);
   const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
-  const showAPL = useGetAPLAvailability();
+  const showAPL = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
+  const { showControlPlaneACL } = getKubeControlPlaneACL(account);
+  const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
+    stringToExtendedIP(''),
+  ]);
+  const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
+    stringToExtendedIP(''),
+  ]);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -129,6 +141,11 @@ export const CreateCluster = () => {
   }, [versionData]);
 
   const createCluster = () => {
+    if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
+      scrollErrorIntoViewV2(formContainerRef);
+      return;
+    }
+
     const { push } = history;
     setErrors(undefined);
     setSubmitting(true);
@@ -137,8 +154,41 @@ export const CreateCluster = () => {
       pick(['type', 'count'])
     ) as CreateNodePoolData[];
 
+    const _ipv4 = ipV4Addr
+      .map((ip) => {
+        return ip.address;
+      })
+      .filter((ip) => ip !== '');
+
+    const _ipv6 = ipV6Addr
+      .map((ip) => {
+        return ip.address;
+      })
+      .filter((ip) => ip !== '');
+
+    const addressIPv4Payload = {
+      ...(_ipv4.length > 0 && { ipv4: _ipv4 }),
+    };
+
+    const addressIPv6Payload = {
+      ...(_ipv6.length > 0 && { ipv6: _ipv6 }),
+    };
+
     let payload: CreateKubeClusterPayload = {
-      control_plane: { high_availability: highAvailability ?? false },
+      control_plane: {
+        acl: {
+          enabled: controlPlaneACL,
+          'revision-id': '',
+          ...(controlPlaneACL && // only send the IPs if we are enabling IPACL
+            (_ipv4.length > 0 || _ipv6.length > 0) && {
+              addresses: {
+                ...addressIPv4Payload,
+                ...addressIPv6Payload,
+              },
+            }),
+        },
+        high_availability: highAvailability ?? false,
+      },
       k8s_version: version,
       label,
       node_pools,
@@ -199,7 +249,14 @@ export const CreateCluster = () => {
   });
 
   const errorMap = getErrorMap(
-    ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
+    [
+      'region',
+      'node_pools',
+      'label',
+      'k8s_version',
+      'versionLoad',
+      'control_plane',
+    ],
     errors
   );
 
@@ -295,8 +352,8 @@ export const CreateCluster = () => {
               </StyledFieldWithDocsStack>
             </>
           )}
-          <Divider sx={{ marginTop: 4 }} />
-          {showHighAvailability ? (
+          <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
+          {showHighAvailability && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
                 highAvailabilityPrice={
@@ -311,7 +368,25 @@ export const CreateCluster = () => {
                 setHighAvailability={setHighAvailability}
               />
             </Box>
-          ) : null}
+          )}
+          {showControlPlaneACL && (
+            <>
+              <Divider />
+              <ControlPlaneACLPane
+                handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
+                  setIPv4Addr(newIpV4Addr);
+                }}
+                handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
+                  setIPv6Addr(newIpV6Addr);
+                }}
+                enableControlPlaneACL={controlPlaneACL}
+                errorText={errorMap.control_plane}
+                ipV4Addr={ipV4Addr}
+                ipV6Addr={ipV6Addr}
+                setControlPlaneACL={setControlPlaneACL}
+              />
+            </>
+          )}
           <Divider sx={{ marginBottom: 4 }} />
           <NodePoolPanel
             typesError={
