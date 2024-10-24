@@ -319,9 +319,9 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     },
     cursor: isDragging ? 'grabbing' : 'grab',
     position: 'relative',
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition: isActive ? transition : 'none',
-    zIndex: isDragging ? 999 : 0,
+    zIndex: isDragging ? 9999 : 0,
   } as const;
 
   return (
