@@ -103,7 +103,12 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
 
 export const StyledIconButton = styled('button', {
   label: 'StyledIconButton',
-  shouldForwardProp: omittedProps(['copyableText', 'text', 'onClickCallback']),
+  shouldForwardProp: omittedProps([
+    'copyableText',
+    'text',
+    'onClickCallback',
+    'displayText',
+  ]),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
   '& svg': {
     color: theme.color.grey1,

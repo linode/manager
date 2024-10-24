@@ -1,3 +1,4 @@
+import { Stack } from '@mui/material';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -103,23 +104,15 @@ export const IPAddress = (props: IPAddressProps) => {
     }
 
     return (
-      <>
-        <StyledIpLinkDiv data-qa-copy-ip>
-          <StyledCopyTooltip
-            data-testid={`styled-copytooltip`}
-            isHovered={isHovered}
-            isIpHovered={isIpTooltipHovered}
-            showTooltipOnIpHover={showTooltipOnIpHover}
-            text={ip}
-          />
-        </StyledIpLinkDiv>
-        {preferences?.maskSensitiveData && (
-          <MaskableTextTooltip
-            handleClick={() => setIsMasked(!isMasked)}
-            isMasked={isMasked}
-          />
-        )}
-      </>
+      <StyledIpLinkDiv data-qa-copy-ip>
+        <StyledCopyTooltip
+          data-testid={`styled-copytooltip`}
+          isHovered={isHovered}
+          isIpHovered={isIpTooltipHovered}
+          showTooltipOnIpHover={showTooltipOnIpHover}
+          text={ip}
+        />
+      </StyledIpLinkDiv>
     );
   };
 
@@ -151,8 +144,31 @@ export const IPAddress = (props: IPAddressProps) => {
 
   return (
     <StyledRootDiv showAll={showAll}>
-      {!showAll ? renderIP(formattedIPS[0]) : formattedIPS.map(renderIP)}
-
+      {!showAll ? (
+        <>
+          {renderIP(formattedIPS[0])}
+          {preferences?.maskSensitiveData && (
+            <MaskableTextTooltip
+              handleClick={() => setIsMasked(!isMasked)}
+              isMasked={isMasked}
+              sx={{ paddingRight: showMore ? 1 : 0 }}
+            />
+          )}
+        </>
+      ) : (
+        <Stack display="flex" flexDirection="row">
+          <Stack display="flex" flexDirection="column">
+            {formattedIPS.map(renderIP)}{' '}
+          </Stack>
+          {preferences?.maskSensitiveData && (
+            <MaskableTextTooltip
+              handleClick={() => setIsMasked(!isMasked)}
+              isMasked={isMasked}
+              sx={{ marginLeft: 'auto' }}
+            />
+          )}
+        </Stack>
+      )}
       {formattedIPS.length > 1 && showMore && !showAll && (
         <ShowMore
           ariaItemType="IP addresses"

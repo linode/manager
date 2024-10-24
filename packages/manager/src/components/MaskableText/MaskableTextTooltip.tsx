@@ -6,16 +6,19 @@ import React from 'react';
 import { Button } from '../Button/Button';
 import { Tooltip } from '../Tooltip';
 
+import type { SxProps } from '@mui/material/styles';
+
 interface Props {
   handleClick: () => void;
   isMasked: boolean;
+  sx?: SxProps;
 }
 
 export const MaskableTextTooltip = (props: Props) => {
-  const { handleClick, isMasked } = props;
+  const { handleClick, isMasked, sx } = props;
 
   return (
-    <Tooltip title={isMasked ? 'Show' : 'Hide'}>
+    <Tooltip sx={sx} title={isMasked ? 'Show' : 'Hide'}>
       <StyledToggleButton onClick={handleClick}>
         {isMasked ? (
           <VisibilityIcon aria-label="Show" />

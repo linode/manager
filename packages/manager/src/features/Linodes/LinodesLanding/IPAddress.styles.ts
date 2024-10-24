@@ -28,8 +28,7 @@ export const StyledRootDiv = styled('div', {
   },
   marginBottom: theme.spacing(0.5),
   maxWidth: '100%',
-  // TODO: check if removing causes regressions; causes a styling issue with distance between IP Address component and visibility icon
-  // width: '100%',
+  width: '100%',
 
   ...(!showAll
     ? {
@@ -45,6 +44,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
     'isHovered',
     'isIpHovered',
     'showTooltipOnIpHover',
+    'displayText',
   ]),
 })<StyledIpAddressProps>(
   ({ isHovered, isIpHovered, showTooltipOnIpHover, theme }) => ({
