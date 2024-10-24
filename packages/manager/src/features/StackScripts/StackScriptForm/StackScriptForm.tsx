@@ -1,7 +1,7 @@
+import { InputAdornment } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { InputAdornment } from 'src/components/InputAdornment';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';

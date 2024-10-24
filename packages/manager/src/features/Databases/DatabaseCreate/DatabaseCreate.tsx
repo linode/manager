@@ -1,3 +1,4 @@
+import { FormControl } from '@linode/ui';
 import { BetaChip } from '@linode/ui';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -18,7 +19,6 @@ import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleVal
 import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';

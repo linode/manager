@@ -1,7 +1,7 @@
+import { FormControl } from '@linode/ui';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { FormControl } from 'src/components/FormControl';
 import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
 
 interface Props {
