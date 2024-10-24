@@ -54,6 +54,7 @@ export const DatabaseRow = ({
     id,
     label,
     region,
+    status,
     type,
     version,
   } = database;
@@ -66,6 +67,8 @@ export const DatabaseRow = ({
   const plan = types?.find((t: DatabaseType) => t.id === type);
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
+  const isLinkInactive =
+    status === 'suspended' || status === 'suspending' || status === 'resuming';
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const configuration =
@@ -85,7 +88,11 @@ export const DatabaseRow = ({
   return (
     <TableRow data-qa-database-cluster-id={id} key={`database-row-${id}`}>
       <TableCell>
-        <Link to={`/databases/${engine}/${id}`}>{label}</Link>
+        {isDatabasesV2GA && isLinkInactive ? (
+          label
+        ) : (
+          <Link to={`/databases/${engine}/${id}`}>{label}</Link>
+        )}
       </TableCell>
       <TableCell statusCell>
         <DatabaseStatusDisplay database={database} events={events} />
@@ -110,6 +117,7 @@ export const DatabaseRow = ({
       {isDatabasesV2GA && isNewDatabase && (
         <TableCell actionCell>
           <DatabaseActionMenu
+            databaseStatus={status}
             databaseEngine={engine}
             databaseId={id}
             databaseLabel={label}

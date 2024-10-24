@@ -24,8 +24,22 @@ import {
   useDatabasesQuery,
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { DateTime, Interval } from 'luxon';
+import { Typography } from 'src/components/Typography';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import { DatabaseInstance } from '@linode/api-v4';
+import { useProfile } from 'src/queries/profile/profile';
+import { formatDate } from 'src/utilities/formatDate';
 
 const preferenceKey = 'databases';
+const SUSPEND_EXPIRATION_DAYS = 180;
+const SUSPEND_WARNING_DAYS = 150;
+
+type SuspendNotification = {
+  id: number;
+  label: string;
+  expirationCopy: string;
+};
 
 const DatabaseLanding = () => {
   const history = useHistory();
@@ -79,6 +93,7 @@ const DatabaseLanding = () => {
     newDatabasesFilter,
     isDefaultEnabled
   );
+  const { data: profile } = useProfile();
 
   const {
     handleOrderChange: legacyDatabaseHandleOrderChange,
@@ -113,6 +128,60 @@ const DatabaseLanding = () => {
     legacyDatabasesFilter,
     !isUserNewBeta
   );
+  const isV2Enabled = isDatabasesV2Enabled || isDatabasesV2GA;
+  const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
+  const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
+  const showSuspend = isDatabasesV2GA && !!newDatabases?.data.length;
+
+  const getSuspendNotification = (
+    database: DatabaseInstance,
+    lastUpdatedDate: string
+  ) => {
+    const lastUpdatedDt = DateTime.fromISO(lastUpdatedDate);
+    const warningDate = lastUpdatedDt.plus({ days: SUSPEND_WARNING_DAYS });
+    const expirationDate = lastUpdatedDt.plus({
+      days: SUSPEND_EXPIRATION_DAYS,
+    });
+    const interval = Interval.fromDateTimes(warningDate, expirationDate);
+    // Display warning banner if the current date is within the warning to expiration range
+    if (interval.contains(DateTime.now())) {
+      const expirationDateString = expirationDate.toUTC().toISO();
+      const expirationCopy = expirationDateString
+        ? `on ${formatDate(expirationDateString, {
+            timezone: profile?.timezone,
+            displayTime: false,
+          })}`
+        : `after ${SUSPEND_EXPIRATION_DAYS} days`;
+
+      const newNotification = {
+        id: database.id,
+        label: database.label,
+        expirationCopy: expirationCopy,
+      };
+      return newNotification;
+    }
+    return;
+  };
+
+  const suspendNotifications: SuspendNotification[] = React.useMemo(() => {
+    const notifications: SuspendNotification[] = [];
+    if (!showSuspend || newDatabases.data.length === 0) {
+      return notifications;
+    }
+    // Loop through new databases to find suspended databases and check if a notification should be displayed.
+    newDatabases.data.forEach((database) => {
+      if (database.status === 'suspended') {
+        const suspendNotification = getSuspendNotification(
+          database,
+          database.updated
+        );
+        if (suspendNotification) {
+          notifications.push(suspendNotification);
+        }
+      }
+    });
+    return notifications;
+  }, [newDatabases]);
 
   const error = newDatabasesError || legacyDatabasesError;
   if (error) {
@@ -134,10 +203,6 @@ const DatabaseLanding = () => {
     return <DatabaseEmptyState />;
   }
 
-  const isV2Enabled = isDatabasesV2Enabled || isDatabasesV2GA;
-  const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
-  const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
-
   const legacyTable = () => {
     return (
       <DatabaseLandingTable
@@ -155,6 +220,7 @@ const DatabaseLanding = () => {
         data={newDatabases?.data}
         handleOrderChange={newDatabaseHandleOrderChange}
         isNewDatabase={true}
+        showSuspend={showSuspend}
         order={newDatabaseOrder}
         orderBy={newDatabaseOrderBy}
       />
@@ -181,7 +247,23 @@ const DatabaseLanding = () => {
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
+
       {showTabs && <DatabaseClusterInfoBanner />}
+      {showSuspend
+        ? suspendNotifications.map((notification) => (
+            <DismissibleBanner
+              preferenceKey={`${notification.id}-suspend-notice`}
+              variant="warning"
+              key={`${notification.id}-key`}
+            >
+              <Box>
+                <Typography>
+                  {`${notification.label} has been suspended for ${SUSPEND_WARNING_DAYS} days. If it is not resumed to be operational it will be automatically deleted ${notification.expirationCopy}.`}
+                </Typography>
+              </Box>
+            </DismissibleBanner>
+          ))
+        : null}
       <Box>
         {showTabs ? (
           <Tabs>
