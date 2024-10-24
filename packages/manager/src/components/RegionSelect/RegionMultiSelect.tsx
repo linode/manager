@@ -106,17 +106,22 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             onChange(selectedOptions?.map((region) => region.id) ?? [])
           }
           renderOption={(props, option, { selected }) => {
+            const { key, ...rest } = props;
             if (!option.site_type) {
               // Render options like "Select All / Deselect All"
-              return <StyledListItem {...props}>{option.label}</StyledListItem>;
+              return (
+                <StyledListItem {...rest} key={key}>
+                  {option.label}
+                </StyledListItem>
+              );
             }
 
             // Render regular options
             return (
               <RegionOption
                 disabledOptions={disabledRegions[option.id]}
-                key={option.id}
-                props={props}
+                key={key}
+                props={rest}
                 region={option}
                 selected={selected}
               />
