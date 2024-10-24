@@ -591,7 +591,6 @@ const DatabaseCreate = () => {
             className={classes.selectPlanPanel}
             data-qa-select-plan
             disabled={isRestricted}
-            disabledTabs={isRestricted ? ['shared', 'dedicated'] : []}
             error={errors.type}
             handleTabChange={handleTabChange}
             header="Choose a Plan"
