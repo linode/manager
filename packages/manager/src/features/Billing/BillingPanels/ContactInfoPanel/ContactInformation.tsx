@@ -13,7 +13,6 @@ import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
-import { usePreferences } from 'src/queries/profile/preferences';
 
 import {
   BillingActionButton,
@@ -81,7 +80,6 @@ const ContactInformation = (props: Props) => {
   ] = React.useState<boolean>(false);
 
   const { data: notifications } = useNotificationsQuery();
-  const { data: preferences } = usePreferences();
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
@@ -192,12 +190,7 @@ const ContactInformation = (props: Props) => {
             country) && (
             <Grid sx={sxGrid}>
               {(firstName || lastName) && (
-                <MaskableText
-                  isMaskedPreferenceEnabled={Boolean(
-                    preferences?.maskSensitiveData
-                  )}
-                  text={`${firstName} ${lastName}`}
-                >
+                <MaskableText text={`${firstName} ${lastName}`}>
                   <StyledTypography
                     data-qa-contact-name
                     sx={{ wordBreak: 'break-all' }}
@@ -207,12 +200,7 @@ const ContactInformation = (props: Props) => {
                 </MaskableText>
               )}
               {company && (
-                <MaskableText
-                  isMaskedPreferenceEnabled={Boolean(
-                    preferences?.maskSensitiveData
-                  )}
-                  text={company}
-                >
+                <MaskableText text={company}>
                   <>
                     {' '}
                     <StyledTypography
@@ -225,12 +213,7 @@ const ContactInformation = (props: Props) => {
                 </MaskableText>
               )}
               {(address1 || address2 || city || state || zip || country) && (
-                <MaskableText
-                  isMaskedPreferenceEnabled={Boolean(
-                    preferences?.maskSensitiveData
-                  )}
-                  text={`${address1} ${address2}`}
-                >
+                <MaskableText text={`${address1} ${address2}`}>
                   <>
                     <StyledTypography data-qa-contact-address>
                       {address1}
@@ -239,34 +222,19 @@ const ContactInformation = (props: Props) => {
                   </>
                 </MaskableText>
               )}
-              <MaskableText
-                isMaskedPreferenceEnabled={Boolean(
-                  preferences?.maskSensitiveData
-                )}
-                text={`${city} ${state} ${zip}`}
-              >
+              <MaskableText text={`${city} ${state} ${zip}`}>
                 <StyledTypography>
                   {city}
                   {city && state && ','} {state} {zip}
                 </StyledTypography>
               </MaskableText>
-              <MaskableText
-                isMaskedPreferenceEnabled={Boolean(
-                  preferences?.maskSensitiveData
-                )}
-                text={countryName}
-              >
+              <MaskableText text={countryName}>
                 <StyledTypography>{countryName}</StyledTypography>
               </MaskableText>
             </Grid>
           )}
           <Grid sx={sxGrid}>
-            <MaskableText
-              isMaskedPreferenceEnabled={Boolean(
-                preferences?.maskSensitiveData
-              )}
-              text={email}
-            >
+            <MaskableText text={email}>
               <StyledTypography
                 data-qa-contact-email
                 sx={{ wordBreak: 'break-all' }}
@@ -275,24 +243,14 @@ const ContactInformation = (props: Props) => {
               </StyledTypography>
             </MaskableText>
             {phone && (
-              <MaskableText
-                isMaskedPreferenceEnabled={Boolean(
-                  preferences?.maskSensitiveData
-                )}
-                text={phone}
-              >
+              <MaskableText text={phone}>
                 <StyledTypography data-qa-contact-phone>
                   {phone}
                 </StyledTypography>
               </MaskableText>
             )}
             {taxId && (
-              <MaskableText
-                isMaskedPreferenceEnabled={Boolean(
-                  preferences?.maskSensitiveData
-                )}
-                text={taxId}
-              >
+              <MaskableText text={taxId}>
                 <Box alignItems="center" display="flex">
                   <StyledTypography
                     sx={{

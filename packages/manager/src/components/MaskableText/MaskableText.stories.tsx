@@ -15,7 +15,6 @@ type Story = StoryObj<typeof MaskableText>;
 export const Default: Story = {
   args: {
     children: <Typography>Hide me</Typography>,
-    isMaskedPreferenceEnabled: true,
     isToggleable: true,
     text: 'Hide me',
   },

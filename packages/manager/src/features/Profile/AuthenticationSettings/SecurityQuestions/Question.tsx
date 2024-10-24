@@ -5,7 +5,6 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { InputLabel } from 'src/components/InputLabel';
 import { LinkButton } from 'src/components/LinkButton';
 import { Typography } from 'src/components/Typography';
-import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { SecurityQuestion } from '@linode/api-v4/lib/profile';
 
@@ -33,8 +32,6 @@ export const Question = (props: Props) => {
     setFieldValue,
   } = props;
 
-  const { data: preferences } = usePreferences();
-
   const currentOption = questionResponse
     ? {
         label: questionResponse.question,
@@ -56,11 +53,7 @@ export const Question = (props: Props) => {
           }}
           variant="body1"
         >
-          <MaskableText
-            isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-            isToggleable
-            text={questionResponse?.question}
-          />
+          <MaskableText isToggleable text={questionResponse?.question} />
           <LinkButton onClick={onClickEdit} style={{ marginLeft: 10 }}>
             Edit
           </LinkButton>

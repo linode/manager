@@ -8,7 +8,6 @@ import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import { usePreferences } from 'src/queries/profile/preferences';
 
 import { MaskableText } from '../MaskableText/MaskableText';
 
@@ -55,18 +54,13 @@ interface Props {
 }
 
 export const ThirdPartyPaymentBody = (props: Props) => {
-  const { data: preferences } = usePreferences();
   const { paymentMethod } = props;
 
   // eslint-disable-next-line sonarjs/no-small-switch
   switch (paymentMethod.type) {
     case 'paypal':
       return (
-        <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-          isToggleable
-          text={paymentMethod.data.email}
-        >
+        <MaskableText isToggleable text={paymentMethod.data.email}>
           <Typography>
             <span style={{ wordBreak: 'break-all' }}>
               {paymentMethod.data.email}

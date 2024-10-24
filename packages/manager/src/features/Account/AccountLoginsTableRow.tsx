@@ -6,7 +6,6 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
@@ -25,7 +24,6 @@ const accessIconMap: Record<AccountLoginStatus, Status> = {
 const AccountLoginsTableRow = (props: AccountLogin) => {
   const { datetime, id, ip, restricted, status, username } = props;
   const { data: profile } = useProfile();
-  const { data: preferences } = usePreferences();
 
   return (
     <TableRow key={id}>
@@ -35,21 +33,13 @@ const AccountLoginsTableRow = (props: AccountLogin) => {
         })}
       </TableCell>
       <TableCell noWrap>
-        <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-          isToggleable
-          text={username}
-        >
+        <MaskableText isToggleable text={username}>
           <Link to={`/account/users/${username}`}>{username}</Link>
         </MaskableText>
       </TableCell>
       <Hidden smDown>
         <TableCell>
-          <MaskableText
-            isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-            isToggleable
-            text={ip}
-          />
+          <MaskableText isToggleable text={ip} />
         </TableCell>
       </Hidden>
       <Hidden mdDown>

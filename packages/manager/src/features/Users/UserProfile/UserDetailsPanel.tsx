@@ -8,7 +8,6 @@ import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
-import { usePreferences } from 'src/queries/profile/preferences';
 
 import type { User } from '@linode/api-v4';
 
@@ -17,28 +16,14 @@ interface Props {
 }
 
 export const UserDetailsPanel = ({ user }: Props) => {
-  const { data: preferences } = usePreferences();
-
   const items = [
     {
       label: 'Username',
-      value: (
-        <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-          isToggleable
-          text={user.username}
-        />
-      ),
+      value: <MaskableText isToggleable text={user.username} />,
     },
     {
       label: 'Email',
-      value: (
-        <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-          isToggleable
-          text={user.email}
-        />
-      ),
+      value: <MaskableText isToggleable text={user.email} />,
     },
     {
       label: 'Account Access',
@@ -87,7 +72,6 @@ export const UserDetailsPanel = ({ user }: Props) => {
       label: 'Verified Phone Number',
       value: (
         <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
           isToggleable
           text={user.verified_phone_number ?? 'None'}
         />

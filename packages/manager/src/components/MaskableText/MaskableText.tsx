@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import * as React from 'react';
 
+import { usePreferences } from 'src/queries/profile/preferences';
 import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import { Stack } from '../Stack';
@@ -12,10 +13,6 @@ export interface MaskableTextProps {
    */
   children?: JSX.Element;
   /**
-   * If true, the user has enabled masking sensitive data in their Profile settings.
-   */
-  isMaskedPreferenceEnabled: boolean;
-  /**
    * If true, displays a VisibilityTooltip icon to toggle the masked and unmasked text.
    */
   isToggleable?: boolean;
@@ -26,14 +23,12 @@ export interface MaskableTextProps {
 }
 
 export const MaskableText = (props: MaskableTextProps) => {
-  const {
-    children,
-    isMaskedPreferenceEnabled,
-    isToggleable = false,
-    text,
-  } = props;
+  const { children, isToggleable = false, text } = props;
 
-  const [isMasked, setIsMasked] = React.useState(isMaskedPreferenceEnabled);
+  const { data: preferences } = usePreferences();
+  const maskedPreferenceSetting = preferences?.maskSensitiveData;
+
+  const [isMasked, setIsMasked] = React.useState(maskedPreferenceSetting);
 
   // Return early based on the preference setting and the original text.
 
@@ -41,7 +36,7 @@ export const MaskableText = (props: MaskableTextProps) => {
     return;
   }
 
-  if (!isMaskedPreferenceEnabled) {
+  if (!maskedPreferenceSetting) {
     return children ? children : <Typography>{text}</Typography>;
   }
 

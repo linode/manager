@@ -11,7 +11,6 @@ import { LinkButton } from 'src/components/LinkButton';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { usePreferences } from 'src/queries/profile/preferences';
 import {
   profileQueries,
   updateProfileData,
@@ -56,7 +55,6 @@ export const PhoneVerification = ({
   const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
   const [isViewMode, setIsViewMode] = React.useState(hasVerifiedPhoneNumber);
   const [isPhoneInputFocused, setIsPhoneInputFocused] = React.useState(false);
-  const { data: preferences } = usePreferences();
 
   React.useEffect(() => {
     // If the user opts-out, hasVerifiedPhoneNumber will change, therefore
@@ -224,9 +222,6 @@ export const PhoneVerification = ({
                         ? getFormattedNumber(profile.verified_phone_number)
                         : 'No Phone Number'
                     }
-                    isMaskedPreferenceEnabled={Boolean(
-                      preferences?.maskSensitiveData
-                    )}
                     isToggleable
                   />
                 </Typography>

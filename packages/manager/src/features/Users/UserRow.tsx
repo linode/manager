@@ -13,7 +13,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useAccountUserGrants } from 'src/queries/account/users';
-import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalize } from 'src/utilities/capitalize';
 
@@ -30,7 +29,6 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const theme = useTheme();
   const { data: grants } = useAccountUserGrants(user.username);
   const { data: profile } = useProfile();
-  const { data: preferences } = usePreferences();
 
   const isProxyUser = Boolean(user.user_type === 'proxy');
   const showChildAccountAccessCol = profile?.user_type === 'parent';
@@ -47,11 +45,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
             }
             username={user.username}
           />
-          <MaskableText
-            isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-            isToggleable
-            text={user.username}
-          />
+          <MaskableText isToggleable text={user.username} />
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
@@ -59,11 +53,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
       <Hidden smDown>
         <TableCell>
           {' '}
-          <MaskableText
-            isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-            isToggleable
-            text={user.email}
-          />
+          <MaskableText isToggleable text={user.email} />
         </TableCell>
       </Hidden>
       <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>

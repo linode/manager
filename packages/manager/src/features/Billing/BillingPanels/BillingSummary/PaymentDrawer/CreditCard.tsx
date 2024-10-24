@@ -10,7 +10,6 @@ import VisaIcon from 'src/assets/icons/payment/visa.svg';
 import { Box } from 'src/components/Box';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
-import { usePreferences } from 'src/queries/profile/preferences';
 import { formatExpiry, isCreditCardExpired } from 'src/utilities/creditCard';
 
 import type {
@@ -76,7 +75,6 @@ export const CreditCard = (props: Props) => {
     showIcon = true,
   } = props;
 
-  const { data: preferences } = usePreferences();
   const { classes } = useStyles();
   const Icon = type ? getIcon(type) : GenericCardIcon;
   const displayText = `${type || 'Card ending in'} ****${lastFour}`;
@@ -91,11 +89,7 @@ export const CreditCard = (props: Props) => {
         ) : null}
       </Box>
       <Box className={classes.card}>
-        <MaskableText
-          isMaskedPreferenceEnabled={Boolean(preferences?.maskSensitiveData)}
-          isToggleable
-          text={displayText}
-        >
+        <MaskableText isToggleable text={displayText}>
           <>
             <Typography className={classes.cardInfo} data-qa-contact-cc>
               {displayText}
