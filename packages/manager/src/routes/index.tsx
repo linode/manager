@@ -82,6 +82,7 @@ declare module '@tanstack/react-router' {
  */
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
+  volumesRouteTree,
 ]);
 export const migrationRouter = createRouter({
   Wrap: ({ children }) => {
