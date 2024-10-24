@@ -22,7 +22,9 @@ interface Props {
    */
   sx?: SxProps<Theme>;
 }
-
+/**
+ * Toggle-able visibility icon with tooltip on hover
+ */
 export const VisibilityTooltip = (props: Props) => {
   const { handleClick, isVisible, sx } = props;
 

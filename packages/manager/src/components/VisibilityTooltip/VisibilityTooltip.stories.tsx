@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof VisibilityTooltip> = {
   component: VisibilityTooltip,
-  title: 'Components/VisibilityTooltip',
+  title: 'Components/Tooltip/Visibility Tooltip',
 };
 
 type Story = StoryObj<typeof VisibilityTooltip>;
