@@ -190,7 +190,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
           onDragEnd={onDragEnd}
           sensors={sensors}
         >
-          <Table>
+          <Table noOverflow>
             <TableHead aria-label={`${category} Rules List Headers`}>
               <TableRow>
                 <TableCell
