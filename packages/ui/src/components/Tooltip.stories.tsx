@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { Tooltip } from './Tooltip';
-import { Typography } from './Typography';
+import { Typography } from '@mui/material';
 
 const meta: Meta<typeof Tooltip> = {
   component: Tooltip,
