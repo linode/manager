@@ -1,7 +1,25 @@
 /**
  * @file LKE creation end-to-end tests.
  */
-
+import {
+  accountFactory,
+  kubernetesClusterFactory,
+  kubernetesControlPlaneACLFactory,
+  kubernetesControlPlaneACLOptionsFactory,
+  linodeTypeFactory,
+  regionFactory,
+} from 'src/factories';
+import {
+  mockCreateCluster,
+  mockGetCluster,
+  mockCreateClusterError,
+  mockGetControlPlaneACL,
+} from 'support/intercepts/lke';
+import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockGetRegions,
+  mockGetRegionAvailability,
+} from 'support/intercepts/regions';
 import { KubernetesCluster } from '@linode/api-v4';
 import { LkePlanDescription } from 'support/api/lke';
 import { lkeClusterPlans } from 'support/constants/lke';
@@ -83,7 +101,9 @@ describe('LKE Cluster Creation', () => {
   it('can create an LKE cluster', () => {
     cy.tag('method:e2e', 'purpose:dcTesting');
     const clusterLabel = randomLabel();
-    const clusterRegion = chooseRegion();
+    const clusterRegion = chooseRegion({
+      capabilities: ['Kubernetes'],
+    });
     const clusterVersion = '1.27';
     const clusterPlans = new Array(2)
       .fill(null)
@@ -365,5 +385,459 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
           .should('be.visible')
           .should('be.enabled');
       });
+  });
+});
+
+describe('LKE Cluster Creation with ACL', () => {
+  /**
+   * - Confirms ACL flow does not exist if account doesn't have the corresponding capability
+   */
+  it('does not show the ACL flow without the LKE ACL capability', () => {
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: [],
+      })
+    ).as('getAccount');
+
+    cy.visitWithLogin('/kubernetes/clusters');
+
+    ui.button
+      .findByTitle('Create Cluster')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.url().should('endWith', '/kubernetes/create');
+    cy.wait(['@getAccount']);
+
+    cy.contains('Control Plane ACL').should('not.exist');
+    cy.contains(
+      'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
+    ).should('not.exist');
+    cy.contains('Enable Control Plane ACL').should('not.exist');
+    cy.contains('IPv4 Addresses or CIDRs').should('not.exist');
+    cy.contains('IPv6 Addresses or CIDRs').should('not.exist');
+    cy.contains('Add IPv4 Address').should('not.exist');
+    cy.contains('Add IPv6 Address').should('not.exist');
+  });
+
+  // setting up mocks
+  const clusterLabel = randomLabel();
+  const mockRegion = regionFactory.build({
+    capabilities: ['Linodes', 'Kubernetes'],
+    id: 'us-east',
+    label: 'Newark, US',
+  });
+  const mockLinodeTypes = [
+    linodeTypeFactory.build({
+      id: 'dedicated-1',
+      label: 'dedicated-1',
+      class: 'dedicated',
+    }),
+    linodeTypeFactory.build({
+      id: 'dedicated-2',
+      label: 'dedicated-2',
+      class: 'dedicated',
+    }),
+  ];
+  const clusterVersion = '1.31';
+  const clusterPlan = { size: 2, tab: 'Dedicated CPU', type: 'Dedicated' };
+  const nodeCount = 1;
+  const planName = 'dedicated-1';
+  const checkoutName = 'dedicated-1 Plan';
+
+  describe('with LKE IPACL account capability', () => {
+    beforeEach(() => {
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: [
+            'LKE HA Control Planes',
+            'LKE Network Access Control List (IP ACL)',
+          ],
+        })
+      ).as('getAccount');
+      mockGetRegions([mockRegion]).as('getRegions');
+      mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+      mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
+    });
+
+    /**
+     * - Confirms create flow when ACL is toggled off
+     * - Confirms LKE summary page shows that ACL is not enabled
+     */
+    it('creates an LKE cluster with ACL disabled', () => {
+      const mockACL = kubernetesControlPlaneACLFactory.build({
+        acl: {
+          enabled: false,
+          'revision-id': '',
+        },
+      });
+      const mockCluster = kubernetesClusterFactory.build({
+        label: clusterLabel,
+        region: mockRegion.id,
+        k8s_version: clusterVersion,
+        control_plane: mockACL,
+      });
+      mockCreateCluster(mockCluster).as('createCluster');
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetControlPlaneACL(mockCluster.id, mockACL).as('getControlPlaneACL');
+
+      cy.visitWithLogin('/kubernetes/clusters');
+
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.url().should('endWith', '/kubernetes/create');
+      cy.wait(['@getAccount', '@getRegions', '@getLinodeTypes']);
+
+      // Fill out LKE creation form label, region, and Kubernetes version fields.
+      cy.findByLabelText('Cluster Label')
+        .should('be.visible')
+        .click()
+        .type(`${clusterLabel}{enter}`);
+
+      ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+      cy.wait(['@getRegionAvailability']);
+
+      cy.findByText('Kubernetes Version')
+        .should('be.visible')
+        .click()
+        .type(`${clusterVersion}{enter}`);
+
+      cy.get('[data-testid="ha-radio-button-yes"]')
+        .should('be.visible')
+        .click();
+
+      // Confirm ACL section and disable ACL
+      cy.contains('Control Plane ACL').should('be.visible');
+      cy.contains(
+        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
+      ).should('be.visible');
+      cy.contains('Enable Control Plane ACL').should('be.visible');
+      cy.contains('IPv4 Addresses or CIDRs').should('be.visible');
+      cy.contains('IPv6 Addresses or CIDRs').should('be.visible');
+      cy.contains('Add IPv4 Address').should('be.visible');
+      cy.contains('Add IPv6 Address').should('be.visible');
+      ui.toggle
+        .find()
+        .should('have.attr', 'data-qa-toggle', 'true')
+        .should('be.visible')
+        .click();
+      // IP related fields do not exist when ACL is not enabled
+      cy.get('IPv4 Addresses or CIDRs').should('not.exist');
+      cy.get('IPv6 Addresses or CIDRs').should('not.exist');
+      cy.get('Add IPv4 Address').should('not.exist');
+      cy.get('Add IPv6 Address').should('not.exist');
+
+      // Add a node pool
+      cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
+      cy.findByText(clusterPlan.tab).should('be.visible').click();
+      cy.findByText(planName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.get('[name="Quantity"]')
+            .should('be.visible')
+            .click()
+            .type(`{selectall}${nodeCount}`);
+
+          ui.button
+            .findByTitle('Add')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm that node pool is shown in the checkout bar.
+      cy.get('[data-testid="kube-checkout-bar"]')
+        .should('be.visible')
+        .within(() => {
+          cy.findAllByText(checkoutName).first().should('be.visible');
+        });
+
+      // create cluster
+      cy.get('[data-testid="kube-checkout-bar"]')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Create Cluster')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@createCluster').then(() => {
+        cy.url().should(
+          'endWith',
+          `/kubernetes/clusters/${mockCluster.id}/summary`
+        );
+      });
+
+      cy.wait(['@getCluster', '@getControlPlaneACL']);
+
+      // Confirms Summary panel displays as expected
+      cy.contains('Control Plane ACL').should('be.visible');
+      ui.button.findByTitle('Enable').should('be.visible').should('be.enabled');
+    });
+
+    /**
+     * - Confirms create flow when ACL is toggled on
+     * - Confirms adding IPs
+     * - Confirms LKE summary page shows that ACL is enabled
+     */
+    it('creates an LKE cluster with ACL enabled', () => {
+      const mockACLOptions = kubernetesControlPlaneACLOptionsFactory.build({
+        'revision-id': '',
+      });
+
+      const mockACL = kubernetesControlPlaneACLFactory.build({
+        acl: mockACLOptions,
+      });
+
+      const mockCluster = kubernetesClusterFactory.build({
+        label: clusterLabel,
+        region: mockRegion.id,
+        k8s_version: clusterVersion,
+        control_plane: mockACL,
+      });
+      mockCreateCluster(mockCluster).as('createCluster');
+      mockGetCluster(mockCluster).as('getCluster');
+      mockGetControlPlaneACL(mockCluster.id, mockACL).as('getControlPlaneACL');
+
+      cy.visitWithLogin('/kubernetes/clusters');
+
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.url().should('endWith', '/kubernetes/create');
+      cy.wait(['@getAccount']);
+
+      // Fill out LKE creation form label, region, and Kubernetes version fields.
+      cy.findByLabelText('Cluster Label')
+        .should('be.visible')
+        .click()
+        .type(`${clusterLabel}{enter}`);
+
+      ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+
+      cy.findByText('Kubernetes Version')
+        .should('be.visible')
+        .click()
+        .type(`${clusterVersion}{enter}`);
+
+      cy.get('[data-testid="ha-radio-button-yes"]')
+        .should('be.visible')
+        .click();
+
+      // Confirm ACL section
+      cy.contains('Control Plane ACL').should('be.visible');
+      cy.contains(
+        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
+      ).should('be.visible');
+      cy.contains('Enable Control Plane ACL').should('be.visible');
+      cy.contains('IPv4 Addresses or CIDRs').should('be.visible');
+      cy.contains('IPv6 Addresses or CIDRs').should('be.visible');
+      cy.contains('Add IPv4 Address').should('be.visible');
+      cy.contains('Add IPv6 Address').should('be.visible');
+      ui.toggle
+        .find()
+        .should('have.attr', 'data-qa-toggle', 'true')
+        .should('be.visible');
+      // Add some IPv4s and an IPv6
+      cy.findByPlaceholderText('0.0.0.0/0')
+        .should('be.visible')
+        .click()
+        .type('10.0.0.0/24');
+      cy.findByText('Add IPv4 Address')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+      cy.get('[id="domain-transfer-ip-1"]')
+        .should('be.visible')
+        .click()
+        .type('10.0.1.0/24');
+      cy.findByPlaceholderText('::/0')
+        .should('be.visible')
+        .click()
+        .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+      cy.findByText('Add IPv6 Address')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      // Add a node pool
+      cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
+      cy.findByText(clusterPlan.tab).should('be.visible').click();
+      cy.findByText(planName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.get('[name="Quantity"]')
+            .should('be.visible')
+            .click()
+            .type(`{selectall}${nodeCount}`);
+
+          ui.button
+            .findByTitle('Add')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm that node pool is shown in the checkout bar.
+      cy.get('[data-testid="kube-checkout-bar"]')
+        .should('be.visible')
+        .within(() => {
+          cy.findAllByText(checkoutName).first().should('be.visible');
+        });
+
+      // create cluster
+      cy.get('[data-testid="kube-checkout-bar"]')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Create Cluster')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@createCluster').then(() => {
+        cy.url().should(
+          'endWith',
+          `/kubernetes/clusters/${mockCluster.id}/summary`
+        );
+      });
+
+      cy.wait(['@getCluster', '@getControlPlaneACL']);
+
+      // Confirms Summary panel displays as expected
+      cy.contains('Control Plane ACL').should('be.visible');
+      ui.button
+        .findByTitle('Enabled (3 IP Addresses)')
+        .should('be.visible')
+        .should('be.enabled');
+    });
+
+    /**
+     * - Confirms IP validation error appears when a bad IP is entered
+     * - Confirms IP validation error disappears when a valid IP is entered
+     * - Confirms API error appears as expected and doesn't crash the page
+     */
+    it('can handle validation and API errors', () => {
+      const mockErrorMessage = 'Control Plane ACL error: request failed';
+      mockCreateClusterError(mockErrorMessage, 400).as('createClusterError');
+
+      cy.visitWithLogin('/kubernetes/clusters');
+
+      ui.button
+        .findByTitle('Create Cluster')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.url().should('endWith', '/kubernetes/create');
+      cy.wait(['@getAccount']);
+
+      // Fill out LKE creation form label, region, and Kubernetes version fields.
+      cy.findByLabelText('Cluster Label')
+        .should('be.visible')
+        .click()
+        .type(`${clusterLabel}{enter}`);
+
+      ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+
+      cy.findByText('Kubernetes Version')
+        .should('be.visible')
+        .click()
+        .type(`${clusterVersion}{enter}`);
+
+      cy.get('[data-testid="ha-radio-button-yes"]')
+        .should('be.visible')
+        .click();
+
+      // Confirm ACL IPv4 validation works as expected
+      cy.findByPlaceholderText('0.0.0.0/0')
+        .should('be.visible')
+        .click()
+        .type('invalid ip');
+      // click out of textbox and confirm error is visible
+      cy.contains('Control Plane ACL').should('be.visible').click();
+      cy.contains('Must be a valid IPv4 address.').should('be.visible');
+      // enter valid IP
+      cy.findByPlaceholderText('0.0.0.0/0')
+        .should('be.visible')
+        .click()
+        .clear()
+        .type('10.0.0.0/24');
+      // Click out of textbox and confirm error is gone
+      cy.contains('Control Plane ACL').should('be.visible').click();
+      cy.contains('Must be a valid IPv4 address.').should('not.exist');
+
+      // Confirm ACL IPv6 validation works as expected
+      cy.findByPlaceholderText('::/0')
+        .should('be.visible')
+        .click()
+        .type('invalid ip');
+      // click out of textbox and confirm error is visible
+      cy.contains('Control Plane ACL').should('be.visible').click();
+      cy.contains('Must be a valid IPv6 address.').should('be.visible');
+      // enter valid IP
+      cy.findByPlaceholderText('::/0')
+        .should('be.visible')
+        .click()
+        .clear()
+        .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
+      // Click out of textbox and confirm error is gone
+      cy.contains('Control Plane ACL').should('be.visible').click();
+      cy.contains('Must be a valid IPv6 address.').should('not.exist');
+
+      // Add a node pool
+      cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
+      cy.findByText(clusterPlan.tab).should('be.visible').click();
+      cy.findByText(planName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.get('[name="Quantity"]')
+            .should('be.visible')
+            .click()
+            .type(`{selectall}${nodeCount}`);
+
+          ui.button
+            .findByTitle('Add')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm that node pool is shown in the checkout bar.
+      cy.get('[data-testid="kube-checkout-bar"]')
+        .should('be.visible')
+        .within(() => {
+          cy.findAllByText(checkoutName).first().should('be.visible');
+        });
+
+      // Attempt to create cluster
+      cy.get('[data-testid="kube-checkout-bar"]')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Create Cluster')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      // Confirm API error displays
+      cy.wait('@createClusterError');
+      cy.contains(mockErrorMessage).should('be.visible');
+    });
   });
 });
