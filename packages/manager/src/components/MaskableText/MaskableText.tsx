@@ -30,6 +30,8 @@ export const MaskableText = (props: MaskableTextProps) => {
 
   const [isMasked, setIsMasked] = React.useState(maskedPreferenceSetting);
 
+  const unmaskedText = children ? children : <Typography>{text}</Typography>;
+
   // Return early based on the preference setting and the original text.
 
   if (!text) {
@@ -37,7 +39,7 @@ export const MaskableText = (props: MaskableTextProps) => {
   }
 
   if (!maskedPreferenceSetting) {
-    return children ? children : <Typography>{text}</Typography>;
+    return unmaskedText;
   }
 
   return (
@@ -51,10 +53,8 @@ export const MaskableText = (props: MaskableTextProps) => {
         <Typography sx={{ overflowWrap: 'anywhere' }}>
           {createMaskedText(text)}
         </Typography>
-      ) : children ? (
-        children
       ) : (
-        <Typography>{text}</Typography>
+        unmaskedText
       )}
       {isToggleable && (
         <VisibilityTooltip
