@@ -36,7 +36,7 @@ export const ApplicationPlatform = (props: APLProps) => {
   };
 
   return (
-    <FormControl>
+    <FormControl data-testid="application-platform-form">
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
@@ -55,12 +55,17 @@ export const ApplicationPlatform = (props: APLProps) => {
       <APLCopy />
       <RadioGroup onChange={(e) => handleChange(e)}>
         <FormControlLabel
+          control={<Radio data-testid="apl-radio-button-yes" />}
           label={<Typography>Yes, enable Akamai App Platform.</Typography>}
-          control={<Radio />}
           name="yes"
           value="yes"
         />
-        <FormControlLabel control={<Radio />} label="No" name="no" value="no" />
+        <FormControlLabel
+          control={<Radio data-testid="apl-radio-button-no" />}
+          label="No"
+          name="no"
+          value="no"
+        />
       </RadioGroup>
     </FormControl>
   );
