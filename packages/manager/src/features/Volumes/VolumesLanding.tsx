@@ -5,8 +5,8 @@ import {
   TextField,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { createLazyRoute } from '@tanstack/react-router';
-import { useNavigate, useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
@@ -27,6 +27,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
+import { volumesSearchParams } from 'src/routes/volumes/index';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AttachVolumeDrawer } from './AttachVolumeDrawer';
@@ -85,119 +86,93 @@ export const VolumesLanding = () => {
 
   const handleDetach = (volume: Volume) => {
     navigate({
+      params: { action: 'detach', volumeId: volume.id },
+      search: (prev) => volumesSearchParams(prev),
       to: `/volumes/$volumeId/$action`,
-      params: { volumeId: volume.id, action: 'detach' },
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
   const handleDelete = (volume: Volume) => {
     navigate({
+      params: { action: 'delete', volumeId: volume.id },
+      search: (prev) => volumesSearchParams(prev),
       to: `/volumes/$volumeId/$action`,
-      params: { volumeId: volume.id, action: 'delete' },
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
   const handleDetails = (volume: Volume) => {
     navigate({
+      params: { action: 'details', volumeId: volume.id },
+      search: (prev) => volumesSearchParams(prev),
       to: `/volumes/$volumeId/$action`,
-      params: { volumeId: volume.id, action: 'details' },
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
   const handleEdit = (volume: Volume) => {
     navigate({
+      params: { action: 'edit', volumeId: volume.id },
+      search: (prev) => volumesSearchParams(prev),
       to: `/volumes/$volumeId/$action`,
-      params: { volumeId: volume.id, action: 'edit' },
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
   const handleResize = (volume: Volume) => {
     navigate({
+      params: { action: 'resize', volumeId: volume.id },
+      search: (prev) => volumesSearchParams(prev),
       to: `/volumes/$volumeId/$action`,
-      params: { volumeId: volume.id, action: 'resize' },
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
   const handleClone = (volume: Volume) => {
     navigate({
+      params: { action: 'clone', volumeId: volume.id },
+      search: (prev) => volumesSearchParams(prev),
       to: `/volumes/$volumeId/$action`,
-      params: { volumeId: volume.id, action: 'clone' },
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
   const handleAttach = (volume: Volume) => {
     navigate({
+      params: { action: 'attach', volumeId: volume.id },
+      search: (prev) => volumesSearchParams(prev),
       to: `/volumes/$volumeId/$action`,
-      params: { volumeId: volume.id, action: 'attach' },
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
   const handleUpgrade = (volume: Volume) => {
     navigate({
+      params: { action: 'upgrade', volumeId: volume.id },
+      search: (prev) => volumesSearchParams(prev),
       to: `/volumes/$volumeId/$action`,
-      params: { volumeId: volume.id, action: 'upgrade' },
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
   const resetSearch = () => {
     navigate({
-      to: '/volumes',
       search: (prev) => ({
-        page: prev.page,
+        ...volumesSearchParams(prev),
         query: undefined,
       }),
+      to: '/volumes',
     });
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     navigate({
-      to: '/volumes',
       search: (prev) => ({
-        page: prev.page,
+        ...volumesSearchParams(prev),
+        page: undefined,
         query: e.target.value,
       }),
+      to: '/volumes',
     });
   };
 
   const navigateToVolumes = () => {
     navigate({
+      search: (prev) => volumesSearchParams(prev),
       to: '/volumes',
-      search: (prev) => ({
-        page: prev.page,
-        query: prev.query,
-      }),
     });
   };
 
