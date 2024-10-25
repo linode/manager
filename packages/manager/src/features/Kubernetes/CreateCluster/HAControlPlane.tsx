@@ -114,7 +114,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
 
         <FormControlLabel
           checked={isAPLEnabled ? false : undefined}
-          control={<Radio />}
+          control={<Radio data-testid="ha-radio-button-no" />}
           label="No"
           name="no"
           value="no"

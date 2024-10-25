@@ -19,7 +19,7 @@ export const APLCopy = () => (
   <Typography>
     Add a pre-paved path to build, deploy, monitor and secure applications.
     <br />
-    <Link to="https://otomi.io">
+    <Link to="https://techdocs.akamai.com/cloud-computing/docs/application-platform">
       Learn more about Application Platform for LKE.
     </Link>
   </Typography>
@@ -34,7 +34,7 @@ export const ApplicationPlatform = (props: APLProps) => {
   };
 
   return (
-    <FormControl>
+    <FormControl data-testid="application-platform-form">
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
@@ -58,11 +58,16 @@ export const ApplicationPlatform = (props: APLProps) => {
           label={
             <Typography>Yes, enable Application platform for LKE.</Typography>
           }
-          control={<Radio />}
+          control={<Radio data-testid="apl-radio-button-yes" />}
           name="yes"
           value="yes"
         />
-        <FormControlLabel control={<Radio />} label="No" name="no" value="no" />
+        <FormControlLabel
+          control={<Radio data-testid="apl-radio-button-no" />}
+          label="No"
+          name="no"
+          value="no"
+        />
       </RadioGroup>
     </FormControl>
   );

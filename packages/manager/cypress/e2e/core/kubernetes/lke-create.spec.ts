@@ -326,6 +326,18 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     // Confirm that HA price updates dynamically once region selection is made.
     cy.contains(/\$.*\/month/).should('be.visible');
 
+    // enable HA mode when APL is enabled and disable HA mode field
+    cy.get('[data-testid="apl-radio-button-yes"]').should('be.visible').click();
+
+    cy.get('[data-testid="ha-radio-button-yes"]').should('be.checked');
+    cy.get('[data-testid="ha-radio-button-yes"]').should('be.disabled');
+    cy.get('[data-testid="ha-radio-button-no"]').should('be.disabled');
+
+    // disable APL should re-enable HA mode if APL was enabled before
+    cy.get('[data-testid="apl-radio-button-no"]').should('be.visible').click();
+    cy.get('[data-testid="ha-radio-button-yes"]').should('be.enabled');
+    cy.get('[data-testid="ha-radio-button-no"]').should('be.enabled').click();
+
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 
     cy.findByText('Kubernetes Version')
