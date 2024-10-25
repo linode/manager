@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import { Input } from '../Input/Input';
+import { Input } from '../Input';
 import { InputAdornment } from './InputAdornment';
 
 const meta: Meta<typeof InputAdornment> = {
