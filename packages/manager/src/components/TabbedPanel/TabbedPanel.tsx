@@ -1,5 +1,4 @@
-import { Box } from '@linode/ui';
-import { Tooltip } from '@linode/ui';
+import { Box, Tooltip } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';

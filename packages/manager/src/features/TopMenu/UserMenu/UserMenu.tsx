@@ -1,5 +1,4 @@
-import { Box } from '@linode/ui';
-import { Tooltip } from '@linode/ui';
+import { Box, Tooltip } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { styled, useMediaQuery } from '@mui/material';

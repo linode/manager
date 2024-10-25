@@ -1,5 +1,4 @@
-import { Tooltip } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, Tooltip } from '@linode/ui';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
