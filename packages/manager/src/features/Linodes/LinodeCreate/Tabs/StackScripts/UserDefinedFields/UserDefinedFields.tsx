@@ -1,9 +1,9 @@
+import { IconButton } from '@linode/ui';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import Info from 'src/assets/icons/info.svg';
 import { Box } from 'src/components/Box';
-import { IconButton } from 'src/components/IconButton';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';

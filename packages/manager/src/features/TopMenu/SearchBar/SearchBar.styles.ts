@@ -1,6 +1,5 @@
+import { IconButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { IconButton } from 'src/components/IconButton';
 
 export const StyledIconButton = styled(IconButton, {
   label: 'StyledIconButton',

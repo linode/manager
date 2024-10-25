@@ -1,10 +1,9 @@
+import { IconButton } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 import { ClickAwayListener } from 'src/components/ClickAwayListener';
-import { IconButton } from 'src/components/IconButton';
-import { TextFieldProps } from 'src/components/TextField';
 
 import {
   StyledButton,
@@ -14,6 +13,8 @@ import {
   StyledTextField,
   StyledTypography,
 } from './EditableInput.styles';
+
+import type { TextFieldProps } from 'src/components/TextField';
 
 export type EditableTextVariant = 'h1' | 'h2' | 'table-cell';
 
