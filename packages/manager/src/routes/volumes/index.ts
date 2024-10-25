@@ -1,16 +1,17 @@
 import { createRoute, redirect } from '@tanstack/react-router';
-import { VolumesRoute } from './VolumesRoute';
+
 import { rootRoute } from '../root';
+import { VolumesRoute } from './VolumesRoute';
 
 const volumeAction = {
   attach: 'attach',
+  clone: 'clone',
+  delete: 'delete',
   detach: 'detach',
+  details: 'details',
   edit: 'edit',
   resize: 'resize',
-  clone: 'clone',
   upgrade: 'upgrade',
-  delete: 'delete',
-  details: 'details',
 } as const;
 type VolumeAction = typeof volumeAction[keyof typeof volumeAction];
 
@@ -26,7 +27,6 @@ const volumesIndexRoute = createRoute({
   validateSearch: (search: { page?: number; query?: string }) => {
     return {
       page: search.page,
-      // pageSize: search.pageSize ? Number(search.pageSize) : undefined,
       query: search.query,
     };
   },
@@ -49,26 +49,26 @@ const volumeActionRoute = createRoute({
   beforeLoad: ({ params }) => {
     if (!(params.action in volumeAction)) {
       throw redirect({
-        to: '/volumes',
         search: (prev) => ({
           page: prev.page,
           query: prev.query,
         }),
+        to: '/volumes',
       });
     }
   },
   getParentRoute: () => volumesRoute,
-  path: '$volumeId/$action',
   parseParams: ({
+    action,
     volumeId,
-    action,
   }: {
-    volumeId: string;
     action: VolumeAction;
+    volumeId: string;
   }) => ({
-    volumeId: Number(volumeId),
     action,
+    volumeId: Number(volumeId),
   }),
+  path: '$volumeId/$action',
 }).lazy(() =>
   import('src/features/Volumes/VolumesLanding').then(
     (m) => m.volumesLandingLazyRoute
@@ -78,11 +78,11 @@ const volumeActionRoute = createRoute({
 const volumesCatchAllRoute = createRoute({
   beforeLoad: () => {
     throw redirect({
-      to: '/volumes',
       search: (prev) => ({
         page: prev.page,
         query: prev.query,
       }),
+      to: '/volumes',
     });
   },
   getParentRoute: () => volumesRoute,
