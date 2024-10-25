@@ -1,3 +1,4 @@
+import { Notice } from '@linode/ui';
 import Search from '@mui/icons-material/Search';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -8,7 +9,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Box } from 'src/components/Box';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { InputAdornment } from 'src/components/InputAdornment';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';

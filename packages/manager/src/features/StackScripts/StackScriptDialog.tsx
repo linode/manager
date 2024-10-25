@@ -1,15 +1,18 @@
-import { StackScript, getStackScript } from '@linode/api-v4/lib/stackscripts';
+import { getStackScript } from '@linode/api-v4/lib/stackscripts';
+import { Notice } from '@linode/ui';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
+import { connect } from 'react-redux';
 
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { Notice } from 'src/components/Notice/Notice';
 import { StackScript as _StackScript } from 'src/components/StackScript/StackScript';
-import { ApplicationState } from 'src/store';
 import { closeStackScriptDialog } from 'src/store/stackScriptDialog';
-import { MapState } from 'src/store/types';
+
+import type { StackScript } from '@linode/api-v4/lib/stackscripts';
+import type { MapDispatchToProps } from 'react-redux';
+import type { ApplicationState } from 'src/store';
+import type { MapState } from 'src/store/types';
 
 interface DispatchProps {
   closeDrawer: () => void;

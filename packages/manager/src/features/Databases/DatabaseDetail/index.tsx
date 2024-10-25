@@ -1,14 +1,15 @@
+import { Notice } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Tab, TabLinkList } from 'src/components/Tabs/TabLinkList';
+import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
@@ -22,10 +23,11 @@ import {
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsDatabasesEnabled } from '../utilities';
+
 import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
-import { BetaChip } from 'src/components/BetaChip/BetaChip';
-import { useIsDatabasesEnabled } from '../utilities';
+import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(
@@ -73,8 +75,8 @@ export const DatabaseDetail = () => {
   } = useEditableLabelState();
 
   const {
-    isDatabasesMonitorEnabled,
     isDatabasesMonitorBeta,
+    isDatabasesMonitorEnabled,
   } = useIsDatabasesEnabled();
 
   if (error) {
@@ -118,9 +120,9 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
+      chip: isDatabasesMonitorBeta ? <BetaChip /> : null,
       routeName: `/databases/${engine}/${id}/monitor`,
       title: 'Monitor',
-      chip: isDatabasesMonitorBeta ? <BetaChip /> : null,
     });
   }
 

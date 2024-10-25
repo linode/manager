@@ -1,7 +1,8 @@
 import {
-  PLACEMENT_GROUP_TYPES,
   PLACEMENT_GROUP_POLICIES,
+  PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
+import { Notice } from '@linode/ui';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -14,7 +15,6 @@ import { DescriptionList } from 'src/components/DescriptionList/DescriptionList'
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
-import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';

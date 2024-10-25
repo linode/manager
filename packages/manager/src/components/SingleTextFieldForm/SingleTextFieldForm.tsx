@@ -1,11 +1,13 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Box } from 'src/components/Box';
-import { Notice } from 'src/components/Notice/Notice';
-import { TextField, TextFieldProps } from 'src/components/TextField';
+import { TextField } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { TextFieldProps } from 'src/components/TextField';
 
 interface Props extends TextFieldProps {
   errorMessage?: string;

@@ -1,3 +1,4 @@
+import { Notice } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
@@ -6,7 +7,6 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import { validateIPs } from 'src/utilities/ipUtils';

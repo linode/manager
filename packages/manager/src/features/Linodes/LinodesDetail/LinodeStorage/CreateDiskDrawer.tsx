@@ -1,3 +1,4 @@
+import { Notice } from '@linode/ui';
 import {
   CreateLinodeDiskFromImageSchema,
   CreateLinodeDiskSchema,
@@ -12,7 +13,6 @@ import { Drawer } from 'src/components/Drawer';
 import { FormHelperText } from 'src/components/FormHelperText';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {

@@ -1,13 +1,12 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { Notice } from './Notice';
+import { expect, vi } from 'vitest';
 
 describe('Notice Component', () => {
   it('renders without errors with proper spacing', () => {
-    const { container } = renderWithTheme(<Notice />);
+    const { container } = render(<Notice />);
     const notice = container.firstChild;
 
     expect(notice).toHaveStyle('margin-bottom: 24px');
@@ -16,14 +15,14 @@ describe('Notice Component', () => {
   });
 
   it('renders with text', () => {
-    const { getByText } = renderWithTheme(<Notice text="This is a notice" />);
+    const { getByText } = render(<Notice text="This is a notice" />);
     const noticeText = getByText('This is a notice');
 
     expect(noticeText).toBeInTheDocument();
   });
 
   it('renders with children', () => {
-    const { getByText } = renderWithTheme(<Notice>This is a notice</Notice>);
+    const { getByText } = render(<Notice>This is a notice</Notice>);
     const noticeText = getByText('This is a notice');
 
     expect(noticeText).toBeInTheDocument();
@@ -31,7 +30,7 @@ describe('Notice Component', () => {
 
   it('handles click events', () => {
     const handleClick = vi.fn();
-    const { getByText } = renderWithTheme(
+    const { getByText } = render(
       <Notice onClick={handleClick} text="Click me" />
     );
     const noticeText = getByText('Click me');
@@ -41,13 +40,13 @@ describe('Notice Component', () => {
   });
 
   it('applies className prop', () => {
-    const { container } = renderWithTheme(<Notice className="custom-class" />);
+    const { container } = render(<Notice className="custom-class" />);
 
     expect(container.firstChild).toHaveClass('custom-class');
   });
 
   it('applies dataTestId props', () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = render(
       <Notice dataTestId="test-id" variant="success" />
     );
 
@@ -56,26 +55,26 @@ describe('Notice Component', () => {
   });
 
   it('applies variant prop', () => {
-    const { container } = renderWithTheme(<Notice variant="error" />);
+    const { container } = render(<Notice variant="error" />);
 
     expect(container.firstChild).toHaveStyle('border-left: 5px solid #d63c42;');
   });
 
   it('displays icon for important notices', () => {
-    const { getByTestId } = renderWithTheme(<Notice important />);
+    const { getByTestId } = render(<Notice important />);
     const icon = getByTestId('notice-important');
 
     expect(icon).toBeInTheDocument();
   });
 
   it('handles bypassValidation prop', () => {
-    const { container } = renderWithTheme(<Notice bypassValidation />);
+    const { container } = render(<Notice bypassValidation />);
 
     expect(container.firstChild).not.toHaveClass('error-for-scroll');
   });
 
   it('applies spacing props', () => {
-    const { container } = renderWithTheme(
+    const { container } = render(
       <Notice spacingBottom={8} spacingLeft={4} spacingTop={4} />
     );
     const notice = container.firstChild;
@@ -86,7 +85,7 @@ describe('Notice Component', () => {
   });
 
   it('applies typeProps to Typography component', () => {
-    const { container } = renderWithTheme(
+    const { container } = render(
       <Notice
         text="Styled Text"
         typeProps={{ style: { fontFamily: 'monospace' } }}

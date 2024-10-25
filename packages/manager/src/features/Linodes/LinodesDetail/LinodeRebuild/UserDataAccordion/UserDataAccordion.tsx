@@ -1,9 +1,9 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 

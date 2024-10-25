@@ -1,15 +1,14 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import Error from 'src/assets/icons/alert.svg';
-import Check from 'src/assets/icons/check.svg';
-import Warning from 'src/assets/icons/warning.svg';
-import { Typography } from 'src/components/Typography';
+import { Warning, Alert as Error, Check } from '../../assets/icons';
+
+import { Typography } from '@mui/material';
 
 import { useStyles } from './Notice.styles';
 
 import type { Grid2Props } from '@mui/material/Unstable_Grid2';
-import type { TypographyProps } from 'src/components/Typography';
+import type { TypographyProps } from '@mui/material';
 
 export type NoticeVariant =
   | 'error'

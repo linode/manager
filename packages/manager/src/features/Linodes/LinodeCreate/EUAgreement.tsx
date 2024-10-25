@@ -1,7 +1,7 @@
+import { Notice } from '@linode/ui';
 import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';

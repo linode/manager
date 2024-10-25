@@ -1,3 +1,4 @@
+import { Notice } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Button } from 'src/components/Button/Button';
 import { InputLabel } from 'src/components/InputLabel';
 import { LinkButton } from 'src/components/LinkButton';
-import { Notice } from 'src/components/Notice/Notice';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';

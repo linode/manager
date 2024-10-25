@@ -1,25 +1,14 @@
-import { Grant } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
-import { Linode } from '@linode/api-v4/lib/linodes';
-import {
-  StackScript,
-  UserDefinedField,
-  getStackScript,
-} from '@linode/api-v4/lib/stackscripts';
-import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import { getStackScript } from '@linode/api-v4/lib/stackscripts';
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Notice } from 'src/components/Notice/Notice';
-import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
+import { RenderGuard } from 'src/components/RenderGuard';
 import { Typography } from 'src/components/Typography';
-import {
-  WithProfileProps,
-  withProfile,
-} from 'src/containers/profile.container';
+import { withProfile } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 import { truncate } from 'src/utilities/truncate';
@@ -33,6 +22,17 @@ import {
 } from './SelectStackScriptPanel.styles';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
+
+import type { Grant } from '@linode/api-v4/lib/account';
+import type { Image } from '@linode/api-v4/lib/images';
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type {
+  StackScript,
+  UserDefinedField,
+} from '@linode/api-v4/lib/stackscripts';
+import type { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import type { RenderGuardProps } from 'src/components/RenderGuard';
+import type { WithProfileProps } from 'src/containers/profile.container';
 
 export interface ExtendedLinode extends Linode {
   heading: string;
@@ -76,6 +76,17 @@ class SelectStackScriptPanel extends React.Component<
   SelectStackScriptPanelProps,
   State
 > {
+  mounted: boolean = false;
+
+  resetStackScript = () => {
+    this.setState({ stackScript: undefined, stackScriptLoading: false });
+  };
+
+  state: State = {
+    stackScriptError: false,
+    stackScriptLoading: false,
+  };
+
   componentDidMount() {
     const selected = +getQueryParamFromQueryString(
       location.search,
@@ -187,17 +198,6 @@ class SelectStackScriptPanel extends React.Component<
       </StyledPanelPaper>
     );
   }
-
-  mounted: boolean = false;
-
-  resetStackScript = () => {
-    this.setState({ stackScript: undefined, stackScriptLoading: false });
-  };
-
-  state: State = {
-    stackScriptError: false,
-    stackScriptLoading: false,
-  };
 }
 
 export default compose<SelectStackScriptPanelProps, Props>(

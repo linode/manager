@@ -1,10 +1,9 @@
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import { Notice } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Hidden } from 'src/components/Hidden';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
@@ -14,6 +13,7 @@ import { PlanSelectionTable } from './PlanSelectionTable';
 
 import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 
 export interface PlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
