@@ -1,4 +1,4 @@
-import type { AccountSettings } from '@linode/api-v4';
+import type { AccountSettings, Params } from '@linode/api-v4';
 
 export type RouterContext = {
   accountSettings?: AccountSettings;
@@ -9,3 +9,8 @@ export type RouterContext = {
   isDatabasesEnabled?: boolean;
   isPlacementGroupsEnabled?: boolean;
 };
+
+export interface TableSearchParams extends Params {
+  order?: 'asc' | 'desc';
+  orderBy?: string;
+}
