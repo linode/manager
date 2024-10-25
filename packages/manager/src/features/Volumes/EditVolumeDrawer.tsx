@@ -53,7 +53,7 @@ export const EditVolumeDrawer = (props: Props) => {
     values,
   } = useFormik({
     enableReinitialize: true,
-    initialValues: { label: volume?.label, tags: volume?.tags },
+    initialValues: { label: volume?.label ?? '', tags: volume?.tags ?? [] },
     async onSubmit(values, { setErrors, setStatus }) {
       try {
         await updateVolume({

@@ -6,12 +6,7 @@ import {
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { createLazyRoute } from '@tanstack/react-router';
-import {
-  useNavigate,
-  useLocation,
-  useMatch,
-  useParams,
-} from '@tanstack/react-router';
+import { useNavigate, useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
@@ -53,38 +48,6 @@ export const VolumesLanding = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams({ strict: false });
-  const editRouteMatch = useMatch({
-    from: '/volumes/$volumeId/edit',
-    shouldThrow: false,
-  });
-  const detachRouteMatch = useMatch({
-    from: '/volumes/$volumeId/detach',
-    shouldThrow: false,
-  });
-  const detailsRouteMatch = useMatch({
-    from: '/volumes/$volumeId/details',
-    shouldThrow: false,
-  });
-  const attachRouteMatch = useMatch({
-    from: '/volumes/$volumeId/attach',
-    shouldThrow: false,
-  });
-  const cloneRouteMatch = useMatch({
-    from: '/volumes/$volumeId/clone',
-    shouldThrow: false,
-  });
-  const resizeRouteMatch = useMatch({
-    from: '/volumes/$volumeId/resize',
-    shouldThrow: false,
-  });
-  const upgradeRouteMatch = useMatch({
-    from: '/volumes/$volumeId/upgrade',
-    shouldThrow: false,
-  });
-  const deleteRouteMatch = useMatch({
-    from: '/volumes/$volumeId/delete',
-    shouldThrow: false,
-  });
   const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
@@ -122,85 +85,89 @@ export const VolumesLanding = () => {
 
   const handleDetach = (volume: Volume) => {
     navigate({
-      to: `/volumes/$volumeId/detach`,
-      params: { volumeId: volume.id },
+      to: `/volumes/$volumeId/$action`,
+      params: { volumeId: volume.id, action: 'detach' },
       search: (prev) => ({
-        page: prev.page ?? 1,
-        query: prev.query ?? '',
+        page: prev.page,
+        query: prev.query,
       }),
     });
   };
 
   const handleDelete = (volume: Volume) => {
     navigate({
-      to: `/volumes/$volumeId/delete`,
-      params: { volumeId: volume.id },
+      to: `/volumes/$volumeId/$action`,
+      params: { volumeId: volume.id, action: 'delete' },
       search: (prev) => ({
-        page: prev.page ?? 1,
-        query: prev.query ?? '',
+        page: prev.page,
+        query: prev.query,
       }),
     });
   };
 
   const handleDetails = (volume: Volume) => {
     navigate({
-      to: `/volumes/$volumeId/details`,
-      params: { volumeId: volume.id },
+      to: `/volumes/$volumeId/$action`,
+      params: { volumeId: volume.id, action: 'details' },
       search: (prev) => ({
-        page: prev.page ?? 1,
-        query: prev.query ?? '',
+        page: prev.page,
+        query: prev.query,
       }),
     });
   };
 
   const handleEdit = (volume: Volume) => {
     navigate({
-      to: `/volumes/$volumeId/edit`,
-      params: { volumeId: volume.id },
+      to: `/volumes/$volumeId/$action`,
+      params: { volumeId: volume.id, action: 'edit' },
       search: (prev) => ({
-        page: prev.page ?? 1,
-        query: prev.query ?? '',
+        page: prev.page,
+        query: prev.query,
       }),
     });
   };
 
   const handleResize = (volume: Volume) => {
     navigate({
-      to: `/volumes/$volumeId/resize`,
-      params: { volumeId: volume.id },
+      to: `/volumes/$volumeId/$action`,
+      params: { volumeId: volume.id, action: 'resize' },
       search: (prev) => ({
-        page: prev.page ?? 1,
-        query: prev.query ?? '',
+        page: prev.page,
+        query: prev.query,
       }),
     });
   };
 
   const handleClone = (volume: Volume) => {
     navigate({
-      to: `/volumes/$volumeId/clone`,
-      params: { volumeId: volume.id },
+      to: `/volumes/$volumeId/$action`,
+      params: { volumeId: volume.id, action: 'clone' },
       search: (prev) => ({
-        page: prev.page ?? 1,
-        query: prev.query ?? '',
+        page: prev.page,
+        query: prev.query,
       }),
     });
   };
 
   const handleAttach = (volume: Volume) => {
     navigate({
-      to: `/volumes/$volumeId/attach`,
-      params: { volumeId: volume.id },
+      to: `/volumes/$volumeId/$action`,
+      params: { volumeId: volume.id, action: 'attach' },
       search: (prev) => ({
-        page: prev.page ?? 1,
-        query: prev.query ?? '',
+        page: prev.page,
+        query: prev.query,
       }),
     });
   };
 
   const handleUpgrade = (volume: Volume) => {
     navigate({
-      to: `/volumes/$volumeId/upgrade`,
-      params: { volumeId: volume.id },
+      to: `/volumes/$volumeId/$action`,
+      params: { volumeId: volume.id, action: 'upgrade' },
+      search: (prev) => ({
+        page: prev.page,
+        query: prev.query,
+      }),
     });
   };
 
@@ -208,7 +175,7 @@ export const VolumesLanding = () => {
     navigate({
       to: '/volumes',
       search: (prev) => ({
-        page: prev.page ?? 1,
+        page: prev.page,
         query: undefined,
       }),
     });
@@ -217,10 +184,10 @@ export const VolumesLanding = () => {
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     navigate({
       to: '/volumes',
-      search: {
-        page: 1,
+      search: (prev) => ({
+        page: prev.page,
         query: e.target.value,
-      },
+      }),
     });
   };
 
@@ -228,8 +195,8 @@ export const VolumesLanding = () => {
     navigate({
       to: '/volumes',
       search: (prev) => ({
-        page: prev.page ?? 1,
-        query: prev.query ?? '',
+        page: prev.page,
+        query: prev.query,
       }),
     });
   };
@@ -369,42 +336,42 @@ export const VolumesLanding = () => {
       />
       <AttachVolumeDrawer
         onClose={navigateToVolumes}
-        open={Boolean(attachRouteMatch)}
+        open={params.action === 'attach'}
         volume={selectedVolume}
       />
       <VolumeDetailsDrawer
         onClose={navigateToVolumes}
-        open={Boolean(detailsRouteMatch)}
+        open={params.action === 'details'}
         volume={selectedVolume}
       />
       <EditVolumeDrawer
         onClose={navigateToVolumes}
-        open={Boolean(editRouteMatch)}
+        open={params.action === 'edit'}
         volume={selectedVolume}
       />
       <ResizeVolumeDrawer
         onClose={navigateToVolumes}
-        open={Boolean(resizeRouteMatch)}
+        open={params.action === 'resize'}
         volume={selectedVolume}
       />
       <CloneVolumeDrawer
         onClose={navigateToVolumes}
-        open={Boolean(cloneRouteMatch)}
+        open={params.action === 'clone'}
         volume={selectedVolume}
       />
       <DetachVolumeDialog
         onClose={navigateToVolumes}
-        open={Boolean(detachRouteMatch)}
+        open={params.action === 'detach'}
         volume={selectedVolume}
       />
       <UpgradeVolumeDialog
         onClose={navigateToVolumes}
-        open={Boolean(upgradeRouteMatch)}
+        open={params.action === 'upgrade'}
         volume={selectedVolume}
       />
       <DeleteVolumeDialog
         onClose={navigateToVolumes}
-        open={Boolean(deleteRouteMatch)}
+        open={params.action === 'delete'}
         volume={selectedVolume}
       />
     </>
