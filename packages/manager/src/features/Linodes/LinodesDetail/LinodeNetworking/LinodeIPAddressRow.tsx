@@ -13,7 +13,6 @@ import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 import { useAllIPsQuery } from 'src/queries/networking/networking';
 import { usePreferences } from 'src/queries/profile/preferences';
-import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
@@ -78,7 +77,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
         <CopyTooltip
           copyableText
           disabled={isVPCOnlyLinode}
-          displayText={isMaskedIP ? createMaskedText(address) : undefined}
+          masked={isMaskedIP}
           text={address}
         />
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}

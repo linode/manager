@@ -6,7 +6,6 @@ import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { VisibilityTooltip } from 'src/components/VisibilityTooltip/VisibilityTooltip';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { usePreferences } from 'src/queries/profile/preferences';
-import { createMaskedText } from 'src/utilities/createMaskedText';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 import { tail } from 'src/utilities/tail';
 
@@ -117,7 +116,6 @@ export const IPAddress = (props: IPAddressProps) => {
   };
 
   const renderIP = (ip: string) => {
-    const displayIp = isMasked ? createMaskedText(ip) : ip;
     const handlers = showTooltipOnIpHover
       ? {
           onMouseEnter: handleMouseEnter,
@@ -134,7 +132,7 @@ export const IPAddress = (props: IPAddressProps) => {
           copyableText
           data-qa-copy-ip-text
           disabled={disabled}
-          displayText={displayIp}
+          masked={isMasked}
           text={ip}
         />
         {renderCopyIcon(ip)}

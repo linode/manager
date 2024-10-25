@@ -21,6 +21,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 interface AccessTableRow {
   displayText?: string;
   heading?: string;
+  isMasked?: boolean;
   text: null | string;
 }
 
@@ -62,7 +63,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                       <CopyTooltip
                         copyableText
                         disabled={isDisabled}
-                        displayText={thisRow.displayText}
+                        masked={thisRow.isMasked}
                         text={thisRow.text}
                       />
                     </StyledGradientDiv>

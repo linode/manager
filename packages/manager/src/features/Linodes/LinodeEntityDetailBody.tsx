@@ -15,7 +15,6 @@ import { Typography } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
-import { createMaskedText } from 'src/utilities/createMaskedText';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -193,16 +192,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               }
               rows={[
                 {
-                  displayText: preferences?.maskSensitiveData
-                    ? createMaskedText(firstAddress)
-                    : undefined,
+                  isMasked: preferences?.maskSensitiveData,
                   text: firstAddress,
                 },
                 {
-                  displayText:
-                    secondAddress && preferences?.maskSensitiveData
-                      ? createMaskedText(secondAddress)
-                      : undefined,
+                  isMasked: preferences?.maskSensitiveData,
                   text: secondAddress,
                 },
               ]}
@@ -214,21 +208,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             <AccessTable
               rows={[
                 {
-                  displayText: preferences?.maskSensitiveData
-                    ? createMaskedText(sshLink(ipv4[0]))
-                    : undefined,
                   heading: 'SSH Access',
+                  isMasked: preferences?.maskSensitiveData,
                   text: sshLink(ipv4[0]),
                 },
                 {
-                  displayText:
-                    !linodeIsInDistributedRegion &&
-                    preferences?.maskSensitiveData
-                      ? createMaskedText(
-                          lishLink(username, region, linodeLabel)
-                        )
-                      : undefined,
                   heading: 'LISH Console via SSH',
+                  isMasked: !linodeIsInDistributedRegion
+                    ? preferences?.maskSensitiveData
+                    : false,
                   text: linodeIsInDistributedRegion
                     ? 'N/A'
                     : lishLink(username, region, linodeLabel),

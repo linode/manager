@@ -4,6 +4,7 @@ import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import FileCopy from 'src/assets/icons/copy.svg';
+import { createMaskedText } from 'src/utilities/createMaskedText';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { TooltipProps } from '@linode/ui';
@@ -24,9 +25,10 @@ export interface CopyTooltipProps {
    */
   disabled?: boolean;
   /**
-   * The text to display to the user in cases where this differs from the text copied to clipboard.
+   * If true, the text will be masked with dots when displayed. It will still be copyable.
+   * @default false
    */
-  displayText?: string;
+  masked?: boolean;
   /**
    * Callback to be executed when the icon is clicked.
    */
@@ -53,14 +55,13 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
     className,
     copyableText,
     disabled,
-    displayText,
+    masked,
     onClickCallback,
     placement,
     text,
   } = props;
 
-  // Ensure we render displayText when text has been masked.
-  const _text = displayText ? displayText : text;
+  const displayText = masked ? createMaskedText(text) : text;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -81,7 +82,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       type="button"
       {...props}
     >
-      {copyableText ? _text : <FileCopy />}
+      {copyableText ? displayText : <FileCopy />}
     </StyledIconButton>
   );
 
