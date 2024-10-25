@@ -7,7 +7,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
-import { VisibilityTooltip } from 'src/components/VisibilityTooltip/VisibilityTooltip';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
@@ -56,10 +55,6 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   const { data: ips } = useLinodeIPsQuery(linodeId);
   const { data: preferences } = usePreferences();
 
-  const [isMaskedIP, setisMaskedIP] = React.useState(
-    preferences?.maskSensitiveData
-  );
-
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
 
@@ -77,16 +72,10 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
         <CopyTooltip
           copyableText
           disabled={isVPCOnlyLinode}
-          masked={isMaskedIP}
+          masked={Boolean(preferences?.maskSensitiveData)}
           text={address}
         />
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
-        {preferences?.maskSensitiveData && (
-          <VisibilityTooltip
-            handleClick={() => setisMaskedIP(!isMaskedIP)}
-            isVisible={!isMaskedIP}
-          />
-        )}
       </TableCell>
       <TableCell
         data-qa-ip-address

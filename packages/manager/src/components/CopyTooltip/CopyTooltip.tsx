@@ -8,6 +8,7 @@ import { createMaskedText } from 'src/utilities/createMaskedText';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { TooltipProps } from '@linode/ui';
+import { VisibilityTooltip } from '../VisibilityTooltip/VisibilityTooltip';
 
 export interface CopyTooltipProps {
   /**
@@ -50,7 +51,6 @@ export interface CopyTooltipProps {
  */
 
 export const CopyTooltip = (props: CopyTooltipProps) => {
-  const [copied, setCopied] = React.useState<boolean>(false);
   const {
     className,
     copyableText,
@@ -61,7 +61,10 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
     text,
   } = props;
 
-  const displayText = masked ? createMaskedText(text) : text;
+  const [copied, setCopied] = React.useState<boolean>(false);
+  const [isTextMasked, setIsTextMasked] = React.useState(masked);
+
+  const displayText = isTextMasked ? createMaskedText(text) : text;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -91,14 +94,22 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   }
 
   return (
-    <Tooltip
-      className="copy-tooltip"
-      data-qa-copied
-      placement={placement ?? 'top'}
-      title={copied ? 'Copied!' : 'Copy'}
-    >
-      {CopyButton}
-    </Tooltip>
+    <>
+      <Tooltip
+        className="copy-tooltip"
+        data-qa-copied
+        placement={placement ?? 'top'}
+        title={copied ? 'Copied!' : 'Copy'}
+      >
+        {CopyButton}
+      </Tooltip>
+      {masked && (
+        <VisibilityTooltip
+          handleClick={() => setIsTextMasked(!isTextMasked)}
+          isVisible={!isTextMasked}
+        />
+      )}
+    </>
   );
 };
 
