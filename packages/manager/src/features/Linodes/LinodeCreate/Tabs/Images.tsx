@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
-import { Box } from 'src/components/Box';
 import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelectv2/utilities';
 import { Link } from 'src/components/Link';

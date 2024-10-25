@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Box } from '@linode/ui';
 import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/constants';

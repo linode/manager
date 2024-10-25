@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';

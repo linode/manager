@@ -1,7 +1,6 @@
+import { Box } from '@linode/ui';
 import { visuallyHidden } from '@mui/utils';
 import * as React from 'react';
-
-import { Box } from 'src/components/Box';
 
 import { getAccessibleTimestamp } from './utils';
 

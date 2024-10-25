@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { imageFactory } from 'src/factories';
 import { getImageGroup } from 'src/utilities/images';
 

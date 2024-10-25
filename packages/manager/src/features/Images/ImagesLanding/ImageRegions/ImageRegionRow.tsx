@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import { Tooltip } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
 import { IconButton } from 'src/components/IconButton';
 import { Stack } from 'src/components/Stack';

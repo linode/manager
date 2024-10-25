@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
