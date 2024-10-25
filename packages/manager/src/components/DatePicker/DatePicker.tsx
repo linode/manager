@@ -1,20 +1,20 @@
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { TextField } from 'src/components/TextField';
 
+import type { DatePickerProps as MuiDatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import type { DateTime } from 'luxon';
 import type { TextFieldProps } from 'src/components/TextField';
 
-interface DatePickerProps {
-  /** If true, disables selecting future dates. Defaults to false. */
-  disableFuture?: boolean;
-  /** If true, disables selecting past dates. Defaults to false. */
-  disablePast?: boolean;
+export interface DatePickerProps
+  extends Omit<MuiDatePickerProps<DateTime>, 'onChange' | 'value'> {
   /** Error text to display below the input */
   errorText?: string;
+  /** Format of the date when rendered in the input field. */
+  format?: string;
   /** Helper text to display below the input */
   helperText?: string;
   /** Label to display for the date picker input */
@@ -30,23 +30,17 @@ interface DatePickerProps {
 }
 
 export const DatePicker = ({
-  disableFuture = false,
-  disablePast = false,
   errorText,
-  helperText,
+  format = 'yyyy-MM-dd',
+  helperText = '',
   label = 'Select a date',
   onChange,
-  placeholder = 'Select a date',
+  placeholder = 'Pick a date',
   textFieldProps,
-  value,
+  value = null,
   ...props
 }: DatePickerProps) => {
-  const [selectedDate, setSelectedDate] = useState<DateTime | null>(
-    value || null
-  );
-
   const onChangeHandler = (newDate: DateTime | null) => {
-    setSelectedDate(newDate);
     if (onChange) {
       onChange(newDate);
     }
@@ -55,25 +49,24 @@ export const DatePicker = ({
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <MuiDatePicker
-        disableFuture={disableFuture}
-        disablePast={disablePast}
-        label={label}
+        format={format}
         onChange={onChangeHandler}
-        value={selectedDate}
+        value={value}
         {...props}
-        // Customize the TextField using slotProps for the default MUI TextField
         slotProps={{
           textField: {
-            component: (inputProps) => (
-              <TextField
-                {...inputProps}
-                error={Boolean(errorText)}
-                helperText={helperText}
-                placeholder={placeholder}
-                {...textFieldProps}
-              />
-            ),
+            ...textFieldProps,
+            InputProps: {
+              ...textFieldProps?.InputProps,
+            },
+            error: Boolean(errorText),
+            helperText,
+            label,
+            placeholder,
           },
+        }}
+        slots={{
+          textField: TextField, // Use custom TextField
         }}
       />
     </LocalizationProvider>
