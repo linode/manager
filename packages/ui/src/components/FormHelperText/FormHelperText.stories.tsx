@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import { FormControl } from './FormControl';
+import { FormControl } from '../FormControl/FormControl';
 import { FormHelperText } from './FormHelperText';
-import { Input } from './Input';
-import { InputLabel } from './InputLabel';
+import { Input } from '../Input/Input';
+import { InputLabel } from '../InputLabel/InputLabel';
 
 const meta: Meta<typeof FormHelperText> = {
   component: FormHelperText,
