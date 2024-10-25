@@ -89,11 +89,12 @@ module.exports = {
     {
       files: [
         // for each new features added to the migration router, add its directory here
-        'src/features/Betas/*',
+        'src/features/Betas/**/*',
+        'src/features/Volumes/**/*',
       ],
       rules: {
         'no-restricted-imports': [
-          'error',
+          'warn',
           {
             paths: [
               {

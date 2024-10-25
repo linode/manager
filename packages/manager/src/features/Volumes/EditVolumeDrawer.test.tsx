@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { accountFactory, volumeFactory } from 'src/factories';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { EditVolumeDrawer } from './EditVolumeDrawer';
 
@@ -24,7 +24,7 @@ describe('EditVolumeDrawer', () => {
       })
     );
 
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithThemeAndRouter(
       <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: true },
@@ -48,7 +48,7 @@ describe('EditVolumeDrawer', () => {
       })
     );
 
-    const { queryByRole } = renderWithTheme(
+    const { queryByRole } = await renderWithThemeAndRouter(
       <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: false },
@@ -69,7 +69,7 @@ describe('EditVolumeDrawer', () => {
       })
     );
 
-    const { queryByRole } = renderWithTheme(
+    const { queryByRole } = await renderWithThemeAndRouter(
       <EditVolumeDrawer onClose={vi.fn} open volume={volume} />,
       {
         flags: { blockStorageEncryption: true },

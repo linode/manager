@@ -1,7 +1,12 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { createLazyRoute } from '@tanstack/react-router';
+import {
+  useNavigate,
+  useLocation,
+  useMatch,
+  useParams,
+} from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -41,17 +46,48 @@ import { VolumeTableRow } from './VolumeTableRow';
 import type { Filter, Volume } from '@linode/api-v4';
 
 const preferenceKey = 'volumes';
-const searchQueryKey = 'query';
 
 export const VolumesLanding = () => {
-  const history = useHistory();
-  const location = useLocation<{ volume: Volume | undefined }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = useParams({ strict: false });
+  const editRouteMatch = useMatch({
+    from: '/volumes/$volumeId/edit',
+    shouldThrow: false,
+  });
+  const detachRouteMatch = useMatch({
+    from: '/volumes/$volumeId/detach',
+    shouldThrow: false,
+  });
+  const detailsRouteMatch = useMatch({
+    from: '/volumes/$volumeId/details',
+    shouldThrow: false,
+  });
+  const attachRouteMatch = useMatch({
+    from: '/volumes/$volumeId/attach',
+    shouldThrow: false,
+  });
+  const cloneRouteMatch = useMatch({
+    from: '/volumes/$volumeId/clone',
+    shouldThrow: false,
+  });
+  const resizeRouteMatch = useMatch({
+    from: '/volumes/$volumeId/resize',
+    shouldThrow: false,
+  });
+  const upgradeRouteMatch = useMatch({
+    from: '/volumes/$volumeId/upgrade',
+    shouldThrow: false,
+  });
+  const deleteRouteMatch = useMatch({
+    from: '/volumes/$volumeId/delete',
+    shouldThrow: false,
+  });
   const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
   });
-  const queryParams = new URLSearchParams(location.search);
-  const volumeLabelFromParam = queryParams.get(searchQueryKey) ?? '';
+  const query = location.search.query ?? '';
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -64,8 +100,8 @@ export const VolumesLanding = () => {
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
-    ...(volumeLabelFromParam && {
-      label: { '+contains': volumeLabelFromParam },
+    ...(query && {
+      label: { '+contains': query },
     }),
   };
 
@@ -80,70 +116,120 @@ export const VolumesLanding = () => {
   const {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
-
-  const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
-  const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(
-    Boolean(location.state?.volume)
-  );
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
-  const [isResizeDrawerOpen, setIsResizeDrawerOpen] = React.useState(false);
-  const [isCloneDrawerOpen, setIsCloneDrawerOpen] = React.useState(false);
-  const [isAttachDrawerOpen, setIsAttachDrawerOpen] = React.useState(false);
-  const [isDetachDialogOpen, setIsDetachDialogOpen] = React.useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = React.useState(false);
-
-  const selectedVolume = volumes?.data.find((v) => v.id === selectedVolumeId);
+  const selectedVolume = volumes?.data.find((v) => v.id === params.volumeId);
 
   const handleDetach = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setIsDetachDialogOpen(true);
+    navigate({
+      to: `/volumes/$volumeId/detach`,
+      params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   const handleDelete = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setIsDeleteDialogOpen(true);
+    navigate({
+      to: `/volumes/$volumeId/delete`,
+      params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   const handleDetails = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setIsDetailsDrawerOpen(true);
+    navigate({
+      to: `/volumes/$volumeId/details`,
+      params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   const handleEdit = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setIsEditDrawerOpen(true);
+    navigate({
+      to: `/volumes/$volumeId/edit`,
+      params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   const handleResize = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setIsResizeDrawerOpen(true);
+    navigate({
+      to: `/volumes/$volumeId/resize`,
+      params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   const handleClone = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setIsCloneDrawerOpen(true);
+    navigate({
+      to: `/volumes/$volumeId/clone`,
+      params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   const handleAttach = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setIsAttachDrawerOpen(true);
+    navigate({
+      to: `/volumes/$volumeId/attach`,
+      params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   const handleUpgrade = (volume: Volume) => {
-    setSelectedVolumeId(volume.id);
-    setIsUpgradeDialogOpen(true);
+    navigate({
+      to: `/volumes/$volumeId/upgrade`,
+      params: { volumeId: volume.id },
+    });
   };
 
   const resetSearch = () => {
-    queryParams.delete(searchQueryKey);
-    history.push({ search: queryParams.toString() });
+    navigate({
+      to: '/volumes',
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: undefined,
+      }),
+    });
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    queryParams.delete('page');
-    queryParams.set(searchQueryKey, e.target.value);
-    history.push({ search: queryParams.toString() });
+    navigate({
+      to: '/volumes',
+      search: {
+        page: 1,
+        query: e.target.value,
+      },
+    });
+  };
+
+  const navigateToVolumes = () => {
+    navigate({
+      to: '/volumes',
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   if (isLoading) {
@@ -160,7 +246,7 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0 && !volumeLabelFromParam) {
+  if (volumes?.results === 0 && !query) {
     return <VolumesLandingEmptyState />;
   }
 
@@ -169,7 +255,7 @@ export const VolumesLanding = () => {
       <DocumentTitleSegment segment="Volumes" />
       <LandingHeader
         breadcrumbProps={{
-          pathname: location.pathname,
+          pathname: 'Volumes',
           removeCrumbX: 1,
         }}
         buttonDataAttrs={{
@@ -182,12 +268,12 @@ export const VolumesLanding = () => {
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
-        onButtonClick={() => history.push('/volumes/create')}
+        onButtonClick={() => navigate({ to: '/volumes/create' })}
         title="Volumes"
       />
       <TextField
         InputProps={{
-          endAdornment: volumeLabelFromParam && (
+          endAdornment: query && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
 
@@ -209,7 +295,7 @@ export const VolumesLanding = () => {
         label="Search"
         placeholder="Search Volumes"
         sx={{ mb: 2 }}
-        value={volumeLabelFromParam}
+        value={query}
       />
       <Table>
         <TableHead>
@@ -280,48 +366,43 @@ export const VolumesLanding = () => {
         pageSize={pagination.pageSize}
       />
       <AttachVolumeDrawer
-        onClose={() => setIsAttachDrawerOpen(false)}
-        open={isAttachDrawerOpen}
+        onClose={navigateToVolumes}
+        open={Boolean(attachRouteMatch)}
         volume={selectedVolume}
       />
       <VolumeDetailsDrawer
-        onClose={() => {
-          setIsDetailsDrawerOpen(false);
-          if (location.state?.volume) {
-            window.history.replaceState(null, '');
-          }
-        }}
-        open={isDetailsDrawerOpen}
-        volume={selectedVolume ?? location.state?.volume}
+        onClose={navigateToVolumes}
+        open={Boolean(detailsRouteMatch)}
+        volume={selectedVolume}
       />
       <EditVolumeDrawer
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
+        onClose={navigateToVolumes}
+        open={Boolean(editRouteMatch)}
         volume={selectedVolume}
       />
       <ResizeVolumeDrawer
-        onClose={() => setIsResizeDrawerOpen(false)}
-        open={isResizeDrawerOpen}
+        onClose={navigateToVolumes}
+        open={Boolean(resizeRouteMatch)}
         volume={selectedVolume}
       />
       <CloneVolumeDrawer
-        onClose={() => setIsCloneDrawerOpen(false)}
-        open={isCloneDrawerOpen}
+        onClose={navigateToVolumes}
+        open={Boolean(cloneRouteMatch)}
         volume={selectedVolume}
       />
       <DetachVolumeDialog
-        onClose={() => setIsDetachDialogOpen(false)}
-        open={isDetachDialogOpen}
+        onClose={navigateToVolumes}
+        open={Boolean(detachRouteMatch)}
         volume={selectedVolume}
       />
       <UpgradeVolumeDialog
-        onClose={() => setIsUpgradeDialogOpen(false)}
-        open={isUpgradeDialogOpen}
+        onClose={navigateToVolumes}
+        open={Boolean(upgradeRouteMatch)}
         volume={selectedVolume}
       />
       <DeleteVolumeDialog
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
+        onClose={navigateToVolumes}
+        open={Boolean(deleteRouteMatch)}
         volume={selectedVolume}
       />
     </>

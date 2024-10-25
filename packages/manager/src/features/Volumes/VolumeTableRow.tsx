@@ -1,5 +1,7 @@
+// import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
@@ -39,14 +41,14 @@ interface Props {
 
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
+  // const navigate = useNavigate();
+  const history = useHistory();
   const {
     handlers,
     isBlockStorageEncryptionFeatureEnabled,
     isDetailsPageRow,
     volume,
   } = props;
-
-  const history = useHistory();
 
   const { data: regions } = useRegionsQuery();
   const { data: notifications } = useNotificationsQuery();
@@ -92,7 +94,14 @@ export const VolumeTableRow = React.memo((props: Props) => {
     if (volume.linode_id !== null) {
       // If the volume is attached to a Linode, we force the user
       // to upgrade all of the Linode's volumes at once from the Linode details page
+
       history.push(`/linodes/${volume.linode_id}/storage?upgrade=true`);
+      // TODO: Tanstack Router - update hook
+      // navigate({
+      //   params: { linodeId: volume.linode_id },
+      //   search: { upgrade: 'true' },
+      //   to: '/linodes/$linodeId/storage',
+      // });
     } else {
       handlers.handleUpgrade();
     }
