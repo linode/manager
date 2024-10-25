@@ -29,7 +29,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '& :hover, & :focus': {
       backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      color: theme.colorTokens.Neutrals.White,
     },
     '& > span': {
       padding: 2,

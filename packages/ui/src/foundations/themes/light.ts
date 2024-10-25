@@ -131,7 +131,7 @@ const iconCircleAnimation = {
     transition: 'fill .2s ease-in-out .2s',
   },
   '& .insidePath *': {
-    stroke: 'white',
+    stroke: Color.Neutrals.White,
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
   },
   '& .outerCircle': {
@@ -147,7 +147,7 @@ const iconCircleHoverEffect = {
     fill: primaryColors.main,
   },
   '& .insidePath *': {
-    stroke: 'white',
+    stroke: Color.Neutrals.White,
   },
 };
 
@@ -1134,7 +1134,7 @@ export const lightTheme: ThemeOptions = {
     MuiSnackbarContent: {
       styleOverrides: {
         root: {
-          backgroundColor: 'white',
+          backgroundColor: Color.Neutrals.White,
           borderLeft: `6px solid transparent`,
           borderRadius: 4,
           boxShadow: `0 0 5px ${Color.Neutrals[30]}`,
@@ -1156,7 +1156,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           '& $checked': {
             '& .square': {
-              fill: 'white',
+              fill: Color.Neutrals.White,
             },
             // color: `${primaryColors.main} !important`,
             '& input': {
@@ -1175,7 +1175,7 @@ export const lightTheme: ThemeOptions = {
                 borderColor: Color.Neutrals[40],
               },
               '& .square': {
-                fill: 'white',
+                fill: Color.Neutrals.White,
               },
             },
           },
@@ -1188,7 +1188,7 @@ export const lightTheme: ThemeOptions = {
             width: 16,
           },
           '& .square': {
-            fill: 'white',
+            fill: Color.Neutrals.White,
             transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           },
           '&:hover, &:focus': {
@@ -1406,7 +1406,7 @@ export const lightTheme: ThemeOptions = {
           opacity: 1,
         },
         tooltip: {
-          backgroundColor: 'white',
+          backgroundColor: Color.Neutrals.White,
           borderRadius: 0,
           boxShadow: `0 0 5px ${Color.Neutrals[50]}`, // TODO: This was the closest color according to our palette
           [breakpoints.up('sm')]: {

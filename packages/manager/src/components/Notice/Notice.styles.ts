@@ -16,7 +16,7 @@ export const useStyles = makeStyles<
     borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   icon: {
-    color: 'white',
+    color: theme.colorTokens.Neutrals.White,
     left: -25, // This value must be static regardless of theme selection
     position: 'absolute',
   },
