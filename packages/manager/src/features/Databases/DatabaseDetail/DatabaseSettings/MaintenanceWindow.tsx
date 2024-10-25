@@ -260,9 +260,9 @@ export const MaintenanceWindow = (props: Props) => {
                   )}
                   disabled={disabled}
                   isClearable={false}
-                  label="Time of Day (UTC)"
+                  label="Time"
                   menuPlacement="top"
-                  name="Time of Day"
+                  name="Time"
                   noMarginTop
                   options={hourSelectionMap}
                   placeholder="Choose a time"
