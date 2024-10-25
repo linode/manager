@@ -1,9 +1,12 @@
 import * as React from 'react';
 
 import { databaseFactory } from 'src/factories/databases';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseSettings from './DatabaseSettings';
+import * as utils from '../../utilities';
+
+beforeAll(() => mockMatchMedia());
 
 describe('DatabaseSettings Component', () => {
   const database = databaseFactory.build();
@@ -69,5 +72,107 @@ describe('DatabaseSettings Component', () => {
     expect(queryByText('Monthly')).toBeNull();
     expect(queryByText('Weekly')).toBeNull();
     expect(queryByText('Set a Weekly Maintenance Window')).toBeTruthy();
+  });
+
+  it('should render suspend option when isDatabasesV2GA flag is true', async () => {
+    const flags = {
+      dbaasV2: {
+        beta: false,
+        enabled: true,
+      },
+    };
+    const mockNewDatabase = databaseFactory.build({
+      platform: 'rdbms-default',
+    });
+
+    const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
+    spy.mockReturnValue({
+      isDatabasesEnabled: true,
+      isDatabasesV1Enabled: true,
+      isDatabasesV2Beta: false,
+      isDatabasesV2Enabled: true,
+      isDatabasesV2GA: true,
+      isUserExistingBeta: false,
+      isUserNewBeta: false,
+    });
+
+    const { container, getAllByRole } = renderWithTheme(
+      <DatabaseSettings database={mockNewDatabase} />,
+      { flags }
+    );
+    const paper = container.querySelector('.MuiPaper-root');
+    expect(paper).not.toBeNull();
+    const headings = getAllByRole('heading');
+
+    expect(headings[0].textContent).toBe('Suspend Cluster');
+    expect(headings[1].textContent).toBe('Access Controls');
+    expect(headings[2].textContent).toBe('Reset Root Password');
+    expect(headings[3].textContent).toBe('Delete Cluster');
+  });
+
+  it('should disable suspend when database status is not active', async () => {
+    const flags = {
+      dbaasV2: {
+        beta: false,
+        enabled: true,
+      },
+    };
+    const mockNewDatabase = databaseFactory.build({
+      platform: 'rdbms-default',
+      status: 'resizing',
+    });
+
+    const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
+    spy.mockReturnValue({
+      isDatabasesEnabled: true,
+      isDatabasesV1Enabled: true,
+      isDatabasesV2Beta: false,
+      isDatabasesV2Enabled: true,
+      isDatabasesV2GA: true,
+      isUserExistingBeta: false,
+      isUserNewBeta: false,
+    });
+
+    const { getAllByText } = renderWithTheme(
+      <DatabaseSettings database={mockNewDatabase} />,
+      { flags }
+    );
+
+    const suspendElements = getAllByText(/Suspend Cluster/i);
+    const suspendButton = suspendElements[1].closest('button');
+    expect(suspendButton).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should enable suspend when database status is active', async () => {
+    const flags = {
+      dbaasV2: {
+        beta: false,
+        enabled: true,
+      },
+    };
+    const mockNewDatabase = databaseFactory.build({
+      platform: 'rdbms-default',
+      status: 'active',
+    });
+
+    const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
+    spy.mockReturnValue({
+      isDatabasesEnabled: true,
+      isDatabasesV1Enabled: true,
+      isDatabasesV2Beta: false,
+      isDatabasesV2Enabled: true,
+      isDatabasesV2GA: true,
+      isUserExistingBeta: false,
+      isUserNewBeta: false,
+    });
+
+    const { getAllByText } = renderWithTheme(
+      <DatabaseSettings database={mockNewDatabase} />,
+      { flags }
+    );
+
+    const suspendElements = getAllByText(/Suspend Cluster/i);
+    const suspendButton = suspendElements[1].closest('button');
+    expect(suspendButton).toHaveAttribute('aria-disabled', 'false');
   });
 });
