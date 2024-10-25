@@ -48,7 +48,6 @@ import { VolumeTableRow } from './VolumeTableRow';
 import type { Filter, Volume } from '@linode/api-v4';
 
 const preferenceKey = 'volumes';
-const searchQueryKey = 'query';
 
 export const VolumesLanding = () => {
   const navigate = useNavigate();
@@ -90,8 +89,7 @@ export const VolumesLanding = () => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
   });
-  const queryParams = new URLSearchParams(location.search);
-  const volumeLabelFromParam = queryParams.get(searchQueryKey) ?? '';
+  const query = location.search.query ?? '';
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -104,8 +102,8 @@ export const VolumesLanding = () => {
   const filter: Filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
-    ...(volumeLabelFromParam && {
-      label: { '+contains': volumeLabelFromParam },
+    ...(query && {
+      label: { '+contains': query },
     }),
   };
 
@@ -123,11 +121,13 @@ export const VolumesLanding = () => {
   const selectedVolume = volumes?.data.find((v) => v.id === params.volumeId);
 
   const handleDetach = (volume: Volume) => {
-    // setSelectedVolumeId(volume.id);
-    // setIsDetachDialogOpen(true);
     navigate({
       to: `/volumes/$volumeId/detach`,
       params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
     });
   };
 
@@ -135,6 +135,10 @@ export const VolumesLanding = () => {
     navigate({
       to: `/volumes/$volumeId/delete`,
       params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
     });
   };
 
@@ -142,6 +146,10 @@ export const VolumesLanding = () => {
     navigate({
       to: `/volumes/$volumeId/details`,
       params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
     });
   };
 
@@ -149,6 +157,10 @@ export const VolumesLanding = () => {
     navigate({
       to: `/volumes/$volumeId/edit`,
       params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
     });
   };
 
@@ -156,6 +168,10 @@ export const VolumesLanding = () => {
     navigate({
       to: `/volumes/$volumeId/resize`,
       params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
     });
   };
 
@@ -163,6 +179,10 @@ export const VolumesLanding = () => {
     navigate({
       to: `/volumes/$volumeId/clone`,
       params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
     });
   };
 
@@ -170,6 +190,10 @@ export const VolumesLanding = () => {
     navigate({
       to: `/volumes/$volumeId/attach`,
       params: { volumeId: volume.id },
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
     });
   };
 
@@ -181,18 +205,33 @@ export const VolumesLanding = () => {
   };
 
   const resetSearch = () => {
-    queryParams.delete(searchQueryKey);
-    navigate({ to: '/volumes', search: queryParams.toString() });
+    navigate({
+      to: '/volumes',
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: undefined,
+      }),
+    });
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    queryParams.delete('page');
-    queryParams.set(searchQueryKey, e.target.value);
-    navigate({ to: '/volumes', search: queryParams.toString() });
+    navigate({
+      to: '/volumes',
+      search: {
+        page: 1,
+        query: e.target.value,
+      },
+    });
   };
 
   const navigateToVolumes = () => {
-    navigate({ to: '/volumes' });
+    navigate({
+      to: '/volumes',
+      search: (prev) => ({
+        page: prev.page ?? 1,
+        query: prev.query ?? '',
+      }),
+    });
   };
 
   if (isLoading) {
@@ -209,7 +248,7 @@ export const VolumesLanding = () => {
     );
   }
 
-  if (volumes?.results === 0 && !volumeLabelFromParam) {
+  if (volumes?.results === 0 && !query) {
     return <VolumesLandingEmptyState />;
   }
 
@@ -218,7 +257,7 @@ export const VolumesLanding = () => {
       <DocumentTitleSegment segment="Volumes" />
       <LandingHeader
         breadcrumbProps={{
-          pathname: location.pathname,
+          pathname: 'Volumes',
           removeCrumbX: 1,
         }}
         buttonDataAttrs={{
@@ -236,7 +275,7 @@ export const VolumesLanding = () => {
       />
       <TextField
         InputProps={{
-          endAdornment: volumeLabelFromParam && (
+          endAdornment: query && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
 
@@ -258,7 +297,7 @@ export const VolumesLanding = () => {
         label="Search"
         placeholder="Search Volumes"
         sx={{ mb: 2 }}
-        value={volumeLabelFromParam}
+        value={query}
       />
       <Table>
         <TableHead>
