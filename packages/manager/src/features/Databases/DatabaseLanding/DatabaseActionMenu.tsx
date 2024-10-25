@@ -3,36 +3,69 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
-import type { Engine } from '@linode/api-v4';
+import type { DatabaseStatus, Engine } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import { useIsDatabasesEnabled } from '../utilities';
+import { useResumeDatabaseMutation } from 'src/queries/databases/databases';
+import { enqueueSnackbar } from 'notistack';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { APIError } from '@linode/api-v4/src/types';
 
 interface Props {
   databaseEngine: Engine;
   databaseId: number;
   databaseLabel: string;
   handlers: ActionHandlers;
+  databaseStatus: DatabaseStatus;
 }
 
 export interface ActionHandlers {
   handleDelete: () => void;
   handleManageAccessControls: () => void;
   handleResetPassword: () => void;
+  handleSuspend: () => void;
 }
 
 export const DatabaseActionMenu = (props: Props) => {
-  const { databaseEngine, databaseId, databaseLabel, handlers } = props;
+  const {
+    databaseEngine,
+    databaseId,
+    databaseLabel,
+    handlers,
+    databaseStatus,
+  } = props;
 
-  const databaseStatus = 'running';
-  const isDatabaseNotRunning = databaseStatus !== 'running';
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
+  const { mutateAsync: resumeDatabase } = useResumeDatabaseMutation(
+    databaseEngine,
+    databaseId
+  );
+
+  const status = 'running';
+  const isDatabaseNotRunning = status !== 'running';
+  const isDatabaseSuspended =
+    databaseStatus === 'suspended' || databaseStatus === 'suspending';
 
   const history = useHistory();
 
+  const handleResume = () => {
+    resumeDatabase()
+      .then(() => {
+        enqueueSnackbar('Database Cluster resumed successfully.', {
+          variant: 'success',
+        });
+      })
+      .catch((e: APIError[]) => {
+        const defaultError =
+          'There was an error resuming this Database Cluster.';
+        const error = getAPIErrorOrDefault(e, defaultError)[0].reason;
+        enqueueSnackbar(error, {
+          variant: 'error',
+        });
+      });
+  };
+
   const actions: Action[] = [
-    // TODO: add suspend action menu item once it's ready
-    // {
-    //   onClick: () => {},
-    //   title: databaseStatus === 'running' ? 'Suspend' : 'Power On',
-    // },
     {
       disabled: isDatabaseNotRunning,
       onClick: handlers.handleManageAccessControls,
@@ -58,6 +91,24 @@ export const DatabaseActionMenu = (props: Props) => {
       title: 'Delete',
     },
   ];
+
+  if (isDatabasesV2GA) {
+    actions.unshift({
+      disabled: databaseStatus !== 'active',
+      onClick: () => {
+        handlers.handleSuspend();
+      },
+      title: 'Suspend',
+    });
+
+    actions.splice(4, 0, {
+      disabled: !isDatabaseSuspended,
+      onClick: () => {
+        handleResume();
+      },
+      title: 'Resume',
+    });
+  }
 
   return (
     <ActionMenu
