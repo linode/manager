@@ -1,5 +1,5 @@
 import { getAPIFilterFromQuery } from '@linode/search';
-import { InputAdornment } from '@linode/ui';
+import { IconButton, InputAdornment } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
@@ -11,7 +11,6 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Code } from 'src/components/Code/Code';
-import { IconButton } from 'src/components/IconButton';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
