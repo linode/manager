@@ -187,8 +187,16 @@ const genericTableHeaderStyle = {
 };
 
 export const darkTheme: ThemeOptions = {
-  accentTokens: Accent,
-  actionTokens: Action,
+  tokens: {
+    accent: Accent,
+    action: Action,
+    background: Background,
+    border: Border,
+    content: Content,
+    elevation: Elevation,
+    interaction: Interaction,
+    typography: Typography,
+  },
   animateCircleIcon: {
     ...iconCircleAnimation,
   },
@@ -201,10 +209,8 @@ export const darkTheme: ThemeOptions = {
   applyTableHeaderStyles: {
     ...genericTableHeaderStyle,
   },
-  backgroundTokens: Background,
   bg: customDarkModeOptions.bg,
   borderColors: customDarkModeOptions.borderColors,
-  borderTokens: Border,
   breakpoints,
   color: customDarkModeOptions.color,
   components: {
@@ -801,8 +807,6 @@ export const darkTheme: ThemeOptions = {
       },
     },
   },
-  contentTokens: Content,
-  elevationTokens: Elevation,
   graphs: {
     cpu: {
       percent: `rgb(54, 131, 220)`,
@@ -861,7 +865,6 @@ export const darkTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
-  interactionTokens: Interaction,
   name: 'dark',
   notificationToast,
   palette: {
@@ -902,5 +905,4 @@ export const darkTheme: ThemeOptions = {
       color: primaryColors.text,
     },
   },
-  typographyTokens: Typography,
 };

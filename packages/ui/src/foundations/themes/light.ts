@@ -227,8 +227,18 @@ const graphTransparency = '0.7';
 const spacing = 8;
 
 export const lightTheme: ThemeOptions = {
-  accentTokens: Accent,
-  actionTokens: Action,
+  tokens: {
+    accent: Accent,
+    action: Action,
+    background: Background,
+    border: Border,
+    chart: Chart,
+    content: Content,
+    elevation: Elevation,
+    interaction: Interaction,
+    radius: Radius,
+    typography: Typography,
+  },
   addCircleHoverEffect: {
     ...iconCircleHoverEffect,
   },
@@ -244,12 +254,9 @@ export const lightTheme: ThemeOptions = {
   applyTableHeaderStyles: {
     ...genericTableHeaderStyle,
   },
-  backgroundTokens: Background,
   bg,
   borderColors,
-  borderTokens: Border,
   breakpoints,
-  chartTokens: Chart,
   color,
   components: {
     MuiAccordion: {
@@ -1471,8 +1478,6 @@ export const lightTheme: ThemeOptions = {
       },
     },
   },
-  contentTokens: Content,
-  elevationTokens: Elevation,
   font: {
     bold: latoWeb.bold,
     normal: latoWeb.normal,
@@ -1578,7 +1583,6 @@ export const lightTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
-  interactionTokens: Interaction,
   name: 'light', // @todo remove this because we leverage pallete.mode now
   notificationToast,
   palette: {
@@ -1613,7 +1617,6 @@ export const lightTheme: ThemeOptions = {
       main: Color.Amber[40],
     },
   },
-  radiusTokens: Radius,
   shadows: [
     'none',
     'none',
@@ -1684,7 +1687,6 @@ export const lightTheme: ThemeOptions = {
       lineHeight: '1.5rem',
     },
   },
-  typographyTokens: Typography,
   visually: {
     hidden: visuallyHidden,
     visible: visuallyVisible,

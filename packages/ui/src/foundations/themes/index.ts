@@ -87,58 +87,62 @@ type NotificationToast = MergeTypes<
  */
 declare module '@mui/material/styles/createTheme' {
   interface Theme {
-    accentTokens: AccentTypes;
-    actionTokens: ActionTypes;
+    tokens: {
+      accent: AccentTypes;
+      action: ActionTypes;
+      background: BackgroundTypes;
+      border: BorderTypes;
+      chart: ChartTypes;
+      content: ContentTypes;
+      elevation: ElevationTypes;
+      interaction: InteractionTypes;
+      radius: RadiusTypes;
+      typography: TypographyTypes;
+    };
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
-    backgroundTokens: BackgroundTypes;
     bg: BgColors;
     borderColors: BorderColors;
-    borderTokens: BorderTypes;
-    chartTokens: ChartTypes;
     color: Colors;
-    contentTokens: ContentTypes;
-    elevationTokens: ElevationTypes;
     font: Fonts;
     graphs: any;
     inputStyles: any;
-    interactionTokens: InteractionTypes;
     name: ThemeName;
     notificationToast: NotificationToast;
-    radiusTokens: RadiusTypes;
     textColors: TextColors;
-    typographyTokens: TypographyTypes;
     visually: any;
   }
 
   interface ThemeOptions {
-    accentTokens?: AccentTypes;
-    actionTokens?: ActionTypes;
+    tokens?: {
+      accent?: AccentTypes;
+      action?: ActionTypes;
+      background?: BackgroundTypes;
+      border?: BorderTypes;
+      chart?: ChartTypes;
+      content?: ContentTypes;
+      elevation?: ElevationTypes;
+      interaction?: InteractionTypes;
+      radius?: RadiusTypes;
+      typography?: TypographyTypes;
+    };
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
-    backgroundTokens?: BackgroundTypes;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
-    borderTokens?: BorderTypes;
-    chartTokens?: ChartTypes;
     color?: DarkModeColors | LightModeColors;
-    contentTokens?: ContentTypes;
-    elevationTokens?: ElevationTypes;
     font?: Fonts;
     graphs?: any;
     inputStyles?: any;
-    interactionTokens?: InteractionTypes;
     name: ThemeName;
     notificationToast?: NotificationToast;
-    radiusTokens?: RadiusTypes;
     textColors?: DarkModeTextColors | LightModeTextColors;
-    typographyTokens?: TypographyTypes;
     visually?: any;
   }
 }

@@ -1,7 +1,5 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
-import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
 import { useTheme } from '@mui/material';
-import { Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -17,6 +15,9 @@ import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+import type { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionBtnsCtn: {
@@ -61,7 +62,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& span': {
       fontFamily: theme.font.bold,
     },
-    background: theme.interactionTokens.Background.Secondary,
+    background: theme.tokens.interaction.Background.Secondary,
     border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
     padding: '8px 15px',
   },
