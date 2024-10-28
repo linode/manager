@@ -1,7 +1,7 @@
-import { Notice } from '@linode/ui';
+import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useState } from 'react';
 import * as React from 'react';
+import { ChangeEvent, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
@@ -10,14 +10,12 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
-import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
+import { ExtendedIP, ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
 import { useIsDatabasesEnabled } from '../utilities';
 
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Theme } from '@mui/material/styles';
-import type { ChangeEvent } from 'react';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import { Notice } from '@linode/ui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   container: {
@@ -38,6 +36,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export type AccessOption = 'none' | 'specific';
 
 interface Props {
+  disabled?: boolean;
   errors?: APIError[];
   ips: ExtendedIP[];
   onBlur: (ips: ExtendedIP[]) => void;
@@ -45,7 +44,7 @@ interface Props {
 }
 
 export const DatabaseCreateAccessControls = (props: Props) => {
-  const { errors, ips, onBlur, onChange } = props;
+  const { disabled = false, errors, ips, onBlur, onChange } = props;
   const { classes } = useStyles();
   const [accessOption, setAccessOption] = useState<AccessOption>('specific');
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
@@ -115,12 +114,13 @@ export const DatabaseCreateAccessControls = (props: Props) => {
             <FormControlLabel
               control={<Radio />}
               data-qa-dbaas-radio="Specific"
+              disabled={disabled}
               label="Specific Access (recommended)"
               value="specific"
             />
             <MultipleIPInput
               className={classes.multipleIPInput}
-              disabled={accessOption === 'none'}
+              disabled={accessOption === 'none' || disabled}
               ips={ips}
               onBlur={onBlur}
               onChange={onChange}
@@ -130,12 +130,14 @@ export const DatabaseCreateAccessControls = (props: Props) => {
             <FormControlLabel
               control={<Radio />}
               data-qa-dbaas-radio="None"
+              disabled={disabled}
               label="No Access (Deny connections from all IP addresses)"
               value="none"
             />
           </RadioGroup>
         ) : (
           <MultipleIPInput
+            disabled={disabled}
             ips={ips}
             onBlur={onBlur}
             onChange={onChange}

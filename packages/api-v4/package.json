@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.128.0",
+  "version": "0.129.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -57,7 +57,6 @@
     "lib"
   ],
   "devDependencies": {
-    "@types/node": "^12.7.1",
     "@types/yup": "^0.29.13",
     "axios-mock-adapter": "^1.22.0",
     "concurrently": "^9.0.1",
