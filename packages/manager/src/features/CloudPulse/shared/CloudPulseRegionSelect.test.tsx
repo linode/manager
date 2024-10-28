@@ -14,19 +14,11 @@ const props: CloudPulseRegionSelectProps = {
   selectedDashboard: undefined,
 };
 
-const queryMocks = vi.hoisted(() => ({
-  useRegionsQuery: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/regions/regions', () => ({
-  useRegionsQuery: queryMocks.useRegionsQuery,
-}));
-
-queryMocks.useRegionsQuery.mockReturnValue({
-  data: Array<Region>(),
-});
-
 describe('CloudPulseRegionSelect', () => {
+  vi.spyOn(regions, 'useRegionsQuery').mockReturnValue({
+    data: Array<Region>(),
+  } as ReturnType<typeof regions.useRegionsQuery>);
+
   it('should render a Region Select component', () => {
     const { getByLabelText, getByTestId } = renderWithTheme(
       <CloudPulseRegionSelect {...props} />
@@ -37,11 +29,11 @@ describe('CloudPulseRegionSelect', () => {
   });
 
   it('should render a Region Select component with proper error message on api call failure', () => {
-    queryMocks.useRegionsQuery.mockReturnValue({
+    vi.spyOn(regions, 'useRegionsQuery').mockReturnValue({
       data: undefined,
       isError: true,
       isLoading: false,
-    });
+    } as ReturnType<typeof regions.useRegionsQuery>);
     const { getByText } = renderWithTheme(
       <CloudPulseRegionSelect {...props} />
     );
