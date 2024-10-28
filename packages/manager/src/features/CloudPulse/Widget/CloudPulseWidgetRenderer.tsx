@@ -1,9 +1,7 @@
 import { Grid, Paper } from '@mui/material';
 import React from 'react';
 
-import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
-
+import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from './CloudPulseWidget';
 import {
@@ -45,7 +43,7 @@ const renderPlaceHolder = (subtitle: string) => {
   return (
     <Grid item xs>
       <Paper>
-        <Placeholder icon={CloudPulseIcon} subtitle={subtitle} title="" />
+        <CloudPulseErrorPlaceholder errorMessage={subtitle} />
       </Paper>
     </Grid>
   );

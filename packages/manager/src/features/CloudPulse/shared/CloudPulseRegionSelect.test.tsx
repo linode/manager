@@ -27,4 +27,17 @@ describe('CloudPulseRegionSelect', () => {
     expect(getByLabelText(label)).toBeInTheDocument();
     expect(getByTestId('region-select')).toBeInTheDocument();
   });
+
+  it('should render a Region Select component with proper error message on api call failure', () => {
+    vi.spyOn(regions, 'useRegionsQuery').mockReturnValue({
+      data: undefined,
+      isError: true,
+      isLoading: false,
+    } as ReturnType<typeof regions.useRegionsQuery>);
+    const { getByText } = renderWithTheme(
+      <CloudPulseRegionSelect {...props} />
+    );
+
+    expect(getByText('Failed to fetch Region'));
+  });
 });
