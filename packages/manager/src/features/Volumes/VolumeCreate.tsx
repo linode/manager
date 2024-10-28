@@ -10,7 +10,6 @@ import {
 } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -47,7 +46,7 @@ import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
 } from 'src/queries/volumes/volumes';
-import { volumesSearchParams } from 'src/routes/volumes/index';
+import { setVolumesSearchParams } from 'src/routes/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -65,6 +64,7 @@ import { SizeField } from './VolumeDrawer/SizeField';
 import type { VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Theme } from '@mui/material/styles';
+import type { VolumesSearchParams } from 'src/routes/volumes';
 
 export const SIZE_FIELD_WIDTH = 160;
 
@@ -229,7 +229,7 @@ export const VolumeCreate = () => {
             variant: 'success',
           });
           navigate({
-            search: (prev) => volumesSearchParams(prev),
+            search: (prev: VolumesSearchParams) => setVolumesSearchParams(prev),
             to: '/volumes',
           });
           // Analytics Event
@@ -552,7 +552,3 @@ const initialValues: FormState = {
   region: '',
   size: 20,
 };
-
-export const volumeCreateLazyRoute = createLazyRoute('/volumes/create')({
-  component: VolumeCreate,
-});
