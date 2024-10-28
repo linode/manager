@@ -6,6 +6,7 @@ import { Box } from 'src/components/Box';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -27,7 +28,6 @@ import {
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
 
 const preferenceKey = 'account-maintenance';
 
@@ -41,17 +41,9 @@ const headersForCSVDownload = [
   { key: 'reason', label: 'Reason' },
 ];
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   cell: {
     width: '12%',
-  },
-  headingContainer: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1.5),
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing(),
-      paddingRight: theme.spacing(),
-    },
   },
 }));
 
@@ -59,7 +51,7 @@ interface Props {
   type: 'completed' | 'pending';
 }
 
-const MaintenanceTable = ({ type }: Props) => {
+export const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const { classes } = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
@@ -143,11 +135,18 @@ const MaintenanceTable = ({ type }: Props) => {
   };
 
   return (
-    <>
-      <Box
-        className={classes.headingContainer}
-        display="flex"
-        justifyContent="space-between"
+    <Box>
+      <Paper
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 1,
+          justifyContent: 'space-between',
+          minHeight: '42px',
+          padding: 0.75,
+          paddingLeft: 2,
+        }}
       >
         <Typography style={{ textTransform: 'capitalize' }} variant="h3">
           {type}
@@ -161,7 +160,7 @@ const MaintenanceTable = ({ type }: Props) => {
             onClick={downloadCSV}
           />
         </Box>
-      </Box>
+      </Paper>
       <Table aria-label={`List of ${type} maintenance`}>
         <TableHead>
           <TableRow>
@@ -222,8 +221,6 @@ const MaintenanceTable = ({ type }: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-    </>
+    </Box>
   );
 };
-
-export { MaintenanceTable };

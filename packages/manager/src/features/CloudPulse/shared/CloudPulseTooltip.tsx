@@ -1,6 +1,5 @@
+import { Tooltip } from '@linode/ui';
 import React from 'react';
-
-import { Tooltip } from 'src/components/Tooltip';
 
 import type { TooltipProps } from '@mui/material';
 

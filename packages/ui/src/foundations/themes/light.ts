@@ -240,6 +240,7 @@ export const lightTheme: ThemeOptions = {
   borderColors,
   breakpoints,
   chartTokens: Chart,
+  colorTokens: Color,
   color,
   components: {
     MuiAccordion: {
@@ -347,7 +348,7 @@ export const lightTheme: ThemeOptions = {
             opacity: 1,
           },
           '&::selection': {
-            backgroundColor: color.grey7,
+            backgroundColor: color.grey10,
           },
         },
         inputRoot: {

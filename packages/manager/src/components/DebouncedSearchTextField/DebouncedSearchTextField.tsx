@@ -1,3 +1,4 @@
+import { IconButton } from '@linode/ui';
 import Clear from '@mui/icons-material/Clear';
 import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
@@ -7,8 +8,6 @@ import { debounce } from 'throttle-debounce';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
-
-import { IconButton } from '../IconButton';
 
 import type { TextFieldProps } from 'src/components/TextField';
 
