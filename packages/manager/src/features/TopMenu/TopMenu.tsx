@@ -1,10 +1,10 @@
+import { IconButton } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
 import * as React from 'react';
 
 import { AppBar } from 'src/components/AppBar';
 import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
 import { Toolbar } from 'src/components/Toolbar';
 import { Typography } from 'src/components/Typography';
 import { useAuthentication } from 'src/hooks/useAuthentication';

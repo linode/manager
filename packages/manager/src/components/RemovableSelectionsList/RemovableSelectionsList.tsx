@@ -1,8 +1,8 @@
+import { IconButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { IconButton } from 'src/components/IconButton';
 
 import {
   SelectedOptionsHeader,
