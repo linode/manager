@@ -148,6 +148,10 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   );
 };
 
+/**
+ * @param errorMessage The error message to be displayed
+ * @returns The error state component with error message passed
+ */
 const renderErrorState = (errorMessage: string) => {
   return (
     <Grid item xs>
