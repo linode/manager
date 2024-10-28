@@ -97,10 +97,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
   ] = React.useState(false);
 
   const [selectedTab, setSelectedTab] = React.useState(0);
-  const {
-    isDatabasesV2Enabled,
-    isDatabasesGAEnabled,
-  } = useIsDatabasesEnabled();
+  const { isDatabasesV2Enabled, isDatabasesV2GA } = useIsDatabasesEnabled();
   const [clusterSize, setClusterSize] = React.useState<ClusterSize | undefined>(
     database.cluster_size
   );
@@ -122,11 +119,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
   const onResize = () => {
     const payload: UpdateDatabasePayload = {};
 
-    if (
-      clusterSize &&
-      clusterSize > database.cluster_size &&
-      isDatabasesGAEnabled
-    ) {
+    if (clusterSize && clusterSize > database.cluster_size && isDatabasesV2GA) {
       payload.cluster_size = clusterSize;
     }
 
@@ -163,30 +156,26 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
         {summaryText ? (
           <>
             <StyledPlanSummarySpan>
-              {isDatabasesGAEnabled
+              {isDatabasesV2GA
                 ? 'Resized Cluster: ' + summaryText.plan
                 : summaryText.plan}
             </StyledPlanSummarySpan>{' '}
-            {isDatabasesGAEnabled ? (
+            {isDatabasesV2GA ? (
               <span
-                className={
-                  isDatabasesGAEnabled ? classes.summarySpanBorder : ''
-                }
+                className={isDatabasesV2GA ? classes.summarySpanBorder : ''}
               >
                 {summaryText.basePrice}
               </span>
             ) : null}
-            <span
-              className={isDatabasesGAEnabled ? classes.nodeSpanSpacing : ''}
-            >
+            <span className={isDatabasesV2GA ? classes.nodeSpanSpacing : ''}>
               {' '}
               {summaryText.numberOfNodes} Node
               {summaryText.numberOfNodes > 1 ? 's' : ''}
-              {!isDatabasesGAEnabled ? ': ' : ' - HA '}
+              {!isDatabasesV2GA ? ': ' : ' - HA '}
             </span>
             {summaryText.price}
           </>
-        ) : isDatabasesGAEnabled ? (
+        ) : isDatabasesV2GA ? (
           <>
             <StyledPlanSummarySpan>Resized Cluster:</StyledPlanSummarySpan>{' '}
             Please select a plan or set the number of nodes.
@@ -263,7 +252,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     setSummaryText({
       numberOfNodes: clusterSize,
       plan: formatStorageUnits(selectedPlanType.label),
-      price: isDatabasesGAEnabled
+      price: isDatabasesV2GA
         ? `$${price?.monthly}/month`
         : `$${price?.monthly}/month or $${price?.hourly}/hour`,
       basePrice: currentPlanPrice,
@@ -287,7 +276,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     }
     const engineType = database.engine.split('/')[0] as Engine;
     // When only a higher node selection is made and plan has not been changed
-    if (isDatabasesGAEnabled && nodeSelected && isSamePlanSelected) {
+    if (isDatabasesV2GA && nodeSelected && isSamePlanSelected) {
       setSummaryAndPrices(database.type, engineType, dbTypes);
     }
     // No plan selection or plan selection is unchanged
@@ -357,7 +346,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       <StyledPlanSummarySpan>
         Current Cluster: {currentPlan?.heading}
       </StyledPlanSummarySpan>{' '}
-      <span className={isDatabasesGAEnabled ? classes.summarySpanBorder : ''}>
+      <span className={isDatabasesV2GA ? classes.summarySpanBorder : ''}>
         {currentPlanPrice}
       </span>
       <span className={classes.nodeSpanSpacing}>
@@ -379,7 +368,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     );
     setSelectedTab(initialTab);
 
-    if (isDatabasesGAEnabled) {
+    if (isDatabasesV2GA) {
       const engineType = database.engine.split('/')[0] as Engine;
       const nodePricingDetails = {
         double: currentPlan?.engines[engineType]?.find(
@@ -418,7 +407,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       return;
     }
     // Clear plan and related info when when 2 nodes option is selected for incompatible plan.
-    if (isDatabasesGAEnabled && selectedTab === 0 && clusterSize === 2) {
+    if (isDatabasesV2GA && selectedTab === 0 && clusterSize === 2) {
       setClusterSize(undefined);
       setPlanSelected(undefined);
       setNodePricing(undefined);
@@ -536,7 +525,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           tabDisabledMessage="Resizing a 2-nodes cluster is only allowed with Dedicated plans."
           types={displayTypes}
         />
-        {isDatabasesGAEnabled && (
+        {isDatabasesV2GA && (
           <>
             <Divider spacingBottom={20} spacingTop={20} />
 
@@ -573,13 +562,13 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       <Paper sx={{ marginTop: 2 }}>
         <Typography
           sx={(theme) => ({
-            marginBottom: isDatabasesGAEnabled ? theme.spacing(2) : 0,
+            marginBottom: isDatabasesV2GA ? theme.spacing(2) : 0,
           })}
           variant="h2"
         >
-          Summary {isDatabasesGAEnabled ? database.label : ''}
+          Summary {isDatabasesV2GA ? database.label : ''}
         </Typography>
-        {isDatabasesGAEnabled && currentPlan ? currentSummary : null}
+        {isDatabasesV2GA && currentPlan ? currentSummary : null}
         {resizeSummary}
       </Paper>
       <StyledGrid>

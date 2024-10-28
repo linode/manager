@@ -10,19 +10,16 @@ import {
   Select,
 } from '@linode/design-language-system';
 
-import { breakpoints } from 'src/foundations/breakpoints';
-import { latoWeb } from 'src/foundations/fonts';
+import { breakpoints } from '../breakpoints';
+import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
-export const inputMaxWidth = 416;
-
-export const charts = { ...Chart } as const;
+const inputMaxWidth = 416;
 
 export const bg = {
   app: Color.Neutrals[5],
   appBar: 'transparent',
-  bgAccessRow: Color.Neutrals[5],
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
   bgPaper: Color.Neutrals.White,
   interactionBgPrimary: Interaction.Background.Secondary,
@@ -242,7 +239,8 @@ export const lightTheme: ThemeOptions = {
   bg,
   borderColors,
   breakpoints,
-  charts,
+  chartTokens: Chart,
+  colorTokens: Color,
   color,
   components: {
     MuiAccordion: {
@@ -305,13 +303,8 @@ export const lightTheme: ThemeOptions = {
     },
     MuiAppBar: {
       styleOverrides: {
-        colorDefault: {
-          backgroundColor: 'inherit',
-        },
         root: {
           backgroundColor: bg.bgPaper,
-          borderLeft: 0,
-          borderTop: 0,
           color: primaryColors.text,
           position: 'relative',
         },
@@ -355,7 +348,7 @@ export const lightTheme: ThemeOptions = {
             opacity: 1,
           },
           '&::selection': {
-            backgroundColor: color.grey7,
+            backgroundColor: color.grey10,
           },
         },
         inputRoot: {
@@ -1534,6 +1527,7 @@ export const lightTheme: ThemeOptions = {
     },
     yellow: `rgba(255, 220, 125, ${graphTransparency})`,
   },
+  inputMaxWidth,
   inputStyles: {
     default: {
       backgroundColor: Select.Default.Background,
@@ -1574,6 +1568,7 @@ export const lightTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
+  interactionTokens: Interaction,
   name: 'light', // @todo remove this because we leverage pallete.mode now
   notificationToast,
   palette: {

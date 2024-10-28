@@ -8,7 +8,7 @@ import {
   CardBaseSubheading,
 } from './CardBase.styles';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface CardBaseProps {
   checked?: boolean;
@@ -17,10 +17,10 @@ export interface CardBaseProps {
   renderIcon?: () => JSX.Element;
   renderVariant?: () => JSX.Element | null;
   subheadings: (JSX.Element | string | undefined)[];
-  sx?: SxProps;
-  sxHeading?: SxProps;
-  sxIcon?: SxProps;
-  sxSubheading?: SxProps;
+  sx?: SxProps<Theme>;
+  sxHeading?: SxProps<Theme>;
+  sxIcon?: SxProps<Theme>;
+  sxSubheading?: SxProps<Theme>;
 }
 export const CardBase = (props: CardBaseProps) => {
   const {
