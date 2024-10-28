@@ -31,7 +31,7 @@ const volumesRoute = createRoute({
 const volumesIndexRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: '/',
-  validateSearch: (search) => search.query,
+  validateSearch: (search: VolumesSearchParams) => search,
 }).lazy(() =>
   import('src/routes/volumes/volumesLazyRoutes').then(
     (m) => m.volumesLandingLazyRoute
