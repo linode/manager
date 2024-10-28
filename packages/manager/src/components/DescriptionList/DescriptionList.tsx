@@ -1,4 +1,3 @@
-import { SxProps } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
@@ -12,7 +11,7 @@ import {
   StyledDT,
 } from './DescriptionList.styles';
 
-import type { Breakpoint, Theme } from '@mui/material/styles';
+import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
 import type { TooltipIconProps } from 'src/components/TooltipIcon';
 
 type DescriptionListBaseProps = {
@@ -67,7 +66,7 @@ type DescriptionListBaseProps = {
   /**
    * Additional styles to apply to the component.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 };
 
 interface DescriptionListGridProps

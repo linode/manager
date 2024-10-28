@@ -78,7 +78,7 @@ export const DatabaseBackups = (props: Props) => {
     databaseId: string;
     engine: Engine;
   }>();
-  const { isV2GAUser } = useIsDatabasesEnabled();
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<DateTime | null>(null);
@@ -86,7 +86,7 @@ export const DatabaseBackups = (props: Props) => {
     null
   );
   const [versionOption, setVersionOption] = React.useState<VersionOption>(
-    isV2GAUser ? 'newest' : 'dateTime'
+    isDatabasesV2GA ? 'newest' : 'dateTime'
   );
 
   const {
@@ -136,30 +136,30 @@ export const DatabaseBackups = (props: Props) => {
       <Typography variant="h2">Summary</Typography>
       <StyledTypography>
         Databases are automatically backed-up with full daily backups for the
-        past 10 days, and binary logs recorded continuously. Full backups are
+        past 14 days, and binary logs recorded continuously. Full backups are
         version-specific binary backups, which when combined with binary
         logs allow for consistent recovery to a specific point in time (PITR).
       </StyledTypography>
       <Divider spacingBottom={25} spacingTop={25} />
       <Typography variant="h2">Restore a Backup</Typography>
       <StyledTypography>
-        {isV2GAUser ? (
+        {isDatabasesV2GA ? (
           <span>
             The newest full backup plus incremental is selected by default. Or,
-            select any date and time within the last 10 days you want to create
+            select any date and time within the last 14 days you want to create
             a fork from.
           </span>
         ) : (
           <span>
-            Select a date and time within the last 10 days you want to create a
-            forkfrom.
+            Select a date and time within the last 14 days you want to create a
+            fork from.
           </span>
         )}
       </StyledTypography>
       {unableToRestoreCopy && (
         <Notice spacingTop={16} text={unableToRestoreCopy} variant="info" />
       )}
-      {isV2GAUser && (
+      {isDatabasesV2GA && (
         <RadioGroup
           aria-label="type"
           name="type"
@@ -214,11 +214,14 @@ export const DatabaseBackups = (props: Props) => {
               onChange={(_, newTime) => setSelectedTime(newTime)}
               options={TIME_OPTIONS}
               placeholder="Choose a time"
-              renderOption={(props, option) => (
-                <li {...props} key={option.value}>
-                  {option.label}
-                </li>
-              )}
+              renderOption={(props, option) => {
+                const { key, ...rest } = props;
+                return (
+                  <li {...rest} key={key}>
+                    {option.label}
+                  </li>
+                );
+              }}
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-time-select': true,

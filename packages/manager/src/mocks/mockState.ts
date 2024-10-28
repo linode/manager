@@ -44,7 +44,14 @@ export const createInitialMockStore = async (): Promise<MockState> => {
   const mockState = await mswDB.getStore('mockState');
 
   if (mockState) {
-    return mockState;
+    const mockStateKeys = Object.keys(mockState);
+    const emptyStoreKeys = Object.keys(emptyStore);
+
+    // Return the existing mockState if it includes all keys from the empty store;
+    // else, discard the existing mockState because we've introduced new values.
+    if (emptyStoreKeys.every((key) => mockStateKeys.includes(key))) {
+      return mockState;
+    }
   }
 
   return emptyStore;

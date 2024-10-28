@@ -174,9 +174,11 @@ describe('Placement Group deletion', () => {
     );
 
     cy.visitWithLogin('/placement-groups');
-    cy.wait('@getPlacementGroups');
+    cy.wait(['@getPlacementGroups', '@getLinodes']);
 
-    // Click "Delete" button next to the mock Placement Group.
+    // Click "Delete" button next to the mock Placement Group, and initially mock
+    // an API error response and confirm that the error message is displayed in the
+    // deletion modal.
     cy.findByText(mockPlacementGroup.label)
       .should('be.visible')
       .closest('tr')
@@ -188,31 +190,72 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
-    // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
+    // The Placement Groups landing page fires off a Linode GET request upon
+    // clicking the "Delete" button so that Cloud knows which Linodes are assigned
+    // to the selected Placement Group.
+    cy.wait('@getLinodes');
+
     mockUnassignPlacementGroupLinodesError(
       mockPlacementGroup.id,
       PlacementGroupErrorMessage
     ).as('UnassignPlacementGroupError');
 
+    // Close dialog and re-open it. This is a workaround to prevent Cypress
+    // failures triggered by React re-rendering after fetching Linodes.
+    //
+    // Tanstack Query is configured to respond with cached data for the `useAllLinodes`
+    // query hook while awaiting the HTTP request response. Because the Placement
+    // Groups landing page fetches Linodes upon opening the deletion modal, there
+    // is a brief period of time where Linode labels are rendered using cached data,
+    // then re-rendered after the real API request resolves. This re-render occasionally
+    // triggers Cypress failures.
+    //
+    // Opening the deletion modal for the same Placement Group a second time
+    // does not trigger another HTTP GET request, this helps circumvent the
+    // issue because the cached/problematic HTTP request is already long resolved
+    // and there is less risk of a re-render occurring while Cypress interacts
+    // with the dialog.
+    //
+    // TODO Consider removing this workaround after M3-8717 is implemented.
     ui.dialog
       .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
       .should('be.visible')
       .within(() => {
-        cy.get('[data-qa-selection-list]').within(() => {
-          // Select the first Linode to unassign
-          const mockLinodeToUnassign = mockPlacementGroupLinodes[0];
+        ui.drawerCloseButton.find().click();
+      });
 
-          cy.findByText(mockLinodeToUnassign.label)
-            .should('be.visible')
-            .closest('li')
-            .within(() => {
-              ui.button
-                .findByTitle('Unassign')
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-            });
-        });
+    cy.findByText(mockPlacementGroup.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    ui.dialog
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-qa-selection-list]')
+          .should('be.visible')
+          .within(() => {
+            // Select the first Linode to unassign
+            const mockLinodeToUnassign = mockPlacementGroupLinodes[0];
+
+            cy.findByText(mockLinodeToUnassign.label)
+              .closest('li')
+              .should('be.visible')
+              .within(() => {
+                ui.button
+                  .findByTitle('Unassign')
+                  .should('be.visible')
+                  .should('be.enabled')
+                  .click();
+              });
+          });
 
         cy.wait('@UnassignPlacementGroupError');
         cy.findByText(PlacementGroupErrorMessage).should('be.visible');
@@ -265,7 +308,10 @@ describe('Placement Group deletion', () => {
                   .click();
               });
 
-            cy.wait('@unassignLinode');
+            // Cloud fires off 2 requests to fetch Linodes: once before the unassignment,
+            // and again after. Wait for both of these requests to resolve to reduce the
+            // risk of a re-render occurring when unassigning the next Linode.
+            cy.wait(['@unassignLinode', '@getLinodes', '@getLinodes']);
             cy.findByText(mockLinode.label).should('not.exist');
           });
         });
@@ -444,7 +490,7 @@ describe('Placement Group deletion', () => {
     );
 
     cy.visitWithLogin('/placement-groups');
-    cy.wait('@getPlacementGroups');
+    cy.wait(['@getPlacementGroups', '@getLinodes']);
 
     // Click "Delete" button next to the mock Placement Group.
     cy.findByText(mockPlacementGroup.label)
@@ -458,11 +504,35 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
+    // The Placement Groups landing page fires off a Linode GET request upon
+    // clicking the "Delete" button so that Cloud knows which Linodes are assigned
+    // to the selected Placement Group.
+    cy.wait('@getLinodes');
+
     // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
     mockUnassignPlacementGroupLinodesError(
       mockPlacementGroup.id,
       PlacementGroupErrorMessage
     ).as('UnassignPlacementGroupError');
+
+    ui.dialog
+      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
+      .should('be.visible')
+      .within(() => {
+        ui.drawerCloseButton.find().should('be.visible').click();
+      });
+
+    // Click "Delete" button next to the mock Placement Group again.
+    cy.findByText(mockPlacementGroup.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        ui.button
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
 
     ui.dialog
       .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
@@ -498,7 +568,7 @@ describe('Placement Group deletion', () => {
       'not.exist'
     );
 
-    // Click "Delete" button next to the mock Placement Group to reopen the dialog
+    // Click "Delete" button next to the mock Placement Group to reopen the dialog.
     cy.findByText(mockPlacementGroup.label)
       .should('be.visible')
       .closest('tr')
@@ -510,31 +580,12 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
-    // Confirm deletion warning appears and that form cannot be submitted
-    // while Linodes are assigned.
+    // Confirm that the error message from the previous attempt is no longer present.
     ui.dialog
       .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
       .should('be.visible')
       .within(() => {
-        // ensure error message not exist when reopening the dialog
         cy.findByText(PlacementGroupErrorMessage).should('not.exist');
-
-        // Unassign each Linode.
-        cy.get('[data-qa-selection-list]').within(() => {
-          // Select the first Linode to unassign
-          const mockLinodeToUnassign = mockPlacementGroupLinodes[0];
-
-          cy.findByText(mockLinodeToUnassign.label)
-            .should('be.visible')
-            .closest('li')
-            .within(() => {
-              ui.button
-                .findByTitle('Unassign')
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-            });
-        });
       });
   });
 });

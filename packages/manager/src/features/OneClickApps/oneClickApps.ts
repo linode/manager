@@ -17,7 +17,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `With 60 million users around the globe, WordPress is the industry standard for custom websites such as blogs, news sites, personal websites, and anything in-between. With a focus on best in class usability and flexibility, you can have a customized website up and running in minutes.`,
     logo_url: 'wordpress.svg',
-    name: 'WordPress',
     related_guides: [
       {
         href:
@@ -39,7 +38,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Drupal is a content management system (CMS) designed for building custom websites for personal and business use. Built for high performance and scalability, Drupal provides the necessary tools to create rich, interactive community websites with forums, user blogs, and private messaging. Drupal also has support for personal publishing projects and can power podcasts, blogs, and knowledge-based systems, all within a single, unified platform.`,
     logo_url: 'drupal.svg',
-    name: 'Drupal',
     related_guides: [
       {
         href:
@@ -61,7 +59,6 @@ export const oneClickApps: Record<number, OCA> = {
     description: `The LAMP stack consists of the Linux operating system, the Apache HTTP Server, the MySQL relational database management system, and the PHP programming language. This software environment is a foundation for popular PHP application
       frameworks like WordPress, Drupal, and Laravel. Upload your existing PHP application code to your new app or use a PHP framework to write a new application on the Linode.`,
     logo_url: 'lamp.svg',
-    name: 'LAMP',
     related_guides: [
       {
         href:
@@ -83,7 +80,6 @@ export const oneClickApps: Record<number, OCA> = {
       and Node.js, which serves as the run-time environment for your application. All of these technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications. Upload your
       existing MERN website code to your new Linode, or use MERN's scaffolding tool to start writing new web applications on the Linode.`,
     logo_url: 'mern.svg',
-    name: 'MERN',
     related_guides: [
       {
         href:
@@ -104,7 +100,6 @@ export const oneClickApps: Record<number, OCA> = {
     description: `Configuring WireGuard&reg; is as simple as configuring SSH. A connection is established by an exchange of public keys between server and client, and only a client whose public key is present in the server's configuration file is considered authorized. WireGuard sets up
       standard network interfaces which behave similarly to other common network interfaces, like eth0. This makes it possible to configure and manage WireGuard interfaces using standard networking tools such as ifconfig and ip. "WireGuard" is a registered trademark of Jason A. Donenfeld.`,
     logo_url: 'wireguard.svg',
-    name: 'WireGuard&reg;',
     related_guides: [
       {
         href:
@@ -126,7 +121,6 @@ export const oneClickApps: Record<number, OCA> = {
     description: `GitLab is a complete solution for all aspects of your software development. At its core, GitLab serves as your centralized Git repository. GitLab also features built-in tools that represent every task in your development workflow, from planning to testing to releasing.
       Self-hosting your software development with GitLab offers total control of your codebase. At the same time, its familiar interface will ease collaboration for you and your team. GitLab is the most popular self-hosted Git repository, so you'll benefit from a robust set of integrated tools and an active community.`,
     logo_url: 'gitlab.svg',
-    name: 'GitLab',
     related_guides: [
       {
         href:
@@ -148,7 +142,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `With WooCommerce, you can securely sell both digital and physical goods, and take payments via major credit cards, bank transfers, PayPal, and other providers like Stripe. With more than 300 extensions to choose from, WooCommerce is extremely flexible.`,
     logo_url: 'woocommerce.svg',
-    name: 'WooCommerce',
     related_guides: [
       {
         href:
@@ -171,7 +164,6 @@ export const oneClickApps: Record<number, OCA> = {
       taming forests, and venturing out to sea. Choose a home from the varied list of biomes like ice worlds, flower plains, and jungles. Build ancient castles or modern mega cities, and fill them with redstone circuit contraptions and villagers. Fight off nightly invasions of Skeletons, Zombies, and explosive
       Creepers, or adventure to the End and the Nether to summon the fabled End Dragon and the chaotic Wither. If that is not enough, Minecraft is also highly moddable and customizable. You decide the rules when hosting your own Minecraft server for you and your friends to play together in this highly addictive game.`,
     logo_url: 'minecraft.svg',
-    name: 'Minecraft: Java Edition',
     related_guides: [
       {
         href:
@@ -192,7 +184,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `OpenVPN is a widely trusted, free, and open-source virtual private network application. OpenVPN creates network tunnels between groups of computers that are not on the same local network, and it uses OpenSSL to encrypt your traffic.`,
     logo_url: 'openvpn.svg',
-    name: 'OpenVPN',
     related_guides: [
       {
         href:
@@ -213,7 +204,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     logo_url: 'plesk.svg',
-    name: 'Plesk',
     related_guides: [
       {
         href:
@@ -236,7 +226,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `The cPanel &amp; WHM&reg; Marketplace App streamlines publishing and managing a website on your Linode. cPanel 	&amp; WHM is a Linux&reg; based web hosting control panel and platform that helps you create and manage websites, servers, databases and more with a suite of hosting automation and optimization tools.`,
     logo_url: 'cpanel.svg',
-    name: 'cPanel',
     related_guides: [
       {
         href:
@@ -259,7 +248,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
     logo_url: 'shadowsocks.svg',
-    name: 'Shadowsocks',
     related_guides: [
       {
         href:
@@ -281,7 +269,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
     logo_url: 'lemp.svg',
-    name: 'LEMP',
     related_guides: [
       {
         href:
@@ -301,7 +288,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `MySQL, or MariaDB for Linux operating systems, is primarily used for web and server applications, including as a component of the industry-standard LAMP and LEMP stacks.`,
     logo_url: 'mysql.svg',
-    name: 'MySQL/MariaDB',
     related_guides: [
       {
         href:
@@ -322,7 +308,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Jenkins is an open source automation tool which can build, test, and deploy your infrastructure.`,
     logo_url: 'jenkins.svg',
-    name: 'Jenkins',
     related_guides: [
       {
         href:
@@ -344,7 +329,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
     logo_url: 'docker.svg',
-    name: 'Docker',
     related_guides: [
       {
         href:
@@ -365,7 +349,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.<br/><br/>*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies.`,
     logo_url: 'redis.svg',
-    name: 'Marketplace App for Redis&reg;',
     related_guides: [
       {
         href:
@@ -388,7 +371,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Intuitive web interface for MySQL and MariaDB operations, including importing/exporting data, administering multiple servers, and global database search.`,
     logo_url: 'phpmyadmin.svg',
-    name: 'phpMyAdmin',
     related_guides: [
       {
         href:
@@ -409,7 +391,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by giving every developer a number of common tools they need to get started. Ruby on Rails empowers you to accomplish more with less code.`,
     logo_url: 'rubyonrails.svg',
-    name: 'Ruby on Rails',
     related_guides: [
       {
         href:
@@ -430,7 +411,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Django is a web development framework for the Python programming language. It enables rapid development, while favoring pragmatic and clean design.`,
     logo_url: 'django.svg',
-    name: 'Django',
     related_guides: [
       {
         href:
@@ -451,7 +431,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Flask is a lightweight WSGI web application framework written in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
     logo_url: 'flask.svg',
-    name: 'Flask',
     related_guides: [
       {
         href:
@@ -472,7 +451,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
     logo_url: 'postgresql.svg',
-    name: 'PostgreSQL',
     related_guides: [
       {
         href:
@@ -493,7 +471,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `MEAN is a full-stack JavaScript-based framework which accelerates web application development much faster than other frameworks.  All involved technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
     logo_url: 'mean.svg',
-    name: 'MEAN',
     related_guides: [
       {
         href:
@@ -515,7 +492,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Nextcloud AIO stands for Nextcloud All In One, and provides easy deployment and maintenance for popular Nextcloud tools. AIO includes Nextcloud, Nextcloud Office, OnlyOffice, and high-performance backend features.`,
     logo_url: 'nextcloud.svg',
-    name: 'Nextcloud',
     related_guides: [
       {
         href:
@@ -535,7 +511,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `All aspects of running a radio station in one web interface so you can start your own station. Manage media, create playlists, and interact with listeners on one free platform.`,
     logo_url: 'azuracast.svg',
-    name: 'Azuracast',
     related_guides: [
       {
         href:
@@ -557,7 +532,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Organize, stream, and share your media library with friends, in addition to free live TV in 220+ countries.`,
     logo_url: 'plex.svg',
-    name: 'Plex',
     related_guides: [
       {
         href:
@@ -579,7 +553,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Secure, stable, and free alternative to popular video conferencing services. Use built-in features to limit meeting access with passwords or stream on YouTube so anyone can attend.`,
     logo_url: 'jitsi.svg',
-    name: 'Jitsi',
     related_guides: [
       {
         href:
@@ -600,7 +573,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Connect and scale applications with asynchronous messaging and highly available work queues, all controlled through an intuitive management UI.`,
     logo_url: 'rabbitmq.svg',
-    name: 'RabbitMQ',
     related_guides: [
       {
         href:
@@ -621,7 +593,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Launch a sleek forum with robust integrations to popular tools like Slack and WordPress to start more conversations.`,
     logo_url: 'discourse.svg',
-    name: 'Discourse',
     related_guides: [
       {
         href:
@@ -644,7 +615,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Lightweight control panel with a suite of features to streamline app management.`,
     logo_url: 'webuzo.svg',
-    name: 'Webuzo',
     related_guides: [
       {
         href:
@@ -666,7 +636,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Launch a portable development environment to speed up tests, downloads, and more.`,
     logo_url: 'vscodeserver.svg',
-    name: 'VS Code Server',
     related_guides: [
       {
         href:
@@ -687,7 +656,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Self-hosted Git service built and maintained by a large developer community.`,
     logo_url: 'gitea.svg',
-    name: 'Gitea',
     related_guides: [
       {
         href:
@@ -708,7 +676,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Use Kepler Builder to easily design and build sites in WordPress - no coding or design knowledge necessary.`,
     logo_url: 'keplerbuilder.svg',
-    name: 'Kepler Builder',
     related_guides: [
       {
         href:
@@ -729,7 +696,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Access your desktop from any device with a browser to keep your desktop hosted in the cloud.`,
     logo_url: 'guacamole.svg',
-    name: 'Guacamole',
     related_guides: [
       {
         href:
@@ -750,7 +716,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `File synchronization across multiple users’ computers and other devices to keep everyone working without interruption.`,
     logo_url: 'filecloud.svg',
-    name: 'FileCloud',
     related_guides: [
       {
         href:
@@ -772,7 +737,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Turnkey solution for running apps like WordPress, Rocket.Chat, NextCloud, GitLab, and OpenVPN.`,
     logo_url: 'cloudron.svg',
-    name: 'Cloudron',
     related_guides: [
       {
         href:
@@ -794,7 +758,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Accelerated and scalable hosting for WordPress. Includes OpenLiteSpeed, PHP, MySQL Server, WordPress, and LiteSpeed Cache.`,
     logo_url: 'openlitespeedwordpress.svg',
-    name: 'OpenLiteSpeed WordPress',
     related_guides: [
       {
         href:
@@ -815,7 +778,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Save time on securing your Linode by deploying an instance pre-configured with some basic security best practices: limited user account access, hardened SSH, and Fail2Ban for SSH Login Protection.`,
     logo_url: 'secureyourserver.svg',
-    name: 'Secure Your Server',
     related_guides: [
       {
         href:
@@ -836,7 +798,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Reduce setup time required to host websites and applications, including popular tools like OpenLiteSpeed WordPress.`,
     logo_url: 'cyberpanel.svg',
-    name: 'CyberPanel',
     related_guides: [
       {
         href:
@@ -857,7 +818,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Simplify Docker deployments and make containerization easy for anyone to use. Please note: Yacht is still in alpha and is not recommended for production use.`,
     logo_url: 'yacht.svg',
-    name: 'Yacht',
     related_guides: [
       {
         href:
@@ -878,7 +838,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Monitor, track performance and maintain availability for network servers, devices, services and other IT resources– all in one tool.`,
     logo_url: 'zabbix.svg',
-    name: 'Zabbix',
     related_guides: [
       {
         href:
@@ -899,7 +858,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Host multiple sites on a single server while managing apps, firewall, databases, backups, system users, cron jobs, SSL and email–  all in an intuitive interface.`,
     logo_url: 'serverwand.svg',
-    name: 'ServerWand',
     related_guides: [
       {
         href:
@@ -921,7 +879,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Open source alternative to paid ticket management solutions with essential features including a streamlined task list, project and client management, and ticket prioritization.`,
     logo_url: 'peppermint.svg',
-    name: 'Peppermint',
     related_guides: [
       {
         href:
@@ -943,7 +900,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
     logo_url: 'antmediaserver.svg',
-    name: 'Ant Media Server: Community Edition',
     related_guides: [
       {
         href:
@@ -964,7 +920,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `A live streaming and chat server for use with existing popular broadcasting software.`,
     logo_url: 'owncast.svg',
-    name: 'Owncast',
     related_guides: [
       {
         href:
@@ -986,7 +941,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Robust open-source learning platform enabling online education for more than 200 million users around the world. Create personalized learning environments within a secure and integrated system built for all education levels with an intuitive interface, drag-and-drop features, and accessible documentation.`,
     logo_url: 'moodle.svg',
-    name: 'Moodle',
     related_guides: [
       {
         href:
@@ -1008,7 +962,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Feature-rich alternative control panel for users who need critical control panel functionality but don’t need to pay for more niche premium features. aaPanel is open source and consistently maintained with weekly updates.`,
     logo_url: 'aapanel.svg',
-    name: 'aaPanel',
     related_guides: [
       {
         href:
@@ -1030,7 +983,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Popular data-to-everything platform with advanced security, observability, and automation features for machine learning and AI.`,
     logo_url: 'splunk.svg',
-    name: 'Splunk',
     related_guides: [
       {
         href:
@@ -1053,7 +1005,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
     logo_url: 'chevereto.svg',
-    name: 'Chevereto',
     related_guides: [
       {
         href:
@@ -1076,7 +1027,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Securely share and collaborate Linode S3 object storage files/folders with your internal or external users such as customers, partners, vendors, etc with fine access control and a simple interface. Nirvashare easily integrates with many external identity providers such as Active Directory, GSuite, AWS SSO, KeyClock, etc.`,
     logo_url: 'nirvashare.svg',
-    name: 'NirvaShare',
     related_guides: [
       {
         href:
@@ -1099,7 +1049,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
     logo_url: 'clustercontrol.svg',
-    name: 'ClusterControl',
     related_guides: [
       {
         href:
@@ -1121,7 +1070,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Powerful and customizable backups for several websites and data all in the same interface. JetBackup integrates with any control panel via API, and has native support for cPanel and DirectAdmin. Easily backup your data to storage you already use, including Linode’s S3-compatible Object Storage.`,
     logo_url: 'jetbackup.svg',
-    name: 'JetBackup',
     related_guides: [
       {
         href:
@@ -1143,7 +1091,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Open source registry for images and containers. Linode recommends using Harbor with Linode Kubernetes Engine (LKE).`,
     logo_url: 'harbor.svg',
-    name: 'Harbor',
     related_guides: [
       {
         href:
@@ -1164,7 +1111,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Put data privacy first with an alternative to programs like Slack and Microsoft Teams.`,
     logo_url: 'rocketchat.svg',
-    name: 'Rocket.Chat',
     related_guides: [
       {
         href:
@@ -1186,7 +1132,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Infrastructure monitoring solution to detect threats, intrusion attempts, unauthorized user actions, and provide security analytics.`,
     logo_url: 'wazuh.svg',
-    name: 'Wazuh',
     related_guides: [
       {
         href:
@@ -1207,7 +1152,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Test the security posture of a client or application using client-side vectors, all powered by a simple API. This project is developed solely for lawful research and penetration testing.`,
     logo_url: 'beef.svg',
-    name: 'BeEF',
     related_guides: [
       {
         href:
@@ -1229,7 +1173,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Simple deployment for OLS web server, Python LSAPI, and CertBot.`,
     logo_url: 'openlitespeeddjango.svg',
-    name: 'OpenLiteSpeed Django',
     related_guides: [
       {
         href:
@@ -1250,7 +1193,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Easy setup to run Ruby apps in the cloud and take advantage of OpenLiteSpeed server features like SSL, HTTP/3 support, and RewriteRules.`,
     logo_url: 'openlitespeedrails.svg',
-    name: 'OpenLiteSpeed Rails',
     related_guides: [
       {
         href:
@@ -1272,7 +1214,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `High-performance open source web server with Node and CertBot, in addition to features like HTTP/3 support and easy SSL setup.`,
     logo_url: 'openlitespeednodejs.svg',
-    name: 'OpenLiteSpeed NodeJS',
     related_guides: [
       {
         href:
@@ -1280,7 +1221,7 @@ export const oneClickApps: Record<number, OCA> = {
         title: 'Deploy OpenLiteSpeed Node.js through the Linode Marketplace',
       },
     ],
-    summary: 'OLS web server with NodeJS JavaScript runtime environment.',
+    summary: 'OLS web server with Node.js JavaScript runtime environment.',
     website: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
   },
   923032: {
@@ -1293,7 +1234,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `High-performance LiteSpeed web server equipped with WHM/cPanel and WHM LiteSpeed Plugin.`,
     logo_url: 'litespeedcpanel.svg',
-    name: 'LiteSpeed cPanel',
     related_guides: [
       {
         href:
@@ -1315,7 +1255,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Akaunting is a universal accounting software that helps small businesses run more efficiently. Track expenses, generate reports, manage your books, and get the other essential features to run your business from a single dashboard.`,
     logo_url: 'akaunting.svg',
-    name: 'Akaunting',
     related_guides: [
       {
         href:
@@ -1337,7 +1276,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Restyaboard is an open-source alternative to Trello, but with additional smart features like offline sync, diff /revisions, nested comments, multiple view layouts, chat, and more.`,
     logo_url: 'restyaboard.svg',
-    name: 'Restyaboard',
     related_guides: [
       {
         href:
@@ -1358,7 +1296,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Feature-rich, self-hosted VPN based on WireGuard® protocol, plus convenient features like single sign-on, real-time bandwidth monitoring, and unlimited users/devices.`,
     logo_url: 'warpspeed.svg',
-    name: 'WarpSpeed',
     related_guides: [
       {
         href:
@@ -1379,7 +1316,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `UTunnel VPN is a robust cloud-based VPN server software solution. With UTunnel VPN, businesses could easily set up secure remote access to their business network. UTunnel comes with a host of business-centric features including site-to-site connectivity, single sign-on integration, 2-factor authentication, etc.`,
     logo_url: 'utunnel.svg',
-    name: 'UTunnel VPN',
     related_guides: [
       {
         href:
@@ -1401,7 +1337,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `User-friendly VPN for both individual and commercial use. Choose from three pricing plans.`,
     logo_url: 'pritunl.svg',
-    name: 'Pritunl',
     related_guides: [
       {
         href:
@@ -1422,7 +1357,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `VictoriaMetrics is designed to collect, store, and process real-time metrics.`,
     logo_url: 'victoriametricssingle.svg',
-    name: 'VictoriaMetrics Single',
     related_guides: [
       {
         href:
@@ -1444,7 +1378,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Protect your network and devices from unwanted content. Avoid ads in non-browser locations with a free, lightweight, and comprehensive privacy solution you can self-host.`,
     logo_url: 'pihole.svg',
-    name: 'Pi-hole',
     related_guides: [
       {
         href:
@@ -1466,7 +1399,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Uptime Kuma is self-hosted alternative to Uptime Robot. Get real-time performance insights for HTTP(s), TCP/ HTTP(s) Keyword, Ping, DNS Record, and more. Monitor everything you need in one UI dashboard, or customize how you receive alerts with a wide range of supported integrations.`,
     logo_url: 'uptimekuma.svg',
-    name: 'Uptime Kuma',
     related_guides: [
       {
         href:
@@ -1487,7 +1419,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Build websites on a CMS that prioritizes speed and simplicity over customization and integration support. Create your content in Markdown and take advantage of powerful taxonomy to customize relationships between pages and other content.`,
     logo_url: 'grav.svg',
-    name: 'Grav',
     related_guides: [
       {
         href:
@@ -1507,14 +1438,13 @@ export const oneClickApps: Record<number, OCA> = {
       end: '333333',
       start: '3d853c',
     },
-    description: `NodeJS is a free, open-source, and cross-platform JavaScript run-time environment that lets developers write command line tools and server-side scripts outside of a browser.`,
+    description: `Node.js is a free, open-source, and cross-platform JavaScript run-time environment that lets developers write command line tools and server-side scripts outside of a browser.`,
     logo_url: 'nodejs.svg',
-    name: 'NodeJS',
     related_guides: [
       {
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/nodejs/',
-        title: 'Deploy NodeJS through the Linode Marketplace',
+        title: 'Deploy Node.js through the Linode Marketplace',
       },
     ],
     summary:
@@ -1531,7 +1461,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Build applications without writing a single line of code. Saltcorn is a free platform that allows you to build an app with an intuitive point-and-click, drag-and-drop UI.`,
     logo_url: 'saltcorn.svg',
-    name: 'Saltcorn',
     related_guides: [
       {
         href:
@@ -1553,7 +1482,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Odoo is a free and comprehensive business app suite of tools that seamlessly integrate. Choose what you need to manage your business on a single platform, including a CRM, email marketing tools, essential project management functions, and more.`,
     logo_url: 'odoo.svg',
-    name: 'Odoo',
     related_guides: [
       {
         href:
@@ -1575,7 +1503,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Create boards, assign tasks, and keep projects moving with a free and robust alternative to tools like Trello and Asana.`,
     logo_url: 'focalboard.svg',
-    name: 'Focalboard',
     related_guides: [
       {
         href:
@@ -1596,7 +1523,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Free industry-standard monitoring tools that work better together. Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed. Use Grafana to create visuals, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
     logo_url: 'prometheusgrafana.svg',
-    name: 'Prometheus & Grafana',
     related_guides: [
       {
         href:
@@ -1617,7 +1543,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Free open source CMS optimized for building custom functionality and design.`,
     logo_url: 'joomla.svg',
-    name: 'Joomla',
     related_guides: [
       {
         href:
@@ -1639,7 +1564,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Ant Media Server makes it easy to set up a video streaming platform with ultra low latency. The Enterprise edition supports WebRTC Live Streaming in addition to CMAF and HLS streaming. Set up live restreaming to social media platforms to reach more viewers.`,
     logo_url: 'antmediaserver.svg',
-    name: 'Ant Media Server: Enterprise Edition',
     related_guides: [
       {
         href:
@@ -1662,7 +1586,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Capture your thoughts and securely access them from any device with a highly customizable note-taking software.`,
     logo_url: 'joplin.svg',
-    name: 'Joplin',
     related_guides: [
       {
         href:
@@ -1683,7 +1606,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Stream live audio or video while maximizing customer engagement with advanced built-in features. Liveswitch provides real-time monitoring, audience polling, and end-to-end (E2E) data encryption.`,
     logo_url: 'liveswitch.svg',
-    name: 'LiveSwitch',
     related_guides: [
       {
         href:
@@ -1705,7 +1627,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Deploy Node.js, Ruby, Python, PHP, Go, and Java applications via an intuitive control panel. Easily set up free SSL certificates, run commands with an in-browser terminal, and push your code from Github to accelerate development.`,
     logo_url: 'easypanel.svg',
-    name: 'Easypanel',
     related_guides: [
       {
         href:
@@ -1727,7 +1648,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Kali Linux is an open source, Debian-based Linux OS that has become an industry-standard tool for penetration testing and security audits. Kali includes hundreds of free tools for reverse engineering, penetration testing and more. Kali prioritizes simplicity, making security best practices more accessible to everyone from cybersecurity professionals to hobbyists.`,
     logo_url: 'kalilinux.svg',
-    name: 'Kali Linux',
     related_guides: [
       {
         href:
@@ -1751,7 +1671,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as: admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
     logo_url: 'budibase.svg',
-    name: 'Budibase',
     related_guides: [
       {
         href:
@@ -1774,7 +1693,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
     logo_url: 'nomad.svg',
-    name: 'HashiCorp Nomad',
     related_guides: [
       {
         href:
@@ -1796,7 +1714,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'HashiCorp Vault is an open source, centralized secrets management system. It provides a secure and reliable way of storing and distributing secrets like API keys, access tokens, and passwords.',
     logo_url: 'vault.svg',
-    name: 'HashiCorp Vault',
     related_guides: [
       {
         href:
@@ -1817,7 +1734,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Microweber is an easy Drag and Drop website builder and a powerful CMS of a new generation, based on the PHP Laravel Framework.`,
     logo_url: 'microweber.svg',
-    name: 'Microweber',
     related_guides: [
       {
         href:
@@ -1838,7 +1754,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
     logo_url: 'postgresqlmarketplaceocc.svg',
-    name: 'PostgreSQL Cluster',
     related_guides: [
       {
         href:
@@ -1859,7 +1774,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Galera provides a performant multi-master/active-active database solution with synchronous replication, to achieve high availability.`,
     logo_url: 'galeramarketplaceocc.svg',
-    name: 'Galera Cluster',
     related_guides: [
       {
         href:
@@ -1880,7 +1794,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Mastodon is an open-source and decentralized micro-blogging platform, supporting federation and public access to the server.`,
     logo_url: 'mastodon.svg',
-    name: 'Mastodon',
     related_guides: [
       {
         href:
@@ -1903,7 +1816,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Programmatically author, schedule, and monitor workflows with a Python-based tool. Airflow provides full insight into the status and logs of your tasks, all in a modern web application.`,
     logo_url: 'apacheairflow.svg',
-    name: 'Apache Airflow',
     related_guides: [
       {
         href:
@@ -1925,7 +1837,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Harden your web applications and APIs against OWASP Top 10 attacks. Haltdos makes it easy to manage WAF settings and review logs in an intuitive web-based GUI.`,
     logo_url: 'haltdos.svg',
-    name: 'HaltDOS Community WAF',
     related_guides: [
       {
         href:
@@ -1947,7 +1858,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Superinsight provides a simple SQL interface to store and search unstructured data. Superinsight is built on top of PostgreSQL to take advantage of powerful extensions and features, plus the ability to run machine learning operations using SQL statements.`,
     logo_url: 'superinsight.svg',
-    name: 'Superinsight',
     related_guides: [
       {
         href:
@@ -1969,7 +1879,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Provision multicloud clusters, containerize applications, and build DevOps pipelines. Gopaddle’s suite of templates and integrations helps eliminate manual errors and automate Kubernetes application releases.`,
     logo_url: 'gopaddle.svg',
-    name: 'Gopaddle',
     related_guides: [
       {
         href:
@@ -1991,7 +1900,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Self-host a password manager designed to simplify and secure your digital life. Passky is a streamlined version of paid password managers designed for everyone to use.`,
     logo_url: 'passky.svg',
-    name: 'Passky',
     related_guides: [
       {
         href:
@@ -2012,7 +1920,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Create and collaborate on text documents, spreadsheets, and presentations compatible with popular file types including .docx, .xlsx, and more. Additional features include real-time editing, paragraph locking while co-editing, and version history.`,
     logo_url: 'onlyoffice.svg',
-    name: 'ONLYOFFICE Docs',
     related_guides: [
       {
         href:
@@ -2033,7 +1940,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Redis&reg; is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis&reg; features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.<br/><br/>*Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd. Any use by Akamai Technologies is for referential purposes only and does not indicate any sponsorship, endorsement or affiliation between Redis and Akamai Technologies.`,
     logo_url: 'redissentinelmarketplaceocc.svg',
-    name: 'Marketplace App for Redis&reg; Sentinel Cluster',
     related_guides: [
       {
         href:
@@ -2056,7 +1962,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `LAMP-stack-based server application that allows you to access your files from anywhere in a secure way.`,
     logo_url: 'owncloud.svg',
-    name: 'ownCloud',
     related_guides: [
       {
         href:
@@ -2079,7 +1984,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `A self-hosted Firebase alternative for web, mobile & Flutter developers.`,
     logo_url: 'appwrite.svg',
-    name: 'Appwrite',
     related_guides: [
       {
         href:
@@ -2102,7 +2006,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Self-hosted database for a variety of management projects.`,
     logo_url: 'seatable.svg',
-    name: 'Seatable',
     related_guides: [
       {
         href:
@@ -2126,7 +2029,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'Illa Builder is a Retool open-source alternative, with low-code UI components for self-hosting the development of internal tools.',
     logo_url: 'illabuilder.svg',
-    name: 'Illa Builder',
     related_guides: [
       {
         href:
@@ -2149,7 +2051,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
     logo_url: 'nomad.svg',
-    name: 'HashiCorp Nomad Cluster',
     related_guides: [
       {
         href:
@@ -2172,7 +2073,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'A simple deployment of multiple clients to horizontally scale an existing Nomad One-Click Cluster.',
     logo_url: 'nomad.svg',
-    name: 'HashiCorp Nomad Clients Cluster',
     related_guides: [
       {
         href:
@@ -2194,7 +2094,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `MainConcept FFmpeg Plugins Demo is suited for both VOD and live production workflows, with advanced features such as Hybrid GPU acceleration and xHE-AAC audio format.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept FFmpeg Plugins Demo',
     related_guides: [
       {
         href:
@@ -2217,7 +2116,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `MainConcept Live Encoder Demo is a powerful all-in-one encoding engine designed to simplify common broadcast and OTT video workflows.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept Live Encoder Demo',
     related_guides: [
       {
         href:
@@ -2239,7 +2137,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `MainConcept P2 AVC ULTRA Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept P2 AVC ULTRA Transcoder Demo',
     related_guides: [
       {
         href:
@@ -2262,7 +2159,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `MainConcept XAVC Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XAVC-Intra, XAVC Long GOP and XAVC-S.`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept XAVC Transcoder Demo',
     related_guides: [
       {
         href:
@@ -2285,7 +2181,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `MainConcept XDCAM Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XDCAM HD, XDCAM EX, XDCAM IMX and DVCAM (XDCAM DV).`,
     logo_url: 'mainconcept.svg',
-    name: 'MainConcept XDCAM Transcoder Demo',
     related_guides: [
       {
         href:
@@ -2308,7 +2203,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `SimpleX Chat - The first messaging platform that has no user identifiers of any kind - 100% private by design. SMP server is the relay server used to pass messages in SimpleX network. XFTP is a new file transfer protocol focussed on meta-data protection. This One-Click APP will deploy both SMP and XFTP servers.`,
     logo_url: 'simplexchat.svg',
-    name: 'SimpleX Chat',
     related_guides: [
       {
         href:
@@ -2330,7 +2224,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'JupyterLab is a cutting-edge web-based, interactive development environment, geared towards data science, machine learning and other scientific computing workflows.',
     logo_url: 'jupyter.svg',
-    name: 'JupyterLab',
     related_guides: [
       {
         href:
@@ -2352,7 +2245,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'NATS is a distributed PubSub technology that enables applications to securely communicate across any combination of cloud vendors, on-premise, edge, web and mobile, and devices.',
     logo_url: 'nats.svg',
-    name: 'NATS Single Node',
     related_guides: [
       {
         href:
@@ -2362,28 +2254,6 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Cloud native application messaging service.',
     website: 'https://nats.io',
-  },
-  1439640: {
-    alt_description: 'Open Source Secrets Manager',
-    alt_name: 'Passbolt CE',
-    categories: ['Security'],
-    colors: {
-      end: 'D40101',
-      start: '171717',
-    },
-    description: `Passbolt Community Edition is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
-    logo_url: 'passbolt.svg',
-    name: 'Passbolt Community Edition',
-    related_guides: [
-      {
-        href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
-        title:
-          'Deploy Passbolt Community Edition through the Linode Marketplace',
-      },
-    ],
-    summary: 'Open-source password manager for teams and businesses.',
-    website: 'https://www.passbolt.com/',
   },
   1329462: {
     alt_description:
@@ -2396,7 +2266,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Self hosted multiplayer game servers.`,
     logo_url: 'linuxgsm.svg',
-    name: 'LinuxGSM',
     related_guides: [
       {
         href:
@@ -2418,7 +2287,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Secure, stable, and free alternative to popular video conferencing services. This app deploys four networked Jitsi nodes.`,
     logo_url: 'jitsi.svg',
-    name: 'Jitsi Cluster',
     related_guides: [
       {
         href:
@@ -2440,7 +2308,6 @@ export const oneClickApps: Record<number, OCA> = {
     description:
       'GlusterFS is an open source, software scalable network filesystem. This app deploys three GlusterFS servers and three GlusterFS clients.',
     logo_url: 'glusterfs.svg',
-    name: 'GlusterFS Cluster',
     related_guides: [
       {
         href:
@@ -2463,7 +2330,6 @@ export const oneClickApps: Record<number, OCA> = {
     description: `Distributed, masterless, replicating NoSQL database cluster.`,
     isNew: true,
     logo_url: 'apachecassandra.svg',
-    name: 'Apache Cassandra Cluster',
     related_guides: [
       {
         href:
@@ -2485,7 +2351,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Couchbase Enterprise Server is a high-performance NoSQL database, built for scale. Couchbase Server is designed with memory-first architecture, built-in cache and workload isolation.`,
     logo_url: 'couchbase.svg',
-    name: 'Couchbase Cluster',
     related_guides: [
       {
         href:
@@ -2507,7 +2372,6 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description: `Apache Kafka supports a wide range of applications from log aggregation to real-time analytics. Kafka provides a foundation for building data pipelines, event-driven architectures, or stream processing applications.`,
     logo_url: 'apachekafka.svg',
-    name: 'Apache Kafka Cluster',
     related_guides: [
       {
         href:
@@ -2529,7 +2393,6 @@ export const oneClickApps: Record<number, OCA> = {
     description: `High performance, BSD license key/value database.`,
     isNew: true,
     logo_url: 'valkey.svg',
-    name: 'Valkey',
     related_guides: [
       {
         href:
@@ -2551,7 +2414,6 @@ export const oneClickApps: Record<number, OCA> = {
     description: `OSI approved open source secrets platform.`,
     isNew: true,
     logo_url: 'openbao.svg',
-    name: 'OpenBao',
     related_guides: [
       {
         href:
@@ -2573,7 +2435,6 @@ export const oneClickApps: Record<number, OCA> = {
     description: `Time series database supporting native query and visualization.`,
     isNew: true,
     logo_url: 'influxdb.svg',
-    name: 'InfluxDB',
     related_guides: [
       {
         href:
@@ -2596,7 +2457,6 @@ export const oneClickApps: Record<number, OCA> = {
     description: `Fast, open-source unified analytics engine for large-scale data processing.`,
     isNew: true,
     logo_url: 'apachespark.svg',
-    name: 'Apache Spark Cluster',
     related_guides: [
       {
         href:
@@ -2606,5 +2466,26 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Unified analytics engine for big data processing.',
     website: 'https://spark.apache.org/',
+  },
+  1439640: {
+    alt_description: 'Open Source Secrets Manager',
+    alt_name: 'Passbolt CE',
+    categories: ['Security'],
+    colors: {
+      end: 'D40101',
+      start: '171717',
+    },
+    description: `Passbolt Community Edition is an open-source password manager designed for teams and businesses. It allows users to securely store, share and manage passwords.`,
+    logo_url: 'passbolt.svg',
+    related_guides: [
+      {
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
+        title:
+          'Deploy Passbolt Community Edition through the Linode Marketplace',
+      },
+    ],
+    summary: 'Open-source password manager for teams and businesses.',
+    website: 'https://www.passbolt.com/',
   },
 };

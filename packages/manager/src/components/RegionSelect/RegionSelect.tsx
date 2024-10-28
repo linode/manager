@@ -15,7 +15,6 @@ import { RegionOption } from './RegionOption';
 import {
   StyledAutocompleteContainer,
   StyledDistributedRegionBox,
-  StyledFlagContainer,
   sxDistributedRegionIcon,
 } from './RegionSelect.styles';
 import {
@@ -52,6 +51,7 @@ export const RegionSelect = <
     helperText,
     ignoreAccountAvailability,
     label,
+    noMarginTop,
     onChange,
     placeholder,
     regionFilter,
@@ -136,14 +136,18 @@ export const RegionSelect = <
         getOptionLabel={(region) =>
           isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`
         }
-        renderOption={(props, region) => (
-          <RegionOption
-            disabledOptions={disabledRegions[region.id]}
-            key={region.id}
-            props={props}
-            region={region}
-          />
-        )}
+        renderOption={(props, region) => {
+          const { key, ...rest } = props;
+
+          return (
+            <RegionOption
+              disabledOptions={disabledRegions[region.id]}
+              key={key}
+              props={rest}
+              region={region}
+            />
+          );
+        }}
         sx={(theme) => ({
           [theme.breakpoints.up('md')]: {
             width: '416px',
@@ -155,9 +159,7 @@ export const RegionSelect = <
             endAdornment: EndAdornment,
             required,
             startAdornment: selectedRegion && (
-              <StyledFlagContainer>
-                <Flag country={selectedRegion?.country} />
-              </StyledFlagContainer>
+              <Flag country={selectedRegion?.country} mr={1} />
             ),
           },
           tooltipText,
@@ -175,6 +177,7 @@ export const RegionSelect = <
         label={label ?? 'Region'}
         loading={accountAvailabilityLoading}
         loadingText="Loading regions..."
+        noMarginTop={noMarginTop}
         noOptionsText="No results"
         onChange={onChange}
         options={regionOptions}

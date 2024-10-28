@@ -1,4 +1,16 @@
 
+## [2024-10-28] - v0.129.0
+
+
+### Added:
+
+- ACL related endpoints and types for LKE clusters ([#10968](https://github.com/linode/manager/pull/10968))
+- `StackScripts` to Region capabilities type ([#11139](https://github.com/linode/manager/pull/11139))
+
+### Fixed:
+
+- Incorrect documentation on how to set a page size ([#11129](https://github.com/linode/manager/pull/11129))
+
 ## [2024-10-14] - v0.128.0
 
 ### Added:

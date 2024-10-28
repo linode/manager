@@ -7,7 +7,8 @@ export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
 
 export const validateIP = (ipAddress?: string | null): boolean => {
-  if (!ipAddress) {
+  // ''is falsy, so we must specify that it is OK
+  if (ipAddress !== '' && !ipAddress) {
     return false;
   }
   // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing

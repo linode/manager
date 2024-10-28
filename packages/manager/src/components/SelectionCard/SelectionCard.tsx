@@ -1,11 +1,12 @@
+import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme, styled } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Tooltip } from 'src/components/Tooltip';
 
 import { CardBase } from './CardBase';
+
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface SelectionCardProps {
   /**
@@ -58,23 +59,23 @@ export interface SelectionCardProps {
   /**
    * Optional styles to apply to the root element.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   /**
    * Optional styles to apply to the root element of the card.
    */
-  sxCardBase?: SxProps;
+  sxCardBase?: SxProps<Theme>;
   /**
    * Optional styles to apply to the heading of the card.
    */
-  sxCardBaseHeading?: SxProps;
+  sxCardBaseHeading?: SxProps<Theme>;
   /**
    * Optional styles to apply to the icon of the card.
    */
-  sxCardBaseIcon?: SxProps;
+  sxCardBaseIcon?: SxProps<Theme>;
   /**
    * Optional styles to apply to the subheading of the card.
    */
-  sxCardBaseSubheading?: SxProps;
+  sxCardBaseSubheading?: SxProps<Theme>;
   /**
    * Optional styles to apply to the grid of the card.
    */
@@ -82,7 +83,7 @@ export interface SelectionCardProps {
   /**
    * Optional styles to apply to the tooltip of the card.
    */
-  sxTooltip?: SxProps;
+  sxTooltip?: SxProps<Theme>;
   /**
    * Optional text to set in a tooltip when hovering over the card.
    */

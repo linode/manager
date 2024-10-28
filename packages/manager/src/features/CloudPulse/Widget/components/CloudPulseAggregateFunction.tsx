@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { StyledWidgetAutocomplete } from '../../Utils/CloudPulseWidgetUtils';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+
+import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
+import { getAutocompleteWidgetStyles } from '../../Utils/CloudPulseWidgetUtils';
+import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 
 export interface AggregateFunctionProperties {
   /**
@@ -41,6 +45,7 @@ export const CloudPulseAggregateFunction = React.memo(
         };
       }
     );
+
     const defaultValue =
       availableAggregateFunc.find(
         (obj) => obj.label === defaultAggregateFunction
@@ -52,26 +57,30 @@ export const CloudPulseAggregateFunction = React.memo(
     ] = React.useState<AggregateFunction>(defaultValue);
 
     return (
-      <StyledWidgetAutocomplete
-        isOptionEqualToValue={(option, value) => {
-          return option.label == value.label;
-        }}
-        onChange={(e, selectedAggregateFunc: AggregateFunction) => {
-          setSelectedAggregateFunction(selectedAggregateFunc);
-          onAggregateFuncChange(selectedAggregateFunc.label);
-        }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
-        autoHighlight
-        disableClearable
-        fullWidth={false}
-        label="Select an Aggregate Function"
-        noMarginTop={true}
-        options={availableAggregateFunc}
-        sx={{ width: '100%' }}
-        value={selectedAggregateFunction}
-      />
+      <CloudPulseTooltip title={'Aggregation function'}>
+        <Autocomplete
+          getOptionLabel={(option) => {
+            return convertStringToCamelCasesWithSpaces(option.label); // options needed to be display in Caps first
+          }}
+          isOptionEqualToValue={(option, value) => {
+            return option.label === value.label;
+          }}
+          onChange={(e, selectedAggregateFunc) => {
+            setSelectedAggregateFunction(selectedAggregateFunc);
+            onAggregateFuncChange(selectedAggregateFunc.label);
+          }}
+          textFieldProps={{
+            hideLabel: true,
+          }}
+          autoHighlight
+          disableClearable
+          label="Select an Aggregate Function"
+          noMarginTop={true}
+          options={availableAggregateFunc}
+          sx={getAutocompleteWidgetStyles}
+          value={selectedAggregateFunction}
+        />
+      </CloudPulseTooltip>
     );
   }
 );

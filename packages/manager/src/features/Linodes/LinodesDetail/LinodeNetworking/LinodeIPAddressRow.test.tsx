@@ -7,10 +7,12 @@ import {
   ipResponseToDisplayRows,
   vpcConfigInterfaceToDisplayRows,
 } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
-import { PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
+import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
-import { IPAddressRowHandlers, LinodeIPAddressRow } from './LinodeIPAddressRow';
+import { LinodeIPAddressRow } from './LinodeIPAddressRow';
+
+import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
 
 const ips = linodeIPFactory.build();
 const ipDisplay = ipResponseToDisplayRows(ips)[0];
@@ -87,7 +89,7 @@ describe('LinodeIPAddressRow', () => {
     fireEvent.mouseEnter(deleteBtn);
     const publicIpsUnassignedTooltip = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip).toContainHTML(
-      PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
     );
 
     const editRDNSBtn = getByTestId('action-menu-item-edit-rdns');
@@ -96,7 +98,7 @@ describe('LinodeIPAddressRow', () => {
     fireEvent.mouseEnter(editRDNSBtn);
     const publicIpsUnassignedTooltip2 = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip2).toContainHTML(
-      PUBLIC_IPS_UNASSIGNED_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
     );
   });
 

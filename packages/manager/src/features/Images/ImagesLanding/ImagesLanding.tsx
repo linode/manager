@@ -450,14 +450,14 @@ export const ImagesLanding = () => {
                 <TableCell>Status</TableCell>
               </Hidden>
               {multiRegionsEnabled && (
-                <>
-                  <Hidden smDown>
-                    <TableCell>Replicated in</TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>Compatibility</TableCell>
-                  </Hidden>
-                </>
+                <Hidden smDown>
+                  <TableCell>Replicated in</TableCell>
+                </Hidden>
+              )}
+              {multiRegionsEnabled && !flags.imageServiceGen2Ga && (
+                <Hidden smDown>
+                  <TableCell>Compatibility</TableCell>
+                </Hidden>
               )}
               <TableSortCell
                 active={manualImagesOrderBy === 'size'}
