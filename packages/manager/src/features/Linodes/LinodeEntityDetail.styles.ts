@@ -189,6 +189,7 @@ export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
       right: 0,
       width: 30,
     },
+    display: 'flex',
     overflowX: 'auto',
     overflowY: 'hidden', // For Edge
     paddingRight: 15,
