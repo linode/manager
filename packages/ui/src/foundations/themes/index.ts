@@ -1,31 +1,33 @@
 import { createTheme } from '@mui/material/styles';
+import { deepmerge } from '@mui/utils';
 
 // Themes & Brands
-import { darkTheme } from 'src/foundations/themes/dark';
-import { lightTheme } from 'src/foundations/themes/light';
-import { deepMerge } from 'src/utilities/deepMerge';
+import { darkTheme } from './dark';
+import { lightTheme } from './light';
 
-import type { Chart as ChartLight } from '@linode/design-language-system';
-import type { Chart as ChartDark } from '@linode/design-language-system/themes/dark';
-import type { latoWeb } from 'src/foundations/fonts';
+import type {
+  ChartTypes,
+  ColorTypes,
+  InteractionTypes as InteractionTypesLight,
+} from '@linode/design-language-system';
+import type { InteractionTypes as InteractionTypesDark } from '@linode/design-language-system/themes/dark';
+import type { latoWeb } from '../fonts';
 // Types & Interfaces
 import type {
   customDarkModeOptions,
   notificationToast as notificationToastDark,
-} from 'src/foundations/themes/dark';
+} from './dark';
 import type {
   bg,
   borderColors,
   color,
   notificationToast,
   textColors,
-} from 'src/foundations/themes/light';
+} from './light';
 
 export type ThemeName = 'dark' | 'light';
 
-type ChartLightTypes = typeof ChartLight;
-type ChartDarkTypes = typeof ChartDark;
-type ChartTypes = MergeTypes<ChartLightTypes, ChartDarkTypes>;
+type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
 
 type Fonts = typeof latoWeb;
 
@@ -72,11 +74,14 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg: BgColors;
     borderColors: BorderColors;
-    charts: ChartTypes;
+    chartTokens: ChartTypes;
+    colorTokens: ColorTypes; // Global token: theme agnostic
     color: Colors;
     font: Fonts;
     graphs: any;
+    inputMaxWidth: number;
     inputStyles: any;
+    interactionTokens: InteractionTypes;
     name: ThemeName;
     notificationToast: NotificationToast;
     textColors: TextColors;
@@ -91,11 +96,14 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
-    charts: ChartTypes;
+    chartTokens?: ChartTypes;
+    colorTokens?: ColorTypes; // Global token: theme agnostic
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
+    inputMaxWidth?: number;
     inputStyles?: any;
+    interactionTokens?: InteractionTypes;
     name: ThemeName;
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
@@ -104,4 +112,4 @@ declare module '@mui/material/styles/createTheme' {
 }
 
 export const light = createTheme(lightTheme);
-export const dark = createTheme(deepMerge(lightTheme, darkTheme));
+export const dark = createTheme(deepmerge(lightTheme, darkTheme));

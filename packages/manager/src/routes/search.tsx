@@ -3,7 +3,6 @@ import React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { StatusBanners } from 'src/features/Help/StatusBanners';
-import SearchLanding from 'src/features/Search/SearchLanding';
 
 import { rootRoute } from './root';
 
@@ -23,9 +22,12 @@ const searchRoute = createRoute({
 });
 
 const searchLandingRoute = createRoute({
-  component: () => <SearchLanding />,
   getParentRoute: () => searchRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Search/SearchLanding').then(
+    (m) => m.searchLandingLazyRoute
+  )
+);
 
 export const searchRouteTree = searchRoute.addChildren([searchLandingRoute]);

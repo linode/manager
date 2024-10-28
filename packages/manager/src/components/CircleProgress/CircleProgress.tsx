@@ -1,11 +1,12 @@
 import _CircularProgress from '@mui/material/CircularProgress';
-import { SxProps, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { CircularProgressProps } from '@mui/material/CircularProgress';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
   /**
@@ -24,7 +25,7 @@ interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
   /**
    * Additional styles to apply to the root element.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 const SIZE_MAP = {

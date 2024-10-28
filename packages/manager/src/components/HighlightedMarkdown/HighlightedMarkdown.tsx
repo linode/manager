@@ -14,7 +14,7 @@ import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 import { useColorMode } from 'src/utilities/theme';
 
-import type { ThemeName } from 'src/foundations/themes';
+import type { ThemeName } from '@linode/ui';
 import type { SanitizeOptions } from 'src/utilities/sanitizeHTML';
 
 hljs.registerLanguage('apache', apache);

@@ -51,8 +51,8 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   y_label: Factory.each((i) => `y_label_${i}`),
 });
 
-export const dashboardMetricFactory =
-  Factory.Sync.makeFactory<AvailableMetrics>({
+export const dashboardMetricFactory = Factory.Sync.makeFactory<AvailableMetrics>(
+  {
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
     dimensions: [],
     label: Factory.each((i) => `widget_label_${i}`),
@@ -62,10 +62,11 @@ export const dashboardMetricFactory =
       (i) => scrape_interval[i % scrape_interval.length]
     ),
     unit: 'defaultUnit',
-  });
+  }
+);
 
-export const cloudPulseMetricsResponseDataFactory =
-  Factory.Sync.makeFactory<CloudPulseMetricsResponseData>({
+export const cloudPulseMetricsResponseDataFactory = Factory.Sync.makeFactory<CloudPulseMetricsResponseData>(
+  {
     result: [
       {
         metric: {},
@@ -73,14 +74,16 @@ export const cloudPulseMetricsResponseDataFactory =
       },
     ],
     result_type: 'matrix',
-  });
+  }
+);
 
-export const cloudPulseMetricsResponseFactory =
-  Factory.Sync.makeFactory<CloudPulseMetricsResponse>({
+export const cloudPulseMetricsResponseFactory = Factory.Sync.makeFactory<CloudPulseMetricsResponse>(
+  {
     data: cloudPulseMetricsResponseDataFactory.build(),
     isPartial: false,
     stats: {
       series_fetched: 2,
     },
     status: 'success',
-  });
+  }
+);

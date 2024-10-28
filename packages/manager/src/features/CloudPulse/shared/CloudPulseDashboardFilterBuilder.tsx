@@ -292,10 +292,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             }
             sx={{
               justifyContent: 'start',
-              m: 0,
+              m: theme.spacing(0),
+              marginBottom: theme.spacing(showFilter ? 1 : 0),
               minHeight: 'auto',
               minWidth: 'auto',
-              p: 0,
+              p: theme.spacing(0),
               svg: {
                 color: theme.color.grey4,
               },
@@ -306,13 +307,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           </Button>
         </Grid>
         <Grid
-          columnSpacing={2}
+          columnSpacing={theme.spacing(2)}
           container
           display={showFilter ? 'flex' : 'none'}
           item
-          maxHeight={'120px'}
+          maxHeight={theme.spacing(22)}
           overflow={'auto'}
-          rowGap={2}
+          rowGap={theme.spacing(2)}
           xs={12}
         >
           <RenderFilters />

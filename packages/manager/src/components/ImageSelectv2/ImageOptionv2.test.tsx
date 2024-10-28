@@ -33,7 +33,7 @@ describe('ImageOptionv2', () => {
     );
 
     expect(
-      getByLabelText('This image is compatible with cloud-init.')
+      getByLabelText('This image supports our Metadata service via cloud-init.')
     ).toBeVisible();
   });
   it('renders a distributed icon if image has the "distributed-sites" capability', () => {
