@@ -3,7 +3,6 @@ import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
 import { clamp } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -13,11 +12,9 @@ import { InputLabel } from 'src/components/InputLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
+import type { TooltipProps } from '@linode/ui';
 import type { StandardTextFieldProps } from '@mui/material/TextField';
 import type { BoxProps } from 'src/components/Box';
-import type { TooltipProps } from 'src/components/Tooltip';
-
-const useStyles = makeStyles()(() => ({}));
 
 interface BaseProps {
   /**
@@ -128,8 +125,6 @@ export type TextFieldProps = BaseProps &
   InputToolTipProps;
 
 export const TextField = (props: TextFieldProps) => {
-  const { cx } = useStyles();
-
   const {
     InputLabelProps,
     InputProps,
@@ -266,12 +261,9 @@ export const TextField = (props: TextFieldProps) => {
   return (
     <Box
       {...containerProps}
-      className={cx(
-        {
-          [errorScrollClassName]: !!errorText,
-        },
-        containerProps?.className
-      )}
+      className={`${errorText ? errorScrollClassName : ''} ${
+        containerProps?.className || ''
+      }`}
       sx={{
         ...(Boolean(tooltipText) && {
           alignItems: 'flex-end',
@@ -431,7 +423,7 @@ export const TextField = (props: TextFieldProps) => {
               wordBreak: 'keep-all',
             }),
             alignItems: 'center',
-            color: theme.color.red,
+            color: theme.palette.error.dark,
             display: 'flex',
             left: 5,
             top: 42,

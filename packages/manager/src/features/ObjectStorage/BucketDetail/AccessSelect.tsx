@@ -1,9 +1,8 @@
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
@@ -11,6 +10,12 @@ import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import { useOpenClose } from 'src/hooks/useOpenClose';
+import {
+  useBucketAccess,
+  useObjectAccess,
+  useUpdateBucketAccessMutation,
+  useUpdateObjectAccessMutation,
+} from 'src/queries/object-storage/queries';
 import { capitalize } from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -22,14 +27,15 @@ import type {
   ObjectStorageBucketAccess,
   ObjectStorageEndpointTypes,
   ObjectStorageObjectACL,
+  UpdateObjectStorageBucketAccessPayload,
 } from '@linode/api-v4/lib/object-storage';
 import type { Theme } from '@mui/material/styles';
 
 export interface Props {
+  bucketName?: string;
+  clusterOrRegion: string;
   endpointType?: ObjectStorageEndpointTypes;
-  getAccess: () => Promise<ObjectStorageBucketAccess | ObjectStorageObjectACL>;
   name: string;
-  updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
   variant: 'bucket' | 'object';
 }
 
@@ -40,21 +46,8 @@ function isUpdateObjectStorageBucketAccessPayload(
 }
 
 export const AccessSelect = React.memo((props: Props) => {
-  const { endpointType, getAccess, name, updateAccess, variant } = props;
-  // Access data for this Object (from the API).
-  const [aclData, setACLData] = React.useState<ACLType | null>(null);
-  const [corsData, setCORSData] = React.useState(true);
-  const [accessLoading, setAccessLoading] = React.useState(false);
-  const [accessError, setAccessError] = React.useState('');
-  // The ACL Option currently selected in the <EnhancedSelect /> component.
-  const [selectedACL, setSelectedACL] = React.useState<ACLType | null>(null);
-  // The CORS Option currently selected in the <Toggle /> component.
-  const [selectedCORSOption, setSelectedCORSOption] = React.useState(true); // TODO: OBJGen2 - We need to handle this in upcoming PR
-  // State for submitting access options.
-  const [updateAccessLoading, setUpdateAccessLoading] = React.useState(false);
-  const [updateAccessError, setUpdateAccessError] = React.useState('');
-  const [updateAccessSuccess, setUpdateAccessSuccess] = React.useState(false);
-  // State for dealing with the confirmation modal when selecting read/write.
+  const { bucketName, clusterOrRegion, endpointType, name, variant } = props;
+
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
   const isCorsAvailable =
@@ -62,59 +55,63 @@ export const AccessSelect = React.memo((props: Props) => {
     endpointType !== 'E2' &&
     endpointType !== 'E3';
 
-  React.useEffect(() => {
-    setUpdateAccessError('');
-    setAccessError('');
-    setUpdateAccessSuccess(false);
-    setAccessLoading(true);
-    getAccess()
-      .then((response) => {
-        setAccessLoading(false);
-        const { acl } = response;
-        // Don't show "public-read-write" for Objects here; use "custom" instead
-        // since "public-read-write" Objects are basically the same as "public-read".
-        const _acl =
-          variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
-        setACLData(_acl);
-        setSelectedACL(_acl);
-        if (isUpdateObjectStorageBucketAccessPayload(response)) {
-          const { cors_enabled } = response;
-          if (typeof cors_enabled === 'boolean') {
-            setCORSData(cors_enabled);
-            setSelectedCORSOption(cors_enabled);
-          }
-        }
-      })
-      .catch((err) => {
-        setAccessLoading(false);
-        setAccessError(getErrorStringOrDefault(err));
-      });
-  }, [getAccess, variant]);
+  const {
+    data: bucketAccessData,
+    error: bucketAccessError,
+    isFetching: bucketAccessIsFetching,
+  } = useBucketAccess(clusterOrRegion, name, variant === 'bucket');
 
-  const handleSubmit = () => {
-    // TS safety check.
-    if (!name || !selectedACL) {
-      return;
+  const {
+    data: objectAccessData,
+    error: objectAccessError,
+    isFetching: objectAccessIsFetching,
+  } = useObjectAccess(
+    bucketName || '',
+    clusterOrRegion,
+    { name },
+    variant === 'object'
+  );
+
+  const {
+    error: updateBucketAccessError,
+    isSuccess: updateBucketAccessSuccess,
+    mutateAsync: updateBucketAccess,
+  } = useUpdateBucketAccessMutation(clusterOrRegion, name);
+
+  const {
+    error: updateObjectAccessError,
+    isSuccess: updateObjectAccessSuccess,
+    mutateAsync: updateObjectAccess,
+  } = useUpdateObjectAccessMutation(clusterOrRegion, bucketName || '', name);
+
+  const formValues = React.useMemo(() => {
+    const data = variant === 'object' ? objectAccessData : bucketAccessData;
+
+    if (data) {
+      const { acl } = data;
+      // Don't show "public-read-write" for Objects here; use "custom" instead
+      // since "public-read-write" Objects are basically the same as "public-read".
+      const _acl =
+        variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
+      const cors_enabled = isUpdateObjectStorageBucketAccessPayload(data)
+        ? data.cors_enabled ?? false
+        : true;
+      return { acl: _acl as ACLType, cors_enabled };
     }
+    return { acl: 'private' as ACLType, cors_enabled: true };
+  }, [bucketAccessData, objectAccessData, , variant]);
 
-    setUpdateAccessSuccess(false);
-    setUpdateAccessLoading(true);
-    setUpdateAccessError('');
-    setAccessError('');
-    closeDialog();
+  const {
+    control,
+    formState: { errors, isDirty, isSubmitting },
+    handleSubmit,
+    watch,
+  } = useForm<Required<UpdateObjectStorageBucketAccessPayload>>({
+    defaultValues: formValues,
+    values: formValues,
+  });
 
-    updateAccess(selectedACL, selectedCORSOption)
-      .then(() => {
-        setUpdateAccessSuccess(true);
-        setACLData(selectedACL);
-        setCORSData(selectedCORSOption);
-        setUpdateAccessLoading(false);
-      })
-      .catch((err) => {
-        setUpdateAccessLoading(false);
-        setUpdateAccessError(getErrorStringOrDefault(err));
-      });
-  };
+  const selectedACL = watch('acl');
 
   const aclOptions = variant === 'bucket' ? bucketACLOptions : objectACLOptions;
 
@@ -127,78 +124,119 @@ export const AccessSelect = React.memo((props: Props) => {
   // select "public-read-write" as an Object ACL, which is just equivalent to
   // "public-read", so we don't present it as an option.
   const _options =
-    aclData === 'custom'
+    selectedACL === 'custom'
       ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
       : aclOptions;
 
-  const aclLabel = _options.find(
-    (thisOption) => thisOption.value === selectedACL
-  )?.label;
-
+  const aclLabel = _options.find((option) => option.value === selectedACL)
+    ?.label;
   const aclCopy = selectedACL ? copy[variant][selectedACL] : null;
 
-  const errorText = accessError || updateAccessError;
+  const errorText =
+    getErrorStringOrDefault(bucketAccessError || '') ||
+    getErrorStringOrDefault(objectAccessError || '') ||
+    getErrorStringOrDefault(updateBucketAccessError || '') ||
+    getErrorStringOrDefault(updateObjectAccessError || '') ||
+    errors.acl?.message;
 
-  const CORSLabel = accessLoading
-    ? 'Loading access...'
-    : selectedCORSOption
-    ? 'CORS Enabled'
-    : 'CORS Disabled';
+  const onSubmit = handleSubmit(async (data) => {
+    closeDialog();
+    if (errorText) {
+      return;
+    }
 
-  const selectedOption =
-    _options.find((thisOption) => thisOption.value === selectedACL) ??
-    _options.find((thisOption) => thisOption.value === 'private');
+    if (variant === 'bucket') {
+      // Don't send the ACL with the payload if it's "custom", since it's
+      // not valid (though it's a valid return type).
+      const payload =
+        data.acl === 'custom' ? { cors_enabled: data.cors_enabled } : data;
+      await updateBucketAccess(payload);
+    } else {
+      await updateObjectAccess(data.acl);
+    }
+  });
 
   return (
-    <>
-      {updateAccessSuccess ? (
+    <form onSubmit={onSubmit}>
+      {(updateBucketAccessSuccess || updateObjectAccessSuccess) && (
         <Notice
+          spacingBottom={0}
+          spacingTop={8}
           text={`${label} access updated successfully.`}
           variant="success"
         />
-      ) : null}
+      )}
 
-      {errorText ? <Notice text={errorText} variant="error" /> : null}
+      {errorText && (
+        <Notice
+          spacingBottom={0}
+          spacingTop={8}
+          text={'An error has occured'}
+          variant="error"
+        />
+      )}
 
-      <Autocomplete
-        onChange={(_, selected) => {
-          if (selected) {
-            setUpdateAccessSuccess(false);
-            setUpdateAccessError('');
-            setSelectedACL(selected.value as ACLType);
-          }
-        }}
-        data-testid="acl-select"
-        disableClearable
-        disabled={Boolean(accessError) || accessLoading}
-        label="Access Control List (ACL)"
-        loading={accessLoading}
-        options={!accessLoading ? _options : []}
-        placeholder={accessLoading ? 'Loading access...' : 'Select an ACL...'}
-        value={!accessLoading ? selectedOption : undefined}
+      <Controller
+        render={({ field }) => (
+          <Autocomplete
+            {...field}
+            onChange={(_, selected: { label: string; value: ACLType }) => {
+              if (selected) {
+                field.onChange(selected.value);
+              }
+            }}
+            placeholder={
+              bucketAccessIsFetching || objectAccessIsFetching
+                ? 'Loading access...'
+                : 'Select an ACL...'
+            }
+            data-testid="acl-select"
+            disableClearable
+            disabled={bucketAccessIsFetching || objectAccessIsFetching}
+            label="Access Control List (ACL)"
+            loading={bucketAccessIsFetching || objectAccessIsFetching}
+            options={_options}
+            value={_options.find((option) => option.value === field.value)}
+          />
+        )}
+        control={control}
+        name="acl"
+        rules={{ required: 'ACL is required' }}
       />
 
       <div style={{ marginTop: 8, minHeight: 16 }}>
-        {aclLabel && aclCopy ? (
+        {aclLabel && aclCopy && (
           <Typography>
             {aclLabel}: {aclCopy}
           </Typography>
-        ) : null}
+        )}
       </div>
 
-      {isCorsAvailable ? (
-        <FormControlLabel
-          control={
-            <Toggle
-              checked={selectedCORSOption}
-              disabled={accessLoading}
-              onChange={() => setSelectedCORSOption((prev) => !prev)}
+      {isCorsAvailable && (
+        <Controller
+          render={({ field }) => (
+            <FormControlLabel
+              control={
+                <Toggle
+                  {...field}
+                  checked={field.value}
+                  disabled={bucketAccessIsFetching || objectAccessIsFetching}
+                />
+              }
+              label={
+                bucketAccessIsFetching || objectAccessIsFetching
+                  ? 'Loading access...'
+                  : field.value
+                  ? 'CORS Enabled'
+                  : 'CORS Disabled'
+              }
+              style={{ display: 'block', marginTop: 16 }}
             />
-          }
-          label={CORSLabel}
-          style={{ display: 'block', marginTop: 16 }}
+          )}
+          control={control}
+          name="cors_enabled"
         />
-      ) : null}
+      )}
 
       {isCorsAvailable ? (
         <Typography>
@@ -209,8 +247,7 @@ export const AccessSelect = React.memo((props: Props) => {
           </Link>
           .
         </Typography>
-      ) : (
-        // TODO: OBJGen2 - We need to handle link in upcoming PR
+      ) : endpointType && variant === 'bucket' ? (
         <Notice spacingBottom={0} spacingTop={16} variant="warning">
           <Typography
             sx={(theme) => ({
@@ -225,19 +262,19 @@ export const AccessSelect = React.memo((props: Props) => {
             .
           </Typography>
         </Notice>
-      )}
+      ) : null}
 
       <ActionsPanel
         primaryButtonProps={{
-          disabled: aclData === selectedACL && corsData === selectedCORSOption,
+          disabled:
+            bucketAccessIsFetching || objectAccessIsFetching || !isDirty,
           label: 'Save',
-          loading: updateAccessLoading,
+          loading: isSubmitting,
           onClick: () => {
-            // This isn't really a sane option: open a dialog for confirmation.
             if (selectedACL === 'public-read-write') {
               openDialog();
             } else {
-              handleSubmit();
+              onSubmit();
             }
           },
           sx: (theme: Theme) => ({
@@ -255,7 +292,7 @@ export const AccessSelect = React.memo((props: Props) => {
               label: 'Cancel',
               onClick: closeDialog,
             }}
-            primaryButtonProps={{ label: 'Confirm', onClick: handleSubmit }}
+            primaryButtonProps={{ label: 'Confirm', onClick: onSubmit }}
             style={{ padding: 0 }}
           />
         )}
@@ -267,12 +304,6 @@ export const AccessSelect = React.memo((props: Props) => {
         Everyone will be able to list, create, overwrite, and delete Objects in
         this Bucket. <strong>This is not recommended.</strong>
       </ConfirmationDialog>
-    </>
+    </form>
   );
 });
-
-export const StyledSubmitButton = styled(Button, {
-  label: 'StyledFileUploadsContainer',
-})(({ theme }) => ({
-  marginTop: theme.spacing(3),
-}));

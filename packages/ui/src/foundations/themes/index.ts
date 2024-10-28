@@ -3,10 +3,11 @@ import { deepmerge } from '@mui/utils';
 
 // Themes & Brands
 import { darkTheme } from './dark';
-import { lightTheme, inputMaxWidth as _inputMaxWidth } from './light';
+import { lightTheme } from './light';
 
 import type {
   ChartTypes,
+  ColorTypes,
   InteractionTypes as InteractionTypesLight,
 } from '@linode/design-language-system';
 import type { InteractionTypes as InteractionTypesDark } from '@linode/design-language-system/themes/dark';
@@ -74,9 +75,11 @@ declare module '@mui/material/styles/createTheme' {
     bg: BgColors;
     borderColors: BorderColors;
     chartTokens: ChartTypes;
+    colorTokens: ColorTypes; // Global token: theme agnostic
     color: Colors;
     font: Fonts;
     graphs: any;
+    inputMaxWidth: number;
     inputStyles: any;
     interactionTokens: InteractionTypes;
     name: ThemeName;
@@ -94,9 +97,11 @@ declare module '@mui/material/styles/createTheme' {
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
     chartTokens?: ChartTypes;
+    colorTokens?: ColorTypes; // Global token: theme agnostic
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
+    inputMaxWidth?: number;
     inputStyles?: any;
     interactionTokens?: InteractionTypes;
     name: ThemeName;
@@ -106,6 +111,5 @@ declare module '@mui/material/styles/createTheme' {
   }
 }
 
-export const inputMaxWidth = _inputMaxWidth;
 export const light = createTheme(lightTheme);
 export const dark = createTheme(deepmerge(lightTheme, darkTheme));

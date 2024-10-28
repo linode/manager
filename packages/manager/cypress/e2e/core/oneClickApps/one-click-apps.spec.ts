@@ -8,7 +8,7 @@ import { mockCreateLinode } from 'support/intercepts/linodes';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 import { stackScriptFactory } from 'src/factories/stackscripts';
-import { oneClickApps } from 'src/features/OneClickApps/oneClickAppsv2';
+import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import { getMarketplaceAppLabel } from 'src/features/Linodes/LinodeCreate/Tabs/Marketplace/utilities';
 
 import type { StackScript } from '@linode/api-v4';

@@ -95,16 +95,11 @@ export const CloudPulseDashboardSelect = React.memo(
         renderGroup={(params) => (
           <Box key={params.key}>
             <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
-              {serviceTypeMap.has(params.group)
-                ? serviceTypeMap.get(params.group)
-                : params.group}
+              {serviceTypeMap.get(params.group) || params.group}
             </Typography>
             {params.children}
           </Box>
         )}
-        textFieldProps={{
-          hideLabel: true,
-        }}
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
@@ -113,8 +108,9 @@ export const CloudPulseDashboardSelect = React.memo(
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Select a Dashboard"
+        label="Dashboard"
         loading={dashboardsLoading || serviceTypesLoading}
+        noMarginTop
         options={getSortedDashboardsList(dashboardsList ?? [])}
         placeholder={placeHolder}
         value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component

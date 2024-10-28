@@ -21,6 +21,7 @@ export interface CloudPulseResourcesSelectProps {
     resources: CloudPulseResources[],
     savePref?: boolean
   ) => void;
+  label: string;
   placeholder?: string;
   region?: string;
   resourceType: string | undefined;
@@ -34,6 +35,7 @@ export const CloudPulseResourcesSelect = React.memo(
       defaultValue,
       disabled,
       handleResourcesSelection,
+      label,
       placeholder,
       region,
       resourceType,
@@ -41,11 +43,22 @@ export const CloudPulseResourcesSelect = React.memo(
       xFilter,
     } = props;
 
+    const platformFilter =
+      resourceType === 'dbaas' ? { platform: 'rdbms-default' } : {};
+
     const { data: resources, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
-      xFilter ? xFilter : { region }
+      xFilter
+        ? {
+            ...platformFilter,
+            ...xFilter,
+          }
+        : {
+            ...platformFilter,
+            region,
+          }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
@@ -103,7 +116,7 @@ export const CloudPulseResourcesSelect = React.memo(
           isAutocompleteOpen.current = true;
         }}
         placeholder={
-          selectedResources?.length ? '' : placeholder || 'Select a Resource'
+          selectedResources?.length ? '' : placeholder || 'Select Resources'
         }
         textFieldProps={{
           InputProps: {
@@ -115,16 +128,16 @@ export const CloudPulseResourcesSelect = React.memo(
               },
             },
           },
-          hideLabel: true,
         }}
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
         disabled={disabled || isLoading}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Select a Resource"
+        label={label || 'Resources'}
         limitTags={2}
         multiple
+        noMarginTop
         options={getResourcesList}
         value={selectedResources ?? []}
       />

@@ -1,7 +1,7 @@
+import { IconButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
-import { IconButton } from 'src/components/IconButton';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
