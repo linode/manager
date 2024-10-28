@@ -134,6 +134,7 @@ const databaseMock: Database = databaseFactory.build({
   status: 'provisioning',
   cluster_size: 1,
   engine: 'mysql',
+  platform: 'rdbms-default',
   hosts: {
     primary: undefined,
     secondary: undefined,
