@@ -238,7 +238,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.colorTokens.Neutrals.White,
   },
   backgroundColor: theme.color.tagButtonBg,
-  borderRadius: 0,
+  borderRadius: theme.borderRadiusTokens.None,
   color: theme.color.tagIcon,
   height: 30,
   marginLeft: theme.spacing(0.5),
