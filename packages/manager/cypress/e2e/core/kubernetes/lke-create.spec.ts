@@ -22,7 +22,7 @@ import {
 } from 'support/intercepts/regions';
 import { KubernetesCluster } from '@linode/api-v4';
 import { LkePlanDescription } from 'support/api/lke';
-import { lkeClusterPlans } from 'support/constants/lke';
+import { lkeClusterPlans, lkeClusterPlansAPL } from 'support/constants/lke';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { interceptCreateCluster } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
@@ -263,6 +263,121 @@ describe('LKE Cluster Creation', () => {
   });
 });
 
+describe('LKE Cluster Creation with APL enabled', () => {
+  before(() => {
+    cleanUp('lke-clusters');
+  });
+
+  it('can create an LKE cluster', () => {
+    cy.tag('method:e2e', 'purpose:dcTesting');
+    const clusterLabel = randomLabel();
+    const clusterRegion = chooseRegion();
+    const clusterVersion = '1.30';
+    const clusterPLans = lkeClusterPlansAPL;
+
+    interceptCreateCluster().as('createCluster');
+
+    cy.visitWithLogin('/kubernetes/clusters');
+
+    ui.button
+      .findByTitle('Create Cluster')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.url().should('endWith', '/kubernetes/create');
+
+    cy.findByLabelText('Cluster Label')
+      .should('be.visible')
+      .click()
+      .type(`${clusterLabel}{enter}`);
+
+    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
+
+    cy.findByText('Kubernetes Version')
+      .should('be.visible')
+      .click()
+      .type(`${clusterVersion}{enter}`);
+
+    // enable HA mode when APL is enabled and disable HA mode field
+    cy.get('[data-testid="apl-radio-button-yes"]').should('be.visible').click();
+
+    cy.get('[data-testid="ha-radio-button-yes"]')
+      .find('input')
+      .should('be.checked');
+
+    cy.get('[data-testid="ha-radio-button-yes"]').should('be.disabled');
+
+    /**
+     * Adding predetermined list of nodepools.
+     * It should not be posssible to add node pools under 8gb ram and/or 4 cores.
+     * Only dedicated 8 should be selected
+     */
+
+    clusterPLans.forEach((clusterPlan) => {
+      const planName = getLkePlanName(clusterPlan);
+      const checkoutName = getLkePlanCheckoutName(clusterPlan);
+      const planShouldBeDisabled = clusterPlan.disabled;
+
+      cy.log(`attempting to add ${getLkePlanName(clusterPlan)} node`);
+
+      cy.findByText(clusterPlan.tab).should('be.visible').click();
+      cy.findByText(planName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.get('[name="Quantity"]')
+            .should('be.visible')
+            .should(planShouldBeDisabled ? 'be.disabled' : 'be.enabled');
+
+          ui.button
+            .findByTitle('Add')
+            .should('be.visible')
+            .should(planShouldBeDisabled ? 'be.disabled' : 'be.enabled');
+
+          if (!planShouldBeDisabled) {
+            ui.button.findByTitle('Add').click();
+          }
+        });
+
+      if (!planShouldBeDisabled) {
+        cy.get('[data-testid="kube-checkout-bar"]')
+          .should('be.visible')
+          .within(() => {
+            cy.findAllByText(checkoutName).first().should('be.visible');
+          });
+      }
+    });
+
+    // check for HA mode and Create LKE cluster in checkout bar.
+    cy.get('[data-testid="kube-checkout-bar"]')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('High Availability (HA) Control Plane').should(
+          'be.visible'
+        );
+
+        ui.button
+          .findByTitle('Create Cluster')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    // Wait for LKE cluster to be created and confirm that we are redirected
+    // to the cluster summary page.
+    cy.wait('@createCluster').then(({ response }) => {
+      if (!response) {
+        throw new Error(
+          `Error creating LKE cluster ${clusterLabel}; API request failed`
+        );
+      }
+      const cluster: KubernetesCluster = response.body;
+      cy.url().should('endWith', `/kubernetes/clusters/${cluster.id}/summary`);
+    });
+  });
+});
+
 describe('LKE Cluster Creation with DC-specific pricing', () => {
   before(() => {
     cleanUp('lke-clusters');
@@ -325,18 +440,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
 
     // Confirm that HA price updates dynamically once region selection is made.
     cy.contains(/\$.*\/month/).should('be.visible');
-
-    // enable HA mode when APL is enabled and disable HA mode field
-    cy.get('[data-testid="apl-radio-button-yes"]').should('be.visible').click();
-
-    cy.get('[data-testid="ha-radio-button-yes"]').should('be.checked');
-    cy.get('[data-testid="ha-radio-button-yes"]').should('be.disabled');
-    cy.get('[data-testid="ha-radio-button-no"]').should('be.disabled');
-
-    // disable APL should re-enable HA mode if APL was enabled before
-    cy.get('[data-testid="apl-radio-button-no"]').should('be.visible').click();
-    cy.get('[data-testid="ha-radio-button-yes"]').should('be.enabled');
-    cy.get('[data-testid="ha-radio-button-no"]').should('be.enabled').click();
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
 
