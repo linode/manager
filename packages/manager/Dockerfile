@@ -29,16 +29,6 @@ CMD yarn start:manager:ci
 # Builds an image containing Cypress and miscellaneous system utilities required
 # by the tests.
 FROM cypress/included:13.11.0 as e2e-build
-RUN apt-get update \
-    && apt-get install -y expect openssh-client \
-    && rm -rf /var/cache/apt/* \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
-# e2e-install
-#
-# Installs Cypress and sets up cache directories.
-FROM e2e-build as e2e-install
 USER node
 WORKDIR /home/node/app
 VOLUME /home/node/app
@@ -48,7 +38,7 @@ RUN mkdir -p /home/node/.cache/Cypress && cypress install
 # `e2e`
 #
 # Runs Cloud Manager Cypress tests.
-FROM e2e-install as e2e
+FROM e2e-build as e2e
 WORKDIR /home/node/app
 VOLUME /home/node/app
 USER node
