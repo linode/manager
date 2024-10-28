@@ -15,13 +15,13 @@ ENV NODE_ENV=development
 WORKDIR /home/node/app
 VOLUME /home/node/app
 EXPOSE 3000/tcp
+
 # Curl is needed for health check.
 RUN apt-get update \
     && apt-get install -y curl \
     && rm -rf /var/cache/apt/* \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-
 CMD yarn start:manager:ci
 
 # e2e-build
@@ -35,7 +35,7 @@ VOLUME /home/node/app
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
 RUN mkdir -p /home/node/.cache/Cypress && cypress install
 
-# `e2e`
+# e2e
 #
 # Runs Cloud Manager Cypress tests.
 FROM e2e-build as e2e
@@ -46,3 +46,21 @@ ENV CI=1
 ENV NO_COLOR=1
 ENV HOME=/home/node/
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
+
+# e2e-reverse-proxy
+#
+# Runs Cloud Manager Cypress tests, with Caddy installed.
+# Extends from `e2e`, and includes Caddy to support reverse proxying Cloud Manager.
+FROM e2e as e2e-reverse-proxy
+USER root
+# Install Caddy.
+# Instructions adapted from Caddy documentation at caddyserver.com:
+# https://caddyserver.com/docs/install#debian-ubuntu-raspbian
+RUN apt-get update \
+    && apt-get install -y debian-keyring debian-archive-keyring apt-transport-https curl \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list \
+    && apt-get update \
+    && apt-get install caddy
+VOLUME /home/node/app
+USER node
