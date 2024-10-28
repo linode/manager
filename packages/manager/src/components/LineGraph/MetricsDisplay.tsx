@@ -14,6 +14,8 @@ import {
 
 import type { Metrics } from 'src/utilities/statMetrics';
 
+const DEFAULT_LEGEND_HEIGHT = 160;
+
 interface Props {
   /**
    * If true, the legends across metrics will be the same height
@@ -54,9 +56,9 @@ export interface MetricsDisplayRow {
 
 export const MetricsDisplay = ({
   hasFixedLegendHeight = false,
-  height = 160,
+  height,
   hiddenRows,
-  maxHeight = 160,
+  maxHeight,
   rows,
 }: Props) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
@@ -70,16 +72,17 @@ export const MetricsDisplay = ({
         '.MuiTable-root': {
           border: 0,
         },
-        maxHeight,
+        maxHeight: hasFixedLegendHeight
+          ? maxHeight || DEFAULT_LEGEND_HEIGHT
+          : maxHeight,
         overflowY: 'auto',
         ...(hasFixedLegendHeight && {
           [theme.breakpoints.up(1100)]: {
-            height,
+            height: height || DEFAULT_LEGEND_HEIGHT,
           },
         }),
       })}
       aria-label="Stats and metrics"
-      noBorder
       stickyHeader
     >
       <TableHead sx={{ ...sxProps, position: 'relative', zIndex: 2 }}>
@@ -93,7 +96,7 @@ export const MetricsDisplay = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {rows.map((row, idx) => {
+        {rows.map((row) => {
           const {
             data,
             format,
@@ -102,18 +105,15 @@ export const MetricsDisplay = ({
             legendTitle,
           } = row;
           const hidden = hiddenRows?.includes(legendTitle);
-          const lastItem = idx === rows.length - 1;
           return (
             <TableRow
-              sx={
-                lastItem
-                  ? {
-                      '.MuiTableCell-root': {
-                        borderBottom: 0,
-                      },
-                    }
-                  : {}
-              }
+              sx={{
+                '&:last-child': {
+                  '.MuiTableCell-root': {
+                    borderBottom: 0,
+                  },
+                },
+              }}
               data-qa-metric-row
               key={legendTitle}
             >
@@ -131,6 +131,9 @@ export const MetricsDisplay = ({
               {metricsBySection(data).map((section, idx) => {
                 return (
                   <TableCell
+                    sx={{
+                      whiteSpace: 'nowrap',
+                    }}
                     data-qa-body-cell
                     key={idx}
                     parentColumn={rowHeaders[idx]}

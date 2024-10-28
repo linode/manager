@@ -129,7 +129,7 @@ export const AreaChart = (props: AreaChartProps) => {
     ariaLabel,
     data,
     fillOpacity,
-    hasFixedLegendHeight = false,
+    hasFixedLegendHeight,
     height = '100%',
     legendRows,
     showLegend,
