@@ -1,5 +1,4 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AppBar } from 'src/components/AppBar';
@@ -33,7 +32,6 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
   const { desktopMenuToggle, isSideMenuOpen, openSideMenu, username } = props;
 
   const { loggedInAsCustomer } = useAuthentication();
-  const theme = useTheme();
 
   const navHoverText = isSideMenuOpen
     ? 'Collapse side menu'
@@ -43,7 +41,10 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
     <React.Fragment>
       {loggedInAsCustomer && (
         <Box bgcolor="pink" padding="1em" textAlign="center">
-          <Typography color={theme.colorTokens.Neutrals.Black} fontSize="1.2em">
+          <Typography
+            color={(theme) => theme.colorTokens.Neutrals.Black}
+            fontSize="1.2em"
+          >
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
         </Box>
