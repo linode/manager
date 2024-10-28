@@ -26,6 +26,10 @@ export interface LkePlanDescription {
   type: string;
 }
 
+export interface LkePlanDescriptionAPL extends LkePlanDescription {
+  disabled: boolean;
+}
+
 /*
  * Determines if the given node pool is ready by checking the status of each node.
  */
