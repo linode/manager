@@ -171,9 +171,23 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               the ACL on your LKE cluster, update the list of allowed IP
               addresses, and adjust other settings.
             </StyledTypography>
+            {!clusterMigrated && (
+              <Notice spacingBottom={0} spacingTop={16} variant="warning">
+                <StyledTypography
+                  sx={(theme) => ({
+                    fontFamily: theme.font.bold,
+                    fontSize: '15px',
+                  })}
+                >
+                  Control Plane ACL has not yet been installed on this cluster.
+                  During installation, it may take up to 15 minutes for the
+                  access control list to be fully enforced.
+                </StyledTypography>
+              </Notice>
+            )}
             <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
             <Typography variant="h3">Activation Status</Typography>
-            <StyledTypography variant="body1">
+            <StyledTypography topMargin variant="body1">
               Enable or disable the Control Plane ACL. If the ACL is not
               enabled, any public IP address can be used to access your control
               plane. Once enabled, all network access is denied except for the
@@ -202,7 +216,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             {clusterMigrated && (
               <>
                 <Typography variant="h3">Revision ID</Typography>
-                <StyledTypography variant="body1">
+                <StyledTypography topMargin variant="body1">
                   A unique identifying string for this particular revision to
                   the ACL, used by clients to track events related to ACL update
                   requests and enforcement. This defaults to a randomly
@@ -226,7 +240,11 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               </>
             )}
             <Typography variant="h3">Addresses</Typography>
-            <StyledTypography sx={{ marginBottom: 1 }} variant="body1">
+            <StyledTypography
+              topMargin
+              sx={{ marginBottom: 1 }}
+              variant="body1"
+            >
               A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This
               cluster&apos;s control plane will only be accessible from IP
               addresses within this list.
@@ -246,7 +264,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                     nonExtendedIPs={field.value ?? ['']}
                     onBlur={field.onBlur}
                     onNonExtendedIPChange={field.onChange}
-                    placeholder="0.0.0.0/0"
                     title="IPv4 Addresses or CIDRs"
                   />
                 )}
@@ -263,7 +280,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
                       nonExtendedIPs={field.value ?? ['']}
                       onBlur={field.onBlur}
                       onNonExtendedIPChange={field.onChange}
-                      placeholder="::/0"
                       title="IPv6 Addresses or CIDRs"
                     />
                   )}
@@ -282,15 +298,6 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
               }}
               secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
             />
-            {!clusterMigrated && (
-              <Notice spacingTop={24} variant="warning">
-                <StyledTypography>
-                  Control Plane ACL has not yet been installed on this cluster.
-                  During installation, it may take up to 15 minutes for the
-                  access control list to be fully enforced.
-                </StyledTypography>
-              </Notice>
-            )}
           </Stack>
         </form>
       </DrawerContent>
@@ -298,6 +305,9 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
   );
 };
 
-const StyledTypography = styled(Typography, { label: 'StyledTypography' })({
+const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})<{ topMargin?: boolean }>(({ theme, ...props }) => ({
+  ...(props.topMargin ? { marginTop: theme.spacing(1) } : {}),
   width: '90%',
-});
+}));

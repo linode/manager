@@ -1485,7 +1485,9 @@ describe('LKE ACL updates', () => {
             .clear()
             .type('10.0.0.0/24');
           cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
-          cy.findByPlaceholderText('::/0').should('be.visible');
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0').should(
+            'be.visible'
+          );
           cy.findByText('Add IPv6 Address')
             .should('be.visible')
             .should('be.enabled');
@@ -1557,7 +1559,7 @@ describe('LKE ACL updates', () => {
 
           // update IPv6 addresses
           cy.findByDisplayValue('10.0.0.0/24').should('be.visible');
-          cy.findByPlaceholderText('::/0')
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
@@ -1565,7 +1567,7 @@ describe('LKE ACL updates', () => {
             .should('be.visible')
             .should('be.enabled')
             .click();
-          cy.get('[id="domain-transfer-ip-1"]')
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-1')
             .should('be.visible')
             .click()
             .type('f4a2:b849:4a24:d0d9:15f0:704b:f943:718f');
@@ -1699,7 +1701,7 @@ describe('LKE ACL updates', () => {
           ).should('be.visible');
           cy.findByText('IPv4 Addresses or CIDRs').should('be.visible');
           // update IPv4
-          cy.findByPlaceholderText('0.0.0.0/0')
+          cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .type('10.0.0.0/24');
@@ -1709,7 +1711,7 @@ describe('LKE ACL updates', () => {
             .click();
           cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
           // update IPv6
-          cy.findByPlaceholderText('::/0')
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
@@ -1835,12 +1837,12 @@ describe('LKE ACL updates', () => {
           cy.findByText('IPv4 Addresses or CIDRs').should('be.visible');
           cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
 
-          cy.findByPlaceholderText('0.0.0.0/0')
+          cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .type('10.0.0.0/24');
 
-          cy.findByPlaceholderText('::/0')
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
@@ -1905,7 +1907,7 @@ describe('LKE ACL updates', () => {
         .should('be.visible')
         .within(() => {
           // Confirm ACL IP validation works as expected for IPv4
-          cy.findByPlaceholderText('0.0.0.0/0')
+          cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .type('invalid ip');
@@ -1913,7 +1915,7 @@ describe('LKE ACL updates', () => {
           cy.contains('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv4 address.').should('be.visible');
           // enter valid IP
-          cy.findByPlaceholderText('0.0.0.0/0')
+          cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .clear()
@@ -1923,7 +1925,7 @@ describe('LKE ACL updates', () => {
           cy.contains('Must be a valid IPv4 address.').should('not.exist');
 
           // Confirm ACL IP validation works as expected for IPv6
-          cy.findByPlaceholderText('::/0')
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .type('invalid ip');
@@ -1931,7 +1933,7 @@ describe('LKE ACL updates', () => {
           cy.findByText('Addresses').should('be.visible').click();
           cy.contains('Must be a valid IPv6 address.').should('be.visible');
           // enter valid IP
-          cy.findByPlaceholderText('::/0')
+          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
             .clear()

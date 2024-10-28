@@ -48,8 +48,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         <Typography mb={1} sx={{ width: '85%' }}>
           Enable an access control list (ACL) on your LKE cluster to restrict
           access to your cluster’s control plane. When enabled, only the IP
-          addresses and ranges specified by you can connect to the control
-          plane.
+          addresses and ranges you specify can connect to the control plane.
         </Typography>
         <FormControlLabel
           control={
@@ -76,7 +75,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             ips={ipV4Addr}
             isLinkStyled
             onChange={handleIPv4Change}
-            placeholder="0.0.0.0/0"
             title="IPv4 Addresses or CIDRs"
           />
           <Box marginTop={2}>
@@ -92,7 +90,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               ips={ipV6Addr}
               isLinkStyled
               onChange={handleIPv6Change}
-              placeholder="::/0"
               title="IPv6 Addresses or CIDRs"
             />
           </Box>
