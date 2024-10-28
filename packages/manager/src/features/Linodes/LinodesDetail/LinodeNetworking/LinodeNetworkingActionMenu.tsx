@@ -61,7 +61,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
 
   const getAriaLabel = (): string => {
     if (ipAddress && 'address' in ipAddress) {
-      return `Action menu for IP Address ${ipAddress?.address}`;
+      return `Action menu for IP Address ${ipAddress.address}`;
     } else {
       return `Action menu for IP Address ${ipAddress?.range}`;
     }
