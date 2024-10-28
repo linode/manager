@@ -113,8 +113,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
         <ErrorState
           errorText={
             isResourcesApiError
-              ? 'Failed to fetch resources'
-              : 'Failed to fetch the dashboard -' + dashboardId
+              ? 'Failed to fetch Resources'
+              : 'Failed to fetch the dashboard details'
           }
         />
       </Grid>
