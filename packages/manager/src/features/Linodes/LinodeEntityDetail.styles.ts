@@ -88,6 +88,42 @@ export const sxLastListItem = {
   paddingRight: 0,
 };
 
+// ---------------------------------------------------------------------
+// VPC Label Styles
+// ---------------------------------------------------------------------
+
+export const StyledVPCWrapper = styled(TableRow, { label: 'StyledVPCWrapper' })(
+  ({ theme }) => ({
+    '&:hover .copy-tooltip > svg, & .copy-tooltip:focus > svg': {
+      opacity: 1,
+    },
+    display: 'flex',
+    [theme.breakpoints.down('md')]: {
+      margin: theme.spacing(0),
+    },
+    marginLeft: theme.spacing(2),
+    border: 0,
+  })
+);
+
+export const StyledVPCLabel = styled(Box, { label: 'StyledVPCLabel' })(
+  ({ theme }) => ({
+    color: theme.textColors.textAccessTable,
+    fontFamily: theme.font.bold,
+    backgroundColor: theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
+    padding: '10px 24px 10px 10px',
+    alignContent: 'center',
+  })
+);
+
+export const StyledVPCItem = styled(Box, { label: 'StyledVPCLabel' })(
+  ({ theme }) => ({
+    backgroundColor: theme.interactionTokens.Background.Secondary,
+    alignContent: 'center',
+    border: 0,
+  })
+);
+
 export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
   ({ theme }) => ({
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
