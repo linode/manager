@@ -1,4 +1,4 @@
-import { Tooltip } from '@linode/ui';
+import { Tooltip, VisibilityTooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
@@ -8,7 +8,6 @@ import { createMaskedText } from 'src/utilities/createMaskedText';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { TooltipProps } from '@linode/ui';
-import { VisibilityTooltip } from '../VisibilityTooltip/VisibilityTooltip';
 
 export interface CopyTooltipProps {
   /**

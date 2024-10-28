@@ -1,3 +1,4 @@
+import { VisibilityTooltip } from '@linode/ui';
 import { Typography } from '@mui/material';
 import * as React from 'react';
 
@@ -5,7 +6,6 @@ import { usePreferences } from 'src/queries/profile/preferences';
 import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import { Stack } from '../Stack';
-import { VisibilityTooltip } from '../VisibilityTooltip/VisibilityTooltip';
 
 export interface MaskableTextProps {
   /**

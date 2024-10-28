@@ -1,10 +1,8 @@
-import { Tooltip } from '@linode/ui';
+import { IconButton, Tooltip } from '@linode/ui';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import React from 'react';
-
-import { Button } from '../Button/Button';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
@@ -41,7 +39,7 @@ export const VisibilityTooltip = (props: Props) => {
   );
 };
 
-const StyledToggleButton = styled(Button, {
+const StyledToggleButton = styled(IconButton, {
   label: 'StyledToggleButton',
 })(({ theme }) => ({
   '& svg': {
