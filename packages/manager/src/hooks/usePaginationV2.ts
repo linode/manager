@@ -24,7 +24,7 @@ const setTableSearchParams = (prev: TableSearchParams) => ({
 });
 
 interface UsePaginationV2Props<T extends TableSearchParams> {
-  baseRoute: ToSubOptions['to'];
+  currentRoute: ToSubOptions['to'];
   initialPage: number;
   preferenceKey: string;
   searchParams?: (prev: T) => T;
@@ -37,7 +37,7 @@ interface UsePaginationV2Props<T extends TableSearchParams> {
  * @param queryParamsPrefix a prefix that is applied to the query params in the url. Useful when this hook is used more than once on the same page.
  */
 export const usePaginationV2 = <T extends TableSearchParams>({
-  baseRoute,
+  currentRoute,
   initialPage,
   preferenceKey,
   searchParams,
@@ -67,7 +67,7 @@ export const usePaginationV2 = <T extends TableSearchParams>({
         ...(searchParams?.(prev) ?? {}),
         page,
       }),
-      to: baseRoute,
+      to: currentRoute,
     });
   };
 
@@ -78,7 +78,7 @@ export const usePaginationV2 = <T extends TableSearchParams>({
         ...(searchParams?.(prev) ?? {}),
         page_size: size,
       }),
-      to: baseRoute,
+      to: currentRoute,
     });
   };
 
