@@ -48,7 +48,7 @@ import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
 
 import type { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
-import type { Theme } from '@mui/material/styles';
+import type { Theme, SxProps } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
@@ -354,19 +354,31 @@ export const BillingActivityPanel = React.memo((props: Props) => {
       );
     }
     if (orderedPaginatedData.length > 0) {
-      return orderedPaginatedData.map((thisItem) => (
-        <ActivityFeedItem
-          downloadPDF={
-            thisItem.type === 'invoice'
-              ? downloadInvoicePDF
-              : downloadPaymentPDF
-          }
-          hasError={pdfErrors.has(`${thisItem.type}-${thisItem.id}`)}
-          isLoading={pdfLoading.has(`${thisItem.type}-${thisItem.id}`)}
-          key={`${thisItem.type}-${thisItem.id}`}
-          {...thisItem}
-        />
-      ));
+      return orderedPaginatedData.map((thisItem, idx) => {
+        const lastItem = idx === orderedPaginatedData.length - 1;
+        return (
+          <ActivityFeedItem
+            sxRow={
+              lastItem
+                ? {
+                    '& .MuiTableCell-root': {
+                      borderBottom: 0,
+                    },
+                  }
+                : {}
+            }
+            downloadPDF={
+              thisItem.type === 'invoice'
+                ? downloadInvoicePDF
+                : downloadPaymentPDF
+            }
+            hasError={pdfErrors.has(`${thisItem.type}-${thisItem.id}`)}
+            isLoading={pdfLoading.has(`${thisItem.type}-${thisItem.id}`)}
+            key={`${thisItem.type}-${thisItem.id}`}
+            {...thisItem}
+          />
+        );
+      });
     }
 
     return null;
@@ -438,7 +450,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
             />
           </div>
         </StyledBillingAndPaymentHistoryHeader>
-        <Table aria-label="List of Invoices and Payments">
+        <Table aria-label="List of Invoices and Payments" sx={{ border: 0 }}>
           <TableHead>
             <TableRow>
               <TableCell className={classes.descriptionColumn}>
@@ -475,8 +487,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
 
 const StyledBillingAndPaymentHistoryHeader = styled('div', {
   name: 'BillingAndPaymentHistoryHeader',
-})(({ theme }) => ({
-  border: theme.name === 'dark' ? `1px solid ${theme.borderColors.divider}` : 0,
+})(() => ({
   borderBottom: 0,
   padding: `15px 0px 15px 20px`,
 }));
@@ -488,12 +499,14 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
   downloadPDF: (id: number) => void;
   hasError: boolean;
   isLoading: boolean;
+  sxRow: SxProps<Theme>;
 }
 
 export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   const { classes } = useStyles();
 
   const {
+    sxRow,
     date,
     downloadPDF,
     hasError,
@@ -520,7 +533,7 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   };
 
   return (
-    <TableRow data-testid={`${type}-${id}`}>
+    <TableRow data-testid={`${type}-${id}`} sx={sxRow}>
       <TableCell>
         {type === 'invoice' ? (
           <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
