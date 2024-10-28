@@ -1,7 +1,16 @@
+# Node.js base image for Cloud Manager CI tasks.
+#
+# Extends from the Node.js base image that corresponds with our latest supported
+# version of Node, and includes other tools that we rely on like pnpm and bun.
+FROM node:20.17-bullseye-slim as nodejs-cloud-manager
+RUN npm install -g pnpm bun
+
 # `manager`
 #
 # Serves Cloud Manager.
-FROM node:20.17-bullseye-slim as manager
+# Assumes Cloud Manager dependencies are installed at `/home/node/app/node_modules`,
+# and Cloud Manager is built.
+FROM nodejs-cloud-manager as manager
 ENV NODE_ENV=development
 WORKDIR /home/node/app
 VOLUME /home/node/app
