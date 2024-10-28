@@ -46,7 +46,6 @@ import {
   useCreateVolumeMutation,
   useVolumeTypesQuery,
 } from 'src/queries/volumes/volumes';
-import { setVolumesSearchParams } from 'src/routes/volumes';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
@@ -58,15 +57,13 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
+import { SIZE_FIELD_WIDTH } from './constants';
 import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
 import { SizeField } from './VolumeDrawer/SizeField';
 
 import type { VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Theme } from '@mui/material/styles';
-import type { VolumesSearchParams } from 'src/routes/volumes';
-
-export const SIZE_FIELD_WIDTH = 160;
 
 const useStyles = makeStyles()((theme: Theme) => ({
   agreement: {
@@ -229,7 +226,6 @@ export const VolumeCreate = () => {
             variant: 'success',
           });
           navigate({
-            search: (prev: VolumesSearchParams) => setVolumesSearchParams(prev),
             to: '/volumes',
           });
           // Analytics Event
