@@ -8,6 +8,7 @@ import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import More from 'src/assets/icons/more.svg';
+import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
@@ -323,7 +324,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               spacingBottom={0}
               spacingTop={0}
             />
-            {linkGroup.title ? (
+            {linkGroup.title ? ( // TODO: we can remove this conditional when Managed is removed
               <StyledAccordion
                 heading={
                   <>
@@ -339,7 +340,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 {PrimaryLinks}
               </StyledAccordion>
             ) : (
-              PrimaryLinks
+              // currently just Managed
+              <Box paddingBottom={1} paddingTop={1}>
+                {PrimaryLinks}
+              </Box>
             )}
           </div>
         );

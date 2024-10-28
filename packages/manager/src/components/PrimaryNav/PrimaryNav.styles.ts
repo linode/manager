@@ -107,7 +107,7 @@ export const StyledActiveLink = styled(Link, {
   cursor: 'pointer',
   display: 'flex',
   minWidth: SIDEBAR_WIDTH,
-  padding: '8px 16px',
+  padding: '7px 16px',
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
