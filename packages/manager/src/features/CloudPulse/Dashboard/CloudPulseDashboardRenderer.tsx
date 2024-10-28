@@ -16,7 +16,7 @@ export const CloudPulseDashboardRenderer = React.memo(
     const { dashboard, filterValue, timeDuration } = props;
 
     const selectDashboardAndFilterMessage =
-      'Select Dashboard and filters to visualize metrics.';
+      'Select dashboard and filters to visualize metrics.';
 
     const getMetricsCall = React.useMemo(
       () => getMetricsCallCustomFilters(filterValue, dashboard?.service_type),
