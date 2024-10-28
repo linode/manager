@@ -1,7 +1,7 @@
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
-import { COLOR_MAP } from './CloudPulseWidgetColorPalette';
+import { COLOR_MAP, DEFAULT } from './CloudPulseWidgetColorPalette';
 import {
   formatToolTip,
   generateUnitByBaseUnit,
@@ -101,7 +101,7 @@ interface graphDataOptionsProps {
   /**
    * preferred color for the widget's graph
    */
-  widgetColor: string | undefined;
+  widgetColor: string;
 }
 
 interface MetricRequestProps {
@@ -164,7 +164,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
   const legendRowsData: LegendRow[] = [];
 
   // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-  const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
+  const colors = COLOR_MAP.get(widgetColor) ?? DEFAULT;
   let today = false;
 
   if (status === 'success') {
