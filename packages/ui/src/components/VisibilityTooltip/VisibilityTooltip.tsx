@@ -1,10 +1,11 @@
-import { IconButton, Tooltip } from '@linode/ui';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import type { SxProps, Theme } from '@mui/material/styles';
+import { IconButton } from '../IconButton';
+import { Tooltip } from '../Tooltip';
 
 interface Props {
   /**

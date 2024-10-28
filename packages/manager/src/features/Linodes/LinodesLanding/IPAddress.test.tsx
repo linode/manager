@@ -142,7 +142,7 @@ describe('IPAddress masked', () => {
       data: preferences,
     });
 
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getAllByTestId, getByText } = renderWithTheme(
       <IPAddress
         ips={['8.8.8.8', '8.8.40.4']}
         showAll={true}
@@ -150,16 +150,20 @@ describe('IPAddress masked', () => {
       />
     );
 
-    const visibilityToggle = getByTestId('VisibilityIcon');
+    const visibilityToggles = getAllByTestId('VisibilityIcon');
 
-    // First and second IP addresses should be masked
+    // First IP address should be masked
     expect(getByText('•••••••')).toBeVisible();
+
+    await userEvent.click(visibilityToggles[0]);
+
+    // First IP address should be unmasked; second IP address should still be masked
+    expect(getByText('8.8.8.8')).toBeVisible();
     expect(getByText('••••••••')).toBeVisible();
 
-    await userEvent.click(visibilityToggle);
+    await userEvent.click(visibilityToggles[1]);
 
-    // Both IP addresses should be unmasked
-    expect(getByText('8.8.8.8')).toBeVisible();
+    // Second IP address should be unmasked
     expect(getByText('8.8.40.4')).toBeVisible();
   });
 
@@ -168,7 +172,12 @@ describe('IPAddress masked', () => {
       data: preferences,
     });
 
-    const { container, getByTestId, getByText, queryByText } = renderWithTheme(
+    const {
+      container,
+      getAllByTestId,
+      getByText,
+      queryByText,
+    } = renderWithTheme(
       <IPAddress
         ips={['8.8.8.8', '8.8.40.4']}
         showAll={false}
@@ -176,20 +185,21 @@ describe('IPAddress masked', () => {
       />
     );
 
-    const visibilityToggle = getByTestId('VisibilityIcon');
+    const visibilityToggles = getAllByTestId('VisibilityIcon');
 
     // First IP address should be masked but visible
     expect(getByText('•••••••')).toBeVisible();
     expect(queryByText('••••••••')).toBeNull();
 
-    // Show more button should be visible
-    expect(
-      container.querySelector('[data-qa-show-more-chip]')
-    ).toBeInTheDocument();
-
-    await userEvent.click(visibilityToggle);
+    await userEvent.click(visibilityToggles[0]);
 
     // First IP address should be unmasked
     expect(getByText('8.8.8.8')).toBeVisible();
+
+    // Show more button should be visible
+    expect(queryByText('8.8.40.4')).toBeNull();
+    expect(
+      container.querySelector('[data-qa-show-more-chip]')
+    ).toBeInTheDocument();
   });
 });

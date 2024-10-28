@@ -118,7 +118,7 @@ export const StyledIconButton = styled('button', {
     'copyableText',
     'text',
     'onClickCallback',
-    'displayText',
+    'masked',
   ]),
 })<Omit<CopyTooltipProps, 'text'>>(({ theme, ...props }) => ({
   '& svg': {
