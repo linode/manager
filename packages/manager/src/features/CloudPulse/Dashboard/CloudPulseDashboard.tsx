@@ -107,12 +107,12 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(resourceList)
   );
 
-  if (isResourcesApiError) {
-    return renderErrorState('Failed to fetch Resources');
-  }
-
   if (isDashboardApiError) {
     return renderErrorState('Failed to fetch the dashboard details');
+  }
+
+  if (isResourcesApiError) {
+    return renderErrorState('Failed to fetch Resources');
   }
 
   if (isJweTokenError) {
