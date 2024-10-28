@@ -119,6 +119,10 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return renderErrorState('Failed to get jwe token');
   }
 
+  if (isMetricDefinitionError) {
+    return renderErrorState('Error loading metric definitions');
+  }
+
   if (
     isMetricDefinitionLoading ||
     isDashboardLoading ||
@@ -126,10 +130,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isJweTokenLoading
   ) {
     return <CircleProgress />;
-  }
-
-  if (isMetricDefinitionError) {
-    return renderErrorState('Error loading metric definitions');
   }
 
   return (
@@ -148,7 +148,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   );
 };
 
-export const renderErrorState = (errorMessage: string) => {
+const renderErrorState = (errorMessage: string) => {
   return (
     <Grid item xs>
       <ErrorState errorText={errorMessage} />
