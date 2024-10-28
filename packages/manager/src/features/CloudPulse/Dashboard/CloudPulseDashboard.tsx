@@ -107,26 +107,20 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(resourceList)
   );
 
-  if (isResourcesApiError || isDashboardApiError) {
-    return (
-      <Grid item xs>
-        <ErrorState
-          errorText={
-            isResourcesApiError
-              ? 'Failed to fetch Resources'
-              : 'Failed to fetch the dashboard details'
-          }
-        />
-      </Grid>
-    );
+  if (isDashboardApiError) {
+    return renderErrorState('Failed to fetch the dashboard details');
+  }
+
+  if (isResourcesApiError) {
+    return renderErrorState('Failed to fetch Resources');
   }
 
   if (isJweTokenError) {
-    return (
-      <Grid item xs>
-        <ErrorState errorText="Failed to get jwe token" />
-      </Grid>
-    );
+    return renderErrorState('Failed to get jwe token');
+  }
+
+  if (isMetricDefinitionError) {
+    return renderErrorState('Error loading metric definitions');
   }
 
   if (
@@ -136,10 +130,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isJweTokenLoading
   ) {
     return <CircleProgress />;
-  }
-
-  if (isMetricDefinitionError) {
-    return <ErrorState errorText={'Error loading metric definitions'} />;
   }
 
   return (
@@ -155,5 +145,17 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       resources={resources}
       savePref={savePref}
     />
+  );
+};
+
+/**
+ * @param errorMessage The error message to be displayed
+ * @returns The error state component with error message passed
+ */
+const renderErrorState = (errorMessage: string) => {
+  return (
+    <Grid item xs>
+      <ErrorState errorText={errorMessage} />
+    </Grid>
   );
 };

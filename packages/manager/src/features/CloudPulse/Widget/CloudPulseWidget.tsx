@@ -251,8 +251,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       serviceType,
       status,
       unit,
-      widgetChartType: widget.chart_type || 'area',
-      widgetColor: widget.color || 'default',
+      widgetChartType: widget.chart_type,
+      widgetColor: widget.color,
     });
 
     data = generatedData.dimensions;
@@ -301,14 +301,14 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               {Boolean(
                 availableMetrics?.available_aggregate_functions?.length
               ) && (
-                <CloudPulseAggregateFunction
-                  availableAggregateFunctions={
-                    availableMetrics!.available_aggregate_functions
-                  }
-                  defaultAggregateFunction={widgetProp?.aggregate_function}
-                  onAggregateFuncChange={handleAggregateFunctionChange}
-                />
-              )}
+                  <CloudPulseAggregateFunction
+                    availableAggregateFunctions={
+                      availableMetrics!.available_aggregate_functions
+                    }
+                    defaultAggregateFunction={widgetProp?.aggregate_function}
+                    onAggregateFuncChange={handleAggregateFunctionChange}
+                  />
+                )}
               <Box sx={{ display: { lg: 'flex', xs: 'none' } }}>
                 <ZoomIcon
                   handleZoomToggle={handleZoomToggle}
