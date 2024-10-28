@@ -6,14 +6,14 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { IconButton } from 'src/components/IconButton';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material';
 
 interface DialogTitleProps {
   className?: string;
   id?: string;
   onClose?: () => void;
   subtitle?: string;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   title: string;
 }
 

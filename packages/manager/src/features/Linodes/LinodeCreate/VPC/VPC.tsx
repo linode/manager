@@ -20,7 +20,6 @@ import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
-import { inputMaxWidth } from 'src/foundations/themes/light';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useVPCQuery, useVPCsQuery } from 'src/queries/vpcs/vpcs';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -133,7 +132,9 @@ export const VPC = () => {
                 }}
                 textFieldProps={{
                   sx: (theme) => ({
-                    [theme.breakpoints.up('sm')]: { minWidth: inputMaxWidth },
+                    [theme.breakpoints.up('sm')]: {
+                      minWidth: theme.inputMaxWidth,
+                    },
                   }),
                   tooltipText: REGION_CAVEAT_HELPER_TEXT,
                 }}

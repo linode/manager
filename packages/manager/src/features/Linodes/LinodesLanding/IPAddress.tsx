@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
-import { PublicIpsUnassignedTooltip } from 'src/features/Linodes/PublicIpsUnassignedTooltip';
-import { privateIPRegex } from 'src/utilities/ipUtils';
+import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { isPrivateIP } from 'src/utilities/ipUtils';
 import { tail } from 'src/utilities/tail';
 
 import {
@@ -55,7 +55,7 @@ export interface IPAddressProps {
 }
 
 export const sortIPAddress = (ip1: string, ip2: string) =>
-  (privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1);
+  (isPrivateIP(ip1) ? 1 : -1) - (isPrivateIP(ip2) ? 1 : -1);
 
 export const IPAddress = (props: IPAddressProps) => {
   const {
@@ -90,7 +90,7 @@ export const IPAddress = (props: IPAddressProps) => {
 
   const renderCopyIcon = (ip: string) => {
     if (disabled) {
-      return PublicIpsUnassignedTooltip;
+      return PublicIPAddressesTooltip;
     }
 
     return (

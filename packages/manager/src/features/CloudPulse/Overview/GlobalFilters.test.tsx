@@ -35,7 +35,7 @@ describe('Global filters component test', () => {
       expect(timeRangeSelect).toBeInTheDocument();
 
       expect(
-        screen.getByRole('combobox', { name: 'Select a Time Duration' })
+        screen.getByRole('combobox', { name: 'Time Range' })
       ).toHaveAttribute('value', 'Last 30 Minutes');
     });
 });

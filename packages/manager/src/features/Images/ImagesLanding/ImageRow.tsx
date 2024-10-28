@@ -1,10 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 
+import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import { Hidden } from 'src/components/Hidden';
 import { LinkButton } from 'src/components/LinkButton';
+import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
+import { useFlags } from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
@@ -44,6 +48,7 @@ export const ImageRow = (props: Props) => {
   } = image;
 
   const { data: profile } = useProfile();
+  const flags = useFlags();
 
   const isFailed = status === 'pending_upload' && event?.status === 'failed';
 
@@ -92,23 +97,42 @@ export const ImageRow = (props: Props) => {
 
   return (
     <TableRow data-qa-image-cell={id} key={id}>
-      <TableCell data-qa-image-label>{label}</TableCell>
+      <TableCell data-qa-image-label noWrap>
+        {capabilities.includes('cloud-init') &&
+        flags.imageServiceGen2 &&
+        flags.imageServiceGen2Ga ? (
+          <Stack alignItems="center" direction="row" gap={1.5}>
+            <Tooltip title="This image supports our Metadata service via cloud-init.">
+              <div style={{ display: 'flex' }}>
+                <CloudInitIcon />
+              </div>
+            </Tooltip>
+            {label}
+          </Stack>
+        ) : (
+          label
+        )}
+      </TableCell>
       <Hidden smDown>
         <TableCell>{getStatusForImage(status)}</TableCell>
       </Hidden>
       {multiRegionsEnabled && (
-        <>
-          <Hidden smDown>
-            <TableCell>
+        <Hidden smDown>
+          <TableCell>
+            {regions.length > 0 ? (
               <LinkButton onClick={() => handlers.onManageRegions?.(image)}>
                 {pluralize('Region', 'Regions', regions.length)}
               </LinkButton>
-            </TableCell>
-          </Hidden>
-          <Hidden smDown>
-            <TableCell>{compatibilitiesList}</TableCell>
-          </Hidden>
-        </>
+            ) : (
+              'N/A'
+            )}
+          </TableCell>
+        </Hidden>
+      )}
+      {multiRegionsEnabled && !flags.imageServiceGen2Ga && (
+        <Hidden smDown>
+          <TableCell>{compatibilitiesList}</TableCell>
+        </Hidden>
       )}
       <TableCell data-qa-image-size>
         {getSizeForImage(size, status, event?.status)}

@@ -1,16 +1,18 @@
 import { Outlet, createRoute } from '@tanstack/react-router';
 import React from 'react';
 
+import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import BetaSignup from 'src/features/Betas/BetaSignup';
-import BetasLanding from 'src/features/Betas/BetasLanding';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { rootRoute } from './root';
 
 export const BetaRoutes = () => {
+  const flags = useFlags();
+  const { selfServeBetas } = flags;
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <Outlet />
+      {selfServeBetas ? <Outlet /> : <NotFound />}
     </React.Suspense>
   );
 };
@@ -22,16 +24,18 @@ const betaRoute = createRoute({
 });
 
 const betaLandingRoute = createRoute({
-  component: BetasLanding,
   getParentRoute: () => betaRoute,
   path: '/',
-});
+}).lazy(() =>
+  import('src/features/Betas/BetasLanding').then((m) => m.betasLandingLazyRoute)
+);
 
 const betaSignupRoute = createRoute({
-  component: BetaSignup,
   getParentRoute: () => betaRoute,
-  path: 'signup',
-});
+  path: 'signup/$betaId',
+}).lazy(() =>
+  import('src/features/Betas/BetaSignup').then((m) => m.betaSignupLazyRoute)
+);
 
 export const betaRouteTree = betaRoute.addChildren([
   betaLandingRoute,

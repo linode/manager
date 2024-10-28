@@ -13,7 +13,7 @@ import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
 import { TagDrawer } from './TagDrawer';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface TagCellProps {
   /**
@@ -29,7 +29,7 @@ export interface TagCellProps {
   /**
    * Additional styles to apply to the tag list.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 
   /**
    * The list of tags to display.
@@ -235,7 +235,7 @@ const StyledTag = styled(Tag, {
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.primary.main,
-    color: '#ffff',
+    color: theme.colorTokens.Neutrals.White,
   },
   backgroundColor: theme.color.tagButtonBg,
   borderRadius: 0,

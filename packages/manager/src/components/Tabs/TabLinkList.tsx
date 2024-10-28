@@ -7,6 +7,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 export interface Tab {
   routeName: string;
   title: string;
+  chip?: React.JSX.Element | null;
 }
 
 interface TabLinkListProps {
@@ -30,6 +31,7 @@ export const TabLinkList = ({ noLink, tabs }: TabLinkListProps) => {
             {...extraTemporaryProps}
           >
             {tab.title}
+            {tab.chip}
           </Tab>
         );
       })}

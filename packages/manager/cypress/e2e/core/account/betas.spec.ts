@@ -7,6 +7,9 @@ import { ui } from 'support/ui';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 
 // TODO Delete feature flag mocks when feature flag is removed.
+beforeEach(() => {
+  cy.tag('method:e2e');
+});
 describe('Betas landing page', () => {
   /*
    * - Confirms that Betas nav item is present when feature is enabled.

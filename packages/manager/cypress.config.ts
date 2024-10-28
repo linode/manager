@@ -17,6 +17,7 @@ import { enableJunitReport } from './cypress/support/plugins/junit-report';
 import { generateTestWeights } from './cypress/support/plugins/generate-weights';
 import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
 import cypressViteConfig from './cypress/vite.config';
+import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
 
 /**
  * Exports a Cypress configuration object.
@@ -91,6 +92,7 @@ export default defineConfig({
         fetchAccount,
         fetchLinodeRegions,
         regionOverrideCheck,
+        featureFlagOverrides,
         logTestTagInfo,
         splitCypressRun,
         enableJunitReport(),

@@ -19,7 +19,7 @@ import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './object-storage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';
-import { rootRoute } from './root';
+import { migrationRootRoute, rootRoute } from './root';
 import { searchRouteTree } from './search';
 import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
@@ -73,3 +73,21 @@ declare module '@tanstack/react-router' {
     router: typeof router;
   }
 }
+
+/**
+ * This is the router that is used to handle the migration to TanStack Router.
+ * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
+ * This is a temporary solution until we are ready to fully migrate to TanStack Router.
+ * Eventually we will only use the router exported above.
+ */
+export const migrationRouteTree = migrationRootRoute.addChildren([
+  betaRouteTree,
+]);
+export const migrationRouter = createRouter({
+  Wrap: ({ children }) => {
+    return <div data-testid="migration-router">{children}</div>;
+  },
+  context: {},
+  defaultNotFoundComponent: () => <NotFound />,
+  routeTree: migrationRouteTree,
+});

@@ -168,7 +168,7 @@ describe('database resize', () => {
     });
   });
 
-  describe('on rendering of page and isDatabasesGAEnabled is true and the Shared CPU tab is preselected ', () => {
+  describe('on rendering of page and isDatabasesV2GA is true and the Shared CPU tab is preselected ', () => {
     beforeEach(() => {
       // Mock database types
       const standardTypes = [
@@ -369,7 +369,7 @@ describe('database resize', () => {
     });
   });
 
-  describe('on rendering of page and isDatabasesGAEnabled is true and the Dedicated CPU tab is preselected', () => {
+  describe('on rendering of page and isDatabasesV2GA is true and the Dedicated CPU tab is preselected', () => {
     beforeEach(() => {
       // Mock database types
       const mockDedicatedTypes = [

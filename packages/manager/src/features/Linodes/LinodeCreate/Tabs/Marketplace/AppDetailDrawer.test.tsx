@@ -23,7 +23,7 @@ describe('AppDetailDrawer', () => {
     );
 
     // Verify title renders
-    expect(await findByText('WordPress')).toBeVisible();
+    expect(await findByText(stackscript.label)).toBeVisible();
 
     // Verify description renders
     expect(
