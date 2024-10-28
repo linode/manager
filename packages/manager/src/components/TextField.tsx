@@ -1,6 +1,4 @@
-import { InputLabel } from '@linode/ui';
-import { FormHelperText } from '@linode/ui';
-import { InputAdornment } from '@linode/ui';
+import { FormHelperText, InputAdornment, InputLabel } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
