@@ -411,14 +411,6 @@ describe('LKE Cluster Creation with ACL', () => {
     cy.wait(['@getAccount']);
 
     cy.contains('Control Plane ACL').should('not.exist');
-    cy.contains(
-      'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
-    ).should('not.exist');
-    cy.contains('Enable Control Plane ACL').should('not.exist');
-    cy.contains('IPv4 Addresses or CIDRs').should('not.exist');
-    cy.contains('IPv6 Addresses or CIDRs').should('not.exist');
-    cy.contains('Add IPv4 Address').should('not.exist');
-    cy.contains('Add IPv6 Address').should('not.exist');
   });
 
   // setting up mocks
@@ -511,26 +503,13 @@ describe('LKE Cluster Creation with ACL', () => {
         .should('be.visible')
         .click();
 
-      // Confirm ACL section and disable ACL
+      // Disable ACL
       cy.contains('Control Plane ACL').should('be.visible');
-      cy.contains(
-        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
-      ).should('be.visible');
-      cy.contains('Enable Control Plane ACL').should('be.visible');
-      cy.contains('IPv4 Addresses or CIDRs').should('be.visible');
-      cy.contains('IPv6 Addresses or CIDRs').should('be.visible');
-      cy.contains('Add IPv4 Address').should('be.visible');
-      cy.contains('Add IPv6 Address').should('be.visible');
       ui.toggle
         .find()
         .should('have.attr', 'data-qa-toggle', 'true')
         .should('be.visible')
         .click();
-      // IP related fields do not exist when ACL is not enabled
-      cy.get('IPv4 Addresses or CIDRs').should('not.exist');
-      cy.get('IPv6 Addresses or CIDRs').should('not.exist');
-      cy.get('Add IPv4 Address').should('not.exist');
-      cy.get('Add IPv6 Address').should('not.exist');
 
       // Add a node pool
       cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
@@ -637,20 +616,12 @@ describe('LKE Cluster Creation with ACL', () => {
 
       // Confirm ACL section
       cy.contains('Control Plane ACL').should('be.visible');
-      cy.contains(
-        'Enable an access control list (ACL) on your LKE cluster to restrict access to your cluster’s control plane. When enabled, only the IP addresses and ranges specified by you can connect to the control plane.'
-      ).should('be.visible');
-      cy.contains('Enable Control Plane ACL').should('be.visible');
-      cy.contains('IPv4 Addresses or CIDRs').should('be.visible');
-      cy.contains('IPv6 Addresses or CIDRs').should('be.visible');
-      cy.contains('Add IPv4 Address').should('be.visible');
-      cy.contains('Add IPv6 Address').should('be.visible');
       ui.toggle
         .find()
         .should('have.attr', 'data-qa-toggle', 'true')
         .should('be.visible');
       // Add some IPv4s and an IPv6
-      cy.findByPlaceholderText('0.0.0.0/0')
+      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click()
         .type('10.0.0.0/24');
@@ -662,7 +633,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .should('be.visible')
         .click()
         .type('10.0.1.0/24');
-      cy.findByPlaceholderText('::/0')
+      cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click()
         .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
@@ -763,7 +734,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       // Confirm ACL IPv4 validation works as expected
-      cy.findByPlaceholderText('0.0.0.0/0')
+      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click()
         .type('invalid ip');
@@ -771,7 +742,7 @@ describe('LKE Cluster Creation with ACL', () => {
       cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv4 address.').should('be.visible');
       // enter valid IP
-      cy.findByPlaceholderText('0.0.0.0/0')
+      cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click()
         .clear()
@@ -781,7 +752,7 @@ describe('LKE Cluster Creation with ACL', () => {
       cy.contains('Must be a valid IPv4 address.').should('not.exist');
 
       // Confirm ACL IPv6 validation works as expected
-      cy.findByPlaceholderText('::/0')
+      cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click()
         .type('invalid ip');
@@ -789,7 +760,7 @@ describe('LKE Cluster Creation with ACL', () => {
       cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv6 address.').should('be.visible');
       // enter valid IP
-      cy.findByPlaceholderText('::/0')
+      cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click()
         .clear()

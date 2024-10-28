@@ -20,11 +20,12 @@ import {
   useKubernetesControlPlaneACLMutation,
   useKubernetesControlPlaneACLQuery,
 } from 'src/queries/kubernetes';
+import { omittedProps } from 'src/utilities/omittedProps';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 
-interface Props {
+export interface KubeControlPlaneACLDrawerProps {
   closeDrawer: () => void;
   clusterId: number;
   clusterLabel: string;
@@ -33,7 +34,9 @@ interface Props {
   showControlPlaneACL: boolean;
 }
 
-export const KubeControlPlaneACLDrawer = (props: Props) => {
+export const KubeControlPlaneACLDrawer = (
+  props: KubeControlPlaneACLDrawerProps
+) => {
   const formContainerRef = React.useRef<HTMLFormElement>(null);
   const {
     closeDrawer,
@@ -241,8 +244,8 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
             )}
             <Typography variant="h3">Addresses</Typography>
             <StyledTypography
-              topMargin
               sx={{ marginBottom: 1 }}
+              topMargin
               variant="body1"
             >
               A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This
@@ -307,6 +310,7 @@ export const KubeControlPlaneACLDrawer = (props: Props) => {
 
 const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
+  shouldForwardProp: omittedProps(['topMargin']),
 })<{ topMargin?: boolean }>(({ theme, ...props }) => ({
   ...(props.topMargin ? { marginTop: theme.spacing(1) } : {}),
   width: '90%',
