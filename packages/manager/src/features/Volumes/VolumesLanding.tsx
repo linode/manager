@@ -22,7 +22,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useOrder } from 'src/hooks/useOrder';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
@@ -49,7 +49,7 @@ export const VolumesLanding = () => {
   const params = useParams({ strict: false });
   const search: VolumesSearchParams = useSearch({ strict: false });
   const pagination = usePaginationV2({
-    baseRoute: '/volumes',
+    currentRoute: '/volumes',
     initialPage: 1,
     preferenceKey,
     searchParams: (prev) => ({
@@ -62,13 +62,14 @@ export const VolumesLanding = () => {
   });
   const { query } = search;
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    currentRoute: '/volumes',
+    initial: {
       order: 'desc',
       orderBy: 'label',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey,
+  });
 
   const filter: Filter = {
     ['+order']: order,

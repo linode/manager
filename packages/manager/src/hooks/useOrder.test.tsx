@@ -1,11 +1,13 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
+
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory } from 'src/queries/base';
 import { usePreferences } from 'src/queries/profile/preferences';
-import { OrderSet } from 'src/types/ManagerPreferences';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { useOrder } from './useOrder';
+
+import type { OrderSet } from 'src/types/ManagerPreferences';
 
 // Default for Sorting
 const defaultOrder: OrderSet = {
@@ -147,12 +149,9 @@ describe('useOrder hook', () => {
 
   it('should update query params when handleOrderChange is called (with prefix)', () => {
     const prefix = 'volume';
-    const { result } = renderHook(
-      () => useOrder(defaultOrder, undefined, prefix),
-      {
-        wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
-      }
-    );
+    const { result } = renderHook(() => useOrder(defaultOrder, undefined), {
+      wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
+    });
 
     act(() =>
       result.current.handleOrderChange(
