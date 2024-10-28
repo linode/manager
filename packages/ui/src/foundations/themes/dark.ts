@@ -222,6 +222,11 @@ export const darkTheme: ThemeOptions = {
           '.MuiChip-deleteIcon': { color: primaryColors.text },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
         },
+        input: {
+          '&::selection': {
+            backgroundColor: customDarkModeOptions.bg.appBar,
+          },
+        },
       },
     },
     MuiBackdrop: {

@@ -1,6 +1,6 @@
 import globby from 'globby';
 
-const PATTERN = 'src/**/*.stories.tsx';
+const PATTERN = '../**/src/**/*.stories.tsx';
 
 /**
  * Find all storybook files, then return the glob containing the parent component/feature.
@@ -11,18 +11,18 @@ const PATTERN = 'src/**/*.stories.tsx';
  */
 export const getReactDocgenTSFileGlobs = () => {
   const filesWithStories = globby.sync(PATTERN);
-  const files: string[] = [];
+  const files = new Set<string>();
 
   filesWithStories.forEach((file) => {
-    const execArr = /(src\/(components|features)\/[a-zA-Z]*(.|\/))/.exec(file);
+    const execArr = /^(.*src\/(components|features)\/[a-zA-Z]*(.|\/))/.exec(
+      file
+    );
     if (execArr) {
       const isDirectory = execArr[3] === '/';
       const fileBlob = `${execArr[0]}${isDirectory ? '**/*.' : ''}{ts,tsx}`;
-      if (!files.includes(fileBlob)) {
-        files.push(fileBlob);
-      }
+      files.add(fileBlob);
     }
   });
 
-  return files;
+  return Array.from(files);
 };

@@ -1,13 +1,15 @@
+import { IconButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import _Drawer, { DrawerProps } from '@mui/material/Drawer';
-import { Theme } from '@mui/material/styles';
+import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { IconButton } from 'src/components/IconButton';
 import { Typography } from 'src/components/Typography';
 import { convertForAria } from 'src/utilities/stringUtils';
+
+import type { DrawerProps } from '@mui/material/Drawer';
+import type { Theme } from '@mui/material/styles';
 
 interface Props extends DrawerProps {
   /**

@@ -1,4 +1,3 @@
-// This component was built asuming an unmodified MUI <Table />
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
