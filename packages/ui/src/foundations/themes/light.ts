@@ -5,9 +5,11 @@ import {
   Chart,
   Color,
   Dropdown,
+  Font,
   Interaction,
   NotificationToast,
   Select,
+  Spacing,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -1462,6 +1464,7 @@ export const lightTheme: ThemeOptions = {
       },
     },
   },
+  fontTokens: Font,
   font: {
     bold: latoWeb.bold,
     normal: latoWeb.normal,
@@ -1630,6 +1633,7 @@ export const lightTheme: ThemeOptions = {
     'none',
     'none',
   ],
+  spacingTokens: Spacing,
   spacing,
   textColors,
   typography: {

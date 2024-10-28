@@ -8,7 +8,9 @@ import { lightTheme } from './light';
 import type {
   ChartTypes,
   ColorTypes,
+  FontTypes,
   InteractionTypes as InteractionTypesLight,
+  SpacingTypes,
 } from '@linode/design-language-system';
 import type { InteractionTypes as InteractionTypesDark } from '@linode/design-language-system/themes/dark';
 import type { latoWeb } from '../fonts';
@@ -75,7 +77,11 @@ declare module '@mui/material/styles/createTheme' {
     bg: BgColors;
     borderColors: BorderColors;
     chartTokens: ChartTypes;
-    colorTokens: ColorTypes; // Global token: theme agnostic
+    // ---- Global tokens: theme agnostic ----
+    colorTokens: ColorTypes;
+    fontTokens: FontTypes;
+    spacingTokens: SpacingTypes;
+    // ---------------------------------------
     color: Colors;
     font: Fonts;
     graphs: any;
@@ -97,7 +103,11 @@ declare module '@mui/material/styles/createTheme' {
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
     chartTokens?: ChartTypes;
-    colorTokens?: ColorTypes; // Global token: theme agnostic
+    //  ---- Global tokens: theme agnostic ----
+    colorTokens?: ColorTypes;
+    fontTokens?: FontTypes;
+    spacingTokens?: SpacingTypes;
+    // ----------------------------------------
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
