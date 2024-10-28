@@ -135,7 +135,7 @@ describe('DbasS API Error Handling', () => {
     mockGetUserPreferences({});
   });
 
-  const statusCodes = [400];
+  const statusCodes = [400,500];
   statusCodes.forEach((statusCode) => {
     it(`should return ${statusCode} error response when fetching metric definitions API Request`, () => {
       // Step 1: Intercept the API call for fetching metric definitions and simulate an error response.
