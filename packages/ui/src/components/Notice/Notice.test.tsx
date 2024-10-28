@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
 import { Notice } from './Notice';
-import { expect, vi } from 'vitest';
+import { expect, describe, it, vi } from 'vitest';
 
 describe('Notice Component', () => {
   it('renders without errors with proper spacing', () => {
