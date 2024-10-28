@@ -22,10 +22,6 @@ export interface VolumesSearchParams extends TableSearchParams {
   query?: string;
 }
 
-export const setVolumesSearchParams = (prev: VolumesSearchParams) => ({
-  query: prev.query,
-});
-
 const volumesRoute = createRoute({
   component: VolumesRoot,
   getParentRoute: () => rootRoute,
@@ -53,7 +49,7 @@ const volumeActionRoute = createRoute({
   beforeLoad: ({ params }) => {
     if (!(params.action in volumeAction)) {
       throw redirect({
-        search: setVolumesSearchParams,
+        search: () => ({}),
         to: '/volumes',
       });
     }
@@ -79,7 +75,7 @@ const volumeActionRoute = createRoute({
 const volumesCatchAllRoute = createRoute({
   beforeLoad: () => {
     throw redirect({
-      search: setVolumesSearchParams,
+      search: () => ({}),
       to: '/volumes',
     });
   },
