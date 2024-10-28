@@ -1,7 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { VolumesRoute } from './VolumesRoute';
+import { VolumesRoot } from './VolumesRoot';
 
 import type { TableSearchParams } from '../types';
 
@@ -15,22 +15,19 @@ const volumeAction = {
   resize: 'resize',
   upgrade: 'upgrade',
 } as const;
+
 type VolumeAction = typeof volumeAction[keyof typeof volumeAction];
 
 export interface VolumesSearchParams extends TableSearchParams {
   query?: string;
 }
 
-export const volumesSearchParams = (prev: VolumesSearchParams) => ({
-  order: prev.order,
-  orderBy: prev.orderBy,
-  page: prev.page,
-  page_size: prev.page_size,
+export const setVolumesSearchParams = (prev: VolumesSearchParams) => ({
   query: prev.query,
 });
 
 const volumesRoute = createRoute({
-  component: VolumesRoute,
+  component: VolumesRoot,
   getParentRoute: () => rootRoute,
   path: 'volumes',
 });
@@ -38,9 +35,9 @@ const volumesRoute = createRoute({
 const volumesIndexRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: '/',
-  validateSearch: (search: VolumesSearchParams) => volumesSearchParams(search),
+  validateSearch: (search) => search.query,
 }).lazy(() =>
-  import('src/features/Volumes/VolumesLanding').then(
+  import('src/routes/volumes/volumesLazyRoutes').then(
     (m) => m.volumesLandingLazyRoute
   )
 );
@@ -49,16 +46,14 @@ const volumesCreateRoute = createRoute({
   getParentRoute: () => volumesRoute,
   path: 'create',
 }).lazy(() =>
-  import('src/features/Volumes/VolumeCreate').then(
-    (m) => m.volumeCreateLazyRoute
-  )
+  import('./volumesLazyRoutes').then((m) => m.volumeCreateLazyRoute)
 );
 
 const volumeActionRoute = createRoute({
   beforeLoad: ({ params }) => {
     if (!(params.action in volumeAction)) {
       throw redirect({
-        search: (prev) => volumesSearchParams(prev),
+        search: setVolumesSearchParams,
         to: '/volumes',
       });
     }
@@ -76,7 +71,7 @@ const volumeActionRoute = createRoute({
   }),
   path: '$volumeId/$action',
 }).lazy(() =>
-  import('src/features/Volumes/VolumesLanding').then(
+  import('src/routes/volumes/volumesLazyRoutes').then(
     (m) => m.volumesLandingLazyRoute
   )
 );
@@ -84,7 +79,7 @@ const volumeActionRoute = createRoute({
 const volumesCatchAllRoute = createRoute({
   beforeLoad: () => {
     throw redirect({
-      search: (prev) => volumesSearchParams(prev),
+      search: setVolumesSearchParams,
       to: '/volumes',
     });
   },
