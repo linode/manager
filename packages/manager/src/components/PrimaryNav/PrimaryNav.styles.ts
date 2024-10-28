@@ -156,6 +156,7 @@ export const StyledAccordion = styled(Accordion, {
         color: props.isActiveProductFamily ? '#00B159' : '#8E9195',
         height: 20,
         marginRight: 14,
+        transition: theme.transitions.create(['color']),
         width: 20,
       },
       alignItems: 'center',
