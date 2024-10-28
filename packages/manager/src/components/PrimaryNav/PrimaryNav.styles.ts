@@ -16,7 +16,7 @@ export const StyledGrid = styled(Grid, {
     '& a[aria-current="true"]': {
       backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
     },
-    '.MuiAccordion-region': {
+    '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
       height: 'auto',
     },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
@@ -25,9 +25,9 @@ export const StyledGrid = styled(Grid, {
       },
     },
   },
-  // when the nav is collapsed, we want to visually hide expanded content
+  // when the nav is collapsed, we want to visually hide expanded content and single links like Managed
   ...(props.isCollapsed && {
-    '.MuiAccordion-region': {
+    '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
       height: 0,
     },
   }),

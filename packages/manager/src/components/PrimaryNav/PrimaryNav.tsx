@@ -282,7 +282,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           </StyledLink>
         </StyledLogoBox>
       </Grid>
-
       {primaryLinkGroups.map((linkGroup, idx) => {
         const filteredLinks = linkGroup.links.filter((link) => !link.hide);
         if (filteredLinks.length === 0) {
@@ -312,18 +311,20 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
         return (
           <div key={idx} style={{ width: 'inherit' }}>
-            <Divider
-              sx={(theme) => ({
-                backgroundColor: 'rgba(0, 0, 0, 0.12)',
-                borderColor:
-                  theme.name === 'light'
-                    ? theme.borderColors.dividerDark
-                    : 'rgba(0, 0, 0, 0.19)',
-                color: '#222',
-              })}
-              spacingBottom={0}
-              spacingTop={0}
-            />
+            {!isManaged && (
+              <Divider
+                sx={(theme) => ({
+                  backgroundColor: 'rgba(0, 0, 0, 0.12)',
+                  borderColor:
+                    theme.name === 'light'
+                      ? theme.borderColors.dividerDark
+                      : 'rgba(0, 0, 0, 0.19)',
+                  color: '#222',
+                })}
+                spacingBottom={0}
+                spacingTop={0}
+              />
+            )}
             {linkGroup.title ? ( // TODO: we can remove this conditional when Managed is removed
               <StyledAccordion
                 heading={
@@ -340,10 +341,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 {PrimaryLinks}
               </StyledAccordion>
             ) : (
-              // currently just Managed
-              <Box paddingBottom={1} paddingTop={1}>
-                {PrimaryLinks}
-              </Box>
+              <Box className={`StyledSingleLinkBox-${idx}`}>{PrimaryLinks}</Box>
             )}
           </div>
         );
