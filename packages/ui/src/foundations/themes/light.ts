@@ -229,21 +229,6 @@ const graphTransparency = '0.7';
 const spacing = 8;
 
 export const lightTheme: ThemeOptions = {
-  tokens: {
-    accent: Accent,
-    action: Action,
-    background: Background,
-    border: Border,
-    color: Color,
-    chart: Chart,
-    content: Content,
-    elevation: Elevation,
-    interaction: Interaction,
-    radius: Radius,
-    typography: Typography,
-    font: Font,
-    spacing: Spacing,
-  },
   addCircleHoverEffect: {
     ...iconCircleHoverEffect,
   },
@@ -1652,6 +1637,21 @@ export const lightTheme: ThemeOptions = {
   ],
   spacing,
   textColors,
+  tokens: {
+    accent: Accent,
+    action: Action,
+    background: Background,
+    border: Border,
+    color: Color,
+    chart: Chart,
+    content: Content,
+    elevation: Elevation,
+    interaction: Interaction,
+    radius: Radius,
+    typography: Typography,
+    font: Font,
+    spacing: Spacing,
+  },
   typography: {
     body1: {
       color: primaryColors.text,
