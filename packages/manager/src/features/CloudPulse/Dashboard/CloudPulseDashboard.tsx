@@ -116,11 +116,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   }
 
   if (isJweTokenError) {
-    return renderErrorState('Failed to get the token.');
+    return renderErrorState('Failed to get the authentication token.');
   }
 
   if (isMetricDefinitionError) {
-    return renderErrorState('Error loading metric definitions.');
+    return renderErrorState('Error loading the definitions of metrics.');
   }
 
   if (
