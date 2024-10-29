@@ -69,7 +69,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
           fill: theme.palette.success.dark,
         },
         [`& .${classes.linkItem}`]: {
-          color: 'white',
+          color: theme.colorTokens.Neutrals.White,
         },
         backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
         border: 'red',

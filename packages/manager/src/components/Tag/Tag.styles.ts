@@ -48,9 +48,9 @@ export const StyledChip = styled(Chip, {
     '& > span': {
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        color: theme.colorTokens.Neutrals.White,
       },
-      color: 'white',
+      color: theme.colorTokens.Neutrals.White,
     },
 
     backgroundColor: theme.palette.primary.main,

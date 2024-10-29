@@ -38,7 +38,10 @@ export const ApplicationPlatform = (props: APLProps) => {
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
-            color: theme.name === 'dark' ? 'white' : theme.color.black,
+            color:
+              theme.name === 'dark'
+                ? theme.colorTokens.Neutrals.White
+                : theme.color.black,
           },
         })}
       >
