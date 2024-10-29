@@ -15,6 +15,7 @@ import {
 } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 interface Props {
   clusterId: number;
@@ -56,10 +57,16 @@ const useStyles = makeStyles()((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   kubeconfigIcons: {
+    '& svg': {
+      height: 16,
+      width: 16,
+      color: theme.palette.primary.main,
+    },
     height: 16,
     margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
     width: 16,
+    padding: 0,
   },
   label: {
     fontFamily: theme.font.bold,
@@ -93,10 +100,18 @@ export const KubeConfigDisplay = (props: Props) => {
     setResetKubeConfigDialogOpen,
   } = props;
 
+  const [getData, setGetData] = React.useState<boolean>(false);
+
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
 
-  const { refetch } = useKubenetesKubeConfigQuery(clusterId);
+  const { data, refetch } = useKubenetesKubeConfigQuery(clusterId, getData);
+
+  const token = data && data.match(/token:\s*(\S+)/);
+
+  React.useEffect(() => {
+    setGetData(true);
+  }, []);
 
   const {
     data: endpoints,
@@ -165,6 +180,17 @@ export const KubeConfigDisplay = (props: Props) => {
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
           </Box>
+          {token && (
+            <Box className={classes.kubeconfigElement}>
+              <CopyTooltip
+                className={classes.kubeconfigIcons}
+                text={token[1]}
+              />
+              <Typography className={classes.kubeconfigFileText}>
+                Token
+              </Typography>
+            </Box>
+          )}
           <Box
             className={classes.kubeconfigElement}
             onClick={() => setResetKubeConfigDialogOpen(true)}
