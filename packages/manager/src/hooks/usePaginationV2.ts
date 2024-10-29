@@ -23,7 +23,7 @@ const setTableSearchParams = (prev: TableSearchParams) => ({
   page_size: prev.page_size,
 });
 
-interface UsePaginationV2Props<T extends TableSearchParams> {
+export interface UsePaginationV2Props<T extends TableSearchParams> {
   currentRoute: ToSubOptions['to'];
   initialPage: number;
   preferenceKey: string;
