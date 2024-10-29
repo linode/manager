@@ -163,7 +163,7 @@ describe('DbasS API Error Handling', () => {
     cy.wait('@getMetricDefinitions');
     cy.get('[data-qa-error-msg="true"]')
       .should('be.visible')
-      .and('have.text', 'Error loading metric definitions.');
+      .and('have.text', 'Error loading the definitions of metrics.');
   });
 
   it('should return error response when fetching services API request', () => {
@@ -189,7 +189,7 @@ describe('DbasS API Error Handling', () => {
         expect(text).to.equal('Failed to fetch the services.');
       });
   });
-  it('should return  error response when fetching Token API Request', () => {
+  it('should return error response when fetching Token API Request', () => {
     cy.intercept('POST', apiMatcher(`/monitor/services/${serviceType}/token`), {
       statusCode: 400,
       body: {
@@ -238,10 +238,10 @@ describe('DbasS API Error Handling', () => {
 
     cy.get('[data-qa-error-msg="true"]')
       .should('be.visible')
-      .and('have.text', 'Failed to get the token.');
+      .and('have.text', 'Failed to get the authentication token.');
   });
 
-  it('should return  error response when fetching Dashboards API Request', () => {
+  it('should return error response when fetching Dashboards API Request', () => {
     mockGetCloudPulseServices(serviceType).as('fetchServices');
     cy.intercept(
       'GET',
@@ -324,7 +324,7 @@ describe('DbasS API Error Handling', () => {
       .and('have.text', 'Failed to fetch the dashboard details.');
   });
 
-  it(`should return  error message when the Regions API request fails`, () => {
+  it(`should return error message when the Regions API request fails`, () => {
     cy.intercept('GET', apiMatcher(`regions*`), {
       statusCode: 400, // Use the status code defined in the test
       body: {
@@ -356,7 +356,7 @@ describe('DbasS API Error Handling', () => {
       });
   });
 
-  it('should return  error response when fetching DB Cluster API Request', () => {
+  it('should return error response when fetching DB Cluster API Request', () => {
     cy.intercept('GET', apiMatcher(`databases/instances*`), {
       statusCode: 400,
       body: {
