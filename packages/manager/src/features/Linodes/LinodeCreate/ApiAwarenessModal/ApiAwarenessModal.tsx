@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -31,20 +30,17 @@ export interface ApiAwarenessModalProps {
   payLoad: CreateLinodeRequest;
 }
 
-export const baseTabs = [
-  {
-    component: CurlTabPanel,
-    title: 'cURL',
-    type: 'API',
-  },
+export const tabs = [
   {
     component: LinodeCLIPanel,
     title: 'Linode CLI',
     type: 'CLI',
   },
-];
-
-export const additionalTabs = [
+  {
+    component: CurlTabPanel,
+    title: 'cURL',
+    type: 'API',
+  },
   {
     component: IntegrationsTabPanel,
     title: 'Integrations',
@@ -75,12 +71,7 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   const isLinodeCreated = linodeCreationEvent !== undefined;
 
-  const isDxAdditionsFeatureEnabled = flags?.apicliDxToolsAdditions;
   const apicliButtonCopy = flags?.testdxtoolabexperiment;
-
-  const tabs = isDxAdditionsFeatureEnabled
-    ? [baseTabs[1], baseTabs[0], ...additionalTabs]
-    : baseTabs;
 
   const handleTabChange = (index: number) => {
     const { title, type } = tabs[index];
@@ -130,23 +121,16 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
       title="Create Linode"
     >
       <Typography sx={{ paddingBottom: '6px' }} variant="body1">
-        {isDxAdditionsFeatureEnabled ? (
-          <>
-            Create a Linode in the command line, powered by the{' '}
-            <Link
-              onClick={() => sendApiAwarenessClickEvent('link', 'Linode API')}
-              to="https://techdocs.akamai.com/linode-api/reference/api/"
-            >
-              Linode API
-            </Link>
-            . Select one of the methods below and paste the corresponding
-            command into your local terminal. The values for each command have
-            been populated with the selections made in the Cloud Manager create
-            form.
-          </>
-        ) : (
-          'Create a Linode in the command line using either cURL or the Linode CLI — both of which are powered by the Linode API. Select one of the methods below and paste the corresponding command into your local terminal. The values for each command have been populated with the selections made in the Cloud Manager create form.'
-        )}
+        Create a Linode in the command line, powered by the{' '}
+        <Link
+          onClick={() => sendApiAwarenessClickEvent('link', 'Linode API')}
+          to="https://techdocs.akamai.com/linode-api/reference/api/"
+        >
+          Linode API
+        </Link>
+        . Select one of the methods below and paste the corresponding command
+        into your local terminal. The values for each command have been
+        populated with the selections made in the Cloud Manager create form.
       </Typography>
       <StyledTabs defaultIndex={0} onChange={handleTabChange}>
         <TabList>
@@ -165,44 +149,6 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
           ))}
         </TabPanels>
       </StyledTabs>
-      {!isDxAdditionsFeatureEnabled && (
-        <Notice spacingBottom={0} spacingTop={24} variant="marketing">
-          <Typography
-            sx={{
-              fontSize: '14px !important',
-            }}
-          >
-            Deploy and manage your infrastructure with the{' '}
-            <Link
-              onClick={() =>
-                sendApiAwarenessClickEvent('link', 'Linode Terraform Provider')
-              }
-              to="https://www.linode.com/products/linode-terraform-provider/"
-            >
-              Linode Terraform Provider
-            </Link>{' '}
-            and{' '}
-            <Link
-              onClick={() =>
-                sendApiAwarenessClickEvent('link', 'Ansible Collection')
-              }
-              to="https://www.linode.com/products/linode-ansible-collection/"
-            >
-              Ansible Collection
-            </Link>
-            .{' '}
-            <Link
-              onClick={() =>
-                sendApiAwarenessClickEvent('link', 'View all tools')
-              }
-              to="https://techdocs.akamai.com/linode-api/reference/api"
-            >
-              View all tools
-            </Link>{' '}
-            with programmatic access to the Linode platform.
-          </Typography>
-        </Notice>
-      )}
       <ActionsPanel
         secondaryButtonProps={{
           compactX: true,

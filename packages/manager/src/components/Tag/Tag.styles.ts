@@ -48,9 +48,9 @@ export const StyledChip = styled(Chip, {
     '& > span': {
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        color: theme.colorTokens.Neutrals.White,
       },
-      color: 'white',
+      color: theme.colorTokens.Neutrals.White,
     },
 
     backgroundColor: theme.palette.primary.main,
@@ -91,7 +91,9 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
     backgroundColor: theme.color.buttonPrimaryHover,
   },
   borderBottomRightRadius: 3,
-  borderLeft: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
+  borderLeft: `1px solid ${
+    theme.name === 'light' ? theme.colorTokens.Neutrals.White : '#2e3238'
+  }`,
   borderRadius: 0,
   borderTopRightRadius: 3,
   height: 30,

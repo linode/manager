@@ -61,7 +61,10 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
-            color: theme.name === 'dark' ? 'white' : theme.color.black,
+            color:
+              theme.name === 'dark'
+                ? theme.colorTokens.Neutrals.White
+                : theme.color.black,
           },
         })}
         id="ha-radio-buttons-group-label"

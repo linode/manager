@@ -85,7 +85,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    {}
+    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {}
   );
 
   const {

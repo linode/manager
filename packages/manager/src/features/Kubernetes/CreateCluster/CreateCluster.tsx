@@ -22,7 +22,7 @@ import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
   getLatestVersion,
-  useGetAPLAvailability,
+  useAPLAvailability,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -87,7 +87,7 @@ export const CreateCluster = () => {
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
-  const showAPL = useGetAPLAvailability();
+  const showAPL = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
