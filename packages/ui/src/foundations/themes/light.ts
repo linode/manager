@@ -242,7 +242,6 @@ export const lightTheme: ThemeOptions = {
   borderColors,
   breakpoints,
   chartTokens: Chart,
-  colorTokens: Color,
   color,
   components: {
     MuiAccordion: {
@@ -1464,7 +1463,6 @@ export const lightTheme: ThemeOptions = {
       },
     },
   },
-  fontTokens: Font,
   font: {
     bold: latoWeb.bold,
     normal: latoWeb.normal,
@@ -1633,9 +1631,13 @@ export const lightTheme: ThemeOptions = {
     'none',
     'none',
   ],
-  spacingTokens: Spacing,
   spacing,
   textColors,
+  tokens: {
+    color: Color,
+    font: Font,
+    spacing: Spacing,
+  },
   typography: {
     body1: {
       color: primaryColors.text,

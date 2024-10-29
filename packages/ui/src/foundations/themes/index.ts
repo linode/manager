@@ -77,11 +77,6 @@ declare module '@mui/material/styles/createTheme' {
     bg: BgColors;
     borderColors: BorderColors;
     chartTokens: ChartTypes;
-    // ---- Global tokens: theme agnostic ----
-    colorTokens: ColorTypes;
-    fontTokens: FontTypes;
-    spacingTokens: SpacingTypes;
-    // ---------------------------------------
     color: Colors;
     font: Fonts;
     graphs: any;
@@ -91,6 +86,13 @@ declare module '@mui/material/styles/createTheme' {
     name: ThemeName;
     notificationToast: NotificationToast;
     textColors: TextColors;
+    tokens: {
+      //  ---- Global tokens: theme agnostic ----
+      color: ColorTypes;
+      font: FontTypes;
+      spacing: SpacingTypes;
+      // ----------------------------------------
+    };
     visually: any;
   }
 
@@ -103,11 +105,6 @@ declare module '@mui/material/styles/createTheme' {
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
     chartTokens?: ChartTypes;
-    //  ---- Global tokens: theme agnostic ----
-    colorTokens?: ColorTypes;
-    fontTokens?: FontTypes;
-    spacingTokens?: SpacingTypes;
-    // ----------------------------------------
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
@@ -117,6 +114,13 @@ declare module '@mui/material/styles/createTheme' {
     name: ThemeName;
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
+    tokens?: {
+      //  ---- Global tokens: theme agnostic ----
+      color: ColorTypes;
+      font: FontTypes;
+      spacing: SpacingTypes;
+      // ----------------------------------------
+    };
     visually?: any;
   }
 }
