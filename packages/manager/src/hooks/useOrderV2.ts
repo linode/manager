@@ -49,7 +49,7 @@ export const useOrderV2 = ({
 }: UseOrderV2Props) => {
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
-  const params = useParams({ strict: false });
+  const params = useParams({ from: initialRoute.from });
   const navigate = useNavigate();
 
   const initialOrder = getInitialValuesFromUserPreferences(
