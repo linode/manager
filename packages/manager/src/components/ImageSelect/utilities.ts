@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 
-import type { ImageSelectVariant } from './ImageSelectv2';
+import type { ImageSelectVariant } from './ImageSelect';
 import type { Image } from '@linode/api-v4';
 
 /**
@@ -13,7 +13,11 @@ export const getAPIFilterForImageSelect = (
   variant: ImageSelectVariant | undefined
 ) => {
   if (variant === 'public') {
-    return { '+order': 'desc', '+order_by': 'label', is_public: true };
+    return {
+      '+order': 'desc',
+      '+order_by': 'label',
+      is_public: true,
+    };
   }
 
   if (variant === 'private') {

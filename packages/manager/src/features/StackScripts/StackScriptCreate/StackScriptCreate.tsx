@@ -17,12 +17,10 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { withImages } from 'src/containers/images.container';
 import { withProfile } from 'src/containers/profile.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
 import { profileQueries } from 'src/queries/profile/profile';
-import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
@@ -36,7 +34,6 @@ import type {
 import type { Account, Grant } from '@linode/api-v4/lib/account';
 import type { QueryClient } from '@tanstack/react-query';
 import type { RouteComponentProps } from 'react-router-dom';
-import type { WithImagesProps } from 'src/containers/images.container';
 import type { WithProfileProps } from 'src/containers/profile.container';
 import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 
@@ -59,7 +56,6 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  WithImagesProps &
   WithProfileProps &
   RouteComponentProps<{ stackScriptID: string }> &
   WithQueryClientProps;
@@ -409,7 +405,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   render() {
     const {
       grants,
-      imagesData,
       location,
       match: {
         params: { stackScriptID },
@@ -429,16 +424,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       // apiResponse
     } = this.state;
 
-    const _imagesData = filterImagesByType(imagesData, 'public');
-
     const hasErrorFor = getAPIErrorFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
     const hasUnsavedChanges = this.hasUnsavedChanges();
-
-    const availableImages = Object.values(_imagesData).filter(
-      (thisImage) => !thisImage.label.match(/kube/i)
-    );
 
     const stackScriptGrants = grants.data?.stackscript;
 
@@ -503,10 +492,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             handler: this.handleDescriptionChange,
             value: description,
           }}
-          images={{
-            available: availableImages,
-            selected: images,
-          }}
           label={{
             handler: this.handleLabelChange,
             value: label,
@@ -528,6 +513,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           onCancel={this.handleOpenDialog}
           onSelectChange={this.handleChooseImage}
           onSubmit={this.handleSubmit}
+          selectedImages={images}
         />
         {this.renderCancelStackScriptDialog()}
       </React.Fragment>
@@ -536,7 +522,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 }
 
 const enhanced = compose<CombinedProps, Props>(
-  withImages,
   withRouter,
   withProfile,
   withQueryClient
