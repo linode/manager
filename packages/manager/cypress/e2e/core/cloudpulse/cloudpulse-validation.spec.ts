@@ -259,7 +259,7 @@ describe('DbasS API Error Handling', () => {
       });
   });
 
-  it('should return   error message when the Dashboard details API request fails', () => {
+  it('should return error message when the Dashboard details API request fails', () => {
     cy.intercept('GET', apiMatcher(`/monitor/dashboards/${id}`), {
       statusCode: 400,
       body: { errors: [{ reason: 'Bad Request' }] },
