@@ -1,5 +1,6 @@
-import { IamAccountPermissions } from '@linode/api-v4';
 import Factory from 'src/factories/factoryProxy';
+
+import type { IamAccountPermissions } from '@linode/api-v4';
 
 export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPermissions>(
   {
@@ -8,9 +9,9 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         resource_type: 'account',
         roles: [
           {
-            name: 'account_admin',
             description:
               'Access to perform any supported action on all resources in the account',
+            name: 'account_admin',
             permissions: ['create_linode', 'update_linode', 'update_firewall'],
           },
         ],
@@ -19,9 +20,9 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         resource_type: 'linode',
         roles: [
           {
-            name: 'account_linode_admin',
             description:
               'Access to perform any supported action on all linode instances in the account',
+            name: 'account_linode_admin',
             permissions: ['create_linode', 'update_linode', 'delete_linode'],
           },
         ],
@@ -30,8 +31,9 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         resource_type: 'firewall',
         roles: [
           {
-            name: 'firewall_creator',
             description: 'Access to create a firewall instance',
+            name: 'firewall_creator',
+            permissions: ['update_firewall'],
           },
         ],
       },
@@ -41,8 +43,8 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         resource_type: 'linode',
         roles: [
           {
-            name: 'linode_contributor',
             description: 'Access to update a linode instance',
+            name: 'linode_contributor',
             permissions: ['update_linode', 'view_linode'],
           },
         ],
@@ -51,13 +53,15 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         resource_type: 'firewall',
         roles: [
           {
-            name: 'firewall_viewer',
             description: 'Access to view a firewall instance',
+            name: 'firewall_viewer',
+            permissions: ['update_firewall'],
           },
           {
-            name: 'firewall_admin',
             description:
               'Access to perform any supported action on a firewall instance',
+            name: 'firewall_admin',
+            permissions: ['update_firewall'],
           },
         ],
       },
