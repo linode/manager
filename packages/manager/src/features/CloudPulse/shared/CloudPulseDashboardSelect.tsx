@@ -51,11 +51,11 @@ export const CloudPulseDashboardSelect = React.memo(
 
     const getErrorText = () => {
       if (serviceTypesError) {
-        return 'Failed to fetch the services';
+        return 'Failed to fetch the services.';
       }
 
       if (dashboardsError.length > 0) {
-        return `Failed to fetch the dashboards`;
+        return 'Failed to fetch the dashboards.';
       }
 
       return '';

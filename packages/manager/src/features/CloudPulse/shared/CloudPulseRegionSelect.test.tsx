@@ -38,6 +38,6 @@ describe('CloudPulseRegionSelect', () => {
       <CloudPulseRegionSelect {...props} />
     );
 
-    expect(getByText('Failed to fetch Region'));
+    expect(getByText('Failed to fetch Region.'));
   });
 });

@@ -33,7 +33,7 @@ export const CloudPulseDashboardRenderer = React.memo(
 
     if (!FILTER_CONFIG.get(dashboard.service_type)) {
       return (
-        <CloudPulseErrorPlaceholder errorMessage="No Filters Configured for selected dashboard's service type" />
+        <CloudPulseErrorPlaceholder errorMessage="No filters configured for selected dashboard's service type." />
       );
     }
 

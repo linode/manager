@@ -111,7 +111,7 @@ describe('CloudPulse Dashboard select', () => {
     renderWithTheme(<CloudPulseDashboardSelect {...props} savePreferences />);
 
     expect(
-      screen.getByText('Failed to fetch the dashboards')
+      screen.getByText('Failed to fetch the dashboards.')
     ).toBeInTheDocument();
   });
   it('Should show error message when services call fails', () => {
@@ -130,7 +130,7 @@ describe('CloudPulse Dashboard select', () => {
     renderWithTheme(<CloudPulseDashboardSelect {...props} savePreferences />);
 
     expect(
-      screen.getByText('Failed to fetch the services')
+      screen.getByText('Failed to fetch the services.')
     ).toBeInTheDocument();
   });
 });
