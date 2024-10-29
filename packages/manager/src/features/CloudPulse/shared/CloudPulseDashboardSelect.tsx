@@ -116,7 +116,6 @@ export const CloudPulseDashboardSelect = React.memo(
         options={getSortedDashboardsList(dashboardsList ?? [])}
         placeholder={placeHolder}
         value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component
-        aria-required
       />
     );
   }
