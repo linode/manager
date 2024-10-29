@@ -49,11 +49,11 @@ export const CloudPulseDashboardSelect = React.memo(
 
     const getErrorText = () => {
       if (serviceTypesError) {
-        return 'Failed to fetch the services';
+        return 'Failed to fetch the services.';
       }
 
       if (dashboardsError.length > 0) {
-        return 'Failed to fetch the dashboards';
+        return 'Failed to fetch the dashboards.';
       }
 
       return '';
@@ -114,6 +114,7 @@ export const CloudPulseDashboardSelect = React.memo(
         options={getSortedDashboardsList(dashboardsList ?? [])}
         placeholder={placeHolder}
         value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component
+        aria-required
       />
     );
   }
