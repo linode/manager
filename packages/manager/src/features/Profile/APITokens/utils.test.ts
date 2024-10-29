@@ -315,7 +315,7 @@ describe('APIToken utils', () => {
         ];
         expect(allScopesAreTheSame(scopes)).toBe(2);
       });
-      it('should return null if all scopes are not same', () => {
+      it('should return null if all scopes are different', () => {
         const scopes: Permission[] = [
           ['account', 1],
           ['child_account', 0],
