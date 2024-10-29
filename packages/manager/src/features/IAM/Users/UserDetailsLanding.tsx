@@ -14,6 +14,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
 import { IAM_LABEL } from '../Shared/constants';
+import { UserProfile } from './UserDetails/UserProfile';
 import { UserResources } from './UserResources/UserResources';
 import { UserRoles } from './UserRoles/UserRoles';
 
@@ -73,7 +74,7 @@ export const UserDetailsLanding = () => {
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={idx}>
-            <p>user details - UIE-8137</p>
+            <UserProfile />
           </SafeTabPanel>
           <SafeTabPanel index={++idx}>
             <UserRoles assignedRoles={assignedRoles} />
