@@ -15,6 +15,7 @@ describe('ImageOption', () => {
 
     expect(getByText(image.label)).toBeVisible();
   });
+
   it('renders an OS icon', () => {
     const image = imageFactory.build();
 
@@ -24,6 +25,7 @@ describe('ImageOption', () => {
 
     expect(getByTestId('os-icon')).toBeVisible();
   });
+
   it('renders a metadata (cloud-init) icon if the flag is on and the image supports cloud-init', () => {
     const image = imageFactory.build({ capabilities: ['cloud-init'] });
 
@@ -36,6 +38,7 @@ describe('ImageOption', () => {
       getByLabelText('This image supports our Metadata service via cloud-init.')
     ).toBeVisible();
   });
+
   it('renders a distributed icon if image has the "distributed-sites" capability', () => {
     const image = imageFactory.build({ capabilities: ['distributed-sites'] });
 
@@ -71,5 +74,15 @@ describe('ImageOption', () => {
     );
 
     expect(getByText(`${image.label} (deprecated)`)).toBeVisible();
+  });
+
+  it('should show the selected icon when isSelected is true', () => {
+    const image = imageFactory.build();
+
+    const { getByTestId } = renderWithTheme(
+      <ImageOption image={image} isSelected={true} listItemProps={{}} />
+    );
+
+    expect(getByTestId('DoneIcon')).toBeVisible();
   });
 });
