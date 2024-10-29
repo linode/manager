@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- Hostnames not showing the Database detail page ([#11182](https://github.com/linode/manager/pull/11182))
+- Hostnames not showing on the Database details page ([#11182](https://github.com/linode/manager/pull/11182))
 
 ## [2024-10-28] - v1.131.0
 
