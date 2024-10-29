@@ -262,7 +262,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             <StyledVPCBox>
               <StyledListItem sx={{ ...sxLastListItem }}>
                 <StyledLabelBox component="span" data-testid="subnets-string">
-                  Subnets:
+                  Subnet:
                 </StyledLabelBox>{' '}
                 {getSubnetsString(linodeAssociatedSubnets ?? [])}
               </StyledListItem>
