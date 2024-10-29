@@ -881,6 +881,7 @@ export const darkTheme: ThemeOptions = {
   },
   textColors: customDarkModeOptions.textColors,
   tokens: {
+    // No need to add global tokens here, as they will be inherited from light.ts
     accent: Accent,
     action: Action,
     background: Background,
