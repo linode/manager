@@ -9,11 +9,13 @@ import {
   Content,
   Dropdown,
   Elevation,
+  Font,
   Interaction,
   NotificationToast,
   Radius,
   Select,
   Typography,
+  Spacing,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -232,12 +234,15 @@ export const lightTheme: ThemeOptions = {
     action: Action,
     background: Background,
     border: Border,
+    color: Color,
     chart: Chart,
     content: Content,
     elevation: Elevation,
     interaction: Interaction,
     radius: Radius,
     typography: Typography,
+    font: Font,
+    spacing: Spacing,
   },
   addCircleHoverEffect: {
     ...iconCircleHoverEffect,
@@ -257,7 +262,6 @@ export const lightTheme: ThemeOptions = {
   bg,
   borderColors,
   breakpoints,
-  colorTokens: Color,
   color,
   components: {
     MuiAccordion: {

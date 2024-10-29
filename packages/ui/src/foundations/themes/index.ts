@@ -14,9 +14,11 @@ import type {
   ColorTypes,
   ContentTypes as ContentTypesLight,
   ElevationTypes as ElevationTypesLight,
+  FontTypes,
   InteractionTypes as InteractionTypesLight,
   TypographyTypes,
   RadiusTypes,
+  SpacingTypes,
 } from '@linode/design-language-system';
 import type {
   AccentTypes as AccentTypesDark,
@@ -96,7 +98,6 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg: BgColors;
     borderColors: BorderColors;
-    colorTokens: ColorTypes; // Global token: theme agnostic
     color: Colors;
     font: Fonts;
     graphs: any;
@@ -105,6 +106,11 @@ declare module '@mui/material/styles/createTheme' {
     name: ThemeName;
     notificationToast: NotificationToast;
     tokens: {
+      //  ---- Global tokens: theme agnostic ----
+      color: ColorTypes;
+      font: FontTypes;
+      spacing: SpacingTypes;
+      // ----------------------------------------
       accent: AccentTypes;
       action: ActionTypes;
       background: BackgroundTypes;
@@ -128,7 +134,6 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
-    colorTokens?: ColorTypes; // Global token: theme agnostic
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
@@ -137,6 +142,11 @@ declare module '@mui/material/styles/createTheme' {
     name: ThemeName;
     notificationToast?: NotificationToast;
     tokens?: {
+      //  ---- Global tokens: theme agnostic ----
+      color?: ColorTypes;
+      font?: FontTypes;
+      spacing?: SpacingTypes;
+      // ----------------------------------------
       accent?: AccentTypes;
       action?: ActionTypes;
       background?: BackgroundTypes;
