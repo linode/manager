@@ -42,7 +42,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
       {loggedInAsCustomer && (
         <Box bgcolor="pink" padding="1em" textAlign="center">
           <Typography
-            color={(theme) => theme.colorTokens.Neutrals.Black}
+            color={(theme) => theme.tokens.color.Neutrals.Black}
             fontSize="1.2em"
           >
             You are logged in as customer: <strong>{username}</strong>

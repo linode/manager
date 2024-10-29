@@ -40,7 +40,7 @@ export const ApplicationPlatform = (props: APLProps) => {
           '&&.MuiFormLabel-root.Mui-focused': {
             color:
               theme.name === 'dark'
-                ? theme.colorTokens.Neutrals.White
+                ? theme.tokens.color.Neutrals.White
                 : theme.color.black,
           },
         })}

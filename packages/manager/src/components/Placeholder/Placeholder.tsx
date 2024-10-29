@@ -98,8 +98,8 @@ export const Placeholder = (props: PlaceholderProps) => {
     '& .circle': {
       fill:
         theme.name === 'light'
-          ? theme.colorTokens.Neutrals.White
-          : theme.colorTokens.Neutrals.Black,
+          ? theme.tokens.color.Neutrals.White
+          : theme.tokens.color.Neutrals.Black,
     },
     '& .insidePath path': {
       opacity: 0,
@@ -108,8 +108,8 @@ export const Placeholder = (props: PlaceholderProps) => {
     '& .outerCircle': {
       fill:
         theme.name === 'light'
-          ? theme.colorTokens.Neutrals.White
-          : theme.colorTokens.Neutrals.Black,
+          ? theme.tokens.color.Neutrals.White
+          : theme.tokens.color.Neutrals.Black,
       stroke: theme.bg.offWhite,
     },
     height: '160px',
