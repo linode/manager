@@ -1,9 +1,9 @@
+import { FormControl } from '@linode/ui';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Divider } from 'src/components/Divider';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
