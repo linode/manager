@@ -133,7 +133,7 @@ export const CloudPulseResourcesSelect = React.memo(
         clearOnBlur
         data-testid="resource-select"
         disabled={disabled}
-        errorText={isError ? `Failed to fetch ${label || 'Resources'}` : ''}
+        errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
         limitTags={2}

@@ -224,7 +224,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
         savePreferences
       />
     );
-    expect(screen.getByText('Failed to fetch Resource')).toBeInTheDocument();
+    expect(screen.getByText('Failed to fetch Resource.')).toBeInTheDocument();
 
     // if the label is ABC, error message should be Failed to fetch ABC
     renderWithTheme(
@@ -237,7 +237,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
         savePreferences
       />
     );
-    expect(screen.getByText('Failed to fetch ABC')).toBeInTheDocument();
+    expect(screen.getByText('Failed to fetch ABC.')).toBeInTheDocument();
 
     // if the label is empty , error message should be Failed to fetch Resources
     renderWithTheme(
@@ -250,6 +250,6 @@ describe('CloudPulseResourcesSelect component tests', () => {
         savePreferences
       />
     );
-    expect(screen.getByText('Failed to fetch Resources')).toBeInTheDocument();
+    expect(screen.getByText('Failed to fetch Resources.')).toBeInTheDocument();
   });
 });

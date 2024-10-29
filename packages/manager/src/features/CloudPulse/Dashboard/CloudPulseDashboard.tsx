@@ -108,19 +108,19 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   );
 
   if (isDashboardApiError) {
-    return renderErrorState('Failed to fetch the dashboard details');
+    return renderErrorState('Failed to fetch the dashboard details.');
   }
 
   if (isResourcesApiError) {
-    return renderErrorState('Failed to fetch Resources');
+    return renderErrorState('Failed to fetch Resources.');
   }
 
   if (isJweTokenError) {
-    return renderErrorState('Failed to get jwe token');
+    return renderErrorState('Failed to get the token.');
   }
 
   if (isMetricDefinitionError) {
-    return renderErrorState('Error loading metric definitions');
+    return renderErrorState('Error loading metric definitions.');
   }
 
   if (

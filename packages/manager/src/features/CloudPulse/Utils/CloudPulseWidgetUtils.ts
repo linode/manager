@@ -163,7 +163,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
   const dimensions: DataSet[] = [];
   const legendRowsData: LegendRow[] = [];
 
-  // for now we will use this, but once we decide how to work with coloring, it should be dynamic
+  // if the color is not found in the map, we will fallback to default color theme
   const colors = COLOR_MAP.get(widgetColor) ?? DEFAULT;
   let today = false;
 
