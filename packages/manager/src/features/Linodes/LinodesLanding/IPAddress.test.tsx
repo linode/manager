@@ -117,26 +117,6 @@ describe('IPAddress masked', () => {
     };
   });
 
-  it('should mask an IP address if the maskSensitiveData preference is enabled', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: preferences,
-    });
-
-    const { getByTestId, getByText } = renderWithTheme(
-      <IPAddress ips={['8.8.8.8']} />
-    );
-
-    const visibilityToggle = getByTestId('VisibilityIcon');
-
-    // IP address should be masked
-    expect(getByText('•••••••')).toBeVisible();
-
-    await userEvent.click(visibilityToggle);
-
-    // IP address should be unmasked
-    expect(getByText('8.8.8.8')).toBeVisible();
-  });
-
   it('should mask all shown IP addresses if the maskSensitiveData preference is enabled', async () => {
     queryMocks.usePreferences.mockReturnValue({
       data: preferences,
