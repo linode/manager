@@ -40,64 +40,67 @@ export interface DialogProps extends _DialogProps {
  * > A modal can only be closed by taking direct action, clicking on a button or the “X” button, or using the `esc` key.
  *
  */
-export const Dialog = (props: DialogProps) => {
-  const theme = useTheme();
-  const {
-    children,
-    className,
-    error,
-    fullHeight,
-    fullWidth,
-    maxWidth = 'md',
-    onClose,
-    subtitle,
-    title,
-    titleBottomBorder,
-    ...rest
-  } = props;
+export const Dialog = React.forwardRef(
+  (props: DialogProps, ref: React.Ref<HTMLDivElement>) => {
+    const theme = useTheme();
+    const {
+      children,
+      className,
+      error,
+      fullHeight,
+      fullWidth,
+      maxWidth = 'md',
+      onClose,
+      subtitle,
+      title,
+      titleBottomBorder,
+      ...rest
+    } = props;
 
-  const titleID = convertForAria(title);
+    const titleID = convertForAria(title);
 
-  return (
-    <StyledDialog
-      aria-labelledby={titleID}
-      data-qa-dialog
-      data-qa-drawer
-      data-testid="drawer"
-      fullHeight={fullHeight}
-      fullWidth={fullWidth}
-      maxWidth={(fullWidth && maxWidth) ?? undefined}
-      onClose={onClose}
-      role="dialog"
-      title={title}
-      {...rest}
-    >
-      <Box
-        sx={{
-          alignItems: 'center',
-        }}
+    return (
+      <StyledDialog
+        aria-labelledby={titleID}
+        data-qa-dialog
+        data-qa-drawer
+        data-testid="drawer"
+        fullHeight={fullHeight}
+        fullWidth={fullWidth}
+        maxWidth={(fullWidth && maxWidth) ?? undefined}
+        onClose={onClose}
+        ref={ref}
+        role="dialog"
+        title={title}
+        {...rest}
       >
-        <DialogTitle
-          id={titleID}
-          onClose={() => onClose && onClose({}, 'backdropClick')}
-          subtitle={subtitle}
-          title={title}
-        />
-        {titleBottomBorder && <StyledHr />}
-        <DialogContent
+        <Box
           sx={{
-            overflowX: 'hidden',
-            paddingBottom: theme.spacing(3),
+            alignItems: 'center',
           }}
-          className={className}
         >
-          {error && <Notice text={error} variant="error" />}
-          {children}
-        </DialogContent>
-      </Box>
-    </StyledDialog>
-  );
-};
+          <DialogTitle
+            id={titleID}
+            onClose={() => onClose && onClose({}, 'backdropClick')}
+            subtitle={subtitle}
+            title={title}
+          />
+          {titleBottomBorder && <StyledHr />}
+          <DialogContent
+            sx={{
+              overflowX: 'hidden',
+              paddingBottom: theme.spacing(3),
+            }}
+            className={className}
+          >
+            {error && <Notice text={error} variant="error" />}
+            {children}
+          </DialogContent>
+        </Box>
+      </StyledDialog>
+    );
+  }
+);
 
 const StyledDialog = styled(_Dialog, {
   shouldForwardProp: omittedProps(['fullHeight', 'title']),

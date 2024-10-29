@@ -1,10 +1,8 @@
 import { rebuildLinode } from '@linode/api-v4/lib/linodes';
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Formik, FormikProps } from 'formik';
+import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -13,7 +11,6 @@ import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { ImageEmptyState } from './ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import {
@@ -34,6 +31,12 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
+
+import { ImageEmptyState } from './ImageEmptyState';
+
+import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { FormikProps } from 'formik';
 
 interface Props {
   disabled: boolean;
@@ -308,13 +311,12 @@ export const RebuildFromStackScript = (props: Props) => {
 
               {ss.images && ss.images.length > 0 ? (
                 <ImageSelect
-                  handleSelectImage={(selected) =>
-                    setFieldValue('image', selected)
+                  onChange={(image) =>
+                    setFieldValue('image', image?.id ?? null)
                   }
-                  error={errors.image}
-                  images={ss.images}
-                  selectedImageID={values.image}
+                  errorText={errors.image}
                   title="Choose Image"
+                  value={values.image}
                   variant="public"
                 />
               ) : (
