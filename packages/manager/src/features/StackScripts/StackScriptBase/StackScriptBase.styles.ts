@@ -55,7 +55,7 @@ export const StyledDebouncedSearchTextfield = styled(DebouncedSearchTextField, {
   '& .input': {
     backgroundColor: theme.bg.bgPaper,
     border: `1px solid ${theme.color.grey3}`,
-    borderRadius: theme.borderRadiusTokens.None,
+    borderRadius: theme.tokens.borderRadius.None,
     minHeight: 'auto',
     minWidth: 415,
   },

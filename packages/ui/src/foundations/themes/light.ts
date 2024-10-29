@@ -1,6 +1,7 @@
 import {
   Action,
   Border,
+  BorderRadius,
   Button,
   Chart,
   Color,
@@ -241,6 +242,9 @@ export const lightTheme: ThemeOptions = {
   breakpoints,
   chartTokens: Chart,
   colorTokens: Color,
+  tokens: {
+    borderRadius: BorderRadius,
+  },
   color,
   components: {
     MuiAccordion: {

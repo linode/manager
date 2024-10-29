@@ -75,7 +75,9 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg: BgColors;
     borderColors: BorderColors;
-    borderRadiusTokens: BorderRadiusTypes;
+    tokens: {
+      borderRadius: BorderRadiusTypes;
+    };
     chartTokens: ChartTypes;
     colorTokens: ColorTypes; // Global token: theme agnostic
     color: Colors;
@@ -98,7 +100,9 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
-    borderRadiusTokens?: BorderRadiusTypes;
+    tokens?: {
+      borderRadius: BorderRadiusTypes;
+    };
     chartTokens?: ChartTypes;
     colorTokens?: ColorTypes; // Global token: theme agnostic
     color?: DarkModeColors | LightModeColors;
