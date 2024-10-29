@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
@@ -9,7 +10,6 @@ import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import More from 'src/assets/icons/more.svg';
 import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
@@ -24,8 +24,8 @@ import PrimaryLink from './PrimaryLink';
 import {
   StyledAccordion,
   StyledAkamaiLogo,
+  StyledDivider,
   StyledGrid,
-  StyledLink,
   StyledLogoBox,
 } from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
@@ -263,7 +263,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       container
       direction="column"
       id="main-navigation"
-      isCollapsed={isCollapsed}
       justifyContent="flex-start"
       role="navigation"
       spacing={0}
@@ -271,16 +270,16 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
     >
       <Grid sx={{ width: '100%' }}>
         <StyledLogoBox isCollapsed={isCollapsed}>
-          <StyledLink
+          <Link
             aria-label="Akamai - Dashboard"
-            isCollapsed={isCollapsed}
             onClick={closeMenu}
             title="Akamai - Dashboard"
             to={`/dashboard`}
           >
             <StyledAkamaiLogo width={83} />
-          </StyledLink>
+          </Link>
         </StyledLogoBox>
+        <StyledDivider />
       </Grid>
       {primaryLinkGroups.map((linkGroup, idx) => {
         const filteredLinks = linkGroup.links.filter((link) => !link.hide);
@@ -311,35 +310,26 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
         return (
           <div key={idx} style={{ width: 'inherit' }}>
-            {!isManaged && (
-              <Divider
-                sx={(theme) => ({
-                  backgroundColor: 'rgba(0, 0, 0, 0.12)',
-                  borderColor:
-                    theme.name === 'light'
-                      ? theme.borderColors.dividerDark
-                      : 'rgba(0, 0, 0, 0.19)',
-                  color: '#222',
-                })}
-                spacingBottom={0}
-                spacingTop={0}
-              />
-            )}
             {linkGroup.title ? ( // TODO: we can remove this conditional when Managed is removed
-              <StyledAccordion
-                heading={
-                  <>
-                    {linkGroup.icon}
-                    <p>{linkGroup.title}</p>
-                  </>
-                }
-                expanded={!collapsedAccordions.includes(idx)}
-                isActiveProductFamily={activeProductFamily === linkGroup.title}
-                isCollapsed={isCollapsed}
-                onChange={() => accordionClicked(idx)}
-              >
-                {PrimaryLinks}
-              </StyledAccordion>
+              <>
+                <StyledAccordion
+                  heading={
+                    <>
+                      {linkGroup.icon}
+                      <p>{linkGroup.title}</p>
+                    </>
+                  }
+                  isActiveProductFamily={
+                    activeProductFamily === linkGroup.title
+                  }
+                  expanded={!collapsedAccordions.includes(idx)}
+                  isCollapsed={isCollapsed}
+                  onChange={() => accordionClicked(idx)}
+                >
+                  {PrimaryLinks}
+                </StyledAccordion>
+                <StyledDivider />
+              </>
             ) : (
               <Box className={`StyledSingleLinkBox-${idx}`}>{PrimaryLinks}</Box>
             )}

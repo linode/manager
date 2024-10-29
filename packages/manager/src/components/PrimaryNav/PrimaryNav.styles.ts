@@ -5,32 +5,13 @@ import { Link } from 'react-router-dom';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { Accordion } from 'src/components/Accordion';
 import { Box } from 'src/components/Box';
+import { Divider } from 'src/components/Divider';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledGrid = styled(Grid, {
   label: 'StyledGrid',
-  shouldForwardProp: omittedProps(['isCollapsed']),
-})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
-  '&:hover': {
-    '& a[aria-current="true"]': {
-      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-    },
-    '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
-      height: 'auto',
-    },
-    '.MuiButtonBase-root, MuiAccordionSummary-root': {
-      '& h3 > p': {
-        opacity: 1,
-      },
-    },
-  },
-  // when the nav is collapsed, we want to visually hide expanded content and single links like Managed
-  ...(props.isCollapsed && {
-    '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
-      height: 0,
-    },
-  }),
+})(({ theme }) => ({
   height: '100%',
   margin: 0,
   minHeight: 64,
@@ -72,35 +53,26 @@ export const StyledAkamaiLogo = styled(AkamaiLogo, {
   transition: 'width .1s linear',
 }));
 
-export const StyledLink = styled(Link, {
-  label: 'StyledLink',
-  shouldForwardProp: omittedProps(['isCollapsed']),
-})<{ isCollapsed: boolean }>(({ ...props }) => ({
-  lineHeight: 0,
-  ...(props.isCollapsed && {
-    // when the nav is collapsed, but hovered by the user, make the logo full sized
-    'nav:hover & > svg ': {
-      '& .akamai-logo-name': {
-        opacity: 1,
-      },
-      width: 83,
-    },
-  }),
+export const StyledDivider = styled(Divider, {
+  label: 'StyledDivider',
+})(({ theme }) => ({
+  backgroundColor: 'rgba(0, 0, 0, 0.12)',
+  borderColor:
+    theme.name === 'light'
+      ? theme.borderColors.dividerDark
+      : 'rgba(0, 0, 0, 0.19)',
+  color: '#222',
+  margin: 0,
 }));
 
 export const StyledActiveLink = styled(Link, {
   label: 'StyledActiveLink',
   shouldForwardProp: omittedProps(['isActiveLink', 'isCollapsed']),
 })<{ isActiveLink: boolean; isCollapsed: boolean }>(({ ...props }) => ({
-  '& p': {
-    marginBottom: 0,
-    marginTop: 0,
-  },
-  '&:focus': {
-    textDecoration: 'none',
-  },
   '&:hover': {
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+  },
+  '&:hover, &:focus': {
     textDecoration: 'none',
   },
   alignItems: 'center',
@@ -111,7 +83,6 @@ export const StyledActiveLink = styled(Link, {
   position: 'relative',
   ...(props.isActiveLink && {
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-    textDecoration: 'none',
   }),
   ...(props.isCollapsed && {
     backgroundImage: 'none',
@@ -122,18 +93,12 @@ export const StyledPrimaryLinkBox = styled(Box, {
   label: 'StyledPrimaryLinkBox',
   shouldForwardProp: omittedProps(['isCollapsed']),
 })<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
-  alignItems: 'center',
   color: '#fff',
-  display: 'flex',
   fontFamily: 'LatoWebBold',
   fontSize: '0.875rem',
-  justifyContent: 'space-between',
-  opacity: 1,
-  position: 'relative',
   transition: theme.transitions.create(['color', 'opacity']),
   width: '100%',
   ...(props.isCollapsed && {
-    maxHeight: 36,
     opacity: 0,
   }),
 }));
@@ -160,7 +125,6 @@ export const StyledAccordion = styled(Accordion, {
         width: 20,
       },
       alignItems: 'center',
-      color: '#B8B8B8',
       display: 'flex',
       fontSize: '0.7rem',
       letterSpacing: '1px',

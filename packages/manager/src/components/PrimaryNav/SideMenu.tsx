@@ -81,8 +81,11 @@ const StyledDrawer = styled(Drawer, {
     [theme.breakpoints.up('md')]: {
       '& .MuiDrawer-paper': {
         '&:hover': {
-          '& .primaryNavLink, .akamai-logo-name': {
+          '& .primaryNavLink, .akamai-logo-name, p': {
             opacity: 1,
+          },
+          '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
+            maxHeight: '100%',
           },
           overflowY: 'auto',
           width: SIDEBAR_WIDTH,
@@ -92,8 +95,17 @@ const StyledDrawer = styled(Drawer, {
         },
         width: `${SIDEBAR_COLLAPSED_WIDTH}px`,
       },
+      '& a[aria-current="true"]': {
+        background: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+      },
       '&.MuiDrawer-docked': {
         height: '100%',
+      },
+      // when the nav is collapsed, we want to visually hide expanded content and single links like Managed
+      '.MuiAccordion-region, div[class*="StyledSingleLinkBox"]': {
+        maxHeight: 0,
+        overflow: 'hidden',
+        transition: 'max-height .1s linear',
       },
     },
   }),
