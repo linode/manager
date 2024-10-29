@@ -59,16 +59,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   kubeconfigIcons: {
-    '& svg': {
-      height: 16,
-      width: 16,
-      color: theme.palette.primary.main,
-    },
     height: 16,
     margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
     width: 16,
-    padding: 0,
   },
   label: {
     fontFamily: theme.font.bold,
