@@ -97,6 +97,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
       <Tooltip
         className="copy-tooltip"
         data-qa-copied
+        disableInteractive
         placement={placement ?? 'top'}
         title={copied ? 'Copied!' : 'Copy'}
       >
