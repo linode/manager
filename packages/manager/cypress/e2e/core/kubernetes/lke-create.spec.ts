@@ -39,6 +39,7 @@ import {
   dcPricingDocsUrl,
 } from 'support/constants/dc-specific-pricing';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 /**
  * Gets the label for an LKE plan as shown in creation plan table.
@@ -268,7 +269,14 @@ describe('LKE Cluster Creation with APL enabled', () => {
     cleanUp('lke-clusters');
   });
 
-  it('can create an LKE cluster', () => {
+  it('can create an LKE cluster with APL flag enabled', () => {
+    mockAppendFeatureFlags({
+      apl: {
+        beta: true,
+        enabled: true,
+      },
+    }).as('getFeatureFlags');
+
     cy.tag('method:e2e', 'purpose:dcTesting');
     const clusterLabel = randomLabel();
     const clusterRegion = chooseRegion();
@@ -278,6 +286,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
     interceptCreateCluster().as('createCluster');
 
     cy.visitWithLogin('/kubernetes/clusters');
+    cy.wait('@getFeatureFlags');
 
     ui.button
       .findByTitle('Create Cluster')
