@@ -53,7 +53,7 @@ export const CloudPulseDashboardSelect = React.memo(
       }
 
       if (dashboardsError.length > 0) {
-        return `Failed to fetch the dashboards`;
+        return 'Failed to fetch the dashboards';
       }
 
       return '';
