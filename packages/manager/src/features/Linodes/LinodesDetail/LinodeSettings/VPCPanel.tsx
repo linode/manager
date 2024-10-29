@@ -8,7 +8,7 @@ import { Checkbox } from 'src/components/Checkbox';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';

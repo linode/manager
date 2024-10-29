@@ -1,4 +1,4 @@
-import { FormControl } from '@linode/ui';
+import { FormControl, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { equals, lensPath, remove, set } from 'ramda';
@@ -10,7 +10,6 @@ import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';

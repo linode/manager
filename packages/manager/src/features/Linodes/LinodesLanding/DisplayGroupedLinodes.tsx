@@ -12,7 +12,7 @@ import {
   PaginationFooter,
   getMinimumPageSizeForNumberOfItems,
 } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

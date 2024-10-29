@@ -2,7 +2,7 @@ import React from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 

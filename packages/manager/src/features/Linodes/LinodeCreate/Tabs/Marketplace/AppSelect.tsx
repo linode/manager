@@ -5,7 +5,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useMarketplaceAppsQuery } from 'src/queries/stackscripts';

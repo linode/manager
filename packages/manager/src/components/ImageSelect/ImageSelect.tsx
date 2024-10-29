@@ -1,3 +1,4 @@
+import { Paper } from '@linode/ui';
 import produce from 'immer';
 import { DateTime } from 'luxon';
 import { equals, groupBy } from 'ramda';
@@ -7,7 +8,6 @@ import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-regi
 import Select from 'src/components/EnhancedSelect';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { ImageOption } from 'src/components/ImageSelect/ImageOption';
-import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import { useAllImagesQuery } from 'src/queries/images';

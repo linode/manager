@@ -6,4 +6,5 @@ export * from './IconButton';
 export * from './Input';
 export * from './InputAdornment';
 export * from './InputLabel';
+export * from './Paper';
 export * from './Tooltip';

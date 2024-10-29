@@ -1,3 +1,4 @@
+import { omittedProps } from '@linode/ui';
 import _Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { styled, useTheme } from '@mui/material/styles';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import { Notice } from 'src/components/Notice/Notice';
-import { omittedProps } from 'src/utilities/omittedProps';
 import { convertForAria } from 'src/utilities/stringUtils';
 
 import type { DialogProps as _DialogProps } from '@mui/material/Dialog';

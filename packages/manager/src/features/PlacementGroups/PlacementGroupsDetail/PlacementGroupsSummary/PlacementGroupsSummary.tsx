@@ -10,7 +10,7 @@ import { Box } from 'src/components/Box';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 
 import {

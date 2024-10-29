@@ -6,7 +6,7 @@ import { Box } from 'src/components/Box';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

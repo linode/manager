@@ -1,7 +1,6 @@
 // Styled component using omittedProps
 import styled from '@emotion/styled';
-
-import { omitProps, omittedProps } from './omittedProps';
+import { omitProps, omittedProps } from '@linode/ui';
 
 type StyledProps = {
   anotherProp?: string;

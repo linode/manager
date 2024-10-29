@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';

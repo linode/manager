@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 
 import { Box } from 'src/components/Box';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';

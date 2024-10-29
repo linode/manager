@@ -6,7 +6,7 @@ import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';

@@ -1,3 +1,4 @@
+import { Paper } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -23,7 +24,6 @@ import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryp
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';

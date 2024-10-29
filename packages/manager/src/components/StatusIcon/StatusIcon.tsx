@@ -1,9 +1,10 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material';
 import * as React from 'react';
 
-import { omittedProps } from 'src/utilities/omittedProps';
+import { Box } from '../Box';
 
-import { Box, BoxProps } from '../Box';
+import type { BoxProps } from '../Box';
 
 export type Status = 'active' | 'error' | 'inactive' | 'other';
 

@@ -1,8 +1,7 @@
+import { omittedProps } from '@linode/ui/src/utilities/omittedProps';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-
-import { omittedProps } from '../../utilities/omittedProps';
 
 export interface EntityDetailProps {
   body?: JSX.Element;

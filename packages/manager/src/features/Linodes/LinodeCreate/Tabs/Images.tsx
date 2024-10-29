@@ -8,7 +8,7 @@ import { Box } from 'src/components/Box';
 import { ImageSelectv2 } from 'src/components/ImageSelectv2/ImageSelectv2';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelectv2/utilities';
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';

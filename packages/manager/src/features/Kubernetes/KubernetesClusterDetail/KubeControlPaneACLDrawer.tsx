@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { omittedProps } from '@linode/ui';
 import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -20,7 +21,6 @@ import {
   useKubernetesControlPlaneACLMutation,
   useKubernetesControlPlaneACLQuery,
 } from 'src/queries/kubernetes';
-import { omittedProps } from 'src/utilities/omittedProps';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';

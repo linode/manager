@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import Info from 'src/assets/icons/info.svg';
 import { Box } from 'src/components/Box';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';

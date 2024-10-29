@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Box } from 'src/components/Box';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import {
   LongviewProcesses,
   WithStartAndEnd,

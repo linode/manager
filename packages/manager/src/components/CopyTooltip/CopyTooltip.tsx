@@ -1,10 +1,9 @@
-import { Tooltip } from '@linode/ui';
+import { Tooltip, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import FileCopy from 'src/assets/icons/copy.svg';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { TooltipProps } from '@linode/ui';
 
