@@ -1,9 +1,11 @@
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -15,11 +17,8 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { BucketActionMenu } from './BucketActionMenu';
 import {
-  StyledBucketLabelLink,
-  StyledBucketNameWrapper,
   StyledBucketObjectsCell,
   StyledBucketRegionCell,
-  StyledBucketRow,
   StyledBucketSizeCell,
 } from './BucketTableRow.styles';
 
@@ -68,25 +67,19 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   const typeLabel = isLegacy ? 'Legacy' : 'Standard';
 
   return (
-    <StyledBucketRow data-qa-bucket-cell={label} key={label}>
+    <TableRow data-qa-bucket-cell={label} key={label}>
       <TableCell>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
-          <Grid>
-            <StyledBucketNameWrapper>
-              <Typography component="h3" data-qa-label variant="body1">
-                <StyledBucketLabelLink
-                  to={`/object-storage/buckets/${
-                    isObjMultiClusterEnabled ? region : cluster
-                  }/${label}`}
-                >
-                  {label}{' '}
-                </StyledBucketLabelLink>
-              </Typography>
-            </StyledBucketNameWrapper>
-
-            {hostname}
-          </Grid>
-        </Grid>
+        <Stack>
+          <Link
+            to={`/object-storage/buckets/${
+              isObjMultiClusterEnabled ? region : cluster
+            }/${label}`}
+            data-qa-label
+          >
+            {label}
+          </Link>
+          {hostname}
+        </Stack>
       </TableCell>
       <Hidden smDown>
         <StyledBucketRegionCell>
@@ -134,6 +127,6 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           onRemove={onRemove}
         />
       </TableCell>
-    </StyledBucketRow>
+    </TableRow>
   );
 };

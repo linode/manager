@@ -1,29 +1,33 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Stack } from 'src/components/Stack';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import { OpenAccessDrawer } from '../types';
+import type { OpenAccessDrawer } from '../types';
+import type { ObjectStorageKey } from '@linode/api-v4';
 
 interface Props {
   label: string;
   objectStorageKey: ObjectStorageKey;
   openDrawer: OpenAccessDrawer;
+  openHostnamesDrawer: () => void;
   openRevokeDialog: (key: ObjectStorageKey) => void;
 }
 
-export const AccessKeyActionMenu = ({
-  label,
-  objectStorageKey,
-  openDrawer,
-  openRevokeDialog,
-}: Props) => {
+export const AccessKeyActionMenu = (props: Props) => {
+  const {
+    label,
+    objectStorageKey,
+    openDrawer,
+    openHostnamesDrawer,
+    openRevokeDialog,
+  } = props;
+
   const flags = useFlags();
   const { account } = useAccountManagement();
 
@@ -46,6 +50,14 @@ export const AccessKeyActionMenu = ({
       },
       title: 'Permissions',
     },
+    ...(isObjMultiClusterEnabled
+      ? [
+          {
+            onClick: openHostnamesDrawer,
+            title: 'View Regions/S3 Hostnames',
+          },
+        ]
+      : []),
     {
       onClick: () => {
         openRevokeDialog(objectStorageKey);
@@ -54,40 +66,34 @@ export const AccessKeyActionMenu = ({
     },
   ];
 
+  if (isObjMultiClusterEnabled) {
+    return (
+      <ActionMenu
+        actionsList={actions}
+        ariaLabel={`Action menu for Object Storage Key ${label}`}
+      />
+    );
+  }
+
   return (
-    <StyledInlineActionsContainer>
-      {isObjMultiClusterEnabled ? (
+    <>
+      <Hidden mdDown>
+        <Stack direction="row" justifyContent="flex-end">
+          {actions.map((thisAction) => (
+            <InlineMenuAction
+              actionText={thisAction.title}
+              key={thisAction.title}
+              onClick={thisAction.onClick}
+            />
+          ))}
+        </Stack>
+      </Hidden>
+      <Hidden mdUp>
         <ActionMenu
           actionsList={actions}
           ariaLabel={`Action menu for Object Storage Key ${label}`}
         />
-      ) : (
-        <>
-          <Hidden mdDown>
-            {actions.map((thisAction) => (
-              <InlineMenuAction
-                actionText={thisAction.title}
-                key={thisAction.title}
-                onClick={thisAction.onClick}
-              />
-            ))}
-          </Hidden>
-          <Hidden mdUp>
-            <ActionMenu
-              actionsList={actions}
-              ariaLabel={`Action menu for Object Storage Key ${label}`}
-            />
-          </Hidden>
-        </>
-      )}
-    </StyledInlineActionsContainer>
+      </Hidden>
+    </>
   );
 };
-
-const StyledInlineActionsContainer = styled('div', {
-  label: 'StyledInlineActionsContainer',
-})(() => ({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'flex-end',
-}));
