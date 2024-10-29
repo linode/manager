@@ -260,9 +260,9 @@ export const getCloudPulseMetricRequest = (
       widget.time_granularity.unit === 'Auto'
         ? undefined
         : {
-          unit: widget.time_granularity.unit,
-          value: widget.time_granularity.value,
-        },
+            unit: widget.time_granularity.unit,
+            value: widget.time_granularity.value,
+          },
   };
 };
 
