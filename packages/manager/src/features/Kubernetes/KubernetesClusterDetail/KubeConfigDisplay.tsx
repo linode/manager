@@ -8,6 +8,7 @@ import * as React from 'react';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
+import CopyIcon from 'src/assets/icons/copy.svg';
 import { Typography } from 'src/components/Typography';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
@@ -15,7 +16,8 @@ import {
 } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import copy from 'copy-to-clipboard';
+import { CircleProgress } from 'src/components/CircleProgress';
 
 interface Props {
   clusterId: number;
@@ -100,18 +102,18 @@ export const KubeConfigDisplay = (props: Props) => {
     setResetKubeConfigDialogOpen,
   } = props;
 
-  const [getData, setGetData] = React.useState<boolean>(false);
-
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
 
-  const { data, refetch } = useKubenetesKubeConfigQuery(clusterId, getData);
+  const { refetch, isFetching } = useKubenetesKubeConfigQuery(clusterId, false);
 
-  const token = data && data.match(/token:\s*(\S+)/);
-
-  React.useEffect(() => {
-    setGetData(true);
-  }, []);
+  const onGetToken = async () => {
+    const { data } = await refetch();
+    const token = data && data.match(/token:\s*(\S+)/);
+    if (token) {
+      copy(token[1]);
+    }
+  };
 
   const {
     data: endpoints,
@@ -180,17 +182,23 @@ export const KubeConfigDisplay = (props: Props) => {
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
           </Box>
-          {token && (
-            <Box className={classes.kubeconfigElement}>
-              <CopyTooltip
-                className={classes.kubeconfigIcons}
-                text={token[1]}
-              />
-              <Typography className={classes.kubeconfigFileText}>
-                Token
-              </Typography>
+          <Box
+            className={classes.kubeconfigElement}
+            onClick={onGetToken}
+            sx={{ marginLeft: isFetching ? 1 : 0 }}
+          >
+            {isFetching ? (
+              <CircleProgress noPadding={true} size="xs" />
+            ) : (
+              <CopyIcon className={classes.kubeconfigIcons} />
+            )}
+            <Box
+              className={classes.kubeconfigFileText}
+              sx={{ marginLeft: isFetching ? 1 : 0 }}
+            >
+              Copy Token
             </Box>
-          )}
+          </Box>
           <Box
             className={classes.kubeconfigElement}
             onClick={() => setResetKubeConfigDialogOpen(true)}
