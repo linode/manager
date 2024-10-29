@@ -30,7 +30,7 @@ const triggerCondition = object({
     .positive('Number of occurrences must be greater than zero'),
 });
 
-export const createAlertDefinitionSchema = object({
+export const createAlertDefinitionSchema = object().shape({
   name: string().required('Name is required'),
   description: string().optional(),
   region: string().required('Region is required'),

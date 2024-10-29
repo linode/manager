@@ -57,7 +57,7 @@ export const AlertsLanding = React.memo(() => {
       <Tabs
         index={activeTabIndex}
         onChange={handleChange}
-        style={{ width: '100%' }}
+        sx={{ width: '100%' }}
       >
         <Box
           sx={{

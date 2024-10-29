@@ -175,9 +175,11 @@ export interface Alert {
   severity: string;
   service_type: string;
   resource_ids: string[];
-  criteria: MetricCriteria[];
+  rule_criteria: {
+    rules: MetricCriteria[];
+  }
   triggerCondition: TriggerCondition;
-  notification: {
+  channel_ids: {
     notification_id: string;
     template_name: string;
   }[];

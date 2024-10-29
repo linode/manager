@@ -6,14 +6,12 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
-import { generateCrumbOverrides } from '../util';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 
 import type {
@@ -49,18 +47,21 @@ export const initialValues: CreateAlertDefinitionPayload = {
   triggerCondition: triggerConditionInitialValues,
 };
 
-export interface ErrorUtilsProps {
-  errors: string | string[] | undefined;
-  touched: boolean | undefined;
-}
-export const ErrorMessage = ({ errors, touched }: ErrorUtilsProps) => {
-  if (touched && errors) {
-    return <Box sx={(theme) => ({ color: theme.color.red })}>{errors}</Box>;
-  } else {
-    return null;
-  }
+const generateCrumbOverrides = () => {
+  const overrides = [
+    {
+      label: 'Definitions',
+      linkTo: '/monitor/cloudpulse/alerts/definitions',
+      position: 1,
+    },
+    {
+      label: 'Details',
+      linkTo: `/monitor/cloudpulse/alerts/definitions/create`,
+      position: 2,
+    },
+  ];
+  return { newPathname: '/Definitions/Details', overrides };
 };
-
 export const CreateAlertDefinition = () => {
   const history = useHistory();
   const alertCreateExit = () => {
@@ -98,10 +99,7 @@ export const CreateAlertDefinition = () => {
     }
   });
 
-  const { newPathname, overrides } = React.useMemo(
-    () => generateCrumbOverrides(location.pathname),
-    []
-  );
+  const { newPathname, overrides } = generateCrumbOverrides();
 
   return (
     <Paper>
@@ -114,40 +112,30 @@ export const CreateAlertDefinition = () => {
           <Typography variant="h2">1. General Information</Typography>
           <Controller
             render={({ field, fieldState }) => (
-              <>
-                <TextField
-                  label="Name"
-                  name={'name'}
-                  onBlur={field.onBlur}
-                  onChange={(e) => field.onChange(e.target.value)}
-                  value={field.value ?? ''}
-                />
-                <ErrorMessage
-                  errors={fieldState.error?.message}
-                  touched={fieldState.isTouched}
-                />
-              </>
+              <TextField
+                data-testid="alert-name"
+                errorText={fieldState.error?.message}
+                label="Name"
+                name={'name'}
+                onBlur={field.onBlur}
+                onChange={(e) => field.onChange(e.target.value)}
+                value={field.value ?? ''}
+              />
             )}
             control={control}
             name="name"
           />
           <Controller
             render={({ field, fieldState }) => (
-              <>
-                <TextField
-                  errorText={fieldState.error?.message}
-                  label="Description"
-                  name={'description'}
-                  onBlur={field.onBlur}
-                  onChange={(e) => field.onChange(e.target.value)}
-                  optional
-                  value={field.value ?? ''}
-                />
-                <ErrorMessage
-                  errors={fieldState.error?.message}
-                  touched={fieldState.isTouched}
-                />
-              </>
+              <TextField
+                errorText={fieldState.error?.message}
+                label="Description"
+                name={'description'}
+                onBlur={field.onBlur}
+                onChange={(e) => field.onChange(e.target.value)}
+                optional
+                value={field.value ?? ''}
+              />
             )}
             control={control}
             name="description"
