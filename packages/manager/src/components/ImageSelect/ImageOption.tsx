@@ -25,10 +25,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   focused: {
     '& g': {
-      fill: theme.colorTokens.Neutrals.White,
+      fill: theme.tokens.color.Neutrals.White,
     },
     backgroundColor: theme.palette.primary.main,
-    color: theme.colorTokens.Neutrals.White,
+    color: theme.tokens.color.Neutrals.White,
   },
   root: {
     '& *': {
@@ -36,7 +36,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     '& g': {
       fill:
-        theme.name === 'dark' ? theme.colorTokens.Neutrals.White : '#888f91',
+        theme.name === 'dark' ? theme.tokens.color.Neutrals.White : '#888f91',
     },
     display: 'flex !important',
     flexDirection: 'row',

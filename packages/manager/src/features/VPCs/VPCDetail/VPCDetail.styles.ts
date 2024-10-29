@@ -9,7 +9,7 @@ export const StyledActionButton = styled(Button, {
 })(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.color.blue,
-    color: theme.colorTokens.Neutrals.White,
+    color: theme.tokens.color.Neutrals.White,
   },
   color: theme.textColors.linkActiveLight,
   fontFamily: theme.font.normal,

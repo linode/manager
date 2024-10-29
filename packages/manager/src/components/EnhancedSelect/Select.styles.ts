@@ -169,7 +169,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       },
       '&:hover': {
         '& svg': {
-          color: theme.colorTokens.Neutrals.White,
+          color: theme.tokens.color.Neutrals.White,
         },
         backgroundColor: theme.palette.primary.main,
       },
@@ -202,7 +202,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
     '& .react-select__option--is-focused': {
       backgroundColor: theme.palette.primary.main,
-      color: theme.colorTokens.Neutrals.White,
+      color: theme.tokens.color.Neutrals.White,
     },
     '& .react-select__option--is-selected': {
       '&.react-select__option--is-focused': {
@@ -251,7 +251,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '& .tag': {
       '&:hover': {
         backgroundColor: theme.palette.primary.main,
-        color: theme.colorTokens.Neutrals.White,
+        color: theme.tokens.color.Neutrals.White,
       },
       backgroundColor: theme.bg.lightBlue1,
       color: theme.palette.text.primary,
@@ -377,7 +377,7 @@ export const reactSelectStyles = (theme: Theme) => ({
     },
     '&:hover': {
       '& svg': {
-        color: theme.colorTokens.Neutrals.White,
+        color: theme.tokens.color.Neutrals.White,
       },
       backgroundColor: theme.palette.primary.main,
     },
@@ -408,7 +408,7 @@ export const reactSelectStyles = (theme: Theme) => ({
       return {
         ...optionStyles,
         backgroundColor: theme.palette.primary.main,
-        color: theme.colorTokens.Neutrals.White,
+        color: theme.tokens.color.Neutrals.White,
       };
     }
     if (state.isSelected) {

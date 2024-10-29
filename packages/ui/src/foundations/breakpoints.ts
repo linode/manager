@@ -13,6 +13,6 @@ export const breakpoints = createTheme({
       xs: 0,
     },
   },
-  chartTokens: Chart,
+  tokens: { chart: Chart },
   name: 'light',
 }).breakpoints;

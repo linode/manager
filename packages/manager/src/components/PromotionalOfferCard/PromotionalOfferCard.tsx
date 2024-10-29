@@ -18,10 +18,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '&:hover, &:focus': {
       backgroundColor: '#3f8a4e',
-      color: theme.colorTokens.Neutrals.White,
+      color: theme.tokens.color.Neutrals.White,
     },
     backgroundColor: '#4FAD62',
-    color: theme.colorTokens.Neutrals.White,
+    color: theme.tokens.color.Neutrals.White,
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     textAlign: 'center',

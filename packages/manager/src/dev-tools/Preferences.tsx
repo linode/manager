@@ -9,7 +9,7 @@ export const Preferences = () => {
       <h4 style={{ marginBottom: 4 }}>Preferences</h4>
       <a
         href="/profile/settings?preferenceEditor=true"
-        style={{ color: theme.colorTokens.Neutrals.White }}
+        style={{ color: theme.tokens.color.Neutrals.White }}
       >
         Open preference Modal
         <LinkIcon
