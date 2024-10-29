@@ -29,7 +29,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
         opacity: 0,
       },
       alignItems: 'center',
-      color: theme.colorTokens.Neutrals.White,
+      color: theme.tokens.color.Neutrals.White,
       display: 'flex',
       fontFamily: 'LatoWebBold',
       fontSize: '0.875rem',
@@ -69,7 +69,7 @@ const useStyles = makeStyles<void, 'linkItem'>()(
           fill: theme.palette.success.dark,
         },
         [`& .${classes.linkItem}`]: {
-          color: 'white',
+          color: theme.tokens.color.Neutrals.White,
         },
         backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
         border: 'red',

@@ -16,14 +16,14 @@ import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appName: {
-    color: `${theme.colorTokens.Neutrals.White} !important`,
+    color: `${theme.tokens.color.Neutrals.White} !important`,
     fontFamily: theme.font.bold,
     fontSize: '2.2rem',
     lineHeight: '2.5rem',
     textAlign: 'center',
   },
   button: {
-    color: 'white !important',
+    color: `${theme.tokens.color.Neutrals.White} !important`,
     margin: theme.spacing(2),
     position: 'absolute',
   },

@@ -158,7 +158,7 @@ export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
       fontSize: 15,
     },
     alignItems: 'center',
-    backgroundColor: theme.interactionTokens.Background.Secondary,
+    backgroundColor: theme.tokens.interaction.Background.Secondary,
     color: theme.textColors.tableStatic,
     display: 'flex',
     fontFamily: '"UbuntuMono", monospace, sans-serif',
@@ -181,7 +181,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
   ({ theme }) => ({
     '&:after': {
-      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.interactionTokens.Background.Secondary});`,
+      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.tokens.interaction.Background.Secondary});`,
       bottom: 0,
       content: '""',
       height: '100%',

@@ -115,10 +115,10 @@ export const StyledChip = styled(Chip)(({ theme }) => ({
   },
   '& .MuiChip-deleteIcon.MuiSvgIcon-root': {
     '&:hover': {
-      backgroundColor: theme.colorTokens.Neutrals.White,
+      backgroundColor: theme.tokens.color.Neutrals.White,
       color: '#3683dc',
     },
     backgroundColor: '#3683dc',
-    color: theme.colorTokens.Neutrals.White,
+    color: theme.tokens.color.Neutrals.White,
   },
 }));

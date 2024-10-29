@@ -1,9 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, FormControl } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
@@ -48,8 +47,7 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
         <Typography mb={1} sx={{ width: '85%' }}>
           Enable an access control list (ACL) on your LKE cluster to restrict
           access to your cluster’s control plane. When enabled, only the IP
-          addresses and ranges specified by you can connect to the control
-          plane.
+          addresses and ranges you specify can connect to the control plane.
         </Typography>
         <FormControlLabel
           control={
@@ -76,7 +74,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             ips={ipV4Addr}
             isLinkStyled
             onChange={handleIPv4Change}
-            placeholder="0.0.0.0/0"
             title="IPv4 Addresses or CIDRs"
           />
           <Box marginTop={2}>
@@ -92,7 +89,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               ips={ipV6Addr}
               isLinkStyled
               onChange={handleIPv6Change}
-              placeholder="::/0"
               title="IPv6 Addresses or CIDRs"
             />
           </Box>

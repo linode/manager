@@ -24,7 +24,7 @@ export const StyledWrapperDiv = styled('div', {
     '& .tag': {
       '&:hover': {
         backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        color: theme.tokens.color.Neutrals.White,
       },
       backgroundColor: theme.bg.lightBlue1,
       color: theme.palette.text.primary,

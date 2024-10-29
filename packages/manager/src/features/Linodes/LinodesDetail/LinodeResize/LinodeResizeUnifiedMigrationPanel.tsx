@@ -1,9 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, FormControl } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
