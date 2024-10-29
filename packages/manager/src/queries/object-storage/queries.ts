@@ -62,10 +62,6 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
     queryFn: () => getObjectStorageKeys(params),
     queryKey: [params],
   }),
-  all: {
-    queryFn: getAllObjectStorageBuckets,
-    queryKey: null,
-  },
   bucket: (clusterOrRegion: string, bucketName: string) => ({
     contextQueries: {
       objects: {
