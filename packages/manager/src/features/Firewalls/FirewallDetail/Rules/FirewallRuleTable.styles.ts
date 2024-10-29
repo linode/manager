@@ -19,6 +19,7 @@ interface StyledFirewallRuleTableRowProps
   status: FirewallRuleTableRowProps['status'];
 }
 
+// Note: Use 'tr' instead of 'TableRow' here for a smoother draggable user experience.
 export const StyledTableRow = styled('tr', {
   label: 'StyledTableRow',
   shouldForwardProp: omittedProps(['originalIndex', 'ruleIndex']),

@@ -1,6 +1,5 @@
 import {
   DndContext,
-  KeyboardSensor,
   MouseSensor,
   PointerSensor,
   TouchSensor,
@@ -38,6 +37,7 @@ import {
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
 } from 'src/features/Firewalls/shared';
 import { capitalize } from 'src/utilities/capitalize';
+import { CustomKeyboardSensor } from 'src/utilities/CustomKeyboardSensor';
 
 import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
 import {
@@ -167,7 +167,7 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
       },
     }),
     useSensor(TouchSensor),
-    useSensor(KeyboardSensor, {
+    useSensor(CustomKeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
@@ -332,7 +332,7 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       // refer to https://docs.dndkit.com/api-documentation/sensors/pointer#touch-action
       touchAction: 'none',
     },
-    cursor: isDragging ? 'grabbing' : 'grab',
+    cursor: isActive ? 'grabbing' : 'grab',
     position: 'relative',
     transform: CSS.Translate.toString(transform),
     transition: isActive ? transition : 'none',
