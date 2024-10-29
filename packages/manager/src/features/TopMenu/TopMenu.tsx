@@ -41,7 +41,10 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
     <React.Fragment>
       {loggedInAsCustomer && (
         <Box bgcolor="pink" padding="1em" textAlign="center">
-          <Typography color="black" fontSize="1.2em">
+          <Typography
+            color={(theme) => theme.colorTokens.Neutrals.Black}
+            fontSize="1.2em"
+          >
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
         </Box>

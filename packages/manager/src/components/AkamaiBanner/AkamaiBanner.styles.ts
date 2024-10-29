@@ -9,20 +9,20 @@ import { Stack } from '../Stack';
 
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
-})({
+})(({ theme }) => ({
   '& .akamai-logo-icon': {
-    fill: 'white',
+    fill: theme.colorTokens.Neutrals.White,
   },
   '& .akamai-logo-name': {
     display: 'none',
   },
-});
+}));
 
 export const StyledWarningIcon = styled(Warning, {
   label: 'StyledWarningIcon',
-})({
-  color: 'black',
-});
+})(({ theme }) => ({
+  color: theme.colorTokens.Neutrals.Black,
+}));
 
 export const StyledBanner = styled(Stack, {
   label: 'StyledBanner',
@@ -39,8 +39,12 @@ export const StyledBannerLabel = styled(Box, {
   label: 'StyledBannerLabel',
   shouldForwardProp: omittedProps(['warning']),
 })<{ warning?: boolean }>(({ theme, warning }) => ({
-  backgroundColor: warning ? theme.palette.warning.dark : 'black',
-  color: warning ? 'black' : 'white',
+  backgroundColor: warning
+    ? theme.palette.warning.dark
+    : theme.colorTokens.Neutrals.Black,
+  color: warning
+    ? theme.colorTokens.Neutrals.Black
+    : theme.colorTokens.Neutrals.White,
   padding: theme.spacing(2.3),
   [theme.breakpoints.up('sm')]: {
     textWrap: 'nowrap',

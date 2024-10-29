@@ -34,7 +34,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'center',
     backgroundColor:
-      theme.name === 'light' ? '#000' : theme.colorTokens.Neutrals.White,
+      theme.name === 'light'
+        ? theme.colorTokens.Neutrals.Black
+        : theme.colorTokens.Neutrals.White,
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',
