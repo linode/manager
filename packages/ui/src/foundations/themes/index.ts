@@ -8,7 +8,9 @@ import { lightTheme } from './light';
 import type {
   ChartTypes,
   ColorTypes,
+  FontTypes,
   InteractionTypes as InteractionTypesLight,
+  SpacingTypes,
 } from '@linode/design-language-system';
 import type { InteractionTypes as InteractionTypesDark } from '@linode/design-language-system/themes/dark';
 import type { latoWeb } from '../fonts';
@@ -74,17 +76,23 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg: BgColors;
     borderColors: BorderColors;
-    chartTokens: ChartTypes;
-    colorTokens: ColorTypes; // Global token: theme agnostic
     color: Colors;
     font: Fonts;
     graphs: any;
     inputMaxWidth: number;
     inputStyles: any;
-    interactionTokens: InteractionTypes;
     name: ThemeName;
     notificationToast: NotificationToast;
     textColors: TextColors;
+    tokens: {
+      //  ---- Global tokens: theme agnostic ----
+      color: ColorTypes;
+      font: FontTypes;
+      spacing: SpacingTypes;
+      // ----------------------------------------
+      chart: ChartTypes;
+      interaction: InteractionTypes;
+    };
     visually: any;
   }
 
@@ -96,17 +104,23 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
-    chartTokens?: ChartTypes;
-    colorTokens?: ColorTypes; // Global token: theme agnostic
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
     inputMaxWidth?: number;
     inputStyles?: any;
-    interactionTokens?: InteractionTypes;
     name: ThemeName;
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
+    tokens?: {
+      //  ---- Global tokens: theme agnostic ----
+      color?: ColorTypes;
+      font?: FontTypes;
+      spacing?: SpacingTypes;
+      // ----------------------------------------
+      chart?: ChartTypes;
+      interaction?: InteractionTypes;
+    };
     visually?: any;
   }
 }
