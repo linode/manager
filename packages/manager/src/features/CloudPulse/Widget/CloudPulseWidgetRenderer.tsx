@@ -73,7 +73,7 @@ export const RenderWidgets = React.memo(
         authToken: '',
         availableMetrics: undefined,
         duration,
-        errorLabel: 'Error while loading data.',
+        errorLabel: 'Error occurred while loading data.',
         resourceIds: resources,
         resources: [],
         serviceType: dashboard?.service_type ?? '',
@@ -127,7 +127,7 @@ export const RenderWidgets = React.memo(
       !Boolean(resourceList?.length)
     ) {
       return renderPlaceHolder(
-        'Select Dashboard, Region and Resource to visualize metrics.'
+        'Select dashboard and filters to visualize metrics.'
       );
     }
 
