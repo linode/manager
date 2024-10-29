@@ -14,7 +14,7 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  ipAddress?: IPAddress | IPRange;
+  ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isOnlyPublicIP: boolean;
   isVPCOnlyLinode: boolean;
@@ -63,7 +63,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     if (ipAddress && 'address' in ipAddress) {
       return `Action menu for IP Address ${ipAddress.address}`;
     } else {
-      return `Action menu for IP Address ${ipAddress?.range}`;
+      return `Action menu for IP Address ${ipAddress.range}`;
     }
   };
 
