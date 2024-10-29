@@ -16,12 +16,12 @@ describe('Actions', () => {
     expect(button).toHaveAttribute('type', 'submit');
     expect(button).toBeEnabled();
   });
-  it("should render a 'Create using command line' button", () => {
+  it("should render a ' View Code Snippets' button", () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <Actions />,
     });
 
-    const button = getByText('Create Using Command Line').closest('button');
+    const button = getByText('View Code Snippets').closest('button');
 
     expect(button).toBeVisible();
     expect(button).toBeEnabled();
