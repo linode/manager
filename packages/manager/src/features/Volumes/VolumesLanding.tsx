@@ -63,10 +63,12 @@ export const VolumesLanding = () => {
   const { query } = search;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
-    currentRoute: '/volumes',
-    initial: {
-      order: 'desc',
-      orderBy: 'label',
+    initialRoute: {
+      from: '/volumes',
+      search: {
+        order: 'desc',
+        orderBy: 'label',
+      },
     },
     preferenceKey,
   });

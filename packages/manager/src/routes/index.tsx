@@ -84,6 +84,7 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
   volumesRouteTree,
 ]);
+export type MigrationRouteTree = typeof migrationRouteTree;
 export const migrationRouter = createRouter({
   Wrap: ({ children }) => {
     return <div data-testid="migration-router">{children}</div>;
