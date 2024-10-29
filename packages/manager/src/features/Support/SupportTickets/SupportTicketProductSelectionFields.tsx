@@ -10,7 +10,7 @@ import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
+import { useAllBucketsQuery } from 'src/queries/object-storage/queries';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 
@@ -86,7 +86,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     data: buckets,
     error: bucketsError,
     isLoading: bucketsLoading,
-  } = useObjectStorageBuckets(entityType === 'bucket');
+  } = useAllBucketsQuery(entityType === 'bucket');
 
   const {
     data: volumes,
@@ -133,12 +133,10 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
 
     if (entityType === 'bucket') {
       return (
-        reactQueryEntityDataMap['bucket']?.buckets?.map(
-          ({ label, region }) => ({
-            label,
-            value: region ?? '',
-          })
-        ) || []
+        reactQueryEntityDataMap['bucket']?.map(({ label, region }) => ({
+          label,
+          value: region ?? '',
+        })) || []
       );
     }
 

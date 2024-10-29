@@ -32,6 +32,7 @@ import {
   getAllBucketsFromClusters,
   getAllBucketsFromEndpoints,
   getAllBucketsFromRegions,
+  getAllObjectStorageBuckets,
   getAllObjectStorageClusters,
   getAllObjectStorageEndpoints,
   getAllObjectStorageTypes,
@@ -61,6 +62,10 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
     queryFn: () => getObjectStorageKeys(params),
     queryKey: [params],
   }),
+  all: {
+    queryFn: getAllObjectStorageBuckets,
+    queryKey: null,
+  },
   bucket: (clusterOrRegion: string, bucketName: string) => ({
     contextQueries: {
       objects: {
@@ -76,6 +81,12 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
     queryKey: [clusterOrRegion, bucketName],
   }),
   buckets: {
+    contextQueries: {
+      all: {
+        queryFn: getAllObjectStorageBuckets,
+        queryKey: null,
+      },
+    },
     queryFn: () => null, // This is a placeholder queryFn. Look at `useObjectStorageBuckets` for the actual logic.
     queryKey: null,
   },
@@ -369,5 +380,12 @@ export const useCancelObjectStorageMutation = () => {
         queryKey: objectStorageQueries.accessKeys._def,
       });
     },
+  });
+};
+
+export const useAllBucketsQuery = (enabled: boolean = true) => {
+  return useQuery<ObjectStorageBucket[], APIError[]>({
+    ...objectStorageQueries.buckets._ctx.all,
+    enabled,
   });
 };
