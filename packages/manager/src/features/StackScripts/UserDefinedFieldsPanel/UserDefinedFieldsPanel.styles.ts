@@ -1,5 +1,4 @@
-import { omittedProps } from '@linode/ui';
-import { Paper } from '@linode/ui';
+import { Paper, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Box } from 'src/components/Box';

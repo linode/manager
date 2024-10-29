@@ -1,5 +1,4 @@
-import { omittedProps } from '@linode/ui';
-import { FormHelperText } from '@linode/ui';
+import { FormHelperText, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
