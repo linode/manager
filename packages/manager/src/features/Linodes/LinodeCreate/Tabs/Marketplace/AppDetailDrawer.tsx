@@ -23,7 +23,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     textAlign: 'center',
   },
   button: {
-    color: 'white !important',
+    color: `${theme.colorTokens.Neutrals.White} !important`,
     margin: theme.spacing(2),
     position: 'absolute',
   },
