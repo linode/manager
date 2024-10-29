@@ -29,6 +29,7 @@ import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomItem } from 'support/util/random';
 import { cleanUp } from 'support/util/cleanup';
 import { authenticate } from 'support/api/authentication';
+import { mockGetAccountBeta } from 'support/intercepts/betas';
 import {
   dcPricingLkeCheckoutSummaryPlaceholder,
   dcPricingLkeHAPlaceholder,
@@ -40,6 +41,7 @@ import {
 } from 'support/constants/dc-specific-pricing';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { accountBetaFactory } from 'src/factories';
 
 /**
  * Gets the label for an LKE plan as shown in creation plan table.
@@ -271,10 +273,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
 
   it('can create an LKE cluster with APL flag enabled', () => {
     mockAppendFeatureFlags({
-      apl: {
-        beta: true,
-        enabled: true,
-      },
+      apl: true,
     }).as('getFeatureFlags');
 
     cy.tag('method:e2e', 'purpose:dcTesting');
@@ -282,10 +281,19 @@ describe('LKE Cluster Creation with APL enabled', () => {
     const clusterRegion = chooseRegion();
     const clusterVersion = '1.30';
     const clusterPLans = lkeClusterPlansAPL;
+    const aplBeta = accountBetaFactory.build({
+      id: 'apl',
+      label: 'Application Platform for LKE',
+      enrolled: '2024-10-29T15:16:58',
+      description: null,
+      started: '2024-10-01T04:00:00',
+      ended: null,
+    });
 
     interceptCreateCluster().as('createCluster');
 
     cy.visitWithLogin('/kubernetes/clusters');
+    mockGetAccountBeta(aplBeta).as('getAccountBeta');
     cy.wait('@getFeatureFlags');
 
     ui.button
@@ -295,13 +303,15 @@ describe('LKE Cluster Creation with APL enabled', () => {
       .click();
 
     cy.url().should('endWith', '/kubernetes/create');
+    cy.wait('@getAccountBeta');
 
     cy.findByLabelText('Cluster Label')
       .should('be.visible')
       .click()
       .type(`${clusterLabel}{enter}`);
 
-    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionId(clusterRegion.label).click();
 
     cy.findByText('Kubernetes Version')
       .should('be.visible')

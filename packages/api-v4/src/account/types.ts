@@ -602,8 +602,8 @@ export interface AccountBeta {
   label: string;
   started: string;
   id: string;
-  ended?: string;
-  description?: string;
+  ended?: string | null;
+  description?: string | null;
   /**
    * The datetime the account enrolled into the beta
    * @example 2024-10-23T14:22:29
