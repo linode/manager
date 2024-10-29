@@ -29,6 +29,7 @@ import { extendRegion } from 'support/util/regions';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { apiMatcher } from 'support/util/intercepts';
 import { Database } from '@linode/api-v4';
+
 /**
  * Verifies the presence and values of specific properties within the aclpPreference object
  * of the request payload. This function checks that the expected properties exist
@@ -102,8 +103,6 @@ describe('DbasS API Error Handling', () => {
     });
     mockGetAccount(mockAccount);
     mockGetLinodes([mockLinode]);
-    mockGetAccount(mockAccount);
-    mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices(serviceType).as('fetchServices');
@@ -113,182 +112,89 @@ describe('DbasS API Error Handling', () => {
     mockGetUserPreferences({});
     mockGetDatabases([databaseMock]).as('getDatabases');
   });
+  
+  it('should return error response when fetching metric definitions API request', () => {
+    cy.intercept(
+      'GET',
+      apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
+      {
+        statusCode: 400,
+        body: {errors: [ { reason: 'Bad Request',},],
+        },
+      }
+    ).as('getMetricDefinitions');
 
-  const statusCodes = [400];
-  statusCodes.forEach((statusCode) => {
-    it('should return ' + statusCode + ' error response when fetching metric definitions API Request', () => {
-        cy.intercept(
-          'GET',
-          apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
+    cy.visitWithLogin('monitor/cloudpulse');
+
+    //  Wait for the services and dashboard API calls to complete before proceeding.
+    cy.wait(['@fetchServices', '@fetchDashboard']);
+
+    // Selecting a dashboard from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Dashboard')
+      .should('be.visible')
+      .type(`${dashboardName}{enter}`)
+      .should('be.visible');
+
+    //  Select a Database Engine from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Database Engine')
+      .should('be.visible')
+      .type(`${engine}{enter}`)
+      .should('be.visible');
+
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click().type(`${region}{enter}`);
+
+    // Select a resource (Database Clusters) from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Database Clusters')
+      .should('be.visible')
+      .type(`${clusterName}{enter}`)
+      .click();
+    cy.findByText(clusterName).should('be.visible');
+
+    // Select a Node from the autocomplete input.
+    ui.autocomplete
+      .findByLabel('Node Type')
+      .should('be.visible')
+      .type(`${nodeType}{enter}`);
+
+    // Wait for the metric definitions API call to resolve.
+    cy.wait('@getMetricDefinitions');
+    cy.get('[data-qa-error-msg="true"]')
+      .should('be.visible')
+      .and('have.text', 'Error loading metric definitions.');
+  });
+
+  it( 'should return error response when fetching services API request',() => {
+    cy.intercept('GET', apiMatcher(`/monitor/services`), {
+      statusCode: 400,
+      body: {errors: [
           {
-            statusCode: statusCode,
-            body: {
-              errors: [
-                {
-                  reason: 'Bad Request',
-                },
-              ],
-            },
-          }
-        ).as('getMetricDefinitions');
-
-        cy.visitWithLogin('monitor/cloudpulse');
-
-        //  Wait for the services and dashboard API calls to complete before proceeding.
-        cy.wait(['@fetchServices', '@fetchDashboard']);
-
-        // Selecting a dashboard from the autocomplete input.
-        ui.autocomplete
-          .findByLabel('Dashboard')
-          .should('be.visible')
-          .type(`${dashboardName}{enter}`)
-          .should('be.visible');
-
-        //  Select a Database Engine from the autocomplete input.
-        ui.autocomplete
-          .findByLabel('Database Engine')
-          .should('be.visible')
-          .type(`${engine}{enter}`)
-          .should('be.visible');
-
-        //  Select a region from the dropdown.
-        ui.regionSelect.find().click().type(`${region}{enter}`);
-
-        // Select a resource (Database Clusters) from the autocomplete input.
-        ui.autocomplete
-          .findByLabel('Database Clusters')
-          .should('be.visible')
-          .type(`${clusterName}{enter}`)
-          .click();
-        cy.findByText(clusterName).should('be.visible');
-
-        // Select a Node from the autocomplete input.
-        ui.autocomplete
-          .findByLabel('Node Type')
-          .should('be.visible')
-          .type(`${nodeType}{enter}`);
-
-        // Wait for the metric definitions API call to resolve.
-        cy.wait('@getMetricDefinitions');
-        cy.get('[data-qa-error-msg="true"]')
-          .should('be.visible')
-          .and('have.text', 'Error loading metric definitions');
-      }
-    );
-
-    it( 'should return ' + statusCode +' error response when fetching Services API Request',() => {
-        cy.intercept('GET', apiMatcher(`/monitor/services`), {
-          statusCode: statusCode,
-          body: {
-            errors: [
-              {
-                reason: 'Bad Request',
-              },
-            ],
+            reason: 'Bad Request',
           },
-        }).as('fetchServices');
-        cy.visitWithLogin('monitor/cloudpulse');
+        ],
+      },
+    }).as('fetchServices');
+    cy.visitWithLogin('monitor/cloudpulse');
 
-        // Wait for the API call to complete and capture the response.
-        cy.wait('@fetchServices');
+    // Wait for the API call to complete and capture the response.
+    cy.wait('@fetchServices');
 
-        cy.get('[data-qa-textfield-error-text="Dashboard"]')
-          .should('be.visible')
-          .invoke('text')
-          .then((text) => {
-            expect(text).to.equal('Failed to fetch the services');
-          });
-      }
-    );
-
-    it( 'should return ' + statusCode + ' error response when fetching Dashboards API Request',() => {
-        mockGetCloudPulseServices(serviceType).as('fetchServices');
-        cy.intercept(
-          'GET',
-          apiMatcher(`/monitor/services/${serviceType}/dashboards`),
-          {
-            statusCode: statusCode,
-            body: {
-              errors: [
-                {
-                  reason: 'Bad Request',
-                },
-              ],
-            },
-          }
-        ).as('fetchDashboard');
-
-        cy.visitWithLogin('monitor/cloudpulse');
-        //  Wait for both the fetch services and fetch dashboard API calls to complete.
-        cy.wait(['@fetchServices', '@fetchDashboard']);
-
-        // Assert that the error message for fetching the dashboards is displayed correctly.
-        cy.get('[data-qa-textfield-error-text="Dashboard"]')
-          .should('be.visible')
-          .invoke('text')
-          .then((text) => {
-            expect(text).to.equal('Failed to fetch the dashboards');
-          });
-      }
-    );
-
-    it('should return  ' + statusCode + ' error message when the Dashboard details API request fails',() => {
-        cy.intercept('GET', apiMatcher(`/monitor/dashboards/${id}`), {
-          statusCode: statusCode,
-          body: {
-            errors: [
-              {
-                reason: 'Bad Request',
-              },
-            ],
-          },
-        }).as('fetchDashboardById');
-
-        cy.visitWithLogin('monitor/cloudpulse');
-
-        //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
-        ui.autocomplete
-          .findByLabel('Dashboard')
-          .should('be.visible')
-          .type(`${dashboardName}{enter}`)
-          .should('be.visible');
-
-        //  Select a database engine from the autocomplete input. Verify visibility before interaction.
-        ui.autocomplete
-          .findByLabel('Database Engine')
-          .should('be.visible')
-          .type(`${engine}{enter}`)
-          .should('be.visible');
-
-        //  Select a region from the dropdown. Verify visibility before interaction.
-        ui.regionSelect.find().click().type(`${region}{enter}`);
-
-        // Select a database cluster from the autocomplete input. Verify visibility before interaction.
-        ui.autocomplete
-          .findByLabel('Database Clusters')
-          .should('be.visible')
-          .type(`${clusterName}{enter}`)
-          .click();
-        cy.findByText(clusterName).should('be.visible');
-
-        //  Select a node type from the autocomplete input. Verify visibility before interaction.
-        ui.autocomplete
-          .findByLabel('Node Type')
-          .should('be.visible')
-          .type(`${nodeType}{enter}`);
-
-        //  Wait for the API calls to fetch services and dashboard to resolve.
-        cy.wait(['@fetchServices', '@fetchDashboard']);
-
-        cy.get('[data-qa-error-msg="true"]')
-          .should('be.visible')
-          .and('have.text', 'Failed to fetch the dashboard details');
-      }
-    );
-
-    it(`should return ${statusCode} error message when the Regions API request fails`, () => {
-      cy.intercept('GET', apiMatcher(`regions*`), {
-        statusCode: statusCode, // Use the status code defined in the test
+    cy.get('[data-qa-textfield-error-text="Dashboard"]')
+      .should('be.visible')
+      .invoke('text')
+      .then((text) => {
+        expect(text).to.equal('Failed to fetch the services.');
+      });
+  });
+  it( 'should return  error response when fetching Token API Request',() => {
+    cy.intercept(
+      'POST',
+      apiMatcher(`/monitor/services/${serviceType}/token`),
+      {
+        statusCode: 400,
         body: {
           errors: [
             {
@@ -296,76 +202,210 @@ describe('DbasS API Error Handling', () => {
             },
           ],
         },
-      }).as('fetchRegion');
+      }
+    ).as('fetchToken');
 
-      //  Navigate to the CloudPulse monitoring page after logging in.
-      cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor/cloudpulse');
+    //  Wait for both the fetch services and fetch dashboard API calls to complete.
+    cy.wait(['@fetchServices', '@fetchDashboard']);
 
-      //  Wait for the services and dashboard API calls to resolve before proceeding.
-      cy.wait(['@fetchServices', '@fetchDashboard']);
+     // Selecting a dashboard from the autocomplete input.
+     ui.autocomplete
+     .findByLabel('Dashboard')
+     .should('be.visible')
+     .type(`${dashboardName}{enter}`)
+     .should('be.visible');
 
-      //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
-      ui.autocomplete
-        .findByLabel('Dashboard')
-        .should('be.visible')
-        .type(`${dashboardName}{enter}`)
-        .should('be.visible');
+   //  Select a Database Engine from the autocomplete input.
+   ui.autocomplete
+     .findByLabel('Database Engine')
+     .should('be.visible')
+     .type(`${engine}{enter}`)
+     .should('be.visible');
 
-      cy.get('[data-qa-textfield-error-text="Region"]') // Select the error message element
-        .should('be.visible')
-        .invoke('text')
-        .then((text) => {
-          expect(text).to.equal('Failed to fetch Region');
-        });
+   //  Select a region from the dropdown.
+   ui.regionSelect.find().click().type(`${region}{enter}`);
+
+   // Select a resource (Database Clusters) from the autocomplete input.
+   ui.autocomplete
+     .findByLabel('Database Clusters')
+     .should('be.visible')
+     .type(`${clusterName}{enter}`)
+     .click();
+   cy.findByText(clusterName).should('be.visible');
+
+   // Select a Node from the autocomplete input.
+   ui.autocomplete
+     .findByLabel('Node Type')
+     .should('be.visible')
+     .type(`${nodeType}{enter}`);
+
+     cy.get('[data-qa-error-msg="true"]')
+      .should('be.visible')
+      .and('have.text', 'Failed to get the token.');
+ });
+
+ it( 'should return  error response when fetching Dashboards API Request',() => {
+  mockGetCloudPulseServices(serviceType).as('fetchServices');
+  cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/services/${serviceType}/dashboards`),
+    {
+      statusCode: 400,
+      body: {
+        errors: [
+          {
+            reason: 'Bad Request',
+          },
+        ],
+      },
+    }
+  ).as('fetchDashboard');
+
+  cy.visitWithLogin('monitor/cloudpulse');
+  //  Wait for both the fetch services and fetch dashboard API calls to complete.
+  cy.wait(['@fetchServices', '@fetchDashboard']);
+
+  // Assert that the error message for fetching the dashboards is displayed correctly.
+  cy.get('[data-qa-textfield-error-text="Dashboard"]')
+    .should('be.visible')
+    .invoke('text')
+    .then((text) => {
+      expect(text).to.equal('Failed to fetch the dashboards.');
+    });
+} );
+
+it('should return   error message when the Dashboard details API request fails',() => {
+  cy.intercept('GET', apiMatcher(`/monitor/dashboards/${id}`), {
+    statusCode: 400,
+    body: {
+      errors: [
+        {
+          reason: 'Bad Request',
+        },
+      ],
+    },
+  }).as('fetchDashboardById');
+
+  cy.visitWithLogin('monitor/cloudpulse');
+
+  //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
+  ui.autocomplete
+    .findByLabel('Dashboard')
+    .should('be.visible')
+    .type(`${dashboardName}{enter}`)
+    .should('be.visible');
+
+  //  Select a database engine from the autocomplete input. Verify visibility before interaction.
+  ui.autocomplete
+    .findByLabel('Database Engine')
+    .should('be.visible')
+    .type(`${engine}{enter}`)
+    .should('be.visible');
+
+  //  Select a region from the dropdown. Verify visibility before interaction.
+  ui.regionSelect.find().click().type(`${region}{enter}`);
+
+  // Select a database cluster from the autocomplete input. Verify visibility before interaction.
+  ui.autocomplete
+    .findByLabel('Database Clusters')
+    .should('be.visible')
+    .type(`${clusterName}{enter}`)
+    .click();
+  cy.findByText(clusterName).should('be.visible');
+
+  //  Select a node type from the autocomplete input. Verify visibility before interaction.
+  ui.autocomplete
+    .findByLabel('Node Type')
+    .should('be.visible')
+    .type(`${nodeType}{enter}`);
+
+  //  Wait for the API calls to fetch services and dashboard to resolve.
+  cy.wait(['@fetchServices', '@fetchDashboard']);
+
+  cy.get('[data-qa-error-msg="true"]')
+    .should('be.visible')
+    .and('have.text', 'Failed to fetch the dashboard details.');
+});
+
+it(`should return  error message when the Regions API request fails`, () => {
+  cy.intercept('GET', apiMatcher(`regions*`), {
+    statusCode: 400, // Use the status code defined in the test
+    body: {
+      errors: [
+        {
+          reason: 'Bad Request',
+        },
+      ],
+    },
+  }).as('fetchRegion');
+
+  cy.visitWithLogin('monitor/cloudpulse');
+
+  //  Wait for the services and dashboard API calls to resolve before proceeding.
+  cy.wait(['@fetchServices', '@fetchDashboard']);
+
+  //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
+  ui.autocomplete
+    .findByLabel('Dashboard')
+    .should('be.visible')
+    .type(`${dashboardName}{enter}`)
+    .should('be.visible');
+
+  cy.get('[data-qa-textfield-error-text="Region"]') // Select the error message element
+    .should('be.visible')
+    .invoke('text')
+    .then((text) => {
+      expect(text).to.equal('Failed to fetch Region.');
+    });
+});
+
+it('should return  error response when fetching DB Cluster API Request',() => {
+  cy.intercept('GET', apiMatcher(`databases/instances*`), {
+    statusCode: 400,
+    body: {
+      errors: [
+        {
+          reason: 'Bad Request',
+        },
+      ],
+    },
+  }).as('fetchCluster');
+
+  cy.visitWithLogin('monitor/cloudpulse');
+
+  //Wait for the services and dashboard API calls to resolve before proceeding.
+  cy.wait(['@fetchServices', '@fetchDashboard']);
+
+  //  Select a dashboard from the autocomplete input
+  ui.autocomplete
+    .findByLabel('Dashboard')
+    .should('be.visible')
+    .type(`${dashboardName}{enter}`)
+    .should('be.visible');
+
+  //  Select a Node Type from the autocomplete input. Verify visibility before typing.
+  ui.autocomplete
+    .findByLabel('Node Type')
+    .should('be.visible')
+    .type(`${nodeType}{enter}`);
+
+  //  Select a region from the dropdown. Click and type the region name.
+  ui.regionSelect.find().click().type(`${region}{enter}`);
+
+  //  Select a Database Engine from the autocomplete input. Verify visibility before typing.
+  ui.autocomplete
+    .findByLabel('Database Engine')
+    .should('be.visible')
+    .type(`${engine}{enter}`)
+    .should('be.visible');
+
+  cy.get('[data-qa-textfield-error-text="Database Clusters"]')
+    .should('be.visible')
+    .invoke('text')
+    .then((text) => {
+      expect(text).to.equal('Failed to fetch Database Clusters.');
     });
 
-    it('should return ' + statusCode +' error response when fetching DB Cluster API Request',() => {
-        cy.intercept('GET', apiMatcher(`databases/instances*`), {
-          statusCode: statusCode,
-          body: {
-            errors: [
-              {
-                reason: 'Bad Request',
-              },
-            ],
-          },
-        }).as('fetchCluster');
-
-        cy.visitWithLogin('monitor/cloudpulse');
-
-        //Wait for the services and dashboard API calls to resolve before proceeding.
-        cy.wait(['@fetchServices', '@fetchDashboard']);
-
-        //  Select a dashboard from the autocomplete input
-        ui.autocomplete
-          .findByLabel('Dashboard')
-          .should('be.visible')
-          .type(`${dashboardName}{enter}`)
-          .should('be.visible');
-
-        //  Select a Node Type from the autocomplete input. Verify visibility before typing.
-        ui.autocomplete
-          .findByLabel('Node Type')
-          .should('be.visible')
-          .type(`${nodeType}{enter}`);
-
-        //  Select a region from the dropdown. Click and type the region name.
-        ui.regionSelect.find().click().type(`${region}{enter}`);
-
-        //  Select a Database Engine from the autocomplete input. Verify visibility before typing.
-        ui.autocomplete
-          .findByLabel('Database Engine')
-          .should('be.visible')
-          .type(`${engine}{enter}`)
-          .should('be.visible');
-
-        cy.get('[data-qa-textfield-error-text="Database Clusters"]')
-          .should('be.visible')
-          .invoke('text')
-          .then((text) => {
-            expect(text).to.equal('Failed to fetch Database Clusters');
-          });
-      }
-    );
-  });
+});
 });
