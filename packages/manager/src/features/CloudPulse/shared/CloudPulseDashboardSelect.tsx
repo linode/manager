@@ -30,6 +30,9 @@ export const CloudPulseDashboardSelect = React.memo(
     } = useCloudPulseServiceTypes(true);
 
     const serviceTypes: string[] = formattedServiceTypes(serviceTypesList);
+    const serviceTypeMap: Map<string, string> = new Map(
+      serviceTypesList?.data.map((item) => [item.service_type, item.label])
+    );
 
     const {
       data: dashboardsList,
@@ -66,6 +69,7 @@ export const CloudPulseDashboardSelect = React.memo(
         (a, b) => -b.service_type.localeCompare(a.service_type)
       );
     };
+
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
       // only call this code when the component is rendered initially
@@ -90,18 +94,12 @@ export const CloudPulseDashboardSelect = React.memo(
         }}
         renderGroup={(params) => (
           <Box key={params.key}>
-            <Typography
-              sx={{ marginLeft: '3.5%', textTransform: 'capitalize' }}
-              variant="h3"
-            >
-              {params.group}
+            <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
+              {serviceTypeMap.get(params.group) || params.group}
             </Typography>
             {params.children}
           </Box>
         )}
-        textFieldProps={{
-          hideLabel: true,
-        }}
         autoHighlight
         clearOnBlur
         data-testid="cloudpulse-dashboard-select"
@@ -110,8 +108,9 @@ export const CloudPulseDashboardSelect = React.memo(
         fullWidth
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Select a Dashboard"
+        label="Dashboard"
         loading={dashboardsLoading || serviceTypesLoading}
+        noMarginTop
         options={getSortedDashboardsList(dashboardsList ?? [])}
         placeholder={placeHolder}
         value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component

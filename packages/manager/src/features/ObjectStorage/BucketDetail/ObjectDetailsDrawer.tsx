@@ -1,7 +1,3 @@
-import {
-  getObjectACL,
-  updateObjectACL,
-} from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -17,10 +13,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from './AccessSelect';
 
-import type {
-  ACLType,
-  ObjectStorageEndpointTypes,
-} from '@linode/api-v4/lib/object-storage';
+import type { ObjectStorageEndpointTypes } from '@linode/api-v4/lib/object-storage';
 
 export interface ObjectDetailsDrawerProps {
   bucketName: string;
@@ -93,16 +86,8 @@ export const ObjectDetailsDrawer = React.memo(
           <>
             <Divider spacingBottom={16} spacingTop={16} />
             <AccessSelect
-              getAccess={() =>
-                getObjectACL({
-                  bucket: bucketName,
-                  clusterId,
-                  params: { name },
-                })
-              }
-              updateAccess={(acl: ACLType) =>
-                updateObjectACL(clusterId, bucketName, name, acl)
-              }
+              bucketName={bucketName}
+              clusterOrRegion={clusterId}
               endpointType={endpointType}
               name={name}
               variant="object"

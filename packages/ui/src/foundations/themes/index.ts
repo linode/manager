@@ -1,8 +1,9 @@
 import { createTheme } from '@mui/material/styles';
+import { deepmerge } from '@mui/utils';
 
 // Themes & Brands
 import { darkTheme } from './dark';
-import { lightTheme, inputMaxWidth as _inputMaxWidth } from './light';
+import { lightTheme } from './light';
 
 import type {
   AccentTypes as AccentTypesLight,
@@ -10,6 +11,7 @@ import type {
   BackgroundTypes as BackgroundTypesLight,
   BorderTypes as BorderTypesLight,
   ChartTypes,
+  ColorTypes,
   ContentTypes as ContentTypesLight,
   ElevationTypes as ElevationTypesLight,
   InteractionTypes as InteractionTypesLight,
@@ -87,6 +89,21 @@ type NotificationToast = MergeTypes<
  */
 declare module '@mui/material/styles/createTheme' {
   interface Theme {
+    addCircleHoverEffect?: any;
+    animateCircleIcon?: any;
+    applyLinkStyles?: any;
+    applyStatusPillStyles?: any;
+    applyTableHeaderStyles?: any;
+    bg: BgColors;
+    borderColors: BorderColors;
+    colorTokens: ColorTypes; // Global token: theme agnostic
+    color: Colors;
+    font: Fonts;
+    graphs: any;
+    inputMaxWidth: number;
+    inputStyles: any;
+    name: ThemeName;
+    notificationToast: NotificationToast;
     tokens: {
       accent: AccentTypes;
       action: ActionTypes;
@@ -99,24 +116,26 @@ declare module '@mui/material/styles/createTheme' {
       radius: RadiusTypes;
       typography: TypographyTypes;
     };
-    addCircleHoverEffect?: any;
-    animateCircleIcon?: any;
-    applyLinkStyles?: any;
-    applyStatusPillStyles?: any;
-    applyTableHeaderStyles?: any;
-    bg: BgColors;
-    borderColors: BorderColors;
-    color: Colors;
-    font: Fonts;
-    graphs: any;
-    inputStyles: any;
-    name: ThemeName;
-    notificationToast: NotificationToast;
     textColors: TextColors;
     visually: any;
   }
 
   interface ThemeOptions {
+    addCircleHoverEffect?: any;
+    animateCircleIcon?: any;
+    applyLinkStyles?: any;
+    applyStatusPillStyles?: any;
+    applyTableHeaderStyles?: any;
+    bg?: DarkModeBgColors | LightModeBgColors;
+    borderColors?: DarkModeBorderColors | LightModeBorderColors;
+    colorTokens?: ColorTypes; // Global token: theme agnostic
+    color?: DarkModeColors | LightModeColors;
+    font?: Fonts;
+    graphs?: any;
+    inputMaxWidth?: number;
+    inputStyles?: any;
+    name: ThemeName;
+    notificationToast?: NotificationToast;
     tokens?: {
       accent?: AccentTypes;
       action?: ActionTypes;
@@ -129,24 +148,10 @@ declare module '@mui/material/styles/createTheme' {
       radius?: RadiusTypes;
       typography?: TypographyTypes;
     };
-    addCircleHoverEffect?: any;
-    animateCircleIcon?: any;
-    applyLinkStyles?: any;
-    applyStatusPillStyles?: any;
-    applyTableHeaderStyles?: any;
-    bg?: DarkModeBgColors | LightModeBgColors;
-    borderColors?: DarkModeBorderColors | LightModeBorderColors;
-    color?: DarkModeColors | LightModeColors;
-    font?: Fonts;
-    graphs?: any;
-    inputStyles?: any;
-    name: ThemeName;
-    notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
     visually?: any;
   }
 }
 
-export const inputMaxWidth = _inputMaxWidth;
 export const light = createTheme(lightTheme);
-export const dark = createTheme(lightTheme, darkTheme);
+export const dark = createTheme(deepmerge(lightTheme, darkTheme));

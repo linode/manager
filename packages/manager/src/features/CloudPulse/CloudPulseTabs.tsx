@@ -1,57 +1,86 @@
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { matchPath } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useLocation,
+  useRouteMatch,
+} from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { useFlags } from 'src/hooks/useFlags';
 
+import { AlertsLanding } from './Alerts/AlertsLanding/AlertsLanding';
 import { CloudPulseDashboardLanding } from './Dashboard/CloudPulseDashboardLanding';
 
-import type { RouteComponentProps } from 'react-router-dom';
-type Props = RouteComponentProps<{}>;
+import type { Tab } from 'src/components/Tabs/TabLinkList';
 
-export const CloudPulseTabs = React.memo((props: Props) => {
-  const tabs = [
-    {
-      routeName: `${props.match.url}/dashboards`,
-      title: 'Dashboards',
-    },
-  ];
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
-  };
-
-  return (
-    <StyledTabs
-      index={Math.max(
-        tabs.findIndex((tab) => matches(tab.routeName)),
+export type EnabledAlertTab = {
+  isEnabled: boolean;
+  tab: Tab;
+};
+export const CloudPulseTabs = () => {
+  const flags = useFlags();
+  const { url } = useRouteMatch();
+  const { pathname } = useLocation();
+  const alertTabs = React.useMemo<EnabledAlertTab[]>(
+    () => [
+      {
+        isEnabled: true,
+        tab: {
+          routeName: `${url}/dashboards`,
+          title: 'Dashboards',
+        },
+      },
+      {
+        isEnabled: Boolean(
+          flags.aclpAlerting?.alertDefinitions ||
+            flags.aclpAlerting?.recentActivity ||
+            flags.aclpAlerting?.notificationChannels
+        ),
+        tab: {
+          routeName: `${url}/alerts`,
+          title: 'Alerts',
+        },
+      },
+    ],
+    [url, flags.aclpAlerting]
+  );
+  const accessibleTabs = React.useMemo(
+    () =>
+      alertTabs
+        .filter((alertTab) => alertTab.isEnabled)
+        .map((alertTab) => alertTab.tab),
+    [alertTabs]
+  );
+  const activeTabIndex = React.useMemo(
+    () =>
+      Math.max(
+        accessibleTabs.findIndex((tab) => pathname.startsWith(tab.routeName)),
         0
-      )}
-      onChange={navToURL}
-    >
-      <TabLinkList tabs={tabs} />
+      ),
+    [accessibleTabs, pathname]
+  );
+  return (
+    <Tabs index={activeTabIndex} marginTop={0}>
+      <TabLinkList tabs={accessibleTabs} />
 
       <React.Suspense fallback={<SuspenseLoader />}>
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <CloudPulseDashboardLanding />
-          </SafeTabPanel>
-        </TabPanels>
+        <Switch>
+          <Route
+            component={CloudPulseDashboardLanding}
+            path={`${url}/dashboards`}
+          />
+          <Route component={AlertsLanding} path={`${url}/alerts`} />
+          <Redirect
+            exact
+            from="/monitor/cloudpulse"
+            to="/monitor/cloudpulse/dashboards"
+          />
+        </Switch>
       </React.Suspense>
-    </StyledTabs>
+    </Tabs>
   );
-});
-
-const StyledTabs = styled(Tabs, {
-  label: 'StyledTabs',
-})(() => ({
-  marginTop: 0,
-}));
+};

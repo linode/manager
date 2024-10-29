@@ -187,16 +187,6 @@ const genericTableHeaderStyle = {
 };
 
 export const darkTheme: ThemeOptions = {
-  tokens: {
-    accent: Accent,
-    action: Action,
-    background: Background,
-    border: Border,
-    content: Content,
-    elevation: Elevation,
-    interaction: Interaction,
-    typography: Typography,
-  },
   animateCircleIcon: {
     ...iconCircleAnimation,
   },
@@ -237,6 +227,11 @@ export const darkTheme: ThemeOptions = {
         tag: {
           '.MuiChip-deleteIcon': { color: primaryColors.text },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
+        },
+        input: {
+          '&::selection': {
+            backgroundColor: customDarkModeOptions.bg.appBar,
+          },
         },
       },
     },
@@ -885,6 +880,16 @@ export const darkTheme: ThemeOptions = {
     },
   },
   textColors: customDarkModeOptions.textColors,
+  tokens: {
+    accent: Accent,
+    action: Action,
+    background: Background,
+    border: Border,
+    content: Content,
+    elevation: Elevation,
+    interaction: Interaction,
+    typography: Typography,
+  },
   typography: {
     body1: {
       color: primaryColors.text,

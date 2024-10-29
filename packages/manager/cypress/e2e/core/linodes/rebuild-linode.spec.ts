@@ -324,7 +324,9 @@ describe('rebuild linode', () => {
         .findByText('Choose an image')
         .should('be.visible')
         .click()
-        .type(`${image}{enter}`);
+        .type(`${image}`);
+
+      ui.select.findItemByText(image).should('be.visible').click();
 
       assertPasswordComplexity(rootPassword, 'Good');
 

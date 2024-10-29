@@ -95,13 +95,14 @@ export const LinodeOrIPSelect = (props: Props) => {
         }
       }}
       renderOption={(props, option, state) => {
+        const { key, ...rest } = props;
         const region =
           regions?.find((r) => r.id === option.region)?.label ?? option.region;
 
         const isCustomIp = option === customIpPlaceholder;
 
         return (
-          <li {...props}>
+          <li {...rest} key={key}>
             <Stack flexGrow={1}>
               <Box>
                 <b>{isCustomIp ? 'Custom IP' : option.label}</b>

@@ -1,3 +1,4 @@
+import { IconButton } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -14,7 +15,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
@@ -450,14 +450,14 @@ export const ImagesLanding = () => {
                 <TableCell>Status</TableCell>
               </Hidden>
               {multiRegionsEnabled && (
-                <>
-                  <Hidden smDown>
-                    <TableCell>Replicated in</TableCell>
-                  </Hidden>
-                  <Hidden smDown>
-                    <TableCell>Compatibility</TableCell>
-                  </Hidden>
-                </>
+                <Hidden smDown>
+                  <TableCell>Replicated in</TableCell>
+                </Hidden>
+              )}
+              {multiRegionsEnabled && !flags.imageServiceGen2Ga && (
+                <Hidden smDown>
+                  <TableCell>Compatibility</TableCell>
+                </Hidden>
               )}
               <TableSortCell
                 active={manualImagesOrderBy === 'size'}

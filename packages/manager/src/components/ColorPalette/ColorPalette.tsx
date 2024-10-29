@@ -50,7 +50,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
  *
  * If a color does not exist in the current palette and is only used once, consider applying the color conditionally:
  *
- * `theme.name === 'light' ? '#fff' : '#000'`
+ * `theme.name === 'light' ? theme.colorTokens.Neutrals.White : theme.colorTokens.Neutrals.Black`
  */
 export const ColorPalette = () => {
   const { classes } = useStyles();

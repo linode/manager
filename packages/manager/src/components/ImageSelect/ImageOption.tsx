@@ -1,14 +1,14 @@
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-import * as React from 'react';
+import { Tooltip } from '@linode/ui';
+import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Box } from 'src/components/Box';
 import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { Stack } from '../Stack';
-import { Tooltip } from '../Tooltip';
 
 import type { ImageItem } from './ImageSelect';
 import type { Theme } from '@mui/material/styles';
@@ -25,17 +25,18 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   focused: {
     '& g': {
-      fill: 'white',
+      fill: theme.colorTokens.Neutrals.White,
     },
     backgroundColor: theme.palette.primary.main,
-    color: 'white',
+    color: theme.colorTokens.Neutrals.White,
   },
   root: {
     '& *': {
       lineHeight: '1.2em',
     },
     '& g': {
-      fill: theme.name === 'dark' ? 'white' : '#888f91',
+      fill:
+        theme.name === 'dark' ? theme.colorTokens.Neutrals.White : '#888f91',
     },
     display: 'flex !important',
     flexDirection: 'row',
@@ -81,8 +82,8 @@ export const ImageOption = (props: ImageOptionProps) => {
           </Tooltip>
         )}
         {flags.metadata && data.isCloudInitCompatible && (
-          <Tooltip title="This image is compatible with cloud-init.">
-            <DescriptionOutlinedIcon />
+          <Tooltip title="This image supports our Metadata service via cloud-init.">
+            <CloudInitIcon />
           </Tooltip>
         )}
       </Stack>
