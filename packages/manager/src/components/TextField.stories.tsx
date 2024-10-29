@@ -1,8 +1,9 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { InputAdornment } from '@linode/ui';
 import React from 'react';
 
-import { InputAdornment } from './InputAdornment';
 import { TextField } from './TextField';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof TextField> = {
   component: TextField,

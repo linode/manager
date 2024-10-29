@@ -1,6 +1,4 @@
-import { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Theme } from '@mui/material/styles';
+import { FormControl } from '@linode/ui';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -9,15 +7,19 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from 'src/components/Button/Button';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
-import { FormControl } from 'src/components/FormControl';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
+
+import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Theme } from '@mui/material/styles';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   formControlDropdown: {

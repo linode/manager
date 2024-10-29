@@ -1,11 +1,10 @@
-import { Tooltip } from '@linode/ui';
+import { InputLabel, Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { InputLabel } from 'src/components/InputLabel';
 
 export interface Props {
   hideShowAll?: boolean;

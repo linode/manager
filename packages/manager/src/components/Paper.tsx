@@ -1,10 +1,11 @@
-import _Paper, { PaperProps } from '@mui/material/Paper';
+import { FormHelperText } from '@linode/ui';
+import _Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { omittedProps } from 'src/utilities/omittedProps';
 
-import { FormHelperText } from './FormHelperText';
+import type { PaperProps } from '@mui/material/Paper';
 
 interface Props extends PaperProps {
   /**
@@ -29,8 +30,8 @@ export const Paper = (props: Props) => {
     <React.Fragment>
       <StyledPaper
         {...props}
-        variant={props.error ? 'outlined' : props.variant}
         data-qa-paper
+        variant={props.error ? 'outlined' : props.variant}
       />
       {props.error && <StyledErrorText>{props.error}</StyledErrorText>}
     </React.Fragment>
