@@ -76,13 +76,11 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg: BgColors;
     borderColors: BorderColors;
-    chartTokens: ChartTypes;
     color: Colors;
     font: Fonts;
     graphs: any;
     inputMaxWidth: number;
     inputStyles: any;
-    interactionTokens: InteractionTypes;
     name: ThemeName;
     notificationToast: NotificationToast;
     textColors: TextColors;
@@ -92,6 +90,8 @@ declare module '@mui/material/styles/createTheme' {
       font: FontTypes;
       spacing: SpacingTypes;
       // ----------------------------------------
+      chart: ChartTypes;
+      interaction: InteractionTypes;
     };
     visually: any;
   }
@@ -104,22 +104,22 @@ declare module '@mui/material/styles/createTheme' {
     applyTableHeaderStyles?: any;
     bg?: DarkModeBgColors | LightModeBgColors;
     borderColors?: DarkModeBorderColors | LightModeBorderColors;
-    chartTokens?: ChartTypes;
     color?: DarkModeColors | LightModeColors;
     font?: Fonts;
     graphs?: any;
     inputMaxWidth?: number;
     inputStyles?: any;
-    interactionTokens?: InteractionTypes;
     name: ThemeName;
     notificationToast?: NotificationToast;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
       //  ---- Global tokens: theme agnostic ----
-      color: ColorTypes;
-      font: FontTypes;
-      spacing: SpacingTypes;
+      color?: ColorTypes;
+      font?: FontTypes;
+      spacing?: SpacingTypes;
       // ----------------------------------------
+      chart?: ChartTypes;
+      interaction?: InteractionTypes;
     };
     visually?: any;
   }

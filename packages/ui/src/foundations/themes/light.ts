@@ -241,7 +241,6 @@ export const lightTheme: ThemeOptions = {
   bg,
   borderColors,
   breakpoints,
-  chartTokens: Chart,
   color,
   components: {
     MuiAccordion: {
@@ -1569,7 +1568,6 @@ export const lightTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
-  interactionTokens: Interaction,
   name: 'light', // @todo remove this because we leverage pallete.mode now
   notificationToast,
   palette: {
@@ -1637,6 +1635,8 @@ export const lightTheme: ThemeOptions = {
     color: Color,
     font: Font,
     spacing: Spacing,
+    chart: Chart,
+    interaction: Interaction,
   },
   typography: {
     body1: {
