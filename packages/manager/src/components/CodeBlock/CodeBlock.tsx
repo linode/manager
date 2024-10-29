@@ -19,7 +19,6 @@ export interface CodeBlockProps {
   handleCopyIconClick?: () => void;
   /** The command language */
   language: SupportedLanguage;
-  ldTrackingKey?: string;
 }
 
 export const CodeBlock = (props: CodeBlockProps) => {
