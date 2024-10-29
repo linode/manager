@@ -56,12 +56,10 @@ export const StyledAkamaiLogo = styled(AkamaiLogo, {
 export const StyledDivider = styled(Divider, {
   label: 'StyledDivider',
 })(({ theme }) => ({
-  backgroundColor: 'rgba(0, 0, 0, 0.12)',
   borderColor:
     theme.name === 'light'
       ? theme.borderColors.dividerDark
       : 'rgba(0, 0, 0, 0.19)',
-  color: '#222',
   margin: 0,
 }));
 
@@ -118,7 +116,7 @@ export const StyledAccordion = styled(Accordion, {
       },
       // product family icon
       '& svg': {
-        color: props.isActiveProductFamily ? '#00B159' : '#8E9195',
+        color: props.isActiveProductFamily ? '#00B159' : theme.color.grey4,
         height: 20,
         marginRight: 14,
         transition: theme.transitions.create(['color']),
@@ -143,7 +141,7 @@ export const StyledAccordion = styled(Accordion, {
       paddingLeft: 4,
       // accordion arrow
       svg: {
-        fill: '#fff',
+        fill: theme.tokens.color.Neutrals.White,
         stroke: 'transparent !important',
       },
     },
