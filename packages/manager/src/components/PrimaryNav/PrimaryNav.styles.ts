@@ -93,7 +93,7 @@ export const StyledPrimaryLinkBox = styled(Box, {
   label: 'StyledPrimaryLinkBox',
   shouldForwardProp: omittedProps(['isCollapsed']),
 })<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
-  color: '#fff',
+  color: theme.tokens.color.Neutrals.White,
   fontFamily: 'LatoWebBold',
   fontSize: '0.875rem',
   transition: theme.transitions.create(['color', 'opacity']),

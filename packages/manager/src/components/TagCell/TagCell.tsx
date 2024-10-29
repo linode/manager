@@ -1,9 +1,9 @@
+import { IconButton } from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { omittedProps } from 'src/utilities/omittedProps';
@@ -235,7 +235,7 @@ const StyledTag = styled(Tag, {
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.primary.main,
-    color: theme.colorTokens.Neutrals.White,
+    color: theme.tokens.color.Neutrals.White,
   },
   backgroundColor: theme.color.tagButtonBg,
   borderRadius: 0,
