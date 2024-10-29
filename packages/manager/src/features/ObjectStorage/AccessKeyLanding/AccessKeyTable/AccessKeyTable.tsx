@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -18,7 +19,6 @@ import type {
   ObjectStorageKey,
   ObjectStorageKeyRegions,
 } from '@linode/api-v4';
-import { Hidden } from 'src/components/Hidden';
 
 export interface AccessKeyTableProps {
   data: ObjectStorageKey[] | undefined;

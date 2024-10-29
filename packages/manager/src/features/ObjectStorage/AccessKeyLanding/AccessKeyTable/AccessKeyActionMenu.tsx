@@ -1,7 +1,7 @@
+import { useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Stack } from 'src/components/Stack';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -10,6 +10,7 @@ import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import type { OpenAccessDrawer } from '../types';
 import type { ObjectStorageKey } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 
 interface Props {
   label: string;
@@ -35,6 +36,10 @@ export const AccessKeyActionMenu = (props: Props) => {
     'Object Storage Access Key Regions',
     Boolean(flags.objMultiCluster),
     account?.capabilities ?? []
+  );
+
+  const isSmallViewport = useMediaQuery<Theme>((theme) =>
+    theme.breakpoints.down('md')
   );
 
   const actions = [
@@ -66,7 +71,7 @@ export const AccessKeyActionMenu = (props: Props) => {
     },
   ];
 
-  if (isObjMultiClusterEnabled) {
+  if (isObjMultiClusterEnabled || isSmallViewport) {
     return (
       <ActionMenu
         actionsList={actions}
@@ -76,24 +81,14 @@ export const AccessKeyActionMenu = (props: Props) => {
   }
 
   return (
-    <>
-      <Hidden mdDown>
-        <Stack direction="row" justifyContent="flex-end">
-          {actions.map((thisAction) => (
-            <InlineMenuAction
-              actionText={thisAction.title}
-              key={thisAction.title}
-              onClick={thisAction.onClick}
-            />
-          ))}
-        </Stack>
-      </Hidden>
-      <Hidden mdUp>
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for Object Storage Key ${label}`}
+    <Stack direction="row" justifyContent="flex-end">
+      {actions.map((action) => (
+        <InlineMenuAction
+          actionText={action.title}
+          key={action.title}
+          onClick={action.onClick}
         />
-      </Hidden>
-    </>
+      ))}
+    </Stack>
   );
 };
