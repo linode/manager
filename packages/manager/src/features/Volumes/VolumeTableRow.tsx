@@ -38,7 +38,6 @@ interface Props {
 
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
-  // const navigate = useNavigate();
   const history = useHistory();
   const {
     handlers,
