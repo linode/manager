@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-10-29] - v1.131.1
+
+
+### Fixed:
+
+- Hostnames not showing the Database detail page ([#11182](https://github.com/linode/manager/pull/11182))
+
 ## [2024-10-28] - v1.131.0
 
 
