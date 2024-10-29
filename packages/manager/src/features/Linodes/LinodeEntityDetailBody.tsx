@@ -275,12 +275,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     <StyledGradientDiv>
                       <CopyTooltip
                         copyableText
-                        text={configInterfaceWithVPC?.ipv4?.vpc}
+                        text={configInterfaceWithVPC.ipv4.vpc}
                       />
                     </StyledGradientDiv>
-                    <StyledCopyTooltip
-                      text={configInterfaceWithVPC?.ipv4?.vpc}
-                    />
+                    <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
                   </StyledTableCell>
                 )}
               </StyledVPCItem>
