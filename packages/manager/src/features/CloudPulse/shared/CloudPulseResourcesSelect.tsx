@@ -52,13 +52,13 @@ export const CloudPulseResourcesSelect = React.memo(
       {},
       xFilter
         ? {
-          ...platformFilter,
-          ...xFilter,
-        }
+            ...platformFilter,
+            ...xFilter,
+          }
         : {
-          ...platformFilter,
-          region,
-        }
+            ...platformFilter,
+            region,
+          }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
