@@ -1,11 +1,11 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -126,9 +126,6 @@ const sxTooltipIcon = {
 
 const privateHostCopy =
   'A private network host and a private IP can only be used to access a Database Cluster from Linodes in the same data center and will not incur transfer costs.';
-
-const mongoHostHelperCopy =
-  'This is a public hostname. Coming soon: connect to your MongoDB clusters using private IPs';
 
 /**
  * Deprecated @since DBaaS V2 GA. Will be removed remove post GA release ~ Dec 2024
@@ -287,48 +284,29 @@ export const DatabaseSummaryConnectionDetailsLegacy = (props: Props) => {
           )}
         </Box>
         <Box>
-          <Typography>
-            <span>hosts</span> ={' '}
-            {(!database.peers || database.peers.length === 0) && (
-              <span className={classes.provisioningText}>
-                Your hostnames will appear here once they are available.
-              </span>
-            )}
-          </Typography>
-          {database.peers &&
-            database.peers.length > 0 &&
-            database.peers.map((hostname, i) => (
-              <Box
-                alignItems="center"
-                display="flex"
-                flexDirection="row"
-                key={hostname}
-              >
-                <Typography
-                  style={{
-                    marginBottom: 0,
-                    marginLeft: 16,
-                    marginTop: 0,
-                  }}
-                >
+          <Box alignItems="center" display="flex" flexDirection="row">
+            {database.hosts?.primary ? (
+              <>
+                <Typography>
+                  <span>host</span> ={' '}
                   <span style={{ fontFamily: theme.font.normal }}>
-                    {hostname}
-                  </span>
+                    {database.hosts?.primary}
+                  </span>{' '}
                 </Typography>
                 <CopyTooltip
                   className={classes.inlineCopyToolTip}
-                  text={hostname}
+                  text={database.hosts?.primary}
                 />
-                {/*  Display the helper text on the first hostname */}
-                {i === 0 && (
-                  <TooltipIcon
-                    status="help"
-                    sxTooltipIcon={sxTooltipIcon}
-                    text={mongoHostHelperCopy}
-                  />
-                )}
-              </Box>
-            ))}
+              </>
+            ) : (
+              <Typography>
+                <span>host</span> ={' '}
+                <span className={classes.provisioningText}>
+                  Your hostname will appear here once it is available.
+                </span>
+              </Typography>
+            )}
+          </Box>
         </Box>
         {readOnlyHost && (
           <Box alignItems="center" display="flex" flexDirection="row">

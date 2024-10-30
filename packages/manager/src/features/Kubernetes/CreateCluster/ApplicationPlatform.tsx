@@ -1,7 +1,6 @@
-import { FormControl } from '@linode/ui';
+import { Box, FormControl } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
