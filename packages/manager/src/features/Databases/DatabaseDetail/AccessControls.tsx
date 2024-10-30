@@ -182,6 +182,7 @@ export const AccessControls = (props: Props) => {
         <Button
           buttonType="primary"
           className={classes.addAccessControlBtn}
+          data-testid="button-access-control"
           disabled={disabled}
           onClick={() => setAddAccessControlDrawerOpen(true)}
         >
