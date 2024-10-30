@@ -331,7 +331,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             height={480}
             legendRows={legendRows}
             loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
-            showLegend
+            showLegend={data.length !== 0}
             timezone={timezone}
             unit={currentUnit}
             xAxis={{ tickFormat, tickGap: 60 }}
