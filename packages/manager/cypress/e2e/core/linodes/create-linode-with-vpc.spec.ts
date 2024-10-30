@@ -53,7 +53,6 @@ describe('Create Linode with VPCs', () => {
       id: randomNumber(),
       label: randomLabel(),
       region: linodeRegion.id,
-      //
     });
 
     mockGetVPCs([mockVPC]).as('getVPCs');
@@ -70,20 +69,18 @@ describe('Create Linode with VPCs', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
-    cy.findByText('Assign VPC').click().type(`${mockVPC.label}`);
+    cy.findByText('Assign VPC').click().type(mockVPC.label);
 
     ui.autocompletePopper
       .findByTitle(mockVPC.label)
       .should('be.visible')
       .click();
 
-    // Confirm that Subnet selection appears and select mock subnet.
-    cy.findByLabelText('Subnet').should('be.visible').type(mockSubnet.label);
-
-    ui.autocompletePopper
-      .findByTitle(`${mockSubnet.label} (${mockSubnet.ipv4})`)
-      .should('be.visible')
-      .click();
+    // Confirm that VPC's subnet gets selected
+    cy.findByLabelText('Subnet').should(
+      'have.value',
+      `${mockSubnet.label} (${mockSubnet.ipv4})`
+    );
 
     // Confirm VPC assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]')
@@ -179,26 +176,18 @@ describe('Create Linode with VPCs', () => {
 
         // Create VPC with successful API response mocked.
         mockCreateVPC(mockVPC).as('createVpc');
+        mockGetVPCs([mockVPC]);
         vpcCreateDrawer.submit();
       });
 
-    // Attempt to create Linode before selecting a VPC subnet, and confirm
-    // that validation error appears.
-    ui.button
-      .findByTitle('Create Linode')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
+    // Verify the VPC field gets populated
+    cy.findByLabelText('Assign VPC').should('have.value', mockVPC.label);
 
-    cy.findByText('Subnet is required.').should('be.visible');
-
-    // Confirm that Subnet selection appears and select mock subnet.
-    cy.findByLabelText('Subnet').should('be.visible').type(mockSubnet.label);
-
-    ui.autocompletePopper
-      .findByTitle(`${mockSubnet.label} (${mockSubnet.ipv4})`)
-      .should('be.visible')
-      .click();
+    // Verify the subnet gets populated
+    cy.findByLabelText('Subnet').should(
+      'have.value',
+      `${mockSubnet.label} (${mockSubnet.ipv4})`
+    );
 
     // Check box to assign public IPv4.
     cy.findByText('Assign a public IPv4 address for this Linode')
