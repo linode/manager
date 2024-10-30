@@ -7,6 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
@@ -16,7 +17,6 @@ import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Theme } from '@mui/material/styles';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 interface Props {
   clusterId: number;
