@@ -28,7 +28,9 @@ import {
 import type { TooltipProps } from 'recharts';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
-interface AreaProps {
+export type ChartVariant = 'line' | 'area';
+
+export interface AreaProps {
   /**
    * color for the area
    */
@@ -63,6 +65,11 @@ export interface AreaChartProps {
    * arialabel for the graph
    */
   ariaLabel: string;
+
+  /**
+   * connect nulls value between two data points
+   */
+  connectNulls? :boolean;
 
   /**
    * data to be displayed on the graph
@@ -114,7 +121,7 @@ export interface AreaChartProps {
    * make chart appear as a line or area chart
    * @default area
    */
-  variant?: 'area' | 'line';
+  variant?: ChartVariant;
 
   /**
    * The width of chart container.
@@ -143,6 +150,7 @@ export const AreaChart = (props: AreaChartProps) => {
     variant,
     width = '100%',
     xAxis,
+    connectNulls
   } = props;
 
   const theme = useTheme();
@@ -274,6 +282,7 @@ export const AreaChart = (props: AreaChartProps) => {
           )}
           {areas.map(({ color, dataKey }) => (
             <Area
+              connectNulls={connectNulls}
               dataKey={dataKey}
               fill={color}
               fillOpacity={variant === 'line' ? 0 : fillOpacity ?? 1}

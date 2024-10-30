@@ -29,9 +29,10 @@ import type {
   TimeGranularity,
 } from '@linode/api-v4';
 import type { Widgets } from '@linode/api-v4';
-import type { AreaProps } from 'src/components/AreaChart/AreaChart';
+import type { AreaProps, ChartVariant } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import type { Metrics } from 'src/utilities/statMetrics';
+import { generateCurrentUnit } from '../Utils/unitConversion';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -239,6 +240,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   let legendRows: MetricsDisplayRow[] = [];
   let currentUnit = unit;
   let areas: AreaProps[] = [];
+  const variant : ChartVariant= widget.chart_type === 'line' ? 'line' : 'area';
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       flags,
@@ -335,6 +337,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             timezone={timezone}
             unit={currentUnit}
             xAxis={{ tickFormat, tickGap: 60 }}
+            variant={variant}
           />
         </Paper>
       </Stack>

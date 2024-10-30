@@ -197,7 +197,6 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           metric: graphData.metric,
           values: transformData(graphData.values, unit),
         };
-        // const color = colors[index];
         const { end, start } = convertTimeDurationToStartAndEndTimeRange({
           unit: 'min',
           value: 30,
