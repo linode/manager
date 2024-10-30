@@ -94,16 +94,6 @@ interface GraphDataOptionsProps {
    * unit of the data
    */
   unit: string;
-
-  /**
-   * widget chart type
-   */
-  widgetChartType: string;
-
-  /**
-   * preferred color for the widget's graph
-   */
-  widgetColor: string;
 }
 
 interface MetricRequestProps {
@@ -182,7 +172,6 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
     unit,
   } = props;
   const legendRowsData: MetricsDisplayRow[] = [];
-  // for now we will use this, but once we decide how to work with coloring, it should be dynamic
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
@@ -258,10 +247,10 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
 
       return { timestamp: Number(timestamp), ...rolledUpData };
     }
-  );
+  ).sort((dimension1, dimension2) => dimension1.timestamp - dimension2.timestamp);
   return {
     areas,
-    dimensions : dimensions.sort((dim1, dim2) => dim1.timestamp - dim2.timestamp),
+    dimensions,
     legendRowsData,
     unit: maxUnit,
   };

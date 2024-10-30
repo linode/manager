@@ -249,9 +249,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       resources,
       serviceType,
       status,
-      unit,
-      widgetChartType: widget.chart_type,
-      widgetColor: widget.color,
+      unit
     });
 
     data = generatedData.dimensions;
