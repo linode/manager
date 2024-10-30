@@ -19,6 +19,7 @@ import {
   mockDatabaseNodeTypes,
 } from 'support/constants/databases';
 import { accountFactory } from '@src/factories';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 /**
  * Resizes a current database cluster to a larger plan size.
@@ -79,6 +80,12 @@ describe('Resizing existing clusters', () => {
           if (!databaseType) {
             throw new Error(`Unknown database type ${database.type}`);
           }
+          mockAppendFeatureFlags({
+            dbaasV2: {
+              enabled: false,
+              beta: false,
+            },
+          });
           mockGetAccount(accountFactory.build()).as('getAccount');
           mockGetDatabase(database).as('getDatabase');
           mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
