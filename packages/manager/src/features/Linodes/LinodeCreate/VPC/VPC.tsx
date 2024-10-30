@@ -116,7 +116,7 @@ export const VPC = () => {
                   field.onChange(vpc?.id ?? null);
 
                   if (vpc && vpc.subnets.length === 1) {
-                    // If the user selectes a VPC with only one subnet,
+                    // If the user selectes a VPC and the VPC only has one subnet,
                     // preselect that subnet for the user.
                     setValue('interfaces.0.subnet_id', vpc.subnets[0].id, {
                       shouldValidate: true,
@@ -321,7 +321,12 @@ export const VPC = () => {
       <VPCCreateDrawer
         onSuccess={(vpc) => {
           setValue('interfaces.0.vpc_id', vpc.id);
-          setValue('interfaces.0.subnet_id', vpc.subnets[0].id);
+
+          if (vpc.subnets.length === 1) {
+            // If the user creates a VPC with just one subnet,
+            // preselect it for them
+            setValue('interfaces.0.subnet_id', vpc.subnets[0].id);
+          }
         }}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
