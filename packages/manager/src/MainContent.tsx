@@ -1,5 +1,6 @@
 import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -206,6 +207,7 @@ export const MainContent = () => {
   const { classes, cx } = useStyles();
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
+  const queryClient = useQueryClient();
 
   const globalErrors = useGlobalErrors();
 
@@ -379,6 +381,7 @@ export const MainContent = () => {
                            */}
                           <Route path="*">
                             <RouterProvider
+                              context={{ queryClient }}
                               router={migrationRouter as AnyRouter}
                             />
                           </Route>
