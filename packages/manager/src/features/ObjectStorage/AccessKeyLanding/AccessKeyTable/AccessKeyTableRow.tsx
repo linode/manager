@@ -2,6 +2,8 @@ import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
@@ -51,10 +53,14 @@ export const AccessKeyTableRow = ({
         </Typography>
       </TableCell>
       <TableCell parentColumn="Access Key">
-        <Typography data-qa-key-created variant="body1">
-          {storageKeyData.access_key}
+        <Stack direction="row">
+          <MaskableText isToggleable text={storageKeyData.access_key}>
+            <Typography data-qa-key-created variant="body1">
+              {storageKeyData.access_key}
+            </Typography>
+          </MaskableText>
           <StyledCopyIcon text={storageKeyData.access_key} />
-        </Typography>
+        </Stack>
       </TableCell>
       {isObjMultiClusterEnabled && (
         <HostNameTableCell
