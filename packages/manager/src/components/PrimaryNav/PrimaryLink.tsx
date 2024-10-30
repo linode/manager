@@ -58,7 +58,7 @@ const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
         {display}
         {isBeta ? (
           <BetaChip
-            className={`${betaChipClassName ? betaChipClassName : ''}`}
+            className={`${betaChipClassName ?? ''}`}
             color="primary"
             component="span"
           />

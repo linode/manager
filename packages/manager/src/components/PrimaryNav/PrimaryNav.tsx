@@ -273,6 +273,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           <Link
             aria-label="Akamai - Dashboard"
             onClick={closeMenu}
+            style={{ lineHeight: 0 }}
             title="Akamai - Dashboard"
             to={`/dashboard`}
           >

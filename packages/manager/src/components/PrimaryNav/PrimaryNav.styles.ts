@@ -137,18 +137,19 @@ export const StyledAccordion = styled(Accordion, {
       padding: 0,
     },
     '.MuiButtonBase-root, MuiAccordionSummary-root': {
-      '.MuiAccordionSummary-contentGutters, .Mui-expanded': {
-        margin: '0 !important',
+      '.Mui-expanded': {
+        alignItems: 'center',
+        maxHeight: '42px',
+        minHeight: '42px',
       },
-      minHeight: '40px !important',
+      maxHeight: '42px',
+      minHeight: '42px',
       paddingLeft: 4,
-      // accordion arrow
       svg: {
         fill: theme.tokens.color.Neutrals.White,
-        stroke: 'transparent !important',
+        stroke: 'transparent',
       },
     },
     backgroundColor: theme.name === 'dark' ? theme.bg.appBar : 'transparent',
-    minHeight: '40px',
   })
 );
