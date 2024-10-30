@@ -16,6 +16,7 @@ import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Theme } from '@mui/material/styles';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 interface Props {
   clusterId: number;
@@ -74,7 +75,7 @@ const renderEndpoint = (
   endpointError?: string
 ) => {
   if (endpoint) {
-    return endpoint;
+    return <MaskableText isToggleable text={endpoint} />;
   }
   if (endpointLoading) {
     return 'Loading...';
