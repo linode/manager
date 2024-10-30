@@ -26,6 +26,7 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
+import { buildVolumeXFilters } from 'src/routes/volumes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AttachVolumeDrawer } from './AttachVolumeDrawer';
@@ -39,7 +40,7 @@ import { VolumeDetailsDrawer } from './VolumeDetailsDrawer';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
 import { VolumeTableRow } from './VolumeTableRow';
 
-import type { Filter, Volume } from '@linode/api-v4';
+import type { Volume } from '@linode/api-v4';
 import type { VolumesSearchParams } from 'src/routes/volumes/index';
 
 const preferenceKey = 'volumes';
@@ -73,20 +74,20 @@ export const VolumesLanding = () => {
     preferenceKey,
   });
 
-  const filter: Filter = {
-    ['+order']: order,
-    ['+order_by']: orderBy,
-    ...(query && {
-      label: { '+contains': query },
-    }),
-  };
-
+  // const filter: Filter = {
+  //   ['+order']: order,
+  //   ['+order_by']: orderBy,
+  //   ...(query && {
+  //     label: { '+contains': query },
+  //   }),
+  // };
+  const volumeXFilters = buildVolumeXFilters(query);
   const { data: volumes, error, isFetching, isLoading } = useVolumesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter
+    volumeXFilters
   );
 
   const {

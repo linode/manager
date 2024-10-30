@@ -3,6 +3,7 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { volumeQueries } from 'src/queries/volumes/volumes';
 
 import { rootRoute } from '../root';
+import { buildXFilters } from '../utils/buildXFilters';
 import { VolumesRoot } from './VolumesRoot';
 
 import type { TableSearchParams } from '../types';
@@ -23,6 +24,19 @@ type VolumeAction = typeof volumeAction[keyof typeof volumeAction];
 export interface VolumesSearchParams extends TableSearchParams {
   query?: string;
 }
+
+export const buildVolumeXFilters = (query?: string) =>
+  buildXFilters({
+    additionalFilters: query
+      ? {
+          label: { '+contains': query },
+        }
+      : undefined,
+    defaults: {
+      order: 'asc',
+      orderBy: 'label',
+    },
+  });
 
 const volumesRoute = createRoute({
   component: VolumesRoot,
@@ -56,16 +70,14 @@ const volumeActionRoute = createRoute({
       });
     }
 
+    const volumeXFilters = buildVolumeXFilters(search.query);
     const volumes = await context.queryClient.fetchQuery(
       volumeQueries.lists._ctx.paginated(
         {
-          page: 1,
-          page_size: 25,
+          page: search.page ?? 1,
+          page_size: search.page_size ?? 25,
         },
-        {
-          '+order': search?.order ?? 'asc',
-          '+order_by': search?.orderBy ?? 'label',
-        }
+        volumeXFilters
       )
     );
 
