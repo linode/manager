@@ -185,7 +185,7 @@ describe('DbasS API Error Handling', () => {
         expect(text).to.equal('Failed to fetch the services.');
       });
   });
-  it('should return error response when fetching Token API Request', () => {
+  it('should return error response when fetching token api request', () => {
     cy.intercept('POST', apiMatcher(`/monitor/services/${serviceType}/token`), {
       statusCode: 400,
       body: {
@@ -332,7 +332,7 @@ describe('DbasS API Error Handling', () => {
       });
   });
 
-  it('should return error response when fetching DB Cluster API Request', () => {
+  it('should return error response when fetching db cluster api request', () => {
     cy.intercept('GET', apiMatcher(`databases/instances*`), {
       statusCode: 400,
       body: {
