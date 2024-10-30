@@ -114,6 +114,19 @@ export const VPC = () => {
                 }
                 onChange={(e, vpc) => {
                   field.onChange(vpc?.id ?? null);
+
+                  if (vpc && vpc.subnets.length === 1) {
+                    // If the user selectes a VPC and the VPC only has one subnet,
+                    // preselect that subnet for the user.
+                    setValue('interfaces.0.subnet_id', vpc.subnets[0].id, {
+                      shouldValidate: true,
+                    });
+                  } else {
+                    // Otherwise, just clear the selected subnet
+                    setValue('interfaces.0.subnet_id', null);
+                  }
+
+                  // Capture analytics
                   if (!vpc?.id) {
                     sendLinodeCreateFormInputEvent({
                       ...vpcFormEventOptions,
@@ -306,7 +319,15 @@ export const VPC = () => {
         </Stack>
       </Stack>
       <VPCCreateDrawer
-        handleSelectVPC={(vpcId) => setValue('interfaces.0.vpc_id', vpcId)}
+        onSuccess={(vpc) => {
+          setValue('interfaces.0.vpc_id', vpc.id);
+
+          if (vpc.subnets.length === 1) {
+            // If the user creates a VPC with just one subnet,
+            // preselect it for them
+            setValue('interfaces.0.subnet_id', vpc.subnets[0].id);
+          }
+        }}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
         selectedRegion={regionId}
