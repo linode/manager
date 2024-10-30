@@ -266,7 +266,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const tickFormat =
     duration.unit === 'min' || duration.unit === 'hr'
       ? 'hh:mm a'
-      : `LLL dd${widget.size === 12 ? ', hh:mm a' : ''}`;
+      : 'LLL dd, hh:mm a';
   return (
     <Grid container item lg={widget.size} xs={12}>
       <Stack flexGrow={1} spacing={2}>
