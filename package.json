@@ -25,6 +25,7 @@
     "start:manager:ci": "yarn workspace linode-manager start:ci",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
     "test": "vitest run",
+    "test:watch": "vitest",
     "test:manager": "yarn workspace linode-manager test",
     "test:sdk": "yarn workspace @linode/api-v4 test",
     "test:search": "yarn workspace @linode/search test",
