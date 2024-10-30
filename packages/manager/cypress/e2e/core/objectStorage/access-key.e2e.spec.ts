@@ -38,9 +38,10 @@ describe('object storage access key end-to-end tests', () => {
     interceptGetAccessKeys().as('getKeys');
     interceptCreateAccessKey().as('createKey');
 
-    mockGetAccount(accountFactory.build({ capabilities: [] }));
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
       objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
     });
 
     cy.visitWithLogin('/object-storage/access-keys');
