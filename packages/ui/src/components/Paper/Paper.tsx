@@ -1,4 +1,4 @@
-import { FormHelperText, omittedProps } from '@linode/ui';
+import { FormHelperText } from '@linode/ui';
 import _Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -37,7 +37,7 @@ export const Paper = (props: Props) => {
 };
 
 const StyledPaper = styled(_Paper, {
-  shouldForwardProp: omittedProps(['error']),
+  shouldForwardProp: (prop) => prop !== 'error',
 })<Props>(({ theme, ...props }) => ({
   borderColor: props.error ? theme.palette.error.dark : undefined,
   padding: theme.spacing(3),
