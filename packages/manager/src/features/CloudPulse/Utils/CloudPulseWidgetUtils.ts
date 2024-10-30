@@ -261,7 +261,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   );
   return {
     areas,
-    dimensions,
+    dimensions : dimensions.sort((dim1, dim2) => dim1.timestamp - dim2.timestamp),
     legendRowsData,
     unit: maxUnit,
   };
