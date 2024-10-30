@@ -66,7 +66,7 @@ export const MainContentBanner = React.memo(() => {
       sx={(theme) => ({
         alignItems: 'center',
         backgroundColor: theme.bg.mainContentBanner,
-        color: 'white',
+        color: theme.tokens.color.Neutrals.White,
         display: 'flex',
         justifyContent: 'space-between',
         position: 'sticky',

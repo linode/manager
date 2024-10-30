@@ -854,7 +854,6 @@ export const darkTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
-  interactionTokens: Interaction,
   name: 'dark',
   notificationToast,
   palette: {
@@ -875,6 +874,10 @@ export const darkTheme: ThemeOptions = {
     },
   },
   textColors: customDarkModeOptions.textColors,
+  tokens: {
+    // No need to add global tokens here, as they will be inherited from light.ts
+    interaction: Interaction,
+  },
   typography: {
     body1: {
       color: primaryColors.text,

@@ -1,9 +1,8 @@
-import { PriceObject } from '@linode/api-v4';
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Typography } from 'src/components/Typography';
 import { isNumber } from 'src/utilities/isNumber';
@@ -11,6 +10,7 @@ import { isNumber } from 'src/utilities/isNumber';
 import { StyledSpan } from './ConfigureForm.styles';
 
 import type { MigratePricePanelType } from './ConfigureForm';
+import type { PriceObject } from '@linode/api-v4';
 
 export interface MigrationPricingProps {
   backups: 'disabled' | PriceObject | undefined;

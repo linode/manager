@@ -1,8 +1,10 @@
-import { Box } from 'src/components/Box';
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Typography, TypographyProps } from 'src/components/Typography';
+import { Typography } from 'src/components/Typography';
+
+import type { TypographyProps } from 'src/components/Typography';
 
 export interface HeaderProps {
   children?: React.ReactNode;
