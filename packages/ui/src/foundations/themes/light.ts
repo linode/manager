@@ -5,9 +5,11 @@ import {
   Chart,
   Color,
   Dropdown,
+  Font,
   Interaction,
   NotificationToast,
   Select,
+  Spacing,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -239,8 +241,6 @@ export const lightTheme: ThemeOptions = {
   bg,
   borderColors,
   breakpoints,
-  chartTokens: Chart,
-  colorTokens: Color,
   color,
   components: {
     MuiAccordion: {
@@ -1568,7 +1568,6 @@ export const lightTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
-  interactionTokens: Interaction,
   name: 'light', // @todo remove this because we leverage pallete.mode now
   notificationToast,
   palette: {
@@ -1632,6 +1631,13 @@ export const lightTheme: ThemeOptions = {
   ],
   spacing,
   textColors,
+  tokens: {
+    color: Color,
+    font: Font,
+    spacing: Spacing,
+    chart: Chart,
+    interaction: Interaction,
+  },
   typography: {
     body1: {
       color: primaryColors.text,
