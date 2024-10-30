@@ -1,9 +1,9 @@
 import { Tooltip } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';

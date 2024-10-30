@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
-import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';

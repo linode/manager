@@ -1,4 +1,4 @@
-import { Stats } from '@linode/api-v4/lib/linodes';
+import { Box } from '@linode/ui';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -8,8 +8,6 @@ import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { LinodeNetworkTimeData, Point } from 'src/components/AreaChart/types';
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Typography } from 'src/components/Typography';
@@ -26,6 +24,12 @@ import {
 import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
+
+import type { Stats } from '@linode/api-v4/lib/linodes';
+import type {
+  LinodeNetworkTimeData,
+  Point,
+} from 'src/components/AreaChart/types';
 
 interface Props {
   linodeCreated: string;

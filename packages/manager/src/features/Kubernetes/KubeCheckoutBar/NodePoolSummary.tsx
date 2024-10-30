@@ -1,9 +1,8 @@
-import { IconButton } from '@linode/ui';
+import { Box, IconButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Divider } from 'src/components/Divider';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';

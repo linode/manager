@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 import {
   Redirect,
@@ -7,7 +8,6 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { Paper } from 'src/components/Paper';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { Tabs } from 'src/components/Tabs/Tabs';

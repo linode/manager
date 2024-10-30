@@ -1,8 +1,7 @@
-import { FormControl } from '@linode/ui';
+import { Box, FormControl } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';

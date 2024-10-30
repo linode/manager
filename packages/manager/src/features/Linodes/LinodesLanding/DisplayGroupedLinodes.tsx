@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'ramda';
@@ -5,7 +6,6 @@ import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import { Box } from 'src/components/Box';
 import Paginate from 'src/components/Paginate';
 import {
   MIN_PAGE_SIZE,

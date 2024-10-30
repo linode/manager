@@ -1,15 +1,13 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
-import { WithStartAndEnd } from '../../../request.types';
 import {
   StyledItemGrid,
   StyledTimeRangeSelect,
@@ -17,6 +15,9 @@ import {
 } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { NGINXGraphs } from './NGINXGraphs';
+
+import type { WithStartAndEnd } from '../../../request.types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   clientAPIKey?: string;
