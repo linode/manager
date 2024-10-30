@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -9,7 +10,6 @@ import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import More from 'src/assets/icons/more.svg';
-import { Box } from 'src/components/Box';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
