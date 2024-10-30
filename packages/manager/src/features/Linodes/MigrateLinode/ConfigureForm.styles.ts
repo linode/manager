@@ -1,7 +1,5 @@
-import { Paper } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Box } from 'src/components/Box';
 
 export const StyledPaper = styled(Paper, { label: 'StyledPaper' })(
   ({ theme }) => ({

@@ -1,11 +1,10 @@
-import { Paper } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { useMakeDefaultPaymentMethodMutation } from 'src/queries/account/payment';

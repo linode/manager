@@ -1,9 +1,9 @@
+import { Box } from '@linode/ui';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';

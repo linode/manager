@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';

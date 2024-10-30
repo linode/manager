@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { Paper } from '@linode/ui';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';

@@ -1,4 +1,4 @@
-import { Paper } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import { Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
@@ -15,7 +15,6 @@ import {
 } from 'recharts';
 
 import { AccessibleAreaChart } from 'src/components/AreaChart/AccessibleAreaChart';
-import { Box } from 'src/components/Box';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
