@@ -7,6 +7,7 @@ import { buildXFilters } from '../utils/buildXFilters';
 import { VolumesRoot } from './VolumesRoot';
 
 import type { TableSearchParams } from '../types';
+import type { OrderDirection } from '../utils/buildXFilters';
 
 const volumeAction = {
   attach: 'attach',
@@ -25,17 +26,25 @@ export interface VolumesSearchParams extends TableSearchParams {
   query?: string;
 }
 
-export const buildVolumeXFilters = (query?: string) =>
+interface BuildVolumeXFiltersParams {
+  order: OrderDirection;
+  orderBy: string | undefined;
+  query?: string;
+}
+
+export const buildVolumeXFilters = ({
+  order = 'desc',
+  orderBy = 'label',
+  query,
+}: BuildVolumeXFiltersParams) =>
   buildXFilters({
     additionalFilters: query
       ? {
           label: { '+contains': query },
         }
       : undefined,
-    defaults: {
-      order: 'asc',
-      orderBy: 'label',
-    },
+    order,
+    orderBy,
   });
 
 const volumesRoute = createRoute({
@@ -70,7 +79,11 @@ const volumeActionRoute = createRoute({
       });
     }
 
-    const volumeXFilters = buildVolumeXFilters(search.query);
+    const volumeXFilters = buildVolumeXFilters({
+      order: search.order,
+      orderBy: search.orderBy,
+      query: search.query,
+    });
     const volumes = await context.queryClient.fetchQuery(
       volumeQueries.lists._ctx.paginated(
         {
