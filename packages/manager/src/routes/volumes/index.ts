@@ -1,5 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { volumeQueries } from 'src/queries/volumes/volumes';
+
 import { rootRoute } from '../root';
 import { VolumesRoot } from './VolumesRoot';
 
@@ -46,14 +48,36 @@ const volumesCreateRoute = createRoute({
 );
 
 const volumeActionRoute = createRoute({
-  beforeLoad: ({ params }) => {
+  beforeLoad: async ({ context, params, search }) => {
     if (!(params.action in volumeAction)) {
       throw redirect({
         search: () => ({}),
         to: '/volumes',
       });
     }
+
+    const volumes = await context.queryClient.fetchQuery(
+      volumeQueries.lists._ctx.paginated(
+        {
+          page: 1,
+          page_size: 25,
+        },
+        {
+          '+order': search?.order ?? 'asc',
+          '+order_by': search?.orderBy ?? 'label',
+        }
+      )
+    );
+
+    // if the volume is not found, redirect to the volumes landing page
+    if (!volumes.data.find((v) => v.id === params.volumeId)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/volumes',
+      });
+    }
   },
+
   getParentRoute: () => volumesRoute,
   parseParams: ({
     action,
@@ -66,6 +90,7 @@ const volumeActionRoute = createRoute({
     volumeId: Number(volumeId),
   }),
   path: '$volumeId/$action',
+  validateSearch: (search: VolumesSearchParams) => search,
 }).lazy(() =>
   import('src/routes/volumes/volumesLazyRoutes').then(
     (m) => m.volumesLandingLazyRoute
