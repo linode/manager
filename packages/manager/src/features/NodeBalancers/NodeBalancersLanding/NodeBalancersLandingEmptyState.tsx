@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -47,7 +47,7 @@ export const NodeBalancerLandingEmptyState = () => {
         ]}
         gettingStartedGuidesData={gettingStartedGuides}
         headers={headers}
-        icon={NodeBalancer}
+        icon={NodeBalancerIcon}
         linkAnalyticsEvent={linkAnalyticsEvent}
         youtubeLinkData={youtubeLinkData}
       />

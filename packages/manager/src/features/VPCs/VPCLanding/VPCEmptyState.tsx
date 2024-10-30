@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import VPC from 'src/assets/icons/entityIcons/vpc.svg';
+import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { gettingStartedGuides } from 'src/features/VPCs/VPCLanding/VPCLandingEmptyStateData';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
@@ -40,7 +40,7 @@ export const VPCEmptyState = () => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={VPC}
+      icon={NodeBalancerIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
     />
   );

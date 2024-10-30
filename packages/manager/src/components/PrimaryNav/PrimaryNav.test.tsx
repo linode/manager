@@ -74,14 +74,14 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findByText, queryByTestId } = renderWithTheme(
+    const { findByTestId, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
         flags,
       }
     );
 
-    const databaseNavItem = await findByText('Databases');
+    const databaseNavItem = await findByTestId('menu-item-Databases');
 
     expect(databaseNavItem).toBeVisible();
     expect(queryByTestId('betaChip')).toBeNull();
@@ -105,14 +105,11 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findByTestId, findByText } = renderWithTheme(
-      <PrimaryNav {...props} />,
-      {
-        flags,
-      }
-    );
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
 
-    const databaseNavItem = await findByText('Databases');
+    const databaseNavItem = await findByTestId('menu-item-Databases');
     const betaChip = await findByTestId('betaChip');
 
     expect(databaseNavItem).toBeVisible();
@@ -137,14 +134,14 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findByText, queryByTestId } = renderWithTheme(
+    const { findByTestId, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
         flags,
       }
     );
 
-    const databaseNavItem = await findByText('Databases');
+    const databaseNavItem = await findByTestId('menu-item-Databases');
 
     expect(databaseNavItem).toBeVisible();
     expect(queryByTestId('betaChip')).toBeNull();
@@ -168,11 +165,11 @@ describe('PrimaryNav', () => {
       },
     };
 
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />, {
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
       flags,
     });
 
-    const databaseNavItem = await findByText('Databases');
+    const databaseNavItem = await findByTestId('menu-item-Databases');
 
     expect(databaseNavItem).toBeVisible();
   });

@@ -33,7 +33,7 @@ export const Default: StoryObj<SideMenuProps> = {
               open={args.open || open}
             />
           </Box>
-          <Box sx={{ ml: '200px' }}>
+          <Box sx={{ ml: '230px' }}>
             <Hidden mdDown>
               <TopMenuTooltip key={navHoverText} title={navHoverText}>
                 <IconButton
