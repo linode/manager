@@ -12,7 +12,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
-import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -37,6 +36,7 @@ import { ImageEmptyState } from './ImageEmptyState';
 import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormikProps } from 'formik';
+import { StackScriptDetailsDialog } from '../../LinodeCreate/Tabs/StackScripts/StackScriptDetailsDialog';
 
 interface Props {
   disabled: boolean;
@@ -117,6 +117,14 @@ export const RebuildFromStackScript = (props: Props) => {
   ] = useStackScript(
     Object.keys(_imagesData).map((eachKey) => _imagesData[eachKey])
   );
+
+  const [isStackScriptDetailsDialogOpen, setIsStackScriptDetailsDialogOpen] = React.useState(false);
+  const [selectedStackScriptIdForDetailsDialog, setSelectedStackScriptIdForDetailsDialog] = React.useState<number>();
+
+  const onOpenStackScriptDetailsDialog = (stackscriptId: number) => {
+    setIsStackScriptDetailsDialogOpen(true);
+    setSelectedStackScriptIdForDetailsDialog(stackscriptId);
+  };
 
   // In this component, most errors are handled by Formik. This is not
   // possible with UDFs, since they are dynamic. Their errors need to
@@ -296,6 +304,7 @@ export const RebuildFromStackScript = (props: Props) => {
                 selectedId={ss.id}
                 selectedUsername={ss.username}
                 updateFor={[ss.id, errors]}
+                openStackScriptDetailsDialog={onOpenStackScriptDetailsDialog}
               />
               {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
                 <UserDefinedFieldsPanel
@@ -380,7 +389,11 @@ export const RebuildFromStackScript = (props: Props) => {
                 />
               </Grid>
             </form>
-            <StackScriptDialog />
+            <StackScriptDetailsDialog
+              id={selectedStackScriptIdForDetailsDialog}
+              onClose={() => setIsStackScriptDetailsDialogOpen(false)}
+              open={isStackScriptDetailsDialogOpen}
+            />
           </Grid>
         );
       }}
