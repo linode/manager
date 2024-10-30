@@ -1,17 +1,19 @@
-import { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Chip } from 'src/components/Chip';
 import { Paper } from 'src/components/Paper';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { useMakeDefaultPaymentMethodMutation } from 'src/queries/account/payment';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
+
+import type { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   /**

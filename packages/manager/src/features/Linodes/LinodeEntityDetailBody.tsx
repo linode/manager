@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
-import { Box } from 'src/components/Box';
 import {
   DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
   UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,

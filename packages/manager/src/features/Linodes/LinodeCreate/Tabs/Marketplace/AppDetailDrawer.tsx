@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
