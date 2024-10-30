@@ -189,6 +189,28 @@ describe('Create Linode with VPCs', () => {
       `${mockSubnet.label} (${mockSubnet.ipv4})`
     );
 
+    // Clear the subnet value
+    cy.get('[data-qa-autocomplete="Subnet"]').within(() => {
+      cy.findByLabelText('Clear').click();
+    });
+
+    // Try to submit the form without a subnet selected
+    ui.button
+      .findByTitle('Create Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Verify a validation error shows
+    cy.findByText('Subnet is required.').should('be.visible');
+
+    cy.findByLabelText('Subnet').should('be.visible').type(mockSubnet.label);
+
+    ui.autocompletePopper
+      .findByTitle(`${mockSubnet.label} (${mockSubnet.ipv4})`)
+      .should('be.visible')
+      .click();
+
     // Check box to assign public IPv4.
     cy.findByText('Assign a public IPv4 address for this Linode')
       .should('be.visible')
