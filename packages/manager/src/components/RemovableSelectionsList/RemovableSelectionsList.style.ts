@@ -1,7 +1,6 @@
-import { omittedProps } from '@linode/ui';
+import { Box, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Box } from 'src/components/Box';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 

@@ -1,5 +1,4 @@
-import { Box } from '@linode/ui';
-import { BetaChip } from '@linode/ui';
+import { BetaChip, Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

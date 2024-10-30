@@ -1,7 +1,6 @@
-import { Paper } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';

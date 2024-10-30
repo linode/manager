@@ -1,5 +1,4 @@
-import { Box } from '@linode/ui';
-import { Tooltip } from '@linode/ui';
+import { Box, Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
