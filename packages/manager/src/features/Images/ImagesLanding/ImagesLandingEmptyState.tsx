@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
+import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -44,7 +44,7 @@ export const ImagesLandingEmptyState = () => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={ImageIcon}
+      icon={LinodeIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />
