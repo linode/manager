@@ -1,11 +1,11 @@
+import { InputAdornment } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { InputAdornment } from 'src/components/InputAdornment';
+import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
-import { ImageSelect } from 'src/features/Images/ImageSelect';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import {
@@ -23,20 +23,12 @@ interface TextFieldHandler {
   value: string;
 }
 
-interface Images {
-  // available to select in the dropdown
-  available: Image[];
-  // image ids that are already selected
-  selected: string[];
-}
-
 interface Props {
   currentUser: string;
   description: TextFieldHandler;
   disableSubmit: boolean;
   disabled?: boolean;
   errors?: APIError[];
-  images: Images;
   isSubmitting: boolean;
   label: TextFieldHandler;
   mode: 'create' | 'edit';
@@ -45,6 +37,7 @@ interface Props {
   onSubmit: () => void;
   revision: TextFieldHandler;
   script: TextFieldHandler;
+  selectedImages: string[];
 }
 
 const errorResources = {
@@ -60,7 +53,6 @@ export const StackScriptForm = React.memo((props: Props) => {
     disableSubmit,
     disabled,
     errors,
-    images,
     isSubmitting,
     label,
     mode,
@@ -69,6 +61,7 @@ export const StackScriptForm = React.memo((props: Props) => {
     onSubmit,
     revision,
     script,
+    selectedImages,
   } = props;
 
   const hasErrorFor = getAPIErrorFor(errorResources, errors);
@@ -104,19 +97,21 @@ export const StackScriptForm = React.memo((props: Props) => {
             value={description.value}
           />
           <ImageSelect
-            helperText={
-              'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.'
-            }
+            textFieldProps={{
+              required: true,
+              tooltipText:
+                'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.',
+            }}
             anyAllOption
             data-qa-stackscript-target-select
             disabled={disabled}
             errorText={hasErrorFor('images')}
-            images={images.available}
-            isMulti
             label="Target Images"
-            onSelect={onSelectChange}
-            required
-            value={images.selected}
+            multiple
+            onChange={onSelectChange}
+            placeholder="Select image(s)"
+            value={selectedImages}
+            variant="public"
           />
         </StyledGridWithTips>
         <StyledGridWithTips>
