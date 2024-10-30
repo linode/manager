@@ -1,4 +1,4 @@
-// Customizing KeybordSensor from dnd-kit to meet our requirements.
+// Customizing KeyboardSensor from dnd-kit to meet our requirements.
 // - Prevent scrolling while using keyboard keys.
 
 import { KeyboardCode, defaultCoordinates } from '@dnd-kit/core';
@@ -111,7 +111,6 @@ export class CustomKeyboardSensor implements SensorInstance {
           }
 
           event.preventDefault();
-
           onActivation?.({ event: event.nativeEvent });
 
           return true;
