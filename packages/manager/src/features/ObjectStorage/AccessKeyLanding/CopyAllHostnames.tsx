@@ -1,9 +1,8 @@
-import { InputLabel, Tooltip } from '@linode/ui';
+import { Box, InputLabel, Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
 export interface Props {

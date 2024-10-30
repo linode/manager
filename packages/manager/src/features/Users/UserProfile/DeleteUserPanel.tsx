@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';

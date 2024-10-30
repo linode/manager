@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import { useArgs } from '@storybook/preview-api';
 import React from 'react';
 
 import { regions } from 'src/__data__/regionsData';
-import { Box } from 'src/components/Box';
 
 import { RegionSelect } from './RegionSelect';
 

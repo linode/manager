@@ -1,9 +1,9 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Minus from 'src/assets/icons/LKEminusSign.svg';
 import Plus from 'src/assets/icons/LKEplusSign.svg';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { TextField } from 'src/components/TextField';
 

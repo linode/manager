@@ -1,7 +1,6 @@
+import { Box } from '@linode/ui';
 import { Typography } from '@mui/material';
 import React from 'react';
-
-import { Box } from 'src/components/Box';
 
 import Select from './Select';
 

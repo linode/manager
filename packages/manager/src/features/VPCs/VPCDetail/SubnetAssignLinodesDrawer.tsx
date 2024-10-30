@@ -1,11 +1,10 @@
 import { appendConfigInterface } from '@linode/api-v4';
-import { FormHelperText } from '@linode/ui';
+import { Box, FormHelperText } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';

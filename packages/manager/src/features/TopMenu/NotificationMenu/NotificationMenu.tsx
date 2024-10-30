@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
-import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Divider } from 'src/components/Divider';
 import { LinkButton } from 'src/components/LinkButton';

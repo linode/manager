@@ -1,5 +1,4 @@
-import { Tooltip } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 

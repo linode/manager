@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';

@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import ProxyUserIcon from 'src/assets/icons/parent-child.svg';
-import { Box } from 'src/components/Box';
 
 interface Props {
   height?: number;

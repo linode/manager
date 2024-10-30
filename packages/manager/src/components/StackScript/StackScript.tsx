@@ -1,10 +1,9 @@
-import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -18,6 +17,9 @@ import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import { TooltipIcon } from '../TooltipIcon';
+
+import type { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   author: {
