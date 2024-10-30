@@ -1,91 +1,61 @@
+import { Tooltip } from '@linode/ui';
 import React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
-import { Box } from 'src/components/Box';
-import { Option } from 'src/components/EnhancedSelect/components/Option';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { SelectedIcon } from '../Autocomplete/Autocomplete.styles';
+import { OSIcon } from '../OSIcon';
 import { Stack } from '../Stack';
-import { Tooltip } from '../Tooltip';
+import { Typography } from '../Typography';
+import { isImageDeprecated } from './utilities';
 
-import type { ImageItem } from './ImageSelect';
-import type { Theme } from '@mui/material/styles';
-import type { OptionProps } from 'react-select';
+import type { Image } from '@linode/api-v4';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  distroIcon: {
-    fontSize: '1.8em',
-
-    margin: `0 ${theme.spacing()}`,
-    [theme.breakpoints.only('xs')]: {
-      fontSize: '1.52em',
-    },
-  },
-  focused: {
-    '& g': {
-      fill: 'white',
-    },
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-  },
-  root: {
-    '& *': {
-      lineHeight: '1.2em',
-    },
-    '& g': {
-      fill: theme.name === 'dark' ? 'white' : '#888f91',
-    },
-    display: 'flex !important',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: '2px 8px !important', // Revisit use of important when we refactor the Select component
-  },
-  selected: {
-    '& g': {
-      fill: theme.palette.primary.main,
-    },
-  },
-}));
-
-interface ImageOptionProps extends OptionProps<any, any> {
-  data: ImageItem;
+interface Props {
+  image: Image;
+  isSelected: boolean;
+  listItemProps: Omit<React.HTMLAttributes<HTMLLIElement>, 'key'>;
 }
 
-export const ImageOption = (props: ImageOptionProps) => {
-  const { classes, cx } = useStyles();
-  const { data, isFocused, isSelected, label } = props;
+export const ImageOption = ({ image, isSelected, listItemProps }: Props) => {
   const flags = useFlags();
 
   return (
-    <Option
-      className={cx(classes.root, {
-        [classes.focused]: isFocused,
-        [classes.selected]: isSelected,
-      })}
-      attrs={{ ['data-qa-image-select-item']: data.value }}
-      value={data.value}
-      {...props}
+    <li
+      {...listItemProps}
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        maxHeight: 35,
+      }}
     >
-      <Stack alignItems="center" direction="row" spacing={1.5}>
-        <span className={`${data.className} ${classes.distroIcon}`} />
-        <Box>{label}</Box>
+      <Stack alignItems="center" direction="row" spacing={2}>
+        {image?.id !== 'any/all' && (
+          <OSIcon fontSize="1.8em" lineHeight="1.8em" os={image.vendor} />
+        )}
+        <Typography color="inherit">
+          {image.label} {isImageDeprecated(image) && '(deprecated)'}
+        </Typography>
       </Stack>
       <Stack alignItems="center" direction="row" spacing={1}>
-        {data.isDistributedCompatible && (
+        {image.capabilities.includes('distributed-sites') && (
           <Tooltip title="This image is compatible with distributed compute regions.">
             <div style={{ display: 'flex' }}>
               <DistributedRegionIcon height="24px" width="24px" />
             </div>
           </Tooltip>
         )}
-        {flags.metadata && data.isCloudInitCompatible && (
+        {flags.metadata && image.capabilities.includes('cloud-init') && (
           <Tooltip title="This image supports our Metadata service via cloud-init.">
-            <CloudInitIcon />
+            <span style={{ display: 'flex' }}>
+              <CloudInitIcon />
+            </span>
           </Tooltip>
         )}
+        {isSelected && <SelectedIcon visible />}
       </Stack>
-    </Option>
+    </li>
   );
 };

@@ -1,3 +1,4 @@
+import { FormControl } from '@linode/ui';
 import { BetaChip } from '@linode/ui';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -18,7 +19,6 @@ import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleVal
 import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
@@ -29,6 +29,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { EngineOption } from 'src/features/Databases/DatabaseCreate/EngineOption';
 import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
@@ -36,6 +37,7 @@ import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/Databa
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -47,6 +49,8 @@ import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { validateIPs } from 'src/utilities/ipUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+
+import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 
 import type {
   ClusterSize,
@@ -62,7 +66,6 @@ import type { Theme } from '@mui/material/styles';
 import type { Item } from 'src/components/EnhancedSelect/Select';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   btnCtn: {
@@ -197,6 +200,9 @@ const DatabaseCreate = () => {
   const { classes } = useStyles();
   const history = useHistory();
   const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  const isRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_databases',
+  });
 
   const {
     data: regionsData,
@@ -510,6 +516,17 @@ const DatabaseCreate = () => {
         }}
         title="Create"
       />
+      {isRestricted && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: 'create',
+            resourceType: 'Databases',
+          })}
+          important
+          spacingTop={16}
+          variant="error"
+        />
+      )}
       <Paper>
         {createError && (
           <Notice variant="error">
@@ -523,6 +540,7 @@ const DatabaseCreate = () => {
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
             data-qa-label-input
+            disabled={isRestricted}
             errorText={errors.label}
             label="Cluster Label"
             onChange={(e) => setFieldValue('label', e.target.value)}
@@ -544,6 +562,7 @@ const DatabaseCreate = () => {
             )}
             className={classes.engineSelect}
             components={{ Option: EngineOption, SingleValue: _SingleValue }}
+            disabled={isRestricted}
             errorText={errors.engine}
             isClearable={false}
             label="Database Engine"
@@ -555,6 +574,7 @@ const DatabaseCreate = () => {
           <RegionSelect
             currentCapability="Managed Databases"
             disableClearable
+            disabled={isRestricted}
             errorText={errors.region}
             onChange={(e, region) => setFieldValue('region', region.id)}
             regions={regionsData}
@@ -570,6 +590,7 @@ const DatabaseCreate = () => {
             }}
             className={classes.selectPlanPanel}
             data-qa-select-plan
+            disabled={isRestricted}
             error={errors.type}
             handleTabChange={handleTabChange}
             header="Choose a Plan"
@@ -599,11 +620,13 @@ const DatabaseCreate = () => {
                 );
             }}
             data-testid="database-nodes"
+            disabled={isRestricted}
           >
             {errors.cluster_size ? (
               <Notice text={errors.cluster_size} variant="error" />
             ) : null}
             <RadioGroup
+              aria-disabled={isRestricted}
               style={{ marginBottom: 0, marginTop: 0 }}
               value={values.cluster_size}
             >
@@ -622,6 +645,7 @@ const DatabaseCreate = () => {
         </Grid>
         <Divider spacingBottom={12} spacingTop={26} />
         <DatabaseCreateAccessControls
+          disabled={isRestricted}
           errors={ipErrorsFromAPI}
           ips={values.allow_list}
           onBlur={handleIPBlur}
@@ -636,6 +660,7 @@ const DatabaseCreate = () => {
         <Button
           buttonType="primary"
           className={classes.createBtn}
+          disabled={isRestricted}
           loading={isSubmitting}
           type="submit"
         >
