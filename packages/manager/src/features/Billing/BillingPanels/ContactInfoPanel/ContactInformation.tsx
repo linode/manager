@@ -201,25 +201,20 @@ const ContactInformation = (props: Props) => {
               )}
               {company && (
                 <MaskableText text={company}>
-                  <>
-                    {' '}
-                    <StyledTypography
-                      data-qa-company
-                      sx={{ wordBreak: 'break-all' }}
-                    >
-                      {company}
-                    </StyledTypography>
-                  </>
+                  <StyledTypography
+                    data-qa-company
+                    sx={{ wordBreak: 'break-all' }}
+                  >
+                    {company}
+                  </StyledTypography>
                 </MaskableText>
               )}
               {(address1 || address2 || city || state || zip || country) && (
                 <MaskableText text={`${address1} ${address2}`}>
-                  <>
-                    <StyledTypography data-qa-contact-address>
-                      {address1}
-                    </StyledTypography>
-                    <StyledTypography>{address2}</StyledTypography>
-                  </>
+                  <StyledTypography data-qa-contact-address>
+                    {address1}
+                  </StyledTypography>
+                  <StyledTypography>{address2}</StyledTypography>
                 </MaskableText>
               )}
               <MaskableText text={`${city} ${state} ${zip}`}>

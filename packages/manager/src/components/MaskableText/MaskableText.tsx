@@ -11,7 +11,7 @@ export interface MaskableTextProps {
   /**
    * (Optional) original JSX element to render if the text is not masked.
    */
-  children?: JSX.Element;
+  children?: JSX.Element | JSX.Element[];
   /**
    * If true, displays a VisibilityTooltip icon to toggle the masked and unmasked text.
    */

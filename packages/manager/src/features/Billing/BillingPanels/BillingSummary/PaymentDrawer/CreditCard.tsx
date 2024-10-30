@@ -90,20 +90,18 @@ export const CreditCard = (props: Props) => {
       </Box>
       <Box className={classes.card}>
         <MaskableText isToggleable text={displayText}>
-          <>
-            <Typography className={classes.cardInfo} data-qa-contact-cc>
-              {displayText}
-            </Typography>
-            <Typography data-qa-contact-cc-exp-date>
-              {expiry && isCreditCardExpired(expiry) ? (
-                <span className={classes.expired}>{`Expired ${formatExpiry(
-                  expiry
-                )}`}</span>
-              ) : expiry ? (
-                <span>{`Expires ${formatExpiry(expiry)}`}</span>
-              ) : null}
-            </Typography>
-          </>
+          <Typography className={classes.cardInfo} data-qa-contact-cc>
+            {displayText}
+          </Typography>
+          <Typography data-qa-contact-cc-exp-date>
+            {expiry && isCreditCardExpired(expiry) ? (
+              <span className={classes.expired}>{`Expired ${formatExpiry(
+                expiry
+              )}`}</span>
+            ) : expiry ? (
+              <span>{`Expires ${formatExpiry(expiry)}`}</span>
+            ) : null}
+          </Typography>
         </MaskableText>
       </Box>
     </>
