@@ -73,7 +73,6 @@ describe('Billing Contact', () => {
     });
   });
   it('Edit Contact Info', () => {
-    throw new Error('This is a test failure!');
     // mock the user's account data and confirm that it is displayed correctly upon page load
     mockGetAccount(accountData).as('getAccount');
     cy.visitWithLogin('/account/billing');
