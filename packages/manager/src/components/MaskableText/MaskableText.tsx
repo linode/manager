@@ -7,6 +7,8 @@ import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import { Stack } from '../Stack';
 
+export type MaskableTextLength = 'ipv4' | 'ipv6' | 'plaintext';
+
 export interface MaskableTextProps {
   /**
    * (Optional) original JSX element to render if the text is not masked.
@@ -17,13 +19,17 @@ export interface MaskableTextProps {
    */
   isToggleable?: boolean;
   /**
+   * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
+   */
+  length?: MaskableTextLength;
+  /**
    * The original, maskable text; if the text is not masked, render this text or the styled text via children.
    */
   text: string | undefined;
 }
 
 export const MaskableText = (props: MaskableTextProps) => {
-  const { children, isToggleable = false, text } = props;
+  const { children, isToggleable = false, text, length } = props;
 
   const { data: preferences } = usePreferences();
   const maskedPreferenceSetting = preferences?.maskSensitiveData;
@@ -51,7 +57,7 @@ export const MaskableText = (props: MaskableTextProps) => {
     >
       {isMasked ? (
         <Typography sx={{ overflowWrap: 'anywhere' }}>
-          {createMaskedText(text)}
+          {createMaskedText(text, length)}
         </Typography>
       ) : (
         unmaskedText
