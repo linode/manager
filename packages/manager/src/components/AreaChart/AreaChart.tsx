@@ -81,7 +81,7 @@ interface AreaChartProps {
   hasFixedLegendHeight?: boolean;
 
   /**
-   * maximum height of the chart container
+   * The height of chart container.
    */
   height?: number;
 
@@ -89,6 +89,11 @@ interface AreaChartProps {
    * list of legends rows to be displayed
    */
   legendRows?: Omit<MetricsDisplayRow[], 'handleLegendClick'>;
+
+  /**
+   * The sizes of whitespace around the container.
+   */
+  margin?: { bottom: number; left: number; right: number; top: number };
 
   /**
    * true to display legends rows else false to hide
@@ -113,7 +118,7 @@ interface AreaChartProps {
   variant?: 'area' | 'line';
 
   /**
-   * maximum width of the chart container
+   * The width of chart container.
    */
   width?: number;
 
@@ -132,6 +137,7 @@ export const AreaChart = (props: AreaChartProps) => {
     hasFixedLegendHeight,
     height = '100%',
     legendRows,
+    margin = { bottom: 0, left: -20, right: 0, top: 0 },
     showLegend,
     timezone,
     unit,
@@ -222,11 +228,7 @@ export const AreaChart = (props: AreaChartProps) => {
   return (
     <>
       <ResponsiveContainer height={height} width={width}>
-        <_AreaChart
-          aria-label={ariaLabel}
-          data={data}
-          margin={{ bottom: 0, left: -20, right: 0, top: 0 }}
-        >
+        <_AreaChart aria-label={ariaLabel} data={data} margin={margin}>
           <CartesianGrid
             stroke={theme.color.grey7}
             strokeDasharray="3 3"

@@ -114,6 +114,12 @@ export const TablesPanel = () => {
               legendTitle: 'Connections',
             },
           ]}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 0,
+            top: 0,
+          }}
           xAxis={{
             tickFormat: 'hh a',
             tickGap: 60,
@@ -202,6 +208,12 @@ export const TablesPanel = () => {
               legendTitle: 'Traffic Out',
             },
           ]}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 0,
+            top: 0,
+          }}
           xAxis={{
             tickFormat: 'hh a',
             tickGap: 60,
