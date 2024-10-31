@@ -1,6 +1,6 @@
+import { Warning } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import Warning from 'src/assets/icons/warning.svg';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
