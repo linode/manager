@@ -1,3 +1,4 @@
+import { Box, FormHelperText, InputAdornment, InputLabel } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
@@ -5,18 +6,13 @@ import { clamp } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
-import { InputLabel } from 'src/components/InputLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
+import type { BoxProps, TooltipProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
 import type { StandardTextFieldProps } from '@mui/material/TextField';
-import type { BoxProps } from 'src/components/Box';
-import type { TooltipProps } from 'src/components/Tooltip';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   absolute: {

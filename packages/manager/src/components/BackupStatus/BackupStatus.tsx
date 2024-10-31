@@ -1,14 +1,15 @@
+import { Tooltip } from '@linode/ui';
 import Backup from '@mui/icons-material/Backup';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
-import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles<void, 'icon'>()(
   (theme: Theme, _params, classes) => ({

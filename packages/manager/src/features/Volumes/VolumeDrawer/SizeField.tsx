@@ -1,11 +1,8 @@
-import { Theme } from '@mui/material/styles';
+import { Box, FormHelperText, InputAdornment } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
@@ -14,6 +11,8 @@ import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { SIZE_FIELD_WIDTH } from '../VolumeCreate';
+
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   disabled?: boolean;

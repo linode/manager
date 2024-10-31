@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
@@ -16,14 +16,14 @@ import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appName: {
-    color: '#fff !important',
+    color: `${theme.tokens.color.Neutrals.White} !important`,
     fontFamily: theme.font.bold,
     fontSize: '2.2rem',
     lineHeight: '2.5rem',
     textAlign: 'center',
   },
   button: {
-    color: 'white !important',
+    color: `${theme.tokens.color.Neutrals.White} !important`,
     margin: theme.spacing(2),
     position: 'absolute',
   },

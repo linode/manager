@@ -52,7 +52,7 @@ export const image: PartialEventMap<'image'> = {
         <>
           Image <EventLink event={e} to="entity" /> could <strong>not</strong>{' '}
           be <strong>uploaded</strong>:{' '}
-          <FormattedEventMessage message={message} />.
+          <FormattedEventMessage message={message} />
         </>
       );
     },

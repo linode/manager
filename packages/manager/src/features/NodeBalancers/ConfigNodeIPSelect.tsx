@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
-import { Box } from 'src/components/Box';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -62,29 +62,32 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
 
   return (
     <Autocomplete
-      renderOption={(props, option, { selected }) => (
-        <li {...props} key={props.key}>
-          <Box
-            alignItems="center"
-            display="flex"
-            flexDirection="row"
-            gap={1}
-            justifyContent="space-between"
-            width="100%"
-          >
-            <Stack>
-              <Typography
-                color="inherit"
-                fontFamily={(theme) => theme.font.bold}
-              >
-                {option.label}
-              </Typography>
-              <Typography color="inherit">{option.linode.label}</Typography>
-            </Stack>
-            {selected && <SelectedIcon visible />}
-          </Box>
-        </li>
-      )}
+      renderOption={(props, option, { selected }) => {
+        const { key, ...rest } = props;
+        return (
+          <li {...rest} key={key}>
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="row"
+              gap={1}
+              justifyContent="space-between"
+              width="100%"
+            >
+              <Stack>
+                <Typography
+                  color="inherit"
+                  fontFamily={(theme) => theme.font.bold}
+                >
+                  {option.label}
+                </Typography>
+                <Typography color="inherit">{option.linode.label}</Typography>
+              </Stack>
+              {selected && <SelectedIcon visible />}
+            </Box>
+          </li>
+        );
+      }}
       disabled={disabled}
       errorText={errorText ?? error?.[0].reason}
       id={inputId}

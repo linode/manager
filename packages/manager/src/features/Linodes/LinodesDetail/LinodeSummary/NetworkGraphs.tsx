@@ -1,9 +1,9 @@
+import { Box } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { Box } from 'src/components/Box';
 import {
   convertNetworkToUnit,
   formatBitsPerSecond,

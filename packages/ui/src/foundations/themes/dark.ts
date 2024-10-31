@@ -222,6 +222,11 @@ export const darkTheme: ThemeOptions = {
           '.MuiChip-deleteIcon': { color: primaryColors.text },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
         },
+        input: {
+          '&::selection': {
+            backgroundColor: customDarkModeOptions.bg.appBar,
+          },
+        },
       },
     },
     MuiBackdrop: {
@@ -849,7 +854,6 @@ export const darkTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
-  interactionTokens: Interaction,
   name: 'dark',
   notificationToast,
   palette: {
@@ -870,6 +874,10 @@ export const darkTheme: ThemeOptions = {
     },
   },
   textColors: customDarkModeOptions.textColors,
+  tokens: {
+    // No need to add global tokens here, as they will be inherited from light.ts
+    interaction: Interaction,
+  },
   typography: {
     body1: {
       color: primaryColors.text,

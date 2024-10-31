@@ -1,13 +1,7 @@
-import { Region } from '@linode/api-v4';
-import {
-  Database,
-  DatabaseInstance,
-  DatabaseType,
-} from '@linode/api-v4/lib/databases/types';
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TooltipIcon } from 'src/components/TooltipIcon';
@@ -26,6 +20,13 @@ import {
   StyledSummaryTextTypography,
   StyledTitleTypography,
 } from './DatabaseResizeCurrentConfiguration.style';
+
+import type { Region } from '@linode/api-v4';
+import type {
+  Database,
+  DatabaseInstance,
+  DatabaseType,
+} from '@linode/api-v4/lib/databases/types';
 
 interface Props {
   database: Database;

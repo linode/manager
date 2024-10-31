@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
@@ -95,9 +95,7 @@ export const CloudPulseDashboardSelect = React.memo(
         renderGroup={(params) => (
           <Box key={params.key}>
             <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
-              {serviceTypeMap.has(params.group)
-                ? serviceTypeMap.get(params.group)
-                : params.group}
+              {serviceTypeMap.get(params.group) || params.group}
             </Typography>
             {params.children}
           </Box>

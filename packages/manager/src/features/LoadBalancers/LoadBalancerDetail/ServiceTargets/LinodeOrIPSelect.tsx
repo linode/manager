@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
-import { Box } from 'src/components/Box';
 import { Stack } from 'src/components/Stack';
 import { linodeFactory } from 'src/factories';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
@@ -95,13 +95,14 @@ export const LinodeOrIPSelect = (props: Props) => {
         }
       }}
       renderOption={(props, option, state) => {
+        const { key, ...rest } = props;
         const region =
           regions?.find((r) => r.id === option.region)?.label ?? option.region;
 
         const isCustomIp = option === customIpPlaceholder;
 
         return (
-          <li {...props}>
+          <li {...rest} key={key}>
             <Stack flexGrow={1}>
               <Box>
                 <b>{isCustomIp ? 'Custom IP' : option.label}</b>
