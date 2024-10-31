@@ -43,7 +43,7 @@ export const buildVolumeXFilters = ({
   query,
 }: BuildVolumeXFiltersParams) =>
   buildXFilters({
-    additionalFilters: query
+    nonPaginationFilters: query
       ? {
           label: { '+contains': query },
         }
