@@ -1,9 +1,8 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
-import { Tooltip } from '@linode/ui';
+import { Box, Tooltip } from '@linode/ui';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Stack } from 'src/components/Stack';
 import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 

@@ -287,7 +287,7 @@ export const lightTheme: ThemeOptions = {
               transform: 'rotate(0deg)',
             },
             margin: 0,
-            minHeight: 48,
+            minHeight: 40,
           },
           '&:hover': {
             '& h3': {
