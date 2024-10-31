@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 

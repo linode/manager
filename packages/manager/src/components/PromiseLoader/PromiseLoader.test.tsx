@@ -1,6 +1,6 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import PromiseLoader from './PromiseLoader';

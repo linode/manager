@@ -1,10 +1,12 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Box } from 'src/components/Box';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   instanceLabel?: string;
