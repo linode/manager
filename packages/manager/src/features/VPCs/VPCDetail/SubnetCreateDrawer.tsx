@@ -82,7 +82,7 @@ export const SubnetCreateDrawer = (props: Props) => {
       title={'Create Subnet'}
     >
       {errors.root?.message && (
-        <Notice text={errors.root.message} variant="error" />
+        <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}
       {userCannotAddSubnet && (
         <Notice
@@ -90,6 +90,7 @@ export const SubnetCreateDrawer = (props: Props) => {
             "You don't have permissions to create a new Subnet. Please contact an account administrator for details."
           }
           important
+          spacingBottom={8}
           spacingTop={16}
           variant="error"
         />
