@@ -30,7 +30,6 @@ export interface DatePickerProps
 }
 
 export const DatePicker = ({
-  errorText,
   format = 'yyyy-MM-dd',
   helperText = '',
   label = 'Select a date',
@@ -59,14 +58,15 @@ export const DatePicker = ({
             InputProps: {
               ...textFieldProps?.InputProps,
             },
-            error: Boolean(errorText),
             helperText,
             label,
             placeholder,
           },
+          ...props?.slotProps,
         }}
         slots={{
           textField: TextField, // Use custom TextField
+          ...props?.slots,
         }}
       />
     </LocalizationProvider>
