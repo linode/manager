@@ -1,6 +1,8 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { createSubnetSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -15,6 +17,7 @@ import {
 
 import { SubnetNode } from '../VPCCreate/SubnetNode';
 
+import type { CreateSubnetPayload } from '@linode/api-v4';
 import type { SubnetFieldState } from 'src/utilities/subnets';
 
 interface Props {
@@ -64,6 +67,15 @@ export const SubnetCreateDrawer = (props: Props) => {
       });
     }
   };
+
+  const { control, formState, setError, watch } = useForm<CreateSubnetPayload>({
+    defaultValues: {
+      ipv4: recommendedIPv4,
+      label: '',
+    },
+    mode: 'onBlur',
+    resolver: yupResolver(createSubnetSchema),
+  });
 
   const { dirty, handleSubmit, resetForm, setValues, values } = useFormik({
     enableReinitialize: true,
