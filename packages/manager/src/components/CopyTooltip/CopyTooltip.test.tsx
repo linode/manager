@@ -63,7 +63,14 @@ describe('CopyTooltip', () => {
       getByTestId,
       getByText,
       queryByText,
-    } = renderWithTheme(<CopyTooltip {...defaultProps} copyableText masked />);
+    } = renderWithTheme(
+      <CopyTooltip
+        {...defaultProps}
+        copyableText
+        masked
+        maskedTextLength="plaintext"
+      />
+    );
 
     const copyIconButton = getByLabelText(`Copy ${mockText} to clipboard`);
     const visibilityToggle = getByTestId('VisibilityIcon');

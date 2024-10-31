@@ -122,7 +122,7 @@ describe('IPAddress masked', () => {
       data: preferences,
     });
 
-    const { getAllByTestId, getByText } = renderWithTheme(
+    const { getAllByTestId, getAllByText, getByText } = renderWithTheme(
       <IPAddress
         ips={['8.8.8.8', '8.8.40.4']}
         showAll={true}
@@ -133,13 +133,13 @@ describe('IPAddress masked', () => {
     const visibilityToggles = getAllByTestId('VisibilityIcon');
 
     // First IP address should be masked
-    expect(getByText('•••••••')).toBeVisible();
+    expect(getAllByText('•••••••••••••••')[0]).toBeVisible();
 
     await userEvent.click(visibilityToggles[0]);
 
     // First IP address should be unmasked; second IP address should still be masked
     expect(getByText('8.8.8.8')).toBeVisible();
-    expect(getByText('••••••••')).toBeVisible();
+    expect(getByText('•••••••••••••••')).toBeVisible();
 
     await userEvent.click(visibilityToggles[1]);
 
@@ -155,6 +155,7 @@ describe('IPAddress masked', () => {
     const {
       container,
       getAllByTestId,
+      getAllByText,
       getByText,
       queryByText,
     } = renderWithTheme(
@@ -168,8 +169,7 @@ describe('IPAddress masked', () => {
     const visibilityToggles = getAllByTestId('VisibilityIcon');
 
     // First IP address should be masked but visible
-    expect(getByText('•••••••')).toBeVisible();
-    expect(queryByText('••••••••')).toBeNull();
+    expect(getAllByText('•••••••••••••••')[0]).toBeVisible();
 
     await userEvent.click(visibilityToggles[0]);
 
