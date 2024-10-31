@@ -24,11 +24,11 @@ export const githubFormatter: Formatter = (
   _junitData: TestSuites[]
 ) => {
   const title = !!metadata.pipelineTitle
-    ? `# ${metadata.pipelineTitle}`
+    ? `## ${metadata.pipelineTitle}`
     : null;
 
   const headline = (() => {
-    const headingMarkdown = '## ';
+    const headingMarkdown = '### ';
 
     const description = runInfo.failing
       ? `${runInfo.failing} failing ${pluralize(runInfo.failing, 'test', 'tests')} on`
@@ -47,7 +47,7 @@ export const githubFormatter: Formatter = (
   const extra = metadata.extra ? `${metadata.extra}\n\n` : null;
 
   const failedTestSummary = (() => {
-    const heading = `### Details`;
+    const heading = `#### Details`;
     const failedTestHeader = `<table><thead><tr><th colspan="3">Failing Tests</th></tr><tr><th></th><th>Spec</th><th>Test</th></tr></thead><tbody>`;
     const failedTestRows = results
       .filter((result: TestResult) => result.failing)
@@ -67,7 +67,7 @@ export const githubFormatter: Formatter = (
   })();
 
   const rerunNote = (() => {
-    const heading = `### Debugging`;
+    const heading = `#### Debugging`;
     const failingTestFiles = results
       .filter((result: TestResult) => result.failing)
       .map((result: TestResult) => result.testFilename);
