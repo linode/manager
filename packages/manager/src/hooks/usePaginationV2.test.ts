@@ -20,7 +20,7 @@ vi.mock('@tanstack/react-router', async () => {
       order: undefined,
       orderBy: undefined,
       page: undefined,
-      page_size: undefined,
+      pageSize: undefined,
     }),
   };
 });
@@ -107,7 +107,7 @@ describe('usePaginationV2', () => {
       order: 'asc',
       orderBy: 'name',
       page: 1,
-      page_size: 25,
+      pageSize: 25,
     };
 
     await waitFor(() => {
@@ -144,13 +144,13 @@ describe('usePaginationV2', () => {
       order: 'asc',
       orderBy: 'name',
       page: 2,
-      page_size: 50,
+      pageSize: 50,
     };
 
     await waitFor(() => {
       expect(pageSizeSearchFn(prevParams)).toEqual({
         ...prevParams,
-        page_size: 50,
+        pageSize: 50,
       });
     });
   });
@@ -181,7 +181,7 @@ describe('usePaginationV2', () => {
       order: 'asc',
       orderBy: 'name',
       page: 1,
-      page_size: 25,
+      pageSize: 25,
     };
 
     await waitFor(() => {
@@ -211,6 +211,48 @@ describe('usePaginationV2', () => {
 
     await waitFor(() => {
       expect(mockUpdatePreferences).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should handle the queryParamsPrefix for both the page and pageSize params', async () => {
+    const { result } = renderHook(
+      () =>
+        usePaginationV2({
+          ...defaultProps,
+          queryParamsPrefix: 'test-prefix',
+        }),
+      {
+        wrapper: (ui) => wrapWithThemeAndRouter(ui.children),
+      }
+    );
+
+    act(() => {
+      result.current.handlePageChange(2);
+      result.current.handlePageSizeChange(50);
+    });
+
+    const navigateCalls = mockNavigate.mock.calls;
+    const searchFnForPage = navigateCalls[0][0].search;
+    const searchFnForPageSize = navigateCalls[1][0].search;
+    const prevParams = {
+      order: 'asc',
+      orderBy: 'name',
+    };
+
+    await waitFor(() => {
+      expect(searchFnForPage(prevParams)).toEqual({
+        ...prevParams,
+        page: undefined,
+        pageSize: undefined,
+        'test-prefix-page': 2,
+      });
+
+      expect(searchFnForPageSize(prevParams)).toEqual({
+        ...prevParams,
+        page: undefined,
+        pageSize: undefined,
+        'test-prefix-pageSize': 50,
+      });
     });
   });
 });
