@@ -92,7 +92,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
       // to upgrade all of the Linode's volumes at once from the Linode details page
 
       history.push(`/linodes/${volume.linode_id}/storage?upgrade=true`);
-      // TODO: Tanstack Router - update hook
+      // TODO: Tanstack Router - update hook and remove history.push and history import
       // navigate({
       //   params: { linodeId: volume.linode_id },
       //   search: { upgrade: 'true' },
