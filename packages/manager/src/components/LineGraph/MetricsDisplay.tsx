@@ -38,10 +38,6 @@ interface Props {
    */
   legendHeight?: string;
   /**
-   * Maximum height of the legend
-   */
-  maxHeight?: number;
-  /**
    * Array of rows to display. Each row should contain the data to display, the format function to use, the legend color, and the legend title.
    */
   rows: MetricsDisplayRow[];
