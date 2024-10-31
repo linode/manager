@@ -12,11 +12,17 @@ type FieldFilter = {
 };
 
 type AdditionalFilters =
-  | Partial<FilterConditionTypes>
-  | Partial<Record<string, FieldFilter>>;
+  | Omit<Partial<FilterConditionTypes>, '+order' | '+order_by'>
+  | Omit<Partial<Record<string, FieldFilter>>, '+order' | '+order_by'>;
 
 interface BuildXFilterParams {
-  additionalFilters?: AdditionalFilters;
+  /**
+   *  Filters to be added to the xFilters object.
+   */
+  nonPaginationFilters?: AdditionalFilters;
+  /**
+   * Pagination options. This can be undefined if the pagination is not needed.
+   */
   pagination?: {
     order: OrderDirection;
     orderBy: string;
@@ -37,12 +43,12 @@ interface BuildXFilterParams {
  * It is usually meant for a landing page with a filterable table.
  */
 export function buildXFilters({
-  additionalFilters,
+  nonPaginationFilters,
   pagination,
 }: BuildXFilterParams): Filter {
   return {
     '+order': pagination?.order,
     '+order_by': pagination?.orderBy,
-    ...additionalFilters,
+    ...nonPaginationFilters,
   };
 }

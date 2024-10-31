@@ -94,6 +94,9 @@ module.exports = {
       ],
       rules: {
         'no-restricted-imports': [
+          // This needs to remain a warning since trying to link to a feature that is not yet migrated will break the UI
+          // For those cases react-router-dom history.push is still needed
+          // That being said this can be turned into an error temporarily to catch all the cases while developing
           'warn',
           {
             paths: [

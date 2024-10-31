@@ -17,7 +17,7 @@ describe('buildXFilters', () => {
 
   it('handles single additional filter with contains operator', () => {
     const result = buildXFilters({
-      additionalFilters: {
+      nonPaginationFilters: {
         label: { '+contains': 'test' },
       },
       pagination: {
@@ -35,7 +35,7 @@ describe('buildXFilters', () => {
 
   it('handles additional filters with no pagination', () => {
     const result = buildXFilters({
-      additionalFilters: {
+      nonPaginationFilters: {
         label: { '+contains': 'test' },
       },
     });
@@ -47,7 +47,7 @@ describe('buildXFilters', () => {
 
   it('handles multiple fields with different operators', () => {
     const result = buildXFilters({
-      additionalFilters: {
+      nonPaginationFilters: {
         created: { '+gt': 123456789 },
         status: { '+neq': 'deleted' },
       },
@@ -67,7 +67,7 @@ describe('buildXFilters', () => {
 
   it('handles complex filters with AND operator', () => {
     const result = buildXFilters({
-      additionalFilters: {
+      nonPaginationFilters: {
         tags: {
           '+and': [{ '+contains': 'production' }, { '+contains': 'database' }],
         },
@@ -89,7 +89,7 @@ describe('buildXFilters', () => {
 
   it('handles OR operator with array of strings', () => {
     const result = buildXFilters({
-      additionalFilters: {
+      nonPaginationFilters: {
         region: { '+or': ['us-east', 'us-west'] },
       },
       pagination: {
@@ -107,7 +107,7 @@ describe('buildXFilters', () => {
 
   it('handles numeric comparison operators', () => {
     const result = buildXFilters({
-      additionalFilters: {
+      nonPaginationFilters: {
         memory: { '+lt': 1024 },
         size: { '+gte': 50 },
       },
@@ -127,7 +127,7 @@ describe('buildXFilters', () => {
 
   it('handles multiple operators on the same field', () => {
     const result = buildXFilters({
-      additionalFilters: {
+      nonPaginationFilters: {
         created: {
           '+gte': 1609459200, // 2021-01-01
           '+lt': 1640995200, // 2022-01-01
@@ -151,7 +151,7 @@ describe('buildXFilters', () => {
 
   it('can feature an operator as the first key', () => {
     const result = buildXFilters({
-      additionalFilters: {
+      nonPaginationFilters: {
         '+or': [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }],
       },
       pagination: {
