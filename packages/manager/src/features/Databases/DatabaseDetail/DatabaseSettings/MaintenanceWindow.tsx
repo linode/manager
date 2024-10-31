@@ -196,9 +196,9 @@ export const MaintenanceWindow = (props: Props) => {
             </Notice>
           ) : null}
           <Typography className={classes.sectionText}>
-            {isLegacy ? typographyLegacyDatabase : typographyDatabase}
+            {isLegacy ? typographyLegacyDatabase : typographyDatabase}{' '}
             {database.cluster_size !== 3
-              ? ' For non-HA plans, expect downtime during this window.'
+              ? 'For non-HA plans, expect downtime during this window.'
               : null}
           </Typography>
           <div>
