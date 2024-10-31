@@ -146,6 +146,12 @@ export class CustomKeyboardSensor implements SensorInstance {
     this.windowListeners.add(EventName.Resize, this.handleCancel);
     this.windowListeners.add(EventName.VisibilityChange, this.handleCancel);
 
+    // Add focus style when draggable element is dragging.
+    const activator = this.props.activeNode.node.current;
+    if (activator) {
+      activator.style.outline = '1px dashed grey';
+    }
+
     setTimeout(() => {
       this.listeners.add(EventName.Keydown, this.handleKeyDown);
     });
@@ -154,6 +160,12 @@ export class CustomKeyboardSensor implements SensorInstance {
   private detach() {
     this.listeners.removeAll();
     this.windowListeners.removeAll();
+
+    // Clear focus style when draggable element is dropped
+    const dropTarget = this.props.activeNode.node.current;
+    if (dropTarget) {
+      dropTarget.style.outline = 'none';
+    }
   }
 
   private handleCancel(event: Event) {
