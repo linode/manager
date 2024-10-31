@@ -29,6 +29,7 @@ CMD yarn start:manager:ci
 # Builds an image containing Cypress and miscellaneous system utilities required
 # by the tests.
 FROM cypress/included:13.11.0 as e2e-build
+RUN npm install -g pnpm bun
 USER node
 WORKDIR /home/node/app
 VOLUME /home/node/app
