@@ -23,11 +23,16 @@ export const githubFormatter: Formatter = (
   metadata: Metadata,
   _junitData: TestSuites[]
 ) => {
+  const title = !!metadata.pipelineTitle
+    ? `# ${metadata.pipelineTitle}`
+    : null;
+
   const headline = (() => {
     const headingMarkdown = '## ';
+
     const description = runInfo.failing
       ? `${runInfo.failing} failing ${pluralize(runInfo.failing, 'test', 'tests')} on`
-      : `Passing`;
+      : `${runInfo.passing} passing ${pluralize(runInfo.passing, 'test', 'tests')} on`;
 
     // If available, render a link for the run.
     const runLink = (metadata.runId && metadata.runUrl)
@@ -81,6 +86,7 @@ export const githubFormatter: Formatter = (
   })();
 
   return [
+    title,
     headline,
     '',
     breakdown,
