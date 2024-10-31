@@ -20,26 +20,38 @@ const setTableSearchParams = (prev: TableSearchParams) => ({
   order: prev.order,
   orderBy: prev.orderBy,
   page: prev.page,
-  page_size: prev.page_size,
+  pageSize: prev.pageSize,
 });
 
 export interface UsePaginationV2Props<T extends TableSearchParams> {
+  /**
+   * The route to which the pagination params are applied.
+   */
   currentRoute: ToSubOptions['to'];
+  /**
+   * The initial page pagination is set to - defaults to 1, it's unusual to set this.
+   */
   initialPage: number;
+  /**
+   * A key used to store a user's preferred page size for a specific table.
+   */
   preferenceKey: string;
+  /**
+   * A prefix that is applied to the query params in the url. Useful when this hook is used more than once on the same page.
+   * ex: two different sortable tables on the same route.
+   */
+  queryParamsPrefix?: string;
+  /**
+   * A function that is called to build the search params for the route.
+   */
   searchParams?: (prev: T) => T;
 }
 
-/**
- * usePagination hook
- * @param initialPage initial page to start on
- * @param preferenceKey a key used to store a user's prefered page size for a specific table
- * @param queryParamsPrefix a prefix that is applied to the query params in the url. Useful when this hook is used more than once on the same page.
- */
 export const usePaginationV2 = <T extends TableSearchParams>({
   currentRoute,
   initialPage,
   preferenceKey,
+  queryParamsPrefix,
   searchParams,
 }: UsePaginationV2Props<T>): PaginationPropsV2 => {
   const { data: preferences } = usePreferences();
@@ -49,7 +61,12 @@ export const usePaginationV2 = <T extends TableSearchParams>({
   const navigate = useNavigate();
 
   const searchParamPage = search.page;
-  const searchParamPageSize = search.page_size;
+  const searchParamPageSize = search.pageSize;
+
+  const pageKey = queryParamsPrefix ? `${queryParamsPrefix}-page` : 'page';
+  const pageSizeKey = queryParamsPrefix
+    ? `${queryParamsPrefix}-pageSize`
+    : 'pageSize';
 
   const preferredPageSize = preferenceKey
     ? preferences?.pageSizes?.[preferenceKey] ?? MIN_PAGE_SIZE
@@ -65,18 +82,20 @@ export const usePaginationV2 = <T extends TableSearchParams>({
       search: (prev: TableSearchParams & T) => ({
         ...setTableSearchParams(prev),
         ...(searchParams?.(prev) ?? {}),
-        page,
+        [pageKey]: page,
+        ...(queryParamsPrefix ? {} : { page }),
       }),
       to: currentRoute,
     });
   };
 
-  const setPageSize = (size: number) => {
+  const setPageSize = (pageSize: number) => {
     navigate({
       search: (prev: TableSearchParams & T) => ({
         ...setTableSearchParams(prev),
         ...(searchParams?.(prev) ?? {}),
-        page_size: size,
+        [pageSizeKey]: pageSize,
+        ...(queryParamsPrefix ? {} : { pageSize }),
       }),
       to: currentRoute,
     });

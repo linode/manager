@@ -16,5 +16,5 @@ export interface TableSearchParams {
   order?: 'asc' | 'desc';
   orderBy?: string;
   page?: number;
-  page_size?: number;
+  pageSize?: number;
 }

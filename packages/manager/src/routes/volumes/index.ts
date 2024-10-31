@@ -1,4 +1,5 @@
 import { createRoute, redirect } from '@tanstack/react-router';
+import { enqueueSnackbar } from 'notistack';
 
 import { volumeQueries } from 'src/queries/volumes/volumes';
 
@@ -94,7 +95,7 @@ const volumeActionRoute = createRoute({
       volumeQueries.lists._ctx.paginated(
         {
           page: search.page ?? 1,
-          page_size: search.page_size ?? 25,
+          page_size: search.pageSize ?? 25,
         },
         volumeXFilters
       )
@@ -102,6 +103,7 @@ const volumeActionRoute = createRoute({
 
     // if the volume is not found, redirect to the volumes landing page
     if (!volumes.data.find((v) => v.id === params.volumeId)) {
+      enqueueSnackbar('Volume not found', { variant: 'error' });
       throw redirect({
         search: () => ({}),
         to: '/volumes',
