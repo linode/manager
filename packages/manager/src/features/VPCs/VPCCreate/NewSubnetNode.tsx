@@ -11,9 +11,17 @@ import {
 
 import type { CreateSubnetPayload } from '@linode/api-v4';
 
+/**
+TODO: replace the current SubnetNode when VPC Create is refactored
+I'm currently thinking about making a RemovableSubnetNode to wrap around
+this for VPCCreate instead of having a bunch of optional props (current
+state of affairs for SubnetNode) or just using this as is inside MultipleSubnetInput
+(but the thinking might change when I start refactoring VPCCreate
+and VPCCreateDrawer)
+*/
 export interface NewSubnetNodeProps {
   disabled?: boolean;
-  ipError: string | undefined;
+  ipv4Error: string | undefined;
   labelError: string | undefined;
   onChange: (subnet: CreateSubnetPayload) => void;
   subnet: CreateSubnetPayload;
@@ -21,7 +29,7 @@ export interface NewSubnetNodeProps {
 
 // @TODO VPC: currently only supports IPv4, must update when/if IPv6 is also supported
 export const NewSubnetNode = (props: NewSubnetNodeProps) => {
-  const { disabled, ipError, labelError, onChange, subnet } = props;
+  const { disabled, ipv4Error, labelError, onChange, subnet } = props;
 
   const availIPs = calculateAvailableIPv4sRFC1918(subnet.ipv4 ?? '');
 
@@ -56,7 +64,7 @@ export const NewSubnetNode = (props: NewSubnetNodeProps) => {
         <TextField
           aria-label="Enter an IPv4"
           disabled={disabled}
-          errorText={ipError}
+          errorText={ipv4Error}
           label="Subnet IP Address Range"
           onChange={onIpv4Change}
           value={subnet.ipv4}
