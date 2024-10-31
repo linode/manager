@@ -18,8 +18,5 @@
   "peerDependencies": {
     "@linode/api-v4": "*",
     "vite": "*"
-  },
-  "devDependencies": {
-    "vitest": "^2.1.1"
   }
 }
