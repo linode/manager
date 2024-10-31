@@ -83,7 +83,7 @@ export const githubFormatter: Formatter = (
   })();
 
   const rerunNote = (() => {
-    const heading = `#### Debugging`;
+    const heading = `#### Troubleshooting`;
     const failingTestFiles = results
       .filter((result: TestResult) => result.failing)
       .map((result: TestResult) => result.testFilename);
