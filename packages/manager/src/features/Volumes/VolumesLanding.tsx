@@ -27,6 +27,7 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useVolumesQuery } from 'src/queries/volumes/volumes';
 import { buildVolumeXFilters } from 'src/routes/volumes';
+import { VOLUME_TABLE_PREFERENCE_KEY } from 'src/routes/volumes/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AttachVolumeDrawer } from './AttachVolumeDrawer';
@@ -43,8 +44,6 @@ import { VolumeTableRow } from './VolumeTableRow';
 import type { Volume } from '@linode/api-v4';
 import type { VolumesSearchParams } from 'src/routes/volumes/index';
 
-const preferenceKey = 'volumes';
-
 export const VolumesLanding = () => {
   const navigate = useNavigate();
   const params = useParams({ strict: false });
@@ -52,7 +51,7 @@ export const VolumesLanding = () => {
   const pagination = usePaginationV2({
     currentRoute: '/volumes',
     initialPage: 1,
-    preferenceKey,
+    preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
     searchParams: (prev) => ({
       ...prev,
       query: search.query,
@@ -71,7 +70,7 @@ export const VolumesLanding = () => {
         orderBy: 'label',
       },
     },
-    preferenceKey,
+    preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
   });
 
   const volumeXFilters = buildVolumeXFilters({
