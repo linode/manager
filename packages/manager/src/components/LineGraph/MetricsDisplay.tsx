@@ -15,7 +15,6 @@ import {
 import type { Metrics } from 'src/utilities/statMetrics';
 
 const ROW_HEADERS = ['Max', 'Avg', 'Last'] as const;
-const DEFAULT_LEGEND_HEIGHT = 208;
 
 type MetricKey = 'average' | 'last' | 'max';
 const METRIC_KEYS: MetricKey[] = ['max', 'average', 'last'];
@@ -31,13 +30,13 @@ export type LegendColor =
 
 interface Props {
   /**
-   * If true, the legends across metrics will be the same height
-   */
-  hasFixedLegendHeight?: boolean;
-  /**
    * Array of rows to hide. Each row should contain the legend title.
    */
   hiddenRows?: string[];
+  /**
+   * Sets the height of the legend. Overflow scroll if the content exceeds the height.
+   */
+  legendHeight?: string;
   /**
    * Maximum height of the legend
    */
@@ -118,9 +117,8 @@ const MetricRow = ({
 };
 
 export const MetricsDisplay = ({
-  hasFixedLegendHeight = true,
   hiddenRows = [],
-  maxHeight,
+  legendHeight = '100%',
   rows,
 }: Props) => (
   <StyledTable
@@ -129,11 +127,9 @@ export const MetricsDisplay = ({
         border: 0,
       },
       overflowY: 'auto',
-      ...(hasFixedLegendHeight && {
-        [theme.breakpoints.up(1100)]: {
-          maxHeight: maxHeight || DEFAULT_LEGEND_HEIGHT,
-        },
-      }),
+      [theme.breakpoints.up(1100)]: {
+        height: legendHeight,
+      },
     })}
     aria-label="Stats and metrics"
     stickyHeader
