@@ -1,6 +1,6 @@
+import { Box } from '@linode/ui';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Typography } from 'src/components/Typography';
 
 import { StyledPlanSummarySpan } from '../DatabaseDetail/DatabaseResize/DatabaseResize.style';
@@ -13,6 +13,7 @@ import type {
   DatabasePriceObject,
   Engine,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
 interface Props {
@@ -77,7 +78,7 @@ export const DatabaseSummarySection = (props: Props) => {
   );
   const resizeSummary = (
     <Box
-      sx={(theme) => ({
+      sx={(theme: Theme) => ({
         marginTop: theme.spacing(2),
       })}
       data-testid="resizeSummary"
