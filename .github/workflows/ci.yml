@@ -194,6 +194,10 @@ jobs:
         with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages-ui-lib
+          path: packages/ui/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
