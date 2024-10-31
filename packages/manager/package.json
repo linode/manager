@@ -100,7 +100,7 @@
     "storybook-static": "storybook build -c .storybook -o .out",
     "build-storybook": "storybook build",
     "cy:run": "cypress run -b chrome",
-    "cy:e2e": "cypress run --headless -b chrome",
+    "cy:e2e": "cypress run --headless -b chrome -s 'cypress/e2e/core/billing/*'",
     "cy:debug": "cypress open --e2e",
     "cy:component": "cypress open --component",
     "cy:component:run": "cypress run --component --headless -b chrome",
