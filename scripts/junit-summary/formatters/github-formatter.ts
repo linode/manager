@@ -31,8 +31,8 @@ export const githubFormatter: Formatter = (
     const headingMarkdown = '### ';
 
     const description = runInfo.failing
-      ? `${runInfo.failing} failing ${pluralize(runInfo.failing, 'test', 'tests')} on`
-      : `${runInfo.passing} passing ${pluralize(runInfo.passing, 'test', 'tests')} on`;
+      ? `:small_red_triangle: ${runInfo.failing} failing ${pluralize(runInfo.failing, 'test', 'tests')} on`
+      : `:tada: ${runInfo.passing} passing ${pluralize(runInfo.passing, 'test', 'tests')} on`;
 
     // If available, render a link for the run.
     const runLink = (metadata.runId && metadata.runUrl)
@@ -42,7 +42,23 @@ export const githubFormatter: Formatter = (
     return `${headingMarkdown}${description} ${runLink}`;
   })();
 
-  const breakdown = `:x: ${runInfo.failing} Failing | :green_heart: ${runInfo.passing} Passing | :arrow_right_hook: ${runInfo.skipped} Skipped | :clock1: ${secondsToTimeString(runInfo.time)}\n\n`;
+  const breakdown = [
+    '<table>',
+    '<thead><tr>',
+    '<td><strong>:x: Failing</strong></td>',
+    '<td><strong>:white_check_mark: Passing</strong></td>',
+    '<td><strong>:arrow_right_hook: Skipped</strong></td>',
+    '<td><strong>:clock1: Duration</strong></td>',
+    '</tr></thead>',
+    '<tbody><tr>',
+    `<td><code>${runInfo.failing} Failing</code></td>`,
+    `<td><code>${runInfo.passing} Passing</code></td>`,
+    `<td><code>${runInfo.skipped} Skipped</code></td>`,
+    `<td><code>${secondsToTimeString(runInfo.time)}</code></td>`,
+    '</tr></tbody>',
+    '</table>',
+    '\n\n',
+  ].join('');
 
   const extra = metadata.extra ? `${metadata.extra}\n\n` : null;
 
