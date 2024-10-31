@@ -73,6 +73,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
           copyableText
           disabled={isVPCOnlyLinode}
           masked={Boolean(preferences?.maskSensitiveData)}
+          maskedTextLength={type.includes('IPv6') ? 'ipv6' : 'ipv4'}
           text={address}
         />
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}

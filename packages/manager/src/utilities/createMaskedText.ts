@@ -7,7 +7,7 @@ export const MASKABLE_TEXT_LENGTH_MAP: Map<
   number
 > = new Map([
   ['ipv4', 15],
-  ['ipv6', 30],
+  ['ipv6', 30], // Max length of an ipv6 address is 45 characters, but dots take up more visual space.
 ]);
 
 export const createMaskedText = (

@@ -75,7 +75,7 @@ const renderEndpoint = (
   endpointError?: string
 ) => {
   if (endpoint) {
-    return <MaskableText isToggleable text={endpoint} />;
+    return <MaskableText isToggleable text={endpoint} length="plaintext" />;
   }
   if (endpointLoading) {
     return 'Loading...';

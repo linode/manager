@@ -7,6 +7,7 @@ import FileCopy from 'src/assets/icons/copy.svg';
 import { createMaskedText } from 'src/utilities/createMaskedText';
 import { omittedProps } from 'src/utilities/omittedProps';
 
+import type { MaskableTextLength } from '../MaskableText/MaskableText';
 import type { TooltipProps } from '@linode/ui';
 
 export interface CopyTooltipProps {
@@ -30,8 +31,13 @@ export interface CopyTooltipProps {
    */
   masked?: boolean;
   /**
+   * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
+   */
+  maskedTextLength?: MaskableTextLength;
+  /**
    * Callback to be executed when the icon is clicked.
    */
+
   onClickCallback?: () => void;
   /**
    * The placement of the tooltip.
@@ -55,6 +61,7 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
     copyableText,
     disabled,
     masked,
+    maskedTextLength,
     onClickCallback,
     placement,
     text,
@@ -63,7 +70,9 @@ export const CopyTooltip = (props: CopyTooltipProps) => {
   const [copied, setCopied] = React.useState<boolean>(false);
   const [isTextMasked, setIsTextMasked] = React.useState(masked);
 
-  const displayText = isTextMasked ? createMaskedText(text) : text;
+  const displayText = isTextMasked
+    ? createMaskedText(text, maskedTextLength)
+    : text;
 
   const handleIconClick = () => {
     setCopied(true);

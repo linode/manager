@@ -118,6 +118,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
               copyableText
               masked={Boolean(preferences?.maskSensitiveData)}
               text={displayIP}
+              maskedTextLength="ipv4"
             />
             <StyledCopyTooltip text={displayIP} />
           </>

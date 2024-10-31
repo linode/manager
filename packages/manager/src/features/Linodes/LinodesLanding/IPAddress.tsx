@@ -127,6 +127,7 @@ export const IPAddress = (props: IPAddressProps) => {
           data-qa-copy-ip-text
           disabled={disabled}
           masked={Boolean(preferences?.maskSensitiveData)}
+          maskedTextLength="ipv4"
           text={ip}
         />
         {renderCopyIcon(ip)}

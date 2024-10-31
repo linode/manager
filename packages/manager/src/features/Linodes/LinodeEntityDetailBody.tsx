@@ -193,10 +193,12 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               rows={[
                 {
                   isMasked: preferences?.maskSensitiveData,
+                  maskedTextLength: 'ipv4',
                   text: firstAddress,
                 },
                 {
                   isMasked: preferences?.maskSensitiveData,
+                  maskedTextLength: 'ipv6',
                   text: secondAddress,
                 },
               ]}

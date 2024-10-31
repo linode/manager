@@ -190,7 +190,10 @@ const ContactInformation = (props: Props) => {
             country) && (
             <Grid sx={sxGrid}>
               {(firstName || lastName) && (
-                <MaskableText text={`${firstName} ${lastName}`}>
+                <MaskableText
+                  text={`${firstName} ${lastName}`}
+                  length="plaintext"
+                >
                   <StyledTypography
                     data-qa-contact-name
                     sx={{ wordBreak: 'break-all' }}
@@ -200,24 +203,32 @@ const ContactInformation = (props: Props) => {
                 </MaskableText>
               )}
               {company && (
-                <MaskableText text={company}>
-                  <StyledTypography
-                    data-qa-company
-                    sx={{ wordBreak: 'break-all' }}
-                  >
-                    {company}
-                  </StyledTypography>
+                <MaskableText text={company} length="plaintext">
+                  <>
+                    {' '}
+                    <StyledTypography
+                      data-qa-company
+                      sx={{ wordBreak: 'break-all' }}
+                    >
+                      {company}
+                    </StyledTypography>
+                  </>
                 </MaskableText>
               )}
               {(address1 || address2 || city || state || zip || country) && (
-                <MaskableText text={`${address1} ${address2}`}>
-                  <StyledTypography data-qa-contact-address>
-                    {address1}
-                  </StyledTypography>
-                  <StyledTypography>{address2}</StyledTypography>
+                <MaskableText
+                  text={`${address1} ${address2}`}
+                  length="plaintext"
+                >
+                  <>
+                    <StyledTypography data-qa-contact-address>
+                      {address1}
+                    </StyledTypography>
+                    <StyledTypography>{address2}</StyledTypography>
+                  </>
                 </MaskableText>
               )}
-              <MaskableText text={`${city} ${state} ${zip}`}>
+              <MaskableText text={`${city} ${state} ${zip}`} length="plaintext">
                 <StyledTypography>
                   {city}
                   {city && state && ','} {state} {zip}
@@ -229,7 +240,7 @@ const ContactInformation = (props: Props) => {
             </Grid>
           )}
           <Grid sx={sxGrid}>
-            <MaskableText text={email}>
+            <MaskableText text={email} length="plaintext">
               <StyledTypography
                 data-qa-contact-email
                 sx={{ wordBreak: 'break-all' }}
@@ -238,14 +249,14 @@ const ContactInformation = (props: Props) => {
               </StyledTypography>
             </MaskableText>
             {phone && (
-              <MaskableText text={phone}>
+              <MaskableText text={phone} length="plaintext">
                 <StyledTypography data-qa-contact-phone>
                   {phone}
                 </StyledTypography>
               </MaskableText>
             )}
             {taxId && (
-              <MaskableText text={taxId}>
+              <MaskableText text={taxId} length="plaintext">
                 <Box alignItems="center" display="flex">
                   <StyledTypography
                     sx={{
