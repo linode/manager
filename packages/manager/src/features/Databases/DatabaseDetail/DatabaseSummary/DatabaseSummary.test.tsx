@@ -31,6 +31,8 @@ const LEGACY_PLATFORM = 'rdbms-legacy';
 const LEGACY_PRIMARY = 'db-mysql-legacy-primary.net';
 const LEGACY_SECONDARY = 'db-mysql-legacy-secondary.net';
 
+const BUTTON_ACCESS_CONTROLS = 'button-access-control';
+
 const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
 spy.mockReturnValue({
   isDatabasesEnabled: true,
@@ -119,7 +121,7 @@ describe('Database Summary', () => {
       platform: DEFAULT_PLATFORM,
     }) as Database;
 
-    const { queryAllByText } = renderWithTheme(
+    const { getByTestId, queryAllByText } = renderWithTheme(
       <DatabaseSummary database={database} />
     );
 
@@ -133,7 +135,7 @@ describe('Database Summary', () => {
       expect(queryAllByText(READONLY_HOST_LABEL)).toHaveLength(1);
       expect(queryAllByText(/db-mysql-default-standby.net/)).toHaveLength(1);
 
-      expect(queryAllByText(ACCESS_CONTROLS)).toHaveLength(1);
+      expect(getByTestId(BUTTON_ACCESS_CONTROLS)).toBeInTheDocument();
     });
   });
 
@@ -157,7 +159,7 @@ describe('Database Summary', () => {
       platform: LEGACY_PLATFORM,
     }) as Database;
 
-    const { queryAllByText } = renderWithTheme(
+    const { getByTestId, queryAllByText } = renderWithTheme(
       <DatabaseSummary database={database} />
     );
 
@@ -171,7 +173,7 @@ describe('Database Summary', () => {
       expect(queryAllByText(READONLY_HOST_LABEL)).toHaveLength(0);
       expect(queryAllByText(/db-mysql-legacy-secondary.net/)).toHaveLength(1);
 
-      expect(queryAllByText(ACCESS_CONTROLS)).toHaveLength(1);
+      expect(getByTestId(BUTTON_ACCESS_CONTROLS)).toBeInTheDocument();
     });
   });
 
@@ -195,7 +197,7 @@ describe('Database Summary', () => {
       platform: LEGACY_PLATFORM,
     }) as Database;
 
-    const { queryAllByText } = renderWithTheme(
+    const { getByTestId, queryAllByText } = renderWithTheme(
       <DatabaseSummary database={database} />
     );
 
@@ -209,7 +211,7 @@ describe('Database Summary', () => {
       expect(queryAllByText(READONLY_HOST_LABEL)).toHaveLength(0);
       expect(queryAllByText(/db-mysql-legacy-secondary.net/)).toHaveLength(1);
 
-      expect(queryAllByText(ACCESS_CONTROLS)).toHaveLength(1);
+      expect(getByTestId(BUTTON_ACCESS_CONTROLS)).toBeInTheDocument();
     });
   });
 });

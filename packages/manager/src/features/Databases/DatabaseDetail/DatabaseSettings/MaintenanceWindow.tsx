@@ -175,11 +175,11 @@ export const MaintenanceWindow = (props: Props) => {
 
   const isLegacy = database.platform === 'rdbms-legacy';
 
-  const typographyDatabase =
-    'Select when you want the required OS and DB engine updates to take place. The maintenance may cause downtime on clusters with less than 3 nodes (non high-availability clusters).';
-
   const typographyLegacyDatabase =
-    "OS and DB engine updates will be performed on the schedule below. Select the frequency, day, and time you'd prefer maintenance to occur.";
+    'Select when you want the required OS and database engine updates to take place. The maintenance may cause downtime on clusters with less than 3 nodes (non high-availability clusters).';
+
+  const typographyDatabase =
+    "OS and database engine updates will be performed on the schedule below. Select the frequency, day, and time you'd prefer maintenance to occur.";
 
   return (
     <form onSubmit={handleSubmit}>
@@ -196,7 +196,7 @@ export const MaintenanceWindow = (props: Props) => {
             </Notice>
           ) : null}
           <Typography className={classes.sectionText}>
-            {isLegacy ? typographyLegacyDatabase : typographyDatabase}
+            {isLegacy ? typographyLegacyDatabase : typographyDatabase}{' '}
             {database.cluster_size !== 3
               ? 'For non-HA plans, expect downtime during this window.'
               : null}
@@ -260,9 +260,9 @@ export const MaintenanceWindow = (props: Props) => {
                   )}
                   disabled={disabled}
                   isClearable={false}
-                  label="Time of Day (UTC)"
+                  label="Time"
                   menuPlacement="top"
-                  name="Time of Day"
+                  name="Time"
                   noMarginTop
                   options={hourSelectionMap}
                   placeholder="Choose a time"
