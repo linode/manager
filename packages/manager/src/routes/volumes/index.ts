@@ -4,6 +4,10 @@ import { volumeQueries } from 'src/queries/volumes/volumes';
 
 import { rootRoute } from '../root';
 import { buildXFilters } from '../utils/buildXFilters';
+import {
+  VOLUME_TABLE_DEFAULT_ORDER,
+  VOLUME_TABLE_DEFAULT_ORDER_BY,
+} from './constants';
 import { VolumesRoot } from './VolumesRoot';
 
 import type { TableSearchParams } from '../types';
@@ -33,8 +37,8 @@ interface BuildVolumeXFiltersParams {
 }
 
 export const buildVolumeXFilters = ({
-  order = 'desc',
-  orderBy = 'label',
+  order = VOLUME_TABLE_DEFAULT_ORDER,
+  orderBy = VOLUME_TABLE_DEFAULT_ORDER_BY,
   query,
 }: BuildVolumeXFiltersParams) =>
   buildXFilters({
@@ -43,8 +47,10 @@ export const buildVolumeXFilters = ({
           label: { '+contains': query },
         }
       : undefined,
-    order,
-    orderBy,
+    pagination: {
+      order,
+      orderBy,
+    },
   });
 
 const volumesRoute = createRoute({
