@@ -58,7 +58,7 @@ export const DatabaseEngineVersion = (props: Props) => {
   );
 };
 
-export const StyledLink = styled(Link)(({ theme }) => ({
+const StyledLink = styled(Link)(({ theme }) => ({
   alignItems: 'center',
   display: 'inline-flex',
   marginLeft: theme.spacing(0.5),

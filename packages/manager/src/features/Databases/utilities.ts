@@ -216,21 +216,23 @@ export const toDatabaseFork = (
   return fork;
 };
 
-export const databaseEngineMap: Record<Engine, string> = {
+export const DATABASE_ENGINE_MAP: Record<Engine, string> = {
   mongodb: 'MongoDB',
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
   redis: 'Redis',
-};
+} as const;
 
 export const getDatabasesDescription = (
   database: Pick<DatabaseInstance, 'engine' | 'version'>
 ) => {
-  return `${databaseEngineMap[database.engine]} v${database.version}`;
+  return `${DATABASE_ENGINE_MAP[database.engine]} v${database.version}`;
 };
 
 export const hasPendingUpdates = (pendingUpdates?: PendingUpdates[]) =>
-  pendingUpdates?.some((update) => update.deadline || update.planned_for);
+  Boolean(
+    pendingUpdates?.some((update) => update.deadline || update.planned_for)
+  );
 
 export const isDefaultDatabase = (
   database: Pick<DatabaseInstance, 'platform'>
@@ -244,7 +246,4 @@ export const upgradableVersions = (
   engine: Engine,
   version: string,
   engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
-) =>
-  engines
-    ?.filter((e) => e.engine === engine)
-    ?.filter((e) => e.version > version);
+) => engines?.filter((e) => e.engine === engine && e.version > version);
