@@ -17,9 +17,12 @@ import {
 } from './LinodeEntityDetail.styles';
 
 import type { SxProps, Theme } from '@mui/material/styles';
+import type { MaskableTextLength } from 'src/components/MaskableText/MaskableText';
 
 interface AccessTableRow {
   heading?: string;
+  isMasked?: boolean;
+  maskedTextLength?: MaskableTextLength;
   text: null | string;
 }
 
@@ -61,6 +64,8 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                       <CopyTooltip
                         copyableText
                         disabled={isDisabled}
+                        masked={thisRow.isMasked}
+                        maskedTextLength={thisRow.maskedTextLength}
                         text={thisRow.text}
                       />
                     </StyledGradientDiv>

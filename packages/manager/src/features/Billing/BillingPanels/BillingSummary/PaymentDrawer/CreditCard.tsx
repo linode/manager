@@ -8,6 +8,7 @@ import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import { formatExpiry, isCreditCardExpired } from 'src/utilities/creditCard';
 
@@ -76,6 +77,7 @@ export const CreditCard = (props: Props) => {
 
   const { classes } = useStyles();
   const Icon = type ? getIcon(type) : GenericCardIcon;
+  const displayText = `${type || 'Card ending in'} ****${lastFour}`;
 
   return (
     <>
@@ -87,18 +89,20 @@ export const CreditCard = (props: Props) => {
         ) : null}
       </Box>
       <Box className={classes.card}>
-        <Typography className={classes.cardInfo} data-qa-contact-cc>
-          {`${type || 'Card ending in'} ****${lastFour}`}
-        </Typography>
-        <Typography data-qa-contact-cc-exp-date>
-          {expiry && isCreditCardExpired(expiry) ? (
-            <span className={classes.expired}>{`Expired ${formatExpiry(
-              expiry
-            )}`}</span>
-          ) : expiry ? (
-            <span>{`Expires ${formatExpiry(expiry)}`}</span>
-          ) : null}
-        </Typography>
+        <MaskableText isToggleable text={displayText}>
+          <Typography className={classes.cardInfo} data-qa-contact-cc>
+            {displayText}
+          </Typography>
+          <Typography data-qa-contact-cc-exp-date>
+            {expiry && isCreditCardExpired(expiry) ? (
+              <span className={classes.expired}>{`Expired ${formatExpiry(
+                expiry
+              )}`}</span>
+            ) : expiry ? (
+              <span>{`Expires ${formatExpiry(expiry)}`}</span>
+            ) : null}
+          </Typography>
+        </MaskableText>
       </Box>
     </>
   );

@@ -6,6 +6,7 @@ import { Avatar } from 'src/components/Avatar/Avatar';
 import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
@@ -44,13 +45,16 @@ export const UserRow = ({ onDelete, user }: Props) => {
             }
             username={user.username}
           />
-          <Typography>{user.username}</Typography>
+          <MaskableText isToggleable text={user.username} />
           <Box display="flex" flexGrow={1} />
           {user.tfa_enabled && <Chip color="success" label="2FA" />}
         </Stack>
       </TableCell>
       <Hidden smDown>
-        <TableCell>{user.email}</TableCell>
+        <TableCell>
+          {' '}
+          <MaskableText isToggleable text={user.email} />
+        </TableCell>
       </Hidden>
       <TableCell>{user.restricted ? 'Limited' : 'Full'}</TableCell>
       {showChildAccountAccessCol && (

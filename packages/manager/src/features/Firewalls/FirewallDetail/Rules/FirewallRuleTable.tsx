@@ -8,6 +8,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import Undo from 'src/assets/icons/undo.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import {
   generateAddressesLabel,
@@ -330,7 +331,8 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
           aria-label={`Addresses: ${addresses}`}
           sx={{ ...sxItemSpacing, overflowWrap: 'break-word', width: '15%' }}
         >
-          {addresses} <ConditionalError errors={errors} formField="addresses" />
+          <MaskableText text={addresses} />
+          <ConditionalError errors={errors} formField="addresses" />
         </Box>
       </Hidden>
       <Box

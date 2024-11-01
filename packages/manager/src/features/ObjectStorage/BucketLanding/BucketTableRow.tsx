@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
@@ -70,23 +71,25 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   return (
     <StyledBucketRow data-qa-bucket-cell={label} key={label}>
       <TableCell>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
-          <Grid>
-            <StyledBucketNameWrapper>
-              <Typography component="h3" data-qa-label variant="body1">
-                <StyledBucketLabelLink
-                  to={`/object-storage/buckets/${
-                    isObjMultiClusterEnabled ? region : cluster
-                  }/${label}`}
-                >
-                  {label}{' '}
-                </StyledBucketLabelLink>
-              </Typography>
-            </StyledBucketNameWrapper>
+        <MaskableText isToggleable text={hostname}>
+          <Grid alignItems="center" container spacing={2} wrap="nowrap">
+            <Grid>
+              <StyledBucketNameWrapper>
+                <Typography component="h3" data-qa-label variant="body1">
+                  <StyledBucketLabelLink
+                    to={`/object-storage/buckets/${
+                      isObjMultiClusterEnabled ? region : cluster
+                    }/${label}`}
+                  >
+                    {label}{' '}
+                  </StyledBucketLabelLink>
+                </Typography>
+              </StyledBucketNameWrapper>
 
-            {hostname}
+              {hostname}
+            </Grid>
           </Grid>
-        </Grid>
+        </MaskableText>
       </TableCell>
       <Hidden smDown>
         <StyledBucketRegionCell>
