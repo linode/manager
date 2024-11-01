@@ -50,7 +50,7 @@ const checkConsoleURL = async (
       if (error.response && error.response.status === 404) {
         setStatus({
           message:
-            'Installation still in progress, please check back in a minute.',
+            'Installation still in progress; please check back in a minute.',
           resolved: false,
         });
       }
