@@ -76,7 +76,6 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
               to={`/object-storage/buckets/${
                 isObjMultiClusterEnabled ? region : cluster
               }/${label}`}
-              data-qa-label
             >
               {label}
             </Link>
