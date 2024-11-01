@@ -13,6 +13,7 @@ Please specify a release date to guarantee timely review of this PR. If exact da
 **Include a screenshot or screen recording of the change.**
 
 :lock: Use the [Mask Sensitive Data](https://cloud.linode.com/profile/settings) setting for security.
+
 :bulb: Use `<video src="" />` tag when including recordings in table.
 
 | Before  | After   |
