@@ -14,6 +14,7 @@ describe('MaskableText', () => {
 
   const defaultProps: MaskableTextProps = {
     isToggleable: false,
+    length: 'plaintext',
     text: plainText,
   };
 
