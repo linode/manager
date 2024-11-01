@@ -34,19 +34,21 @@ export const DatabaseSettingsSuspendClusterDialog = (
   const [hasConfirmed, setHasConfirmed] = React.useState(false);
   const { push } = useHistory();
 
-  const onSuspendCluster = () => {
-    suspendDatabase()
-      .then(() => {
-        enqueueSnackbar('Database Cluster suspended successfully.', {
-          variant: 'success',
-        });
-        onClose();
-        setHasConfirmed(false);
-        push('/databases');
-      })
-      .catch(() => {
-        setHasConfirmed(false);
+  const onSuspendCluster = async () => {
+    try {
+      await suspendDatabase();
+      enqueueSnackbar('Database Cluster suspended successfully.', {
+        variant: 'success',
       });
+      onClose();
+      push('/databases');
+    } catch (error) {
+      enqueueSnackbar('Failed to suspend Database Cluster. Please try again.', {
+        variant: 'error',
+      });
+    } finally {
+      setHasConfirmed(false);
+    }
   };
 
   const onCancel = () => {
