@@ -190,7 +190,7 @@ const Graph = (props: GraphProps) => {
   }
 
   return (
-    <Box marginLeft={-4} marginTop={2}>
+    <Box marginTop={2}>
       <AreaChart
         areas={[
           {
