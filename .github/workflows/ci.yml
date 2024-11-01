@@ -152,30 +152,9 @@ jobs:
       - run: cp scripts/validatePackages/sdk-commonjs.cjs test-sdk-cjs/
       - run: cd test-sdk-cjs && node ./sdk-commonjs.cjs
 
-  build-ui:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20.17"
-      - uses: actions/cache@v4
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn --frozen-lockfile
-      - run: yarn workspace @linode/ui run build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: packages-ui-lib
-          path: packages/ui/lib 
-
   test-manager:
     runs-on: ubuntu-latest
-    needs: 
-      - build-sdk
-      - build-ui
+    needs: build-sdk
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -194,10 +173,6 @@ jobs:
         with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
-      - uses: actions/download-artifact@v4
-        with:
-          name: packages-ui-lib
-          path: packages/ui/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
