@@ -1,6 +1,6 @@
 import globby from 'globby';
 
-const PATTERN = '../**/src/**/*.stories.tsx';
+const PATTERN = __dirname + '/../../**/src/**/*.stories.tsx';
 
 /**
  * Find all storybook files, then return the glob containing the parent component/feature.
