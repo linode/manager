@@ -1,13 +1,19 @@
 import {
+  Accent,
   Action,
+  Background,
   Badge,
+  Border,
   Button,
   Color,
+  Content,
   Dropdown,
+  Elevation,
   Interaction,
   NotificationToast,
   Select,
   TextField,
+  Typography,
 } from '@linode/design-language-system/themes/dark';
 
 import { breakpoints } from '../breakpoints';
@@ -876,7 +882,14 @@ export const darkTheme: ThemeOptions = {
   textColors: customDarkModeOptions.textColors,
   tokens: {
     // No need to add global tokens here, as they will be inherited from light.ts
+    accent: Accent,
+    action: Action,
+    background: Background,
+    border: Border,
+    content: Content,
+    elevation: Elevation,
     interaction: Interaction,
+    typography: Typography,
   },
   typography: {
     body1: {
