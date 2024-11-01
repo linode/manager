@@ -18,7 +18,7 @@ export const APLCopy = () => (
   <Typography>
     Add a pre-paved path to build, deploy, monitor and secure applications.
     <br />
-    <Link to="https://otomi.io">
+    <Link to="https://techdocs.akamai.com/cloud-computing/docs/application-platform">
       Learn more about Application Platform for LKE.
     </Link>
   </Typography>
