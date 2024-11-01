@@ -219,15 +219,13 @@ const DatabaseLandingTable = ({
           )}
         </>
       )}
-      {showSuspend && (
-        <DatabaseSettingsSuspendClusterDialog
-          databaseEngine={selectedDatabase.engine}
-          databaseId={selectedDatabase.id}
-          databaseLabel={selectedDatabase.label}
-          onClose={() => setIsSuspendClusterDialogOpen(false)}
-          open={isSuspendClusterDialogOpen}
-        />
-      )}
+      <DatabaseSettingsSuspendClusterDialog
+        databaseEngine={selectedDatabase.engine}
+        databaseId={selectedDatabase.id}
+        databaseLabel={selectedDatabase.label}
+        onClose={() => setIsSuspendClusterDialogOpen(false)}
+        open={isSuspendClusterDialogOpen}
+      />
       <AddAccessControlDrawer
         database={selectedDatabase}
         onClose={onCloseAccesControls}

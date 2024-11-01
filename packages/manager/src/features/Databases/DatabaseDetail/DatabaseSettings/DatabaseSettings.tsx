@@ -135,15 +135,13 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
         onClose={onResetRootPasswordClose}
         open={isResetRootPasswordDialogOpen}
       />
-      {isDatabasesV2GA && isDefault ? (
-        <DatabaseSettingsSuspendClusterDialog
-          databaseEngine={database.engine}
-          databaseId={database.id}
-          databaseLabel={database.label}
-          onClose={onSuspendDialogClose}
-          open={isSuspendClusterDialogOpen}
-        />
-      ) : null}
+      <DatabaseSettingsSuspendClusterDialog
+        databaseEngine={database.engine}
+        databaseId={database.id}
+        databaseLabel={database.label}
+        onClose={onSuspendDialogClose}
+        open={isSuspendClusterDialogOpen}
+      />
     </>
   );
 };
