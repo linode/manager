@@ -1,14 +1,20 @@
 import {
+  Accent,
   Action,
+  Background,
   Border,
   Button,
   Chart,
   Color,
+  Content,
   Dropdown,
+  Elevation,
   Font,
   Interaction,
   NotificationToast,
+  Radius,
   Select,
+  Typography,
   Spacing,
 } from '@linode/design-language-system';
 
@@ -1632,11 +1638,19 @@ export const lightTheme: ThemeOptions = {
   spacing,
   textColors,
   tokens: {
+    accent: Accent,
+    action: Action,
+    background: Background,
+    border: Border,
     color: Color,
+    chart: Chart,
+    content: Content,
+    elevation: Elevation,
+    interaction: Interaction,
+    radius: Radius,
+    typography: Typography,
     font: Font,
     spacing: Spacing,
-    chart: Chart,
-    interaction: Interaction,
   },
   typography: {
     body1: {
