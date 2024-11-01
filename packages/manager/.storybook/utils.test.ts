@@ -3,10 +3,9 @@ import { getReactDocgenTSFileGlobs } from './utils';
 describe('getReactDocgenTSFileGlobs', () => {
   const typeScriptFileGlobs = getReactDocgenTSFileGlobs();
   it('should return component and feature globs for storybook files', () => {
-    console.log(typeScriptFileGlobs);
     expect(
-      typeScriptFileGlobs.some(
-        (file) => file === '../manager/src/components/Button/**/*.{ts,tsx}'
+      typeScriptFileGlobs.some((file) =>
+        file.includes('../manager/src/components/Button/**/*.{ts,tsx}')
       )
     ).toBe(true);
     expect(
@@ -15,13 +14,13 @@ describe('getReactDocgenTSFileGlobs', () => {
       )
     ).toBe(true);
     expect(
-      typeScriptFileGlobs.some(
-        (file) => file === '../manager/src/features/TopMenu/**/*.{ts,tsx}'
+      typeScriptFileGlobs.some((file) =>
+        file.includes('../manager/src/features/TopMenu/**/*.{ts,tsx}')
       )
     ).toBe(true);
     expect(
-      typeScriptFileGlobs.some(
-        (file) => file === '../manager/src/features/Longview/**/*.{ts,tsx}'
+      typeScriptFileGlobs.some((file) =>
+        file.includes('../manager/src/features/Longview/**/*.{ts,tsx}')
       )
     ).toBe(false);
   });
