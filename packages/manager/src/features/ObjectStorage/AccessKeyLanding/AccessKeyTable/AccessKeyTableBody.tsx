@@ -66,14 +66,14 @@ export const AccessKeyTableBody = (props: Props) => {
     return <TableRowEmpty colSpan={cols} />;
   }
 
-  return data?.map((eachKey: ObjectStorageKey, index) => (
+  return data?.map((key) => (
     <AccessKeyTableRow
-      key={index}
+      key={key.id}
       openDrawer={openDrawer}
       openRevokeDialog={openRevokeDialog}
       setHostNames={setHostNames}
       setShowHostNamesDrawers={setShowHostNamesDrawers}
-      storageKeyData={eachKey}
+      storageKeyData={key}
     />
   ));
 };
