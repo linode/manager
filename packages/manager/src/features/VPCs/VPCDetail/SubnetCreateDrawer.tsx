@@ -63,7 +63,7 @@ export const SubnetCreateDrawer = (props: Props) => {
     resolver: yupResolver(createSubnetSchema),
   });
 
-  const { ipv4 } = watch();
+  const ipv4 = watch('ipv4');
   const availIPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
 
   const onCreateSubnet = async (values: CreateSubnetPayload) => {
