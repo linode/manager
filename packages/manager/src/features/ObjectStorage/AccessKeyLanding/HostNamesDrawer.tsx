@@ -56,13 +56,17 @@ export const HostNamesDrawer = (props: Props) => {
 
           return (
             <CopyableTextField
+              sx={{
+                backgroundColor: 'unset',
+                border: 'none',
+                maxWidth: '100%',
+              }}
               value={`${regionsLookup[region.id]?.label}${endpointTypeLabel}: ${
                 region.s3_endpoint
               }`}
               hideLabel
               key={index}
               label={`${region.id}${endpointTypeLabel}: ${region.s3_endpoint}`}
-              sx={{ border: 'none', maxWidth: '100%' }}
             />
           );
         })}
