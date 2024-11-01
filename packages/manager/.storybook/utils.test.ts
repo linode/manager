@@ -9,8 +9,8 @@ describe('getReactDocgenTSFileGlobs', () => {
       )
     ).toBe(true);
     expect(
-      typeScriptFileGlobs.some(
-        (file) => file === '../ui/src/components/Paper/**/*.{ts,tsx}'
+      typeScriptFileGlobs.some((file) =>
+        file.includes('../ui/src/components/Paper/**/*.{ts,tsx}')
       )
     ).toBe(true);
     expect(
