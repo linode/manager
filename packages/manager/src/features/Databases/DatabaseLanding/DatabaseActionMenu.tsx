@@ -9,7 +9,6 @@ import { useIsDatabasesEnabled } from '../utilities';
 import { useResumeDatabaseMutation } from 'src/queries/databases/databases';
 import { enqueueSnackbar } from 'notistack';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { APIError } from '@linode/api-v4/src/types';
 
 interface Props {
   databaseEngine: Engine;
@@ -48,21 +47,19 @@ export const DatabaseActionMenu = (props: Props) => {
 
   const history = useHistory();
 
-  const handleResume = () => {
-    resumeDatabase()
-      .then(() => {
-        enqueueSnackbar('Database Cluster resumed successfully.', {
-          variant: 'success',
-        });
-      })
-      .catch((e: APIError[]) => {
-        const defaultError =
-          'There was an error resuming this Database Cluster.';
-        const error = getAPIErrorOrDefault(e, defaultError)[0].reason;
-        enqueueSnackbar(error, {
-          variant: 'error',
-        });
+  const handleResume = async () => {
+    try {
+      await resumeDatabase();
+      return enqueueSnackbar('Database Cluster resumed successfully.', {
+        variant: 'success',
       });
+    } catch (e: any) {
+      const error = getAPIErrorOrDefault(
+        e,
+        'There was an error resuming this Database Cluster.'
+      )[0].reason;
+      return enqueueSnackbar(error, { variant: 'error' });
+    }
   };
 
   const actions: Action[] = [
