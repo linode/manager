@@ -206,4 +206,50 @@ describe('CloudPulseResourcesSelect component tests', () => {
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
+
+  it('Should show appropriate error message on resources call failure', async () => {
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: undefined,
+      isError: true,
+      isLoading: false,
+      status: 'error',
+    });
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        defaultValue={['12']}
+        handleResourcesSelection={mockResourceHandler}
+        label="Resource"
+        region={'us-east'}
+        resourceType={'linode'}
+        savePreferences
+      />
+    );
+    expect(screen.getByText('Failed to fetch Resource.')).toBeInTheDocument();
+
+    // if the label is ABC, error message should be Failed to fetch ABC
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        defaultValue={['12']}
+        handleResourcesSelection={mockResourceHandler}
+        label="ABC"
+        region={'us-east'}
+        resourceType={'linode'}
+        savePreferences
+      />
+    );
+    expect(screen.getByText('Failed to fetch ABC.')).toBeInTheDocument();
+
+    // if the label is empty , error message should be Failed to fetch Resources
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        defaultValue={['12']}
+        handleResourcesSelection={mockResourceHandler}
+        label=""
+        region={'us-east'}
+        resourceType={'linode'}
+        savePreferences
+      />
+    );
+    expect(screen.getByText('Failed to fetch Resources.')).toBeInTheDocument();
+  });
 });

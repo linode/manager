@@ -100,4 +100,37 @@ describe('CloudPulse Dashboard select', () => {
         dashboardLabel
       );
     });
+
+  it('Should show error message when only dashboard call fails', () => {
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [],
+      error: 'some error',
+      isLoading: false,
+    });
+
+    renderWithTheme(<CloudPulseDashboardSelect {...props} savePreferences />);
+
+    expect(
+      screen.getByText('Failed to fetch the dashboards.')
+    ).toBeInTheDocument();
+  });
+  it('Should show error message when services call fails', () => {
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: undefined,
+      error: 'an error happened',
+      isLoading: false,
+    });
+
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [],
+      error: 'some error',
+      isLoading: false,
+    });
+
+    renderWithTheme(<CloudPulseDashboardSelect {...props} savePreferences />);
+
+    expect(
+      screen.getByText('Failed to fetch the services.')
+    ).toBeInTheDocument();
+  });
 });
