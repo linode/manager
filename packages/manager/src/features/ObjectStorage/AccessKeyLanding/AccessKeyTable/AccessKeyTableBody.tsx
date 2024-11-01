@@ -45,7 +45,12 @@ export const AccessKeyTableBody = (props: Props) => {
   }
 
   if (isLoading) {
-    return <TableRowLoading columns={cols} />;
+    return (
+      <TableRowLoading
+        columns={cols}
+        responsive={isObjMultiClusterEnabled ? { 2: { smDown: true } } : {}}
+      />
+    );
   }
 
   if (error) {

@@ -62,7 +62,15 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
       >
         <TableHead>
           <TableRow>
-            <TableCell>Label</TableCell>
+            <TableCell
+              sx={(theme) => ({
+                [theme.breakpoints.up('md')]: {
+                  minWidth: 120,
+                },
+              })}
+            >
+              Label
+            </TableCell>
             <TableCell>Access Key</TableCell>
             {isObjMultiClusterEnabled && (
               <Hidden smDown>
