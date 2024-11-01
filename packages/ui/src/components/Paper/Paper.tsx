@@ -1,4 +1,4 @@
-import { FormHelperText } from '@linode/ui';
+import { FormHelperText } from '../FormHelperText/FormHelperText';
 import _Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
