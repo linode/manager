@@ -98,7 +98,7 @@ export const TablesPanel = () => {
     );
 
     return (
-      <Box marginLeft={-3}>
+      <Box>
         <AreaChart
           areas={[
             {
@@ -114,6 +114,12 @@ export const TablesPanel = () => {
               legendTitle: 'Connections',
             },
           ]}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 0,
+            top: 0,
+          }}
           xAxis={{
             tickFormat: 'hh a',
             tickGap: 60,
@@ -176,7 +182,7 @@ export const TablesPanel = () => {
     }
 
     return (
-      <Box marginLeft={-3}>
+      <Box>
         <AreaChart
           areas={[
             {
@@ -202,6 +208,12 @@ export const TablesPanel = () => {
               legendTitle: 'Traffic Out',
             },
           ]}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 0,
+            top: 0,
+          }}
           xAxis={{
             tickFormat: 'hh a',
             tickGap: 60,
@@ -255,11 +267,9 @@ const StyledTitle = styled(Typography, {
 
 export const StyledBottomLegend = styled('div', {
   label: 'StyledBottomLegend',
-})(({ theme }) => ({
-  backgroundColor: theme.bg.offWhite,
+})(() => ({
   color: '#777',
   fontSize: 14,
-  margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
 }));
 
 const StyledPanel = styled(Paper, {
