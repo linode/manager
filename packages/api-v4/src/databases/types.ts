@@ -2,6 +2,8 @@ import { BaseType } from '../linodes/types';
 
 export type DatabaseTypeClass = 'standard' | 'dedicated' | 'nanode' | 'premium';
 
+export type Platform = 'rdbms-default' | 'rdbms-legacy';
+
 export interface DatabasePriceObject {
   monthly: number;
   hourly: number;
@@ -24,7 +26,7 @@ export interface DatabaseEngine {
   id: string;
   engine: Engine;
   version: string;
-  deprecated: boolean;
+  deprecated?: boolean;
 }
 
 export type DatabaseStatus =
@@ -71,24 +73,30 @@ type MemberType = 'primary' | 'failover';
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
 export interface DatabaseInstance {
-  id: number;
-  label: string;
-  engine: Engine;
-  type: string;
-  region: string;
-  version: string;
-  status: DatabaseStatus;
+  allow_list: string[];
   cluster_size: ClusterSize;
-  updated: string;
+  connection_strings: ConnectionStrings[];
   created: string;
-  instance_uri: string;
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
+  encrypted: boolean;
+  engine: Engine;
   hosts: DatabaseHosts;
+  id: number;
+  instance_uri?: string;
+  label: string;
   /**
    * A key/value object where the key is an IP address and the value is a member type.
    */
   members: Record<string, MemberType>;
-  platform?: string;
-  allow_list: string[];
+  oldest_restore_time?: string;
+  platform?: Platform;
+  readonly_count?: ReadonlyCount;
+  region: string;
+  status: DatabaseStatus;
+  type: string;
+  updated: string;
+  updates: UpdatesSchedule;
+  version: string;
 }
 
 export type ClusterSize = 1 | 2 | 3;
@@ -98,15 +106,18 @@ type ReadonlyCount = 0 | 2;
 export type MySQLReplicationType = 'none' | 'semi_synch' | 'asynch';
 
 export interface CreateDatabasePayload {
+  allow_list?: string[];
+  cluster_size?: ClusterSize;
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
+  encrypted?: boolean;
+  engine?: Engine;
   label: string;
   region: string;
-  type: string;
-  cluster_size?: ClusterSize;
-  engine?: Engine;
-  encrypted?: boolean;
-  ssl_connection?: boolean;
+  /** @Deprecated used by rdbms-legacy only */
   replication_type?: MySQLReplicationType | PostgresReplicationType;
-  allow_list?: string[];
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
+  ssl_connection?: boolean;
+  type: string;
 }
 
 type DriverTypes = 'jdbc' | 'odbc' | 'php' | 'python' | 'ruby' | 'node.js';
@@ -116,34 +127,40 @@ interface ConnectionStrings {
 }
 
 export type UpdatesFrequency = 'weekly' | 'monthly';
+
 export interface UpdatesSchedule {
-  frequency: UpdatesFrequency;
-  duration: number;
-  hour_of_day: number;
   day_of_week: number;
+  duration: number;
+  frequency: UpdatesFrequency;
+  hour_of_day: number;
+  pending?: PendingUpdates[];
   week_of_month: number | null;
 }
 
+/**
+ * Maintenance/patches for the next maintenance window
+ * @since V2GA */
+export interface PendingUpdates {
+  /**
+   * Optional ISO-8601 UTC timestamp
+   * describing the point in time by which a mandatory update must be applied.
+   * Not all updates have deadlines.
+   */
+  deadline: string | null;
+  description: string;
+  /**
+   * Optional ISO-8601 UTC timestamp
+   * describing the maintenance window in which the update is planned to be applied.
+   * Users may trigger these updates outside a scheduled maintenance window by calling the patch API.
+   */
+  planned_for: string | null;
+}
+
 // Database is the base interface for the shape of data returned by /databases/{engine}/instances
-export interface BaseDatabase {
-  id: number;
-  label: string;
-  type: string;
-  version: string;
-  region: string;
-  status: DatabaseStatus;
-  cluster_size: ClusterSize;
-  readonly_count?: ReadonlyCount;
-  engine: Engine;
-  encrypted: boolean;
-  ssl_connection: boolean;
-  allow_list: string[];
-  connection_strings: ConnectionStrings[];
-  created: string;
-  updated: string;
-  hosts: DatabaseHosts;
+interface BaseDatabase extends DatabaseInstance {
   port: number;
-  updates: UpdatesSchedule;
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
+  ssl_connection: boolean;
   /**
    * total_disk_size_gb is feature flagged by the API.
    * It may not be defined.
@@ -154,15 +171,10 @@ export interface BaseDatabase {
    * It may not be defined.
    */
   used_disk_size_gb?: number;
-  /**
-   * A key/value object where the key is an IP address and the value is a member type.
-   */
-  members: Record<string, MemberType>;
-  platform?: string;
-  oldest_restore_time?: string;
 }
 
 export interface MySQLDatabase extends BaseDatabase {
+  /** @Deprecated used by rdbms-legacy only */
   replication_type?: MySQLReplicationType;
 }
 
@@ -176,7 +188,9 @@ type ReplicationCommitTypes =
   | 'off';
 
 export interface PostgresDatabase extends BaseDatabase {
+  /** @Deprecated used by rdbms-legacy only */
   replication_type?: PostgresReplicationType;
+  /** @Deprecated used by rdbms-legacy only */
   replication_commit_type?: ReplicationCommitTypes;
 }
 
@@ -203,4 +217,5 @@ export interface UpdateDatabasePayload {
   allow_list?: string[];
   updates?: UpdatesSchedule;
   type?: string;
+  version?: string;
 }
