@@ -79,7 +79,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={2}>
               <AreaChart
                 areas={[
                   {
@@ -108,7 +108,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={2}>
               <AreaChart
                 areas={[
                   {
@@ -142,7 +142,7 @@ const createTabs = (
         return (
           <StyledRootDiv>
             <div>{summaryCopy}</div>
-            <Box marginLeft={-4} marginTop={3}>
+            <Box marginTop={3}>
               <AreaChart
                 areas={[
                   {

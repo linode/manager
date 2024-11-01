@@ -7,6 +7,7 @@ import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { LinkButton } from 'src/components/LinkButton';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import {
@@ -214,9 +215,14 @@ export const PhoneVerification = ({
               </StyledPhoneNumberTitle>
               <Box alignItems="center" display="flex" style={{ gap: 10 }}>
                 <Typography>
-                  {profile?.verified_phone_number
-                    ? getFormattedNumber(profile.verified_phone_number)
-                    : 'No Phone Number'}
+                  <MaskableText
+                    text={
+                      profile?.verified_phone_number
+                        ? getFormattedNumber(profile.verified_phone_number)
+                        : 'No Phone Number'
+                    }
+                    isToggleable
+                  />
                 </Typography>
                 <LinkButton
                   style={{

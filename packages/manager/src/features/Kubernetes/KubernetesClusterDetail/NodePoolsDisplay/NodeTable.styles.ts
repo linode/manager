@@ -11,7 +11,6 @@ export const StyledTableRow = styled(TableRow, {
 })(({ theme }) => ({
   '& svg': {
     height: `12px`,
-    opacity: 0,
     width: `12px`,
   },
   '&:hover': {

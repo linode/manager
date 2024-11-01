@@ -8,3 +8,4 @@ export * from './Input';
 export * from './InputAdornment';
 export * from './InputLabel';
 export * from './Tooltip';
+export * from './VisibilityTooltip';
