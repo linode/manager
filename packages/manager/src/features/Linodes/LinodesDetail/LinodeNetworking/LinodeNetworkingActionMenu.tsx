@@ -14,7 +14,7 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  ipAddress?: IPAddress | IPRange;
+  ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isOnlyPublicIP: boolean;
   isVPCOnlyLinode: boolean;
@@ -58,6 +58,14 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const isOnlyPublicIPTooltip = isOnlyPublicIP
     ? 'Linodes must have at least one public IP'
     : undefined;
+
+  const getAriaLabel = (): string => {
+    if ('address' in ipAddress) {
+      return `Action menu for IP Address ${ipAddress.address}`;
+    } else {
+      return `Action menu for IP Address ${ipAddress.range}`;
+    }
+  };
 
   const actions = [
     onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
@@ -110,10 +118,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           );
         })}
       {matchesMdDown && (
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for IP Address ${props.ipAddress}`}
-        />
+        <ActionMenu actionsList={actions} ariaLabel={getAriaLabel()} />
       )}
     </>
   ) : (
