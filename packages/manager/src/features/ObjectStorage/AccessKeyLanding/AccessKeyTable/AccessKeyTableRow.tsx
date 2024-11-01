@@ -3,6 +3,8 @@ import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
@@ -45,11 +47,13 @@ export const AccessKeyTableRow = (props: Props) => {
   return (
     <TableRow data-qa-table-row={storageKeyData.label} key={storageKeyData.id}>
       <TableCell parentColumn="Label">{storageKeyData.label}</TableCell>
-      <TableCell noWrap parentColumn="Access Key">
-        <Typography data-qa-key-created variant="body1">
-          {storageKeyData.access_key}
+      <TableCell parentColumn="Access Key">
+        <Stack direction="row">
+          <MaskableText isToggleable text={storageKeyData.access_key}>
+            <Typography variant="body1">{storageKeyData.access_key}</Typography>
+          </MaskableText>
           <StyledCopyIcon text={storageKeyData.access_key} />
-        </Typography>
+        </Stack>
       </TableCell>
       {isObjMultiClusterEnabled && (
         <Hidden smDown>

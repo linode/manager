@@ -3,6 +3,7 @@ import * as React from 'react';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -69,17 +70,19 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
   return (
     <TableRow data-qa-bucket-cell={label} key={label}>
       <TableCell>
-        <Stack>
-          <Link
-            to={`/object-storage/buckets/${
-              isObjMultiClusterEnabled ? region : cluster
-            }/${label}`}
-            data-qa-label
-          >
-            {label}
-          </Link>
-          {hostname}
-        </Stack>
+        <MaskableText isToggleable text={hostname}>
+          <Stack>
+            <Link
+              to={`/object-storage/buckets/${
+                isObjMultiClusterEnabled ? region : cluster
+              }/${label}`}
+              data-qa-label
+            >
+              {label}
+            </Link>
+            {hostname}
+          </Stack>
+        </MaskableText>
       </TableCell>
       <Hidden smDown>
         <StyledBucketRegionCell>
