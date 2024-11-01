@@ -55,7 +55,6 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '&.copy > div': {
-    backgroundColor: theme.name === 'dark' ? '#2f3236' : '#f4f4f4',
     opacity: 1,
   },
   '.removeDisabledStyles': {
