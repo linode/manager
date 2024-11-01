@@ -179,7 +179,9 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
         ? ([1, 3][i % 2] as ClusterSize)
         : ([1, 2, 3][i % 3] as ClusterSize)
     ),
+    connection_strings: [],
     created: '2021-12-09T17:15:12',
+    encrypted: false,
     engine: Factory.each((i) => ['mysql', 'postgresql'][i % 2] as Engine),
     hosts: Factory.each((i) =>
       adb10(i)
@@ -205,6 +207,20 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     status: Factory.each((i) => possibleStatuses[i % possibleStatuses.length]),
     type: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
     updated: '2021-12-16T17:15:12',
+    updates: {
+      day_of_week: 1,
+      duration: 3,
+      frequency: 'weekly',
+      hour_of_day: 20,
+      pending: [
+        {
+          deadline: null,
+          description: 'Log configuration options changes required',
+          planned_for: '2044-09-15T17:15:12',
+        },
+      ],
+      week_of_month: null,
+    },
     version: Factory.each((i) => ['8.0.30', '15.7'][i % 2]),
   }
 );
@@ -251,6 +267,13 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
     duration: 3,
     frequency: 'weekly',
     hour_of_day: 20,
+    pending: [
+      {
+        deadline: null,
+        description: 'Log configuration options changes required',
+        planned_for: '2044-09-15T17:15:12',
+      },
+    ],
     week_of_month: null,
   },
   used_disk_size_gb: 5,

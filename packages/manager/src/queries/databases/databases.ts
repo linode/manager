@@ -6,6 +6,7 @@ import {
   getDatabases,
   getEngineDatabase,
   legacyRestoreWithBackup,
+  patchDatabase,
   resetDatabaseCredentials,
   restoreWithBackup,
   updateDatabase,
@@ -131,6 +132,22 @@ export const useDatabaseMutation = (engine: Engine, id: number) => {
         databaseQueries.database(engine, id).queryKey,
         database
       );
+    },
+  });
+};
+
+export const usePatchDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<void, APIError[], void>({
+    mutationFn: () => patchDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
+      });
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
     },
   });
 };
