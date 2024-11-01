@@ -1112,14 +1112,26 @@ export const lightTheme: ThemeOptions = {
         icon: {
           color: `${Color.Neutrals[50]} !important`,
           height: 28,
+          marginTop: -4,
           marginRight: 4,
-          marginTop: -2,
+          paddingLeft: 8,
           opacity: 0.5,
           transition: 'color 225ms ease-in-out',
           width: 28,
         },
+        root: {
+          borderRadius: 0,
+        },
         select: {
+          border: `1px solid ${Color.Neutrals[40]}`,
+          height: 34,
+          minHeight: 34,
+          padding: '0 12px',
+          display: 'flex',
+          alignItems: 'center',
+          borderRadius: 0,
           '&:focus': {
+            borderColor: primaryColors.main,
             backgroundColor: 'transparent',
           },
         },

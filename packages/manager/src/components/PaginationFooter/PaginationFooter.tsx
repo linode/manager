@@ -1,8 +1,9 @@
+import { SimpleSelect } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { MenuItem } from 'src/components/MenuItem';
 
 import { PaginationControls } from '../PaginationControls/PaginationControls';
 
@@ -81,14 +82,19 @@ export const PaginationFooter = (props: Props) => {
       )}
       {!fixedSize ? (
         <PageSizeSelectContainer data-qa-pagination-page-size>
-          <Autocomplete
-            disableClearable
+          <SimpleSelect
+            defaultValue={defaultPagination}
             label="Number of items to show"
-            onChange={(_, selected) => handleSizeChange(selected.value)}
-            options={finalOptions}
-            textFieldProps={{ hideLabel: true, noMarginTop: true }}
-            value={defaultPagination}
-          />
+            onChange={(e) => handleSizeChange(Number(e.target.value))}
+            sx={{ margin: 0.5 }}
+            value={pageSize}
+          >
+            {finalOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </SimpleSelect>
         </PageSizeSelectContainer>
       ) : null}
     </Box>
