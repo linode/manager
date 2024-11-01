@@ -9,3 +9,4 @@ export * from './InputAdornment';
 export * from './InputLabel';
 export * from './Paper';
 export * from './Tooltip';
+export * from './VisibilityTooltip';

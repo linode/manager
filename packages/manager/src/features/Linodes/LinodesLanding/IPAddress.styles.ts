@@ -44,6 +44,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
     'isHovered',
     'isIpHovered',
     'showTooltipOnIpHover',
+    'displayText',
   ]),
 })<StyledIpAddressProps>(
   ({ isHovered, isIpHovered, showTooltipOnIpHover, theme }) => ({

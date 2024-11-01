@@ -74,14 +74,24 @@ interface AreaChartProps {
   fillOpacity?: number;
 
   /**
-   * maximum height of the chart container
+   * The height of chart container.
    */
-  height: number;
+  height?: number;
+
+  /**
+   * Sets the height of the legend. Overflow scroll if the content exceeds the height.
+   */
+  legendHeight?: string;
 
   /**
    * list of legends rows to be displayed
    */
   legendRows?: Omit<MetricsDisplayRow[], 'handleLegendClick'>;
+
+  /**
+   * The sizes of whitespace around the container.
+   */
+  margin?: { bottom: number; left: number; right: number; top: number };
 
   /**
    * true to display legends rows else false to hide
@@ -106,6 +116,11 @@ interface AreaChartProps {
   variant?: 'area' | 'line';
 
   /**
+   * The width of chart container.
+   */
+  width?: number;
+
+  /**
    * x-axis properties
    */
   xAxis: XAxisProps;
@@ -117,12 +132,15 @@ export const AreaChart = (props: AreaChartProps) => {
     ariaLabel,
     data,
     fillOpacity,
-    height,
+    height = '100%',
+    legendHeight,
     legendRows,
+    margin = { bottom: 0, left: -20, right: 0, top: 0 },
     showLegend,
     timezone,
     unit,
     variant,
+    width = '100%',
     xAxis,
   } = props;
 
@@ -173,7 +191,7 @@ export const AreaChart = (props: AreaChartProps) => {
     return null;
   };
 
-  const CustomLegend = () => {
+  const CustomLegend = ({ legendHeight }: { legendHeight?: string }) => {
     if (legendRows) {
       const legendRowsWithClickHandler = legendRows.map((legendRow) => ({
         ...legendRow,
@@ -184,6 +202,7 @@ export const AreaChart = (props: AreaChartProps) => {
         <StyledBottomLegend>
           <MetricsDisplay
             hiddenRows={activeSeries}
+            legendHeight={legendHeight}
             rows={legendRowsWithClickHandler}
           />
         </StyledBottomLegend>
@@ -194,10 +213,16 @@ export const AreaChart = (props: AreaChartProps) => {
 
   const accessibleDataKeys = areas.map((area) => area.dataKey);
 
+  const legendStyles = {
+    bottom: 0,
+    left: 0,
+    width: '100%',
+  };
+
   return (
     <>
-      <ResponsiveContainer height={height} width="100%">
-        <_AreaChart aria-label={ariaLabel} data={data}>
+      <ResponsiveContainer height={height} width={width}>
+        <_AreaChart aria-label={ariaLabel} data={data} margin={margin}>
           <CartesianGrid
             stroke={theme.color.grey7}
             strokeDasharray="3 3"
@@ -236,18 +261,14 @@ export const AreaChart = (props: AreaChartProps) => {
                   handleLegendClick(dataKey as string);
                 }
               }}
-              wrapperStyle={{
-                left: 25,
-              }}
               iconType="square"
+              wrapperStyle={legendStyles}
             />
           )}
           {showLegend && legendRows && (
             <Legend
-              wrapperStyle={{
-                left: 20,
-              }}
-              content={<CustomLegend />}
+              content={<CustomLegend legendHeight={legendHeight} />}
+              wrapperStyle={legendStyles}
             />
           )}
           {areas.map(({ color, dataKey }) => (
