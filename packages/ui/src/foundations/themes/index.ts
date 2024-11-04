@@ -10,6 +10,7 @@ import type {
   ActionTypes as ActionTypesLight,
   BackgroundTypes as BackgroundTypesLight,
   BorderTypes as BorderTypesLight,
+  BorderRadiusTypes,
   ChartTypes,
   ColorTypes,
   ContentTypes as ContentTypesLight,
@@ -107,6 +108,7 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast: NotificationToast;
     tokens: {
       //  ---- Global tokens: theme agnostic ----
+      borderRadius: BorderRadiusTypes;
       color: ColorTypes;
       font: FontTypes;
       spacing: SpacingTypes;
@@ -143,6 +145,7 @@ declare module '@mui/material/styles/createTheme' {
     notificationToast?: NotificationToast;
     tokens?: {
       //  ---- Global tokens: theme agnostic ----
+      borderRadius?: BorderRadiusTypes;
       color?: ColorTypes;
       font?: FontTypes;
       spacing?: SpacingTypes;
