@@ -6,6 +6,7 @@ import {
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
+  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -77,6 +78,7 @@ export const useStackScriptsInfiniteQuery = (
       return page + 1;
     },
     initialPageParam: 1,
+    placeholderData: keepPreviousData,
   });
 
 export const useUpdateStackScriptMutation = (

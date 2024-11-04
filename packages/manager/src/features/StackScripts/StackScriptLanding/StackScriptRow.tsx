@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
+import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -29,14 +30,26 @@ export const StackScriptRow = (props: Props) => {
 
   return (
     <TableRow>
-      <TableCell>{stackscript.label}</TableCell>
-      <TableCell>{stackscript.deployments_total}</TableCell>
-      <TableCell noWrap>
-        <DateTimeDisplay value={stackscript.updated} />
+      <TableCell>
+        {stackscript.username} / {stackscript.label}
       </TableCell>
-      <TableCell>{stackscript.images.join(', ')}</TableCell>
+      <TableCell>{stackscript.deployments_total}</TableCell>
+      <Hidden smDown>
+        <TableCell noWrap>
+          <DateTimeDisplay value={stackscript.updated} />
+        </TableCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell>
+          {stackscript.images.includes('any/all')
+            ? 'Any/All'
+            : stackscript.images.join(', ')}
+        </TableCell>
+      </Hidden>
       {type === 'account' && (
-        <TableCell>{stackscript.is_public ? 'Public' : 'Private'}</TableCell>
+        <Hidden lgDown>
+          <TableCell>{stackscript.is_public ? 'Public' : 'Private'}</TableCell>
+        </Hidden>
       )}
       <TableCell actionCell noWrap>
         {type === 'community' ? (

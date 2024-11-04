@@ -1,8 +1,13 @@
+import { getAPIFilterFromQuery } from '@linode/search';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Hidden } from 'src/components/Hidden';
+import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -38,6 +43,18 @@ export const StackScriptLandingTable = (props: Props) => {
       ? { order: 'desc' as const, orderBy: 'deployments_total' }
       : { order: 'desc' as const, orderBy: 'updated' };
 
+  const history = useHistory();
+
+  const queryParams = new URLSearchParams(history.location.search);
+  const query = queryParams.get('query') ?? '';
+
+  const {
+    error: searchParseError,
+    filter: searchFilter,
+  } = getAPIFilterFromQuery(query, {
+    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+  });
+
   const { handleOrderChange, order, orderBy } = useOrder(defaultOrder);
 
   const [selectedStackScriptId, setSelectedStackScriptId] = useState<number>();
@@ -50,9 +67,11 @@ export const StackScriptLandingTable = (props: Props) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetching,
     isLoading,
   } = useStackScriptsInfiniteQuery({
     ...filter,
+    ...searchFilter,
     '+order': order,
     '+order_by': orderBy,
   });
@@ -72,7 +91,19 @@ export const StackScriptLandingTable = (props: Props) => {
     : undefined;
 
   return (
-    <>
+    <Stack spacing={1}>
+      <DebouncedSearchTextField
+        onSearch={(value) => {
+          queryParams.set('query', value);
+          history.push({ search: queryParams.toString() });
+        }}
+        hideLabel
+        label="Search"
+        loading={isFetching}
+        noMarginTop
+        placeholder="Search by Label, Username, or Description"
+        value={query}
+      />
       <Table>
         <TableHead>
           <TableRow>
@@ -92,16 +123,24 @@ export const StackScriptLandingTable = (props: Props) => {
             >
               Deploys
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'updated'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="updated"
-            >
-              Last Revision
-            </TableSortCell>
-            <TableCell>Compatible Images</TableCell>
-            {type === 'account' && <TableCell>Status</TableCell>}
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'updated'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="updated"
+              >
+                Last Revision
+              </TableSortCell>
+            </Hidden>
+            <Hidden lgDown>
+              <TableCell>Compatible Images</TableCell>
+            </Hidden>
+            {type === 'account' && (
+              <Hidden lgDown>
+                <TableCell>Status</TableCell>
+              </Hidden>
+            )}
             <TableCell />
           </TableRow>
         </TableHead>
@@ -124,7 +163,14 @@ export const StackScriptLandingTable = (props: Props) => {
             />
           ))}
           {isFetchingNextPage && (
-            <TableRowLoading columns={type === 'account' ? 6 : 5} />
+            <TableRowLoading
+              responsive={{
+                2: { smDown: true },
+                3: { lgDown: true },
+                4: { lgDown: true },
+              }}
+              columns={type === 'account' ? 6 : 5}
+            />
           )}
         </TableBody>
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
@@ -139,6 +185,6 @@ export const StackScriptLandingTable = (props: Props) => {
         open={isDeleteDialogOpen}
         stackscript={selectedStackScript}
       />
-    </>
+    </Stack>
   );
 };
