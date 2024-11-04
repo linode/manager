@@ -66,6 +66,10 @@ When building a large component, it is recommended to break it down and avoid wr
 Components should, in most cases, come with their own unit test, although they can be skipped if an e2e suite is covering the functionality.
 Utilities should almost always feature a unit test.
 
+#### Security
+
+Consider whether the component is displaying data that may be sensitive, such as IP addresses or personal contact information. If so, make use of the `MaskableText` component or `masked` property of the `CopyTooltip` to hide this data for users who choose to 'Mask Sensitive Data' via Profile Settings.
+
 #### Styles
 
 - With the transition to MUI v5, the [`styled`](https://mui.com/system/styled/) API, along with the [`sx` prop](https://mui.com/system/getting-started/the-sx-prop/), is the preferred way to specify component-specific styles.
