@@ -1,8 +1,7 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 

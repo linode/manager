@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import { Stack, Typography } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';

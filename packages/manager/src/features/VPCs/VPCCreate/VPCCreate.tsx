@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Notice, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -7,7 +7,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Paper } from 'src/components/Paper';
 import { VPC_GETTING_STARTED_LINK } from 'src/features/VPCs/constants';
 import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';

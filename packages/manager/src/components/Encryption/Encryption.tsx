@@ -1,8 +1,7 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import { List, ListItem } from '@mui/material';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Typography } from 'src/components/Typography';
 

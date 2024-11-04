@@ -1,15 +1,15 @@
+import { InputAdornment } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-import { InputAdornment } from 'src/components/InputAdornment';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { TextField } from 'src/components/TextField';
 
-import { FileAttachment } from './index';
+import type { FileAttachment } from './index';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   attachmentField: {

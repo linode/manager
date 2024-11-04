@@ -1,3 +1,4 @@
+import { omitProps } from '@linode/ui';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -9,7 +10,6 @@ import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEven
 import { isPrivateIP } from 'src/utilities/ipUtils';
 import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { omitProps } from 'src/utilities/omittedProps';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';

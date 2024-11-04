@@ -2,14 +2,13 @@ import {
   getActiveLongviewPlan,
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
-import { Notice } from '@linode/ui';
+import { Notice, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { SupportLink } from 'src/components/SupportLink';
 import { TableBody } from 'src/components/TableBody';

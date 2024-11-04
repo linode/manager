@@ -1,12 +1,10 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice, Paper } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
-import { Box } from 'src/components/Box';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { Paper } from 'src/components/Paper';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';

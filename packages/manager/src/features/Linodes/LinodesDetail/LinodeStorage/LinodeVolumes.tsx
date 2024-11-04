@@ -1,12 +1,12 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

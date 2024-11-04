@@ -1,7 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import OrderBy from 'src/components/OrderBy';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -13,15 +12,17 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { Typography } from 'src/components/Typography';
-import {
-  LongviewTopProcesses,
-  TopProcessStat,
-} from 'src/features/Longview/request.types';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
 import { StyledItemGrid } from './CommonStyles.styles';
 import { StyledLink } from './TopProcesses.styles';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type {
+  LongviewTopProcesses,
+  TopProcessStat,
+} from 'src/features/Longview/request.types';
 
 export interface Props {
   clientID: number;

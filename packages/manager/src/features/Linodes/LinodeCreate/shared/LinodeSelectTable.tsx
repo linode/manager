@@ -1,11 +1,10 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Stack } from 'src/components/Stack';

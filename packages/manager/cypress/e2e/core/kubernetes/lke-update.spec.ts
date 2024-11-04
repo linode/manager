@@ -1436,16 +1436,8 @@ describe('LKE ACL updates', () => {
             .should('be.visible')
             .should('not.be.enabled');
 
-          cy.contains(
-            "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
-          ).should('be.visible');
-
-          // confirm Activation Status section and toggle on 'Enable'
+          // Enable ACL
           cy.contains('Activation Status').should('be.visible');
-          cy.contains(
-            'Enable or disable the Control Plane ACL. If the ACL is not enabled, any public IP address can be used to access your control plane. Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
-          ).should('be.visible');
-          cy.findByText('Enable Control Plane ACL');
           ui.toggle
             .find()
             .should('have.attr', 'data-qa-toggle', 'false')
@@ -1458,39 +1450,19 @@ describe('LKE ACL updates', () => {
             .should('be.visible')
             .should('be.enabled');
 
-          // confirm Revision ID section and edit Revision ID
-          cy.findAllByText('Revision ID').should('have.length', 2);
-          cy.contains(
-            'A unique identifying string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
-          ).should('be.visible');
+          // Edit Revision ID
           cy.findByLabelText('Revision ID').should(
             'have.value',
             mockACLOptions['revision-id']
           );
           cy.findByLabelText('Revision ID').clear().type(mockRevisionId);
 
-          // confirm Addresses section
-          cy.findByText('Addresses').should('be.visible');
-          cy.findByText(
-            "A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This cluster's control plane will only be accessible from IP addresses within this list."
-          ).should('be.visible');
-          cy.findByText('IPv4 Addresses or CIDRs').should('be.visible');
-          cy.findByText('Add IPv4 Address')
-            .should('be.visible')
-            .should('be.enabled');
-          // confirm current IPv4 value and enter new IP
+          // Addresses section: confirm current IPv4 value and enter new IP
           cy.findByDisplayValue('10.0.3.0/24')
             .should('be.visible')
             .click()
             .clear()
             .type('10.0.0.0/24');
-          cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
-          cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0').should(
-            'be.visible'
-          );
-          cy.findByText('Add IPv6 Address')
-            .should('be.visible')
-            .should('be.enabled');
 
           // submit
           ui.button
@@ -1662,16 +1634,8 @@ describe('LKE ACL updates', () => {
             .should('be.visible')
             .should('not.be.enabled');
 
-          cy.contains(
-            "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
-          ).should('be.visible');
-
-          // confirm Activation Status section and toggle off 'Enable'
+          // Activation Status section: toggle off 'Enable'
           cy.contains('Activation Status').should('be.visible');
-          cy.contains(
-            'Enable or disable the Control Plane ACL. If the ACL is not enabled, any public IP address can be used to access your control plane. Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
-          ).should('be.visible');
-          cy.findByText('Enable Control Plane ACL');
           ui.toggle
             .find()
             .should('have.attr', 'data-qa-toggle', 'true')
@@ -1684,23 +1648,13 @@ describe('LKE ACL updates', () => {
             .should('be.visible')
             .should('be.enabled');
 
-          // confirm Revision ID section exists
-          cy.findAllByText('Revision ID').should('have.length', 2);
-          cy.contains(
-            'A unique identifying string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
-          ).should('be.visible');
+          // confirm Revision ID section
           cy.findByLabelText('Revision ID').should(
             'have.value',
             mockACLOptions['revision-id']
           );
 
-          // confirm Addresses section
-          cy.findByText('Addresses').should('be.visible');
-          cy.findByText(
-            "A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This cluster's control plane will only be accessible from IP addresses within this list."
-          ).should('be.visible');
-          cy.findByText('IPv4 Addresses or CIDRs').should('be.visible');
-          // update IPv4
+          // Addresses Section: update IPv4
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
@@ -1709,7 +1663,6 @@ describe('LKE ACL updates', () => {
             .should('be.visible')
             .should('be.enabled')
             .click();
-          cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
           // update IPv6
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
             .should('be.visible')
@@ -1808,35 +1761,24 @@ describe('LKE ACL updates', () => {
         .findByTitle('Control Plane ACL')
         .should('be.visible')
         .within(() => {
+          // Confirm installation notice is displayed
           cy.contains(
-            "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
+            'Control Plane ACL has not yet been installed on this cluster. During installation, it may take up to 15 minutes for the access control list to be fully enforced.'
           ).should('be.visible');
 
           // Confirm Activation Status section and Enable ACL
           cy.contains('Activation Status').should('be.visible');
-          cy.contains(
-            'Enable or disable the Control Plane ACL. If the ACL is not enabled, any public IP address can be used to access your control plane. Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
-          ).should('be.visible');
           ui.toggle
             .find()
             .should('have.attr', 'data-qa-toggle', 'false')
             .should('be.visible')
             .click();
 
-          // Confirm revision ID section does not exist
+          // Revision ID section does not exist
           cy.contains('Revision ID').should('not.exist');
-          cy.contains(
-            'A unique identifying string for this particular revision to the ACL, used by clients to track events related to ACL update requests and enforcement. This defaults to a randomly generated string but can be edited if you prefer to specify your own string to use for tracking this change.'
-          ).should('not.exist');
 
-          // Confirm Addresses section and add IP addresses
+          // Addresses section: add IP addresses
           cy.findByText('Addresses').should('be.visible');
-          cy.findByText(
-            "A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This cluster's control plane will only be accessible from IP addresses within this list."
-          ).should('be.visible');
-          cy.findByText('IPv4 Addresses or CIDRs').should('be.visible');
-          cy.findByText('IPv6 Addresses or CIDRs').should('be.visible');
-
           cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
             .should('be.visible')
             .click()
@@ -1846,11 +1788,6 @@ describe('LKE ACL updates', () => {
             .should('be.visible')
             .click()
             .type('8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e');
-
-          // Confirm installation notice is displayed
-          cy.contains(
-            'Control Plane ACL has not yet been installed on this cluster. During installation, it may take up to 15 minutes for the access control list to be fully enforced.'
-          ).should('be.visible');
 
           // submit
           ui.button

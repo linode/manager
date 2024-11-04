@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { InputAdornment, Notice } from '@linode/ui';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
@@ -8,7 +8,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import Select from 'src/components/EnhancedSelect/Select';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 
 import type {

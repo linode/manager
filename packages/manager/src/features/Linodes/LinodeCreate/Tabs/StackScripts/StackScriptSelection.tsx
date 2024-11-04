@@ -1,8 +1,7 @@
-import { Notice } from '@linode/ui';
+import { Notice, Paper } from '@linode/ui';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';

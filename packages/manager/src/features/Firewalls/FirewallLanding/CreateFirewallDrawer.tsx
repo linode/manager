@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -7,7 +7,6 @@ import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { FormControlLabel } from 'src/components/FormControlLabel';

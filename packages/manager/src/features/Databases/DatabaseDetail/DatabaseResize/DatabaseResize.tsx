@@ -1,15 +1,13 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice, Paper } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';

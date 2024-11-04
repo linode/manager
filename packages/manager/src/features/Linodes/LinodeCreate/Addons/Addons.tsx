@@ -1,9 +1,8 @@
-import { Notice } from '@linode/ui';
+import { Notice, Paper } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
 import { Divider } from 'src/components/Divider';
-import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';

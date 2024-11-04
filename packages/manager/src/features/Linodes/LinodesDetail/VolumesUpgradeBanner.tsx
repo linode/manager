@@ -1,10 +1,9 @@
-import { Notice } from '@linode/ui';
+import { Notice, Paper } from '@linode/ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';

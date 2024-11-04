@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Notice, Paper } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
@@ -8,7 +8,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Paper } from 'src/components/Paper';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';

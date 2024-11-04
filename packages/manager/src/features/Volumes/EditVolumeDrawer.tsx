@@ -1,10 +1,9 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import { UpdateVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';

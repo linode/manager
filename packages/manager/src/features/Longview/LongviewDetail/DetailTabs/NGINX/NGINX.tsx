@@ -1,8 +1,7 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';

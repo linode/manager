@@ -1,9 +1,8 @@
 import { getStackScript } from '@linode/api-v4/lib/stackscripts';
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { RenderGuard } from 'src/components/RenderGuard';
@@ -52,6 +51,7 @@ interface Props extends RenderGuardProps {
     images: string[],
     userDefinedFields: UserDefinedField[]
   ) => void;
+  openStackScriptDetailsDialog: (stackscriptId: number) => void;
   publicImages: Record<string, Image>;
   request: (
     username: string,
@@ -139,6 +139,9 @@ class SelectStackScriptPanel extends React.Component<
               />
               <tbody>
                 <StackScriptSelectionRow
+                  openStackScriptDetailsDialog={
+                    this.props.openStackScriptDetailsDialog
+                  }
                   updated={formatDate(stackScript.updated, {
                     displayTime: false,
                     timezone: profile.data?.timezone,
@@ -183,6 +186,9 @@ class SelectStackScriptPanel extends React.Component<
           )}
           <StyledSelectingPaper>
             <SelectStackScriptPanelContent
+              openStackScriptDetailsDialog={
+                this.props.openStackScriptDetailsDialog
+              }
               category={category}
               currentUser={profile.data?.username || ''}
               disabled={this.props.disabled}

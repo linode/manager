@@ -1,5 +1,4 @@
-import { Notice } from '@linode/ui';
-import { BetaChip } from '@linode/ui';
+import { BetaChip, FormControl, Notice, Paper } from '@linode/ui';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -19,10 +18,8 @@ import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleVal
 import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';

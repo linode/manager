@@ -1,9 +1,8 @@
-import { Notice } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CircleProgress } from 'src/components/CircleProgress';

@@ -1,13 +1,13 @@
+import { Box, InputAdornment } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { LinkButton } from 'src/components/LinkButton';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import {
@@ -215,9 +215,14 @@ export const PhoneVerification = ({
               </StyledPhoneNumberTitle>
               <Box alignItems="center" display="flex" style={{ gap: 10 }}>
                 <Typography>
-                  {profile?.verified_phone_number
-                    ? getFormattedNumber(profile.verified_phone_number)
-                    : 'No Phone Number'}
+                  <MaskableText
+                    text={
+                      profile?.verified_phone_number
+                        ? getFormattedNumber(profile.verified_phone_number)
+                        : 'No Phone Number'
+                    }
+                    isToggleable
+                  />
                 </Typography>
                 <LinkButton
                   style={{

@@ -42,7 +42,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     '& .react-select__option--is-focused': {
       backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      color: theme.tokens.color.Neutrals.White,
     },
     '& .react-select__value-container': {
       '& p': {

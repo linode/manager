@@ -1,11 +1,10 @@
-import { Notice } from '@linode/ui';
+import { Notice, Paper } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';

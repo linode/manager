@@ -1,8 +1,9 @@
-import _Divider, { DividerProps as _DividerProps } from '@mui/material/Divider';
+import { omittedProps } from '@linode/ui';
+import _Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { omittedProps } from 'src/utilities/omittedProps';
+import type { DividerProps as _DividerProps } from '@mui/material/Divider';
 
 export interface DividerProps extends _DividerProps {
   dark?: boolean;

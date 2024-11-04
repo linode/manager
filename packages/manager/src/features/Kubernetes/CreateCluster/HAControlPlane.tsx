@@ -1,10 +1,8 @@
-import { Notice } from '@linode/ui';
+import { Box, FormControl, Notice } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
@@ -61,7 +59,10 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
-            color: theme.name === 'dark' ? 'white' : theme.color.black,
+            color:
+              theme.name === 'dark'
+                ? theme.tokens.color.Neutrals.White
+                : theme.color.black,
           },
         })}
         id="ha-radio-buttons-group-label"

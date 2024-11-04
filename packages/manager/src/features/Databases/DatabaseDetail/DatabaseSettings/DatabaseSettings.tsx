@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 
@@ -75,7 +75,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           descriptiveText={resetRootPasswordCopy}
           disabled={disabled}
           onClick={onResetRootPassword}
-          sectionTitle="Reset Root Password"
+          sectionTitle="Reset the Root Password"
         />
         <Divider spacingBottom={22} spacingTop={28} />
         <DatabaseSettingsMenuItem
@@ -83,7 +83,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           descriptiveText={deleteClusterCopy}
           disabled={Boolean(profile?.restricted)}
           onClick={onDeleteCluster}
-          sectionTitle="Delete Cluster"
+          sectionTitle="Delete the Cluster"
         />
         <Divider spacingBottom={22} spacingTop={28} />
         <MaintenanceWindow

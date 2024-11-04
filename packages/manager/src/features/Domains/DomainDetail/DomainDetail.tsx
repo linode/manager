@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Notice, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -7,7 +7,6 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Paper } from 'src/components/Paper';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { Typography } from 'src/components/Typography';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';

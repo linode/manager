@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { FormControl, FormHelperText, Notice } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -7,9 +7,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { FormHelperText } from 'src/components/FormHelperText';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
 import {
