@@ -32,7 +32,12 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           <ErrorState errorText={error} />
         </Box>
       ) : (
-        <AreaChart {...rest} connectNulls fillOpacity={0.5}/>
+        <AreaChart
+          {...rest}
+          connectNulls
+          fillOpacity={0.5}
+          legendHeight="150px"
+        />
       )}
       {rest.data.length === 0 && (
         <Box
