@@ -64,6 +64,11 @@ export const Region = React.memo(() => {
     name: 'region',
   });
 
+  const { field: siteTypeField } = useController({
+    control,
+    name: 'site_type',
+  });
+
   const [selectedLinode, selectedImage] = useWatch({
     control,
     name: ['linode', 'image'],
@@ -93,6 +98,7 @@ export const Region = React.memo(() => {
     const values = getValues();
 
     field.onChange(region.id);
+    siteTypeField.onChange(region.site_type);
 
     if (values.hasSignedEUAgreement) {
       // Reset the EU agreement checkbox if they checked it so they have to re-agree when they change regions

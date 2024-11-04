@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useWatch } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { imageFactory } from 'src/factories/images';
@@ -8,11 +9,13 @@ import { OSIcon } from '../OSIcon';
 import { ImageOption } from './ImageOption';
 import {
   getAPIFilterForImageSelect,
+  getDisabledImages,
   getFilteredImagesForImageSelect,
 } from './utilities';
 
 import type { Image } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
+import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
 
 export type ImageSelectVariant = 'all' | 'private' | 'public';
 
@@ -61,6 +64,15 @@ export const ImageSelect = (props: Props) => {
     {},
     getAPIFilterForImageSelect(variant)
   );
+
+  const siteType = useWatch<LinodeCreateFormValues, 'site_type'>({
+    name: 'site_type',
+  });
+
+  const disabledImages = getDisabledImages({
+    images: images ?? [],
+    site_type: siteType ?? 'core',
+  });
 
   const _options = useMemo(() => {
     // We can't filter out Kubernetes images using the API so we do it client side
@@ -144,6 +156,7 @@ export const ImageSelect = (props: Props) => {
 
         return (
           <ImageOption
+            disabledOptions={disabledImages[option.id]}
             image={option}
             isSelected={state.selected}
             key={key}
@@ -182,6 +195,7 @@ export const ImageSelect = (props: Props) => {
           : !multiple && !Array.isArray(value) && onChange(value)
       }
       errorText={rest.errorText ?? error?.[0].reason}
+      getOptionDisabled={(option) => Boolean(disabledImages[option.id])}
       multiple={multiple}
       value={value}
     />

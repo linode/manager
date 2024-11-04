@@ -184,7 +184,7 @@ export const RegionSelect = <
         placeholder={placeholder ?? 'Select a Region'}
         value={selectedRegion as Region}
       />
-      {showDistributedRegionIconHelperText && ( // @TODO Gecko Beta: Add docs link
+      {showDistributedRegionIconHelperText && (
         <StyledDistributedRegionBox centerChildren={Boolean(errorText)}>
           <DistributedRegion />
           <Typography
