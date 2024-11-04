@@ -115,9 +115,9 @@ export const RegionSelect = <
           return (
             <RegionOption
               disabledOptions={disabledRegions[region.id]}
+              item={region}
               key={key}
               props={rest}
-              region={region}
             />
           );
         }}

@@ -120,9 +120,9 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return (
               <RegionOption
                 disabledOptions={disabledRegions[option.id]}
+                item={option}
                 key={key}
                 props={rest}
-                region={option}
                 selected={selected}
               />
             );

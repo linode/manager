@@ -1,5 +1,4 @@
 import { Box } from '@linode/ui';
-import DoneIcon from '@mui/icons-material/Done';
 import { styled } from '@mui/material/styles';
 
 import { Chip } from 'src/components/Chip';
@@ -55,17 +54,6 @@ export const StyledListItem = styled(ListItem, {
   '&.MuiListItem-root[aria-disabled="true"]:active': {
     pointerEvents: 'none !important',
   },
-}));
-
-export const SelectedIcon = styled(DoneIcon, {
-  label: 'RegionSelectSelectedIcon',
-  shouldForwardProp: (prop) => prop != 'visible',
-})<{ visible: boolean }>(({ visible }) => ({
-  height: 17,
-  marginLeft: '-2px',
-  marginRight: '5px',
-  visibility: visible ? 'visible' : 'hidden',
-  width: 17,
 }));
 
 export const StyledChip = styled(Chip)(({ theme }) => ({
