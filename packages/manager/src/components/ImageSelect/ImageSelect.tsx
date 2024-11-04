@@ -157,10 +157,10 @@ export const ImageSelect = (props: Props) => {
         return (
           <ImageOption
             disabledOptions={disabledImages[option.id]}
-            image={option}
-            isSelected={state.selected}
+            item={option}
             key={key}
-            listItemProps={rest}
+            props={rest}
+            selected={state.selected}
           />
         );
       }}

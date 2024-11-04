@@ -12,6 +12,7 @@ export interface ListItemProps<T> {
   children?: React.ReactNode;
   disabledOptions?: DisableItemOption;
   item: T & { id: string };
+  maxHeight?: number;
   props: React.HTMLAttributes<HTMLLIElement>;
   selected?: boolean;
 }
@@ -33,6 +34,7 @@ export const ListItemOption = <T,>({
   children,
   disabledOptions,
   item,
+  maxHeight,
   props,
   selected,
 }: ListItemProps<T>) => {
@@ -79,6 +81,11 @@ export const ListItemOption = <T,>({
             ? onClick(e)
             : null
         }
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          maxHeight,
+        }}
         aria-disabled={undefined}
         data-qa-disabled-item={isItemOptionDisabled}
       >
@@ -88,7 +95,7 @@ export const ListItemOption = <T,>({
             sx={visuallyHidden}
           >{`Option disabled: ${itemOptionDisabledReason}`}</Box>
         )}
-        {selected && <SelectedIcon visible />}
+        {selected && <SelectedIcon style={{ marginLeft: 8 }} visible />}
       </StyledDisabledItem>
     </Tooltip>
   );

@@ -10,7 +10,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build({ eol: null });
 
     const { getByText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
 
     expect(getByText(image.label)).toBeVisible();
@@ -20,7 +20,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build();
 
     const { getByTestId } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
 
     expect(getByTestId('os-icon')).toBeVisible();
@@ -30,7 +30,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build({ capabilities: ['cloud-init'] });
 
     const { getByLabelText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />,
+      <ImageOption item={image} props={{}} selected={false} />,
       { flags: { metadata: true } }
     );
 
@@ -47,9 +47,9 @@ describe('ImageOption', () => {
     const { getByText } = renderWithTheme(
       <ImageOption
         disabledOptions={{ reason: disabledReason }}
-        image={image}
-        isSelected={false}
-        listItemProps={{}}
+        item={image}
+        props={{}}
+        selected={false}
       />
     );
     expect(
@@ -61,7 +61,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build({ eol: null });
 
     const { getByText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
     expect(
       getByText(image.label).closest('li')?.getAttribute('aria-label')
@@ -72,7 +72,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build({ deprecated: true });
 
     const { getByText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
 
     expect(getByText(`${image.label} (deprecated)`)).toBeVisible();
@@ -85,7 +85,7 @@ describe('ImageOption', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
 
     expect(getByText(`${image.label} (deprecated)`)).toBeVisible();
@@ -95,7 +95,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build();
 
     const { getByTestId } = renderWithTheme(
-      <ImageOption image={image} isSelected={true} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={true} />
     );
 
     expect(getByTestId('DoneIcon')).toBeVisible();
