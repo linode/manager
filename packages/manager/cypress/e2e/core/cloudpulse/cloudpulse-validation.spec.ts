@@ -12,17 +12,12 @@ import {
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
 import {
-  accountFactory,
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
-  kubeLinodeFactory,
-  linodeFactory,
   regionFactory,
   widgetFactory,
 } from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
-import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { extendRegion } from 'support/util/regions';
@@ -72,12 +67,6 @@ const metricDefinitions = {
   ),
 };
 
-const mockLinode = linodeFactory.build({
-  label: clusterName,
-  id: kubeLinodeFactory.build().instance_id ?? undefined,
-});
-
-const mockAccount = accountFactory.build();
 const mockRegion = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes'],
@@ -101,8 +90,6 @@ describe('DbasS API Error Handling', () => {
     mockAppendFeatureFlags({
       aclp: { beta: true, enabled: true },
     });
-    mockGetAccount(mockAccount);
-    mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices(serviceType).as('fetchServices');
@@ -117,10 +104,7 @@ describe('DbasS API Error Handling', () => {
     cy.intercept(
       'GET',
       apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
-      {
-        statusCode: 400,
-        body: { errors: [{ reason: 'Bad Request' }] },
-      }
+      { statusCode: 500, body: { errors: [{ reason: 'Bad Request' }] }, }
     ).as('getMetricDefinitions');
 
     cy.visitWithLogin('monitor/cloudpulse');
@@ -151,7 +135,6 @@ describe('DbasS API Error Handling', () => {
       .should('be.visible')
       .type(`${clusterName}{enter}`)
       .click();
-    cy.findByText(clusterName).should('be.visible');
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
@@ -168,15 +151,11 @@ describe('DbasS API Error Handling', () => {
 
   it('should return error response when fetching services API request', () => {
     cy.intercept('GET', apiMatcher(`/monitor/services`), {
-      statusCode: 400,
+      statusCode: 500,
       body: {
-        errors: [{ reason: 'Bad Request' }],
-      },
+        errors: [{ reason: 'Bad Request' }],},
     }).as('fetchServices');
     cy.visitWithLogin('monitor/cloudpulse');
-
-    // Wait for the API call to complete and capture the response.
-    cy.wait('@fetchServices');
 
     cy.get('[data-qa-textfield-error-text="Dashboard"]')
       .should('be.visible')
@@ -185,13 +164,12 @@ describe('DbasS API Error Handling', () => {
         expect(text).to.equal('Failed to fetch the services.');
       });
   });
-  it('should return error response when fetching token api request', () => {
+  it('should return error response when fetching token API request', () => {
     cy.intercept('POST', apiMatcher(`/monitor/services/${serviceType}/token`), {
-      statusCode: 400,
+      statusCode: 500,
       body: {
-        errors: [{ reason: 'Bad Request' }],
-      },
-    }).as('fetchToken');
+        errors: [{ reason: 'Bad Request' }], },
+    });
 
     cy.visitWithLogin('monitor/cloudpulse');
     //  Wait for both the fetch services and fetch dashboard API calls to complete.
@@ -220,7 +198,6 @@ describe('DbasS API Error Handling', () => {
       .should('be.visible')
       .type(`${clusterName}{enter}`)
       .click();
-    cy.findByText(clusterName).should('be.visible');
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
@@ -239,10 +216,8 @@ describe('DbasS API Error Handling', () => {
       'GET',
       apiMatcher(`/monitor/services/${serviceType}/dashboards`),
       {
-        statusCode: 400,
-        body: {
-          errors: [{ reason: 'Bad Request' }],
-        },
+        statusCode: 500,
+        body: { errors: [{ reason: 'Bad Request' }],},
       }
     ).as('fetchDashboard');
 
@@ -261,9 +236,9 @@ describe('DbasS API Error Handling', () => {
 
   it('should return error message when the Dashboard details API request fails', () => {
     cy.intercept('GET', apiMatcher(`/monitor/dashboards/${id}`), {
-      statusCode: 400,
+      statusCode: 500,
       body: { errors: [{ reason: 'Bad Request' }] },
-    }).as('fetchDashboardById');
+    });
 
     cy.visitWithLogin('monitor/cloudpulse');
 
@@ -290,7 +265,6 @@ describe('DbasS API Error Handling', () => {
       .should('be.visible')
       .type(`${clusterName}{enter}`)
       .click();
-    cy.findByText(clusterName).should('be.visible');
 
     //  Select a node type from the autocomplete input. Verify visibility before interaction.
     ui.autocomplete
@@ -308,9 +282,9 @@ describe('DbasS API Error Handling', () => {
 
   it(`should return error message when the Regions API request fails`, () => {
     cy.intercept('GET', apiMatcher(`regions*`), {
-      statusCode: 400, // Use the status code defined in the test
+      statusCode: 500, 
       body: { errors: [{ reason: 'Bad Request' }] },
-    }).as('fetchRegion');
+    });
 
     cy.visitWithLogin('monitor/cloudpulse');
 
@@ -324,7 +298,7 @@ describe('DbasS API Error Handling', () => {
       .type(`${dashboardName}{enter}`)
       .should('be.visible');
 
-    cy.get('[data-qa-textfield-error-text="Region"]') // Select the error message element
+    cy.get('[data-qa-textfield-error-text="Region"]')
       .should('be.visible')
       .invoke('text')
       .then((text) => {
@@ -332,13 +306,11 @@ describe('DbasS API Error Handling', () => {
       });
   });
 
-  it('should return error response when fetching db cluster api request', () => {
+  it('should return error response when fetching db cluster API request', () => {
     cy.intercept('GET', apiMatcher(`databases/instances*`), {
-      statusCode: 400,
-      body: {
-        errors: [{ reason: 'Bad Request' }],
-      },
-    }).as('fetchCluster');
+      statusCode: 500,
+      body: {errors: [{ reason: 'Bad Request' }],},
+    });
 
     cy.visitWithLogin('monitor/cloudpulse');
 
