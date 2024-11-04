@@ -81,6 +81,7 @@ describe('VPC assign/unassign flows', () => {
     mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, []).as('getSubnets');
     mockCreateSubnet(mockVPC.id).as('createSubnet');
+    mockGetLinodes([mockLinode]).as('getLinodes');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
     cy.wait(['@getVPC', '@getSubnets']);
@@ -110,7 +111,7 @@ describe('VPC assign/unassign flows', () => {
           .click();
       });
 
-    cy.wait(['@createSubnet', '@getVPC', '@getSubnets']);
+    cy.wait(['@createSubnet', '@getVPC', '@getSubnets', '@getLinodes']);
 
     // confirm that newly created subnet should now appear on VPC's detail page
     cy.findByText(mockVPC.label).should('be.visible');
@@ -123,12 +124,10 @@ describe('VPC assign/unassign flows', () => {
       .should('be.visible')
       .click();
 
-    mockGetLinodes([mockLinode]).as('getLinodes');
     ui.actionMenuItem
       .findByTitle('Assign Linodes')
       .should('be.visible')
       .click();
-    cy.wait('@getLinodes');
 
     ui.drawer
       .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label} (0.0.0.0/0)`)
@@ -224,9 +223,10 @@ describe('VPC assign/unassign flows', () => {
     mockGetVPCs(mockVPCs).as('getVPCs');
     mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
+    mockGetLinodes([mockLinode, mockSecondLinode]).as('getLinodes');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getVPC', '@getSubnets']);
+    cy.wait(['@getVPC', '@getSubnets', '@getLinodes']);
 
     // confirm that subnet should get displayed on VPC's detail page
     cy.findByText(mockVPC.label).should('be.visible');
@@ -239,12 +239,10 @@ describe('VPC assign/unassign flows', () => {
       .should('be.visible')
       .click();
 
-    mockGetLinodes([mockLinode, mockSecondLinode]).as('getLinodes');
     ui.actionMenuItem
       .findByTitle('Unassign Linodes')
       .should('be.visible')
       .click();
-    cy.wait('@getLinodes');
 
     ui.drawer
       .findByTitle(
