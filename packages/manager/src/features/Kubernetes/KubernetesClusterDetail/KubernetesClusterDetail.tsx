@@ -117,9 +117,9 @@ export const KubernetesClusterDetail = () => {
         <>
           <LandingHeader
             docsLabel="Docs"
-            docsLink="https://otomi.io/docs/get-started/overview"
+            docsLink="https://apl-docs.net/"
             removeCrumbX={[1, 2, 3]}
-            title="Application platform for LKE"
+            title="Application Platform for LKE"
           />
           <Grid>
             <APLSummaryPanel cluster={cluster} />

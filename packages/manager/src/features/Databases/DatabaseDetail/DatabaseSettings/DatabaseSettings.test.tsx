@@ -12,16 +12,16 @@ describe('DatabaseSettings Component', () => {
     renderWithTheme(<DatabaseSettings database={database} />);
   });
 
-  it('Should render a Paper component with headers for Access Controls, Reseting the Root password, and Deleting the Cluster', () => {
+  it('Should render a Paper component with headers for Manage Access, Reseting the Root password, and Deleting the Cluster', () => {
     const { container, getAllByRole } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).not.toBeNull();
     const headings = getAllByRole('heading');
-    expect(headings[0].textContent).toBe('Access Controls');
-    expect(headings[1].textContent).toBe('Reset Root Password');
-    expect(headings[2].textContent).toBe('Delete Cluster');
+    expect(headings[0].textContent).toBe('Manage Access');
+    expect(headings[1].textContent).toBe('Reset the Root Password');
+    expect(headings[2].textContent).toBe('Delete the Cluster');
   });
 
   it.each([
@@ -33,7 +33,7 @@ describe('DatabaseSettings Component', () => {
     );
     const button1 = getByTitle('Reset Root Password');
     const button2 = getByTitle('Save Changes');
-    const button3 = getByRole('button', { name: 'Manage Access Controls' });
+    const button3 = getByRole('button', { name: 'Manage Access' });
 
     if (isDisabled) {
       expect(button1).toBeDisabled();

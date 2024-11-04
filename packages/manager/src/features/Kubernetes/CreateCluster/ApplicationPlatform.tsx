@@ -1,7 +1,6 @@
-import { FormControl } from '@linode/ui';
+import { Box, FormControl } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
@@ -19,7 +18,7 @@ export const APLCopy = () => (
   <Typography>
     Add a pre-paved path to build, deploy, monitor and secure applications.
     <br />
-    <Link to="https://otomi.io">
+    <Link to="https://techdocs.akamai.com/cloud-computing/docs/application-platform">
       Learn more about Application Platform for LKE.
     </Link>
   </Typography>

@@ -46,7 +46,7 @@ export const CloudPulseResourcesSelect = React.memo(
     const platformFilter =
       resourceType === 'dbaas' ? { platform: 'rdbms-default' } : {};
 
-    const { data: resources, isError, isLoading } = useResourcesQuery(
+    const { data: resources, isLoading, isError } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},

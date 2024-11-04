@@ -25,9 +25,11 @@ export const StyledTableCell = styled(TableCell, {
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-start',
+    textAlign: 'left',
     [theme.breakpoints.down('sm')]: {
       padding: 0,
     },
+    whiteSpace: 'nowrap',
   },
 }));
 
@@ -42,6 +44,7 @@ export const StyledButton = styled(Button, {
         : theme.graphs[legendColor]
         ? theme.graphs[legendColor]
         : legendColor,
+      flexShrink: 0,
     },
   }),
 }));

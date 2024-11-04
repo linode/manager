@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import DoneIcon from '@mui/icons-material/Done';
 import { styled } from '@mui/material/styles';
 
-import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { ListItem } from 'src/components/ListItem';
 
