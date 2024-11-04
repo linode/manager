@@ -7,12 +7,16 @@ import {
   useLocation,
   useRouteMatch,
 } from 'react-router-dom';
-import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
+import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
-const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
+const StackScriptsLanding = React.lazy(() =>
+  import('./StackScriptLanding/StackScriptsLanding').then((module) => ({
+    default: module.StackScriptsLanding,
+  }))
+);
 const StackScriptCreate = React.lazy(
   () => import('./StackScriptCreate/StackScriptCreate')
 );

@@ -1,0 +1,144 @@
+import React, { useState } from 'react';
+import { Waypoint } from 'react-waypoint';
+
+import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Table } from 'src/components/Table';
+import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
+import { TableHead } from 'src/components/TableHead';
+import { TableRow } from 'src/components/TableRow';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { TableSortCell } from 'src/components/TableSortCell';
+import {
+  accountStackScriptFilter,
+  communityStackScriptFilter,
+} from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
+import { useOrder } from 'src/hooks/useOrder';
+import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
+
+import { StackScriptDeleteDialog } from './StackScriptDeleteDialog';
+import { StackScriptMakePublicDialog } from './StackScriptMakePublicDialog';
+import { StackScriptRow } from './StackScriptRow';
+
+interface Props {
+  type: 'account' | 'community';
+}
+
+export const StackScriptLandingTable = (props: Props) => {
+  const { type } = props;
+
+  const filter =
+    type === 'community'
+      ? communityStackScriptFilter
+      : accountStackScriptFilter;
+
+  const defaultOrder =
+    type === 'community'
+      ? { order: 'desc' as const, orderBy: 'deployments_total' }
+      : { order: 'desc' as const, orderBy: 'updated' };
+
+  const { handleOrderChange, order, orderBy } = useOrder(defaultOrder);
+
+  const [selectedStackScriptId, setSelectedStackScriptId] = useState<number>();
+  const [isMakePublicDialogOpen, setIsMakePublicDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useStackScriptsInfiniteQuery({
+    ...filter,
+    '+order': order,
+    '+order_by': orderBy,
+  });
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
+  }
+
+  const stackscripts = data?.pages.flatMap((page) => page.data);
+
+  const selectedStackScript = selectedStackScriptId
+    ? stackscripts?.find((s) => s.id === selectedStackScriptId)
+    : undefined;
+
+  return (
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'label'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="label"
+            >
+              StackScript
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'deployments_total'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="deployments_total"
+            >
+              Deploys
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'updated'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="updated"
+            >
+              Last Revision
+            </TableSortCell>
+            <TableCell>Compatible Images</TableCell>
+            {type === 'account' && <TableCell>Status</TableCell>}
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {stackscripts?.map((stackscript) => (
+            <StackScriptRow
+              handlers={{
+                onDelete: () => {
+                  setSelectedStackScriptId(stackscript.id);
+                  setIsDeleteDialogOpen(true);
+                },
+                onMakePublic: () => {
+                  setSelectedStackScriptId(stackscript.id);
+                  setIsMakePublicDialogOpen(true);
+                },
+              }}
+              key={stackscript.id}
+              stackscript={stackscript}
+              type={type}
+            />
+          ))}
+          {isFetchingNextPage && (
+            <TableRowLoading columns={type === 'account' ? 6 : 5} />
+          )}
+        </TableBody>
+        {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
+      </Table>
+      <StackScriptMakePublicDialog
+        onClose={() => setIsMakePublicDialogOpen(false)}
+        open={isMakePublicDialogOpen}
+        stackscript={selectedStackScript}
+      />
+      <StackScriptDeleteDialog
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
+        stackscript={selectedStackScript}
+      />
+    </>
+  );
+};
