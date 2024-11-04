@@ -5,9 +5,12 @@ import { useAccount } from 'src/queries/account/account';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
-import { databaseEngineMap } from './DatabaseLanding/DatabaseRow';
-
-import type { DatabaseInstance } from '@linode/api-v4';
+import type {
+  DatabaseEngine,
+  DatabaseInstance,
+  Engine,
+  PendingUpdates,
+} from '@linode/api-v4';
 import type { DatabaseFork } from '@linode/api-v4';
 
 export interface IsDatabasesEnabled {
@@ -213,6 +216,34 @@ export const toDatabaseFork = (
   return fork;
 };
 
-export const getDatabasesDescription = (database: DatabaseInstance) => {
-  return `${databaseEngineMap[database.engine]} v${database.version}`;
+export const DATABASE_ENGINE_MAP: Record<Engine, string> = {
+  mongodb: 'MongoDB',
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+  redis: 'Redis',
+} as const;
+
+export const getDatabasesDescription = (
+  database: Pick<DatabaseInstance, 'engine' | 'version'>
+) => {
+  return `${DATABASE_ENGINE_MAP[database.engine]} v${database.version}`;
 };
+
+export const hasPendingUpdates = (pendingUpdates?: PendingUpdates[]) =>
+  Boolean(
+    pendingUpdates?.some((update) => update.deadline || update.planned_for)
+  );
+
+export const isDefaultDatabase = (
+  database: Pick<DatabaseInstance, 'platform'>
+) => database.platform === 'rdbms-default';
+
+export const isLegacyDatabase = (
+  database: Pick<DatabaseInstance, 'platform'>
+) => !database.platform || database.platform === 'rdbms-legacy';
+
+export const upgradableVersions = (
+  engine: Engine,
+  version: string,
+  engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
+) => engines?.filter((e) => e.engine === engine && e.version > version);

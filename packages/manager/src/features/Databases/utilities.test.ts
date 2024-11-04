@@ -1,17 +1,26 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
-import { AccountCapability } from '@linode/api-v4';
-import { accountFactory, databaseTypeFactory } from 'src/factories';
-import { TimeOption } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups';
 import {
+  accountFactory,
+  databaseFactory,
+  databaseTypeFactory,
+} from 'src/factories';
+import {
+  getDatabasesDescription,
   isDateOutsideBackup,
+  isDefaultDatabase,
+  isLegacyDatabase,
   isTimeOutsideBackup,
   toISOString,
+  upgradableVersions,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+
+import type { AccountCapability, Database, Engine } from '@linode/api-v4';
+import type { TimeOption } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups';
 
 const setup = (capabilities: AccountCapability[], flags: any) => {
   const account = accountFactory.build({ capabilities });
@@ -376,7 +385,7 @@ describe('isTimeOutsideBackup', () => {
 
 describe('toISOString', () => {
   it('should convert a date and time to ISO string format', () => {
-    const selectedDate = DateTime.fromObject({ year: 2023, month: 5, day: 15 });
+    const selectedDate = DateTime.fromObject({ day: 15, month: 5, year: 2023 });
     const selectedTime: TimeOption = { label: '02:00', value: 14 };
     const result = toISOString(selectedDate, selectedTime.value);
     expect(result).toContain('2023-05-15T14:00');
@@ -384,9 +393,9 @@ describe('toISOString', () => {
 
   it('should handle midnight correctly', () => {
     const selectedDate = DateTime.fromObject({
-      year: 2023,
-      month: 12,
       day: 31,
+      month: 12,
+      year: 2023,
     });
     const selectedTime: TimeOption = { label: '12:00 AM', value: 0 };
     const result = toISOString(selectedDate, selectedTime.value);
@@ -394,9 +403,114 @@ describe('toISOString', () => {
   });
 
   it('should handle noon correctly', () => {
-    const selectedDate = DateTime.fromObject({ year: 2024, month: 1, day: 1 });
+    const selectedDate = DateTime.fromObject({ day: 1, month: 1, year: 2024 });
     const selectedTime: TimeOption = { label: '12:00 PM', value: 12 };
     const result = toISOString(selectedDate, selectedTime.value);
     expect(result).toContain('2024-01-01T12:00');
+  });
+});
+
+describe('getDatabasesDescription', () => {
+  it('should return MySQL', () => {
+    const result = getDatabasesDescription({
+      engine: 'mysql',
+      version: '8.0.30',
+    });
+    expect(result).toEqual('MySQL v8.0.30');
+  });
+
+  it('should return PostgreSQL', () => {
+    const db: Database = databaseFactory.build({
+      engine: 'postgresql',
+      version: '14.13',
+    });
+    const result = getDatabasesDescription(db);
+    expect(result).toEqual('PostgreSQL v14.13');
+  });
+});
+
+describe('isDefaultDatabase', () => {
+  it('should return true for default platform database', () => {
+    const db: Database = databaseFactory.build({
+      platform: 'rdbms-default',
+    });
+    const result = isDefaultDatabase(db);
+    expect(result).toBe(true);
+  });
+
+  it('should return false for legacy platform database', () => {
+    const db: Database = databaseFactory.build({
+      platform: 'rdbms-legacy',
+    });
+    const result = isDefaultDatabase(db);
+    expect(result).toBe(false);
+    expect(isDefaultDatabase({ platform: undefined })).toBe(false);
+  });
+});
+
+describe('isLegacyDatabase', () => {
+  it('should return true for legacy databases', () => {
+    expect(isLegacyDatabase({ platform: 'rdbms-legacy' })).toBe(true);
+  });
+
+  it('should return true fro undefined platform', () => {
+    expect(isLegacyDatabase({ platform: undefined })).toBe(true);
+  });
+
+  it('should return false for non-legacy databases', () => {
+    expect(isLegacyDatabase({ platform: 'rdbms-default' })).toBe(false);
+  });
+});
+
+describe('upgradableVersions', () => {
+  const mockEngines = [
+    {
+      engine: 'mysql' as Engine,
+      id: 'mysql/8',
+      version: '8',
+    },
+    {
+      engine: 'postgresql' as Engine,
+      id: 'postgresql/13',
+      version: '13',
+    },
+    {
+      engine: 'postgresql' as Engine,
+      id: 'postgresql/14',
+      version: '14',
+    },
+    {
+      engine: 'postgresql' as Engine,
+      id: 'postgresql/15',
+      version: '15',
+    },
+    {
+      engine: 'postgresql' as Engine,
+      id: 'postgresql/16',
+      version: '16',
+    },
+  ];
+
+  it('should return engines with higher versions for the same engine type', () => {
+    const result = upgradableVersions('postgresql', '14.0.26', mockEngines);
+    expect(result).toHaveLength(2);
+    expect(result![0].version).toBe('15');
+  });
+
+  it('should return empty array when no upgrades are available', () => {
+    const result = upgradableVersions('mysql', '8.0.30', mockEngines);
+    expect(result).toHaveLength(0);
+  });
+
+  it('should only return engines of the same type', () => {
+    const result = upgradableVersions('postgresql', '14.13.0', mockEngines);
+    expect(result?.every((engine) => engine.engine === 'postgresql')).toBe(
+      true
+    );
+  });
+
+  it('should return undefined when no engines are provided', () => {
+    const result = upgradableVersions('mysql', '8.0.26', undefined);
+    expect(result).toBeUndefined();
   });
 });
