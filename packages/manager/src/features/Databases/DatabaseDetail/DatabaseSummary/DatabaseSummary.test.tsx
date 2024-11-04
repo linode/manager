@@ -36,7 +36,6 @@ const BUTTON_ACCESS_CONTROLS = 'button-access-control';
 const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
 spy.mockReturnValue({
   isDatabasesEnabled: true,
-  isDatabasesV1Enabled: true,
   isDatabasesV2Beta: false,
   isDatabasesV2Enabled: true,
   isDatabasesV2GA: true,
@@ -104,7 +103,6 @@ describe('Database Summary', () => {
   it('should render Beta view default db', async () => {
     spy.mockReturnValue({
       isDatabasesEnabled: true,
-      isDatabasesV1Enabled: true,
       isDatabasesV2Beta: true,
       isDatabasesV2Enabled: true,
       isDatabasesV2GA: false,
@@ -142,7 +140,6 @@ describe('Database Summary', () => {
   it('should render Beta view legacy db', async () => {
     spy.mockReturnValue({
       isDatabasesEnabled: true,
-      isDatabasesV1Enabled: true,
       isDatabasesV2Beta: true,
       isDatabasesV2Enabled: true,
       isDatabasesV2GA: false,
@@ -180,7 +177,6 @@ describe('Database Summary', () => {
   it('should render V1 view legacy db', async () => {
     spy.mockReturnValue({
       isDatabasesEnabled: true,
-      isDatabasesV1Enabled: true,
       isDatabasesV2Beta: false,
       isDatabasesV2Enabled: false,
       isDatabasesV2GA: false,
