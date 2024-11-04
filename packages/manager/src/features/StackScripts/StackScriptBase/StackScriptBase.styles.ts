@@ -1,9 +1,9 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Table } from 'src/components/Table';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { WithStackScriptBaseOptions } from './StackScriptBase';
 

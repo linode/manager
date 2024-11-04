@@ -1,11 +1,10 @@
-import { Tooltip, VisibilityTooltip } from '@linode/ui';
+import { Tooltip, VisibilityTooltip, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
 import FileCopy from 'src/assets/icons/copy.svg';
 import { createMaskedText } from 'src/utilities/createMaskedText';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { MaskableTextLength } from '../MaskableText/MaskableText';
 import type { TooltipProps } from '@linode/ui';
