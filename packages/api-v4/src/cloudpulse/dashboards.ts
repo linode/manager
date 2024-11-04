@@ -1,5 +1,5 @@
 import { ResourcePage } from 'src/types';
-import Request, { setHeaders, setMethod, setURL } from '../request';
+import Request, { setMethod, setURL } from '../request';
 import { Dashboard } from './types';
 import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 

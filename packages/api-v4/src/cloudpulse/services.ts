@@ -1,5 +1,5 @@
 import { BETA_API_ROOT as API_ROOT } from 'src/constants';
-import Request, { setData, setHeaders, setMethod, setURL } from '../request';
+import Request, { setData, setMethod, setURL } from '../request';
 import {
   JWEToken,
   JWETokenPayLoad,
