@@ -11,7 +11,7 @@ import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
 export interface ListItemProps<T> {
   children?: React.ReactNode;
   disabledOptions?: DisableItemOption;
-  item: T & { id: string };
+  item: T & { id: number | string };
   maxHeight?: number;
   props: React.HTMLAttributes<HTMLLIElement>;
   selected?: boolean;
