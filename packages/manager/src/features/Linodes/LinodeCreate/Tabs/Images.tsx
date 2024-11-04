@@ -1,14 +1,13 @@
+import { Paper } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
-import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
 import { Link } from 'src/components/Link';
-import { Paper } from '@linode/ui';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
@@ -76,11 +75,6 @@ export const Images = () => {
     getAPIFilterForImageSelect('private')
   );
 
-  // @todo: delete this logic when all Images are "distributed compatible"
-  const showDistributedCapabilityNotice = images?.some((image) =>
-    image.capabilities.includes('distributed-sites')
-  );
-
   if (images?.length === 0) {
     return (
       <Paper>
@@ -110,14 +104,6 @@ export const Images = () => {
             value={field.value ?? null}
             variant="private"
           />
-          {showDistributedCapabilityNotice && (
-            <Stack alignItems="center" direction="row" pb={0.8} spacing={1}>
-              <DistributedRegionIcon height="21px" width="24px" />
-              <Typography>
-                Indicates compatibility with distributed compute regions.
-              </Typography>
-            </Stack>
-          )}
         </Box>
       </Paper>
     </Stack>

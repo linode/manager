@@ -1,22 +1,14 @@
-import { Typography } from '@mui/material';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
-import { Link } from 'src/components/Link';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';
-import {
-  StyledAutocompleteContainer,
-  StyledDistributedRegionBox,
-  sxDistributedRegionIcon,
-} from './RegionSelect.styles';
+import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
@@ -57,13 +49,12 @@ export const RegionSelect = <
     regionFilter,
     regions,
     required,
-    showDistributedRegionIconHelperText,
     tooltipText,
     value,
     width,
   } = props;
 
-  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   const {
     data: accountAvailability,
@@ -102,24 +93,6 @@ export const RegionSelect = <
     return acc;
   }, {});
 
-  const EndAdornment = React.useMemo(() => {
-    // @TODO Gecko: Remove adornment after LA
-    if (isGeckoBetaEnabled && selectedRegion?.site_type === 'distributed') {
-      return (
-        <TooltipIcon
-          icon={<DistributedRegion />}
-          status="other"
-          sxTooltipIcon={sxDistributedRegionIcon}
-          text="This region is a distributed region."
-        />
-      );
-    }
-    if (isGeckoLAEnabled && selectedRegion) {
-      return `(${selectedRegion?.id})`;
-    }
-    return null;
-  }, [isGeckoBetaEnabled, isGeckoLAEnabled, selectedRegion]);
-
   /*
    * When Gecko is enabled, allow regions to be searched by ID by passing a
    * custom stringify function.
@@ -156,7 +129,7 @@ export const RegionSelect = <
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
-            endAdornment: EndAdornment,
+            endAdornment: selectedRegion && `(${selectedRegion?.id})`,
             required,
             startAdornment: selectedRegion && (
               <Flag country={selectedRegion?.country} mr={1} />
@@ -184,25 +157,6 @@ export const RegionSelect = <
         placeholder={placeholder ?? 'Select a Region'}
         value={selectedRegion as Region}
       />
-      {showDistributedRegionIconHelperText && (
-        <StyledDistributedRegionBox centerChildren={Boolean(errorText)}>
-          <DistributedRegion />
-          <Typography
-            data-testid="region-select-distributed-region-text"
-            sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
-          >
-            {' '}
-            Indicates a distributed region.{' '}
-            <Link
-              aria-label="Learn more about Akamai distributed regions"
-              to="#"
-            >
-              Learn more
-            </Link>
-            .
-          </Typography>
-        </StyledDistributedRegionBox>
-      )}
     </StyledAutocompleteContainer>
   );
 };

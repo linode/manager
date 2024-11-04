@@ -39,18 +39,33 @@ describe('ImageOption', () => {
     ).toBeVisible();
   });
 
-  it('renders a distributed icon if image has the "distributed-sites" capability', () => {
-    const image = imageFactory.build({ capabilities: ['distributed-sites'] });
+  it('disables the image option if the image has a disabled reason', () => {
+    const image = imageFactory.build({ eol: null });
+    const disabledReason =
+      'The selected image cannot be deployed to a distributed region.';
 
-    const { getByLabelText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
+      <ImageOption
+        disabledOptions={{ reason: disabledReason }}
+        image={image}
+        isSelected={false}
+        listItemProps={{}}
+      />
+    );
+    expect(
+      getByText(image.label).closest('li')?.getAttribute('aria-label')
+    ).toBe(disabledReason);
+  });
+
+  it('does not disable the image option if the image does not have a disabled reason', () => {
+    const image = imageFactory.build({ eol: null });
+
+    const { getByText } = renderWithTheme(
       <ImageOption image={image} isSelected={false} listItemProps={{}} />
     );
-
     expect(
-      getByLabelText(
-        'This image is compatible with distributed compute regions.'
-      )
-    ).toBeVisible();
+      getByText(image.label).closest('li')?.getAttribute('aria-label')
+    ).toBe('');
   });
 
   it('renders (deprecated) if the image is deprecated', () => {

@@ -30,44 +30,6 @@ export const StyledAutocompleteContainer = styled(Box, {
   },
 }));
 
-export const sxDistributedRegionIcon = {
-  '& svg': {
-    color: 'inherit !important',
-    height: 21,
-    width: 24,
-  },
-  '&:hover': {
-    color: 'inherit',
-  },
-  color: 'inherit',
-  padding: 0,
-};
-
-export const StyledDistributedRegionBox = styled(Box, {
-  label: 'StyledDistributedRegionBox',
-  shouldForwardProp: (prop) => prop != 'centerChildren',
-})<{ centerChildren: boolean }>(({ centerChildren, theme }) => ({
-  '& svg': {
-    height: 21,
-    marginLeft: 8,
-    marginRight: 8,
-    width: 24,
-  },
-  alignSelf: centerChildren ? 'center' : 'end',
-  color: 'inherit',
-  display: 'flex',
-  marginTop: centerChildren ? 21 : 0,
-  padding: 8,
-  [theme.breakpoints.down('md')]: {
-    '& svg': {
-      marginLeft: 0,
-    },
-    alignSelf: 'start',
-    marginTop: 0,
-    paddingLeft: 0,
-  },
-}));
-
 export const StyledLParentListItem = styled(ListItem, {
   label: 'RegionSelectParentListItem',
 })(() => ({

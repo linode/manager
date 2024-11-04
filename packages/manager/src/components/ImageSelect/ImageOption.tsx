@@ -2,7 +2,6 @@ import { Tooltip } from '@linode/ui';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
-import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { SelectedIcon } from '../Autocomplete/Autocomplete.styles';
@@ -75,13 +74,6 @@ export const ImageOption = ({
           </Typography>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={1}>
-          {image.capabilities.includes('distributed-sites') && (
-            <Tooltip title="This image is compatible with distributed compute regions.">
-              <div style={{ display: 'flex' }}>
-                <DistributedRegionIcon height="24px" width="24px" />
-              </div>
-            </Tooltip>
-          )}
           {flags.metadata && image.capabilities.includes('cloud-init') && (
             <Tooltip title="This image supports our Metadata service via cloud-init.">
               <span style={{ display: 'flex' }}>

@@ -1,3 +1,4 @@
+import { Paper } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
@@ -7,7 +8,6 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from '@linode/ui';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import {
   isDistributedRegionSupported,
@@ -90,7 +90,7 @@ export const Region = React.memo(() => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
@@ -183,10 +183,6 @@ export const Region = React.memo(() => {
     !flags.gecko2?.enabled ||
     !isDistributedRegionSupported(params.type ?? 'OS');
 
-  const showDistributedRegionIconHelperText =
-    isGeckoBetaEnabled && !hideDistributedRegions;
-  regions?.some((region) => region.site_type === 'distributed');
-
   const disabledRegions = getDisabledRegions({
     regions: regions ?? [],
     selectedImage: image,
@@ -200,9 +196,6 @@ export const Region = React.memo(() => {
           hideDistributedRegions && params.type !== 'Images'
             ? 'core'
             : undefined
-        }
-        showDistributedRegionIconHelperText={
-          showDistributedRegionIconHelperText
         }
         disabled={isLinodeCreateRestricted}
         disabledRegions={disabledRegions}
@@ -246,9 +239,6 @@ export const Region = React.memo(() => {
           hideDistributedRegions && params.type !== 'Images'
             ? 'core'
             : undefined
-        }
-        showDistributedRegionIconHelperText={
-          showDistributedRegionIconHelperText
         }
         currentCapability="Linodes"
         disableClearable

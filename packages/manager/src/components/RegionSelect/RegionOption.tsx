@@ -2,17 +2,11 @@ import { Box, Tooltip } from '@linode/ui';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
-import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Flag } from 'src/components/Flag';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Stack } from 'src/components/Stack';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 
-import {
-  SelectedIcon,
-  StyledListItem,
-  sxDistributedRegionIcon,
-} from './RegionSelect.styles';
+import { SelectedIcon, StyledListItem } from './RegionSelect.styles';
 
 import type { DisableRegionOption } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
@@ -34,9 +28,7 @@ export const RegionOption = ({
   const { className, onClick } = props;
   const isRegionDisabled = Boolean(disabledOptions);
   const isRegionDisabledReason = disabledOptions?.reason;
-  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
-  const displayDistributedRegionIcon =
-    isGeckoBetaEnabled && region.site_type === 'distributed';
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   return (
     <Tooltip
@@ -75,25 +67,12 @@ export const RegionOption = ({
         <Stack alignItems="center" direction="row" gap={1} width="100%">
           <Flag country={region.country} />
           {isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`}
-          {displayDistributedRegionIcon && (
-            <Box sx={visuallyHidden}>
-              &nbsp;(This region is a distributed region.)
-            </Box>
-          )}
           {isRegionDisabled && isRegionDisabledReason && (
             <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
           )}
           <Box flexGrow={1} />
           {isGeckoLAEnabled && `(${region.id})`}
           {selected && <SelectedIcon visible />}
-          {displayDistributedRegionIcon && (
-            <TooltipIcon
-              icon={<DistributedRegion />}
-              status="other"
-              sxTooltipIcon={sxDistributedRegionIcon}
-              text="This region is a distributed region."
-            />
-          )}
         </Stack>
       </StyledListItem>
     </Tooltip>
