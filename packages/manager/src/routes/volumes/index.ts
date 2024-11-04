@@ -78,31 +78,21 @@ const volumesCreateRoute = createRoute({
 );
 
 const volumeActionRoute = createRoute({
-  beforeLoad: async ({ context, params, search }) => {
+  beforeLoad: async ({ params }) => {
     if (!(params.action in volumeAction)) {
       throw redirect({
         search: () => ({}),
         to: '/volumes',
       });
     }
-
-    const volumeXFilters = buildVolumeXFilters({
-      order: search.order,
-      orderBy: search.orderBy,
-      query: search.query,
-    });
-    const volumes = await context.queryClient.fetchQuery(
-      volumeQueries.lists._ctx.paginated(
-        {
-          page: search.page ?? 1,
-          page_size: search.pageSize ?? 25,
-        },
-        volumeXFilters
-      )
-    );
-
-    // if the volume is not found, redirect to the volumes landing page
-    if (!volumes.data.find((v) => v.id === params.volumeId)) {
+  },
+  getParentRoute: () => volumesRoute,
+  loader: async ({ context, params }) => {
+    try {
+      await context.queryClient.fetchQuery(
+        volumeQueries.volume(params.volumeId)
+      );
+    } catch {
       enqueueSnackbar('Volume not found', { variant: 'error' });
       throw redirect({
         search: () => ({}),
@@ -110,8 +100,6 @@ const volumeActionRoute = createRoute({
       });
     }
   },
-
-  getParentRoute: () => volumesRoute,
   parseParams: ({
     action,
     volumeId,
