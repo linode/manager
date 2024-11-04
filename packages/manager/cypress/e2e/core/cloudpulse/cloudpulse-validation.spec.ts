@@ -85,7 +85,7 @@ const databaseMock: Database = databaseFactory.build({
   engine: 'mysql',
 });
 
-describe('DbasS API Error Handling', () => {
+describe('Tests for API error handling', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclp: { beta: true, enabled: true },
