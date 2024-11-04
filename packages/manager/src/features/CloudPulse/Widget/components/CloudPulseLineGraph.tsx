@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
@@ -14,6 +14,8 @@ export interface CloudPulseLineGraph extends AreaChartProps {
 
 export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
   const { error, loading, ...rest } = props;
+
+  const theme = useTheme();
 
   if (loading) {
     return <CircleProgress sx={{ minHeight: '380px' }} />;
@@ -36,7 +38,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           {...rest}
           connectNulls
           fillOpacity={0.5}
-          legendHeight="150px"
+          legendHeight={theme.spacing(18.75)}
         />
       )}
       {rest.data.length === 0 && (

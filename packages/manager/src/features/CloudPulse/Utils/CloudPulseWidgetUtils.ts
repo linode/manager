@@ -182,10 +182,6 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           return;
         }
 
-        if (label.includes('CPU') && index >= 1) {
-          return;
-        }
-
         const transformedData = {
           metric: graphData.metric,
           values: transformData(graphData.values, unit),
@@ -241,9 +237,9 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
     .map(
       ([timestamp, resource]): DataSet => {
         const rolledUpData = Object.entries(resource).reduce(
-          (previousValue, newValue) => {
+          (oldValue, newValue) => {
             return {
-              ...previousValue,
+              ...oldValue,
               [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
             };
           },
