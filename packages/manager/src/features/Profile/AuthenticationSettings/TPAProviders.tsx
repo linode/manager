@@ -1,6 +1,6 @@
-import { TPAProvider } from '@linode/api-v4/lib/profile';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Divider } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
@@ -8,7 +8,6 @@ import AkamaiWaveOnlyIcon from 'src/assets/icons/providers/akamai-logo-rgb-waveO
 import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
 import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
@@ -22,6 +21,8 @@ import {
   StyledProvidersListGrid,
   StyledRootContainer,
 } from './TPAProviders.styles';
+
+import type { TPAProvider } from '@linode/api-v4/lib/profile';
 
 interface Props {
   authType: TPAProvider;

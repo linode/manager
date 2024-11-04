@@ -1,5 +1,4 @@
-import { IconButton } from '@linode/ui';
-import { Tooltip } from '@linode/ui';
+import { IconButton, Tooltip } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import React from 'react';
 

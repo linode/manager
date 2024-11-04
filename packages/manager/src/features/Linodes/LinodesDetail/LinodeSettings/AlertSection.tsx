@@ -1,9 +1,9 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Divider } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';

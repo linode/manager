@@ -1,4 +1,4 @@
-import { Tooltip } from '@linode/ui';
+import { Divider, Tooltip } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { styled, useMediaQuery } from '@mui/material';
@@ -11,7 +11,6 @@ import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Stack } from 'src/components/Stack';

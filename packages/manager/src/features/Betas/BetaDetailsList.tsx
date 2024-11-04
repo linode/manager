@@ -1,7 +1,7 @@
+import { Divider } from '@linode/ui';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
