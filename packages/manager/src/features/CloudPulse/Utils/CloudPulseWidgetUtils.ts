@@ -182,6 +182,10 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           return;
         }
 
+        if (label.includes('CPU') && index >= 1) {
+          return;
+        }
+
         const transformedData = {
           metric: graphData.metric,
           values: transformData(graphData.values, unit),
@@ -233,21 +237,25 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   }
 
   const maxUnit = generateMaxUnit(legendRowsData, unit);
-  const dimensions = Object.entries(dimension).map(
-    ([timestamp, resource]): DataSet => {
-      const rolledUpData = Object.entries(resource).reduce(
-        (previousValue, newValue) => {
-          return {
-            ...previousValue,
-            [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
-          };
-        },
-        {}
-      );
+  const dimensions = Object.entries(dimension)
+    .map(
+      ([timestamp, resource]): DataSet => {
+        const rolledUpData = Object.entries(resource).reduce(
+          (previousValue, newValue) => {
+            return {
+              ...previousValue,
+              [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
+            };
+          },
+          {}
+        );
 
-      return { timestamp: Number(timestamp), ...rolledUpData };
-    }
-  ).sort((dimension1, dimension2) => dimension1.timestamp - dimension2.timestamp);
+        return { timestamp: Number(timestamp), ...rolledUpData };
+      }
+    )
+    .sort(
+      (dimension1, dimension2) => dimension1.timestamp - dimension2.timestamp
+    );
   return {
     areas,
     dimensions,
@@ -350,7 +358,6 @@ export const mapResourceIdToName = (
   );
   return resourcesObj?.label ?? id ?? '';
 };
-
 
 /**
  *

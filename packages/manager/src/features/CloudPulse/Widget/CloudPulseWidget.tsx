@@ -13,6 +13,7 @@ import {
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
 import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
+import { generateCurrentUnit } from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
 import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
@@ -29,10 +30,12 @@ import type {
   TimeGranularity,
 } from '@linode/api-v4';
 import type { Widgets } from '@linode/api-v4';
-import type { AreaProps, ChartVariant } from 'src/components/AreaChart/AreaChart';
+import type {
+  AreaProps,
+  ChartVariant,
+} from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import type { Metrics } from 'src/utilities/statMetrics';
-import { generateCurrentUnit } from '../Utils/unitConversion';
 
 export interface CloudPulseWidgetProperties {
   /**
@@ -240,7 +243,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   let legendRows: MetricsDisplayRow[] = [];
   let currentUnit = unit;
   let areas: AreaProps[] = [];
-  const variant : ChartVariant= widget.chart_type === 'line' ? 'line' : 'area';
+  const variant: ChartVariant = widget.chart_type === 'line' ? 'line' : 'area';
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       flags,
@@ -249,7 +252,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       resources,
       serviceType,
       status,
-      unit
+      unit,
     });
 
     data = generatedData.dimensions;
@@ -334,8 +337,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             showLegend={data.length !== 0}
             timezone={timezone}
             unit={currentUnit}
-            xAxis={{ tickFormat, tickGap: 60 }}
             variant={variant}
+            xAxis={{ tickFormat, tickGap: 60 }}
           />
         </Paper>
       </Stack>
