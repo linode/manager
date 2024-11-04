@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormHelperText } from '@linode/ui';
 import { createSubnetSchema } from '@linode/validation';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -64,7 +63,7 @@ export const SubnetCreateDrawer = (props: Props) => {
   });
 
   const ipv4 = watch('ipv4');
-  const availIPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
+  const numberOfAvailableIPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
 
   const onCreateSubnet = async (values: CreateSubnetPayload) => {
     try {
@@ -102,49 +101,47 @@ export const SubnetCreateDrawer = (props: Props) => {
         />
       )}
       <form onSubmit={handleSubmit(onCreateSubnet)}>
-        <Grid sx={{ flexGrow: 1, maxWidth: 460 }}>
-          <Stack>
-            <Controller
-              render={({ field, fieldState }) => (
-                <TextField
-                  aria-label="Enter a subnet label"
-                  disabled={userCannotAddSubnet}
-                  errorText={fieldState.error?.message}
-                  label="Subnet Label"
-                  onBlur={field.onBlur}
-                  onChange={field.onChange}
-                  placeholder="Enter a subnet label"
-                  value={field.value}
-                />
-              )}
-              control={control}
-              name="label"
-            />
-            <Controller
-              render={({ field, fieldState }) => (
-                <TextField
-                  aria-label="Enter an IPv4"
-                  disabled={userCannotAddSubnet}
-                  errorText={fieldState.error?.message}
-                  label="Subnet IP Address Range"
-                  onBlur={field.onBlur}
-                  onChange={field.onChange}
-                  value={field.value}
-                />
-              )}
-              control={control}
-              name="ipv4"
-            />
-            {availIPs && (
-              <FormHelperText>
-                Number of Available IP Addresses:{' '}
-                {availIPs > RESERVED_IP_NUMBER
-                  ? (availIPs - RESERVED_IP_NUMBER).toLocaleString()
-                  : 0}
-              </FormHelperText>
+        <Stack>
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                aria-label="Enter a subnet label"
+                disabled={userCannotAddSubnet}
+                errorText={fieldState.error?.message}
+                label="Subnet Label"
+                onBlur={field.onBlur}
+                onChange={field.onChange}
+                placeholder="Enter a subnet label"
+                value={field.value}
+              />
             )}
-          </Stack>
-        </Grid>
+            control={control}
+            name="label"
+          />
+          <Controller
+            render={({ field, fieldState }) => (
+              <TextField
+                aria-label="Enter an IPv4"
+                disabled={userCannotAddSubnet}
+                errorText={fieldState.error?.message}
+                label="Subnet IP Address Range"
+                onBlur={field.onBlur}
+                onChange={field.onChange}
+                value={field.value}
+              />
+            )}
+            control={control}
+            name="ipv4"
+          />
+          {numberOfAvailableIPs && (
+            <FormHelperText>
+              Number of Available IP Addresses:{' '}
+              {numberOfAvailableIPs > RESERVED_IP_NUMBER
+                ? (numberOfAvailableIPs - RESERVED_IP_NUMBER).toLocaleString()
+                : 0}
+            </FormHelperText>
+          )}
+        </Stack>
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'create-subnet-drawer-button',
