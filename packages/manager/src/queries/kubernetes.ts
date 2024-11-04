@@ -30,7 +30,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -108,12 +107,18 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
-export const useKubernetesClusterQuery = (id: number, showAPL: boolean) => {
+export const useKubernetesClusterQuery = (id: number) => {
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id),
-    queryFn: showAPL
-      ? () => getKubernetesClusterBeta(id) // necessary to call BETA_API_ROOT in a seperate function based on feature flag
-      : () => getKubernetesCluster(id),
+    queryFn: () => getKubernetesCluster(id),
+  });
+};
+
+export const useKubernetesClusterQueryBeta = (id: number) => {
+  return useQuery<KubernetesCluster, APIError[]>({
+    ...kubernetesQueries.cluster(id),
+    // necessary to call BETA_API_ROOT in a separate function based on feature flag
+    queryFn: () => getKubernetesClusterBeta(id),
   });
 };
 

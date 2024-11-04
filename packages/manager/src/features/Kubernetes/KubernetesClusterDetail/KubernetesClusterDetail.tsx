@@ -13,6 +13,7 @@ import { useAccount } from 'src/queries/account/account';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
+  useKubernetesClusterQueryBeta,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -30,23 +31,16 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
   const showAPL = useAPLAvailability();
 
-  const {
-    data: cluster,
-    error,
-    isLoading,
-    refetch,
-  } = useKubernetesClusterQuery(id, showAPL);
+  const kubernetesClusterBetaQuery = useKubernetesClusterQueryBeta(id);
+  const kubernetesClusterQuery = useKubernetesClusterQuery(id);
+  const { data: cluster, error, isLoading } = showAPL
+    ? kubernetesClusterBetaQuery
+    : kubernetesClusterQuery;
   const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
     id
   );
-
-  React.useEffect(() => {
-    if (showAPL) {
-      refetch();
-    }
-  }, [refetch, showAPL]);
 
   const {
     isClusterHighlyAvailable,
