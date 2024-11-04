@@ -1,9 +1,9 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Button } from 'src/components/Button/Button';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledTable = styled(Table, {
   label: 'StyledTable',

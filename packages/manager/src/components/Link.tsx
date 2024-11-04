@@ -1,4 +1,5 @@
 import { sanitizeUrl } from '@braintree/sanitize-url';
+import { omitProps } from '@linode/ui';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -9,7 +10,6 @@ import {
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
 } from 'src/utilities/link';
-import { omitProps } from 'src/utilities/omittedProps';
 
 import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
 import type { LinkProps as _LinkProps } from 'react-router-dom';

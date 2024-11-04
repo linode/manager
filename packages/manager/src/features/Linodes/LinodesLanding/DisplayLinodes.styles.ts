@@ -1,9 +1,8 @@
-import { IconButton } from '@linode/ui';
+import { IconButton, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledTagHeaderRow = styled(TableRow, {
   label: 'StyledTagHeaderRow',

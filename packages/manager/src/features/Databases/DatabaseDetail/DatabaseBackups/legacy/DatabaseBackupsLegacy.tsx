@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4';
 import type { Database, Engine } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

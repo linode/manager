@@ -1,15 +1,16 @@
+import { Paper } from '@linode/ui';
 import Button from '@mui/material/Button';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
-import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
-import { PromotionalOffer } from 'src/featureFlags';
-import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { OFFSITE_URL_REGEX, ONSITE_URL_REGEX } from 'src/constants';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+
+import type { Theme } from '@mui/material/styles';
+import type { PromotionalOffer } from 'src/featureFlags';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   alignLeft: {

@@ -1,7 +1,7 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Chip } from 'src/components/Chip';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';
 

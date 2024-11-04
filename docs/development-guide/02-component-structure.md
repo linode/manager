@@ -15,9 +15,9 @@ The basic structure of a component file should follow:
 Here is a minimal code example demonstrating the basic structure of a component file:
 
 ```tsx
-import * as React from "react";
+import { omittedProps } from "@linode/ui";
 import { styled } from "@mui/material/styles";
-import { omittedProps } from "src/utilities/omittedProps";
+import * as React from "react";
 
 // If not exported, it can just be named `Props`
 export interface SayHelloProps {

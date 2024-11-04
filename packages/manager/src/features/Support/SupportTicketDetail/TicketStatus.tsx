@@ -1,11 +1,10 @@
-import { SupportTicket } from '@linode/api-v4/lib/support/types';
+import { Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { Typography } from 'src/components/Typography';
@@ -15,6 +14,8 @@ import { formatDate } from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 import { SeverityChip } from './SeverityChip';
+
+import type { SupportTicket } from '@linode/api-v4/lib/support/types';
 
 type Props = Pick<
   SupportTicket,

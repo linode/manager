@@ -1,9 +1,8 @@
-import { InputAdornment } from '@linode/ui';
+import { InputAdornment, Paper } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';

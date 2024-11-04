@@ -1,6 +1,7 @@
 // Styled component using omittedProps
 import styled from '@emotion/styled';
-
+import '@testing-library/jest-dom/vitest';
+import { describe, expect, it } from 'vitest';
 import { omitProps, omittedProps } from './omittedProps';
 
 type StyledProps = {
@@ -11,7 +12,7 @@ type StyledProps = {
 
 const MyStyledComponent = styled('div', {
   label: 'MyStyledComponent',
-  shouldForwardProp: omittedProps<StyledProps>(['extraProp', 'anotherProp']),
+  shouldForwardProp: omittedProps(['extraProp', 'anotherProp']),
 })<StyledProps>`
   color: ${(props) => props.color};
 `;

@@ -1,10 +1,9 @@
-import { Box, Tooltip } from '@linode/ui';
+import { Box, Paper, Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { StyledActionButton } from 'src/components/Button/StyledActionButton';
-import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
 import { NodeTable } from './NodeTable';

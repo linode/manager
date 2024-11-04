@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 
