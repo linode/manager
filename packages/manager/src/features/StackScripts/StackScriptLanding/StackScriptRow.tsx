@@ -1,9 +1,11 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { StackScriptActionMenu } from './StackScriptActionMenu';
 
@@ -19,6 +21,12 @@ interface Props {
 export const StackScriptRow = (props: Props) => {
   const { handlers, stackscript, type } = props;
 
+  const history = useHistory();
+  const isLinodeCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_linodes',
+    permittedGrantLevel: 'read_write',
+  });
+
   return (
     <TableRow>
       <TableCell>{stackscript.label}</TableCell>
@@ -32,7 +40,20 @@ export const StackScriptRow = (props: Props) => {
       )}
       <TableCell actionCell noWrap>
         {type === 'community' ? (
-          <InlineMenuAction actionText="Deploy new Linode" />
+          <InlineMenuAction
+            onClick={() =>
+              history.push(
+                `/linodes/create?type=StackScripts&subtype=Community&stackScriptID=${stackscript.id}`
+              )
+            }
+            tooltip={
+              isLinodeCreationRestricted
+                ? "You don't have permissions to add Linodes"
+                : undefined
+            }
+            actionText="Deploy New Linode"
+            disabled={isLinodeCreationRestricted}
+          />
         ) : (
           <StackScriptActionMenu
             handlers={handlers}
