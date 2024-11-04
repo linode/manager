@@ -7,7 +7,7 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import {
   isDistributedRegionSupported,

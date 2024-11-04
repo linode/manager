@@ -1,8 +1,6 @@
-import { Box } from '@linode/ui';
+import { Box, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material';
 import * as React from 'react';
-
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { BoxProps } from '@linode/ui';
 

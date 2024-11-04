@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
