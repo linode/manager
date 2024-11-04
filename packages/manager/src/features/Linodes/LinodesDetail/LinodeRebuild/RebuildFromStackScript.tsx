@@ -31,12 +31,12 @@ import {
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
+import { StackScriptDetailsDialog } from '../../LinodeCreate/Tabs/StackScripts/StackScriptDetailsDialog';
 import { ImageEmptyState } from './ImageEmptyState';
 
 import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormikProps } from 'formik';
-import { StackScriptDetailsDialog } from '../../LinodeCreate/Tabs/StackScripts/StackScriptDetailsDialog';
 
 interface Props {
   disabled: boolean;
@@ -118,11 +118,12 @@ export const RebuildFromStackScript = (props: Props) => {
     Object.keys(_imagesData).map((eachKey) => _imagesData[eachKey])
   );
 
-  const [isStackScriptDetailsDialogOpen, setIsStackScriptDetailsDialogOpen] = React.useState(false);
-  const [selectedStackScriptIdForDetailsDialog, setSelectedStackScriptIdForDetailsDialog] = React.useState<number>();
+  const [
+    selectedStackScriptIdForDetailsDialog,
+    setSelectedStackScriptIdForDetailsDialog,
+  ] = React.useState<number | undefined>();
 
   const onOpenStackScriptDetailsDialog = (stackscriptId: number) => {
-    setIsStackScriptDetailsDialogOpen(true);
     setSelectedStackScriptIdForDetailsDialog(stackscriptId);
   };
 
@@ -299,12 +300,12 @@ export const RebuildFromStackScript = (props: Props) => {
                 error={errors.stackscript_id}
                 header="Select StackScript"
                 onSelect={handleSelect}
+                openStackScriptDetailsDialog={onOpenStackScriptDetailsDialog}
                 publicImages={filterImagesByType(_imagesData, 'public')}
                 resetSelectedStackScript={resetStackScript}
                 selectedId={ss.id}
                 selectedUsername={ss.username}
                 updateFor={[ss.id, errors]}
-                openStackScriptDetailsDialog={onOpenStackScriptDetailsDialog}
               />
               {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
                 <UserDefinedFieldsPanel
@@ -390,9 +391,11 @@ export const RebuildFromStackScript = (props: Props) => {
               </Grid>
             </form>
             <StackScriptDetailsDialog
+              onClose={() =>
+                setSelectedStackScriptIdForDetailsDialog(undefined)
+              }
               id={selectedStackScriptIdForDetailsDialog}
-              onClose={() => setIsStackScriptDetailsDialogOpen(false)}
-              open={isStackScriptDetailsDialogOpen}
+              open={selectedStackScriptIdForDetailsDialog !== undefined}
             />
           </Grid>
         );
