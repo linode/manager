@@ -132,3 +132,8 @@ export interface ServiceTypes {
 export interface ServiceTypesList {
   data: ServiceTypes[];
 }
+
+export interface DataSet {
+  [label: string]: number;
+  timestamp: number;
+}
