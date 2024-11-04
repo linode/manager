@@ -5,7 +5,7 @@ import { Typography } from 'src/components/Typography';
 
 import { StyledPlanSummarySpan } from '../DatabaseDetail/DatabaseResize/DatabaseResize.style';
 import { useIsDatabasesEnabled } from '../utilities';
-import { useStyles } from './DatabaseCreate.style';
+import { StyledSpan } from './DatabaseCreate.style';
 
 import type {
   ClusterSize,
@@ -32,7 +32,6 @@ interface Props {
 }
 
 export const DatabaseSummarySection = (props: Props) => {
-  const { classes } = useStyles();
   const {
     currentClusterSize,
     currentEngine,
@@ -63,14 +62,18 @@ export const DatabaseSummarySection = (props: Props) => {
         {isResize && 'Current Cluster: '}
         {currentPlan?.heading}
       </StyledPlanSummarySpan>{' '}
-      <span className={isDatabasesV2GA ? classes.summarySpanBorder : ''}>
-        {currentPlanPrice}
-      </span>
-      <span className={classes.nodeSpanSpacing}>
-        {' '}
+      {isDatabasesV2GA ? (
+        <StyledSpan>{currentPlanPrice}</StyledSpan>
+      ) : (
+        <span>{currentPlanPrice}</span>
+      )}
+      <Typography
+        component="span"
+        // sx={(theme) => ({ marginRight: theme.spacing(1) })}
+      >
         {currentClusterSize} Node
         {currentClusterSize > 1 ? 's - HA ' : ' '}
-      </span>
+      </Typography>
       {currentNodePrice}
     </Box>
   ) : (
@@ -90,17 +93,19 @@ export const DatabaseSummarySection = (props: Props) => {
               ? 'Resized Cluster: ' + resizeData.plan
               : resizeData.plan}
           </StyledPlanSummarySpan>{' '}
-          {isNewDatabase && (
-            <span className={classes.summarySpanBorder}>
-              {resizeData.basePrice}
-            </span>
-          )}
-          <span className={isNewDatabase ? classes.nodeSpanSpacing : ''}>
-            {' '}
+          {isNewDatabase && <StyledSpan>{resizeData.basePrice}</StyledSpan>}
+          <Typography
+            sx={
+              isNewDatabase
+                ? (theme) => ({ marginRight: theme.spacing(1) })
+                : null
+            }
+            component="span"
+          >
             {resizeData.numberOfNodes} Node
             {resizeData.numberOfNodes > 1 ? 's' : ''}
             {!isNewDatabase ? ': ' : ' - HA '}
-          </span>
+          </Typography>
           {resizeData.price}
         </>
       ) : isNewDatabase ? (

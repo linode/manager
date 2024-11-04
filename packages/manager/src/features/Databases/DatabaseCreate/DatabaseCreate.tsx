@@ -6,18 +6,20 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { DatabaseClusterData } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
-import { useStyles } from 'src/features/Databases/DatabaseCreate/DatabaseCreate.style';
+import {
+  StyledBtnCtn,
+  StyledCreateBtn,
+  StyledPlansPanel,
+  StyledTypography,
+} from 'src/features/Databases/DatabaseCreate/DatabaseCreate.style';
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
 import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/DatabaseSummarySection';
 import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
@@ -55,7 +57,6 @@ import type { PlanSelectionWithDatabaseType } from 'src/features/components/Plan
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const DatabaseCreate = () => {
-  const { classes } = useStyles();
   const history = useHistory();
   const {
     isDatabasesV2Beta,
@@ -281,7 +282,10 @@ const DatabaseCreate = () => {
           ],
           labelOptions: {
             suffixComponent: isDatabasesV2Beta ? (
-              <BetaChip className={classes.chip} component="span" />
+              <BetaChip
+                component="span"
+                sx={{ marginLeft: '6px', marginTop: '4px' }}
+              />
             ) : null,
           },
           pathname: location.pathname,
@@ -309,21 +313,18 @@ const DatabaseCreate = () => {
           </Notice>
         )}
         <DatabaseClusterData
-          onChange={(field: string, value: any) => {
-            setFieldValue(field, value);
-          }}
           engines={engines}
           errors={errors}
+          onChange={(field: string, value: any) => setFieldValue(field, value)}
           regionsData={regionsData}
           values={values}
         />
         <Divider spacingBottom={12} spacingTop={38} />
         <Grid>
-          <PlansPanel
+          <StyledPlansPanel
             onSelect={(selected: string) => {
               setFieldValue('type', selected);
             }}
-            className={classes.selectPlanPanel}
             data-qa-select-plan
             disabled={isRestricted}
             error={errors.type}
@@ -368,21 +369,20 @@ const DatabaseCreate = () => {
           />
         </Paper>
       )}
-      <Grid className={classes.btnCtn}>
-        <Typography className={classes.createText}>
+      <StyledBtnCtn>
+        <StyledTypography>
           Your database node(s) will take approximately 15-30 minutes to
           provision.
-        </Typography>
-        <Button
+        </StyledTypography>
+        <StyledCreateBtn
           buttonType="primary"
-          className={classes.createBtn}
           disabled={isRestricted}
           loading={isSubmitting}
           type="submit"
         >
           Create Database Cluster
-        </Button>
-      </Grid>
+        </StyledCreateBtn>
+      </StyledBtnCtn>
       {isDatabasesV2Enabled && <DatabaseLogo />}
     </form>
   );

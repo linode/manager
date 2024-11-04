@@ -8,7 +8,6 @@ import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 import { StyledChip } from 'src/features/components/PlansPanel/PlanSelection.styles';
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
-import { useStyles } from 'src/features/Databases/DatabaseCreate/DatabaseCreate.style';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { useIsDatabasesEnabled } from '../utilities';
@@ -19,6 +18,7 @@ import type {
   DatabasePriceObject,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
+import type { Theme } from '@mui/material';
 import type {
   PlanSelectionType,
   PlanSelectionWithDatabaseType,
@@ -40,6 +40,9 @@ interface Props {
   selectedPlan: PlanSelectionWithDatabaseType | undefined;
   selectedTab: number;
 }
+const typographyBaseStyles = (theme: Theme) => ({
+  color: theme.palette.mode === 'dark' ? theme.color.grey6 : theme.color.grey1,
+});
 
 export const DatabaseNodeSelector = (props: Props) => {
   const {
@@ -58,7 +61,6 @@ export const DatabaseNodeSelector = (props: Props) => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
-  const { classes } = useStyles();
 
   const nodePricing = {
     double: selectedPlan?.engines[selectedEngine]?.find(
@@ -97,8 +99,8 @@ export const DatabaseNodeSelector = (props: Props) => {
       {
         label: (
           <Typography
-            className={isDisabled(1) ? classes.disabledOptionLabel : ''}
-            component={'div'}
+            component="div"
+            sx={isDisabled(1) ? typographyBaseStyles : undefined}
           >
             <span>1 Node {` `}</span>
             {currentClusterSize === 1 && currentChip}
@@ -118,8 +120,8 @@ export const DatabaseNodeSelector = (props: Props) => {
       options.push({
         label: (
           <Typography
-            className={isDisabled(2) ? classes.disabledOptionLabel : ''}
-            component={'div'}
+            component="div"
+            sx={isDisabled(2) ? typographyBaseStyles : undefined}
           >
             <span>2 Nodes - High Availability</span>
             {currentClusterSize === 2 && currentChip}
@@ -138,8 +140,8 @@ export const DatabaseNodeSelector = (props: Props) => {
     options.push({
       label: (
         <Typography
-          className={isDisabled(3) ? classes.disabledOptionLabel : ''}
-          component={'div'}
+          component="div"
+          sx={isDisabled(3) ? typographyBaseStyles : undefined}
         >
           <span>3 Nodes - High Availability (recommended)</span>
           {currentClusterSize === 3 && currentChip}
@@ -191,12 +193,12 @@ export const DatabaseNodeSelector = (props: Props) => {
               disabled={
                 currentClusterSize && nodeOption.value < currentClusterSize
               }
-              className={classes.formControlLabel}
               control={<Radio />}
               data-qa-radio={nodeOption.label}
               data-testid={`database-node-${nodeOption.value}`}
               key={nodeOption.value}
               label={nodeOption.label}
+              sx={(theme) => ({ marginBottom: theme.spacing() })}
               value={nodeOption.value}
             />
           ))}

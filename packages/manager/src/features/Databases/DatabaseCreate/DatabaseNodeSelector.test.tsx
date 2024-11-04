@@ -1,4 +1,5 @@
-import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
@@ -35,7 +36,7 @@ describe('database node selector', () => {
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     const sharedTab = getAllByRole('tab')[1];
-    fireEvent.click(sharedTab);
+    await userEvent.click(sharedTab);
 
     expect(getByTestId('database-nodes').childNodes.length).equal(2);
     expect(getByTestId('database-node-1')).toBeInTheDocument();

@@ -40,7 +40,6 @@ describe('useIsDatabasesEnabled', () => {
     const { result } = setup([], { dbaasV2: { beta: true, enabled: true } });
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(false);
-      expect(result.current.isDatabasesV1Enabled).toBe(false);
       expect(result.current.isDatabasesV2Enabled).toBe(false);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
@@ -58,7 +57,6 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV1Enabled).toBe(true);
       expect(result.current.isDatabasesV2Enabled).toBe(false);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
@@ -76,7 +74,6 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV1Enabled).toBe(false);
       expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(true);
@@ -94,7 +91,6 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(false);
-      expect(result.current.isDatabasesV1Enabled).toBe(false);
       expect(result.current.isDatabasesV2Enabled).toBe(false);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
@@ -112,7 +108,6 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV1Enabled).toBe(true);
       expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(true);
@@ -130,8 +125,7 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV1Enabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(false);
+      expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
       expect(result.current.isUserExistingBeta).toBe(false);
@@ -176,7 +170,6 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV1Enabled).toBe(true);
       expect(result.current.isDatabasesV2Enabled).toBe(false);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);
@@ -222,7 +215,6 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV1Enabled).toBe(true);
       expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(true);
@@ -268,7 +260,6 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV1Enabled).toBe(false);
       expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(true);
@@ -314,7 +305,6 @@ describe('useIsDatabasesEnabled', () => {
 
     await waitFor(() => {
       expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV1Enabled).toBe(false);
       expect(result.current.isDatabasesV2Enabled).toBe(true);
 
       expect(result.current.isDatabasesV2Beta).toBe(false);

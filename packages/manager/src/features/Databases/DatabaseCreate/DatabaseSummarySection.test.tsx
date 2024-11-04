@@ -1,8 +1,5 @@
-import {
-  fireEvent,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Router } from 'react-router-dom';
@@ -60,10 +57,12 @@ describe('database node selector', () => {
     const selectedPlan = await waitFor(
       () => document.getElementById('g6-dedicated-2') as HTMLInputElement
     );
-    await fireEvent.click(selectedPlan);
+    await userEvent.click(selectedPlan);
 
     const summary = getByTestId('currentSummary');
-    const defaultText = 'Dedicated 4 GB $60/month 3 Nodes - HA $140/month';
-    expect(summary).toHaveTextContent(defaultText);
+    const selectedPlanText = 'Dedicated 4 GB $60/month';
+    expect(summary).toHaveTextContent(selectedPlanText);
+    const selectedNodesText = '3 Nodes - HA $140/month';
+    expect(summary).toHaveTextContent(selectedNodesText);
   });
 });

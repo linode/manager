@@ -1,88 +1,92 @@
-import { makeStyles } from 'tss-react/mui';
+import { Box } from '@linode/ui';
+import { Grid, styled } from '@mui/material';
 
-import type { Theme } from '@mui/material';
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Button } from 'src/components/Button/Button';
+import { TextField } from 'src/components/TextField';
+import { Typography } from 'src/components/Typography';
+import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 
-export const useStyles = makeStyles()((theme: Theme) => ({
-  btnCtn: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      alignItems: 'flex-end',
-      flexDirection: 'column',
-      marginTop: theme.spacing(),
+export const StyledLabelTooltip = styled(Box, {
+  label: 'StyledLabelTooltip',
+})(() => ({
+  '& strong': {
+    padding: 8,
+  },
+  '& ul': {
+    margin: '4px',
+  },
+}));
+
+export const StyledTextField = styled(TextField, {
+  label: 'StyledTextField',
+})(({ theme }) => ({
+  '& .MuiTooltip-tooltip': {
+    [theme.breakpoints.up('md')]: {
+      minWidth: 350,
     },
   },
-  chip: {
-    marginLeft: 6,
-    marginTop: 4,
-  },
-  createBtn: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-    whiteSpace: 'nowrap',
-  },
-  createText: {
-    marginLeft: theme.spacing(),
-    marginRight: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 0,
-      padding: theme.spacing(),
-    },
-  },
-  disabledOptionLabel: {
-    color:
-      theme.palette.mode === 'dark' ? theme.color.grey6 : theme.color.grey1,
-  },
-  engineSelect: {
-    '& .react-select__option--is-focused': {
-      '&:not(.react-select__option--is-selected)': {
-        '& svg': {
-          filter: 'brightness(0) invert(1)',
-        },
+}));
+
+export const StyledEngineSelect = styled(Autocomplete, {
+  label: 'StyledTextField',
+})(() => ({
+  '& .react-select__option--is-focused': {
+    '&:not(.react-select__option--is-selected)': {
+      '& svg': {
+        filter: 'brightness(0) invert(1)',
       },
     },
   },
-  formControlLabel: {
-    marginBottom: theme.spacing(),
+}));
+
+export const StyledPlansPanel = styled(PlansPanel, {
+  label: 'StyledPlansPanel',
+})(() => ({
+  margin: 0,
+  padding: 0,
+}));
+
+export const StyledBtnCtn = styled(Grid, {
+  label: 'StyledBtnCtn',
+})(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'flex-end',
+  marginTop: theme.spacing(2),
+  [theme.breakpoints.down('sm')]: {
+    alignItems: 'flex-end',
+    flexDirection: 'column',
+    marginTop: theme.spacing(),
   },
-  labelToolTipCtn: {
-    '& strong': {
-      padding: 8,
-    },
-    '& ul': {
-      margin: '4px',
-    },
+}));
+
+export const StyledCreateBtn = styled(Button, {
+  label: 'StyledCreateBtn',
+})(({ theme }) => ({
+  [theme.breakpoints.down('md')]: {
+    marginRight: theme.spacing(),
   },
-  nodeHelpIcon: {
-    marginTop: '-2px',
-    padding: '0px 0px 0px 2px',
+  whiteSpace: 'nowrap',
+}));
+
+export const StyledTypography = styled(Typography, {
+  label: 'StyledTypography',
+})(({ theme }) => ({
+  marginLeft: theme.spacing(),
+  marginRight: theme.spacing(3),
+  [theme.breakpoints.down('sm')]: {
+    marginRight: 0,
+    padding: theme.spacing(),
   },
-  nodeSpanSpacing: {
-    marginRight: theme.spacing(1),
-  },
-  notice: {
-    fontSize: 15,
-    lineHeight: '18px',
-  },
-  selectPlanPanel: {
-    margin: 0,
-    padding: 0,
-  },
-  summarySpanBorder: {
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    color: theme.textColors.tableStatic,
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-  },
-  tooltip: {
-    '& .MuiTooltip-tooltip': {
-      [theme.breakpoints.up('md')]: {
-        minWidth: 350,
-      },
-    },
-  },
+}));
+
+export const StyledSpan = styled('span', {
+  label: 'StyledSpan',
+})(({ theme }) => ({
+  borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+  color: theme.textColors.tableStatic,
+  marginLeft: theme.spacing(1),
+  marginRight: theme.spacing(1),
+  paddingRight: theme.spacing(1),
 }));
