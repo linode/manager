@@ -52,6 +52,7 @@ interface Props extends RenderGuardProps {
     images: string[],
     userDefinedFields: UserDefinedField[]
   ) => void;
+  openStackScriptDetailsDialog: (stackscriptId: number) => void;
   publicImages: Record<string, Image>;
   request: (
     username: string,
@@ -139,6 +140,9 @@ class SelectStackScriptPanel extends React.Component<
               />
               <tbody>
                 <StackScriptSelectionRow
+                  openStackScriptDetailsDialog={
+                    this.props.openStackScriptDetailsDialog
+                  }
                   updated={formatDate(stackScript.updated, {
                     displayTime: false,
                     timezone: profile.data?.timezone,
@@ -183,6 +187,9 @@ class SelectStackScriptPanel extends React.Component<
           )}
           <StyledSelectingPaper>
             <SelectStackScriptPanelContent
+              openStackScriptDetailsDialog={
+                this.props.openStackScriptDetailsDialog
+              }
               category={category}
               currentUser={profile.data?.username || ''}
               disabled={this.props.disabled}
