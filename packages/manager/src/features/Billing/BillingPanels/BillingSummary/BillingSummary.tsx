@@ -1,10 +1,9 @@
-import { Divider } from '@linode/ui';
+import { Box, Divider } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import { TooltipIcon } from 'src/components/TooltipIcon';

@@ -1,9 +1,8 @@
-import { Divider } from '@linode/ui';
+import { Divider, FormControl } from '@linode/ui';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';

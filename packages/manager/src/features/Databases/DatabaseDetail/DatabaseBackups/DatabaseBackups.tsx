@@ -1,4 +1,4 @@
-import { Divider } from '@linode/ui';
+import { Box, Divider } from '@linode/ui';
 import {
   FormControl,
   FormControlLabel,
@@ -13,7 +13,6 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';

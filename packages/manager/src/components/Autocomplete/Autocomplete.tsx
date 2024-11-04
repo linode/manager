@@ -1,13 +1,12 @@
+import { Box, InputAdornment } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { TextField } from 'src/components/TextField';
 
 import { CircleProgress } from '../CircleProgress';
-import { InputAdornment } from '../InputAdornment';
 import {
   CustomPopper,
   SelectedIcon,

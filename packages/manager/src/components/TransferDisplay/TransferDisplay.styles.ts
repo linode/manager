@@ -1,6 +1,5 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Box } from 'src/components/Box';
 
 export const StyledTransferDisplayContainer = styled(Box, {
   label: 'StyledTransferDisplayTypography',

@@ -1,11 +1,11 @@
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import { LongviewPackage } from './request.types';
+import type { LongviewPackage } from './request.types';
 
 interface Props {
   lvPackage: LongviewPackage;

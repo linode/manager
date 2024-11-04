@@ -1,5 +1,5 @@
 import { makePayment } from '@linode/api-v4/lib/account';
-import { Divider } from '@linode/ui';
+import { Divider, InputAdornment } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -10,7 +10,6 @@ import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';

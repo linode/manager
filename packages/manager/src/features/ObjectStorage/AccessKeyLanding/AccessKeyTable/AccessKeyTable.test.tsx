@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AccessKeyTable, AccessKeyTableProps } from './AccessKeyTable';
+import { AccessKeyTable } from './AccessKeyTable';
+
+import type { AccessKeyTableProps } from './AccessKeyTable';
 
 describe('ObjectStorageKeyTable', () => {
   const props: AccessKeyTableProps = {
@@ -34,9 +36,9 @@ describe('ObjectStorageKeyTable', () => {
     getByText('We were unable to load your Access Keys.');
   });
 
-  it('returns an empty state if there is no data', () => {
+  it('returns an empty state if there are no access keys', () => {
     const { getByText } = renderWithTheme(
-      <AccessKeyTable {...props} data={undefined} />
+      <AccessKeyTable {...props} data={[]} />
     );
     getByText('No items to display.');
   });
