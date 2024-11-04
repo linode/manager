@@ -21,6 +21,7 @@ interface Props {
     images: string[],
     userDefinedFields: UserDefinedField[]
   ) => void;
+  openStackScriptDetailsDialog: (stackscriptId: number) => void;
   publicImages: Record<string, Image>;
   request: StackScriptsRequest;
   resetStackScriptSelection: () => void;
@@ -47,6 +48,7 @@ class SelectStackScriptPanelContent extends React.Component<
         disabled={this.props.disabled}
         isSorting={this.props.isSorting}
         onSelect={this.handleSelectStackScript}
+        openStackScriptDetailsDialog={this.props.openStackScriptDetailsDialog}
         publicImages={this.props.publicImages}
         selectedId={selected}
       />
