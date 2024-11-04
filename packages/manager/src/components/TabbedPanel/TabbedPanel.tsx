@@ -1,4 +1,4 @@
-import { Tooltip } from '@linode/ui';
+import { Box, Tooltip } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
@@ -11,8 +11,6 @@ import { TabPanel } from 'src/components/Tabs/TabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Typography } from 'src/components/Typography';
-
-import { Box } from '../Box';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 

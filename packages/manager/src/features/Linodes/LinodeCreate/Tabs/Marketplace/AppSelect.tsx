@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from 'src/components/Paper';

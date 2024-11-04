@@ -1,9 +1,9 @@
+import { Box } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
-import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { omittedProps } from 'src/utilities/omittedProps';
