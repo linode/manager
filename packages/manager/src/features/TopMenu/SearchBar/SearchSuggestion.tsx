@@ -1,9 +1,7 @@
-import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Box } from '@linode/ui';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { OptionProps } from 'react-select';
 
-import { Box } from 'src/components/Box';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Tag } from 'src/components/Tag/Tag';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
@@ -16,6 +14,9 @@ import {
   StyledTagContainer,
   StyledWrapperDiv,
 } from './SearchSuggestion.styles';
+
+import type { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import type { OptionProps } from 'react-select';
 
 export interface SearchSuggestionT {
   description: string;

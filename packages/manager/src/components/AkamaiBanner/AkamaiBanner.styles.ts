@@ -1,28 +1,28 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import Warning from 'src/assets/icons/warning.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { omittedProps } from 'src/utilities/omittedProps';
 
-import { Box } from '../Box';
 import { Stack } from '../Stack';
 
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
-})({
+})(({ theme }) => ({
   '& .akamai-logo-icon': {
-    fill: 'white',
+    fill: theme.tokens.color.Neutrals.White,
   },
   '& .akamai-logo-name': {
     display: 'none',
   },
-});
+}));
 
 export const StyledWarningIcon = styled(Warning, {
   label: 'StyledWarningIcon',
-})({
-  color: 'black',
-});
+})(({ theme }) => ({
+  color: theme.tokens.color.Neutrals.Black,
+}));
 
 export const StyledBanner = styled(Stack, {
   label: 'StyledBanner',
@@ -39,8 +39,12 @@ export const StyledBannerLabel = styled(Box, {
   label: 'StyledBannerLabel',
   shouldForwardProp: omittedProps(['warning']),
 })<{ warning?: boolean }>(({ theme, warning }) => ({
-  backgroundColor: warning ? theme.palette.warning.dark : 'black',
-  color: warning ? 'black' : 'white',
+  backgroundColor: warning
+    ? theme.palette.warning.dark
+    : theme.tokens.color.Neutrals.Black,
+  color: warning
+    ? theme.tokens.color.Neutrals.Black
+    : theme.tokens.color.Neutrals.White,
   padding: theme.spacing(2.3),
   [theme.breakpoints.up('sm')]: {
     textWrap: 'nowrap',
