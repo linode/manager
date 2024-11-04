@@ -1,17 +1,9 @@
-import { Grant } from '@linode/api-v4/lib/account';
-import { StackScript, getStackScripts } from '@linode/api-v4/lib/stackscripts';
-import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
+import { getStackScripts } from '@linode/api-v4';
 
 import type { StackScriptsRequest } from './types';
+import type { Filter, Grant, Params } from '@linode/api-v4';
 
 export type StackScriptCategory = 'account' | 'community';
-
-export const emptyResult: ResourcePage<StackScript> = {
-  data: [],
-  page: 1,
-  pages: 1,
-  results: 0,
-};
 
 const oneClickFilter = [
   {
@@ -29,16 +21,6 @@ const oneClickFilter = [
 
 export const getOneClickApps = (params?: Params) =>
   getStackScripts(params, oneClickFilter);
-
-export const getStackScriptsByUser: StackScriptsRequest = (
-  username: string,
-  params?: Params,
-  filter?: Filter
-) =>
-  getStackScripts(params, {
-    ...filter,
-    username,
-  });
 
 export const getMineAndAccountStackScripts: StackScriptsRequest = (
   params?: Params,

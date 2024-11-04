@@ -1,6 +1,6 @@
-import { Grant } from '@linode/api-v4/lib/account';
-
 import { canUserModifyAccountStackScript } from './stackScriptUtils';
+
+import type { Grant } from '@linode/api-v4';
 
 describe('canUserModifyStackScript', () => {
   let isRestrictedUser = false;
