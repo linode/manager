@@ -30,12 +30,23 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
   const showAPL = useAPLAvailability();
 
-  const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
+  const {
+    data: cluster,
+    error,
+    isLoading,
+    refetch,
+  } = useKubernetesClusterQuery(id, showAPL);
   const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
     id
   );
+
+  React.useEffect(() => {
+    if (showAPL) {
+      refetch();
+    }
+  }, [refetch, showAPL]);
 
   const {
     isClusterHighlyAvailable,

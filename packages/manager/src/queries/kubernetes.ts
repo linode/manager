@@ -108,8 +108,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   },
 });
 
-export const useKubernetesClusterQuery = (id: number) => {
-  const showAPL = useAPLAvailability();
+export const useKubernetesClusterQuery = (id: number, showAPL: boolean) => {
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id),
     queryFn: showAPL

@@ -42,7 +42,7 @@ const checkConsoleURL = async (
     try {
       const response = await axios.get(consoleURL);
 
-      if (response.status === 200) {
+      if (response.status === 302 || response.status === 200) {
         clearInterval(interval); // Stop the polling
         setStatus({ resolved: true, url: consoleURL });
       }
@@ -53,6 +53,9 @@ const checkConsoleURL = async (
             'APL is still being deployed, please check back in a minute.',
           resolved: false,
         });
+      } else {
+        clearInterval(interval); // Stop the polling
+        setStatus({ resolved: true, url: consoleURL });
       }
     }
   };
