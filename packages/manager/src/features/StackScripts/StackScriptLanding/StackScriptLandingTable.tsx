@@ -26,6 +26,7 @@ import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
 import { StackScriptDeleteDialog } from './StackScriptDeleteDialog';
 import { StackScriptMakePublicDialog } from './StackScriptMakePublicDialog';
 import { StackScriptRow } from './StackScriptRow';
+import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelperText';
 
 interface Props {
   type: 'account' | 'community';
@@ -104,6 +105,8 @@ export const StackScriptLandingTable = (props: Props) => {
         label="Search"
         noMarginTop
         placeholder="Search by Label, Username, or Description"
+        tooltipText={<StackScriptSearchHelperText />}
+        tooltipWidth={300}
         value={query}
       />
       <Table>
@@ -167,17 +170,24 @@ export const StackScriptLandingTable = (props: Props) => {
           {query && stackscripts?.length === 0 && <TableRowEmpty colSpan={6} />}
           {isFetchingNextPage && (
             <TableRowLoading
-              responsive={{
-                2: { smDown: true },
-                3: { lgDown: true },
-                4: { lgDown: true },
-              }}
+              responsive={
+                type === 'account'
+                  ? {
+                      2: { smDown: true },
+                      3: { lgDown: true },
+                      4: { lgDown: true },
+                    }
+                  : {
+                      2: { smDown: true },
+                      3: { lgDown: true },
+                    }
+              }
               columns={type === 'account' ? 6 : 5}
             />
           )}
         </TableBody>
-        {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
       </Table>
+      {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
       <StackScriptMakePublicDialog
         onClose={() => setIsMakePublicDialogOpen(false)}
         open={isMakePublicDialogOpen}

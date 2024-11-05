@@ -43,6 +43,7 @@ import {
 
 import type { StackScriptTabType } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
+import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
 
 interface Props {
   type: StackScriptTabType;
@@ -172,36 +173,12 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             </InputAdornment>
           ),
         }}
-        tooltipText={
-          <Stack spacing={1}>
-            <Typography>
-              You can search for a specific item by prepending your search term
-              with "username:", "label:", or "description:".
-            </Typography>
-            <Box>
-              <Typography fontFamily={(theme) => theme.font.bold}>
-                Examples
-              </Typography>
-              <Typography fontSize="0.8rem">
-                <Code>username: linode</Code>
-              </Typography>
-              <Typography fontSize="0.8rem">
-                <Code>label: sql</Code>
-              </Typography>
-              <Typography fontSize="0.8rem">
-                <Code>description: "ubuntu server"</Code>
-              </Typography>
-              <Typography fontSize="0.8rem">
-                <Code>label: sql or label: php</Code>
-              </Typography>
-            </Box>
-          </Stack>
-        }
         hideLabel
         label="Search"
         onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search StackScripts"
         spellCheck={false}
+        tooltipText={<StackScriptSearchHelperText />}
         tooltipWidth={300}
         value={query}
       />

@@ -60,7 +60,7 @@ export const StackScriptRow = (props: Props) => {
         <TableCell>
           {stackscript.images.includes('any/all')
             ? 'Any/All'
-            : stackscript.images.join(', ')}
+            : stackscript.images.join(',  ')}
         </TableCell>
       </Hidden>
       {type === 'account' && (

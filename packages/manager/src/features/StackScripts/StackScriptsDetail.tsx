@@ -1,3 +1,4 @@
+import { Paper } from '@linode/ui';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -5,7 +6,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { Paper } from 'src/components/Paper';
 import { StackScript } from 'src/components/StackScript/StackScript';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import {
