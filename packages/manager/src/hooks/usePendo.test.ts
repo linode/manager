@@ -1,4 +1,4 @@
-import { transformUrls } from './usePendo';
+import { transformUrl } from './usePendo';
 
 const ID_URLS = [
   {
@@ -58,11 +58,11 @@ const OBJ_URLS = [
   },
 ];
 
-describe('transformUrls', () => {
+describe('transformUrl', () => {
   it.each(ID_URLS)(
     'replaces id(s) in $position positions in the url path',
     ({ expectedTransform, url }) => {
-      const actualTransform = transformUrls(url);
+      const actualTransform = transformUrl(url);
       expect(actualTransform).toEqual(expectedTransform);
     }
   );
@@ -71,7 +71,7 @@ describe('transformUrls', () => {
     'truncates $path from the /users url path',
     ({ path }) => {
       const baseUrl = 'https://cloud.linode.com/account/users/';
-      const actualTransform = transformUrls(`${baseUrl}${path}`);
+      const actualTransform = transformUrl(`${baseUrl}${path}`);
       expect(actualTransform).toEqual(baseUrl);
     }
   );
@@ -80,7 +80,7 @@ describe('transformUrls', () => {
     'replaces the OBJ region and bucket name in the url path ($path)',
     ({ expectedTransform, path }) => {
       const baseUrl = 'http://cloud.linode.com/object-storage/buckets/';
-      const actualTransform = transformUrls(`${baseUrl}${path}`);
+      const actualTransform = transformUrl(`${baseUrl}${path}`);
       expect(actualTransform).toEqual(expectedTransform);
     }
   );
@@ -88,7 +88,7 @@ describe('transformUrls', () => {
   it('truncates the url after "access_token" in the url path', () => {
     const url =
       'https://cloud.linode.com/oauth/callback#access_token=12345&token_type=bearer&expires_in=5678';
-    const actualTransform = transformUrls(url);
+    const actualTransform = transformUrl(url);
     const expectedTransform =
       'https://cloud.linode.com/oauth/callback#access_token';
     expect(actualTransform).toEqual(expectedTransform);

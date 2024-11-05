@@ -34,7 +34,7 @@ const hashUniquePendoId = (id: string | undefined) => {
  * @param url The url of the page.
  * @returns A clean, transformed url of the page.
  */
-export const transformUrls = (url: string) => {
+export const transformUrl = (url: string) => {
   const idMatchingRegex = /(\/\d+)/g;
   const bucketPathMatchingRegex = /(buckets\/[^\/]+\/[^\/]+)/;
   const userPathMatchingRegex = /(users\/).*/;
@@ -143,7 +143,7 @@ export const usePendo = () => {
                 action: 'Replace',
                 attr: 'pathname',
                 data(url: string) {
-                  return transformUrls(url);
+                  return transformUrl(url);
                 },
               },
             ],
