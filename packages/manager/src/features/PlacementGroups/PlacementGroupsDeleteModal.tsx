@@ -1,8 +1,8 @@
+import { CircleProgress } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';

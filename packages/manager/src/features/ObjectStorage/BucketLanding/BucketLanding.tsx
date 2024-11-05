@@ -1,8 +1,8 @@
+import { CircleProgress } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';

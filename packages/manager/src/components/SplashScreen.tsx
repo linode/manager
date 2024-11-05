@@ -1,7 +1,7 @@
+import { CircleProgress } from '@linode/ui';
 import { Box } from '@linode/ui';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { srSpeak } from 'src/utilities/accessibility';
 
 export const SplashScreen = () => {

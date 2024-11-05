@@ -1,10 +1,10 @@
+import { CircleProgress } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
@@ -28,6 +28,7 @@ import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
+import { useIsDatabasesEnabled } from '../Databases/utilities';
 import { getImageLabelForLinode } from '../Images/utils';
 import { ResultGroup } from './ResultGroup';
 import './searchLanding.css';
@@ -43,7 +44,6 @@ import withStoreSearch from './withStoreSearch';
 
 import type { SearchProps } from './withStoreSearch';
 import type { RouteComponentProps } from 'react-router-dom';
-import { useIsDatabasesEnabled } from '../Databases/utilities';
 
 const displayMap = {
   buckets: 'Buckets',

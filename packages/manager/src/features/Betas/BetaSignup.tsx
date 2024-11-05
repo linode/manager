@@ -1,3 +1,4 @@
+import { CircleProgress } from '@linode/ui';
 import { Paper } from '@linode/ui';
 import {
   createLazyRoute,
@@ -9,7 +10,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { NotFound } from 'src/components/NotFound';

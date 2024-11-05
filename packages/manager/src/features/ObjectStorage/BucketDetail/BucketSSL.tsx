@@ -1,3 +1,4 @@
+import { CircleProgress } from '@linode/ui';
 import { Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -7,7 +8,6 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';

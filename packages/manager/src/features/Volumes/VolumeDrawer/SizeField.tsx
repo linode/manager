@@ -1,8 +1,8 @@
+import { CircleProgress } from '@linode/ui';
 import { Box, FormHelperText, InputAdornment } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';

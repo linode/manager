@@ -1,9 +1,9 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
+import { CircleProgress } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';

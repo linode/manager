@@ -1,17 +1,15 @@
 import {
-  LongviewSubscription,
   getActiveLongviewPlan,
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Paper } from '@linode/ui';
+import { CircleProgress } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from '@linode/ui';
 import { Radio } from 'src/components/Radio/Radio';
 import { SupportLink } from 'src/components/SupportLink';
 import { TableBody } from 'src/components/TableBody';
@@ -20,7 +18,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -35,6 +32,10 @@ import {
   StyledTable,
   StyledTableRow,
 } from './LongviewPlans.styles';
+
+import type { LongviewSubscription } from '@linode/api-v4/lib/longview';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { UseAPIRequest } from 'src/hooks/useAPIRequest';
 
 // If an account has the "free" Longview plan,
 // longview_subscription will be {}. We'd rather use

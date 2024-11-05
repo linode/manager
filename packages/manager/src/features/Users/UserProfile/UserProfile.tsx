@@ -1,7 +1,7 @@
+import { CircleProgress } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { NotFound } from 'src/components/NotFound';

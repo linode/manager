@@ -1,3 +1,4 @@
+import { CircleProgress } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -6,7 +7,6 @@ import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
-import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Divider } from 'src/components/Divider';
 import { ErrorMessage } from 'src/components/ErrorMessage';

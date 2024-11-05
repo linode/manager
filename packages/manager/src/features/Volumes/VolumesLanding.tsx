@@ -1,3 +1,4 @@
+import { CircleProgress } from '@linode/ui';
 import { IconButton, InputAdornment } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -5,7 +6,6 @@ import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';

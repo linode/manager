@@ -1,8 +1,8 @@
+import { CircleProgress } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';

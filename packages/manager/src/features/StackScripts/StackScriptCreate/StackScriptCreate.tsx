@@ -3,6 +3,7 @@ import {
   getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
+import { CircleProgress } from '@linode/ui';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
@@ -10,7 +11,6 @@ import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';

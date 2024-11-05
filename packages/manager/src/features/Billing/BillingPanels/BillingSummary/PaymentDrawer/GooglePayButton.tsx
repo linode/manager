@@ -1,3 +1,4 @@
+import { CircleProgress } from '@linode/ui';
 import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -5,7 +6,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import {
   gPay,

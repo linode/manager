@@ -1,9 +1,9 @@
+import { CircleProgress } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';

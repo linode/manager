@@ -1,3 +1,4 @@
+import { CircleProgress } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';

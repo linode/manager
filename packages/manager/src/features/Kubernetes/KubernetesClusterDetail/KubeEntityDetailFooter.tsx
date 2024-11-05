@@ -1,3 +1,4 @@
+import { CircleProgress } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -5,7 +6,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import {
   StyledBox,
