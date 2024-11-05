@@ -20,6 +20,7 @@ export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
   shouldForwardProp: omittedProps(['isPlanCell']),
 })<StyledTableCellPropsProps>(({ theme, ...props }) => ({
+  ...(props.isPlanCell && { width: '20%' }),
   '&.emptyCell': {
     borderRight: 'none',
   },
