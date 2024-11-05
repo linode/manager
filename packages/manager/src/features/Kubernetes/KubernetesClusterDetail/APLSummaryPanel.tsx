@@ -49,7 +49,7 @@ const checkConsoleURL = async (
     } catch (error) {
       setStatus({
         message:
-          'APL is still being provisioned, please check back in a minute.',
+          'Installation still in progress; please check back in a minute.',
         resolved: false,
       });
     }
@@ -85,9 +85,7 @@ export const APLSummaryPanel = React.memo((props: Props) => {
     <Paper className={classes.root}>
       <Grid className={classes.mainGridContainer} container spacing={2}>
         <Grid>
-          <Typography className={classes.label}>
-            APL Console Endpoint:
-          </Typography>
+          <Typography className={classes.label}>Portal Endpoint:</Typography>
           {status.resolved ? (
             <Link to={status.url}>{status.url}</Link>
           ) : (
