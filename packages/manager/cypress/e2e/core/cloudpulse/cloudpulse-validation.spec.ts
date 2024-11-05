@@ -1,5 +1,5 @@
 /**
- * @file Error Handling Tests for CloudPulse DBaaS Dashboard.
+ * @file @file Error Handling Tests for CloudPulse Dashboard.
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -12,6 +12,7 @@ import {
 import { ui } from 'support/ui';
 import { widgetDetails } from 'support/constants/widgets';
 import {
+  accountFactory,
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
@@ -24,15 +25,8 @@ import { extendRegion } from 'support/util/regions';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { apiMatcher } from 'support/util/intercepts';
 import { Database } from '@linode/api-v4';
+import { mockGetAccount } from 'support/intercepts/account';
 
-/**
- * Verifies the presence and values of specific properties within the aclpPreference object
- * of the request payload. This function checks that the expected properties exist
- * and have the expected values, allowing for validation of user preferences in the application.
- *
- * @param requestPayload - The payload received from the request, containing the aclpPreference object.
- * @param expectedValues - An object containing the expected values for properties to validate against the requestPayload.
- */
 const {
   metrics,
   id,
@@ -84,12 +78,14 @@ const databaseMock: Database = databaseFactory.build({
   cluster_size: 1,
   engine: 'mysql',
 });
+const mockAccount = accountFactory.build();
 
 describe('Tests for API error handling', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclp: { beta: true, enabled: true },
     });
+    mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices(serviceType).as('fetchServices');
@@ -100,7 +96,7 @@ describe('Tests for API error handling', () => {
     mockGetDatabases([databaseMock]).as('getDatabases');
   });
 
-  it('should return error response when fetching metric definitions API request', () => {
+  it('displays error message when metric definitions API fails', () => {
     cy.intercept(
       'GET',
       apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
@@ -109,7 +105,7 @@ describe('Tests for API error handling', () => {
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //  Wait for the services and dashboard API calls to complete before proceeding.
+    //  Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
@@ -142,14 +138,14 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
-    // Wait for the metric definitions API call to resolve.
+    //  Wait for the API calls .
     cy.wait('@getMetricDefinitions');
     cy.get('[data-qa-error-msg="true"]')
       .should('be.visible')
       .and('have.text', 'Error loading the definitions of metrics.');
   });
 
-  it('should return error response when fetching services API request', () => {
+  it('displays error message when services API fails', () => {
     cy.intercept('GET', apiMatcher(`/monitor/services`), {
       statusCode: 500,
       body: {
@@ -165,7 +161,7 @@ describe('Tests for API error handling', () => {
         expect(text).to.equal('Failed to fetch the services.');
       });
   });
-  it('should return error response when fetching token API request', () => {
+  it('displays error message when token API fails', () => {
     cy.intercept('POST', apiMatcher(`/monitor/services/${serviceType}/token`), {
       statusCode: 500,
       body: {
@@ -174,7 +170,8 @@ describe('Tests for API error handling', () => {
     });
 
     cy.visitWithLogin('monitor/cloudpulse');
-    //  Wait for both the fetch services and fetch dashboard API calls to complete.
+
+    //  Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
@@ -212,7 +209,7 @@ describe('Tests for API error handling', () => {
       .and('have.text', 'Failed to get the authentication token.');
   });
 
-  it('should return error response when fetching Dashboards API Request', () => {
+  it('displays error message when Dashboards API fails', () => {
     mockGetCloudPulseServices(serviceType).as('fetchServices');
     cy.intercept(
       'GET',
@@ -224,7 +221,8 @@ describe('Tests for API error handling', () => {
     ).as('fetchDashboard');
 
     cy.visitWithLogin('monitor/cloudpulse');
-    //  Wait for both the fetch services and fetch dashboard API calls to complete.
+
+    //  Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Assert that the error message for fetching the dashboards is displayed correctly.
@@ -236,7 +234,7 @@ describe('Tests for API error handling', () => {
       });
   });
 
-  it('should return error message when the Dashboard details API request fails', () => {
+  it('displays error message when dashboard details API fails', () => {
     cy.intercept('GET', apiMatcher(`/monitor/dashboards/${id}`), {
       statusCode: 500,
       body: { errors: [{ reason: 'Bad Request' }] },
@@ -274,7 +272,7 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
-    //  Wait for the API calls to fetch services and dashboard to resolve.
+    //  Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     cy.get('[data-qa-error-msg="true"]')
@@ -282,7 +280,7 @@ describe('Tests for API error handling', () => {
       .and('have.text', 'Failed to fetch the dashboard details.');
   });
 
-  it(`should return error message when the Regions API request fails`, () => {
+  it(`displays error message when regions API fails`, () => {
     cy.intercept('GET', apiMatcher(`regions*`), {
       statusCode: 500,
       body: { errors: [{ reason: 'Bad Request' }] },
@@ -308,7 +306,7 @@ describe('Tests for API error handling', () => {
       });
   });
 
-  it('should return error response when fetching db cluster API request', () => {
+  it('displays error message when instace API fails', () => {
     cy.intercept('GET', apiMatcher(`databases/instances*`), {
       statusCode: 500,
       body: { errors: [{ reason: 'Bad Request' }] },
@@ -316,7 +314,7 @@ describe('Tests for API error handling', () => {
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //Wait for the services and dashboard API calls to resolve before proceeding.
+    //  Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     //  Select a dashboard from the autocomplete input
