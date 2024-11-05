@@ -16,6 +16,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import {
   accountStackScriptFilter,
   communityStackScriptFilter,
@@ -95,6 +96,15 @@ export const StackScriptLandingTable = (props: Props) => {
   return (
     <Stack spacing={1}>
       <DebouncedSearchTextField
+        InputProps={{
+          endAdornment: searchParseError && (
+            <TooltipIcon
+              status="error"
+              sxTooltipIcon={{ p: 0.75 }}
+              text={searchParseError.message}
+            />
+          ),
+        }}
         onSearch={(value) => {
           queryParams.set('query', value);
           history.push({ search: queryParams.toString() });

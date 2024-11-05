@@ -9,7 +9,6 @@ import { debounce } from 'throttle-debounce';
 
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Code } from 'src/components/Code/Code';
 import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -22,7 +21,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
+import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useStackScriptQuery,
@@ -43,7 +42,6 @@ import {
 
 import type { StackScriptTabType } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
-import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
 
 interface Props {
   type: StackScriptTabType;
