@@ -41,29 +41,21 @@ export const transformUrl = (url: string) => {
   const oauthPathMatchingRegex = /(#access_token).*/;
   let transformedUrl = url;
 
-  if (idMatchingRegex.test(url)) {
-    // Replace any ids with XXXX and keep the rest of the URL intact
-    transformedUrl = url.replace(idMatchingRegex, '/XXXX');
-  }
+  // Replace any ids with XXXX and keep the rest of the URL intact
+  transformedUrl = url.replace(idMatchingRegex, '/XXXX');
 
-  if (bucketPathMatchingRegex.test(transformedUrl)) {
-    // Replace the region and bucket names with XXXX and keep the rest of the URL intact.
-    // Object storage file navigation is truncated via the 'clear search' transform.
-    transformedUrl = transformedUrl.replace(
-      bucketPathMatchingRegex,
-      'buckets/XXXX/XXXX'
-    );
-  }
+  // Replace the region and bucket names with XXXX and keep the rest of the URL intact.
+  // Object storage file navigation is truncated via the 'clear search' transform.
+  transformedUrl = transformedUrl.replace(
+    bucketPathMatchingRegex,
+    'buckets/XXXX/XXXX'
+  );
 
-  if (oauthPathMatchingRegex.test(transformedUrl)) {
-    // Remove everything after access_token
-    transformedUrl = transformedUrl.replace(oauthPathMatchingRegex, '$1');
-  }
+  // Remove everything after access_token
+  transformedUrl = transformedUrl.replace(oauthPathMatchingRegex, '$1');
 
-  if (userPathMatchingRegex.test(transformedUrl)) {
-    // Remove everything after /users
-    transformedUrl = transformedUrl.replace(userPathMatchingRegex, '$1');
-  }
+  // Remove everything after /users
+  transformedUrl = transformedUrl.replace(userPathMatchingRegex, '$1');
   return transformedUrl;
 };
 
