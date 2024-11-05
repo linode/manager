@@ -1,7 +1,7 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Chip } from 'src/components/Chip';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';
 
@@ -48,9 +48,9 @@ export const StyledChip = styled(Chip, {
     '& > span': {
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
-        color: 'white',
+        color: theme.tokens.color.Neutrals.White,
       },
-      color: 'white',
+      color: theme.tokens.color.Neutrals.White,
     },
 
     backgroundColor: theme.palette.primary.main,
@@ -92,7 +92,7 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
   },
   borderBottomRightRadius: 3,
   borderLeft: `1px solid ${
-    theme.name === 'light' ? theme.colorTokens.Neutrals.White : '#2e3238'
+    theme.name === 'light' ? theme.tokens.color.Neutrals.White : '#2e3238'
   }`,
   borderRadius: 0,
   borderTopRightRadius: 3,

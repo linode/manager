@@ -20,7 +20,7 @@ import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { interceptGetAllImages } from 'support/intercepts/images';
 import type { Image } from '@linode/api-v4';
-import { getFilteredImagesForImageSelect } from 'src/components/ImageSelectv2/utilities';
+import { getFilteredImagesForImageSelect } from 'src/components/ImageSelect/utilities';
 
 // StackScript fixture paths.
 const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
@@ -80,9 +80,9 @@ const fillOutStackscriptForm = (
       .type(description);
   }
 
-  cy.findByText('Target Images').click().type(`${targetImage}`);
-
-  cy.findByText(`${targetImage}`).should('be.visible').click();
+  ui.autocomplete.findByLabel('Target Images').should('be.visible').click();
+  ui.autocompletePopper.findByTitle(targetImage).should('be.visible').click();
+  ui.autocomplete.findByLabel('Target Images').click(); // Close autocomplete popper
 
   // Insert a script.
   inputStackScript(script);
