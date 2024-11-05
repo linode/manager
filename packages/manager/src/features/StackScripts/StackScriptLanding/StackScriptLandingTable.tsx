@@ -28,6 +28,7 @@ import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelper
 import { StackScriptDeleteDialog } from './StackScriptDeleteDialog';
 import { StackScriptMakePublicDialog } from './StackScriptMakePublicDialog';
 import { StackScriptRow } from './StackScriptRow';
+import { StackScriptsEmptyLandingState } from '../StackScriptBase/StackScriptsEmptyLandingPage';
 
 interface Props {
   type: 'account' | 'community';
@@ -89,6 +90,10 @@ export const StackScriptLandingTable = (props: Props) => {
 
   const stackscripts = data?.pages.flatMap((page) => page.data);
 
+  if (stackscripts?.length === 0) {
+    return <StackScriptsEmptyLandingState />;
+  }
+
   const selectedStackScript = selectedStackScriptId
     ? stackscripts?.find((s) => s.id === selectedStackScriptId)
     : undefined;
@@ -119,7 +124,7 @@ export const StackScriptLandingTable = (props: Props) => {
         tooltipWidth={300}
         value={query}
       />
-      <Table>
+      <Table aria-label='List of StackScripts'>
         <TableHead>
           <TableRow>
             <TableSortCell
@@ -144,6 +149,7 @@ export const StackScriptLandingTable = (props: Props) => {
                 direction={order}
                 handleClick={handleOrderChange}
                 label="updated"
+                noWrap
               >
                 Last Revision
               </TableSortCell>

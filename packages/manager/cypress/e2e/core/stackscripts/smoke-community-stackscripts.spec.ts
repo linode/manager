@@ -138,7 +138,7 @@ describe('Community Stackscripts integration tests', () => {
 
       // Search the corresponding community stack script
       mockGetStackScripts([stackScript]).as('getFilteredStackScripts');
-      cy.get('[id="search-by-label,-username,-or-description"]')
+      cy.findByPlaceholderText('Search by Label, Username, or Description')
         .click()
         .type(`${stackScript.label}{enter}`);
       cy.wait('@getFilteredStackScripts');
@@ -277,7 +277,7 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('tr').then((value) => {
       const rowCount = Cypress.$(value).length - 1; // Remove the table title row
 
-      cy.get('[id="search-by-label,-username,-or-description"]')
+      cy.findByPlaceholderText('Search by Label, Username, or Description')
         .click()
         .type(`${stackScript.label}{enter}`);
       cy.get(`[data-qa-table-row="${stackScript.label}"]`).should('be.visible');
@@ -311,7 +311,7 @@ describe('Community Stackscripts integration tests', () => {
     cy.visitWithLogin('/stackscripts/community');
     cy.wait(['@getStackScripts', '@getPreferences']);
 
-    cy.get('[id="search-by-label,-username,-or-description"]')
+    cy.findByPlaceholderText('Search by Label, Username, or Description')
       .click()
       .type(`${stackScriptName}{enter}`);
     cy.get(`[data-qa-table-row="${stackScriptName}"]`)

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
@@ -11,12 +12,8 @@ import {
   youtubeLinkData,
 } from './StackScriptsEmptyResourcesData';
 
-interface Props {
-  goToCreateStackScript: () => void;
-}
-
-export const StackScriptsEmptyLandingState = (props: Props) => {
-  const { goToCreateStackScript } = props;
+export const StackScriptsEmptyLandingState = () => {
+  const history = useHistory();
 
   return (
     <ResourcesSection
@@ -29,7 +26,7 @@ export const StackScriptsEmptyLandingState = (props: Props) => {
               category: linkAnalyticsEvent.category,
               label: 'Create StackScript',
             });
-            goToCreateStackScript();
+            history.push('/stackscripts/create');
           },
         },
       ]}

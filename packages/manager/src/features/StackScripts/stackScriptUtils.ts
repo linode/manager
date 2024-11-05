@@ -1,7 +1,7 @@
 import { getStackScripts } from '@linode/api-v4';
 
 import type { StackScriptsRequest } from './types';
-import type { Filter, Grant, Params } from '@linode/api-v4';
+import type { Filter, Grant, Params, StackScript } from '@linode/api-v4';
 
 export type StackScriptCategory = 'account' | 'community';
 
@@ -132,4 +132,27 @@ export const canUserModifyAccountStackScript = (
 
   // User must have "read_write" permissions to modify StackScript
   return grantsForThisStackScript.permissions === 'read_write';
+};
+
+export const getStackScriptImages = (images: StackScript['images']) => {
+  const cleanedImages: string[] = [];
+
+  for (const image of images) {
+    if (image === 'any/all') {
+      return 'Any/All';
+    }
+
+    if (!image) {
+      // Sometimes the API returns `null` in the images array 😳
+      continue;
+    }
+
+    if (image.startsWith('linode/')) {
+      cleanedImages.push(image.split('linode/')[1]);
+    } else {
+      cleanedImages.push(image);
+    }
+  }
+
+  return cleanedImages.join(', ');
 };

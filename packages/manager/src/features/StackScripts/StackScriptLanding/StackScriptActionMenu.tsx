@@ -98,8 +98,6 @@ export const StackScriptActionMenu = (props: Props) => {
     }
     return acc;
   }, []);
-    // .filter((action) => action.show)
-    // .map((action) => action.action);
 
   if (type === 'community' && isLargeScreen) {
     return filteredActions.map((action) => (
