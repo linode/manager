@@ -87,7 +87,8 @@ export const CloudPulseResourcesSelect = React.memo(
       return resources && resources.length > 0 ? resources : [];
     }, [resources]);
 
-    const setResourceLimit = React.useMemo(() => {
+    // Maximum resource selection limit is fetched from launchdarkly
+    const ResourceLimit = React.useMemo(() => {
       const obj = flags.aclpResourceTypeMap?.find(
         (item: CloudPulseResourceTypeMapFlag) =>
           item.serviceType === resourceType
@@ -96,8 +97,8 @@ export const CloudPulseResourcesSelect = React.memo(
     }, [resourceType, flags.aclpResourceTypeMap]);
 
     const resourceLimitReached = React.useMemo(() => {
-      return getResourcesList.length > setResourceLimit;
-    }, [getResourcesList.length, setResourceLimit]);
+      return getResourcesList.length > ResourceLimit;
+    }, [getResourcesList.length, ResourceLimit]);
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
@@ -142,13 +143,14 @@ export const CloudPulseResourcesSelect = React.memo(
           selectedResources?.length ? '' : placeholder || 'Select Resources'
         }
         renderOption={(props, option) => {
+          // After selecting resources up to the max resource selection limit, rest of the unselected options will be disabled if there are any
           const { key, ...rest } = props;
           const isResourceSelected = selectedResources?.some(
             (item) => item.label === option.label
           );
           const isOverLimitOption =
             selectedResources &&
-            selectedResources?.length >= setResourceLimit &&
+            selectedResources.length >= ResourceLimit &&
             !isResourceSelected;
           return (
             <ListItem
@@ -178,11 +180,12 @@ export const CloudPulseResourcesSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
-        disableSelectAll={resourceLimitReached}
+        disableSelectAll={resourceLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
+        helperText={`Select up to ${ResourceLimit} ${label}`}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label={`${label || 'Resources'} (${setResourceLimit} max)`}
+        label={label || 'Resources'}
         limitTags={2}
         loading={isLoading}
         multiple
