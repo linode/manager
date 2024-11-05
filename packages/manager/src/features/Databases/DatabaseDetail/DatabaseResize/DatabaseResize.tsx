@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -9,7 +9,6 @@ import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
@@ -30,7 +29,7 @@ import {
 } from './DatabaseResize.style';
 import { DatabaseResizeCurrentConfiguration } from './DatabaseResizeCurrentConfiguration';
 
-import type { NodePricing } from '../../DatabaseCreate/DatabaseCreate';
+import type { NodePricing } from '../../DatabaseCreate/DatabaseNodeSelector';
 import type {
   ClusterSize,
   Database,

@@ -24,7 +24,10 @@ export const omittedProps = <Props>(props: Array<keyof Props>) => (
  * @param toRemove Array of props to remove
  * @returns Object with props removed
  */
-export const omitProps = <Props extends {}, Keys extends keyof Props & string>(
+export const omitProps = <
+  Props extends NonNullable<unknown>,
+  Keys extends keyof Props & string
+>(
   props: Props,
   toRemove: Keys[] & string[]
 ) =>

@@ -4,7 +4,7 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { Divider } from 'src/components/Divider';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useImageQuery } from 'src/queries/images';
