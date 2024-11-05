@@ -1,4 +1,4 @@
-import { Warning } from '@linode/ui';
+import { WarningIcon } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
@@ -40,7 +40,7 @@ export const StyledTableHeadCell = styled(TableCell, {
   borderTop: 'none !important',
 }));
 
-export const StyledWarningIcon = styled(Warning, {
+export const StyledWarningIcon = styled(WarningIcon, {
   label: 'StyledWarningIcon',
 })(({ theme }) => ({
   fill: theme.color.yellow,

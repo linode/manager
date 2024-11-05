@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Warning, Alert as Error, Check } from '../../assets/icons';
+import { WarningIcon, AlertIcon as Error, CheckIcon } from '../../assets/icons';
 
 import { Typography } from '@mui/material';
 
@@ -180,10 +180,10 @@ export const Notice = (props: NoticeProps) => {
     >
       {important &&
         ((variantMap.success && (
-          <Check className={classes.icon} data-qa-success-img />
+          <CheckIcon className={classes.icon} data-qa-success-img />
         )) ||
           ((variantMap.warning || variantMap.info) && (
-            <Warning className={classes.icon} data-qa-warning-img />
+            <WarningIcon className={classes.icon} data-qa-warning-img />
           )) ||
           (variantMap.error && (
             <Error className={classes.icon} data-qa-error-img />
