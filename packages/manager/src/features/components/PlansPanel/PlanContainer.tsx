@@ -175,7 +175,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
         <Grid xs={12}>
-          {planSelectionDividers.map((planSelectionDivider, idx) =>
+          {planSelectionDividers.map((planSelectionDivider) =>
             planType === planSelectionDivider.planType &&
             planSelectionDivider.flag ? (
               planSelectionDivider.tables.map((table, idx) => {
@@ -198,8 +198,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
                         shouldDisplayNoRegionSelectedMessage
                       }
                       key={`plan-filter-${idx}`}
-                      plans={plans}
                       planFilter={table.planFilter}
+                      plans={plans}
                       showNetwork={showNetwork}
                       showTransfer={showTransfer}
                     />
