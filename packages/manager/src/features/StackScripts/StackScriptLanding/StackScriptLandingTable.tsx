@@ -23,10 +23,10 @@ import {
 import { useOrder } from 'src/hooks/useOrder';
 import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
 
+import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelperText';
 import { StackScriptDeleteDialog } from './StackScriptDeleteDialog';
 import { StackScriptMakePublicDialog } from './StackScriptMakePublicDialog';
 import { StackScriptRow } from './StackScriptRow';
-import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelperText';
 
 interface Props {
   type: 'account' | 'community';

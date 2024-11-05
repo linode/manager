@@ -1,11 +1,14 @@
+import { useMediaQuery } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import type { StackScript } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface StackScriptHandlers {
@@ -16,12 +19,17 @@ export interface StackScriptHandlers {
 interface Props {
   handlers: StackScriptHandlers;
   stackscript: StackScript;
+  type: 'account' | 'community';
 }
 
 export const StackScriptActionMenu = (props: Props) => {
-  const { handlers, stackscript } = props;
+  const { handlers, stackscript, type } = props;
 
   const history = useHistory();
+
+  const isLargeScreen = useMediaQuery<Theme>((theme) =>
+    theme.breakpoints.up('md')
+  );
 
   const isLinodeCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -41,42 +49,71 @@ export const StackScriptActionMenu = (props: Props) => {
       }
     : {};
 
-  const actions: Action[] = [
+  const actions: { action: Action; show: boolean }[] = [
     {
-      onClick: () => history.push(`/stackscripts/${stackscript.id}/edit`),
-      title: 'Edit',
-      ...sharedActionOptions,
+      action: {
+        onClick: () => history.push(`/stackscripts/${stackscript.id}/edit`),
+        title: 'Edit',
+        ...sharedActionOptions,
+      },
+      show: type === 'account',
     },
     {
-      disabled: isLinodeCreationRestricted,
-      onClick: () =>
-        history.push(
-          `/linodes/create?type=StackScripts&subtype=Account&stackScriptID=${stackscript.id}`
-        ),
-      title: 'Deploy New Linode',
-      tooltip: isLinodeCreationRestricted
-        ? "You don't have permissions to add Linodes"
-        : undefined,
+      action: {
+        disabled: isLinodeCreationRestricted,
+        onClick: () =>
+          history.push(
+            type === 'account'
+              ? `/linodes/create?type=StackScripts&subtype=Account&stackScriptID=${stackscript.id}`
+              : `/linodes/create?type=StackScripts&subtype=Community&stackScriptID=${stackscript.id}`
+          ),
+        title: 'Deploy New Linode',
+        tooltip: isLinodeCreationRestricted
+          ? "You don't have permissions to add Linodes"
+          : undefined,
+      },
+      show: true,
     },
-    ...(!stackscript.is_public
-      ? [
-          {
-            onClick: handlers.onMakePublic,
-            title: 'Make StackScript Public',
-            ...sharedActionOptions,
-          },
-          {
-            onClick: handlers.onDelete,
-            title: 'Delete',
-            ...sharedActionOptions,
-          },
-        ]
-      : []),
+    {
+      action: {
+        onClick: handlers.onMakePublic,
+        title: 'Make StackScript Public',
+        ...sharedActionOptions,
+      },
+      show: !stackscript.is_public,
+    },
+    {
+      action: {
+        onClick: handlers.onDelete,
+        title: 'Delete',
+        ...sharedActionOptions,
+      },
+      show: !stackscript.is_public,
+    },
   ];
+
+  const filteredActions = actions.reduce<Action[]>((acc, action) => {
+    if (action.show) {
+      acc.push(action.action);
+    }
+    return acc;
+  }, []);
+    // .filter((action) => action.show)
+    // .map((action) => action.action);
+
+  if (type === 'community' && isLargeScreen) {
+    return filteredActions.map((action) => (
+      <InlineMenuAction
+        key={action.title}
+        {...action}
+        actionText={action.title}
+      />
+    ));
+  }
 
   return (
     <ActionMenu
-      actionsList={actions}
+      actionsList={filteredActions}
       ariaLabel={`Action menu for StackScript ${stackscript.label}`}
     />
   );
