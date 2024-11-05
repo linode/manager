@@ -115,10 +115,12 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 });
 
 export const useKubernetesClusterQuery = (id: number) => {
-  const showAPL = useAPLAvailability();
-  return useQuery<KubernetesCluster, APIError[]>(
-    kubernetesQueries.cluster(id)._ctx.cluster(showAPL)
-  );
+  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
+
+  return useQuery<KubernetesCluster, APIError[]>({
+    ...kubernetesQueries.cluster(id)._ctx.cluster(showAPL),
+    enabled: !isAPLAvailabilityLoading,
+  });
 };
 
 export const useKubernetesClustersQuery = (
