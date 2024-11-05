@@ -4,10 +4,13 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TooltipIcon } from 'src/components/TooltipIcon';
+import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
-import { PlanWithAvailability } from './types';
+
+import type { PlanWithAvailability } from './types';
 
 interface PlanSelectionFilterOptionsTable {
   header?: string;
@@ -17,6 +20,7 @@ interface PlanSelectionFilterOptionsTable {
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
   planFilter?: (plan: PlanWithAvailability) => boolean;
+  plans?: PlanWithAvailability[];
   renderPlanSelection: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
   ) => React.JSX.Element[];
@@ -45,11 +49,24 @@ const tableCells = [
 export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const {
     filterOptions,
+    plans,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
     showNetwork: shouldShowNetwork,
     showTransfer: shouldShowTransfer,
   } = props;
+  const flags = useFlags();
+
+  const showTransferTooltip = (cellName: string) =>
+    plans?.some((plan) => {
+      return (
+        flags.gpuv2?.transferBanner &&
+        plan.class === 'gpu' &&
+        filterOptions?.header?.includes('Ada') &&
+        plan.transfer === 0 &&
+        cellName === 'Transfer'
+      );
+    });
 
   return (
     <StyledTable
@@ -78,6 +95,13 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                 {isPlanCell && filterOptions?.header
                   ? filterOptions?.header
                   : cellName}
+                {showTransferTooltip(cellName) && (
+                  <TooltipIcon
+                    status="help"
+                    sxTooltipIcon={{ py: 0 }}
+                    text="Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to standard charges."
+                  />
+                )}
               </StyledTableCell>
             );
           })}
