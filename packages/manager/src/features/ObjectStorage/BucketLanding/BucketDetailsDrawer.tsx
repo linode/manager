@@ -1,7 +1,3 @@
-import {
-  getBucketAccess,
-  updateBucketAccess,
-} from '@linode/api-v4/lib/object-storage';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,6 +5,7 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -24,10 +21,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { AccessSelect } from '../BucketDetail/AccessSelect';
 import { BucketRateLimitTable } from './BucketRateLimitTable';
 
-import type {
-  ACLType,
-  ObjectStorageBucket,
-} from '@linode/api-v4/lib/object-storage';
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
 export interface BucketDetailsDrawerProps {
   onClose: () => void;
@@ -115,12 +109,14 @@ export const BucketDetailsDrawer = React.memo(
           </Typography>
         ) : null}
         {hostname && (
-          <StyledLinkContainer>
-            <Link external to={`https://${hostname}`}>
-              {truncateMiddle(hostname, 50)}
-            </Link>
-            <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
-          </StyledLinkContainer>
+          <MaskableText isToggleable text={hostname}>
+            <StyledLinkContainer>
+              <Link external to={`https://${hostname}`}>
+                {truncateMiddle(hostname, 50)}
+              </Link>
+              <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
+            </StyledLinkContainer>
+          </MaskableText>
         )}
         {(formattedCreated || cluster) && (
           <Divider spacingBottom={16} spacingTop={16} />
@@ -159,28 +155,11 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {cluster && label && (
           <AccessSelect
-            getAccess={() =>
-              getBucketAccess(
-                isObjMultiClusterEnabled && currentRegion
-                  ? currentRegion.id
-                  : cluster,
-                label
-              )
+            clusterOrRegion={
+              isObjMultiClusterEnabled && currentRegion
+                ? currentRegion.id
+                : cluster
             }
-            updateAccess={(acl: ACLType, cors_enabled: boolean) => {
-              // Don't send the ACL with the payload if it's "custom", since it's
-              // not valid (though it's a valid return type).
-              const payload =
-                acl === 'custom' ? { cors_enabled } : { acl, cors_enabled };
-
-              return updateBucketAccess(
-                isObjMultiClusterEnabled && currentRegion
-                  ? currentRegion.id
-                  : cluster,
-                label,
-                payload
-              );
-            }}
             endpointType={endpoint_type}
             name={label}
             variant="bucket"

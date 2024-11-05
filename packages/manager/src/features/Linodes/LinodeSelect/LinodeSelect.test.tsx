@@ -9,7 +9,6 @@ import { LinodeSelect } from './LinodeSelect';
 
 import type { Linode } from '@linode/api-v4';
 
-
 const TEXTFIELD_ID = 'textfield-input';
 
 describe('LinodeSelect', () => {

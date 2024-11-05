@@ -1,5 +1,12 @@
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
+import {
+  RouterProvider,
+  createMemoryHistory,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from '@tanstack/react-router';
+import { act, render, waitFor } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
 import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
@@ -15,9 +22,12 @@ import thunk from 'redux-thunk';
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
+import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
 
 import type { QueryClient } from '@tanstack/react-query';
+// TODO: Tanstack Router - replace AnyRouter once migration is complete.
+import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction, RenderResult } from '@testing-library/react';
 import type { FormikConfig, FormikValues } from 'formik';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
@@ -100,6 +110,9 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
             options={{ bootstrap: options.flags }}
           >
             <SnackbarProvider>
+              {/**
+               * TODO Tanstack Router - remove amy routing  routing wrapWithTheme
+               */}
               <MemoryRouter {...options.MemoryRouter}>
                 {routePath ? (
                   <Route path={routePath}>{uiToRender}</Route>
@@ -113,6 +126,121 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       </QueryClientProvider>
     </Provider>
   );
+};
+
+interface OptionsWithRouter
+  extends Omit<Options, 'MemoryRouter' | 'routePath'> {
+  initialRoute?: string;
+  routeTree?: AnyRootRoute;
+  router?: AnyRouter;
+}
+
+/**
+ * We don't always need to use the router in our tests. When we do, due to the async nature of TanStack Router, we need to use this helper function.
+ * The reason we use this instead of extending renderWithTheme is because of having to make all tests async.
+ * It seems unnecessary to refactor all tests to async when we don't need to access the router at all.
+ *
+ * In order to use this, you must await the result of the function.
+ *
+ * @example
+ * const { getByText, router } = await renderWithThemeAndRouter(
+ *   <Component />, {
+ *     initialRoute: '/route',
+ *   }
+ * );
+ *
+ * // Assert the initial route
+ * expect(router.state.location.pathname).toBe('/route');
+ *
+ * // from here, you can use the router to navigate
+ * await waitFor(() =>
+ *   router.navigate({
+ *    params: { betaId: beta.id },
+ *    to: '/path/to/something',
+ *  })
+ * );
+ *
+ * // And assert
+ * expect(router.state.location.pathname).toBe('/path/to/something');
+ *
+ * // and test the UI
+ * getByText('Some text');
+ */
+export const wrapWithThemeAndRouter = (
+  ui: React.ReactNode,
+  options: OptionsWithRouter = {}
+) => {
+  const {
+    customStore,
+    initialRoute = '/',
+    queryClient: passedQueryClient,
+  } = options;
+  const queryClient = passedQueryClient ?? queryClientFactory();
+  const storeToPass = customStore ? baseStore(customStore) : storeFactory();
+
+  setupInterceptors(
+    configureStore<ApplicationState>([thunk])(defaultState)
+  );
+
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => ui,
+    getParentRoute: () => rootRoute,
+    path: initialRoute,
+  });
+  const router: AnyRouter = createRouter({
+    history: createMemoryHistory({
+      initialEntries: [initialRoute],
+    }),
+    routeTree: rootRoute.addChildren([indexRoute]),
+  });
+
+  return (
+    <Provider store={storeToPass}>
+      <QueryClientProvider client={passedQueryClient || queryClient}>
+        <LinodeThemeWrapper theme={options.theme}>
+          <LDProvider
+            clientSideID={''}
+            deferInitialization
+            flags={options.flags ?? {}}
+            options={{ bootstrap: options.flags }}
+          >
+            <SnackbarProvider>
+              <RouterProvider router={router} />
+            </SnackbarProvider>
+          </LDProvider>
+        </LinodeThemeWrapper>
+      </QueryClientProvider>
+    </Provider>
+  );
+};
+
+export const renderWithThemeAndRouter = async (
+  ui: React.ReactNode,
+  options: OptionsWithRouter = {}
+): Promise<RenderResult & { router: AnyRouter }> => {
+  const router = createRouter({
+    history: createMemoryHistory({
+      initialEntries: [options.initialRoute || '/'],
+    }),
+    routeTree: options.routeTree || migrationRouteTree,
+  });
+
+  let renderResult: RenderResult;
+
+  await act(async () => {
+    renderResult = render(wrapWithThemeAndRouter(ui, { ...options, router }));
+
+    // Wait for the router to be ready
+    await waitFor(() => expect(router.state.status).toBe('idle'));
+  });
+
+  return {
+    ...renderResult!,
+    rerender: (ui) =>
+      renderResult.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
+    router,
+  };
 };
 
 /**

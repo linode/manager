@@ -1,11 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadAttachment } from '@linode/api-v4/lib/support';
+import { Box } from '@linode/ui';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
-import { makeStyles } from 'tss-react/mui';
 
 import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
@@ -44,28 +44,7 @@ import type { SMTPCustomFields } from './SupportTicketSMTPFields';
 import type { CreateKubeClusterPayload } from '@linode/api-v4';
 import type { TicketSeverity } from '@linode/api-v4/lib/support';
 import type { CreateLinodeRequest } from '@linode/api-v4/src/linodes/types';
-import type { Theme } from '@mui/material/styles';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  expPanelSummary: {
-    backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
-    borderTop: `1px solid ${theme.bg.main}`,
-    paddingTop: theme.spacing(1),
-  },
-  innerReply: {
-    '& div[role="tablist"]': {
-      marginBottom: theme.spacing(),
-      marginTop: theme.spacing(),
-    },
-    padding: 0,
-  },
-  rootReply: {
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
-    padding: 0,
-  },
-}));
 
 interface Accumulator {
   errors: AttachmentError[];
@@ -212,8 +191,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-
-  const { classes } = useStyles();
 
   React.useEffect(() => {
     if (!open) {
@@ -507,26 +484,28 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               {props.hideProductSelection ? null : (
                 <SupportTicketProductSelectionFields />
               )}
-              <Controller
-                render={({ field, fieldState }) => (
-                  <TabbedReply
-                    placeholder={
-                      "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-                    }
-                    error={fieldState.error?.message}
-                    handleChange={field.onChange}
-                    innerClass={classes.innerReply}
-                    required
-                    rootClass={classes.rootReply}
-                    value={description}
-                  />
-                )}
-                control={form.control}
-                name="description"
-              />
+              <Box mt={1}>
+                <Controller
+                  render={({ field, fieldState }) => (
+                    <TabbedReply
+                      placeholder={
+                        'Tell us more about the trouble you’re having and any steps you’ve already taken to resolve it.'
+                      }
+                      error={fieldState.error?.message}
+                      handleChange={field.onChange}
+                      required
+                      value={description}
+                    />
+                  )}
+                  control={form.control}
+                  name="description"
+                />
+              </Box>
               <Accordion
-                detailProps={{ className: classes.expPanelSummary }}
+                detailProps={{ sx: { p: 0.25 } }}
                 heading="Formatting Tips"
+                summaryProps={{ sx: { paddingX: 0.25 } }}
+                sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
               >
                 <MarkdownReference />
               </Accordion>

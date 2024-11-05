@@ -6,6 +6,7 @@ import {
   getDatabases,
   getEngineDatabase,
   legacyRestoreWithBackup,
+  patchDatabase,
   resetDatabaseCredentials,
   restoreWithBackup,
   updateDatabase,
@@ -135,6 +136,22 @@ export const useDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
+export const usePatchDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<void, APIError[], void>({
+    mutationFn: () => patchDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
+      });
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
+    },
+  });
+};
+
 export const useCreateDatabaseMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Database, APIError[], CreateDatabasePayload>({
@@ -187,9 +204,13 @@ export const useDatabaseEnginesQuery = (enabled: boolean = false) =>
     enabled,
   });
 
-export const useDatabaseTypesQuery = (filter: Filter = {}) =>
+export const useDatabaseTypesQuery = (
+  filter: Filter = {},
+  enabled: boolean = true
+) =>
   useQuery<DatabaseType[], APIError[]>({
     ...databaseQueries.types._ctx.all(filter),
+    enabled,
   });
 
 export const useDatabaseCredentialsQuery = (

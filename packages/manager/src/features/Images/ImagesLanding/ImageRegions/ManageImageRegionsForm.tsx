@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
@@ -103,7 +103,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         <Notice text={errors.root.message} variant="error" />
       )}
       <Typography>
-        Custom images are billed monthly, at $0.10/GB. Check out{' '}
+        Custom images are billed monthly at $0.10/GB. Check out{' '}
         <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
           this guide
         </Link>{' '}

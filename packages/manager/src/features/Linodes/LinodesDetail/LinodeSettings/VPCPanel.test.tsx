@@ -3,10 +3,10 @@ import * as React from 'react';
 
 import { accountFactory, regionFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import { VPCPanel, VPCPanelProps } from './VPCPanel';
+import { VPCPanel } from './VPCPanel';
 
 beforeAll(() => mockMatchMedia());
 
@@ -14,7 +14,6 @@ const props = {
   additionalIPv4RangesForVPC: [],
   assignPublicIPv4Address: false,
   autoassignIPv4WithinVPC: true,
-  from: 'linodeCreate' as VPCPanelProps['from'],
   handleIPv4RangeChange: vi.fn(),
   handleSelectVPC: vi.fn(),
   handleSubnetChange: vi.fn(),
@@ -100,7 +99,7 @@ describe('VPCPanel', () => {
     });
   });
 
-  it('should display helper text if there are no vpcs in the selected region and "from" is "linodeCreate"', async () => {
+  it('should not display helper text if there are no vpcs in the selected region', async () => {
     server.use(
       http.get('*/regions', () => {
         const usEast = regionFactory.build({
@@ -115,33 +114,6 @@ describe('VPCPanel', () => {
     );
 
     const wrapper = renderWithTheme(<VPCPanel {...props} />);
-
-    await waitFor(() => {
-      expect(
-        wrapper.queryByText(
-          'No VPCs exist in the selected region. Click Create VPC to create one.'
-        )
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('should not display helper text if there are no vpcs in the selected region and "from" is "linodeConfig"', async () => {
-    server.use(
-      http.get('*/regions', () => {
-        const usEast = regionFactory.build({
-          capabilities: ['VPCs'],
-          id: 'us-east',
-        });
-        return HttpResponse.json(makeResourcePage([usEast]));
-      }),
-      http.get('*/vpcs', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      })
-    );
-
-    const wrapper = renderWithTheme(
-      <VPCPanel {...props} from="linodeConfig" />
-    );
 
     await waitFor(() => {
       expect(
@@ -149,42 +121,6 @@ describe('VPCPanel', () => {
           'No VPCs exist in the selected region. Click Create VPC to create one.'
         )
       ).not.toBeInTheDocument();
-    });
-  });
-  it('shows helper text for when "from" = "linodeCreate" if the selected region does not support VPCs', async () => {
-    server.use(
-      http.get('*/regions', () => {
-        const usEast = regionFactory.build({
-          capabilities: [],
-          id: 'us-east',
-        });
-        return HttpResponse.json(makeResourcePage([usEast]));
-      })
-    );
-
-    const wrapper = renderWithTheme(<VPCPanel {...props} />);
-
-    await waitFor(() => {
-      expect(
-        wrapper.queryByText('VPC is not available in the selected region.')
-      ).toBeInTheDocument();
-    });
-  });
-  it('should show the "Create VPC" drawer link when from = "linodeCreate" and a region that supports VPCs is selected', async () => {
-    server.use(
-      http.get('*/regions', () => {
-        const usEast = regionFactory.build({
-          capabilities: ['VPCs'],
-          id: 'us-east',
-        });
-        return HttpResponse.json(makeResourcePage([usEast]));
-      })
-    );
-
-    const wrapper = renderWithTheme(<VPCPanel {...props} />);
-
-    await waitFor(() => {
-      expect(wrapper.queryByText('Create VPC')).toBeInTheDocument();
     });
   });
   it('should display an unchecked VPC IPv4 auto-assign checkbox and display the VPC IPv4 input field if there is already a value', async () => {
@@ -212,9 +148,9 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        wrapper.getByRole('checkbox', {
-          name: 'Auto-assign a VPC IPv4 address for this Linode in the VPC',
-        })
+        wrapper.getByLabelText(
+          'Auto-assign a VPC IPv4 address for this Linode in the VPC'
+        )
       ).not.toBeChecked();
       // Using regex here to account for the "(required)" indicator.
       expect(wrapper.getByLabelText(/^VPC IPv4.*/)).toHaveValue('10.0.4.3');
@@ -244,9 +180,7 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        wrapper.getByRole('checkbox', {
-          name: 'Assign a public IPv4 address for this Linode',
-        })
+        wrapper.getByLabelText('Assign a public IPv4 address for this Linode')
       ).toBeChecked();
     });
   });

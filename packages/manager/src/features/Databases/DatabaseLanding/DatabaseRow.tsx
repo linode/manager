@@ -66,7 +66,7 @@ export const DatabaseRow = ({
   const plan = types?.find((t: DatabaseType) => t.id === type);
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
-  const { isV2GAUser } = useIsDatabasesEnabled();
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const configuration =
     cluster_size === 1 ? (
@@ -107,7 +107,7 @@ export const DatabaseRow = ({
               })}
         </TableCell>
       </Hidden>
-      {isV2GAUser && isNewDatabase && (
+      {isDatabasesV2GA && isNewDatabase && (
         <TableCell actionCell>
           <DatabaseActionMenu
             databaseEngine={engine}
