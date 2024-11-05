@@ -137,6 +137,7 @@ const DatabaseLanding = () => {
   const isV2Enabled = isDatabasesV2Enabled || isDatabasesV2GA;
   const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
   const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
+  const showSuspend = isDatabasesV2GA && !!newDatabases?.data.length;
 
   const legacyTable = () => {
     return (
@@ -155,6 +156,7 @@ const DatabaseLanding = () => {
         data={newDatabases?.data}
         handleOrderChange={newDatabaseHandleOrderChange}
         isNewDatabase={true}
+        showSuspend={showSuspend}
         order={newDatabaseOrder}
         orderBy={newDatabaseOrderBy}
       />

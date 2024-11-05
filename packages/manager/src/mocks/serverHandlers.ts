@@ -324,6 +324,14 @@ const databases = [
   http.delete('*/databases/mysql/instances/:databaseId', () => {
     return HttpResponse.json({});
   }),
+
+  http.post('*/databases/:engine/instances/:databaseId/suspend', () => {
+    return HttpResponse.json({});
+  }),
+
+  http.post('*/databases/:engine/instances/:databaseId/resume', () => {
+    return HttpResponse.json({});
+  }),
 ];
 
 const vpc = [
