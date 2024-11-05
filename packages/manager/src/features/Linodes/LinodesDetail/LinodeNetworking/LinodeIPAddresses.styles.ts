@@ -1,7 +1,7 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 type StyledCopyTooltipProps = { isHovered: boolean };
 

@@ -1,17 +1,24 @@
-import type { DatabaseInstance } from '@linode/api-v4';
-import { DatabaseFork } from '@linode/api-v4';
 import { DateTime } from 'luxon';
+
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
-import { databaseEngineMap } from './DatabaseLanding/DatabaseRow';
+
+import type {
+  DatabaseEngine,
+  DatabaseInstance,
+  Engine,
+  PendingUpdates,
+} from '@linode/api-v4';
+import type { DatabaseFork } from '@linode/api-v4';
 
 export interface IsDatabasesEnabled {
   isDatabasesEnabled: boolean;
-  isDatabasesV1Enabled: boolean;
-  isDatabasesV2Enabled: boolean;
+  isDatabasesMonitorBeta?: boolean;
+  isDatabasesMonitorEnabled?: boolean;
   isDatabasesV2Beta: boolean;
+  isDatabasesV2Enabled: boolean;
   isDatabasesV2GA: boolean;
   /**
    * Temporary variable to be removed post GA release
@@ -21,8 +28,6 @@ export interface IsDatabasesEnabled {
    * Temporary variable to be removed post GA release
    */
   isUserNewBeta: boolean;
-  isDatabasesMonitorEnabled: boolean;
-  isDatabasesMonitorBeta: boolean;
 }
 
 /**
@@ -65,28 +70,32 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
       account?.capabilities ?? []
     );
 
-    const isDatabasesV2Enabled = isFeatureEnabledV2(
-      'Managed Databases Beta',
-      hasV2Flag,
-      account?.capabilities ?? []
-    );
+    const isDatabasesV2BetaEnabled =
+      isFeatureEnabledV2(
+        'Managed Databases Beta',
+        hasV2Flag,
+        account?.capabilities ?? []
+      ) && hasV2BetaFlag;
 
-    const isDatabasesV2Beta: boolean = isDatabasesV2Enabled && hasV2BetaFlag;
+    const isDatabasesV2GAEnabled =
+      isFeatureEnabledV2(
+        'Managed Databases',
+        hasV2Flag,
+        account?.capabilities ?? []
+      ) && hasV2GAFlag;
 
     return {
-      isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
-      isDatabasesV1Enabled,
-      isDatabasesV2Enabled,
+      isDatabasesEnabled:
+        isDatabasesV1Enabled ||
+        isDatabasesV2BetaEnabled ||
+        isDatabasesV2GAEnabled,
 
-      isDatabasesV2Beta,
-      isUserExistingBeta: isDatabasesV2Beta && isDatabasesV1Enabled,
-      isUserNewBeta: isDatabasesV2Beta && !isDatabasesV1Enabled,
+      isDatabasesV2Beta: isDatabasesV2BetaEnabled,
+      isDatabasesV2Enabled: isDatabasesV2BetaEnabled || isDatabasesV2GAEnabled,
+      isDatabasesV2GA: isDatabasesV2GAEnabled,
 
-      isDatabasesV2GA:
-        (isDatabasesV1Enabled || isDatabasesV2Enabled) && hasV2GAFlag,
-
-      isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
-      isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
+      isUserExistingBeta: isDatabasesV2BetaEnabled && isDatabasesV1Enabled,
+      isUserNewBeta: isDatabasesV2BetaEnabled && !isDatabasesV1Enabled,
     };
   }
 
@@ -95,17 +104,13 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
 
   return {
     isDatabasesEnabled: hasLegacyTypes || hasDefaultTypes,
-    isDatabasesV1Enabled: hasLegacyTypes,
-    isDatabasesV2Enabled: hasDefaultTypes,
 
     isDatabasesV2Beta: hasDefaultTypes && hasV2BetaFlag,
-    isUserExistingBeta: hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
-    isUserNewBeta: !hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
-
+    isDatabasesV2Enabled: hasDefaultTypes,
     isDatabasesV2GA: (hasLegacyTypes || hasDefaultTypes) && hasV2GAFlag,
 
-    isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
-    isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
+    isUserExistingBeta: hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
+    isUserNewBeta: !hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
   };
 };
 
@@ -169,8 +174,7 @@ export const toSelectedDateTime = (
   const isoTime = DateTime.now()
     .set({ hour: time, minute: 0 })
     ?.toISOTime({ includeOffset: false });
-  const selectedDateTime = DateTime.fromISO(`${isoDate}T${isoTime}`);
-  return selectedDateTime;
+  return DateTime.fromISO(`${isoDate}T${isoTime}`);
 };
 
 /**
@@ -216,6 +220,34 @@ export const toDatabaseFork = (
   return fork;
 };
 
-export const getDatabasesDescription = (database: DatabaseInstance) => {
-  return `${databaseEngineMap[database.engine]} v${database.version}`;
+export const DATABASE_ENGINE_MAP: Record<Engine, string> = {
+  mongodb: 'MongoDB',
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+  redis: 'Redis',
+} as const;
+
+export const getDatabasesDescription = (
+  database: Pick<DatabaseInstance, 'engine' | 'version'>
+) => {
+  return `${DATABASE_ENGINE_MAP[database.engine]} v${database.version}`;
 };
+
+export const hasPendingUpdates = (pendingUpdates?: PendingUpdates[]) =>
+  Boolean(
+    pendingUpdates?.some((update) => update.deadline || update.planned_for)
+  );
+
+export const isDefaultDatabase = (
+  database: Pick<DatabaseInstance, 'platform'>
+) => database.platform === 'rdbms-default';
+
+export const isLegacyDatabase = (
+  database: Pick<DatabaseInstance, 'platform'>
+) => !database.platform || database.platform === 'rdbms-legacy';
+
+export const upgradableVersions = (
+  engine: Engine,
+  version: string,
+  engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
+) => engines?.filter((e) => e.engine === engine && e.version > version);

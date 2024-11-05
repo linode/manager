@@ -1,15 +1,16 @@
 // This component was built asuming an unmodified MUI <Table />
+import { Box } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+
+import type { Theme } from '@mui/material/styles';
 
 // ---------------------------------------------------------------------
 // Header Styles
@@ -157,7 +158,7 @@ export const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })(
       fontSize: 15,
     },
     alignItems: 'center',
-    backgroundColor: theme.interactionTokens.Background.Secondary,
+    backgroundColor: theme.tokens.interaction.Background.Secondary,
     color: theme.textColors.tableStatic,
     display: 'flex',
     fontFamily: '"UbuntuMono", monospace, sans-serif',
@@ -180,7 +181,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
 export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
   ({ theme }) => ({
     '&:after': {
-      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.interactionTokens.Background.Secondary});`,
+      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.tokens.interaction.Background.Secondary});`,
       bottom: 0,
       content: '""',
       height: '100%',
@@ -188,6 +189,7 @@ export const StyledGradientDiv = styled('div', { label: 'StyledGradientDiv' })(
       right: 0,
       width: 30,
     },
+    display: 'flex',
     overflowX: 'auto',
     overflowY: 'hidden', // For Edge
     paddingRight: 15,

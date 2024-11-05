@@ -1,4 +1,3 @@
-import { inputMaxWidth } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -12,7 +11,7 @@ import {
 } from 'src/components/Encryption/constants';
 import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
 import { Typography } from 'src/components/Typography';
@@ -56,7 +55,11 @@ export const Security = () => {
         Security
       </Typography>
       <React.Suspense
-        fallback={<Skeleton sx={{ height: '89px', maxWidth: inputMaxWidth }} />}
+        fallback={
+          <Skeleton
+            sx={(theme) => ({ height: '89px', maxWidth: theme.inputMaxWidth })}
+          />
+        }
       >
         <Controller
           render={({ field, fieldState }) => (

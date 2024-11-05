@@ -1,13 +1,22 @@
 import {
+  Accent,
   Action,
+  Background,
   Border,
+  BorderRadius,
   Button,
   Chart,
   Color,
+  Content,
   Dropdown,
+  Elevation,
+  Font,
   Interaction,
   NotificationToast,
+  Radius,
   Select,
+  Typography,
+  Spacing,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -15,7 +24,7 @@ import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
-export const inputMaxWidth = 416;
+const inputMaxWidth = 416;
 
 export const bg = {
   app: Color.Neutrals[5],
@@ -131,7 +140,7 @@ const iconCircleAnimation = {
     transition: 'fill .2s ease-in-out .2s',
   },
   '& .insidePath *': {
-    stroke: 'white',
+    stroke: Color.Neutrals.White,
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
   },
   '& .outerCircle': {
@@ -147,7 +156,7 @@ const iconCircleHoverEffect = {
     fill: primaryColors.main,
   },
   '& .insidePath *': {
-    stroke: 'white',
+    stroke: Color.Neutrals.White,
   },
 };
 
@@ -239,7 +248,6 @@ export const lightTheme: ThemeOptions = {
   bg,
   borderColors,
   breakpoints,
-  chartTokens: Chart,
   color,
   components: {
     MuiAccordion: {
@@ -286,7 +294,7 @@ export const lightTheme: ThemeOptions = {
               transform: 'rotate(0deg)',
             },
             margin: 0,
-            minHeight: 48,
+            minHeight: 40,
           },
           '&:hover': {
             '& h3': {
@@ -347,7 +355,7 @@ export const lightTheme: ThemeOptions = {
             opacity: 1,
           },
           '&::selection': {
-            backgroundColor: color.grey7,
+            backgroundColor: color.grey10,
           },
         },
         inputRoot: {
@@ -1133,7 +1141,7 @@ export const lightTheme: ThemeOptions = {
     MuiSnackbarContent: {
       styleOverrides: {
         root: {
-          backgroundColor: 'white',
+          backgroundColor: Color.Neutrals.White,
           borderLeft: `6px solid transparent`,
           borderRadius: 4,
           boxShadow: `0 0 5px ${Color.Neutrals[30]}`,
@@ -1155,7 +1163,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           '& $checked': {
             '& .square': {
-              fill: 'white',
+              fill: Color.Neutrals.White,
             },
             // color: `${primaryColors.main} !important`,
             '& input': {
@@ -1174,7 +1182,7 @@ export const lightTheme: ThemeOptions = {
                 borderColor: Color.Neutrals[40],
               },
               '& .square': {
-                fill: 'white',
+                fill: Color.Neutrals.White,
               },
             },
           },
@@ -1187,7 +1195,7 @@ export const lightTheme: ThemeOptions = {
             width: 16,
           },
           '& .square': {
-            fill: 'white',
+            fill: Color.Neutrals.White,
             transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           },
           '&:hover, &:focus': {
@@ -1405,7 +1413,7 @@ export const lightTheme: ThemeOptions = {
           opacity: 1,
         },
         tooltip: {
-          backgroundColor: 'white',
+          backgroundColor: Color.Neutrals.White,
           borderRadius: 0,
           boxShadow: `0 0 5px ${Color.Neutrals[50]}`, // TODO: This was the closest color according to our palette
           [breakpoints.up('sm')]: {
@@ -1526,6 +1534,7 @@ export const lightTheme: ThemeOptions = {
     },
     yellow: `rgba(255, 220, 125, ${graphTransparency})`,
   },
+  inputMaxWidth,
   inputStyles: {
     default: {
       backgroundColor: Select.Default.Background,
@@ -1566,7 +1575,6 @@ export const lightTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
-  interactionTokens: Interaction,
   name: 'light', // @todo remove this because we leverage pallete.mode now
   notificationToast,
   palette: {
@@ -1630,6 +1638,22 @@ export const lightTheme: ThemeOptions = {
   ],
   spacing,
   textColors,
+  tokens: {
+    accent: Accent,
+    action: Action,
+    background: Background,
+    border: Border,
+    borderRadius: BorderRadius,
+    color: Color,
+    chart: Chart,
+    content: Content,
+    elevation: Elevation,
+    interaction: Interaction,
+    radius: Radius,
+    typography: Typography,
+    font: Font,
+    spacing: Spacing,
+  },
   typography: {
     body1: {
       color: primaryColors.text,

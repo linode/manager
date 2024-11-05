@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import DoneIcon from '@mui/icons-material/Done';
 import { styled } from '@mui/material/styles';
 
-import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { ListItem } from 'src/components/ListItem';
 
@@ -106,7 +106,7 @@ export const SelectedIcon = styled(DoneIcon, {
   width: 17,
 }));
 
-export const StyledChip = styled(Chip)(() => ({
+export const StyledChip = styled(Chip)(({ theme }) => ({
   '& .MuiChip-deleteIcon': {
     '& svg': {
       borderRadius: '50%',
@@ -115,10 +115,10 @@ export const StyledChip = styled(Chip)(() => ({
   },
   '& .MuiChip-deleteIcon.MuiSvgIcon-root': {
     '&:hover': {
-      backgroundColor: '#fff',
+      backgroundColor: theme.tokens.color.Neutrals.White,
       color: '#3683dc',
     },
     backgroundColor: '#3683dc',
-    color: '#fff',
+    color: theme.tokens.color.Neutrals.White,
   },
 }));

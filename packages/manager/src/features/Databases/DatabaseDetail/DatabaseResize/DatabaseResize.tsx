@@ -1,19 +1,26 @@
+import { Box, Paper } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Radio } from 'src/components/Radio/Radio';
+import { RadioGroup } from 'src/components/RadioGroup';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
+import { StyledChip } from 'src/features/components/PlansPanel/PlanSelection.styles';
+import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
+import { useIsDatabasesEnabled } from '../../utilities';
 import {
   StyledGrid,
   StyledPlanSummarySpan,
@@ -22,6 +29,7 @@ import {
 } from './DatabaseResize.style';
 import { DatabaseResizeCurrentConfiguration } from './DatabaseResizeCurrentConfiguration';
 
+import type { NodePricing } from '../../DatabaseCreate/DatabaseNodeSelector';
 import type {
   ClusterSize,
   Database,
@@ -31,35 +39,26 @@ import type {
   Engine,
   UpdateDatabasePayload,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
-import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
-import { NodePricing } from '../../DatabaseCreate/DatabaseCreate';
-import { useIsDatabasesEnabled } from '../../utilities';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Radio } from 'src/components/Radio/Radio';
-import { Divider } from 'src/components/Divider';
-import { RadioGroup } from 'src/components/RadioGroup';
-import { StyledChip } from 'src/features/components/PlansPanel/PlanSelection.styles';
-import { makeStyles } from 'tss-react/mui';
-import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  formControlLabel: {
-    marginBottom: theme.spacing(),
-  },
   disabledOptionLabel: {
     color:
       theme.palette.mode === 'dark' ? theme.color.grey6 : theme.color.grey1,
   },
-  summarySpanBorder: {
-    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
-    color: theme.textColors.tableStatic,
-    paddingRight: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    marginLeft: theme.spacing(1),
+  formControlLabel: {
+    marginBottom: theme.spacing(),
   },
   nodeSpanSpacing: {
     marginRight: theme.spacing(1),
+  },
+  summarySpanBorder: {
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    color: theme.textColors.tableStatic,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    paddingRight: theme.spacing(1),
   },
 }));
 
@@ -76,10 +75,10 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     database.type
   );
   const [summaryText, setSummaryText] = React.useState<{
+    basePrice: string;
     numberOfNodes: ClusterSize;
     plan: string;
     price: string;
-    basePrice: string;
   }>();
   const [nodePricing, setNodePricing] = React.useState<
     NodePricing | undefined
@@ -146,45 +145,41 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
   );
 
   const resizeSummary = (
-    <>
-      <Box
-        sx={(theme) => ({
-          marginTop: theme.spacing(2),
-        })}
-        data-testid="resizeSummary"
-      >
-        {summaryText ? (
-          <>
-            <StyledPlanSummarySpan>
-              {isDatabasesV2GA
-                ? 'Resized Cluster: ' + summaryText.plan
-                : summaryText.plan}
-            </StyledPlanSummarySpan>{' '}
-            {isDatabasesV2GA ? (
-              <span
-                className={isDatabasesV2GA ? classes.summarySpanBorder : ''}
-              >
-                {summaryText.basePrice}
-              </span>
-            ) : null}
-            <span className={isDatabasesV2GA ? classes.nodeSpanSpacing : ''}>
-              {' '}
-              {summaryText.numberOfNodes} Node
-              {summaryText.numberOfNodes > 1 ? 's' : ''}
-              {!isDatabasesV2GA ? ': ' : ' - HA '}
+    <Box
+      sx={(theme) => ({
+        marginTop: theme.spacing(2),
+      })}
+      data-testid="resizeSummary"
+    >
+      {summaryText ? (
+        <>
+          <StyledPlanSummarySpan>
+            {isDatabasesV2GA
+              ? 'Resized Cluster: ' + summaryText.plan
+              : summaryText.plan}
+          </StyledPlanSummarySpan>{' '}
+          {isDatabasesV2GA ? (
+            <span className={isDatabasesV2GA ? classes.summarySpanBorder : ''}>
+              {summaryText.basePrice}
             </span>
-            {summaryText.price}
-          </>
-        ) : isDatabasesV2GA ? (
-          <>
-            <StyledPlanSummarySpan>Resized Cluster:</StyledPlanSummarySpan>{' '}
-            Please select a plan or set the number of nodes.
-          </>
-        ) : (
-          'Please select a plan.'
-        )}
-      </Box>
-    </>
+          ) : null}
+          <span className={isDatabasesV2GA ? classes.nodeSpanSpacing : ''}>
+            {' '}
+            {summaryText.numberOfNodes} Node
+            {summaryText.numberOfNodes > 1 ? 's' : ''}
+            {!isDatabasesV2GA ? ': ' : ' - HA '}
+          </span>
+          {summaryText.price}
+        </>
+      ) : isDatabasesV2GA ? (
+        <>
+          <StyledPlanSummarySpan>Resized Cluster:</StyledPlanSummarySpan> Please
+          select a plan or set the number of nodes.
+        </>
+      ) : (
+        'Please select a plan.'
+      )}
+    </Box>
   );
 
   const costSummary = (
@@ -250,12 +245,12 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     const currentPlanPrice = `$${resizeBasePrice?.monthly}/month`;
 
     setSummaryText({
+      basePrice: currentPlanPrice,
       numberOfNodes: clusterSize,
       plan: formatStorageUnits(selectedPlanType.label),
       price: isDatabasesV2GA
         ? `$${price?.monthly}/month`
         : `$${price?.monthly}/month or $${price?.hourly}/hour`,
-      basePrice: currentPlanPrice,
     });
 
     setShouldSubmitBeDisabled(false);
@@ -436,8 +431,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       {
         label: (
           <Typography
-            component={'div'}
             className={isDisabled(1) ? classes.disabledOptionLabel : ''}
+            component={'div'}
           >
             <span>1 Node {` `}</span>
             {database.cluster_size === 1 && currentChip}
@@ -457,8 +452,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       options.push({
         label: (
           <Typography
-            component={'div'}
             className={isDisabled(2) ? classes.disabledOptionLabel : ''}
+            component={'div'}
           >
             <span>2 Nodes - High Availability</span>
             {database.cluster_size === 2 && currentChip}
@@ -477,8 +472,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     options.push({
       label: (
         <Typography
-          component={'div'}
           className={isDisabled(3) ? classes.disabledOptionLabel : ''}
+          component={'div'}
         >
           <span>3 Nodes - High Availability (recommended)</span>
           {database.cluster_size === 3 && currentChip}
@@ -518,9 +513,9 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           disabled={disabled}
           disabledSmallerPlans={disabledPlans}
           disabledTabs={isDisabledSharedTab ? ['shared'] : []}
+          handleTabChange={handleTabChange}
           header="Choose a Plan"
           onSelect={(selected: string) => setPlanSelected(selected)}
-          handleTabChange={handleTabChange}
           selectedId={planSelected}
           tabDisabledMessage="Resizing a 2-nodes cluster is only allowed with Dedicated plans."
           types={displayTypes}
@@ -538,21 +533,21 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
             </Typography>
 
             <RadioGroup
+              data-testid="database-nodes"
+              onChange={handleNodeChange}
               style={{ marginBottom: 0, marginTop: 0 }}
               value={clusterSize ?? ''}
-              onChange={handleNodeChange}
-              data-testid="database-nodes"
             >
               {nodeOptions.map((nodeOption) => (
                 <FormControlLabel
                   className={classes.formControlLabel}
                   control={<Radio />}
-                  data-testid={`database-node-${nodeOption.value}`}
                   data-qa-radio={nodeOption.label}
+                  data-testid={`database-node-${nodeOption.value}`}
+                  disabled={nodeOption.value < database.cluster_size}
                   key={nodeOption.value}
                   label={nodeOption.label}
                   value={nodeOption.value}
-                  disabled={nodeOption.value < database.cluster_size}
                 />
               ))}
             </RadioGroup>

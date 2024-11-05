@@ -54,7 +54,6 @@ describe('Object Storage gen2 access keys tests', () => {
     cy.findByText('Label').should('be.visible');
     cy.findByText('Access Key').should('be.visible');
     cy.findByText('Regions/S3 Hostnames').should('be.visible');
-    cy.findByText('Actions').should('be.visible');
 
     // confirm endpoint types are displayed
     cy.findByText(mockAccessKey1.label).should('be.visible');

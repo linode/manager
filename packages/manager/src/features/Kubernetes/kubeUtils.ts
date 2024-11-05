@@ -1,4 +1,6 @@
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccountBetaQuery } from 'src/queries/account/betas';
+import { getBetaStatus } from 'src/utilities/betaUtils';
 import { sortByVersion } from 'src/utilities/sort-by';
 
 import type { Account } from '@linode/api-v4/lib/account';
@@ -113,14 +115,37 @@ export const getKubeHighAvailability = (
   };
 };
 
-export const useGetAPLAvailability = (): boolean => {
+export const useAPLAvailability = () => {
   const flags = useFlags();
 
-  if (!flags) {
+  // Only fetch the account beta if the APL flag is enabled
+  const { data: beta } = useAccountBetaQuery('apl', Boolean(flags.apl));
+
+  if (!beta) {
     return false;
   }
 
-  return Boolean(flags.apl);
+  const betaStatus = getBetaStatus(beta);
+
+  return betaStatus === 'active';
+};
+
+export const getKubeControlPlaneACL = (
+  account: Account | undefined,
+  cluster?: KubernetesCluster | null
+) => {
+  const showControlPlaneACL = account?.capabilities.includes(
+    'LKE Network Access Control List (IP ACL)'
+  );
+
+  const isClusterControlPlaneACLd = Boolean(
+    showControlPlaneACL && cluster?.control_plane.acl
+  );
+
+  return {
+    isClusterControlPlaneACLd,
+    showControlPlaneACL,
+  };
 };
 
 /**
