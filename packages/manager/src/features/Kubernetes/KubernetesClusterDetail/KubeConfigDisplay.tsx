@@ -20,6 +20,7 @@ import copy from 'copy-to-clipboard';
 import { CircleProgress } from 'src/components/CircleProgress';
 
 import type { Theme } from '@mui/material/styles';
+import { APIError } from '@linode/api-v4';
 
 interface Props {
   clusterId: number;
@@ -105,13 +106,28 @@ export const KubeConfigDisplay = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
 
-  const { refetch, isFetching } = useKubenetesKubeConfigQuery(clusterId, false);
+  const { isFetching, refetch: getKubeConfig } = useKubenetesKubeConfigQuery(
+    clusterId,
+    false
+  );
 
-  const onGetToken = async () => {
-    const { data } = await refetch();
-    const token = data && data.match(/token:\s*(\S+)/);
-    if (token) {
-      copy(token[1]);
+  const onCopyToken = async () => {
+    try {
+      const { data } = await getKubeConfig();
+      const token = data && data.match(/token:\s*(\S+)/);
+      if (token && token[1]) {
+        copy(token[1]);
+      } else {
+        enqueueSnackbar({
+          message: 'Unable to find token within the Kubeconfig',
+          variant: 'error',
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar({
+        message: (error as APIError[])[0].reason,
+        variant: 'error',
+      });
     }
   };
 
@@ -123,7 +139,7 @@ export const KubeConfigDisplay = (props: Props) => {
 
   const downloadKubeConfig = async () => {
     try {
-      const { data } = await refetch();
+      const { data } = await getKubeConfig();
 
       if (data) {
         downloadFile(`${clusterLabel}-kubeconfig.yaml`, data);
@@ -182,8 +198,8 @@ export const KubeConfigDisplay = (props: Props) => {
           </Box>
           <Box
             className={classes.kubeconfigElement}
-            onClick={onGetToken}
-            sx={{ marginLeft: isFetching ? 1 : 0 }}
+            onClick={onCopyToken}
+            sx={{ marginLeft: isFetching ? 1.25 : 0 }}
           >
             {isFetching ? (
               <CircleProgress noPadding={true} size="xs" />
