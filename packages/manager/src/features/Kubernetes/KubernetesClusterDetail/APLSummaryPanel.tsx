@@ -37,23 +37,21 @@ const checkConsoleURL = async (
   setStatus: React.Dispatch<React.SetStateAction<StatusState>>
 ) => {
   const consoleURL = `https://console.lke${cluster.id}.akamai-apl.net`;
-
+  const healthCheckURL = `https://auth.lke${cluster.id}.akamai-apl.net/ready`;
   const pollURL = async () => {
     try {
-      const response = await axios.get(consoleURL);
+      const response = await axios.get(healthCheckURL);
 
-      if (response.status === 200) {
+      if (response.status === 302 || response.status === 200) {
         clearInterval(interval); // Stop the polling
         setStatus({ resolved: true, url: consoleURL });
       }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setStatus({
-          message:
-            'APL is still being deployed, please check back in a minute.',
-          resolved: false,
-        });
-      }
+      setStatus({
+        message:
+          'Installation still in progress; please check back in a minute.',
+        resolved: false,
+      });
     }
   };
 
@@ -87,9 +85,7 @@ export const APLSummaryPanel = React.memo((props: Props) => {
     <Paper className={classes.root}>
       <Grid className={classes.mainGridContainer} container spacing={2}>
         <Grid>
-          <Typography className={classes.label}>
-            APL Console Endpoint:
-          </Typography>
+          <Typography className={classes.label}>Portal Endpoint:</Typography>
           {status.resolved ? (
             <Link to={status.url}>{status.url}</Link>
           ) : (
