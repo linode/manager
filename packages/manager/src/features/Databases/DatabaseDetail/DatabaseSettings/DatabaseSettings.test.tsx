@@ -88,7 +88,6 @@ describe('DatabaseSettings Component', () => {
     const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
     spy.mockReturnValue({
       isDatabasesEnabled: true,
-      isDatabasesV1Enabled: true,
       isDatabasesV2Beta: false,
       isDatabasesV2Enabled: true,
       isDatabasesV2GA: true,
@@ -105,9 +104,9 @@ describe('DatabaseSettings Component', () => {
     const headings = getAllByRole('heading');
 
     expect(headings[0].textContent).toBe('Suspend Cluster');
-    expect(headings[1].textContent).toBe('Access Controls');
-    expect(headings[2].textContent).toBe('Reset Root Password');
-    expect(headings[3].textContent).toBe('Delete Cluster');
+    expect(headings[1].textContent).toBe('Manage Access');
+    expect(headings[2].textContent).toBe('Reset the Root Password');
+    expect(headings[3].textContent).toBe('Delete the Cluster');
   });
 
   it('should disable suspend when database status is not active', async () => {
@@ -125,7 +124,6 @@ describe('DatabaseSettings Component', () => {
     const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
     spy.mockReturnValue({
       isDatabasesEnabled: true,
-      isDatabasesV1Enabled: true,
       isDatabasesV2Beta: false,
       isDatabasesV2Enabled: true,
       isDatabasesV2GA: true,
@@ -158,7 +156,6 @@ describe('DatabaseSettings Component', () => {
     const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
     spy.mockReturnValue({
       isDatabasesEnabled: true,
-      isDatabasesV1Enabled: true,
       isDatabasesV2Beta: false,
       isDatabasesV2Enabled: true,
       isDatabasesV2GA: true,
