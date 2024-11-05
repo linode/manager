@@ -119,15 +119,14 @@ export const useAPLAvailability = () => {
   const flags = useFlags();
 
   // Only fetch the account beta if the APL flag is enabled
-  const { data: beta } = useAccountBetaQuery('apl', Boolean(flags.apl));
+  const { data: beta, isLoading } = useAccountBetaQuery(
+    'apl',
+    Boolean(flags.apl)
+  );
 
-  if (!beta) {
-    return false;
-  }
+  const showAPL = beta !== undefined && getBetaStatus(beta) === 'active';
 
-  const betaStatus = getBetaStatus(beta);
-
-  return betaStatus === 'active';
+  return { isLoading: flags.apl && isLoading, showAPL };
 };
 
 export const getKubeControlPlaneACL = (

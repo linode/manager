@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-11-05] - v1.131.2
+
+
+### Fixed:
+
+- APL summary panel not being loaded consistently ([#11207](https://github.com/linode/manager/pull/11207))
+
 ## [2024-10-29] - v1.131.1
 
 
