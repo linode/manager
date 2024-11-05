@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -31,7 +32,23 @@ export const StackScriptRow = (props: Props) => {
   return (
     <TableRow>
       <TableCell>
-        {stackscript.username} / {stackscript.label}
+        {type === 'account' ? (
+          <Link to={`/stackscripts/${stackscript.id}`}>
+            {stackscript.label}
+          </Link>
+        ) : (
+          <>
+            <Link
+              to={`/stackscripts/community?query=username:${stackscript.username}`}
+            >
+              {stackscript.username}
+            </Link>{' '}
+            /{' '}
+            <Link to={`/stackscripts/${stackscript.id}`}>
+              {stackscript.label}
+            </Link>
+          </>
+        )}
       </TableCell>
       <TableCell>{stackscript.deployments_total}</TableCell>
       <Hidden smDown>

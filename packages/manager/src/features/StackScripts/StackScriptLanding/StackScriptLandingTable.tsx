@@ -13,6 +13,7 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import {
@@ -66,8 +67,8 @@ export const StackScriptLandingTable = (props: Props) => {
     error,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
     isFetching,
+    isFetchingNextPage,
     isLoading,
   } = useStackScriptsInfiniteQuery({
     ...filter,
@@ -98,9 +99,10 @@ export const StackScriptLandingTable = (props: Props) => {
           history.push({ search: queryParams.toString() });
         }}
         hideLabel
+        isSearching={isFetching}
         label="Search"
-        loading={isFetching}
         noMarginTop
+        clearable
         placeholder="Search by Label, Username, or Description"
         value={query}
       />
@@ -162,6 +164,7 @@ export const StackScriptLandingTable = (props: Props) => {
               type={type}
             />
           ))}
+          {query && stackscripts?.length === 0 && <TableRowEmpty colSpan={6} />}
           {isFetchingNextPage && (
             <TableRowLoading
               responsive={{
