@@ -1,8 +1,7 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { omittedProps } from 'src/utilities/omittedProps';
-
-import { SearchSuggestionProps } from './SearchSuggestion';
+import type { SearchSuggestionProps } from './SearchSuggestion';
 
 export const StyledWrapperDiv = styled('div', {
   label: 'StyledWrapperDiv',
@@ -24,7 +23,7 @@ export const StyledWrapperDiv = styled('div', {
     '& .tag': {
       '&:hover': {
         backgroundColor: theme.palette.primary.main,
-        color: theme.colorTokens.Neutrals.White,
+        color: theme.tokens.color.Neutrals.White,
       },
       backgroundColor: theme.bg.lightBlue1,
       color: theme.palette.text.primary,

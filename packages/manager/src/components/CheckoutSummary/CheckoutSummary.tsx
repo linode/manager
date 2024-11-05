@@ -1,10 +1,10 @@
+import { Paper } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { Paper } from '../Paper';
 import { Typography } from '../Typography';
 import { SummaryItem } from './SummaryItem';
 

@@ -10,7 +10,9 @@ List any change relevant to the reviewer.
 Please specify a release date to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
 
 ## Preview 📷
-**Include a screenshot or screen recording of the change**
+**Include a screenshot or screen recording of the change.**
+
+:lock: Use the [Mask Sensitive Data](https://cloud.linode.com/profile/settings) setting for security.
 
 :bulb: Use `<video src="" />` tag when including recordings in table.
 

@@ -1,9 +1,8 @@
-import { IconButton } from '@linode/ui';
+import { Box, IconButton } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useArgs } from '@storybook/preview-api';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
 import { TopMenuTooltip } from 'src/features/TopMenu/TopMenuTooltip';
 
@@ -34,7 +33,7 @@ export const Default: StoryObj<SideMenuProps> = {
               open={args.open || open}
             />
           </Box>
-          <Box sx={{ ml: '200px' }}>
+          <Box sx={{ ml: '230px' }}>
             <Hidden mdDown>
               <TopMenuTooltip key={navHoverText} title={navHoverText}>
                 <IconButton

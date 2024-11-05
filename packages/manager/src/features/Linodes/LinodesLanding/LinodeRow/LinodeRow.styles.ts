@@ -1,7 +1,9 @@
-import { Theme, styled } from '@mui/material/styles';
+import { omittedProps } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
-import { omittedProps } from 'src/utilities/omittedProps';
+
+import type { Theme } from '@mui/material/styles';
 
 type StyledMaintenanceCellProps = { maintenance: boolean };
 

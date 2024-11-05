@@ -10,7 +10,7 @@ import type { OptionProps } from 'react-select';
 const useStyles = makeStyles()((theme: Theme) => ({
   focused: {
     backgroundColor: theme.palette.primary.main,
-    color: theme.colorTokens.Neutrals.White,
+    color: theme.tokens.color.Neutrals.White,
   },
   root: {
     padding: theme.spacing(1),

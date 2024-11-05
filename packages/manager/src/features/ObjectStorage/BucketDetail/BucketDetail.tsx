@@ -1,5 +1,6 @@
 import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
-import { InfiniteData, useQueryClient } from '@tanstack/react-query';
+import { Box } from '@linode/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
@@ -58,6 +58,7 @@ import type {
   ObjectStorageObject,
   ObjectStorageObjectList,
 } from '@linode/api-v4';
+import type { InfiniteData } from '@tanstack/react-query';
 
 interface MatchParams {
   bucketName: string;

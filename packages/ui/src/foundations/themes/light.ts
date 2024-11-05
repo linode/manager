@@ -1,13 +1,22 @@
 import {
+  Accent,
   Action,
+  Background,
   Border,
+  BorderRadius,
   Button,
   Chart,
   Color,
+  Content,
   Dropdown,
+  Elevation,
+  Font,
   Interaction,
   NotificationToast,
+  Radius,
   Select,
+  Typography,
+  Spacing,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -239,8 +248,6 @@ export const lightTheme: ThemeOptions = {
   bg,
   borderColors,
   breakpoints,
-  chartTokens: Chart,
-  colorTokens: Color,
   color,
   components: {
     MuiAccordion: {
@@ -287,7 +294,7 @@ export const lightTheme: ThemeOptions = {
               transform: 'rotate(0deg)',
             },
             margin: 0,
-            minHeight: 48,
+            minHeight: 40,
           },
           '&:hover': {
             '& h3': {
@@ -1568,7 +1575,6 @@ export const lightTheme: ThemeOptions = {
       color: Select.Hover.Text,
     },
   },
-  interactionTokens: Interaction,
   name: 'light', // @todo remove this because we leverage pallete.mode now
   notificationToast,
   palette: {
@@ -1632,6 +1638,22 @@ export const lightTheme: ThemeOptions = {
   ],
   spacing,
   textColors,
+  tokens: {
+    accent: Accent,
+    action: Action,
+    background: Background,
+    border: Border,
+    borderRadius: BorderRadius,
+    color: Color,
+    chart: Chart,
+    content: Content,
+    elevation: Elevation,
+    interaction: Interaction,
+    radius: Radius,
+    typography: Typography,
+    font: Font,
+    spacing: Spacing,
+  },
   typography: {
     body1: {
       color: primaryColors.text,

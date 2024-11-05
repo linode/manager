@@ -1,14 +1,14 @@
-import { Box } from 'src/components/Box';
+import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
 import CopyIcon from 'src/assets/icons/copy.svg';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
@@ -18,6 +18,8 @@ import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import copy from 'copy-to-clipboard';
 import { CircleProgress } from 'src/components/CircleProgress';
+
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   clusterId: number;
@@ -76,15 +78,19 @@ const renderEndpoint = (
   endpointError?: string
 ) => {
   if (endpoint) {
-    return endpoint;
+    return <MaskableText isToggleable text={endpoint} length="plaintext" />;
   }
   if (endpointLoading) {
-    return 'Loading...';
+    return <Typography>Loading...</Typography>;
   }
   if (endpointError) {
-    return endpointError;
+    return <Typography>{endpointError}</Typography>;
   }
-  return 'Your endpoint will be displayed here once it is available.';
+  return (
+    <Typography>
+      Your endpoint will be displayed here once it is available.
+    </Typography>
+  );
 };
 
 export const KubeConfigDisplay = (props: Props) => {
@@ -145,15 +151,13 @@ export const KubeConfigDisplay = (props: Props) => {
         <Typography className={classes.label}>
           Kubernetes API Endpoint:
         </Typography>
-        <Typography>
-          {renderEndpoint(
-            getEndpointToDisplay(
-              endpoints?.map((endpoint) => endpoint.endpoint) ?? []
-            ),
-            endpointsLoading,
-            endpointsError?.[0].reason
-          )}
-        </Typography>
+        {renderEndpoint(
+          getEndpointToDisplay(
+            endpoints?.map((endpoint) => endpoint.endpoint) ?? []
+          ),
+          endpointsLoading,
+          endpointsError?.[0].reason
+        )}
       </Grid>
       <Grid xs={12}>
         <Typography className={classes.label} style={{ marginTop: 8 }}>

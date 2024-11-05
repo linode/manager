@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

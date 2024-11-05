@@ -1,10 +1,10 @@
+import { Paper } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import axios from 'axios';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 
 import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
@@ -50,7 +50,7 @@ const checkConsoleURL = async (
       if (error.response && error.response.status === 404) {
         setStatus({
           message:
-            'APL is still being deployed, please check back in a minute.',
+            'Installation still in progress; please check back in a minute.',
           resolved: false,
         });
       }
@@ -87,9 +87,7 @@ export const APLSummaryPanel = React.memo((props: Props) => {
     <Paper className={classes.root}>
       <Grid className={classes.mainGridContainer} container spacing={2}>
         <Grid>
-          <Typography className={classes.label}>
-            APL Console Endpoint:
-          </Typography>
+          <Typography className={classes.label}>Portal Endpoint:</Typography>
           {status.resolved ? (
             <Link to={status.url}>{status.url}</Link>
           ) : (
