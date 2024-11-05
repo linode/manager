@@ -93,4 +93,10 @@ describe('transformUrl', () => {
       'https://cloud.linode.com/oauth/callback#access_token';
     expect(actualTransform).toEqual(expectedTransform);
   });
+
+  it('returns the original url if no transformation is needed', () => {
+    const url = 'https://cloud.linode.com/linodes/create';
+    const actualTransform = transformUrl(url);
+    expect(actualTransform).toEqual(url);
+  });
 });
