@@ -2,7 +2,7 @@ import { createRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import StackScriptCreate from 'src/features/StackScripts/StackScriptCreate/StackScriptCreate';
-import StackScriptDetail from 'src/features/StackScripts/StackScriptsDetail';
+import { StackScriptsDetail } from 'src/features/StackScripts/StackScriptsDetail';
 
 import { rootRoute } from '../root';
 import { StackScriptsRoute } from './StackscriptsRoute';
@@ -49,7 +49,7 @@ const stackScriptsCreateRoute = createRoute({
 
 const stackScriptsDetailRoute = createRoute({
   // TODO: TanStack Router - broken, perhaps due to being a class component.
-  component: () => <StackScriptDetail />,
+  component: () => <StackScriptsDetail />,
   getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
     stackScriptID: Number(params.stackScriptID),

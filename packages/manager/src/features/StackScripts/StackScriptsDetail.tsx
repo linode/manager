@@ -1,19 +1,17 @@
-import {
-  StackScript,
-  getStackScript,
-  updateStackScript,
-} from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import React from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
+import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { StackScript as _StackScript } from 'src/components/StackScript/StackScript';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useGrants } from 'src/queries/profile/profile';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { Paper } from 'src/components/Paper';
+import { StackScript } from 'src/components/StackScript/StackScript';
+import { useGrants, useProfile } from 'src/queries/profile/profile';
+import {
+  useStackScriptQuery,
+  useUpdateStackScriptMutation,
+} from 'src/queries/stackscripts';
 
 import {
   canUserModifyAccountStackScript,
@@ -21,21 +19,23 @@ import {
 } from './stackScriptUtils';
 
 export const StackScriptsDetail = () => {
-  const { _hasGrant, _isRestrictedUser, profile } = useAccountManagement();
+  const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { stackScriptId } = useParams<{ stackScriptId: string }>();
+  const id = Number(stackScriptId);
   const history = useHistory();
-  const location = useLocation();
 
-  const [label, setLabel] = React.useState<string | undefined>('');
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
-  const [stackScript, setStackScript] = React.useState<StackScript | undefined>(
-    undefined
-  );
+  const { data: stackScript, error, isLoading } = useStackScriptQuery(id);
+
+  const {
+    error: updateError,
+    mutateAsync: updateStackScript,
+    reset,
+  } = useUpdateStackScriptMutation(id);
 
   const username = profile?.username;
-  const userCannotAddLinodes = _isRestrictedUser && !_hasGrant('add_linodes');
+  const userCannotAddLinodes =
+    profile?.restricted && !grants?.global.add_linodes;
 
   const isRestrictedUser = profile?.restricted ?? false;
   const stackScriptGrants = grants?.stackscript ?? [];
@@ -48,18 +48,6 @@ export const StackScriptsDetail = () => {
         +stackScriptId
       )
   );
-
-  React.useEffect(() => {
-    getStackScript(+stackScriptId)
-      .then((stackScript) => {
-        setLoading(false);
-        setStackScript(stackScript);
-      })
-      .catch((error) => {
-        setLoading(false);
-        setErrors(error);
-      });
-  }, [stackScriptId]);
 
   const handleCreateClick = () => {
     if (!stackScript) {
@@ -74,42 +62,20 @@ export const StackScriptsDetail = () => {
   };
 
   const handleLabelChange = (label: string) => {
-    // This should never actually happen, but TypeScript is expecting a Promise here.
-    if (stackScript === undefined) {
-      return Promise.resolve();
-    }
-
-    setErrors(undefined);
-
-    return updateStackScript(stackScript.id, { label })
-      .then(() => {
-        setLabel(label);
-        setStackScript({ ...stackScript, label });
-      })
-      .catch((e) => {
-        setLabel(label);
-        setErrors(getAPIErrorOrDefault(e, 'Error updating label', 'label'));
-        return Promise.reject(e);
-      });
+    return updateStackScript({ label });
   };
 
-  const resetEditableLabel = () => {
-    setLabel(stackScript?.label);
-    setErrors(undefined);
-  };
-
-  if (loading) {
+  if (isLoading) {
     return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error?.[0].reason} />;
   }
 
   if (!stackScript) {
     return <NotFound />;
   }
-
-  const errorMap = getErrorMap(['label'], errors);
-  const labelError = errorMap.label;
-
-  const stackScriptLabel = label ?? stackScript.label;
 
   return (
     <>
@@ -127,9 +93,9 @@ export const StackScriptsDetail = () => {
           labelOptions: { noCap: true },
           onEditHandlers: userCanModify
             ? {
-                editableTextTitle: stackScriptLabel,
-                errorText: labelError,
-                onCancel: resetEditableLabel,
+                editableTextTitle: stackScript.label,
+                errorText: updateError ? updateError[0].reason : undefined,
+                onCancel: reset,
                 onEdit: handleLabelChange,
               }
             : undefined,
@@ -142,11 +108,9 @@ export const StackScriptsDetail = () => {
         onButtonClick={handleCreateClick}
         title={stackScript.label}
       />
-      <div className="detailsWrapper">
-        <_StackScript data={stackScript} userCanModify={userCanModify} />
-      </div>
+      <Paper>
+        <StackScript data={stackScript} userCanModify={userCanModify} />
+      </Paper>
     </>
   );
 };
-
-export default StackScriptsDetail;

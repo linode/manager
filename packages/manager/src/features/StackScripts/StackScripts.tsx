@@ -11,7 +11,11 @@ import {
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
-const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
+const StackScriptsDetail = React.lazy(() =>
+  import('./StackScriptsDetail').then((module) => ({
+    default: module.StackScriptsDetail,
+  }))
+);
 const StackScriptsLanding = React.lazy(() =>
   import('./StackScriptLanding/StackScriptsLanding').then((module) => ({
     default: module.StackScriptsLanding,

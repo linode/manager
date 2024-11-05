@@ -83,7 +83,7 @@ export const useStackScriptsInfiniteQuery = (
 
 export const useUpdateStackScriptMutation = (
   id: number,
-  options: UseMutationOptions<
+  options?: UseMutationOptions<
     StackScript,
     APIError[],
     Partial<StackScriptPayload>
@@ -102,7 +102,7 @@ export const useUpdateStackScriptMutation = (
         stackscriptQueries.stackscript(id).queryKey,
         stackscript
       );
-      if (options.onSuccess) {
+      if (options?.onSuccess) {
         options.onSuccess(stackscript, vars, ctx);
       }
     },

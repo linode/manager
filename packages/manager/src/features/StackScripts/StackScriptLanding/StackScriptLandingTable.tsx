@@ -98,11 +98,11 @@ export const StackScriptLandingTable = (props: Props) => {
           queryParams.set('query', value);
           history.push({ search: queryParams.toString() });
         }}
+        clearable
         hideLabel
         isSearching={isFetching}
         label="Search"
         noMarginTop
-        clearable
         placeholder="Search by Label, Username, or Description"
         value={query}
       />
