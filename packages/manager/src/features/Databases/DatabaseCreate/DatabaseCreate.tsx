@@ -138,7 +138,7 @@ const DatabaseCreate = () => {
       ...values,
       allow_list: _allow_list,
     };
-    if (isDatabasesV2Enabled || isDatabasesV2GA) {
+    if (isDatabasesV2Enabled) {
       delete createPayload.replication_type;
     }
     try {
