@@ -89,9 +89,12 @@ const volumeActionRoute = createRoute({
   getParentRoute: () => volumesRoute,
   loader: async ({ context, params }) => {
     try {
-      await context.queryClient.fetchQuery(
-        volumeQueries.volume(params.volumeId)
-      );
+      await context.queryClient.fetchQuery({
+        queryFn: volumeQueries.volume(params.volumeId).queryFn,
+        queryKey: volumeQueries.volume(params.volumeId).queryKey,
+        retry: 3,
+        retryDelay: 1000,
+      });
     } catch {
       enqueueSnackbar('Volume not found', { variant: 'error' });
       throw redirect({
