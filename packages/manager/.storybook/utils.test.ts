@@ -10,7 +10,7 @@ describe('getReactDocgenTSFileGlobs', () => {
     ).toBe(true);
     expect(
       typeScriptFileGlobs.some((file) =>
-        file.includes('../manager/src/components/Paper.{ts,tsx}')
+        file.includes('../ui/src/components/Paper/**/*.{ts,tsx}')
       )
     ).toBe(true);
     expect(

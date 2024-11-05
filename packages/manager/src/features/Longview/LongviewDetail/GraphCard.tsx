@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 
 interface Props {
   children?: React.ReactNode;

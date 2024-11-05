@@ -1,10 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import { Button } from 'src/components/Button/Button';
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { FirewallRuleTableRowProps } from './FirewallRuleTable';
 

@@ -1,9 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import {
   convertData,
