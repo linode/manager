@@ -14,11 +14,9 @@ import {
   isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
-import type {
-  DisableRegionOption,
-  RegionSelectProps,
-} from './RegionSelect.types';
+import type { RegionSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 /**
  * A specific select for regions.
@@ -72,7 +70,7 @@ export const RegionSelect = <
     : null;
 
   const disabledRegions = regionOptions.reduce<
-    Record<string, DisableRegionOption>
+    Record<string, DisableItemOption>
   >((acc, region) => {
     if (disabledRegionsFromProps?.[region.id]) {
       acc[region.id] = disabledRegionsFromProps[region.id];
@@ -129,7 +127,8 @@ export const RegionSelect = <
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
-            endAdornment: selectedRegion && `(${selectedRegion?.id})`,
+            endAdornment:
+              isGeckoLAEnabled && selectedRegion && `(${selectedRegion?.id})`,
             required,
             startAdornment: selectedRegion && (
               <Flag country={selectedRegion?.country} mr={1} />

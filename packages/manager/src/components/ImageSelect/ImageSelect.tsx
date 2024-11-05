@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { useWatch } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { imageFactory } from 'src/factories/images';
@@ -13,9 +12,8 @@ import {
   getFilteredImagesForImageSelect,
 } from './utilities';
 
-import type { Image } from '@linode/api-v4';
+import type { Image, RegionSite } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
-import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
 
 export type ImageSelectVariant = 'all' | 'private' | 'public';
 
@@ -30,6 +28,7 @@ interface BaseProps
   label?: string;
   placeholder?: string;
   selectIfOnlyOneOption?: boolean;
+  siteType?: RegionSite;
   variant: ImageSelectVariant;
 }
 
@@ -56,6 +55,7 @@ export const ImageSelect = (props: Props) => {
     onChange,
     placeholder,
     selectIfOnlyOneOption,
+    siteType,
     variant,
     ...rest
   } = props;
@@ -65,13 +65,9 @@ export const ImageSelect = (props: Props) => {
     getAPIFilterForImageSelect(variant)
   );
 
-  const siteType = useWatch<LinodeCreateFormValues, 'site_type'>({
-    name: 'site_type',
-  });
-
   const disabledImages = getDisabledImages({
     images: images ?? [],
-    site_type: siteType ?? 'core',
+    site_type: siteType,
   });
 
   const _options = useMemo(() => {

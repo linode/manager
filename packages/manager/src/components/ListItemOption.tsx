@@ -91,9 +91,7 @@ export const ListItemOption = <T,>({
       >
         {children}
         {isItemOptionDisabled && (
-          <Box
-            sx={visuallyHidden}
-          >{`Option disabled: ${itemOptionDisabledReason}`}</Box>
+          <Box sx={visuallyHidden}>{itemOptionDisabledReason}</Box>
         )}
         {selected && <SelectedIcon style={{ marginLeft: 8 }} visible />}
       </StyledDisabledItem>

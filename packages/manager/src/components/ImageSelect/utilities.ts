@@ -4,7 +4,7 @@ import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 
 import type { ImageSelectVariant } from './ImageSelect';
 import type { Image, RegionSite } from '@linode/api-v4';
-import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 /**
  * Given a Image Select "variant", this PR returns an
@@ -92,7 +92,7 @@ export const isImageDeprecated = (image: Image) => {
 
 interface DisabledImageOptions {
   images: Image[];
-  site_type: RegionSite;
+  site_type?: RegionSite;
 }
 
 /**
@@ -105,7 +105,7 @@ export const getDisabledImages = (options: DisabledImageOptions) => {
 
   // Disable images that do not support distributed sites if the selected region is distributed
   if (site_type === 'distributed') {
-    const disabledImages: Record<string, DisableRegionOption> = {};
+    const disabledImages: Record<string, DisableItemOption> = {};
     for (const image of images) {
       if (!image.capabilities.includes('distributed-sites')) {
         disabledImages[image.id] = {

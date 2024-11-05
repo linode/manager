@@ -5,23 +5,27 @@ import React from 'react';
 import { imageFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { ImageSelect } from './ImageSelect';
 
 describe('ImageSelect', () => {
   it('should render a default "Images" label', () => {
-    const { getByLabelText } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={null} variant="public" />
-    );
+    const { getByLabelText } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect onChange={vi.fn()} value={null} variant="public" />
+      ),
+    });
 
     expect(getByLabelText('Images')).toBeVisible();
   });
 
   it('should render default placeholder text', () => {
-    const { getByPlaceholderText } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={null} variant="public" />
-    );
+    const { getByPlaceholderText } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect onChange={vi.fn()} value={null} variant="public" />
+      ),
+    });
 
     expect(getByPlaceholderText('Choose an image')).toBeVisible();
   });
@@ -35,9 +39,14 @@ describe('ImageSelect', () => {
       })
     );
 
-    const { getByPlaceholderText, getByText } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={null} variant="public" />
-    );
+    const {
+      getByPlaceholderText,
+      getByText,
+    } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect onChange={vi.fn()} value={null} variant="public" />
+      ),
+    });
 
     await userEvent.click(getByPlaceholderText('Choose an image'));
 
@@ -56,9 +65,14 @@ describe('ImageSelect', () => {
       })
     );
 
-    const { getByPlaceholderText, getByText } = renderWithTheme(
-      <ImageSelect onChange={onChange} value={null} variant="public" />
-    );
+    const {
+      getByPlaceholderText,
+      getByText,
+    } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect onChange={onChange} value={null} variant="public" />
+      ),
+    });
 
     await userEvent.click(getByPlaceholderText('Choose an image'));
 
@@ -80,9 +94,11 @@ describe('ImageSelect', () => {
       })
     );
 
-    const { findByDisplayValue } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={image.id} variant="public" />
-    );
+    const { findByDisplayValue } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect onChange={vi.fn()} value={image.id} variant="public" />
+      ),
+    });
 
     await findByDisplayValue(image.label);
   });
@@ -96,9 +112,11 @@ describe('ImageSelect', () => {
       })
     );
 
-    const { findByTestId } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={image.id} variant="public" />
-    );
+    const { findByTestId } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect onChange={vi.fn()} value={image.id} variant="public" />
+      ),
+    });
 
     await findByTestId('os-icon');
   });
@@ -132,9 +150,15 @@ describe('ImageSelect', () => {
       })
     );
 
-    const { getByPlaceholderText, getByText, queryByText } = renderWithTheme(
-      <ImageSelect onChange={vi.fn()} value={null} variant="public" />
-    );
+    const {
+      getByPlaceholderText,
+      getByText,
+      queryByText,
+    } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect onChange={vi.fn()} value={null} variant="public" />
+      ),
+    });
 
     await userEvent.click(getByPlaceholderText('Choose an image'));
 
@@ -145,30 +169,34 @@ describe('ImageSelect', () => {
   });
 
   it('should display an error', () => {
-    const { getByText } = renderWithTheme(
-      <ImageSelect
-        errorText="An error"
-        onChange={vi.fn()}
-        value={null}
-        variant="public"
-      />
-    );
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect
+          errorText="An error"
+          onChange={vi.fn()}
+          value={null}
+          variant="public"
+        />
+      ),
+    });
     expect(getByText('An error')).toBeInTheDocument();
   });
 
   it('should handle any/all', async () => {
     const onSelect = vi.fn();
 
-    const { getByLabelText, getByText } = renderWithTheme(
-      <ImageSelect
-        anyAllOption
-        label="Images"
-        multiple
-        onChange={onSelect}
-        value={[]}
-        variant="public"
-      />
-    );
+    const { getByLabelText, getByText } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect
+          anyAllOption
+          label="Images"
+          multiple
+          onChange={onSelect}
+          value={[]}
+          variant="public"
+        />
+      ),
+    });
 
     await userEvent.click(getByLabelText('Images'));
 
@@ -218,14 +246,20 @@ describe('ImageSelect', () => {
     // Therefore this test assumes the API initial sort order
     const images = [...privateImages, ...publicImages];
 
-    const { getAllByRole, getByLabelText, getByText } = renderWithTheme(
-      <ImageSelect
-        onChange={vi.fn()}
-        options={images}
-        value={null}
-        variant="all"
-      />
-    );
+    const {
+      getAllByRole,
+      getByLabelText,
+      getByText,
+    } = renderWithThemeAndHookFormContext({
+      component: (
+        <ImageSelect
+          onChange={vi.fn()}
+          options={images}
+          value={null}
+          variant="all"
+        />
+      ),
+    });
 
     await userEvent.click(getByLabelText('Images'));
     expect(getByText('My Images')).toBeInTheDocument();

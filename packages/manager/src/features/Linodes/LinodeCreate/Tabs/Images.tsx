@@ -40,7 +40,10 @@ export const Images = () => {
     globalGrantType: 'add_linodes',
   });
 
-  const regionId = useWatch({ control, name: 'region' });
+  const [regionId, siteType] = useWatch({
+    control,
+    name: ['region', 'site_type'],
+  });
 
   const { data: regions } = useRegionsQuery();
 
@@ -100,6 +103,7 @@ export const Images = () => {
             errorText={fieldState.error?.message}
             onBlur={field.onBlur}
             onChange={onChange}
+            siteType={siteType}
             sx={{ width: '416px' }}
             value={field.value ?? null}
             variant="private"

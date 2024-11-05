@@ -41,21 +41,6 @@ export const StyledLParentListItem = styled(ListItem, {
   },
 }));
 
-export const StyledListItem = styled(ListItem, {
-  label: 'RegionSelectListItem',
-})(() => ({
-  '&.Mui-disabled': {
-    cursor: 'not-allowed',
-  },
-  '&.MuiAutocomplete-option': {
-    minHeight: 'auto !important',
-    padding: '8px 10px !important',
-  },
-  '&.MuiListItem-root[aria-disabled="true"]:active': {
-    pointerEvents: 'none !important',
-  },
-}));
-
 export const StyledChip = styled(Chip)(({ theme }) => ({
   '& .MuiChip-deleteIcon': {
     '& svg': {
