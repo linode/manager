@@ -181,7 +181,7 @@ const DatabaseLanding = () => {
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
-      {showTabs && <DatabaseClusterInfoBanner />}
+      {showTabs && !isDatabasesV2GA && <DatabaseClusterInfoBanner />}
       <Box>
         {showTabs ? (
           <Tabs>
