@@ -301,7 +301,8 @@ export const extractPlansInformation = ({
           (disabledPlan) => disabledPlan.id === plan.id
         )
       );
-      const planIsTooSmallForAPL = isAPLEnabled && Boolean(plan.memory < 16000);
+      const planIsTooSmallForAPL =
+        isAPLEnabled && Boolean(plan.memory < 8000 || plan.vcpus < 4);
 
       return {
         ...plan,

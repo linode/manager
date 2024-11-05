@@ -8,7 +8,8 @@ export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =
   "This plan isn't available for the selected region.";
 export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
   'This plan is currently unavailable.';
-export const PLAN_IS_TOO_SMALL_FOR_APL_COPY = 'This plan is too small for APL';
+export const PLAN_IS_TOO_SMALL_FOR_APL_COPY =
+  'This plan is too small for Application Platform for LKE.';
 
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
