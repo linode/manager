@@ -105,7 +105,7 @@ describe('Tests for API error handling', () => {
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //  Wait for the API calls .
+    // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
@@ -115,17 +115,17 @@ describe('Tests for API error handling', () => {
       .type(`${dashboardName}{enter}`)
       .should('be.visible');
 
-    //  Select a Database Engine from the autocomplete input.
+    // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
       .type(`${engine}{enter}`)
       .should('be.visible');
 
-    //  Select a region from the dropdown.
+    // Select a region from the dropdown.
     ui.regionSelect.find().click().type(`${region}{enter}`);
 
-    // Select a resource (Database Clusters) from the autocomplete input.
+    //Select a resource (Database Clusters) from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Clusters')
       .should('be.visible')
@@ -138,7 +138,7 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
-    //  Wait for the API calls .
+    // Wait for the API calls .
     cy.wait('@getMetricDefinitions');
     cy.get('[data-qa-error-msg="true"]')
       .should('be.visible')
@@ -146,7 +146,7 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when services API fails', () => {
-    cy.intercept('GET', apiMatcher(`/monitor/services`), {
+    cy.intercept('GET', apiMatcher('/monitor/services'), {
       statusCode: 500,
       body: {
         errors: [{ reason: 'Bad Request' }],
@@ -171,7 +171,7 @@ describe('Tests for API error handling', () => {
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //  Wait for the API calls .
+    // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Selecting a dashboard from the autocomplete input.
@@ -181,14 +181,14 @@ describe('Tests for API error handling', () => {
       .type(`${dashboardName}{enter}`)
       .should('be.visible');
 
-    //  Select a Database Engine from the autocomplete input.
+    // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
       .type(`${engine}{enter}`)
       .should('be.visible');
 
-    //  Select a region from the dropdown.
+    // Select a region from the dropdown.
     ui.regionSelect.find().click().type(`${region}{enter}`);
 
     // Select a resource (Database Clusters) from the autocomplete input.
@@ -222,7 +222,7 @@ describe('Tests for API error handling', () => {
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //  Wait for the API calls .
+    // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     // Assert that the error message for fetching the dashboards is displayed correctly.
@@ -242,37 +242,37 @@ describe('Tests for API error handling', () => {
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
+    // Select a dashboard from the autocomplete input.
     ui.autocomplete
       .findByLabel('Dashboard')
       .should('be.visible')
       .type(`${dashboardName}{enter}`)
       .should('be.visible');
 
-    //  Select a database engine from the autocomplete input. Verify visibility before interaction.
+    // Select a database engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
       .type(`${engine}{enter}`)
       .should('be.visible');
 
-    //  Select a region from the dropdown. Verify visibility before interaction.
+    // Select a region from the dropdown.
     ui.regionSelect.find().click().type(`${region}{enter}`);
 
-    // Select a database cluster from the autocomplete input. Verify visibility before interaction.
+    // Select a database cluster from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Clusters')
       .should('be.visible')
       .type(`${clusterName}{enter}`)
       .click();
 
-    //  Select a node type from the autocomplete input. Verify visibility before interaction.
+    // Select a node type from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
 
-    //  Wait for the API calls .
+    // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
     cy.get('[data-qa-error-msg="true"]')
@@ -280,18 +280,18 @@ describe('Tests for API error handling', () => {
       .and('have.text', 'Failed to fetch the dashboard details.');
   });
 
-  it(`displays error message when regions API fails`, () => {
-    cy.intercept('GET', apiMatcher(`regions*`), {
+  it('displays error message when regions API fails', () => {
+    cy.intercept('GET', apiMatcher('regions*'), {
       statusCode: 500,
       body: { errors: [{ reason: 'Bad Request' }] },
     });
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //  Wait for the services and dashboard API calls to resolve before proceeding.
+    // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
-    //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
+    // Select a dashboard from the autocomplete input.
     ui.autocomplete
       .findByLabel('Dashboard')
       .should('be.visible')
@@ -314,17 +314,17 @@ describe('Tests for API error handling', () => {
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //  Wait for the API calls .
+    // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
-    //  Select a dashboard from the autocomplete input
+    // Select a dashboard from the autocomplete input
     ui.autocomplete
       .findByLabel('Dashboard')
       .should('be.visible')
       .type(`${dashboardName}{enter}`)
       .should('be.visible');
 
-    //  Select a Node Type from the autocomplete input. Verify visibility before typing.
+    // Select a Node Type from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
@@ -333,7 +333,7 @@ describe('Tests for API error handling', () => {
     //  Select a region from the dropdown. Click and type the region name.
     ui.regionSelect.find().click().type(`${region}{enter}`);
 
-    //  Select a Database Engine from the autocomplete input. Verify visibility before typing.
+    //  Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
