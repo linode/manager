@@ -368,23 +368,27 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
     setSubmitting(true);
 
-    let requestPayload = {
-      [_entityType]: Number(_entityId),
+    const baseRequestPayload = {
       description: _description,
       severity: selectedSeverity,
       summary,
     };
 
+    let requestPayload;
     if (entityType === 'bucket') {
       const bucket_label = values.entityInputValue;
       requestPayload = {
         bucket: bucket_label,
-        description: _description,
         region: _entityId,
-        severity: selectedSeverity,
-        summary,
+        ...baseRequestPayload,
+      };
+    } else {
+      requestPayload = {
+        [_entityType]: Number(_entityId),
+        ...baseRequestPayload,
       };
     }
+
     createSupportTicket(requestPayload)
       .then((response) => {
         return response;
