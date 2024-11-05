@@ -11,6 +11,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - APL summary panel not being loaded consistently ([#11207](https://github.com/linode/manager/pull/11207))
 
+## [2024-10-29] - v1.131.1
+
+
+### Fixed:
+
+- Hostnames not showing on the Database details page ([#11182](https://github.com/linode/manager/pull/11182))
+
 ## [2024-10-28] - v1.131.0
 
 
