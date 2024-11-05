@@ -30,6 +30,44 @@ const hashUniquePendoId = (id: string | undefined) => {
 };
 
 /**
+ * This function uses string matching and replacement to transform the page url into a sanitized url without unwanted data.
+ * @param url The url of the page.
+ * @returns A clean, transformed url of the page.
+ */
+export const transformUrls = (url: string) => {
+  const idMatchingRegex = /(\/\d+)/g;
+  const bucketPathMatchingRegex = /(buckets\/[^\/]+\/[^\/]+)/;
+  const userPathMatchingRegex = /(users\/).*/;
+  const oauthPathMatchingRegex = /(#access_token).*/;
+  let transformedUrl = url;
+
+  if (idMatchingRegex.test(url)) {
+    // Replace any ids with XXXX and keep the rest of the URL intact
+    transformedUrl = url.replace(idMatchingRegex, '/XXXX');
+  }
+
+  if (bucketPathMatchingRegex.test(transformedUrl)) {
+    // Replace the region and bucket names with XXXX and keep the rest of the URL intact.
+    // Object storage file navigation is truncated via the 'clear search' transform.
+    transformedUrl = transformedUrl.replace(
+      bucketPathMatchingRegex,
+      'buckets/XXXX/XXXX'
+    );
+  }
+
+  if (oauthPathMatchingRegex.test(transformedUrl)) {
+    // Remove everything after access_token
+    transformedUrl = transformedUrl.replace(oauthPathMatchingRegex, '$1');
+  }
+
+  if (userPathMatchingRegex.test(transformedUrl)) {
+    // Remove everything after /users
+    transformedUrl = transformedUrl.replace(userPathMatchingRegex, '$1');
+  }
+  return transformedUrl;
+};
+
+/**
  * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists.
  */
 export const usePendo = () => {
@@ -105,25 +143,7 @@ export const usePendo = () => {
                 action: 'Replace',
                 attr: 'pathname',
                 data(url: string) {
-                  const idMatchingRegex = /(\/\d+)/;
-                  const bucketPathMatchingRegex = /(buckets\/[^\/]+\/[^\/]+)/;
-                  const userPathMatchingRegex = /(users\/).*/;
-                  const oauthPathMatchingRegex = /(#access_token).*/;
-
-                  if (idMatchingRegex.test(url)) {
-                    // Replace any ids with XXXX and keep the rest of the URL intact
-                    return url.replace(idMatchingRegex, '/XXXX');
-                  } else if (bucketPathMatchingRegex.test(url)) {
-                    // Replace the region and bucket names with XXXX and keep the rest of the URL intact
-                    return url.replace(bucketPathMatchingRegex, 'XXXX/XXXX');
-                  } else if (oauthPathMatchingRegex.test(url)) {
-                    // Remove everything after access_token/
-                    url.replace(oauthPathMatchingRegex, '$1');
-                  } else if (userPathMatchingRegex.test(url)) {
-                    // Remove everything after /users
-                    return url.replace(userPathMatchingRegex, '$1');
-                  }
-                  return url;
+                  return transformUrls(url);
                 },
               },
             ],
