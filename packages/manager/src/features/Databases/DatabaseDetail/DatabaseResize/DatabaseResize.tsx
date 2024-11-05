@@ -280,7 +280,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           header="Choose a Plan"
           onSelect={(selected: string) => setSelectedPlanId(selected)}
           selectedId={selectedPlanId}
-          tabDisabledMessage="Resizing a 2-nodes cluster is only allowed with Dedicated plans."
+          tabDisabledMessage="Resizing a 2-node cluster is only allowed with Dedicated plans."
           types={displayTypes}
         />
         {isNewDatabaseGA && (
