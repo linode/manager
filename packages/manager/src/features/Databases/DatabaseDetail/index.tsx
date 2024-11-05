@@ -72,9 +72,6 @@ export const DatabaseDetail = () => {
     setEditableLabelError,
   } = useEditableLabelState();
 
-  const isDatabasesMonitorEnabled = true;
-  const isDatabasesMonitorBeta = true;
-
   if (error) {
     return (
       <ErrorState
@@ -94,7 +91,7 @@ export const DatabaseDetail = () => {
   }
 
   const isDefault = database.platform === 'rdbms-default';
-  const isMonitorEnabled = isDefault && isDatabasesMonitorEnabled;
+  const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
 
   const tabs: Tab[] = [
     {
@@ -116,7 +113,7 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
-      chip: isDatabasesMonitorBeta ? <BetaChip /> : null,
+      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
       routeName: `/databases/${engine}/${id}/monitor`,
       title: 'Monitor',
     });
