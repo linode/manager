@@ -1,5 +1,5 @@
 /**
- * @file @file Error Handling Tests for CloudPulse Dashboard.
+ * @file Error Handling Tests for CloudPulse Dashboard.
  */
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -85,7 +85,7 @@ describe('Tests for API error handling', () => {
     mockAppendFeatureFlags({
       aclp: { beta: true, enabled: true },
     });
-    mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
+    mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
     mockGetCloudPulseServices(serviceType).as('fetchServices');
