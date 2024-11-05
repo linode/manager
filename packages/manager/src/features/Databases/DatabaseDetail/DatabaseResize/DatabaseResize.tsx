@@ -287,8 +287,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           <>
             <Divider spacingBottom={20} spacingTop={20} />
             <DatabaseNodeSelector
-              handleNodeChange={(v: ClusterSize) => {
-                handleNodeChange(v);
+              handleNodeChange={(size: ClusterSize) => {
+                handleNodeChange(size);
               }}
               selectedPlan={displayTypes?.find(
                 (type) => type.id === selectedPlanId
