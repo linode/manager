@@ -63,7 +63,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
         flags.gpuv2?.transferBanner &&
         plan.class === 'gpu' &&
         filterOptions?.header?.includes('Ada') &&
-        plan.transfer === 0 &&
         cellName === 'Transfer'
       );
     });
