@@ -85,7 +85,7 @@ export const CreateCluster = () => {
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
-  const showAPL = useAPLAvailability();
+  const { showAPL } = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([

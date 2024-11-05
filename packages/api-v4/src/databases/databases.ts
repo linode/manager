@@ -316,3 +316,33 @@ export const getSSLFields = (engine: Engine, databaseID: number) =>
     ),
     setMethod('GET')
   );
+
+/**
+ * suspendDatabase
+ *
+ * Suspend the specified database cluster
+ */
+export const suspendDatabase = (engine: Engine, databaseID: number) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}/suspend`
+    ),
+    setMethod('POST')
+  );
+
+/**
+ * resumeDatabase
+ *
+ * Resume the specified database cluster
+ */
+export const resumeDatabase = (engine: Engine, databaseID: number) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/${encodeURIComponent(
+        engine
+      )}/instances/${encodeURIComponent(databaseID)}/resume`
+    ),
+    setMethod('POST')
+  );

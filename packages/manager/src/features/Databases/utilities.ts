@@ -15,9 +15,6 @@ import type { DatabaseFork } from '@linode/api-v4';
 
 export interface IsDatabasesEnabled {
   isDatabasesEnabled: boolean;
-  isDatabasesMonitorBeta?: boolean;
-  isDatabasesMonitorEnabled?: boolean;
-  isDatabasesV1Enabled: boolean;
   isDatabasesV2Beta: boolean;
   isDatabasesV2Enabled: boolean;
   isDatabasesV2GA: boolean;
@@ -71,26 +68,32 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
       account?.capabilities ?? []
     );
 
-    const isDatabasesV2Enabled = isFeatureEnabledV2(
-      'Managed Databases Beta',
-      hasV2Flag,
-      account?.capabilities ?? []
-    );
+    const isDatabasesV2BetaEnabled =
+      isFeatureEnabledV2(
+        'Managed Databases Beta',
+        hasV2Flag,
+        account?.capabilities ?? []
+      ) && hasV2BetaFlag;
 
-    const isDatabasesV2Beta: boolean = isDatabasesV2Enabled && hasV2BetaFlag;
+    const isDatabasesV2GAEnabled =
+      isFeatureEnabledV2(
+        'Managed Databases',
+        hasV2Flag,
+        account?.capabilities ?? []
+      ) && hasV2GAFlag;
 
     return {
-      isDatabasesEnabled: isDatabasesV1Enabled || isDatabasesV2Enabled,
-      isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
-      isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
-      isDatabasesV1Enabled,
-      isDatabasesV2Beta,
-      isDatabasesV2Enabled,
-      isDatabasesV2GA:
-        (isDatabasesV1Enabled || isDatabasesV2Enabled) && hasV2GAFlag,
+      isDatabasesEnabled:
+        isDatabasesV1Enabled ||
+        isDatabasesV2BetaEnabled ||
+        isDatabasesV2GAEnabled,
 
-      isUserExistingBeta: isDatabasesV2Beta && isDatabasesV1Enabled,
-      isUserNewBeta: isDatabasesV2Beta && !isDatabasesV1Enabled,
+      isDatabasesV2Beta: isDatabasesV2BetaEnabled,
+      isDatabasesV2Enabled: isDatabasesV2BetaEnabled || isDatabasesV2GAEnabled,
+      isDatabasesV2GA: isDatabasesV2GAEnabled,
+
+      isUserExistingBeta: isDatabasesV2BetaEnabled && isDatabasesV1Enabled,
+      isUserNewBeta: isDatabasesV2BetaEnabled && !isDatabasesV1Enabled,
     };
   }
 
@@ -99,12 +102,11 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
 
   return {
     isDatabasesEnabled: hasLegacyTypes || hasDefaultTypes,
-    isDatabasesMonitorBeta: !!flags.dbaasV2MonitorMetrics?.beta,
-    isDatabasesMonitorEnabled: !!flags.dbaasV2MonitorMetrics?.enabled,
-    isDatabasesV1Enabled: hasLegacyTypes,
+
     isDatabasesV2Beta: hasDefaultTypes && hasV2BetaFlag,
     isDatabasesV2Enabled: hasDefaultTypes,
     isDatabasesV2GA: (hasLegacyTypes || hasDefaultTypes) && hasV2GAFlag,
+
     isUserExistingBeta: hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
     isUserNewBeta: !hasLegacyTypes && hasDefaultTypes && hasV2BetaFlag,
   };
