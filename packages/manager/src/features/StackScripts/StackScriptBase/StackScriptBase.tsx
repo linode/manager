@@ -197,9 +197,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   You don&rsquo;t have any StackScripts to select from.
                 </StyledPlaceholder>
               ) : (
-                <StackScriptsEmptyLandingState
-                  goToCreateStackScript={this.goToCreateStackScript}
-                />
+                <StackScriptsEmptyLandingState />
               )}
             </StyledEmptyStateDiv>
           ) : (
@@ -425,11 +423,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           this.state.isSorting
         )
       );
-    };
-
-    goToCreateStackScript = () => {
-      const { history } = this.props;
-      history.push('/stackscripts/create');
     };
 
     handleClickTableHeader = (value: string) => {
