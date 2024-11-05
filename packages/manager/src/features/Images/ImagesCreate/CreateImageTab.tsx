@@ -13,7 +13,7 @@ import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/co
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Stack } from 'src/components/Stack';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';

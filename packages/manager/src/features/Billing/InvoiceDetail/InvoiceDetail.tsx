@@ -13,7 +13,7 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';

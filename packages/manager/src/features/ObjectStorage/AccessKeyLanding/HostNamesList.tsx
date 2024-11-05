@@ -1,11 +1,10 @@
-import { Box } from '@linode/ui';
+import { Box, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React, { useRef } from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { List } from 'src/components/List';
 import { useRegionsQuery } from 'src/queries/regions/regions';
-import { omittedProps } from 'src/utilities/omittedProps';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';

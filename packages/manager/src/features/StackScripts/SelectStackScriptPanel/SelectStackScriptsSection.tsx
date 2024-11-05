@@ -18,12 +18,20 @@ interface Props {
   disabled?: boolean;
   isSorting: boolean;
   onSelect: (s: StackScript) => void;
+  openStackScriptDetailsDialog: (stackscriptId: number) => void;
   publicImages: Record<string, Image>;
   selectedId?: number;
 }
 
 export const SelectStackScriptsSection = (props: Props) => {
-  const { data, disabled, isSorting, onSelect, selectedId } = props;
+  const {
+    data,
+    disabled,
+    isSorting,
+    onSelect,
+    openStackScriptDetailsDialog,
+    selectedId,
+  } = props;
 
   const { data: profile } = useProfile();
 
@@ -40,6 +48,7 @@ export const SelectStackScriptsSection = (props: Props) => {
       key={s.id}
       label={s.label}
       onSelect={() => onSelect(s)}
+      openStackScriptDetailsDialog={openStackScriptDetailsDialog}
       stackScriptID={s.id}
       stackScriptUsername={s.username}
       updateFor={[selectedId === s.id]}

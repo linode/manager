@@ -1,3 +1,4 @@
+import { Paper } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -5,7 +6,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Paper } from 'src/components/Paper';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Stack } from 'src/components/Stack';
