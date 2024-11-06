@@ -107,7 +107,9 @@ export const TableCell = (props: TableCellProps) => {
           // hide the cell at small breakpoints if it's empty with no parent column
           emptyCell:
             (!parentColumn && !props.children) ||
-            (Array.isArray(props.children) && !props.children[0]),
+            (!parentColumn &&
+              Array.isArray(props.children) &&
+              !props.children[0]),
         },
         className
       )}
