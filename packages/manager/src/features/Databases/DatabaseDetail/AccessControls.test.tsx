@@ -35,13 +35,13 @@ describe('Access Controls', () => {
     ['disable', true],
     ['enable', false],
   ])(
-    'should %s "Manage Access Control" button when disabled is %s',
+    'should %s "Manage Access" button when disabled is %s',
     (_, isDisabled) => {
       const database = databaseFactory.build();
       const { getByRole } = renderWithTheme(
         <AccessControls database={database} disabled={isDisabled} />
       );
-      const button = getByRole('button', { name: 'Manage Access Controls' });
+      const button = getByRole('button', { name: 'Manage Access' });
 
       if (isDisabled) {
         expect(button).toBeDisabled();

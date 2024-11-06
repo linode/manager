@@ -3,6 +3,7 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 import { tail } from 'src/utilities/tail';
 
@@ -77,6 +78,8 @@ export const IPAddress = (props: IPAddressProps) => {
     false
   );
 
+  const { data: preferences } = usePreferences();
+
   React.useEffect(() => {
     return () => {
       if (copiedTimeout !== null) {
@@ -123,6 +126,8 @@ export const IPAddress = (props: IPAddressProps) => {
           copyableText
           data-qa-copy-ip-text
           disabled={disabled}
+          masked={Boolean(preferences?.maskSensitiveData)}
+          maskedTextLength="ipv4"
           text={ip}
         />
         {renderCopyIcon(ip)}
@@ -133,7 +138,6 @@ export const IPAddress = (props: IPAddressProps) => {
   return (
     <StyledRootDiv showAll={showAll}>
       {!showAll ? renderIP(formattedIPS[0]) : formattedIPS.map(renderIP)}
-
       {formattedIPS.length > 1 && showMore && !showAll && (
         <ShowMore
           ariaItemType="IP addresses"

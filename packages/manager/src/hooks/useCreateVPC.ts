@@ -16,6 +16,7 @@ import type {
   APIError,
   CreateSubnetPayload,
   CreateVPCPayload,
+  VPC,
 } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 import type { SubnetError } from 'src/utilities/formikErrorUtils';
@@ -31,7 +32,7 @@ export interface CreateVPCFieldState {
 }
 
 export interface UseCreateVPCInputs {
-  handleSelectVPC?: (vpcId: number) => void;
+  handleSelectVPC?: (vpc: VPC) => void;
   onDrawerClose?: () => void;
   pushToVPCPage?: boolean;
   selectedRegion?: string;
@@ -135,12 +136,12 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
     };
 
     try {
-      const response = await createVPC(createVPCPayload);
+      const vpc = await createVPC(createVPCPayload);
       if (pushToVPCPage) {
-        history.push(`/vpcs/${response.id}`);
+        history.push(`/vpcs/${vpc.id}`);
       } else {
         if (handleSelectVPC && onDrawerClose) {
-          handleSelectVPC(response.id);
+          handleSelectVPC(vpc);
           onDrawerClose();
         }
       }
