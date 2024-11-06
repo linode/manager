@@ -437,7 +437,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       label,
       revisionNote,
       script,
-      // apiResponse
+      apiResponse
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor(errorResources, errors);
@@ -490,7 +490,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               ...(mode === 'edit'
                 ? [
                     {
-                      label,
+                      label: apiResponse?.label,
                       position: 2,
                     },
                   ]
