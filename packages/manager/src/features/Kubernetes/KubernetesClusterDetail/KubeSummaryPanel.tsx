@@ -30,6 +30,8 @@ import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 import { KubeEntityDetailFooter } from './KubeEntityDetailFooter';
 
 import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import { Hidden } from 'src/components/Hidden';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   cluster: KubernetesCluster;
@@ -106,7 +108,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               isResettingKubeConfig={isResettingKubeConfig}
               setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
             />
-            <Box flexGrow={1} />
             {cluster.control_plane.high_availability && (
               <Chip
                 sx={(theme) => ({
@@ -147,31 +148,38 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             >
               <Typography variant="h2">Summary</Typography>
             </Box>
-            <Box display="flex" justifyContent="end">
-              <StyledActionButton
-                onClick={() => {
-                  window.open(dashboard?.url, '_blank');
-                }}
-                sx={{
-                  '& svg': {
-                    height: '14px',
-                    marginLeft: '4px',
-                  },
-                  alignItems: 'center',
-                  display: 'flex',
-                }}
-                disabled={Boolean(dashboardError) || !dashboard}
-              >
-                Kubernetes Dashboard
-                <OpenInNewIcon />
-              </StyledActionButton>
-              <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
-                Delete Cluster
-              </StyledActionButton>
+            <Box>
+              <Hidden smUp>
+                <ActionMenu
+                  actionsList={[
+                    {
+                      disabled: Boolean(dashboardError) || !dashboard,
+                      onClick: () => window.open(dashboard?.url, '_blank'),
+                      title: 'Kubernetes Dashboard',
+                    },
+                    {
+                      onClick: () => setIsDeleteDialogOpen(true),
+                      title: 'Delete Cluster',
+                    },
+                  ]}
+                  ariaLabel={`Action menu for Kubernetes Cluster ${cluster.label}`}
+                />
+              </Hidden>
+              <Hidden smDown>
+                <StyledActionButton
+                  disabled={Boolean(dashboardError) || !dashboard}
+                  endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
+                  onClick={() => window.open(dashboard?.url, '_blank')}
+                >
+                  Kubernetes Dashboard
+                </StyledActionButton>
+                <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
+                  Delete Cluster
+                </StyledActionButton>
+              </Hidden>
             </Box>
           </EntityHeader>
         }
-        noBodyBottomBorder
       />
 
       <KubeConfigDrawer

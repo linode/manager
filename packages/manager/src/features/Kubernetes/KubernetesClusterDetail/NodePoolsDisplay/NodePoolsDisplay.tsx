@@ -91,7 +91,7 @@ export const NodePoolsDisplay = (props: Props) => {
         spacing={2}
       >
         <Typography variant="h2">Node Pools</Typography>
-        <Box>
+        <Stack direction="row" spacing={1}>
           <Button
             buttonType="secondary"
             onClick={() => setIsRecycleClusterOpen(true)}
@@ -101,7 +101,7 @@ export const NodePoolsDisplay = (props: Props) => {
           <Button buttonType="primary" onClick={handleOpenAddDrawer}>
             Add a Node Pool
           </Button>
-        </Box>
+        </Stack>
       </Stack>
       {poolsError && <ErrorState errorText={poolsError[0].reason} />}
       <Stack spacing={2}>
