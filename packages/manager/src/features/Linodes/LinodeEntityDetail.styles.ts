@@ -92,7 +92,7 @@ export const sxLastListItem = {
 // VPC Label Styles
 // ---------------------------------------------------------------------
 
-export const StyledVPCWrapper = styled(TableRow, { label: 'StyledVPCWrapper' })(
+export const StyledIPv4Box = styled(Box, { label: 'StyledIPv4Box' })(
   ({ theme }) => ({
     '&:hover .copy-tooltip > svg, & .copy-tooltip:focus > svg': {
       opacity: 1,
@@ -116,11 +116,16 @@ export const StyledVPCLabel = styled(Box, { label: 'StyledVPCLabel' })(
   })
 );
 
-export const StyledVPCItem = styled(Box, { label: 'StyledVPCLabel' })(
+export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
   ({ theme }) => ({
-    backgroundColor: theme.interactionTokens.Background.Secondary,
-    alignContent: 'center',
-    border: 0,
+    '& div': {
+      fontSize: 15,
+    },
+    alignItems: 'center',
+    backgroundColor: theme.tokens.interaction.Background.Secondary,
+    display: 'flex',
+    fontFamily: '"UbuntuMono", monospace, sans-serif',
+    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
   })
 );
 

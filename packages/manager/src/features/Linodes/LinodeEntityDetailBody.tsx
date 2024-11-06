@@ -25,14 +25,13 @@ import {
   StyledLabelBox,
   StyledListItem,
   StyledVPCLabel,
-  StyledVPCItem,
+  StyledIPv4Item,
   StyledSummaryGrid,
   StyledVPCBox,
   StyledCopyTooltip,
-  StyledTableCell,
   StyledGradientDiv,
   sxLastListItem,
-  StyledVPCWrapper,
+  StyledIPv4Box,
 } from './LinodeEntityDetail.styles';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -287,22 +286,20 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 {getSubnetsString(linodeAssociatedSubnets ?? [])}
               </StyledListItem>
             </StyledVPCBox>
-            <StyledVPCWrapper>
-              <StyledVPCLabel data-testid="vpc-ipv4">VPC IPv4</StyledVPCLabel>
-              <StyledVPCItem component="span" data-testid="vpc-ipv4">
-                {configInterfaceWithVPC?.ipv4?.vpc && (
-                  <StyledTableCell sx={{ border: 0 }}>
-                    <StyledGradientDiv>
-                      <CopyTooltip
-                        copyableText
-                        text={configInterfaceWithVPC.ipv4.vpc}
-                      />
-                    </StyledGradientDiv>
-                    <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
-                  </StyledTableCell>
-                )}
-              </StyledVPCItem>
-            </StyledVPCWrapper>
+            {configInterfaceWithVPC?.ipv4?.vpc && (
+              <StyledIPv4Box>
+                <StyledVPCLabel data-testid="vpc-ipv4">VPC IPv4</StyledVPCLabel>
+                <StyledIPv4Item component="span" data-testid="vpc-ipv4">
+                  <StyledGradientDiv>
+                    <CopyTooltip
+                      copyableText
+                      text={configInterfaceWithVPC.ipv4.vpc}
+                    />
+                  </StyledGradientDiv>
+                  <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                </StyledIPv4Item>
+              </StyledIPv4Box>
+            )}
           </Grid>
         </Grid>
       )}
