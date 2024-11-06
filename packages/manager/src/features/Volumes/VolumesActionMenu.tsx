@@ -44,15 +44,17 @@ export const VolumesActionMenu = (props: Props) => {
     id: volume.id,
   });
 
-  const actions: (Action & { action?: VolumeAction })[] = [
+  const actions: Action<VolumeAction>[] = [
     {
       action: 'details',
+      id: volume.id.toString(),
       onClick: handlers.handleDetails,
       title: 'Show Config',
     },
     {
       action: 'edit',
       disabled: isVolumeReadOnly,
+      id: volume.id.toString(),
       onClick: handlers.handleEdit,
       title: 'Edit',
       tooltip: isVolumeReadOnly
@@ -66,6 +68,7 @@ export const VolumesActionMenu = (props: Props) => {
     {
       action: 'resize',
       disabled: isVolumeReadOnly,
+      id: volume.id.toString(),
       onClick: handlers.handleResize,
       title: 'Resize',
       tooltip: isVolumeReadOnly
@@ -79,6 +82,7 @@ export const VolumesActionMenu = (props: Props) => {
     {
       action: 'clone',
       disabled: isVolumeReadOnly,
+      id: volume.id.toString(),
       onClick: handlers.handleClone,
       title: 'Clone',
       tooltip: isVolumeReadOnly
@@ -95,6 +99,7 @@ export const VolumesActionMenu = (props: Props) => {
     actions.push({
       action: 'attach',
       disabled: isVolumeReadOnly,
+      id: volume.id.toString(),
       onClick: handlers.handleAttach,
       title: 'Attach',
       tooltip: isVolumeReadOnly
@@ -109,6 +114,7 @@ export const VolumesActionMenu = (props: Props) => {
     actions.push({
       action: 'detach',
       disabled: isVolumeReadOnly,
+      id: volume.id.toString(),
       onClick: handlers.handleDetach,
       title: 'Detach',
       tooltip: isVolumeReadOnly
@@ -124,6 +130,7 @@ export const VolumesActionMenu = (props: Props) => {
   actions.push({
     action: 'delete',
     disabled: isVolumeReadOnly || attached,
+    id: volume.id.toString(),
     onClick: handlers.handleDelete,
     title: 'Delete',
     tooltip: isVolumeReadOnly
@@ -166,6 +173,7 @@ export const VolumesActionMenu = (props: Props) => {
       <ActionMenu
         actionsList={menuActions}
         ariaLabel={`Action menu for Volume ${volume.label}`}
+        useTanstackRouter
       />
     </>
   );
