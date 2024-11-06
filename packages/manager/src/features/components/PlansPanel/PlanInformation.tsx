@@ -80,7 +80,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
                 subject to standard charges.
                 <br />
                 <Link to="https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs">
-                  Learn more about transfer costs.
+                  Learn more about transfer costs
                 </Link>
                 .
               </Typography>
