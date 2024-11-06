@@ -487,6 +487,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
                 label: 'StackScripts',
                 position: 1,
               },
+              ...(mode === 'edit'
+                ? [
+                    {
+                      label,
+                      position: 2,
+                    },
+                  ]
+                : []),
             ],
             pathname: location.pathname,
           }}
