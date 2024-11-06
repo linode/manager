@@ -1,4 +1,3 @@
-import { Box } from '@linode/ui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
