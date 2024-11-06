@@ -25,10 +25,13 @@ import { useOrder } from 'src/hooks/useOrder';
 import { useStackScriptsInfiniteQuery } from 'src/queries/stackscripts';
 
 import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelperText';
+import { StackScriptsEmptyLandingState } from '../StackScriptBase/StackScriptsEmptyLandingPage';
+import { isLKEStackScript } from '../stackScriptUtils';
 import { StackScriptDeleteDialog } from './StackScriptDeleteDialog';
 import { StackScriptMakePublicDialog } from './StackScriptMakePublicDialog';
 import { StackScriptRow } from './StackScriptRow';
-import { StackScriptsEmptyLandingState } from '../StackScriptBase/StackScriptsEmptyLandingPage';
+
+import type { StackScript } from '@linode/api-v4';
 
 interface Props {
   type: 'account' | 'community';
@@ -88,7 +91,16 @@ export const StackScriptLandingTable = (props: Props) => {
     return <ErrorState errorText={error[0].reason} />;
   }
 
-  const stackscripts = data?.pages.flatMap((page) => page.data);
+  // Never show LKE StackScripts. We try to hide these from the user even though they
+  // are returned by the API.
+  const stackscripts = data?.pages.reduce<StackScript[]>((acc, page) => {
+    for (const stackscript of page.data) {
+      if (!isLKEStackScript(stackscript)) {
+        acc.push(stackscript);
+      }
+    }
+    return acc;
+  }, []);
 
   if (!query && stackscripts?.length === 0) {
     return <StackScriptsEmptyLandingState />;

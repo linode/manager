@@ -158,3 +158,12 @@ export const getStackScriptImages = (images: StackScript['images']) => {
 
   return cleanedImages.join(', ');
 };
+/**
+ * Determines if a StackScript is a StackScript created by LKE.
+ *
+ * This function exists because the API returns these but we try
+ * to hide these StackScripts from the user in the UI.
+ */
+export const isLKEStackScript = (stackscript: StackScript) => {
+  return stackscript.username.startsWith('lke-service-account-');
+};

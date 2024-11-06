@@ -7,6 +7,7 @@ import { Stack } from 'src/components/Stack';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
+import { isLKEStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { truncate } from 'src/utilities/truncate';
 
 import type { StackScript } from '@linode/api-v4';
@@ -22,9 +23,9 @@ interface Props {
 export const StackScriptSelectionRow = (props: Props) => {
   const { disabled, isSelected, onOpenDetails, onSelect, stackscript } = props;
 
-  // Never show LKE StackScripts. We try to hide these from the user, even though they
+  // Never show LKE StackScripts. We try to hide these from the user even though they
   // are returned by the API.
-  if (stackscript.username.startsWith('lke-service-account-')) {
+  if (isLKEStackScript(stackscript)) {
     return null;
   }
 
