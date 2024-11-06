@@ -332,6 +332,7 @@ export interface LinodeType extends BaseType {
 export type LinodeTypeClass =
   | 'nanode'
   | 'standard'
+  | 'shared'
   | 'dedicated'
   | 'highmem'
   | 'gpu'

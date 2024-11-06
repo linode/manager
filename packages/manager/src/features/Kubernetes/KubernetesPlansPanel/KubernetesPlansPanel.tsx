@@ -28,7 +28,10 @@ interface Props {
   hasSelectedRegion: boolean;
   header?: string;
   isAPLEnabled?: boolean;
-  isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
+  isPlanPanelDisabled: (
+    planType?: LinodeTypeClass,
+    isAPLEnabled?: boolean
+  ) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;
   onAdd?: (key: string, value: number) => void;
@@ -105,6 +108,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 )}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
+                isAPLEnabled={isAPLEnabled}
                 planType={plan}
                 regionsData={regionsData}
               />
@@ -118,7 +122,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionId}
                 updatePlanCount={updatePlanCount}
-                wholePanelIsDisabled={isPlanPanelDisabled(plan)}
+                wholePanelIsDisabled={isPlanPanelDisabled(plan, isAPLEnabled)}
               />
             </>
           );

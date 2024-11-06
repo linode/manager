@@ -6,6 +6,7 @@ import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { APLNotice } from './APLNotice';
 import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
@@ -26,6 +27,7 @@ export interface PlanInformationProps {
   hasMajorityOfPlansDisabled: boolean;
   hasSelectedRegion: boolean;
   hideLimitedAvailabilityBanner?: boolean;
+  isAPLEnabled?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
   planType: LinodeTypeClass;
   regionsData?: Region[];
@@ -37,6 +39,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     hasMajorityOfPlansDisabled,
     hasSelectedRegion,
     hideLimitedAvailabilityBanner,
+    isAPLEnabled,
     isSelectedRegionEligibleForPlan,
     planType,
     regionsData,
@@ -100,6 +103,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
           hasDisabledClass={getDisabledClass('metal')}
         />
       ) : null}
+      {planType === 'shared' ? <APLNotice dataTestId="apl-notice" /> : null}
       {planType === 'premium' ? (
         <PlansAvailabilityNotice
           hasSelectedRegion={hasSelectedRegion}

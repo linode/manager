@@ -37,13 +37,18 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
     );
 
   /**
-   * A util to determine if the Premium Plan selection should be disabled
+   * A util to determine if the Premium or Shared Plan selection should be disabled
    * @param {LinodeTypeClass} linodeType
+   * @param {boolean} isAPLEnabled
    * @param {Capabilities} planType
    * @returns {boolean}
    */
-  const isPlanPanelDisabled = (planType: LinodeTypeClass) =>
-    hasSelectedRegion && !isSelectedRegionEligibleForPlan(planType);
+  const isPlanPanelDisabled = (
+    planType: LinodeTypeClass,
+    isAPLEnabled?: boolean
+  ) =>
+    (hasSelectedRegion && !isSelectedRegionEligibleForPlan(planType)) ||
+    (planType === 'shared' && isAPLEnabled);
 
   return {
     hasSelectedRegion,
