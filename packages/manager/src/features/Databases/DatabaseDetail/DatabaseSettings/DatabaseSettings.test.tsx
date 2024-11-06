@@ -3,28 +3,67 @@ import * as React from 'react';
 import { databaseFactory } from 'src/factories/databases';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import DatabaseSettings from './DatabaseSettings';
 import * as utils from '../../utilities';
+import DatabaseSettings from './DatabaseSettings';
 
 beforeAll(() => mockMatchMedia());
 
+const v1 = () => {
+  return {
+    isDatabasesEnabled: true,
+    isDatabasesV1Enabled: true,
+    isDatabasesV2Beta: false,
+    isDatabasesV2Enabled: false,
+    isDatabasesV2GA: false,
+    isUserExistingBeta: false,
+    isUserNewBeta: false,
+  };
+};
+
+const v2Beta = () => {
+  return {
+    isDatabasesEnabled: true,
+    isDatabasesV1Enabled: true,
+    isDatabasesV2Beta: true,
+    isDatabasesV2Enabled: true,
+    isDatabasesV2GA: false,
+    isUserExistingBeta: false,
+    isUserNewBeta: true,
+  };
+};
+
+const v2GA = () => ({
+  isDatabasesEnabled: true,
+  isDatabasesV1Enabled: true,
+  isDatabasesV2Beta: false,
+  isDatabasesV2Enabled: true,
+  isDatabasesV2GA: true,
+  isUserExistingBeta: false,
+  isUserNewBeta: false,
+});
+
+const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
+spy.mockReturnValue(v2GA());
+
 describe('DatabaseSettings Component', () => {
-  const database = databaseFactory.build();
+  const database = databaseFactory.build({ platform: 'rdbms-default' });
   it('Should exist and be renderable', () => {
     expect(DatabaseSettings).toBeDefined();
     renderWithTheme(<DatabaseSettings database={database} />);
   });
 
   it('Should render a Paper component with headers for Manage Access, Reseting the Root password, and Deleting the Cluster', () => {
+    spy.mockReturnValue(v2GA());
     const { container, getAllByRole } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).not.toBeNull();
     const headings = getAllByRole('heading');
-    expect(headings[0].textContent).toBe('Manage Access');
-    expect(headings[1].textContent).toBe('Reset the Root Password');
-    expect(headings[2].textContent).toBe('Delete the Cluster');
+    expect(headings[0].textContent).toBe('Suspend Cluster');
+    expect(headings[1].textContent).toBe('Manage Access');
+    expect(headings[2].textContent).toBe('Reset the Root Password');
+    expect(headings[3].textContent).toBe('Delete the Cluster');
   });
 
   it.each([
@@ -46,6 +85,106 @@ describe('DatabaseSettings Component', () => {
       expect(button1).toBeEnabled();
       expect(button3).toBeEnabled();
     }
+  });
+
+  it('should not render Maintenance for V1 view legacy db', async () => {
+    spy.mockReturnValue(v1());
+
+    const database = databaseFactory.build({
+      engine: 'postgresql',
+      platform: 'rdbms-legacy',
+      version: '14.6',
+    });
+
+    const { container } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
+
+    const maintenance = container.querySelector(
+      '[data-qa-settings-section="Maintenance"]'
+    );
+
+    expect(maintenance).not.toBeInTheDocument();
+  });
+
+  it('should not render Maintenance for V2 beta view legacy db', async () => {
+    spy.mockReturnValue(v2Beta());
+
+    const database = databaseFactory.build({
+      engine: 'postgresql',
+      platform: 'rdbms-legacy',
+      version: '14.6',
+    });
+
+    const { container } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
+
+    const maintenance = container.querySelector(
+      '[data-qa-settings-section="Maintenance"]'
+    );
+
+    expect(maintenance).not.toBeInTheDocument();
+  });
+
+  it('should not render Maintenance for V2 beta view default db', async () => {
+    spy.mockReturnValue(v2Beta());
+
+    const database = databaseFactory.build({
+      engine: 'postgresql',
+      platform: 'rdbms-default',
+      version: '14.6',
+    });
+
+    const { container } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
+
+    const maintenance = container.querySelector(
+      '[data-qa-settings-section="Maintenance"]'
+    );
+
+    expect(maintenance).not.toBeInTheDocument();
+  });
+
+  it('should not render Maintenance for V2 GA view legacy db', async () => {
+    spy.mockReturnValue(v2GA());
+
+    const database = databaseFactory.build({
+      engine: 'postgresql',
+      platform: 'rdbms-legacy',
+      version: '14.6',
+    });
+
+    const { container } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
+
+    const maintenance = container.querySelector(
+      '[data-qa-settings-section="Maintenance"]'
+    );
+
+    expect(maintenance).not.toBeInTheDocument();
+  });
+
+  it('should render Maintenance for V2 GA view default db', async () => {
+    spy.mockReturnValue(v2GA());
+
+    const database = databaseFactory.build({
+      engine: 'postgresql',
+      platform: 'rdbms-default',
+      version: '14.6',
+    });
+
+    const { container } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
+
+    const maintenance = container.querySelector(
+      '[data-qa-settings-section="Maintenance"]'
+    );
+
+    expect(maintenance).toBeInTheDocument();
   });
 
   it('Should render Maintenance Window with radio buttons', () => {

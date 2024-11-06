@@ -5,7 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
-import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -94,7 +94,13 @@ export const DatabaseSummaryClusterConfigurationLegacy = (props: Props) => {
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Version</Typography>
-          {databaseEngineMap[database.engine]} v{database.version}
+          <DatabaseEngineVersion
+            databaseEngine={database.engine}
+            databaseID={database.id}
+            databasePendingUpdates={database.updates.pending}
+            databasePlatform={database.platform}
+            databaseVersion={database.version}
+          />
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Nodes</Typography>

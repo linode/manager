@@ -1,19 +1,25 @@
+import { Paper } from '@linode/ui';
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
+import { DatabaseSettingsReviewUpdatesDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsReviewUpdatesDialog';
+import { DatabaseSettingsUpgradeVersionDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsUpgradeVersionDialog';
+import {
+  isDefaultDatabase,
+  useIsDatabasesEnabled,
+} from 'src/features/Databases/utilities';
 import { useProfile } from 'src/queries/profile/profile';
 
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
+import { DatabaseSettingsMaintenance } from './DatabaseSettingsMaintenance';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
+import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
 import MaintenanceWindow from './MaintenanceWindow';
 
 import type { Database } from '@linode/api-v4/lib/databases/types';
-import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
-import { useIsDatabasesEnabled } from '../../utilities';
 
 interface Props {
   database: Database;
@@ -24,6 +30,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   const { database, disabled } = props;
   const { data: profile } = useProfile();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
+  const isDefaultDB = isDefaultDatabase(database);
 
   const accessControlCopy = (
     <Typography>
@@ -32,16 +39,13 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     </Typography>
   );
 
-  const isLegacy = database.platform === 'rdbms-legacy';
-  const isDefault = database.platform === 'rdbms-default';
-
   const suspendClusterCopy = `Suspend the cluster if you don't use it temporarily to prevent being billed for it.`;
 
-  const resetRootPasswordCopy = isLegacy
+  const resetRootPasswordCopy = !isDefaultDB
     ? 'Resetting your root password will automatically generate a new password. You can view the updated password on your database cluster summary page. '
     : 'Reset your root password if someone should no longer have access to the root user or if you believe your password may have been compromised. This will automatically generate a new password that you’ll be able to see on your database cluster summary page.';
 
-  const deleteClusterCopy = isLegacy
+  const deleteClusterCopy = !isDefaultDB
     ? 'Deleting a database cluster is permanent and cannot be undone.'
     : 'Permanently remove an unused database cluster.';
 
@@ -53,6 +57,16 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   const [
     isSuspendClusterDialogOpen,
     setIsSuspendClusterDialogOpen,
+  ] = React.useState(false);
+
+  const [
+    isUpgradeVersionDialogOpen,
+    setIsUpgradeVersionDialogOpen,
+  ] = React.useState(false);
+
+  const [
+    isReviewUpdatesDialogOpen,
+    setIsReviewUpdatesDialogOpen,
   ] = React.useState(false);
 
   const onResetRootPassword = () => {
@@ -79,10 +93,26 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     setIsSuspendClusterDialogOpen(false);
   };
 
+  const onUpgradeVersion = () => {
+    setIsUpgradeVersionDialogOpen(true);
+  };
+
+  const onUpgradeVersionClose = () => {
+    setIsUpgradeVersionDialogOpen(false);
+  };
+
+  const onReviewUpdates = () => {
+    setIsReviewUpdatesDialogOpen(true);
+  };
+
+  const onReviewUpdatesClose = () => {
+    setIsReviewUpdatesDialogOpen(false);
+  };
+
   return (
     <>
       <Paper>
-        {isDatabasesV2GA && isDefault && (
+        {isDatabasesV2GA && isDefaultDB && (
           <>
             <DatabaseSettingsMenuItem
               buttonText={'Suspend Cluster'}
@@ -115,6 +145,18 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           onClick={onDeleteCluster}
           sectionTitle="Delete the Cluster"
         />
+        {isDatabasesV2GA && isDefaultDB && (
+          <>
+            <Divider spacingBottom={22} spacingTop={28} />
+            <DatabaseSettingsMaintenance
+              databaseEngine={database.engine}
+              databasePendingUpdates={database.updates.pending}
+              databaseVersion={database.version}
+              onReviewUpdates={onReviewUpdates}
+              onUpgradeVersion={onUpgradeVersion}
+            />
+          </>
+        )}
         <Divider spacingBottom={22} spacingTop={28} />
         <MaintenanceWindow
           database={database}
@@ -141,6 +183,21 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
         databaseLabel={database.label}
         onClose={onSuspendDialogClose}
         open={isSuspendClusterDialogOpen}
+      />
+      <DatabaseSettingsUpgradeVersionDialog
+        databaseEngine={database.engine}
+        databaseID={database.id}
+        databaseLabel={database.label}
+        databaseVersion={database.version}
+        onClose={onUpgradeVersionClose}
+        open={isUpgradeVersionDialogOpen}
+      />
+      <DatabaseSettingsReviewUpdatesDialog
+        databaseEngine={database.engine}
+        databaseID={database.id}
+        databasePendingUpdates={database.updates.pending}
+        onClose={onReviewUpdatesClose}
+        open={isReviewUpdatesDialogOpen}
       />
     </>
   );

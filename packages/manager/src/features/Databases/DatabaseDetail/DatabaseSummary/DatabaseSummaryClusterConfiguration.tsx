@@ -10,7 +10,7 @@ import {
   StyledLabelTypography,
   StyledValueGrid,
 } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
-import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -101,7 +101,13 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
           <StyledLabelTypography>Engine</StyledLabelTypography>
         </Grid>
         <StyledValueGrid lg={1.5} md={4} xs={8}>
-          {databaseEngineMap[database.engine]} v{database.version}
+          <DatabaseEngineVersion
+            databaseEngine={database.engine}
+            databaseID={database.id}
+            databasePendingUpdates={database.updates.pending}
+            databasePlatform={database.platform}
+            databaseVersion={database.version}
+          />
         </StyledValueGrid>
         <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>Region</StyledLabelTypography>
