@@ -38,7 +38,7 @@ export const ListItemOption = <T,>({
   props,
   selected,
 }: ListItemProps<T>) => {
-  const { className, onClick } = props;
+  const { className, onClick, ...rest } = props;
   const isItemOptionDisabled = Boolean(disabledOptions);
   const itemOptionDisabledReason = disabledOptions?.reason;
 
@@ -64,7 +64,7 @@ export const ListItemOption = <T,>({
       enterTouchDelay={200}
     >
       <StyledDisabledItem
-        {...props}
+        {...rest}
         className={
           isItemOptionDisabled ? `${className} Mui-disabled` : className
         }

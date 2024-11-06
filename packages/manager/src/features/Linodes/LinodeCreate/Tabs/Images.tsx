@@ -40,17 +40,14 @@ export const Images = () => {
     globalGrantType: 'add_linodes',
   });
 
-  const [regionId, siteType] = useWatch({
-    control,
-    name: ['region', 'site_type'],
-  });
+  const regionId = useWatch({ control, name: 'region' });
 
   const { data: regions } = useRegionsQuery();
 
+  const selectedRegion = regions?.find((r) => r.id === regionId);
+
   const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
-
-    const selectedRegion = regions?.find((r) => r.id === regionId);
 
     // Non-"distributed compatible" Images must only be deployed to core sites.
     // Clear the region field if the currently selected region is a distributed site and the Image is only core compatible.
@@ -103,7 +100,7 @@ export const Images = () => {
             errorText={fieldState.error?.message}
             onBlur={field.onBlur}
             onChange={onChange}
-            siteType={siteType}
+            siteType={selectedRegion?.site_type}
             sx={{ width: '416px' }}
             value={field.value ?? null}
             variant="private"

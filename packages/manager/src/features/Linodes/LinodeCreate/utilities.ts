@@ -21,7 +21,6 @@ import type {
   InterfacePayload,
   Linode,
   Profile,
-  RegionSite,
 } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors } from 'react-hook-form';
@@ -153,7 +152,6 @@ export const getLinodeCreatePayload = (
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
-    'site_type',
   ]);
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
@@ -265,10 +263,6 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    * The currently selected Linode
    */
   linode?: Linode | null;
-  /**
-   * Site type of the selected region
-   */
-  site_type?: RegionSite;
 }
 
 export interface LinodeCreateFormContext {

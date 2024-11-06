@@ -7,6 +7,7 @@ import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useRegionQuery } from 'src/queries/regions/regions';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
@@ -29,9 +30,11 @@ export const OperatingSystems = () => {
     name: 'image',
   });
 
-  const siteType = useWatch<LinodeCreateFormValues, 'site_type'>({
-    name: 'site_type',
+  const regionId = useWatch<LinodeCreateFormValues, 'region'>({
+    name: 'region',
   });
+
+  const { data: region } = useRegionQuery(regionId ?? -1);
 
   const isCreateLinodeRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -62,7 +65,7 @@ export const OperatingSystems = () => {
           onBlur={field.onBlur}
           onChange={onChange}
           placeholder="Choose a Linux distribution"
-          siteType={siteType}
+          siteType={region?.site_type}
           value={field.value}
           variant="public"
         />
