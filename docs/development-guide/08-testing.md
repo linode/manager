@@ -64,7 +64,7 @@ describe("My component", () => {
 Handling events such as clicks is a little more involved:
 
 ```js
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 import { renderWithTheme } from "src/utilities/testHelpers";
 import Component from "./wherever";
 
