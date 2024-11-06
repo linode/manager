@@ -1,37 +1,28 @@
-import { BetaChip, FormControl, Paper } from '@linode/ui';
+import { BetaChip, Paper } from '@linode/ui';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
-import { groupBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 
-import MongoDBIcon from 'src/assets/icons/mongodb.svg';
-import MySQLIcon from 'src/assets/icons/mysql.svg';
-import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Divider } from 'src/components/Divider';
-import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
-import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
-import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-import { EngineOption } from 'src/features/Databases/DatabaseCreate/EngineOption';
+import { DatabaseClusterData } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
+import {
+  StyledBtnCtn,
+  StyledCreateBtn,
+  StyledPlansPanel,
+  StyledTypography,
+} from 'src/features/Databases/DatabaseCreate/DatabaseCreate.style';
+import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
+import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/DatabaseSummarySection';
 import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
-import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
@@ -44,164 +35,37 @@ import {
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { validateIPs } from 'src/utilities/ipUtils';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
+import {
+  determineCompressionType,
+  determineReplicationCommitType,
+  determineReplicationType,
+  determineStorageEngine,
+} from './utilities';
 
 import type {
   ClusterSize,
   ComprehensiveReplicationType,
   CreateDatabasePayload,
-  DatabaseClusterSizeObject,
-  DatabaseEngine,
-  DatabasePriceObject,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Theme } from '@mui/material/styles';
-import type { Item } from 'src/components/EnhancedSelect/Select';
-import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  btnCtn: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      alignItems: 'flex-end',
-      flexDirection: 'column',
-      marginTop: theme.spacing(),
-    },
-  },
-  chip: {
-    marginLeft: 6,
-    marginTop: 4,
-  },
-  createBtn: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(),
-    },
-    whiteSpace: 'nowrap',
-  },
-  createText: {
-    marginLeft: theme.spacing(),
-    marginRight: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 0,
-      padding: theme.spacing(),
-    },
-  },
-  engineSelect: {
-    '& .react-select__option--is-focused': {
-      '&:not(.react-select__option--is-selected)': {
-        '& svg': {
-          filter: 'brightness(0) invert(1)',
-        },
-      },
-    },
-  },
-  formControlLabel: {
-    marginBottom: theme.spacing(),
-  },
-  labelToolTipCtn: {
-    '& strong': {
-      padding: 8,
-    },
-    '& ul': {
-      margin: '4px',
-    },
-  },
-  nodeHelpIcon: {
-    marginTop: '-2px',
-    padding: '0px 0px 0px 2px',
-  },
-  notice: {
-    fontSize: 15,
-    lineHeight: '18px',
-  },
-  selectPlanPanel: {
-    margin: 0,
-    padding: 0,
-  },
-  tooltip: {
-    '& .MuiTooltip-tooltip': {
-      [theme.breakpoints.up('md')]: {
-        minWidth: 350,
-      },
-    },
-  },
-}));
-
-const engineIcons = {
-  mongodb: <MongoDBIcon height="24" width="24" />,
-  mysql: <MySQLIcon height="24" width="24" />,
-  postgresql: <PostgreSQLIcon height="24" width="24" />,
-  redis: null,
-};
-
-const getEngineOptions = (engines: DatabaseEngine[]) => {
-  const groupedEngines = groupBy<DatabaseEngine>((engineObject) => {
-    if (engineObject.engine.match(/mysql/i)) {
-      return 'MySQL';
-    }
-    if (engineObject.engine.match(/postgresql/i)) {
-      return 'PostgreSQL';
-    }
-    if (engineObject.engine.match(/mongodb/i)) {
-      return 'MongoDB';
-    }
-    if (engineObject.engine.match(/redis/i)) {
-      return 'Redis';
-    }
-    return 'Other';
-  }, engines);
-  return ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Other'].reduce(
-    (accum, thisGroup) => {
-      if (
-        !groupedEngines[thisGroup] ||
-        groupedEngines[thisGroup].length === 0
-      ) {
-        return accum;
-      }
-      return [
-        ...accum,
-        {
-          label: thisGroup,
-          options: groupedEngines[thisGroup]
-            .map((engineObject) => ({
-              ...engineObject,
-              flag: engineIcons[engineObject.engine],
-              label: `${databaseEngineMap[engineObject.engine]} v${
-                engineObject.version
-              }`,
-              value: `${engineObject.engine}/${engineObject.version}`,
-            }))
-            .sort((a, b) => (a.version > b.version ? -1 : 1)),
-        },
-      ];
-    },
-    []
-  );
-};
-
-export interface NodePricing {
-  double: DatabasePriceObject | undefined;
-  multi: DatabasePriceObject | undefined;
-  single: DatabasePriceObject | undefined;
-}
-
 const DatabaseCreate = () => {
-  const { classes } = useStyles();
   const history = useHistory();
-  const { isDatabasesV2Beta, isDatabasesV2Enabled } = useIsDatabasesEnabled();
+  const {
+    isDatabasesV2Beta,
+    isDatabasesV2Enabled,
+    isDatabasesV2GA,
+  } = useIsDatabasesEnabled();
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
-
   const {
     data: regionsData,
     error: regionsError,
@@ -225,17 +89,9 @@ const DatabaseCreate = () => {
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
   const [selectedTab, setSelectedTab] = React.useState(0);
-
-  const engineOptions = React.useMemo(() => {
-    if (!engines) {
-      return [];
-    }
-    return getEngineOptions(engines);
-  }, [engines]);
 
   const handleIPBlur = (ips: ExtendedIP[]) => {
     const ipsWithMasks = enforceIPMasks(ips);
@@ -282,7 +138,7 @@ const DatabaseCreate = () => {
       ...values,
       allow_list: _allow_list,
     };
-    if (isDatabasesV2Beta) {
+    if (isDatabasesV2Enabled) {
       delete createPayload.replication_type;
     }
     try {
@@ -337,9 +193,33 @@ const DatabaseCreate = () => {
     validationSchema: createDatabaseSchema,
   });
 
+  React.useEffect(() => {
+    if (setFieldValue) {
+      setFieldValue(
+        'cluster_size',
+        values.cluster_size < 1 ? 3 : values.cluster_size
+      );
+      if (!isDatabasesV2Enabled) {
+        setFieldValue(
+          'replication_type',
+          determineReplicationType(values.cluster_size, values.engine)
+        );
+        setFieldValue(
+          'replication_commit_type',
+          determineReplicationCommitType(values.engine)
+        );
+      }
+      setFieldValue('storage_engine', determineStorageEngine(values.engine));
+      setFieldValue(
+        'compression_type',
+        determineCompressionType(values.engine)
+      );
+    }
+  }, [setFieldValue, values.cluster_size, values.engine, isDatabasesV2Enabled]);
+
   const selectedEngine = values.engine.split('/')[0] as Engine;
 
-  const displayTypes: PlanSelectionType[] = React.useMemo(() => {
+  const displayTypes: PlanSelectionWithDatabaseType[] = React.useMemo(() => {
     if (!dbtypes) {
       return [];
     }
@@ -367,134 +247,29 @@ const DatabaseCreate = () => {
     });
   }, [dbtypes, selectedEngine]);
 
-  const nodeOptions = React.useMemo(() => {
-    const hasDedicated = displayTypes.some(
-      (type) => type.class === 'dedicated'
-    );
-
-    const options = [
-      {
-        label: (
-          <Typography>
-            1 Node {` `}
-            <br />
-            <span style={{ fontSize: '12px' }}>
-              {`$${nodePricing?.single?.monthly || 0}/month $${
-                nodePricing?.single?.hourly || 0
-              }/hr`}
-            </span>
-          </Typography>
-        ),
-        value: 1,
-      },
-    ];
-
-    if (hasDedicated && selectedTab === 0 && isDatabasesV2Enabled) {
-      options.push({
-        label: (
-          <Typography>
-            2 Nodes - High Availability
-            <br />
-            <span style={{ fontSize: '12px' }}>
-              {`$${nodePricing?.double?.monthly || 0}/month $${
-                nodePricing?.double?.hourly || 0
-              }/hr`}
-            </span>
-          </Typography>
-        ),
-        value: 2,
-      });
-    }
-
-    options.push({
-      label: (
-        <Typography>
-          3 Nodes - High Availability (recommended)
-          <br />
-          <span style={{ fontSize: '12px' }}>
-            {`$${nodePricing?.multi?.monthly || 0}/month $${
-              nodePricing?.multi?.hourly || 0
-            }/hr`}
-          </span>
-        </Typography>
-      ),
-      value: 3,
-    });
-
-    return options;
-  }, [selectedTab, nodePricing, displayTypes, isDatabasesV2Enabled]);
-
-  const labelToolTip = (
-    <div className={classes.labelToolTipCtn}>
-      <strong>Label must:</strong>
-      <ul>
-        <li>Begin with an alpha character</li>
-        <li>Contain only alpha characters or single hyphens</li>
-        <li>Be between 3 - 32 characters</li>
-      </ul>
-    </div>
-  );
+  const selectedPlan = React.useMemo(() => {
+    return displayTypes?.find((type) => type.id === values.type);
+  }, [displayTypes, values.type]);
 
   const handleTabChange = (index: number) => {
     setSelectedTab(index);
+    setFieldValue('type', undefined);
+    setFieldValue('cluster_size', 3);
   };
-
-  React.useEffect(() => {
-    if (values.type.length === 0 || !dbtypes) {
-      return;
-    }
-
-    const type = dbtypes.find((type) => type.id === values.type);
-    if (!type) {
-      return;
-    }
-
-    const engineType = values.engine.split('/')[0] as Engine;
-
-    setNodePricing({
-      double: type.engines[engineType]?.find(
-        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 2
-      )?.price,
-      multi: type.engines[engineType]?.find(
-        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
-      )?.price,
-      single: type.engines[engineType]?.find(
-        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
-      )?.price,
-    });
-    setFieldValue(
-      'cluster_size',
-      values.cluster_size < 1 ? 3 : values.cluster_size
-    );
-    if (!isDatabasesV2Enabled) {
-      setFieldValue(
-        'replication_type',
-        determineReplicationType(values.cluster_size, values.engine)
-      );
-      setFieldValue(
-        'replication_commit_type',
-        determineReplicationCommitType(values.engine)
-      );
-    }
-    setFieldValue('storage_engine', determineStorageEngine(values.engine));
-    setFieldValue('compression_type', determineCompressionType(values.engine));
-  }, [
-    dbtypes,
-    setFieldValue,
-    values.cluster_size,
-    values.type,
-    values.engine,
-    isDatabasesV2Enabled,
-  ]);
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError || enginesError || typesError) {
+  if (regionsError || typesError || enginesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
+  const handleNodeChange = (size: ClusterSize | undefined) => {
+    setFieldValue('cluster_size', size);
+    isDatabasesV2Enabled &&
+      setFieldValue('replication_type', size === 1 ? 'none' : 'semi_synch');
+  };
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
       <LandingHeader
@@ -507,7 +282,10 @@ const DatabaseCreate = () => {
           ],
           labelOptions: {
             suffixComponent: isDatabasesV2Beta ? (
-              <BetaChip className={classes.chip} component="span" />
+              <BetaChip
+                component="span"
+                sx={{ marginLeft: '6px', marginTop: '4px' }}
+              />
             ) : null,
           },
           pathname: location.pathname,
@@ -534,59 +312,19 @@ const DatabaseCreate = () => {
             />
           </Notice>
         )}
-        <Grid>
-          <Typography variant="h2">Name Your Cluster</Typography>
-          <TextField
-            data-qa-label-input
-            disabled={isRestricted}
-            errorText={errors.label}
-            label="Cluster Label"
-            onChange={(e) => setFieldValue('label', e.target.value)}
-            tooltipClasses={classes.tooltip}
-            tooltipText={labelToolTip}
-            value={values.label}
-          />
-        </Grid>
+        <DatabaseClusterData
+          engines={engines}
+          errors={errors}
+          onChange={(field: string, value: any) => setFieldValue(field, value)}
+          regionsData={regionsData}
+          values={values}
+        />
         <Divider spacingBottom={12} spacingTop={38} />
         <Grid>
-          <Typography variant="h2">Select Engine and Region</Typography>
-          <Select
-            onChange={(selected: Item<string>) => {
-              setFieldValue('engine', selected.value);
-            }}
-            value={getSelectedOptionFromGroupedOptions(
-              values.engine,
-              engineOptions
-            )}
-            className={classes.engineSelect}
-            components={{ Option: EngineOption, SingleValue: _SingleValue }}
-            disabled={isRestricted}
-            errorText={errors.engine}
-            isClearable={false}
-            label="Database Engine"
-            options={engineOptions}
-            placeholder={'Select a Database Engine'}
-          />
-        </Grid>
-        <Grid>
-          <RegionSelect
-            currentCapability="Managed Databases"
-            disableClearable
-            disabled={isRestricted}
-            errorText={errors.region}
-            onChange={(e, region) => setFieldValue('region', region.id)}
-            regions={regionsData}
-            value={values.region}
-          />
-          <RegionHelperText mt={1} />
-        </Grid>
-        <Divider spacingBottom={12} spacingTop={38} />
-        <Grid>
-          <PlansPanel
+          <StyledPlansPanel
             onSelect={(selected: string) => {
               setFieldValue('type', selected);
             }}
-            className={classes.selectPlanPanel}
             data-qa-select-plan
             disabled={isRestricted}
             error={errors.type}
@@ -601,45 +339,17 @@ const DatabaseCreate = () => {
         </Grid>
         <Divider spacingBottom={12} spacingTop={26} />
         <Grid>
-          <Typography style={{ marginBottom: 4 }} variant="h2">
-            Set Number of Nodes{' '}
-          </Typography>
-          <Typography style={{ marginBottom: 8 }}>
-            We recommend 3 nodes in a database cluster to avoid downtime during
-            upgrades and maintenance.
-          </Typography>
-          <FormControl
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldValue('cluster_size', +e.target.value);
-              !isDatabasesV2Enabled &&
-                setFieldValue(
-                  'replication_type',
-                  +e.target.value === 1 ? 'none' : 'semi_synch'
-                );
+          <DatabaseNodeSelector
+            handleNodeChange={(v: ClusterSize) => {
+              handleNodeChange(v);
             }}
-            data-testid="database-nodes"
-            disabled={isRestricted}
-          >
-            {errors.cluster_size ? (
-              <Notice text={errors.cluster_size} variant="error" />
-            ) : null}
-            <RadioGroup
-              aria-disabled={isRestricted}
-              style={{ marginBottom: 0, marginTop: 0 }}
-              value={values.cluster_size}
-            >
-              {nodeOptions.map((nodeOption) => (
-                <FormControlLabel
-                  className={classes.formControlLabel}
-                  control={<Radio />}
-                  data-qa-radio={nodeOption.label}
-                  key={nodeOption.value}
-                  label={nodeOption.label}
-                  value={nodeOption.value}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
+            displayTypes={displayTypes}
+            error={errors.cluster_size}
+            selectedClusterSize={values.cluster_size}
+            selectedEngine={selectedEngine}
+            selectedPlan={selectedPlan}
+            selectedTab={selectedTab}
+          />
         </Grid>
         <Divider spacingBottom={12} spacingTop={26} />
         <DatabaseCreateAccessControls
@@ -650,69 +360,32 @@ const DatabaseCreate = () => {
           onChange={(ips: ExtendedIP[]) => setFieldValue('allow_list', ips)}
         />
       </Paper>
-      <Grid className={classes.btnCtn}>
-        <Typography className={classes.createText}>
+      {isDatabasesV2GA && (
+        <Paper sx={{ marginTop: 2 }}>
+          <DatabaseSummarySection
+            currentClusterSize={values.cluster_size}
+            currentEngine={selectedEngine}
+            currentPlan={selectedPlan}
+          />
+        </Paper>
+      )}
+      <StyledBtnCtn>
+        <StyledTypography>
           Your database node(s) will take approximately 15-30 minutes to
           provision.
-        </Typography>
-        <Button
+        </StyledTypography>
+        <StyledCreateBtn
           buttonType="primary"
-          className={classes.createBtn}
           disabled={isRestricted}
           loading={isSubmitting}
           type="submit"
         >
           Create Database Cluster
-        </Button>
-      </Grid>
+        </StyledCreateBtn>
+      </StyledBtnCtn>
       {isDatabasesV2Enabled && <DatabaseLogo />}
     </form>
   );
-};
-
-const determineReplicationType = (clusterSize: number, engine: string) => {
-  if (Boolean(engine.match(/mongo/))) {
-    return undefined;
-  }
-
-  // If engine is a MySQL or Postgres one and it's a standalone DB instance
-  if (clusterSize === 1) {
-    return 'none';
-  }
-
-  // MySQL engine & cluster = semi_synch. PostgreSQL engine & cluster = asynch.
-  if (Boolean(engine.match(/mysql/))) {
-    return 'semi_synch';
-  } else {
-    return 'asynch';
-  }
-};
-
-const determineReplicationCommitType = (engine: string) => {
-  // 'local' is the default.
-  if (Boolean(engine.match(/postgres/))) {
-    return 'local';
-  }
-
-  return undefined;
-};
-
-const determineStorageEngine = (engine: string) => {
-  // 'wiredtiger' is the default.
-  if (Boolean(engine.match(/mongo/))) {
-    return 'wiredtiger';
-  }
-
-  return undefined;
-};
-
-const determineCompressionType = (engine: string) => {
-  // 'none' is the default.
-  if (Boolean(engine.match(/mongo/))) {
-    return 'none';
-  }
-
-  return undefined;
 };
 
 export const databaseCreateLazyRoute = createLazyRoute('/databases/create')({
