@@ -64,29 +64,31 @@ describe("My component", () => {
 Handling events such as clicks is a little more involved:
 
 ```js
-import { fireEvent } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
 import { renderWithTheme } from "src/utilities/testHelpers";
 import Component from "./wherever";
 
 const props = { onClick: vi.fn() };
 
 describe("My component", () => {
-  it("should have some text", () => {
+  it("should have some text", async () => {
     const { getByText } = renderWithTheme(<Component {...props} />);
     const button = getByText("Submit");
-    fireEvent.click(button);
+    await userEvent.click(button);
     expect(props.onClick).toHaveBeenCalled();
   });
 });
 ```
 
-If, while using the Testing Library, your tests trigger a warning in the console from React ("Warning: An update to Component inside a test was not wrapped in act(...)"), first check out the library author's [blog post](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning) about this. Depending on your situation, you probably will have to `wait` for something in your test:
+Note that we recommend using `userEvent` rather than `fireEvent` where possible. This is a [React Testing Library best practice](https://testing-library.com/docs/user-event/intro#differences-from-fireevent), because `userEvent` more accurately simulates user interactions in a browser and makes the test more reliable in catching unintended event handler behavior.
+
+If, while using the Testing Library, your tests trigger a warning in the console from React ("Warning: An update to Component inside a test was not wrapped in act(...)"), first check out the library author's [blog post](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning) about this. Depending on your situation, you probably will have to [`waitFor`](https://testing-library.com/docs/dom-testing-library/api-async/) for something in your test and ensure asynchronous side-effects have completed:
 
 ```js
-import { fireEvent, wait } from '@testing-library/react';
+import { userEvent, waitFor } from '@testing-library/react';
 
 ...
-await wait(() => fireEvent.click(getByText('Delete')));
+await waitFor(() => userEvent.click(getByText('Delete')));
 ...
 ```
 
