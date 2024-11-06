@@ -47,14 +47,8 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
-const {
-  metrics,
-  id,
-  serviceType,
-  dashboardName,
-  region,
-  resource,
-} = widgetDetails.linode;
+const { metrics, id, serviceType, dashboardName, region, resource } =
+  widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,

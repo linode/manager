@@ -104,7 +104,7 @@ describe('Tests for API error handling', () => {
     cy.intercept(
       'GET',
       apiMatcher(`/monitor/services/${serviceType}/metric-definitions`),
-      { statusCode: 500, body: { errors: [{ reason: 'Bad Request' }] }, }
+      { statusCode: 500, body: { errors: [{ reason: 'Bad Request' }] } }
     ).as('getMetricDefinitions');
 
     cy.visitWithLogin('monitor/cloudpulse');
@@ -153,7 +153,8 @@ describe('Tests for API error handling', () => {
     cy.intercept('GET', apiMatcher(`/monitor/services`), {
       statusCode: 500,
       body: {
-        errors: [{ reason: 'Bad Request' }],},
+        errors: [{ reason: 'Bad Request' }],
+      },
     }).as('fetchServices');
     cy.visitWithLogin('monitor/cloudpulse');
 
@@ -168,7 +169,8 @@ describe('Tests for API error handling', () => {
     cy.intercept('POST', apiMatcher(`/monitor/services/${serviceType}/token`), {
       statusCode: 500,
       body: {
-        errors: [{ reason: 'Bad Request' }], },
+        errors: [{ reason: 'Bad Request' }],
+      },
     });
 
     cy.visitWithLogin('monitor/cloudpulse');
@@ -217,7 +219,7 @@ describe('Tests for API error handling', () => {
       apiMatcher(`/monitor/services/${serviceType}/dashboards`),
       {
         statusCode: 500,
-        body: { errors: [{ reason: 'Bad Request' }],},
+        body: { errors: [{ reason: 'Bad Request' }] },
       }
     ).as('fetchDashboard');
 
@@ -282,7 +284,7 @@ describe('Tests for API error handling', () => {
 
   it(`should return error message when the Regions API request fails`, () => {
     cy.intercept('GET', apiMatcher(`regions*`), {
-      statusCode: 500, 
+      statusCode: 500,
       body: { errors: [{ reason: 'Bad Request' }] },
     });
 
@@ -309,7 +311,7 @@ describe('Tests for API error handling', () => {
   it('should return error response when fetching db cluster API request', () => {
     cy.intercept('GET', apiMatcher(`databases/instances*`), {
       statusCode: 500,
-      body: {errors: [{ reason: 'Bad Request' }],},
+      body: { errors: [{ reason: 'Bad Request' }] },
     });
 
     cy.visitWithLogin('monitor/cloudpulse');
