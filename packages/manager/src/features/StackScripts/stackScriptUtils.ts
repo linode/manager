@@ -3,8 +3,6 @@ import { getStackScripts } from '@linode/api-v4';
 import type { StackScriptsRequest } from './types';
 import type { Filter, Grant, Params, StackScript } from '@linode/api-v4';
 
-export type StackScriptCategory = 'account' | 'community';
-
 const oneClickFilter = [
   {
     '+and': [
@@ -134,6 +132,10 @@ export const canUserModifyAccountStackScript = (
   return grantsForThisStackScript.permissions === 'read_write';
 };
 
+/**
+ * Gets a comma seperated string of Image IDs to display to the user
+ * with the linode/ prefix removed from the Image IDs
+ */
 export const getStackScriptImages = (images: StackScript['images']) => {
   const cleanedImages: string[] = [];
 
