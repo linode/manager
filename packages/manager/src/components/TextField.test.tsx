@@ -1,9 +1,9 @@
+import { InputAdornment } from '@linode/ui';
 import { fireEvent, getDefaultNormalizer } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { InputAdornment } from './InputAdornment';
 import { TextField } from './TextField';
 
 describe('TextField', () => {

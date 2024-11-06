@@ -1,140 +1,154 @@
-import { makeStyles } from 'tss-react/mui';
+import { Box, omittedProps } from '@linode/ui';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Link } from 'react-router-dom';
 
+import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
+import { Accordion } from 'src/components/Accordion';
+import { Divider } from 'src/components/Divider';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 
-import type { Theme } from '@mui/material/styles';
+export const StyledGrid = styled(Grid, {
+  label: 'StyledGrid',
+})(({ theme }) => ({
+  height: '100%',
+  margin: 0,
+  minHeight: 64,
+  padding: 0,
+  [theme.breakpoints.up('md')]: {
+    minHeight: 80,
+  },
+  [theme.breakpoints.up('sm')]: {
+    minHeight: 72,
+  },
+  width: '100%',
+}));
 
-const useStyles = makeStyles<void, 'linkItem'>()(
-  (theme: Theme, _params, classes) => ({
-    active: {
-      '& div.icon': {
-        opacity: 1,
-      },
-      '& svg': {
-        color: theme.palette.success.dark,
-      },
-      backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-      textDecoration: 'none',
+export const StyledLogoBox = styled(Box, {
+  label: 'StyledLogoBox',
+  shouldForwardProp: omittedProps(['isCollapsed']),
+})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.name === 'dark' ? theme.bg.appBar : undefined,
+  display: 'flex',
+  height: 50,
+  paddingLeft: 13,
+  transition: 'padding-left .03s linear',
+  ...(props.isCollapsed && {
+    '& .akamai-logo-name': {
+      opacity: 0,
     },
-    chip: {
-      marginTop: 2,
-    },
-    divider: {
-      backgroundColor: 'rgba(0, 0, 0, 0.12)',
-      color: '#222',
-    },
-    linkItem: {
-      '&.hiddenWhenCollapsed': {
-        maxHeight: 36,
-        opacity: 0,
-      },
-      alignItems: 'center',
-      color: theme.colorTokens.Neutrals.White,
-      display: 'flex',
-      fontFamily: 'LatoWebBold',
-      fontSize: '0.875rem',
-      opacity: 1,
-      position: 'relative',
-      transition: theme.transitions.create(['color', 'opacity']),
-    },
-    listItem: {
-      '& .icon': {
-        '& svg': {
-          '&:not(.wBorder) circle, & .circle': {
-            display: 'none',
-          },
-          alignItems: 'center',
-          display: 'flex',
-          height: 20,
-          width: 20,
-        },
-        color: '#CFD0D2',
-        marginRight: theme.spacing(1.5),
-        opacity: 0.5,
-        transition: 'max-height 1s linear, width .1s linear',
-      },
+    paddingLeft: 8,
+  }),
+}));
+
+export const StyledAkamaiLogo = styled(AkamaiLogo, {
+  label: 'StyledAkamaiLogo',
+})(({ theme }) => ({
+  '& .akamai-logo-name': {
+    transition: theme.transitions.create(['opacity']),
+  },
+  // give the svg a transition so it smoothly resizes
+  transition: 'width .1s linear',
+}));
+
+export const StyledDivider = styled(Divider, {
+  label: 'StyledDivider',
+})(({ theme }) => ({
+  borderColor:
+    theme.name === 'light'
+      ? theme.borderColors.dividerDark
+      : 'rgba(0, 0, 0, 0.19)',
+  margin: 0,
+}));
+
+export const StyledActiveLink = styled(Link, {
+  label: 'StyledActiveLink',
+  shouldForwardProp: omittedProps(['isActiveLink', 'isCollapsed']),
+})<{ isActiveLink: boolean; isCollapsed: boolean }>(({ ...props }) => ({
+  '&:hover': {
+    backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+  },
+  '&:hover, &:focus': {
+    textDecoration: 'none',
+  },
+  alignItems: 'center',
+  cursor: 'pointer',
+  display: 'flex',
+  minWidth: SIDEBAR_WIDTH,
+  padding: '7px 16px',
+  position: 'relative',
+  ...(props.isActiveLink && {
+    backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
+  }),
+  ...(props.isCollapsed && {
+    backgroundImage: 'none',
+  }),
+}));
+
+export const StyledPrimaryLinkBox = styled(Box, {
+  label: 'StyledPrimaryLinkBox',
+  shouldForwardProp: omittedProps(['isCollapsed']),
+})<{ isCollapsed: boolean }>(({ theme, ...props }) => ({
+  alignItems: 'center',
+  color: theme.tokens.color.Neutrals.White,
+  display: 'flex',
+  fontFamily: 'LatoWebBold',
+  fontSize: '0.875rem',
+  justifyContent: 'space-between',
+  transition: theme.transitions.create(['color', 'opacity']),
+  width: '100%',
+  ...(props.isCollapsed && {
+    opacity: 0,
+  }),
+}));
+
+export const StyledAccordion = styled(Accordion, {
+  label: 'StyledAccordion',
+  shouldForwardProp: omittedProps(['isCollapsed', 'isActiveProductFamily']),
+})<{ isActiveProductFamily: boolean; isCollapsed: boolean }>(
+  ({ theme, ...props }) => ({
+    '& h3': {
       '& p': {
-        marginBottom: 0,
-        marginTop: 0,
-      },
-      '&:focus': {
-        textDecoration: 'none',
-      },
-      '&:hover': {
-        '& .icon': {
-          opacity: 1,
-        },
-        '& svg': {
-          color: theme.palette.success.dark,
-          fill: theme.palette.success.dark,
-        },
-        [`& .${classes.linkItem}`]: {
-          color: 'white',
-        },
-        backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
-        border: 'red',
-        textDecoration: 'none',
-      },
-      alignItems: 'center',
-      cursor: 'pointer',
-      display: 'flex',
-      minWidth: SIDEBAR_WIDTH,
-      padding: '8px 13px',
-      position: 'relative',
-    },
-    logo: {
-      '& .akamai-logo-name': {
+        color: '#B8B8B8',
         transition: theme.transitions.create(['opacity']),
+        ...(props.isCollapsed && {
+          opacity: 0,
+        }),
       },
-      // give the svg a transition so it smoothly resizes
-      transition: 'width .1s linear',
-    },
-    logoAkamaiCollapsed: {
-      background: theme.bg.appBar,
-      width: 83,
-    },
-    logoContainer: {
-      lineHeight: 0,
-      // when the nav is collapsed, but hovered by the user, make the logo full sized
-      'nav:hover & > svg ': {
-        '& .akamai-logo-name': {
-          opacity: 1,
-        },
-        width: 83,
+      // product family icon
+      '& svg': {
+        color: props.isActiveProductFamily ? '#00B159' : theme.color.grey4,
+        height: 20,
+        marginRight: 14,
+        transition: theme.transitions.create(['color']),
+        width: 20,
       },
-    },
-    logoItemAkamai: {
       alignItems: 'center',
-      backgroundColor: theme.name === 'dark' ? theme.bg.appBar : undefined,
       display: 'flex',
-      height: 50,
-      paddingLeft: 13,
-      transition: 'padding-left .03s linear',
+      fontSize: '0.7rem',
+      letterSpacing: '1px',
+      lineheight: 20,
+      padding: '0 10px',
+      textTransform: 'uppercase',
     },
-    logoItemAkamaiCollapsed: {
-      '& .akamai-logo-name': {
-        opacity: 0,
-      },
-      paddingLeft: 8,
-    },
-    menuGrid: {
-      height: '100%',
-      margin: 0,
-      minHeight: 64,
+    '.MuiAccordionDetails-root': {
       padding: 0,
-      [theme.breakpoints.up('md')]: {
-        minHeight: 80,
-      },
-      [theme.breakpoints.up('sm')]: {
-        minHeight: 72,
-      },
-      width: '100%',
     },
-    navLinkItem: {
-      lineHeight: 0,
+    '.MuiButtonBase-root, MuiAccordionSummary-root': {
+      '.Mui-expanded': {
+        alignItems: 'center',
+        maxHeight: '42px',
+        minHeight: '42px',
+      },
+      maxHeight: '42px',
+      minHeight: '42px',
+      paddingLeft: 4,
+      svg: {
+        fill: theme.tokens.color.Neutrals.White,
+        stroke: 'transparent',
+      },
     },
+    backgroundColor: theme.name === 'dark' ? theme.bg.appBar : 'transparent',
   })
 );
-
-// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
-export default useStyles;

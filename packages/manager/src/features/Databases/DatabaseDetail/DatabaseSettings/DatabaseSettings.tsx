@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Divider } from 'src/components/Divider';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 
@@ -12,6 +12,8 @@ import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPassword
 import MaintenanceWindow from './MaintenanceWindow';
 
 import type { Database } from '@linode/api-v4/lib/databases/types';
+import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
+import { useIsDatabasesEnabled } from '../../utilities';
 
 interface Props {
   database: Database;
@@ -21,6 +23,7 @@ interface Props {
 export const DatabaseSettings: React.FC<Props> = (props) => {
   const { database, disabled } = props;
   const { data: profile } = useProfile();
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const accessControlCopy = (
     <Typography>
@@ -30,6 +33,9 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   );
 
   const isLegacy = database.platform === 'rdbms-legacy';
+  const isDefault = database.platform === 'rdbms-default';
+
+  const suspendClusterCopy = `Suspend the cluster if you don't use it temporarily to prevent being billed for it.`;
 
   const resetRootPasswordCopy = isLegacy
     ? 'Resetting your root password will automatically generate a new password. You can view the updated password on your database cluster summary page. '
@@ -44,6 +50,10 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     isResetRootPasswordDialogOpen,
     setIsResetRootPasswordDialogOpen,
   ] = React.useState(false);
+  const [
+    isSuspendClusterDialogOpen,
+    setIsSuspendClusterDialogOpen,
+  ] = React.useState(false);
 
   const onResetRootPassword = () => {
     setIsResetRootPasswordDialogOpen(true);
@@ -51,6 +61,10 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
 
   const onDeleteCluster = () => {
     setIsDeleteDialogOpen(true);
+  };
+
+  const onSuspendCluster = () => {
+    setIsSuspendClusterDialogOpen(true);
   };
 
   const onDeleteClusterClose = () => {
@@ -61,9 +75,25 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     setIsResetRootPasswordDialogOpen(false);
   };
 
+  const onSuspendDialogClose = () => {
+    setIsSuspendClusterDialogOpen(false);
+  };
+
   return (
     <>
       <Paper>
+        {isDatabasesV2GA && isDefault && (
+          <>
+            <DatabaseSettingsMenuItem
+              buttonText={'Suspend Cluster'}
+              descriptiveText={suspendClusterCopy}
+              disabled={disabled || database.status !== 'active'}
+              onClick={onSuspendCluster}
+              sectionTitle={'Suspend Cluster'}
+            />
+            <Divider spacingBottom={22} spacingTop={28} />
+          </>
+        )}
         <AccessControls
           database={database}
           description={accessControlCopy}
@@ -75,7 +105,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           descriptiveText={resetRootPasswordCopy}
           disabled={disabled}
           onClick={onResetRootPassword}
-          sectionTitle="Reset Root Password"
+          sectionTitle="Reset the Root Password"
         />
         <Divider spacingBottom={22} spacingTop={28} />
         <DatabaseSettingsMenuItem
@@ -83,7 +113,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           descriptiveText={deleteClusterCopy}
           disabled={Boolean(profile?.restricted)}
           onClick={onDeleteCluster}
-          sectionTitle="Delete Cluster"
+          sectionTitle="Delete the Cluster"
         />
         <Divider spacingBottom={22} spacingTop={28} />
         <MaintenanceWindow
@@ -104,6 +134,13 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
         databaseID={database.id}
         onClose={onResetRootPasswordClose}
         open={isResetRootPasswordDialogOpen}
+      />
+      <DatabaseSettingsSuspendClusterDialog
+        databaseEngine={database.engine}
+        databaseId={database.id}
+        databaseLabel={database.label}
+        onClose={onSuspendDialogClose}
+        open={isSuspendClusterDialogOpen}
       />
     </>
   );

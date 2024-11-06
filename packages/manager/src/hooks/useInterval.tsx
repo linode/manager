@@ -35,7 +35,7 @@ interface UseIntervalReturn {
   /**
    * Reference to the interval timer.
    */
-  intervalRef: React.MutableRefObject<NodeJS.Timer | undefined>;
+  intervalRef: React.MutableRefObject<number | undefined>;
 }
 
 const useInterval = ({
@@ -46,7 +46,7 @@ const useInterval = ({
   startImmediately = false,
   when = true,
 }: UseIntervalOptions): UseIntervalReturn => {
-  const intervalRef = useRef<NodeJS.Timer | undefined>();
+  const intervalRef = useRef<number | undefined>();
 
   // Save the callback to a ref to ensure it has the most recent version
   // without needing to reset the interval each time the callback changes.
@@ -58,7 +58,7 @@ const useInterval = ({
 
   const clearTimer = useCallback(() => {
     if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+      window.clearInterval(intervalRef.current);
 
       // Optionally clear the ref after stopping the interval
       intervalRef.current = undefined;
@@ -84,7 +84,7 @@ const useInterval = ({
         tick();
       }
 
-      intervalRef.current = setInterval(tick, delay);
+      intervalRef.current = window.setInterval(tick, delay);
 
       return clearTimer;
     }

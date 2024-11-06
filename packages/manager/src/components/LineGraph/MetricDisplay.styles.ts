@@ -1,9 +1,9 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Button } from 'src/components/Button/Button';
 import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
@@ -25,9 +25,11 @@ export const StyledTableCell = styled(TableCell, {
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-start',
+    textAlign: 'left',
     [theme.breakpoints.down('sm')]: {
       padding: 0,
     },
+    whiteSpace: 'nowrap',
   },
 }));
 
@@ -40,6 +42,7 @@ export const StyledButton = styled(Button, {
       backgroundColor: hidden
         ? theme.color.disabledText
         : theme.graphs[legendColor],
+      flexShrink: 0,
     },
   }),
 }));
