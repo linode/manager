@@ -29,7 +29,7 @@ export const StackScriptRow = (props: Props) => {
         <Stack>
           <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
             <Link to={`/stackscripts/${stackscript.id}`}>
-              {stackscript.username} / {stackscript.label}
+              {stackscript.username} / <span>{stackscript.label}</span>
             </Link>
           </Typography>
           <Typography
