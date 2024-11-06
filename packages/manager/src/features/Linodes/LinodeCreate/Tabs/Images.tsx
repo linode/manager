@@ -1,14 +1,14 @@
+import { Box } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import DistributedRegionIcon from 'src/assets/icons/entityIcons/distributed-region.svg';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
-import { Box } from 'src/components/Box';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
 import { Link } from 'src/components/Link';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';

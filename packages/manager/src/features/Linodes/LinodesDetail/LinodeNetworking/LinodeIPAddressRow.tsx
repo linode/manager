@@ -11,6 +11,7 @@ import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
 import { useAllIPsQuery } from 'src/queries/networking/networking';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
@@ -52,6 +53,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   } = props;
 
   const { data: ips } = useLinodeIPsQuery(linodeId);
+  const { data: preferences } = usePreferences();
 
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
@@ -67,7 +69,13 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
         parentColumn="Address"
         sx={{ whiteSpace: 'nowrap' }}
       >
-        <CopyTooltip copyableText disabled={isVPCOnlyLinode} text={address} />
+        <CopyTooltip
+          copyableText
+          disabled={isVPCOnlyLinode}
+          masked={Boolean(preferences?.maskSensitiveData)}
+          maskedTextLength={type.includes('IPv6') ? 'ipv6' : 'ipv4'}
+          text={address}
+        />
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
       </TableCell>
       <TableCell

@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { Box } from '@linode/ui';
 import { Stack } from '@mui/material';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

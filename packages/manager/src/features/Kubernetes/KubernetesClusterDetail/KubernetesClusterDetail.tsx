@@ -28,7 +28,7 @@ export const KubernetesClusterDetail = () => {
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
   const location = useLocation();
-  const showAPL = useAPLAvailability();
+  const { showAPL } = useAPLAvailability();
 
   const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
   const { data: regionsData } = useRegionsQuery();
@@ -117,9 +117,9 @@ export const KubernetesClusterDetail = () => {
         <>
           <LandingHeader
             docsLabel="Docs"
-            docsLink="https://otomi.io/docs/get-started/overview"
+            docsLink="https://apl-docs.net/"
             removeCrumbX={[1, 2, 3]}
-            title="Application platform for LKE"
+            title="Application Platform for LKE"
           />
           <Grid>
             <APLSummaryPanel cluster={cluster} />

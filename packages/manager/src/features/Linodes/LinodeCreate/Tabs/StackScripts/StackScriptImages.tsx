@@ -1,8 +1,8 @@
+import { Paper } from '@linode/ui';
 import React from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
-import { Paper } from 'src/components/Paper';
 import { Typography } from 'src/components/Typography';
 import { useStackScriptQuery } from 'src/queries/stackscripts';
 
