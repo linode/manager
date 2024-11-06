@@ -57,15 +57,18 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   } = props;
   const flags = useFlags();
 
-  const showTransferTooltip = (cellName: string) =>
-    plans?.some((plan) => {
-      return (
-        flags.gpuv2?.transferBanner &&
-        plan.class === 'gpu' &&
-        filterOptions?.header?.includes('Ada') &&
-        cellName === 'Transfer'
-      );
-    });
+  const showTransferTooltip = React.useCallback(
+    (cellName: string) =>
+      plans?.some((plan) => {
+        return (
+          flags.gpuv2?.transferBanner &&
+          plan.class === 'gpu' &&
+          filterOptions?.header?.includes('Ada') &&
+          cellName === 'Transfer'
+        );
+      }),
+    [plans, filterOptions, flags.gpuv2]
+  );
 
   return (
     <StyledTable
@@ -96,8 +99,14 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                   : cellName}
                 {showTransferTooltip(cellName) && (
                   <TooltipIcon
+                    sxTooltipIcon={{
+                      height: 12,
+                      marginTop: '-2px',
+                      ml: 0.5,
+                      px: 0,
+                      py: 0,
+                    }}
                     status="help"
-                    sxTooltipIcon={{ py: 0 }}
                     text="Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to standard charges."
                   />
                 )}

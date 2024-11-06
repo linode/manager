@@ -1,12 +1,11 @@
-import {
-  default as _TableCell,
-  TableCellProps as _TableCellProps,
-} from '@mui/material/TableCell';
-import { Theme } from '@mui/material/styles';
+import { default as _TableCell } from '@mui/material/TableCell';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { TooltipIcon } from 'src/components/TooltipIcon';
+
+import type { Theme } from '@mui/material/styles';
+import type { TableCellProps as _TableCellProps } from '@mui/material/TableCell';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   actionCell: {
@@ -106,7 +105,9 @@ export const TableCell = (props: TableCellProps) => {
           [classes.root]: true,
           [classes.sortable]: sortable,
           // hide the cell at small breakpoints if it's empty with no parent column
-          emptyCell: !parentColumn && !props.children,
+          emptyCell:
+            (!parentColumn && !props.children) ||
+            (Array.isArray(props.children) && !props.children[0]),
         },
         className
       )}
