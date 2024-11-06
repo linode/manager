@@ -4,10 +4,9 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { TanstackLink } from '../TanstackLink';
+import { TanstackLink } from '../TanstackLinks';
 
-import type { TanstackLinkProps } from '../TanstackLink';
-import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
+import type { TanStackLinkRoutingProps } from '../TanstackLinks';
 
 interface InlineMenuActionProps {
   /** Required action text */
@@ -29,12 +28,7 @@ interface InlineMenuActionProps {
   /** Optional onClick handler */
   onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   /** Optional use the tanstackRouter */
-  tanstackRouter?: {
-    linkType: TanstackLinkProps['linkType'];
-    params?: TanStackLinkProps['params'];
-    preload?: TanStackLinkProps['preload'];
-    to: TanStackLinkProps['to'];
-  };
+  tanstackRouter?: TanStackLinkRoutingProps;
   /** Optional tooltip text for help icon */
   tooltip?: string;
   /** Optional tooltip event handler for sending analytics */

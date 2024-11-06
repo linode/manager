@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { TanstackLink } from './TanstackLink';
+import { TanstackLink } from './TanstackLinks';
 
-import type { TanstackLinkProps } from './TanstackLink';
+import type { TanstackLinkComponentProps } from './TanstackLinks';
 import type { Meta, StoryObj } from '@storybook/react';
 
-export const AsButtonPrimary: StoryObj<TanstackLinkProps> = {
+export const AsButtonPrimary: StoryObj<TanstackLinkComponentProps> = {
   render: () => (
     <TanstackLink linkType="primary" to="/">
       Home
@@ -13,7 +13,7 @@ export const AsButtonPrimary: StoryObj<TanstackLinkProps> = {
   ),
 };
 
-export const AsButtonSecondary: StoryObj<TanstackLinkProps> = {
+export const AsButtonSecondary: StoryObj<TanstackLinkComponentProps> = {
   render: () => (
     <TanstackLink linkType="secondary" to="/">
       Home
@@ -21,7 +21,7 @@ export const AsButtonSecondary: StoryObj<TanstackLinkProps> = {
   ),
 };
 
-export const AsLink: StoryObj<TanstackLinkProps> = {
+export const AsLink: StoryObj<TanstackLinkComponentProps> = {
   render: () => (
     <TanstackLink linkType="link" to="/">
       Home
@@ -29,7 +29,7 @@ export const AsLink: StoryObj<TanstackLinkProps> = {
   ),
 };
 
-const meta: Meta<TanstackLinkProps> = {
+const meta: Meta<TanstackLinkComponentProps> = {
   parameters: {
     tanStackRouter: true,
   },
