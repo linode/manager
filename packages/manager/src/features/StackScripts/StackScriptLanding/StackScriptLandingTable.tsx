@@ -90,7 +90,7 @@ export const StackScriptLandingTable = (props: Props) => {
 
   const stackscripts = data?.pages.flatMap((page) => page.data);
 
-  if (stackscripts?.length === 0) {
+  if (!query && stackscripts?.length === 0) {
     return <StackScriptsEmptyLandingState />;
   }
 
@@ -101,15 +101,19 @@ export const StackScriptLandingTable = (props: Props) => {
   return (
     <Stack spacing={1}>
       <DebouncedSearchTextField
-        InputProps={{
-          endAdornment: searchParseError && (
-            <TooltipIcon
-              status="error"
-              sxTooltipIcon={{ p: 0.75 }}
-              text={searchParseError.message}
-            />
-          ),
-        }}
+        InputProps={
+          searchParseError
+            ? {
+                endAdornment: (
+                  <TooltipIcon
+                    status="error"
+                    sxTooltipIcon={{ p: 0.75 }}
+                    text={searchParseError.message}
+                  />
+                ),
+              }
+            : {}
+        }
         onSearch={(value) => {
           queryParams.set('query', value);
           history.push({ search: queryParams.toString() });
@@ -124,7 +128,7 @@ export const StackScriptLandingTable = (props: Props) => {
         tooltipWidth={300}
         value={query}
       />
-      <Table aria-label='List of StackScripts'>
+      <Table aria-label="List of StackScripts">
         <TableHead>
           <TableRow>
             <TableSortCell
