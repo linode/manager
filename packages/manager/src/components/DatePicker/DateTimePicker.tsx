@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import { Grid, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -6,7 +7,6 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { Divider } from 'src/components/Divider';
 import { TextField } from 'src/components/TextField';
 

@@ -1,7 +1,6 @@
+import { Box } from '@linode/ui';
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
-
-import { Box } from 'src/components/Box';
 
 import { DateTimePicker } from './DateTimePicker';
 
