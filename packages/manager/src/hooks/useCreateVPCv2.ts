@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { createVPCSchema } from '@linode/validation';
-import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -11,12 +10,7 @@ import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEvent
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
 
-import type {
-  APIError,
-  CreateSubnetPayload,
-  CreateVPCPayload,
-  VPC,
-} from '@linode/api-v4';
+import type { CreateVPCPayload, VPC } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
