@@ -10,7 +10,11 @@ import {
   mockGetLinodeDisks,
   mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
-import { mockMigrateVolumes, mockGetVolumes } from 'support/intercepts/volumes';
+import {
+  mockMigrateVolumes,
+  mockGetVolumes,
+  mockGetVolume,
+} from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
 
 describe('volume upgrade/migration', () => {
@@ -24,6 +28,7 @@ describe('volume upgrade/migration', () => {
 
     mockGetVolumes([volume]).as('getVolumes');
     mockMigrateVolumes().as('migrateVolumes');
+    mockGetVolume(volume).as('getVolume');
     mockGetNotifications([migrationScheduledNotification]).as(
       'getNotifications'
     );
@@ -53,7 +58,7 @@ describe('volume upgrade/migration', () => {
         .click();
     });
 
-    cy.wait(['@migrateVolumes', '@getNotifications']);
+    cy.wait(['@migrateVolumes', '@getNotifications', '@getVolume']);
 
     cy.findByText('UPGRADE PENDING').should('be.visible');
 
