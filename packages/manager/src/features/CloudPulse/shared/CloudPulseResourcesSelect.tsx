@@ -179,7 +179,7 @@ export const CloudPulseResourcesSelect = React.memo(
         disableSelectAll={resourceLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
-        helperText={`Select up to ${ResourceLimit} ${label}`}
+        helperText={!isError ? `Select up to ${ResourceLimit} ${label}` : ''}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
         limitTags={2}
