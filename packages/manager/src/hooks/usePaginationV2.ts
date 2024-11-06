@@ -30,8 +30,9 @@ export interface UsePaginationV2Props<T extends TableSearchParams> {
   currentRoute: ToSubOptions['to'];
   /**
    * The initial page pagination is set to - defaults to 1, it's unusual to set this.
+   * @default 1
    */
-  initialPage: number;
+  initialPage?: number;
   /**
    * A key used to store a user's preferred page size for a specific table.
    */
@@ -49,7 +50,7 @@ export interface UsePaginationV2Props<T extends TableSearchParams> {
 
 export const usePaginationV2 = <T extends TableSearchParams>({
   currentRoute,
-  initialPage,
+  initialPage = 1,
   preferenceKey,
   queryParamsPrefix,
   searchParams,
