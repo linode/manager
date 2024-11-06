@@ -50,7 +50,6 @@ export const VolumesLanding = () => {
   const search: VolumesSearchParams = useSearch({ strict: false });
   const pagination = usePaginationV2({
     currentRoute: '/volumes',
-    initialPage: 1,
     preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
     searchParams: (prev) => ({
       ...prev,
