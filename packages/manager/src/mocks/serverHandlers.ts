@@ -392,7 +392,17 @@ const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
 const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
 const proDedicatedType = proDedicatedTypeFactory.build();
-
+const gpuTypesAda = linodeTypeFactory.buildList(7, {
+  class: 'gpu',
+  gpus: 5,
+  label: 'Ada Lovelace',
+  transfer: 0,
+});
+const gpuTypesRX = linodeTypeFactory.buildList(7, {
+  class: 'gpu',
+  gpus: 1,
+  transfer: 5000,
+});
 const proxyAccountUser = accountUserFactory.build({
   email: 'partner@proxy.com',
   last_login: null,
@@ -586,6 +596,8 @@ export const handlers = [
         nanodeType,
         ...standardTypes,
         ...dedicatedTypes,
+        ...gpuTypesAda,
+        ...gpuTypesRX,
         proDedicatedType,
       ])
     );
