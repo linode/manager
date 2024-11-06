@@ -12,7 +12,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
-import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -32,6 +31,7 @@ import {
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 
+import { StackScriptDetailsDialog } from '../../LinodeCreate/Tabs/StackScripts/StackScriptDetailsDialog';
 import { ImageEmptyState } from './ImageEmptyState';
 
 import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
@@ -117,6 +117,15 @@ export const RebuildFromStackScript = (props: Props) => {
   ] = useStackScript(
     Object.keys(_imagesData).map((eachKey) => _imagesData[eachKey])
   );
+
+  const [
+    selectedStackScriptIdForDetailsDialog,
+    setSelectedStackScriptIdForDetailsDialog,
+  ] = React.useState<number | undefined>();
+
+  const onOpenStackScriptDetailsDialog = (stackscriptId: number) => {
+    setSelectedStackScriptIdForDetailsDialog(stackscriptId);
+  };
 
   // In this component, most errors are handled by Formik. This is not
   // possible with UDFs, since they are dynamic. Their errors need to
@@ -291,6 +300,7 @@ export const RebuildFromStackScript = (props: Props) => {
                 error={errors.stackscript_id}
                 header="Select StackScript"
                 onSelect={handleSelect}
+                openStackScriptDetailsDialog={onOpenStackScriptDetailsDialog}
                 publicImages={filterImagesByType(_imagesData, 'public')}
                 resetSelectedStackScript={resetStackScript}
                 selectedId={ss.id}
@@ -380,7 +390,13 @@ export const RebuildFromStackScript = (props: Props) => {
                 />
               </Grid>
             </form>
-            <StackScriptDialog />
+            <StackScriptDetailsDialog
+              onClose={() =>
+                setSelectedStackScriptIdForDetailsDialog(undefined)
+              }
+              id={selectedStackScriptIdForDetailsDialog}
+              open={selectedStackScriptIdForDetailsDialog !== undefined}
+            />
           </Grid>
         );
       }}

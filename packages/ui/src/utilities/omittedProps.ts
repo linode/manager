@@ -20,12 +20,12 @@ export const omittedProps = <Props>(props: Array<keyof Props>) => (
    * from the object instead of returning a boolean.
    * This util is a direct replacement for `omit` from lodash.
 
-   * @param props Array of props to filter out
-   * @param toRemove Array of props to remove
-   * @returns Object with props removed
-   */
+ * @param props Array of props to filter out
+ * @param toRemove Array of props to remove
+ * @returns Object with props removed
+ */
 export const omitProps = <
-  Props extends object,
+  Props extends NonNullable<unknown>,
   Keys extends keyof Props & string
 >(
   props: Props,

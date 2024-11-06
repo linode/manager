@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { omittedProps } from '@linode/ui';
-import { IconButton, Tooltip, tooltipClasses } from '@linode/ui';
+import { IconButton, Tooltip, omittedProps, tooltipClasses } from '@linode/ui';
 import SuccessOutline from '@mui/icons-material/CheckCircleOutlined';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import HelpOutline from '@mui/icons-material/HelpOutline';

@@ -11,7 +11,7 @@ import {
 } from 'src/components/Encryption/constants';
 import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
 import { Typography } from 'src/components/Typography';

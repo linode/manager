@@ -3,7 +3,7 @@ import { default as Grid } from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import withLongviewClients, {
   DispatchProps,
 } from 'src/containers/longview.container';

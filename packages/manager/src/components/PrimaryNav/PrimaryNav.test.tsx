@@ -118,7 +118,7 @@ describe('PrimaryNav', () => {
 
   it('should show Databases menu item if the user has the account capability V2', async () => {
     const account = accountFactory.build({
-      capabilities: ['Managed Databases Beta'],
+      capabilities: ['Managed Databases'],
     });
 
     server.use(
