@@ -272,7 +272,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             );
           });
 
-          //validate the widget linegrah is present
+          //validate the widget areachart is present
           cy.findByTestId('areachart-wrapper').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
@@ -326,7 +326,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             );
           });
 
-          //validate the widget linegrah is present
+          //validate the widget areachart is present
           cy.findByTestId('areachart-wrapper').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
