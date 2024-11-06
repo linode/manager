@@ -10,7 +10,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build({ eol: null });
 
     const { getByText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
 
     expect(getByText(image.label)).toBeVisible();
@@ -20,7 +20,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build();
 
     const { getByTestId } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
 
     expect(getByTestId('os-icon')).toBeVisible();
@@ -30,7 +30,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build({ capabilities: ['cloud-init'] });
 
     const { getByLabelText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />,
+      <ImageOption item={image} props={{}} selected={false} />,
       { flags: { metadata: true } }
     );
 
@@ -39,25 +39,40 @@ describe('ImageOption', () => {
     ).toBeVisible();
   });
 
-  it('renders a distributed icon if image has the "distributed-sites" capability', () => {
-    const image = imageFactory.build({ capabilities: ['distributed-sites'] });
+  it('disables the image option if the image has a disabled reason', () => {
+    const image = imageFactory.build({ eol: null });
+    const disabledReason =
+      'The selected image cannot be deployed to a distributed region.';
 
-    const { getByLabelText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+    const { getByText } = renderWithTheme(
+      <ImageOption
+        disabledOptions={{ reason: disabledReason }}
+        item={image}
+        props={{}}
+        selected={false}
+      />
     );
-
     expect(
-      getByLabelText(
-        'This image is compatible with distributed compute regions.'
-      )
-    ).toBeVisible();
+      getByText(image.label).closest('li')?.getAttribute('aria-label')
+    ).toBe(disabledReason);
+  });
+
+  it('does not disable the image option if the image does not have a disabled reason', () => {
+    const image = imageFactory.build({ eol: null });
+
+    const { getByText } = renderWithTheme(
+      <ImageOption item={image} props={{}} selected={false} />
+    );
+    expect(
+      getByText(image.label).closest('li')?.getAttribute('aria-label')
+    ).toBe('');
   });
 
   it('renders (deprecated) if the image is deprecated', () => {
     const image = imageFactory.build({ deprecated: true });
 
     const { getByText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
 
     expect(getByText(`${image.label} (deprecated)`)).toBeVisible();
@@ -70,7 +85,7 @@ describe('ImageOption', () => {
     });
 
     const { getByText } = renderWithTheme(
-      <ImageOption image={image} isSelected={false} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={false} />
     );
 
     expect(getByText(`${image.label} (deprecated)`)).toBeVisible();
@@ -80,7 +95,7 @@ describe('ImageOption', () => {
     const image = imageFactory.build();
 
     const { getByTestId } = renderWithTheme(
-      <ImageOption image={image} isSelected={true} listItemProps={{}} />
+      <ImageOption item={image} props={{}} selected={true} />
     );
 
     expect(getByTestId('DoneIcon')).toBeVisible();
