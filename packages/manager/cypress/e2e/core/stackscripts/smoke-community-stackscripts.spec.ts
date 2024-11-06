@@ -106,7 +106,10 @@ describe('Community Stackscripts integration tests', () => {
     cy.visitWithLogin('/stackscripts/community');
     cy.wait('@getStackScripts');
 
-    cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
+    // Confirm that empty state is not shown.
+    cy.get('[data-qa-placeholder-container="resources-section"]').should(
+      'not.exist'
+    );
     cy.findByText('Automate deployment scripts').should('not.exist');
 
     cy.defer(getProfile, 'getting profile').then((profile: Profile) => {
@@ -201,7 +204,9 @@ describe('Community Stackscripts integration tests', () => {
       cy.wait('@getStackScripts');
 
       // Confirm that empty state is not shown.
-      cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
+      cy.get('[data-qa-placeholder-container="resources-section"]').should(
+        'not.exist'
+      );
       cy.findByText('Automate deployment scripts').should('not.exist');
 
       // Confirm that scrolling to the bottom of the StackScripts list causes
@@ -271,7 +276,10 @@ describe('Community Stackscripts integration tests', () => {
     cy.visitWithLogin('/stackscripts/community');
     cy.wait('@getStackScripts');
 
-    cy.get('[data-qa-stackscript-empty-msg="true"]').should('not.exist');
+    // Confirm that empty state is not shown.
+    cy.get('[data-qa-placeholder-container="resources-section"]').should(
+      'not.exist'
+    );
     cy.findByText('Automate deployment scripts').should('not.exist');
 
     cy.get('tr').then((value) => {

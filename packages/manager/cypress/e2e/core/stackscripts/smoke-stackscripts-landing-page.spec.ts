@@ -15,7 +15,8 @@ describe('Display stackscripts', () => {
     cy.wait('@getStackScripts');
 
     cy.findByText('Automate deployment scripts').should('be.visible');
-    cy.get('[data-qa-stackscript-empty-msg="true"]')
+
+    cy.get('[data-qa-placeholder-container="resources-section"]')
       .should('be.visible')
       .within(() => {
         ui.button

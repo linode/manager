@@ -21,6 +21,7 @@ import { withProfile } from 'src/containers/profile.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';
 import { profileQueries } from 'src/queries/profile/profile';
+import { stackscriptQueries } from 'src/queries/stackscripts';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
@@ -163,6 +164,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();
+        queryClient.invalidateQueries({
+          queryKey: stackscriptQueries.infinite._def,
+        });
+        queryClient.setQueryData<StackScript>(
+          stackscriptQueries.stackscript(stackScript.id).queryKey,
+          stackScript
+        );
         history.push('/stackscripts/account', {
           successMessage: `${stackScript.label} successfully created`,
         });
@@ -226,6 +234,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       match: {
         params: { stackScriptID },
       },
+      queryClient,
     } = this.props;
 
     return updateStackScript(+stackScriptID, payload)
@@ -235,6 +244,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields(updatedStackScript);
+        queryClient.invalidateQueries({
+          queryKey: stackscriptQueries.infinite._def,
+        });
+        queryClient.setQueryData<StackScript>(
+          stackscriptQueries.stackscript(updatedStackScript.id).queryKey,
+          updatedStackScript
+        );
         history.push('/stackscripts/account', {
           successMessage: `${updatedStackScript.label} successfully updated`,
         });
