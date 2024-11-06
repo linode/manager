@@ -11,6 +11,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import type { Volume } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import type { VolumeAction } from 'src/routes/volumes';
 
 export interface ActionHandlers {
   handleAttach: () => void;
@@ -43,12 +44,14 @@ export const VolumesActionMenu = (props: Props) => {
     id: volume.id,
   });
 
-  const actions: Action[] = [
+  const actions: (Action & { action?: VolumeAction })[] = [
     {
+      action: 'details',
       onClick: handlers.handleDetails,
       title: 'Show Config',
     },
     {
+      action: 'edit',
       disabled: isVolumeReadOnly,
       onClick: handlers.handleEdit,
       title: 'Edit',
@@ -61,6 +64,7 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     {
+      action: 'resize',
       disabled: isVolumeReadOnly,
       onClick: handlers.handleResize,
       title: 'Resize',
@@ -73,6 +77,7 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     {
+      action: 'clone',
       disabled: isVolumeReadOnly,
       onClick: handlers.handleClone,
       title: 'Clone',
@@ -88,6 +93,7 @@ export const VolumesActionMenu = (props: Props) => {
 
   if (!attached && isVolumesLanding) {
     actions.push({
+      action: 'attach',
       disabled: isVolumeReadOnly,
       onClick: handlers.handleAttach,
       title: 'Attach',
@@ -101,6 +107,7 @@ export const VolumesActionMenu = (props: Props) => {
     });
   } else {
     actions.push({
+      action: 'detach',
       disabled: isVolumeReadOnly,
       onClick: handlers.handleDetach,
       title: 'Detach',
@@ -115,6 +122,7 @@ export const VolumesActionMenu = (props: Props) => {
   }
 
   actions.push({
+    action: 'delete',
     disabled: isVolumeReadOnly || attached,
     onClick: handlers.handleDelete,
     title: 'Delete',
@@ -138,6 +146,15 @@ export const VolumesActionMenu = (props: Props) => {
         inlineActions.map((action) => {
           return (
             <InlineMenuAction
+              tanstackRouter={{
+                linkType: 'link',
+                params: {
+                  action: action.action,
+                  volumeId: volume.id,
+                },
+                preload: 'intent',
+                to: `/volumes/$volumeId/$action`,
+              }}
               actionText={action.title}
               disabled={action.disabled}
               key={action.title}

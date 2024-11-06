@@ -25,7 +25,7 @@ const volumeAction = {
   upgrade: 'upgrade',
 } as const;
 
-type VolumeAction = typeof volumeAction[keyof typeof volumeAction];
+export type VolumeAction = typeof volumeAction[keyof typeof volumeAction];
 
 export interface VolumesSearchParams extends TableSearchParams {
   query?: string;
