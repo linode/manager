@@ -86,12 +86,15 @@ const MetricRow = ({
           legendColor={legendColor}
           onClick={handleLegendClick}
         >
-          <Typography component="span">{legendTitle}</Typography>
+          <Typography component="span" data-qa-graph-row-title={legendTitle}>
+            {legendTitle}
+          </Typography>
         </StyledButton>
       </StyledTableCell>
       {METRIC_KEYS.map((key, idx) => (
         <TableCell
           data-qa-body-cell
+          data-qa-graph-column-title={ROW_HEADERS[idx]}
           key={key}
           parentColumn={ROW_HEADERS[idx]}
           sx={{ whiteSpace: 'nowrap' }}
