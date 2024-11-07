@@ -1,14 +1,16 @@
-import { Engine } from '@linode/api-v4/lib/databases';
+import { Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useSuspendDatabaseMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { Engine } from '@linode/api-v4/lib/databases';
 
 export interface SuspendDialogProps {
   databaseEngine: Engine;
@@ -24,9 +26,9 @@ export const DatabaseSettingsSuspendClusterDialog = (
   const { databaseEngine, databaseId, databaseLabel, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
-    mutateAsync: suspendDatabase,
-    isPending,
     error,
+    isPending,
+    mutateAsync: suspendDatabase,
     reset,
   } = useSuspendDatabaseMutation(databaseEngine, databaseId);
 

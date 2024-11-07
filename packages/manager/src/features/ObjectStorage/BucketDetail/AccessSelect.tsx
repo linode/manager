@@ -1,3 +1,4 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -6,7 +7,6 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import { useOpenClose } from 'src/hooks/useOpenClose';

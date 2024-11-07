@@ -1,7 +1,7 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { Flag } from 'src/components/Flag';
-import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Typography } from 'src/components/Typography';

@@ -1,6 +1,6 @@
 import type { OCA } from './features/OneClickApps/types';
 import type { TPAProvider } from '@linode/api-v4/lib/profile';
-import type { NoticeVariant } from 'src/components/Notice/Notice';
+import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
 

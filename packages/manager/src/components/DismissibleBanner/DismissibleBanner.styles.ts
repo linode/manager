@@ -1,6 +1,5 @@
+import { Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Notice } from 'src/components/Notice/Notice';
 
 import { StyledLinkButton } from '../Button/StyledLinkButton';
 

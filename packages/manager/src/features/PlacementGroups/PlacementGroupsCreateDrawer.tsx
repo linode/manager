@@ -1,4 +1,4 @@
-import { Divider, Stack } from '@linode/ui';
+import { Divider, Notice, Stack } from '@linode/ui';
 import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -10,7 +10,6 @@ import { DescriptionList } from 'src/components/DescriptionList/DescriptionList'
 import { Drawer } from 'src/components/Drawer';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';

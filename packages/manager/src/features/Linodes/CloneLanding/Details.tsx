@@ -1,4 +1,4 @@
-import { Divider } from '@linode/ui';
+import { Divider, Notice, Paper } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -8,8 +8,6 @@ import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';

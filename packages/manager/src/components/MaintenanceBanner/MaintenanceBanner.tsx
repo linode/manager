@@ -1,13 +1,14 @@
-import { AccountMaintenance } from '@linode/api-v4/lib/account';
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
+
+import type { AccountMaintenance } from '@linode/api-v4/lib/account';
 
 interface Props {
   maintenanceEnd?: null | string;

@@ -1,4 +1,4 @@
-import { Volume } from '@linode/api-v4';
+import { Notice } from '@linode/ui';
 import { ResizeVolumeSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -6,7 +6,6 @@ import React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile/profile';
 import {
@@ -21,6 +20,8 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 
 import { PricePanel } from './VolumeDrawer/PricePanel';
 import { SizeField } from './VolumeDrawer/SizeField';
+
+import type { Volume } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;

@@ -1,6 +1,5 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
-
-import { Notice } from 'src/components/Notice/Notice';
 
 import { CANNOT_CREATE_VPC_MESSAGE } from '../../constants';
 

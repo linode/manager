@@ -7,7 +7,6 @@ import { makeStyles } from 'tss-react/mui';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
@@ -16,6 +15,7 @@ import { ExtendedIP, ipFieldPlaceholder } from 'src/utilities/ipUtils';
 import { useIsDatabasesEnabled } from '../utilities';
 
 import type { APIError } from '@linode/api-v4/lib/types';
+import { Notice } from '@linode/ui';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   container: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-export type AccessOption = 'specific' | 'none';
+export type AccessOption = 'none' | 'specific';
 
 interface Props {
   disabled?: boolean;
@@ -65,7 +65,7 @@ export const DatabaseCreateAccessControls = (props: Props) => {
         <>
           <Typography>
             Add IPv4 addresses or ranges that should be authorized to access
-            this cluster. 
+            this cluster.
             <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls">
               Learn more
             </Link>

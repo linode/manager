@@ -8,6 +8,7 @@ export * from './IconButton';
 export * from './Input';
 export * from './InputAdornment';
 export * from './InputLabel';
+export * from './Notice';
 export * from './Paper';
 export * from './Stack';
 export * from './Tooltip';

@@ -2,6 +2,7 @@ import {
   PLACEMENT_GROUP_POLICIES,
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
+import { Notice, Paper } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -9,8 +10,6 @@ import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 
 import {

@@ -1,19 +1,20 @@
+import { Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useRestoreFromBackupMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import type { Database } from '@linode/api-v4/lib/databases';
-import { DateTime } from 'luxon';
-import { useState } from 'react';
-import type { DialogProps } from 'src/components/Dialog/Dialog';
 import { toDatabaseFork, toFormatedDate } from '../../utilities';
+
+import type { Database } from '@linode/api-v4/lib/databases';
+import type { DateTime } from 'luxon';
+import type { DialogProps } from 'src/components/Dialog/Dialog';
 
 interface Props extends Omit<DialogProps, 'title'> {
   database: Database;

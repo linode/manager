@@ -1,4 +1,5 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
+import { Notice } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -8,7 +9,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { Notice } from 'src/components/Notice/Notice';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';

@@ -1,8 +1,8 @@
+import { Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { useLegacyRestoreFromBackupMutation } from 'src/queries/databases/databases';
