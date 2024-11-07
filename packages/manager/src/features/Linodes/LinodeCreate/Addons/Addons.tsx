@@ -1,7 +1,7 @@
+import { Divider } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
-import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { Paper } from '@linode/ui';
 import { Stack } from 'src/components/Stack';

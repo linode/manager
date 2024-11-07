@@ -1,7 +1,8 @@
 import {
-  PLACEMENT_GROUP_TYPES,
   PLACEMENT_GROUP_POLICIES,
+  PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
+import { Divider } from '@linode/ui';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -11,7 +12,6 @@ import { useParams } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
 import { Notice } from 'src/components/Notice/Notice';

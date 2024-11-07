@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, Divider } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -6,7 +6,6 @@ import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
-import { Divider } from 'src/components/Divider';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
