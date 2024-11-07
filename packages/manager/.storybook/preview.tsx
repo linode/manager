@@ -47,11 +47,13 @@ const preview: Preview = {
       return wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
     },
   ],
+
   loaders: [
     async () => ({
       msw: await storybookWorker?.start(),
     }),
   ],
+
   parameters: {
     backgrounds: {
       grid: {
@@ -99,6 +101,8 @@ const preview: Preview = {
       ),
     },
   },
+
+  tags: ['autodocs'],
 };
 
 export default preview;

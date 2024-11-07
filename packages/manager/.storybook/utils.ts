@@ -13,6 +13,9 @@ export const getReactDocgenTSFileGlobs = () => {
   const filesWithStories = globby.sync(PATTERN);
   const files = new Set<string>();
 
+  files.add('**/*.{ts,tsx}');
+  files.add('../ui/**/*.{ts,tsx}');
+
   filesWithStories.forEach((file) => {
     const execArr = /^(.*src\/(components|features)\/[a-zA-Z]*(.|\/))/.exec(
       file

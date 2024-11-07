@@ -1,3 +1,4 @@
+import { dirname, join } from 'path';
 import type { StorybookConfig } from '@storybook/react-vite';
 import { mergeConfig } from 'vite';
 import { getReactDocgenTSFileGlobs } from './utils';
@@ -11,18 +12,18 @@ const config: StorybookConfig = {
     '../../ui/src/components/**/*.@(mdx|stories.@(js|ts|jsx|tsx))',
   ],
   addons: [
-    '@storybook/addon-docs',
-    '@storybook/addon-controls',
-    '@storybook/addon-viewport',
-    '@storybook/addon-measure',
-    '@storybook/addon-actions',
-    'storybook-dark-mode',
-    '@storybook/addon-storysource',
-    '@storybook/addon-a11y',
+    getAbsolutePath('@storybook/addon-docs'),
+    getAbsolutePath('@storybook/addon-controls'),
+    getAbsolutePath('@storybook/addon-viewport'),
+    getAbsolutePath('@storybook/addon-measure'),
+    getAbsolutePath('@storybook/addon-actions'),
+    getAbsolutePath('storybook-dark-mode'),
+    getAbsolutePath('@storybook/addon-storysource'),
+    getAbsolutePath('@storybook/addon-a11y'),
   ],
   staticDirs: ['../public'],
   framework: {
-    name: '@storybook/react-vite',
+    name: getAbsolutePath('@storybook/react-vite'),
     options: {},
   },
   typescript: {
@@ -49,7 +50,6 @@ const config: StorybookConfig = {
     reactDocgen: 'react-docgen-typescript',
   },
   docs: {
-    autodocs: true,
     defaultName: 'Documentation',
   },
   async viteFinal(config) {
@@ -66,3 +66,7 @@ const config: StorybookConfig = {
 };
 
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, 'package.json')));
+}
