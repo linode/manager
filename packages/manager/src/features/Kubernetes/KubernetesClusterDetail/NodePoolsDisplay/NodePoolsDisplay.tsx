@@ -86,6 +86,7 @@ export const NodePoolsDisplay = (props: Props) => {
       <Stack
         alignItems="center"
         direction="row"
+        flexWrap="wrap"
         justifyContent="space-between"
         spacing={2}
         sx={{ paddingLeft: { md: 0, sm: 1, xs: 1 } }}
