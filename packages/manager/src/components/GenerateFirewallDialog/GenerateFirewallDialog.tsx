@@ -1,3 +1,4 @@
+import { Stack } from '@linode/ui';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -9,7 +10,6 @@ import { ErrorMessage } from '../ErrorMessage';
 import { LinearProgress } from '../LinearProgress';
 import { Link } from '../Link';
 import { Notice } from '../Notice/Notice';
-import { Stack } from '../Stack';
 import { Typography } from '../Typography';
 import { useCreateFirewallFromTemplate } from './useCreateFirewallFromTemplate';
 

@@ -1,3 +1,4 @@
+import { Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
@@ -6,7 +7,6 @@ import { makeStyles } from 'tss-react/mui';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
