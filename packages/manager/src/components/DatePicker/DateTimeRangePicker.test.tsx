@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -37,37 +36,7 @@ describe('DateTimeRangePicker Component', () => {
     );
   });
 
-  it.skip('should call onChange when end date is changed', async () => {
-    renderWithTheme(
-      <DateTimeRangePicker
-        endLabel="End Date and Time"
-        onChange={onChangeMock}
-        startLabel="Start Date and Time"
-      />
-    );
-
-    // Open the end date picker
-    await userEvent.click(
-      screen.getByRole('textbox', { name: 'End Date and Time' })
-    );
-
-    // Confirm the dialog is visible and wait for it
-    expect(screen.getByRole('dialog')).toBeVisible();
-
-    // Simulate selecting a date (e.g., 15th of the month)
-    const element = screen.getByRole('gridcell', { name: '2' });
-
-    await userEvent.click(element);
-    // await userEvent.click(screen.getByRole('gridcell', { name: '1' }));
-
-    // Click the 'Apply' button and wait for onChange to be called
-    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-
-    // Verify onChange is called with the appropriate arguments
-    expect(onChangeMock).toHaveBeenCalledWith(null, expect.any(DateTime));
-  });
-
-  it.skip('should show error when end date-time is before start date-time', async () => {
+  it('should show error when end date-time is before start date-time', async () => {
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
 
     // Set start date-time to the 15th
@@ -76,37 +45,15 @@ describe('DateTimeRangePicker Component', () => {
     await userEvent.click(screen.getByRole('gridcell', { name: '15' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
-    // Set end date-time to the 10th (before start date-time)
+    // Open the end date picker
     const endDateField = screen.getByLabelText('End Date and Time');
     await userEvent.click(endDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
-    expect(screen.getAllByText('Invalid dae and Time')).toHaveLength(2);
-  });
+    // Check if the date before the start date is disabled via a class or attribute
+    const invalidDate = screen.getByRole('gridcell', { name: '10' });
+    expect(invalidDate).toHaveClass('Mui-disabled'); // or check for the specific attribute used
 
-  it.skip('should clear the error when a valid end date-time is selected', async () => {
-    renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
-
-    // Set start date-time to the 10th
-    const startDateField = screen.getByLabelText('Start Date');
-    await userEvent.click(startDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-
-    // Set an invalid end date-time (e.g., 5th)
-    const endDateField = screen.getByLabelText('End Date and Time');
-    await userEvent.click(endDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '5' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-
-    expect(screen.getAllByText('Invalid dae and Time')).toHaveLength(2);
-
-    // Select a valid end date-time (e.g., 15th)
-    await userEvent.click(endDateField);
-    await userEvent.click(screen.getByRole('gridcell', { name: '15' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-
-    expect(screen.queryByText('Invalid dae and Time')).not.toBeInTheDocument();
+    // Confirm error message is not shown since the click was blocked
+    expect(screen.queryByText('Invalid date and Time')).not.toBeInTheDocument();
   });
 });

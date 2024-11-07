@@ -133,7 +133,7 @@ export const DateTimePicker = ({
               ? `${dateTime.toFormat(format)}${
                   timezone ? ` (${timezone})` : ''
                 }`
-              : null
+              : ''
           }
           InputProps={{ readOnly: true }}
           errorText={errorText}
