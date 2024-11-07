@@ -61,59 +61,57 @@ export const Backups = () => {
   });
 
   return (
-    <>
-      {checked && diskEncryption === 'enabled' && (
-        <Notice
-          typeProps={{
-            style: { fontSize: '0.875rem' },
-          }}
-          spacingBottom={0}
-          spacingTop={0}
-          text={DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY}
-          variant="warning"
-        />
-      )}
-      <FormControlLabel
-        disabled={
-          isDistributedRegionSelected ||
-          isLinodeCreateRestricted ||
-          isAccountBackupsEnabled
-        }
-        label={
-          <Stack sx={{ pl: 2 }}>
-            <Stack alignItems="center" direction="row" spacing={2}>
-              <Typography component="span" variant="h3">
-                Backups
-              </Typography>
-              {backupsMonthlyPrice && (
-                <Typography component="span">
-                  <Currency quantity={backupsMonthlyPrice} /> per month
-                </Typography>
-              )}
-            </Stack>
-            <Typography component="span" display="block" variant="body1">
-              {isAccountBackupsEnabled ? (
-                <React.Fragment>
-                  You have enabled automatic backups for your account. This
-                  Linode will automatically have backups enabled. To change this
-                  setting, <Link to={'/account/settings'}>click here.</Link>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  Three backup slots are executed and rotated automatically: a
-                  daily backup, a 2-7 day old backup, and an 8-14 day old
-                  backup. Plans are priced according to the Linode plan selected
-                  above.
-                </React.Fragment>
-              )}
+    <FormControlLabel
+      disabled={
+        isDistributedRegionSelected ||
+        isLinodeCreateRestricted ||
+        isAccountBackupsEnabled
+      }
+      label={
+        <Stack sx={{ pl: 2 }}>
+          <Stack alignItems="center" direction="row" spacing={2}>
+            <Typography component="span" variant="h3">
+              Backups
             </Typography>
+            {backupsMonthlyPrice && (
+              <Typography component="span">
+                <Currency quantity={backupsMonthlyPrice} /> per month
+              </Typography>
+            )}
           </Stack>
-        }
-        checked={checked}
-        control={<Checkbox />}
-        data-testid="backups"
-        onChange={field.onChange}
-      />
-    </>
+          {checked && diskEncryption === 'enabled' && (
+            <Notice
+              typeProps={{
+                style: { fontSize: '0.875rem' },
+              }}
+              spacingBottom={0}
+              spacingTop={0}
+              text={DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY}
+              variant="warning"
+            />
+          )}
+          <Typography component="span" display="block" variant="body1">
+            {isAccountBackupsEnabled ? (
+              <React.Fragment>
+                You have enabled automatic backups for your account. This Linode
+                will automatically have backups enabled. To change this setting,{' '}
+                <Link to={'/account/settings'}>click here.</Link>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                Three backup slots are executed and rotated automatically: a
+                daily backup, a 2-7 day old backup, and an 8-14 day old backup.
+                Plans are priced according to the Linode plan selected above.
+              </React.Fragment>
+            )}
+          </Typography>
+        </Stack>
+      }
+      checked={checked}
+      control={<Checkbox />}
+      data-testid="backups"
+      onChange={field.onChange}
+      sx={{ alignItems: 'start' }}
+    />
   );
 };

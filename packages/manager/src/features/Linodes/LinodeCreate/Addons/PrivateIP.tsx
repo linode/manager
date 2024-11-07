@@ -48,6 +48,7 @@ export const PrivateIP = () => {
       control={<Checkbox />}
       disabled={isDistributedRegionSelected || isLinodeCreateRestricted}
       onChange={field.onChange}
+      sx={{ alignItems: 'start' }}
     />
   );
 };
