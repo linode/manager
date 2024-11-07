@@ -1,9 +1,8 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
-import { Box } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import React from 'react';
 
 import { ListItemOption } from 'src/components/ListItemOption';
-import { Stack } from 'src/components/Stack';
 
 import type { PlacementGroup } from '@linode/api-v4';
 import type { ListItemProps } from 'src/components/ListItemOption';

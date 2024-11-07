@@ -1,8 +1,7 @@
-import { Divider, Paper } from '@linode/ui';
+import { Divider, Paper, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 
-import { Stack } from 'src/components/Stack';
 import { useProfile } from 'src/queries/profile/profile';
 
 import { AvatarForm } from './AvatarForm';

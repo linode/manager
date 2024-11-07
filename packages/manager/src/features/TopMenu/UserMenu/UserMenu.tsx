@@ -1,4 +1,4 @@
-import { Box, Divider, Tooltip } from '@linode/ui';
+import { Box, Divider, Stack, Tooltip } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { styled, useMediaQuery } from '@mui/material';
@@ -12,7 +12,6 @@ import { AvatarForProxy } from 'src/components/AvatarForProxy';
 import { Button } from 'src/components/Button/Button';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';

@@ -1,3 +1,4 @@
+import { Stack } from '@linode/ui';
 import { Box } from '@linode/ui';
 import BuildIcon from '@mui/icons-material/Build';
 import { useTheme } from '@mui/material/styles';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import Logo from 'src/assets/logo/akamai-logo.svg';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';

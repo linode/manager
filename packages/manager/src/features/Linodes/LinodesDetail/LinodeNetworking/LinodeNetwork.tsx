@@ -1,7 +1,6 @@
+import { Stack } from '@linode/ui';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-
-import { Stack } from 'src/components/Stack';
 
 import { LinodeFirewalls } from './LinodeFirewalls/LinodeFirewalls';
 import { LinodeIPAddresses } from './LinodeIPAddresses';

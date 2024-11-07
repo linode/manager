@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Stack } from 'src/components/Stack';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';

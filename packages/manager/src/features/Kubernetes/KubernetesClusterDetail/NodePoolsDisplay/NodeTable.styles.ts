@@ -4,7 +4,6 @@ import VerticalDivider from 'src/assets/icons/divider-vertical.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Typography } from 'src/components/Typography';
 
-
 export const StyledCopyTooltip = styled(CopyTooltip, {
   label: 'CopyTooltip',
 })(() => ({

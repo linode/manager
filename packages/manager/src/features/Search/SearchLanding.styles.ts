@@ -1,5 +1,5 @@
 import { keyframes } from '@emotion/react';
-import { Stack } from '@mui/material';
+import { Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 

@@ -1,9 +1,9 @@
+import { Stack } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { Stack } from 'src/components/Stack';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';

@@ -1,13 +1,15 @@
+import { Stack } from '@linode/ui';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-import { SuppliedMaintenanceData } from 'src/featureFlags';
 import { queryPresets } from 'src/queries/base';
-import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
+import { useMaintenanceQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
+
+import type { SuppliedMaintenanceData } from 'src/featureFlags';
+import type { Maintenance } from 'src/queries/statusPage';
 
 interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;

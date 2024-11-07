@@ -1,7 +1,7 @@
+import { Stack } from '@linode/ui';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Stack } from 'src/components/Stack';
 
 import { MaintenanceTable } from './MaintenanceTable';
 
