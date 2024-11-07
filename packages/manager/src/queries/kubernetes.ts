@@ -62,6 +62,12 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
         queryFn: () => getKubernetesClusterControlPlaneACL(id),
         queryKey: [id],
       },
+      cluster: (useBetaEndpoint: boolean = false) => ({
+        queryFn: useBetaEndpoint
+          ? () => getKubernetesClusterBeta(id)
+          : () => getKubernetesCluster(id),
+        queryKey: [useBetaEndpoint],
+      }),
       dashboard: {
         queryFn: () => getKubernetesClusterDashboard(id),
         queryKey: null,
@@ -109,12 +115,11 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 });
 
 export const useKubernetesClusterQuery = (id: number) => {
-  const showAPL = useAPLAvailability();
+  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
+
   return useQuery<KubernetesCluster, APIError[]>({
-    ...kubernetesQueries.cluster(id),
-    queryFn: showAPL
-      ? () => getKubernetesClusterBeta(id) // necessary to call BETA_API_ROOT in a seperate function based on feature flag
-      : () => getKubernetesCluster(id),
+    ...kubernetesQueries.cluster(id)._ctx.cluster(showAPL),
+    enabled: !isAPLAvailabilityLoading,
   });
 };
 
@@ -142,7 +147,15 @@ export const useKubernetesClusterMutation = (id: number) => {
         queryClient.invalidateQueries({
           queryKey: kubernetesQueries.cluster(id)._ctx.acl.queryKey,
         });
-        queryClient.setQueryData(kubernetesQueries.cluster(id).queryKey, data);
+        // queryClient.setQueryData<KubernetesCluster>(
+        //   kubernetesQueries.cluster(id).queryKey,
+        //   data
+        // );
+        // Temporary cache update logic for APL
+        queryClient.setQueriesData<KubernetesCluster>(
+          { queryKey: kubernetesQueries.cluster(id)._ctx.cluster._def },
+          (oldData) => ({ ...oldData, ...data })
+        );
       },
     }
   );

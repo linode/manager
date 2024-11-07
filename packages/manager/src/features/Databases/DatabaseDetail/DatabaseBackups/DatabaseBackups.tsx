@@ -1,4 +1,4 @@
-import type { Engine } from '@linode/api-v4/lib/databases';
+import { Box, Divider } from '@linode/ui';
 import {
   FormControl,
   FormControlLabel,
@@ -11,27 +11,28 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { Box } from 'src/components/Box';
+
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import {
   StyledDateCalendar,
   StyledTypography,
   useStyles,
 } from 'src/features/Databases/DatabaseDetail/DatabaseBackups/DatabaseBackups.style';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import {
   isDateOutsideBackup,
   isTimeOutsideBackup,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
 import { useDatabaseQuery } from 'src/queries/databases/databases';
+
 import DatabaseBackupsDialog from './DatabaseBackupsDialog';
 import DatabaseBackupsLegacy from './legacy/DatabaseBackupsLegacy';
+
+import type { Engine } from '@linode/api-v4/lib/databases';
 
 interface Props {
   disabled?: boolean;
@@ -69,7 +70,7 @@ const TIME_OPTIONS: TimeOption[] = [
   { label: '23:00', value: 23 },
 ];
 
-export type VersionOption = 'newest' | 'dateTime';
+export type VersionOption = 'dateTime' | 'newest';
 
 export const DatabaseBackups = (props: Props) => {
   const { classes } = useStyles();
@@ -187,10 +188,10 @@ export const DatabaseBackups = (props: Props) => {
           <Typography variant="h3">Date</Typography>
           <LocalizationProvider dateAdapter={AdapterLuxon}>
             <StyledDateCalendar
-              disabled={disabled || versionOption === 'newest'}
               shouldDisableDate={(date) =>
                 isDateOutsideBackup(date, oldestBackup?.startOf('day'))
               }
+              disabled={disabled || versionOption === 'newest'}
               onChange={handleDateChange}
               value={selectedDate}
             />
@@ -201,19 +202,12 @@ export const DatabaseBackups = (props: Props) => {
           <FormControl style={{ marginTop: 0 }}>
             {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
             <Autocomplete
-              autoComplete={false}
-              className={classes.timeAutocomplete}
-              disabled={disabled || !selectedDate || versionOption === 'newest'}
               getOptionDisabled={(option) =>
                 isTimeOutsideBackup(option.value, selectedDate!, oldestBackup!)
               }
-              label=""
               isOptionEqualToValue={(option, value) =>
                 option.value === value.value
               }
-              onChange={(_, newTime) => setSelectedTime(newTime)}
-              options={TIME_OPTIONS}
-              placeholder="Choose a time"
               renderOption={(props, option) => {
                 const { key, ...rest } = props;
                 return (
@@ -227,6 +221,13 @@ export const DatabaseBackups = (props: Props) => {
                   'data-qa-time-select': true,
                 },
               }}
+              autoComplete={false}
+              className={classes.timeAutocomplete}
+              disabled={disabled || !selectedDate || versionOption === 'newest'}
+              label=""
+              onChange={(_, newTime) => setSelectedTime(newTime)}
+              options={TIME_OPTIONS}
+              placeholder="Choose a time"
               value={selectedTime}
             />
           </FormControl>
@@ -235,11 +236,11 @@ export const DatabaseBackups = (props: Props) => {
       <Grid item xs={12}>
         <Box display="flex" justifyContent="flex-end">
           <Button
-            buttonType="primary"
-            data-qa-settings-button="restore"
             disabled={
               versionOption === 'dateTime' && (!selectedDate || !selectedTime)
             }
+            buttonType="primary"
+            data-qa-settings-button="restore"
             onClick={onRestoreDatabase}
           >
             Restore
@@ -258,9 +259,9 @@ export const DatabaseBackups = (props: Props) => {
     </Paper>
   ) : (
     <DatabaseBackupsLegacy
-      disabled={disabled}
       database={database}
       databaseError={databaseError}
+      disabled={disabled}
       engine={engine}
       isDatabaseLoading={isDatabaseLoading}
     />

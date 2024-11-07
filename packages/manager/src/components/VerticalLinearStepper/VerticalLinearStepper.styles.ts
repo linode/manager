@@ -1,7 +1,6 @@
+import { omittedProps } from '@linode/ui';
 import { StepConnector, StepIcon } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import { omittedProps } from 'src/utilities/omittedProps';
 
 type StyledCircleIconProps = {
   activeStep: number;

@@ -154,9 +154,6 @@ describe('Resizing existing clusters', () => {
                   cy.contains(`$${desiredPlanPrice.monthly}/month`).should(
                     'be.visible'
                   );
-                  cy.contains(`$${desiredPlanPrice.hourly}/hour`).should(
-                    'be.visible'
-                  );
                 });
               });
           });

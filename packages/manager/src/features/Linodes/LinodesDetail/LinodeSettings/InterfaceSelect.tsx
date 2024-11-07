@@ -1,10 +1,10 @@
+import { Divider } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Divider } from 'src/components/Divider';
 import { Notice } from 'src/components/Notice/Notice';
 import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
@@ -395,7 +395,6 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
             additionalIPv4RangesForVPC={additionalIPv4RangesForVPC ?? []}
             assignPublicIPv4Address={nattedIPv4Address !== undefined}
             autoassignIPv4WithinVPC={vpcIPv4 === undefined}
-            from="linodeConfig"
             handleIPv4RangeChange={handleIPv4RangeChange}
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}
