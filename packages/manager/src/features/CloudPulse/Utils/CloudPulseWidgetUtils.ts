@@ -357,7 +357,7 @@ export const fillMissingTimeStampsAcrossDimensions = (...arraysToBeFilled: [numb
   // Step 1: Collect all unique keys from all arrays
   const allTimestamps = new Set<number>();
 
-  // Collect keys from each array
+  // Collect timeStamps from each array, array[0], contains the number timestamp
   arraysToBeFilled.forEach(array => {
     array.forEach(([timeStamp]) => allTimestamps.add(timeStamp));
   });
