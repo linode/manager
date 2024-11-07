@@ -24,7 +24,7 @@ import {
   StyledColumnLabelGrid,
   StyledLabelBox,
   StyledListItem,
-  StyledVPCLabel,
+  StyledIPv4Label,
   StyledIPv4Item,
   StyledSummaryGrid,
   StyledVPCBox,
@@ -288,7 +288,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             </StyledVPCBox>
             {configInterfaceWithVPC?.ipv4?.vpc && (
               <StyledIPv4Box>
-                <StyledVPCLabel data-testid="vpc-ipv4">VPC IPv4</StyledVPCLabel>
+                <StyledIPv4Label data-testid="vpc-ipv4">
+                  VPC IPv4
+                </StyledIPv4Label>
                 <StyledIPv4Item component="span" data-testid="vpc-ipv4">
                   <StyledGradientDiv>
                     <CopyTooltip

@@ -106,7 +106,7 @@ export const StyledIPv4Box = styled(Box, { label: 'StyledIPv4Box' })(
   })
 );
 
-export const StyledVPCLabel = styled(Box, { label: 'StyledVPCLabel' })(
+export const StyledIPv4Label = styled(Box, { label: 'StyledIPv4Label' })(
   ({ theme }) => ({
     color: theme.textColors.textAccessTable,
     fontFamily: theme.font.bold,
