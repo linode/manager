@@ -8,10 +8,16 @@ interface Options {
   /**
    * Defines the API fields filtered against (currently using +contains)
    * when the search query contains no operators.
-   * 
+   *
    * @example ['label', 'tags']
    */
   searchableFieldsWithoutOperator: string[];
+  /**
+   * Images have an array of region objects, so we apply special
+   * search logic to allow users to just search regions by doing:
+   * "region: us-east"
+   */
+  enableImageRegionOverride?: boolean;
 }
 
 /**

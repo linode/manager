@@ -1,3 +1,4 @@
+import { getAPIFilterFromQuery } from '@linode/search';
 import { IconButton, InputAdornment, Paper } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
@@ -24,8 +25,10 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -55,7 +58,7 @@ import type { Handlers as ImageHandlers } from './ImagesActionMenu';
 import type { Filter, ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
-const searchQueryKey = 'query';
+const searchParamKey = 'query';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -98,9 +101,14 @@ export const ImagesLanding = () => {
     globalGrantType: 'add_images',
   });
   const queryParams = new URLSearchParams(location.search);
-  const imageLabelFromParam = queryParams.get(searchQueryKey) ?? '';
+  const query = queryParams.get(searchParamKey) ?? '';
 
   const queryClient = useQueryClient();
+
+  const { error: searchParseError, filter } = getAPIFilterFromQuery(query, {
+    enableImageRegionOverride: true,
+    searchableFieldsWithoutOperator: ['label', 'tags'],
+  });
 
   const paginationForManualImages = usePagination(1, 'images-manual', 'manual');
 
@@ -120,7 +128,7 @@ export const ImagesLanding = () => {
   const manualImagesFilter: Filter = {
     ['+order']: manualImagesOrder,
     ['+order_by']: manualImagesOrderBy,
-    ...(imageLabelFromParam && { label: { '+contains': imageLabelFromParam } }),
+    ...filter,
   };
 
   const {
@@ -169,7 +177,7 @@ export const ImagesLanding = () => {
   const automaticImagesFilter: Filter = {
     ['+order']: automaticImagesOrder,
     ['+order_by']: automaticImagesOrderBy,
-    ...(imageLabelFromParam && { label: { '+contains': imageLabelFromParam } }),
+    ...filter,
   };
 
   const {
@@ -327,13 +335,13 @@ export const ImagesLanding = () => {
   };
 
   const resetSearch = () => {
-    queryParams.delete(searchQueryKey);
+    queryParams.delete(searchParamKey);
     history.push({ search: queryParams.toString() });
   };
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     queryParams.delete('page');
-    queryParams.set(searchQueryKey, e.target.value);
+    queryParams.set(searchParamKey, e.target.value);
     history.push({ search: queryParams.toString() });
   };
 
@@ -362,7 +370,7 @@ export const ImagesLanding = () => {
     return <CircleProgress />;
   }
 
-  if (manualImagesError || automaticImagesError) {
+  if (!query && (manualImagesError || automaticImagesError)) {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
@@ -371,11 +379,7 @@ export const ImagesLanding = () => {
     );
   }
 
-  if (
-    manualImages?.results === 0 &&
-    automaticImages?.results === 0 &&
-    !imageLabelFromParam
-  ) {
+  if (manualImages?.results === 0 && automaticImages?.results === 0 && !query) {
     return <ImagesLandingEmptyState />;
   }
 
@@ -400,10 +404,12 @@ export const ImagesLanding = () => {
       />
       <TextField
         InputProps={{
-          endAdornment: imageLabelFromParam && (
+          endAdornment: query && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
-
+              {searchParseError && (
+                <TooltipIcon status="error" text={searchParseError.message} />
+              )}
               <IconButton
                 aria-label="Clear"
                 data-testid="clear-images-search"
@@ -418,11 +424,11 @@ export const ImagesLanding = () => {
         onChange={debounce(400, (e) => {
           onSearch(e);
         })}
+        containerProps={{ mb: 2 }}
         hideLabel
         label="Search"
         placeholder="Search Images"
-        sx={{ mb: 2 }}
-        value={imageLabelFromParam}
+        value={query}
       />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
@@ -493,6 +499,12 @@ export const ImagesLanding = () => {
               <TableRowEmpty
                 colSpan={9}
                 message={`No Custom Images to display.`}
+              />
+            )}
+            {manualImagesError && query && (
+              <TableRowError
+                colSpan={9}
+                message={manualImagesError[0].reason}
               />
             )}
             {manualImages?.data.map((manualImage) => (
@@ -566,6 +578,12 @@ export const ImagesLanding = () => {
               <TableRowEmpty
                 colSpan={6}
                 message={`No Recovery Images to display.`}
+              />
+            )}
+            {automaticImagesError && query && (
+              <TableRowError
+                colSpan={9}
+                message={automaticImagesError[0].reason}
               />
             )}
             {automaticImages?.data.map((automaticImage) => (
