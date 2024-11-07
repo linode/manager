@@ -46,17 +46,22 @@ export const CloudPulseResourcesSelect = React.memo(
     const platformFilter =
       resourceType === 'dbaas' ? { platform: 'rdbms-default' } : {};
 
+    const orderFilter: Partial<Filter> =
+      resourceType === 'dbaas' ? { '+order': 'asc', '+order_by': 'id' } : {};
+
     const { data: resources, isLoading, isError } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
       xFilter
         ? {
-            ...platformFilter,
-            ...xFilter,
+            ...platformFilter, // platform is a top level filter
+            ...orderFilter, // order by filter
+            ...xFilter, // the usual xFilters
           }
         : {
             ...platformFilter,
+            ...orderFilter,
             region,
           }
     );
