@@ -3,9 +3,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilities';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-
-import { getEngineOptions } from './utilities';
 
 import type { DatabaseCreateValues } from './DatabaseClusterData';
 import type { DatabaseEngine } from '@linode/api-v4';
@@ -54,7 +53,6 @@ export const DatabaseEngineSelect = (props: Props) => {
       }}
       renderOption={(props, option) => {
         const { key, ...rest } = props;
-
         return (
           <li {...rest} data-testid="db-engine-option" key={key}>
             <Grid
@@ -73,7 +71,7 @@ export const DatabaseEngineSelect = (props: Props) => {
       textFieldProps={{
         InputProps: {
           startAdornment: (
-            <Box sx={{ mr: 1.1, pt: 0.7 }}>
+            <Box sx={{ pr: 1, pt: 0.7 }}>
               {engineOptions?.find((val) => val.label === selectedValue)?.flag}
             </Box>
           ),
