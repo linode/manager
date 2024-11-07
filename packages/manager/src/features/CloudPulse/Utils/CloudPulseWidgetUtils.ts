@@ -347,3 +347,28 @@ export const getAutocompleteWidgetStyles = (theme: Theme) => ({
     width: '90px',
   },
 });
+
+export const synchronizeArrays = (...arrays: [number, number | null][][]): [number, number | null][][] => {
+  // Step 1: Collect all unique keys from all arrays
+  const allTimestamps = new Set<number>();
+
+  // Collect keys from each array
+  arrays.forEach(array => {
+    array.forEach(([timeStamp]) => allTimestamps.add(timeStamp));
+  });
+
+  // Step 2: Sort the timestamps to maintain chronological order
+  const sortedKeys = Array.from(allTimestamps).sort((a, b) => a - b);
+
+  // Step 3: Synchronize the arrays to have null values for all missing timestamps
+  return arrays.map(array => {
+    // Step 3.1: Convert the array into a map for fast lookup
+    const map = new Map(array.map(([key, value]) => [key, value]));
+
+    // Step 3.2: Build the synchronized array by checking if a key exists
+    return sortedKeys.map(key => {
+      // If the current array has the key, use its value; otherwise, set it to 0
+      return [key, map.get(key) ?? null] as [number, number | null];
+    });
+  });
+}
