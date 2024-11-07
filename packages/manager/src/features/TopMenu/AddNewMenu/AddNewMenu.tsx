@@ -2,38 +2,45 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import {
   Box,
-  ListItemIcon,
   Menu,
   MenuItem,
   Stack,
   Typography,
   useTheme,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
-import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
-import PlacementGroupsIcon from 'src/assets/icons/entityIcons/placement-groups.svg';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import VPCIcon from 'src/assets/icons/entityIcons/vpc.svg';
 import { Button } from 'src/components/Button/Button';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
-interface LinkProps {
-  attr?: { [key: string]: boolean };
-  description: string;
-  entity: string;
-  hide?: boolean;
-  icon: React.ComponentClass<any, any>;
-  link: string;
+import type { BaseNavLink } from 'src/components/PrimaryNav/PrimaryLink';
+import type { ProductFamilyLinkGroup } from 'src/components/PrimaryNav/PrimaryNav';
+
+export type CreateEntity =
+  | 'Bucket'
+  | 'Database'
+  | 'Domain'
+  | 'Firewall'
+  | 'Image'
+  | 'Kubernetes'
+  | 'Linode'
+  | 'Longview'
+  | 'Marketplace'
+  | 'NodeBalancer'
+  | 'Object Storage'
+  | 'Placement Group'
+  | 'VPC'
+  | 'Volume';
+
+interface MenuLink extends BaseNavLink {
+  description?: string;
 }
 
 export const AddNewMenu = () => {
@@ -52,75 +59,93 @@ export const AddNewMenu = () => {
     setAnchorEl(null);
   };
 
-  const links: LinkProps[] = [
+  const productFamilyLinkGroups: ProductFamilyLinkGroup<MenuLink[]>[] = [
     {
-      description: 'High performance SSD Linux servers',
-      entity: 'Linode',
-      icon: LinodeIcon,
-      link: '/linodes/create',
+      icon: <LinodeIcon />,
+      links: [
+        {
+          description: 'High performance SSD Linux servers',
+          display: 'Linode',
+          href: '/linodes/create',
+        },
+        {
+          description: 'Capture or upload Linux images',
+          display: 'Image',
+          href: '/images/create',
+        },
+        {
+          description: 'Highly available container workloads',
+          display: 'Kubernetes',
+          href: '/kubernetes/clusters/create',
+        },
+        {
+          description: "Control your Linodes' physical placement",
+          display: 'Placement Group',
+          hide: !isPlacementGroupsEnabled,
+          href: '/placement-groups/create',
+        },
+        {
+          attr: { 'data-qa-one-click-add-new': true },
+          description: 'Deploy applications with ease',
+          display: 'Marketplace',
+          href: '/linodes/create?type=One-Click',
+        },
+      ],
+      name: 'Compute',
     },
     {
-      description: 'Attach additional storage to your Linode',
-      entity: 'Volume',
-      icon: VolumeIcon,
-      link: '/volumes/create',
+      icon: <BucketIcon />,
+      links: [
+        {
+          description: 'S3-compatible object storage',
+          display: 'Bucket',
+          href: '/object-storage/buckets/create',
+        },
+        {
+          description: 'Attach additional storage to your Linode',
+          display: 'Volume',
+          href: '/volumes/create',
+        },
+      ],
+      name: 'Storage',
     },
     {
-      description: 'Ensure your services are highly available',
-      entity: 'NodeBalancer',
-      icon: NodebalancerIcon,
-      link: '/nodebalancers/create',
+      icon: <NodebalancerIcon />,
+      links: [
+        {
+          description: 'Create a private and isolated network',
+          display: 'VPC',
+          href: '/vpcs/create',
+        },
+        {
+          description: 'Control network access to your Linodes',
+          display: 'Firewall',
+          href: '/firewalls/create',
+        },
+        {
+          description: 'Ensure your services are highly available',
+          display: 'NodeBalancer',
+          href: '/nodebalancers/create',
+        },
+        {
+          description: 'Manage your DNS records',
+          display: 'Domain',
+          href: '/domains/create',
+        },
+      ],
+      name: 'Networking',
     },
     {
-      description: 'Create a private and isolated network',
-      entity: 'VPC',
-      icon: VPCIcon,
-      link: '/vpcs/create',
-    },
-    {
-      description: 'Control network access to your Linodes',
-      entity: 'Firewall',
-      icon: FirewallIcon,
-      link: '/firewalls/create',
-    },
-    {
-      description: "Control your Linodes' physical placement",
-      entity: 'Placement Groups',
-      hide: !isPlacementGroupsEnabled,
-      icon: PlacementGroupsIcon,
-      link: '/placement-groups/create',
-    },
-    {
-      description: 'Manage your DNS records',
-      entity: 'Domain',
-      icon: DomainIcon,
-      link: '/domains/create',
-    },
-    {
-      description: 'High-performance managed database clusters',
-      entity: 'Database',
-      hide: !isDatabasesEnabled,
-      icon: DatabaseIcon,
-      link: '/databases/create',
-    },
-    {
-      description: 'Highly available container workloads',
-      entity: 'Kubernetes',
-      icon: KubernetesIcon,
-      link: '/kubernetes/create',
-    },
-    {
-      description: 'S3-compatible object storage',
-      entity: 'Bucket',
-      icon: BucketIcon,
-      link: '/object-storage/buckets/create',
-    },
-    {
-      attr: { 'data-qa-one-click-add-new': true },
-      description: 'Deploy applications with ease',
-      entity: 'Marketplace',
-      icon: OneClickIcon,
-      link: '/linodes/create?type=One-Click',
+      icon: <DatabaseIcon />,
+      links: [
+        {
+          description: 'High-performance managed database clusters',
+          display: 'Database',
+          hide: !isDatabasesEnabled,
+          href: '/databases/create',
+        },
+      ],
+      name: 'Databases',
     },
   ];
 
@@ -166,31 +191,66 @@ export const AddNewMenu = () => {
         onClose={handleClose}
         open={open}
       >
-        {links.map(
-          (link, i) =>
-            !link.hide && [
-              <MenuItem
-                component={Link}
-                key={link.entity}
-                onClick={handleClose}
-                to={link.link}
-                {...link.attr}
-                style={{
-                  // We have to do this because in packages/manager/src/index.css we force underline links
-                  textDecoration: 'none',
-                }}
-              >
-                <ListItemIcon>
-                  <link.icon height={20} width={20} />
-                </ListItemIcon>
-                <Stack>
-                  <Typography variant="h3">{link.entity}</Typography>
-                  <Typography>{link.description}</Typography>
-                </Stack>
-              </MenuItem>,
-            ]
-        )}
+        {productFamilyLinkGroups.map((productFamily) => (
+          <>
+            <StyledHeading>
+              {productFamily.icon}
+              {productFamily.name}
+            </StyledHeading>
+            {productFamily.links.map(
+              (link) =>
+                !link.hide && [
+                  <MenuItem
+                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                    autoFocus={link.display === 'Linode'}
+                    component={Link}
+                    key={link.display}
+                    onClick={handleClose}
+                    to={link.href}
+                    {...link.attr}
+                    style={{
+                      padding: '8px 12px',
+                      // We have to do this because in packages/manager/src/index.css we force underline links
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Stack>
+                      <Typography
+                        sx={{
+                          color: theme.color.offBlack,
+                          fontFamily: theme.font.bold,
+                          fontSize: '1rem',
+                          lineHeight: '1.4rem',
+                        }}
+                      >
+                        {link.display}
+                      </Typography>
+                      <Typography>{link.description}</Typography>
+                    </Stack>
+                  </MenuItem>,
+                ]
+            )}
+          </>
+        ))}
       </Menu>
     </Box>
   );
 };
+
+export const StyledHeading = styled('h3', {
+  label: 'StyledHeading',
+})(({ theme }) => ({
+  '& svg': {
+    height: 16,
+    marginRight: theme.spacing(1),
+    width: 16,
+  },
+  alignItems: 'center',
+  background: 'rgb(247, 247, 250)',
+  display: 'flex',
+  fontSize: '0.75rem',
+  letterSpacing: '0.25px',
+  margin: 0,
+  padding: '8px 10px',
+  textTransform: 'uppercase',
+}));
