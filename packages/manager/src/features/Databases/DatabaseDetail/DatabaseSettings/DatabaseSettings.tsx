@@ -10,7 +10,6 @@ import {
 } from 'src/features/Databases/utilities';
 import { useProfile } from 'src/queries/profile/profile';
 
-import { useIsDatabasesEnabled } from '../../utilities';
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
 import { DatabaseSettingsMaintenance } from './DatabaseSettingsMaintenance';
