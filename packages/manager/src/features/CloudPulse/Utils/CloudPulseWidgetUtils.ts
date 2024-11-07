@@ -372,7 +372,7 @@ export const fillMissingTimeStampsAcrossDimensions = (...arraysToBeFilled: [numb
 
     // Step 3.2: Build the synchronized array by checking if a key exists
     return sortedTimestamps.map(key => {
-      // If the current array has the key, use its value; otherwise, set it to 0
+      // If the current array has the key, use its value; otherwise, set it to null, so that the gap is properly visible
       return [key, map.get(key) ?? null] as [number, number | null];
     });
   });
