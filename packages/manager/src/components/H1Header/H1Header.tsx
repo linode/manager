@@ -1,13 +1,14 @@
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { Typography } from 'src/components/Typography';
+
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface H1HeaderProps {
   className?: string;
   dataQaEl?: string;
   renderAsSecondary?: boolean;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   title: string;
 }
 // Accessibility Feature:

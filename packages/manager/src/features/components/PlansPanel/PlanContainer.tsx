@@ -1,4 +1,3 @@
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -14,6 +13,7 @@ import { PlanSelectionTable } from './PlanSelectionTable';
 
 import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 
 export interface PlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
@@ -50,7 +50,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const showTransfer =
-    showLimits && plans.some((plan: PlanWithAvailability) => plan.transfer);
+    showLimits &&
+    plans.some((plan: PlanWithAvailability) => plan.transfer !== undefined);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const showNetwork =
@@ -198,6 +199,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                       }
                       key={`plan-filter-${idx}`}
                       planFilter={table.planFilter}
+                      plans={plans}
                       showNetwork={showNetwork}
                       showTransfer={showTransfer}
                     />

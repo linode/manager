@@ -1,3 +1,4 @@
+import { omitProps } from '@linode/ui';
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -6,10 +7,9 @@ import { linodeQueries } from 'src/queries/linodes/linodes';
 import { stackscriptQueries } from 'src/queries/stackscripts';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { privateIPRegex } from 'src/utilities/ipUtils';
+import { isPrivateIP } from 'src/utilities/ipUtils';
 import { utoa } from 'src/utilities/metadata';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { omitProps } from 'src/utilities/omittedProps';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
@@ -299,8 +299,7 @@ export const defaultValues = async (
     ? await queryClient.ensureQueryData(linodeQueries.linode(params.linodeID))
     : null;
 
-  const privateIp =
-    linode?.ipv4.some((ipv4) => privateIPRegex.test(ipv4)) ?? false;
+  const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,

@@ -1,77 +1,116 @@
-import { Theme, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
-const useStyles = makeStyles()(() => ({
-  root: {
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: '0px !important',
-  },
-}));
+import type { DatabaseStatus, Engine } from '@linode/api-v4';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
+import { useIsDatabasesEnabled } from '../utilities';
+import { useResumeDatabaseMutation } from 'src/queries/databases/databases';
+import { enqueueSnackbar } from 'notistack';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+interface Props {
+  databaseEngine: Engine;
+  databaseId: number;
+  databaseLabel: string;
+  handlers: ActionHandlers;
+  databaseStatus: DatabaseStatus;
+}
 
 export interface ActionHandlers {
-  [index: string]: any;
-  triggerDeleteDatabase: (databaseID: number, databaseLabel: string) => void;
+  handleDelete: () => void;
+  handleManageAccessControls: () => void;
+  handleResetPassword: () => void;
+  handleSuspend: () => void;
 }
 
-interface Props extends ActionHandlers {
-  databaseID: number;
-  databaseLabel: string;
-  inlineLabel?: string;
-}
+export const DatabaseActionMenu = (props: Props) => {
+  const {
+    databaseEngine,
+    databaseId,
+    databaseLabel,
+    handlers,
+    databaseStatus,
+  } = props;
 
-type CombinedProps = Props;
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
+  const { mutateAsync: resumeDatabase } = useResumeDatabaseMutation(
+    databaseEngine,
+    databaseId
+  );
 
-const DatabaseActionMenu = (props: CombinedProps) => {
-  const { classes } = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const status = 'running';
+  const isDatabaseNotRunning = status !== 'running';
+  const isDatabaseSuspended =
+    databaseStatus === 'suspended' || databaseStatus === 'suspending';
 
-  const { databaseID, databaseLabel, triggerDeleteDatabase } = props;
+  const history = useHistory();
+
+  const handleResume = async () => {
+    try {
+      await resumeDatabase();
+      return enqueueSnackbar('Database Cluster resumed successfully.', {
+        variant: 'success',
+      });
+    } catch (e: any) {
+      const error = getAPIErrorOrDefault(
+        e,
+        'There was an error resuming this Database Cluster.'
+      )[0].reason;
+      return enqueueSnackbar(error, { variant: 'error' });
+    }
+  };
 
   const actions: Action[] = [
     {
+      disabled: isDatabaseNotRunning,
+      onClick: handlers.handleManageAccessControls,
+      title: 'Manage Access Controls',
+    },
+    {
+      disabled: isDatabaseNotRunning,
+      onClick: handlers.handleResetPassword,
+      title: 'Reset Root Password',
+    },
+    {
+      disabled: isDatabaseNotRunning,
       onClick: () => {
-        alert('Resize not yet implemented');
+        history.push({
+          pathname: `/databases/${databaseEngine}/${databaseId}/resize`,
+        });
       },
       title: 'Resize',
     },
     {
-      onClick: () => {
-        if (triggerDeleteDatabase !== undefined) {
-          triggerDeleteDatabase(databaseID, databaseLabel);
-        }
-      },
+      disabled: isDatabaseNotRunning,
+      onClick: handlers.handleDelete,
       title: 'Delete',
     },
   ];
 
+  if (isDatabasesV2GA) {
+    actions.unshift({
+      disabled: databaseStatus !== 'active',
+      onClick: () => {
+        handlers.handleSuspend();
+      },
+      title: 'Suspend',
+    });
+
+    actions.splice(4, 0, {
+      disabled: !isDatabaseSuspended,
+      onClick: () => {
+        handleResume();
+      },
+      title: 'Resume',
+    });
+  }
+
   return (
-    <div className={classes.root}>
-      {!matchesSmDown &&
-        actions.map((thisAction) => {
-          return (
-            <InlineMenuAction
-              actionText={thisAction.title}
-              key={thisAction.title}
-              onClick={thisAction.onClick}
-            />
-          );
-        })}
-      {matchesSmDown && (
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for Database ${props.databaseLabel}`}
-        />
-      )}
-    </div>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Database ${databaseLabel}`}
+    />
   );
 };
-
-export default React.memo(DatabaseActionMenu);

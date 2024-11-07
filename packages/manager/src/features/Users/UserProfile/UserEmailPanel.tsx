@@ -1,9 +1,9 @@
+import { Paper } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Button } from 'src/components/Button/Button';
-import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';

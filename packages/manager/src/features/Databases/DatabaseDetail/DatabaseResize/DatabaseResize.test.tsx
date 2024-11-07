@@ -1,13 +1,17 @@
 import {
-  fireEvent,
   queryByAttribute,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Router } from 'react-router-dom';
 
-import { databaseFactory, databaseTypeFactory } from 'src/factories';
+import {
+  accountFactory,
+  databaseFactory,
+  databaseTypeFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
@@ -25,6 +29,29 @@ describe('database resize', () => {
   });
 
   it('should render a loading state', async () => {
+    // Mock database types
+    const standardTypes = [
+      databaseTypeFactory.build({
+        class: 'nanode',
+        id: 'g6-nanode-1',
+        label: `Nanode 1 GB`,
+        memory: 1024,
+      }),
+      ...databaseTypeFactory.buildList(7, { class: 'standard' }),
+    ];
+
+    server.use(
+      http.get('*/databases/types', () => {
+        return HttpResponse.json(
+          makeResourcePage([...standardTypes, ...dedicatedTypes])
+        );
+      }),
+      http.get('*/account', () => {
+        const account = accountFactory.build();
+        return HttpResponse.json(account);
+      })
+    );
+
     const { getByTestId } = renderWithTheme(
       <DatabaseResize database={database} />
     );
@@ -49,6 +76,10 @@ describe('database resize', () => {
         return HttpResponse.json(
           makeResourcePage([...standardTypes, ...dedicatedTypes])
         );
+      }),
+      http.get('*/account', () => {
+        const account = accountFactory.build();
+        return HttpResponse.json(account);
       })
     );
 
@@ -86,6 +117,10 @@ describe('database resize', () => {
           return HttpResponse.json(
             makeResourcePage([...standardTypes, ...dedicatedTypes])
           );
+        }),
+        http.get('*/account', () => {
+          const account = accountFactory.build();
+          return HttpResponse.json(account);
         })
       );
     });
@@ -111,13 +146,13 @@ describe('database resize', () => {
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const getById = queryByAttribute.bind(null, 'id');
-      fireEvent.click(getById(container, examplePlanType));
+      await userEvent.click(getById(container, examplePlanType));
       const resizeButton = getByText(/Resize Database Cluster/i);
       expect(resizeButton.closest('button')).toHaveAttribute(
         'aria-disabled',
         'false'
       );
-      fireEvent.click(resizeButton);
+      await userEvent.click(resizeButton);
       getByText(`Resize Database Cluster ${database.label}?`);
     });
 
@@ -130,6 +165,283 @@ describe('database resize', () => {
         'button'
       );
       expect(resizeDatabaseBtn).toBeDisabled();
+    });
+  });
+
+  describe('on rendering of page and isDatabasesV2GA is true and the Shared CPU tab is preselected ', () => {
+    const mockDatabase = databaseFactory.build({
+      cluster_size: 3,
+      engine: 'mysql',
+      platform: 'rdbms-default',
+      type: 'g6-nanode-1',
+    });
+
+    const flags = {
+      dbaasV2: {
+        beta: false,
+        enabled: true,
+      },
+    };
+
+    beforeEach(() => {
+      // Mock database types
+      const standardTypes = [
+        databaseTypeFactory.build({
+          class: 'nanode',
+          id: 'g6-nanode-1',
+          label: `New DBaaS - Nanode 1 GB`,
+          memory: 1024,
+        }),
+        ...databaseTypeFactory.buildList(7, { class: 'standard' }),
+      ];
+      const mockDedicatedTypes = [
+        databaseTypeFactory.build({
+          class: 'dedicated',
+          disk: 81920,
+          id: 'g6-dedicated-2',
+          label: 'Dedicated 4 GB',
+          memory: 4096,
+        }),
+      ];
+
+      server.use(
+        http.get('*/databases/types', () => {
+          return HttpResponse.json(
+            makeResourcePage([...mockDedicatedTypes, ...standardTypes])
+          );
+        }),
+        http.get('*/account', () => {
+          const account = accountFactory.build({
+            capabilities: ['Managed Databases', 'Managed Databases Beta'],
+          });
+          return HttpResponse.json(account);
+        })
+      );
+    });
+
+    it('should render set node section', async () => {
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseResize database={mockDatabase} />,
+        { flags }
+      );
+
+      expect(getByTestId(loadingTestId)).toBeInTheDocument();
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+      expect(getByText('Set Number of Nodes')).toBeDefined();
+      expect(
+        getByText('Please select a plan or set the number of nodes.')
+      ).toBeDefined();
+    });
+
+    it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
+      const { getByTestId } = renderWithTheme(
+        <DatabaseResize database={mockDatabase} />,
+        { flags }
+      );
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      const nodeRadioBtns = getByTestId('database-nodes');
+      expect(nodeRadioBtns.children.length).toBe(2);
+      expect(nodeRadioBtns).toHaveTextContent('$60/month $0.09/hr');
+      expect(nodeRadioBtns).toHaveTextContent('$140/month $0.21/hr');
+
+      const currentSummary = getByTestId('currentSummary');
+      const selectedPlanText =
+        'Current Cluster: New DBaaS - Nanode 1 GB $60/month';
+      expect(currentSummary).toHaveTextContent(selectedPlanText);
+      const selectedNodesText = '3 Nodes - HA $140/month';
+      expect(currentSummary).toHaveTextContent(selectedNodesText);
+
+      const expectedResizeSummary =
+        'Resized Cluster: Please select a plan or set the number of nodes.';
+      const resizeSummary = getByTestId('resizeSummary');
+      expect(resizeSummary).toHaveTextContent(expectedResizeSummary);
+    });
+
+    it('should preselect cluster size in Set Number of Nodes', async () => {
+      const { getByTestId } = renderWithTheme(
+        <DatabaseResize database={mockDatabase} />,
+        { flags }
+      );
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      const selectedNodeRadioButton = getByTestId(
+        `database-node-${mockDatabase.cluster_size}`
+      ).children[0].children[0] as HTMLInputElement;
+      expect(selectedNodeRadioButton).toBeChecked();
+    });
+
+    it('should disable visible lower node selections', async () => {
+      const { getByTestId } = renderWithTheme(
+        <DatabaseResize database={mockDatabase} />,
+        { flags }
+      );
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      const selectedNodeRadioButton = getByTestId('database-node-1').children[0]
+        .children[0] as HTMLInputElement;
+      expect(selectedNodeRadioButton).toBeDisabled();
+    });
+
+    it('should set price, enable resize button, and update resize summary when a new number of nodes is selected', async () => {
+      const mockDatabase = databaseFactory.build({
+        cluster_size: 1,
+        platform: 'rdbms-default',
+        type: 'g6-nanode-1',
+      });
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseResize database={mockDatabase} />,
+        { flags }
+      );
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      // Mock clicking 3 Nodes option
+      const selectedNodeRadioButton = getByTestId('database-node-3').children[0]
+        .children[0] as HTMLInputElement;
+      await userEvent.click(selectedNodeRadioButton);
+      const resizeButton = getByText(/Resize Database Cluster/i).closest(
+        'button'
+      ) as HTMLButtonElement;
+      expect(resizeButton.disabled).toBeFalsy();
+
+      const summary = getByTestId('resizeSummary');
+      const selectedPlanText =
+        'Resized Cluster: New DBaaS - Nanode 1 GB $60/month';
+      expect(summary).toHaveTextContent(selectedPlanText);
+      const selectedNodesText = '3 Nodes - HA $140/month';
+      expect(summary).toHaveTextContent(selectedNodesText);
+    });
+
+    it('should disable the resize button if node selection is set back to current', async () => {
+      const mockDatabase = databaseFactory.build({
+        cluster_size: 1,
+        platform: 'rdbms-default',
+        type: 'g6-nanode-1',
+      });
+      const { getByTestId, getByText } = renderWithTheme(
+        <DatabaseResize database={mockDatabase} />,
+        { flags }
+      );
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      // Mock clicking 3 Nodes option
+      const threeNodesRadioButton = getByTestId('database-node-3').children[0]
+        .children[0] as HTMLInputElement;
+      await userEvent.click(threeNodesRadioButton);
+      const resizeButton = getByText(/Resize Database Cluster/i).closest(
+        'button'
+      );
+      expect(resizeButton).toBeEnabled();
+      // Mock clicking 1 Node option
+      const oneNodeRadioButton = getByTestId('database-node-1').children[0]
+        .children[0] as HTMLInputElement;
+      await userEvent.click(oneNodeRadioButton);
+      expect(resizeButton).toBeDisabled();
+    });
+  });
+
+  describe('on rendering of page and isDatabasesV2GA is true and the Dedicated CPU tab is preselected', () => {
+    beforeEach(() => {
+      // Mock database types
+      const mockDedicatedTypes = [
+        databaseTypeFactory.build({
+          class: 'dedicated',
+          disk: 81920,
+          id: 'g6-dedicated-2',
+          label: 'Dedicated 4 GB',
+          memory: 4096,
+        }),
+        databaseTypeFactory.build({
+          class: 'dedicated',
+          disk: 163840,
+          id: 'g6-dedicated-4',
+          label: 'Dedicated 8 GB',
+          memory: 8192,
+        }),
+      ];
+
+      // Mock database types
+      const standardTypes = [
+        databaseTypeFactory.build({
+          class: 'nanode',
+          id: 'g6-nanode-1',
+          label: `New DBaaS - Nanode 1 GB`,
+          memory: 1024,
+        }),
+      ];
+
+      server.use(
+        http.get('*/databases/types', () => {
+          return HttpResponse.json(
+            makeResourcePage([...mockDedicatedTypes, ...standardTypes])
+          );
+        }),
+        http.get('*/account', () => {
+          const account = accountFactory.build({
+            capabilities: ['Managed Databases', 'Managed Databases Beta'],
+          });
+          return HttpResponse.json(account);
+        })
+      );
+    });
+
+    it('should render node selection for dedicated tab with default summary', async () => {
+      const mockDatabase = databaseFactory.build({
+        cluster_size: 3,
+        platform: 'rdbms-default',
+        type: 'g6-dedicated-2',
+      });
+
+      const flags = {
+        dbaasV2: {
+          beta: false,
+          enabled: true,
+        },
+      };
+
+      const { getByTestId } = renderWithTheme(
+        <DatabaseResize database={mockDatabase} />,
+        { flags }
+      );
+      expect(getByTestId(loadingTestId)).toBeInTheDocument();
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      expect(getByTestId('database-nodes')).toBeDefined();
+      expect(getByTestId('database-node-1')).toBeDefined();
+      expect(getByTestId('database-node-2')).toBeDefined();
+      expect(getByTestId('database-node-3')).toBeDefined();
+    });
+
+    it('should disable lower node selections', async () => {
+      const mockDatabase = databaseFactory.build({
+        cluster_size: 3,
+        platform: 'rdbms-default',
+        type: 'g6-dedicated-2',
+      });
+
+      const flags = {
+        dbaasV2: {
+          beta: false,
+          enabled: true,
+        },
+      };
+
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
+      const history = createMemoryHistory();
+      history.push(`databases/${database.engine}/${database.id}/resize`);
+
+      const { getByTestId } = renderWithTheme(
+        <Router history={history}>
+          <DatabaseResize database={mockDatabase} />
+        </Router>,
+        { flags }
+      );
+      expect(getByTestId(loadingTestId)).toBeInTheDocument();
+      await waitForElementToBeRemoved(getByTestId(loadingTestId));
+      expect(
+        getByTestId('database-node-1').children[0].children[0]
+      ).toBeDisabled();
+      expect(
+        getByTestId('database-node-2').children[0].children[0]
+      ).toBeDisabled();
+      expect(
+        getByTestId('database-node-3').children[0].children[0]
+      ).toBeEnabled();
     });
   });
 
@@ -165,6 +477,10 @@ describe('database resize', () => {
       server.use(
         http.get('*/databases/types', () => {
           return HttpResponse.json(makeResourcePage([...dedicatedTypes]));
+        }),
+        http.get('*/account', () => {
+          const account = accountFactory.build();
+          return HttpResponse.json(account);
         })
       );
       const { getByTestId } = renderWithTheme(
@@ -184,6 +500,26 @@ describe('database resize', () => {
       type: 'g6-dedicated-8',
     });
     it('should disable Shared Plans Tab', async () => {
+      const standardTypes = [
+        databaseTypeFactory.build({
+          class: 'nanode',
+          id: 'g6-nanode-1',
+          label: `Nanode 1 GB`,
+          memory: 1024,
+        }),
+      ];
+      server.use(
+        http.get('*/databases/types', () => {
+          return HttpResponse.json(
+            makeResourcePage([...dedicatedTypes, ...standardTypes])
+          );
+        }),
+        http.get('*/account', () => {
+          const account = accountFactory.build();
+          return HttpResponse.json(account);
+        })
+      );
+
       const { getByTestId, getByText } = renderWithTheme(
         <DatabaseResize database={database} />
       );

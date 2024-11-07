@@ -1,16 +1,15 @@
-import { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import { Divider } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -21,12 +20,10 @@ import {
   StyledHeader,
   StyledTypography,
 } from './Details.styles';
-import {
-  EstimatedCloneTimeMode,
-  ExtendedConfig,
-  getAllDisks,
-  getEstimatedCloneTime,
-} from './utilities';
+import { getAllDisks, getEstimatedCloneTime } from './utilities';
+
+import type { EstimatedCloneTimeMode, ExtendedConfig } from './utilities';
+import type { Disk, Linode } from '@linode/api-v4/lib/linodes';
 
 interface Props {
   clearAll: () => void;

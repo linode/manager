@@ -1,13 +1,12 @@
 import { Grid, Paper } from '@mui/material';
 import React from 'react';
 
-import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
-
+import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseWidget } from './CloudPulseWidget';
 import {
   allIntervalOptions,
+  autoIntervalOption,
   getInSeconds,
   getIntervalIndex,
 } from './components/CloudPulseIntervalSelect';
@@ -44,7 +43,7 @@ const renderPlaceHolder = (subtitle: string) => {
   return (
     <Grid item xs>
       <Paper>
-        <Placeholder icon={CloudPulseIcon} subtitle={subtitle} title="" />
+        <CloudPulseErrorPlaceholder errorMessage={subtitle} />
       </Paper>
     </Grid>
   );
@@ -74,13 +73,13 @@ export const RenderWidgets = React.memo(
         authToken: '',
         availableMetrics: undefined,
         duration,
-        errorLabel: 'Error While Loading Data',
+        errorLabel: 'Error occurred while loading data.',
         resourceIds: resources,
         resources: [],
         serviceType: dashboard?.service_type ?? '',
         timeStamp: manualRefreshTimeStamp,
         unit: widget.unit ?? '%',
-        widget: { ...widget },
+        widget: { ...widget, time_granularity: autoIntervalOption },
       };
       if (savePref) {
         graphProp.widget = setPreferredWidgetPlan(graphProp.widget);
@@ -104,17 +103,13 @@ export const RenderWidgets = React.memo(
             pref.aggregateFunction ?? widgetObj.aggregate_function,
           size: pref.size ?? widgetObj.size,
           time_granularity: {
-            ...(pref.timeGranularity ?? widgetObj.time_granularity),
+            ...(pref.timeGranularity ?? autoIntervalOption),
           },
         };
       } else {
         return {
           ...widgetObj,
-          time_granularity: {
-            label: 'Auto',
-            unit: 'Auto',
-            value: -1,
-          },
+          time_granularity: autoIntervalOption,
         };
       }
     };
@@ -132,7 +127,7 @@ export const RenderWidgets = React.memo(
       !Boolean(resourceList?.length)
     ) {
       return renderPlaceHolder(
-        'Select Dashboard, Region and Resource to visualize metrics'
+        'Select a dashboard and filters to visualize metrics.'
       );
     }
 

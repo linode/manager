@@ -1,9 +1,9 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
@@ -31,10 +31,11 @@ import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { AutoEnroll } from './AutoEnroll';
 import { BackupLinodeRow } from './BackupLinodeRow';
 import {
-  EnableBackupsRejectedResult,
   getFailureNotificationText,
   useEnableBackupsOnLinodesMutation,
 } from './utils';
+
+import type { EnableBackupsRejectedResult } from './utils';
 
 interface Props {
   onClose: () => void;

@@ -1,19 +1,17 @@
+import { Box, IconButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { Typography } from '@mui/material';
 import _DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { IconButton } from 'src/components/IconButton';
-
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material';
 
 interface DialogTitleProps {
   className?: string;
   id?: string;
   onClose?: () => void;
   subtitle?: string;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   title: string;
 }
 

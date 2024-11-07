@@ -50,7 +50,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
  *
  * If a color does not exist in the current palette and is only used once, consider applying the color conditionally:
  *
- * `theme.name === 'light' ? '#fff' : '#000'`
+ * `theme.name === 'light' ? theme.tokens.color.Neutrals.White : theme.tokens.color.Neutrals.Black`
  */
 export const ColorPalette = () => {
   const { classes } = useStyles();
@@ -122,10 +122,6 @@ export const ColorPalette = () => {
     {
       alias: 'theme.bg.bgPaper',
       color: theme.bg.bgPaper,
-    },
-    {
-      alias: 'theme.bg.bgAccessRow',
-      color: theme.bg.bgAccessRow,
     },
     {
       alias: 'theme.bg.bgAccessRowTransparentGradient',

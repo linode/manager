@@ -12,13 +12,11 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
-import { stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 
 import type { APIError, Database } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {
@@ -86,11 +84,7 @@ interface Props {
 }
 
 export const AccessControls = (props: Props) => {
-  const {
-    database: { allow_list: allowList, engine, id },
-    description,
-    disabled,
-  } = props;
+  const { database, description, disabled } = props;
 
   const { classes } = useStyles();
 
@@ -107,22 +101,10 @@ export const AccessControls = (props: Props) => {
     setAddAccessControlDrawerOpen,
   ] = React.useState<boolean>(false);
 
-  const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
-
   const {
     isPending: databaseUpdating,
     mutateAsync: updateDatabase,
-  } = useDatabaseMutation(engine, id);
-
-  React.useEffect(() => {
-    if (allowList.length > 0) {
-      const allowListExtended = allowList.map(stringToExtendedIP);
-
-      setExtendedIPs(allowListExtended);
-    } else {
-      setExtendedIPs([]);
-    }
-  }, [allowList]);
+  } = useDatabaseMutation(database.engine, database.id);
 
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);
@@ -136,7 +118,7 @@ export const AccessControls = (props: Props) => {
 
   const handleRemoveIPAddress = () => {
     updateDatabase({
-      allow_list: allowList.filter(
+      allow_list: database.allow_list.filter(
         (ipAddress) => ipAddress !== accessControlToBeRemoved
       ),
     })
@@ -193,20 +175,21 @@ export const AccessControls = (props: Props) => {
       <div className={classes.topSection}>
         <div className={classes.sectionTitleAndText}>
           <div className={classes.sectionTitle}>
-            <Typography variant="h3">Access Controls</Typography>
+            <Typography variant="h3">Manage Access</Typography>
           </div>
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <Button
           buttonType="primary"
           className={classes.addAccessControlBtn}
+          data-testid="button-access-control"
           disabled={disabled}
           onClick={() => setAddAccessControlDrawerOpen(true)}
         >
-          Manage Access Controls
+          Manage Access
         </Button>
       </div>
-      {ipTable(allowList)}
+      {ipTable(database.allow_list)}
       <ConfirmationDialog
         actions={actionsPanel}
         onClose={handleDialogClose}
@@ -222,10 +205,9 @@ export const AccessControls = (props: Props) => {
         </Typography>
       </ConfirmationDialog>
       <AddAccessControlDrawer
-        allowList={extendedIPs}
+        database={database}
         onClose={() => setAddAccessControlDrawerOpen(false)}
         open={addAccessControlDrawerOpen}
-        updateDatabase={updateDatabase}
       />
     </>
   );

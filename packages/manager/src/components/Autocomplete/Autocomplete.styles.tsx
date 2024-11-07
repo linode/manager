@@ -1,9 +1,8 @@
+import { omittedProps } from '@linode/ui';
 import DoneIcon from '@mui/icons-material/Done';
 import Popper from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
 import React from 'react';
-
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { PopperProps } from '@mui/material/Popper';
 
@@ -44,7 +43,7 @@ export const SelectedIcon = styled(DoneIcon, {
 }));
 
 export const CustomPopper = (props: PopperProps) => {
-  const { style, ...rest } = props;
+  const { placement, style, ...rest } = props;
 
   const updatedStyle = {
     ...style,
@@ -58,9 +57,13 @@ export const CustomPopper = (props: PopperProps) => {
   return (
     <Popper
       {...rest}
+      modifiers={[
+        { enabled: false, name: 'preventOverflow' },
+        { enabled: !placement, name: 'flip' },
+      ]}
       data-qa-autocomplete-popper
       data-testid="autocomplete-popper"
-      modifiers={[{ enabled: false, name: 'preventOverflow' }]}
+      placement={placement}
       style={updatedStyle}
     />
   );

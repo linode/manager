@@ -1,17 +1,15 @@
+import { Tooltip, omittedProps } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import _Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/reload.svg';
-import { Tooltip } from 'src/components/Tooltip';
 
 import { rotate360 } from '../../styles/keyframes';
-import { omittedProps } from '../../utilities/omittedProps';
 
 import type { ButtonProps as _ButtonProps } from '@mui/material/Button';
-import type { Theme } from '@mui/material/styles';
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export type ButtonType = 'outlined' | 'primary' | 'secondary';
 

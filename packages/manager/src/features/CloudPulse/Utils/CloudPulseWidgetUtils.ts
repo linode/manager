@@ -1,10 +1,7 @@
-import { styled } from '@mui/material';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
-import { COLOR_MAP } from './CloudPulseWidgetColorPalette';
+import { COLOR_MAP, DEFAULT } from './CloudPulseWidgetColorPalette';
 import {
   formatToolTip,
   generateUnitByBaseUnit,
@@ -24,6 +21,7 @@ import type {
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
@@ -103,7 +101,7 @@ interface graphDataOptionsProps {
   /**
    * preferred color for the widget's graph
    */
-  widgetColor: string | undefined;
+  widgetColor: string;
 }
 
 interface MetricRequestProps {
@@ -165,8 +163,8 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
   const dimensions: DataSet[] = [];
   const legendRowsData: LegendRow[] = [];
 
-  // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-  const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
+  // If the color is not found in the map, fallback to default color theme
+  const colors = COLOR_MAP.get(widgetColor) ?? DEFAULT;
   let today = false;
 
   if (status === 'success') {
@@ -336,11 +334,11 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
 };
 
 /**
- * Returns an autocomplete with updated styles according to UX, this will be used at widget level
+ *
+ * @param theme mui theme
+ * @returns The style needed for widget level autocomplete filters
  */
-export const StyledWidgetAutocomplete = styled(Autocomplete, {
-  label: 'StyledAutocomplete',
-})(({ theme }) => ({
+export const getAutocompleteWidgetStyles = (theme: Theme) => ({
   '&& .MuiFormControl-root': {
     minWidth: '90px',
     [theme.breakpoints.down('sm')]: {
@@ -348,4 +346,4 @@ export const StyledWidgetAutocomplete = styled(Autocomplete, {
     },
     width: '90px',
   },
-}));
+});

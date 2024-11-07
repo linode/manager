@@ -4,7 +4,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "husky": "^9.1.6",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.1"
   },
   "scripts": {
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
@@ -18,12 +19,17 @@
     "up": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all",
     "up:expose": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all:expose",
     "dev": "yarn install:all && yarn start:all",
-    "start:all": "concurrently -n api-v4,validation,manager -c blue,yellow,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace linode-manager start\"",
-    "start:all:expose": "concurrently -n api-v4,validation,manager -c blue,yellow,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace linode-manager start:expose\"",
+    "start:all": "concurrently -n api-v4,validation,ui,manager -c blue,yellow,magenta,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace @linode/ui start\" \"yarn workspace linode-manager start\"",
+    "start:all:expose": "concurrently -n api-v4,validation,ui,manager -c blue,yellow,magenta,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace @linode/ui start\" \"yarn workspace linode-manager start:expose\"",
     "start:manager": "yarn workspace linode-manager start",
     "start:manager:ci": "yarn workspace linode-manager start:ci",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
-    "test": "yarn workspace linode-manager test",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:manager": "yarn workspace linode-manager test",
+    "test:sdk": "yarn workspace @linode/api-v4 test",
+    "test:search": "yarn workspace @linode/search test",
+    "test:ui": "yarn workspace @linode/ui test",
     "package-versions": "node ./scripts/package-versions/index.js",
     "storybook": "yarn workspace linode-manager storybook",
     "cy:run": "yarn workspace linode-manager cy:run",

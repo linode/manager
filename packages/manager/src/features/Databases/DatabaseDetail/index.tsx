@@ -2,6 +2,7 @@ import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 
+import { BetaChip } from 'src/components/BetaChip/BetaChip';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -24,6 +25,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { Tab } from 'src/components/Tabs/TabLinkList';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(
@@ -35,7 +37,11 @@ const DatabaseResize = React.lazy(() =>
     default: DatabaseResize,
   }))
 );
-
+const DatabaseMonitor = React.lazy(() =>
+  import('./DatabaseMonitor/DatabaseMonitor').then(({ DatabaseMonitor }) => ({
+    default: DatabaseMonitor,
+  }))
+);
 export const DatabaseDetail = () => {
   const history = useHistory();
   const flags = useFlags();
@@ -84,7 +90,10 @@ export const DatabaseDetail = () => {
     return null;
   }
 
-  const tabs = [
+  const isDefault = database.platform === 'rdbms-default';
+  const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
+
+  const tabs: Tab[] = [
     {
       routeName: `/databases/${engine}/${id}/summary`,
       title: 'Summary',
@@ -99,8 +108,19 @@ export const DatabaseDetail = () => {
     },
   ];
 
+  const resizeIndex = isMonitorEnabled ? 3 : 2;
+  const backupsIndex = isMonitorEnabled ? 2 : 1;
+
+  if (isMonitorEnabled) {
+    tabs.splice(1, 0, {
+      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
+      routeName: `/databases/${engine}/${id}/monitor`,
+      title: 'Monitor',
+    });
+  }
+
   if (flags.databaseResize) {
-    tabs.splice(2, 0, {
+    tabs.splice(resizeIndex, 0, {
       routeName: `/databases/${engine}/${id}/resize`,
       title: 'Resize',
     });
@@ -187,18 +207,23 @@ export const DatabaseDetail = () => {
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
-          <SafeTabPanel index={1}>
+          {isMonitorEnabled ? (
+            <SafeTabPanel index={1}>
+              <DatabaseMonitor database={database} />
+            </SafeTabPanel>
+          ) : null}
+          <SafeTabPanel index={backupsIndex}>
             <DatabaseBackups disabled={isDatabasesGrantReadOnly} />
           </SafeTabPanel>
           {flags.databaseResize ? (
-            <SafeTabPanel index={2}>
+            <SafeTabPanel index={resizeIndex}>
               <DatabaseResize
                 database={database}
                 disabled={isDatabasesGrantReadOnly}
               />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={flags.databaseResize ? 3 : 2}>
+          <SafeTabPanel index={tabs.length - 1}>
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
@@ -206,7 +231,7 @@ export const DatabaseDetail = () => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
-      {database.platform === 'rdbms-default' && <DatabaseLogo />}
+      {isDefault && <DatabaseLogo />}
     </>
   );
 };

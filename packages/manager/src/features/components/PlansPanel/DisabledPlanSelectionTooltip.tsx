@@ -1,8 +1,6 @@
+import { IconButton, Tooltip } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
-
-import { IconButton } from 'src/components/IconButton';
-import { Tooltip } from 'src/components/Tooltip';
 
 interface DisabledPlanSelectionTooltipProps {
   tooltipCopy: string;

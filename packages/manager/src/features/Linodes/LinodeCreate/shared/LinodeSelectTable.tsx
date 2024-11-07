@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { Box } from 'src/components/Box';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -24,7 +24,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useLinodesQuery } from 'src/queries/linodes/linodes';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { privateIPRegex } from 'src/utilities/ipUtils';
+import { isPrivateIP } from 'src/utilities/ipUtils';
 import { isNumeric } from 'src/utilities/stringUtils';
 
 import {
@@ -105,7 +105,7 @@ export const LinodeSelectTable = (props: Props) => {
   const queryClient = useQueryClient();
 
   const handleSelect = async (linode: Linode) => {
-    const hasPrivateIP = linode.ipv4.some((ipv4) => privateIPRegex.test(ipv4));
+    const hasPrivateIP = linode.ipv4.some(isPrivateIP);
     reset((prev) => ({
       ...prev,
       backup_id: null,

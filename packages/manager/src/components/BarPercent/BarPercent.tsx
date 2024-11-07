@@ -1,9 +1,10 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import * as React from 'react';
 
 import { LinearProgress } from 'src/components/LinearProgress';
-import { omittedProps } from 'src/utilities/omittedProps';
+
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface BarPercentProps {
   /** Additional css class to pass to the component */
@@ -16,7 +17,7 @@ export interface BarPercentProps {
   narrow?: boolean;
   /** Applies a `border-radius` to the bar. */
   rounded?: boolean;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   /** The value of the progress indicator for the determinate and buffer variants. */
   value: number;
   /** The value for the buffer variant. */

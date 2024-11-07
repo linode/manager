@@ -4,17 +4,23 @@ import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
+import AddAccessControlDrawer from 'src/features/Databases/DatabaseDetail/AddAccessControlDrawer';
+import DatabaseSettingsDeleteClusterDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
+import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { usePagination } from 'src/hooks/usePagination';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import type { DatabaseInstance } from '@linode/api-v4/lib/databases';
 import type { Order } from 'src/hooks/useOrder';
+import { DatabaseSettingsSuspendClusterDialog } from '../DatabaseDetail/DatabaseSettings/DatabaseSettingsSuspendClusterDialog';
 
 const preferenceKey = 'databases';
 
@@ -24,6 +30,7 @@ interface Props {
   isNewDatabase?: boolean;
   order: 'asc' | 'desc';
   orderBy: string;
+  showSuspend?: boolean;
 }
 const DatabaseLandingTable = ({
   data,
@@ -31,11 +38,56 @@ const DatabaseLandingTable = ({
   isNewDatabase,
   order,
   orderBy,
+  showSuspend,
 }: Props) => {
   const { data: events } = useInProgressEvents();
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const dbPlatformType = isNewDatabase ? 'new' : 'legacy';
   const pagination = usePagination(1, preferenceKey, dbPlatformType);
+
+  const [
+    selectedDatabase,
+    setSelectedDatabase,
+  ] = React.useState<DatabaseInstance>({} as DatabaseInstance);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [
+    isResetPasswordsDialogOpen,
+    setIsResetPasswordsDialogOpen,
+  ] = React.useState(false);
+  const [
+    isManageAccessControlsDialogOpen,
+    setIsManageAccessControlsDialogOpen,
+  ] = React.useState(false);
+  const [
+    isSuspendClusterDialogOpen,
+    setIsSuspendClusterDialogOpen,
+  ] = React.useState(false);
+
+  const handleManageAccessControls = (database: DatabaseInstance) => {
+    setSelectedDatabase(database);
+    setIsManageAccessControlsDialogOpen(true);
+  };
+
+  const onCloseAccesControls = () => {
+    setIsManageAccessControlsDialogOpen(false);
+    setSelectedDatabase({} as DatabaseInstance);
+  };
+
+  const handleDelete = (database: DatabaseInstance) => {
+    setSelectedDatabase(database);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleResetPassword = (database: DatabaseInstance) => {
+    setSelectedDatabase(database);
+    setIsResetPasswordsDialogOpen(true);
+  };
+
+  const handleSuspend = (database: DatabaseInstance) => {
+    setSelectedDatabase(database);
+    setIsSuspendClusterDialogOpen(true);
+  };
 
   return (
     <>
@@ -106,11 +158,19 @@ const DatabaseLandingTable = ({
                 Created
               </TableSortCell>
             </Hidden>
+            {isDatabasesV2GA && isNewDatabase && <TableCell></TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
           {data?.map((database: DatabaseInstance) => (
             <DatabaseRow
+              handlers={{
+                handleDelete: () => handleDelete(database),
+                handleManageAccessControls: () =>
+                  handleManageAccessControls(database),
+                handleResetPassword: () => handleResetPassword(database),
+                handleSuspend: () => handleSuspend(database),
+              }}
               database={database}
               events={events}
               isNewDatabase={isNewDatabase}
@@ -137,7 +197,40 @@ const DatabaseLandingTable = ({
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      {isNewDatabase && <DatabaseLogo />}
+      {isNewDatabase && (
+        <>
+          <DatabaseLogo />
+          {selectedDatabase && (
+            <>
+              <DatabaseSettingsDeleteClusterDialog
+                databaseEngine={selectedDatabase.engine}
+                databaseID={selectedDatabase.id}
+                databaseLabel={selectedDatabase?.label}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                open={isDeleteDialogOpen}
+              />
+              <DatabaseSettingsResetPasswordDialog
+                databaseEngine={selectedDatabase.engine}
+                databaseID={selectedDatabase.id}
+                onClose={() => setIsResetPasswordsDialogOpen(false)}
+                open={isResetPasswordsDialogOpen}
+              />
+            </>
+          )}
+        </>
+      )}
+      <DatabaseSettingsSuspendClusterDialog
+        databaseEngine={selectedDatabase.engine}
+        databaseId={selectedDatabase.id}
+        databaseLabel={selectedDatabase.label}
+        onClose={() => setIsSuspendClusterDialogOpen(false)}
+        open={isSuspendClusterDialogOpen}
+      />
+      <AddAccessControlDrawer
+        database={selectedDatabase}
+        onClose={onCloseAccesControls}
+        open={isManageAccessControlsDialogOpen}
+      />
     </>
   );
 };

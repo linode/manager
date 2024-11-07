@@ -1,3 +1,4 @@
+import { Paper } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -5,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
@@ -21,7 +21,7 @@ import type {
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
-import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 interface Props {
   image: Image | undefined;
@@ -79,7 +79,7 @@ export const ManageImageReplicasForm = (props: Props) => {
 
   const values = watch();
 
-  const disabledRegions: Record<string, DisableRegionOption> = {};
+  const disabledRegions: Record<string, DisableItemOption> = {};
 
   const availableRegions = image?.regions.filter(
     (regionItem) => regionItem.status === 'available'
@@ -103,7 +103,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         <Notice text={errors.root.message} variant="error" />
       )}
       <Typography>
-        Custom images are billed monthly, at $0.10/GB. Check out{' '}
+        Custom images are billed monthly at $0.10/GB. Check out{' '}
         <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
           this guide
         </Link>{' '}

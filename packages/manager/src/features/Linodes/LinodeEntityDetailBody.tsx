@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
-import { Box } from 'src/components/Box';
 import {
   DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
   UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
@@ -13,6 +13,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { pluralize } from 'src/utilities/pluralize';
 
@@ -90,6 +91,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   } = props;
 
   const { data: profile } = useProfile();
+  const { data: preferences } = usePreferences();
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
@@ -170,6 +172,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             )}
           </StyledSummaryGrid>
         </Grid>
+
         <Grid container sm={isDisplayingEncryptedStatus ? 8 : 9} xs={12}>
           <Grid container xs={12}>
             <AccessTable
@@ -187,17 +190,35 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   </Typography>
                 ) : undefined
               }
+              rows={[
+                {
+                  isMasked: preferences?.maskSensitiveData,
+                  maskedTextLength: 'ipv4',
+                  text: firstAddress,
+                },
+                {
+                  isMasked: preferences?.maskSensitiveData,
+                  maskedTextLength: 'ipv6',
+                  text: secondAddress,
+                },
+              ]}
               gridSize={{ lg: 5, xs: 12 }}
               isVPCOnlyLinode={isVPCOnlyLinode}
-              rows={[{ text: firstAddress }, { text: secondAddress }]}
               sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
             />
             <AccessTable
               rows={[
-                { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+                {
+                  heading: 'SSH Access',
+                  isMasked: preferences?.maskSensitiveData,
+                  text: sshLink(ipv4[0]),
+                },
                 {
                   heading: 'LISH Console via SSH',
+                  isMasked: !linodeIsInDistributedRegion
+                    ? preferences?.maskSensitiveData
+                    : false,
                   text: linodeIsInDistributedRegion
                     ? 'N/A'
                     : lishLink(username, region, linodeLabel),

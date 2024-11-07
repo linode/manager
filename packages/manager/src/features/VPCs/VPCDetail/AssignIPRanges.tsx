@@ -1,8 +1,7 @@
+import { Box, Divider } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Notice } from 'src/components/Notice/Notice';
@@ -13,16 +12,16 @@ import {
   ASSIGN_IPV4_RANGES_DESCRIPTION,
   ASSIGN_IPV4_RANGES_TITLE,
 } from 'src/features/VPCs/constants';
-import { ExtendedIP } from 'src/utilities/ipUtils';
 
-import type { SxProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
   handleIPRangeChange: (ips: ExtendedIP[]) => void;
   includeDescriptionInTooltip?: boolean;
   ipRanges: ExtendedIP[];
   ipRangesError?: string;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export const AssignIPRanges = (props: Props) => {

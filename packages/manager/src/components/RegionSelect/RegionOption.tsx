@@ -1,105 +1,35 @@
-import { visuallyHidden } from '@mui/utils';
+import { Box } from '@linode/ui';
 import React from 'react';
 
-import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
-import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
+import { ListItemOption } from 'src/components/ListItemOption';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { Tooltip } from 'src/components/Tooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Stack } from 'src/components/Stack';
 
-import {
-  SelectedIcon,
-  StyledFlagContainer,
-  StyledListItem,
-  sxDistributedRegionIcon,
-} from './RegionSelect.styles';
-
-import type { DisableRegionOption } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
-
-interface Props {
-  disabledOptions?: DisableRegionOption;
-  props: React.HTMLAttributes<HTMLLIElement>;
-  region: Region;
-  selected?: boolean;
-}
+import type { ListItemProps } from 'src/components/ListItemOption';
 
 export const RegionOption = ({
   disabledOptions,
+  item,
   props,
-  region,
   selected,
-}: Props) => {
-  const { className, onClick } = props;
-  const isRegionDisabled = Boolean(disabledOptions);
-  const isRegionDisabledReason = disabledOptions?.reason;
-  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
-  const displayDistributedRegionIcon =
-    isGeckoBetaEnabled && region.site_type === 'distributed';
+}: ListItemProps<Region>) => {
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   return (
-    <Tooltip
-      PopperProps={{
-        sx: {
-          '& .MuiTooltip-tooltip': {
-            minWidth: disabledOptions?.tooltipWidth ?? 215,
-          },
-        },
-      }}
-      title={
-        isRegionDisabled && isRegionDisabledReason ? isRegionDisabledReason : ''
-      }
-      disableFocusListener={!isRegionDisabled}
-      disableHoverListener={!isRegionDisabled}
-      disableTouchListener={!isRegionDisabled}
-      enterDelay={200}
-      enterNextDelay={200}
-      enterTouchDelay={200}
+    <ListItemOption
+      disabledOptions={disabledOptions}
+      item={item}
+      props={props}
+      selected={selected}
     >
-      <StyledListItem
-        {...props}
-        componentsProps={{
-          root: {
-            'data-qa-option': region.id,
-            'data-testid': region.id,
-          } as ListItemComponentsPropsOverrides,
-        }}
-        onClick={(e) =>
-          isRegionDisabled ? e.preventDefault() : onClick ? onClick(e) : null
-        }
-        aria-disabled={undefined}
-        data-qa-disabled-item={isRegionDisabled}
-        className={isRegionDisabled ? `${className} Mui-disabled` : className}
-      >
-        <>
-          <Box alignItems="center" display="flex" flexGrow={1}>
-            <StyledFlagContainer>
-              <Flag country={region.country} />
-            </StyledFlagContainer>
-            {isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`}
-            {displayDistributedRegionIcon && (
-              <Box sx={visuallyHidden}>
-                &nbsp;(This region is a distributed region.)
-              </Box>
-            )}
-            {isRegionDisabled && isRegionDisabledReason && (
-              <Box sx={visuallyHidden}>{isRegionDisabledReason}</Box>
-            )}
-          </Box>
-          {isGeckoLAEnabled && `(${region.id})`}
-          {selected && <SelectedIcon visible />}
-          {displayDistributedRegionIcon && (
-            <TooltipIcon
-              icon={<DistributedRegion />}
-              status="other"
-              sxTooltipIcon={sxDistributedRegionIcon}
-              text="This region is a distributed region."
-            />
-          )}
-        </>
-      </StyledListItem>
-    </Tooltip>
+      <Stack alignItems="center" direction="row" gap={1} width="100%">
+        <Flag country={item.country} />
+        {isGeckoLAEnabled ? item.label : `${item.label} (${item.id})`}
+        <Box flexGrow={1} />
+        {isGeckoLAEnabled && `(${item.id})`}
+      </Stack>
+    </ListItemOption>
   );
 };

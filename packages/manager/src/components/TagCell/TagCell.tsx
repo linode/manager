@@ -1,19 +1,18 @@
+import { IconButton, omittedProps } from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { IconButton } from 'src/components/IconButton';
 import { Tag } from 'src/components/Tag/Tag';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import { StyledPlusIcon, StyledTagButton } from '../Button/StyledTagButton';
 import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
 import { TagDrawer } from './TagDrawer';
 
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface TagCellProps {
   /**
@@ -29,7 +28,7 @@ export interface TagCellProps {
   /**
    * Additional styles to apply to the tag list.
    */
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 
   /**
    * The list of tags to display.
@@ -235,10 +234,10 @@ const StyledTag = styled(Tag, {
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.primary.main,
-    color: '#ffff',
+    color: theme.tokens.color.Neutrals.White,
   },
   backgroundColor: theme.color.tagButtonBg,
-  borderRadius: 0,
+  borderRadius: theme.tokens.borderRadius.None,
   color: theme.color.tagIcon,
   height: 30,
   marginLeft: theme.spacing(0.5),

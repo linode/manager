@@ -2,52 +2,34 @@ import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
 import { Flag } from 'src/components/Flag';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { StyledListItem } from '../Autocomplete/Autocomplete.styles';
+import { Stack } from '../Stack';
 import { RegionOption } from './RegionOption';
-import {
-  StyledAutocompleteContainer,
-  StyledFlagContainer,
-} from './RegionSelect.styles';
+import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
-import type {
-  DisableRegionOption,
-  RegionMultiSelectProps,
-} from './RegionSelect.types';
+import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
-interface LabelComponentProps {
+interface RegionChipLabelProps {
   region: Region;
 }
 
-const SelectedRegion = ({ region }: LabelComponentProps) => {
+const RegionChipLabel = ({ region }: RegionChipLabelProps) => {
   return (
-    <Box
-      sx={{
-        alignItems: 'center',
-        display: 'flex',
-        flexGrow: 1,
-      }}
-    >
-      <StyledFlagContainer
-        sx={(theme) => ({
-          marginRight: theme.spacing(1 / 2),
-          transform: 'scale(0.8)',
-        })}
-      >
-        <Flag country={region.country} />
-      </StyledFlagContainer>
+    <Stack alignItems="center" direction="row" gap={1}>
+      <Flag country={region.country} sx={{ fontSize: '1rem' }} />
       {region.label} ({region.id})
-    </Box>
+    </Stack>
   );
 };
 
@@ -56,6 +38,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     SelectedRegionsList,
     currentCapability,
     disabled,
+    disabledRegions: disabledRegionsFromProps,
     errorText,
     helperText,
     isClearable,
@@ -67,7 +50,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     selectedIds,
     sortRegionOptions,
     width,
-    disabledRegions: disabledRegionsFromProps,
     ...rest
   } = props;
 
@@ -87,7 +69,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   };
 
   const disabledRegions = regionOptions.reduce<
-    Record<string, DisableRegionOption>
+    Record<string, DisableItemOption>
   >((acc, region) => {
     if (disabledRegionsFromProps?.[region.id]) {
       acc[region.id] = disabledRegionsFromProps[region.id];
@@ -122,18 +104,23 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             onChange(selectedOptions?.map((region) => region.id) ?? [])
           }
           renderOption={(props, option, { selected }) => {
+            const { key, ...rest } = props;
             if (!option.site_type) {
               // Render options like "Select All / Deselect All"
-              return <StyledListItem {...props}>{option.label}</StyledListItem>;
+              return (
+                <StyledListItem {...rest} key={key}>
+                  {option.label}
+                </StyledListItem>
+              );
             }
 
             // Render regular options
             return (
               <RegionOption
                 disabledOptions={disabledRegions[option.id]}
-                key={option.id}
-                props={props}
-                region={option}
+                item={option}
+                key={key}
+                props={rest}
                 selected={selected}
               />
             );
@@ -145,7 +132,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
                 data-testid={option.id}
                 deleteIcon={<CloseIcon />}
                 key={index}
-                label={<SelectedRegion region={option} />}
+                label={<RegionChipLabel region={option} />}
                 onDelete={() => handleRemoveOption(option.id)}
               />
             ));

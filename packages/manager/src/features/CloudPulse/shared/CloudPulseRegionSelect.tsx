@@ -8,6 +8,7 @@ import type { Dashboard, FilterValue } from '@linode/api-v4';
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
   handleRegionChange: (region: string | undefined, savePref?: boolean) => void;
+  label: string;
   placeholder?: string;
   savePreferences?: boolean;
   selectedDashboard: Dashboard | undefined;
@@ -15,11 +16,12 @@ export interface CloudPulseRegionSelectProps {
 
 export const CloudPulseRegionSelect = React.memo(
   (props: CloudPulseRegionSelectProps) => {
-    const { data: regions } = useRegionsQuery();
+    const { data: regions, isError, isLoading } = useRegionsQuery();
 
     const {
       defaultValue,
       handleRegionChange,
+      label,
       placeholder,
       savePreferences,
       selectedDashboard,
@@ -44,15 +46,15 @@ export const CloudPulseRegionSelect = React.memo(
           setSelectedRegion(region?.id);
           handleRegionChange(region?.id, savePreferences);
         }}
-        textFieldProps={{
-          hideLabel: true,
-        }}
         currentCapability={undefined}
         data-testid="region-select"
         disableClearable={false}
         disabled={!selectedDashboard || !regions}
+        errorText={isError ? `Failed to fetch ${label || 'Regions'}.` : ''}
         fullWidth
-        label="Select a Region"
+        label={label || 'Region'}
+        loading={isLoading}
+        noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
         regions={regions ? regions : []}
         value={selectedRegion}

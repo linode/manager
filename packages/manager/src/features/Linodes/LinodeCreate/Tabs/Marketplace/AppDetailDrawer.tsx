@@ -1,29 +1,29 @@
+import { Box } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import { useMarketplaceApps } from './utilities';
+import { getMarketplaceAppLabel, useMarketplaceApps } from './utilities';
 
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   appName: {
-    color: '#fff !important',
+    color: `${theme.tokens.color.Neutrals.White} !important`,
     fontFamily: theme.font.bold,
     fontSize: '2.2rem',
     lineHeight: '2.5rem',
     textAlign: 'center',
   },
   button: {
-    color: 'white !important',
+    color: `${theme.tokens.color.Neutrals.White} !important`,
     margin: theme.spacing(2),
     position: 'absolute',
   },
@@ -69,11 +69,13 @@ export const AppDetailDrawer = (props: Props) => {
   const { classes } = useStyles();
   const { apps } = useMarketplaceApps();
 
-  const selectedApp = apps.find((app) => app.stackscript.id === stackScriptId)
-    ?.details;
+  const selectedApp = apps.find((app) => app.stackscript.id === stackScriptId);
+  const displayLabel = selectedApp
+    ? getMarketplaceAppLabel(selectedApp?.stackscript.label)
+    : '';
 
   const gradient = {
-    backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${selectedApp?.colors.start}, #${selectedApp?.colors.end})`,
+    backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${selectedApp?.details?.colors.start}, #${selectedApp?.details?.colors.end})`,
   };
 
   return (
@@ -109,59 +111,62 @@ export const AppDetailDrawer = (props: Props) => {
             <img
               src={`/assets/white/${
                 REUSE_WHITE_ICONS[
-                  selectedApp?.logo_url as keyof typeof REUSE_WHITE_ICONS
-                ] || selectedApp?.logo_url
+                  selectedApp?.details
+                    ?.logo_url as keyof typeof REUSE_WHITE_ICONS
+                ] || selectedApp?.details?.logo_url
               }`}
-              alt={`${selectedApp.name} logo`}
+              alt={`${displayLabel} logo`}
               className={classes.image}
             />
             <Typography
               dangerouslySetInnerHTML={{
                 __html: sanitizeHTML({
                   sanitizingTier: 'flexible',
-                  text: selectedApp.name,
+                  text: displayLabel,
                 }),
               }}
-              data-qa-drawer-title={selectedApp.name}
               className={classes.appName}
+              data-qa-drawer-title={displayLabel}
               data-testid="app-name"
               variant="h2"
             />
           </Box>
           <Box className={classes.container}>
             <Box>
-              <Typography variant="h3">{selectedApp.summary}</Typography>
+              <Typography variant="h3">
+                {selectedApp?.details.summary}
+              </Typography>
               <Typography
                 dangerouslySetInnerHTML={{
                   __html: sanitizeHTML({
                     sanitizingTier: 'flexible',
-                    text: selectedApp.description,
+                    text: selectedApp?.details?.description,
                   }),
                 }}
                 className={classes.description}
                 variant="body1"
               />
             </Box>
-            {selectedApp.website && (
+            {selectedApp?.details.website && (
               <Box>
                 <Typography variant="h3">Website</Typography>
                 <Link
                   className={classes.link}
                   external
-                  to={selectedApp.website}
+                  to={selectedApp?.details.website}
                 >
-                  {selectedApp.website}
+                  {selectedApp?.details.website}
                 </Link>
               </Box>
             )}
-            {selectedApp.related_guides && (
+            {selectedApp?.details.related_guides && (
               <Box>
                 <Typography variant="h3">Guides</Typography>
                 <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
-                  {selectedApp.related_guides.map((link, idx) => (
+                  {selectedApp?.details.related_guides.map((link, idx) => (
                     <Link
                       className={classes.link}
-                      key={`${selectedApp.name}-guide-${idx}`}
+                      key={`${displayLabel}-guide-${idx}`}
                       to={link.href}
                     >
                       {sanitizeHTML({
@@ -173,13 +178,13 @@ export const AppDetailDrawer = (props: Props) => {
                 </Box>
               </Box>
             )}
-            {selectedApp.tips && (
+            {selectedApp?.details.tips && (
               <Box>
                 <Typography variant="h3">Tips</Typography>
                 <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
-                  {selectedApp.tips.map((tip, idx) => (
+                  {selectedApp?.details.tips.map((tip, idx) => (
                     <Typography
-                      key={`${selectedApp.name}-tip-${idx}`}
+                      key={`${displayLabel}-tip-${idx}`}
                       variant="body1"
                     >
                       {tip}

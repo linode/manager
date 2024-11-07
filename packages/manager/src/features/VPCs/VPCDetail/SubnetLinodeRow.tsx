@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -19,7 +19,6 @@ import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import {
-  NETWORK_INTERFACES_GUIDE_URL,
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
 } from '../constants';
@@ -121,12 +120,9 @@ export const SubnetLinodeRow = (props: Props) => {
       <TooltipIcon
         text={
           <Typography>
-            This Linode is using an unrecommended configuration profile. Update
-            its configuration profile to avoid connectivity issues. Read our{' '}
-            <Link to={NETWORK_INTERFACES_GUIDE_URL}>
-              Configuration Profiles
-            </Link>{' '}
-            guide for more information.
+            This Linode is using a configuration profile with a Networking
+            setting that is not recommended. To avoid potential connectivity
+            issues, edit the Linode’s configuration.
           </Typography>
         }
         icon={<StyledWarningIcon />}

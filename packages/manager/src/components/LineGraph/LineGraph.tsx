@@ -108,7 +108,7 @@ export interface LineGraphProps {
   /**
    * Custom styles for the table.
    */
-  sxTableStyles?: SxProps;
+  sxTableStyles?: SxProps<Theme>;
   /**
    * The suggested maximum y-axis value passed to **Chart,js**.
    */

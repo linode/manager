@@ -70,29 +70,6 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   class: 'standard',
   disk: Factory.each((i) => i * 20480),
   engines: {
-    mongodb: [
-      {
-        price: {
-          hourly: 0.03,
-          monthly: 50,
-        },
-        quantity: 1,
-      },
-      {
-        price: {
-          hourly: 0.08,
-          monthly: 88,
-        },
-        quantity: 2,
-      },
-      {
-        price: {
-          hourly: 0.22,
-          monthly: 116,
-        },
-        quantity: 3,
-      },
-    ],
     mysql: [
       {
         price: {
@@ -139,29 +116,6 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
         quantity: 3,
       },
     ],
-    redis: [
-      {
-        price: {
-          hourly: 0.08,
-          monthly: 180,
-        },
-        quantity: 1,
-      },
-      {
-        price: {
-          hourly: 0.16,
-          monthly: 360,
-        },
-        quantity: 2,
-      },
-      {
-        price: {
-          hourly: 0.32,
-          monthly: 540,
-        },
-        quantity: 3,
-      },
-    ],
   },
   id: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
   label: Factory.each((i) => `Linode ${i} GB`),
@@ -173,12 +127,15 @@ const adb10 = (i: number) => i % 2 === 0;
 
 export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
   {
+    allow_list: [],
     cluster_size: Factory.each((i) =>
       adb10(i)
         ? ([1, 3][i % 2] as ClusterSize)
         : ([1, 2, 3][i % 3] as ClusterSize)
     ),
+    connection_strings: [],
     created: '2021-12-09T17:15:12',
+    encrypted: false,
     engine: Factory.each((i) => ['mysql', 'postgresql'][i % 2] as Engine),
     hosts: Factory.each((i) =>
       adb10(i)
@@ -204,6 +161,20 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     status: Factory.each((i) => possibleStatuses[i % possibleStatuses.length]),
     type: Factory.each((i) => possibleTypes[i % possibleTypes.length]),
     updated: '2021-12-16T17:15:12',
+    updates: {
+      day_of_week: 1,
+      duration: 3,
+      frequency: 'weekly',
+      hour_of_day: 20,
+      pending: [
+        {
+          deadline: null,
+          description: 'Log configuration options changes required',
+          planned_for: '2044-09-15T17:15:12',
+        },
+      ],
+      week_of_month: null,
+    },
     version: Factory.each((i) => ['8.0.30', '15.7'][i % 2]),
   }
 );
@@ -237,7 +208,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
     '2.2.2.2': 'primary',
   },
   oldest_restore_time: '2024-09-15T17:15:12',
-  platform: pickRandom(['rdbms-legacy', 'rdbms-default']),
+  platform: Factory.each((i) => (adb10(i) ? 'rdbms-legacy' : 'rdbms-default')),
   port: 3306,
   region: 'us-east',
   ssl_connection: false,
@@ -250,6 +221,13 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
     duration: 3,
     frequency: 'weekly',
     hour_of_day: 20,
+    pending: [
+      {
+        deadline: null,
+        description: 'Log configuration options changes required',
+        planned_for: '2044-09-15T17:15:12',
+      },
+    ],
     week_of_month: null,
   },
   used_disk_size_gb: 5,

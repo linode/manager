@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
@@ -7,7 +8,6 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Tooltip } from 'src/components/Tooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
@@ -32,7 +32,7 @@ import {
 } from './LinodeRow.styles';
 
 import type { LinodeHandlers } from '../LinodesLanding';
-import type { SxProps } from '@mui/system';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface Props extends LinodeWithMaintenance {
@@ -210,7 +210,7 @@ RenderFlag.displayName = `RenderFlag`;
 export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   text: string | undefined;
 }> = (props) => {
   const { className, progress, sx, text } = props;

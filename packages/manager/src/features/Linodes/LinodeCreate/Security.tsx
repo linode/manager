@@ -1,8 +1,8 @@
+import { Divider } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import UserSSHKeyPanel from 'src/components/AccessPanel/UserSSHKeyPanel';
-import { Divider } from 'src/components/Divider';
 import {
   DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES,
   DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION,
@@ -11,11 +11,10 @@ import {
 } from 'src/components/Encryption/constants';
 import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
 import { Typography } from 'src/components/Typography';
-import { inputMaxWidth } from 'src/foundations/themes/light';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -56,7 +55,11 @@ export const Security = () => {
         Security
       </Typography>
       <React.Suspense
-        fallback={<Skeleton sx={{ height: '89px', maxWidth: inputMaxWidth }} />}
+        fallback={
+          <Skeleton
+            sx={(theme) => ({ height: '89px', maxWidth: theme.inputMaxWidth })}
+          />
+        }
       >
         <Controller
           render={({ field, fieldState }) => (
