@@ -60,7 +60,7 @@ export const VPCCreateDrawer = (props: Props) => {
         {generalAPIError ? (
           <Notice text={generalAPIError} variant="error" />
         ) : null}
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}>
           <Box sx={{ marginTop: theme.spacing(3) }}>
             <VPCTopSectionContent
               disabled={userCannotAddVPC}
@@ -95,7 +95,7 @@ export const VPCCreateDrawer = (props: Props) => {
             }}
             style={{ marginTop: theme.spacing(3) }}
           />
-        </form>
+        </form> */}
       </Grid>
     </Drawer>
   );

@@ -1,5 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { isEmpty } from '@linode/api-v4';
 import { createVPCSchema } from '@linode/validation';
+import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -8,16 +10,15 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useCreateVPCMutation } from 'src/queries/vpcs/vpcs';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
+import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
 
 import type { CreateVPCPayload, VPC } from '@linode/api-v4';
 import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
-
-// DON'T FORGET TO PUT BACK IN SENDING THE ANALYTICAL EVENT GIRL
-
 export interface UseCreateVPCInputs {
+  formContainerRef: React.RefObject<HTMLFormElement>;
   handleSelectVPC?: (vpc: VPC) => void;
   onDrawerClose?: () => void;
   pushToVPCPage?: boolean;
@@ -26,6 +27,7 @@ export interface UseCreateVPCInputs {
 
 export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const {
+    formContainerRef,
     handleSelectVPC,
     onDrawerClose,
     pushToVPCPage,
@@ -72,7 +74,11 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
       }
     } catch (errors) {
       for (const error of errors) {
-        form.setError(error?.field ?? 'root', { message: error.reason });
+        if (error?.field === 'subnets.label') {
+          form.setError('subnets', { message: error.reason });
+        } else {
+          form.setError(error?.field ?? 'root', { message: error.reason });
+        }
       }
     }
   };
@@ -89,10 +95,17 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
         },
       ],
     },
-
     mode: 'onBlur',
     resolver: yupResolver(createVPCSchema),
   });
+
+  const { errors } = form.formState;
+
+  React.useEffect(() => {
+    if (!isEmpty(errors)) {
+      scrollErrorIntoViewV2(formContainerRef);
+    }
+  }, [errors]);
 
   return {
     form,
