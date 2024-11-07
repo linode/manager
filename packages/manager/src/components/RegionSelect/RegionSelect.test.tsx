@@ -64,26 +64,4 @@ describe('RegionSelect', () => {
     );
     expect(getByTestId('textfield-input')).toBeDisabled();
   });
-
-  it('should render a Select component with distributed region text', () => {
-    const newProps = {
-      ...props,
-      showDistributedRegionIconHelperText: true,
-    };
-    const { getByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
-    expect(
-      getByTestId('region-select-distributed-region-text')
-    ).toBeInTheDocument();
-  });
-
-  it('should render a Select component with no distributed region text', () => {
-    const newProps = {
-      ...props,
-      showDistributedRegionIconHelperText: false,
-    };
-    const { queryByTestId } = renderWithTheme(<RegionSelect {...newProps} />);
-    expect(
-      queryByTestId('region-select-distributed-region-text')
-    ).not.toBeInTheDocument();
-  });
 });
