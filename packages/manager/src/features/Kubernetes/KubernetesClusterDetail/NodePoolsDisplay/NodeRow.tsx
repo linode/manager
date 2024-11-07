@@ -115,10 +115,12 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           </Typography>
         ) : displayIP.length > 0 ? (
           <Box
+            sx={{
+              '& svg': { height: '12px !important', width: '12px !important' },
+            }}
             alignItems="center"
             display="flex"
             gap={0.5}
-            sx={{ '& svg': { height: 12, width: 12 } }}
           >
             <CopyTooltip
               copyableText
