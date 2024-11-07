@@ -18,6 +18,9 @@ const StyledResourcesLinksSection = styled('div', {
   display: 'grid',
   gridAutoColumns: '1fr',
   gridAutoFlow: 'column',
+  [theme.breakpoints.between('md', 'lg')]: {
+    width: 'auto',
+  },
   [theme.breakpoints.down(props.wide ? 'lg' : 'md')]: {
     gridAutoFlow: 'row',
     justifyItems: 'start',
