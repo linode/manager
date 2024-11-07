@@ -353,6 +353,7 @@ export const getAutocompleteWidgetStyles = (theme: Theme) => ({
  * @param arraysToBeFilled The list of dimension data to be filled
  * @returns The list of dimension data filled with null values for missing timestamps
  */
+// TODO: CloudPulse - delete when recharts migration completed
 export const fillMissingTimeStampsAcrossDimensions = (...arraysToBeFilled: [number, number | null][][]): [number, number | null][][] => {
   // Step 1: Collect all unique keys from all arrays
   const allTimestamps = new Set<number>();
