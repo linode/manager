@@ -215,6 +215,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                 renderPlanSelection={renderPlanSelection}
                 showNetwork={showNetwork}
                 showTransfer={showTransfer}
+                showUsableStorage={isDatabaseCreateFlow || isDatabaseResizeFlow}
               />
             )
           )}
