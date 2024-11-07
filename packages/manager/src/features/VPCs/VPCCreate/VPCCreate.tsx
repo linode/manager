@@ -9,21 +9,23 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { VPC_GETTING_STARTED_LINK } from 'src/features/VPCs/constants';
-import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent2';
+import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPCv2';
 
 import { CannotCreateVPCNotice } from './FormComponents/CannotCreateVPCNotice';
 import { StyledHeaderTypography } from './FormComponents/VPCCreateForm.styles';
-import { VPCTopSectionContent } from './FormComponents/VPCTopSectionContent2';
+import { VPCTopSectionContent } from './FormComponents/VPCTopSectionContent';
 
 const VPCCreate = () => {
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+
   const {
     form,
     isLoadingCreateVPC,
     onCreateVPC,
     regionsData,
     userCannotAddVPC,
-  } = useCreateVPC({ pushToVPCPage: true });
+  } = useCreateVPC({ formContainerRef, pushToVPCPage: true });
 
   const {
     formState: { errors },
@@ -49,10 +51,10 @@ const VPCCreate = () => {
       />
       {userCannotAddVPC && CannotCreateVPCNotice}
       <Grid>
-        {errors.root?.message ? (
-          <Notice text={errors.root.message} variant="error" />
-        ) : null}
-        <form onSubmit={handleSubmit(onCreateVPC)}>
+        <form onSubmit={handleSubmit(onCreateVPC)} ref={formContainerRef}>
+          {errors.root?.message ? (
+            <Notice text={errors.root.message} variant="error" />
+          ) : null}
           <Paper>
             <StyledHeaderTypography variant="h2">VPC</StyledHeaderTypography>
             <VPCTopSectionContent
@@ -61,12 +63,7 @@ const VPCCreate = () => {
             />
           </Paper>
           <Paper sx={(theme) => ({ marginTop: theme.spacing(2.5) })}>
-            {/* <SubnetContent
-              disabled={userCannotAddVPC}
-              onChangeField={setFieldValue}
-              subnetErrors={generalSubnetErrorsFromAPI}
-              subnets={values.subnets}
-            /> */}
+            <SubnetContent disabled={userCannotAddVPC} />
           </Paper>
           <StyledActionsPanel
             primaryButtonProps={{
@@ -74,6 +71,8 @@ const VPCCreate = () => {
               disabled: userCannotAddVPC,
               label: 'Create VPC',
               loading: isLoadingCreateVPC,
+              onClick: handleSubmit(onCreateVPC),
+              type: 'submit',
             }}
           />
         </form>
