@@ -1,8 +1,9 @@
-import { Box, Paper, Tooltip } from '@linode/ui';
+import { Box, Paper, Stack, Tooltip } from '@linode/ui';
 import * as React from 'react';
 
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { StyledActionButton } from 'src/components/Button/StyledActionButton';
-import { Stack } from 'src/components/Stack';
+import { Hidden } from 'src/components/Hidden';
 import { Typography } from 'src/components/Typography';
 
 import { NodeTable } from './NodeTable';
@@ -12,8 +13,6 @@ import type {
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
-import { Hidden } from 'src/components/Hidden';
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   autoscaler: AutoscaleSettings;
