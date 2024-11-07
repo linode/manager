@@ -48,7 +48,7 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
     isAPLEnabled?: boolean
   ) =>
     (hasSelectedRegion && !isSelectedRegionEligibleForPlan(planType)) ||
-    (planType === 'shared' && isAPLEnabled);
+    (planType === 'shared' && Boolean(isAPLEnabled));
 
   return {
     hasSelectedRegion,
