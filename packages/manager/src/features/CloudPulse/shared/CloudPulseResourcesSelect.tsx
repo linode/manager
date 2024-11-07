@@ -55,13 +55,13 @@ export const CloudPulseResourcesSelect = React.memo(
       {},
       xFilter
         ? {
-            ...platformFilter, // platform is a top level filter
             ...orderFilter, // order by filter
+            ...platformFilter, // platform is a top level filter
             ...xFilter, // the usual xFilters
           }
         : {
-            ...platformFilter,
             ...orderFilter,
+            ...platformFilter,
             region,
           }
     );
