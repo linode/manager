@@ -10,7 +10,7 @@ import { useProfile } from 'src/queries/profile/profile';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
-  synchronizeArrays,
+  fillMissingTimeStampsAcrossDimensions,
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
 import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
@@ -259,7 +259,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     data = generatedData.dimensions;
 
     // add missing timestamps across all the dimensions
-    const filledArrays = synchronizeArrays(...data.map(data => data.data));
+    const filledArrays = fillMissingTimeStampsAcrossDimensions(...data.map(data => data.data));
 
     //update the chart data with updated arrays
     filledArrays.forEach((arr, index) => {
