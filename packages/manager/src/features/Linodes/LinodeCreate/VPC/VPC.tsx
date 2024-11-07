@@ -1,10 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, Divider } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Checkbox } from 'src/components/Checkbox';
-import { Divider } from 'src/components/Divider';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
