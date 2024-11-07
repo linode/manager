@@ -34,8 +34,8 @@ EqualQuery
 ContainsQuery
   = key:FilterableField ws* Contains ws* value:String {
     console.log(options, value);
-    if (options.enableImageRegionOverride && key === "region") {
-      return { regions: { region: value } };
+    if (options.containsOverride && key === options.containsOverride.field) {
+      return options.containsOverride.filter(value);
     }
     return { [key]: { "+contains": value } };
   }

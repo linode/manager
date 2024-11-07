@@ -17,7 +17,7 @@ interface Options {
    * search logic to allow users to just search regions by doing:
    * "region: us-east"
    */
-  enableImageRegionOverride?: boolean;
+  containsOverride?: { field: string; filter: (value: string) => Filter };
 }
 
 /**

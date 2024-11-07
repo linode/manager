@@ -106,7 +106,10 @@ export const ImagesLanding = () => {
   const queryClient = useQueryClient();
 
   const { error: searchParseError, filter } = getAPIFilterFromQuery(query, {
-    enableImageRegionOverride: true,
+    containsOverride: {
+      field: 'region',
+      filter: (value) => ({ regions: { region: value } }),
+    },
     searchableFieldsWithoutOperator: ['label', 'tags'],
   });
 
