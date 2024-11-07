@@ -1,11 +1,10 @@
-import { Notice, Paper } from '@linode/ui';
+import { Divider, Notice, Paper } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';

@@ -1,9 +1,7 @@
-import { Notice, Paper } from '@linode/ui';
+import { Divider, Notice, Paper, Stack } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useWatch } from 'react-hook-form';
 
-import { Divider } from 'src/components/Divider';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
@@ -31,7 +29,7 @@ export const Addons = () => {
         <Typography variant="h2">Add-ons</Typography>
         {isDistributedRegionSelected && (
           <Notice
-            text="Backups and Private IP are currently not available for distributed regions."
+            text="Backups and Private IP are not available for distributed regions."
             variant="warning"
           />
         )}

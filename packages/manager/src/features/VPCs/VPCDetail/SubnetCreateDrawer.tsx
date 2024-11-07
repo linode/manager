@@ -1,12 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormHelperText, Notice } from '@linode/ui';
+import { Notice, Stack } from '@linode/ui';
+import { FormHelperText } from '@linode/ui';
 import { createSubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';

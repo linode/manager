@@ -1,4 +1,4 @@
-import { Box, Notice, Paper } from '@linode/ui';
+import { Box, Notice, Paper, Stack } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -27,7 +27,6 @@ import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectFirewallPanel } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import { Stack } from 'src/components/Stack';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
@@ -53,8 +52,8 @@ import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEvent
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import {
   getDCSpecificPriceByType,
   renderMonthlyPriceToCorrectDecimalPlace,

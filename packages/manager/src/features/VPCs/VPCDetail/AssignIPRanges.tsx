@@ -1,8 +1,7 @@
-import { Box, Notice } from '@linode/ui';
+import { Box, Divider, Notice } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { TooltipIcon } from 'src/components/TooltipIcon';

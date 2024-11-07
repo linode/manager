@@ -56,6 +56,7 @@ interface AttachmentWithTarget {
 }
 
 export type EntityType =
+  | 'bucket'
   | 'database_id'
   | 'domain_id'
   | 'firewall_id'
@@ -343,12 +344,28 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
     setSubmitting(true);
 
-    createSupportTicket({
-      [_entityType]: Number(_entityId),
+    const baseRequestPayload = {
       description: _description,
       severity: selectedSeverity,
       summary,
-    })
+    };
+
+    let requestPayload;
+    if (entityType === 'bucket') {
+      const bucket_label = values.entityInputValue;
+      requestPayload = {
+        bucket: bucket_label,
+        region: _entityId,
+        ...baseRequestPayload,
+      };
+    } else {
+      requestPayload = {
+        [_entityType]: Number(_entityId),
+        ...baseRequestPayload,
+      };
+    }
+
+    createSupportTicket(requestPayload)
       .then((response) => {
         return response;
       })
