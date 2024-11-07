@@ -1,16 +1,19 @@
 import * as React from 'react';
 
+import { Link } from 'src/components/Link';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 
 import type { PlanWithAvailability } from './types';
+import type { TooltipIconStatus } from 'src/components/TooltipIcon';
 
 interface PlanSelectionFilterOptionsTable {
   header?: string;
@@ -27,6 +30,7 @@ interface PlanSelectionTableProps {
   shouldDisplayNoRegionSelectedMessage: boolean;
   showNetwork?: boolean;
   showTransfer?: boolean;
+  showUsableStorage?: boolean;
 }
 
 const tableCells = [
@@ -54,6 +58,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     shouldDisplayNoRegionSelectedMessage,
     showNetwork: shouldShowNetwork,
     showTransfer: shouldShowTransfer,
+    showUsableStorage,
   } = props;
   const flags = useFlags();
 
@@ -70,6 +75,29 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     [plans, filterOptions, flags.gpuv2]
   );
 
+  const showUsableStorageTooltip = (cellName: string) =>
+    cellName === 'Usable Storage';
+
+  const showTooltip = (
+    status: TooltipIconStatus,
+    text: JSX.Element | string,
+    width?: number
+  ) => {
+    return (
+      <TooltipIcon
+        sxTooltipIcon={{
+          height: 12,
+          marginTop: '-2px',
+          ml: 0.5,
+          px: 0,
+          py: 0,
+        }}
+        status={status}
+        text={text}
+        width={width}
+      />
+    );
+  };
   return (
     <StyledTable
       aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
@@ -86,6 +114,14 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             ) {
               return null;
             }
+            if (
+              showUsableStorage &&
+              !flags.dbaasV2?.beta &&
+              flags.dbaasV2?.enabled &&
+              cellName === 'Storage'
+            ) {
+              cellName = 'Usable Storage';
+            }
             return (
               <StyledTableCell
                 center={center}
@@ -97,19 +133,24 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                 {isPlanCell && filterOptions?.header
                   ? filterOptions?.header
                   : cellName}
-                {showTransferTooltip(cellName) && (
-                  <TooltipIcon
-                    sxTooltipIcon={{
-                      height: 12,
-                      marginTop: '-2px',
-                      ml: 0.5,
-                      px: 0,
-                      py: 0,
-                    }}
-                    status="help"
-                    text="Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to standard charges."
-                  />
-                )}
+                {showTransferTooltip(cellName) &&
+                  showTooltip(
+                    'help',
+                    'Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to standard charges.'
+                  )}
+                {showUsableStorageTooltip(cellName) &&
+                  showTooltip(
+                    'help',
+                    <Typography>
+                      Usable storage is smaller than the actual plan storage due
+                      to the overhead from the database platform.{' '}
+                      <Link to="https://www.linode.com/pricing/">
+                        Learn more
+                      </Link>
+                      .
+                    </Typography>,
+                    240
+                  )}
               </StyledTableCell>
             );
           })}
