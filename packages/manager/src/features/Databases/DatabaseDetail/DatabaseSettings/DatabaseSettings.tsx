@@ -1,7 +1,6 @@
-import { Paper } from '@linode/ui';
+import { Divider, Paper } from '@linode/ui';
 import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import { DatabaseSettingsReviewUpdatesDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsReviewUpdatesDialog';
 import { DatabaseSettingsUpgradeVersionDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsUpgradeVersionDialog';

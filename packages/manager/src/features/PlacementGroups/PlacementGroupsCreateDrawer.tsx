@@ -1,3 +1,4 @@
+import { Divider } from '@linode/ui';
 import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -6,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';

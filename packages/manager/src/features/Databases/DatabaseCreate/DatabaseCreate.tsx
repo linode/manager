@@ -1,4 +1,4 @@
-import { BetaChip, Paper } from '@linode/ui';
+import { BetaChip, Divider, Paper } from '@linode/ui';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -7,7 +7,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Divider } from 'src/components/Divider';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';

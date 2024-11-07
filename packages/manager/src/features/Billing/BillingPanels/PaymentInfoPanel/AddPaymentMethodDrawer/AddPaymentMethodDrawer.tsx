@@ -1,8 +1,7 @@
-import { Box } from '@linode/ui';
+import { Box, Divider } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { Notice } from 'src/components/Notice/Notice';

@@ -1,7 +1,7 @@
+import { Divider } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';

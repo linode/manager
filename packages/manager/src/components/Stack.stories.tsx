@@ -1,7 +1,6 @@
-import { Paper } from '@linode/ui';
+import { Divider, Paper } from '@linode/ui';
 import React from 'react';
 
-import { Divider } from './Divider';
 import { Stack } from './Stack';
 
 import type { Meta, StoryObj } from '@storybook/react';
