@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added:
 
+- Tooltip for 'Usable Storage' in Create/Resize Database Table ([#11223](https://github.com/linode/manager/pull/11223))
 - Success toasts to profile display settings page (with other minor improvements) ([#11141](https://github.com/linode/manager/pull/11141))
 - Mask Sensitive Data preference to Profile Settings ([#11143](https://github.com/linode/manager/pull/11143))
 - DBaaS Suspend and Resume for Database Landing and Details ([#11152](https://github.com/linode/manager/pull/11152))
@@ -64,6 +65,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Upcoming Features:
 
+- ACLP UI - DBaaS instances order by label ([#11226](https://github.com/linode/manager/pull/11226))
 - Add post processing for missing timestamp data across dimensions in ACLP charts  ([#11225](https://github.com/linode/manager/pull/11225))
 - Add default x-filter for DBasS Aiven clusters fetch in resource selection component ([#11150](https://github.com/linode/manager/pull/11150))
 - Replace one-off hardcoded black and white color values with colorTokens ([#11165](https://github.com/linode/manager/pull/11165))
