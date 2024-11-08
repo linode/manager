@@ -14,7 +14,7 @@ import { PlanSelectionTable } from './PlanSelectionTable';
 import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-
+import type { Theme } from '@mui/material/styles';
 export interface PlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
   currentPlanHeading?: string;
@@ -65,6 +65,10 @@ export const PlanContainer = (props: PlanContainerProps) => {
   const shouldDisplayNoRegionSelectedMessage =
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
+  const isDatabaseGA =
+    !flags.dbaasV2?.beta &&
+    flags.dbaasV2?.enabled &&
+    (isDatabaseCreateFlow || isDatabaseResizeFlow);
   interface PlanSelectionDividerTable {
     header?: string;
     planFilter?: (plan: PlanWithAvailability) => boolean;
@@ -142,6 +146,18 @@ export const PlanContainer = (props: PlanContainerProps) => {
   return (
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
+        {isCreate && isDatabaseGA && (
+          <Typography
+            sx={(theme: Theme) => ({
+              marginBottom: theme.spacing(2),
+              marginLeft: theme.spacing(1),
+              marginTop: theme.spacing(1),
+            })}
+          >
+            Usable storage is smaller than the actual plan storage due to the
+            overhead from the database platform.
+          </Typography>
+        )}
         {shouldDisplayNoRegionSelectedMessage ? (
           <Notice
             spacingLeft={8}
