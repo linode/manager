@@ -1,18 +1,9 @@
 import { createRoute, redirect } from '@tanstack/react-router';
-import { enqueueSnackbar } from 'notistack';
-
-import { volumeQueries } from 'src/queries/volumes/volumes';
 
 import { rootRoute } from '../root';
-import { buildXFilters } from '../utils/buildXFilters';
-import {
-  VOLUME_TABLE_DEFAULT_ORDER,
-  VOLUME_TABLE_DEFAULT_ORDER_BY,
-} from './constants';
 import { VolumesRoot } from './VolumesRoot';
 
 import type { TableSearchParams } from '../types';
-import type { OrderDirection } from '../utils/buildXFilters';
 
 const volumeAction = {
   attach: 'attach',
@@ -30,29 +21,6 @@ export type VolumeAction = typeof volumeAction[keyof typeof volumeAction];
 export interface VolumesSearchParams extends TableSearchParams {
   query?: string;
 }
-
-interface BuildVolumeXFiltersParams {
-  order: OrderDirection;
-  orderBy: string | undefined;
-  query?: string;
-}
-
-export const buildVolumeXFilters = ({
-  order = VOLUME_TABLE_DEFAULT_ORDER,
-  orderBy = VOLUME_TABLE_DEFAULT_ORDER_BY,
-  query,
-}: BuildVolumeXFiltersParams) =>
-  buildXFilters({
-    nonPaginationFilters: query
-      ? {
-          label: { '+contains': query },
-        }
-      : undefined,
-    pagination: {
-      order,
-      orderBy,
-    },
-  });
 
 const volumesRoute = createRoute({
   component: VolumesRoot,
@@ -87,22 +55,6 @@ const volumeActionRoute = createRoute({
     }
   },
   getParentRoute: () => volumesRoute,
-  loader: async ({ context, params }) => {
-    try {
-      await context.queryClient.fetchQuery({
-        queryFn: volumeQueries.volume(params.volumeId).queryFn,
-        queryKey: volumeQueries.volume(params.volumeId).queryKey,
-        retry: 3,
-        retryDelay: 1000,
-      });
-    } catch {
-      enqueueSnackbar('Volume not found', { variant: 'error' });
-      throw redirect({
-        search: () => ({}),
-        to: '/volumes',
-      });
-    }
-  },
   parseParams: ({
     action,
     volumeId,

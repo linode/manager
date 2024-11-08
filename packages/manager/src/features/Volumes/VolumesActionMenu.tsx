@@ -1,17 +1,13 @@
-import { useTheme } from '@mui/material/styles';
+import { Volume } from '@linode/api-v4';
+import { Theme, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-
-import type { Volume } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import type { VolumeAction } from 'src/routes/volumes';
 
 export interface ActionHandlers {
   handleAttach: () => void;
@@ -44,17 +40,13 @@ export const VolumesActionMenu = (props: Props) => {
     id: volume.id,
   });
 
-  const actions: Action<VolumeAction>[] = [
+  const actions: Action[] = [
     {
-      action: 'details',
-      id: volume.id.toString(),
       onClick: handlers.handleDetails,
       title: 'Show Config',
     },
     {
-      action: 'edit',
       disabled: isVolumeReadOnly,
-      id: volume.id.toString(),
       onClick: handlers.handleEdit,
       title: 'Edit',
       tooltip: isVolumeReadOnly
@@ -66,9 +58,7 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     {
-      action: 'resize',
       disabled: isVolumeReadOnly,
-      id: volume.id.toString(),
       onClick: handlers.handleResize,
       title: 'Resize',
       tooltip: isVolumeReadOnly
@@ -80,9 +70,7 @@ export const VolumesActionMenu = (props: Props) => {
         : undefined,
     },
     {
-      action: 'clone',
       disabled: isVolumeReadOnly,
-      id: volume.id.toString(),
       onClick: handlers.handleClone,
       title: 'Clone',
       tooltip: isVolumeReadOnly
@@ -97,9 +85,7 @@ export const VolumesActionMenu = (props: Props) => {
 
   if (!attached && isVolumesLanding) {
     actions.push({
-      action: 'attach',
       disabled: isVolumeReadOnly,
-      id: volume.id.toString(),
       onClick: handlers.handleAttach,
       title: 'Attach',
       tooltip: isVolumeReadOnly
@@ -112,9 +98,7 @@ export const VolumesActionMenu = (props: Props) => {
     });
   } else {
     actions.push({
-      action: 'detach',
       disabled: isVolumeReadOnly,
-      id: volume.id.toString(),
       onClick: handlers.handleDetach,
       title: 'Detach',
       tooltip: isVolumeReadOnly
@@ -128,9 +112,7 @@ export const VolumesActionMenu = (props: Props) => {
   }
 
   actions.push({
-    action: 'delete',
     disabled: isVolumeReadOnly || attached,
-    id: volume.id.toString(),
     onClick: handlers.handleDelete,
     title: 'Delete',
     tooltip: isVolumeReadOnly
@@ -153,15 +135,6 @@ export const VolumesActionMenu = (props: Props) => {
         inlineActions.map((action) => {
           return (
             <InlineMenuAction
-              tanstackRouter={{
-                linkType: 'link',
-                params: {
-                  action: action.action,
-                  volumeId: volume.id,
-                },
-                preload: 'intent',
-                to: `/volumes/$volumeId/$action`,
-              }}
               actionText={action.title}
               disabled={action.disabled}
               key={action.title}
@@ -173,7 +146,6 @@ export const VolumesActionMenu = (props: Props) => {
       <ActionMenu
         actionsList={menuActions}
         ariaLabel={`Action menu for Volume ${volume.label}`}
-        useTanstackRouter
       />
     </>
   );
