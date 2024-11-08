@@ -6,10 +6,7 @@ import * as React from 'react';
 
 import KebabIcon from 'src/assets/icons/kebab.svg';
 
-import { TanstackMenuItemLink } from '../TanstackLinks';
-
-export interface Action<T = undefined> {
-  action?: T;
+export interface Action {
   disabled?: boolean;
   id?: string;
   onClick: () => void;
@@ -17,11 +14,11 @@ export interface Action<T = undefined> {
   tooltip?: string;
 }
 
-export interface ActionMenuProps<T = undefined> {
+export interface ActionMenuProps {
   /**
    * A list of actions to show in the Menu
    */
-  actionsList: Action<T>[];
+  actionsList: Action[];
   /**
    * Gives the Menu Button an accessible name
    */
@@ -30,10 +27,6 @@ export interface ActionMenuProps<T = undefined> {
    * A function that is called when the Menu is opened. Useful for analytics.
    */
   onOpen?: () => void;
-  /**
-   * Optional tanstackRouter props
-   */
-  useTanstackRouter?: boolean;
 }
 
 /**
@@ -41,10 +34,8 @@ export interface ActionMenuProps<T = undefined> {
  *
  * No more than 8 items should be displayed within an action menu.
  */
-export const ActionMenu = React.memo(function ActionMenu<T = undefined>(
-  props: ActionMenuProps<T>
-) {
-  const { actionsList, ariaLabel, onOpen, useTanstackRouter } = props;
+export const ActionMenu = React.memo((props: ActionMenuProps) => {
+  const { actionsList, ariaLabel, onOpen } = props;
 
   const menuId = convertToKebabCase(ariaLabel);
   const buttonId = `${convertToKebabCase(ariaLabel)}-button`;
@@ -82,25 +73,6 @@ export const ActionMenu = React.memo(function ActionMenu<T = undefined>(
   const sxTooltipIcon = {
     padding: '0 0 0 8px',
     pointerEvents: 'all', // Allows the tooltip to be hovered on a disabled MenuItem
-  };
-
-  const MenuItemContent = (a: Action<T>) => {
-    return (
-      <>
-        <ListItemText primaryTypographyProps={{ color: 'inherit' }}>
-          {a.title}
-        </ListItemText>
-        {a.tooltip && (
-          <TooltipIcon
-            data-qa-tooltip-icon
-            status="help"
-            sxTooltipIcon={sxTooltipIcon}
-            text={a.tooltip}
-            tooltipPosition="right"
-          />
-        )}
-      </>
-    );
   };
 
   return (
@@ -157,36 +129,34 @@ export const ActionMenu = React.memo(function ActionMenu<T = undefined>(
         open={open}
         transitionDuration={225}
       >
-        {actionsList.map((a, idx) =>
-          useTanstackRouter ? (
-            <TanstackMenuItemLink
-              data-qa-action-menu-item={a.title}
-              data-testid={a.title}
-              key={idx}
-              linkType="link"
-              onMouseEnter={handleMouseEnter}
-              to={`/volumes/${a.id}/${a.action}`}
-            >
-              <MenuItemContent {...a} />
-            </TanstackMenuItemLink>
-          ) : (
-            <MenuItem
-              onClick={() => {
-                if (!a.disabled) {
-                  handleClose();
-                  a.onClick();
-                }
-              }}
-              data-qa-action-menu-item={a.title}
-              data-testid={a.title}
-              disabled={a.disabled}
-              key={idx}
-              onMouseEnter={handleMouseEnter}
-            >
-              <MenuItemContent {...a} />
-            </MenuItem>
-          )
-        )}
+        {actionsList.map((a, idx) => (
+          <MenuItem
+            onClick={() => {
+              if (!a.disabled) {
+                handleClose();
+                a.onClick();
+              }
+            }}
+            data-qa-action-menu-item={a.title}
+            data-testid={a.title}
+            disabled={a.disabled}
+            key={idx}
+            onMouseEnter={handleMouseEnter}
+          >
+            <ListItemText primaryTypographyProps={{ color: 'inherit' }}>
+              {a.title}
+            </ListItemText>
+            {a.tooltip && (
+              <TooltipIcon
+                data-qa-tooltip-icon
+                status="help"
+                sxTooltipIcon={sxTooltipIcon}
+                text={a.tooltip}
+                tooltipPosition="right"
+              />
+            )}
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );
