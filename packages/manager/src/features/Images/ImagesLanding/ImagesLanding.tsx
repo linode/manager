@@ -106,9 +106,18 @@ export const ImagesLanding = () => {
   const queryClient = useQueryClient();
 
   const { error: searchParseError, filter } = getAPIFilterFromQuery(query, {
-    containsOverride: {
-      field: 'region',
-      filter: (value) => ({ regions: { region: value } }),
+    // Because Images have an array of region objects, we need to transform
+    // search queries like "region: us-east" to { regions: { region: "us-east" } }
+    // rather than the default behavior which is { region: { '+contains': "us-east" } }
+    filterShapeOverrides: {
+      '+contains': {
+        field: 'region',
+        filter: (value) => ({ regions: { region: value } }),
+      },
+      '+eq': {
+        field: 'region',
+        filter: (value) => ({ regions: { region: value } }),
+      },
     },
     searchableFieldsWithoutOperator: ['label', 'tags'],
   });

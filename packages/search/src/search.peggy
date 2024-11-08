@@ -28,14 +28,19 @@ DefaultQuery
     }
 
 EqualQuery
-  = key:FilterableField ws* Equal ws* value:Number { return { [key]: value }; }
-  / key:FilterableField ws* Equal ws* value:String { return { [key]: value }; }
+  = key:FilterableField ws* Equal ws* value:SearchValue {
+      const override = options.filterShapeOverrides?.['+eq'];
+      if (override && key === override.field) {
+        return override.filter(value);
+      }
+      return { [key]: value };
+    }
 
 ContainsQuery
   = key:FilterableField ws* Contains ws* value:String {
-    console.log(options, value);
-    if (options.containsOverride && key === options.containsOverride.field) {
-      return options.containsOverride.filter(value);
+    const override = options.filterShapeOverrides?.['+contains'];
+    if (override && key === override.field) {
+      return override.filter(value);
     }
     return { [key]: { "+contains": value } };
   }
@@ -112,6 +117,10 @@ StringWithSpaces "string with spaces"
 Number "numeric search value"
   = number:[0-9\.]+ { return parseFloat(number.join("")); }
   / number:[0-9]+ { return parseInt(number.join(""), 10); }
+
+SearchValue
+  = Number
+  / String
 
 ws "whitespace"
   = [ \t\r\n]

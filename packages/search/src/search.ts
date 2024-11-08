@@ -1,5 +1,5 @@
 import { generate } from 'peggy';
-import type { Filter } from '@linode/api-v4';
+import type { Filter, FilterConditionTypes } from '@linode/api-v4';
 import grammar from './search.peggy?raw';
 
 const parser = generate(grammar);
@@ -13,11 +13,11 @@ interface Options {
    */
   searchableFieldsWithoutOperator: string[];
   /**
-   * Images have an array of region objects, so we apply special
-   * search logic to allow users to just search regions by doing:
-   * "region: us-east"
+   * Somtimes, we may need to change the way the parser transforms operations
+   * into API filters. This option allows you to specify a custom transformation
+   * for a specific searchable field.
    */
-  containsOverride?: { field: string; filter: (value: string) => Filter };
+  filterShapeOverrides?: Partial<Record<keyof FilterConditionTypes, { field: string; filter: (value: string) => Filter }>>;
 }
 
 /**
