@@ -98,7 +98,7 @@ export const DatabaseDetail = () => {
   }
 
   const isDefault = database.platform === 'rdbms-default';
-  const isMonitorEnabled = isDatabasesMonitorEnabled;
+  const isMonitorEnabled = true;
 
   const tabs: Tab[] = [
     {
@@ -120,7 +120,7 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
-      chip: isDatabasesMonitorBeta ? <BetaChip /> : null,
+      chip: (isDatabasesMonitorBeta || true) ? <BetaChip /> : null,
       routeName: `/databases/${engine}/${id}/monitor`,
       title: 'Monitor',
     });
