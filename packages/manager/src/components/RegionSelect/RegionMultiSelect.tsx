@@ -1,3 +1,4 @@
+import { Stack } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
@@ -8,7 +9,6 @@ import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availabili
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { StyledListItem } from '../Autocomplete/Autocomplete.styles';
-import { Stack } from '../Stack';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {

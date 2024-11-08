@@ -1,13 +1,12 @@
-import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
+import { Notice } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Formik, FormikHelpers } from 'formik';
+import { Formik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
@@ -17,12 +16,15 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { isPrivateIP, removePrefixLength } from 'src/utilities/ipUtils';
 
+import { DEFAULTS } from './common';
 import {
   StyledIPGrid,
   StyledPortGrid,
   StyledTypography,
 } from './EditSSHAccessDrawer.styles';
-import { DEFAULTS } from './common';
+
+import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
+import type { FormikHelpers } from 'formik';
 
 interface EditSSHAccessDrawerProps {
   closeDrawer: () => void;
