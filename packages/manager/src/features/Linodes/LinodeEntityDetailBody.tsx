@@ -24,9 +24,14 @@ import {
   StyledColumnLabelGrid,
   StyledLabelBox,
   StyledListItem,
+  StyledIPv4Label,
+  StyledIPv4Item,
   StyledSummaryGrid,
   StyledVPCBox,
+  StyledCopyTooltip,
+  StyledGradientDiv,
   sxLastListItem,
+  StyledIPv4Box,
 } from './LinodeEntityDetail.styles';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -40,6 +45,7 @@ import type {
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 import type { TypographyProps } from 'src/components/Typography';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -253,8 +259,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 display: 'flex',
                 flexDirection: 'column',
                 paddingLeft: '8px',
+                alignItems: 'start',
               },
             }}
+            alignItems="center"
             container
             direction="row"
             spacing={2}
@@ -271,21 +279,29 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               </StyledListItem>
             </StyledVPCBox>
             <StyledVPCBox>
-              <StyledListItem>
+              <StyledListItem sx={{ ...sxLastListItem }}>
                 <StyledLabelBox component="span" data-testid="subnets-string">
-                  Subnets:
+                  Subnet:
                 </StyledLabelBox>{' '}
                 {getSubnetsString(linodeAssociatedSubnets ?? [])}
               </StyledListItem>
             </StyledVPCBox>
-            <StyledVPCBox>
-              <StyledListItem sx={{ ...sxLastListItem }}>
-                <StyledLabelBox component="span" data-testid="vpc-ipv4">
-                  VPC IPv4:
-                </StyledLabelBox>{' '}
-                {configInterfaceWithVPC?.ipv4?.vpc}
-              </StyledListItem>
-            </StyledVPCBox>
+            {configInterfaceWithVPC?.ipv4?.vpc && (
+              <StyledIPv4Box>
+                <StyledIPv4Label data-testid="vpc-ipv4">
+                  VPC IPv4
+                </StyledIPv4Label>
+                <StyledIPv4Item component="span" data-testid="vpc-ipv4">
+                  <StyledGradientDiv>
+                    <CopyTooltip
+                      copyableText
+                      text={configInterfaceWithVPC.ipv4.vpc}
+                    />
+                  </StyledGradientDiv>
+                  <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                </StyledIPv4Item>
+              </StyledIPv4Box>
+            )}
           </Grid>
         </Grid>
       )}
