@@ -1,15 +1,16 @@
-import { Theme, styled } from '@mui/material/styles';
+import { Notice } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { regionsWithFeature } from 'src/utilities/doesRegionSupportFeature';
 
 import type { Region } from '@linode/api-v4';
+import type { Theme } from '@mui/material/styles';
 
 export const VLANAvailabilityNotice = () => {
   const regions = useRegionsQuery().data ?? [];
