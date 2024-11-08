@@ -1,7 +1,7 @@
 import { Box, Chip, Typography } from '@linode/ui';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+// eslint-disable-next-line no-restricted-imports
+import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Hidden } from 'src/components/Hidden';
@@ -21,7 +21,6 @@ import { VolumesActionMenu } from './VolumesActionMenu';
 
 import type { ActionHandlers } from './VolumesActionMenu';
 import type { Volume } from '@linode/api-v4';
-import type { TanStackLinkRoutingProps } from 'src/components/TanstackLinks';
 
 export const useStyles = makeStyles()({
   volumePath: {
@@ -34,19 +33,19 @@ interface Props {
   handlers: ActionHandlers;
   isBlockStorageEncryptionFeatureEnabled?: boolean;
   isDetailsPageRow?: boolean;
-  tanstackRouter?: TanStackLinkRoutingProps;
   volume: Volume;
 }
 
 export const VolumeTableRow = React.memo((props: Props) => {
   const { classes } = useStyles();
-  const history = useHistory();
   const {
     handlers,
     isBlockStorageEncryptionFeatureEnabled,
     isDetailsPageRow,
     volume,
   } = props;
+
+  const history = useHistory();
 
   const { data: regions } = useRegionsQuery();
   const { data: notifications } = useNotificationsQuery();
@@ -92,14 +91,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
     if (volume.linode_id !== null) {
       // If the volume is attached to a Linode, we force the user
       // to upgrade all of the Linode's volumes at once from the Linode details page
-
       history.push(`/linodes/${volume.linode_id}/storage?upgrade=true`);
-      // TODO: Tanstack Router - update hook and remove history.push and history import
-      // navigate({
-      //   params: { linodeId: volume.linode_id },
-      //   search: { upgrade: 'true' },
-      //   to: '/linodes/$linodeId/storage',
-      // });
     } else {
       handlers.handleUpgrade();
     }

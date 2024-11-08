@@ -4,10 +4,6 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { TanstackLink } from '../TanstackLinks';
-
-import type { TanStackLinkRoutingProps } from '../TanstackLinks';
-
 interface InlineMenuActionProps {
   /** Required action text */
   actionText: string;
@@ -27,8 +23,6 @@ interface InlineMenuActionProps {
   loading?: boolean;
   /** Optional onClick handler */
   onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-  /** Optional use the tanstackRouter */
-  tanstackRouter?: TanStackLinkRoutingProps;
   /** Optional tooltip text for help icon */
   tooltip?: string;
   /** Optional tooltip event handler for sending analytics */
@@ -44,13 +38,12 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
     href,
     loading,
     onClick,
-    tanstackRouter,
     tooltip,
     tooltipAnalyticsEvent,
     ...rest
   } = props;
 
-  if (href && !tanstackRouter?.to) {
+  if (href) {
     return (
       <StyledLink className={className} to={href}>
         <span>{actionText}</span>
@@ -58,26 +51,18 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
     );
   }
 
-  const commonProps = {
-    disabled,
-    loading,
-    sx: buttonHeight !== undefined ? { height: buttonHeight } : {},
-    tooltipAnalyticsEvent,
-    tooltipText: tooltip,
-    ...rest,
-  };
-
-  return tanstackRouter?.to ? (
-    <TanstackLink
-      {...tanstackRouter}
-      {...commonProps}
-      style={{ paddingLeft: 8, paddingRight: 8 }}
-      sx={{ mr: 0.5 }}
+  return (
+    <StyledActionButton
+      // TODO: We need to define what buttonType this will be in the future for now 'secondary' works...
+      buttonType="primary"
+      disabled={disabled}
+      loading={loading}
+      onClick={onClick}
+      sx={buttonHeight !== undefined ? { height: buttonHeight } : {}}
+      tooltipAnalyticsEvent={tooltipAnalyticsEvent}
+      tooltipText={tooltip}
+      {...rest}
     >
-      {actionText}
-    </TanstackLink>
-  ) : (
-    <StyledActionButton {...commonProps} onClick={onClick}>
       {actionText}
     </StyledActionButton>
   );

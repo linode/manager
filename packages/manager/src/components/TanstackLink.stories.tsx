@@ -33,6 +33,6 @@ const meta: Meta<TanstackLinkComponentProps> = {
   parameters: {
     tanStackRouter: true,
   },
-  title: 'Foundations/Tanstack Link',
+  title: 'Foundations/Link/Tanstack Link',
 };
 export default meta;
