@@ -1,12 +1,10 @@
 import * as React from 'react';
 
-import { Link } from 'src/components/Link';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -141,14 +139,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                 {showUsableStorageTooltip(cellName) &&
                   showTooltip(
                     'help',
-                    <Typography>
-                      Usable storage is smaller than the actual plan storage due
-                      to the overhead from the database platform.{' '}
-                      <Link to="https://www.linode.com/pricing/">
-                        Learn more
-                      </Link>
-                      .
-                    </Typography>,
+                    'Usable storage is smaller than the actual plan storage due to the overhead from the database platform.',
                     240
                   )}
               </StyledTableCell>
