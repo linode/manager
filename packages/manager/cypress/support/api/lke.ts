@@ -39,6 +39,12 @@ const isPoolReady = (pool: KubeNodePoolResponse): boolean =>
 /**
  * Delete all LKE clusters whose labels are prefixed with "cy-test-".
  *
+ * Sometimes when attempting to delete provisioning LKE clusters, the cluster
+ * becomes stuck and requires manual intervention to resolve. To reduce the risk
+ * of this happening, this function will only delete clusters that have finished
+ * provisioning (i.e. all nodes have `'ready'` status) or which have existed
+ * for at least an hour.
+ *
  * @returns Promise that resolves when test LKE clusters have been deleted.
  */
 export const deleteAllTestLkeClusters = async (): Promise<void> => {

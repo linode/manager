@@ -137,6 +137,10 @@ const DatabaseLanding = () => {
   const isV2Enabled = isDatabasesV2Enabled || isDatabasesV2GA;
   const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
   const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
+  const showSuspend = isDatabasesV2GA && !!newDatabases?.data.length;
+  const docsLink = isV2Enabled
+    ? 'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters'
+    : 'https://techdocs.akamai.com/cloud-computing/docs/managed-databases';
 
   const legacyTable = () => {
     return (
@@ -155,6 +159,7 @@ const DatabaseLanding = () => {
         data={newDatabases?.data}
         handleOrderChange={newDatabaseHandleOrderChange}
         isNewDatabase={true}
+        showSuspend={showSuspend}
         order={newDatabaseOrder}
         orderBy={newDatabaseOrderBy}
       />
@@ -177,11 +182,11 @@ const DatabaseLanding = () => {
         }}
         createButtonText="Create Database Cluster"
         disabledCreateButton={isRestricted}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/managed-databases"
+        docsLink={docsLink}
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
-      {showTabs && <DatabaseClusterInfoBanner />}
+      {showTabs && !isDatabasesV2GA && <DatabaseClusterInfoBanner />}
       <Box>
         {showTabs ? (
           <Tabs>

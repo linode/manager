@@ -1,9 +1,9 @@
+import { Paper, Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Paper } from 'src/components/Paper';
-import { Stack } from 'src/components/Stack';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';
@@ -18,11 +18,11 @@ export const UserDetailsPanel = ({ user }: Props) => {
   const items = [
     {
       label: 'Username',
-      value: <Typography>{user.username}</Typography>,
+      value: <MaskableText isToggleable text={user.username} />,
     },
     {
       label: 'Email',
-      value: <Typography>{user.email}</Typography>,
+      value: <MaskableText isToggleable text={user.email} />,
     },
     {
       label: 'Account Access',
@@ -69,7 +69,12 @@ export const UserDetailsPanel = ({ user }: Props) => {
     },
     {
       label: 'Verified Phone Number',
-      value: <Typography>{user.verified_phone_number ?? 'None'}</Typography>,
+      value: (
+        <MaskableText
+          isToggleable
+          text={user.verified_phone_number ?? 'None'}
+        />
+      ),
     },
     {
       label: 'SSH Keys',

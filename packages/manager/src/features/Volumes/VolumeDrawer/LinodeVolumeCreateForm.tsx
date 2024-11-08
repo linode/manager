@@ -1,10 +1,10 @@
+import { Box, Notice } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import {
   BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION,
   BLOCK_STORAGE_ENCRYPTION_OVERHEAD_CAVEAT,
@@ -13,7 +13,6 @@ import {
 } from 'src/components/Encryption/constants';
 import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Notice } from 'src/components/Notice/Notice';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';

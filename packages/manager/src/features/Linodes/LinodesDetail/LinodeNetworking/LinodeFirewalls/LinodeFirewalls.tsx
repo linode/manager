@@ -1,7 +1,6 @@
-import { Stack } from '@mui/material';
+import { Paper, Stack } from '@linode/ui';
 import * as React from 'react';
 
-import { Paper } from 'src/components/Paper';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

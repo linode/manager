@@ -6,8 +6,11 @@ import {
   getDatabases,
   getEngineDatabase,
   legacyRestoreWithBackup,
+  patchDatabase,
   resetDatabaseCredentials,
   restoreWithBackup,
+  resumeDatabase,
+  suspendDatabase,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -135,6 +138,22 @@ export const useDatabaseMutation = (engine: Engine, id: number) => {
   });
 };
 
+export const usePatchDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<void, APIError[], void>({
+    mutationFn: () => patchDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
+      });
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
+    },
+  });
+};
+
 export const useCreateDatabaseMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<Database, APIError[], CreateDatabasePayload>({
@@ -165,6 +184,36 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) => {
         queryKey: databaseQueries.databases.queryKey,
       });
       queryClient.removeQueries({
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
+    },
+  });
+};
+
+export const useSuspendDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => suspendDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.database(engine, id).queryKey,
+      });
+    },
+  });
+};
+
+export const useResumeDatabaseMutation = (engine: Engine, id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[]>({
+    mutationFn: () => resumeDatabase(engine, id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: databaseQueries.databases.queryKey,
+      });
+      queryClient.invalidateQueries({
         queryKey: databaseQueries.database(engine, id).queryKey,
       });
     },

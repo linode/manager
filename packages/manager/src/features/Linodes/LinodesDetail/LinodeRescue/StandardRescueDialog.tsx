@@ -1,3 +1,4 @@
+import { Notice, Paper } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
@@ -7,8 +8,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
@@ -229,18 +228,18 @@ export const StandardRescueDialog = (props: Props) => {
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
             />
             <Button
-              sx={{ marginTop: theme.spacing() }}
               buttonType="secondary"
               compactX
               disabled={disabled || counter >= 6}
               onClick={incrementCounter}
+              sx={{ marginTop: theme.spacing() }}
             >
               Add Disk
             </Button>
             <ActionsPanel
               primaryButtonProps={{
-                'data-testid': 'submit',
                 'data-qa-form-data-loading': isLoading,
+                'data-testid': 'submit',
                 disabled,
                 label: 'Reboot into Rescue Mode',
                 onClick: onSubmit,

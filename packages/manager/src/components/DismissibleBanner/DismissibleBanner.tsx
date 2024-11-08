@@ -1,13 +1,13 @@
+import { Box } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 
 import { StyledButton, StyledNotice } from './DismissibleBanner.styles';
 
-import type { NoticeProps } from 'src/components/Notice/Notice';
+import type { NoticeProps } from '@linode/ui';
 import type { DismissibleNotificationOptions } from 'src/hooks/useDismissibleNotifications';
 
 interface Props extends NoticeProps {

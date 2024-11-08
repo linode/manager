@@ -1,10 +1,9 @@
-import { styled } from '@mui/material/styles';
+import { Box, Divider } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 

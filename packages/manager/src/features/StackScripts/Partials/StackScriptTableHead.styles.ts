@@ -1,10 +1,11 @@
-import { Theme, styled } from '@mui/material/styles';
+import { omittedProps } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { StackScriptTableHeadProps } from './StackScriptTableHead';
+import type { Theme } from '@mui/material/styles';
 
 const tableHeadStyles = (theme: Theme) => {
   return {

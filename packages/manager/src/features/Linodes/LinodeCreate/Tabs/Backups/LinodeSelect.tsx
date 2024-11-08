@@ -1,11 +1,10 @@
+import { Paper, Stack } from '@linode/ui';
 import React from 'react';
 
-import { Paper } from 'src/components/Paper';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
-import { BackupsWarning } from './BackupsWarning';
 import { LinodeSelectTable } from '../../shared/LinodeSelectTable';
+import { BackupsWarning } from './BackupsWarning';
 
 export const LinodeSelect = () => {
   return (

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StackScriptForm } from './StackScriptForm';
 
@@ -12,10 +12,6 @@ const props = {
   },
   disableSubmit: false,
   errors: [],
-  images: {
-    available: [],
-    selected: [],
-  },
   isSubmitting: false,
   label: {
     handler: vi.fn(),
@@ -33,11 +29,14 @@ const props = {
     handler: vi.fn(),
     value: '',
   },
+  selectedImages: [],
 };
 
 describe('StackScriptCreate', () => {
   it('should render', () => {
-    const { getByText } = renderWithTheme(<StackScriptForm {...props} />);
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <StackScriptForm {...props} />,
+    });
     getByText(/stackscript label/i);
   });
 });

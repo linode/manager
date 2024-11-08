@@ -1,7 +1,7 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
@@ -45,6 +45,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     return Boolean(disabledClasses?.includes(thisClass));
   };
   const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
+  const showTransferBanner = Boolean(useFlags().gpuv2?.transferBanner);
 
   return (
     <>
@@ -63,6 +64,23 @@ export const PlanInformation = (props: PlanInformationProps) => {
                 time.{' '}
                 <Link to="https://www.linode.com/blog/compute/new-gpus-nvidia-rtx-4000-ada-generation">
                   Learn more
+                </Link>
+                .
+              </Typography>
+            </Notice>
+          )}
+          {showTransferBanner && (
+            <Notice spacingBottom={8} variant="warning">
+              <Typography
+                fontFamily={(theme: Theme) => theme.font.bold}
+                fontSize="1rem"
+              >
+                Some plans do not include bundled network transfer. If the
+                transfer allotment is 0, all outbound network transfer is
+                subject to standard charges.
+                <br />
+                <Link to="https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs">
+                  Learn more about transfer costs
                 </Link>
                 .
               </Typography>

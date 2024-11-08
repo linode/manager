@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Box, Notice, omittedProps } from '@linode/ui';
 import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -6,12 +7,10 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
@@ -20,7 +19,6 @@ import {
   useKubernetesControlPlaneACLMutation,
   useKubernetesControlPlaneACLQuery,
 } from 'src/queries/kubernetes';
-import { omittedProps } from 'src/utilities/omittedProps';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';

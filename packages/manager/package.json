@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.131.0",
+  "version": "1.131.2",
   "private": true,
   "type": "module",
   "bugs": {
@@ -209,8 +209,7 @@
     "storybook-dark-mode": "4.0.1",
     "tsx": "^4.19.1",
     "vite": "^5.4.6",
-    "vite-plugin-svgr": "^3.2.0",
-    "vitest": "^2.1.1"
+    "vite-plugin-svgr": "^3.2.0"
   },
   "browserslist": [
     ">1%",

@@ -1,10 +1,10 @@
+import { Notice } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { Notice } from 'src/components/Notice/Notice';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Typography } from 'src/components/Typography';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
@@ -16,8 +16,6 @@ import { HostMaintenanceError } from '../HostMaintenanceError';
 import { LinodePermissionsError } from '../LinodePermissionsError';
 import { RebuildFromImage } from './RebuildFromImage';
 import { RebuildFromStackScript } from './RebuildFromStackScript';
-
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   linodeId: number | undefined;
@@ -31,7 +29,10 @@ type MODES =
   | 'fromCommunityStackScript'
   | 'fromImage';
 
-const options = [
+const options: {
+  label: string;
+  value: MODES;
+}[] = [
   { label: 'From Image', value: 'fromImage' },
   { label: 'From Community StackScript', value: 'fromCommunityStackScript' },
   { label: 'From Account StackScript', value: 'fromAccountStackScript' },
@@ -131,15 +132,17 @@ export const LinodeRebuildDialog = (props: Props) => {
             Linode.
           </strong>
         </Typography>
-        <EnhancedSelect
-          onChange={(selected: Item<MODES>) => {
-            setMode(selected.value);
+        <Autocomplete
+          onChange={(_, selected) => {
+            setMode(selected?.value ?? 'fromImage');
             setRebuildError('');
           }}
+          textFieldProps={{
+            hideLabel: true,
+          }}
           defaultValue={options.find((option) => option.value === mode)}
+          disableClearable
           disabled={disabled}
-          hideLabel
-          isClearable={false}
           label="From Image"
           options={options}
         />

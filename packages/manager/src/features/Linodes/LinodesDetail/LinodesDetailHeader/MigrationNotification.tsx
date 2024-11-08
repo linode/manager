@@ -1,12 +1,12 @@
-import { NotificationType } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
+import { Notice } from '@linode/ui';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useDialog } from 'src/hooks/useDialog';
 import { useProfile } from 'src/queries/profile/profile';
@@ -14,7 +14,8 @@ import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+
+import type { NotificationType } from '@linode/api-v4/lib/account';
 
 interface Props {
   linodeID: number;
