@@ -6,6 +6,7 @@ import {
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
@@ -49,6 +50,7 @@ import type { VolumesSearchParams } from 'src/routes/volumes/index';
 
 export const VolumesLanding = () => {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const params = useParams({ strict: false });
   const search: VolumesSearchParams = useSearch({
     from: '/volumes',
@@ -97,6 +99,16 @@ export const VolumesLanding = () => {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
   const selectedVolume = volumes?.data.find((v) => v.id === params.volumeId);
+
+  // TODO: Tanstack Router - remove this once we are fully migrated and can implement that logic at the route level
+  React.useEffect(() => {
+    if (params.volumeId && !isFetching && !selectedVolume) {
+      enqueueSnackbar('Volume not found', {
+        variant: 'error',
+      });
+      navigate({ to: '/volumes' });
+    }
+  }, [params.volumeId, isFetching, selectedVolume, navigate, enqueueSnackbar]);
 
   const handleDetach = (volume: Volume) => {
     navigate({
