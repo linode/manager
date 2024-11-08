@@ -43,11 +43,9 @@ export const CloudPulseResourcesSelect = React.memo(
       xFilter,
     } = props;
 
-    const platformFilter =
-      resourceType === 'dbaas' ? { platform: 'rdbms-default' } : {};
-
-    const orderFilter: Partial<Filter> =
-      resourceType === 'dbaas' ? { '+order': 'asc', '+order_by': 'label' } : {};
+    const resourceFilterMap: Record<string, Filter> = {
+      dbaas: { '+order': 'asc', '+order_by': 'label', platform: 'rdbms-default' },
+    };
 
     const { data: resources, isLoading, isError } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
@@ -55,15 +53,13 @@ export const CloudPulseResourcesSelect = React.memo(
       {},
       xFilter
         ? {
-            ...orderFilter, // order by filter
-            ...platformFilter, // platform is a top level filter
-            ...xFilter, // the usual xFilters
-          }
+          ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+          ...xFilter, // the usual xFilters
+        }
         : {
-            ...orderFilter,
-            ...platformFilter,
-            region,
-          }
+          ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+          region,
+        }
     );
 
     const [selectedResources, setSelectedResources] = React.useState<
