@@ -77,7 +77,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
               >
                 Some plans do not include bundled network transfer. If the
                 transfer allotment is 0, all outbound network transfer is
-                subject to standard charges.
+                subject to charges.
                 <br />
                 <Link to="https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs">
                   Learn more about transfer costs

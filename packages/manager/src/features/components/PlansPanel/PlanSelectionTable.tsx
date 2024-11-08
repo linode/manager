@@ -134,7 +134,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                 {showTransferTooltip(cellName) &&
                   showTooltip(
                     'help',
-                    'Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to standard charges.'
+                    'Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to charges.'
                   )}
                 {showUsableStorageTooltip(cellName) &&
                   showTooltip(
