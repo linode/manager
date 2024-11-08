@@ -50,7 +50,9 @@ import type { VolumesSearchParams } from 'src/routes/volumes/index';
 export const VolumesLanding = () => {
   const navigate = useNavigate();
   const params = useParams({ strict: false });
-  const search: VolumesSearchParams = useSearch({ strict: false });
+  const search: VolumesSearchParams = useSearch({
+    from: '/volumes',
+  });
   const pagination = usePaginationV2({
     currentRoute: '/volumes',
     preferenceKey: VOLUME_TABLE_PREFERENCE_KEY,
