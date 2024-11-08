@@ -20,6 +20,7 @@ export interface TanStackLinkRoutingProps {
   linkType: TanstackLinkComponentProps['linkType'];
   params?: TanStackLinkProps['params'];
   preload?: TanStackLinkProps['preload'];
+  search?: TanStackLinkProps['search'];
   to: TanStackLinkProps['to'];
 }
 

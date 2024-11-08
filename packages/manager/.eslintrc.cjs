@@ -94,10 +94,10 @@ module.exports = {
       ],
       rules: {
         'no-restricted-imports': [
-          // This needs to remain a warning since trying to link to a feature that is not yet migrated will break the UI
+          // This needs to remain an error however trying to link to a feature that is not yet migrated will break the router
           // For those cases react-router-dom history.push is still needed
-          // That being said this can be turned into an error temporarily to catch all the cases while developing
-          'warn',
+          // using `eslint-disable-next-line no-restricted-imports` can help bypass those imports
+          'error',
           {
             paths: [
               {
