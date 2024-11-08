@@ -157,7 +157,6 @@ describe('Maintenance', () => {
           const parsedCsvPendingMigration = Papa.parse(csvContent, {
             header: true,
           }).data;
-          console.log('ParsedCsv Content: ', parsedCsvPendingMigration);
           expect(parsedCsvPendingMigration.length).to.equal(
             expectedPendingMigrationContent.length
           );
@@ -171,11 +170,6 @@ describe('Maintenance', () => {
               status: entry['Status'],
               reason: entry['Reason'],
             })
-          );
-          console.log('ExpectedCsvContent: ', expectedPendingMigrationContent);
-          console.log(
-            'NormalizedParsedCsv: ',
-            actualPendingMigrationCsvContent
           );
           expect(actualPendingMigrationCsvContent).to.deep.equal(
             expectedPendingMigrationContent
@@ -221,7 +215,6 @@ describe('Maintenance', () => {
           const parsedCsvCompletedMigration = Papa.parse(csvContent, {
             header: true,
           }).data;
-          console.log('ParsedCsv Content: ', parsedCsvCompletedMigration);
           expect(parsedCsvCompletedMigration.length).to.equal(
             expectedCompletedMigrationContent.length
           );
@@ -235,14 +228,6 @@ describe('Maintenance', () => {
               status: entry['Status'],
               reason: entry['Reason'],
             })
-          );
-          console.log(
-            'ExpectedCsvContent: ',
-            expectedCompletedMigrationContent
-          );
-          console.log(
-            'NormalizedParsedCsv: ',
-            actualCompletedMigrationCsvContent
           );
           expect(actualCompletedMigrationCsvContent).to.deep.equal(
             expectedCompletedMigrationContent
