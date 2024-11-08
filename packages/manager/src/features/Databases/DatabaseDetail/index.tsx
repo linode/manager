@@ -1,4 +1,3 @@
-import { Notice } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
@@ -8,6 +7,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -22,6 +22,8 @@ import {
   useDatabaseTypesQuery,
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import { useIsDatabasesEnabled } from '../utilities';
 
 import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -72,6 +74,11 @@ export const DatabaseDetail = () => {
     setEditableLabelError,
   } = useEditableLabelState();
 
+  const {
+    isDatabasesMonitorBeta,
+    isDatabasesMonitorEnabled,
+  } = useIsDatabasesEnabled();
+
   if (error) {
     return (
       <ErrorState
@@ -91,7 +98,7 @@ export const DatabaseDetail = () => {
   }
 
   const isDefault = database.platform === 'rdbms-default';
-  const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
+  const isMonitorEnabled = isDatabasesMonitorEnabled;
 
   const tabs: Tab[] = [
     {
@@ -113,7 +120,7 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
-      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
+      chip: isDatabasesMonitorBeta ? <BetaChip /> : null,
       routeName: `/databases/${engine}/${id}/monitor`,
       title: 'Monitor',
     });

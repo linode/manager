@@ -28,7 +28,6 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
@@ -230,8 +229,6 @@ export const MainContent = () => {
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
 
-  const { isACLPEnabled } = useIsACLPEnabled();
-
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -356,12 +353,12 @@ export const MainContent = () => {
                             <Route component={Databases} path="/databases" />
                           )}
                           <Route component={VPC} path="/vpcs" />
-                          {isACLPEnabled && (
-                            <Route
-                              component={CloudPulse}
-                              path="/monitor/cloudpulse"
-                            />
-                          )}
+                          {/* {isACLPEnabled && ( */}
+                          <Route
+                            component={CloudPulse}
+                            path="/monitor/cloudpulse"
+                          />
+                          {/* )} */}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                           <Redirect from="/dashboard" to={defaultRoot} />

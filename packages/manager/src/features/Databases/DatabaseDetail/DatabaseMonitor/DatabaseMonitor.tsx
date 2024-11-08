@@ -8,7 +8,7 @@ interface Props {
 
 export const DatabaseMonitor = ({ database }: Props) => {
   const databaseId = database?.id;
-  const dbaasDashboardId = 1;
+  const dbaasDashboardId = 2;
   return (
     <CloudPulseDashboardWithFilters
       dashboardId={dbaasDashboardId}
