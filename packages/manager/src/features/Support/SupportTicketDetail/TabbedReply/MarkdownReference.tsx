@@ -1,9 +1,8 @@
-import { Paper } from '@linode/ui';
+import { Paper, Stack } from '@linode/ui';
 import * as React from 'react';
 
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 interface Props {

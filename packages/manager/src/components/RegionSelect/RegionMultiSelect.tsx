@@ -1,3 +1,4 @@
+import { Stack } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
@@ -8,7 +9,6 @@ import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availabili
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { StyledListItem } from '../Autocomplete/Autocomplete.styles';
-import { Stack } from '../Stack';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
@@ -16,11 +16,9 @@ import {
   isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
-import type {
-  DisableRegionOption,
-  RegionMultiSelectProps,
-} from './RegionSelect.types';
+import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 interface RegionChipLabelProps {
   region: Region;
@@ -71,7 +69,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   };
 
   const disabledRegions = regionOptions.reduce<
-    Record<string, DisableRegionOption>
+    Record<string, DisableItemOption>
   >((acc, region) => {
     if (disabledRegionsFromProps?.[region.id]) {
       acc[region.id] = disabledRegionsFromProps[region.id];
@@ -120,9 +118,9 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             return (
               <RegionOption
                 disabledOptions={disabledRegions[option.id]}
+                item={option}
                 key={key}
                 props={rest}
-                region={option}
                 selected={selected}
               />
             );

@@ -1,6 +1,5 @@
-import { IconButton } from '@linode/ui';
+import { IconButton, Stack } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
-import { Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
