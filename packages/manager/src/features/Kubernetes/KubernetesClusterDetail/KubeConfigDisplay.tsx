@@ -1,5 +1,4 @@
-import { Box } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -135,8 +134,8 @@ export const KubeConfigDisplay = (props: Props) => {
   };
 
   return (
-    <>
-      <Grid xs={12}>
+    <Stack spacing={1}>
+      <Box>
         <Typography className={classes.label}>
           Kubernetes API Endpoint:
         </Typography>
@@ -147,8 +146,8 @@ export const KubeConfigDisplay = (props: Props) => {
           endpointsLoading,
           endpointsError?.[0].reason
         )}
-      </Grid>
-      <Grid xs={12}>
+      </Box>
+      <Box>
         <Typography className={classes.label} style={{ marginTop: 8 }}>
           Kubeconfig:
         </Typography>
@@ -189,7 +188,7 @@ export const KubeConfigDisplay = (props: Props) => {
             </Typography>
           </Box>
         </div>
-      </Grid>
-    </>
+      </Box>
+    </Stack>
   );
 };

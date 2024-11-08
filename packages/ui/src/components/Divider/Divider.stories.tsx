@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import { Divider } from 'src/components/Divider';
+import { Divider } from './Divider';
 
 const meta: Meta<typeof Divider> = {
   component: Divider,
@@ -11,6 +11,12 @@ const meta: Meta<typeof Divider> = {
 type Story = StoryObj<typeof Divider>;
 
 export const Default: Story = {
+  args: {
+    absolute: false,
+    light: true,
+    variant: 'inset',
+  },
+
   render: (args) => <Divider {...args} />,
 };
 

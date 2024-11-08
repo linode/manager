@@ -1,8 +1,6 @@
-import { Box, Paper } from '@linode/ui';
+import { Box, Divider, Paper, Stack } from '@linode/ui';
 import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 interface Props {
