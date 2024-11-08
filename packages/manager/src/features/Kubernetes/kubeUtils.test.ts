@@ -88,7 +88,7 @@ describe('helper functions', () => {
         wrapper: (ui) => wrapWithTheme(ui, { flags: { apl: true } }),
       });
       await waitFor(() => {
-        expect(result.current).toBe(true);
+        expect(result.current.showAPL).toBe(true);
       });
     });
   });

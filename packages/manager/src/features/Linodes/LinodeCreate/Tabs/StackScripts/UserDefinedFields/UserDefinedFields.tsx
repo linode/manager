@@ -1,12 +1,9 @@
-import { Box, IconButton } from '@linode/ui';
+import { Box, IconButton, Notice, Paper, Stack } from '@linode/ui';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import Info from 'src/assets/icons/info.svg';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from '@linode/ui';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 import { useStackScriptQuery } from 'src/queries/stackscripts';

@@ -1,5 +1,7 @@
-import { default as _Stack, StackProps } from '@mui/material/Stack';
+import { default as _Stack } from '@mui/material/Stack';
 import React from 'react';
+
+import type { StackProps } from '@mui/material/Stack';
 
 /**
  * A Stack is a layout component that uses flexbox to

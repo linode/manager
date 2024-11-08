@@ -8,10 +8,11 @@ import { OSIcon } from '../OSIcon';
 import { ImageOption } from './ImageOption';
 import {
   getAPIFilterForImageSelect,
+  getDisabledImages,
   getFilteredImagesForImageSelect,
 } from './utilities';
 
-import type { Image } from '@linode/api-v4';
+import type { Image, RegionSite } from '@linode/api-v4';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 
 export type ImageSelectVariant = 'all' | 'private' | 'public';
@@ -27,6 +28,7 @@ interface BaseProps
   label?: string;
   placeholder?: string;
   selectIfOnlyOneOption?: boolean;
+  siteType?: RegionSite;
   variant: ImageSelectVariant;
 }
 
@@ -53,6 +55,7 @@ export const ImageSelect = (props: Props) => {
     onChange,
     placeholder,
     selectIfOnlyOneOption,
+    siteType,
     variant,
     ...rest
   } = props;
@@ -61,6 +64,11 @@ export const ImageSelect = (props: Props) => {
     {},
     getAPIFilterForImageSelect(variant)
   );
+
+  const disabledImages = getDisabledImages({
+    images: images ?? [],
+    site_type: siteType,
+  });
 
   const _options = useMemo(() => {
     // We can't filter out Kubernetes images using the API so we do it client side
@@ -144,10 +152,11 @@ export const ImageSelect = (props: Props) => {
 
         return (
           <ImageOption
-            image={option}
-            isSelected={state.selected}
+            disabledOptions={disabledImages[option.id]}
+            item={option}
             key={key}
-            listItemProps={rest}
+            props={rest}
+            selected={state.selected}
           />
         );
       }}
@@ -182,6 +191,7 @@ export const ImageSelect = (props: Props) => {
           : !multiple && !Array.isArray(value) && onChange(value)
       }
       errorText={rest.errorText ?? error?.[0].reason}
+      getOptionDisabled={(option) => Boolean(disabledImages[option.id])}
       multiple={multiple}
       value={value}
     />
