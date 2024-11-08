@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed:
 
+- Optimize GPU egress data transfer copy ([#11235](https://github.com/linode/manager/pull/11235))
 - Incorporate Product Family Groups in Side Nav ([#11080](https://github.com/linode/manager/pull/11080))
 - Remove Double border on "Billing & Payment History" table with dark theme. ([#11111](https://github.com/linode/manager/pull/11111))
 - Slightly improve styles on support ticket flows ([#11144](https://github.com/linode/manager/pull/11144))
@@ -30,6 +31,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
+- Preserve default child cluster creation behavior ([#11234](https://github.com/linode/manager/pull/11234))
 - Misaligned table headers in Account Maintenance page ([#11099](https://github.com/linode/manager/pull/11099))
 - Database create page form being enabled for restricted users ([#11137](https://github.com/linode/manager/pull/11137))
 - Faux bold in Safari with `<strong />` & `<b />` tags ([#11149](https://github.com/linode/manager/pull/11149))
