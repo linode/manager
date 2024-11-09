@@ -503,13 +503,12 @@ describe('LKE Cluster Creation with ACL', () => {
         .should('be.visible')
         .click();
 
-      // Disable ACL
+      // Confirm that ACL is disabled by default.
       cy.contains('Control Plane ACL').should('be.visible');
       ui.toggle
         .find()
-        .should('have.attr', 'data-qa-toggle', 'true')
-        .should('be.visible')
-        .click();
+        .should('have.attr', 'data-qa-toggle', 'false')
+        .should('be.visible');
 
       // Add a node pool
       cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
@@ -614,12 +613,16 @@ describe('LKE Cluster Creation with ACL', () => {
         .should('be.visible')
         .click();
 
-      // Confirm ACL section
+      // Confirm ACL is disabled by default, then enable it.
       cy.contains('Control Plane ACL').should('be.visible');
       ui.toggle
         .find()
-        .should('have.attr', 'data-qa-toggle', 'true')
-        .should('be.visible');
+        .should('have.attr', 'data-qa-toggle', 'false')
+        .should('be.visible')
+        .click();
+
+      ui.toggle.find().should('have.attr', 'data-qa-toggle', 'true');
+
       // Add some IPv4s and an IPv6
       cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
@@ -733,11 +736,22 @@ describe('LKE Cluster Creation with ACL', () => {
         .should('be.visible')
         .click();
 
+      // Enable ACL
+      cy.contains('Control Plane ACL').should('be.visible');
+      ui.toggle
+        .find()
+        .should('have.attr', 'data-qa-toggle', 'false')
+        .should('be.visible')
+        .click();
+
+      ui.toggle.find().should('have.attr', 'data-qa-toggle', 'true');
+
       // Confirm ACL IPv4 validation works as expected
       cy.findByLabelText('IPv4 Addresses or CIDRs ip-address-0')
         .should('be.visible')
         .click()
         .type('invalid ip');
+
       // click out of textbox and confirm error is visible
       cy.contains('Control Plane ACL').should('be.visible').click();
       cy.contains('Must be a valid IPv4 address.').should('be.visible');
