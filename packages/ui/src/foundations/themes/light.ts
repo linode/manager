@@ -485,7 +485,7 @@ export const lightTheme: ThemeOptions = {
             color: Button.Secondary.Hover.Text,
           },
           '&[aria-disabled="true"]': {
-            color: '#c9cacb',
+            color: Color.Neutrals[40],
           },
           backgroundColor: 'transparent',
           color: Button.Secondary.Default.Text,

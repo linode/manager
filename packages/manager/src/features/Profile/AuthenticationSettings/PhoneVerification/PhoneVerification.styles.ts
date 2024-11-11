@@ -21,7 +21,10 @@ export const StyledPhoneNumberTitle = styled(Typography, {
 export const StyledLabel = styled(Typography, {
   label: 'StyledLabel',
 })(({ theme }) => ({
-  color: theme.name === 'light' ? theme.tokens.color.Neutrals[80] : '#c9cacb',
+  color:
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals[80]
+      : theme.tokens.color.Neutrals[40],
   fontSize: '.875rem',
   lineHeight: '1',
   marginBottom: '8px',
