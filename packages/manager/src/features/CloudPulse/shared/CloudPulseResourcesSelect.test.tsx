@@ -252,7 +252,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
     );
     expect(screen.getByText('Failed to fetch Resources.')).toBeInTheDocument();
   });
-  
+
   it('should be able to select limited resources', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodeFactory.buildList(12),
@@ -282,7 +282,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
       .filter((option) => option.getAttribute(ARIA_SELECTED) === 'true');
 
     expect(selectedOptions.length).toBe(10);
-
+    expect(selectedOptions[0].textContent).toBe('linode-14');
     expect(screen.getByRole('option', { name: `linode-24` })).toHaveAttribute(
       ARIA_DISABLED,
       'true'
