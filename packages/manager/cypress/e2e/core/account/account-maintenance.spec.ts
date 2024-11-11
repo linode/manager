@@ -1,6 +1,6 @@
 import { mockGetMaintenance } from 'support/intercepts/account';
 import { accountMaintenanceFactory } from 'src/factories';
-import Papa from 'papaparse';
+import { parseCsv } from 'support/util/csvUtils';
 
 describe('Maintenance', () => {
   /*
@@ -34,7 +34,7 @@ describe('Maintenance', () => {
    * - Confirm "Download CSV" button for pending maintenance visible and enabled.
    * - Confirm "Download CSV" button for completed maintenance visible and enabled.
    */
-  it('confirm maintenance details in the tables', () => {
+  it.only('confirm maintenance details in the tables', () => {
     const pendingMaintenanceNumber = 2;
     const completedMaintenanceNumber = 5;
     const accountpendingMaintenance = accountMaintenanceFactory.buildList(
@@ -154,13 +154,10 @@ describe('Maintenance', () => {
 
         // Read the downloaded CSV and compare its content to the expected CSV content
         cy.readFile(`${downloadsFolder}/${fileName}`).then((csvContent) => {
-          const parsedCsvPendingMigration = Papa.parse(csvContent, {
-            header: true,
-          }).data;
+          const parsedCsvPendingMigration = parseCsv(csvContent);
           expect(parsedCsvPendingMigration.length).to.equal(
             expectedPendingMigrationContent.length
           );
-
           // Map the parsedCsv to match the structure of expectedCsvContent
           const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
             (entry: any) => ({
@@ -171,6 +168,7 @@ describe('Maintenance', () => {
               reason: entry['Reason'],
             })
           );
+
           expect(actualPendingMigrationCsvContent).to.deep.equal(
             expectedPendingMigrationContent
           );
@@ -212,9 +210,8 @@ describe('Maintenance', () => {
 
         // Read the downloaded CSV and compare its content to the expected CSV content
         cy.readFile(`${downloadsFolder}/${fileName}`).then((csvContent) => {
-          const parsedCsvCompletedMigration = Papa.parse(csvContent, {
-            header: true,
-          }).data;
+          const parsedCsvCompletedMigration = parseCsv(csvContent);
+
           expect(parsedCsvCompletedMigration.length).to.equal(
             expectedCompletedMigrationContent.length
           );
@@ -229,6 +226,7 @@ describe('Maintenance', () => {
               reason: entry['Reason'],
             })
           );
+
           expect(actualCompletedMigrationCsvContent).to.deep.equal(
             expectedCompletedMigrationContent
           );
