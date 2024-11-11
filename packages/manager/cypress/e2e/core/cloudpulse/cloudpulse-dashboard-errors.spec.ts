@@ -108,7 +108,7 @@ describe('Tests for API error handling', () => {
     mockGetDatabases([databaseMock]).as('getDatabases');
   });
 
-  it.only('displays error message when metric definitions API fails', () => {
+  it('displays error message when metric definitions API fails', () => {
     // Mocking an error response for the 'getMetricDefinitions' API request related to a specific service type.
     mockGetCloudPulseMetricDefinitionError(
       'Internal Server Error',
