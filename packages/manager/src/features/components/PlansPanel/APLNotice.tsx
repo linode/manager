@@ -6,10 +6,11 @@ interface Props {
   dataTestId?: string;
 }
 
+const programInfo = `Shared CPU instances are currently not available for Application Platform for LKE`;
+
 export const APLNotice = (props: Props) => {
   const { dataTestId } = props;
 
-  const programInfo = `Shared CPU instances are currently not available for Application Platform for LKE`;
   return (
     <Notice dataTestId={dataTestId} variant="error">
       {programInfo}

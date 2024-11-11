@@ -28,10 +28,7 @@ interface Props {
   hasSelectedRegion: boolean;
   header?: string;
   isAPLEnabled?: boolean;
-  isPlanPanelDisabled: (
-    planType?: LinodeTypeClass,
-    isAPLEnabled?: boolean
-  ) => boolean;
+  isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   isSubmitting?: boolean;
   onAdd?: (key: string, value: number) => void;
@@ -71,6 +68,9 @@ export const KubernetesPlansPanel = (props: Props) => {
     selectedRegionId || '',
     Boolean(flags.soldOutChips) && selectedRegionId !== undefined
   );
+
+  const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
+    plan === 'shared' && Boolean(isAPLEnabled);
 
   const _types = types.filter(
     (type) =>
@@ -113,6 +113,9 @@ export const KubernetesPlansPanel = (props: Props) => {
                 regionsData={regionsData}
               />
               <KubernetesPlanContainer
+                wholePanelIsDisabled={
+                  isPlanPanelDisabled(plan) || isPlanDisabledByAPL(plan)
+                }
                 allDisabledPlans={allDisabledPlans}
                 getTypeCount={getTypeCount}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
@@ -122,7 +125,6 @@ export const KubernetesPlansPanel = (props: Props) => {
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionId}
                 updatePlanCount={updatePlanCount}
-                wholePanelIsDisabled={isPlanPanelDisabled(plan, isAPLEnabled)}
               />
             </>
           );

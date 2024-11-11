@@ -43,12 +43,8 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
    * @param {Capabilities} planType
    * @returns {boolean}
    */
-  const isPlanPanelDisabled = (
-    planType: LinodeTypeClass,
-    isAPLEnabled?: boolean
-  ) =>
-    (hasSelectedRegion && !isSelectedRegionEligibleForPlan(planType)) ||
-    (planType === 'shared' && Boolean(isAPLEnabled));
+  const isPlanPanelDisabled = (planType: LinodeTypeClass) =>
+    hasSelectedRegion && !isSelectedRegionEligibleForPlan(planType);
 
   return {
     hasSelectedRegion,
