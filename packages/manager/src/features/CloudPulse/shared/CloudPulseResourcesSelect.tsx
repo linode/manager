@@ -95,7 +95,7 @@ export const CloudPulseResourcesSelect = React.memo(
     const resourceLimitReached = React.useMemo(() => {
       return getResourcesList.length > ResourceLimit;
     }, [getResourcesList.length, ResourceLimit]);
-
+    
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
       if (resources && savePreferences && !selectedResources) {
@@ -118,6 +118,26 @@ export const CloudPulseResourcesSelect = React.memo(
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resources, region, xFilter, resourceType]);
+
+    // selected resources will appear at the top in the autcomplete popper
+    const sortedResourcesList = React.useMemo<CloudPulseResources[]>(() => {
+      return [...getResourcesList].sort((resource_a, resource_b) => {
+        const aIsSelected = selectedResources?.some(
+          (item) => item.label === resource_a.label
+        );
+        const bIsSelected = selectedResources?.some(
+          (item) => item.label === resource_b.label
+        );
+
+        if (aIsSelected && !bIsSelected) {
+          return -1;
+        }
+        if (!aIsSelected && bIsSelected) {
+          return 1;
+        }
+        return 0;
+      });
+    }, [getResourcesList, selectedResources]);
 
     return (
       <Autocomplete
@@ -186,7 +206,7 @@ export const CloudPulseResourcesSelect = React.memo(
         loading={isLoading}
         multiple
         noMarginTop
-        options={getResourcesList}
+        options={sortedResourcesList}
         value={selectedResources ?? []}
       />
     );
