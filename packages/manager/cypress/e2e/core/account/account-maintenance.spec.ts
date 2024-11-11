@@ -34,7 +34,7 @@ describe('Maintenance', () => {
    * - Confirm "Download CSV" button for pending maintenance visible and enabled.
    * - Confirm "Download CSV" button for completed maintenance visible and enabled.
    */
-  it.only('confirm maintenance details in the tables', () => {
+  it('confirm maintenance details in the tables', () => {
     const pendingMaintenanceNumber = 2;
     const completedMaintenanceNumber = 5;
     const accountpendingMaintenance = accountMaintenanceFactory.buildList(
