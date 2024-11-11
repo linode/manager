@@ -730,7 +730,7 @@ describe('LKE cluster updates', () => {
       cy.wait(['@getCluster', '@getNodePools', '@getVersions']);
 
       // Click "Reset" button, proceed through confirmation dialog.
-      cy.findByText('Reset').should('be.visible').click();
+      cy.findByText('Reset').should('be.visible').click({ force: true });
       ui.dialog
         .findByTitle('Reset Cluster Kubeconfig?')
         .should('be.visible')
