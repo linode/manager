@@ -26,7 +26,7 @@ export const topMenuIconButtonSx = (theme: Theme) => ({
   '&:hover, &:focus': {
     color: '#606469',
   },
-  color: '#c9c7c7',
+  color: theme.tokens.color.Neutrals[40],
   height: `50px`,
   [theme.breakpoints.down('sm')]: {
     padding: 1,

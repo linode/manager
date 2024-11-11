@@ -88,7 +88,9 @@ export const NotificationMenu = () => {
         <IconButton
           sx={(theme) => ({
             ...topMenuIconButtonSx(theme),
-            color: notificationContext.menuOpen ? '#606469' : '#c9c7c7',
+            color: notificationContext.menuOpen
+              ? '#606469'
+              : theme.tokens.color.Neutrals[40],
           })}
           aria-describedby={id}
           aria-haspopup="true"
