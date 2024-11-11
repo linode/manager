@@ -20,6 +20,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 
 import type { DatabaseInstance } from '@linode/api-v4/lib/databases';
 import type { Order } from 'src/hooks/useOrder';
+import { DatabaseSettingsSuspendClusterDialog } from '../DatabaseDetail/DatabaseSettings/DatabaseSettingsSuspendClusterDialog';
 
 const preferenceKey = 'databases';
 
@@ -29,6 +30,7 @@ interface Props {
   isNewDatabase?: boolean;
   order: 'asc' | 'desc';
   orderBy: string;
+  showSuspend?: boolean;
 }
 const DatabaseLandingTable = ({
   data,
@@ -36,6 +38,7 @@ const DatabaseLandingTable = ({
   isNewDatabase,
   order,
   orderBy,
+  showSuspend,
 }: Props) => {
   const { data: events } = useInProgressEvents();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
@@ -56,6 +59,10 @@ const DatabaseLandingTable = ({
     isManageAccessControlsDialogOpen,
     setIsManageAccessControlsDialogOpen,
   ] = React.useState(false);
+  const [
+    isSuspendClusterDialogOpen,
+    setIsSuspendClusterDialogOpen,
+  ] = React.useState(false);
 
   const handleManageAccessControls = (database: DatabaseInstance) => {
     setSelectedDatabase(database);
@@ -75,6 +82,11 @@ const DatabaseLandingTable = ({
   const handleResetPassword = (database: DatabaseInstance) => {
     setSelectedDatabase(database);
     setIsResetPasswordsDialogOpen(true);
+  };
+
+  const handleSuspend = (database: DatabaseInstance) => {
+    setSelectedDatabase(database);
+    setIsSuspendClusterDialogOpen(true);
   };
 
   return (
@@ -157,6 +169,7 @@ const DatabaseLandingTable = ({
                 handleManageAccessControls: () =>
                   handleManageAccessControls(database),
                 handleResetPassword: () => handleResetPassword(database),
+                handleSuspend: () => handleSuspend(database),
               }}
               database={database}
               events={events}
@@ -206,6 +219,13 @@ const DatabaseLandingTable = ({
           )}
         </>
       )}
+      <DatabaseSettingsSuspendClusterDialog
+        databaseEngine={selectedDatabase.engine}
+        databaseId={selectedDatabase.id}
+        databaseLabel={selectedDatabase.label}
+        onClose={() => setIsSuspendClusterDialogOpen(false)}
+        open={isSuspendClusterDialogOpen}
+      />
       <AddAccessControlDrawer
         database={selectedDatabase}
         onClose={onCloseAccesControls}

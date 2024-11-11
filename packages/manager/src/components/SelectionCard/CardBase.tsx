@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import {
   CardBaseGrid,
   CardBaseHeading,
@@ -36,6 +38,18 @@ export const CardBase = (props: CardBaseProps) => {
     sxSubheading,
   } = props;
 
+  const flags = useFlags();
+
+  const isDatabaseCreateFlow = location.pathname.includes('/databases/create');
+  const isDatabaseResizeFlow =
+    location.pathname.match(/\/databases\/.*\/(\d+\/resize)/)?.[0] ===
+    location.pathname;
+
+  const isDatabaseGA =
+    !flags.dbaasV2?.beta &&
+    flags.dbaasV2?.enabled &&
+    (isDatabaseCreateFlow || isDatabaseResizeFlow);
+
   const renderSubheadings = subheadings.map((subheading, idx) => {
     const subHeadingIsString = typeof subheading === 'string';
 
@@ -46,7 +60,9 @@ export const CardBase = (props: CardBaseProps) => {
         key={idx}
         sx={sxSubheading}
       >
-        {subheading}
+        {subHeadingIsString && isDatabaseGA
+          ? subheading?.replace('Storage', 'Usable Storage')
+          : subheading}
       </CardBaseSubheading>
     );
   });

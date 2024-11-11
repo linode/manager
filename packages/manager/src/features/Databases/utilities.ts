@@ -15,8 +15,6 @@ import type { DatabaseFork } from '@linode/api-v4';
 
 export interface IsDatabasesEnabled {
   isDatabasesEnabled: boolean;
-  isDatabasesMonitorBeta?: boolean;
-  isDatabasesMonitorEnabled?: boolean;
   isDatabasesV2Beta: boolean;
   isDatabasesV2Enabled: boolean;
   isDatabasesV2GA: boolean;
@@ -221,10 +219,8 @@ export const toDatabaseFork = (
 };
 
 export const DATABASE_ENGINE_MAP: Record<Engine, string> = {
-  mongodb: 'MongoDB',
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
-  redis: 'Redis',
 } as const;
 
 export const getDatabasesDescription = (
