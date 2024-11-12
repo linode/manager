@@ -59,7 +59,9 @@ const formatMessage = (message: string): JSX.Element => {
 
 const StyledPre = styled('pre')(({ theme }) => ({
   backgroundColor:
-    theme.name === 'dark' ? theme.tokens.color.Neutrals.Black : '#f4f4f4',
+    theme.name === 'dark'
+      ? theme.tokens.color.Neutrals.Black
+      : theme.tokens.color.Neutrals[5],
   borderRadius: 4,
   display: 'inline',
   fontSize: '0.75rem',
