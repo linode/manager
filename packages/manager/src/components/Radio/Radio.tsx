@@ -23,11 +23,18 @@ import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
 - Give people control and align with their expectations
  */
 export const Radio = (props: RadioProps) => {
+  const sizeInPixels: Record<string, string> = {
+    medium: '25px',
+    small: '20px',
+  };
+  const iconDimension = sizeInPixels[props.size ?? 'medium'];
   return (
     <_Radio
-      checkedIcon={<RadioIconRadioed />}
+      checkedIcon={
+        <RadioIconRadioed height={iconDimension} width={iconDimension} />
+      }
       data-qa-radio={props.checked || false}
-      icon={<RadioIcon />}
+      icon={<RadioIcon height={iconDimension} width={iconDimension} />}
       {...props}
       inputProps={{
         'aria-checked': props.checked,
