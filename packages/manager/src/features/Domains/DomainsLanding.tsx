@@ -1,11 +1,10 @@
-import { Notice } from '@linode/ui';
+import { Button, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';

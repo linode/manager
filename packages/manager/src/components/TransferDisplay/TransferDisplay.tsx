@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, StyledLinkButton } from '@linode/ui';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';
@@ -6,7 +6,6 @@ import { Typography } from 'src/components/Typography';
 import { useAccountNetworkTransfer } from 'src/queries/account/transfer';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import { StyledLinkButton } from '../Button/StyledLinkButton';
 import { StyledTransferDisplayContainer } from './TransferDisplay.styles';
 import { TransferDisplayDialog } from './TransferDisplayDialog';
 import {

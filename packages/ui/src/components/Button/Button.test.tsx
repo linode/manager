@@ -1,9 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { Button } from './Button';
+import { renderWithTheme } from '../../utilities/testHelpers';
+import { expect } from 'vitest';
 
 describe('Button', () => {
   it('should render', () => {

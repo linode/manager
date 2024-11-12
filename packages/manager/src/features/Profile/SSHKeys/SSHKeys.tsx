@@ -1,9 +1,9 @@
+import { Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

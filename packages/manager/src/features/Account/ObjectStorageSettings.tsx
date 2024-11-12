@@ -1,9 +1,8 @@
-import { Box, Notice, Stack } from '@linode/ui';
+import { Box, Button, Notice, Stack } from '@linode/ui';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { Link } from 'src/components/Link';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';

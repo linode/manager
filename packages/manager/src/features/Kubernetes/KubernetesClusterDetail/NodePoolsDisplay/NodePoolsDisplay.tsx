@@ -1,8 +1,7 @@
-import { Stack } from '@linode/ui';
+import { Button, Stack } from '@linode/ui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Typography } from 'src/components/Typography';

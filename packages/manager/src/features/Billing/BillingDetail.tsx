@@ -1,10 +1,10 @@
+import { Button } from '@linode/ui';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';

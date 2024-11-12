@@ -1,4 +1,4 @@
-import { Tooltip, omittedProps } from '@linode/ui';
+import { Tooltip } from '../Tooltip';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import _Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -6,7 +6,8 @@ import * as React from 'react';
 
 import Reload from 'src/assets/icons/reload.svg';
 
-import { rotate360 } from '../../styles/keyframes';
+import { rotate360 } from '../../foundations';
+import { omittedProps } from '../../utilities';
 
 import type { ButtonProps as _ButtonProps } from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/material/styles';

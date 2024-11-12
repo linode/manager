@@ -1,8 +1,7 @@
+import { Button } from '@linode/ui';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Formik } from 'formik';
 import * as React from 'react';
-
-import { Button } from 'src/components/Button/Button';
 
 import {
   assertOrder,
