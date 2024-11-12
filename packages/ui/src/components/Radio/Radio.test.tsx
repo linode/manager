@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Radio } from './Radio';
 import { renderWithTheme } from '../../utilities/testHelpers';
-import { expect } from 'vitest';
+import { expect, describe, it } from 'vitest';
 
 // This test is for a single radio button, not a radio group
 describe('Radio', () => {
