@@ -1,4 +1,4 @@
-import { Box, Divider, Notice, RadioGroup, Stack, Tooltip } from '@linode/ui';
+import { Box, Divider, Notice, Radio, RadioGroup, Stack, Tooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -6,7 +6,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Radio } from 'src/components/Radio/Radio';
 import { Typography } from 'src/components/Typography';
 import {
   useAllocateIPMutation,

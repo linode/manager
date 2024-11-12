@@ -12,6 +12,7 @@ export * from './InputLabel';
 export * from './Notice';
 export * from './Paper';
 export * from './RadioGroup';
+export * from './Radio';
 export * from './Stack';
 export * from './Tooltip';
 export * from './VisibilityTooltip';

@@ -1,9 +1,9 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { Radio } from './Radio';
+import { renderWithTheme } from '../../utilities/testHelpers';
+import { expect } from 'vitest';
 
 // This test is for a single radio button, not a radio group
 describe('Radio', () => {

@@ -1,4 +1,4 @@
-import { FormHelperText, Notice, Paper, RadioGroup } from '@linode/ui';
+import { FormHelperText, Notice, Paper, RadioGroup, Radio } from '@linode/ui';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -14,7 +14,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';

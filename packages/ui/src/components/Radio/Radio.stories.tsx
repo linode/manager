@@ -1,7 +1,7 @@
 import { Box, RadioGroup } from '@linode/ui';
 import React from 'react';
 
-import { FormControlLabel } from '../FormControlLabel';
+import { FormControlLabel } from '../../../../manager/src/components/FormControlLabel';
 import { Radio } from './Radio';
 
 import type { RadioProps } from './Radio';
