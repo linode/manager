@@ -64,7 +64,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
       fontFamily: theme.font.bold,
     },
     background: theme.bg.bgAccessRowTransparentGradient,
-    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
+    border: `1px solid ${
+      theme.name === 'light' ? theme.tokens.color.Neutrals[40] : '#222'
+    }`,
     padding: '8px 15px',
   },
   copyToolTip: {

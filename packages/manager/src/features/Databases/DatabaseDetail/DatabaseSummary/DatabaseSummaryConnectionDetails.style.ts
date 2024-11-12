@@ -47,7 +47,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       fontFamily: theme.font.bold,
     },
     background: theme.tokens.interaction.Background.Secondary,
-    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
+    border: `1px solid ${
+      theme.name === 'light' ? theme.tokens.color.Neutrals[40] : '#222'
+    }`,
     padding: `${theme.spacing(1)} 15px`,
   },
   copyToolTip: {

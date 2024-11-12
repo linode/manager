@@ -37,7 +37,10 @@ export const StyledInputContainer = styled(Box, {
   shouldForwardProp: omittedProps(['isPhoneInputFocused']),
 })<{ isPhoneInputFocused: boolean }>(({ isPhoneInputFocused, theme }) => ({
   backgroundColor: theme.name === 'dark' ? '#343438' : undefined,
-  border: theme.name === 'light' ? '1px solid #ccc' : '1px solid #222',
+  border:
+    theme.name === 'light'
+      ? `1px solid ${theme.tokens.color.Neutrals[40]}`
+      : '1px solid #222',
   transition: 'border-color 225ms ease-in-out',
   width: 'fit-content',
   ...(isPhoneInputFocused &&
