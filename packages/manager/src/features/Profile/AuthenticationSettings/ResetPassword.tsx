@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { LOGIN_ROOT } from 'src/constants';

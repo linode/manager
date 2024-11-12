@@ -1,8 +1,7 @@
+import { Box, FormControl } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Chip } from 'src/components/Chip';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
@@ -38,7 +37,10 @@ export const ApplicationPlatform = (props: APLProps) => {
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
-            color: theme.name === 'dark' ? 'white' : theme.color.black,
+            color:
+              theme.name === 'dark'
+                ? theme.tokens.color.Neutrals.White
+                : theme.color.black,
           },
         })}
       >

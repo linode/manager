@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import { Link } from 'src/components/Link';
 import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
