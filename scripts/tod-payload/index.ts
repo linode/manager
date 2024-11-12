@@ -50,7 +50,7 @@ const main = async (junitPath: string) => {
 
   const payload = JSON.stringify({
     team: program.opts()['appTeam'],
-    name: program.opts()['appName'],
+    softwareName: program.opts()['appName'],
     buildName: program.opts()['appBuild'],
     semanticVersion: program.opts()['appVersion'],
     buildUrl: program.opts()['appBuildUrl'],
