@@ -1,3 +1,9 @@
+export type AlertSeverityType = 0 | 1 | 2 | 3;
+type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
+type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
+type DimensionFilterOperatorType = 'eq' | 'neq' | 'startswith' | 'endswith';
+type AlertDefinitionType = 'default' | 'custom';
+type AlertStatusType = 'enabled' | 'disabled';
 export interface Dashboard {
   id: number;
   label: string;
@@ -134,54 +140,59 @@ export interface ServiceTypesList {
 }
 
 export interface CreateAlertDefinitionPayload {
-  name: string;
-  region: string;
+  label: string;
   description?: string;
-  service_type: string;
-  engineOption: string;
-  resource_ids: string[];
-  severity: string;
+  resource_ids?: string[];
+  severity: AlertSeverityType;
   rule_criteria: {
     rules: MetricCriteria[];
   };
   triggerCondition: TriggerCondition;
   channel_ids: number[];
 }
+export interface CreateAlertDefinitionForm
+  extends CreateAlertDefinitionPayload {
+  region: string;
+  service_type: string;
+  engine_type: string;
+}
 export interface MetricCriteria {
   metric: string;
-  aggregation_type: string;
-  operator: string;
+  aggregation_type: MetricAggregationType | '';
+  operator: MetricOperatorType | '';
   value: number;
   dimension_filters: DimensionFilter[];
 }
 
 export interface DimensionFilter {
   dimension_label: string;
-  operator: string;
+  operator: DimensionFilterOperatorType | '';
   value: string;
 }
 
 export interface TriggerCondition {
-  criteria_condition: string;
-  polling_interval_seconds: string;
-  evaluation_period_seconds: string;
+  polling_interval_seconds: number;
+  evaluation_period_seconds: number;
   trigger_occurrences: number;
 }
 export interface Alert {
   id: number;
-  name: string;
+  label: string;
   description: string;
-  status: string;
-  severity: string;
+  status: AlertStatusType;
+  type: AlertDefinitionType;
+  severity: AlertSeverityType;
   service_type: string;
   resource_ids: string[];
   rule_criteria: {
     rules: MetricCriteria[];
-  }
+  };
   triggerCondition: TriggerCondition;
-  channel_ids: {
-    notification_id: string;
-    template_name: string;
+  channels: {
+    id: string;
+    label: string;
+    url: string;
+    type: 'channel';
   }[];
   created_by: string;
   updated_by: string;

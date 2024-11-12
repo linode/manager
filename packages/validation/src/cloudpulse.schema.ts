@@ -31,7 +31,7 @@ const triggerCondition = object({
 });
 
 export const createAlertDefinitionSchema = object().shape({
-  name: string().required('Name is required'),
+  label: string().required('Name is required'),
   description: string().optional(),
   region: string().required('Region is required'),
   engineOption: engineOptionValidation,
