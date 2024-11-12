@@ -370,6 +370,7 @@ export const TextField = (props: TextFieldProps) => {
             ...(Boolean(tooltipText) && {
               width: '415px',
             }),
+            ...props.sx,
           }}
           className={className}
           error={!!error || !!errorText}
