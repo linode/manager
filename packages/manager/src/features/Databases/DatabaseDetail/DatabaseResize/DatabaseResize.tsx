@@ -1,12 +1,9 @@
-import { CircleProgress } from '@linode/ui';
-import { Box, Paper } from '@linode/ui';
+import { Box, CircleProgress, Divider, Notice, Paper } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';

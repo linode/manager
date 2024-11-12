@@ -1,5 +1,5 @@
 import { acceptEntityTransfer } from '@linode/api-v4/lib/entity-transfers';
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, Notice } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -7,7 +7,6 @@ import * as React from 'react';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Notice } from 'src/components/Notice/Notice';
 import {
   TRANSFER_FILTERS,
   queryKey,

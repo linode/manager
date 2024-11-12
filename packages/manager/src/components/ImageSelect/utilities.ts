@@ -3,7 +3,8 @@ import { DateTime } from 'luxon';
 import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 
 import type { ImageSelectVariant } from './ImageSelect';
-import type { Image } from '@linode/api-v4';
+import type { Image, RegionSite } from '@linode/api-v4';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 /**
  * Given a Image Select "variant", this PR returns an
@@ -87,4 +88,34 @@ export const isImageDeprecated = (image: Image) => {
   const isImageEOL = DateTime.fromISO(image.eol) < DateTime.now();
 
   return image.deprecated || isImageEOL;
+};
+
+interface DisabledImageOptions {
+  images: Image[];
+  site_type?: RegionSite;
+}
+
+/**
+ * Returns images that should be disabled on the Linode Create flow.
+ *
+ * @returns key/value pairs for disabled images. the key is the image id and the value is why the image is disabled
+ */
+export const getDisabledImages = (options: DisabledImageOptions) => {
+  const { images, site_type } = options;
+
+  // Disable images that do not support distributed sites if the selected region is distributed
+  if (site_type === 'distributed') {
+    const disabledImages: Record<string, DisableItemOption> = {};
+    for (const image of images) {
+      if (!image.capabilities.includes('distributed-sites')) {
+        disabledImages[image.id] = {
+          reason:
+            'The selected image cannot be deployed to a distributed region.',
+        };
+      }
+    }
+    return disabledImages;
+  }
+
+  return {};
 };

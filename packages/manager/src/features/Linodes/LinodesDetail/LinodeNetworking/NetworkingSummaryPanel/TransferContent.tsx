@@ -1,10 +1,9 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
-import { Notice } from 'src/components/Notice/Notice';
 
 import {
   StyledLinodeUsage,

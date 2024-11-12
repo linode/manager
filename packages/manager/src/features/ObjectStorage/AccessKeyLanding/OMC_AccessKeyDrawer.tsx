@@ -1,4 +1,4 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, Notice } from '@linode/ui';
 import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useAccountSettings } from 'src/queries/account/settings';

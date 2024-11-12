@@ -1,5 +1,4 @@
-import { Paper } from '@linode/ui';
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, Notice, Paper } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -9,7 +8,6 @@ import { compose } from 'recompose';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { Notice } from 'src/components/Notice/Notice';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';

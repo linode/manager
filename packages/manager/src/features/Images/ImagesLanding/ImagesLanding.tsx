@@ -1,5 +1,10 @@
-import { CircleProgress } from '@linode/ui';
-import { IconButton, InputAdornment, Paper } from '@linode/ui';
+import {
+  CircleProgress,
+  IconButton,
+  InputAdornment,
+  Notice,
+  Paper,
+} from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -16,7 +21,6 @@ import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

@@ -1,11 +1,8 @@
-import { CircleProgress } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, CircleProgress, Divider, Notice } from '@linode/ui';
 import { Typography, styled } from '@mui/material';
 import * as React from 'react';
 
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
-import { Divider } from 'src/components/Divider';
-import { Notice } from 'src/components/Notice/Notice';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useAccountAgreements } from 'src/queries/account/agreements';

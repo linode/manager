@@ -1,5 +1,4 @@
-import { CircleProgress } from '@linode/ui';
-import { Paper } from '@linode/ui';
+import { CircleProgress, Notice, Paper } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -10,7 +9,6 @@ import Step3 from 'src/assets/referrals/step-3.svg';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
