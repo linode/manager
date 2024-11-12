@@ -1,9 +1,6 @@
 import { dirname, join } from 'path';
 import type { StorybookConfig } from '@storybook/react-vite';
 import { mergeConfig } from 'vite';
-import { getReactDocgenTSFileGlobs } from './utils';
-
-const typeScriptFileGlobs = getReactDocgenTSFileGlobs();
 
 const config: StorybookConfig = {
   stories: [
@@ -43,9 +40,7 @@ const config: StorybookConfig = {
           ? !/node_modules\/(?!@mui)/.test(prop.parent.fileName)
           : true,
       // Only compile files that have stories for faster local development performance
-      include: /(development|test)/i.test(process.env.NODE_ENV ?? '')
-        ? typeScriptFileGlobs
-        : undefined,
+      include: ['**/*.{ts,tsx}', '../ui/**/*.{ts,tsx}'],
     },
     reactDocgen: 'react-docgen-typescript',
   },
