@@ -65,7 +65,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     background: theme.bg.bgAccessRowTransparentGradient,
     border: `1px solid ${
-      theme.name === 'light' ? theme.tokens.color.Neutrals[40] : '#222'
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals[40]
+        : theme.tokens.color.Neutrals.Black
     }`,
     padding: '8px 15px',
   },

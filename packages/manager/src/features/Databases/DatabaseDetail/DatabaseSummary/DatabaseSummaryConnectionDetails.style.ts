@@ -48,7 +48,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
     background: theme.tokens.interaction.Background.Secondary,
     border: `1px solid ${
-      theme.name === 'light' ? theme.tokens.color.Neutrals[40] : '#222'
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals[40]
+        : theme.tokens.color.Neutrals.Black
     }`,
     padding: `${theme.spacing(1)} 15px`,
   },

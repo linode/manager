@@ -40,7 +40,7 @@ export const StyledInputContainer = styled(Box, {
   border:
     theme.name === 'light'
       ? `1px solid ${theme.tokens.color.Neutrals[40]}`
-      : '1px solid #222',
+      : `1px solid ${theme.tokens.color.Neutrals.Black}`,
   transition: 'border-color 225ms ease-in-out',
   width: 'fit-content',
   ...(isPhoneInputFocused &&
@@ -51,7 +51,7 @@ export const StyledInputContainer = styled(Box, {
         }
       : {
           borderColor: '#3683dc',
-          boxShadow: '0 0 2px 1px #222',
+          boxShadow: `0 0 2px 1px ${theme.tokens.color.Neutrals.Black}`,
         })),
 }));
 

@@ -61,7 +61,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     '& .MuiInput-input': {
       WebkitTextFillColor: 'unset !important',
       borderColor:
-        theme.name === 'light' ? theme.tokens.color.Neutrals[40] : '#222',
+        theme.name === 'light'
+          ? theme.tokens.color.Neutrals[40]
+          : theme.tokens.color.Neutrals.Black,
       color:
         theme.name === 'light'
           ? `${theme.palette.text.primary} !important`
@@ -70,7 +72,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
     '&& .MuiInput-root': {
       borderColor:
-        theme.name === 'light' ? theme.tokens.color.Neutrals[40] : '#222',
+        theme.name === 'light'
+          ? theme.tokens.color.Neutrals[40]
+          : theme.tokens.color.Neutrals.Black,
       opacity: 1,
     },
   },
