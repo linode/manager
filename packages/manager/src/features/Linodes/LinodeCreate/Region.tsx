@@ -74,7 +74,7 @@ export const Region = React.memo(() => {
 
   const { data: type } = useTypeQuery(
     selectedLinode?.type ?? '',
-    Boolean(selectedLinode)
+    Boolean(selectedLinode?.type)
   );
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
