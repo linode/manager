@@ -152,7 +152,9 @@ describe('volumes', () => {
     cy.wait('@getLinodeDetail');
 
     // Create a new volume.
-    cy.findByText('Storage').should('be.visible').click();
+    cy.get('main').within(() => {
+      cy.findByText('Storage').should('be.visible').click();
+    });
 
     ui.button.findByTitle('Add Volume').should('be.visible').click();
 
@@ -285,7 +287,9 @@ describe('volumes', () => {
     cy.wait(['@getVolumes', '@getLinodeDetail']);
 
     // Open the Add Volume drawer.
-    cy.findByText('Storage').should('be.visible').click();
+    cy.get('main').within(() => {
+      cy.findByText('Storage').should('be.visible').click();
+    });
     ui.button.findByTitle('Add Volume').should('be.visible').click();
     cy.wait(['@getVolumeTypesError']);
 

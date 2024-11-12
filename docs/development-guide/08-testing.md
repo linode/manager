@@ -19,7 +19,7 @@ yarn test
 Or you can run the tests in watch mode with:
 
 ```
-yarn test --watch
+yarn test:watch
 ```
 
 To run a specific file or files in a directory:

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 
 export const AlertDefinitionLanding = () => {

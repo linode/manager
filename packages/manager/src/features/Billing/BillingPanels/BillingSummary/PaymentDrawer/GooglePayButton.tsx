@@ -1,11 +1,11 @@
+import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Tooltip } from 'src/components/Tooltip';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import {
   gPay,
@@ -18,13 +18,14 @@ import { useClientToken } from 'src/queries/account/payment';
 import type { SetSuccess } from './types';
 import type { APIWarning } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
+import type { QueryClient } from '@tanstack/react-query';
 import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '& svg': {
       color:
-        theme.name === 'light' ? theme.colorTokens.Neutrals.White : '#616161',
+        theme.name === 'light' ? theme.tokens.color.Neutrals.White : '#616161',
       height: 16,
     },
     '&:hover': {
@@ -33,7 +34,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     alignItems: 'center',
     backgroundColor:
-      theme.name === 'light' ? '#000' : theme.colorTokens.Neutrals.White,
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals.Black
+        : theme.tokens.color.Neutrals.White,
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',

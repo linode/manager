@@ -1,10 +1,11 @@
+import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
+
 import {
   StyledContainerGrid,
   StyledInstructionGrid,
@@ -35,10 +36,10 @@ export const InstallationInstructions = React.memo((props: Props) => {
           </Grid>
           <Grid
             sx={{
-              paddingTop: 0,
+              overflowX: 'auto',
               paddingBottom: 0,
               paddingLeft: '8px',
-              overflowX: 'auto',
+              paddingTop: 0,
             }}
           >
             <pre>

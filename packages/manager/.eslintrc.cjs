@@ -155,6 +155,7 @@ module.exports = {
     'xss',
     'perfectionist',
     '@linode/eslint-plugin-cloud-manager',
+    'react-refresh',
   ],
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
@@ -275,6 +276,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react-hooks/exhaustive-deps': 'warn',
     'react-hooks/rules-of-hooks': 'error',
+    'react-refresh/only-export-components': 'warn',
     'scanjs-rules/assign_to_hostname': 'warn',
     'scanjs-rules/assign_to_href': 'warn',
     'scanjs-rules/assign_to_location': 'warn',

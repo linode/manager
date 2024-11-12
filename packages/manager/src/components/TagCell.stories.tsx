@@ -1,7 +1,6 @@
+import { Box } from '@linode/ui';
 import { useArgs } from '@storybook/preview-api';
 import React from 'react';
-
-import { Box } from 'src/components/Box';
 
 import { TagCell } from './TagCell/TagCell';
 

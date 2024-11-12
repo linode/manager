@@ -1,12 +1,10 @@
+import { Box, IconButton, Tooltip } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Flag } from 'src/components/Flag';
-import { IconButton } from 'src/components/IconButton';
 import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Tooltip } from 'src/components/Tooltip';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 

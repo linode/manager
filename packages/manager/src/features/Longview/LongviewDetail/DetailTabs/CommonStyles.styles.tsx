@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { TimeRangeSelect } from '../../shared/TimeRangeSelect';
 

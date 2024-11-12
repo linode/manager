@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
 import { CircleProgress } from 'src/components/CircleProgress';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 
 export const StyledCopyToClipboardGrid = styled(Grid, {

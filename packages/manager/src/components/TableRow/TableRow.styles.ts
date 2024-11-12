@@ -1,7 +1,6 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { default as _TableRow } from '@mui/material/TableRow';
-
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { TableRowProps } from './TableRow';
 

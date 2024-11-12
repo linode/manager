@@ -1,4 +1,3 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
@@ -10,15 +9,15 @@ import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
 
+import type { ObjectStorageKey } from '@linode/api-v4';
+
 export interface Props {
   objectStorageKey: ObjectStorageKey | null;
   onClose: () => void;
   open: boolean;
 }
 
-type CombinedProps = Props;
-
-export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
+export const ViewPermissionsDrawer = (props: Props) => {
   const { objectStorageKey, onClose, open } = props;
 
   const flags = useFlags();
@@ -30,18 +29,14 @@ export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
     account?.capabilities ?? []
   );
 
-  if (objectStorageKey === null) {
-    return null;
-  }
-
   return (
     <Drawer
       onClose={onClose}
       open={open}
-      title={`Permissions for ${objectStorageKey.label}`}
+      title={`Permissions for ${objectStorageKey?.label}`}
       wide
     >
-      {objectStorageKey.bucket_access === null ? (
+      {!objectStorageKey ? null : objectStorageKey.bucket_access === null ? (
         <Typography>
           This key has unlimited access to all buckets on your account.
         </Typography>
@@ -70,5 +65,3 @@ export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
     </Drawer>
   );
 };
-
-export default React.memo(ViewPermissionsDrawer);

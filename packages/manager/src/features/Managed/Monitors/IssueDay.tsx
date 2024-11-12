@@ -1,4 +1,4 @@
-import { ManagedIssue } from '@linode/api-v4';
+import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
@@ -6,13 +6,14 @@ import Bad from 'src/assets/icons/monitor-failed.svg';
 import Good from 'src/assets/icons/monitor-ok.svg';
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Tooltip } from 'src/components/Tooltip';
 
 import {
   StyledDateTimeDisplay,
   StyledGrid,
   StyledLink,
 } from './IssueDay.styles';
+
+import type { ManagedIssue } from '@linode/api-v4';
 
 export interface IssueDayProps {
   day: string;

@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { MapDispatchToProps, connect } from 'react-redux';
-import { compose as recompose } from 'recompose';
 
 import { Radio } from 'src/components/Radio/Radio';
-import { RenderGuard, RenderGuardProps } from 'src/components/RenderGuard';
+import { RenderGuard } from 'src/components/RenderGuard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
-import { openStackScriptDialog as openStackScriptDialogAction } from 'src/store/stackScriptDialog';
 
 import {
   StyledDetailsButton,
@@ -20,7 +17,7 @@ import {
   StyledUsernameLabel,
 } from '../CommonStackScript.styles';
 
-export interface Props {
+interface Props {
   checked?: boolean;
   deploymentsActive: number;
   description: string;
@@ -28,24 +25,13 @@ export interface Props {
   disabledCheckedSelect?: boolean;
   label: string;
   onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
+  openStackScriptDetailsDialog: (stackscriptId: number) => void;
   stackScriptID: number;
   stackScriptUsername: string;
   updated: string;
 }
 
-interface DispatchProps {
-  openStackScriptDialog: (stackScriptId: number) => void;
-}
-
-export interface StackScriptSelectionRowProps
-  extends Props,
-    DispatchProps,
-    RenderGuardProps {}
-
-export class StackScriptSelectionRow extends React.Component<
-  StackScriptSelectionRowProps,
-  {}
-> {
+export class StackScriptSelectionRow extends React.Component<Props, {}> {
   render() {
     const {
       checked,
@@ -54,7 +40,7 @@ export class StackScriptSelectionRow extends React.Component<
       disabledCheckedSelect,
       label,
       onSelect,
-      openStackScriptDialog,
+      openStackScriptDetailsDialog,
       stackScriptID,
       stackScriptUsername,
     } = this.props;
@@ -62,7 +48,7 @@ export class StackScriptSelectionRow extends React.Component<
     const renderLabel = () => {
       const openDialog = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
-        openStackScriptDialog(stackScriptID);
+        openStackScriptDetailsDialog(stackScriptID);
       };
       return (
         <StyledSelectionGrid alignItems="center" container>
@@ -110,18 +96,4 @@ export class StackScriptSelectionRow extends React.Component<
   }
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch
-) => {
-  return {
-    openStackScriptDialog: (stackScriptId: number) =>
-      dispatch(openStackScriptDialogAction(stackScriptId)),
-  };
-};
-
-interface ExportProps extends Props, RenderGuardProps {}
-
-export default recompose<StackScriptSelectionRowProps, ExportProps>(
-  connect(undefined, mapDispatchToProps),
-  RenderGuard
-)(StackScriptSelectionRow);
+export default RenderGuard(StackScriptSelectionRow);

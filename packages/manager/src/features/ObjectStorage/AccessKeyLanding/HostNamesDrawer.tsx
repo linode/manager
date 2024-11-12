@@ -1,6 +1,6 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Drawer } from 'src/components/Drawer';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -56,13 +56,17 @@ export const HostNamesDrawer = (props: Props) => {
 
           return (
             <CopyableTextField
+              sx={{
+                backgroundColor: 'unset',
+                border: 'none',
+                maxWidth: '100%',
+              }}
               value={`${regionsLookup[region.id]?.label}${endpointTypeLabel}: ${
                 region.s3_endpoint
               }`}
               hideLabel
               key={index}
               label={`${region.id}${endpointTypeLabel}: ${region.s3_endpoint}`}
-              sx={{ border: 'none', maxWidth: '100%' }}
             />
           );
         })}

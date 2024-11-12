@@ -1,7 +1,7 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import Plus from 'src/assets/icons/plusSign.svg';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import { Button } from './Button';
 

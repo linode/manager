@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Typography } from 'src/components/Typography';

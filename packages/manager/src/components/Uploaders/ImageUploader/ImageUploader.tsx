@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material';
 import { Duration } from 'luxon';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { BarPercent } from 'src/components/BarPercent';
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';

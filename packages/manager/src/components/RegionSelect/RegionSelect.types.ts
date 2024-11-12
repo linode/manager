@@ -6,19 +6,7 @@ import type {
 } from '@linode/api-v4';
 import type React from 'react';
 import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
-
-export interface DisableRegionOption {
-  /**
-   * The reason the region option is disabled.
-   * This is shown to the user as a tooltip.
-   */
-  reason: JSX.Element | string;
-  /**
-   * An optional minWith applied to the tooltip
-   * @default 215
-   */
-  tooltipWidth?: number;
-}
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 export type RegionFilterValue =
   | 'distributed-AF'
@@ -49,7 +37,7 @@ export interface RegionSelectProps<
   /**
    * A key/value object for disabling regions by their ID.
    */
-  disabledRegions?: Record<string, DisableRegionOption>;
+  disabledRegions?: Record<string, DisableItemOption>;
   helperText?: string;
   /**
    * Ignores account availability information when rendering region options
@@ -60,7 +48,6 @@ export interface RegionSelectProps<
   regionFilter?: RegionFilterValue;
   regions: Region[];
   required?: boolean;
-  showDistributedRegionIconHelperText?: boolean;
   tooltipText?: string;
   /**
    * The ID of the selected region.
@@ -79,7 +66,7 @@ export interface RegionMultiSelectProps
     selectedRegions: Region[];
   }>;
   currentCapability: Capabilities | undefined;
-  disabledRegions?: Record<string, DisableRegionOption>;
+  disabledRegions?: Record<string, DisableItemOption>;
   helperText?: string;
   isClearable?: boolean;
   label?: string;

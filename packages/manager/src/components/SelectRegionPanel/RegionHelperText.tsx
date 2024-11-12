@@ -1,11 +1,10 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
-import { Box } from '../Box';
-
-import type { BoxProps } from '../Box';
+import type { BoxProps } from '@linode/ui';
 
 interface RegionHelperTextProps extends BoxProps {
   onClick?: () => void;

@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';

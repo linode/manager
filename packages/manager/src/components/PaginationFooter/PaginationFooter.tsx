@@ -1,9 +1,9 @@
+import { Box } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
-import { Box } from '../Box';
 import { PaginationControls } from '../PaginationControls/PaginationControls';
 
 export const MIN_PAGE_SIZE = 25;
@@ -67,9 +67,9 @@ export const PaginationFooter = (props: Props) => {
         background: theme.bg.bgPaper,
       }}
       alignItems="center"
+      data-qa-table-pagination
       display="flex"
       justifyContent="space-between"
-      data-qa-table-pagination
     >
       {!isShowingAll && (
         <PaginationControls

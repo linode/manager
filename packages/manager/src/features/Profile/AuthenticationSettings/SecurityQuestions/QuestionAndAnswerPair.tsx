@@ -1,7 +1,6 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Box } from 'src/components/Box';
 
 import { Answer } from './Answer';
 import { Question } from './Question';

@@ -2,7 +2,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 

@@ -34,7 +34,7 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
           anchorEl
             ? {
                 backgroundColor: theme.palette.primary.main,
-                color: 'white',
+                color: theme.tokens.color.Neutrals.White,
               }
             : null
         }
@@ -72,7 +72,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   },
   '&:hover': {
     backgroundColor: theme.palette.primary.main,
-    color: 'white',
+    color: theme.tokens.color.Neutrals.White,
   },
   backgroundColor: theme.bg.lightBlue1,
   fontFamily: theme.font.bold,

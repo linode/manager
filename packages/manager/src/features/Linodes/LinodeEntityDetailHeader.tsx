@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';

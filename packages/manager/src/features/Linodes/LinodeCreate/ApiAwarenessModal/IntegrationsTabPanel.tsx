@@ -4,7 +4,6 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
-import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
 import { generateAnsibleConfig } from 'src/utilities/codesnippets/generate-ansibleConfig';
 import { generateTerraformConfig } from 'src/utilities/codesnippets/generate-terraformConfig';
 
@@ -72,11 +71,6 @@ export const IntegrationsTabPanel = ({
               selectedIntegration.value === 'ansible'
                 ? ansibleConfig
                 : terraformConfig
-            }
-            ldTrackingKey={
-              selectedIntegration.value === 'ansible'
-                ? LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_ANSIBLE_CODE_SNIPPET
-                : LD_DX_TOOLS_METRICS_KEYS.INTEGRATION_TERRAFORM_CODE_SNIPPET
             }
             commandType={selectedIntegration.value}
             language={'bash'}

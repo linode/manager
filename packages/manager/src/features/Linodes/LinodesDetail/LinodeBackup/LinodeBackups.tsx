@@ -6,7 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

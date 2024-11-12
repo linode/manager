@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
-import { Box } from 'src/components/Box';
 import { DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import OrderBy from 'src/components/OrderBy';

@@ -4,7 +4,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import {
   LongviewPortsResponse,
