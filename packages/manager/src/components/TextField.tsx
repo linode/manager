@@ -266,6 +266,7 @@ export const TextField = (props: TextFieldProps) => {
           display: 'flex',
           flexWrap: 'wrap',
         }),
+        ...containerProps?.sx,
       }}
     >
       <Box
