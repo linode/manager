@@ -36,7 +36,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     '&[disabled]': {
       '& g': {
-        stroke: '#cdd0d5',
+        stroke: theme.tokens.color.Neutrals[30],
       },
       '&:hover': {
         backgroundColor: 'inherit',
@@ -44,7 +44,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
       // Override disabled background color defined for dark mode
       backgroundColor: 'transparent',
-      color: '#cdd0d5',
+      color: theme.tokens.color.Neutrals[30],
       cursor: 'default',
     },
     color: theme.palette.primary.main,
