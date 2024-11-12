@@ -2,6 +2,7 @@ import { IconButton, Stack } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
+import { expect, userEvent, within } from '@storybook/test';
 import React, { useState } from 'react';
 
 import { List } from 'src/components/List';
@@ -179,6 +180,81 @@ export const Default: Story = {
   args: {
     defaultValue: linodes[0],
   },
+  play: async ({ canvasElement, step }) => {
+    /**
+     * general thoughts:
+     *
+     * In terms of writing - either is fine. Storybook component testing
+     * feels like vite unit testing (and cypress component tests feel
+     * like integration tests) which makes sense haha
+     *
+     * HOWEVER for a component like autocomplete with many interactions,
+     * I prefer cypress component tests:
+     * - split up tests by interaction I'm trying to test, rather than by story (?)
+     *   - while I'm able to group by the step function, cypress feels like it gives
+     *     me a bit more freedom to organize things/group things how I want, and create
+     *     isolated tests for specific interactions without having to create new stories
+     *
+     * Note: I feel like I'm having trouble figuring out multiselect tests for both
+     * story and cypress component tests, but that's more of an I need to investigate
+     * further problem
+     */
+    const canvas = within(canvasElement);
+
+    const openMenuButton = canvas.getByLabelText('Open');
+
+    /**
+     * the first four steps are equivalent to the open/close tests in autocomplete.spec.tsx
+     * Having trouble with 'Confirms autocomplete can be closed by clicking away' equivalent
+     * here though (no separate element)
+     */
+
+    // open menu via button
+    await step('Open menu interaction via button', async () => {
+      await userEvent.click(openMenuButton);
+      expect(canvas.getByText('Linode-001')).toBeVisible();
+    });
+
+    const closeMenuButton = canvas.getByLabelText('Close');
+
+    // close menu via button
+    await step('Close menu interaction via button', async () => {
+      await userEvent.click(closeMenuButton);
+      expect(canvas.queryByText('Linode-001')).not.toBeInTheDocument();
+    });
+
+    const input = canvas.getByLabelText('Select a Linode');
+
+    // open menu via typing
+    await step('Open menu interaction via typing', async () => {
+      await userEvent.clear(input);
+      await userEvent.type(input, 'linode');
+      expect(canvas.getByText('Linode-001')).toBeVisible();
+      await userEvent.click(canvas.getByText('Linode-001'));
+    });
+
+    // close menu via esc key
+    await step('Close menu interaction via esc key', async () => {
+      await userEvent.keyboard('{Escape}');
+      expect(canvas.queryByText('Linode-001')).not.toBeInTheDocument();
+    });
+
+    // clearing selected element
+    await step('Clear selected element', async () => {
+      expect(canvas.getByRole('combobox')).toHaveValue('Linode-001');
+      const clearButton = canvas.getByLabelText('Clear');
+      await userEvent.click(clearButton);
+      expect(canvas.getByRole('combobox')).toHaveValue('');
+    });
+
+    // selecting a new value
+    await step('Select a new value', async () => {
+      await userEvent.click(openMenuButton);
+      const linode2 = canvas.getByText(/Linode-002/);
+      await userEvent.click(linode2);
+      expect(canvas.getByRole('combobox')).toHaveValue('Linode-002');
+    });
+  },
   render: (args) => <Autocomplete {...args} />,
 };
 
@@ -230,6 +306,34 @@ const linodeList = linodeFactory.buildList(10);
 
 export const MultiSelect: MultiSelectStory = {
   args: {},
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    const openMenuButton = canvas.getByLabelText('Open');
+
+    // open menu
+    await step('Open menu interaction', async () => {
+      await userEvent.click(openMenuButton);
+      expect(canvas.getByText('Select All')).toBeVisible();
+      expect(canvas.getByText('linode-1')).toBeVisible();
+    });
+
+    // Select all elements
+    await step('Select all elements', async () => {
+      const selectAll = canvas.getByText('Select All');
+      await userEvent.click(selectAll);
+      expect(canvas.getByText('Deselect All')).toBeVisible();
+      expect(canvas.getByLabelText('Clear')).toBeVisible();
+    });
+
+    // Deselect all elements
+    await step('Deselect all elements', async () => {
+      const deselectAll = canvas.getByText('Deselect All');
+      await userEvent.click(deselectAll);
+      expect(canvas.getByText('Select All')).toBeVisible();
+      expect(canvas.queryByLabelText('Clear')).not.toBeInTheDocument();
+    });
+  },
   render: () => {
     const Example = () => {
       const [selectedLinodes, setSelectedLinodes] = useState<Linode[]>([]);
