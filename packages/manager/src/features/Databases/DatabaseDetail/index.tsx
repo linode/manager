@@ -23,8 +23,6 @@ import {
 } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { useIsDatabasesEnabled } from '../utilities';
-
 import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Tab } from 'src/components/Tabs/TabLinkList';
@@ -74,11 +72,6 @@ export const DatabaseDetail = () => {
     setEditableLabelError,
   } = useEditableLabelState();
 
-  const {
-    isDatabasesMonitorBeta,
-    isDatabasesMonitorEnabled,
-  } = useIsDatabasesEnabled();
-
   if (error) {
     return (
       <ErrorState
@@ -120,7 +113,7 @@ export const DatabaseDetail = () => {
 
   if (isMonitorEnabled) {
     tabs.splice(1, 0, {
-      chip: (isDatabasesMonitorBeta || true) ? <BetaChip /> : null,
+      chip: <BetaChip />,
       routeName: `/databases/${engine}/${id}/monitor`,
       title: 'Monitor',
     });
