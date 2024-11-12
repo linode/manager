@@ -6,18 +6,12 @@ import { ui } from 'support/ui';
 
 import { randomLabel, randomString } from 'support/util/random';
 import { linodeCreatePage } from 'support/ui/pages';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 describe('Create Linode flow to validate code snippet modal', () => {
   /*
    * tests for create Linode flow to validate code snippet modal.
    */
-  // TODO Delete these mocks once `testdxtoolabexperiment` feature flag is retired.
-  beforeEach(() => {
-    mockAppendFeatureFlags({
-      testdxtoolabexperiment: 'Create using command line',
-    });
-  });
+
   it(`view code snippets in create linode flow`, () => {
     const linodeLabel = randomLabel();
     const rootPass = randomString(32);
@@ -33,7 +27,7 @@ describe('Create Linode flow to validate code snippet modal', () => {
 
     // View Code Snippets and confirm it's provisioned as expected.
     ui.button
-      .findByTitle('Create using command line')
+      .findByTitle('View Code Snippets')
       .should('be.visible')
       .should('be.enabled')
       .click();

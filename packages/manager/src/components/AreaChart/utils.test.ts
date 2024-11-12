@@ -39,7 +39,8 @@ describe('humanizeLargeData', () => {
   it('should return the value as an abbreviated string if the value is >= 1000', () => {
     expect(humanizeLargeData(999)).toBe('999');
     expect(humanizeLargeData(1125)).toBe('1.1K');
-    expect(humanizeLargeData(231434)).toBe('231.4K');
+    expect(humanizeLargeData(55555)).toBe('55.6K');
+    expect(humanizeLargeData(231434)).toBe('231K');
     expect(humanizeLargeData(1010000)).toBe('1M');
     expect(humanizeLargeData(12345678900)).toBe('12.3B');
     expect(humanizeLargeData(1543212345678)).toBe('1.5T');

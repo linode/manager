@@ -8,6 +8,7 @@ import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useInProgressEvents } from 'src/queries/events/events';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import NodeActionMenu from './NodeActionMenu';
 import { StyledCopyTooltip, StyledTableRow } from './NodeTable.styles';
@@ -43,6 +44,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   } = props;
 
   const { data: events } = useInProgressEvents();
+  const { data: preferences } = usePreferences();
 
   const recentEvent = events?.find(
     (event) =>
@@ -112,7 +114,12 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           </Typography>
         ) : displayIP.length > 0 ? (
           <>
-            <CopyTooltip copyableText text={displayIP} />
+            <CopyTooltip
+              copyableText
+              masked={Boolean(preferences?.maskSensitiveData)}
+              text={displayIP}
+              maskedTextLength="ipv4"
+            />
             <StyledCopyTooltip text={displayIP} />
           </>
         ) : null}

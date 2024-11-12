@@ -52,7 +52,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       color: theme.palette.primary.light,
     },
     alignItems: 'flex-start',
-    borderRadius: 0,
+    borderRadius: theme.tokens.borderRadius.None,
     cursor: 'pointer',
     display: 'flex',
     margin: `0 ${theme.spacing(1)} 2px 0`,

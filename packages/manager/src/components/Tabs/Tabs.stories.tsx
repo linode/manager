@@ -1,6 +1,6 @@
+import { Paper } from '@linode/ui';
 import * as React from 'react';
 
-import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';

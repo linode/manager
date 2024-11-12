@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
 
 export const StyledActionButton = styled(Button, {
@@ -9,7 +9,7 @@ export const StyledActionButton = styled(Button, {
 })(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.color.blue,
-    color: theme.colorTokens.Neutrals.White,
+    color: theme.tokens.color.Neutrals.White,
   },
   color: theme.textColors.linkActiveLight,
   fontFamily: theme.font.normal,

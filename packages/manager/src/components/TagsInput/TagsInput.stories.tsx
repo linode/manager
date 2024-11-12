@@ -1,12 +1,11 @@
+import { Box } from '@linode/ui';
 import { useArgs } from '@storybook/preview-api';
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-
-import { Box } from 'src/components/Box';
 
 import { TagsInput } from './TagsInput';
 
 import type { Tag, TagsInputProps } from './TagsInput';
+import type { Meta, StoryObj } from '@storybook/react';
 
 export const Default: StoryObj<TagsInputProps> = {
   args: {

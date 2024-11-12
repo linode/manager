@@ -117,10 +117,14 @@ services:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
 
-  # Cypress test runner service to run tests against a locally-served Cloud instance.
+  # Cypress test runner service to run tests against a local Cloud instance.
   #
-  # This is useful when testing against a customized or in-development build of
-  # Cloud Manager.
+  # This is useful when testing against a Cloud Manager instance served locally at
+  # `localhost:3000`, e.g. during development.
+  #
+  # If the local Cloud Manager instance is not served at `localhost:3000` (when
+  # served from a container, for example), prefer the `cypress_containerized`
+  # service instead.
   cypress_local:
     <<: *default-runner
     environment:
@@ -129,6 +133,38 @@ services:
     depends_on:
       web:
         condition: service_healthy
+
+  # Cypress test runner service to run tests against a containerized Cloud instance.
+  #
+  # This service reverse proxies the given $CYPRESS_BASE_URL to `localhost:3000`.
+  # This is necessary for certain tests which require a secure context, which
+  # can typically only be achieved when Cloud is served at `localhost` or
+  # remotely behind SSL.
+  #
+  # For more information, refer to:
+  # https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts
+  #
+  # If the local Cloud Manager instance is served at `localhost:3000` (when
+  # running Cloud Manager locally during development, for example), prefer the
+  # `cypress_local` service instead.
+  cypress_containerized:
+    <<: *default-runner
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e-reverse-proxy
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH}
+      CYPRESS_BASE_URL: "http://localhost:3000"
+      REVERSE_PROXY_URL: ${CYPRESS_BASE_URL}
+    depends_on:
+      web:
+        condition: service_healthy
+    entrypoint:
+      - "/bin/sh"
+      - "-c"
+      - "caddy reverse-proxy --from $${CYPRESS_BASE_URL} --to $${REVERSE_PROXY_URL} & yarn $0 $@"
 
   # Cypress component test runner service.
   #

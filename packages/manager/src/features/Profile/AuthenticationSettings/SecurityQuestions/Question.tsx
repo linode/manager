@@ -1,7 +1,8 @@
+import { InputLabel } from '@linode/ui';
+import { MaskableText } from 'linode-manager/src/components/MaskableText/MaskableText';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { InputLabel } from 'src/components/InputLabel';
 import { LinkButton } from 'src/components/LinkButton';
 import { Typography } from 'src/components/Typography';
 
@@ -44,8 +45,15 @@ export const Question = (props: Props) => {
     return (
       <>
         <InputLabel>{label}</InputLabel>
-        <Typography style={{ fontSize: '0.875rem' }} variant="body1">
-          {questionResponse?.question}
+        <Typography
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            fontSize: '0.875rem',
+          }}
+          variant="body1"
+        >
+          <MaskableText isToggleable text={questionResponse?.question} />
           <LinkButton onClick={onClickEdit} style={{ marginLeft: 10 }}>
             Edit
           </LinkButton>

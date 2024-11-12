@@ -29,7 +29,7 @@ describe('CloudPulse  navigation', () => {
     cy.visitWithLogin('/linodes');
     cy.wait('@getFeatureFlags');
 
-    ui.nav.findItemByTitle('Monitor').should('be.visible').click();
+    cy.get('[data-testid="menu-item-Monitor"]').should('be.visible').click();
     cy.url().should('endWith', '/cloudpulse');
   });
 
@@ -48,7 +48,7 @@ describe('CloudPulse  navigation', () => {
     cy.wait('@getFeatureFlags');
 
     ui.nav.find().within(() => {
-      cy.findByText('Monitor').should('not.exist');
+      cy.get('[data-testid="menu-item-Monitor"]').should('not.exist');
     });
   });
 

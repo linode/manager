@@ -1,11 +1,10 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import 'flag-icons/css/flag-icons.min.css';
 import React from 'react';
 
-import { Box } from './Box';
-
-import type { BoxProps } from './Box';
 import type { Country } from '@linode/api-v4';
+import type { BoxProps } from '@linode/ui';
 
 const COUNTRY_FLAG_OVERRIDES = {
   uk: 'gb',

@@ -1,14 +1,10 @@
 import { useTheme } from '@mui/material/styles';
-import { useLDClient } from 'launchdarkly-react-client-sdk';
 import React, { useMemo } from 'react';
 
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Link } from 'src/components/Link';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Typography } from 'src/components/Typography';
-import { LD_DX_TOOLS_METRICS_KEYS } from 'src/constants';
-import { useFlags } from 'src/hooks/useFlags';
-import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCurlCommand } from 'src/utilities/codesnippets/generate-cURL';
 
@@ -21,15 +17,13 @@ export interface CurlTabPanelProps {
 }
 
 export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
-  const flags = useFlags();
-  const ldClient = useLDClient();
   const theme = useTheme();
-  const { isAkamaiAccount: isInternalAccount } = useIsAkamaiAccount();
+
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
     [payLoad]
   );
-  const apicliButtonCopy = flags?.testdxtoolabexperiment;
+
   return (
     <SafeTabPanel index={index}>
       <Typography sx={{ marginTop: theme.spacing(2) }} variant="body1">
@@ -37,13 +31,6 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
         <Link
           onClick={() => {
             sendApiAwarenessClickEvent('link', 'personal access token');
-            if (!isInternalAccount) {
-              ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
-                variation: apicliButtonCopy,
-              });
-            }
-
-            ldClient?.flush();
           }}
           to="/profile/tokens"
         >
@@ -57,13 +44,6 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
               'link',
               'Get Started with the Linode API'
             );
-            if (!isInternalAccount) {
-              ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
-                variation: apicliButtonCopy,
-              });
-            }
-
-            ldClient?.flush();
           }}
           to="https://techdocs.akamai.com/linode-api/reference/get-started"
         >
@@ -73,13 +53,6 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
         <Link
           onClick={() => {
             sendApiAwarenessClickEvent('link', 'Linode API Guides');
-            if (!isInternalAccount) {
-              ldClient?.track(LD_DX_TOOLS_METRICS_KEYS.CURL_RESOURCE_LINKS, {
-                variation: apicliButtonCopy,
-              });
-            }
-
-            ldClient?.flush();
           }}
           to="https://techdocs.akamai.com/linode-api/reference/api"
         >
@@ -87,12 +60,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
         </Link>
         .
       </Typography>
-      <CodeBlock
-        command={curlCommand}
-        commandType={title}
-        language={'bash'}
-        ldTrackingKey={LD_DX_TOOLS_METRICS_KEYS.CURL_CODE_SNIPPET}
-      />
+      <CodeBlock command={curlCommand} commandType={title} language={'bash'} />
     </SafeTabPanel>
   );
 };

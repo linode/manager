@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
+import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -47,7 +47,7 @@ export const FirewallLandingEmptyState = (props: Props) => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={FirewallIcon}
+      icon={NodeBalancerIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />

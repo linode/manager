@@ -1,23 +1,16 @@
-import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import Undo from 'src/assets/icons/undo.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import {
-  FirewallOptionItem,
   generateAddressesLabel,
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall,
@@ -25,7 +18,6 @@ import {
 import { capitalize } from 'src/utilities/capitalize';
 
 import { FirewallRuleActionMenu } from './FirewallRuleActionMenu';
-import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import {
   MoreStyledLinkButton,
   StyledButtonDiv,
@@ -41,9 +33,15 @@ import {
   sxBox,
   sxItemSpacing,
 } from './FirewallRuleTable.styles';
-import { Category, FirewallRuleError, sortPortString } from './shared';
+import { sortPortString } from './shared';
 
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
+import type { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
+import type { Category, FirewallRuleError } from './shared';
+import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import type { Theme } from '@mui/material/styles';
+import type { DropResult } from 'react-beautiful-dnd';
+import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
   action?: string;
@@ -333,7 +331,8 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
           aria-label={`Addresses: ${addresses}`}
           sx={{ ...sxItemSpacing, overflowWrap: 'break-word', width: '15%' }}
         >
-          {addresses} <ConditionalError errors={errors} formField="addresses" />
+          <MaskableText text={addresses} />
+          <ConditionalError errors={errors} formField="addresses" />
         </Box>
       </Hidden>
       <Box
@@ -444,14 +443,14 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
           textFieldProps={{
             hideLabel: true,
           }}
-          autoHighlight
-          onChange={(_, selected) => handlePolicyChange(selected?.value)}
           value={policyOptions.find(
             (thisOption) => thisOption.value === policy
           )}
-          disabled={disabled}
+          autoHighlight
           disableClearable
+          disabled={disabled}
           label={`${category} policy`}
+          onChange={(_, selected) => handlePolicyChange(selected?.value)}
           options={policyOptions}
         />
       </Box>

@@ -5,11 +5,12 @@ import { Button } from 'src/components/Button/Button';
 import { Divider } from 'src/components/Divider';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
-  SubnetFieldState,
   getRecommendedSubnetIPv4,
 } from 'src/utilities/subnets';
 
 import { SubnetNode } from './SubnetNode';
+
+import type { SubnetFieldState } from 'src/utilities/subnets';
 
 interface Props {
   disabled?: boolean;

@@ -1,8 +1,8 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LinearProgress } from 'src/components/LinearProgress';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 

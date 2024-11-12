@@ -1,8 +1,10 @@
-import { Theme, styled } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
-import { Box } from 'src/components/Box';
 import { Stack } from 'src/components/Stack';
+
+import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   root: {

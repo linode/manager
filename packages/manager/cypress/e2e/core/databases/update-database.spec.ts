@@ -94,7 +94,7 @@ const removeAllowedIp = (allowedIp: string) => {
  * @param existingIps - The number of existing IPs. Optional, default is `0`.
  */
 const manageAccessControl = (allowedIps: string[], existingIps: number = 0) => {
-  cy.findByText('Manage Access Controls').closest('button').click();
+  cy.findByTestId('button-access-control').click();
 
   ui.drawer
     .findByTitle('Manage Access Controls')

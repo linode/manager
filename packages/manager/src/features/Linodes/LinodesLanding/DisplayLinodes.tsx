@@ -1,3 +1,4 @@
+import { Tooltip } from '@linode/ui';
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -8,10 +9,9 @@ import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
-import { Tooltip } from 'src/components/Tooltip';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 

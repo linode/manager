@@ -1,6 +1,6 @@
 import Factory from 'src/factories/factoryProxy';
 
-import { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 export const preferencesFactory = Factory.Sync.makeFactory<ManagerPreferences>({
   backups_cta_dismissed: true,
@@ -21,6 +21,7 @@ export const preferencesFactory = Factory.Sync.makeFactory<ManagerPreferences>({
   linodes_view_style: 'grid',
   longviewTimeRange: '',
   main_content_banner_dismissal: { t: true },
+  maskSensitiveData: true,
   nodebalancers_group_by_tag: true,
   sortKeys: {},
   theme: 'light',

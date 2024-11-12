@@ -1,9 +1,9 @@
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { Drawer } from 'src/components/Drawer';
 import { Notice } from 'src/components/Notice/Notice';
 import { CannotCreateVPCNotice } from 'src/features/VPCs/VPCCreate/FormComponents/CannotCreateVPCNotice';
@@ -11,16 +11,21 @@ import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/Subnet
 import { VPCTopSectionContent } from 'src/features/VPCs/VPCCreate/FormComponents/VPCTopSectionContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
 
+import type { VPC } from '@linode/api-v4';
+
 interface Props {
-  handleSelectVPC: (vpcId: number) => void;
   onClose: () => void;
+  /**
+   * A function that is called when a VPC is successfully created
+   */
+  onSuccess: (vpc: VPC) => void;
   open: boolean;
   selectedRegion?: string;
 }
 
 export const VPCCreateDrawer = (props: Props) => {
   const theme = useTheme();
-  const { handleSelectVPC, onClose, open, selectedRegion } = props;
+  const { onClose, onSuccess, open, selectedRegion } = props;
 
   const {
     formik,
@@ -33,7 +38,11 @@ export const VPCCreateDrawer = (props: Props) => {
     setGeneralAPIError,
     setGeneralSubnetErrorsFromAPI,
     userCannotAddVPC,
-  } = useCreateVPC({ handleSelectVPC, onDrawerClose: onClose, selectedRegion });
+  } = useCreateVPC({
+    handleSelectVPC: onSuccess,
+    onDrawerClose: onClose,
+    selectedRegion,
+  });
 
   const { errors, handleSubmit, resetForm, setFieldValue, values } = formik;
 

@@ -1,6 +1,6 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Box } from 'src/components/Box';
 import { TimeRangeSelect } from '../../../shared/TimeRangeSelect';
 
 export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({

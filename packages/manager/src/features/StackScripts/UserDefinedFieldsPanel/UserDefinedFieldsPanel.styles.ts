@@ -1,8 +1,5 @@
+import { Box, Paper, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Box } from 'src/components/Box';
-import { Paper } from 'src/components/Paper';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 export const StyledBox = styled(Box, { label: 'StyledBox' })(({ theme }) => ({
   '& > img': {

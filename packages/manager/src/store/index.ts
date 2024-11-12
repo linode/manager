@@ -16,10 +16,6 @@ import longviewStats, {
   State as LongviewStatsState,
   defaultState as defaultLongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
-import stackScriptDialog, {
-  State as StackScriptDialogState,
-  defaultState as stackScriptDialogDefaultState,
-} from 'src/store/stackScriptDialog';
 
 import mockFeatureFlags, {
   MockFeatureFlagState,
@@ -38,7 +34,6 @@ export interface ApplicationState {
   longviewStats: LongviewStatsState;
   mockFeatureFlags: MockFeatureFlagState;
   pendingUpload: PendingUploadState;
-  stackScriptDialog: StackScriptDialogState;
 }
 
 export const defaultState: ApplicationState = {
@@ -48,7 +43,6 @@ export const defaultState: ApplicationState = {
   longviewStats: defaultLongviewStatsState,
   mockFeatureFlags: defaultMockFeatureFlagState,
   pendingUpload: pendingUploadState,
-  stackScriptDialog: stackScriptDialogDefaultState,
 };
 
 /**
@@ -61,7 +55,6 @@ const reducers = combineReducers<ApplicationState>({
   longviewStats,
   mockFeatureFlags,
   pendingUpload,
-  stackScriptDialog,
 });
 
 export const storeFactory = () =>

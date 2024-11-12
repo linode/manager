@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 

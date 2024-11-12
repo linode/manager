@@ -88,6 +88,7 @@ export const kubernetesControlPlaneACLOptionsFactory = Factory.Sync.makeFactory<
     'revision-id': '67497a9c5fc8491889a7ef8107493e92',
   }
 );
+
 export const kubernetesControlPlaneACLFactory = Factory.Sync.makeFactory<KubernetesControlPlaneACLPayload>(
   {
     acl: {

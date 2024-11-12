@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 
@@ -107,12 +108,15 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
 
         return (
           <PlacementGroupSelectOption
-            disabled={isDisabledPlacementGroup(option, selectedRegion)}
+            disabledOptions={
+              isDisabledPlacementGroup(option, selectedRegion)
+                ? { reason: PLACEMENT_GROUP_HAS_NO_CAPACITY }
+                : undefined
+            }
+            item={option}
             key={key}
-            label={option.label}
             props={rest}
             selected={selected}
-            value={option}
           />
         );
       }}

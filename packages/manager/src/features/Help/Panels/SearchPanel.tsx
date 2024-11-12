@@ -1,8 +1,8 @@
+import { Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { H1Header } from 'src/components/H1Header/H1Header';
-import { Paper } from 'src/components/Paper';
 
 import AlgoliaSearchBar from './AlgoliaSearchBar';
 

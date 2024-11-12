@@ -2,7 +2,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { Paper } from 'src/components/Paper';
+import { Paper } from '@linode/ui';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
 import { WithStartAndEnd } from '../../../request.types';

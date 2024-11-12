@@ -195,7 +195,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </TableCell>
           {showTransfer ? (
             <TableCell center data-qa-transfer>
-              {plan.transfer ? <>{plan.transfer / 1000} TB</> : ''}
+              {plan.transfer !== undefined ? (
+                <>{plan.transfer / 1000} TB</>
+              ) : (
+                ''
+              )}
             </TableCell>
           ) : null}
           {showNetwork ? (

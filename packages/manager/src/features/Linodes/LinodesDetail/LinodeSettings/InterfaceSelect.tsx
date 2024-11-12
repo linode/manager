@@ -395,7 +395,6 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
             additionalIPv4RangesForVPC={additionalIPv4RangesForVPC ?? []}
             assignPublicIPv4Address={nattedIPv4Address !== undefined}
             autoassignIPv4WithinVPC={vpcIPv4 === undefined}
-            from="linodeConfig"
             handleIPv4RangeChange={handleIPv4RangeChange}
             handleSelectVPC={handleVPCLabelChange}
             handleSubnetChange={handleSubnetChange}

@@ -46,7 +46,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     '& span': {
       fontFamily: theme.font.bold,
     },
-    background: theme.interactionTokens.Background.Secondary,
+    background: theme.tokens.interaction.Background.Secondary,
     border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
     padding: `${theme.spacing(1)} 15px`,
   },
