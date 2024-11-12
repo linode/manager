@@ -84,7 +84,7 @@ export const CloudPulseResourcesSelect = React.memo(
     }, [resources]);
 
     // Maximum resource selection limit is fetched from launchdarkly
-    const ResourceLimit = React.useMemo(() => {
+    const maxResourceSelectionLimit = React.useMemo(() => {
       const obj = flags.aclpResourceTypeMap?.find(
         (item: CloudPulseResourceTypeMapFlag) =>
           item.serviceType === resourceType
@@ -92,10 +92,10 @@ export const CloudPulseResourcesSelect = React.memo(
       return obj ? obj.maxResourceSelections || 10 : 10;
     }, [resourceType, flags.aclpResourceTypeMap]);
 
-    const resourceLimitReached = React.useMemo(() => {
-      return getResourcesList.length > ResourceLimit;
-    }, [getResourcesList.length, ResourceLimit]);
-    
+    const isMaxSelectionsReached = React.useMemo(() => {
+      return getResourcesList.length > maxResourceSelectionLimit;
+    }, [getResourcesList.length, maxResourceSelectionLimit]);
+
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
       if (resources && savePreferences && !selectedResources) {
@@ -120,23 +120,22 @@ export const CloudPulseResourcesSelect = React.memo(
     }, [resources, region, xFilter, resourceType]);
 
     // selected resources will appear at the top in the autcomplete popper
-    const sortedResourcesList = React.useMemo<CloudPulseResources[]>(() => {
-      return [...getResourcesList].sort((resource_a, resource_b) => {
-        const aIsSelected = selectedResources?.some(
-          (item) => item.label === resource_a.label
-        );
-        const bIsSelected = selectedResources?.some(
-          (item) => item.label === resource_b.label
-        );
+    const resourcesWithSelectedFirst = React.useMemo<
+      CloudPulseResources[]
+    >(() => {
+      const selectedResourcesSet = new Set(
+        selectedResources?.map((item) => item.label)
+      );
 
-        if (aIsSelected && !bIsSelected) {
-          return -1;
-        }
-        if (!aIsSelected && bIsSelected) {
-          return 1;
-        }
-        return 0;
-      });
+      const selectedResourcesList = getResourcesList.filter((resource) =>
+        selectedResourcesSet.has(resource.label)
+      );
+
+      const unselectedResourcesList = getResourcesList.filter(
+        (resource) => !selectedResourcesSet.has(resource.label)
+      );
+
+      return [...selectedResourcesList, ...unselectedResourcesList];
     }, [getResourcesList, selectedResources]);
 
     return (
@@ -166,7 +165,7 @@ export const CloudPulseResourcesSelect = React.memo(
           );
           const isOverLimitOption =
             selectedResources &&
-            selectedResources.length >= ResourceLimit &&
+            selectedResources.length >= maxResourceSelectionLimit &&
             !isResourceSelected;
           return (
             <ListItem
@@ -196,17 +195,19 @@ export const CloudPulseResourcesSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
-        disableSelectAll={resourceLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
+        disableSelectAll={isMaxSelectionsReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
-        helperText={!isError ? `Select up to ${ResourceLimit} ${label}` : ''}
+        helperText={
+          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
+        }
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
         limitTags={2}
         loading={isLoading}
         multiple
         noMarginTop
-        options={sortedResourcesList}
+        options={resourcesWithSelectedFirst}
         value={selectedResources ?? []}
       />
     );
