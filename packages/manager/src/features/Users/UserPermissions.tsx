@@ -4,7 +4,7 @@ import {
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
-import { Box } from '@linode/ui';
+import { Box, Notice } from '@linode/ui';
 import { Paper } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { enqueueSnackbar } from 'notistack';
@@ -15,7 +15,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Notice } from 'src/components/Notice/Notice';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
