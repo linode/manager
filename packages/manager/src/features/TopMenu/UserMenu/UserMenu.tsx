@@ -181,7 +181,9 @@ export const UserMenu = React.memo(() => {
     return matchesSmDown ? undefined : open ? (
       <KeyboardArrowUp sx={sx} />
     ) : (
-      <KeyboardArrowDown sx={{ color: '#9ea4ae', ...sx }} />
+      <KeyboardArrowDown
+        sx={(theme) => ({ color: theme.tokens.color.Neutrals[50], ...sx })}
+      />
     );
   };
 
