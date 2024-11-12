@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - UI bugs on the Object Storage bucket and access key landing pages ([#11187](https://github.com/linode/manager/pull/11187))
 - Animation for VPC subnet drawers ([#11195](https://github.com/linode/manager/pull/11195))
 - DBaaS enable creation of two node clusters ([#11218](https://github.com/linode/manager/pull/11218))
+- Crash on the Linode Create flow when a Linode with a `type` of `null` is selected ([#11247](https://github.com/linode/manager/pull/11247))
 
 ### Tech Stories:
 
