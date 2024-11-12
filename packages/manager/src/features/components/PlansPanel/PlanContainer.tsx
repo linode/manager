@@ -1,4 +1,3 @@
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -14,7 +13,8 @@ import { PlanSelectionTable } from './PlanSelectionTable';
 
 import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
-
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import type { Theme } from '@mui/material/styles';
 export interface PlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
   currentPlanHeading?: string;
@@ -50,7 +50,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
   const showTransfer =
-    showLimits && plans.some((plan: PlanWithAvailability) => plan.transfer);
+    showLimits &&
+    plans.some((plan: PlanWithAvailability) => plan.transfer !== undefined);
 
   // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
   const showNetwork =
@@ -64,6 +65,10 @@ export const PlanContainer = (props: PlanContainerProps) => {
   const shouldDisplayNoRegionSelectedMessage =
     !selectedRegionId && !isDatabaseCreateFlow && !isDatabaseResizeFlow;
 
+  const isDatabaseGA =
+    !flags.dbaasV2?.beta &&
+    flags.dbaasV2?.enabled &&
+    (isDatabaseCreateFlow || isDatabaseResizeFlow);
   interface PlanSelectionDividerTable {
     header?: string;
     planFilter?: (plan: PlanWithAvailability) => boolean;
@@ -141,6 +146,18 @@ export const PlanContainer = (props: PlanContainerProps) => {
   return (
     <Grid container spacing={2}>
       <Hidden lgUp={isCreate} mdUp={!isCreate}>
+        {isCreate && isDatabaseGA && (
+          <Typography
+            sx={(theme: Theme) => ({
+              marginBottom: theme.spacing(2),
+              marginLeft: theme.spacing(1),
+              marginTop: theme.spacing(1),
+            })}
+          >
+            Usable storage is smaller than the actual plan storage due to the
+            overhead from the database platform.
+          </Typography>
+        )}
         {shouldDisplayNoRegionSelectedMessage ? (
           <Notice
             spacingLeft={8}
@@ -198,6 +215,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                       }
                       key={`plan-filter-${idx}`}
                       planFilter={table.planFilter}
+                      plans={plans}
                       showNetwork={showNetwork}
                       showTransfer={showTransfer}
                     />
@@ -213,6 +231,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                 renderPlanSelection={renderPlanSelection}
                 showNetwork={showNetwork}
                 showTransfer={showTransfer}
+                showUsableStorage={isDatabaseCreateFlow || isDatabaseResizeFlow}
               />
             )
           )}

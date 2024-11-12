@@ -43,7 +43,7 @@ import type {
   Region,
 } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
-import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
+import type { DisableItemOption } from 'src/components/ListItemOption';
 
 export const PlacementGroupsCreateDrawer = (
   props: PlacementGroupsCreateDrawerProps
@@ -156,7 +156,7 @@ export const PlacementGroupsCreateDrawer = (
     selectedRegion
   )}`;
 
-  const disabledRegions = regions?.reduce<Record<string, DisableRegionOption>>(
+  const disabledRegions = regions?.reduce<Record<string, DisableItemOption>>(
     (acc, region) => {
       const isRegionAtCapacity = hasRegionReachedPlacementGroupCapacity({
         allPlacementGroups: allPlacementGroupsInRegion,

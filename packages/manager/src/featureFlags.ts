@@ -72,6 +72,7 @@ export interface CloudPulseResourceTypeMapFlag {
 interface gpuV2 {
   egressBanner: boolean;
   planDivider: boolean;
+  transferBanner: boolean;
 }
 
 interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
@@ -124,7 +125,6 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxId: BaseFeatureFlag;
   taxes: Taxes;
-  testdxtoolabexperiment: string;
   tpaProviders: Provider[];
 }
 

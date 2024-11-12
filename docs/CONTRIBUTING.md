@@ -27,7 +27,8 @@ Feel free to open an issue to report a bug or request a feature.
     **Example:** `feat: [M3-1234] - Allow user to view their login history`
 
 6. Open a pull request against `develop` and make sure the title follows the same format as the commit message.
-7. If needed, create a changeset to populate our changelog.
+7. Keep in mind that our repository is public and open source! Before adding screenshots to your PR, we recommend you enable the **Mask Sensitive Data** setting in Cloud Manager [Profile Settings](https://cloud.linode.com/profile/settings).
+8. If needed, create a changeset to populate our changelog.
     - If you don't have the Github CLI installed or need to update it (you need GH CLI 2.21.0 or greater),
         - install it via `brew`: https://github.com/cli/cli#installation or upgrade with `brew upgrade gh`
         - Once installed, run `gh repo set-default` and pick `linode/manager` (only > 2.21.0)

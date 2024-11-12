@@ -1,23 +1,17 @@
-import { Region } from '@linode/api-v4';
-import {
-  Database,
-  DatabaseInstance,
-  DatabaseType,
-} from '@linode/api-v4/lib/databases/types';
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
-import { databaseEngineMap } from '../../DatabaseLanding/DatabaseRow';
 import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
 import {
   StyledStatusBox,
@@ -27,13 +21,15 @@ import {
   StyledTitleTypography,
 } from './DatabaseResizeCurrentConfiguration.style';
 
+import type { Region } from '@linode/api-v4';
+import type {
+  Database,
+  DatabaseType,
+} from '@linode/api-v4/lib/databases/types';
+
 interface Props {
   database: Database;
 }
-
-export const getDatabaseVersionNumber = (
-  version: DatabaseInstance['version']
-) => version.split('/')[1];
 
 export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
   const {
@@ -93,7 +89,13 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
           </StyledSummaryTextBox>
           <StyledSummaryTextTypography>
             <span style={{ fontFamily: theme.font.bold }}>Version</span>{' '}
-            {databaseEngineMap[database.engine]} v{database.version}
+            <DatabaseEngineVersion
+              databaseEngine={database.engine}
+              databaseID={database.id}
+              databasePendingUpdates={database.updates.pending}
+              databasePlatform={database.platform}
+              databaseVersion={database.version}
+            />
           </StyledSummaryTextTypography>
           <StyledSummaryTextTypography>
             <span style={{ fontFamily: theme.font.bold }}>Nodes</span>{' '}
