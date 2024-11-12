@@ -1,9 +1,9 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { Notice } from 'src/components/Notice/Notice';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
+import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';

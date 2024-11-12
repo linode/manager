@@ -1,7 +1,7 @@
+import { Divider } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import Select from 'src/components/EnhancedSelect';
 import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -19,10 +19,12 @@ import { getEngineOptions } from './utilities';
 
 import type {
   ClusterSize,
-  ComprehensiveReplicationType,
   DatabaseEngine,
   Engine,
+  MySQLReplicationType,
+  PostgresReplicationType,
   Region,
+  ReplicationCommitTypes,
 } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
 import type { Item } from 'src/components/EnhancedSelect';
@@ -32,14 +34,15 @@ export interface DatabaseCreateValues {
     error: string;
   }[];
   cluster_size: ClusterSize;
-  compression_type: undefined;
   engine: Engine;
   label: string;
   region: string;
-  replication_commit_type: undefined;
-  replication_type: ComprehensiveReplicationType;
-  ssl_connection: boolean;
-  storage_engine: undefined;
+  /** @Deprecated used by rdbms-legacy PostgreSQL only */
+  replication_commit_type?: ReplicationCommitTypes;
+  /** @Deprecated used by rdbms-legacy only */
+  replication_type?: MySQLReplicationType | PostgresReplicationType;
+  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
+  ssl_connection?: boolean;
   type: string;
 }
 

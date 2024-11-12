@@ -1,9 +1,9 @@
+import { Paper } from '@linode/ui';
 import { Box } from '@linode/ui';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { Paper } from '@linode/ui';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -116,7 +116,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
               onChange={(e, region) => onChange(region)}
               regionFilter="core"
               regions={regions ?? []}
-              showDistributedRegionIconHelperText={false}
               value={value}
             />
           </SafeTabPanel>
@@ -147,7 +146,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
               onChange={(e, region) => onChange(region)}
               regionFilter={regionFilter}
               regions={regions ?? []}
-              showDistributedRegionIconHelperText={false}
               value={value}
             />
           </SafeTabPanel>

@@ -1,9 +1,9 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { Notice } from './Notice';
+import { expect, describe, it, vi } from 'vitest';
+import { renderWithTheme } from '../../utilities/testHelpers';
 
 describe('Notice Component', () => {
   it('renders without errors with proper spacing', () => {
