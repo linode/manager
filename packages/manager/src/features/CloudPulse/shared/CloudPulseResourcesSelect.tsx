@@ -1,12 +1,16 @@
+import { Box, ListItem } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { themes } from 'src/utilities/theme';
 
 import { deepEqual } from '../Utils/FilterBuilder';
 
 import type { Filter, FilterValue } from '@linode/api-v4';
+import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 export interface CloudPulseResources {
   id: string;
@@ -43,6 +47,8 @@ export const CloudPulseResourcesSelect = React.memo(
       xFilter,
     } = props;
 
+    const flags = useFlags();
+
     const resourceFilterMap: Record<string, Filter> = {
       dbaas: { '+order': 'asc', '+order_by': 'label', platform: 'rdbms-default' },
     };
@@ -76,6 +82,18 @@ export const CloudPulseResourcesSelect = React.memo(
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       return resources && resources.length > 0 ? resources : [];
     }, [resources]);
+
+    const setResourceLimit = React.useMemo(() => {
+      const obj = flags.aclpResourceTypeMap?.find(
+        (item: CloudPulseResourceTypeMapFlag) =>
+          item.serviceType === resourceType
+      );
+      return obj ? obj.maxResourceSelections || 10 : 10;
+    }, [resourceType, flags.aclpResourceTypeMap]);
+
+    const resourceLimitReached = React.useMemo(() => {
+      return getResourcesList.length > setResourceLimit;
+    }, [getResourcesList.length, setResourceLimit]);
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
@@ -119,6 +137,29 @@ export const CloudPulseResourcesSelect = React.memo(
         placeholder={
           selectedResources?.length ? '' : placeholder || 'Select Resources'
         }
+        renderOption={(props, option) => {
+          const { key, ...rest } = props;
+          const isResourceSelected = selectedResources?.some(
+            (item) => item.label === option.label
+          );
+          const isOverLimitOption =
+            selectedResources &&
+            selectedResources?.length >= setResourceLimit &&
+            !isResourceSelected;
+          return (
+            <ListItem
+              {...rest}
+              aria-disabled={isOverLimitOption}
+              data-qa-option
+              key={key}
+            >
+              <>
+                <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
+                <SelectedIcon visible={isResourceSelected || false} />
+              </>
+            </ListItem>
+          );
+        }}
         textFieldProps={{
           InputProps: {
             sx: {
@@ -133,10 +174,11 @@ export const CloudPulseResourcesSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
+        disableSelectAll={resourceLimitReached}
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        label={label || 'Resources'}
+        label={`${label || 'Resources'} (${setResourceLimit} max)`}
         limitTags={2}
         loading={isLoading}
         multiple
