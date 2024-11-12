@@ -32,14 +32,6 @@ import { mockGetDatabases } from 'support/intercepts/databases';
 import { Database } from '@linode/api-v4';
 import { mockGetAccount } from 'support/intercepts/account';
 
-/**
- * Verifies the presence and values of specific properties within the aclpPreference object
- * of the request payload. This function checks that the expected properties exist
- * and have the expected values, allowing for validation of user preferences in the application.
- *
- * @param requestPayload - The payload received from the request, containing the aclpPreference object.
- * @param expectedValues - An object containing the expected values for properties to validate against the requestPayload.
- */
 const {
   metrics,
   id,
@@ -139,10 +131,10 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
-    //  Select a region from the dropdown.
+    // Select a region from the dropdown.
     ui.regionSelect.find().click().type(`${region}{enter}`);
 
-    // Select a resource (Database Clusters) from the autocomplete input.
+    //Select a resource (Database Clusters) from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Clusters')
       .should('be.visible')
@@ -199,7 +191,7 @@ describe('Tests for API error handling', () => {
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
 
-    //  Select a region from the dropdown.
+    // Select a region from the dropdown.
     ui.regionSelect.find().click().type(`${region}{enter}`);
 
     // Select a resource (Database Clusters) from the autocomplete input.
@@ -246,7 +238,7 @@ describe('Tests for API error handling', () => {
 
     cy.visitWithLogin('monitor/cloudpulse');
 
-    //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
+    // Select a dashboard from the autocomplete input.
     ui.autocomplete
       .findByLabel('Dashboard')
       .should('be.visible')
@@ -299,7 +291,7 @@ describe('Tests for API error handling', () => {
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
-    //  Select a dashboard from the autocomplete input
+    // Select a dashboard from the autocomplete input
     ui.autocomplete
       .findByLabel('Dashboard')
       .should('be.visible')

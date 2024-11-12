@@ -41,9 +41,7 @@ export const StyledButton = styled(Button, {
     '&:before': {
       backgroundColor: hidden
         ? theme.color.disabledText
-        : theme.graphs[legendColor]
-        ? theme.graphs[legendColor]
-        : legendColor,
+        : theme.graphs[legendColor],
       flexShrink: 0,
     },
   }),

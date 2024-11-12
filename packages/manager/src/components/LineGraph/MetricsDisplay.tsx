@@ -19,6 +19,15 @@ const ROW_HEADERS = ['Max', 'Avg', 'Last'] as const;
 type MetricKey = 'average' | 'last' | 'max';
 const METRIC_KEYS: MetricKey[] = ['max', 'average', 'last'];
 
+export type LegendColor =
+  | 'blue'
+  | 'darkGreen'
+  | 'green'
+  | 'lightGreen'
+  | 'purple'
+  | 'red'
+  | 'yellow';
+
 interface Props {
   /**
    * Array of rows to hide. Each row should contain the legend title.
@@ -38,7 +47,7 @@ export interface MetricsDisplayRow {
   data: Metrics;
   format: (n: number) => string;
   handleLegendClick?: () => void;
-  legendColor: string;
+  legendColor: LegendColor;
   legendTitle: string;
 }
 

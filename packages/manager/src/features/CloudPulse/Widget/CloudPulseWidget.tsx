@@ -13,7 +13,11 @@ import {
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
 import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
-import { generateCurrentUnit } from '../Utils/unitConversion';
+import {
+  convertValueToUnit,
+  formatToolTip,
+  generateCurrentUnit,
+} from '../Utils/unitConversion';
 import { useAclpPreference } from '../Utils/UserPreference';
 import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
@@ -26,15 +30,10 @@ import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { Widgets } from '@linode/api-v4';
 import type {
   AvailableMetrics,
-  DataSet,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
-import type {
-  AreaProps,
-  ChartVariant,
-} from 'src/components/AreaChart/AreaChart';
-import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
+import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { Metrics } from 'src/utilities/statMetrics';
 
 export interface CloudPulseWidgetProperties {
@@ -238,12 +237,11 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       url: flags.aclpReadEndpoint!,
     }
   );
+
   let data: DataSet[] = [];
 
-  let legendRows: MetricsDisplayRow[] = [];
-  let currentUnit = unit;
-  let areas: AreaProps[] = [];
-  const variant: ChartVariant = widget.chart_type === 'line' ? 'line' : 'area';
+  let legendRows: LegendRow[] = [];
+  let today: boolean = false;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       flags,
@@ -253,21 +251,18 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       serviceType,
       status,
       unit,
+      widgetChartType: widget.chart_type,
+      widgetColor: widget.color,
     });
 
     data = generatedData.dimensions;
     legendRows = generatedData.legendRowsData;
+    today = generatedData.today;
     scaledWidgetUnit.current = generatedData.unit; // here state doesn't matter, as this is always the latest re-render
-    currentUnit = generatedData.unit;
-    areas = generatedData.areas;
   }
 
   const metricsApiCallError = error?.[0]?.reason;
 
-  const tickFormat =
-    duration.unit === 'min' || duration.unit === 'hr'
-      ? 'hh:mm a'
-      : 'LLL dd, hh:mm a';
   return (
     <Grid container item lg={widget.size} xs={12}>
       <Stack flexGrow={1} spacing={2}>
@@ -328,17 +323,20 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 ? metricsApiCallError ?? 'Error while rendering graph'
                 : undefined
             }
-            areas={areas}
+            formatData={(data: number) =>
+              convertValueToUnit(data, scaledWidgetUnit.current)
+            }
+            legendRows={
+              legendRows && legendRows.length > 0 ? legendRows : undefined
+            }
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
-            height={480}
-            legendRows={legendRows}
+            formatTooltip={(value: number) => formatToolTip(value, unit)}
+            gridSize={widget.size}
             loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
-            showLegend={data.length !== 0}
+            showToday={today}
             timezone={timezone}
-            unit={currentUnit}
-            variant={variant}
-            xAxis={{ tickFormat, tickGap: 60 }}
+            title={widget.label}
           />
         </Paper>
       </Stack>

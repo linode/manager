@@ -27,7 +27,7 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
             sx={{
               color: theme.color.grey1,
               fontSize: 'x-large',
-              padding: '0',
+              padding: 0,
             }}
             aria-label="Zoom In"
             data-testid="zoom-in"
