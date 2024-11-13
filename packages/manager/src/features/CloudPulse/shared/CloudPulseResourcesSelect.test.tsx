@@ -21,6 +21,7 @@ vi.mock('src/queries/cloudpulse/resources', async () => {
 const mockResourceHandler = vi.fn();
 const SELECT_ALL = 'Select All';
 const ARIA_SELECTED = 'aria-selected';
+const ARIA_DISABLED = 'aria-disabled';
 
 describe('CloudPulseResourcesSelect component tests', () => {
   it('should render disabled component if the the props are undefined or regions and service type does not have any resources', () => {
@@ -70,8 +71,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
         })
       ).toBeInTheDocument();
     });
-
-  it('should be able to select all resources', () => {
+  it('should be able to select all resources if resource selection limit is higher than number of resources', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodeFactory.buildList(2),
       isError: false,
@@ -251,5 +251,42 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
     expect(screen.getByText('Failed to fetch Resources.')).toBeInTheDocument();
+  });
+
+  it('should be able to select limited resources', () => {
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(12),
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    const { queryByRole } = renderWithTheme(
+      <CloudPulseResourcesSelect
+        handleResourcesSelection={mockResourceHandler}
+        label="Resources"
+        region="us-east"
+        resourceType="linode"
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+    expect(screen.getByText('Select up to 10 Resources')).toBeInTheDocument();
+
+    for (let i = 14; i <= 23; i++) {
+      fireEvent.click(screen.getByRole('option', { name: `linode-${i}` }));
+    }
+    const selectedOptions = screen
+      .getAllByRole('option')
+      .filter((option) => option.getAttribute(ARIA_SELECTED) === 'true');
+
+    expect(selectedOptions.length).toBe(10);
+    expect(screen.getByRole('option', { name: `linode-24` })).toHaveAttribute(
+      ARIA_DISABLED,
+      'true'
+    );
+
+    expect(queryByRole('option', { name: SELECT_ALL })).not.toBeInTheDocument();
   });
 });
