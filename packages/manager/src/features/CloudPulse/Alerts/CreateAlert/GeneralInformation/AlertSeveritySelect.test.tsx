@@ -18,16 +18,16 @@ describe('EngineOption component tests', () => {
       component: <CloudPulseAlertSeveritySelect name="severity" />,
     });
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    expect(screen.getByRole('option', { name: 'Info - 3' }));
-    expect(screen.getByRole('option', { name: 'Low - 2' }));
+    expect(screen.getByRole('option', { name: 'Info' }));
+    expect(screen.getByRole('option', { name: 'Low' }));
   });
   it('should be able to select an option', () => {
     renderWithThemeAndHookFormContext({
       component: <CloudPulseAlertSeveritySelect name="severity" />,
     });
     fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'Medium - 1' }));
-    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Medium - 1');
+    fireEvent.click(screen.getByRole('option', { name: 'Medium' }));
+    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Medium');
   });
   it('should render the tooltip text', () => {
     const container = renderWithThemeAndHookFormContext({

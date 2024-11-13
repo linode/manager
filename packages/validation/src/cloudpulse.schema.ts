@@ -37,7 +37,7 @@ export const createAlertDefinitionSchema = object().shape({
   engineOption: engineOptionValidation,
   service_type: string().required('Service type is required'),
   resource_ids: array().of(string()).min(1, 'At least one resource is needed'),
-  severity: string().required('Severity is required'),
+  severity: string().required('Severity is required').nullable(),
   criteria: array()
     .of(metricCriteria)
     .min(1, 'At least one metric criteria is needed'),

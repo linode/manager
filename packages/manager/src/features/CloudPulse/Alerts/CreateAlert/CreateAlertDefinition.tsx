@@ -43,7 +43,7 @@ const initialValues: CreateAlertDefinitionForm = {
   resource_ids: [],
   rule_criteria: { rules: criteriaInitialValues },
   service_type: '',
-  severity: 0,
+  severity: null,
   triggerCondition: triggerConditionInitialValues,
 };
 
@@ -93,7 +93,7 @@ export const CreateAlertDefinition = () => {
   });
 
   return (
-    <Paper sx={{ paddingTop: 1.25 }}>
+    <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
       <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>

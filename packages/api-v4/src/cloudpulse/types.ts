@@ -1,4 +1,4 @@
-export type AlertSeverityType = 0 | 1 | 2 | 3;
+export type AlertSeverityType = 0 | 1 | 2 | 3 | null;
 type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 type DimensionFilterOperatorType = 'eq' | 'neq' | 'startswith' | 'endswith';

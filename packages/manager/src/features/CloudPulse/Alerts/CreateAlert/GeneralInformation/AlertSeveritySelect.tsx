@@ -26,23 +26,27 @@ export const CloudPulseAlertSeveritySelect = (
         <Autocomplete
           onChange={(
             _,
-            selected: { label: string; value: AlertSeverityType }
-            // reason
+            selected: { label: string; value: AlertSeverityType },
+            reason
           ) => {
             if (selected) {
               field.onChange(selected.value);
             }
-            // if (reason === 'clear') {
-            //   field.onChange(undefined);
-            // }
+            if (reason === 'clear') {
+              field.onChange(null);
+            }
           }}
           textFieldProps={{
             labelTooltipText:
               'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab',
           }}
-          value={alertSeverityOptions.find(
-            (option) => option.value === field.value
-          )}
+          value={
+            field.value !== null
+              ? alertSeverityOptions.find(
+                  (option) => option.value === field.value
+                )
+              : null
+          }
           data-testid={'severity'}
           errorText={fieldState.error?.message}
           label="Severity"
