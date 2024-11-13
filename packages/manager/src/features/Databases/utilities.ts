@@ -219,10 +219,8 @@ export const toDatabaseFork = (
 };
 
 export const DATABASE_ENGINE_MAP: Record<Engine, string> = {
-  mongodb: 'MongoDB',
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
-  redis: 'Redis',
 } as const;
 
 export const getDatabasesDescription = (

@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText } from '@linode/ui';
+import { FormControl, FormHelperText, Notice } from '@linode/ui';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -6,7 +6,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
