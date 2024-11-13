@@ -4,9 +4,16 @@ import * as React from 'react';
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
-export type FilterValueType = number | number[] | string | string[] | undefined;
+export type FilterValueType =
+  | CloudPulseResources[]
+  | number
+  | number[]
+  | string
+  | string[]
+  | undefined;
 
 export interface DashboardProp {
   dashboard?: Dashboard;

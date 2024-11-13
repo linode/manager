@@ -4,7 +4,6 @@ import React from 'react';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
-import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import {
   useCloudPulseJWEtokenQuery,
   useGetCloudPulseMetricDefinitionsByServiceType,
@@ -15,6 +14,7 @@ import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { JWETokenPayLoad, TimeDuration } from '@linode/api-v4';
+import { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 
 export interface DashboardProperties {
   /**
@@ -45,7 +45,7 @@ export interface DashboardProperties {
   /**
    * Selected resources for the dashboard
    */
-  resources: string[];
+  resources: CloudPulseResources[];
 
   /**
    * optional flag to check whether changes should be stored in preferences or not (in case this component is reused)
@@ -67,7 +67,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
     return {
-      resource_ids: resourceList?.map((resource) => Number(resource.id)) ?? [],
+      resource_ids: resources?.map((resource) => Number(resource.id)) ?? [],
     };
   };
 
@@ -76,17 +76,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isError: isDashboardApiError,
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
-
-  const {
-    data: resourceList,
-    isError: isResourcesApiError,
-    isLoading: isResourcesLoading,
-  } = useResourcesQuery(
-    Boolean(dashboard?.service_type),
-    dashboard?.service_type,
-    {},
-    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {}
-  );
 
   const {
     data: metricDefinitions,
@@ -104,15 +93,11 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
-    Boolean(resourceList)
+    Boolean(resources) && !isDashboardLoading && !isDashboardApiError
   );
 
   if (isDashboardApiError) {
     return renderErrorState('Failed to fetch the dashboard details.');
-  }
-
-  if (isResourcesApiError) {
-    return renderErrorState('Failed to fetch Resources.');
   }
 
   if (isJweTokenError) {
@@ -126,7 +111,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   if (
     isMetricDefinitionLoading ||
     isDashboardLoading ||
-    isResourcesLoading ||
     isJweTokenLoading
   ) {
     return <CircleProgress />;
@@ -141,7 +125,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}
-      resourceList={resourceList}
       resources={resources}
       savePref={savePref}
     />
