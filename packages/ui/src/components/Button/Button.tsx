@@ -4,7 +4,7 @@ import _Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import Reload from 'src/assets/icons/reload.svg';
+import { ReloadIcon } from '../../assets';
 
 import { rotate360 } from '../../foundations';
 import { omittedProps } from '../../utilities';
@@ -167,7 +167,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         sx={sx}
         variant={variant}
       >
-        <Span data-testid="loadingIcon">{loading ? <Reload /> : children}</Span>
+        <Span data-testid="loadingIcon">
+          {loading ? <ReloadIcon /> : children}
+        </Span>
       </StyledButton>
     );
 

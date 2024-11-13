@@ -5,7 +5,7 @@ describe('getReactDocgenTSFileGlobs', () => {
   it('should return component and feature globs for storybook files', () => {
     expect(
       typeScriptFileGlobs.some((file) =>
-        file.includes('../manager/src/components/Button/**/*.{ts,tsx}')
+        file.includes('../ui/src/components/Button/**/*.{ts,tsx}')
       )
     ).toBe(true);
     expect(

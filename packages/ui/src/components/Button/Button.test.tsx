@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Button } from './Button';
 import { renderWithTheme } from '../../utilities/testHelpers';
-import { expect } from 'vitest';
+import { expect, describe, it } from 'vitest';
 
 describe('Button', () => {
   it('should render', () => {
