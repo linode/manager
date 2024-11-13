@@ -201,8 +201,6 @@ export const AddNewMenu = () => {
               (link) =>
                 !link.hide && [
                   <MenuItem
-                    // eslint-disable-next-line jsx-a11y/no-autofocus
-                    autoFocus={link.display === 'Linode'}
                     component={Link}
                     key={link.display}
                     onClick={handleClose}
@@ -213,6 +211,7 @@ export const AddNewMenu = () => {
                       // We have to do this because in packages/manager/src/index.css we force underline links
                       textDecoration: 'none',
                     }}
+                    tabIndex={0}
                   >
                     <Stack>
                       <Typography
