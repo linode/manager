@@ -85,7 +85,7 @@ export const OperatingSystems = () => {
           value={field.value}
           variant="public"
         />
-        {imageDeprecatedText ?? (
+        {imageDeprecatedText && (
           <Notice
             dataTestId="os-distro-deprecated-image-notice"
             spacingBottom={0}
