@@ -137,9 +137,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const handleResourceChange = React.useCallback(
       (resources: CloudPulseResources[], savePref: boolean = false) => {
-        emitFilterChangeByFilterKey(RESOURCES, resources, savePref, {
-          [RESOURCES]: resources,
-        });
+        emitFilterChangeByFilterKey(
+          RESOURCE_ID,
+          resources,
+          savePref,
+          {
+            [RESOURCES]: resources,
+          }
+        );
       },
       [emitFilterChangeByFilterKey]
     );
