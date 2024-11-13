@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Notice, RadioGroup } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -7,7 +7,6 @@ import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { useUpdateDomainMutation } from 'src/queries/domains';

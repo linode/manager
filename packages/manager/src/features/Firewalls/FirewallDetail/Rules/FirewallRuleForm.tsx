@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Notice, RadioGroup } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -7,7 +7,6 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import {
