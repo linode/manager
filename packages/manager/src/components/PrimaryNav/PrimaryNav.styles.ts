@@ -1,11 +1,10 @@
-import { Box, omittedProps } from '@linode/ui';
+import { Box, Divider, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link } from 'react-router-dom';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import { Accordion } from 'src/components/Accordion';
-import { Divider } from 'src/components/Divider';
 import { SIDEBAR_WIDTH } from 'src/components/PrimaryNav/SideMenu';
 
 export const StyledGrid = styled(Grid, {
