@@ -90,7 +90,7 @@ export const CloudPulseResourcesSelect = React.memo(
       return obj?.maxResourceSelections || 10;
     }, [resourceType, flags.aclpResourceTypeMap]);
 
-    const isMaxSelectionsReached = React.useMemo(() => {
+    const resourcesLimitReached = React.useMemo(() => {
       return getResourcesList.length > maxResourceSelectionLimit;
     }, [getResourcesList.length, maxResourceSelectionLimit]);
 
@@ -142,14 +142,14 @@ export const CloudPulseResourcesSelect = React.memo(
           const isResourceSelected = selectedResources?.some(
             (item) => item.label === option.label
           );
-          const isOverLimitOption =
+          const isMaxSelectionsReached =
             selectedResources &&
             selectedResources.length >= maxResourceSelectionLimit &&
             !isResourceSelected;
           return (
             <ListItem
               {...rest}
-              aria-disabled={isOverLimitOption}
+              aria-disabled={isMaxSelectionsReached}
               data-qa-option
               key={key}
             >
@@ -174,7 +174,7 @@ export const CloudPulseResourcesSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
-        disableSelectAll={isMaxSelectionsReached} // Select_All option will not be available if number of resources are higher than resource selection limit
+        disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
         helperText={
