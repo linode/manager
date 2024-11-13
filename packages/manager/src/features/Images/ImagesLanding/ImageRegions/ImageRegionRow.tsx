@@ -63,7 +63,6 @@ export const imageStatusIconMap: Readonly<
 > = {
   available: 'active',
   creating: 'other',
-  deleted: 'error',
   pending: 'other',
   'pending deletion': 'other',
   'pending replication': 'other',

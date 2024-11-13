@@ -313,7 +313,7 @@ describe('machine image', () => {
    * - Confirms that machine image is listed in landing page as expected.
    * - Confirms that notifications appear that describe the image's failed status.
    */
-  it.only('uploads machine image, mock expired upload event', () => {
+  it('uploads machine image, mock expired upload event', () => {
     const label = randomLabel();
     const status = 'failed';
     const message = 'Upload window expired';

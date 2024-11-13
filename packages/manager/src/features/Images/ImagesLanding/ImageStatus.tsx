@@ -23,7 +23,14 @@ interface Props {
 export const ImageStatus = (props: Props) => {
   const { event, image } = props;
 
-  if (event && event.status === 'failed' && image.status === 'pending_upload') {
+  if (
+    event &&
+    event.status === 'failed' &&
+    event.action === 'image_upload' &&
+    image.status === 'pending_upload'
+  ) {
+    // If we have a recent image upload failure, we show the user
+    // that the upload failed and why.
     return (
       <Stack alignItems="center" direction="row">
         <StatusIcon status="error" />
@@ -43,6 +50,7 @@ export const ImageStatus = (props: Props) => {
     ?.status;
 
   if (imageRegionStatus) {
+    // If we have any non-available region statuses, expose the first one as the Image's status to the user
     return (
       <Stack direction="row">
         <StatusIcon status={imageStatusIconMap[imageRegionStatus]} />
@@ -52,10 +60,7 @@ export const ImageStatus = (props: Props) => {
   }
 
   const showEventProgress =
-    event &&
-    event.status === 'started' &&
-    event.percent_complete !== null &&
-    event.percent_complete > 0;
+    event && event.status === 'started' && event.percent_complete !== null;
 
   return (
     <Stack direction="row">
