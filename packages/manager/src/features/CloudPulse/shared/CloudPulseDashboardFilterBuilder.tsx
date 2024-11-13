@@ -26,7 +26,23 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
-import type { AclpConfig, Dashboard } from '@linode/api-v4';
+import type { AclpConfig, AclpWidget, Dashboard } from '@linode/api-v4';
+
+type WidgetFilterValue = { [key: string]: AclpWidget };
+
+type FilterValue =
+  | CloudPulseResources[]
+  | WidgetFilterValue
+  | number
+  | number[]
+  | string
+  | string[]
+  | undefined;
+
+interface AclpConfigExtended {
+  [key: string]: FilterValue;
+  widgets?: WidgetFilterValue;
+}
 
 export interface CloudPulseDashboardFilterBuilderProps {
   /**
@@ -106,7 +122,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         filterKey: string,
         filterValue: FilterValueType,
         savePref: boolean = false,
-        updatedPreferenceData: AclpConfig = {}
+        updatedPreferenceData: AclpConfigExtended = {}
       ) => {
         emitFilterChange(
           filterKey,
@@ -120,17 +136,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const handleResourceChange = React.useCallback(
-      (resourceId: CloudPulseResources[], savePref: boolean = false) => {
-        emitFilterChangeByFilterKey(
-          RESOURCE_ID,
-          resourceId.map((resource) => resource.id),
-          savePref,
-          {
-            [RESOURCES]: resourceId.map((resource: { id: string }) =>
-              String(resource.id)
-            ),
-          }
-        );
+      (resources: CloudPulseResources[], savePref: boolean = false) => {
+        emitFilterChangeByFilterKey(RESOURCES, resources, savePref, {
+          [RESOURCES]: resources,
+        });
       },
       [emitFilterChangeByFilterKey]
     );

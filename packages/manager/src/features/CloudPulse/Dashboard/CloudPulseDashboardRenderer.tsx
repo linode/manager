@@ -9,6 +9,7 @@ import {
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { DashboardProp } from './CloudPulseDashboardLanding';
 
 export const CloudPulseDashboardRenderer = React.memo(
@@ -66,7 +67,7 @@ export const CloudPulseDashboardRenderer = React.memo(
         }
         resources={
           filterValue[RESOURCE_ID] && Array.isArray(filterValue[RESOURCE_ID])
-            ? (filterValue[RESOURCE_ID] as string[])
+            ? (filterValue[RESOURCE_ID] as CloudPulseResources[])
             : []
         }
         additionalFilters={getMetricsCall}
