@@ -1,4 +1,4 @@
-import { Notice, RadioGroup, Radio } from '@linode/ui';
+import { Notice, Radio, RadioGroup } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 

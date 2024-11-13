@@ -1,4 +1,4 @@
-import { Box, FormControl, RadioGroup, Radio } from '@linode/ui';
+import { Box, FormControl, Radio, RadioGroup } from '@linode/ui';
 import * as React from 'react';
 
 import { Chip } from 'src/components/Chip';

@@ -1,4 +1,4 @@
-import { FormControl, Notice, RadioGroup, Radio } from '@linode/ui';
+import { FormControl, Notice, Radio, RadioGroup } from '@linode/ui';
 import React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Box, Notice, RadioGroup, Radio } from '@linode/ui';
+import { Box, Notice, Radio, RadioGroup } from '@linode/ui';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';

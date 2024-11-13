@@ -1,4 +1,4 @@
-import { Notice, RadioGroup, Radio } from '@linode/ui';
+import { Notice, Radio, RadioGroup } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 

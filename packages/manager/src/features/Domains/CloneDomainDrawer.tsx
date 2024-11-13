@@ -1,4 +1,4 @@
-import { Notice, RadioGroup, Radio } from '@linode/ui';
+import { Notice, Radio, RadioGroup } from '@linode/ui';
 import { useFormik } from 'formik';
 import React from 'react';
 import { useHistory } from 'react-router-dom';

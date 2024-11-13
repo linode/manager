@@ -1,4 +1,4 @@
-import { RadioGroup, Radio } from '@linode/ui';
+import { Radio, RadioGroup } from '@linode/ui';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';

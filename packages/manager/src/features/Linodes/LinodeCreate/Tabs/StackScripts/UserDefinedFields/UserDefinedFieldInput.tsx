@@ -1,4 +1,4 @@
-import { Divider, FormControl, RadioGroup, Radio, Stack } from '@linode/ui';
+import { Divider, FormControl, Radio, RadioGroup, Stack } from '@linode/ui';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
