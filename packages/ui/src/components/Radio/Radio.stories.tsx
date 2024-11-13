@@ -1,11 +1,13 @@
 import { Box, RadioGroup } from '@linode/ui';
 import React from 'react';
 
-import { FormControlLabel } from '../../../../manager/src/components/FormControlLabel';
 import { Radio } from './Radio';
 
 import type { RadioProps } from './Radio';
 import type { Meta, StoryObj } from '@storybook/react';
+
+// @TODO: Import from 'ui' package once FormControlLabel is migrated.
+import { FormControlLabel } from '@mui/material';
 
 const meta: Meta<RadioProps> = {
   args: {
