@@ -1,8 +1,6 @@
-import { Chip } from '@linode/ui';
+import { Chip, ChipProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { ChipProps } from 'src/components/Chip';
 
 export interface BetaChipProps
   extends Omit<

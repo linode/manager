@@ -1,9 +1,7 @@
-import { Chip } from '@linode/ui';
+import { Chip, ChipProps } from '@linode/ui';
 import Popover from '@mui/material/Popover';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-
-import { ChipProps } from 'src/components/Chip';
 
 interface ShowMoreProps<T> {
   ariaItemType: string;
