@@ -1,11 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, Divider, Notice } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { Notice } from 'src/components/Notice/Notice';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
@@ -19,8 +17,8 @@ import { PayPalErrorBoundary } from '../PayPalErrorBoundary';
 import AddCreditCardForm from './AddCreditCardForm';
 
 import type { PaymentMethod } from '@linode/api-v4/lib/account';
+import type { NoticeVariant } from '@linode/ui';
 import type { VariantType } from 'notistack';
-import type { NoticeVariant } from 'src/components/Notice/Notice';
 
 interface Props {
   onClose: () => void;
