@@ -64,7 +64,6 @@ export const useImagesQuery = (
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
     placeholderData: keepPreviousData,
-    retry: false,
     ...options,
   });
 

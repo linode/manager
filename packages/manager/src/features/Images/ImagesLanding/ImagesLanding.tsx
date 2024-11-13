@@ -163,6 +163,10 @@ export const ImagesLanding = () => {
       // to update Image region statuses. We should make the API
       // team and Images team implement events for this.
       refetchInterval: 30_000,
+      // If we have a search query, disable retries to keep the UI
+      // snappy if the user inputs an invalid X-Filter. Otherwise,
+      // pass undefined to use the default retry behavior.
+      retry: query ? false : undefined,
     }
   );
 
@@ -205,6 +209,12 @@ export const ImagesLanding = () => {
       ...automaticImagesFilter,
       is_public: false,
       type: 'automatic',
+    },
+    {
+      // If we have a search query, disable retries to keep the UI
+      // snappy if the user inputs an invalid X-Filter. Otherwise,
+      // pass undefined to use the default retry behavior.
+      retry: query ? false : undefined,
     }
   );
 
