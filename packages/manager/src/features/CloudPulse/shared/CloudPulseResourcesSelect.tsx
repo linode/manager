@@ -10,7 +10,6 @@ import { themes } from 'src/utilities/theme';
 import { deepEqual } from '../Utils/FilterBuilder';
 
 import type { Filter, FilterValue } from '@linode/api-v4';
-import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 export interface CloudPulseResources {
   id: string;
@@ -90,10 +89,9 @@ export const CloudPulseResourcesSelect = React.memo(
     // Maximum resource selection limit is fetched from launchdarkly
     const maxResourceSelectionLimit = React.useMemo(() => {
       const obj = flags.aclpResourceTypeMap?.find(
-        (item: CloudPulseResourceTypeMapFlag) =>
-          item.serviceType === resourceType
+        (item) => item.serviceType === resourceType
       );
-      return obj ? obj.maxResourceSelections || 10 : 10;
+      return obj?.maxResourceSelections || 10;
     }, [resourceType, flags.aclpResourceTypeMap]);
 
     const isMaxSelectionsReached = React.useMemo(() => {
@@ -122,25 +120,6 @@ export const CloudPulseResourcesSelect = React.memo(
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resources, region, xFilter, resourceType]);
-
-    // selected resources will appear at the top in the autcomplete popper
-    const resourcesWithSelectedFirst = React.useMemo<
-      CloudPulseResources[]
-    >(() => {
-      const selectedResourcesSet = new Set(
-        selectedResources?.map((item) => item.label)
-      );
-
-      const selectedResourcesList = getResourcesList.filter((resource) =>
-        selectedResourcesSet.has(resource.label)
-      );
-
-      const unselectedResourcesList = getResourcesList.filter(
-        (resource) => !selectedResourcesSet.has(resource.label)
-      );
-
-      return [...selectedResourcesList, ...unselectedResourcesList];
-    }, [getResourcesList, selectedResources]);
 
     return (
       <Autocomplete
@@ -211,7 +190,7 @@ export const CloudPulseResourcesSelect = React.memo(
         loading={isLoading}
         multiple
         noMarginTop
-        options={resourcesWithSelectedFirst}
+        options={getResourcesList}
         value={selectedResources ?? []}
       />
     );

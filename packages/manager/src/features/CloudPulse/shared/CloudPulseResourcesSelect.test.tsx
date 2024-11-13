@@ -282,7 +282,6 @@ describe('CloudPulseResourcesSelect component tests', () => {
       .filter((option) => option.getAttribute(ARIA_SELECTED) === 'true');
 
     expect(selectedOptions.length).toBe(10);
-    expect(selectedOptions[0].textContent).toBe('linode-14');
     expect(screen.getByRole('option', { name: `linode-24` })).toHaveAttribute(
       ARIA_DISABLED,
       'true'
