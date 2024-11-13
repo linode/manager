@@ -154,13 +154,3 @@ export const ImageRow = (props: Props) => {
     </TableRow>
   );
 };
-
-export const isImageUpdating = (e?: Event) => {
-  // Make Typescript happy, since this function can otherwise technically return undefined
-  if (!e) {
-    return false;
-  }
-  return (
-    e?.action === 'disk_imagize' && ['scheduled', 'started'].includes(e.status)
-  );
-};
