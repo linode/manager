@@ -70,6 +70,29 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   class: 'standard',
   disk: Factory.each((i) => i * 20480),
   engines: {
+    mongodb: [
+      {
+        price: {
+          hourly: 0.03,
+          monthly: 50,
+        },
+        quantity: 1,
+      },
+      {
+        price: {
+          hourly: 0.08,
+          monthly: 88,
+        },
+        quantity: 2,
+      },
+      {
+        price: {
+          hourly: 0.22,
+          monthly: 116,
+        },
+        quantity: 3,
+      },
+    ],
     mysql: [
       {
         price: {
@@ -112,6 +135,29 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
         price: {
           hourly: 0.25,
           monthly: 180,
+        },
+        quantity: 3,
+      },
+    ],
+    redis: [
+      {
+        price: {
+          hourly: 0.08,
+          monthly: 180,
+        },
+        quantity: 1,
+      },
+      {
+        price: {
+          hourly: 0.16,
+          monthly: 360,
+        },
+        quantity: 2,
+      },
+      {
+        price: {
+          hourly: 0.32,
+          monthly: 540,
         },
         quantity: 3,
       },
@@ -208,7 +254,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
     '2.2.2.2': 'primary',
   },
   oldest_restore_time: '2024-09-15T17:15:12',
-  platform: Factory.each((i) => (adb10(i) ? 'rdbms-legacy' : 'rdbms-default')),
+  platform: pickRandom(['rdbms-legacy', 'rdbms-default']),
   port: 3306,
   region: 'us-east',
   ssl_connection: false,

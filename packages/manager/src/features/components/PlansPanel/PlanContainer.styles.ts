@@ -12,15 +12,14 @@ interface StyledTableCellPropsProps extends TableCellProps {
 
 export const StyledTable = styled(Table, {
   label: 'StyledTable',
-})({
+})(({ theme }) => ({
   overflowX: 'hidden',
-});
+}));
 
 export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
   shouldForwardProp: omittedProps(['isPlanCell']),
 })<StyledTableCellPropsProps>(({ theme, ...props }) => ({
-  ...(props.isPlanCell && { width: '30%' }),
   '&.emptyCell': {
     borderRight: 'none',
   },

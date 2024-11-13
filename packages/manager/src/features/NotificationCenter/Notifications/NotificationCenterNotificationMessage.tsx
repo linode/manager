@@ -1,9 +1,10 @@
-import { Box, Divider } from '@linode/ui';
+import { Box } from '@linode/ui';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Divider } from 'src/components/Divider';
 import { Typography } from 'src/components/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 

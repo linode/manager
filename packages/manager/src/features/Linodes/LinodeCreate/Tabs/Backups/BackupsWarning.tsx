@@ -1,8 +1,8 @@
-import { Notice } from '@linode/ui';
 import { ListItem } from '@mui/material';
 import React from 'react';
 
 import { List } from 'src/components/List';
+import { Notice } from 'src/components/Notice/Notice';
 
 export const BackupsWarning = () => {
   return (

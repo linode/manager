@@ -1,4 +1,5 @@
-import { FormHelperText, InputAdornment, Notice } from '@linode/ui';
+import { InputAdornment } from '@linode/ui';
+import { FormHelperText } from '@linode/ui';
 import { ResizeLinodeDiskSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -9,6 +10,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Code } from 'src/components/Code/Code';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useEventsPollingActions } from 'src/queries/events/events';

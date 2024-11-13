@@ -1,9 +1,9 @@
-import { Stack } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { Checkbox } from 'src/components/Checkbox';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';

@@ -1,4 +1,3 @@
-import { Notice } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -7,6 +6,7 @@ import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { ErrorMessage } from 'src/components/ErrorMessage';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';

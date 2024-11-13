@@ -1,22 +1,32 @@
+import { Typography } from '@mui/material';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
+import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
+import { Link } from 'src/components/Link';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 import { RegionOption } from './RegionOption';
-import { StyledAutocompleteContainer } from './RegionSelect.styles';
+import {
+  StyledAutocompleteContainer,
+  StyledDistributedRegionBox,
+  sxDistributedRegionIcon,
+} from './RegionSelect.styles';
 import {
   getRegionOptions,
   isRegionOptionUnavailable,
 } from './RegionSelect.utils';
 
-import type { RegionSelectProps } from './RegionSelect.types';
+import type {
+  DisableRegionOption,
+  RegionSelectProps,
+} from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { DisableItemOption } from 'src/components/ListItemOption';
 
 /**
  * A specific select for regions.
@@ -47,12 +57,13 @@ export const RegionSelect = <
     regionFilter,
     regions,
     required,
+    showDistributedRegionIconHelperText,
     tooltipText,
     value,
     width,
   } = props;
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
 
   const {
     data: accountAvailability,
@@ -70,7 +81,7 @@ export const RegionSelect = <
     : null;
 
   const disabledRegions = regionOptions.reduce<
-    Record<string, DisableItemOption>
+    Record<string, DisableRegionOption>
   >((acc, region) => {
     if (disabledRegionsFromProps?.[region.id]) {
       acc[region.id] = disabledRegionsFromProps[region.id];
@@ -90,6 +101,24 @@ export const RegionSelect = <
     }
     return acc;
   }, {});
+
+  const EndAdornment = React.useMemo(() => {
+    // @TODO Gecko: Remove adornment after LA
+    if (isGeckoBetaEnabled && selectedRegion?.site_type === 'distributed') {
+      return (
+        <TooltipIcon
+          icon={<DistributedRegion />}
+          status="other"
+          sxTooltipIcon={sxDistributedRegionIcon}
+          text="This region is a distributed region."
+        />
+      );
+    }
+    if (isGeckoLAEnabled && selectedRegion) {
+      return `(${selectedRegion?.id})`;
+    }
+    return null;
+  }, [isGeckoBetaEnabled, isGeckoLAEnabled, selectedRegion]);
 
   /*
    * When Gecko is enabled, allow regions to be searched by ID by passing a
@@ -113,9 +142,9 @@ export const RegionSelect = <
           return (
             <RegionOption
               disabledOptions={disabledRegions[region.id]}
-              item={region}
               key={key}
               props={rest}
+              region={region}
             />
           );
         }}
@@ -127,8 +156,7 @@ export const RegionSelect = <
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
-            endAdornment:
-              isGeckoLAEnabled && selectedRegion && `(${selectedRegion?.id})`,
+            endAdornment: EndAdornment,
             required,
             startAdornment: selectedRegion && (
               <Flag country={selectedRegion?.country} mr={1} />
@@ -156,6 +184,25 @@ export const RegionSelect = <
         placeholder={placeholder ?? 'Select a Region'}
         value={selectedRegion as Region}
       />
+      {showDistributedRegionIconHelperText && ( // @TODO Gecko Beta: Add docs link
+        <StyledDistributedRegionBox centerChildren={Boolean(errorText)}>
+          <DistributedRegion />
+          <Typography
+            data-testid="region-select-distributed-region-text"
+            sx={{ alignSelf: 'center', textWrap: 'nowrap' }}
+          >
+            {' '}
+            Indicates a distributed region.{' '}
+            <Link
+              aria-label="Learn more about Akamai distributed regions"
+              to="#"
+            >
+              Learn more
+            </Link>
+            .
+          </Typography>
+        </StyledDistributedRegionBox>
+      )}
     </StyledAutocompleteContainer>
   );
 };

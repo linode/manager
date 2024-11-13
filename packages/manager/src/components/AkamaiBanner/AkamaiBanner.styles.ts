@@ -1,7 +1,10 @@
-import { Box, Stack, WarningIcon, omittedProps } from '@linode/ui';
+import { Box, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
+import Warning from 'src/assets/icons/warning.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
+
+import { Stack } from '../Stack';
 
 export const StyledAkamaiLogo = styled(AkamaiLogo, {
   label: 'StyledAkamaiLogo',
@@ -14,7 +17,7 @@ export const StyledAkamaiLogo = styled(AkamaiLogo, {
   },
 }));
 
-export const StyledWarningIcon = styled(WarningIcon, {
+export const StyledWarningIcon = styled(Warning, {
   label: 'StyledWarningIcon',
 })(({ theme }) => ({
   color: theme.tokens.color.Neutrals.Black,

@@ -1,10 +1,10 @@
-import { Notice } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes/volumes';

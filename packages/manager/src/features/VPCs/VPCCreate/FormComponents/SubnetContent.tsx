@@ -1,8 +1,8 @@
-import { Notice } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 

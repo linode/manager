@@ -1,8 +1,10 @@
-import { Box, Divider, Stack } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
+import { Divider } from 'src/components/Divider';
 import { Link } from 'src/components/Link';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { parseAPIDate } from 'src/utilities/date';
 

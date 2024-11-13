@@ -1,8 +1,9 @@
-import { Box, Notice } from '@linode/ui';
+import { Box } from '@linode/ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 
 interface Props {

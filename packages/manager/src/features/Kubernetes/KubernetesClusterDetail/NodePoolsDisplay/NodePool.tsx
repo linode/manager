@@ -1,9 +1,9 @@
-import { Box, Paper, Stack, Tooltip } from '@linode/ui';
+import { Box, Paper, Tooltip } from '@linode/ui';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { StyledActionButton } from 'src/components/Button/StyledActionButton';
-import { Hidden } from 'src/components/Hidden';
 import { Typography } from 'src/components/Typography';
 
 import { NodeTable } from './NodeTable';
@@ -13,6 +13,7 @@ import type {
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   autoscaler: AutoscaleSettings;
@@ -27,6 +28,19 @@ interface Props {
   poolId: number;
   typeLabel: string;
 }
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  autoscaleText: {
+    alignSelf: 'center',
+    paddingRight: theme.spacing(2),
+  },
+  button: {
+    paddingRight: 8,
+  },
+  deletePoolBtn: {
+    paddingRight: 8,
+  },
+}));
 
 export const NodePool = (props: Props) => {
   const {
@@ -43,8 +57,10 @@ export const NodePool = (props: Props) => {
     typeLabel,
   } = props;
 
+  const { classes } = useStyles();
+
   return (
-    <Box data-qa-node-pool-id={poolId} data-qa-node-pool-section>
+    <Grid data-qa-node-pool-id={poolId} data-qa-node-pool-section>
       <Paper
         sx={{
           alignItems: 'center',
@@ -56,77 +72,55 @@ export const NodePool = (props: Props) => {
           py: 0,
         }}
       >
-        <Typography variant="h2">{typeLabel}</Typography>
-        <Hidden smUp>
-          <ActionMenu
-            actionsList={[
-              {
-                onClick: () => openAutoscalePoolDialog(poolId),
-                title: 'Autoscale Pool',
-              },
-              {
-                onClick: () => handleClickResize(poolId),
-                title: 'Resize Pool',
-              },
-              {
-                onClick: () => openRecycleAllNodesDialog(poolId),
-                title: 'Recycle Pool Nodes',
-              },
-              {
-                disabled: isOnlyNodePool,
-                onClick: () => openDeletePoolDialog(poolId),
-                title: 'Delete Pool',
-                tooltip: isOnlyNodePool
-                  ? 'Clusters must contain at least one node pool.'
-                  : undefined,
-              },
-            ]}
-            ariaLabel={`Action menu for Node Pool ${poolId}`}
-          />
-        </Hidden>
-        <Hidden smDown>
-          <Stack alignItems="center" direction="row">
-            <StyledActionButton
-              compactY
-              onClick={() => openAutoscalePoolDialog(poolId)}
-            >
-              Autoscale Pool
-            </StyledActionButton>
-            {autoscaler.enabled && (
-              <Typography mx={1}>
-                (Min {autoscaler.min} / Max {autoscaler.max})
-              </Typography>
-            )}
-            <StyledActionButton
-              compactY
-              onClick={() => handleClickResize(poolId)}
-            >
-              Resize Pool
-            </StyledActionButton>
-            <StyledActionButton
-              compactY
-              onClick={() => openRecycleAllNodesDialog(poolId)}
-            >
-              Recycle Pool Nodes
-            </StyledActionButton>
-            <Tooltip
-              disableFocusListener={!isOnlyNodePool}
-              disableHoverListener={!isOnlyNodePool}
-              disableTouchListener={!isOnlyNodePool}
-              title="Clusters must contain at least one node pool."
-            >
-              <div>
-                <StyledActionButton
-                  compactY
-                  disabled={isOnlyNodePool}
-                  onClick={() => openDeletePoolDialog(poolId)}
-                >
-                  Delete Pool
-                </StyledActionButton>
-              </div>
-            </Tooltip>
-          </Stack>
-        </Hidden>
+        <Box>
+          <Typography variant="h2">{typeLabel}</Typography>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <StyledActionButton
+            compactY
+            onClick={() => openAutoscalePoolDialog(poolId)}
+          >
+            Autoscale Pool
+          </StyledActionButton>
+          {autoscaler.enabled ? (
+            <Typography className={classes.autoscaleText}>
+              {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
+            </Typography>
+          ) : null}
+          <StyledActionButton
+            compactY
+            onClick={() => handleClickResize(poolId)}
+          >
+            Resize Pool
+          </StyledActionButton>
+          <StyledActionButton
+            compactY
+            onClick={() => openRecycleAllNodesDialog(poolId)}
+          >
+            Recycle Pool Nodes
+          </StyledActionButton>
+          <Tooltip
+            disableFocusListener={!isOnlyNodePool}
+            disableHoverListener={!isOnlyNodePool}
+            disableTouchListener={!isOnlyNodePool}
+            title="Clusters must contain at least one node pool."
+          >
+            <div>
+              <StyledActionButton
+                compactY
+                disabled={isOnlyNodePool}
+                onClick={() => openDeletePoolDialog(poolId)}
+              >
+                Delete Pool
+              </StyledActionButton>
+            </div>
+          </Tooltip>
+        </Box>
       </Paper>
       <NodeTable
         encryptionStatus={encryptionStatus}
@@ -135,6 +129,6 @@ export const NodePool = (props: Props) => {
         poolId={poolId}
         typeLabel={typeLabel}
       />
-    </Box>
+    </Grid>
   );
 };

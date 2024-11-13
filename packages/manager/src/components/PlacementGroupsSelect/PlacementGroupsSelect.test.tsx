@@ -106,6 +106,8 @@ describe('PlacementGroupSelect', () => {
     const selectedRegionOption = getByText('my-placement-group');
     fireEvent.click(selectedRegionOption);
 
-    expect(getByText(PLACEMENT_GROUP_HAS_NO_CAPACITY)).toBeVisible();
+    expect(
+      getByText(`Option disabled: ${PLACEMENT_GROUP_HAS_NO_CAPACITY}`)
+    ).toBeVisible();
   });
 });

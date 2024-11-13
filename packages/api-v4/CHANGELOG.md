@@ -1,22 +1,3 @@
-## [2024-11-12] - v0.130.0
-
-
-### Added:
-
-- DBaaS: Suspend and Resume backend calls ([#11152](https://github.com/linode/manager/pull/11152))
-
-### Removed:
-
-- DBaaS: Deprecated types including MongoDB and Redis ([#11218](https://github.com/linode/manager/pull/11218))
-
-### Tech Stories:
-
-- Remove `@types/node` dependency ([#11157](https://github.com/linode/manager/pull/11157))
-
-### Upcoming Features:
-
-- DBaaS: Modify update payload to include version, add patch API ([#11196](https://github.com/linode/manager/pull/11196))
-
 
 ## [2024-10-28] - v0.129.0
 

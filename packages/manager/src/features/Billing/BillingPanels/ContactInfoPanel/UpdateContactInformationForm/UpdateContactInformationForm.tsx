@@ -1,4 +1,3 @@
-import { Notice } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
 import { useFormik } from 'formik';
@@ -7,6 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import EnhancedSelect from 'src/components/EnhancedSelect/Select';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import {
   getRestrictedResourceText,

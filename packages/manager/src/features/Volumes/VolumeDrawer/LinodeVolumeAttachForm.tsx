@@ -1,10 +1,10 @@
-import { Notice } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { number, object } from 'yup';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { Notice } from 'src/components/Notice/Notice';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useGrants } from 'src/queries/profile/profile';
 import {

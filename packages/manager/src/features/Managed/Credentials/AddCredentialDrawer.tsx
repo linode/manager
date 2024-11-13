@@ -1,16 +1,15 @@
-import { Notice } from '@linode/ui';
+import { CredentialPayload } from '@linode/api-v4/lib/managed';
 import { Formik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Notice } from 'src/components/Notice/Notice';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { TextField } from 'src/components/TextField';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import { creationSchema } from './credential.schema';
-
-import type { CredentialPayload } from '@linode/api-v4/lib/managed';
 
 const PasswordInput = React.lazy(
   () => import('src/components/PasswordInput/PasswordInput')

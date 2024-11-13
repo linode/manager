@@ -1,13 +1,17 @@
-import { acceptEntityTransfer } from '@linode/api-v4/lib/entity-transfers';
-import { Notice } from '@linode/ui';
-import { useQueryClient } from '@tanstack/react-query';
+import {
+  TransferEntities,
+  acceptEntityTransfer,
+} from '@linode/api-v4/lib/entity-transfers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Checkbox } from 'src/components/Checkbox';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { Notice } from 'src/components/Notice/Notice';
 import {
   TRANSFER_FILTERS,
   queryKey,
@@ -30,9 +34,6 @@ import {
   StyledSummaryTypography,
   StyledUl,
 } from './ConfirmTransferDialog.styles';
-
-import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
-import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface ConfirmTransferDialogProps {
   onClose: () => void;

@@ -1,11 +1,11 @@
 import { getTFAToken } from '@linode/api-v4/lib/profile';
-import { Notice } from '@linode/ui';
-import { useQueryClient } from '@tanstack/react-query';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
-import { profileQueries } from 'src/queries/profile/profile';
 import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -19,8 +19,7 @@ import {
   StyledRootContainer,
 } from './TwoFactor.styles';
 import { TwoFactorToggle } from './TwoFactorToggle';
-
-import type { APIError } from '@linode/api-v4/lib/types';
+import { profileQueries } from 'src/queries/profile/profile';
 
 export interface TwoFactorProps {
   disabled?: boolean;

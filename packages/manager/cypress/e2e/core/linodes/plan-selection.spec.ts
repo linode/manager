@@ -12,7 +12,6 @@ import {
   mockGetRegionAvailability,
 } from 'support/intercepts/regions';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 const mockRegions = [
   regionFactory.build({
@@ -357,18 +356,11 @@ describe('displays specific linode plans for GPU', () => {
     mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
       'getRegionAvailability'
     );
-    mockAppendFeatureFlags({
-      gpuv2: {
-        transferBanner: true,
-        planDivider: true,
-        egressBanner: true,
-      },
-    }).as('getFeatureFlags');
   });
 
   it('Should render divided tables when GPU divider enabled', () => {
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
+
     ui.regionSelect.find().click();
     ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
 
@@ -376,7 +368,7 @@ describe('displays specific linode plans for GPU', () => {
     // Should display two separate tables
     cy.findByText('GPU').click();
     cy.get(linodePlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 3);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', {

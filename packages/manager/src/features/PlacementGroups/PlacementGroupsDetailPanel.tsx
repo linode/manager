@@ -1,9 +1,10 @@
-import { Box, Notice } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { ListItem } from 'src/components/ListItem';
+import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { Typography } from 'src/components/Typography';

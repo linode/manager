@@ -1,21 +1,17 @@
-import { Notice } from '@linode/ui';
 import Search from '@mui/icons-material/Search';
+import { Theme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
-import EnhancedSelect from 'src/components/EnhancedSelect';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
+import { Notice } from 'src/components/Notice/Notice';
 import { selectStyles } from 'src/features/TopMenu/SearchBar/SearchBar';
 
-import withSearch from '../SearchHOC';
+import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import { SearchItem } from './SearchItem';
-
-import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
-import type { Theme } from '@mui/material/styles';
-import type { RouteComponentProps } from 'react-router-dom';
-import type { Item } from 'src/components/EnhancedSelect';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   enhancedSelectWrapper: {

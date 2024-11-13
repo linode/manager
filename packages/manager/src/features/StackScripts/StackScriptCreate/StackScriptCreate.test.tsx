@@ -3,7 +3,7 @@ import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { profileFactory } from 'src/factories';
 import { queryClientFactory } from 'src/queries/base';
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptCreate } from './StackScriptCreate';
 
@@ -15,22 +15,21 @@ const queryClient = queryClientFactory();
 
 describe('StackScriptCreate', () => {
   it('should render header, inputs, and buttons', () => {
-    const { getByLabelText, getByText } = renderWithThemeAndHookFormContext({
-      component: (
-        <StackScriptCreate
-          {...reactRouterProps}
-          profile={
-            { data: profileFactory.build() } as UseQueryResult<
-              Profile,
-              APIError[]
-            >
-          }
-          grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
-          mode="create"
-          queryClient={queryClient}
-        />
-      ),
-    });
+    const { getByLabelText, getByText } = renderWithTheme(
+      <StackScriptCreate
+        {...reactRouterProps}
+        profile={
+          { data: profileFactory.build() } as UseQueryResult<
+            Profile,
+            APIError[]
+          >
+        }
+        grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
+        mode="create"
+        queryClient={queryClient}
+      />,
+      { queryClient }
+    );
 
     expect(getByText('Create')).toBeVisible();
 

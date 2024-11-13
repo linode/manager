@@ -1,7 +1,6 @@
-import { Notice } from '@linode/ui';
 import * as React from 'react';
 
-import type { NoticeVariant } from '@linode/ui';
+import { Notice, NoticeVariant } from 'src/components/Notice/Notice';
 
 export interface ProductNotificationProps {
   onClick?: () => void;

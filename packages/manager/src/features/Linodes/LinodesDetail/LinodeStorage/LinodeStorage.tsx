@@ -1,5 +1,6 @@
-import { Stack } from '@linode/ui';
 import * as React from 'react';
+
+import { Stack } from 'src/components/Stack';
 
 import { LinodeDisks } from './LinodeDisks';
 import { LinodeVolumes } from './LinodeVolumes';

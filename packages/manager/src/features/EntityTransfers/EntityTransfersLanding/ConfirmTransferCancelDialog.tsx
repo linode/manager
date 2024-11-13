@@ -1,18 +1,19 @@
-import { cancelTransfer } from '@linode/api-v4/lib/entity-transfers';
-import { Notice } from '@linode/ui';
-import { useQueryClient } from '@tanstack/react-query';
+import {
+  TransferEntities,
+  cancelTransfer,
+} from '@linode/api-v4/lib/entity-transfers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { queryKey } from 'src/queries/entityTransfers';
 import { sendEntityTransferCancelEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import type { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
-import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface Props {
   entities?: TransferEntities;

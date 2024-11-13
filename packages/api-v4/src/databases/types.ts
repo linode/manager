@@ -20,7 +20,7 @@ export interface DatabaseType extends BaseType {
   engines: Engines;
 }
 
-export type Engine = 'mysql' | 'postgresql';
+export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
 
 export interface DatabaseEngine {
   id: string;
@@ -103,7 +103,6 @@ export type ClusterSize = 1 | 2 | 3;
 
 type ReadonlyCount = 0 | 2;
 
-/** @deprecated TODO (UIE-8214) remove POST GA */
 export type MySQLReplicationType = 'none' | 'semi_synch' | 'asynch';
 
 export interface CreateDatabasePayload {
@@ -121,10 +120,7 @@ export interface CreateDatabasePayload {
   type: string;
 }
 
-/** @deprecated TODO (UIE-8214) remove POST GA */
 type DriverTypes = 'jdbc' | 'odbc' | 'php' | 'python' | 'ruby' | 'node.js';
-
-/** @deprecated TODO (UIE-8214) remove POST GA */
 interface ConnectionStrings {
   driver: DriverTypes;
   value: string;
@@ -177,24 +173,20 @@ interface BaseDatabase extends DatabaseInstance {
   used_disk_size_gb?: number;
 }
 
-/** @deprecated TODO (UIE-8214) remove POST GA */
 export interface MySQLDatabase extends BaseDatabase {
   /** @Deprecated used by rdbms-legacy only */
   replication_type?: MySQLReplicationType;
 }
 
-/** @deprecated TODO (UIE-8214) remove POST GA */
 export type PostgresReplicationType = 'none' | 'synch' | 'asynch';
 
-/** @deprecated TODO (UIE-8214) remove POST GA */
-export type ReplicationCommitTypes =
+type ReplicationCommitTypes =
   | 'on'
   | 'local'
   | 'remote_write'
   | 'remote_apply'
   | 'off';
 
-/** @deprecated TODO (UIE-8214) remove POST GA */
 export interface PostgresDatabase extends BaseDatabase {
   /** @Deprecated used by rdbms-legacy only */
   replication_type?: PostgresReplicationType;
@@ -202,13 +194,22 @@ export interface PostgresDatabase extends BaseDatabase {
   replication_commit_type?: ReplicationCommitTypes;
 }
 
-/** @deprecated TODO (UIE-8214) remove POST GA */
+type MongoStorageEngine = 'wiredtiger' | 'mmapv1';
+type MongoCompressionType = 'none' | 'snappy' | 'zlib';
+export interface MongoDatabase extends BaseDatabase {
+  storage_engine: MongoStorageEngine;
+  compression_type: MongoCompressionType;
+  replica_set: string | null;
+  peers: string[];
+}
+
 export type ComprehensiveReplicationType = MySQLReplicationType &
   PostgresReplicationType;
 
 export type Database = BaseDatabase &
   Partial<MySQLDatabase> &
-  Partial<PostgresDatabase>;
+  Partial<PostgresDatabase> &
+  Partial<MongoDatabase>;
 
 export interface UpdateDatabasePayload {
   cluster_size?: number;

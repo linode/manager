@@ -1,10 +1,3 @@
-## [2024-11-12] - v0.56.0
-
-
-### Tech Stories:
-
-- Remove `@types/node` dependency ([#11157](https://github.com/linode/manager/pull/11157))
-
 ## [2024-10-28] - v0.55.0
 
 

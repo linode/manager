@@ -1,5 +1,6 @@
-import { Stack } from '@linode/ui';
 import React, { useState } from 'react';
+
+import { Stack } from 'src/components/Stack';
 
 import { Region } from '../../Region';
 import { StackScriptImages } from '../StackScripts/StackScriptImages';

@@ -1,4 +1,4 @@
-import { Box, Paper, Stack } from '@linode/ui';
+import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -8,6 +8,8 @@ import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Paper } from '@linode/ui';
+import { Stack } from 'src/components/Stack';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

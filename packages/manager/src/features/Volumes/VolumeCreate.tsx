@@ -1,4 +1,4 @@
-import { Box, Notice, Paper, Stack } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -22,7 +22,9 @@ import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';

@@ -1,4 +1,4 @@
-import { FormControl, Notice } from '@linode/ui';
+import { FormControl } from '@linode/ui';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -9,6 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Button } from 'src/components/Button/Button';
 import Select from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { TooltipIcon } from 'src/components/TooltipIcon';

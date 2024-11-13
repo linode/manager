@@ -1,8 +1,9 @@
-import { Box, Notice } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Button } from 'src/components/Button/Button';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 

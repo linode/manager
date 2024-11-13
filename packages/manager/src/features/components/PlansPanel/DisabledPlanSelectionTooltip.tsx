@@ -1,4 +1,5 @@
-import { IconButton, Tooltip } from '@linode/ui';
+import { IconButton } from '@linode/ui';
+import { Tooltip } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 

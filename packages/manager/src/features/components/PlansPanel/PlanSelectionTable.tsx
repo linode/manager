@@ -4,14 +4,10 @@ import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
-
-import type { PlanWithAvailability } from './types';
-import type { TooltipIconStatus } from 'src/components/TooltipIcon';
+import { PlanWithAvailability } from './types';
 
 interface PlanSelectionFilterOptionsTable {
   header?: string;
@@ -21,14 +17,12 @@ interface PlanSelectionFilterOptionsTable {
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
   planFilter?: (plan: PlanWithAvailability) => boolean;
-  plans?: PlanWithAvailability[];
   renderPlanSelection: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
   ) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
   showNetwork?: boolean;
   showTransfer?: boolean;
-  showUsableStorage?: boolean;
 }
 
 const tableCells = [
@@ -51,51 +45,12 @@ const tableCells = [
 export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const {
     filterOptions,
-    plans,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
     showNetwork: shouldShowNetwork,
     showTransfer: shouldShowTransfer,
-    showUsableStorage,
   } = props;
-  const flags = useFlags();
 
-  const showTransferTooltip = React.useCallback(
-    (cellName: string) =>
-      plans?.some((plan) => {
-        return (
-          flags.gpuv2?.transferBanner &&
-          plan.class === 'gpu' &&
-          filterOptions?.header?.includes('Ada') &&
-          cellName === 'Transfer'
-        );
-      }),
-    [plans, filterOptions, flags.gpuv2]
-  );
-
-  const showUsableStorageTooltip = (cellName: string) =>
-    cellName === 'Usable Storage';
-
-  const showTooltip = (
-    status: TooltipIconStatus,
-    text: JSX.Element | string,
-    width?: number
-  ) => {
-    return (
-      <TooltipIcon
-        sxTooltipIcon={{
-          height: 12,
-          marginTop: '-2px',
-          ml: 0.5,
-          px: 0,
-          py: 0,
-        }}
-        status={status}
-        text={text}
-        width={width}
-      />
-    );
-  };
   return (
     <StyledTable
       aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
@@ -112,14 +67,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             ) {
               return null;
             }
-            if (
-              showUsableStorage &&
-              !flags.dbaasV2?.beta &&
-              flags.dbaasV2?.enabled &&
-              cellName === 'Storage'
-            ) {
-              cellName = 'Usable Storage';
-            }
             return (
               <StyledTableCell
                 center={center}
@@ -131,17 +78,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                 {isPlanCell && filterOptions?.header
                   ? filterOptions?.header
                   : cellName}
-                {showTransferTooltip(cellName) &&
-                  showTooltip(
-                    'help',
-                    'Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to charges.'
-                  )}
-                {showUsableStorageTooltip(cellName) &&
-                  showTooltip(
-                    'help',
-                    'Usable storage is smaller than the actual plan storage due to the overhead from the database platform.',
-                    240
-                  )}
               </StyledTableCell>
             );
           })}

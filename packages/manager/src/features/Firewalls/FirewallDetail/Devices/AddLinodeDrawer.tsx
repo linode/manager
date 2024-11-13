@@ -1,4 +1,3 @@
-import { Notice } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -7,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { SupportLink } from 'src/components/SupportLink';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {

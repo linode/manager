@@ -1,15 +1,14 @@
-import { Notice } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Accordion } from 'src/components/Accordion';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-
-import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   enableBackupsButton: {

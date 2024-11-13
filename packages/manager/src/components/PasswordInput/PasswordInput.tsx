@@ -1,8 +1,8 @@
-import { Stack } from '@linode/ui';
 import * as React from 'react';
 import zxcvbn from 'zxcvbn';
 
 import { StrengthIndicator } from '../PasswordInput/StrengthIndicator';
+import { Stack } from '../Stack';
 import { HideShowText } from './HideShowText';
 
 import type { TextFieldProps } from 'src/components/TextField';

@@ -1,3 +1,4 @@
+import { act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -10,29 +11,32 @@ import type { CopyTooltipProps } from './CopyTooltip';
 const mockText = 'Hello world';
 
 const defaultProps: CopyTooltipProps = {
-  onClickCallback: vi.fn(),
   text: mockText,
 };
 
 describe('CopyTooltip', () => {
   it('should render the copy icon button and tooltip', async () => {
-    const { findByRole, getByLabelText } = renderWithTheme(
+    const { getByLabelText, getByRole } = renderWithTheme(
       <CopyTooltip {...defaultProps} />
     );
 
     const copyIconButton = getByLabelText(`Copy ${mockText} to clipboard`);
 
-    await userEvent.hover(copyIconButton);
+    await act(() => userEvent.hover(copyIconButton));
 
-    const copyTooltip = await findByRole('tooltip');
-    expect(copyTooltip).toBeInTheDocument();
-    expect(copyTooltip).toHaveTextContent('Copy');
+    await waitFor(() => {
+      const copyTooltip = getByRole('tooltip');
+      expect(copyTooltip).toBeInTheDocument();
+      expect(copyTooltip).toHaveTextContent('Copy');
+    });
 
     await userEvent.click(copyIconButton);
 
-    const copiedTooltip = await findByRole('tooltip');
-    expect(copiedTooltip).toBeInTheDocument();
-    expect(copiedTooltip).toHaveTextContent('Copied!');
+    await waitFor(() => {
+      const copiedTooltip = getByRole('tooltip', {});
+      expect(copiedTooltip).toBeInTheDocument();
+      expect(copiedTooltip).toHaveTextContent('Copied!');
+    });
   });
 
   it('should render text with the copyableText property', async () => {
@@ -76,7 +80,7 @@ describe('CopyTooltip', () => {
     expect(getByText('•••••••••••')).toBeVisible();
     expect(queryByText(mockText)).toBeNull();
 
-    await userEvent.click(visibilityToggle);
+    await act(() => userEvent.click(visibilityToggle));
 
     // Text should be unmasked
     expect(getByText('Hello world')).toBeVisible();

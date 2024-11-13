@@ -1,10 +1,10 @@
-import { Notice } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
 import { CircleProgress } from 'src/components/CircleProgress';
+import { Notice } from 'src/components/Notice/Notice';
 
 import {
   StyledLinodeUsage,
@@ -90,30 +90,32 @@ export const TransferContent = (props: ContentProps) => {
         value={Math.ceil(linodeUsagePercent)}
         valueBuffer={Math.ceil(totalUsagePercent)}
       />
-      <StyledLinodeUsage>
-        <span>
-          {linodeLabel} ({linodeUsedInGB} GB - {Math.ceil(linodeUsagePercent)}
-          %)
-        </span>
-      </StyledLinodeUsage>
-      <StyledPoolUsage>
-        <span>
-          {isDynamicPricingDC
-            ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
-                totalUsagePercent
-              )}%)`
-            : `Global Pool Used (${totalUsedInGB} GB - ${Math.ceil(
-                totalUsagePercent
-              )}%)`}
-        </span>
-      </StyledPoolUsage>
-      <StyledRemainingPoolUsage>
-        <span>
-          {isDynamicPricingDC
-            ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
-            : `Global Pool Remaining (${remainingInGB} GB)`}
-        </span>
-      </StyledRemainingPoolUsage>
+      <>
+        <StyledLinodeUsage>
+          <span>
+            {linodeLabel} ({linodeUsedInGB} GB - {Math.ceil(linodeUsagePercent)}
+            %)
+          </span>
+        </StyledLinodeUsage>
+        <StyledPoolUsage>
+          <span>
+            {isDynamicPricingDC
+              ? `${regionName} Transfer Used (${totalUsedInGB} GB - ${Math.ceil(
+                  totalUsagePercent
+                )}%)`
+              : `Global Pool Used (${totalUsedInGB} GB - ${Math.ceil(
+                  totalUsagePercent
+                )}%)`}
+          </span>
+        </StyledPoolUsage>
+        <StyledRemainingPoolUsage>
+          <span>
+            {isDynamicPricingDC
+              ? `${regionName} Transfer Remaining (${remainingInGB} GB)`
+              : `Global Pool Remaining (${remainingInGB} GB)`}
+          </span>
+        </StyledRemainingPoolUsage>
+      </>
     </div>
   );
 };

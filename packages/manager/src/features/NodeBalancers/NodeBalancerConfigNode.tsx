@@ -1,4 +1,4 @@
-import { Box, Divider, Notice } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
@@ -6,6 +6,8 @@ import * as React from 'react';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
 import { Chip } from 'src/components/Chip';
+import { Divider } from 'src/components/Divider';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getErrorMap } from 'src/utilities/errorUtils';

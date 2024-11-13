@@ -1,11 +1,13 @@
-import { Notice, Paper, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from '@linode/ui';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useUpdateImageRegionsMutation } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -19,7 +21,7 @@ import type {
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
 import type { Resolver } from 'react-hook-form';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 interface Props {
   image: Image | undefined;
@@ -77,7 +79,7 @@ export const ManageImageReplicasForm = (props: Props) => {
 
   const values = watch();
 
-  const disabledRegions: Record<string, DisableItemOption> = {};
+  const disabledRegions: Record<string, DisableRegionOption> = {};
 
   const availableRegions = image?.regions.filter(
     (regionItem) => regionItem.status === 'available'

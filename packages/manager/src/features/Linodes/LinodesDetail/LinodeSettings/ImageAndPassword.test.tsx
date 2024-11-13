@@ -4,7 +4,7 @@ import * as React from 'react';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ImageAndPassword } from './ImageAndPassword';
 
@@ -20,18 +20,16 @@ const props = {
 
 describe('ImageAndPassword', () => {
   it('should render an Image Select', () => {
-    renderWithThemeAndHookFormContext({
-      component: <ImageAndPassword {...props} />,
-    });
+    renderWithTheme(<ImageAndPassword {...props} />);
 
     expect(screen.getByRole('combobox'));
     expect(screen.getByRole('combobox')).toBeEnabled();
   });
   it('should render a password error if defined', async () => {
     const errorMessage = 'Unable to set password.';
-    const { findByText } = renderWithThemeAndHookFormContext({
-      component: <ImageAndPassword {...props} passwordError={errorMessage} />,
-    });
+    const { findByText } = renderWithTheme(
+      <ImageAndPassword {...props} passwordError={errorMessage} />
+    );
 
     const passwordError = await findByText(errorMessage, undefined, {
       timeout: 2500,
@@ -39,9 +37,7 @@ describe('ImageAndPassword', () => {
     expect(passwordError).toBeVisible();
   });
   it('should render an SSH Keys section', async () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
-      component: <ImageAndPassword {...props} />,
-    });
+    const { getByText } = renderWithTheme(<ImageAndPassword {...props} />);
 
     expect(getByText('SSH Keys', { selector: 'h2' })).toBeVisible();
   });
@@ -54,9 +50,7 @@ describe('ImageAndPassword', () => {
       })
     );
 
-    const { findByText } = renderWithThemeAndHookFormContext({
-      component: <ImageAndPassword {...props} />,
-    });
+    const { findByText } = renderWithTheme(<ImageAndPassword {...props} />);
 
     for (const user of users) {
       // eslint-disable-next-line no-await-in-loop

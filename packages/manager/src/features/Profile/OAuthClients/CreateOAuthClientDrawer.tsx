@@ -1,4 +1,4 @@
-import { FormControl, Notice } from '@linode/ui';
+import { FormControl } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -6,6 +6,7 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Checkbox } from 'src/components/Checkbox';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useCreateOAuthClientMutation } from 'src/queries/account/oauth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';

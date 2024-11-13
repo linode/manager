@@ -1,8 +1,9 @@
-import { Notice, Paper } from '@linode/ui';
+import { Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import { Button } from 'src/components/Button/Button';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 
 export const StyledRootContainer = styled(Paper, {

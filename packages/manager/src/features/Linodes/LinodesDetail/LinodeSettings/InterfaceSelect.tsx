@@ -1,10 +1,12 @@
-import { Divider, Notice, Stack } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { Divider } from 'src/components/Divider';
+import { Notice } from 'src/components/Notice/Notice';
+import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCPanel';

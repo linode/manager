@@ -1,9 +1,11 @@
-import { Divider, Paper, Stack } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { Divider } from 'src/components/Divider';
+import { Paper } from '@linode/ui';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useImageQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';
@@ -63,7 +65,7 @@ export const Summary = () => {
     getMonthlyBackupsPrice({ region: regionId, type })
   );
 
-  const price = getLinodePrice({ clusterSize, regionId, type });
+  const price = getLinodePrice({ type, regionId, clusterSize });
 
   const summaryItems = [
     {

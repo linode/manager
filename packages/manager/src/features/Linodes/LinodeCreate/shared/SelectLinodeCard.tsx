@@ -1,9 +1,10 @@
-import { Stack } from '@linode/ui';
+import { Linode } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { Button } from 'src/components/Button/Button';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { Stack } from 'src/components/Stack';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useImageQuery } from 'src/queries/images';
@@ -14,8 +15,6 @@ import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
-
-import type { Linode } from '@linode/api-v4';
 
 interface Props {
   disabled?: boolean;

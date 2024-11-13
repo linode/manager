@@ -1,6 +1,7 @@
-import { Box, Stack } from '@linode/ui';
+import { Box } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -10,6 +11,7 @@ import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import { getKubeControlPlaneACL } from 'src/features/Kubernetes/kubeUtils';
@@ -27,10 +29,9 @@ import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
 import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 import { KubeEntityDetailFooter } from './KubeEntityDetailFooter';
+import { StyledActionRowGrid } from './KubeSummaryPanel.styles';
 
 import type { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import { Hidden } from 'src/components/Hidden';
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   cluster: KubernetesCluster;
@@ -94,32 +95,55 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     setDrawerOpen(true);
   };
 
+  const sxSpacing = {
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(1),
+  };
+
+  const sxMainGridContainer = {
+    paddingBottom: theme.spacing(2.5),
+    paddingTop: theme.spacing(2),
+    position: 'relative',
+  };
+
   return (
-    <Box>
+    <Stack sx={{ marginBottom: theme.spacing(3) }}>
       <EntityDetail
         body={
-          <Stack direction="row" flexWrap="wrap" gap={2} px={3} py={2}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ ...sxSpacing, ...sxMainGridContainer }}
+          >
             <KubeClusterSpecs cluster={cluster} />
-            <KubeConfigDisplay
-              clusterId={cluster.id}
-              clusterLabel={cluster.label}
-              handleOpenDrawer={handleOpenDrawer}
-              isResettingKubeConfig={isResettingKubeConfig}
-              setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
-            />
-            {cluster.control_plane.high_availability && (
-              <Chip
-                sx={(theme) => ({
-                  borderColor: theme.color.green,
-                  position: 'absolute',
-                  right: theme.spacing(3),
-                })}
-                label="HA CLUSTER"
-                size="small"
-                variant="outlined"
+            <Grid container direction="column" lg={4} xs={12}>
+              <KubeConfigDisplay
+                clusterId={cluster.id}
+                clusterLabel={cluster.label}
+                handleOpenDrawer={handleOpenDrawer}
+                isResettingKubeConfig={isResettingKubeConfig}
+                setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
               />
-            )}
-          </Stack>
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              justifyContent="space-between"
+              lg={5}
+              xs={12}
+            >
+              <StyledActionRowGrid>
+                {cluster.control_plane.high_availability && (
+                  <Chip
+                    label="HA CLUSTER"
+                    size="small"
+                    sx={(theme) => ({ borderColor: theme.color.green })}
+                    variant="outlined"
+                  />
+                )}
+              </StyledActionRowGrid>
+            </Grid>
+          </Grid>
         }
         footer={
           <KubeEntityDetailFooter
@@ -139,46 +163,45 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
           <EntityHeader>
             <Box
               sx={{
+                ...sxSpacing,
                 paddingBottom: theme.spacing(),
-                paddingLeft: theme.spacing(3),
-                paddingRight: theme.spacing(1),
                 paddingTop: theme.spacing(),
               }}
             >
               <Typography variant="h2">Summary</Typography>
             </Box>
-            <Box>
-              <Hidden smUp>
-                <ActionMenu
-                  actionsList={[
-                    {
-                      disabled: Boolean(dashboardError) || !dashboard,
-                      onClick: () => window.open(dashboard?.url, '_blank'),
-                      title: 'Kubernetes Dashboard',
-                    },
-                    {
-                      onClick: () => setIsDeleteDialogOpen(true),
-                      title: 'Delete Cluster',
-                    },
-                  ]}
-                  ariaLabel={`Action menu for Kubernetes Cluster ${cluster.label}`}
-                />
-              </Hidden>
-              <Hidden smDown>
-                <StyledActionButton
-                  disabled={Boolean(dashboardError) || !dashboard}
-                  endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
-                  onClick={() => window.open(dashboard?.url, '_blank')}
-                >
-                  Kubernetes Dashboard
-                </StyledActionButton>
-                <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
-                  Delete Cluster
-                </StyledActionButton>
-              </Hidden>
+            <Box display="flex" justifyContent="end">
+              <StyledActionButton
+                onClick={() => {
+                  window.open(dashboard?.url, '_blank');
+                }}
+                sx={{
+                  '& svg': {
+                    height: '14px',
+                    marginLeft: '4px',
+                  },
+                  alignItems: 'center',
+                  display: 'flex',
+                }}
+                disabled={Boolean(dashboardError) || !dashboard}
+              >
+                Kubernetes Dashboard
+                <OpenInNewIcon />
+              </StyledActionButton>
+              <StyledActionButton
+                sx={{
+                  [theme.breakpoints.up('md')]: {
+                    paddingRight: '8px',
+                  },
+                }}
+                onClick={() => setIsDeleteDialogOpen(true)}
+              >
+                Delete Cluster
+              </StyledActionButton>
             </Box>
           </EntityHeader>
         }
+        noBodyBottomBorder
       />
 
       <KubeConfigDrawer
@@ -231,6 +254,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         will no longer be able to access this cluster via your previous
         Kubeconfig file. This action cannot be undone.
       </ConfirmationDialog>
-    </Box>
+    </Stack>
   );
 });

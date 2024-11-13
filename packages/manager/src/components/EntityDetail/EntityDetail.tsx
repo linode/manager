@@ -51,7 +51,8 @@ const GridBody = styled(Grid, {
       ? undefined
       : `1px solid ${theme.borderColors.borderTable}`, // @TODO LKE-E: This conditional can be removed when/if the footer is introduced in M3-8348
   borderTop: `1px solid ${theme.borderColors.borderTable}`,
-  padding: theme.spacing(),
+  paddingBottom: theme.spacing(),
+  paddingRight: theme.spacing(),
 }));
 
 const GridFooter = styled(Grid, {

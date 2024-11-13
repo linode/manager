@@ -1,8 +1,9 @@
-import { Box, Notice } from '@linode/ui';
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
+import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
 import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';

@@ -32,6 +32,7 @@ interface Props {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   iconTextOuter: {
+    flexBasis: '72%',
     minWidth: 115,
   },
   item: {
@@ -43,6 +44,16 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     paddingBottom: theme.spacing(1),
     paddingTop: theme.spacing(1),
+  },
+  mainGridContainer: {
+    position: 'relative',
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'space-between',
+    },
+  },
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
   },
   tooltip: {
     '& .MuiTooltip-tooltip': {
@@ -136,7 +147,7 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   };
 
   return (
-    <Grid container direction="row" lg={3} xs={12}>
+    <Grid container direction="row" lg={3} spacing={0} xs={12}>
       <Grid lg={6}>{kubeSpecsLeft.map(kubeSpecItem)}</Grid>
       <Grid lg={6}>{kubeSpecsRight.map(kubeSpecItem)}</Grid>
     </Grid>

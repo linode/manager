@@ -88,47 +88,6 @@ export const sxLastListItem = {
   paddingRight: 0,
 };
 
-// ---------------------------------------------------------------------
-// VPC Label Styles
-// ---------------------------------------------------------------------
-
-export const StyledIPv4Box = styled(Box, { label: 'StyledIPv4Box' })(
-  ({ theme }) => ({
-    '&:hover .copy-tooltip > svg, & .copy-tooltip:focus > svg': {
-      opacity: 1,
-    },
-    display: 'flex',
-    [theme.breakpoints.down('md')]: {
-      margin: theme.spacing(0),
-    },
-    marginLeft: theme.spacing(2),
-    border: 0,
-  })
-);
-
-export const StyledIPv4Label = styled(Box, { label: 'StyledIPv4Label' })(
-  ({ theme }) => ({
-    color: theme.textColors.textAccessTable,
-    fontFamily: theme.font.bold,
-    backgroundColor: theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
-    padding: '10px 24px 10px 10px',
-    alignContent: 'center',
-  })
-);
-
-export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
-  ({ theme }) => ({
-    '& div': {
-      fontSize: 15,
-    },
-    alignItems: 'center',
-    backgroundColor: theme.tokens.interaction.Background.Secondary,
-    display: 'flex',
-    fontFamily: '"UbuntuMono", monospace, sans-serif',
-    padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
-  })
-);
-
 export const StyledListItem = styled(Typography, { label: 'StyledTypography' })(
   ({ theme }) => ({
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,

@@ -1,8 +1,13 @@
 import {
+  Domain,
+  DomainRecord,
+  DomainType,
+  RecordType,
+  UpdateDomainPayload,
   createDomainRecord,
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { Notice } from '@linode/ui';
+import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import {
   cond,
@@ -20,10 +25,15 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
+import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
-import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
+import {
+  ExtendedIP,
+  extendedIPToString,
+  stringToExtendedIP,
+} from 'src/utilities/ipUtils';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 
@@ -33,16 +43,6 @@ import {
   isValidCNAME,
   isValidDomainRecord,
 } from './domainUtils';
-
-import type {
-  Domain,
-  DomainRecord,
-  DomainType,
-  RecordType,
-  UpdateDomainPayload,
-} from '@linode/api-v4/lib/domains';
-import type { APIError } from '@linode/api-v4/lib/types';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;
@@ -117,48 +117,74 @@ export class DomainRecordDrawer extends React.Component<
   DomainRecordDrawerProps,
   State
 > {
-  /**
-   * the defaultFieldState is used to pre-populate the drawer with either
-   * editable data or defaults.
-   */
-  static defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
-    axfr_ips: getInitialIPs(props.axfr_ips),
-    description: '',
-    domain: props.domain,
-    expire_sec: props.expire_sec ?? 0,
-    id: props.id,
-    name: props.name ?? '',
-    port: props.port ?? '80',
-    priority: props.priority ?? '10',
-    protocol: props.protocol ?? 'tcp',
-    refresh_sec: props.refresh_sec ?? 0,
-    retry_sec: props.retry_sec ?? 0,
-    service: props.service ?? '',
-    soa_email: props.soa_email ?? '',
-    tag: props.tag ?? 'issue',
-    target: props.target ?? '',
-    ttl_sec: props.ttl_sec ?? 0,
-    weight: props.weight ?? '5',
-  });
+  componentDidUpdate(prevProps: DomainRecordDrawerProps) {
+    if (this.props.open && !prevProps.open) {
+      // Drawer is opening, set the fields according to props
+      this.setState({
+        fields: DomainRecordDrawer.defaultFieldsState(this.props),
+      });
+    }
+  }
 
-  static errorFields = {
-    axfr_ips: 'domain transfers',
-    domain: 'domain',
-    expire_sec: 'expire rate',
-    name: 'name',
-    port: 'port',
-    priority: 'priority',
-    protocol: 'protocol',
-    refresh_sec: 'refresh rate',
-    retry_sec: 'retry rate',
-    service: 'service',
-    soa_email: 'SOA email address',
-    tag: 'tag',
-    target: 'target',
-    ttl_sec: 'ttl_sec',
-    type: 'type',
-    weight: 'weight',
-  };
+  render() {
+    const { submitting } = this.state;
+    const { mode, open, records, type } = this.props;
+    const { fields } = this.types[type];
+    const isCreating = mode === 'create';
+    const isDomain = type === 'master' || type === 'slave';
+
+    const hasARecords = records.find((thisRecord) =>
+      ['A', 'AAAA'].includes(thisRecord.type)
+    ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+
+    const noARecordsNoticeText =
+      'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
+
+    const otherErrors = [
+      getAPIErrorFor({}, this.state.errors)('_unknown'),
+      getAPIErrorFor({}, this.state.errors)('none'),
+    ].filter(Boolean);
+
+    return (
+      <Drawer
+        onClose={this.onClose}
+        open={open}
+        title={`${path([mode], modeMap)} ${path([type], typeMap)} Record`}
+      >
+        {otherErrors.length > 0 &&
+          otherErrors.map((err, index) => {
+            return <Notice key={index} text={err} variant="error" />;
+          })}
+        {!hasARecords && type === 'NS' && (
+          <Notice
+            spacingTop={8}
+            text={noARecordsNoticeText}
+            variant="warning"
+          />
+        )}
+        {fields.map((field: any, idx: number) => field(idx))}
+
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'save',
+            disabled: submitting,
+            label: 'Save',
+            loading: submitting,
+            onClick: isDomain
+              ? this.onDomainEdit
+              : isCreating
+              ? this.onRecordCreate
+              : this.onRecordEdit,
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: this.onClose,
+          }}
+        />
+      </Drawer>
+    );
+  }
 
   DefaultTTLField = () => (
     <this.MSSelect field="ttl_sec" fn={this.setTTLSec} label="Default TTL" />
@@ -448,6 +474,49 @@ export class DomainRecordDrawer extends React.Component<
 
   WeightField = () => <this.NumberField field="weight" label="Weight" />;
 
+  /**
+   * the defaultFieldState is used to pre-populate the drawer with either
+   * editable data or defaults.
+   */
+  static defaultFieldsState = (props: Partial<DomainRecordDrawerProps>) => ({
+    axfr_ips: getInitialIPs(props.axfr_ips),
+    description: '',
+    domain: props.domain,
+    expire_sec: props.expire_sec ?? 0,
+    id: props.id,
+    name: props.name ?? '',
+    port: props.port ?? '80',
+    priority: props.priority ?? '10',
+    protocol: props.protocol ?? 'tcp',
+    refresh_sec: props.refresh_sec ?? 0,
+    retry_sec: props.retry_sec ?? 0,
+    service: props.service ?? '',
+    soa_email: props.soa_email ?? '',
+    tag: props.tag ?? 'issue',
+    target: props.target ?? '',
+    ttl_sec: props.ttl_sec ?? 0,
+    weight: props.weight ?? '5',
+  });
+
+  static errorFields = {
+    axfr_ips: 'domain transfers',
+    domain: 'domain',
+    expire_sec: 'expire rate',
+    name: 'name',
+    port: 'port',
+    priority: 'priority',
+    protocol: 'protocol',
+    refresh_sec: 'refresh rate',
+    retry_sec: 'retry rate',
+    service: 'service',
+    soa_email: 'SOA email address',
+    tag: 'tag',
+    target: 'target',
+    ttl_sec: 'ttl_sec',
+    type: 'type',
+    weight: 'weight',
+  };
+
   filterDataByType = (
     fields: EditableDomainFields | EditableRecordFields,
     t: DomainType | RecordType
@@ -640,16 +709,6 @@ export class DomainRecordDrawer extends React.Component<
     key: keyof EditableDomainFields | keyof EditableRecordFields
   ) => (value: any) => this.setState(set(lensPath(['fields', key]), value));
 
-  componentDidUpdate(prevProps: DomainRecordDrawerProps) {
-    if (this.props.open && !prevProps.open) {
-      // Drawer is opening, set the fields according to props
-      this.setState({
-        fields: DomainRecordDrawer.defaultFieldsState(this.props),
-      });
-    }
-  }
-
-  // eslint-disable-next-line perfectionist/sort-classes
   setExpireSec = this.updateField('expire_sec');
 
   setProtocol = this.updateField('protocol');
@@ -669,6 +728,9 @@ export class DomainRecordDrawer extends React.Component<
 
   types = {
     A: {
+      fields: [],
+    },
+    PTR: {
       fields: [],
     },
     AAAA: {
@@ -740,9 +802,6 @@ export class DomainRecordDrawer extends React.Component<
         (idx: number) => <this.TTLField key={idx} />,
       ],
     },
-    PTR: {
-      fields: [],
-    },
     SRV: {
       fields: [
         (idx: number) => <this.ServiceField key={idx} />,
@@ -798,66 +857,6 @@ export class DomainRecordDrawer extends React.Component<
       fields: [],
     },
   };
-
-  render() {
-    const { submitting } = this.state;
-    const { mode, open, records, type } = this.props;
-    const { fields } = this.types[type];
-    const isCreating = mode === 'create';
-    const isDomain = type === 'master' || type === 'slave';
-
-    const hasARecords = records.find((thisRecord) =>
-      ['A', 'AAAA'].includes(thisRecord.type)
-    ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
-
-    const noARecordsNoticeText =
-      'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
-
-    const otherErrors = [
-      getAPIErrorFor({}, this.state.errors)('_unknown'),
-      getAPIErrorFor({}, this.state.errors)('none'),
-    ].filter(Boolean);
-
-    return (
-      <Drawer
-        onClose={this.onClose}
-        open={open}
-        title={`${path([mode], modeMap)} ${path([type], typeMap)} Record`}
-      >
-        {otherErrors.length > 0 &&
-          otherErrors.map((err, index) => {
-            return <Notice key={index} text={err} variant="error" />;
-          })}
-        {!hasARecords && type === 'NS' && (
-          <Notice
-            spacingTop={8}
-            text={noARecordsNoticeText}
-            variant="warning"
-          />
-        )}
-        {fields.map((field: any, idx: number) => field(idx))}
-
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'save',
-            disabled: submitting,
-            label: 'Save',
-            loading: submitting,
-            onClick: isDomain
-              ? this.onDomainEdit
-              : isCreating
-              ? this.onRecordCreate
-              : this.onRecordEdit,
-          }}
-          secondaryButtonProps={{
-            'data-testid': 'cancel',
-            label: 'Cancel',
-            onClick: this.onClose,
-          }}
-        />
-      </Drawer>
-    );
-  }
 }
 
 const modeMap = {

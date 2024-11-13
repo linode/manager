@@ -15,10 +15,10 @@ export const omittedProps = <Props>(props: Array<keyof Props>) => (
 ): boolean => !props.includes(prop);
 
 /**
-   * Helper to filter out props we spread into a component.
-   * This helpers differs from `omittedProps` in that it omits the props
-   * from the object instead of returning a boolean.
-   * This util is a direct replacement for `omit` from lodash.
+ * Helper to filter out props we spread into a component.
+ * This helpers differs from `omittedProps` in that it omits the props
+ * from the object instead of returning a boolean.
+ * This util is a direct replacement for `omit` from lodash.
 
  * @param props Array of props to filter out
  * @param toRemove Array of props to remove

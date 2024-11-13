@@ -1,6 +1,8 @@
-import { Box, Stack } from '@linode/ui';
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
+
+import { Stack } from 'src/components/Stack';
 
 import type { Theme } from '@mui/material/styles';
 

@@ -21,7 +21,7 @@ import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
-import { Divider } from '@linode/ui';
+import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 import type { Theme } from '@mui/material/styles';

@@ -1,16 +1,15 @@
-import { Divider } from '@linode/ui';
+import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Divider } from 'src/components/Divider';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LineGraph } from 'src/components/LineGraph/LineGraph';
-import { Typography } from 'src/components/Typography';
-
-import type { Theme } from '@mui/material/styles';
-import type {
+import {
   DataSet,
+  LineGraph,
   LineGraphProps,
 } from 'src/components/LineGraph/LineGraph';
+import { Typography } from 'src/components/Typography';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   message: {

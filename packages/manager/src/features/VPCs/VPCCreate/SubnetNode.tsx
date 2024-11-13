@@ -1,5 +1,6 @@
-import { FormHelperText, Stack } from '@linode/ui';
+import { FormHelperText } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
+import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';

@@ -1,8 +1,8 @@
-import { Notice } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
+import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

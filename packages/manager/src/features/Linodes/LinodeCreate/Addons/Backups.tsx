@@ -1,4 +1,3 @@
-import { Notice, Stack } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
@@ -7,6 +6,8 @@ import { Currency } from 'src/components/Currency';
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
+import { Notice } from 'src/components/Notice/Notice';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccountSettings } from 'src/queries/account/settings';

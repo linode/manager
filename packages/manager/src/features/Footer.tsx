@@ -1,4 +1,4 @@
-import { Stack } from '@linode/ui';
+import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

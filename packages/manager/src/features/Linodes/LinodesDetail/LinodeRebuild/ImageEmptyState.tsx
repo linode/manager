@@ -1,7 +1,8 @@
-import { Notice, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Notice } from 'src/components/Notice/Notice';
+import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 
 import type { SxProps, Theme } from '@mui/material/styles';

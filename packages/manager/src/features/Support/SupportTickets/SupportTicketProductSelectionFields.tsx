@@ -10,7 +10,6 @@ import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllNodeBalancersQuery } from 'src/queries/nodebalancers';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { useAllVolumesQuery } from 'src/queries/volumes/volumes';
 import { useAllVPCsQuery } from 'src/queries/vpcs/vpcs';
 
@@ -83,12 +82,6 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
   } = useAllLinodesQuery({}, {}, entityType === 'linode_id');
 
   const {
-    data: buckets,
-    error: bucketsError,
-    isLoading: bucketsLoading,
-  } = useObjectStorageBuckets(entityType === 'bucket');
-
-  const {
     data: volumes,
     error: volumesError,
     isLoading: volumesLoading,
@@ -100,9 +93,8 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
     isLoading: vpcsLoading,
   } = useAllVPCsQuery(entityType === 'vpc_id');
 
-  const getEntityOptions = (): { label: string; value: number | string }[] => {
+  const getEntityOptions = (): { label: string; value: number }[] => {
     const reactQueryEntityDataMap = {
-      bucket: buckets,
       database_id: databases,
       domain_id: domains,
       firewall_id: firewalls,
@@ -131,17 +123,6 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
       );
     }
 
-    if (entityType === 'bucket') {
-      return (
-        reactQueryEntityDataMap['bucket']?.buckets?.map(
-          ({ label, region }) => ({
-            label,
-            value: region ?? '',
-          })
-        ) || []
-      );
-    }
-
     return (
       reactQueryEntityDataMap[entityType]?.map(
         ({ id, label }: { id: number; label: string }) => ({
@@ -153,7 +134,6 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
   };
 
   const loadingMap: Record<EntityType, boolean> = {
-    bucket: bucketsLoading,
     database_id: databasesLoading,
     domain_id: domainsLoading,
     firewall_id: firewallsLoading,
@@ -167,7 +147,6 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
   };
 
   const errorMap: Record<EntityType, APIError[] | null> = {
-    bucket: bucketsError,
     database_id: databasesError,
     domain_id: domainsError,
     firewall_id: firewallsError,

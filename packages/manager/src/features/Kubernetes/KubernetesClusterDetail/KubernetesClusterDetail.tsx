@@ -1,4 +1,4 @@
-import { Box, Stack } from '@linode/ui';
+import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -78,13 +78,16 @@ export const KubernetesClusterDetail = () => {
   };
 
   return (
-    <Box>
+    <>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
-      <UpgradeKubernetesVersionBanner
-        clusterID={cluster?.id}
-        clusterLabel={cluster?.label}
-        currentVersion={cluster?.k8s_version}
-      />
+      <Grid>
+        <UpgradeKubernetesVersionBanner
+          clusterID={cluster?.id}
+          clusterLabel={cluster?.label}
+          currentVersion={cluster?.k8s_version}
+        />
+      </Grid>
+
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
@@ -107,33 +110,37 @@ export const KubernetesClusterDetail = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         title="Kubernetes Cluster Details"
       />
-      <Stack spacing={1}>
+      <Grid>
         <KubeSummaryPanel cluster={cluster} />
-        {showAPL && cluster.apl_enabled && (
-          <Box>
-            <LandingHeader
-              docsLabel="Docs"
-              docsLink="https://apl-docs.net/"
-              removeCrumbX={[1, 2, 3]}
-              title="Application Platform for LKE"
-            />
+      </Grid>
+      {showAPL && cluster.apl_enabled && (
+        <>
+          <LandingHeader
+            docsLabel="Docs"
+            docsLink="https://apl-docs.net/"
+            removeCrumbX={[1, 2, 3]}
+            title="Application Platform for LKE"
+          />
+          <Grid>
             <APLSummaryPanel cluster={cluster} />
-          </Box>
-        )}
+          </Grid>
+        </>
+      )}
+      <Grid>
         <NodePoolsDisplay
           clusterID={cluster.id}
           clusterLabel={cluster.label}
           clusterRegionId={cluster.region}
           regionsData={regionsData || []}
         />
-      </Stack>
+      </Grid>
       <UpgradeKubernetesClusterToHADialog
         clusterID={cluster.id}
         onClose={() => setIsUpgradeToHAOpen(false)}
         open={isUpgradeToHAOpen}
         regionID={cluster.region}
       />
-    </Box>
+    </>
   );
 };
 

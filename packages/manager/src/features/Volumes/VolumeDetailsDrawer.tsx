@@ -1,11 +1,10 @@
-import { Stack } from '@linode/ui';
+import { Volume } from '@linode/api-v4';
 import React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { Drawer } from 'src/components/Drawer';
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
-
-import type { Volume } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;

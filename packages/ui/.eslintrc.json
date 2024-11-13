@@ -56,7 +56,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/interface-name-prefix": "off",
-    "sonarjs/cognitive-complexity": "off",
+    "sonarjs/cognitive-complexity": "warn",
     "sonarjs/no-duplicate-string": "warn",
     "sonarjs/prefer-immediate-return": "warn",
     "sonarjs/no-identical-functions": "warn",

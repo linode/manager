@@ -1,4 +1,4 @@
-import { Stack } from '@linode/ui';
+import { Stack } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 

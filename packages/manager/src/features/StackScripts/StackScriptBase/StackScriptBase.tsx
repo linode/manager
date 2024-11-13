@@ -1,7 +1,9 @@
-import { Notice } from '@linode/ui';
+import { Image } from '@linode/api-v4/lib/images';
+import { StackScript } from '@linode/api-v4/lib/stackscripts';
+import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 
@@ -9,7 +11,12 @@ import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import { Button } from 'src/components/Button/Button';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { withProfile } from 'src/containers/profile.container';
+import { Notice } from 'src/components/Notice/Notice';
+import {
+  WithProfileProps,
+  withProfile,
+} from 'src/containers/profile.container';
+import { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getDisplayName } from 'src/utilities/getDisplayName';
@@ -18,9 +25,11 @@ import { getQueryParamFromQueryString } from 'src/utilities/queryParams';
 
 import { StackScriptTableHead } from '../Partials/StackScriptTableHead';
 import {
+  AcceptedFilters,
   generateCatchAllFilter,
   generateSpecificFilter,
 } from '../stackScriptUtils';
+import { StackScriptsRequest } from '../types';
 import {
   StyledContentDiv,
   StyledDebouncedSearchTextfield,
@@ -30,15 +39,6 @@ import {
   StyledTable,
 } from './StackScriptBase.styles';
 import { StackScriptsEmptyLandingState } from './StackScriptsEmptyLandingPage';
-
-import type { AcceptedFilters } from '../stackScriptUtils';
-import type { StackScriptsRequest } from '../types';
-import type { Image } from '@linode/api-v4/lib/images';
-import type { StackScript } from '@linode/api-v4/lib/stackscripts';
-import type { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
-import type { RouteComponentProps } from 'react-router-dom';
-import type { WithProfileProps } from 'src/containers/profile.container';
-import type { WithQueryClientProps } from 'src/containers/withQueryClient.container';
 
 type CurrentFilter = 'deploys' | 'label' | 'revision';
 
@@ -102,6 +102,199 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
   const { isSelecting, useQueryString } = options;
 
   class EnhancedComponent extends React.Component<CombinedProps, State> {
+    componentDidMount() {
+      this.mounted = true;
+      // If the URL contains a QS param called "query" treat it as a filter.
+      const query = getQueryParamFromQueryString(
+        this.props.location.search,
+        'query'
+      );
+      if (query) {
+        return this.handleSearch(query);
+      }
+
+      return this.getDataAtPage(1);
+    }
+
+    componentWillUnmount() {
+      this.mounted = false;
+    }
+
+    render() {
+      const {
+        allStackScriptsLoaded,
+        currentFilterType,
+        didSearch,
+        error,
+        fieldError,
+        getMoreStackScriptsFailed,
+        gettingMoreStackScripts,
+        isSearching,
+        isSorting,
+        listOfStackScripts,
+        sortOrder,
+        successMessage,
+      } = this.state;
+
+      const { grants, profile } = this.props;
+
+      const userCannotCreateStackScripts =
+        Boolean(profile.data?.restricted) &&
+        !grants.data?.global.add_stackscripts;
+
+      if (error) {
+        return (
+          <div style={{ overflow: 'hidden' }}>
+            <ErrorState
+              errorText={pathOr(
+                'There was an error.',
+                [0, 'reason'],
+                handleUnauthorizedErrors(
+                  error,
+                  'You are not authorized to view StackScripts for this account.'
+                )
+              )}
+            />
+          </div>
+        );
+      }
+
+      if (this.state.loading) {
+        return (
+          <StyledLoaderDiv>
+            <CircleProgress />
+          </StyledLoaderDiv>
+        );
+      }
+
+      // Use the query string if the argument has been specified.
+      const query = useQueryString
+        ? getQueryParamFromQueryString(this.props.location.search, 'query')
+        : undefined;
+
+      return (
+        <React.Fragment>
+          {fieldError && fieldError.reason && (
+            <Notice text={fieldError.reason} variant="error" />
+          )}
+          {successMessage && <Notice text={successMessage} variant="success" />}
+          {/*
+           * We only want to show this empty state on the initial GET StackScripts request
+           * If the user is searching and 0 results come back, we just want to show
+           * an empty table, rather than showing a message indicating no StackScripts exist
+           */}
+          {!didSearch &&
+          listOfStackScripts &&
+          listOfStackScripts.length === 0 ? (
+            <StyledEmptyStateDiv data-qa-stackscript-empty-msg>
+              {userCannotCreateStackScripts ? (
+                <StyledPlaceholder
+                  icon={StackScriptsIcon}
+                  isEntity
+                  renderAsSecondary
+                  title="StackScripts"
+                >
+                  You don&rsquo;t have any StackScripts to select from.
+                </StyledPlaceholder>
+              ) : (
+                <StackScriptsEmptyLandingState
+                  goToCreateStackScript={this.goToCreateStackScript}
+                />
+              )}
+            </StyledEmptyStateDiv>
+          ) : (
+            <React.Fragment>
+              <StyledContentDiv isSelecting={!isSelecting}>
+                <StyledDebouncedSearchTextfield
+                  tooltipText={
+                    this.props.category === 'community'
+                      ? `Hint: try searching for a specific item by prepending your
+                  search term with "username:", "label:", or "description:"`
+                      : ''
+                  }
+                  debounceTime={400}
+                  defaultValue={query}
+                  hideLabel
+                  isSearching={isSearching}
+                  label="Search by Label, Username, or Description"
+                  onSearch={this.handleSearch}
+                  placeholder="Search by Label, Username, or Description"
+                  value={query ?? ''}
+                />
+              </StyledContentDiv>
+              <StyledTable
+                aria-label="List of StackScripts"
+                colCount={isSelecting ? 1 : 4}
+                noOverflow={true}
+                rowCount={listOfStackScripts.length}
+                style={!isSelecting ? { tableLayout: 'fixed' } : undefined}
+              >
+                <StackScriptTableHead
+                  category={this.props.category}
+                  currentFilterType={currentFilterType}
+                  handleClickTableHeader={this.handleClickTableHeader}
+                  isSelecting={isSelecting}
+                  sortOrder={sortOrder}
+                />
+                <Component
+                  {...this.props}
+                  {...this.state}
+                  getDataAtPage={this.getDataAtPage}
+                  getNext={this.getNext}
+                />
+              </StyledTable>
+
+              {/*
+               * show loading indicator if we're getting more stackscripts
+               * and if we're not showing the "get more stackscripts" button
+               */}
+              {gettingMoreStackScripts && !isSorting && (
+                <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}>
+                  <CircleProgress size="sm" />
+                </div>
+              )}
+            </React.Fragment>
+          )}
+          {/*
+           * if we're sorting, or if we already loaded all results
+           * or if we're in the middle of getting more results, don't render
+           * the lazy load trigger
+           */}
+          {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts && (
+            <div style={{ textAlign: 'center' }}>
+              {/*
+               * If the lazy-load failed (marked by the catch in getNext),
+               * show the "Show more StackScripts button
+               * Otherwise, try to lazy load some more dang stackscripts
+               */}
+              {!getMoreStackScriptsFailed ? (
+                <Waypoint onEnter={this.getNext}>
+                  {/*
+                   * The reason for this empty div is that there was some wonkiness when
+                   * scrolling to the waypoint with trackpads. For some reason, the Waypoint
+                   * would never be scrolled into view no matter how much you scrolled on the
+                   * trackpad. Especially finicky at zoomed in browser sizes
+                   */}
+                  <div style={{ minHeight: '150px' }}></div>
+                </Waypoint>
+              ) : (
+                <Button
+                  buttonType="secondary"
+                  disabled={this.state.gettingMoreStackScripts}
+                  onClick={this.getNext}
+                  style={{ margin: '32px 0 32px 0' }}
+                  title="Show More StackScripts"
+                  value="Show More"
+                >
+                  Show More StackScripts
+                </Button>
+              )}
+            </div>
+          )}
+        </React.Fragment>
+      );
+    }
+
     static displayName = `WithStackScriptBase(${getDisplayName(Component)})`;
 
     generateFilterInfo = (value: CurrentFilter): FilterInfo => {
@@ -406,199 +599,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
     usesKubeImage = (stackScriptImages: string[]) =>
       stackScriptImages.some((imageId) => isLinodeKubeImageId(imageId));
-
-    componentDidMount() {
-      this.mounted = true;
-      // If the URL contains a QS param called "query" treat it as a filter.
-      const query = getQueryParamFromQueryString(
-        this.props.location.search,
-        'query'
-      );
-      if (query) {
-        return this.handleSearch(query);
-      }
-
-      return this.getDataAtPage(1);
-    }
-
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    render() {
-      const {
-        allStackScriptsLoaded,
-        currentFilterType,
-        didSearch,
-        error,
-        fieldError,
-        getMoreStackScriptsFailed,
-        gettingMoreStackScripts,
-        isSearching,
-        isSorting,
-        listOfStackScripts,
-        sortOrder,
-        successMessage,
-      } = this.state;
-
-      const { grants, profile } = this.props;
-
-      const userCannotCreateStackScripts =
-        Boolean(profile.data?.restricted) &&
-        !grants.data?.global.add_stackscripts;
-
-      if (error) {
-        return (
-          <div style={{ overflow: 'hidden' }}>
-            <ErrorState
-              errorText={pathOr(
-                'There was an error.',
-                [0, 'reason'],
-                handleUnauthorizedErrors(
-                  error,
-                  'You are not authorized to view StackScripts for this account.'
-                )
-              )}
-            />
-          </div>
-        );
-      }
-
-      if (this.state.loading) {
-        return (
-          <StyledLoaderDiv>
-            <CircleProgress />
-          </StyledLoaderDiv>
-        );
-      }
-
-      // Use the query string if the argument has been specified.
-      const query = useQueryString
-        ? getQueryParamFromQueryString(this.props.location.search, 'query')
-        : undefined;
-
-      return (
-        <React.Fragment>
-          {fieldError && fieldError.reason && (
-            <Notice text={fieldError.reason} variant="error" />
-          )}
-          {successMessage && <Notice text={successMessage} variant="success" />}
-          {/*
-           * We only want to show this empty state on the initial GET StackScripts request
-           * If the user is searching and 0 results come back, we just want to show
-           * an empty table, rather than showing a message indicating no StackScripts exist
-           */}
-          {!didSearch &&
-          listOfStackScripts &&
-          listOfStackScripts.length === 0 ? (
-            <StyledEmptyStateDiv data-qa-stackscript-empty-msg>
-              {userCannotCreateStackScripts ? (
-                <StyledPlaceholder
-                  icon={StackScriptsIcon}
-                  isEntity
-                  renderAsSecondary
-                  title="StackScripts"
-                >
-                  You don&rsquo;t have any StackScripts to select from.
-                </StyledPlaceholder>
-              ) : (
-                <StackScriptsEmptyLandingState
-                  goToCreateStackScript={this.goToCreateStackScript}
-                />
-              )}
-            </StyledEmptyStateDiv>
-          ) : (
-            <React.Fragment>
-              <StyledContentDiv isSelecting={!isSelecting}>
-                <StyledDebouncedSearchTextfield
-                  tooltipText={
-                    this.props.category === 'community'
-                      ? `Hint: try searching for a specific item by prepending your
-                  search term with "username:", "label:", or "description:"`
-                      : ''
-                  }
-                  debounceTime={400}
-                  defaultValue={query}
-                  hideLabel
-                  isSearching={isSearching}
-                  label="Search by Label, Username, or Description"
-                  onSearch={this.handleSearch}
-                  placeholder="Search by Label, Username, or Description"
-                  value={query ?? ''}
-                />
-              </StyledContentDiv>
-              <StyledTable
-                aria-label="List of StackScripts"
-                colCount={isSelecting ? 1 : 4}
-                noOverflow={true}
-                rowCount={listOfStackScripts.length}
-                style={!isSelecting ? { tableLayout: 'fixed' } : undefined}
-              >
-                <StackScriptTableHead
-                  category={this.props.category}
-                  currentFilterType={currentFilterType}
-                  handleClickTableHeader={this.handleClickTableHeader}
-                  isSelecting={isSelecting}
-                  sortOrder={sortOrder}
-                />
-                <Component
-                  {...this.props}
-                  {...this.state}
-                  getDataAtPage={this.getDataAtPage}
-                  getNext={this.getNext}
-                />
-              </StyledTable>
-
-              {/*
-               * show loading indicator if we're getting more stackscripts
-               * and if we're not showing the "get more stackscripts" button
-               */}
-              {gettingMoreStackScripts && !isSorting && (
-                <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}>
-                  <CircleProgress size="sm" />
-                </div>
-              )}
-            </React.Fragment>
-          )}
-          {/*
-           * if we're sorting, or if we already loaded all results
-           * or if we're in the middle of getting more results, don't render
-           * the lazy load trigger
-           */}
-          {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts && (
-            <div style={{ textAlign: 'center' }}>
-              {/*
-               * If the lazy-load failed (marked by the catch in getNext),
-               * show the "Show more StackScripts button
-               * Otherwise, try to lazy load some more dang stackscripts
-               */}
-              {!getMoreStackScriptsFailed ? (
-                <Waypoint onEnter={this.getNext}>
-                  {/*
-                   * The reason for this empty div is that there was some wonkiness when
-                   * scrolling to the waypoint with trackpads. For some reason, the Waypoint
-                   * would never be scrolled into view no matter how much you scrolled on the
-                   * trackpad. Especially finicky at zoomed in browser sizes
-                   */}
-                  <div style={{ minHeight: '150px' }}></div>
-                </Waypoint>
-              ) : (
-                <Button
-                  buttonType="secondary"
-                  disabled={this.state.gettingMoreStackScripts}
-                  onClick={this.getNext}
-                  style={{ margin: '32px 0 32px 0' }}
-                  title="Show More StackScripts"
-                  value="Show More"
-                >
-                  Show More StackScripts
-                </Button>
-              )}
-            </div>
-          )}
-        </React.Fragment>
-      );
-    }
   }
 
   return compose(withRouter, withProfile)(EnhancedComponent);

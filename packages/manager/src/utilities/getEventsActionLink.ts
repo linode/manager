@@ -6,10 +6,6 @@ export const getEngineFromDatabaseEntityURL = (url: string) => {
   return url.match(/databases\/(\w*)\/instances/i)?.[1];
 };
 
-export const getRegionFromObjectStorageEntityURL = (url: string) => {
-  return url.match(/\/buckets\/([^/]+)/)?.[1];
-};
-
 export const getLinkForEvent = (action: EventAction, entity: Entity | null) => {
   const type = entity?.type;
   const id = entity?.id;
@@ -147,14 +143,10 @@ export const getLinkTargets = (entity: Entity | null) => {
       return '/images';
     case 'longview':
       return '/longview';
-    case 'object_storage_bucket':
-      return `/object-storage/buckets/${getRegionFromObjectStorageEntityURL(
-        entity.url
-      )}/${entity.label}`;
-    case 'placement_group':
-      return `/placement-groups/${entity.id}`;
     case 'volume':
       return '/volumes';
+    case 'placement_group':
+      return `/placement-groups/${entity.id}`;
     case 'vpc':
       return `/vpcs/${entity.id}`;
     default:

@@ -1,7 +1,8 @@
-import { Box, Paper, Stack } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFlags } from 'src/hooks/useFlags';

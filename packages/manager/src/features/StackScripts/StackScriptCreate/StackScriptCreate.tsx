@@ -3,7 +3,6 @@ import {
   getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
-import { Notice } from '@linode/ui';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
@@ -16,6 +15,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { withProfile } from 'src/containers/profile.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';

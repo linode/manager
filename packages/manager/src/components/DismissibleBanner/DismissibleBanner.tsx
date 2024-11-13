@@ -7,7 +7,7 @@ import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotificatio
 
 import { StyledButton, StyledNotice } from './DismissibleBanner.styles';
 
-import type { NoticeProps } from '@linode/ui';
+import type { NoticeProps } from 'src/components/Notice/Notice';
 import type { DismissibleNotificationOptions } from 'src/hooks/useDismissibleNotifications';
 
 interface Props extends NoticeProps {

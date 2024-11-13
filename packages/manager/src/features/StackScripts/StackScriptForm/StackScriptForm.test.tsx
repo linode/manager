@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptForm } from './StackScriptForm';
 
@@ -34,9 +34,7 @@ const props = {
 
 describe('StackScriptCreate', () => {
   it('should render', () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
-      component: <StackScriptForm {...props} />,
-    });
+    const { getByText } = renderWithTheme(<StackScriptForm {...props} />);
     getByText(/stackscript label/i);
   });
 });

@@ -1,8 +1,8 @@
-import { Notice } from '@linode/ui';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 
 import { useIsDatabasesEnabled } from '../Databases/utilities';

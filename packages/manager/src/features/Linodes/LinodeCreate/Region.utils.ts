@@ -1,5 +1,5 @@
 import type { Image, Region } from '@linode/api-v4';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+import type { DisableRegionOption } from 'src/components/RegionSelect/RegionSelect.types';
 
 interface DisabledRegionOptions {
   regions: Region[];
@@ -21,7 +21,7 @@ export const getDisabledRegions = (options: DisabledRegionOptions) => {
     selectedImage &&
     !selectedImage.capabilities.includes('distributed-sites')
   ) {
-    const disabledRegions: Record<string, DisableItemOption> = {};
+    const disabledRegions: Record<string, DisableRegionOption> = {};
 
     for (const region of regions) {
       if (region.site_type === 'distributed') {

@@ -4,7 +4,8 @@ import React from 'react';
 import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
-import { getDatabasesDescription } from 'src/features/Databases/utilities';
+
+import { databaseEngineMap } from '../DatabaseLanding/DatabaseRow';
 
 import type { DatabaseEngine } from '@linode/api-v4';
 
@@ -100,10 +101,9 @@ export const getEngineOptions = (engines: DatabaseEngine[]) => {
             .map((engineObject) => ({
               ...engineObject,
               flag: engineIcons[engineObject.engine],
-              label: getDatabasesDescription({
-                engine: engineObject.engine,
-                version: engineObject.version,
-              }),
+              label: `${databaseEngineMap[engineObject.engine]} v${
+                engineObject.version
+              }`,
               value: `${engineObject.engine}/${engineObject.version}`,
             }))
             .sort((a, b) => (a.version > b.version ? -1 : 1)),

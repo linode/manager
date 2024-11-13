@@ -6,7 +6,6 @@ import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
-import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
@@ -20,8 +19,16 @@ import type { Event } from '@linode/api-v4';
 import type {
   DatabaseInstance,
   DatabaseType,
+  Engine,
 } from '@linode/api-v4/lib/databases/types';
 import type { ActionHandlers } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
+
+export const databaseEngineMap: Record<Engine, string> = {
+  mongodb: 'MongoDB',
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+  redis: 'Redis',
+};
 
 interface Props {
   database: DatabaseInstance;
@@ -46,11 +53,9 @@ export const DatabaseRow = ({
     engine,
     id,
     label,
-    platform,
     region,
     status,
     type,
-    updates,
     version,
   } = database;
 
@@ -96,15 +101,7 @@ export const DatabaseRow = ({
       <Hidden smDown>
         <TableCell>{configuration}</TableCell>
       </Hidden>
-      <TableCell>
-        <DatabaseEngineVersion
-          databaseEngine={engine}
-          databaseID={id}
-          databasePendingUpdates={updates.pending}
-          databasePlatform={platform}
-          databaseVersion={version}
-        />
-      </TableCell>
+      <TableCell>{`${databaseEngineMap[engine]} v${version}`}</TableCell>
       <Hidden mdDown>
         <TableCell>{actualRegion?.label ?? region}</TableCell>
       </Hidden>
