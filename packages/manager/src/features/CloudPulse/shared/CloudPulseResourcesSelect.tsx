@@ -186,7 +186,7 @@ export const CloudPulseResourcesSelect = React.memo(
         }
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
-        limitTags={2}
+        limitTags={1}
         loading={isLoading}
         multiple
         noMarginTop
