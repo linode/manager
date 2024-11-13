@@ -331,7 +331,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             areas={areas}
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
-            height={480}
+            height={424}
             legendRows={legendRows}
             loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
             showLegend={data.length !== 0}

@@ -38,14 +38,14 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           {...rest}
           connectNulls
           fillOpacity={0.5}
-          legendHeight={theme.spacing(18.75)}
+          legendHeight={theme.spacing(16)}
         />
       )}
       {rest.data.length === 0 && (
         <Box
           sx={{
-            bottom: '60%',
-            left: '50%',
+            bottom: '50%',
+            left: '45%',
             position: 'absolute',
           }}
         >
