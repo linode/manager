@@ -1,5 +1,4 @@
-import { Paper } from '@linode/ui';
-import { Button } from '@linode/ui';
+import { Button, Paper } from '@linode/ui';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';

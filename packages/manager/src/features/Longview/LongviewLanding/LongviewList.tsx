@@ -1,5 +1,4 @@
-import { Paper } from '@linode/ui';
-import { Box, StyledLinkButton } from '@linode/ui';
+import { Box, Paper, StyledLinkButton } from '@linode/ui';
 import * as React from 'react';
 
 import { CircleProgress } from 'src/components/CircleProgress';

@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Notice, Paper, Stack } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, Button, Notice, Paper, Stack } from '@linode/ui';
 import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

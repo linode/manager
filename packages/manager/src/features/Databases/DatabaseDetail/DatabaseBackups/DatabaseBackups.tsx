@@ -1,5 +1,4 @@
-import { Button, Paper } from '@linode/ui';
-import { Box, Divider, Notice } from '@linode/ui';
+import { Box, Button, Divider, Notice, Paper } from '@linode/ui';
 import {
   FormControl,
   FormControlLabel,

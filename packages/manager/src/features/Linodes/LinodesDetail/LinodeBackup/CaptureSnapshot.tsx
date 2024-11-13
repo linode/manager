@@ -1,5 +1,4 @@
-import { Paper } from '@linode/ui';
-import { Box, Button, FormControl } from '@linode/ui';
+import { Box, Button, FormControl, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';

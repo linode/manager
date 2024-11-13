@@ -1,5 +1,4 @@
-import { Paper } from '@linode/ui';
-import { Box, Button } from '@linode/ui';
+import { Box, Button, Paper } from '@linode/ui';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 

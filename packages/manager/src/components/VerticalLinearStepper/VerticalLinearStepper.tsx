@@ -138,12 +138,13 @@ export const VerticalLinearStepper = ({
                     )}
                     {index !== 2 && (
                       <Button
-                        //  * 2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
+                        /* Generate a 'data-testid' attribute value based on the label of the next step.
+                            1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
+                            2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
+                        */
                         data-testid={convertToKebabCase(
                           steps[index + 1]?.label
                         )}
-                        // Generate a 'data-testid' attribute value based on the label of the next step.
-                        //  * 1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
                         onClick={() => {
                           handleNext();
                           handler?.();
