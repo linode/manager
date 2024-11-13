@@ -1,32 +1,38 @@
 import {
-  KubeNodePoolResponse,
-  KubernetesCluster,
-  PoolNodeResponse,
   deleteKubernetesCluster,
   getKubernetesClusters,
   getNodePools,
 } from '@linode/api-v4';
+import { DateTime } from 'luxon';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
-import { DateTime } from 'luxon';
 
 import { isTestLabel } from './common';
+
+import type {
+  KubeNodePoolResponse,
+  KubernetesCluster,
+  PoolNodeResponse,
+} from '@linode/api-v4';
+import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 
 /**
  * Describes an LKE plan as shown in Cloud Manager.
  */
-export interface LkePlanDescription {
-  // / Plan size, GB.
+export interface LkePlanDetails {
+  /** Number of nodes in the plan. */
+  nodeCount: number;
+  /** Name of the plan. */
+  planName: string;
+  /** Plan size, GB. */
   size: number;
-
-  // / Label for tab containing the plan in creation screen.
+  /** Label for tab containing the plan in creation screen. */
   tab: string;
-
-  // / Type of plan.
-  type: string;
+  /** Type of plan. */
+  type: LinodeTypeClass;
 }
 
-export interface LkePlanDescriptionAPL extends LkePlanDescription {
+export interface LkePlanDescriptionAPL extends LkePlanDetails {
   disabled: boolean;
 }
 
