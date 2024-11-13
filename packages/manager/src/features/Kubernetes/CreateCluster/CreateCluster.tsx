@@ -77,7 +77,7 @@ export const CreateCluster = () => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
-  const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(true);
+  const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
   const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
 
   const { data, error: regionsError } = useRegionsQuery();

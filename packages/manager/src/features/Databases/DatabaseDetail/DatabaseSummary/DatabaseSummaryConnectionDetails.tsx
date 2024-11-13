@@ -63,6 +63,16 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const password =
     showCredentials && credentials ? credentials?.password : '••••••••••';
 
+  const hostTooltipComponentProps = {
+    tooltip: {
+      style: {
+        minWidth: 285,
+      },
+    },
+  };
+  const HOST_TOOLTIP_COPY =
+    'Use the IPv6 address (AAAA record) for this hostname to avoid network transfer charges when connecting to this database from Linodes within the same region.';
+
   const handleShowPasswordClick = () => {
     setShowPassword((showCredentials) => !showCredentials);
   };
@@ -226,6 +236,14 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
                 className={classes.inlineCopyToolTip}
                 text={database.hosts?.primary}
               />
+              {!isLegacy && (
+                <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={sxTooltipIcon}
+                  componentsProps={hostTooltipComponentProps}
+                  text={HOST_TOOLTIP_COPY}
+                />
+              )}
             </>
           ) : (
             <Typography>
