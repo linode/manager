@@ -1,6 +1,5 @@
+import { Chip } from '@linode/ui';
 import React from 'react';
-
-import { Chip } from 'src/components/Chip';
 
 import { SEVERITY_LABEL_MAP } from '../SupportTickets/constants';
 
