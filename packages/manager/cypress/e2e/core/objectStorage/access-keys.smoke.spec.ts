@@ -42,9 +42,10 @@ describe('object storage access keys smoke tests', () => {
       secret_key: randomString(39),
     });
 
-    mockGetAccount(accountFactory.build({ capabilities: [] }));
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
       objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
     });
 
     mockGetAccessKeys([]).as('getKeys');
@@ -113,9 +114,10 @@ describe('object storage access keys smoke tests', () => {
       secret_key: randomString(39),
     });
 
-    mockGetAccount(accountFactory.build({ capabilities: [] }));
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
       objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
     });
 
     // Mock initial GET request to include an access key.
@@ -162,11 +164,12 @@ describe('object storage access keys smoke tests', () => {
     beforeEach(() => {
       mockGetAccount(
         accountFactory.build({
-          capabilities: ['Object Storage Access Key Regions'],
+          capabilities: ['Object Storage', 'Object Storage Access Key Regions'],
         })
       );
       mockAppendFeatureFlags({
         objMultiCluster: true,
+        objectStorageGen2: { enabled: false },
       });
     });
 
