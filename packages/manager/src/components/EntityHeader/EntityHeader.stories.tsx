@@ -60,6 +60,7 @@ export const Default: Story = {
               },
             }}
             linodeType={{
+              accelerated_devices: 0,
               addons: {
                 backups: {
                   price: {

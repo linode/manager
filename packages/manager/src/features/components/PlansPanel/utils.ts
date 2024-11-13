@@ -165,6 +165,12 @@ export const getIsLimitedAvailability = ({
 };
 
 export const planTabInfoContent = {
+  accelerated: {
+    dataId: 'data-qa-accelerated',
+    key: 'accelerated',
+    title: 'TBD - M3-8834',
+    typography: 'TBD - M3-8834',
+  },
   dedicated: {
     dataId: 'data-qa-dedicated',
     key: 'dedicated',
