@@ -3,17 +3,23 @@
  */
 import {
   accountFactory,
+  accountBetaFactory,
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
   linodeTypeFactory,
+  nodePoolFactory,
   regionFactory,
+  kubeEndpointFactory,
 } from 'src/factories';
 import {
   mockCreateCluster,
   mockGetCluster,
   mockCreateClusterError,
   mockGetControlPlaneACL,
+  mockGetClusterPools,
+  mockGetDashboardUrl,
+  mockGetApiEndpoints,
 } from 'support/intercepts/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -21,14 +27,12 @@ import {
   mockGetRegionAvailability,
 } from 'support/intercepts/regions';
 import { KubernetesCluster } from '@linode/api-v4';
-import { LkePlanDescription } from 'support/api/lke';
-import { lkeClusterPlans, lkeClusterPlansAPL } from 'support/constants/lke';
+import { lkeClusterPlansAPL } from 'support/constants/lke';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { interceptCreateCluster } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomItem } from 'support/util/random';
 import { cleanUp } from 'support/util/cleanup';
-import { authenticate } from 'support/api/authentication';
 import { mockGetAccountBeta } from 'support/intercepts/betas';
 import {
   dcPricingLkeCheckoutSummaryPlaceholder,
@@ -41,29 +45,8 @@ import {
 } from 'support/constants/dc-specific-pricing';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { accountBetaFactory } from 'src/factories';
 
-/**
- * Gets the label for an LKE plan as shown in creation plan table.
- *
- * @param clusterPlan - Cluster plan from which to determine Cloud Manager LKE plan name.
- *
- * @returns LKE plan name for plan.
- */
-const getLkePlanName = (clusterPlan: LkePlanDescription) => {
-  return `${clusterPlan.type} ${clusterPlan.size} GB`;
-};
-
-/**
- * Gets the label for an LKE plan as shown in the creation checkout bar.
- *
- * @param clusterPlan - Cluster plan from which to determine Cloud Manager LKE checkout name.
- *
- * @returns LKE checkout plan name for plan.
- */
-const getLkePlanCheckoutName = (clusterPlan: LkePlanDescription) => {
-  return `${clusterPlan.type} ${clusterPlan.size} GB Plan`;
-};
+import type { LkePlanDetails } from 'support/api/lke';
 
 /**
  * Returns each plan in an array which is similar to the given plan.
@@ -76,8 +59,8 @@ const getLkePlanCheckoutName = (clusterPlan: LkePlanDescription) => {
  * @returns Array of similar cluster plans.
  */
 const getSimilarPlans = (
-  clusterPlan: LkePlanDescription,
-  clusterPlans: LkePlanDescription[]
+  clusterPlan: LkePlanDetails,
+  clusterPlans: LkePlanDetails[]
 ) => {
   return clusterPlans.filter((otherClusterPlan: any) => {
     return (
@@ -87,12 +70,7 @@ const getSimilarPlans = (
   });
 };
 
-authenticate();
-describe('LKE Cluster Creation', () => {
-  before(() => {
-    cleanUp(['linodes', 'lke-clusters']);
-  });
-
+describe.only('LKE Cluster Creation', () => {
   /*
    * - Confirms that users can create a cluster by completing the LKE create form.
    * - Confirms that LKE cluster is created.
@@ -108,11 +86,54 @@ describe('LKE Cluster Creation', () => {
       capabilities: ['Kubernetes'],
     });
     const clusterVersion = '1.27';
-    const clusterPlans = new Array(2)
-      .fill(null)
-      .map(() => randomItem(lkeClusterPlans));
+    const clusterPlans: LkePlanDetails[] = [
+      {
+        size: 4,
+        tab: 'Dedicated CPU',
+        type: 'dedicated',
+        nodeCount: 4,
+        planName: 'Dedicated 4 GB',
+      },
+      {
+        size: 24,
+        tab: 'Shared CPU',
+        type: 'nanode',
+        nodeCount: 3,
+        planName: 'Linode 2 GB',
+      },
+    ];
+    const mockedLKECluster = kubernetesClusterFactory.build({
+      region: clusterRegion.label,
+      label: clusterLabel,
+    });
+    const dedicatedCpuPool = nodePoolFactory.build({
+      count: clusterPlans.find((plan) => plan.type === 'dedicated')?.nodeCount,
+      type: 'g6-dedicated-2',
+    });
+    const nanodeMemoryPool = nodePoolFactory.build({
+      count: clusterPlans.find((plan) => plan.type === 'nanode')?.nodeCount,
+      type: 'g6-nanode-1',
+    });
 
-    interceptCreateCluster().as('createCluster');
+    const mockedLKEClusterPools = [nanodeMemoryPool, dedicatedCpuPool];
+
+    const mockedLKEClusterControlPlane = kubernetesControlPlaneACLFactory.build();
+    const mockedLKEClusterApiEndpoints = kubeEndpointFactory.buildList(1);
+
+    mockCreateCluster(mockedLKECluster).as('createCluster');
+    mockGetCluster(mockedLKECluster).as('getCluster');
+    mockGetClusterPools(mockedLKECluster.id, mockedLKEClusterPools).as(
+      'getClusterPools'
+    );
+    mockGetDashboardUrl(mockedLKECluster.id).as('getDashboardUrl');
+    mockGetControlPlaneACL(
+      mockedLKECluster.id,
+      mockedLKEClusterControlPlane
+    ).as('getControlPlaneACL');
+    mockGetApiEndpoints(
+      mockedLKECluster.id,
+      mockedLKEClusterApiEndpoints.map((endpoint) => endpoint.endpoint)
+    ).as('getApiEndpoints');
 
     cy.visitWithLogin('/kubernetes/clusters');
 
@@ -144,14 +165,13 @@ describe('LKE Cluster Creation', () => {
     let totalStorage = 0;
     let monthPrice = 0;
 
-    // Add a node pool for each randomly selected plan, and confirm that the
+    // Add a node pool for each selected plan, and confirm that the
     // selected node pool plan is added to the checkout bar.
     clusterPlans.forEach((clusterPlan) => {
-      const nodeCount = randomNumber(1, 3);
-      const planName = getLkePlanName(clusterPlan);
-      const checkoutName = getLkePlanCheckoutName(clusterPlan);
+      const nodeCount = clusterPlan.nodeCount;
+      const planName = clusterPlan.planName;
 
-      cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
+      // cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
       // Click the right tab for the plan, and add a node pool with the desired
       // number of nodes.
       cy.findByText(clusterPlan.tab).should('be.visible').click();
@@ -178,27 +198,21 @@ describe('LKE Cluster Creation', () => {
           // It's possible that multiple pools of the same type get added.
           // We're taking a naive approach here by confirming that at least one
           // instance of the pool appears in the checkout bar.
-          cy.findAllByText(checkoutName).first().should('be.visible');
+          cy.findAllByText(`${planName} Plan`).first().should('be.visible');
         });
 
       // Expected information on the LKE cluster summary page.
-      if (clusterPlan.size == 2 && clusterPlan.type == 'Linode') {
-        totalCpu = totalCpu + nodeCount * 1;
-        totalMemory = totalMemory + nodeCount * 2;
-        totalStorage = totalStorage + nodeCount * 50;
-        monthPrice = monthPrice + nodeCount * 12;
+      if (clusterPlan.size == 4 && clusterPlan.type == 'dedicated') {
+        totalCpu += totalCpu + nodeCount * 2;
+        totalMemory += totalMemory + nodeCount * 4;
+        totalStorage += totalStorage + nodeCount * 80;
+        monthPrice += monthPrice + nodeCount * 24;
       }
-      if (clusterPlan.size == 4 && clusterPlan.type == 'Linode') {
-        totalCpu = totalCpu + nodeCount * 2;
-        totalMemory = totalMemory + nodeCount * 4;
-        totalStorage = totalStorage + nodeCount * 80;
-        monthPrice = monthPrice + nodeCount * 24;
-      }
-      if (clusterPlan.size == 4 && clusterPlan.type == 'Dedicated') {
-        totalCpu = totalCpu + nodeCount * 2;
-        totalMemory = totalMemory + nodeCount * 4;
-        totalStorage = totalStorage + nodeCount * 80;
-        monthPrice = monthPrice + nodeCount * 36;
+      if (clusterPlan.size == 4 && clusterPlan.type == 'highmem') {
+        totalCpu += totalCpu + nodeCount * 2;
+        totalMemory += totalMemory + nodeCount * 4;
+        totalStorage += totalStorage + nodeCount * 80;
+        monthPrice += monthPrice + nodeCount * 36;
       }
     });
     // $60.00/month for enabling HA control plane
@@ -217,22 +231,19 @@ describe('LKE Cluster Creation', () => {
 
     // Wait for LKE cluster to be created and confirm that we are redirected
     // to the cluster summary page.
-    cy.wait('@createCluster').then(({ response }) => {
-      if (!response) {
-        throw new Error(
-          `Error creating LKE cluster ${clusterLabel}; API request failed`
-        );
-      }
-      const cluster: KubernetesCluster = response.body;
-      cy.url().should('endWith', `/kubernetes/clusters/${cluster.id}/summary`);
-    });
+    cy.wait('@createCluster');
+    cy.wait('@getCluster');
+    cy.url().should(
+      'endWith',
+      `/kubernetes/clusters/${mockedLKECluster.id}/summary`
+    );
 
     // Confirm that each node pool is shown.
     clusterPlans.forEach((clusterPlan) => {
       // Because multiple node pools may have identical labels, we figure out
       // how many identical labels for each plan will exist and confirm that
       // the expected number is present.
-      const nodePoolLabel = getLkePlanName(clusterPlan);
+      const nodePoolLabel = clusterPlan.planName;
       const similarNodePoolCount = getSimilarPlans(clusterPlan, clusterPlans)
         .length;
 
@@ -334,11 +345,10 @@ describe('LKE Cluster Creation with APL enabled', () => {
      */
 
     clusterPLans.forEach((clusterPlan) => {
-      const planName = getLkePlanName(clusterPlan);
-      const checkoutName = getLkePlanCheckoutName(clusterPlan);
+      const planName = clusterPlan.planName;
       const planShouldBeDisabled = clusterPlan.disabled;
 
-      cy.log(`attempting to add ${getLkePlanName(clusterPlan)} node`);
+      cy.log(`attempting to add ${clusterPlan.planName} node`);
 
       cy.findByText(clusterPlan.tab).should('be.visible').click();
       cy.findByText(planName)
@@ -363,7 +373,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
         cy.get('[data-testid="kube-checkout-bar"]')
           .should('be.visible')
           .within(() => {
-            cy.findAllByText(checkoutName).first().should('be.visible');
+            cy.findAllByText(planName).first().should('be.visible');
           });
       }
     });
@@ -476,10 +486,9 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
     // selected node pool plan is added to the checkout bar.
     clusterPlans.forEach((clusterPlan) => {
       const nodeCount = randomNumber(1, 3);
-      const planName = getLkePlanName(clusterPlan);
-      const checkoutName = getLkePlanCheckoutName(clusterPlan);
+      const planName = clusterPlan.planName;
 
-      cy.log(`Adding ${nodeCount}x ${getLkePlanName(clusterPlan)} node(s)`);
+      cy.log(`Adding ${nodeCount}x ${clusterPlan.planName} node(s)`);
       // Click the right tab for the plan, and add a node pool with the desired
       // number of nodes.
       cy.findByText(clusterPlan.tab).should('be.visible').click();
@@ -506,7 +515,7 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
           // It's possible that multiple pools of the same type get added.
           // We're taking a naive approach here by confirming that at least one
           // instance of the pool appears in the checkout bar.
-          cy.findAllByText(checkoutName).first().should('be.visible');
+          cy.findAllByText(planName).first().should('be.visible');
         });
     });
 
