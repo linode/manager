@@ -1,4 +1,5 @@
-import { Box, omittedProps } from '@linode/ui';
+import { Box } from '../Box';
+import { omittedProps } from '../../utilities';
 import _CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
