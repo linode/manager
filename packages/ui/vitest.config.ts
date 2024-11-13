@@ -1,8 +1,8 @@
-import { defineConfig, UserConfig } from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
-  plugins: [svgr({ exportAsDefault: true })] as UserConfig['plugins'],
+  plugins: [svgr({ exportAsDefault: true })],
   test: {
     environment: 'jsdom',
     setupFiles: './testSetup.ts',
