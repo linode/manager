@@ -37,9 +37,8 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
     );
 
   /**
-   * A util to determine if the Premium or Shared Plan selection should be disabled
+   * A util to determine if the Premium Plan selection should be disabled
    * @param {LinodeTypeClass} linodeType
-   * @param {boolean} isAPLEnabled
    * @param {Capabilities} planType
    * @returns {boolean}
    */
