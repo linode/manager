@@ -52,7 +52,8 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
       if (allPages.length === 1 && lastPage.results === 0) {
         // If we did the inital fetch (the one that limits results to 7 days) but got no results,
         // we can't conclude there are no more pages to fetch. There could be more events to fetch
-        // outside of the 7 day window.
+        // outside of the 7 day window. Therefore, we return a "fake" query key so that React Query
+        // will still attempt to fetch another page whenever `fetchNextPage` is called next.
         return 'fetch more';
       }
       return lastPage.data[lastPage.data.length - 1]?.id;
@@ -233,23 +234,6 @@ export const useMarkEventsAsSeen = () => {
   return useMutation<{}, APIError[], number>({
     mutationFn: (eventId) => markEventSeen(eventId),
     onSuccess: (_, eventId) => {
-      // Update Initial Query
-      queryClient.setQueryData<ResourcePage<Event>>(
-        ['events', 'initial'],
-        (prev) => {
-          if (!prev) {
-            return undefined;
-          }
-
-          for (const event of prev.data) {
-            if (event.id <= eventId) {
-              event.seen = true;
-            }
-          }
-
-          return prev;
-        }
-      );
 
       // Update Infinite Queries
       queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
@@ -308,8 +292,6 @@ export const updateEventsQueries = (
 
       updateEventsQuery(filteredEvents, queryKey, queryClient);
     });
-
-  updateInitialEventsQuery(events, queryClient);
 };
 
 /**
@@ -371,47 +353,6 @@ export const updateEventsQuery = (
         pageParams: prev.pageParams,
         pages: prev.pages,
       };
-    }
-  );
-};
-
-export const updateInitialEventsQuery = (
-  events: Event[],
-  queryClient: QueryClient
-) => {
-  queryClient.setQueryData<ResourcePage<Event>>(
-    ['events', 'initial'],
-    (prev) => {
-      if (!prev) {
-        return undefined;
-      }
-      const updatedEventIndexes: number[] = [];
-
-      for (let i = 0; i < events.length; i++) {
-        const indexOfEvent = prev.data.findIndex((e) => e.id === events[i].id);
-
-        if (indexOfEvent !== -1) {
-          prev.data[indexOfEvent] = events[i];
-          updatedEventIndexes.push(i);
-        }
-      }
-
-      const newEvents: Event[] = [];
-
-      for (let i = 0; i < events.length; i++) {
-        if (!updatedEventIndexes.includes(i)) {
-          newEvents.push(events[i]);
-        }
-      }
-
-      if (newEvents.length > 0) {
-        // For all events, that remain, append them to the top of the events list
-        prev.data = [...newEvents, ...prev.data];
-
-        prev.results += newEvents.length;
-      }
-
-      return prev;
     }
   );
 };
