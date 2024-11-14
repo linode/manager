@@ -9,10 +9,8 @@ import {
   mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseServices,
   mockGetCloudPulseDashboardByIdError,
-  mockGetCloudPulseDatabaseInstancesError,
   mockGetCloudPulseDashboardsError,
-  mockGetCloudPulseMetricDefinitionError,
-  mockGetCloudPulseRegionsError,
+  mockGetCloudPulseMetricDefinitionsError,
   mockGetCloudPulseServicesError,
   mockGetCloudPulseTokenError,
 } from 'support/intercepts/cloudpulse';
@@ -27,8 +25,14 @@ import {
   widgetFactory,
 } from 'src/factories';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
-import { mockGetRegions } from 'support/intercepts/regions';
-import { mockGetDatabases } from 'support/intercepts/databases';
+import {
+  mockGetRegions,
+  mockGetRegionsError,
+} from 'support/intercepts/regions';
+import {
+  mockGetDatabases,
+  mockGetDatabasesError,
+} from 'support/intercepts/databases';
 import { Database } from '@linode/api-v4';
 import { mockGetAccount } from 'support/intercepts/account';
 
@@ -45,7 +49,6 @@ const {
   id,
   serviceType,
   dashboardName,
-  region,
   engine,
   clusterName,
   nodeType,
@@ -84,7 +87,7 @@ const mockRegion = regionFactory.build({
 const databaseMock: Database = databaseFactory.build({
   label: clusterName,
   type: engine,
-  region: region,
+  region: mockRegion.id,
   version: '1',
   status: 'provisioning',
   cluster_size: 1,
@@ -110,9 +113,9 @@ describe('Tests for API error handling', () => {
 
   it('displays error message when metric definitions API fails', () => {
     // Mocking an error response for the 'getMetricDefinitions' API request related to a specific service type.
-    mockGetCloudPulseMetricDefinitionError(
-      'Internal Server Error',
-      serviceType
+    mockGetCloudPulseMetricDefinitionsError(
+      serviceType,
+      'Internal Server Error'
     ).as('getMetricDefinitions');
 
     cy.visitWithLogin('monitor/cloudpulse');
@@ -183,7 +186,7 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when token API fails', () => {
-    mockGetCloudPulseTokenError('Internal Server Error', serviceType).as(
+    mockGetCloudPulseTokenError(serviceType, 'Internal Server Error').as(
       'getCloudPulseTokenError'
     );
 
@@ -244,7 +247,7 @@ describe('Tests for API error handling', () => {
     mockGetCloudPulseServices(serviceType).as('fetchServices');
 
     // Mocking an error response for the 'fetchDashboard' API request for a specific service type.
-    mockGetCloudPulseDashboardsError('Internal Server Error', serviceType).as(
+    mockGetCloudPulseDashboardsError(serviceType, 'Internal Server Error').as(
       'fetchDashboard'
     );
 
@@ -261,7 +264,7 @@ describe('Tests for API error handling', () => {
 
   it('displays error message when dashboard details API fails', () => {
     // Mocking an error response for the 'getCloudPulseDashboardById' API request for a specific dashboard ID.
-    mockGetCloudPulseDashboardByIdError('Internal Server Error', id).as(
+    mockGetCloudPulseDashboardByIdError(id, 'Internal Server Error').as(
       'getCloudPulseDashboardError'
     );
 
@@ -320,7 +323,7 @@ describe('Tests for API error handling', () => {
 
   it('displays error message when regions API fails', () => {
     // Mocking an error response for the 'CloudPulseRegions' API request.
-    mockGetCloudPulseRegionsError('Internal Server Error').as(
+    mockGetRegionsError('Internal Server Error').as(
       'getCloudPulseRegionsError'
     );
 
@@ -350,7 +353,7 @@ describe('Tests for API error handling', () => {
 
   it('displays error message when instance API fails', () => {
     // Mocking an error response for the 'CloudPulseDatabaseInstances' API request.
-    mockGetCloudPulseDatabaseInstancesError('Internal Server Error').as(
+    mockGetDatabasesError('Internal Server Error').as(
       'getDatabaseInstancesError'
     );
 
