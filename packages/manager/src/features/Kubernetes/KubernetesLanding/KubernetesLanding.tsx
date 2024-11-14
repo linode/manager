@@ -286,5 +286,3 @@ export const kubernetesLandingLazyRoute = createLazyRoute(
 )({
   component: KubernetesLanding,
 });
-
-export default KubernetesLanding;

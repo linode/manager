@@ -17,6 +17,7 @@ const StyledResourcesLinksSubSection = styled('div', {
   '& > a': {
     display: 'inline-block',
     fontFamily: theme.font.bold,
+    width: '100%',
   },
   '& > h2': {
     color: theme.palette.text.primary,
@@ -34,7 +35,6 @@ const StyledResourcesLinksSubSection = styled('div', {
   fontSize: '0.875rem',
   gridTemplateRows: `22px minmax(${theme.spacing(3)}, 100%) 1.125rem`,
   rowGap: theme.spacing(2),
-  width: '100%',
 }));
 
 export const ResourcesLinksSubSection = (
