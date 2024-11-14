@@ -1,21 +1,23 @@
 import { addPaymentMethod } from '@linode/api-v4/lib';
+import { Notice } from '@linode/ui';
 import { CreditCardSchema } from '@linode/validation';
-import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
-import { Theme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik, yupToFormErrors } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import NumberFormat, { NumberFormatProps } from 'react-number-format';
+import NumberFormat from 'react-number-format';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { accountQueries } from 'src/queries/account/queries';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+
+import type { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
+import type { Theme } from '@mui/material/styles';
+import type { NumberFormatProps } from 'react-number-format';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   error: {

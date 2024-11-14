@@ -1,3 +1,4 @@
+import { FormHelperText, InputAdornment, Notice } from '@linode/ui';
 import {
   CreateLinodeDiskFromImageSchema,
   CreateLinodeDiskSchema,
@@ -9,10 +10,7 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
-import { FormHelperText } from 'src/components/FormHelperText';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
@@ -188,6 +186,7 @@ export const CreateDiskDrawer = (props: Props) => {
             authorizedUsers={formik.values.authorized_users}
             linodeId={linodeId}
             password={formik.values.root_pass}
+            selectedImage={formik.values.image}
           />
         )}
         <TextField

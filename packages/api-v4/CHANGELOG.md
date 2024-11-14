@@ -1,3 +1,34 @@
+## [2024-11-12] - v0.130.0
+
+
+### Added:
+
+- DBaaS: Suspend and Resume backend calls ([#11152](https://github.com/linode/manager/pull/11152))
+
+### Removed:
+
+- DBaaS: Deprecated types including MongoDB and Redis ([#11218](https://github.com/linode/manager/pull/11218))
+
+### Tech Stories:
+
+- Remove `@types/node` dependency ([#11157](https://github.com/linode/manager/pull/11157))
+
+### Upcoming Features:
+
+- DBaaS: Modify update payload to include version, add patch API ([#11196](https://github.com/linode/manager/pull/11196))
+
+
+## [2024-10-28] - v0.129.0
+
+
+### Added:
+
+- ACL related endpoints and types for LKE clusters ([#10968](https://github.com/linode/manager/pull/10968))
+- `StackScripts` to Region capabilities type ([#11139](https://github.com/linode/manager/pull/11139))
+
+### Fixed:
+
+- Incorrect documentation on how to set a page size ([#11129](https://github.com/linode/manager/pull/11129))
 
 ## [2024-10-14] - v0.128.0
 

@@ -1,20 +1,23 @@
-import { Stats } from '@linode/api-v4/lib/linodes';
-import { Theme, styled, useTheme } from '@mui/material/styles';
+import { Box } from '@linode/ui';
+import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { NetworkTimeData } from 'src/components/AreaChart/types';
-import { Box } from 'src/components/Box';
 import {
-  NetworkUnit,
   convertNetworkToUnit,
   formatBitsPerSecond,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
-import { Metrics, getMetrics } from 'src/utilities/statMetrics';
+import { getMetrics } from 'src/utilities/statMetrics';
 
 import { StatsPanel } from './StatsPanel';
+
+import type { Stats } from '@linode/api-v4/lib/linodes';
+import type { Theme } from '@mui/material/styles';
+import type { NetworkTimeData } from 'src/components/AreaChart/types';
+import type { NetworkUnit } from 'src/features/Longview/shared/utilities';
+import type { Metrics } from 'src/utilities/statMetrics';
 
 export interface TotalTrafficProps {
   combinedTraffic: string;
@@ -187,7 +190,7 @@ const Graph = (props: GraphProps) => {
   }
 
   return (
-    <Box marginLeft={-4} marginTop={2}>
+    <Box marginTop={2}>
       <AreaChart
         areas={[
           {

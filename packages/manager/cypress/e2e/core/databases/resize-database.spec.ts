@@ -50,7 +50,7 @@ const resizeDatabase = (initialLabel: string) => {
 describe('Resizing existing clusters', () => {
   databaseConfigurationsResize.forEach(
     (configuration: databaseClusterConfiguration) => {
-      describe(`Resizes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
+      describe(`Resizes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster (legacy DBaaS)`, () => {
         /*
          * - Tests active database resize UI flows using mocked data.
          * - Confirms that users can resize an existing database.
@@ -70,6 +70,7 @@ describe('Resizing existing clusters', () => {
             cluster_size: 3,
             status: 'active',
             allow_list: [allowedIp],
+            platform: 'rdbms-legacy',
           });
 
           // Mock account to ensure 'Managed Databases' capability.
@@ -152,9 +153,6 @@ describe('Resizing existing clusters', () => {
                 cy.get('[data-testid="resizeSummary"]').within(() => {
                   cy.contains(`${nodeType.label}`).should('be.visible');
                   cy.contains(`$${desiredPlanPrice.monthly}/month`).should(
-                    'be.visible'
-                  );
-                  cy.contains(`$${desiredPlanPrice.hourly}/hour`).should(
                     'be.visible'
                   );
                 });

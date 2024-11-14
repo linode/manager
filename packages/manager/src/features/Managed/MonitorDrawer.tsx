@@ -1,9 +1,4 @@
-import {
-  ManagedCredential,
-  ManagedServiceMonitor,
-  ManagedServicePayload,
-  ServiceType,
-} from '@linode/api-v4/lib/managed';
+import { InputAdornment, Notice } from '@linode/ui';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
@@ -12,10 +7,16 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { Notice } from 'src/components/Notice/Notice';
+import Select from 'src/components/EnhancedSelect/Select';
 import { TextField } from 'src/components/TextField';
-import { InputAdornment } from 'src/components/InputAdornment';
+
+import type {
+  ManagedCredential,
+  ManagedServiceMonitor,
+  ManagedServicePayload,
+  ServiceType,
+} from '@linode/api-v4/lib/managed';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export interface MonitorDrawerProps {
   credentials: ManagedCredential[];

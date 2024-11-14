@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import { IconButton } from '@linode/ui';
-import { Tooltip, tooltipClasses } from '@linode/ui';
+import { IconButton, Tooltip, omittedProps, tooltipClasses } from '@linode/ui';
 import SuccessOutline from '@mui/icons-material/CheckCircleOutlined';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import HelpOutline from '@mui/icons-material/HelpOutline';
@@ -9,12 +8,10 @@ import WarningSolid from '@mui/icons-material/Warning';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { omittedProps } from 'src/utilities/omittedProps';
-
 import type { TooltipProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-type TooltipIconStatus =
+export type TooltipIconStatus =
   | 'error'
   | 'help'
   | 'info'

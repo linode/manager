@@ -1,8 +1,8 @@
+import { Box } from '@linode/ui';
 import { Typography } from '@mui/material';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Box } from 'src/components/Box';
 import { FormLabel } from 'src/components/FormLabel';
 import { storage } from 'src/utilities/storage';
 

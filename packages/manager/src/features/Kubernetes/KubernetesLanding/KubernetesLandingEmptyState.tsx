@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import KubernetesSvg from 'src/assets/icons/entityIcons/kubernetes.svg';
+import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { sendEvent } from 'src/utilities/analytics/utils';
@@ -45,7 +45,7 @@ export const KubernetesEmptyState = (props: Props) => {
       ]}
       gettingStartedGuidesData={gettingStartedGuides}
       headers={headers}
-      icon={KubernetesSvg}
+      icon={LinodeIcon}
       linkAnalyticsEvent={linkAnalyticsEvent}
       youtubeLinkData={youtubeLinkData}
     />

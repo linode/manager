@@ -1,10 +1,10 @@
+import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
-import { Box } from 'src/components/Box';
 import {
   DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
   UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
@@ -13,6 +13,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
+import { usePreferences } from 'src/queries/profile/preferences';
 import { useProfile } from 'src/queries/profile/profile';
 import { pluralize } from 'src/utilities/pluralize';
 
@@ -23,9 +24,14 @@ import {
   StyledColumnLabelGrid,
   StyledLabelBox,
   StyledListItem,
+  StyledIPv4Label,
+  StyledIPv4Item,
   StyledSummaryGrid,
   StyledVPCBox,
+  StyledCopyTooltip,
+  StyledGradientDiv,
   sxLastListItem,
+  StyledIPv4Box,
 } from './LinodeEntityDetail.styles';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -39,6 +45,7 @@ import type {
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 import type { TypographyProps } from 'src/components/Typography';
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -90,6 +97,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   } = props;
 
   const { data: profile } = useProfile();
+  const { data: preferences } = usePreferences();
   const username = profile?.username ?? 'none';
 
   const theme = useTheme();
@@ -188,17 +196,35 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   </Typography>
                 ) : undefined
               }
+              rows={[
+                {
+                  isMasked: preferences?.maskSensitiveData,
+                  maskedTextLength: 'ipv4',
+                  text: firstAddress,
+                },
+                {
+                  isMasked: preferences?.maskSensitiveData,
+                  maskedTextLength: 'ipv6',
+                  text: secondAddress,
+                },
+              ]}
               gridSize={{ lg: 5, xs: 12 }}
               isVPCOnlyLinode={isVPCOnlyLinode}
-              rows={[{ text: firstAddress }, { text: secondAddress }]}
               sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
             />
             <AccessTable
               rows={[
-                { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+                {
+                  heading: 'SSH Access',
+                  isMasked: preferences?.maskSensitiveData,
+                  text: sshLink(ipv4[0]),
+                },
                 {
                   heading: 'LISH Console via SSH',
+                  isMasked: !linodeIsInDistributedRegion
+                    ? preferences?.maskSensitiveData
+                    : false,
                   text: linodeIsInDistributedRegion
                     ? 'N/A'
                     : lishLink(username, region, linodeLabel),
@@ -233,8 +259,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 display: 'flex',
                 flexDirection: 'column',
                 paddingLeft: '8px',
+                alignItems: 'start',
               },
             }}
+            alignItems="center"
             container
             direction="row"
             spacing={2}
@@ -251,21 +279,29 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               </StyledListItem>
             </StyledVPCBox>
             <StyledVPCBox>
-              <StyledListItem>
+              <StyledListItem sx={{ ...sxLastListItem }}>
                 <StyledLabelBox component="span" data-testid="subnets-string">
-                  Subnets:
+                  Subnet:
                 </StyledLabelBox>{' '}
                 {getSubnetsString(linodeAssociatedSubnets ?? [])}
               </StyledListItem>
             </StyledVPCBox>
-            <StyledVPCBox>
-              <StyledListItem sx={{ ...sxLastListItem }}>
-                <StyledLabelBox component="span" data-testid="vpc-ipv4">
-                  VPC IPv4:
-                </StyledLabelBox>{' '}
-                {configInterfaceWithVPC?.ipv4?.vpc}
-              </StyledListItem>
-            </StyledVPCBox>
+            {configInterfaceWithVPC?.ipv4?.vpc && (
+              <StyledIPv4Box>
+                <StyledIPv4Label data-testid="vpc-ipv4">
+                  VPC IPv4
+                </StyledIPv4Label>
+                <StyledIPv4Item component="span" data-testid="vpc-ipv4">
+                  <StyledGradientDiv>
+                    <CopyTooltip
+                      copyableText
+                      text={configInterfaceWithVPC.ipv4.vpc}
+                    />
+                  </StyledGradientDiv>
+                  <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                </StyledIPv4Item>
+              </StyledIPv4Box>
+            )}
           </Grid>
         </Grid>
       )}

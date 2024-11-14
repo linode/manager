@@ -183,9 +183,10 @@ describe('object storage end-to-end tests', () => {
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
     interceptGetNetworkUtilization().as('getNetworkUtilization');
 
-    mockGetAccount(accountFactory.build({ capabilities: [] }));
+    mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
       objMultiCluster: false,
+      objectStorageGen2: { enabled: false },
     }).as('getFeatureFlags');
 
     cy.visitWithLogin('/object-storage');

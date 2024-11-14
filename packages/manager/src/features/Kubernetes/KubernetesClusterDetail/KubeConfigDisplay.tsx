@@ -1,13 +1,13 @@
-import { Box } from 'src/components/Box';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { Box, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
+import CopyIcon from 'src/assets/icons/copy.svg';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
@@ -15,6 +15,11 @@ import {
 } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import copy from 'copy-to-clipboard';
+import { CircleProgress } from 'src/components/CircleProgress';
+
+import type { Theme } from '@mui/material/styles';
+import { APIError } from '@linode/api-v4';
 
 interface Props {
   clusterId: number;
@@ -73,15 +78,19 @@ const renderEndpoint = (
   endpointError?: string
 ) => {
   if (endpoint) {
-    return endpoint;
+    return <MaskableText isToggleable text={endpoint} length="plaintext" />;
   }
   if (endpointLoading) {
-    return 'Loading...';
+    return <Typography>Loading...</Typography>;
   }
   if (endpointError) {
-    return endpointError;
+    return <Typography>{endpointError}</Typography>;
   }
-  return 'Your endpoint will be displayed here once it is available.';
+  return (
+    <Typography>
+      Your endpoint will be displayed here once it is available.
+    </Typography>
+  );
 };
 
 export const KubeConfigDisplay = (props: Props) => {
@@ -96,7 +105,30 @@ export const KubeConfigDisplay = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
 
-  const { refetch } = useKubenetesKubeConfigQuery(clusterId);
+  const { isFetching, refetch: getKubeConfig } = useKubenetesKubeConfigQuery(
+    clusterId,
+    false
+  );
+
+  const onCopyToken = async () => {
+    try {
+      const { data } = await getKubeConfig();
+      const token = data && data.match(/token:\s*(\S+)/);
+      if (token && token[1]) {
+        copy(token[1]);
+      } else {
+        enqueueSnackbar({
+          message: 'Unable to find token within the Kubeconfig',
+          variant: 'error',
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar({
+        message: (error as APIError[])[0].reason,
+        variant: 'error',
+      });
+    }
+  };
 
   const {
     data: endpoints,
@@ -106,7 +138,7 @@ export const KubeConfigDisplay = (props: Props) => {
 
   const downloadKubeConfig = async () => {
     try {
-      const { data } = await refetch();
+      const { data } = await getKubeConfig();
 
       if (data) {
         downloadFile(`${clusterLabel}-kubeconfig.yaml`, data);
@@ -129,22 +161,20 @@ export const KubeConfigDisplay = (props: Props) => {
   };
 
   return (
-    <>
-      <Grid xs={12}>
+    <Stack spacing={1}>
+      <Box>
         <Typography className={classes.label}>
           Kubernetes API Endpoint:
         </Typography>
-        <Typography>
-          {renderEndpoint(
-            getEndpointToDisplay(
-              endpoints?.map((endpoint) => endpoint.endpoint) ?? []
-            ),
-            endpointsLoading,
-            endpointsError?.[0].reason
-          )}
-        </Typography>
-      </Grid>
-      <Grid xs={12}>
+        {renderEndpoint(
+          getEndpointToDisplay(
+            endpoints?.map((endpoint) => endpoint.endpoint) ?? []
+          ),
+          endpointsLoading,
+          endpointsError?.[0].reason
+        )}
+      </Box>
+      <Box>
         <Typography className={classes.label} style={{ marginTop: 8 }}>
           Kubeconfig:
         </Typography>
@@ -167,6 +197,23 @@ export const KubeConfigDisplay = (props: Props) => {
           </Box>
           <Box
             className={classes.kubeconfigElement}
+            onClick={onCopyToken}
+            sx={{ marginLeft: isFetching ? 1.25 : 0 }}
+          >
+            {isFetching ? (
+              <CircleProgress noPadding={true} size="xs" />
+            ) : (
+              <CopyIcon className={classes.kubeconfigIcons} />
+            )}
+            <Box
+              className={classes.kubeconfigFileText}
+              sx={{ marginLeft: isFetching ? 1 : 0 }}
+            >
+              Copy Token
+            </Box>
+          </Box>
+          <Box
+            className={classes.kubeconfigElement}
             onClick={() => setResetKubeConfigDialogOpen(true)}
           >
             <ResetIcon
@@ -185,7 +232,7 @@ export const KubeConfigDisplay = (props: Props) => {
             </Typography>
           </Box>
         </div>
-      </Grid>
-    </>
+      </Box>
+    </Stack>
   );
 };

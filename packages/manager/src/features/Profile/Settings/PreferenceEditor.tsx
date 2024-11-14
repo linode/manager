@@ -1,15 +1,16 @@
+import { Box, Notice } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { Button } from 'src/components/Button/Button';
-import { Dialog, DialogProps } from 'src/components/Dialog/Dialog';
+import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import {
   useMutatePreferences,
   usePreferences,
 } from 'src/queries/profile/preferences';
+
+import type { DialogProps } from 'src/components/Dialog/Dialog';
 
 type Props = Pick<DialogProps, 'onClose' | 'open'>;
 

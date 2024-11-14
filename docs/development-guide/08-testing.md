@@ -6,38 +6,38 @@ The unit tests for Cloud Manager are written in Typescript using the [Vitest](ht
 
 To run tests, first build the **api-v4** package:
 
-```
+```shell
 yarn install:all && yarn workspace @linode/api-v4 build
 ```
 
 Then you can start the tests:
 
-```
+```shell
 yarn test
 ```
 
 Or you can run the tests in watch mode with:
 
-```
-yarn test --watch
+```shell
+yarn test:watch
 ```
 
 To run a specific file or files in a directory:
 
-```
+```shell
 yarn test myFile.test.tsx
 yarn test src/some-folder
 ```
 
 Vitest has built-in pattern matching, so you can also do things like run all tests whose filename contains "Linode" with:
 
-```
+```shell
 yarn test linode
 ```
 
 To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run:
 
-```
+```shell
 yarn workspace linode-manager run test:debug
 ```
 
@@ -64,31 +64,25 @@ describe("My component", () => {
 Handling events such as clicks is a little more involved:
 
 ```js
-import { fireEvent } from "@testing-library/react";
+import { userEvent } from '@testing-library/user-event';
 import { renderWithTheme } from "src/utilities/testHelpers";
 import Component from "./wherever";
 
 const props = { onClick: vi.fn() };
 
 describe("My component", () => {
-  it("should have some text", () => {
+  it("should have some text", async () => {
     const { getByText } = renderWithTheme(<Component {...props} />);
     const button = getByText("Submit");
-    fireEvent.click(button);
+    await userEvent.click(button);
     expect(props.onClick).toHaveBeenCalled();
   });
 });
 ```
 
-If, while using the Testing Library, your tests trigger a warning in the console from React ("Warning: An update to Component inside a test was not wrapped in act(...)"), first check out the library author's [blog post](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning) about this. Depending on your situation, you probably will have to `wait` for something in your test:
+We recommend using `userEvent` rather than `fireEvent` where possible. This is a [React Testing Library best practice](https://testing-library.com/docs/user-event/intro#differences-from-fireevent), because `userEvent` more accurately simulates user interactions in a browser and makes the test more reliable in catching unintended event handler behavior.
 
-```js
-import { fireEvent, wait } from '@testing-library/react';
-
-...
-await wait(() => fireEvent.click(getByText('Delete')));
-...
-```
+If, while using the Testing Library, your tests trigger a warning in the console from React ("Warning: An update to Component inside a test was not wrapped in act(...)"), first check out the library author's [blog post](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning) about this. Depending on your situation, you probably will have to use [`findBy`](https://testing-library.com/docs/dom-testing-library/api-async/#findby-queries) or [`waitFor`](https://testing-library.com/docs/dom-testing-library/api-async/) for something in your test to ensure asynchronous side-effects have completed.
 
 ### Mocking
 
@@ -108,7 +102,9 @@ vi.mock('@linode/api-v4/lib/kubernetes', async () => {
 
 Some components, such as our ActionMenu, don't lend themselves well to unit testing (they often have complex DOM structures from MUI and it's hard to target). We have mocks for most of these components in a `__mocks__` directory adjacent to their respective components. To make use of these, just tell Vitest to use the mock:
 
+```js
     vi.mock('src/components/ActionMenu/ActionMenu');
+```
 
 Any `<ActionMenu>`s rendered by the test will be simplified versions that are easier to work with.
 
@@ -157,6 +153,7 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
     * Select a reasonable expiry time (avoid "Never") and make sure that every permission is set to "Read/Write".
 3. Set the `MANAGER_OAUTH` environment variable in your `.env` file using your new personal access token.
     * Example of `.env` addition:
+
         ```shell
         # Manager OAuth token for Cypress tests:
         # (The real token will be a 64-digit string of hexadecimals).
@@ -174,6 +171,7 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
 Cloud Manager UI tests can be configured using environment variables, which can be defined in `packages/manager/.env` or specified when running Cypress.
 
 ##### Cypress Environment Variables
+
 These environment variables are used by Cypress out-of-the-box to override the default configuration. Cypress exposes many other options that can be configured with environment variables, but the items listed below are particularly relevant for Cloud Manager testing. More information can be found at [docs.cypress.io](https://docs.cypress.io/guides/guides/environment-variables).
 
 | Environment Variable | Description                                | Example                    | Default                 |
@@ -181,9 +179,11 @@ These environment variables are used by Cypress out-of-the-box to override the d
 | `CYPRESS_BASE_URL`   | URL to Cloud Manager environment for tests | `https://cloud.linode.com` | `http://localhost:3000` |
 
 ##### Cloud Manager-specific Environment Variables
+
 These environment variables are specific to Cloud Manager UI tests. They can be distinguished from out-of-the-box Cypress environment variables by their `CY_TEST_` prefix.
 
 ###### General
+
 Environment variables related to the general operation of the Cloud Manager Cypress tests.
 
 | Environment Variable | Description                                                                                           | Example      | Default                         |
@@ -192,6 +192,7 @@ Environment variables related to the general operation of the Cloud Manager Cypr
 | `CY_TEST_TAGS`       | Query identifying tests that should run by specifying allowed and disallowed tags.                    | `method:e2e` | Unset; all tests run by default |
 
 ###### Overriding Behavior
+
 These environment variables can be used to override some behaviors of Cloud Manager's UI tests. This can be useful when testing Cloud Manager for nonstandard or work-in-progress functionality.
 
 | Environment Variable    | Description                                     | Example   | Default                                    |
@@ -200,6 +201,7 @@ These environment variables can be used to override some behaviors of Cloud Mana
 | `CY_TEST_FEATURE_FLAGS` | JSON string containing feature flag data        | `{}`      | Unset; feature flag data is not overridden |
 
 ###### Run Splitting
+
 These environment variables facilitate splitting the Cypress run between multiple runners without the use of any third party services. This can be useful for improving Cypress test performance in some circumstances. For additional performance gains, an optional test weights file can be specified using `CY_TEST_SPLIT_RUN_WEIGHTS` (see `CY_TEST_GENWEIGHTS` to generate test weights).
 
 | Environment Variable        | Description                                | Example          | Default                    |
@@ -210,6 +212,7 @@ These environment variables facilitate splitting the Cypress run between multipl
 | `CY_TEST_SPLIT_RUN_WEIGHTS` | Path to test weights file                  | `./weights.json` | Unset; disabled by default |
 
 ###### Development, Logging, and Reporting
+
 Environment variables related to Cypress logging and reporting, as well as report generation.
 
 | Environment Variable            | Description                                        | Example          | Default                    |
@@ -222,6 +225,7 @@ Environment variables related to Cypress logging and reporting, as well as repor
 | `CY_TEST_GENWEIGHTS`            | Generate and output test weights to the given path | `./weights.json` | Unset; disabled by default |
 
 ###### Performance
+
 Environment variables that can be used to improve test performance in some scenarios.
 
 | Environment Variable            | Description                                   | Example            | Default                    |
@@ -233,6 +237,7 @@ Environment variables that can be used to improve test performance in some scena
 
 1. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
 2. Test Example:
+
    ```tsx
     /* this test will not pass on cloud manager.
     it is only intended to show correct test structure, syntax,
@@ -293,13 +298,15 @@ Environment variables that can be used to improve test performance in some scena
       });
     });
     ```
+
 3. How to use intercepts:
+
     ```tsx
       // stub response syntax:
       cy.intercept('POST', ‘/path’, {response}) or cy.intercept(‘/path’, (req) => { req.reply({response})}).as('something');
-	    // edit and end response syntax: 
+     // edit and end response syntax: 
       cy.intercept('GET', ‘/path’, (req) => { req.send({edit: something})}).as('something');
-	    // edit request syntax:
+     // edit request syntax:
       cy.intercept('POST', ‘/path’, (req) => { req.body.storyName = 'some name'; req.continue().as('something');
   
       // use alias syntax:

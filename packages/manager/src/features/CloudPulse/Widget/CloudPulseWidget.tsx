@@ -1,8 +1,8 @@
+import { Paper } from '@linode/ui';
 import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
-import { Paper } from 'src/components/Paper';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 import { useProfile } from 'src/queries/profile/profile';
@@ -10,6 +10,7 @@ import { useProfile } from 'src/queries/profile/profile';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
+  fillMissingTimeStampsAcrossDimensions,
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
 import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
@@ -27,12 +28,12 @@ import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
+import type { Widgets } from '@linode/api-v4';
 import type {
   AvailableMetrics,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
-import type { Widgets } from '@linode/api-v4';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { Metrics } from 'src/utilities/statMetrics';
 
@@ -256,6 +257,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     });
 
     data = generatedData.dimensions;
+
+    // add missing timestamps across all the dimensions
+    const filledArrays = fillMissingTimeStampsAcrossDimensions(
+      ...data.map((data) => data.data)
+    );
+
+    //update the chart data with updated arrays
+    filledArrays.forEach((arr, index) => {
+      data[index].data = arr;
+    });
+
     legendRows = generatedData.legendRowsData;
     today = generatedData.today;
     scaledWidgetUnit.current = generatedData.unit; // here state doesn't matter, as this is always the latest re-render
@@ -323,8 +335,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 ? metricsApiCallError ?? 'Error while rendering graph'
                 : undefined
             }
-            formatData={(data: number) =>
-              convertValueToUnit(data, scaledWidgetUnit.current)
+            formatData={(data: number | null) =>
+              data === null
+                ? data
+                : convertValueToUnit(data, scaledWidgetUnit.current)
             }
             legendRows={
               legendRows && legendRows.length > 0 ? legendRows : undefined

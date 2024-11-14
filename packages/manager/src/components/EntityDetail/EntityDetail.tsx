@@ -1,8 +1,7 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-
-import { omittedProps } from '../../utilities/omittedProps';
 
 export interface EntityDetailProps {
   body?: JSX.Element;
@@ -52,8 +51,7 @@ const GridBody = styled(Grid, {
       ? undefined
       : `1px solid ${theme.borderColors.borderTable}`, // @TODO LKE-E: This conditional can be removed when/if the footer is introduced in M3-8348
   borderTop: `1px solid ${theme.borderColors.borderTable}`,
-  paddingBottom: theme.spacing(),
-  paddingRight: theme.spacing(),
+  padding: theme.spacing(),
 }));
 
 const GridFooter = styled(Grid, {

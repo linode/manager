@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import React, { useState } from 'react';
 
 import { regions } from 'src/__data__/regionsData';
-import { Box } from 'src/components/Box';
 import { SelectedRegionsList } from 'src/features/ObjectStorage/AccessKeyLanding/AccessKeyRegions/SelectedRegionsList';
 import { sortByString } from 'src/utilities/sort-by';
 
