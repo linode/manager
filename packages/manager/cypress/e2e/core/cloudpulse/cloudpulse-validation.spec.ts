@@ -107,7 +107,7 @@ describe('Tests for API error handling', () => {
       { statusCode: 500, body: { errors: [{ reason: 'Bad Request' }] }, }
     ).as('getMetricDefinitions');
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
 
     //  Wait for the services and dashboard API calls to complete before proceeding.
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -155,7 +155,7 @@ describe('Tests for API error handling', () => {
       body: {
         errors: [{ reason: 'Bad Request' }],},
     }).as('fetchServices');
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
 
     cy.get('[data-qa-textfield-error-text="Dashboard"]')
       .should('be.visible')
@@ -171,7 +171,7 @@ describe('Tests for API error handling', () => {
         errors: [{ reason: 'Bad Request' }], },
     });
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
     //  Wait for both the fetch services and fetch dashboard API calls to complete.
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
@@ -221,7 +221,7 @@ describe('Tests for API error handling', () => {
       }
     ).as('fetchDashboard');
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
     //  Wait for both the fetch services and fetch dashboard API calls to complete.
     cy.wait(['@fetchServices', '@fetchDashboard']);
 
@@ -240,7 +240,7 @@ describe('Tests for API error handling', () => {
       body: { errors: [{ reason: 'Bad Request' }] },
     });
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
 
     //  Select a dashboard from the autocomplete input. Verify that the input is visible before typing.
     ui.autocomplete
@@ -282,11 +282,11 @@ describe('Tests for API error handling', () => {
 
   it(`should return error message when the Regions API request fails`, () => {
     cy.intercept('GET', apiMatcher(`regions*`), {
-      statusCode: 500, 
+      statusCode: 500,
       body: { errors: [{ reason: 'Bad Request' }] },
     });
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
 
     //  Wait for the services and dashboard API calls to resolve before proceeding.
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -312,7 +312,7 @@ describe('Tests for API error handling', () => {
       body: {errors: [{ reason: 'Bad Request' }],},
     });
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
 
     //Wait for the services and dashboard API calls to resolve before proceeding.
     cy.wait(['@fetchServices', '@fetchDashboard']);
