@@ -23,8 +23,6 @@ export const CloudPulseLanding = () => {
   );
 };
 
-export const cloudPulseLandingLazyRoute = createLazyRoute(
-  '/monitor/cloudpulse'
-)({
+export const cloudPulseLandingLazyRoute = createLazyRoute('/monitor')({
   component: CloudPulseLanding,
 });
