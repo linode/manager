@@ -149,11 +149,15 @@ export const useEventsPoller = () => {
   const { data: events } = useQuery({
     enabled: hasFetchedInitialEvents,
     queryFn: () => {
-      const data = queryClient.getQueryData<ResourcePage<Event>>([
+      const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
         'events',
-        'initial',
+        'infinite',
+        EVENTS_LIST_FILTER,
       ]);
-      const events = data?.data;
+      const events = data?.pages.reduce(
+        (events, page) => [...events, ...page.data],
+        []
+      );
 
       // If the user has events, poll for new events based on the most recent event's created time.
       // If the user has no events, poll events from the time the app mounted.
@@ -234,7 +238,6 @@ export const useMarkEventsAsSeen = () => {
   return useMutation<{}, APIError[], number>({
     mutationFn: (eventId) => markEventSeen(eventId),
     onSuccess: (_, eventId) => {
-
       // Update Infinite Queries
       queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
         { queryKey: ['events', 'infinite'] },
