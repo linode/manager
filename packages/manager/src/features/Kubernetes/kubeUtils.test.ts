@@ -2,6 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import {
   accountBetaFactory,
+  accountFactory,
   kubeLinodeFactory,
   linodeTypeFactory,
   nodePoolFactory,
@@ -14,6 +15,7 @@ import {
   getLatestVersion,
   getTotalClusterMemoryCPUAndStorage,
   useAPLAvailability,
+  useIsLkeEnterpriseEnabled,
 } from './kubeUtils';
 
 describe('helper functions', () => {
@@ -125,6 +127,75 @@ describe('helper functions', () => {
     it('should return default fallback value when called with empty versions', () => {
       const result = getLatestVersion([]);
       expect(result).toEqual({ label: '', value: '' });
+    });
+  });
+});
+
+describe('useIsLkeEnterpriseEnabled', () => {
+  it('returns false if the account does not have the capability', async () => {
+    const accountMockData = accountFactory.build({ capabilities: [] });
+    server.use(
+      http.get('*/account/account', () => {
+        return HttpResponse.json(accountMockData);
+      })
+    );
+
+    const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { lkeEnterprise: { enabled: true, la: true, ga: true } },
+        }),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLkeEnterpriseLAEnabled).toBe(false);
+      expect(result.current.isLkeEnterpriseGAEnabled).toBe(false);
+    });
+  });
+
+  it('returns true for LA if the account has the capability + enabled LA feature flag values', async () => {
+    const accountMockData = accountFactory.build({
+      capabilities: ['Kubernetes Enterprise'],
+    });
+    server.use(
+      http.get('*/account/account', () => {
+        return HttpResponse.json(accountMockData);
+      })
+    );
+
+    const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { lkeEnterprise: { enabled: true, la: true, ga: false } },
+        }),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLkeEnterpriseLAEnabled).toBe(true);
+      expect(result.current.isLkeEnterpriseGAEnabled).toBe(false);
+    });
+  });
+
+  it('returns true for GA if the account has the capability + enabled GA feature flag values', async () => {
+    const accountMockData = accountFactory.build({
+      capabilities: ['Kubernetes Enterprise'],
+    });
+    server.use(
+      http.get('*/account/account', () => {
+        return HttpResponse.json(accountMockData);
+      })
+    );
+
+    const { result } = renderHook(() => useIsLkeEnterpriseEnabled(), {
+      wrapper: (ui) =>
+        wrapWithTheme(ui, {
+          flags: { lkeEnterprise: { enabled: true, la: true, ga: true } },
+        }),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLkeEnterpriseLAEnabled).toBe(true);
+      expect(result.current.isLkeEnterpriseGAEnabled).toBe(true);
     });
   });
 });
