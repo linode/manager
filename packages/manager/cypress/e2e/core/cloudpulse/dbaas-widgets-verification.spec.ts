@@ -135,7 +135,6 @@ const getWidgetLegendRowValuesFromResponse = (
     serviceType: serviceType,
     status: 'success',
     unit: unit,
-    // widgetColor: 'red',
   });
 
   // Destructure metrics data from the first legend row
@@ -237,7 +236,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       cy.get(widgetSelector)
         .should('be.visible')
         .find('h2')
-        .should('have.text', `${testData.title} (${testData.unit.trim()})`);
+        .should('have.text', `${testData.title} (${testData.unit})`);
       cy.get(widgetSelector)
         .should('be.visible')
         .within(() => {
