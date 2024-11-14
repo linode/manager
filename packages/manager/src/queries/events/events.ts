@@ -241,7 +241,7 @@ export const useMarkEventsAsSeen = () => {
   const queryClient = useQueryClient();
 
   return useMutation<{}, APIError[], number>({
-    mutationFn: (eventId) => markEventSeen(eventId),
+    mutationFn: markEventSeen,
     onSuccess: (_, eventId) => {
       // Update Infinite Queries
       queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
