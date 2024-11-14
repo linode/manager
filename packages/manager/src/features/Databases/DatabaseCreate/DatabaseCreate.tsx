@@ -52,7 +52,6 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 import type { DatabaseCreateValues } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-import { Radio } from 'src/components/Radio/Radio';
 
 const DatabaseCreate = () => {
   const history = useHistory();
@@ -371,8 +370,6 @@ const DatabaseCreate = () => {
           Your database node(s) will take approximately 15-30 minutes to
           provision.
         </StyledTypography>
-        <Radio size="small"></Radio>
-        <Radio size="medium"></Radio>
         <StyledCreateBtn
           buttonType="primary"
           disabled={isRestricted}
