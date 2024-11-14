@@ -1,15 +1,14 @@
-import {
-  TableCellProps as _TableCellProps,
-  default as TableCell,
-} from '@mui/material/TableCell';
+import { CircleProgress } from '@linode/ui';
+import { default as TableCell } from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import SortUp from 'src/assets/icons/sort-up.svg';
 import Sort from 'src/assets/icons/unsorted.svg';
-import { CircleProgress } from 'src/components/CircleProgress';
+
+import type { Theme } from '@mui/material/styles';
+import type { TableCellProps as _TableCellProps } from '@mui/material/TableCell';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   initialIcon: {

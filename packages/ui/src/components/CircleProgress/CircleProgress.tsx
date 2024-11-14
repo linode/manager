@@ -1,4 +1,5 @@
-import { Box, omittedProps } from '@linode/ui';
+import { Box } from '../Box';
+import { omittedProps } from '../../utilities';
 import _CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -6,7 +7,8 @@ import * as React from 'react';
 import type { CircularProgressProps } from '@mui/material/CircularProgress';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
+export interface CircleProgressProps
+  extends Omit<CircularProgressProps, 'size'> {
   /**
    * Additional child elements to pass in
    */

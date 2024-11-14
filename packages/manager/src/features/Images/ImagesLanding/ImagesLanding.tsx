@@ -1,4 +1,10 @@
-import { IconButton, InputAdornment, Notice, Paper } from '@linode/ui';
+import {
+  CircleProgress,
+  IconButton,
+  InputAdornment,
+  Notice,
+  Paper,
+} from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -9,7 +15,6 @@ import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Drawer } from 'src/components/Drawer';
