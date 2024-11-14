@@ -42,6 +42,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     hasMajorityOfPlansDisabled,
     hasSelectedRegion,
     hideLimitedAvailabilityBanner,
+    isAPLEnabled,
     isSelectedRegionEligibleForPlan,
     planType,
     regionsData,
@@ -105,7 +106,9 @@ export const PlanInformation = (props: PlanInformationProps) => {
           hasDisabledClass={getDisabledClass('metal')}
         />
       ) : null}
-      {planType === 'shared' ? <APLNotice dataTestId="apl-notice" /> : null}
+      {planType === 'shared' && isAPLEnabled ? (
+        <APLNotice dataTestId="apl-notice" />
+      ) : null}
       {planType === 'premium' ? (
         <PlansAvailabilityNotice
           hasSelectedRegion={hasSelectedRegion}
