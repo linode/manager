@@ -16,6 +16,5 @@ export * from './Paper';
 export * from './Radio';
 export * from './RadioGroup';
 export * from './Stack';
-export * from './SimpleSelect';
 export * from './Tooltip';
 export * from './VisibilityTooltip';

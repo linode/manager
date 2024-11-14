@@ -1,4 +1,3 @@
-import { SimpleSelect } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -6,6 +5,7 @@ import * as React from 'react';
 import { MenuItem } from 'src/components/MenuItem';
 
 import { PaginationControls } from '../PaginationControls/PaginationControls';
+import { TextField } from '../TextField';
 
 export const MIN_PAGE_SIZE = 25;
 
@@ -81,12 +81,13 @@ export const PaginationFooter = (props: Props) => {
         />
       )}
       {!fixedSize ? (
-        <PageSizeSelectContainer data-qa-pagination-page-size>
-          <SimpleSelect
+        <Box data-qa-pagination-page-size padding={0.5}>
+          <StyledTextField
             defaultValue={defaultPagination}
+            hideLabel
             label="Number of items to show"
             onChange={(e) => handleSizeChange(Number(e.target.value))}
-            sx={{ margin: 0.5 }}
+            select
             value={pageSize}
           >
             {finalOptions.map((option) => (
@@ -94,28 +95,31 @@ export const PaginationFooter = (props: Props) => {
                 {option.label}
               </MenuItem>
             ))}
-          </SimpleSelect>
-        </PageSizeSelectContainer>
+          </StyledTextField>
+        </Box>
       ) : null}
     </Box>
   );
 };
 
-const PageSizeSelectContainer = styled(Box, {
-  label: 'PageSizeSelectContainer',
+const StyledTextField = styled(TextField, {
+  label: 'StyledTextField',
 })(({ theme }) => ({
-  '& .MuiInput-input': {
-    paddingTop: 4,
-  },
   '& .MuiInput-root': {
-    '&.Mui-focused': {
-      boxShadow: 'none',
-    },
     backgroundColor: theme.bg.bgPaper,
     border: 'none',
   },
-  '& .react-select__value-container': {
-    paddingLeft: 12,
+  '& .MuiSelect-select': {
+    border: 'none',
+  },
+  '& .MuiSvgIcon-root': {
+    margin: 0,
+    padding: 0,
+    position: 'relative',
+    top: 0,
+  },
+  '&.Mui-focused': {
+    boxShadow: 'none',
   },
 }));
 
