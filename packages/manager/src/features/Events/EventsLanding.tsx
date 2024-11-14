@@ -44,9 +44,9 @@ export const EventsLanding = (props: Props) => {
     events,
     fetchNextPage,
     hasNextPage,
+    isFetching,
     isFetchingNextPage,
     isLoading,
-    isFetching,
   } = useEventsInfiniteQuery(filter);
 
   const renderTableBody = () => {
