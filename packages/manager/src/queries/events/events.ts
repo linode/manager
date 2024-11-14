@@ -26,46 +26,10 @@ import type {
   QueryKey,
 } from '@tanstack/react-query';
 
-/**
- * This query exists to get the first 7 days of events when you load the app.
- *
- * Using the first page of useEventsInfiniteQuery would be ideal, but we are going to try this...
- *
- * @note This initial query should match X-Filtering that our poller does. If we want this query
- * to have a different filter than our poller, we will need to implement filtering in
- * `updateEventsQueries` like we do for our infinite queries.
- */
-export const useInitialEventsQuery = () => {
-  /**
-   * We only want to get events from the last 7 days.
-   */
-  const [defaultCreatedFilter] = useState(
-    DateTime.now()
-      .minus({ days: 7 })
-      .setZone('utc')
-      .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
-  );
-
-  const query = useQuery<ResourcePage<Event>, APIError[]>({
-    gcTime: Infinity,
-    queryFn: () =>
-      getEvents(
-        {},
-        {
-          ...EVENTS_LIST_FILTER,
-          '+order': 'desc',
-          '+order_by': 'id',
-          created: { '+gt': defaultCreatedFilter },
-        }
-      ),
-    queryKey: ['events', 'initial'],
-    staleTime: Infinity,
-  });
-
-  const events = query.data?.data;
-
-  return { ...query, events };
-};
+const defaultCreatedFilter = DateTime.now()
+  .minus({ days: 7 })
+  .setZone('utc')
+  .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
 
 /**
  * Gets an infinitely scrollable list of all Events
@@ -80,25 +44,50 @@ export const useInitialEventsQuery = () => {
  * the next set of events when the items returned by the server may have shifted.
  */
 export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
+  const queryClient = useQueryClient();
+
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
     gcTime: Infinity,
-    getNextPageParam: ({ data, results }) => {
-      if (results === data.length) {
-        return undefined;
+    getNextPageParam: (lastPage, allPages) => {
+      if (allPages.length === 1 && lastPage.results === 0) {
+        // If we did the inital fetch (the one that limits results to 7 days) but got no results,
+        // we can't conclude there are no more pages to fetch. There could be more events to fetch
+        // outside of the 7 day window.
+        return 'fetch more';
       }
-      return data[data.length - 1].id;
+      return lastPage.data[lastPage.data.length - 1]?.id;
     },
     initialPageParam: undefined,
-    queryFn: ({ pageParam }) =>
-      getEvents(
+    queryFn: ({ pageParam }) => {
+      const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
+        'events',
+        'infinite',
+        filter,
+      ]);
+      if (data === undefined) {
+        return getEvents(
+          {},
+          {
+            ...filter,
+            '+order': 'desc',
+            '+order_by': 'id',
+            created: { '+gt': defaultCreatedFilter },
+          }
+        );
+      }
+      return getEvents(
         {},
         {
           ...filter,
           '+order': 'desc',
           '+order_by': 'id',
-          id: pageParam ? { '+lt': pageParam } : undefined,
+          id:
+            pageParam === 'fetch more'
+              ? undefined
+              : { '+lt': pageParam as number },
         }
-      ),
+      );
+    },
     queryKey: ['events', 'infinite', filter],
     staleTime: Infinity,
   });
@@ -148,9 +137,9 @@ export const useEventsPoller = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: initialEvents } = useInitialEventsQuery();
+  const { data } = useEventsInfiniteQuery();
 
-  const hasFetchedInitialEvents = initialEvents !== undefined;
+  const hasFetchedInitialEvents = data !== undefined;
 
   const [mountTimestamp] = useState(
     DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)

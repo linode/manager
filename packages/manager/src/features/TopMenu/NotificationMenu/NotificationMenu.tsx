@@ -22,7 +22,7 @@ import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import {
-  useInitialEventsQuery,
+  useEventsInfiniteQuery,
   useMarkEventsAsSeen,
 } from 'src/queries/events/events';
 import { rotate360 } from 'src/styles/keyframes';
@@ -36,8 +36,8 @@ export const NotificationMenu = () => {
   const formattedNotifications = useFormattedNotifications();
   const notificationContext = React.useContext(_notificationContext);
 
-  const { data, events } = useInitialEventsQuery();
-  const eventsData = data?.data ?? [];
+  const { data } = useEventsInfiniteQuery();
+  const events = data?.pages[0].data ?? [];
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
@@ -152,8 +152,8 @@ export const NotificationMenu = () => {
           </Box>
           <Divider spacingBottom={0} />
 
-          {eventsData.length > 0 ? (
-            eventsData
+          {events.length > 0 ? (
+            events
               .slice(0, 20)
               .map((event) => (
                 <NotificationCenterEvent
