@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeFactory } from 'src/factories';
@@ -253,7 +254,9 @@ describe('CloudPulseResourcesSelect component tests', () => {
     expect(screen.getByText('Failed to fetch Resources.')).toBeInTheDocument();
   });
 
-  it('should be able to select limited resources', () => {
+  it('should be able to select limited resources', async () => {
+    const user = userEvent.setup();
+
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodeFactory.buildList(12),
       isError: false,
@@ -270,22 +273,28 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+
     expect(screen.getByLabelText('Resources')).toBeInTheDocument();
     expect(screen.getByText('Select up to 10 Resources')).toBeInTheDocument();
 
     for (let i = 14; i <= 23; i++) {
-      fireEvent.click(screen.getByRole('option', { name: `linode-${i}` }));
+      // eslint-disable-next-line no-await-in-loop
+      const option = await screen.findByRole('option', { name: `linode-${i}` });
+      // eslint-disable-next-line no-await-in-loop
+      await user.click(option);
     }
+
     const selectedOptions = screen
       .getAllByRole('option')
       .filter((option) => option.getAttribute(ARIA_SELECTED) === 'true');
 
     expect(selectedOptions.length).toBe(10);
-    expect(screen.getByRole('option', { name: `linode-24` })).toHaveAttribute(
-      ARIA_DISABLED,
-      'true'
-    );
+
+    const isResourceWithExceededLimit = await screen.findByRole('option', {
+      name: 'linode-24',
+    });
+    expect(isResourceWithExceededLimit).toHaveAttribute(ARIA_DISABLED, 'true');
 
     expect(queryByRole('option', { name: SELECT_ALL })).not.toBeInTheDocument();
   });
