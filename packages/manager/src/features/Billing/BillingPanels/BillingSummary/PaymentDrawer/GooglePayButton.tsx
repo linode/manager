@@ -1,5 +1,4 @@
-import { CircleProgress } from '@linode/ui';
-import { Tooltip } from '@linode/ui';
+import { CircleProgress, Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';

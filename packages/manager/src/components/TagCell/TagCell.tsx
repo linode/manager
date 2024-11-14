@@ -1,5 +1,4 @@
-import { CircleProgress } from '@linode/ui';
-import { IconButton, omittedProps } from '@linode/ui';
+import { CircleProgress, IconButton, omittedProps } from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';

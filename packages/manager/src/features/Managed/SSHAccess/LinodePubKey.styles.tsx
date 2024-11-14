@@ -1,5 +1,4 @@
-import { Paper } from '@linode/ui';
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 

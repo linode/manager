@@ -1,6 +1,4 @@
-import { Paper } from '@linode/ui';
-import { CircleProgress } from '@linode/ui';
-import { Box, Stack } from '@mui/material';
+import { Box, CircleProgress, Paper, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';

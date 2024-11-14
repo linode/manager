@@ -1,5 +1,4 @@
-import { CircleProgress } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, CircleProgress } from '@linode/ui';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';

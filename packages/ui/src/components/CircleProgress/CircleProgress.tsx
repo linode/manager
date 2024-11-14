@@ -7,7 +7,8 @@ import * as React from 'react';
 import type { CircularProgressProps } from '@mui/material/CircularProgress';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-interface CircleProgressProps extends Omit<CircularProgressProps, 'size'> {
+export interface CircleProgressProps
+  extends Omit<CircularProgressProps, 'size'> {
   /**
    * Additional child elements to pass in
    */

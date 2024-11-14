@@ -1,5 +1,4 @@
-import { CircleProgress } from '@linode/ui';
-import { IconButton, InputAdornment } from '@linode/ui';
+import { CircleProgress, IconButton, InputAdornment } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';

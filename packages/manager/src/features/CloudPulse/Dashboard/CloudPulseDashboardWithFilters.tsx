@@ -1,5 +1,4 @@
-import { CircleProgress } from '@linode/ui';
-import { Paper } from '@linode/ui';
+import { CircleProgress, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 

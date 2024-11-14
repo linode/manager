@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { CircleProgress } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { VncScreen } from 'react-vnc';
 

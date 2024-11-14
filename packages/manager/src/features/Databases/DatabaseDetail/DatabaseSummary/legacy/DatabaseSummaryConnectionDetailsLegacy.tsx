@@ -1,6 +1,5 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
-import { CircleProgress } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, CircleProgress } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

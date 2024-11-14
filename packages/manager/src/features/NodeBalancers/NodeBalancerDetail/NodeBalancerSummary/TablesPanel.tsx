@@ -1,6 +1,4 @@
-import { Paper } from '@linode/ui';
-import { Box } from '@linode/ui';
-import { CircleProgress } from '@linode/ui';
+import { Box, CircleProgress, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
