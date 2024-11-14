@@ -118,6 +118,9 @@ const StyledTextField = styled(TextField, {
     backgroundColor: theme.bg.bgPaper,
     border: 'none',
   },
+  '& .MuiList-root': {
+    border: `1px solid ${theme.palette.primary.main}`,
+  },
   '& .MuiSelect-select': {
     border: 'none',
   },
