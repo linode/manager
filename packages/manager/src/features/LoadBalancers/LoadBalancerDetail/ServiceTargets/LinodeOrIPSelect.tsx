@@ -1,9 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
-import { Stack } from 'src/components/Stack';
 import { linodeFactory } from 'src/factories';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';

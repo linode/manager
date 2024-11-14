@@ -1,4 +1,4 @@
-import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import { Notice, RadioGroup } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
@@ -6,22 +6,19 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
-import {
-  ExtendedIP,
-  extendedIPToString,
-  stringToExtendedIP,
-} from 'src/utilities/ipUtils';
+import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { transferHelperText as helperText } from './domainUtils';
+
+import type { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface EditDomainDrawerProps {
   domain: Domain | undefined;

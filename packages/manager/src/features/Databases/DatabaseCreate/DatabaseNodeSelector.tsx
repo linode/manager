@@ -1,10 +1,8 @@
-import { FormControl } from '@linode/ui';
+import { FormControl, Notice, RadioGroup } from '@linode/ui';
 import React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Notice } from 'src/components/Notice/Notice';
 import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 import { StyledChip } from 'src/features/components/PlansPanel/PlanSelection.styles';
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';

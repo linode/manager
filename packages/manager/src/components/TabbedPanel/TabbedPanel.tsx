@@ -1,9 +1,8 @@
-import { Box, Paper, Tooltip } from '@linode/ui';
+import { Box, Notice, Paper, Tooltip } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
-import { Notice } from 'src/components/Notice/Notice';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanel } from 'src/components/Tabs/TabPanel';

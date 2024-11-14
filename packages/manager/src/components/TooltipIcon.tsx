@@ -11,7 +11,7 @@ import * as React from 'react';
 import type { TooltipProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-type TooltipIconStatus =
+export type TooltipIconStatus =
   | 'error'
   | 'help'
   | 'info'

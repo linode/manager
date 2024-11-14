@@ -1,7 +1,7 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
@@ -77,7 +77,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
               >
                 Some plans do not include bundled network transfer. If the
                 transfer allotment is 0, all outbound network transfer is
-                subject to standard charges.
+                subject to charges.
                 <br />
                 <Link to="https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs">
                   Learn more about transfer costs
