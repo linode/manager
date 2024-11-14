@@ -50,6 +50,8 @@ export * from './vpcs';
 
 export * from './betas';
 
+export * from './iam';
+
 export {
   baseRequest,
   setToken,
