@@ -19,7 +19,7 @@ import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 /**
  * Describes an LKE plan as shown in Cloud Manager.
  */
-export interface LkePlanDetails {
+export interface LkePlanDescription {
   /** Number of nodes in the plan. */
   nodeCount: number;
   /** Name of the plan. */
@@ -32,7 +32,7 @@ export interface LkePlanDetails {
   type: LinodeTypeClass;
 }
 
-export interface LkePlanDescriptionAPL extends LkePlanDetails {
+export interface LkePlanDescriptionAPL extends LkePlanDescription {
   disabled: boolean;
 }
 
