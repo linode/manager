@@ -1,9 +1,8 @@
+import { CircleProgress } from '@linode/ui';
 import React from 'react';
 
 import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
 
-import { useStyles } from '../NotificationCenter.styles';
 import {
   StyledCaret,
   StyledEmptyMessage,
@@ -11,6 +10,7 @@ import {
   StyledLoadingContainer,
   StyledNotificationCenterItem,
 } from '../NotificationCenter.styles';
+import { useStyles } from '../NotificationCenter.styles';
 
 import type { NotificationCenterNotificationsItem } from '../types';
 

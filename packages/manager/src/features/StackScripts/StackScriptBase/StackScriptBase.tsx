@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { CircleProgress, Notice } from '@linode/ui';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { compose } from 'recompose';
 
 import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { withProfile } from 'src/containers/profile.container';
 import { isLinodeKubeImageId } from 'src/store/image/image.helpers';

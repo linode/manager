@@ -1,11 +1,16 @@
-import { Box, FormHelperText, InputAdornment, InputLabel } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  FormHelperText,
+  InputAdornment,
+  InputLabel,
+} from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
 import { clamp } from 'ramda';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
