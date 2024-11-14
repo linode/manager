@@ -1,14 +1,16 @@
+import { render } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { CircleProgress } from './CircleProgress';
+
+import { expect, describe, it } from 'vitest';
+import '@testing-library/jest-dom/vitest';
 
 const CONTENT_LOADING = 'Content is loading';
 
 describe('CircleProgress', () => {
   it('renders a CircleProgress properly', () => {
-    const screen = renderWithTheme(<CircleProgress />);
+    const screen = render(<CircleProgress />);
 
     const circleProgress = screen.getByLabelText(CONTENT_LOADING);
     expect(circleProgress).toBeVisible();
@@ -18,7 +20,7 @@ describe('CircleProgress', () => {
   });
 
   it('renders a small CircleProgress', () => {
-    const screen = renderWithTheme(<CircleProgress size="sm" />);
+    const screen = render(<CircleProgress size="sm" />);
 
     const circleProgress = screen.getByLabelText(CONTENT_LOADING);
     expect(circleProgress).toBeVisible();
@@ -26,7 +28,7 @@ describe('CircleProgress', () => {
   });
 
   it('sets a small CircleProgress with no padding', () => {
-    const screen = renderWithTheme(<CircleProgress noPadding size="sm" />);
+    const screen = render(<CircleProgress noPadding size="sm" />);
 
     const circleProgress = screen.getByLabelText(CONTENT_LOADING);
     expect(circleProgress).toBeVisible();

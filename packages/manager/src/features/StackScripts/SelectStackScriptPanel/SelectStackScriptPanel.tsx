@@ -1,9 +1,8 @@
 import { getStackScript } from '@linode/api-v4/lib/stackscripts';
-import { Box, Button, Notice } from '@linode/ui';
+import { Box, Button, CircleProgress, Notice } from '@linode/ui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { Typography } from 'src/components/Typography';
 import { withProfile } from 'src/containers/profile.container';

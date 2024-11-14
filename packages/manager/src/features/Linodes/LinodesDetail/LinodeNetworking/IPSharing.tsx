@@ -1,11 +1,10 @@
-import { Button, Divider, Notice } from '@linode/ui';
+import { Button, CircleProgress, Divider, Notice } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';

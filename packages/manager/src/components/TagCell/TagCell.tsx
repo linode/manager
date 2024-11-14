@@ -1,4 +1,5 @@
 import {
+  CircleProgress,
   IconButton,
   StyledPlusIcon,
   StyledTagButton,
@@ -12,7 +13,6 @@ import * as React from 'react';
 import { Tag } from 'src/components/Tag/Tag';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 
-import { CircleProgress } from '../CircleProgress';
 import { AddTag } from './AddTag';
 import { TagDrawer } from './TagDrawer';
 

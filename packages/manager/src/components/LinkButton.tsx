@@ -1,8 +1,6 @@
-import { Box, StyledLinkButton } from '@linode/ui';
+import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-
-import { CircleProgress } from 'src/components/CircleProgress';
 
 import type { Theme } from '@mui/material/styles';
 

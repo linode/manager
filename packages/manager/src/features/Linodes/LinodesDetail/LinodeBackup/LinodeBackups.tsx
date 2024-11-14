@@ -1,10 +1,9 @@
-import { Button, Paper } from '@linode/ui';
+import { Button, CircleProgress, Paper } from '@linode/ui';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';

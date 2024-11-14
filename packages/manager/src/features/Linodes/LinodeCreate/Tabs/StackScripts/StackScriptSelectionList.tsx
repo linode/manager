@@ -1,5 +1,12 @@
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Box, Button, IconButton, InputAdornment, Stack } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  IconButton,
+  InputAdornment,
+  Stack,
+} from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
@@ -7,7 +14,6 @@ import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Code } from 'src/components/Code/Code';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
