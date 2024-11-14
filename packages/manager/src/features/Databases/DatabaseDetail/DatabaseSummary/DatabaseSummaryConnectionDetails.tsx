@@ -116,16 +116,14 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     database?.hosts?.standby ?? database?.hosts?.secondary ?? '';
 
   const readOnlyHost = () => {
-    const defaultValue = isLegacy ? '-' : 'not available';
-    const value = readOnlyHostValue ?? defaultValue;
+    const defaultValue = isLegacy ? '-' : 'N/A';
+    const value = readOnlyHostValue ? readOnlyHostValue : defaultValue;
+    const displayCopyTooltip = value !== '-' && value !== 'N/A';
     return (
       <>
         {value}
-        {value && (
-          <CopyTooltip
-            className={classes.inlineCopyToolTip}
-            text={readOnlyHostValue}
-          />
+        {value && displayCopyTooltip && (
+          <CopyTooltip className={classes.inlineCopyToolTip} text={value} />
         )}
         {isLegacy && (
           <TooltipIcon
