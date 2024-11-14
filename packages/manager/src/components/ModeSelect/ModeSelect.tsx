@@ -1,8 +1,8 @@
+import { RadioGroup } from '@linode/ui';
 import * as React from 'react';
 
-import { Radio } from 'src/components/Radio/Radio';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { RadioGroup } from 'src/components/RadioGroup';
+import { Radio } from 'src/components/Radio/Radio';
 
 export interface Mode<modes> {
   label: string;
