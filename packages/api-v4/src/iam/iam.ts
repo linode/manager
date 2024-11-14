@@ -1,6 +1,6 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { IamUserPermissions } from './types';
+import { IamUserPermissions, IamAccountPermissions } from './types';
 
 /**
  * getUserPermissions
@@ -42,3 +42,16 @@ export const updateUserPermissions = (
     setMethod('PUT'),
     setData(data)
   );
+
+/**
+ * getAccountPermissions
+ *
+ * Return all permissions for account.
+ *
+ */
+export const getAccountPermissions = () => {
+  return Request<IamAccountPermissions>(
+    setURL(`${BETA_API_ROOT}/iam/role-permissions`),
+    setMethod('GET')
+  );
+};
