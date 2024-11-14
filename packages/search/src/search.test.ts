@@ -167,4 +167,20 @@ describe("getAPIFilterFromQuery", () => {
       error: null,
     });
   });
+
+  it("allows custom filter transformations on a per-field basis", () => {
+    const query = "region: us-east";
+
+    expect(
+      getAPIFilterFromQuery(query, {
+        searchableFieldsWithoutOperator: [],
+        filterShapeOverrides: {
+          '+contains': { field: 'region', filter: (value) => ({ regions: { region: value } }) }
+        }
+      })
+    ).toEqual({
+      filter: { regions: { region: 'us-east' } },
+      error: null,
+    });
+  });
 });

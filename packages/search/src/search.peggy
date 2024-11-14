@@ -13,6 +13,7 @@ andQuery
 subQuery
   = '(' ws* query:orQuery ws* ')' { return query; }
   / EqualQuery
+  / TagQuery
   / ContainsQuery
   / NotEqualQuery
   / LessThanQuery
@@ -27,14 +28,25 @@ DefaultQuery
     }
 
 EqualQuery
-  = key:FilterableField ws* Equal ws* value:Number { return { [key]: value }; }
-  / key:FilterableField ws* Equal ws* value:String { return { [key]: value }; }
+  = key:FilterableField ws* Equal ws* value:SearchValue {
+      const override = options.filterShapeOverrides?.['+eq'];
+      if (override && key === override.field) {
+        return override.filter(value);
+      }
+      return { [key]: value };
+    }
 
 ContainsQuery
-  = key:FilterableField ws* Contains ws* value:String { return { [key]: { "+contains": value } }; }
+  = key:FilterableField ws* Contains ws* value:String {
+    const override = options.filterShapeOverrides?.['+contains'];
+    if (override && key === override.field) {
+      return override.filter(value);
+    }
+    return { [key]: { "+contains": value } };
+  }
 
 TagQuery
-  = "tag" ws* Equal ws* value:String { return { "tags": { "+contains": value } }; }
+  = "tag" ws* Contains ws* value:String { return { "tags": { "+contains": value } }; }
 
 NotEqualQuery
   = Not key:FilterableField ws* Equal ws* value:String { return { [key]: { "+neq": value } }; }
@@ -100,11 +112,15 @@ Word "word"
   = [a-zA-Z0-9\-\.]+ { return text(); }
 
 StringWithSpaces "string with spaces"
-  = [a-zA-Z0-9\-\. ]+ { return text(); }
+  = [a-zA-Z0-9\-|_\.\: ]+ { return text(); }
 
 Number "numeric search value"
   = number:[0-9\.]+ { return parseFloat(number.join("")); }
   / number:[0-9]+ { return parseInt(number.join(""), 10); }
+
+SearchValue
+  = Number
+  / String
 
 ws "whitespace"
   = [ \t\r\n]
