@@ -1,20 +1,11 @@
 {
-  "ignorePatterns": [
-    "node_modules",
-    "lib",
-    "index.js",
-    "!.eslintrc.js"
-  ],
+  "ignorePatterns": ["node_modules", "lib", "index.js", "!.eslintrc.js"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
     "warnOnUnsupportedTypeScriptVersion": true
   },
-  "plugins": [
-    "@typescript-eslint",
-    "sonarjs",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "sonarjs", "prettier"],
   "extends": [
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
@@ -38,10 +29,7 @@
     "array-callback-return": "error",
     "no-invalid-this": "off",
     "no-new-wrappers": "error",
-    "no-restricted-imports": [
-      "error",
-      "rxjs"
-    ],
+    "no-restricted-imports": ["error", "rxjs"],
     "no-console": "error",
     "no-undef-init": "off",
     "radix": "error",
@@ -52,7 +40,7 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-empty-interface": "warn",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "sonarjs/cognitive-complexity": "warn",
@@ -62,6 +50,7 @@
     "sonarjs/no-redundant-jump": "warn",
     "sonarjs/no-small-switch": "warn",
     "no-multiple-empty-lines": "error",
+    "camelcase": ["warn", { "properties": "always" }],
     "curly": "warn",
     "sort-keys": "off",
     "comma-dangle": "off",
@@ -74,9 +63,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "*ts"
-      ],
+      "files": ["*ts"],
       "rules": {
         "@typescript-eslint/ban-types": [
           "warn",
