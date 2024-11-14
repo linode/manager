@@ -6,20 +6,17 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilities';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
-import type { DatabaseCreateValues } from './DatabaseClusterData';
 import type { DatabaseEngine } from '@linode/api-v4';
-import type { FormikErrors } from 'formik';
-import type { Item } from 'src/components/EnhancedSelect';
 
 interface Props {
   engines: DatabaseEngine[] | undefined;
-  errors: FormikErrors<DatabaseCreateValues>;
+  errorText: string | undefined;
   onChange: (filed: string, value: any) => void;
-  values: DatabaseCreateValues;
+  value: string;
 }
+
 export const DatabaseEngineSelect = (props: Props) => {
-  const { engines, errors, onChange, values } = props;
-  const [selectedValue, setSelectedValue] = React.useState('');
+  const { engines, errorText, onChange, value } = props;
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
@@ -30,6 +27,11 @@ export const DatabaseEngineSelect = (props: Props) => {
     }
     return getEngineOptions(engines);
   }, [engines]);
+
+  const selectedEngine = React.useMemo(() => {
+    return engineOptions.find((val) => val.value === value);
+  }, [value, engineOptions]);
+
   return (
     <Autocomplete
       groupBy={(option) => {
@@ -47,9 +49,8 @@ export const DatabaseEngineSelect = (props: Props) => {
         }
         return 'Other';
       }}
-      onChange={(_, selected: Item<string>) => {
+      onChange={(_, selected) => {
         onChange('engine', selected.value);
-        setSelectedValue(selected.label);
       }}
       renderOption={(props, option) => {
         const { key, ...rest } = props;
@@ -71,22 +72,19 @@ export const DatabaseEngineSelect = (props: Props) => {
       textFieldProps={{
         InputProps: {
           startAdornment: (
-            <Box sx={{ pr: 1, pt: 0.7 }}>
-              {engineOptions?.find((val) => val.label === selectedValue)?.flag}
-            </Box>
+            <Box sx={{ pr: 1, pt: 0.7 }}>{selectedEngine?.flag}</Box>
           ),
         },
       }}
       autoHighlight
-      clearOnBlur={true}
-      disableClearable={true}
+      disableClearable
       disabled={isRestricted}
-      errorText={errors.engine}
+      errorText={errorText}
       isOptionEqualToValue={(option, value) => option.value === value.value}
       label="Database Engine"
       options={engineOptions ?? []}
       placeholder="Select a Database Engine"
-      value={engineOptions?.find((val) => val.label === values.label)}
+      value={selectedEngine}
     />
   );
 };

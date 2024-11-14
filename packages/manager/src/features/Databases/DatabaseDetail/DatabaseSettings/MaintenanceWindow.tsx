@@ -229,7 +229,6 @@ export const MaintenanceWindow = (props: Props) => {
                   (thisOption) => thisOption.value === values.day_of_week
                 )}
                 autoHighlight
-                clearOnBlur={true}
                 disableClearable
                 disabled={disabled}
                 errorText={touched.day_of_week ? errors.day_of_week : undefined}
@@ -264,8 +263,7 @@ export const MaintenanceWindow = (props: Props) => {
                     (thisOption) => thisOption.value === values.hour_of_day
                   )}
                   autoHighlight
-                  clearOnBlur={true}
-                  disableClearable={true}
+                  disableClearable
                   disabled={disabled}
                   label="Time"
                   noMarginTop
@@ -356,9 +354,8 @@ export const MaintenanceWindow = (props: Props) => {
                     (thisOption) => thisOption.value === values.week_of_month
                   )}
                   autoHighlight
-                  clearOnBlur={true}
                   defaultValue={modifiedWeekSelectionMap[0]}
-                  disableClearable={true}
+                  disableClearable
                   label="Repeats on"
                   noMarginTop
                   options={modifiedWeekSelectionMap}
@@ -407,8 +404,8 @@ const daySelectionMap = [
 
 const hourSelectionMap = [
   { label: '00:00', value: 0 },
-  { label: '01:00', value: 2 },
-  { label: '02:00', value: 1 },
+  { label: '01:00', value: 1 },
+  { label: '02:00', value: 2 },
   { label: '03:00', value: 3 },
   { label: '04:00', value: 4 },
   { label: '05:00', value: 5 },

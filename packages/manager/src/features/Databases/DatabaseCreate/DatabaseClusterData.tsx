@@ -83,9 +83,9 @@ export const DatabaseClusterData = (props: Props) => {
         <Typography variant="h2">Select Engine and Region</Typography>
         <DatabaseEngineSelect
           engines={engines}
-          errors={errors}
+          errorText={errors.engine}
           onChange={onChange}
-          values={values}
+          value={values.engine}
         />
       </Grid>
       <Grid>

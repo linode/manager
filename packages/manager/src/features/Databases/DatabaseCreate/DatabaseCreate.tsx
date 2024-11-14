@@ -159,7 +159,7 @@ const DatabaseCreate = () => {
       },
     ],
     cluster_size: -1 as ClusterSize,
-    engine: 'mysql' as Engine,
+    engine: 'mysql/8' as Engine,
     label: '',
     region: '',
     type: '',
