@@ -27,7 +27,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -428,9 +427,6 @@ export const ImagesLanding = () => {
           endAdornment: query && (
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
-              {searchParseError && (
-                <TooltipIcon status="error" text={searchParseError.message} />
-              )}
               <IconButton
                 aria-label="Clear"
                 data-testid="clear-images-search"
@@ -446,6 +442,7 @@ export const ImagesLanding = () => {
           onSearch(e);
         })}
         containerProps={{ mb: 2 }}
+        errorText={searchParseError?.message}
         hideLabel
         label="Search"
         placeholder="Search Images"
