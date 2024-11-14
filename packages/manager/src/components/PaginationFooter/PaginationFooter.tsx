@@ -83,6 +83,11 @@ export const PaginationFooter = (props: Props) => {
       {!fixedSize ? (
         <Box data-qa-pagination-page-size padding={0.5}>
           <StyledTextField
+            SelectProps={{
+              MenuProps: {
+                disablePortal: true,
+              },
+            }}
             defaultValue={defaultPagination}
             hideLabel
             label="Number of items to show"
@@ -91,7 +96,11 @@ export const PaginationFooter = (props: Props) => {
             value={pageSize}
           >
             {finalOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
+              <MenuItem
+                data-qa-pagination-page-size-option={option.value}
+                key={option.value}
+                value={option.value}
+              >
                 {option.label}
               </MenuItem>
             ))}
