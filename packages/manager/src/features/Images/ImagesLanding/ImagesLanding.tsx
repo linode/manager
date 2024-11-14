@@ -103,6 +103,13 @@ export const ImagesLanding = () => {
 
   const queryClient = useQueryClient();
 
+  /**
+   * At the time of writing: `label`, `tags`, `size`, `status`, `region` are filterable.
+   *
+   * Some fields like `status` and `region` can't be used in complex filters using '+or' / '+and'
+   *
+   * Using `tags` in a '+or' is currently broken. See ARB-5792
+   */
   const { error: searchParseError, filter } = getAPIFilterFromQuery(query, {
     // Because Images have an array of region objects, we need to transform
     // search queries like "region: us-east" to { regions: { region: "us-east" } }
