@@ -66,6 +66,11 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
         filter,
       ]);
       if (data === undefined) {
+        // If there is no data in the cache yet at this query key,
+        // it likely means that this is the initial fetch. For the
+        // initial fetch, we have been asked to use `created` to limit
+        // the timeframe we fetch initial events for to a small window.
+        // See M3-8450 for context.
         return getEvents(
           {},
           {
