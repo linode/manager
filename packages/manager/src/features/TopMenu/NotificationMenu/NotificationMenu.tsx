@@ -37,7 +37,10 @@ export const NotificationMenu = () => {
   const notificationContext = React.useContext(_notificationContext);
 
   const { data } = useEventsInfiniteQuery();
+
+  // Just use the first page of events because we `slice` to get the first 20 events anyway
   const events = data?.pages[0].data ?? [];
+
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
