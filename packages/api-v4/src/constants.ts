@@ -1,4 +1,4 @@
-export const API_ROOT = 'https://api.linode.com/v4';
+export const API_ROOT = 'https://api.staging.linode.com/v4';
 export const BETA_API_ROOT = API_ROOT + 'beta';
 
 // Value from  1-4 reflecting a minimum score from zxcvbn

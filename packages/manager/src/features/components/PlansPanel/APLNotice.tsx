@@ -2,11 +2,13 @@ import * as React from 'react';
 
 import { Notice } from 'src/components/Notice/Notice';
 
+import { APL_NOTICE_COPY } from './constants';
+
 interface Props {
   dataTestId?: string;
 }
 
-const programInfo = `Shared CPU instances are currently not available for Application Platform for LKE`;
+const programInfo = APL_NOTICE_COPY;
 
 export const APLNotice = (props: Props) => {
   const { dataTestId } = props;
