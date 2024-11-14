@@ -95,7 +95,7 @@ export const ImageRow = (props: Props) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell>
+        <TableCell noWrap>
           <ImageStatus event={event} image={image} />
         </TableCell>
       </Hidden>
