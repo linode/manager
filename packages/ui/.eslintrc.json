@@ -1,10 +1,5 @@
 {
-  "ignorePatterns": [
-    "node_modules",
-    "lib",
-    "index.js",
-    "!.eslintrc.js"
-  ],
+  "ignorePatterns": ["node_modules", "lib", "index.js", "!.eslintrc.js"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
@@ -12,6 +7,7 @@
   },
   "plugins": [
     "@typescript-eslint",
+    "react",
     "sonarjs",
     "prettier",
     "@linode/eslint-plugin-cloud-manager"
@@ -37,15 +33,14 @@
     "no-loop-func": "error",
     "no-await-in-loop": "error",
     "array-callback-return": "error",
+    "camelcase": ["warn", { "properties": "always" }],
     "no-invalid-this": "off",
     "no-new-wrappers": "error",
-    "no-restricted-imports": [
-      "error",
-      "rxjs"
-    ],
+    "no-restricted-imports": ["error", "rxjs"],
     "no-console": "error",
     "no-undef-init": "off",
     "radix": "error",
+    "react/self-closing-comp": "warn",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-inferrable-types": "off",
     "@typescript-eslint/no-namespace": "warn",
@@ -53,7 +48,7 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-empty-interface": "warn",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "sonarjs/cognitive-complexity": "off",
