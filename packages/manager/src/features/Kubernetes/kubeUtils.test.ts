@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 
 import {
   accountBetaFactory,
@@ -6,9 +6,7 @@ import {
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { extendType } from 'src/utilities/extendType';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   getLatestVersion,
@@ -16,6 +14,40 @@ import {
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
 } from './kubeUtils';
+
+const queryMocks = vi.hoisted(() => ({
+  useAccountBeta: vi.fn().mockReturnValue({}),
+  useAccountBetaQuery: vi.fn().mockReturnValue({}),
+  useFlags: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/account/account', () => {
+  const actual = vi.importActual('src/queries/account/account');
+  return {
+    ...actual,
+    useAccountBeta: queryMocks.useAccountBeta,
+  };
+});
+
+vi.mock('src/queries/account/betas/apl', () => {
+  const actual = vi.importActual('src/queries/account/betas/:betaId');
+  return {
+    ...actual,
+    useAccountBetaQuery: queryMocks.useAccountBetaQuery,
+  };
+});
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
@@ -81,17 +113,16 @@ describe('helper functions', () => {
         enrolled: '2023-01-15T00:00:00Z',
         id: 'apl',
       });
-      server.use(
-        http.get('*/account/betas/apl', () => {
-          return HttpResponse.json(accountBeta);
-        })
-      );
-      const { result } = renderHook(() => useAPLAvailability(), {
-        wrapper: (ui) => wrapWithTheme(ui, { flags: { apl: true } }),
+
+      queryMocks.useAccountBetaQuery.mockReturnValue({
+        data: accountBeta,
       });
-      await waitFor(() => {
-        expect(result.current.showAPL).toBe(true);
+      queryMocks.useFlags.mockReturnValue({
+        apl: true,
       });
+
+      const { result } = renderHook(() => useAPLAvailability());
+      expect(result.current.showAPL).toBe(true);
     });
   });
 
@@ -133,27 +164,6 @@ describe('helper functions', () => {
 });
 
 describe('useIsLkeEnterpriseEnabled', () => {
-  const queryMocks = vi.hoisted(() => ({
-    useAccountBeta: vi.fn().mockReturnValue({}),
-    useFlags: vi.fn().mockReturnValue({}),
-  }));
-
-  vi.mock('src/queries/account/account', () => {
-    const actual = vi.importActual('src/queries/account/account');
-    return {
-      ...actual,
-      useAccountBeta: queryMocks.useAccountBeta,
-    };
-  });
-
-  vi.mock('src/hooks/useFlags', () => {
-    const actual = vi.importActual('src/hooks/useFlags');
-    return {
-      ...actual,
-      useFlags: queryMocks.useFlags,
-    };
-  });
-
   it('returns false if the account does not have the capability', () => {
     queryMocks.useAccountBeta.mockReturnValue({
       data: {
