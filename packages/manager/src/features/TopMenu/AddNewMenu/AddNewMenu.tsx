@@ -1,13 +1,7 @@
+import { Box, Divider, omittedProps } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import {
-  Box,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Menu, MenuItem, Stack, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -59,7 +53,7 @@ export const AddNewMenu = () => {
     setAnchorEl(null);
   };
 
-  const productFamilyLinkGroups: ProductFamilyLinkGroup<MenuLink[]>[] = [
+  const productFamilyLinkGroup: ProductFamilyLinkGroup<MenuLink[]>[] = [
     {
       icon: <LinodeIcon />,
       links: [
@@ -94,22 +88,6 @@ export const AddNewMenu = () => {
       name: 'Compute',
     },
     {
-      icon: <BucketIcon />,
-      links: [
-        {
-          description: 'S3-compatible object storage',
-          display: 'Bucket',
-          href: '/object-storage/buckets/create',
-        },
-        {
-          description: 'Attach additional storage to your Linode',
-          display: 'Volume',
-          href: '/volumes/create',
-        },
-      ],
-      name: 'Storage',
-    },
-    {
       icon: <NodebalancerIcon />,
       links: [
         {
@@ -136,6 +114,22 @@ export const AddNewMenu = () => {
       name: 'Networking',
     },
     {
+      icon: <BucketIcon />,
+      links: [
+        {
+          description: 'S3-compatible object storage',
+          display: 'Bucket',
+          href: '/object-storage/buckets/create',
+        },
+        {
+          description: 'Attach additional storage to your Linode',
+          display: 'Volume',
+          href: '/volumes/create',
+        },
+      ],
+      name: 'Storage',
+    },
+    {
       icon: <DatabaseIcon />,
       links: [
         {
@@ -148,6 +142,46 @@ export const AddNewMenu = () => {
       name: 'Databases',
     },
   ];
+
+  const ProductFamilyGroup = (
+    productFamily: ProductFamilyLinkGroup<MenuLink[]>
+  ) => {
+    return (
+      <>
+        <StyledHeading paddingTop={productFamily.name === 'Databases'}>
+          {productFamily.icon}
+          {productFamily.name}
+        </StyledHeading>
+        {productFamily.links.map(
+          (link) =>
+            !link.hide && [
+              <StyledMenuItem
+                component={Link}
+                key={link.display}
+                onClick={handleClose}
+                tabIndex={0}
+                to={link.href}
+                {...link.attr}
+              >
+                <Stack>
+                  <Typography
+                    sx={{
+                      color: theme.color.offBlack,
+                      fontFamily: theme.font.bold,
+                      fontSize: '1rem',
+                      lineHeight: '1.4rem',
+                    }}
+                  >
+                    {link.display}
+                  </Typography>
+                  <Typography>{link.description}</Typography>
+                </Stack>
+              </StyledMenuItem>,
+            ]
+        )}
+      </>
+    );
+  };
 
   return (
     <Box
@@ -177,7 +211,14 @@ export const AddNewMenu = () => {
           paper: {
             // UX requested a drop shadow that didn't affect the button.
             // If we revise our theme's shadows, we could consider removing
-            sx: { boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)' },
+            sx: {
+              boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
+              [theme.breakpoints.up('md')]: {
+                maxWidth: '100%',
+                paddingBottom: 1,
+                paddingTop: 2,
+              },
+            },
           },
         }}
         sx={{
@@ -191,46 +232,21 @@ export const AddNewMenu = () => {
         onClose={handleClose}
         open={open}
       >
-        {productFamilyLinkGroups.map((productFamily) => (
-          <>
-            <StyledHeading>
-              {productFamily.icon}
-              {productFamily.name}
-            </StyledHeading>
-            {productFamily.links.map(
-              (link) =>
-                !link.hide && [
-                  <MenuItem
-                    component={Link}
-                    key={link.display}
-                    onClick={handleClose}
-                    to={link.href}
-                    {...link.attr}
-                    style={{
-                      padding: '8px 12px',
-                      // We have to do this because in packages/manager/src/index.css we force underline links
-                      textDecoration: 'none',
-                    }}
-                    tabIndex={0}
-                  >
-                    <Stack>
-                      <Typography
-                        sx={{
-                          color: theme.color.offBlack,
-                          fontFamily: theme.font.bold,
-                          fontSize: '1rem',
-                          lineHeight: '1.4rem',
-                        }}
-                      >
-                        {link.display}
-                      </Typography>
-                      <Typography>{link.description}</Typography>
-                    </Stack>
-                  </MenuItem>,
-                ]
-            )}
-          </>
-        ))}
+        <Stack direction="row" tabIndex={-1}>
+          {productFamilyLinkGroup.slice(0, 2).map((productFamily) => (
+            <>
+              <Stack key={productFamily.name} tabIndex={-1}>
+                {ProductFamilyGroup(productFamily)}
+              </Stack>
+              <Divider orientation="vertical" sx={{ height: 'auto' }} />
+            </>
+          ))}
+          <Stack tabIndex={-1}>
+            {productFamilyLinkGroup
+              .slice(2)
+              .map((productFamily) => ProductFamilyGroup(productFamily))}
+          </Stack>
+        </Stack>
       </Menu>
     </Box>
   );
@@ -238,7 +254,8 @@ export const AddNewMenu = () => {
 
 export const StyledHeading = styled('h3', {
   label: 'StyledHeading',
-})(({ theme }) => ({
+  shouldForwardProp: omittedProps(['paddingTop']),
+})<{ paddingTop?: boolean }>(({ theme, ...props }) => ({
   '& svg': {
     height: 16,
     marginRight: theme.spacing(1),
@@ -250,6 +267,29 @@ export const StyledHeading = styled('h3', {
   fontSize: '0.75rem',
   letterSpacing: '0.25px',
   margin: 0,
-  padding: '8px 10px',
+  padding: '8px 12px',
   textTransform: 'uppercase',
+  [theme.breakpoints.up('lg')]: {
+    background: 'inherit',
+    padding: `${props.paddingTop ? '16px' : '0px'} 16px 8px 16px`,
+  },
+}));
+
+export const StyledMenuItem = styled(MenuItem, {
+  label: 'StyledMenuItem',
+})(({ theme }) => ({
+  padding: '8px 14px',
+  // We have to do this because in packages/manager/src/index.css we force underline links
+  textDecoration: 'none !important',
+  [theme.breakpoints.up('md')]: {
+    padding: '8px 16px',
+  },
+}));
+
+export const StyledBox = styled(Box, {
+  label: 'StyledBox',
+})(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+  },
 }));

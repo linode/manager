@@ -23,7 +23,6 @@ export interface PrimaryLink extends BaseNavLink {
 interface PrimaryLinkProps extends PrimaryLink {
   closeMenu: () => void;
   isActiveLink: boolean;
-  isBeta?: boolean;
   isCollapsed: boolean;
 }
 
