@@ -1,10 +1,9 @@
-import { Box, Paper, Stack } from '@linode/ui';
+import { Box, CircleProgress, Paper, Stack } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
