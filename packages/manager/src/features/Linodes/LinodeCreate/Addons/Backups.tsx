@@ -67,7 +67,7 @@ export const Backups = () => {
         isAccountBackupsEnabled
       }
       label={
-        <Stack sx={{ pl: 2 }}>
+        <Stack spacing={1} sx={{ pl: 2 }}>
           <Stack alignItems="center" direction="row" spacing={2}>
             <Typography component="span" variant="h3">
               Backups

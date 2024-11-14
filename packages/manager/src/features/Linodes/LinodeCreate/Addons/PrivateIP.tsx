@@ -34,7 +34,7 @@ export const PrivateIP = () => {
   return (
     <FormControlLabel
       label={
-        <Stack sx={{ pl: 2 }}>
+        <Stack spacing={1} sx={{ pl: 2 }}>
           <Typography component="span" variant="h3">
             Private IP
           </Typography>
