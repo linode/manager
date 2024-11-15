@@ -11,6 +11,7 @@ export * from './InputAdornment';
 export * from './InputLabel';
 export * from './Notice';
 export * from './Paper';
+export * from './Radio';
 export * from './RadioGroup';
 export * from './Stack';
 export * from './Tooltip';

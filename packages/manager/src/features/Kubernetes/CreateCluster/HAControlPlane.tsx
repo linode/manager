@@ -3,6 +3,7 @@ import {
   CircleProgress,
   FormControl,
   Notice,
+  Radio,
   RadioGroup,
   TooltipIcon,
 } from '@linode/ui';
@@ -11,7 +12,6 @@ import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Radio } from 'src/components/Radio/Radio';
 import { Typography } from 'src/components/Typography';
 
 export interface HAControlPlaneProps {
