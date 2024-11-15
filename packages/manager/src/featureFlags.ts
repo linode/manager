@@ -66,6 +66,7 @@ interface AclpFlag {
 
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
+  maxResourceSelections?: number;
   serviceType: string;
 }
 
