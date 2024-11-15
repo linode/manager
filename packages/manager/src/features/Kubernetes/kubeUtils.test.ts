@@ -29,8 +29,8 @@ vi.mock('src/queries/account/account', () => {
   };
 });
 
-vi.mock('src/queries/account/betas/apl', () => {
-  const actual = vi.importActual('src/queries/account/betas/:betaId');
+vi.mock('src/queries/account/betas', () => {
+  const actual = vi.importActual('src/queries/account/betas');
   return {
     ...actual,
     useAccountBetaQuery: queryMocks.useAccountBetaQuery,
@@ -173,15 +173,15 @@ describe('useIsLkeEnterpriseEnabled', () => {
     queryMocks.useFlags.mockReturnValue({
       lkeEnterprise: {
         enabled: true,
-        la: true,
         ga: true,
+        la: true,
       },
     });
 
     const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
     expect(result.current).toStrictEqual({
-      isLkeEnterpriseLAEnabled: false,
       isLkeEnterpriseGAEnabled: false,
+      isLkeEnterpriseLAEnabled: false,
     });
   });
 
@@ -194,15 +194,15 @@ describe('useIsLkeEnterpriseEnabled', () => {
     queryMocks.useFlags.mockReturnValue({
       lkeEnterprise: {
         enabled: true,
-        la: true,
         ga: false,
+        la: true,
       },
     });
 
     const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
     expect(result.current).toStrictEqual({
-      isLkeEnterpriseLAEnabled: true,
       isLkeEnterpriseGAEnabled: false,
+      isLkeEnterpriseLAEnabled: true,
     });
   });
 
