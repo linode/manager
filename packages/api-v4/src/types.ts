@@ -39,7 +39,7 @@ export interface RequestOptions {
   headers?: RequestHeaders;
 }
 
-interface FilterConditionTypes {
+export interface FilterConditionTypes {
   '+and'?: Filter[];
   '+or'?: Filter[] | string[];
   '+order_by'?: string;
