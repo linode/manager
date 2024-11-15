@@ -36,7 +36,11 @@ export const humanizeLargeData = (value: number) => {
   return `${value}`;
 };
 
-export const generate12HourTicks = (data: any[], timezone: string) => {
+export const generate12HourTicks = (
+  data: any[],
+  timezone: string,
+  tickCount: number
+) => {
   if (data.length === 0) {
     return [];
   }
@@ -53,7 +57,6 @@ export const generate12HourTicks = (data: any[], timezone: string) => {
 
   // Generate fixed number of ticks across the 12-hour period
   // Use 7 ticks (every 2 hours) to prevent overcrowding
-  const tickCount = 7;
   const interval = duration / (tickCount - 1);
 
   return Array.from({ length: tickCount }, (_, i) => {
