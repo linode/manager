@@ -1,9 +1,8 @@
 import { Box, Divider } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { Popover, Stack, Typography } from '@mui/material';
+import { Popover, Stack } from '@mui/material';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
@@ -13,13 +12,8 @@ import { Button } from 'src/components/Button/Button';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
-import {
-  StyledHeading,
-  StyledLinkTypography,
-  StyledMenuItem,
-  StyledMenuList,
-  StyledPaper,
-} from './CreateMenu.styles';
+import { StyledMenuList, StyledPaper } from './CreateMenu.styles';
+import { ProductFamilyGroup } from './ProductFamilyGroup';
 
 import type { BaseNavLink } from 'src/components/PrimaryNav/PrimaryLink';
 import type { ProductFamilyLinkGroup } from 'src/components/PrimaryNav/PrimaryNav';
@@ -39,7 +33,7 @@ export type CreateEntity =
   | 'VPC'
   | 'Volume';
 
-interface CreateMenuLink extends BaseNavLink {
+export interface CreateMenuLink extends BaseNavLink {
   description?: string;
 }
 
@@ -148,42 +142,6 @@ export const CreateMenu = () => {
     },
   ];
 
-  const ProductFamilyGroup = (
-    productFamily: ProductFamilyLinkGroup<CreateMenuLink[]>
-  ) => {
-    const filteredLinks = productFamily.links.filter((link) => !link.hide);
-    if (filteredLinks.length === 0) {
-      return null;
-    }
-
-    return (
-      <>
-        <StyledHeading paddingTop={productFamily.name === 'Databases'}>
-          {productFamily.icon}
-          {productFamily.name}
-        </StyledHeading>
-        {filteredLinks.map(
-          (link) =>
-            !link.hide && [
-              <StyledMenuItem
-                component={Link}
-                key={link.display}
-                onClick={handleClose}
-                tabIndex={0}
-                to={link.href}
-                {...link.attr}
-              >
-                <Stack>
-                  <StyledLinkTypography>{link.display}</StyledLinkTypography>
-                  <Typography>{link.description}</Typography>
-                </Stack>
-              </StyledMenuItem>,
-            ]
-        )}
-      </>
-    );
-  };
-
   return (
     <Box>
       <Button
@@ -210,23 +168,34 @@ export const CreateMenu = () => {
       >
         <StyledPaper>
           <StyledMenuList>
-            <Stack direction="column">
-              {ProductFamilyGroup(productFamilyLinkGroup[0])}
+            <Stack direction="column" tabIndex={-1}>
+              <ProductFamilyGroup
+                handleClose={handleClose}
+                productFamily={productFamilyLinkGroup[0]}
+              />
             </Stack>
             <Divider
               orientation="vertical"
               sx={{ height: 'auto', margin: 0, marginTop: 1 }}
             />
-            <Stack direction="column">
-              {ProductFamilyGroup(productFamilyLinkGroup[1])}
+            <Stack direction="column" tabIndex={-1}>
+              <ProductFamilyGroup
+                handleClose={handleClose}
+                productFamily={productFamilyLinkGroup[1]}
+              />
             </Stack>
             <Divider
               orientation="vertical"
               sx={{ height: 'auto', margin: 0, marginTop: 1 }}
             />
-            <Stack direction="column">
-              {ProductFamilyGroup(productFamilyLinkGroup[2])}
-              {ProductFamilyGroup(productFamilyLinkGroup[3])}
+            <Stack direction="column" tabIndex={-1}>
+              {productFamilyLinkGroup.slice(2).map((productFamilyGroup) => (
+                <ProductFamilyGroup
+                  handleClose={handleClose}
+                  key={productFamilyGroup.name}
+                  productFamily={productFamilyGroup}
+                />
+              ))}
             </Stack>
           </StyledMenuList>
         </StyledPaper>
