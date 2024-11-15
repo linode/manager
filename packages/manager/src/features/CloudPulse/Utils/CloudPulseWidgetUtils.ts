@@ -204,7 +204,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
         };
         const labelName = getLabelName(labelOptions);
         const data = seriesDataFormatter(transformedData.values, start, end);
-        const color = colors[index].Primary;
+        const color = colors[index % 22].Primary;
         areas.push({
           color,
           dataKey: labelName,

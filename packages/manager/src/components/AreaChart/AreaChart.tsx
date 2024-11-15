@@ -76,6 +76,11 @@ export interface AreaChartProps {
   data: any;
 
   /**
+   * radius of the dots to be displayed
+   */
+  dotRadius?: number;
+
+  /**
    *
    */
   fillOpacity?: number;
@@ -99,6 +104,11 @@ export interface AreaChartProps {
    * The sizes of whitespace around the container.
    */
   margin?: { bottom: number; left: number; right: number; top: number };
+
+  /**
+   * control the visibility of dots for each data points
+   */
+  showDot?: boolean;
 
   /**
    * true to display legends rows else false to hide
@@ -139,11 +149,13 @@ export const AreaChart = (props: AreaChartProps) => {
     ariaLabel,
     connectNulls,
     data,
+    dotRadius = 3,
     fillOpacity,
     height = '100%',
     legendHeight,
     legendRows,
-    margin = { bottom: 0, left: -20, right: 0, top: 0 },
+    margin = { bottom: 0, left: -20, right: 30, top: 0 },
+    showDot,
     showLegend,
     timezone,
     unit,
@@ -239,7 +251,7 @@ export const AreaChart = (props: AreaChartProps) => {
           <XAxis
             dataKey="timestamp"
             domain={['dataMin', 'dataMax']}
-            interval="preserveEnd"
+            interval={0}
             minTickGap={xAxis.tickGap}
             scale="time"
             stroke={theme.color.label}
@@ -283,6 +295,7 @@ export const AreaChart = (props: AreaChartProps) => {
             <Area
               connectNulls={connectNulls}
               dataKey={dataKey}
+              dot={{ r: showDot ? dotRadius : 0 }}
               fill={color}
               fillOpacity={variant === 'line' ? 0 : fillOpacity ?? 1}
               hide={activeSeries.includes(dataKey)}
