@@ -69,7 +69,7 @@ export const CreateMenu = () => {
         {
           description: 'Highly available container workloads',
           display: 'Kubernetes',
-          href: '/kubernetes/clusters/create',
+          href: '/kubernetes/create',
         },
         {
           description: "Control your Linodes' physical placement",
@@ -162,6 +162,7 @@ export const CreateMenu = () => {
           vertical: 'bottom',
         }}
         anchorEl={anchorEl}
+        aria-labelledby="create-menu"
         id="basic-menu"
         onClose={handleClose}
         open={open}
