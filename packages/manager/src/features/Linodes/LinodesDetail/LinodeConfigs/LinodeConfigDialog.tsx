@@ -6,6 +6,7 @@ import {
   FormControl,
   FormHelperText,
   Notice,
+  Radio,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -22,7 +23,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { TooltipIcon } from 'src/components/TooltipIcon';
