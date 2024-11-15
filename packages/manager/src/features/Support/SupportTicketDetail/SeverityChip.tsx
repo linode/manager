@@ -1,10 +1,10 @@
 import { Chip } from '@linode/ui';
-import { ChipProps } from '@linode/ui';
 import React from 'react';
 
 import { SEVERITY_LABEL_MAP } from '../SupportTickets/constants';
 
 import type { TicketSeverity } from '@linode/api-v4';
+import type { ChipProps } from '@linode/ui';
 
 const severityColorMap: Record<TicketSeverity, ChipProps['color']> = {
   1: 'error',

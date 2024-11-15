@@ -1,6 +1,7 @@
 import { default as _Chip } from '@mui/material/Chip';
-import { ChipProps as _ChipProps } from '@mui/material/Chip';
 import * as React from 'react';
+
+import type { ChipProps as _ChipProps } from '@mui/material/Chip';
 
 export interface ChipProps extends _ChipProps {
   /**
