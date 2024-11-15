@@ -142,6 +142,11 @@ export interface AreaChartProps {
    * x-axis properties
    */
   xAxis: XAxisProps;
+
+  /**
+   * number of x-axis ticks should be shown
+   */
+  xAxisTickCount?: number;
 }
 
 export const AreaChart = (props: AreaChartProps) => {
@@ -163,6 +168,7 @@ export const AreaChart = (props: AreaChartProps) => {
     variant,
     width = '100%',
     xAxis,
+    xAxisTickCount,
   } = props;
 
   const theme = useTheme();
@@ -250,14 +256,18 @@ export const AreaChart = (props: AreaChartProps) => {
             vertical={false}
           />
           <XAxis
+            ticks={
+              xAxisTickCount
+                ? generate12HourTicks(data, timezone, xAxisTickCount)
+                : []
+            }
             dataKey="timestamp"
             domain={['dataMin', 'dataMax']}
-            interval={0}
+            interval={xAxisTickCount ? 0 : 'preserveEnd'}
             minTickGap={xAxis.tickGap}
             scale="time"
             stroke={theme.color.label}
             tickFormatter={xAxisTickFormatter}
-            ticks={generate12HourTicks(data, timezone)}
             type="number"
           />
           <YAxis stroke={theme.color.label} tickFormatter={humanizeLargeData} />
