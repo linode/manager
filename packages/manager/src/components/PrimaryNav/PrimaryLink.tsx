@@ -4,7 +4,7 @@ import * as React from 'react';
 import { StyledActiveLink, StyledPrimaryLinkBox } from './PrimaryNav.styles';
 
 import type { NavEntity } from './PrimaryNav';
-import type { CreateEntity } from 'src/features/TopMenu/AddNewMenu/AddNewMenu';
+import type { CreateEntity } from 'src/features/TopMenu/CreateMenu/CreateMenu';
 
 export interface BaseNavLink {
   attr?: { [key: string]: any };

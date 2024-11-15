@@ -19,7 +19,7 @@ import {
   StyledMenuItem,
   StyledMenuList,
   StyledPaper,
-} from './AddNewMenu.styles';
+} from './CreateMenu.styles';
 
 import type { BaseNavLink } from 'src/components/PrimaryNav/PrimaryLink';
 import type { ProductFamilyLinkGroup } from 'src/components/PrimaryNav/PrimaryNav';
@@ -39,11 +39,11 @@ export type CreateEntity =
   | 'VPC'
   | 'Volume';
 
-interface MenuLink extends BaseNavLink {
+interface CreateMenuLink extends BaseNavLink {
   description?: string;
 }
 
-export const AddNewMenu = () => {
+export const CreateMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -58,7 +58,7 @@ export const AddNewMenu = () => {
     setAnchorEl(null);
   };
 
-  const productFamilyLinkGroup: ProductFamilyLinkGroup<MenuLink[]>[] = [
+  const productFamilyLinkGroup: ProductFamilyLinkGroup<CreateMenuLink[]>[] = [
     {
       icon: <LinodeIcon />,
       links: [
@@ -149,7 +149,7 @@ export const AddNewMenu = () => {
   ];
 
   const ProductFamilyGroup = (
-    productFamily: ProductFamilyLinkGroup<MenuLink[]>
+    productFamily: ProductFamilyLinkGroup<CreateMenuLink[]>
   ) => {
     return (
       <>

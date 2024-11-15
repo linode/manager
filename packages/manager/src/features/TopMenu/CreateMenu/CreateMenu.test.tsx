@@ -5,17 +5,17 @@ import { Router } from 'react-router-dom';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { AddNewMenu } from './AddNewMenu';
+import { CreateMenu } from './CreateMenu';
 
-describe('AddNewMenu', () => {
+describe('CreateMenu', () => {
   test('renders the Create button', () => {
-    const { getByText } = renderWithTheme(<AddNewMenu />);
+    const { getByText } = renderWithTheme(<CreateMenu />);
     const createButton = getByText('Create');
     expect(createButton).toBeInTheDocument();
   });
 
   test('opens the menu on button click', () => {
-    const { getByText, getByRole } = renderWithTheme(<AddNewMenu />);
+    const { getByRole, getByText } = renderWithTheme(<CreateMenu />);
     const createButton = getByText('Create');
     fireEvent.click(createButton);
     const menu = getByRole('menu');
@@ -23,7 +23,7 @@ describe('AddNewMenu', () => {
   });
 
   test('renders Linode menu item', () => {
-    const { getByText } = renderWithTheme(<AddNewMenu />);
+    const { getByText } = renderWithTheme(<CreateMenu />);
     const createButton = getByText('Create');
     fireEvent.click(createButton);
     const menuItem = getByText('Linode');
@@ -37,7 +37,7 @@ describe('AddNewMenu', () => {
     // Render the component with the Router and history
     const { getByText } = renderWithTheme(
       <Router history={history}>
-        <AddNewMenu />
+        <CreateMenu />
       </Router>
     );
 
@@ -52,7 +52,7 @@ describe('AddNewMenu', () => {
   });
 
   test('does not render hidden menu items', () => {
-    const { getByText, queryByText } = renderWithTheme(<AddNewMenu />, {
+    const { getByText, queryByText } = renderWithTheme(<CreateMenu />, {
       flags: { databases: false },
     });
     const createButton = getByText('Create');

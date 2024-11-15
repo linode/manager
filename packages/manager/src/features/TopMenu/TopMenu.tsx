@@ -8,8 +8,8 @@ import { Toolbar } from 'src/components/Toolbar';
 import { Typography } from 'src/components/Typography';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 
-import { AddNewMenu } from './AddNewMenu/AddNewMenu';
 import { Community } from './Community';
+import { CreateMenu } from './CreateMenu/CreateMenu';
 import { Help } from './Help';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
 import SearchBar from './SearchBar/SearchBar';
@@ -84,7 +84,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
               </IconButton>
             </TopMenuTooltip>
           </Hidden>
-          <AddNewMenu />
+          <CreateMenu />
           <SearchBar />
           <Help />
           <Community />
