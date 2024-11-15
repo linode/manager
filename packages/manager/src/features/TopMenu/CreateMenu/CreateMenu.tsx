@@ -151,13 +151,18 @@ export const CreateMenu = () => {
   const ProductFamilyGroup = (
     productFamily: ProductFamilyLinkGroup<CreateMenuLink[]>
   ) => {
+    const filteredLinks = productFamily.links.filter((link) => !link.hide);
+    if (filteredLinks.length === 0) {
+      return null;
+    }
+
     return (
       <>
         <StyledHeading paddingTop={productFamily.name === 'Databases'}>
           {productFamily.icon}
           {productFamily.name}
         </StyledHeading>
-        {productFamily.links.map(
+        {filteredLinks.map(
           (link) =>
             !link.hide && [
               <StyledMenuItem
