@@ -19,6 +19,7 @@ import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
 import {
+  generate12HourTicks,
   humanizeLargeData,
   tooltipLabelFormatter,
   tooltipValueFormatter,
@@ -256,6 +257,7 @@ export const AreaChart = (props: AreaChartProps) => {
             scale="time"
             stroke={theme.color.label}
             tickFormatter={xAxisTickFormatter}
+            ticks={generate12HourTicks(data, timezone)}
             type="number"
           />
           <YAxis stroke={theme.color.label} tickFormatter={humanizeLargeData} />
