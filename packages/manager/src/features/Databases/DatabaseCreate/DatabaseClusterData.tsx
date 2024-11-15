@@ -2,8 +2,6 @@ import { Divider } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
-import Select from 'src/components/EnhancedSelect';
-import { _SingleValue } from 'src/components/EnhancedSelect/components/SingleValue';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { Typography } from 'src/components/Typography';
@@ -11,11 +9,8 @@ import {
   StyledLabelTooltip,
   StyledTextField,
 } from 'src/features/Databases/DatabaseCreate/DatabaseCreate.style';
-import { EngineOption } from 'src/features/Databases/DatabaseCreate/EngineOption';
+import { DatabaseEngineSelect } from 'src/features/Databases/DatabaseCreate/DatabaseEngineSelect';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { getSelectedOptionFromGroupedOptions } from 'src/utilities/getSelectedOptionFromGroupedOptions';
-
-import { getEngineOptions } from './utilities';
 
 import type {
   ClusterSize,
@@ -27,7 +22,6 @@ import type {
   ReplicationCommitTypes,
 } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
-import type { Item } from 'src/components/EnhancedSelect';
 export interface DatabaseCreateValues {
   allow_list: {
     address: string;
@@ -59,13 +53,6 @@ export const DatabaseClusterData = (props: Props) => {
     globalGrantType: 'add_databases',
   });
 
-  const engineOptions = React.useMemo(() => {
-    if (!engines) {
-      return [];
-    }
-    return getEngineOptions(engines);
-  }, [engines]);
-
   const labelToolTip = (
     <StyledLabelTooltip>
       <strong>Label must:</strong>
@@ -94,22 +81,11 @@ export const DatabaseClusterData = (props: Props) => {
       <Divider spacingBottom={12} spacingTop={38} />
       <Grid>
         <Typography variant="h2">Select Engine and Region</Typography>
-        {/* TODO: use Autocomplete instead of Select */}
-        <Select
-          onChange={(selected: Item<string>) => {
-            onChange('engine', selected.value);
-          }}
-          value={getSelectedOptionFromGroupedOptions(
-            values.engine,
-            engineOptions
-          )}
-          components={{ Option: EngineOption, SingleValue: _SingleValue }}
-          disabled={isRestricted}
+        <DatabaseEngineSelect
+          engines={engines}
           errorText={errors.engine}
-          isClearable={false}
-          label="Database Engine"
-          options={engineOptions}
-          placeholder="Select a Database Engine"
+          onChange={onChange}
+          value={values.engine}
         />
       </Grid>
       <Grid>

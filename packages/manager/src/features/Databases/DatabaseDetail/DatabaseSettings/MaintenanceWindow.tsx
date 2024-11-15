@@ -6,8 +6,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
+import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Button } from 'src/components/Button/Button';
-import Select from 'src/components/EnhancedSelect/Select';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -24,6 +24,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       overflow: 'visible',
     },
     marginRight: '3rem',
+    minWidth: '125px',
   },
   sectionButton: {
     alignSelf: 'end',
@@ -200,21 +201,23 @@ export const MaintenanceWindow = (props: Props) => {
           </Typography>
           <div>
             <FormControl className={classes.formControlDropdown}>
-              <Select
-                defaultValue={daySelectionMap.find(
-                  (option) => option.value === 1
-                )}
-                onChange={(e) => {
+              <Autocomplete
+                isOptionEqualToValue={(option, value) =>
+                  option.value === value.value
+                }
+                onChange={(_, day) => {
                   setFormTouched(true);
-                  setFieldValue('day_of_week', e.value);
-                  weekSelectionModifier(e.label, weekSelectionMap);
-
+                  setFieldValue('day_of_week', day.value);
+                  weekSelectionModifier(day.label, weekSelectionMap);
                   // If week_of_month is not null (i.e., the user has selected a value for "Repeats on" already),
                   // refresh the field value so that the selected option displays the chosen day.
                   if (values.week_of_month) {
                     setFieldValue('week_of_month', values.week_of_month);
                   }
                 }}
+                renderOption={(props, option) => (
+                  <li {...props}>{option.label}</li>
+                )}
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-weekday-select': true,
@@ -223,12 +226,11 @@ export const MaintenanceWindow = (props: Props) => {
                 value={daySelectionMap.find(
                   (thisOption) => thisOption.value === values.day_of_week
                 )}
+                autoHighlight
+                disableClearable
                 disabled={disabled}
                 errorText={touched.day_of_week ? errors.day_of_week : undefined}
-                isClearable={false}
                 label="Day of Week"
-                menuPlacement="top"
-                name="Day of Week"
                 noMarginTop
                 options={daySelectionMap}
                 placeholder="Choose a day"
@@ -236,17 +238,20 @@ export const MaintenanceWindow = (props: Props) => {
             </FormControl>
             <FormControl className={classes.formControlDropdown}>
               <div style={{ alignItems: 'center', display: 'flex' }}>
-                <Select
+                <Autocomplete
                   defaultValue={hourSelectionMap.find(
                     (option) => option.value === 20
                   )}
                   errorText={
                     touched.hour_of_day ? errors.hour_of_day : undefined
                   }
-                  onChange={(e) => {
+                  onChange={(_, hour) => {
                     setFormTouched(true);
-                    setFieldValue('hour_of_day', e.value);
+                    setFieldValue('hour_of_day', hour?.value);
                   }}
+                  renderOption={(props, option) => (
+                    <li {...props}>{option.label}</li>
+                  )}
                   textFieldProps={{
                     dataAttrs: {
                       'data-qa-time-select': true,
@@ -255,11 +260,10 @@ export const MaintenanceWindow = (props: Props) => {
                   value={hourSelectionMap.find(
                     (thisOption) => thisOption.value === values.hour_of_day
                   )}
+                  autoHighlight
+                  disableClearable
                   disabled={disabled}
-                  isClearable={false}
                   label="Time"
-                  menuPlacement="top"
-                  name="Time"
                   noMarginTop
                   options={hourSelectionMap}
                   placeholder="Choose a time"
@@ -328,14 +332,17 @@ export const MaintenanceWindow = (props: Props) => {
                 className={classes.formControlDropdown}
                 style={{ minWidth: '250px' }}
               >
-                <Select
+                <Autocomplete
                   errorText={
                     touched.week_of_month ? errors.week_of_month : undefined
                   }
-                  onChange={(e) => {
+                  onChange={(_, week) => {
                     setFormTouched(true);
-                    setFieldValue('week_of_month', e.value);
+                    setFieldValue('week_of_month', week?.value);
                   }}
+                  renderOption={(props, option) => (
+                    <li {...props}>{option.label}</li>
+                  )}
                   textFieldProps={{
                     dataAttrs: {
                       'data-qa-week-in-month-select': true,
@@ -344,11 +351,10 @@ export const MaintenanceWindow = (props: Props) => {
                   value={modifiedWeekSelectionMap.find(
                     (thisOption) => thisOption.value === values.week_of_month
                   )}
+                  autoHighlight
                   defaultValue={modifiedWeekSelectionMap[0]}
-                  isClearable={false}
+                  disableClearable
                   label="Repeats on"
-                  menuPlacement="top"
-                  name="Repeats on"
                   noMarginTop
                   options={modifiedWeekSelectionMap}
                   placeholder="Repeats on"
@@ -396,8 +402,8 @@ const daySelectionMap = [
 
 const hourSelectionMap = [
   { label: '00:00', value: 0 },
-  { label: '01:00', value: 2 },
-  { label: '02:00', value: 1 },
+  { label: '01:00', value: 1 },
+  { label: '02:00', value: 2 },
   { label: '03:00', value: 3 },
   { label: '04:00', value: 4 },
   { label: '05:00', value: 5 },
