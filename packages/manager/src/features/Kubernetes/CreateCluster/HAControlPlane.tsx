@@ -4,6 +4,7 @@ import {
   FormControl,
   Notice,
   RadioGroup,
+  TooltipIcon,
 } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
@@ -11,7 +12,6 @@ import * as React from 'react';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
 export interface HAControlPlaneProps {

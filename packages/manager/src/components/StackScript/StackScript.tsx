@@ -1,4 +1,4 @@
-import { Box, Divider } from '@linode/ui';
+import { Box, Divider, TooltipIcon } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -14,8 +14,6 @@ import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-
-import { TooltipIcon } from '../TooltipIcon';
 
 import type { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
 import type { Theme } from '@mui/material/styles';

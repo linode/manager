@@ -5,6 +5,7 @@ import {
   FormControl,
   FormHelperText,
   Notice,
+  TooltipIcon,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -25,7 +26,6 @@ import { Link } from 'src/components/Link';
 import { Radio } from 'src/components/Radio/Radio';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';

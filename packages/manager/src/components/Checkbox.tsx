@@ -1,3 +1,4 @@
+import { TooltipIcon } from '@linode/ui';
 import _Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -5,7 +6,6 @@ import * as React from 'react';
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';
