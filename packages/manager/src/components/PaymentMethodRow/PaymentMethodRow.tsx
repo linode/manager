@@ -10,7 +10,7 @@ import { useMakeDefaultPaymentMethodMutation } from 'src/queries/account/payment
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 import type { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import { Action } from 'src/components/ActionMenu/ActionMenu';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   /**
