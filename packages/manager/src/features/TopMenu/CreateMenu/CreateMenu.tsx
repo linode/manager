@@ -210,21 +210,23 @@ export const CreateMenu = () => {
       >
         <StyledPaper>
           <StyledMenuList>
-            {productFamilyLinkGroup.slice(0, 2).map((productFamily) => (
-              <>
-                <Stack direction="column" key={productFamily.name}>
-                  {ProductFamilyGroup(productFamily)}
-                </Stack>
-                <Divider
-                  orientation="vertical"
-                  sx={{ height: 'auto', margin: 0, marginTop: 1 }}
-                />
-              </>
-            ))}
             <Stack direction="column">
-              {productFamilyLinkGroup
-                .slice(2)
-                .map((productFamily) => ProductFamilyGroup(productFamily))}
+              {ProductFamilyGroup(productFamilyLinkGroup[0])}
+            </Stack>
+            <Divider
+              orientation="vertical"
+              sx={{ height: 'auto', margin: 0, marginTop: 1 }}
+            />
+            <Stack direction="column">
+              {ProductFamilyGroup(productFamilyLinkGroup[1])}
+            </Stack>
+            <Divider
+              orientation="vertical"
+              sx={{ height: 'auto', margin: 0, marginTop: 1 }}
+            />
+            <Stack direction="column">
+              {ProductFamilyGroup(productFamilyLinkGroup[2])}
+              {ProductFamilyGroup(productFamilyLinkGroup[3])}
             </Stack>
           </StyledMenuList>
         </StyledPaper>
