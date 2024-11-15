@@ -1,16 +1,18 @@
+import { Button } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
 import { ClickAwayListener } from 'src/components/ClickAwayListener';
 import { H1Header } from 'src/components/H1Header/H1Header';
 
-import { TextField, TextFieldProps } from '../TextField';
+import { TextField } from '../TextField';
+
+import type { TextFieldProps } from '../TextField';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
   (theme: Theme, _params, classes) => ({

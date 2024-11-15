@@ -1,4 +1,4 @@
-import { FormControl, Notice, Radio, RadioGroup } from '@linode/ui';
+import { Button, FormControl, Notice, Radio, RadioGroup } from '@linode/ui';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Button } from 'src/components/Button/Button';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';

@@ -1,5 +1,6 @@
 export * from './BetaChip';
 export * from './Box';
+export * from './Button';
 export * from './Chip';
 export * from './CircleProgress';
 export * from './Divider';
