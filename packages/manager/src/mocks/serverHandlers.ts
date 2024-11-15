@@ -1244,7 +1244,6 @@ export const handlers = [
       active_promotions: promoFactory.buildList(1),
       active_since: '2022-11-30',
       balance: 50,
-      capabilities: ['NETINT Quadra T1U'],
       company: 'Mock Company',
     });
     return HttpResponse.json(account);
