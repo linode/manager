@@ -4,25 +4,22 @@ import { useHistory } from 'react-router-dom';
 
 import { Button } from 'src/components/Button/Button';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { useAllPaymentMethodsQuery } from 'src/queries/account/payment';
+import { useAccount } from 'src/queries/account/account';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
-
-import type { PaymentMethod } from '@linode/api-v4/lib/account/types';
 
 export const CreditCardExpiredBanner = () => {
   const history = useHistory();
 
-  const { data: paymentMethods } = useAllPaymentMethodsQuery();
+  const { data: account } = useAccount();
 
-  if (!paymentMethods || paymentMethods?.length == 0) {
-    return;
+  if (!account) {
+    return null;
   }
 
-  const isExpired = paymentMethods.some((paymentMethod: PaymentMethod) => {
-    const ccExpiry =
-      paymentMethod.type === 'credit_card' ? paymentMethod.data.expiry : null;
-    return ccExpiry && isCreditCardExpired(ccExpiry);
-  });
+  const isExpired = Boolean(
+    account?.credit_card?.expiry &&
+      isCreditCardExpired(account?.credit_card.expiry)
+  );
 
   if (!isExpired) {
     return;
@@ -39,7 +36,7 @@ export const CreditCardExpiredBanner = () => {
         </Button>
       }
       important
-      preferenceKey={'credit card expired'}
+      preferenceKey={'credit-card-expired'}
       variant="error"
     >
       <Typography variant="body1">
