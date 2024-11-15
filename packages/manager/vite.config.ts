@@ -11,7 +11,6 @@ export default defineConfig({
     outDir: 'build',
   },
   envPrefix: 'REACT_APP_',
-  // @todo Remove this `as` when we upgrade our package manager. Yarn v1's hoisting behavior is causing a type error
   plugins: [react(), svgr({ exportAsDefault: true })],
   resolve: {
     alias: {

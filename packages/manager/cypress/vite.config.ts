@@ -7,7 +7,6 @@ import svgr from 'vite-plugin-svgr';
 const DIRNAME = new URL('.', import.meta.url).pathname;
 
 export default defineConfig({
-  // @todo Remove this `as` when we upgrade our package manager. Yarn v1's hoisting behavior is causing a type error
   plugins: [react(), svgr({ exportAsDefault: true })],
   build: {
     rollupOptions: {
