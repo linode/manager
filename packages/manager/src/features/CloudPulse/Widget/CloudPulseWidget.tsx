@@ -265,9 +265,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const metricsApiCallError = error?.[0]?.reason;
 
   const tickFormat =
-    duration.unit === 'min' || duration.unit === 'hr'
-      ? 'hh:mm a'
-      : 'LLL dd, hh:mm a';
+    duration.unit === 'min' || duration.unit === 'hr' ? 'hh:mm a' : 'LLL dd';
   return (
     <Grid container item lg={widget.size} xs={12}>
       <Stack flexGrow={1} spacing={2}>
@@ -331,9 +329,11 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             areas={areas}
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
+            dotRadius={1.5}
             height={424}
             legendRows={legendRows}
             loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
+            showDot
             showLegend={data.length !== 0}
             timezone={timezone}
             unit={currentUnit}
