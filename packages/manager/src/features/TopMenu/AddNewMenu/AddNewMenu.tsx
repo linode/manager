@@ -1,15 +1,7 @@
-import { Box, Divider, Paper, omittedProps } from '@linode/ui';
+import { Box, Divider } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import {
-  MenuItem,
-  MenuList,
-  Popover,
-  Stack,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Popover, Stack, Typography } from '@mui/material';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -20,6 +12,14 @@ import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { Button } from 'src/components/Button/Button';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
+
+import {
+  StyledHeading,
+  StyledLinkTypography,
+  StyledMenuItem,
+  StyledMenuList,
+  StyledPaper,
+} from './AddNewMenu.styles';
 
 import type { BaseNavLink } from 'src/components/PrimaryNav/PrimaryLink';
 import type { ProductFamilyLinkGroup } from 'src/components/PrimaryNav/PrimaryNav';
@@ -32,7 +32,6 @@ export type CreateEntity =
   | 'Image'
   | 'Kubernetes'
   | 'Linode'
-  | 'Longview'
   | 'Marketplace'
   | 'NodeBalancer'
   | 'Object Storage'
@@ -45,7 +44,6 @@ interface MenuLink extends BaseNavLink {
 }
 
 export const AddNewMenu = () => {
-  const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -171,16 +169,7 @@ export const AddNewMenu = () => {
                 {...link.attr}
               >
                 <Stack>
-                  <Typography
-                    sx={{
-                      color: theme.color.offBlack,
-                      fontFamily: theme.font.bold,
-                      fontSize: '1rem',
-                      lineHeight: '1.4rem',
-                    }}
-                  >
-                    {link.display}
-                  </Typography>
+                  <StyledLinkTypography>{link.display}</StyledLinkTypography>
                   <Typography>{link.description}</Typography>
                 </Stack>
               </StyledMenuItem>,
@@ -191,13 +180,7 @@ export const AddNewMenu = () => {
   };
 
   return (
-    <Box
-      sx={{
-        [theme.breakpoints.down('md')]: {
-          flex: 1,
-        },
-      }}
-    >
+    <Box>
       <Button
         aria-controls={open ? 'basic-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
@@ -220,21 +203,8 @@ export const AddNewMenu = () => {
         onClose={handleClose}
         open={open}
       >
-        <Paper
-          sx={(theme) => ({
-            padding: `${theme.spacing(1)} 0`,
-            [theme.breakpoints.down('sm')]: {
-              padding: 0,
-            },
-          })}
-        >
-          <MenuList
-            sx={(theme) => ({
-              [theme.breakpoints.up('md')]: {
-                display: 'flex',
-              },
-            })}
-          >
+        <StyledPaper>
+          <StyledMenuList>
             {productFamilyLinkGroup.slice(0, 2).map((productFamily) => (
               <>
                 <Stack direction="column" key={productFamily.name}>
@@ -251,44 +221,9 @@ export const AddNewMenu = () => {
                 .slice(2)
                 .map((productFamily) => ProductFamilyGroup(productFamily))}
             </Stack>
-          </MenuList>
-        </Paper>
+          </StyledMenuList>
+        </StyledPaper>
       </Popover>
     </Box>
   );
 };
-
-export const StyledHeading = styled('h3', {
-  label: 'StyledHeading',
-  shouldForwardProp: omittedProps(['paddingTop']),
-})<{ paddingTop?: boolean }>(({ theme, ...props }) => ({
-  '& svg': {
-    height: 16,
-    marginRight: theme.spacing(1),
-    width: 16,
-  },
-  alignItems: 'center',
-  background: 'rgb(247, 247, 250)',
-  display: 'flex',
-  fontFamily: 'LatoWebBold',
-  fontSize: '0.75rem',
-  letterSpacing: '0.25px',
-  margin: 0,
-  padding: '8px 12px',
-  textTransform: 'uppercase',
-  [theme.breakpoints.up('lg')]: {
-    background: 'inherit',
-    padding: `${props.paddingTop ? '16px' : '8px'} 16px 6px 16px`,
-  },
-}));
-
-export const StyledMenuItem = styled(MenuItem, {
-  label: 'StyledMenuItem',
-})(({ theme }) => ({
-  padding: '8px 14px',
-  // We have to do this because in packages/manager/src/index.css we force underline links
-  textDecoration: 'none !important',
-  [theme.breakpoints.up('md')]: {
-    padding: '8px 16px',
-  },
-}));
