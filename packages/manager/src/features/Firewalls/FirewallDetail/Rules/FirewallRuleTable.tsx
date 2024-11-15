@@ -312,6 +312,8 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
     triggerOpenRuleDrawerForEditing,
   };
 
+  const theme = useTheme();
+
   const {
     active,
     attributes,
@@ -331,6 +333,11 @@ const FirewallRuleTableRow = React.memo((props: FirewallRuleTableRowProps) => {
       // in order to prevent scrolling on mobile devices.
       // refer to https://docs.dndkit.com/api-documentation/sensors/pointer#touch-action
       touchAction: 'none',
+    },
+    ':focus': {
+      backgroundColor: isActive
+        ? theme.tokens.background.Neutralsubtle
+        : theme.tokens.background.Normal,
     },
     cursor: isActive ? 'grabbing' : 'grab',
     position: 'relative',
