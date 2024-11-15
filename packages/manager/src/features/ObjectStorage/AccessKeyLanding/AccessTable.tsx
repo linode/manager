@@ -1,7 +1,7 @@
+import { Radio } from '@linode/ui';
 import { update } from 'ramda';
 import * as React from 'react';
 
-import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';

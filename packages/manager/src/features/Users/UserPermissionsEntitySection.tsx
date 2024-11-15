@@ -6,14 +6,13 @@
  * I'll create a tech debt ticket in jira to keep track of this issue.
  */
 
-import { Box } from '@linode/ui';
+import { Box, Radio } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { createDisplayPage } from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Radio } from 'src/components/Radio/Radio';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
