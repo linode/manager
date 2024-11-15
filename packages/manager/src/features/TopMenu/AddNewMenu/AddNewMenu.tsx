@@ -1,7 +1,14 @@
-import { Box, Divider, omittedProps } from '@linode/ui';
+import { Box, Divider, Paper, omittedProps } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { Menu, MenuItem, Stack, Typography, useTheme } from '@mui/material';
+import {
+  MenuItem,
+  MenuList,
+  Popover,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -203,51 +210,50 @@ export const AddNewMenu = () => {
       >
         Create
       </Button>
-      <Menu
-        MenuListProps={{
-          'aria-labelledby': 'create-menu',
-        }}
-        slotProps={{
-          paper: {
-            // UX requested a drop shadow that didn't affect the button.
-            // If we revise our theme's shadows, we could consider removing
-            sx: {
-              boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-              [theme.breakpoints.up('md')]: {
-                maxWidth: '100%',
-                paddingBottom: 1,
-                paddingTop: 2,
-              },
-            },
-          },
-        }}
-        sx={{
-          '& hr': {
-            marginBottom: '0 !important',
-            marginTop: '0 !important',
-          },
+      <Popover
+        anchorOrigin={{
+          horizontal: 'left',
+          vertical: 'bottom',
         }}
         anchorEl={anchorEl}
         id="basic-menu"
         onClose={handleClose}
         open={open}
       >
-        <Stack direction="row" tabIndex={-1}>
-          {productFamilyLinkGroup.slice(0, 2).map((productFamily) => (
-            <>
-              <Stack key={productFamily.name} tabIndex={-1}>
-                {ProductFamilyGroup(productFamily)}
-              </Stack>
-              <Divider orientation="vertical" sx={{ height: 'auto' }} />
-            </>
-          ))}
-          <Stack tabIndex={-1}>
-            {productFamilyLinkGroup
-              .slice(2)
-              .map((productFamily) => ProductFamilyGroup(productFamily))}
-          </Stack>
-        </Stack>
-      </Menu>
+        <Paper
+          sx={(theme) => ({
+            padding: `${theme.spacing(1)} 0`,
+            [theme.breakpoints.down('sm')]: {
+              padding: 0,
+            },
+          })}
+        >
+          <MenuList
+            sx={(theme) => ({
+              [theme.breakpoints.up('md')]: {
+                display: 'flex',
+              },
+            })}
+          >
+            {productFamilyLinkGroup.slice(0, 2).map((productFamily) => (
+              <>
+                <Stack direction="column" key={productFamily.name}>
+                  {ProductFamilyGroup(productFamily)}
+                </Stack>
+                <Divider
+                  orientation="vertical"
+                  sx={{ height: 'auto', margin: 0, marginTop: 1 }}
+                />
+              </>
+            ))}
+            <Stack direction="column">
+              {productFamilyLinkGroup
+                .slice(2)
+                .map((productFamily) => ProductFamilyGroup(productFamily))}
+            </Stack>
+          </MenuList>
+        </Paper>
+      </Popover>
     </Box>
   );
 };
@@ -264,6 +270,7 @@ export const StyledHeading = styled('h3', {
   alignItems: 'center',
   background: 'rgb(247, 247, 250)',
   display: 'flex',
+  fontFamily: 'LatoWebBold',
   fontSize: '0.75rem',
   letterSpacing: '0.25px',
   margin: 0,
@@ -271,7 +278,7 @@ export const StyledHeading = styled('h3', {
   textTransform: 'uppercase',
   [theme.breakpoints.up('lg')]: {
     background: 'inherit',
-    padding: `${props.paddingTop ? '16px' : '0px'} 16px 8px 16px`,
+    padding: `${props.paddingTop ? '16px' : '8px'} 16px 6px 16px`,
   },
 }));
 
@@ -283,13 +290,5 @@ export const StyledMenuItem = styled(MenuItem, {
   textDecoration: 'none !important',
   [theme.breakpoints.up('md')]: {
     padding: '8px 16px',
-  },
-}));
-
-export const StyledBox = styled(Box, {
-  label: 'StyledBox',
-})(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
   },
 }));
