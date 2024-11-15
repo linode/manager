@@ -4,12 +4,13 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import { useMakeDefaultPaymentMethodMutation } from 'src/queries/account/payment';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
 import type { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   /**

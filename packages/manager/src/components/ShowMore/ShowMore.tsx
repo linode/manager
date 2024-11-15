@@ -1,4 +1,5 @@
-import { Chip, ChipProps } from '@linode/ui';
+import { Chip } from '@linode/ui';
+import { ChipProps } from '@linode/ui';
 import Popover from '@mui/material/Popover';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
