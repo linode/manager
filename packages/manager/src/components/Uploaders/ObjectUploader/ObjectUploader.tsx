@@ -1,11 +1,11 @@
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
+import { Button } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { debounce } from 'throttle-debounce';
 
-import { Button } from 'src/components/Button/Button';
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { readableBytes } from 'src/utilities/unitConversions';

@@ -1,6 +1,7 @@
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Box,
+  Button,
   CircleProgress,
   IconButton,
   InputAdornment,
@@ -13,7 +14,6 @@ import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import { Button } from 'src/components/Button/Button';
 import { Code } from 'src/components/Code/Code';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

@@ -1,8 +1,7 @@
-import { Box } from '@linode/ui';
+import { Box, StyledLinkButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Typography } from 'src/components/Typography';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';

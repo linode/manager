@@ -1,9 +1,9 @@
+import { rotate360 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 
 import UploadPending from 'src/assets/icons/uploadPending.svg';
 import { Typography } from 'src/components/Typography';
-import { rotate360 } from 'src/styles/keyframes';
 
 import type { FileUploadProps } from './FileUpload';
 import type { Theme } from '@mui/material/styles';

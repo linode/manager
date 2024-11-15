@@ -1,12 +1,11 @@
 import { makePayment } from '@linode/api-v4/lib/account';
-import { Divider, InputAdornment, Notice, Stack } from '@linode/ui';
+import { Button, Divider, InputAdornment, Notice, Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';

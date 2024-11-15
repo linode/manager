@@ -1,9 +1,8 @@
 import { getTFAToken } from '@linode/api-v4/lib/profile';
-import { Notice } from '@linode/ui';
+import { Notice, StyledLinkButton } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Typography } from 'src/components/Typography';
 import { profileQueries } from 'src/queries/profile/profile';
 import { useSecurityQuestions } from 'src/queries/profile/securityQuestions';

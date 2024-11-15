@@ -1,8 +1,7 @@
-import { CircleProgress, Notice } from '@linode/ui';
+import { Button, CircleProgress, Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
@@ -21,7 +20,7 @@ import type {
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
-import type { ButtonProps } from 'src/components/Button/Button';
+import type { ButtonProps } from '@linode/ui';
 
 interface Props {
   disableUnassignButton: boolean;

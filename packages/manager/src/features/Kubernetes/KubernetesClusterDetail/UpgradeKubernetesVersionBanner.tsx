@@ -1,13 +1,13 @@
+import { Button } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Typography } from 'src/components/Typography';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
 
-import UpgradeVersionModal from '../UpgradeVersionModal';
 import { getNextVersion } from '../kubeUtils';
+import UpgradeVersionModal from '../UpgradeVersionModal';
 
 interface Props {
   clusterID: number;
@@ -32,8 +32,8 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
       {nextVersion ? (
         <DismissibleBanner
           actionButton={actionButton}
-          variant="info"
           preferenceKey={`${clusterID}-${currentVersion}`}
+          variant="info"
         >
           <Grid
             alignItems="center"

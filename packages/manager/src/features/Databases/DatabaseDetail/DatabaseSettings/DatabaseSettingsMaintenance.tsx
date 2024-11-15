@@ -1,7 +1,7 @@
+import { StyledLinkButton } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Typography } from 'src/components/Typography';
 import {
   getDatabasesDescription,

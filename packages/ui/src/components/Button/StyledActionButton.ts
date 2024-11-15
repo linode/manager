@@ -1,4 +1,4 @@
-import { latoWeb } from '@linode/ui';
+import { latoWeb } from '../../foundations';
 import { styled } from '@mui/material/styles';
 
 import { Button } from './Button';

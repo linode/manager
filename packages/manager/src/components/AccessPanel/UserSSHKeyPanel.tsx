@@ -1,8 +1,8 @@
+import { Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

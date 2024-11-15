@@ -1,7 +1,6 @@
+import { Button, StyledLinkButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Button } from 'src/components/Button/Button';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 

@@ -12,8 +12,8 @@ import {
   StyledScrollBox,
 } from './RemovableSelectionsList.style';
 
+import type { ButtonProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material';
-import type { ButtonProps } from 'src/components/Button/Button';
 
 export type RemovableItem = {
   // The remaining key-value pairs must have their values typed

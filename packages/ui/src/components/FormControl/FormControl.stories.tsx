@@ -1,4 +1,4 @@
-import { FormHelperText } from '@linode/ui';
+import { FormHelperText } from '../FormHelperText';
 import React from 'react';
 
 import { FormControl } from './FormControl';

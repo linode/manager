@@ -1,5 +1,4 @@
-import { Stack } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import BuildIcon from '@mui/icons-material/Build';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';

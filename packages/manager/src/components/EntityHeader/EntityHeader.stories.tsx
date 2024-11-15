@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, Button } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
@@ -6,7 +6,6 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Hidden } from 'src/components/Hidden';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 
-import { Button } from '../Button/Button';
 import { Link } from '../Link';
 
 import type { Meta, StoryObj } from '@storybook/react';

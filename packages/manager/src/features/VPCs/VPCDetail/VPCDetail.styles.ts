@@ -1,8 +1,6 @@
-import { Box } from '@linode/ui';
+import { Box, Button } from '@linode/ui';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import { Button } from 'src/components/Button/Button';
 
 export const StyledActionButton = styled(Button, {
   label: 'StyledActionButton',

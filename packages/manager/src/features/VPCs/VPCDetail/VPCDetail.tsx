@@ -1,11 +1,10 @@
-import { Box, CircleProgress } from '@linode/ui';
+import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
