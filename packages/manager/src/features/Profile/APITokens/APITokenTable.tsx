@@ -1,7 +1,6 @@
-import { Box, Paper } from '@linode/ui';
+import { Box, Button, Paper } from '@linode/ui';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';

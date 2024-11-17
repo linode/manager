@@ -1,7 +1,6 @@
-import { omittedProps } from '@linode/ui';
+import { Button, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Button } from 'src/components/Button/Button';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

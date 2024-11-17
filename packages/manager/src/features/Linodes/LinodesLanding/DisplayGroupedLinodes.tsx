@@ -1,4 +1,4 @@
-import { Box, Tooltip } from '@linode/ui';
+import { Box, Paper, Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -11,7 +11,6 @@ import {
   PaginationFooter,
   getMinimumPageSizeForNumberOfItems,
 } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from '@linode/ui';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

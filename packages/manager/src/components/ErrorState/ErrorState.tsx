@@ -1,9 +1,9 @@
+import { Button } from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 
 import type { SvgIconProps } from '../SvgIcon';
