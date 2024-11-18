@@ -102,6 +102,7 @@ export const Dialog = React.forwardRef(
           }
         }}
         aria-labelledby={titleID}
+        closeAfterTransition={false}
         data-qa-dialog
         data-qa-drawer
         data-testid="drawer"
