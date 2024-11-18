@@ -51,7 +51,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * token to fetch metrics data
    */
-  authToken: string;
+  authToken?: string;
 
   /**
    * metrics defined of this widget
@@ -232,7 +232,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     {
       authToken,
-      isFlags: Boolean(flags),
+      isFlags: Boolean(flags && authToken),
       label: widget.label,
       timeStamp,
       url: flags.aclpReadEndpoint!,
