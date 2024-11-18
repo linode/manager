@@ -69,6 +69,11 @@ export interface CloudPulseWidgetProperties {
   errorLabel?: string;
 
   /**
+   * Jwe token fetching status check
+   */
+  isJweTokenFetching: boolean;
+
+  /**
    * resources ids selected by user to show metrics for
    */
   resourceIds: string[];
@@ -136,6 +141,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     authToken,
     availableMetrics,
     duration,
+    isJweTokenFetching,
     resourceIds,
     resources,
     savePref,
@@ -232,7 +238,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     {
       authToken,
-      isFlags: Boolean(flags && authToken),
+      isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
       timeStamp,
       url: flags.aclpReadEndpoint!,
@@ -332,7 +338,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             dotRadius={1.5}
             height={424}
             legendRows={legendRows}
-            loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
+            loading={isLoading || isJweTokenFetching} // keep loading until we are trying to fetch the refresh token
             showDot
             showLegend={data.length !== 0}
             timezone={timezone}
