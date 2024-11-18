@@ -17,6 +17,24 @@ import {
 
 const today = new Date().toISOString().slice(0, 10);
 
+// Sanitize the file name to prevent path traversal
+const sanitizeFileName = (fileName) => {
+  return fileName.replace(/[^a-zA-Z0-9-_\.]/g, ""); // Allow only alphanumeric, dashes, underscores, and dots
+};
+
+// Safe path join function to prevent path traversal
+const safeJoinPath = (dir, file) => {
+  const sanitizedFile = sanitizeFileName(file);
+  const safeFile = path.basename(sanitizedFile); // Ensure we only get the file name
+  const safePath = path.resolve(dir, safeFile); // Resolve to absolute path
+
+  // Check if the resolved path is within the intended directory
+  if (!safePath.startsWith(path.resolve(dir))) {
+    throw new Error("Path traversal attempt detected");
+  }
+  return safePath;
+};
+
 try {
   for (const pkg in PACKAGES) {
     const changesetEntries = {};
@@ -41,7 +59,6 @@ try {
           }
         });
       });
-
       // If only README.md in there, no changeset(s)
       if (files.length === 1) {
         logger.success({
@@ -78,8 +95,11 @@ try {
               return;
             }
 
-            // Logic to parse the changeset file and generate the changelog content
-            const filePath = path.join(changesetDirectory(linodePackage), file);
+            // Use the safeJoinPath function to prevent path traversal
+            const filePath = safeJoinPath(
+              changesetDirectory(linodePackage),
+              file
+            );
             const content = fs.readFileSync(filePath, "utf-8");
             const matches = content.match(
               new RegExp(`"@linode/${linodePackage}": ([^\n]+)`)
@@ -102,7 +122,10 @@ try {
           });
         }
 
-        const changelogContent = initiateChangelogEntry(releaseDate, currentSemver);
+        const changelogContent = initiateChangelogEntry(
+          releaseDate,
+          currentSemver
+        );
         // Generate the final changelog content
         populateChangelogEntry(changesetEntries, changelogContent);
 
