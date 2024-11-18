@@ -210,6 +210,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           dataKey: labelName,
         });
 
+        // map each label & its data point to its timestamp
         data.forEach((dataPoint) => {
           const timestamp = dataPoint[0];
           const value = dataPoint[1];
@@ -377,9 +378,11 @@ export const getAutocompleteWidgetStyles = (theme: Theme) => ({
  */
 // TODO: CloudPulse - delete when recharts migration completed
 export const fillMissingTimeStampsAcrossDimensions = (
-  ...arraysToBeFilled: [number, number | null][][]
-): [number, number | null][][] => {
-  if (arraysToBeFilled.length === 0) return [];
+  ...arraysToBeFilled: [number, null | number][][]
+): [number, null | number][][] => {
+  if (arraysToBeFilled.length === 0) {
+    return [];
+  }
 
   // Step 1: Collect all unique keys from all arrays
   const allTimestamps = new Set<number>();
@@ -400,7 +403,7 @@ export const fillMissingTimeStampsAcrossDimensions = (
     // Step 3.2: Build the synchronized array by checking if a key exists
     return sortedTimestamps.map((key) => {
       // If the current array has the key, use its value; otherwise, set it to null, so that the gap is properly visible
-      return [key, map.get(key) ?? null] as [number, number | null];
+      return [key, map.get(key) ?? null] as [number, null | number];
     });
   });
 };
