@@ -11,6 +11,9 @@ export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
 export const PLAN_IS_TOO_SMALL_FOR_APL_COPY =
   'This plan is too small for Application Platform for LKE.';
 
+export const APL_NOTICE_COPY =
+  'Shared CPU instances are currently not available for Application Platform for LKE';
+
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
 export const DEDICATED_COMPUTE_INSTANCES_LINK =
