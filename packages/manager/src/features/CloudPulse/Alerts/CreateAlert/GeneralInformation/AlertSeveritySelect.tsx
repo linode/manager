@@ -9,12 +9,12 @@ import type {
   AlertSeverityType,
   CreateAlertDefinitionForm,
 } from '@linode/api-v4';
-import type { FieldPath } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 export interface CloudPulseAlertSeveritySelectProps {
   /**
    * name used for the component in the form
    */
-  name: FieldPath<CreateAlertDefinitionForm>;
+  name: FieldPathByValue<CreateAlertDefinitionForm, AlertSeverityType>;
 }
 
 export const CloudPulseAlertSeveritySelect = (
