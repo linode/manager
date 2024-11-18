@@ -1,7 +1,9 @@
 import { Notice } from '@linode/ui';
+import { ListItem } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
+import { List } from 'src/components/List';
 import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
@@ -94,6 +96,28 @@ export const PlanInformation = (props: PlanInformationProps) => {
           />
         </>
       ) : null}
+      {planType === 'accelerated' && (
+        // TODO: GET THE LINK(s) pls
+        <Notice variant="warning">
+          <Typography
+            fontFamily={(theme: Theme) => theme.font.bold}
+            fontSize="1rem"
+          >
+            <List sx={{ listStyleType: 'disc', pl: 2 }}>
+              <ListItem disablePadding sx={{ display: 'list-item' }}>
+                These plans have limited deployment availability.{' '}
+                <Link to="#">Learn more</Link> and request access to Accelerated
+                plans.
+              </ListItem>
+              <ListItem disablePadding sx={{ display: 'list-item' }}>
+                Transfer costs not included in the plan price will be charged
+                additionally. <Link to="#">Learn more</Link> about pricing and
+                transfer costs.
+              </ListItem>
+            </List>
+          </Typography>
+        </Notice>
+      )}
       {planType === 'metal' ? (
         <MetalNotice
           dataTestId="metal-notice"
@@ -166,7 +190,7 @@ export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
       break;
     case 'accelerated':
       planTypeLabel = 'Accelerated';
-      docLink = 'tbd';
+      docLink = '#';
       break;
     default:
       planTypeLabel = null;
