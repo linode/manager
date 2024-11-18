@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -52,7 +52,7 @@ describe('Dialog', () => {
     expect(getByText('This is a subtitle')).toBeInTheDocument();
   });
 
-  it('should call onClose when the Dialog close button is clicked', () => {
+  it('should call onClose when the Dialog close button is clicked', async () => {
     const { getByRole } = renderWithTheme(
       <Dialog {...defaultArgs} open={true} />
     );
@@ -60,7 +60,9 @@ describe('Dialog', () => {
     const closeButton = getByRole('button', { name: 'Close' });
     fireEvent.click(closeButton);
 
-    expect(defaultArgs.onClose).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(defaultArgs.onClose).toHaveBeenCalled();
+    });
   });
 
   it('should render a Dialog with an error message if provided', () => {
