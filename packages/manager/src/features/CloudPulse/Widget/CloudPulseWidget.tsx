@@ -74,7 +74,7 @@ export interface CloudPulseWidgetProperties {
   resourceIds: string[];
 
   /**
-   * List of resources available of selected service type
+   * List of selected resources available of selected service type
    */
   resources: CloudPulseResources[];
 
