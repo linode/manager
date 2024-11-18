@@ -1,12 +1,10 @@
-import { Box, TooltipIcon } from '@linode/ui';
-import LockIcon from '@mui/icons-material/Lock';
+import { Box, TooltipIcon, VisibilityTooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
@@ -23,6 +21,7 @@ import {
 import BillingContactDrawer from './EditBillingContactDrawer';
 
 import type { Profile } from '@linode/api-v4';
+import { useState } from 'react';
 
 interface Props {
   address1: string;
@@ -127,6 +126,10 @@ export const ContactInformation = React.memo((props: Props) => {
     }
   }, [editContactDrawerOpen, history.location.state]);
 
+  const [isContactInfoMasked, setIsContactInfoMasked] = useState(
+    preferences?.maskSensitiveData
+  );
+
   /**
    * Finding the country from the countryData JSON
    * `country-region-data` mapping:
@@ -180,13 +183,19 @@ export const ContactInformation = React.memo((props: Props) => {
             {EDIT_BILLING_CONTACT}
           </BillingActionButton>
         </BillingBox>
-        {preferences?.maskSensitiveData ? (
-          <Grid container display="flex" flexDirection="row" padding={0}>
-            <LockIcon />
-            <Typography alignSelf="center" marginLeft={1}>
-              This data is masked. To unmask, toggle your preference in{' '}
-              <Link to="/profile/settings">Profile Settings</Link>.
-            </Typography>
+        {isContactInfoMasked ? (
+          <Grid
+            container
+            display="flex"
+            flexDirection="row"
+            padding={0}
+            marginBottom={1}
+          >
+            <Typography alignSelf="center">This data is masked.</Typography>
+            <VisibilityTooltip
+              handleClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
+              isVisible={false}
+            />
           </Grid>
         ) : (
           <Grid container display="flex" flexDirection="row" spacing={2}>
