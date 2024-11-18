@@ -5,10 +5,13 @@ import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { Dashboard, TimeDuration } from '@linode/api-v4';
+import type { AclpWidget, Dashboard, TimeDuration } from '@linode/api-v4';
+
+export type WidgetFilterValue = { [key: string]: AclpWidget };
 
 export type FilterValueType =
   | CloudPulseResources[]
+  | WidgetFilterValue
   | number
   | number[]
   | string

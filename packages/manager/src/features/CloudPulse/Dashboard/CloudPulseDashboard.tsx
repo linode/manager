@@ -12,9 +12,9 @@ import {
 import { useAclpPreference } from '../Utils/UserPreference';
 import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
 
+import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { JWETokenPayLoad, TimeDuration } from '@linode/api-v4';
-import { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 
 export interface DashboardProperties {
   /**
@@ -108,11 +108,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return renderErrorState('Error loading the definitions of metrics.');
   }
 
-  if (
-    isMetricDefinitionLoading ||
-    isDashboardLoading ||
-    isJweTokenLoading
-  ) {
+  if (isMetricDefinitionLoading || isDashboardLoading) {
     return <CircleProgress />;
   }
 
@@ -121,7 +117,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       additionalFilters={additionalFilters}
       dashboard={dashboard}
       duration={duration}
-      jweToken={jweToken}
+      isJweTokenLoading={isJweTokenLoading}
+      jweToken={isJweTokenLoading ? undefined : jweToken}
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}
