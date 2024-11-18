@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, TooltipIcon } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
@@ -6,7 +6,6 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';

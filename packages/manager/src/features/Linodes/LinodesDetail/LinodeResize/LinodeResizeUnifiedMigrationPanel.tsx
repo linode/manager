@@ -1,10 +1,16 @@
-import { Box, Divider, FormControl, Radio, RadioGroup } from '@linode/ui';
+import {
+  Box,
+  Divider,
+  FormControl,
+  Radio,
+  RadioGroup,
+  TooltipIcon,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
 

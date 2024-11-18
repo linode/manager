@@ -1,8 +1,7 @@
-import { Box } from '@linode/ui';
+import { Box, TooltipIcon } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 
 export const UserDataAccordionHeading = () => {
   return (

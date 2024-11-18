@@ -1,7 +1,7 @@
+import { TooltipIcon } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
 const sxTooltipIcon = {
