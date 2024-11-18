@@ -118,7 +118,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       dashboard={dashboard}
       duration={duration}
       isJweTokenFetching={isJweTokenFetching}
-      jweToken={isJweTokenFetching ? undefined : jweToken}
+      jweToken={jweToken}
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}

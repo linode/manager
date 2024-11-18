@@ -74,6 +74,7 @@ export const RenderWidgets = React.memo(
         availableMetrics: undefined,
         duration,
         errorLabel: 'Error occurred while loading data.',
+        isJweTokenFetching: false,
         resourceIds: resources.map((resource) => String(resource.id)),
         resources: [],
         serviceType: dashboard?.service_type ?? '',
@@ -161,6 +162,7 @@ export const RenderWidgets = React.memo(
                 {...cloudPulseWidgetProperties}
                 authToken={jweToken?.token}
                 availableMetrics={availMetrics}
+                isJweTokenFetching={isJweTokenFetching}
                 resources={resources}
                 savePref={savePref}
               />
