@@ -164,6 +164,10 @@ export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
       planTypeLabel = 'GPU';
       docLink = GPU_COMPUTE_INSTANCES_LINK;
       break;
+    case 'accelerated':
+      planTypeLabel = 'Accelerated';
+      docLink = 'tbd';
+      break;
     default:
       planTypeLabel = null;
       docLink = null;

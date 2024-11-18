@@ -166,7 +166,6 @@ export const getIsLimitedAvailability = ({
 };
 
 export const planTabInfoContent = {
-  // TODO: to be further handled in M3-8834
   accelerated: {
     dataId: 'data-qa-accelerated',
     key: 'accelerated',
