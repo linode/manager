@@ -90,7 +90,9 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
   },
   borderBottomRightRadius: 3,
   borderLeft: `1px solid ${
-    theme.name === 'light' ? theme.tokens.color.Neutrals.White : '#2e3238'
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals.White
+      : theme.tokens.color.Neutrals[100]
   }`,
   borderRadius: theme.tokens.borderRadius.None,
   borderTopRightRadius: 3,

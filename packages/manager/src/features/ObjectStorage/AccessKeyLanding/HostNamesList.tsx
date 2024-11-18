@@ -27,7 +27,11 @@ export const HostNamesList = ({ objectStorageKey }: Props) => {
       <StyledBoxShadowWrapper
         sx={(theme) => ({
           backgroundColor: theme.bg.main,
-          border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
+          border: `1px solid ${
+            theme.name === 'light'
+              ? theme.tokens.color.Neutrals[40]
+              : theme.tokens.color.Neutrals.Black
+          }`,
           minHeight: '34px',
         })}
         displayShadow={currentListHeight > maxHeight}

@@ -78,7 +78,7 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
   '&:hover': {
     color: theme.palette.primary.main,
   },
-  color: '#ccc',
+  color: theme.tokens.color.Neutrals[40],
   transition: theme.transitions.create(['color']),
   ...(props.checked && {
     color: theme.palette.primary.main,
@@ -88,7 +88,7 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
       fill: `${theme.bg.main}`,
       opacity: 0.5,
     },
-    color: '#ccc !important',
+    color: `${theme.tokens.color.Neutrals[40]} !important`,
     fill: `${theme.bg.main} !important`,
     pointerEvents: 'none',
   }),

@@ -16,7 +16,7 @@ export const StyledIconButton = styled(IconButton, {
   },
   backgroundColor: 'inherit',
   border: 'none',
-  color: '#c9c7c7',
+  color: theme.tokens.color.Neutrals[40],
   cursor: 'pointer',
   padding: theme.spacing(),
   position: 'relative',

@@ -180,7 +180,9 @@ export const UserMenu = React.memo(() => {
     return matchesSmDown ? undefined : open ? (
       <KeyboardArrowUp sx={sx} />
     ) : (
-      <KeyboardArrowDown sx={{ color: '#9ea4ae', ...sx }} />
+      <KeyboardArrowDown
+        sx={(theme) => ({ color: theme.tokens.color.Neutrals[50], ...sx })}
+      />
     );
   };
 
@@ -287,7 +289,7 @@ export const UserMenu = React.memo(() => {
           )}
           <Box>
             <Heading>My Profile</Heading>
-            <Divider color="#9ea4ae" />
+            <Divider />
             <Grid columnSpacing={2} container rowSpacing={1}>
               <Grid container direction="column" wrap="nowrap" xs={6}>
                 {profileLinks.slice(0, 4).map(renderLink)}
@@ -300,7 +302,7 @@ export const UserMenu = React.memo(() => {
           {hasAccountAccess && (
             <Box>
               <Heading>Account</Heading>
-              <Divider color="#9ea4ae" />
+              <Divider />
               <Stack mt={1} spacing={1.5}>
                 {accountLinks.map((menuLink) =>
                   menuLink.hide ? null : (

@@ -241,10 +241,10 @@ export const AreaChart = (props: AreaChartProps) => {
           <YAxis stroke={theme.color.label} tickFormatter={humanizeLargeData} />
           <Tooltip
             contentStyle={{
-              color: '#606469',
+              color: theme.tokens.color.Neutrals[70],
             }}
             itemStyle={{
-              color: '#606469',
+              color: theme.tokens.color.Neutrals[70],
               fontFamily: theme.font.bold,
             }}
             content={<CustomTooltip />}

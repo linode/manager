@@ -115,10 +115,10 @@ const StyledDialog = styled(_Dialog, {
   },
 }));
 
-const StyledHr = styled('hr')({
-  backgroundColor: '#e3e5e8',
+const StyledHr = styled('hr', { label: 'StyledHr' })(({ theme }) => ({
+  backgroundColor: theme.tokens.color.Neutrals[20],
   border: 'none',
   height: 1,
   margin: '-2em 8px 0px 8px',
   width: '100%',
-});
+}));
