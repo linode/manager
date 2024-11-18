@@ -64,9 +64,10 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     (cellName: string) =>
       plans?.some((plan) => {
         return (
-          flags.gpuv2?.transferBanner &&
-          plan.class === 'gpu' &&
-          filterOptions?.header?.includes('Ada') &&
+          ((flags.gpuv2?.transferBanner &&
+            plan.class === 'gpu' &&
+            filterOptions?.header?.includes('Ada')) ||
+            plan.class === 'accelerated') &&
           cellName === 'Transfer'
         );
       }),
