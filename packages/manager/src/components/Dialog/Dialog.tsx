@@ -51,7 +51,7 @@ export interface DialogProps extends _DialogProps {
  * - **Confirmation**
  *  - Users must confirm a choice
  * - **Deletion**
- *  - The user must confirm the deleteion of an entity
+ *  - The user must confirm the deletion of an entity
  *  - Can require user to type the entity name to confirm deletion
  *
  * > Clicking off of the modal will not close it.
@@ -162,10 +162,5 @@ const StyledDialog = styled(_Dialog, {
     [theme.breakpoints.down('md')]: {
       minWidth: '380px',
     },
-  },
-  '& .MuiDialogActions-root': {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: theme.spacing(2),
   },
 }));
