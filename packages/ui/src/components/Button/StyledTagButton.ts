@@ -1,4 +1,4 @@
-import { omittedProps } from '@linode/ui';
+import { omittedProps } from '../../utilities';
 import { styled } from '@mui/material/styles';
 
 import Plus from 'src/assets/icons/plusSign.svg';

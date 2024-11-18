@@ -1,10 +1,16 @@
-import { Box, CircleProgress, Divider, Notice, TooltipIcon } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  Divider,
+  Notice,
+  TooltipIcon,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorMessage } from 'src/components/ErrorMessage';

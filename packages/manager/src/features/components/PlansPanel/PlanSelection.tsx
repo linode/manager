@@ -1,7 +1,6 @@
-import { Radio } from '@linode/ui';
+import { Chip, Radio } from '@linode/ui';
 import * as React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { Currency } from 'src/components/Currency';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';

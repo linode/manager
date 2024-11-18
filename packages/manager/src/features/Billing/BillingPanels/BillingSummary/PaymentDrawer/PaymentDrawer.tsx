@@ -1,5 +1,6 @@
 import { makePayment } from '@linode/api-v4/lib/account';
 import {
+  Button,
   Divider,
   InputAdornment,
   Notice,
@@ -12,7 +13,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';

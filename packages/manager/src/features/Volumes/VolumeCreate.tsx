@@ -1,4 +1,4 @@
-import { Box, Notice, Paper, Stack, TooltipIcon } from '@linode/ui';
+import { Box, Button, Notice, Paper, Stack, TooltipIcon } from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -8,7 +8,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   BLOCK_STORAGE_CHOOSE_REGION_COPY,
