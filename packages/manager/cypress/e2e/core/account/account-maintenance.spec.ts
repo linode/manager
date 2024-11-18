@@ -134,12 +134,12 @@ describe('Maintenance', () => {
           }
         });
 
-        // Confirm download buttons work
-        cy.get('button')
-          .filter(':contains("Download CSV")')
+        // Locate the <a> element for pending-maintenance and then find its sibling <button> element
+        cy.get('a[download*="pending-maintenance"]')
+          .siblings('button')
           .should('be.visible')
-          .should('be.enabled')
-          .click({ multiple: true });
+          .and('contain', 'Download CSV')
+          .click();
 
         // Map the expected CSV content to match the structure of the downloaded CSV
         const expectedPendingMigrationContent = accountpendingMaintenance.map(
@@ -153,26 +153,37 @@ describe('Maintenance', () => {
         );
 
         // Read the downloaded CSV and compare its content to the expected CSV content
-        cy.readFile(`${downloadsFolder}/${fileName}`).then((csvContent) => {
-          const parsedCsvPendingMigration = parseCsv(csvContent);
-          expect(parsedCsvPendingMigration.length).to.equal(
-            expectedPendingMigrationContent.length
-          );
-          // Map the parsedCsv to match the structure of expectedCsvContent
-          const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
-            (entry: any) => ({
-              entity_label: entry['Entity Label'],
-              entity_type: entry['Entity Type'],
-              type: entry['Type'],
-              status: entry['Status'],
-              reason: entry['Reason'],
-            })
-          );
+        cy.readFile(`${downloadsFolder}/${fileName}`)
+          .then((csvContent) => {
+            const parsedCsvPendingMigration = parseCsv(csvContent);
+            expect(parsedCsvPendingMigration.length).to.equal(
+              expectedPendingMigrationContent.length
+            );
+            // Map the parsedCsv to match the structure of expectedCsvContent
+            const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
+              (entry: any) => ({
+                entity_label: entry['Entity Label'],
+                entity_type: entry['Entity Type'],
+                type: entry['Type'],
+                status: entry['Status'],
+                reason: entry['Reason'],
+              })
+            );
 
-          expect(actualPendingMigrationCsvContent).to.deep.equal(
-            expectedPendingMigrationContent
-          );
-        });
+            expect(actualPendingMigrationCsvContent).to.deep.equal(
+              expectedPendingMigrationContent
+            );
+          })
+          .then(() => {
+            // Delete the file after the assertions
+            cy.exec(`rm -f ${downloadsFolder}/${fileName}`).then((result) => {
+              if (result.code === 0) {
+                cy.log(`Deleted file: ${fileName}`);
+              } else {
+                cy.log(`Failed to delete file: ${fileName}`);
+              }
+            });
+          });
       });
 
     // Validate content of the downloaded CSV for completed maintenance
@@ -190,12 +201,12 @@ describe('Maintenance', () => {
           }
         });
 
-        // Confirm download buttons work
-        cy.get('button')
-          .filter(':contains("Download CSV")')
+        // Locate the <a> element for completed-maintenance and then find its sibling <button> element
+        cy.get('a[download*="completed-maintenance"]')
+          .siblings('button')
           .should('be.visible')
-          .should('be.enabled')
-          .click({ multiple: true });
+          .and('contain', 'Download CSV')
+          .click();
 
         // Map the expected CSV content to match the structure of the downloaded CSV
         const expectedCompletedMigrationContent = accountcompletedMaintenance.map(
@@ -209,28 +220,39 @@ describe('Maintenance', () => {
         );
 
         // Read the downloaded CSV and compare its content to the expected CSV content
-        cy.readFile(`${downloadsFolder}/${fileName}`).then((csvContent) => {
-          const parsedCsvCompletedMigration = parseCsv(csvContent);
+        cy.readFile(`${downloadsFolder}/${fileName}`)
+          .then((csvContent) => {
+            const parsedCsvCompletedMigration = parseCsv(csvContent);
 
-          expect(parsedCsvCompletedMigration.length).to.equal(
-            expectedCompletedMigrationContent.length
-          );
+            expect(parsedCsvCompletedMigration.length).to.equal(
+              expectedCompletedMigrationContent.length
+            );
 
-          // Map the parsedCsv to match the structure of expectedCsvContent
-          const actualCompletedMigrationCsvContent = parsedCsvCompletedMigration.map(
-            (entry: any) => ({
-              entity_label: entry['Entity Label'],
-              entity_type: entry['Entity Type'],
-              type: entry['Type'],
-              status: entry['Status'],
-              reason: entry['Reason'],
-            })
-          );
+            // Map the parsedCsv to match the structure of expectedCsvContent
+            const actualCompletedMigrationCsvContent = parsedCsvCompletedMigration.map(
+              (entry: any) => ({
+                entity_label: entry['Entity Label'],
+                entity_type: entry['Entity Type'],
+                type: entry['Type'],
+                status: entry['Status'],
+                reason: entry['Reason'],
+              })
+            );
 
-          expect(actualCompletedMigrationCsvContent).to.deep.equal(
-            expectedCompletedMigrationContent
-          );
-        });
+            expect(actualCompletedMigrationCsvContent).to.deep.equal(
+              expectedCompletedMigrationContent
+            );
+          })
+          .then(() => {
+            // Delete the file after the assertions
+            cy.exec(`rm -f ${downloadsFolder}/${fileName}`).then((result) => {
+              if (result.code === 0) {
+                cy.log(`Deleted file: ${fileName}`);
+              } else {
+                cy.log(`Failed to delete file: ${fileName}`);
+              }
+            });
+          });
       });
   });
 });
