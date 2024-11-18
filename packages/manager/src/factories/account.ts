@@ -47,6 +47,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'Machine Images',
     'Managed Databases',
     'Managed Databases Beta',
+    'NETINT Quadra T1U',
     'NodeBalancers',
     'Object Storage Access Key Regions',
     'Object Storage Endpoint Types',

@@ -9,6 +9,7 @@ import type {
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {
@@ -87,6 +88,7 @@ export const planSelectionTypeFactory = Factory.Sync.makeFactory<PlanWithAvailab
 export const extendedTypeFactory = Factory.Sync.makeFactory<
   ExtendedType & PlanSelectionAvailabilityTypes
 >({
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {

@@ -25,6 +25,7 @@ export const GPU_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/gpu-compute-instances';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {
@@ -83,6 +84,7 @@ export const DEDICATED_512_GB_PLAN: ExtendedType = {
 };
 
 export const PREMIUM_512_GB_PLAN: ExtendedType = {
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {

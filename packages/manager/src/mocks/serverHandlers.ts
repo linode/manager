@@ -400,6 +400,12 @@ const gpuTypesRX = linodeTypeFactory.buildList(7, {
   gpus: 1,
   transfer: 5000,
 });
+const acceleratedType = linodeTypeFactory.buildList(7, {
+  accelerated_devices: 1,
+  class: 'accelerated',
+  label: 'Netint Quadra T1U X',
+  transfer: 0,
+});
 const proxyAccountUser = accountUserFactory.build({
   email: 'partner@proxy.com',
   last_login: null,
@@ -595,6 +601,7 @@ export const handlers = [
         ...dedicatedTypes,
         ...gpuTypesAda,
         ...gpuTypesRX,
+        ...acceleratedType,
         proDedicatedType,
       ])
     );
