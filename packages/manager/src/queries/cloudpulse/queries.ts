@@ -22,6 +22,10 @@ import type {
 const key = 'Clousepulse';
 
 export const queryFactory = createQueryKeys(key, {
+  alerts: {
+    // This query key is a placeholder , it will be updated once the relevant queries are added
+    queryKey: null,
+  },
   dashboardById: (dashboardId: number) => ({
     queryFn: () => getDashboardById(dashboardId),
     queryKey: [dashboardId],
