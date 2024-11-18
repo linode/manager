@@ -1,6 +1,6 @@
+import { Chip } from '@linode/ui';
 import React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

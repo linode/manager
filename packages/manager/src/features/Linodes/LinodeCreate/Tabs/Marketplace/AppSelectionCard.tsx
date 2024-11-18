@@ -1,8 +1,8 @@
+import { Chip } from '@linode/ui';
 import { IconButton } from '@mui/material';
 import * as React from 'react';
 
 import Info from 'src/assets/icons/info.svg';
-import { Chip } from 'src/components/Chip';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { APP_ROOT } from 'src/constants';
 

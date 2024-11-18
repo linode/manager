@@ -1,9 +1,8 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, Stack, Chip } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
-import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';

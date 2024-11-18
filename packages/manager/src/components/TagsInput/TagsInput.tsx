@@ -1,3 +1,4 @@
+import { Chip } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useQueryClient } from '@tanstack/react-query';
@@ -5,7 +6,6 @@ import { concat } from 'ramda';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Chip } from 'src/components/Chip';
 import { useProfile } from 'src/queries/profile/profile';
 import { updateTagsSuggestionsData, useAllTagsQuery } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
