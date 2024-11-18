@@ -30,7 +30,7 @@ interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
   dashboard?: Dashboard | undefined;
   duration: TimeDuration;
-  isJweTokenLoading: boolean;
+  isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   manualRefreshTimeStamp?: number;
   metricDefinitions: MetricDefinitions | undefined;
@@ -55,7 +55,7 @@ export const RenderWidgets = React.memo(
       additionalFilters,
       dashboard,
       duration,
-      isJweTokenLoading,
+      isJweTokenFetching,
       jweToken,
       manualRefreshTimeStamp,
       metricDefinitions,
@@ -123,7 +123,7 @@ export const RenderWidgets = React.memo(
     if (
       !dashboard.service_type ||
       !Boolean(resources.length > 0) ||
-      (!isJweTokenLoading && !jweToken?.token) ||
+      (!isJweTokenFetching && !jweToken?.token) ||
       !Boolean(resources?.length)
     ) {
       return renderPlaceHolder(
