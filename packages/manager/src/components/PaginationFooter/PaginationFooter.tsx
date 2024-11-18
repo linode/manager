@@ -116,7 +116,7 @@ const StyledTextField = styled(TextField, {
 })(({ theme }) => ({
   '& .MuiInput-root': {
     backgroundColor: theme.bg.bgPaper,
-    border: 'none',
+    border: '1px solid transparent',
   },
   '& .MuiList-root': {
     border: `1px solid ${theme.palette.primary.main}`,
@@ -131,6 +131,7 @@ const StyledTextField = styled(TextField, {
     top: 0,
   },
   '&.Mui-focused': {
+    border: `1px dotted ${theme.color.grey1}`,
     boxShadow: 'none',
   },
 }));
