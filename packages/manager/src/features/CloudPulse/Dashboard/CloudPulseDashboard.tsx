@@ -89,7 +89,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const {
     data: jweToken,
     isError: isJweTokenError,
-    isLoading: isJweTokenLoading,
+    isFetching: isJweTokenFetching,
   } = useCloudPulseJWEtokenQuery(
     dashboard?.service_type,
     getJweTokenPayload(),
@@ -117,8 +117,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       additionalFilters={additionalFilters}
       dashboard={dashboard}
       duration={duration}
-      isJweTokenLoading={isJweTokenLoading}
-      jweToken={isJweTokenLoading ? undefined : jweToken}
+      isJweTokenFetching={isJweTokenFetching}
+      jweToken={isJweTokenFetching ? undefined : jweToken}
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}
