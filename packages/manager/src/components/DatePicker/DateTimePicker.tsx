@@ -1,3 +1,4 @@
+import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { Grid, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
@@ -7,7 +8,6 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Divider } from 'src/components/Divider';
 import { TextField } from 'src/components/TextField';
 
 import { TimeZoneSelect } from './TimeZoneSelect';
