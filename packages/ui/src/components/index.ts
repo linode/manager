@@ -3,6 +3,7 @@ export * from './Box';
 export * from './Button';
 export * from './Chip';
 export * from './CircleProgress';
+export * from './ClickAwayListener';
 export * from './Divider';
 export * from './FormControl';
 export * from './FormHelperText';
