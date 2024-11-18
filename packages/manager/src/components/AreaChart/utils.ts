@@ -36,6 +36,36 @@ export const humanizeLargeData = (value: number) => {
   return `${value}`;
 };
 
+export const generate12HourTicks = (
+  data: any[],
+  timezone: string,
+  tickCount: number
+) => {
+  if (data.length === 0) {
+    return [];
+  }
+
+  // Get start and end time from data
+  const startTime = data[0].timestamp;
+  const endTime = data[data.length - 1].timestamp;
+
+  // Calculate duration in hours
+  const duration = DateTime.fromMillis(endTime, { zone: timezone }).diff(
+    DateTime.fromMillis(startTime, { zone: timezone }),
+    'hours'
+  ).hours;
+
+  // Generate fixed number of ticks across the 12-hour period
+  // Use 7 ticks (every 2 hours) to prevent overcrowding
+  const interval = duration / (tickCount - 1);
+
+  return Array.from({ length: tickCount }, (_, i) => {
+    return DateTime.fromMillis(startTime, { zone: timezone })
+      .plus({ hours: i * interval })
+      .toMillis();
+  });
+};
+
 export const timeData: LinodeNetworkTimeData[] = [
   {
     'Public Outbound Traffic': 5.434939999999999,

@@ -19,6 +19,7 @@ import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { StyledBottomLegend } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
 import {
+  generate12HourTicks,
   humanizeLargeData,
   tooltipLabelFormatter,
   tooltipValueFormatter,
@@ -76,6 +77,11 @@ export interface AreaChartProps {
   data: any;
 
   /**
+   * radius of the dots to be displayed
+   */
+  dotRadius?: number;
+
+  /**
    *
    */
   fillOpacity?: number;
@@ -99,6 +105,11 @@ export interface AreaChartProps {
    * The sizes of whitespace around the container.
    */
   margin?: { bottom: number; left: number; right: number; top: number };
+
+  /**
+   * control the visibility of dots for each data points
+   */
+  showDot?: boolean;
 
   /**
    * true to display legends rows else false to hide
@@ -131,6 +142,11 @@ export interface AreaChartProps {
    * x-axis properties
    */
   xAxis: XAxisProps;
+
+  /**
+   * number of x-axis ticks should be shown
+   */
+  xAxisTickCount?: number;
 }
 
 export const AreaChart = (props: AreaChartProps) => {
@@ -139,17 +155,20 @@ export const AreaChart = (props: AreaChartProps) => {
     ariaLabel,
     connectNulls,
     data,
+    dotRadius = 3,
     fillOpacity,
     height = '100%',
     legendHeight,
     legendRows,
-    margin = { bottom: 0, left: -20, right: 0, top: 0 },
+    margin = { bottom: 0, left: -20, right: 30, top: 0 },
+    showDot,
     showLegend,
     timezone,
     unit,
     variant,
     width = '100%',
     xAxis,
+    xAxisTickCount,
   } = props;
 
   const theme = useTheme();
@@ -237,9 +256,14 @@ export const AreaChart = (props: AreaChartProps) => {
             vertical={false}
           />
           <XAxis
+            ticks={
+              xAxisTickCount
+                ? generate12HourTicks(data, timezone, xAxisTickCount)
+                : []
+            }
             dataKey="timestamp"
             domain={['dataMin', 'dataMax']}
-            interval="preserveEnd"
+            interval={xAxisTickCount ? 0 : 'preserveEnd'}
             minTickGap={xAxis.tickGap}
             scale="time"
             stroke={theme.color.label}
@@ -283,6 +307,7 @@ export const AreaChart = (props: AreaChartProps) => {
             <Area
               connectNulls={connectNulls}
               dataKey={dataKey}
+              dot={{ r: showDot ? dotRadius : 0 }}
               fill={color}
               fillOpacity={variant === 'line' ? 0 : fillOpacity ?? 1}
               hide={activeSeries.includes(dataKey)}

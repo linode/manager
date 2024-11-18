@@ -108,7 +108,7 @@ export const seriesDataFormatter = (
 
   const formattedArray: StatWithDummyPoint[] = data.map(([x, y]) => ({
     x: Number(x),
-    y: y != null ? Number(y) : null,
+    y: y !== null ? Number(y) : null,
   }));
 
   return convertData(formattedArray, startTime, endTime);
