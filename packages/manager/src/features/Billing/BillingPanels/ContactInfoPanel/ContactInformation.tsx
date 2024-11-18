@@ -1,10 +1,12 @@
 import { Box, TooltipIcon } from '@linode/ui';
+import LockIcon from '@mui/icons-material/Lock';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -12,6 +14,7 @@ import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import {
   BillingActionButton,
@@ -79,6 +82,8 @@ const ContactInformation = (props: Props) => {
   ] = React.useState<boolean>(false);
 
   const { data: notifications } = useNotificationsQuery();
+
+  const { data: preferences } = usePreferences();
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
@@ -176,106 +181,118 @@ const ContactInformation = (props: Props) => {
             {EDIT_BILLING_CONTACT}
           </BillingActionButton>
         </BillingBox>
-
-        <Grid container spacing={2}>
-          {(firstName ||
-            lastName ||
-            company ||
-            address1 ||
-            address2 ||
-            city ||
-            state ||
-            zip ||
-            country) && (
-            <Grid sx={sxGrid}>
-              {(firstName || lastName) && (
-                <MaskableText
-                  text={`${firstName} ${lastName}`}
-                  length="plaintext"
-                >
-                  <StyledTypography
-                    data-qa-contact-name
-                    sx={{ wordBreak: 'break-all' }}
+        {preferences?.maskSensitiveData ? (
+          <Grid container display="flex" flexDirection="row" padding={0}>
+            <LockIcon />
+            <Typography alignSelf="center" marginLeft={1}>
+              This data is masked. To unmask, toggle your preference in{' '}
+              <Link to="/profile/settings">Profile Settings</Link>.
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid container display="flex" flexDirection="row" spacing={2}>
+            {(firstName ||
+              lastName ||
+              company ||
+              address1 ||
+              address2 ||
+              city ||
+              state ||
+              zip ||
+              country) && (
+              <Grid sx={sxGrid}>
+                {(firstName || lastName) && (
+                  <MaskableText
+                    length="plaintext"
+                    text={`${firstName} ${lastName}`}
                   >
-                    {firstName} {lastName}
-                  </StyledTypography>
-                </MaskableText>
-              )}
-              {company && (
-                <MaskableText text={company} length="plaintext">
-                  <>
-                    {' '}
                     <StyledTypography
-                      data-qa-company
+                      data-qa-contact-name
                       sx={{ wordBreak: 'break-all' }}
                     >
-                      {company}
+                      {firstName} {lastName}
                     </StyledTypography>
-                  </>
-                </MaskableText>
-              )}
-              {(address1 || address2 || city || state || zip || country) && (
-                <MaskableText
-                  text={`${address1} ${address2}`}
-                  length="plaintext"
-                >
-                  <>
-                    <StyledTypography data-qa-contact-address>
-                      {address1}
-                    </StyledTypography>
-                    <StyledTypography>{address2}</StyledTypography>
-                  </>
-                </MaskableText>
-              )}
-              <MaskableText text={`${city} ${state} ${zip}`} length="plaintext">
-                <StyledTypography>
-                  {city}
-                  {city && state && ','} {state} {zip}
-                </StyledTypography>
-              </MaskableText>
-              <MaskableText text={countryName}>
-                <StyledTypography>{countryName}</StyledTypography>
-              </MaskableText>
-            </Grid>
-          )}
-          <Grid sx={sxGrid}>
-            <MaskableText text={email} length="plaintext">
-              <StyledTypography
-                data-qa-contact-email
-                sx={{ wordBreak: 'break-all' }}
-              >
-                {email}
-              </StyledTypography>
-            </MaskableText>
-            {phone && (
-              <MaskableText text={phone} length="plaintext">
-                <StyledTypography data-qa-contact-phone>
-                  {phone}
-                </StyledTypography>
-              </MaskableText>
-            )}
-            {taxId && (
-              <MaskableText text={taxId} length="plaintext">
-                <Box alignItems="center" display="flex">
-                  <StyledTypography
-                    sx={{
-                      margin: 0,
-                    }}
+                  </MaskableText>
+                )}
+                {company && (
+                  <MaskableText length="plaintext" text={company}>
+                    <>
+                      {' '}
+                      <StyledTypography
+                        data-qa-company
+                        sx={{ wordBreak: 'break-all' }}
+                      >
+                        {company}
+                      </StyledTypography>
+                    </>
+                  </MaskableText>
+                )}
+                {(address1 || address2 || city || state || zip || country) && (
+                  <MaskableText
+                    length="plaintext"
+                    text={`${address1} ${address2}`}
                   >
-                    <strong>Tax ID</strong> {taxId}
+                    <>
+                      <StyledTypography data-qa-contact-address>
+                        {address1}
+                      </StyledTypography>
+                      <StyledTypography>{address2}</StyledTypography>
+                    </>
+                  </MaskableText>
+                )}
+                <MaskableText
+                  length="plaintext"
+                  text={`${city} ${state} ${zip}`}
+                >
+                  <StyledTypography>
+                    {city}
+                    {city && state && ','} {state} {zip}
                   </StyledTypography>
-                  {taxIdIsVerifyingNotification && (
-                    <TooltipIcon
-                      icon={<StyledAutorenewIcon />}
-                      status="other"
-                      text={taxIdIsVerifyingNotification.label}
-                    />
-                  )}
-                </Box>
-              </MaskableText>
+                </MaskableText>
+                <MaskableText text={countryName}>
+                  <StyledTypography>{countryName}</StyledTypography>
+                </MaskableText>
+              </Grid>
             )}
+            <Grid sx={sxGrid}>
+              <MaskableText length="plaintext" text={email}>
+                <StyledTypography
+                  data-qa-contact-email
+                  sx={{ wordBreak: 'break-all' }}
+                >
+                  {email}
+                </StyledTypography>
+              </MaskableText>
+              {phone && (
+                <MaskableText length="plaintext" text={phone}>
+                  <StyledTypography data-qa-contact-phone>
+                    {phone}
+                  </StyledTypography>
+                </MaskableText>
+              )}
+              {taxId && (
+                <MaskableText length="plaintext" text={taxId}>
+                  <Box alignItems="center" display="flex">
+                    <StyledTypography
+                      sx={{
+                        margin: 0,
+                      }}
+                    >
+                      <strong>Tax ID</strong> {taxId}
+                    </StyledTypography>
+                    {taxIdIsVerifyingNotification && (
+                      <TooltipIcon
+                        icon={<StyledAutorenewIcon />}
+                        status="other"
+                        text={taxIdIsVerifyingNotification.label}
+                      />
+                    )}
+                  </Box>
+                </MaskableText>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </BillingPaper>
       <BillingContactDrawer
         onClose={() => {
