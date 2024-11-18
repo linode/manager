@@ -4,6 +4,7 @@ import type { Account } from '@linode/api-v4';
 import { ui } from 'support/ui';
 import { TAX_ID_HELPER_TEXT } from 'src/features/Billing/constants';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetUserPreferences } from 'support/intercepts/profile';
 
 /* eslint-disable sonarjs/no-duplicate-string */
 const accountData = accountFactory.build({
@@ -72,7 +73,20 @@ describe('Billing Contact', () => {
       },
     });
   });
+  it('Mask Contact Info', () => {
+    mockGetUserPreferences({ maskSensitiveData: true }).as(
+      'getUserPreferences'
+    );
+    mockGetAccount(accountData).as('getAccount');
+    cy.visitWithLogin('/account/billing');
+
+    cy.contains('This data is masked.');
+    cy.get('[data-qa-contact-name]').should('not.exist');
+  });
   it('Edit Contact Info', () => {
+    mockGetUserPreferences({ maskSensitiveData: false }).as(
+      'getUserPreferences'
+    );
     // mock the user's account data and confirm that it is displayed correctly upon page load
     mockGetAccount(accountData).as('getAccount');
     cy.visitWithLogin('/account/billing');
