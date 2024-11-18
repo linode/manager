@@ -28,10 +28,10 @@ const triggerConditionInitialValues: TriggerCondition = {
 };
 const criteriaInitialValues: MetricCriteria[] = [
   {
-    aggregation_type: '',
+    aggregation_type: null,
     dimension_filters: [],
     metric: '',
-    operator: '',
+    operator: null,
     value: 0,
   },
 ];

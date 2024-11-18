@@ -1,7 +1,12 @@
 export type AlertSeverityType = 0 | 1 | 2 | 3 | null;
-type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
-type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
-type DimensionFilterOperatorType = 'eq' | 'neq' | 'startswith' | 'endswith';
+type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count' | null;
+type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte' | null;
+type DimensionFilterOperatorType =
+  | 'eq'
+  | 'neq'
+  | 'startswith'
+  | 'endswith'
+  | null;
 type AlertDefinitionType = 'default' | 'custom';
 type AlertStatusType = 'enabled' | 'disabled';
 export interface Dashboard {
@@ -158,15 +163,15 @@ export interface CreateAlertDefinitionForm
 }
 export interface MetricCriteria {
   metric: string;
-  aggregation_type: MetricAggregationType | '';
-  operator: MetricOperatorType | '';
+  aggregation_type: MetricAggregationType;
+  operator: MetricOperatorType;
   value: number;
   dimension_filters: DimensionFilter[];
 }
 
 export interface DimensionFilter {
   dimension_label: string;
-  operator: DimensionFilterOperatorType | '';
+  operator: DimensionFilterOperatorType;
   value: string;
 }
 

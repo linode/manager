@@ -5,20 +5,23 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { alertSeverityOptions } from '../../constants';
 
-import type { AlertSeverityType } from '@linode/api-v4';
-export interface CloudViewRegionSelectProps {
+import type {
+  AlertSeverityType,
+  CreateAlertDefinitionForm,
+} from '@linode/api-v4';
+import type { FieldPath } from 'react-hook-form';
+export interface CloudPulseAlertSeveritySelectProps {
   /**
    * name used for the component in the form
    */
-  name: string;
+  name: FieldPath<CreateAlertDefinitionForm>;
 }
 
 export const CloudPulseAlertSeveritySelect = (
-  props: CloudViewRegionSelectProps
+  props: CloudPulseAlertSeveritySelectProps
 ) => {
   const { name } = props;
-
-  const { control } = useFormContext();
+  const { control } = useFormContext<CreateAlertDefinitionForm>();
 
   return (
     <Controller

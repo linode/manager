@@ -1,11 +1,10 @@
 import type { AlertSeverityType } from '@linode/api-v4';
 
-export interface Item<T = number | string, L = string> {
-  data?: any;
+export interface Item<L extends string, T> {
   label: L;
   value: T;
 }
-export const alertSeverityOptions: Item<AlertSeverityType>[] = [
+export const alertSeverityOptions: Item<string, AlertSeverityType>[] = [
   { label: 'Info', value: 3 },
   { label: 'Low', value: 2 },
   { label: 'Medium', value: 1 },
