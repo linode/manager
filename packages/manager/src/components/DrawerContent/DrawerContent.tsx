@@ -1,7 +1,5 @@
-import { Notice } from '@linode/ui';
+import { CircleProgress, Notice } from '@linode/ui';
 import * as React from 'react';
-
-import { CircleProgress } from 'src/components/CircleProgress';
 
 export interface DrawerContentProps {
   children: React.ReactNode;

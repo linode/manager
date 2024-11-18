@@ -1,13 +1,14 @@
+import { Button, fadeIn } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import { Button, ButtonProps } from 'src/components/Button/Button';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Typography } from 'src/components/Typography';
-import { fadeIn } from 'src/styles/keyframes';
 
 import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
+
+import type { ButtonProps } from '@linode/ui';
 
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;
@@ -218,12 +219,20 @@ const StyledButtonWrapper = styled('div')(({ theme }) => ({
 const StyledLinksSection = styled('div')<
   Pick<PlaceholderProps, 'showTransferDisplay'>
 >(({ theme, ...props }) => ({
-  borderTop: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
+  borderTop: `1px solid ${
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals[20]
+      : theme.tokens.color.Neutrals[100]
+  }`,
   gridArea: 'links',
   paddingTop: '38px',
 
   ...(props.showTransferDisplay && {
-    borderBottom: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
+    borderBottom: `1px solid ${
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals[20]
+        : theme.tokens.color.Neutrals[100]
+    }`,
     paddingBottom: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       paddingBottom: theme.spacing(4),

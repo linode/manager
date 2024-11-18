@@ -1,13 +1,11 @@
 import {
-  StackScript,
   getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
+import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { StackScript as _StackScript } from 'src/components/StackScript/StackScript';
@@ -19,6 +17,9 @@ import {
   canUserModifyAccountStackScript,
   getStackScriptUrl,
 } from './stackScriptUtils';
+
+import type { StackScript } from '@linode/api-v4/lib/stackscripts';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 export const StackScriptsDetail = () => {
   const { _hasGrant, _isRestrictedUser, profile } = useAccountManagement();

@@ -1,7 +1,7 @@
+import { StyledLinkButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { useRegionsQuery } from 'src/queries/regions/regions';

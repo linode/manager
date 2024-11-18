@@ -1,11 +1,10 @@
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
-import { Notice } from '@linode/ui';
+import { Notice, StyledLinkButton } from '@linode/ui';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useDialog } from 'src/hooks/useDialog';
