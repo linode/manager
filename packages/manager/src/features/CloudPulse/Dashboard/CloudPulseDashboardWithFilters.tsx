@@ -1,8 +1,7 @@
-import { Paper } from '@linode/ui';
+import { CircleProgress, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 

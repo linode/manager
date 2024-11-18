@@ -1,8 +1,8 @@
+import { CircleProgress } from '@linode/ui';
 import { Box, Typography, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import type { AreaChartProps } from 'src/components/AreaChart/AreaChart';

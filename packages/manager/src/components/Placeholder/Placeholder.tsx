@@ -1,13 +1,14 @@
+import { Button, fadeIn } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import { Button, ButtonProps } from 'src/components/Button/Button';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { Typography } from 'src/components/Typography';
-import { fadeIn } from 'src/styles/keyframes';
 
 import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
+
+import type { ButtonProps } from '@linode/ui';
 
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;

@@ -1,4 +1,4 @@
-import { Box, Divider } from '@linode/ui';
+import { Box, Divider, rotate360 } from '@linode/ui';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
@@ -25,7 +25,6 @@ import {
   useInitialEventsQuery,
   useMarkEventsAsSeen,
 } from 'src/queries/events/events';
-import { rotate360 } from 'src/styles/keyframes';
 
 import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
 
