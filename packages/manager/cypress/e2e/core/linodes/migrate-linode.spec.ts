@@ -183,7 +183,6 @@ describe('Migrate linodes', () => {
       cy.findByText('No results').should('be.visible');
     });
 
-    cy.findByText('No results').should('be.visible');
     // Confirm that DC pricing information does not show up
     cy.findByText(dcPricingCurrentPriceLabel).should('not.exist');
     cy.get('[data-testid="current-price-panel"]').should('not.exist');
