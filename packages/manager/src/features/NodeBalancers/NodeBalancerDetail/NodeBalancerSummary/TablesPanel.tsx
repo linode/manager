@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, CircleProgress, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -6,9 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import {

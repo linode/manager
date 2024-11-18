@@ -1,11 +1,10 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
+import { Button, CircleProgress } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
@@ -116,16 +115,14 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     database?.hosts?.standby ?? database?.hosts?.secondary ?? '';
 
   const readOnlyHost = () => {
-    const defaultValue = isLegacy ? '-' : 'not available';
-    const value = readOnlyHostValue ?? defaultValue;
+    const defaultValue = isLegacy ? '-' : 'N/A';
+    const value = readOnlyHostValue ? readOnlyHostValue : defaultValue;
+    const displayCopyTooltip = value !== '-' && value !== 'N/A';
     return (
       <>
         {value}
-        {value && (
-          <CopyTooltip
-            className={classes.inlineCopyToolTip}
-            text={readOnlyHostValue}
-          />
+        {value && displayCopyTooltip && (
+          <CopyTooltip className={classes.inlineCopyToolTip} text={value} />
         )}
         {isLegacy && (
           <TooltipIcon
@@ -238,9 +235,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               />
               {!isLegacy && (
                 <TooltipIcon
+                  componentsProps={hostTooltipComponentProps}
                   status="help"
                   sxTooltipIcon={sxTooltipIcon}
-                  componentsProps={hostTooltipComponentProps}
                   text={HOST_TOOLTIP_COPY}
                 />
               )}

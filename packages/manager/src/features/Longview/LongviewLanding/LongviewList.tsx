@@ -1,12 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, CircleProgress, Paper, StyledLinkButton } from '@linode/ui';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 
 import { LongviewListRows } from './LongviewListRows';

@@ -1,8 +1,7 @@
-import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { usePagination } from 'src/hooks/usePagination';
 import {
@@ -13,6 +12,8 @@ import {
 import { TransfersTable } from '../TransfersTable';
 import { CreateTransferSuccessDialog } from './CreateTransferSuccessDialog';
 import { TransferControls } from './TransferControls';
+
+import type { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
 
 export const EntityTransfersLanding = () => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);

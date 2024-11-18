@@ -1,9 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Button } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';

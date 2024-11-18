@@ -14,6 +14,7 @@ import { SessionExpirationDialog } from '../Account/SwitchAccounts/SessionExpira
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { ComplianceBanner } from './ComplianceBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
+import { CreditCardExpiredBanner } from './CreditCardExpiredBanner';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import { RegionStatusBanner } from './RegionStatusBanner';
 import { TaxCollectionBanner } from './TaxCollectionBanner';
@@ -53,6 +54,7 @@ export const GlobalNotifications = () => {
 
   return (
     <>
+      <CreditCardExpiredBanner />
       <DesignUpdateBanner />
       <EmailBounceNotificationSection />
       <RegionStatusBanner />
