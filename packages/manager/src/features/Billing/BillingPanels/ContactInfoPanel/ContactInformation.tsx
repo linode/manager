@@ -7,7 +7,6 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
@@ -54,7 +53,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
 
-const ContactInformation = (props: Props) => {
+export const ContactInformation = React.memo((props: Props) => {
   const {
     address1,
     address2,
@@ -202,93 +201,65 @@ const ContactInformation = (props: Props) => {
               country) && (
               <Grid sx={sxGrid}>
                 {(firstName || lastName) && (
-                  <MaskableText
-                    length="plaintext"
-                    text={`${firstName} ${lastName}`}
+                  <StyledTypography
+                    data-qa-contact-name
+                    sx={{ wordBreak: 'break-all' }}
                   >
-                    <StyledTypography
-                      data-qa-contact-name
-                      sx={{ wordBreak: 'break-all' }}
-                    >
-                      {firstName} {lastName}
-                    </StyledTypography>
-                  </MaskableText>
+                    {firstName} {lastName}
+                  </StyledTypography>
                 )}
                 {company && (
-                  <MaskableText length="plaintext" text={company}>
-                    <>
-                      {' '}
-                      <StyledTypography
-                        data-qa-company
-                        sx={{ wordBreak: 'break-all' }}
-                      >
-                        {company}
-                      </StyledTypography>
-                    </>
-                  </MaskableText>
+                  <StyledTypography
+                    data-qa-company
+                    sx={{ wordBreak: 'break-all' }}
+                  >
+                    {company}
+                  </StyledTypography>
                 )}
                 {(address1 || address2 || city || state || zip || country) && (
-                  <MaskableText
-                    length="plaintext"
-                    text={`${address1} ${address2}`}
-                  >
-                    <>
-                      <StyledTypography data-qa-contact-address>
-                        {address1}
-                      </StyledTypography>
-                      <StyledTypography>{address2}</StyledTypography>
-                    </>
-                  </MaskableText>
+                  <>
+                    <StyledTypography data-qa-contact-address>
+                      {address1}
+                    </StyledTypography>
+                    <StyledTypography>{address2}</StyledTypography>
+                  </>
                 )}
-                <MaskableText
-                  length="plaintext"
-                  text={`${city} ${state} ${zip}`}
-                >
-                  <StyledTypography>
-                    {city}
-                    {city && state && ','} {state} {zip}
-                  </StyledTypography>
-                </MaskableText>
-                <MaskableText text={countryName}>
-                  <StyledTypography>{countryName}</StyledTypography>
-                </MaskableText>
+                <StyledTypography>
+                  {city}
+                  {city && state && ','} {state} {zip}
+                </StyledTypography>
+                <StyledTypography>{countryName}</StyledTypography>
               </Grid>
             )}
             <Grid sx={sxGrid}>
-              <MaskableText length="plaintext" text={email}>
-                <StyledTypography
-                  data-qa-contact-email
-                  sx={{ wordBreak: 'break-all' }}
-                >
-                  {email}
-                </StyledTypography>
-              </MaskableText>
+              <StyledTypography
+                data-qa-contact-email
+                sx={{ wordBreak: 'break-all' }}
+              >
+                {email}
+              </StyledTypography>
               {phone && (
-                <MaskableText length="plaintext" text={phone}>
-                  <StyledTypography data-qa-contact-phone>
-                    {phone}
-                  </StyledTypography>
-                </MaskableText>
+                <StyledTypography data-qa-contact-phone>
+                  {phone}
+                </StyledTypography>
               )}
               {taxId && (
-                <MaskableText length="plaintext" text={taxId}>
-                  <Box alignItems="center" display="flex">
-                    <StyledTypography
-                      sx={{
-                        margin: 0,
-                      }}
-                    >
-                      <strong>Tax ID</strong> {taxId}
-                    </StyledTypography>
-                    {taxIdIsVerifyingNotification && (
-                      <TooltipIcon
-                        icon={<StyledAutorenewIcon />}
-                        status="other"
-                        text={taxIdIsVerifyingNotification.label}
-                      />
-                    )}
-                  </Box>
-                </MaskableText>
+                <Box alignItems="center" display="flex">
+                  <StyledTypography
+                    sx={{
+                      margin: 0,
+                    }}
+                  >
+                    <strong>Tax ID</strong> {taxId}
+                  </StyledTypography>
+                  {taxIdIsVerifyingNotification && (
+                    <TooltipIcon
+                      icon={<StyledAutorenewIcon />}
+                      status="other"
+                      text={taxIdIsVerifyingNotification.label}
+                    />
+                  )}
+                </Box>
               )}
             </Grid>
           </Grid>
@@ -305,6 +276,4 @@ const ContactInformation = (props: Props) => {
       />
     </Grid>
   );
-};
-
-export default React.memo(ContactInformation);
+});
