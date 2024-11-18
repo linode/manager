@@ -219,12 +219,20 @@ const StyledButtonWrapper = styled('div')(({ theme }) => ({
 const StyledLinksSection = styled('div')<
   Pick<PlaceholderProps, 'showTransferDisplay'>
 >(({ theme, ...props }) => ({
-  borderTop: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
+  borderTop: `1px solid ${
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals[20]
+      : theme.tokens.color.Neutrals[100]
+  }`,
   gridArea: 'links',
   paddingTop: '38px',
 
   ...(props.showTransferDisplay && {
-    borderBottom: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
+    borderBottom: `1px solid ${
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals[20]
+        : theme.tokens.color.Neutrals[100]
+    }`,
     paddingBottom: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       paddingBottom: theme.spacing(4),

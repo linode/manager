@@ -1,4 +1,4 @@
-import { Box, Divider, rotate360 } from '@linode/ui';
+import { Box, Chip, Divider, rotate360 } from '@linode/ui';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
@@ -7,7 +7,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
-import { Chip } from 'src/components/Chip';
 import { LinkButton } from 'src/components/LinkButton';
 import { Typography } from 'src/components/Typography';
 import { NotificationCenterEvent } from 'src/features/NotificationCenter/Events/NotificationCenterEvent';
@@ -87,7 +86,9 @@ export const NotificationMenu = () => {
         <IconButton
           sx={(theme) => ({
             ...topMenuIconButtonSx(theme),
-            color: notificationContext.menuOpen ? '#606469' : '#c9c7c7',
+            color: notificationContext.menuOpen
+              ? theme.tokens.color.Neutrals[70]
+              : theme.tokens.color.Neutrals[40],
           })}
           aria-describedby={id}
           aria-haspopup="true"

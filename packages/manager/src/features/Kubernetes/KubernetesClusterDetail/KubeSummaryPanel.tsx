@@ -1,4 +1,4 @@
-import { Box, Stack, StyledActionButton } from '@linode/ui';
+import { Box, Chip, Stack, StyledActionButton } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Chip } from 'src/components/Chip';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';

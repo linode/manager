@@ -1,4 +1,4 @@
-import { Button } from '@linode/ui';
+import { Button, ClickAwayListener } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { ClickAwayListener } from 'src/components/ClickAwayListener';
 import { H1Header } from 'src/components/H1Header/H1Header';
 
 import { TextField } from '../TextField';
