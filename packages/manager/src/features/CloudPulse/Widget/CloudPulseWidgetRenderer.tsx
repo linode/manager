@@ -122,7 +122,6 @@ export const RenderWidgets = React.memo(
 
     if (
       !dashboard.service_type ||
-      !Boolean(resources.length > 0) ||
       (!isJweTokenFetching && !jweToken?.token) ||
       !Boolean(resources?.length)
     ) {
