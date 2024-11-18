@@ -1,4 +1,4 @@
-import { BetaChip, Paper } from '@linode/ui';
+import { BetaChip, CircleProgress, Divider, Notice, Paper } from '@linode/ui';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -6,12 +6,9 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Divider } from 'src/components/Divider';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { DatabaseClusterData } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
 import {
@@ -40,10 +37,8 @@ import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 import {
-  determineCompressionType,
   determineReplicationCommitType,
   determineReplicationType,
-  determineStorageEngine,
 } from './utilities';
 
 import type {
@@ -54,6 +49,7 @@ import type {
 } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
+import type { DatabaseCreateValues } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const DatabaseCreate = () => {
@@ -138,9 +134,6 @@ const DatabaseCreate = () => {
       ...values,
       allow_list: _allow_list,
     };
-    if (isDatabasesV2Enabled) {
-      delete createPayload.replication_type;
-    }
     try {
       const response = await createDatabase(createPayload);
       history.push(`/databases/${response.engine}/${response.id}`);
@@ -157,6 +150,27 @@ const DatabaseCreate = () => {
     setSubmitting(false);
   };
 
+  const initialValues: DatabaseCreateValues = {
+    allow_list: [
+      {
+        address: '',
+        error: '',
+      },
+    ],
+    cluster_size: -1 as ClusterSize,
+    engine: 'mysql/8' as Engine,
+    label: '',
+    region: '',
+    type: '',
+  };
+
+  if (!isDatabasesV2Enabled) {
+    // TODO (UIE-8214) remove POST GA
+    initialValues.replication_commit_type = undefined; // specific to Postgres
+    initialValues.replication_type = 'none' as ComprehensiveReplicationType;
+    initialValues.ssl_connection = true;
+  }
+
   const {
     errors,
     handleSubmit,
@@ -166,24 +180,7 @@ const DatabaseCreate = () => {
     setSubmitting,
     values,
   } = useFormik({
-    initialValues: {
-      allow_list: [
-        {
-          address: '',
-          error: '',
-        },
-      ],
-      cluster_size: -1 as ClusterSize,
-      compression_type: undefined, // specific to MongoDB
-      engine: 'mysql' as Engine,
-      label: '',
-      region: '',
-      replication_commit_type: undefined, // specific to Postgres
-      replication_type: 'none' as ComprehensiveReplicationType,
-      ssl_connection: true,
-      storage_engine: undefined, // specific to MongoDB
-      type: '',
-    },
+    initialValues,
     onSubmit: submitForm,
     validate: () => {
       handleIPValidation();
@@ -200,6 +197,7 @@ const DatabaseCreate = () => {
         values.cluster_size < 1 ? 3 : values.cluster_size
       );
       if (!isDatabasesV2Enabled) {
+        // TODO (UIE-8214) remove POST GA
         setFieldValue(
           'replication_type',
           determineReplicationType(values.cluster_size, values.engine)
@@ -209,11 +207,6 @@ const DatabaseCreate = () => {
           determineReplicationCommitType(values.engine)
         );
       }
-      setFieldValue('storage_engine', determineStorageEngine(values.engine));
-      setFieldValue(
-        'compression_type',
-        determineCompressionType(values.engine)
-      );
     }
   }, [setFieldValue, values.cluster_size, values.engine, isDatabasesV2Enabled]);
 
@@ -267,8 +260,10 @@ const DatabaseCreate = () => {
 
   const handleNodeChange = (size: ClusterSize | undefined) => {
     setFieldValue('cluster_size', size);
-    isDatabasesV2Enabled &&
+    if (!isDatabasesV2Enabled) {
+      // TODO (UIE-8214) remove POST GA
       setFieldValue('replication_type', size === 1 ? 'none' : 'semi_synch');
+    }
   };
   return (
     <form onSubmit={handleSubmit} ref={formRef}>

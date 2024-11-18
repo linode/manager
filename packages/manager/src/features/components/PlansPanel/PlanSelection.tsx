@@ -1,10 +1,9 @@
+import { Chip, Radio } from '@linode/ui';
 import * as React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { Currency } from 'src/components/Currency';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Hidden } from 'src/components/Hidden';
-import { Radio } from 'src/components/Radio/Radio';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -195,7 +194,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </TableCell>
           {showTransfer ? (
             <TableCell center data-qa-transfer>
-              {plan.transfer ? <>{plan.transfer / 1000} TB</> : ''}
+              {plan.transfer !== undefined ? (
+                <>{plan.transfer / 1000} TB</>
+              ) : (
+                ''
+              )}
             </TableCell>
           ) : null}
           {showNetwork ? (

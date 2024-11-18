@@ -1,10 +1,9 @@
+import { Button, Stack } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 
 import type { AccountBeta, Beta } from '@linode/api-v4';

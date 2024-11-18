@@ -1,4 +1,4 @@
-import { Box, Paper } from '@linode/ui';
+import { Box, Notice, Paper, Stack } from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -12,10 +12,8 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Notice } from 'src/components/Notice/Notice';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import { Stack } from 'src/components/Stack';
 import { TextField } from 'src/components/TextField';
 import {
   getKubeControlPlaneACL,
@@ -79,7 +77,7 @@ export const CreateCluster = () => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
-  const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(true);
+  const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
   const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
 
   const { data, error: regionsError } = useRegionsQuery();

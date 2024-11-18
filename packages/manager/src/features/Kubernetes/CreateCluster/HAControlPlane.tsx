@@ -1,13 +1,16 @@
-import { Box, FormControl } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  FormControl,
+  Notice,
+  Radio,
+  RadioGroup,
+} from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 

@@ -1,13 +1,9 @@
+import { Notice } from '@linode/ui';
 import * as React from 'react';
 
-import DistributedRegion from 'src/assets/icons/entityIcons/distributed-region.svg';
 import { Flag } from 'src/components/Flag';
-import { Notice } from 'src/components/Notice/Notice';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { sxDistributedRegionIcon } from 'src/components/RegionSelect/RegionSelect.styles';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
@@ -148,8 +144,6 @@ export const ConfigureForm = React.memo((props: Props) => {
   const linodeIsInDistributedRegion =
     currentActualRegion?.site_type === 'distributed';
 
-  const { isGeckoBetaEnabled } = useIsGeckoEnabled();
-
   return (
     <StyledPaper>
       <Typography variant="h3">Configure Migration</Typography>
@@ -161,14 +155,6 @@ export const ConfigureForm = React.memo((props: Props) => {
             <Typography>{`${getRegionCountryGroup(currentActualRegion)}: ${
               currentActualRegion?.label ?? currentRegion
             }`}</Typography>
-            {isGeckoBetaEnabled && linodeIsInDistributedRegion && (
-              <TooltipIcon
-                icon={<DistributedRegion />}
-                status="other"
-                sxTooltipIcon={sxDistributedRegionIcon}
-                text="This region is a distributed region."
-              />
-            )}
           </StyledDiv>
           {shouldDisplayPriceComparison && (
             <MigrationPricing

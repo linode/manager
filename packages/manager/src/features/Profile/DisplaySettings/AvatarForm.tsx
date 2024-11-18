@@ -1,9 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
-import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
 
 import { AvatarColorPickerDialog } from './AvatarColorPickerDialog';

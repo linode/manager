@@ -1,9 +1,7 @@
-import { IconButton } from '@linode/ui';
+import { ClickAwayListener, IconButton } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-
-import { ClickAwayListener } from 'src/components/ClickAwayListener';
 
 import {
   StyledButton,

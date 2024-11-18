@@ -1,6 +1,9 @@
+import { Box, ListItem } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { themes } from 'src/utilities/theme';
 
@@ -43,8 +46,15 @@ export const CloudPulseResourcesSelect = React.memo(
       xFilter,
     } = props;
 
-    const platformFilter =
-      resourceType === 'dbaas' ? { platform: 'rdbms-default' } : {};
+    const flags = useFlags();
+
+    const resourceFilterMap: Record<string, Filter> = {
+      dbaas: {
+        '+order': 'asc',
+        '+order_by': 'label',
+        platform: 'rdbms-default',
+      },
+    };
 
     const { data: resources, isLoading, isError } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
@@ -52,11 +62,11 @@ export const CloudPulseResourcesSelect = React.memo(
       {},
       xFilter
         ? {
-            ...platformFilter,
-            ...xFilter,
+            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
+            ...xFilter, // the usual xFilters
           }
         : {
-            ...platformFilter,
+            ...(resourceFilterMap[resourceType ?? ''] ?? {}),
             region,
           }
     );
@@ -75,6 +85,18 @@ export const CloudPulseResourcesSelect = React.memo(
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
       return resources && resources.length > 0 ? resources : [];
     }, [resources]);
+
+    // Maximum resource selection limit is fetched from launchdarkly
+    const maxResourceSelectionLimit = React.useMemo(() => {
+      const obj = flags.aclpResourceTypeMap?.find(
+        (item) => item.serviceType === resourceType
+      );
+      return obj?.maxResourceSelections || 10;
+    }, [resourceType, flags.aclpResourceTypeMap]);
+
+    const resourcesLimitReached = React.useMemo(() => {
+      return getResourcesList.length > maxResourceSelectionLimit;
+    }, [getResourcesList.length, maxResourceSelectionLimit]);
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
@@ -118,6 +140,30 @@ export const CloudPulseResourcesSelect = React.memo(
         placeholder={
           selectedResources?.length ? '' : placeholder || 'Select Resources'
         }
+        renderOption={(props, option) => {
+          // After selecting resources up to the max resource selection limit, rest of the unselected options will be disabled if there are any
+          const { key, ...rest } = props;
+          const isResourceSelected = selectedResources?.some(
+            (item) => item.label === option.label
+          );
+          const isMaxSelectionsReached =
+            selectedResources &&
+            selectedResources.length >= maxResourceSelectionLimit &&
+            !isResourceSelected;
+          return (
+            <ListItem
+              {...rest}
+              aria-disabled={isMaxSelectionsReached}
+              data-qa-option
+              key={key}
+            >
+              <>
+                <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
+                <SelectedIcon visible={isResourceSelected || false} />
+              </>
+            </ListItem>
+          );
+        }}
         textFieldProps={{
           InputProps: {
             sx: {
@@ -132,11 +178,15 @@ export const CloudPulseResourcesSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="resource-select"
+        disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
+        helperText={
+          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
+        }
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
-        limitTags={2}
+        limitTags={1}
         loading={isLoading}
         multiple
         noMarginTop

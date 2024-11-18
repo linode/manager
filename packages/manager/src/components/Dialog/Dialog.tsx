@@ -1,11 +1,10 @@
-import { Box, omittedProps } from '@linode/ui';
+import { Box, Notice, omittedProps } from '@linode/ui';
 import _Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
-import { Notice } from 'src/components/Notice/Notice';
 import { convertForAria } from 'src/utilities/stringUtils';
 
 import type { DialogProps as _DialogProps } from '@mui/material/Dialog';
@@ -116,10 +115,10 @@ const StyledDialog = styled(_Dialog, {
   },
 }));
 
-const StyledHr = styled('hr')({
-  backgroundColor: '#e3e5e8',
+const StyledHr = styled('hr', { label: 'StyledHr' })(({ theme }) => ({
+  backgroundColor: theme.tokens.color.Neutrals[20],
   border: 'none',
   height: 1,
   margin: '-2em 8px 0px 8px',
   width: '100%',
-});
+}));

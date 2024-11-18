@@ -1,9 +1,9 @@
+import { CircleProgress } from '@linode/ui';
 import { Box } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -37,8 +37,8 @@ const DatabaseLanding = () => {
 
   const {
     isDatabasesV2Enabled,
-    isUserExistingBeta,
     isDatabasesV2GA,
+    isUserExistingBeta,
     isUserNewBeta,
   } = useIsDatabasesEnabled();
 
@@ -138,6 +138,9 @@ const DatabaseLanding = () => {
   const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
   const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
   const showSuspend = isDatabasesV2GA && !!newDatabases?.data.length;
+  const docsLink = isV2Enabled
+    ? 'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters'
+    : 'https://techdocs.akamai.com/cloud-computing/docs/managed-databases';
 
   const legacyTable = () => {
     return (
@@ -179,7 +182,7 @@ const DatabaseLanding = () => {
         }}
         createButtonText="Create Database Cluster"
         disabledCreateButton={isRestricted}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/managed-databases"
+        docsLink={docsLink}
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />

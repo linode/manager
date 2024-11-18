@@ -1,14 +1,11 @@
-import { Box } from '@linode/ui';
+import { Box, Button, Chip, Divider } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/Chip';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Divider } from 'src/components/Divider';
 import { H1Header } from 'src/components/H1Header/H1Header';
 import { ScriptCode } from 'src/components/ScriptCode/ScriptCode';
 import { Typography } from 'src/components/Typography';
