@@ -1,12 +1,14 @@
-import _Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
-import { Theme, styled } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
+import _Checkbox from '@mui/material/Checkbox';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { TooltipIcon } from 'src/components/TooltipIcon';
+
+import type { CheckboxProps } from '@mui/material/Checkbox';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface Props extends CheckboxProps {
   /**
@@ -76,7 +78,7 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
   '&:hover': {
     color: theme.palette.primary.main,
   },
-  color: '#ccc',
+  color: theme.tokens.color.Neutrals[40],
   transition: theme.transitions.create(['color']),
   ...(props.checked && {
     color: theme.palette.primary.main,
@@ -86,7 +88,7 @@ const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
       fill: `${theme.bg.main}`,
       opacity: 0.5,
     },
-    color: '#ccc !important',
+    color: `${theme.tokens.color.Neutrals[40]} !important`,
     fill: `${theme.bg.main} !important`,
     pointerEvents: 'none',
   }),

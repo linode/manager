@@ -1,15 +1,13 @@
+import { Button, Notice, Stack } from '@linode/ui';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { replaceNewlinesWithLineBreaks } from 'src/utilities/replaceNewlinesWithLineBreaks';
 
-import { Button } from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { ErrorMessage } from '../ErrorMessage';
 import { LinearProgress } from '../LinearProgress';
 import { Link } from '../Link';
-import { Notice } from '../Notice/Notice';
-import { Stack } from '../Stack';
 import { Typography } from '../Typography';
 import { useCreateFirewallFromTemplate } from './useCreateFirewallFromTemplate';
 

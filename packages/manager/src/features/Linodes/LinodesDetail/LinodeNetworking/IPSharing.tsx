@@ -1,19 +1,13 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { IPRangeInformation } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Button, CircleProgress, Divider, Notice } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { Divider } from 'src/components/Divider';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
@@ -29,6 +23,11 @@ import {
 import { useAllDetailedIPv6RangesQuery } from 'src/queries/networking/networking';
 import { areArraysEqual } from 'src/utilities/areArraysEqual';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+
+import type { Linode } from '@linode/api-v4/lib/linodes';
+import type { IPRangeInformation } from '@linode/api-v4/lib/networking';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { Item } from 'src/components/EnhancedSelect/Select';
 
 interface Props {
   linodeId: number;
@@ -451,10 +450,10 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
       </Grid>
       <Grid xs={12}>
         <TextField
-          sx={{ marginTop: 0, width: '100%' }}
           disabled
           hideLabel
           label="IP Address"
+          sx={{ marginTop: 0, width: '100%' }}
           value={ip}
         />
       </Grid>
@@ -521,23 +520,23 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       </Grid>
       {handleDelete ? (
         <Grid
-          sm={2}
           sx={{
             [theme.breakpoints.down('sm')]: {
               width: '100%',
             },
           }}
+          sm={2}
         >
           <Button
-            buttonType="outlined"
-            data-qa-remove-shared-ip
-            disabled={readOnly}
-            onClick={() => handleDelete(idx)}
             sx={{
               [theme.breakpoints.down('sm')]: {
                 margin: '-16px 0 0 -26px',
               },
             }}
+            buttonType="outlined"
+            data-qa-remove-shared-ip
+            disabled={readOnly}
+            onClick={() => handleDelete(idx)}
           >
             Remove
           </Button>

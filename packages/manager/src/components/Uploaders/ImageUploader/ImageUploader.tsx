@@ -1,12 +1,10 @@
+import { Box, Button, Stack } from '@linode/ui';
 import { styled } from '@mui/material';
 import { Duration } from 'luxon';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { BarPercent } from 'src/components/BarPercent';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -54,7 +52,7 @@ export const ImageUploader = React.memo((props: Props) => {
               compressed using gzip.
             </Typography>
             <Typography variant="subtitle2">
-              The maxiumum compressed file size is 5 GB and the file can&rsquo;t
+              The maximum compressed file size is 5 GB and the file can&rsquo;t
               exceed 6 GB when uncompressed.
             </Typography>
           </>

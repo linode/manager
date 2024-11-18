@@ -1,3 +1,4 @@
+import { Divider, Paper } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -14,14 +15,12 @@ import {
 } from 'src/components/Encryption/constants';
 import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Paper } from 'src/components/Paper';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 
-import { Divider } from '../Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 import type { Theme } from '@mui/material/styles';

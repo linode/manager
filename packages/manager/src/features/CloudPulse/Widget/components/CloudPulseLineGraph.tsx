@@ -1,7 +1,7 @@
+import { CircleProgress } from '@linode/ui';
 import { Box, Typography, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 
@@ -49,10 +49,10 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
               border: 0,
             },
             backgroundColor: theme.bg.offWhite,
-            height: `calc(${theme.spacing(14)} + 3px)`, // 115px
             maxHeight: `calc(${theme.spacing(14)} + 3px)`,
+            minHeight: `calc(${theme.spacing(10)})`,
             overflow: 'auto',
-            padding: theme.spacing(1),
+            paddingLeft: theme.spacing(1),
           }}
           ariaLabel={ariaLabel}
           data={data}

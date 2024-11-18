@@ -1,13 +1,9 @@
+import { Box, Chip, FormControl, Radio, RadioGroup } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Chip } from 'src/components/Chip';
-import { FormControl } from 'src/components/FormControl';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 import { Typography } from 'src/components/Typography';
 
 export interface APLProps {
@@ -19,7 +15,7 @@ export const APLCopy = () => (
   <Typography>
     Add a pre-paved path to build, deploy, monitor and secure applications.
     <br />
-    <Link to="https://otomi.io">
+    <Link to="https://techdocs.akamai.com/cloud-computing/docs/application-platform">
       Learn more about Application Platform for LKE.
     </Link>
   </Typography>
@@ -38,7 +34,10 @@ export const ApplicationPlatform = (props: APLProps) => {
       <FormLabel
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
-            color: theme.name === 'dark' ? 'white' : theme.color.black,
+            color:
+              theme.name === 'dark'
+                ? theme.tokens.color.Neutrals.White
+                : theme.color.black,
           },
         })}
       >

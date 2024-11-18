@@ -1,11 +1,10 @@
+import { Divider, Tooltip } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useStyles } from 'tss-react/mui';
 
-import { Divider } from 'src/components/Divider';
 import { ListItem } from 'src/components/ListItem';
 import { ListItemText } from 'src/components/ListItemText';
-import { Tooltip } from 'src/components/Tooltip';
 
 interface Props extends PrimaryLink {
   closeMenu: () => void;

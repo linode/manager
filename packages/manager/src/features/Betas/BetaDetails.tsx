@@ -1,20 +1,20 @@
-import { AccountBeta } from '@linode/api-v4/lib/account';
-import { Beta } from '@linode/api-v4/lib/betas';
-import { Stack } from 'src/components/Stack';
+import { Button, Stack } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 
+import type { AccountBeta, Beta } from '@linode/api-v4';
+
 interface Props {
   beta: AccountBeta | Beta;
+  dataQA: string;
 }
 
 const BetaDetails = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   let more_info = undefined;
   let enrolled = undefined;
   if ('more_info' in props.beta) {
@@ -25,6 +25,7 @@ const BetaDetails = (props: Props) => {
   }
   const {
     beta: { description, ended, id, label, started },
+    dataQA,
   } = props;
   const startDate = !enrolled ? (
     <Typography>
@@ -41,6 +42,7 @@ const BetaDetails = (props: Props) => {
 
   return (
     <Stack
+      data-qa-beta-details={dataQA}
       direction="row"
       justifyContent="space-between"
       minHeight={66}
@@ -63,7 +65,7 @@ const BetaDetails = (props: Props) => {
         {enrolled ? null : (
           <Button
             onClick={() => {
-              history.push('/betas/signup', { betaId: id });
+              navigate({ params: { betaId: id }, to: '/betas/signup/$betaId' });
             }}
             buttonType="primary"
           >

@@ -2,6 +2,7 @@ import {
   queryByAttribute,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Router } from 'react-router-dom';
@@ -16,7 +17,6 @@ import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseResize } from './DatabaseResize';
-import userEvent from '@testing-library/user-event';
 
 const loadingTestId = 'circle-progress';
 
@@ -168,7 +168,21 @@ describe('database resize', () => {
     });
   });
 
-  describe('on rendering of page and isDatabasesGAEnabled is true and the Shared CPU tab is preselected ', () => {
+  describe('on rendering of page and isDatabasesV2GA is true and the Shared CPU tab is preselected ', () => {
+    const mockDatabase = databaseFactory.build({
+      cluster_size: 3,
+      engine: 'mysql',
+      platform: 'rdbms-default',
+      type: 'g6-nanode-1',
+    });
+
+    const flags = {
+      dbaasV2: {
+        beta: false,
+        enabled: true,
+      },
+    };
+
     beforeEach(() => {
       // Mock database types
       const standardTypes = [
@@ -206,17 +220,6 @@ describe('database resize', () => {
     });
 
     it('should render set node section', async () => {
-      const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
-      };
-      const mockDatabase = databaseFactory.build({
-        cluster_size: 3,
-        type: 'g6-nanode-1',
-        engine: 'mysql',
-      });
       const { getByTestId, getByText } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
@@ -232,16 +235,6 @@ describe('database resize', () => {
     });
 
     it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
-      const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
-      };
-      const mockDatabase = databaseFactory.build({
-        cluster_size: 3,
-        type: 'g6-nanode-1',
-      });
       const { getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
@@ -252,10 +245,12 @@ describe('database resize', () => {
       expect(nodeRadioBtns).toHaveTextContent('$60/month $0.09/hr');
       expect(nodeRadioBtns).toHaveTextContent('$140/month $0.21/hr');
 
-      const expectedCurrentSummary =
-        'Current Cluster: New DBaaS - Nanode 1 GB $60/month 3 Nodes - HA $140/month';
       const currentSummary = getByTestId('currentSummary');
-      expect(currentSummary).toHaveTextContent(expectedCurrentSummary);
+      const selectedPlanText =
+        'Current Cluster: New DBaaS - Nanode 1 GB $60/month';
+      expect(currentSummary).toHaveTextContent(selectedPlanText);
+      const selectedNodesText = '3 Nodes - HA $140/month';
+      expect(currentSummary).toHaveTextContent(selectedNodesText);
 
       const expectedResizeSummary =
         'Resized Cluster: Please select a plan or set the number of nodes.';
@@ -264,16 +259,6 @@ describe('database resize', () => {
     });
 
     it('should preselect cluster size in Set Number of Nodes', async () => {
-      const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
-      };
-      const mockDatabase = databaseFactory.build({
-        cluster_size: 3,
-        type: 'g6-nanode-1',
-      });
       const { getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
@@ -286,16 +271,6 @@ describe('database resize', () => {
     });
 
     it('should disable visible lower node selections', async () => {
-      const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
-      };
-      const mockDatabase = databaseFactory.build({
-        cluster_size: 3,
-        type: 'g6-nanode-1',
-      });
       const { getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
@@ -307,14 +282,9 @@ describe('database resize', () => {
     });
 
     it('should set price, enable resize button, and update resize summary when a new number of nodes is selected', async () => {
-      const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
-      };
       const mockDatabase = databaseFactory.build({
         cluster_size: 1,
+        platform: 'rdbms-default',
         type: 'g6-nanode-1',
       });
       const { getByTestId, getByText } = renderWithTheme(
@@ -331,21 +301,18 @@ describe('database resize', () => {
       ) as HTMLButtonElement;
       expect(resizeButton.disabled).toBeFalsy();
 
-      const expectedSummaryText =
-        'Resized Cluster: New DBaaS - Nanode 1 GB $60/month 3 Nodes - HA $140/month';
       const summary = getByTestId('resizeSummary');
-      expect(summary).toHaveTextContent(expectedSummaryText);
+      const selectedPlanText =
+        'Resized Cluster: New DBaaS - Nanode 1 GB $60/month';
+      expect(summary).toHaveTextContent(selectedPlanText);
+      const selectedNodesText = '3 Nodes - HA $140/month';
+      expect(summary).toHaveTextContent(selectedNodesText);
     });
 
     it('should disable the resize button if node selection is set back to current', async () => {
-      const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
-      };
       const mockDatabase = databaseFactory.build({
         cluster_size: 1,
+        platform: 'rdbms-default',
         type: 'g6-nanode-1',
       });
       const { getByTestId, getByText } = renderWithTheme(
@@ -369,7 +336,7 @@ describe('database resize', () => {
     });
   });
 
-  describe('on rendering of page and isDatabasesGAEnabled is true and the Dedicated CPU tab is preselected', () => {
+  describe('on rendering of page and isDatabasesV2GA is true and the Dedicated CPU tab is preselected', () => {
     beforeEach(() => {
       // Mock database types
       const mockDedicatedTypes = [
@@ -416,8 +383,9 @@ describe('database resize', () => {
 
     it('should render node selection for dedicated tab with default summary', async () => {
       const mockDatabase = databaseFactory.build({
-        type: 'g6-dedicated-2',
         cluster_size: 3,
+        platform: 'rdbms-default',
+        type: 'g6-dedicated-2',
       });
 
       const flags = {
@@ -441,8 +409,9 @@ describe('database resize', () => {
 
     it('should disable lower node selections', async () => {
       const mockDatabase = databaseFactory.build({
-        type: 'g6-dedicated-2',
         cluster_size: 3,
+        platform: 'rdbms-default',
+        type: 'g6-dedicated-2',
       });
 
       const flags = {
@@ -452,8 +421,14 @@ describe('database resize', () => {
         },
       };
 
+      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
+      const history = createMemoryHistory();
+      history.push(`databases/${database.engine}/${database.id}/resize`);
+
       const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
+        <Router history={history}>
+          <DatabaseResize database={mockDatabase} />
+        </Router>,
         { flags }
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();

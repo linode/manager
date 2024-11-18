@@ -1,12 +1,11 @@
-import { SxProps } from '@mui/system';
+import { Button, StyledLinkButton } from '@linode/ui';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
-import { Button } from 'src/components/Button/Button';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 
-import type { ButtonType } from 'src/components/Button/Button';
+import type { ButtonType } from '@linode/ui';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface DownloadCSVProps {
   buttonType?: 'styledLink' | ButtonType;
@@ -17,7 +16,7 @@ interface DownloadCSVProps {
   filename: string;
   headers: { key: string; label: string }[];
   onClick: (() => void) | ((e: React.MouseEvent<HTMLButtonElement>) => void);
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
   text?: string;
 }
 

@@ -1,10 +1,9 @@
+import { Box, Radio } from '@linode/ui';
 import React from 'react';
 
-import { Box } from 'src/components/Box';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { Radio } from 'src/components/Radio/Radio';
 import { SupportLink } from 'src/components/SupportLink';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

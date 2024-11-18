@@ -1,6 +1,3 @@
-import React from 'react';
-
-import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import {
   docsLink,
   guidesMoreLinkText,
@@ -17,7 +14,6 @@ import type {
 export const headers: ResourcesHeaders = {
   description:
     "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution.",
-  logo: <DatabaseLogo sx={{ marginBottom: '20px', marginTop: '-10px' }} />,
   subtitle: 'Fully managed cloud database clusters',
   title: 'Databases',
 };

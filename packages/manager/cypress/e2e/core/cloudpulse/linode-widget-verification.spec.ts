@@ -145,14 +145,14 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
-      .findByLabel('Select a Dashboard')
+      .findByLabel('Dashboard')
       .should('be.visible')
       .type(`${dashboardName}{enter}`)
       .should('be.visible');
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
-      .findByLabel('Select a Time Duration')
+      .findByLabel('Time Range')
       .should('be.visible')
       .type(`${timeDurationToSelect}{enter}`)
       .should('be.visible');
@@ -162,7 +162,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     // Select a resource from the autocomplete input.
     ui.autocomplete
-      .findByLabel('Select a Resource')
+      .findByLabel('Resources')
       .should('be.visible')
       .type(`${resource}{enter}`)
       .click();

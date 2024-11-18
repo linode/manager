@@ -1,4 +1,5 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
+import { Box, Notice, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { castDraft } from 'immer';
@@ -12,10 +13,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 
-import { Box } from 'src/components/Box';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';

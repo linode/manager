@@ -1,6 +1,6 @@
-import type { Doc, OCA } from './features/OneClickApps/types';
+import type { OCA } from './features/OneClickApps/types';
 import type { TPAProvider } from '@linode/api-v4/lib/profile';
-import type { NoticeVariant } from 'src/components/Notice/Notice';
+import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
 
@@ -66,40 +66,47 @@ interface AclpFlag {
 
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
+  maxResourceSelections?: number;
   serviceType: string;
 }
 
 interface gpuV2 {
   egressBanner: boolean;
   planDivider: boolean;
+  transferBanner: boolean;
 }
-
-type OneClickApp = Record<string, string>;
 
 interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
   key: string;
   link: string;
 }
 
+interface AclpAlerting {
+  alertDefinitions: boolean;
+  notificationChannels: boolean;
+  recentActivity: boolean;
+}
 export interface Flags {
   aclp: AclpFlag;
+  aclpAlerting: AclpAlerting;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
-  apl: boolean;
   apicliButtonCopy: string;
-  apicliDxToolsAdditions: boolean;
+  apl: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
   dbaasV2: BetaFeatureFlag;
+  dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   disallowImageUploadToNonObjRegions: boolean;
   gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
   imageServiceGen2: boolean;
+  imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
   linodeDiskEncryption: boolean;
   mainContentBanner: MainContentBanner;
@@ -107,8 +114,6 @@ export interface Flags {
   metadata: boolean;
   objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
-  oneClickApps: OneClickApp;
-  oneClickAppsDocsOverride: Record<string, Doc[]>;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -121,7 +126,6 @@ export interface Flags {
   taxCollectionBanner: TaxCollectionBanner;
   taxId: BaseFeatureFlag;
   taxes: Taxes;
-  testdxtoolabexperiment: string;
   tpaProviders: Provider[];
 }
 
@@ -129,7 +133,7 @@ interface MarketplaceAppOverride {
   /**
    * Define app details that should be overwritten
    *
-   * If you are adding an app that is not already defined in "oneClickAppsv2.ts",
+   * If you are adding an app that is not already defined in "oneClickApps.ts",
    * you *must* include all required OCA properties or Cloud Manager could crash.
    *
    * Pass `null` to hide the marketplace app

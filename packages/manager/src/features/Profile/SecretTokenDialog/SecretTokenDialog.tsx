@@ -1,11 +1,10 @@
+import { Box, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { Notice } from 'src/components/Notice/Notice';
 import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
 import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';

@@ -1,9 +1,9 @@
+import { CircleProgress } from '@linode/ui';
 import { Box } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -37,9 +37,9 @@ const DatabaseLanding = () => {
 
   const {
     isDatabasesV2Enabled,
-    isV2ExistingBetaUser,
-    isV2GAUser,
-    isV2NewBetaUser,
+    isDatabasesV2GA,
+    isUserExistingBeta,
+    isUserNewBeta,
   } = useIsDatabasesEnabled();
 
   const { isLoading: isTypeLoading } = useDatabaseTypesQuery({
@@ -47,7 +47,7 @@ const DatabaseLanding = () => {
   });
 
   const isDefaultEnabled =
-    isV2ExistingBetaUser || isV2NewBetaUser || isV2GAUser;
+    isUserExistingBeta || isUserNewBeta || isDatabasesV2GA;
 
   const {
     handleOrderChange: newDatabaseHandleOrderChange,
@@ -97,7 +97,7 @@ const DatabaseLanding = () => {
     ['+order_by']: legacyDatabaseOrderBy,
   };
 
-  if (isV2ExistingBetaUser || isV2GAUser) {
+  if (isUserExistingBeta || isDatabasesV2GA) {
     legacyDatabasesFilter['platform'] = 'rdbms-legacy';
   }
 
@@ -111,7 +111,7 @@ const DatabaseLanding = () => {
       page_size: legacyDatabasesPagination.pageSize,
     },
     legacyDatabasesFilter,
-    !isV2NewBetaUser
+    !isUserNewBeta
   );
 
   const error = newDatabasesError || legacyDatabasesError;
@@ -134,9 +134,13 @@ const DatabaseLanding = () => {
     return <DatabaseEmptyState />;
   }
 
-  const isV2Enabled = isDatabasesV2Enabled || isV2GAUser;
+  const isV2Enabled = isDatabasesV2Enabled || isDatabasesV2GA;
   const showTabs = isV2Enabled && !!legacyDatabases?.data.length;
   const isNewDatabase = isV2Enabled && !!newDatabases?.data.length;
+  const showSuspend = isDatabasesV2GA && !!newDatabases?.data.length;
+  const docsLink = isV2Enabled
+    ? 'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters'
+    : 'https://techdocs.akamai.com/cloud-computing/docs/managed-databases';
 
   const legacyTable = () => {
     return (
@@ -155,6 +159,7 @@ const DatabaseLanding = () => {
         data={newDatabases?.data}
         handleOrderChange={newDatabaseHandleOrderChange}
         isNewDatabase={true}
+        showSuspend={showSuspend}
         order={newDatabaseOrder}
         orderBy={newDatabaseOrderBy}
       />
@@ -177,11 +182,11 @@ const DatabaseLanding = () => {
         }}
         createButtonText="Create Database Cluster"
         disabledCreateButton={isRestricted}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/managed-databases"
+        docsLink={docsLink}
         onButtonClick={() => history.push('/databases/create')}
         title="Database Clusters"
       />
-      {showTabs && <DatabaseClusterInfoBanner />}
+      {showTabs && !isDatabasesV2GA && <DatabaseClusterInfoBanner />}
       <Box>
         {showTabs ? (
           <Tabs>

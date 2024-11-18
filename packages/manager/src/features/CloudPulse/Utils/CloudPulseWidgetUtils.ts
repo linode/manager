@@ -1,10 +1,7 @@
-import { styled } from '@mui/material';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { isToday } from 'src/utilities/isToday';
 import { getMetrics } from 'src/utilities/statMetrics';
 
-import { COLOR_MAP } from './CloudPulseWidgetColorPalette';
+import { COLOR_MAP, DEFAULT } from './CloudPulseWidgetColorPalette';
 import {
   formatToolTip,
   generateUnitByBaseUnit,
@@ -24,6 +21,7 @@ import type {
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
+import type { Theme } from '@mui/material';
 import type { DataSet } from 'src/components/LineGraph/LineGraph';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
@@ -103,7 +101,7 @@ interface graphDataOptionsProps {
   /**
    * preferred color for the widget's graph
    */
-  widgetColor: string | undefined;
+  widgetColor: string;
 }
 
 interface MetricRequestProps {
@@ -165,8 +163,8 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
   const dimensions: DataSet[] = [];
   const legendRowsData: LegendRow[] = [];
 
-  // for now we will use this, but once we decide how to work with coloring, it should be dynamic
-  const colors = COLOR_MAP.get(widgetColor ?? 'default')!;
+  // If the color is not found in the map, fallback to default color theme
+  const colors = COLOR_MAP.get(widgetColor) ?? DEFAULT;
   let today = false;
 
   if (status === 'success') {
@@ -336,11 +334,11 @@ export const isDataEmpty = (data: DataSet[]): boolean => {
 };
 
 /**
- * Returns an autocomplete with updated styles according to UX, this will be used at widget level
+ *
+ * @param theme mui theme
+ * @returns The style needed for widget level autocomplete filters
  */
-export const StyledWidgetAutocomplete = styled(Autocomplete, {
-  label: 'StyledAutocomplete',
-})(({ theme }) => ({
+export const getAutocompleteWidgetStyles = (theme: Theme) => ({
   '&& .MuiFormControl-root': {
     minWidth: '90px',
     [theme.breakpoints.down('sm')]: {
@@ -348,4 +346,39 @@ export const StyledWidgetAutocomplete = styled(Autocomplete, {
     },
     width: '90px',
   },
-}));
+});
+
+/**
+ * This method handles the existing issue in chart JS, and it will deleted when the recharts migration is completed
+ * @param arraysToBeFilled The list of dimension data to be filled
+ * @returns The list of dimension data filled with null values for missing timestamps
+ */
+// TODO: CloudPulse - delete when recharts migration completed
+export const fillMissingTimeStampsAcrossDimensions = (
+  ...arraysToBeFilled: [number, number | null][][]
+): [number, number | null][][] => {
+  if (arraysToBeFilled.length === 0) return [];
+
+  // Step 1: Collect all unique keys from all arrays
+  const allTimestamps = new Set<number>();
+
+  // Collect timestamps from each array, array[0], contains the number timestamp
+  arraysToBeFilled.forEach((array) => {
+    array.forEach(([timeStamp]) => allTimestamps.add(timeStamp));
+  });
+
+  // Step 2: Sort the timestamps to maintain chronological order
+  const sortedTimestamps = Array.from(allTimestamps).sort((a, b) => a - b);
+
+  // Step 3: Synchronize the arrays to have null values for all missing timestamps
+  return arraysToBeFilled.map((array) => {
+    // Step 3.1: Convert the array into a map for fast lookup
+    const map = new Map(array.map(([key, value]) => [key, value]));
+
+    // Step 3.2: Build the synchronized array by checking if a key exists
+    return sortedTimestamps.map((key) => {
+      // If the current array has the key, use its value; otherwise, set it to null, so that the gap is properly visible
+      return [key, map.get(key) ?? null] as [number, number | null];
+    });
+  });
+};

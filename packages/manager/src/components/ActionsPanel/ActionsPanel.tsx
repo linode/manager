@@ -1,13 +1,9 @@
+import { Box, Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
-
-import { Box } from '../Box';
-
-import type { BoxProps } from '../Box';
-import type { ButtonProps } from 'src/components/Button/Button';
+import type { BoxProps, ButtonProps } from '@linode/ui';
 
 interface ActionButtonsProps extends ButtonProps {
   'data-node-idx'?: number;

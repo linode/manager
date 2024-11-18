@@ -1,12 +1,11 @@
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { InputLabel, Notice, Radio } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { InputLabel } from 'src/components/InputLabel';
-import { Notice } from 'src/components/Notice/Notice';
-import { Radio } from 'src/components/Radio/Radio';
+
+import type { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 
 interface Props {
   error?: string;

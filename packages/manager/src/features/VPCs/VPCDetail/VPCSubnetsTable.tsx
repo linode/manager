@@ -1,9 +1,7 @@
+import { Box, Button, CircleProgress } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
@@ -297,13 +295,11 @@ export const VPCSubnetsTable = (props: Props) => {
           Create Subnet
         </Button>
       </Box>
-      {subnetCreateDrawerOpen && (
-        <SubnetCreateDrawer
-          onClose={() => setSubnetCreateDrawerOpen(false)}
-          open={subnetCreateDrawerOpen}
-          vpcId={vpcId}
-        />
-      )}
+      <SubnetCreateDrawer
+        onClose={() => setSubnetCreateDrawerOpen(false)}
+        open={subnetCreateDrawerOpen}
+        vpcId={vpcId}
+      />
       <CollapsibleTable
         TableRowEmpty={
           <TableRowEmpty colSpan={5} message={'No Subnets are assigned.'} />
@@ -318,52 +314,42 @@ export const VPCSubnetsTable = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-      {subnetUnassignLinodesDrawerOpen && (
-        <SubnetUnassignLinodesDrawer
-          onClose={() => {
-            setSubnetUnassignLinodesDrawerOpen(false);
-            setSelectedLinode(undefined);
-          }}
-          open={subnetUnassignLinodesDrawerOpen}
-          singleLinodeToBeUnassigned={selectedLinode}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-        />
-      )}
-      {subnetAssignLinodesDrawerOpen && (
-        <SubnetAssignLinodesDrawer
-          onClose={() => setSubnetAssignLinodesDrawerOpen(false)}
-          open={subnetAssignLinodesDrawerOpen}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-          vpcRegion={vpcRegion}
-        />
-      )}
-      {deleteSubnetDialogOpen && (
-        <SubnetDeleteDialog
-          onClose={() => setDeleteSubnetDialogOpen(false)}
-          open={deleteSubnetDialogOpen}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-        />
-      )}
-      {editSubnetsDrawerOpen && (
-        <SubnetEditDrawer
-          onClose={() => setEditSubnetsDrawerOpen(false)}
-          open={editSubnetsDrawerOpen}
-          subnet={selectedSubnet}
-          vpcId={vpcId}
-        />
-      )}
-      {powerActionDialogOpen && (
-        <PowerActionsDialog
-          action={linodePowerAction ?? 'Reboot'}
-          isOpen={powerActionDialogOpen}
-          linodeId={selectedLinode?.id}
-          linodeLabel={selectedLinode?.label}
-          onClose={() => setPowerActionDialogOpen(false)}
-        />
-      )}
+      <SubnetUnassignLinodesDrawer
+        onClose={() => {
+          setSubnetUnassignLinodesDrawerOpen(false);
+          setSelectedLinode(undefined);
+        }}
+        open={subnetUnassignLinodesDrawerOpen}
+        singleLinodeToBeUnassigned={selectedLinode}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
+      />
+      <SubnetAssignLinodesDrawer
+        onClose={() => setSubnetAssignLinodesDrawerOpen(false)}
+        open={subnetAssignLinodesDrawerOpen}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
+        vpcRegion={vpcRegion}
+      />
+      <SubnetDeleteDialog
+        onClose={() => setDeleteSubnetDialogOpen(false)}
+        open={deleteSubnetDialogOpen}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
+      />
+      <SubnetEditDrawer
+        onClose={() => setEditSubnetsDrawerOpen(false)}
+        open={editSubnetsDrawerOpen}
+        subnet={selectedSubnet}
+        vpcId={vpcId}
+      />
+      <PowerActionsDialog
+        action={linodePowerAction ?? 'Reboot'}
+        isOpen={powerActionDialogOpen}
+        linodeId={selectedLinode?.id}
+        linodeLabel={selectedLinode?.label}
+        onClose={() => setPowerActionDialogOpen(false)}
+      />
     </>
   );
 };

@@ -1,9 +1,8 @@
+import { Button, CircleProgress } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Hidden } from 'src/components/Hidden';
@@ -15,9 +14,11 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -72,6 +73,10 @@ const FirewallLanding = () => {
   const selectedFirewall = data?.data.find(
     (firewall) => firewall.id === selectedFirewallId
   );
+
+  const isFirewallsCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_firewalls',
+  });
 
   const openModal = (mode: Mode, id: number) => {
     setSelectedFirewallId(id);
@@ -135,6 +140,13 @@ const FirewallLanding = () => {
   return (
     <React.Fragment>
       <LandingHeader
+        buttonDataAttrs={{
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Firewalls',
+          }),
+        }}
         extraActions={
           secureVMNoticesEnabled && flags.secureVmCopy?.generateActionText ? (
             <Button
@@ -146,6 +158,7 @@ const FirewallLanding = () => {
           ) : undefined
         }
         breadcrumbProps={{ pathname: '/firewalls' }}
+        disabledCreateButton={isFirewallsCreationRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         entity="Firewall"
         onButtonClick={onOpenCreateDrawer}

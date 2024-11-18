@@ -1,9 +1,8 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, StyledLinkButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Hidden } from 'src/components/Hidden';

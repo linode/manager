@@ -1,18 +1,18 @@
-import { Theme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
+import { Button, Paper } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';
-import { Button } from 'src/components/Button/Button';
 import { Typography } from 'src/components/Typography';
-import { Paper } from 'src/components/Paper';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { KubeConfigDrawer } from './KubeConfigDrawer';
+
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {

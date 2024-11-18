@@ -10,6 +10,7 @@ import type { Region } from '@linode/api-v4';
 
 const props: CloudPulseRegionSelectProps = {
   handleRegionChange: vi.fn(),
+  label: 'Region',
   selectedDashboard: undefined,
 };
 
@@ -19,9 +20,24 @@ describe('CloudPulseRegionSelect', () => {
   } as ReturnType<typeof regions.useRegionsQuery>);
 
   it('should render a Region Select component', () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByLabelText, getByTestId } = renderWithTheme(
       <CloudPulseRegionSelect {...props} />
     );
+    const { label } = props;
+    expect(getByLabelText(label)).toBeInTheDocument();
     expect(getByTestId('region-select')).toBeInTheDocument();
+  });
+
+  it('should render a Region Select component with proper error message on api call failure', () => {
+    vi.spyOn(regions, 'useRegionsQuery').mockReturnValue({
+      data: undefined,
+      isError: true,
+      isLoading: false,
+    } as ReturnType<typeof regions.useRegionsQuery>);
+    const { getByText } = renderWithTheme(
+      <CloudPulseRegionSelect {...props} />
+    );
+
+    expect(getByText('Failed to fetch Region.'));
   });
 });

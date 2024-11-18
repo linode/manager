@@ -1,6 +1,5 @@
+import { IconButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { IconButton } from 'src/components/IconButton';
 
 export const StyledIconButton = styled(IconButton, {
   label: 'StyledIconButton',
@@ -17,7 +16,7 @@ export const StyledIconButton = styled(IconButton, {
   },
   backgroundColor: 'inherit',
   border: 'none',
-  color: '#c9c7c7',
+  color: theme.tokens.color.Neutrals[40],
   cursor: 'pointer',
   padding: theme.spacing(),
   position: 'relative',

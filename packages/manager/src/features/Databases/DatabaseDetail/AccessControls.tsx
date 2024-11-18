@@ -1,11 +1,10 @@
+import { Button, Notice } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { Notice } from 'src/components/Notice/Notice';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -175,17 +174,18 @@ export const AccessControls = (props: Props) => {
       <div className={classes.topSection}>
         <div className={classes.sectionTitleAndText}>
           <div className={classes.sectionTitle}>
-            <Typography variant="h3">Access Controls</Typography>
+            <Typography variant="h3">Manage Access</Typography>
           </div>
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <Button
           buttonType="primary"
           className={classes.addAccessControlBtn}
+          data-testid="button-access-control"
           disabled={disabled}
           onClick={() => setAddAccessControlDrawerOpen(true)}
         >
-          Manage Access Controls
+          Manage Access
         </Button>
       </div>
       {ipTable(database.allow_list)}

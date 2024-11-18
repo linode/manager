@@ -1,6 +1,5 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { omittedProps } from 'src/utilities/omittedProps';
 
 import type { TableProps } from './Table';
 

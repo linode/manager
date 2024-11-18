@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Box, Button, Notice, Paper, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -7,22 +8,16 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { Checkbox } from 'src/components/Checkbox';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { Stack } from 'src/components/Stack';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
-import { Dispatch } from 'src/hooks/types';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -49,6 +44,7 @@ import type {
   ImageUploadNavigationState,
 } from './ImageUpload.utils';
 import type { AxiosError, AxiosProgressEvent } from 'axios';
+import type { Dispatch } from 'src/hooks/types';
 
 export const ImageUpload = () => {
   const { location } = useHistory<ImageUploadNavigationState | undefined>();
@@ -194,7 +190,7 @@ export const ImageUpload = () => {
               Image Details
             </Typography>
             <Typography>
-              Custom images are billed monthly, at $0.10/GB. An uploaded image
+              Custom images are billed monthly at $0.10/GB. An uploaded image
               file needs to meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#requirements-and-considerations">
                 requirements

@@ -1,19 +1,15 @@
+import { Box, Notice, Paper, Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
-import { Box } from 'src/components/Box';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { Stack } from 'src/components/Stack';
 import { Typography } from 'src/components/Typography';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 
-import { LinodeCreateFormValues } from '../../utilities';
-
+import type { LinodeCreateFormValues } from '../../utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const BackupSelect = () => {

@@ -1,12 +1,9 @@
+import { Box, Button, FormControl, Paper } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
-import { FormControl } from 'src/components/FormControl';
-import { Paper } from 'src/components/Paper';
 import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';

@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -5,12 +6,13 @@ import { Link } from 'react-router-dom';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
+import { TableRow } from 'src/components/TableRow';
 import { Typography } from 'src/components/Typography';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useInProgressEvents } from 'src/queries/events/events';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import NodeActionMenu from './NodeActionMenu';
-import { StyledCopyTooltip, StyledTableRow } from './NodeTable.styles';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 
@@ -43,6 +45,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   } = props;
 
   const { data: events } = useInProgressEvents();
+  const { data: preferences } = usePreferences();
 
   const recentEvent = events?.find(
     (event) =>
@@ -71,7 +74,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   const displayIP = ip ?? '';
 
   return (
-    <StyledTableRow data-qa-node-row={nodeId}>
+    <TableRow data-qa-node-row={nodeId}>
       <TableCell>
         <Grid alignItems="center" container wrap="nowrap">
           <Grid>
@@ -111,10 +114,22 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
             Error retrieving IP
           </Typography>
         ) : displayIP.length > 0 ? (
-          <>
-            <CopyTooltip copyableText text={displayIP} />
-            <StyledCopyTooltip text={displayIP} />
-          </>
+          <Box
+            sx={{
+              '& svg': { height: '12px !important', width: '12px !important' },
+            }}
+            alignItems="center"
+            display="flex"
+            gap={0.5}
+          >
+            <CopyTooltip
+              copyableText
+              masked={Boolean(preferences?.maskSensitiveData)}
+              maskedTextLength="ipv4"
+              text={displayIP}
+            />
+            <CopyTooltip text={displayIP} />
+          </Box>
         ) : null}
       </TableCell>
       <TableCell>
@@ -124,6 +139,6 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           openRecycleNodeDialog={openRecycleNodeDialog}
         />
       </TableCell>
-    </StyledTableRow>
+    </TableRow>
   );
 });

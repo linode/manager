@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-expressions */
+import { Box, CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { VncScreen } from 'react-vnc';
 
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';

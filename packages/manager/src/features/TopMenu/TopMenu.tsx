@@ -1,10 +1,9 @@
+import { Box, IconButton } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
 import * as React from 'react';
 
 import { AppBar } from 'src/components/AppBar';
-import { Box } from 'src/components/Box';
 import { Hidden } from 'src/components/Hidden';
-import { IconButton } from 'src/components/IconButton';
 import { Toolbar } from 'src/components/Toolbar';
 import { Typography } from 'src/components/Typography';
 import { useAuthentication } from 'src/hooks/useAuthentication';
@@ -40,8 +39,15 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
   return (
     <React.Fragment>
       {loggedInAsCustomer && (
-        <Box bgcolor="pink" padding="1em" textAlign="center">
-          <Typography color="black" fontSize="1.2em">
+        <Box
+          bgcolor={(theme) => theme.tokens.color.Pink[40]}
+          padding="1em"
+          textAlign="center"
+        >
+          <Typography
+            color={(theme) => theme.tokens.color.Neutrals.Black}
+            fontSize="1.2em"
+          >
             You are logged in as customer: <strong>{username}</strong>
           </Typography>
         </Box>
@@ -61,6 +67,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
             <TopMenuTooltip title={navHoverText}>
               <IconButton
                 aria-label="open menu"
+                color="inherit"
                 data-testid="open-nav-menu"
                 onClick={desktopMenuToggle}
                 size="large"

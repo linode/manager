@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.129.1",
+  "version": "1.132.0",
   "private": true,
   "type": "module",
   "bugs": {
@@ -25,6 +25,7 @@
     "@lukemorales/query-key-factory": "^1.3.4",
     "@mui/icons-material": "^5.14.7",
     "@mui/material": "^5.14.7",
+    "@mui/utils": "^5.14.7",
     "@mui/x-date-pickers": "^7.12.0",
     "@paypal/react-paypal-js": "^7.8.3",
     "@reach/tabs": "^0.10.5",
@@ -86,7 +87,7 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "start": "concurrently --raw \"vite\" \"tsc --watch --preserveWatchOutput\"",
+    "start": "concurrently --raw \"NODE_OPTIONS='--max-old-space-size=4096' vite\" \"NODE_OPTIONS='--max-old-space-size=4096' tsc --watch --preserveWatchOutput\"",
     "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
     "start:ci": "vite preview --port 3000 --host",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
@@ -95,7 +96,7 @@
     "precommit": "lint-staged && yarn typecheck",
     "test": "vitest run",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
     "storybook-static": "storybook build -c .storybook -o .out",
     "build-storybook": "storybook build",
     "cy:run": "cypress run -b chrome",
@@ -148,7 +149,7 @@
     "@types/markdown-it": "^10.0.2",
     "@types/md5": "^2.1.32",
     "@types/mocha": "^10.0.2",
-    "@types/node": "^12.7.1",
+    "@types/node": "^20.17.0",
     "@types/qrcode.react": "^0.8.0",
     "@types/ramda": "0.25.16",
     "@types/react": "^18.2.55",
@@ -189,6 +190,7 @@
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
+    "eslint-plugin-react-refresh": "^0.4.13",
     "eslint-plugin-scanjs-rules": "^0.2.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "eslint-plugin-testing-library": "^3.1.2",
@@ -207,8 +209,7 @@
     "storybook-dark-mode": "4.0.1",
     "tsx": "^4.19.1",
     "vite": "^5.4.6",
-    "vite-plugin-svgr": "^3.2.0",
-    "vitest": "^2.1.1"
+    "vite-plugin-svgr": "^3.2.0"
   },
   "browserslist": [
     ">1%",

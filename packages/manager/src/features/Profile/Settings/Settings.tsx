@@ -1,3 +1,4 @@
+import { Paper, Radio, RadioGroup, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -5,10 +6,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Paper } from 'src/components/Paper';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
-import { Stack } from 'src/components/Stack';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import {
@@ -49,7 +46,9 @@ export const ProfileSettings = () => {
     preferences?.type_to_confirm === undefined ||
     preferences?.type_to_confirm === true;
 
+  // Email notifications and masking sensitive data are disabled by default until the user explicitly enables it.
   const areEmailNotificationsEnabled = profile?.email_notifications === true;
+  const isSensitiveDataMasked = preferences?.maskSensitiveData === true;
 
   return (
     <Stack spacing={2}>
@@ -115,6 +114,27 @@ export const ProfileSettings = () => {
           }
           label={`Type-to-confirm is ${
             isTypeToConfirmEnabled ? 'enabled' : 'disabled'
+          }`}
+        />
+      </Paper>
+      <Paper>
+        <Typography marginBottom={1} variant="h2">
+          Mask Sensitive Data
+        </Typography>
+        <Typography marginBottom={1} variant="body1">
+          Mask IP addresses and user contact information for data privacy.
+        </Typography>
+        <FormControlLabel
+          control={
+            <Toggle
+              onChange={(_, checked) =>
+                updatePreferences({ maskSensitiveData: checked })
+              }
+              checked={isSensitiveDataMasked}
+            />
+          }
+          label={`Sensitive data is ${
+            isSensitiveDataMasked ? 'masked' : 'visible'
           }`}
         />
       </Paper>

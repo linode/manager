@@ -8,6 +8,7 @@ import {
   updateNodeBalancerConfig,
   updateNodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers';
+import { Box, Button } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import {
   append,
@@ -26,8 +27,6 @@ import { compose as composeC } from 'recompose';
 
 import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Box } from 'src/components/Box';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromiseLoader from 'src/components/PromiseLoader/PromiseLoader';

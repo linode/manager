@@ -1,7 +1,7 @@
+import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TextField } from 'src/components/TextField';
 
@@ -55,21 +55,26 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '&.copy > div': {
-    backgroundColor: theme.name === 'dark' ? '#2f3236' : '#f4f4f4',
     opacity: 1,
   },
   '.removeDisabledStyles': {
     '& .MuiInput-input': {
       WebkitTextFillColor: 'unset !important',
-      borderColor: theme.name === 'light' ? '#ccc' : '#222',
+      borderColor:
+        theme.name === 'light'
+          ? theme.tokens.color.Neutrals[40]
+          : theme.tokens.color.Neutrals.Black,
       color:
         theme.name === 'light'
           ? `${theme.palette.text.primary} !important`
-          : '#fff !important',
+          : `${theme.tokens.color.Neutrals.White} !important`,
       opacity: theme.name === 'dark' ? 0.5 : 0.8,
     },
     '&& .MuiInput-root': {
-      borderColor: theme.name === 'light' ? '#ccc' : '#222',
+      borderColor:
+        theme.name === 'light'
+          ? theme.tokens.color.Neutrals[40]
+          : theme.tokens.color.Neutrals.Black,
       opacity: 1,
     },
   },

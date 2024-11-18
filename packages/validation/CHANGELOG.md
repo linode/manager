@@ -1,3 +1,29 @@
+## [2024-11-12] - v0.56.0
+
+
+### Tech Stories:
+
+- Remove `@types/node` dependency ([#11157](https://github.com/linode/manager/pull/11157))
+
+## [2024-10-28] - v0.55.0
+
+
+### Added:
+
+- Validation schema for LKE ACL payload ([#10968](https://github.com/linode/manager/pull/10968))
+- `PRIVATE_IPv4_REGEX` for determining if an IPv4 address is private ([#11069](https://github.com/linode/manager/pull/11069))
+
+### Changed:
+
+- Update `nodeBalancerConfigNodeSchema` to allow any private IPv4 rather than just \`192\.168\` IPs ([#11069](https://github.com/linode/manager/pull/11069))
+
+## [2024-10-14] - v0.54.0
+
+
+### Changed:
+
+- Update validation schema to account for clearing value in ImageSelect ([#11007](https://github.com/linode/manager/pull/11007))
+
 ## [2024-09-30] - v0.53.0
 
 

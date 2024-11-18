@@ -1,9 +1,9 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { omittedProps } from 'src/utilities/omittedProps';
 
-import { IPAddressProps } from './IPAddress';
+import type { IPAddressProps } from './IPAddress';
 
 interface StyledIpAddressProps extends Partial<IPAddressProps> {
   isIpHovered?: boolean;
@@ -44,6 +44,7 @@ export const StyledCopyTooltip = styled(CopyTooltip, {
     'isHovered',
     'isIpHovered',
     'showTooltipOnIpHover',
+    'displayText',
   ]),
 })<StyledIpAddressProps>(
   ({ isHovered, isIpHovered, showTooltipOnIpHover, theme }) => ({

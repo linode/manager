@@ -1,10 +1,10 @@
-import { Theme } from '@mui/material/styles';
+import { Button } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
-import { SvgIcon } from 'src/components/SvgIcon';
+import type { Theme } from '@mui/material/styles';
+import type { SvgIcon } from 'src/components/SvgIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   active: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       color: theme.palette.primary.light,
     },
     alignItems: 'flex-start',
-    borderRadius: 0,
+    borderRadius: theme.tokens.borderRadius.None,
     cursor: 'pointer',
     display: 'flex',
     margin: `0 ${theme.spacing(1)} 2px 0`,

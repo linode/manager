@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
-import { dashboardFactory } from 'src/factories';
+import { dashboardFactory, serviceTypesFactory } from 'src/factories';
 import * as utils from 'src/features/CloudPulse/Utils/utils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -19,6 +19,7 @@ const queryMocks = vi.hoisted(() => ({
   useCloudPulseServiceTypes: vi.fn().mockReturnValue({}),
 }));
 const mockDashboard = dashboardFactory.build();
+const mockServiceTypesList = serviceTypesFactory.build();
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');
@@ -46,7 +47,7 @@ queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
 
 queryMocks.useCloudPulseServiceTypes.mockReturnValue({
   data: {
-    data: [{ service_type: 'linode' }],
+    data: [mockServiceTypesList],
   },
 });
 
@@ -99,4 +100,37 @@ describe('CloudPulse Dashboard select', () => {
         dashboardLabel
       );
     });
+
+  it('Should show error message when only dashboard call fails', () => {
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [],
+      error: 'some error',
+      isLoading: false,
+    });
+
+    renderWithTheme(<CloudPulseDashboardSelect {...props} savePreferences />);
+
+    expect(
+      screen.getByText('Failed to fetch the dashboards.')
+    ).toBeInTheDocument();
+  });
+  it('Should show error message when services call fails', () => {
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: undefined,
+      error: 'an error happened',
+      isLoading: false,
+    });
+
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [],
+      error: 'some error',
+      isLoading: false,
+    });
+
+    renderWithTheme(<CloudPulseDashboardSelect {...props} savePreferences />);
+
+    expect(
+      screen.getByText('Failed to fetch the services.')
+    ).toBeInTheDocument();
+  });
 });

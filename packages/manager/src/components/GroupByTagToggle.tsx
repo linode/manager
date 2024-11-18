@@ -1,7 +1,7 @@
+import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import { Tooltip } from 'src/components/Tooltip';
 import { StyledToggleButton } from 'src/features/Linodes/LinodesLanding/DisplayLinodes.styles';
 
 interface GroupByTagToggleProps {

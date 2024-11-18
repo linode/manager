@@ -1,15 +1,16 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 
-import { WithStartAndEnd } from '../../../request.types';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { DiskGraph } from './DiskGraph';
 import { StyledBox, StyledTimeRangeSelect } from './Disks.styles';
+
+import type { WithStartAndEnd } from '../../../request.types';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   clientAPIKey: string;

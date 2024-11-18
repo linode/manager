@@ -1,11 +1,12 @@
+import { Chip } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
+import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
@@ -19,16 +20,8 @@ import type { Event } from '@linode/api-v4';
 import type {
   DatabaseInstance,
   DatabaseType,
-  Engine,
 } from '@linode/api-v4/lib/databases/types';
 import type { ActionHandlers } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
-
-export const databaseEngineMap: Record<Engine, string> = {
-  mongodb: 'MongoDB',
-  mysql: 'MySQL',
-  postgresql: 'PostgreSQL',
-  redis: 'Redis',
-};
 
 interface Props {
   database: DatabaseInstance;
@@ -53,8 +46,11 @@ export const DatabaseRow = ({
     engine,
     id,
     label,
+    platform,
     region,
+    status,
     type,
+    updates,
     version,
   } = database;
 
@@ -66,7 +62,9 @@ export const DatabaseRow = ({
   const plan = types?.find((t: DatabaseType) => t.id === type);
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
-  const { isV2GAUser } = useIsDatabasesEnabled();
+  const isLinkInactive =
+    status === 'suspended' || status === 'suspending' || status === 'resuming';
+  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const configuration =
     cluster_size === 1 ? (
@@ -85,7 +83,11 @@ export const DatabaseRow = ({
   return (
     <TableRow data-qa-database-cluster-id={id} key={`database-row-${id}`}>
       <TableCell>
-        <Link to={`/databases/${engine}/${id}`}>{label}</Link>
+        {isDatabasesV2GA && isLinkInactive ? (
+          label
+        ) : (
+          <Link to={`/databases/${engine}/${id}`}>{label}</Link>
+        )}
       </TableCell>
       <TableCell statusCell>
         <DatabaseStatusDisplay database={database} events={events} />
@@ -94,7 +96,15 @@ export const DatabaseRow = ({
       <Hidden smDown>
         <TableCell>{configuration}</TableCell>
       </Hidden>
-      <TableCell>{`${databaseEngineMap[engine]} v${version}`}</TableCell>
+      <TableCell>
+        <DatabaseEngineVersion
+          databaseEngine={engine}
+          databaseID={id}
+          databasePendingUpdates={updates.pending}
+          databasePlatform={platform}
+          databaseVersion={version}
+        />
+      </TableCell>
       <Hidden mdDown>
         <TableCell>{actualRegion?.label ?? region}</TableCell>
       </Hidden>
@@ -107,9 +117,10 @@ export const DatabaseRow = ({
               })}
         </TableCell>
       </Hidden>
-      {isV2GAUser && isNewDatabase && (
+      {isDatabasesV2GA && isNewDatabase && (
         <TableCell actionCell>
           <DatabaseActionMenu
+            databaseStatus={status}
             databaseEngine={engine}
             databaseId={id}
             databaseLabel={label}

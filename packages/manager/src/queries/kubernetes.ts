@@ -7,6 +7,7 @@ import {
   getKubeConfig,
   getKubernetesCluster,
   getKubernetesClusterBeta,
+  getKubernetesClusterControlPlaneACL,
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
@@ -18,6 +19,7 @@ import {
   recycleNode,
   resetKubeConfig,
   updateKubernetesCluster,
+  updateKubernetesClusterControlPlaneACL,
   updateNodePool,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -28,6 +30,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -38,6 +41,7 @@ import type {
   CreateNodePoolData,
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
   KubernetesVersion,
@@ -54,10 +58,16 @@ import type {
 export const kubernetesQueries = createQueryKeys('kubernetes', {
   cluster: (id: number) => ({
     contextQueries: {
-      beta: {
-        queryFn: () => getKubernetesClusterBeta(id),
+      acl: {
+        queryFn: () => getKubernetesClusterControlPlaneACL(id),
         queryKey: [id],
       },
+      cluster: (useBetaEndpoint: boolean = false) => ({
+        queryFn: useBetaEndpoint
+          ? () => getKubernetesClusterBeta(id)
+          : () => getKubernetesCluster(id),
+        queryKey: [useBetaEndpoint],
+      }),
       dashboard: {
         queryFn: () => getKubernetesClusterDashboard(id),
         queryKey: null,
@@ -105,17 +115,12 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 });
 
 export const useKubernetesClusterQuery = (id: number) => {
-  return useQuery<KubernetesCluster, APIError[]>(kubernetesQueries.cluster(id));
-};
+  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
 
-/**
- * duplicated function of useKubernetesClusterQuery
- * necessary to call BETA_API_ROOT in a seperate function based on feature flag
- */
-export const useKubernetesClusterBetaQuery = (id: number) => {
-  return useQuery<KubernetesCluster, APIError[]>(
-    kubernetesQueries.cluster(id)._ctx.beta
-  );
+  return useQuery<KubernetesCluster, APIError[]>({
+    ...kubernetesQueries.cluster(id)._ctx.cluster(showAPL),
+    enabled: !isAPLAvailabilityLoading,
+  });
 };
 
 export const useKubernetesClustersQuery = (
@@ -139,7 +144,18 @@ export const useKubernetesClusterMutation = (id: number) => {
         queryClient.invalidateQueries({
           queryKey: kubernetesQueries.lists.queryKey,
         });
-        queryClient.setQueryData(kubernetesQueries.cluster(id).queryKey, data);
+        queryClient.invalidateQueries({
+          queryKey: kubernetesQueries.cluster(id)._ctx.acl.queryKey,
+        });
+        // queryClient.setQueryData<KubernetesCluster>(
+        //   kubernetesQueries.cluster(id).queryKey,
+        //   data
+        // );
+        // Temporary cache update logic for APL
+        queryClient.setQueriesData<KubernetesCluster>(
+          { queryKey: kubernetesQueries.cluster(id)._ctx.cluster._def },
+          (oldData) => ({ ...oldData, ...data })
+        );
       },
     }
   );
@@ -346,6 +362,34 @@ export const useAllKubernetesClustersQuery = (enabled = false) => {
   return useQuery<KubernetesCluster[], APIError[]>({
     ...kubernetesQueries.lists._ctx.all,
     enabled,
+  });
+};
+
+export const useKubernetesControlPlaneACLQuery = (
+  clusterId: number,
+  enabled: boolean = true
+) => {
+  return useQuery<KubernetesControlPlaneACLPayload, APIError[]>({
+    enabled,
+    retry: 1,
+    ...kubernetesQueries.cluster(clusterId)._ctx.acl,
+  });
+};
+
+export const useKubernetesControlPlaneACLMutation = (id: number) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    KubernetesControlPlaneACLPayload,
+    APIError[],
+    Partial<KubernetesControlPlaneACLPayload>
+  >({
+    mutationFn: (data) => updateKubernetesClusterControlPlaneACL(id, data),
+    onSuccess(data) {
+      queryClient.setQueryData(
+        kubernetesQueries.cluster(id)._ctx.acl.queryKey,
+        data
+      );
+    },
   });
 };
 

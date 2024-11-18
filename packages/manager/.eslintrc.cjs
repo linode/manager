@@ -84,6 +84,50 @@ module.exports = {
         'testing-library/await-async-query': 'off',
       },
     },
+    // restrict usage of react-router-dom during migration to tanstack/react-router
+    // TODO: TanStack Router - remove this override when migration is complete
+    {
+      files: [
+        // for each new features added to the migration router, add its directory here
+        'src/features/Betas/*',
+      ],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                importNames: [
+                  // intentionally not including <Link> in this list as this will be updated last globally
+                  'useNavigate',
+                  'useParams',
+                  'useLocation',
+                  'useHistory',
+                  'useRouteMatch',
+                  'matchPath',
+                  'MemoryRouter',
+                  'Route',
+                  'RouteProps',
+                  'Switch',
+                  'Redirect',
+                  'RouteComponentProps',
+                  'withRouter',
+                ],
+                message:
+                  'Please use routing utilities from @tanstack/react-router.',
+                name: 'react-router-dom',
+              },
+              {
+                importNames: ['renderWithTheme'],
+                message:
+                  'Please use the wrapWithThemeAndRouter helper function for testing components being migrated to TanStack Router.',
+                name: 'src/utilities/testHelpers',
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
@@ -111,6 +155,7 @@ module.exports = {
     'xss',
     'perfectionist',
     '@linode/eslint-plugin-cloud-manager',
+    'react-refresh',
   ],
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
@@ -162,6 +207,7 @@ module.exports = {
       'error',
       'rxjs',
       '@mui/core',
+      '@mui/system',
       '@mui/icons-material',
     ],
     'no-throw-literal': 'warn',
@@ -230,6 +276,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react-hooks/exhaustive-deps': 'warn',
     'react-hooks/rules-of-hooks': 'error',
+    'react-refresh/only-export-components': 'warn',
     'scanjs-rules/assign_to_hostname': 'warn',
     'scanjs-rules/assign_to_href': 'warn',
     'scanjs-rules/assign_to_location': 'warn',

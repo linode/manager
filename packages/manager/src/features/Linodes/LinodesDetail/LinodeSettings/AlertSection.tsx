@@ -1,15 +1,12 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Divider, InputAdornment, fadeIn } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { Divider } from 'src/components/Divider';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { InputAdornment } from 'src/components/InputAdornment';
 import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
-import { fadeIn } from 'src/styles/keyframes';
 
 interface Props {
   copy: string;

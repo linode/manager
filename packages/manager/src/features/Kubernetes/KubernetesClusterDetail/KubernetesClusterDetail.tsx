@@ -1,17 +1,15 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, CircleProgress, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
-import { useGetAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
-  useKubernetesClusterBetaQuery,
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
@@ -29,13 +27,9 @@ export const KubernetesClusterDetail = () => {
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
   const location = useLocation();
-  const showAPL = useGetAPLAvailability();
-  const kubernetesClusterBetaQuery = useKubernetesClusterBetaQuery(id);
-  const kubernetesClusterQuery = useKubernetesClusterQuery(id);
+  const { showAPL } = useAPLAvailability();
 
-  const { data: cluster, error, isLoading } = showAPL
-    ? kubernetesClusterBetaQuery
-    : kubernetesClusterQuery;
+  const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
   const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
@@ -83,16 +77,13 @@ export const KubernetesClusterDetail = () => {
   };
 
   return (
-    <>
+    <Box>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
-      <Grid>
-        <UpgradeKubernetesVersionBanner
-          clusterID={cluster?.id}
-          clusterLabel={cluster?.label}
-          currentVersion={cluster?.k8s_version}
-        />
-      </Grid>
-
+      <UpgradeKubernetesVersionBanner
+        clusterID={cluster?.id}
+        clusterLabel={cluster?.label}
+        currentVersion={cluster?.k8s_version}
+      />
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
@@ -115,37 +106,33 @@ export const KubernetesClusterDetail = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         title="Kubernetes Cluster Details"
       />
-      <Grid>
+      <Stack spacing={1}>
         <KubeSummaryPanel cluster={cluster} />
-      </Grid>
-      {showAPL && cluster.apl_enabled && (
-        <>
-          <LandingHeader
-            docsLabel="Docs"
-            docsLink="https://otomi.io/docs/get-started/overview"
-            removeCrumbX={[1, 2, 3]}
-            title="Application platform for LKE"
-          />
-          <Grid>
+        {showAPL && cluster.apl_enabled && (
+          <Box>
+            <LandingHeader
+              docsLabel="Docs"
+              docsLink="https://apl-docs.net/"
+              removeCrumbX={[1, 2, 3]}
+              title="Application Platform for LKE"
+            />
             <APLSummaryPanel cluster={cluster} />
-          </Grid>
-        </>
-      )}
-      <Grid>
+          </Box>
+        )}
         <NodePoolsDisplay
           clusterID={cluster.id}
           clusterLabel={cluster.label}
           clusterRegionId={cluster.region}
           regionsData={regionsData || []}
         />
-      </Grid>
+      </Stack>
       <UpgradeKubernetesClusterToHADialog
         clusterID={cluster.id}
         onClose={() => setIsUpgradeToHAOpen(false)}
         open={isUpgradeToHAOpen}
         regionID={cluster.region}
       />
-    </>
+    </Box>
   );
 };
 

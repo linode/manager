@@ -1,7 +1,7 @@
+import { omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Typography } from 'src/components/Typography';
-import { omittedProps } from 'src/utilities/omittedProps';
 
 type StyledVPCFormProps = {
   isDrawer?: boolean;

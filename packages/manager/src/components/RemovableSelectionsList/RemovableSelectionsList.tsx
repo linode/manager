@@ -1,8 +1,6 @@
+import { Box, IconButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
-
-import { Box } from 'src/components/Box';
-import { IconButton } from 'src/components/IconButton';
 
 import {
   SelectedOptionsHeader,
@@ -14,8 +12,8 @@ import {
   StyledScrollBox,
 } from './RemovableSelectionsList.style';
 
+import type { ButtonProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material';
-import type { ButtonProps } from 'src/components/Button/Button';
 
 export type RemovableItem = {
   // The remaining key-value pairs must have their values typed

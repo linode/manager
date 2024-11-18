@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Paper, Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -6,12 +6,10 @@ import { useLocation } from 'react-router-dom';
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
-import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from 'src/components/Paper';
+import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TableBody } from 'src/components/TableBody';
-import { Tooltip } from 'src/components/Tooltip';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 

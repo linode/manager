@@ -1,7 +1,7 @@
+import { CircleProgress } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
@@ -73,17 +73,19 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const {
     data: dashboard,
+    isError: isDashboardApiError,
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
 
   const {
     data: resourceList,
+    isError: isResourcesApiError,
     isLoading: isResourcesLoading,
   } = useResourcesQuery(
     Boolean(dashboard?.service_type),
     dashboard?.service_type,
     {},
-    {}
+    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {}
   );
 
   const {
@@ -105,12 +107,20 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     Boolean(resourceList)
   );
 
+  if (isDashboardApiError) {
+    return renderErrorState('Failed to fetch the dashboard details.');
+  }
+
+  if (isResourcesApiError) {
+    return renderErrorState('Failed to fetch Resources.');
+  }
+
   if (isJweTokenError) {
-    return (
-      <Grid item xs>
-        <ErrorState errorText="Failed to get jwe token" />
-      </Grid>
-    );
+    return renderErrorState('Failed to get the authentication token.');
+  }
+
+  if (isMetricDefinitionError) {
+    return renderErrorState('Error loading the definitions of metrics.');
   }
 
   if (
@@ -120,10 +130,6 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isJweTokenLoading
   ) {
     return <CircleProgress />;
-  }
-
-  if (isMetricDefinitionError) {
-    return <ErrorState errorText={'Error loading metric definitions'} />;
   }
 
   return (
@@ -139,5 +145,17 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       resources={resources}
       savePref={savePref}
     />
+  );
+};
+
+/**
+ * @param errorMessage The error message to be displayed
+ * @returns The error state component with error message passed
+ */
+const renderErrorState = (errorMessage: string) => {
+  return (
+    <Grid item xs>
+      <ErrorState errorText={errorMessage} />
+    </Grid>
   );
 };

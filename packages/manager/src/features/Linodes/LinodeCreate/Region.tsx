@@ -1,13 +1,11 @@
+import { Box, Notice, Paper } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
-import { Box } from 'src/components/Box';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Paper } from 'src/components/Paper';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import {
   isDistributedRegionSupported,
@@ -76,7 +74,7 @@ export const Region = React.memo(() => {
 
   const { data: type } = useTypeQuery(
     selectedLinode?.type ?? '',
-    Boolean(selectedLinode)
+    Boolean(selectedLinode?.type)
   );
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
@@ -85,7 +83,7 @@ export const Region = React.memo(() => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoBetaEnabled, isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled();
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
@@ -177,10 +175,6 @@ export const Region = React.memo(() => {
     !flags.gecko2?.enabled ||
     !isDistributedRegionSupported(params.type ?? 'OS');
 
-  const showDistributedRegionIconHelperText =
-    isGeckoBetaEnabled && !hideDistributedRegions;
-  regions?.some((region) => region.site_type === 'distributed');
-
   const disabledRegions = getDisabledRegions({
     regions: regions ?? [],
     selectedImage: image,
@@ -194,9 +188,6 @@ export const Region = React.memo(() => {
           hideDistributedRegions && params.type !== 'Images'
             ? 'core'
             : undefined
-        }
-        showDistributedRegionIconHelperText={
-          showDistributedRegionIconHelperText
         }
         disabled={isLinodeCreateRestricted}
         disabledRegions={disabledRegions}
@@ -240,9 +231,6 @@ export const Region = React.memo(() => {
           hideDistributedRegions && params.type !== 'Images'
             ? 'core'
             : undefined
-        }
-        showDistributedRegionIconHelperText={
-          showDistributedRegionIconHelperText
         }
         currentCapability="Linodes"
         disableClearable

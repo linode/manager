@@ -85,6 +85,7 @@ import {
   promoFactory,
   regionAvailabilityFactory,
   securityQuestionsFactory,
+  serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
   subnetFactory,
@@ -110,10 +111,12 @@ import { pickRandom } from 'src/utilities/random';
 import type {
   AccountMaintenance,
   CreateObjectStorageKeyPayload,
+  Dashboard,
   FirewallStatus,
   NotificationType,
   ObjectStorageEndpointTypes,
   SecurityQuestionsPayload,
+  ServiceTypesList,
   TokenRequest,
   UpdateImageRegionsPayload,
   User,
@@ -222,11 +225,8 @@ const databases = [
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });
-    const premiumTypes = databaseTypeFactory.buildList(7, {
-      class: 'premium',
-    });
     return HttpResponse.json(
-      makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
+      makeResourcePage([...standardTypes, ...dedicatedTypes])
     );
   }),
 
@@ -235,32 +235,32 @@ const databases = [
     const engine2 = databaseEngineFactory.buildList(3, {
       engine: 'postgresql',
     });
-    const engine3 = databaseEngineFactory.buildList(3, {
-      engine: 'mongodb',
-    });
 
-    const combinedList = [...engine1, ...engine2, ...engine3];
+    const combinedList = [...engine1, ...engine2];
 
     return HttpResponse.json(makeResourcePage(combinedList));
   }),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
-    const database = databaseFactory.build({
-      compression_type: params.engine === 'mongodb' ? 'none' : undefined,
+    const isDefault = Number(params.id) % 2 !== 0;
+    const db: Record<string, boolean | number | string | undefined> = {
       engine: params.engine as 'mysql',
       id: Number(params.id),
       label: `database-${params.id}`,
-      replication_commit_type:
-        params.engine === 'postgresql' ? 'local' : undefined,
-      replication_type:
+      platform: isDefault ? 'rdbms-default' : 'rdbms-legacy',
+    };
+    if (!isDefault) {
+      db.replication_commit_type =
+        params.engine === 'postgresql' ? 'local' : undefined;
+      db.replication_type =
         params.engine === 'mysql'
           ? pickRandom(possibleMySQLReplicationTypes)
           : params.engine === 'postgresql'
           ? pickRandom(possiblePostgresReplicationTypes)
-          : (undefined as any),
-      ssl_connection: true,
-      storage_engine: params.engine === 'mongodb' ? 'wiredtiger' : undefined,
-    });
+          : (undefined as any);
+      db.ssl_connection = true;
+    }
+    const database = databaseFactory.build(db);
     return HttpResponse.json(database);
   }),
 
@@ -319,6 +319,14 @@ const databases = [
   ),
 
   http.delete('*/databases/mysql/instances/:databaseId', () => {
+    return HttpResponse.json({});
+  }),
+
+  http.post('*/databases/:engine/instances/:databaseId/suspend', () => {
+    return HttpResponse.json({});
+  }),
+
+  http.post('*/databases/:engine/instances/:databaseId/resume', () => {
     return HttpResponse.json({});
   }),
 ];
@@ -381,7 +389,17 @@ const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
 const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
 const proDedicatedType = proDedicatedTypeFactory.build();
-
+const gpuTypesAda = linodeTypeFactory.buildList(7, {
+  class: 'gpu',
+  gpus: 5,
+  label: 'Ada Lovelace',
+  transfer: 0,
+});
+const gpuTypesRX = linodeTypeFactory.buildList(7, {
+  class: 'gpu',
+  gpus: 1,
+  transfer: 5000,
+});
 const proxyAccountUser = accountUserFactory.build({
   email: 'partner@proxy.com',
   last_login: null,
@@ -575,6 +593,8 @@ export const handlers = [
         nanodeType,
         ...standardTypes,
         ...dedicatedTypes,
+        ...gpuTypesAda,
+        ...gpuTypesRX,
         proDedicatedType,
       ])
     );
@@ -588,6 +608,9 @@ export const handlers = [
         return HttpResponse.json(type);
       })
   ),
+  http.get(`*/linode/types/*`, () => {
+    return HttpResponse.json(linodeTypeFactory.build());
+  }),
   http.get('*/linode/instances', async ({ request }) => {
     linodeFactory.resetSequenceNumber();
     const metadataLinodeWithCompatibleImage = linodeFactory.build({
@@ -2031,7 +2054,7 @@ export const handlers = [
   http.delete('*/profile/tokens/:id', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/account/betas', () => {
+  http.get('*/v4*/account/betas', () => {
     return HttpResponse.json(
       makeResourcePage([
         ...accountBetaFactory.buildList(5),
@@ -2043,7 +2066,7 @@ export const handlers = [
       ])
     );
   }),
-  http.get('*/account/betas/:id', ({ params }) => {
+  http.get('*/v4*/account/betas/:id', ({ params }) => {
     if (params.id !== 'undefined') {
       return HttpResponse.json(
         accountBetaFactory.build({ id: params.id as string })
@@ -2051,17 +2074,15 @@ export const handlers = [
     }
     return HttpResponse.json({}, { status: 404 });
   }),
-  http.post('*/account/betas', () => {
-    return HttpResponse.json({});
+  http.get('*/v4*/betas', () => {
+    return HttpResponse.json(makeResourcePage(betaFactory.buildList(5)));
   }),
-  http.get('*/betas/:id', ({ params }) => {
+  http.get('*/v4*/betas/:id', ({ params }) => {
+    const id = params.id.toString();
     if (params.id !== 'undefined') {
-      return HttpResponse.json(betaFactory.build({ id: params.id as string }));
+      return HttpResponse.json(betaFactory.build({ id }));
     }
     return HttpResponse.json({}, { status: 404 });
-  }),
-  http.get('*/betas', () => {
-    return HttpResponse.json(makeResourcePage(betaFactory.buildList(5)));
   }),
   http.get('*regions/availability', () => {
     return HttpResponse.json(
@@ -2306,25 +2327,40 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services', () => {
-    const response = {
-      data: [{ service_type: 'linode' }],
-    };
-
-    return HttpResponse.json(response);
-  }),
-  http.get('*/monitor/services/:serviceType/dashboards', () => {
-    const response = {
+    const response: ServiceTypesList = {
       data: [
-        dashboardFactory.build({
-          label: 'Linode Dashboard',
+        serviceTypesFactory.build({
+          label: 'Linode',
           service_type: 'linode',
         }),
-        dashboardFactory.build({
-          label: 'DBaaS Dashboard',
+        serviceTypesFactory.build({
+          label: 'Databases',
           service_type: 'dbaas',
         }),
       ],
     };
+
+    return HttpResponse.json(response);
+  }),
+  http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
+    const response = {
+      data: [] as Dashboard[],
+    };
+    if (params.serviceType === 'linode') {
+      response.data.push(
+        dashboardFactory.build({
+          label: 'Linode Dashboard',
+          service_type: 'linode',
+        })
+      );
+    } else if (params.serviceType === 'dbaas') {
+      response.data.push(
+        dashboardFactory.build({
+          label: 'DBaaS Dashboard',
+          service_type: 'dbaas',
+        })
+      );
+    }
 
     return HttpResponse.json(response);
   }),

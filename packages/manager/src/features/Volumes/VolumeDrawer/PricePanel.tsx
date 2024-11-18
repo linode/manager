@@ -1,7 +1,6 @@
+import { Box, CircleProgress } from '@linode/ui';
 import * as React from 'react';
 
-import { Box } from 'src/components/Box';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { useVolumeTypesQuery } from 'src/queries/volumes/volumes';

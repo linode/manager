@@ -108,7 +108,7 @@ export interface LineGraphProps {
   /**
    * Custom styles for the table.
    */
-  sxTableStyles?: SxProps;
+  sxTableStyles?: SxProps<Theme>;
   /**
    * The suggested maximum y-axis value passed to **Chart,js**.
    */
@@ -284,7 +284,7 @@ export const LineGraph = (props: LineGraphProps) => {
         intersect: false,
         mode: 'index',
         position: 'nearest',
-        titleFontColor: '#606469',
+        titleFontColor: theme.tokens.color.Neutrals[70],
         xPadding: 8,
         yPadding: 10,
       },

@@ -1,12 +1,11 @@
+import { CircleProgress, Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { NotFound } from 'src/components/NotFound';
-import { Notice } from 'src/components/Notice/Notice';
 import { Typography } from 'src/components/Typography';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';

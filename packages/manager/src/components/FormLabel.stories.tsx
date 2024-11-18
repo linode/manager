@@ -1,11 +1,10 @@
-import { Meta, StoryObj } from '@storybook/react';
+import { FormControl, Radio, RadioGroup } from '@linode/ui';
 import React from 'react';
 
-import { FormControl } from './FormControl';
 import { FormControlLabel } from './FormControlLabel';
 import { FormLabel } from './FormLabel';
-import { Radio } from './Radio/Radio';
-import { RadioGroup } from './RadioGroup';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof FormLabel> = {
   component: FormLabel,
