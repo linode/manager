@@ -10,10 +10,26 @@ import { DialogTitle } from 'src/components/DialogTitle/DialogTitle';
 import type { DialogProps } from '@mui/material/Dialog';
 
 export interface ConfirmationDialogProps extends DialogProps {
+  /**
+   * The actions to be displayed in the dialog.
+   */
   actions?: ((props: any) => JSX.Element) | JSX.Element;
+  /**
+   * The error message to be displayed at the top of the dialog.
+   * Usually API errors.
+   */
   error?: JSX.Element | string;
+  /**
+   * Callback fired when the dialog is closed.
+   */
   onClose: () => void;
+  /**
+   * Callback fired when the dialog closing animation has completed.
+   */
   onExited?: () => void;
+  /**
+   * The title of the dialog.
+   */
   title: string;
 }
 

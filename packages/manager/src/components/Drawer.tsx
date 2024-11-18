@@ -1,4 +1,4 @@
-import { IconButton } from '@linode/ui';
+import { Box, CircleProgress, IconButton } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -13,9 +13,11 @@ import type { Theme } from '@mui/material/styles';
 
 interface Props extends DrawerProps {
   /**
-   * Callback fired when the drawer closing animation has completed.
+   * Whether the drawer is fetching the entity's data.
+   *
+   * If true, the drawer will feature a loading spinner for its content.
    */
-  onExited?: () => void;
+  isFetching?: boolean;
   /**
    * Title that appears at the top of the drawer
    */
@@ -26,6 +28,112 @@ interface Props extends DrawerProps {
    */
   wide?: boolean;
 }
+
+/**
+ * ## Overview
+ * - Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
+ * - Like traditional modals, they block interaction with the page content.
+ * - They are elevated above the app’s UI and don’t affect the screen’s layout grid.
+ *
+ * ## Behavior
+ *
+ * - Clicking a button on the screen opens the drawer.
+ * - Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
+ */
+export const Drawer = (props: Props) => {
+  const { classes, cx } = useStyles();
+
+  const { children, isFetching, onClose, open, title, wide, ...rest } = props;
+
+  const titleID = convertForAria(title);
+  const [closingTransition, setClosingTransition] = React.useState(false);
+
+  const handleClose = () => {
+    setClosingTransition(true);
+  };
+
+  const handleExited = (): void => {
+    onClose?.({}, 'escapeKeyDown');
+  };
+
+  React.useEffect(() => {
+    if (open) {
+      setClosingTransition(false);
+    }
+  }, [open]);
+
+  return (
+    <_Drawer
+      classes={{
+        paper: cx(classes.common, {
+          [classes.default]: !wide,
+          [classes.wide]: wide,
+        }),
+      }}
+      onClose={(_, reason) => {
+        if (onClose && reason !== 'backdropClick') {
+          handleClose();
+        }
+      }}
+      anchor="right"
+      open={open && !closingTransition}
+      {...rest}
+      aria-labelledby={titleID}
+      data-qa-drawer
+      data-testid="drawer"
+      onTransitionExited={handleExited}
+      role="dialog"
+    >
+      <Grid
+        sx={{
+          position: 'relative',
+        }}
+        alignItems="flex-start"
+        className={classes.drawerHeader}
+        container
+        justifyContent="space-between"
+        wrap="nowrap"
+      >
+        <Grid>
+          {isFetching ? null : (
+            <Typography
+              className={classes.title}
+              data-qa-drawer-title={title}
+              data-testid="drawer-title"
+              id={titleID}
+              variant="h2"
+            >
+              {title}
+            </Typography>
+          )}
+        </Grid>
+        <Grid>
+          <IconButton
+            sx={{
+              position: 'absolute',
+              right: '-12px',
+              top: '-12px',
+            }}
+            aria-label="Close drawer"
+            color="primary"
+            data-qa-close-drawer
+            onClick={handleClose}
+            size="large"
+          >
+            <Close />
+          </IconButton>
+        </Grid>
+      </Grid>
+      {isFetching ? (
+        <Box display="flex" justifyContent="center" mt={8}>
+          <CircleProgress size="md" />
+        </Box>
+      ) : (
+        children
+      )}
+    </_Drawer>
+  );
+};
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
@@ -76,85 +184,3 @@ const useStyles = makeStyles()((theme: Theme) => ({
     width: '100%',
   },
 }));
-
-/**
- * ## Overview
- * - Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
- * - Like traditional modals, they block interaction with the page content.
- * - They are elevated above the app’s UI and don’t affect the screen’s layout grid.
- *
- * ## Behavior
- *
- * - Clicking a button on the screen opens the drawer.
- * - Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
- */
-export const Drawer = (props: Props) => {
-  const { classes, cx } = useStyles();
-
-  const { children, onClose, onExited, title, wide, ...rest } = props;
-
-  const titleID = convertForAria(title);
-
-  return (
-    <_Drawer
-      classes={{
-        paper: cx(classes.common, {
-          [classes.default]: !wide,
-          [classes.wide]: wide,
-        }),
-      }}
-      onClose={(event, reason) => {
-        if (onClose && reason !== 'backdropClick') {
-          onClose(event, reason);
-        }
-      }}
-      anchor="right"
-      {...rest}
-      aria-labelledby={titleID}
-      data-qa-drawer
-      data-testid="drawer"
-      onTransitionExited={onExited}
-      role="dialog"
-    >
-      <Grid
-        sx={{
-          position: 'relative',
-        }}
-        alignItems="flex-start"
-        className={classes.drawerHeader}
-        container
-        justifyContent="space-between"
-        wrap="nowrap"
-      >
-        <Grid>
-          <Typography
-            className={classes.title}
-            data-qa-drawer-title={title}
-            data-testid="drawer-title"
-            id={titleID}
-            variant="h2"
-          >
-            {title}
-          </Typography>
-        </Grid>
-        <Grid>
-          <IconButton
-            sx={{
-              position: 'absolute',
-              right: '-12px',
-              top: '-12px',
-            }}
-            aria-label="Close drawer"
-            color="primary"
-            data-qa-close-drawer
-            onClick={onClose as (e: any) => void}
-            size="large"
-          >
-            <Close />
-          </IconButton>
-        </Grid>
-      </Grid>
-      {children}
-    </_Drawer>
-  );
-};

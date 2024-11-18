@@ -59,7 +59,7 @@ export const EditImageDrawer = (props: Props) => {
       ...values,
       description: safeDescription,
     })
-      .then(onClose)
+      .then(handleClose)
       .catch((errors: APIError[]) => {
         for (const error of errors) {
           if (
@@ -75,8 +75,13 @@ export const EditImageDrawer = (props: Props) => {
       });
   });
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   return (
-    <Drawer onClose={onClose} onExited={reset} open={open} title="Edit Image">
+    <Drawer onClose={handleClose} open={open} title="Edit Image">
       {!canCreateImage && (
         <Notice
           text="You don't have permissions to edit images. Please contact an account administrator for details."
@@ -152,7 +157,7 @@ export const EditImageDrawer = (props: Props) => {
         secondaryButtonProps={{
           disabled: !canCreateImage,
           label: 'Cancel',
-          onClick: onClose,
+          onClick: handleClose,
         }}
         style={{ marginTop: 16 }}
       />

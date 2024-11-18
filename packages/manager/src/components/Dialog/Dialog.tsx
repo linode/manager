@@ -1,4 +1,4 @@
-import { Box, Notice, omittedProps } from '@linode/ui';
+import { Box, CircleProgress, Notice, omittedProps } from '@linode/ui';
 import _Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { styled, useTheme } from '@mui/material/styles';
@@ -10,12 +10,32 @@ import { convertForAria } from 'src/utilities/stringUtils';
 import type { DialogProps as _DialogProps } from '@mui/material/Dialog';
 
 export interface DialogProps extends _DialogProps {
+  /**
+   * Additional CSS to be applied to the Dialog.
+   */
   className?: string;
+  /**
+   * Error that will be shown in the dialog.
+   */
   error?: string;
+  /**
+   * Let the Dialog take up the entire height of the viewport.
+   */
   fullHeight?: boolean;
+  /**
+   * Whether the drawer is fetching the entity's data.
+   *
+   * If true, the drawer will feature a loading spinner for its content.
+   */
+  isFetching?: boolean;
+  /**
+   * Subtitle that will be shown in the dialog.
+   */
   subtitle?: string;
+  /**
+   * Title that will be shown in the dialog.
+   */
   title: string;
-  titleBottomBorder?: boolean;
 }
 
 /**
@@ -47,18 +67,40 @@ export const Dialog = React.forwardRef(
       error,
       fullHeight,
       fullWidth,
+      isFetching,
       maxWidth = 'md',
       onClose,
+      open,
       subtitle,
       title,
-      titleBottomBorder,
       ...rest
     } = props;
 
+    const [closingTransition, setClosingTransition] = React.useState(false);
+
     const titleID = convertForAria(title);
+
+    const handleClose = () => {
+      setClosingTransition(true);
+    };
+
+    const handleExited = () => {
+      onClose?.({}, 'escapeKeyDown');
+    };
+
+    React.useEffect(() => {
+      if (open) {
+        setClosingTransition(false);
+      }
+    }, [open]);
 
     return (
       <StyledDialog
+        onClose={(_, reason) => {
+          if (onClose && reason !== 'backdropClick') {
+            handleClose();
+          }
+        }}
         aria-labelledby={titleID}
         data-qa-dialog
         data-qa-drawer
@@ -66,7 +108,8 @@ export const Dialog = React.forwardRef(
         fullHeight={fullHeight}
         fullWidth={fullWidth}
         maxWidth={(fullWidth && maxWidth) ?? undefined}
-        onClose={onClose}
+        onTransitionExited={handleExited}
+        open={open && !closingTransition}
         ref={ref}
         role="dialog"
         title={title}
@@ -79,11 +122,11 @@ export const Dialog = React.forwardRef(
         >
           <DialogTitle
             id={titleID}
-            onClose={() => onClose && onClose({}, 'backdropClick')}
+            isFetching={isFetching}
+            onClose={handleClose}
             subtitle={subtitle}
             title={title}
           />
-          {titleBottomBorder && <StyledHr />}
           <DialogContent
             sx={{
               overflowX: 'hidden',
@@ -91,8 +134,16 @@ export const Dialog = React.forwardRef(
             }}
             className={className}
           >
-            {error && <Notice text={error} variant="error" />}
-            {children}
+            {isFetching ? (
+              <Box display="flex" justifyContent="center" my={4}>
+                <CircleProgress size="md" />
+              </Box>
+            ) : (
+              <>
+                {error && <Notice text={error} variant="error" />}
+                {children}
+              </>
+            )}
           </DialogContent>
         </Box>
       </StyledDialog>
@@ -106,19 +157,15 @@ const StyledDialog = styled(_Dialog, {
   '& .MuiDialog-paper': {
     height: props.fullHeight ? '100vh' : undefined,
     maxHeight: '100%',
+    minWidth: '500px',
     padding: 0,
+    [theme.breakpoints.down('md')]: {
+      minWidth: '380px',
+    },
   },
   '& .MuiDialogActions-root': {
     display: 'flex',
     justifyContent: 'flex-end',
     marginTop: theme.spacing(2),
   },
-}));
-
-const StyledHr = styled('hr', { label: 'StyledHr' })(({ theme }) => ({
-  backgroundColor: theme.tokens.color.Neutrals[20],
-  border: 'none',
-  height: 1,
-  margin: '-2em 8px 0px 8px',
-  width: '100%',
 }));

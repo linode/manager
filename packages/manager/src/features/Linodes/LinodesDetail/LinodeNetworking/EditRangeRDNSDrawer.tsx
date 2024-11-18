@@ -64,26 +64,22 @@ export const EditRangeRDNSDrawer = (props: Props) => {
       enqueueSnackbar(`Successfully updated RDNS for ${range?.range}`, {
         variant: 'success',
       });
-      onClose();
+      handleClose();
     },
   });
 
   const theme = useTheme();
 
-  const onExited = () => {
+  const handleClose = () => {
     formik.resetForm();
     reset();
+    onClose();
   };
 
   const errorMap = getErrorMap(['rdns'], error);
 
   return (
-    <Drawer
-      onClose={onClose}
-      onExited={onExited}
-      open={open}
-      title="Edit Reverse DNS"
-    >
+    <Drawer onClose={handleClose} open={open} title="Edit Reverse DNS">
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
           <Notice data-qa-error style={{ marginTop: 16 }} variant="error">
@@ -118,7 +114,7 @@ export const EditRangeRDNSDrawer = (props: Props) => {
           secondaryButtonProps={{
             'data-testid': 'cancel',
             label: 'Close',
-            onClick: onClose,
+            onClick: handleClose,
           }}
           style={{ marginTop: 16 }}
         />

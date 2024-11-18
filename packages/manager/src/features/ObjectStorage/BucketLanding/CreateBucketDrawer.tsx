@@ -110,7 +110,7 @@ export const CreateBucketDrawer = (props: Props) => {
         }
       }
 
-      onClose();
+      handleClose();
     } catch (errors) {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
@@ -138,13 +138,13 @@ export const CreateBucketDrawer = (props: Props) => {
     selectedRegionId: clusterRegion?.id ?? '',
   });
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   return (
-    <Drawer
-      onClose={onClose}
-      onExited={reset}
-      open={isOpen}
-      title="Create Bucket"
-    >
+    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -207,7 +207,7 @@ export const CreateBucketDrawer = (props: Props) => {
                 : '',
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
         />
         <EnableObjectStorageModal
           handleSubmit={handleSubmit(onSubmit)}
