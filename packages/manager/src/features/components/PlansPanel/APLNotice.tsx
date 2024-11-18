@@ -7,14 +7,12 @@ interface Props {
   dataTestId?: string;
 }
 
-const programInfo = APL_NOTICE_COPY;
-
 export const APLNotice = (props: Props) => {
   const { dataTestId } = props;
 
   return (
     <Notice dataTestId={dataTestId} variant="error">
-      {programInfo}
+      {APL_NOTICE_COPY}
     </Notice>
   );
 };
