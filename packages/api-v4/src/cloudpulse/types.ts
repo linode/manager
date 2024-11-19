@@ -7,8 +7,8 @@ type DimensionFilterOperatorType =
   | 'startswith'
   | 'endswith'
   | null;
-type AlertDefinitionType = 'default' | 'custom';
-type AlertStatusType = 'enabled' | 'disabled';
+export type AlertDefinitionType = 'default' | 'custom';
+export type AlertStatusType = 'enabled' | 'disabled';
 export interface Dashboard {
   id: number;
   label: string;

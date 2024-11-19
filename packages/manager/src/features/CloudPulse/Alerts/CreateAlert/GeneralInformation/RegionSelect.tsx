@@ -27,7 +27,6 @@ export const CloudPulseRegionSelect = (props: CloudViewRegionSelectProps) => {
             field.onChange(value?.id);
           }}
           currentCapability={undefined}
-          disableClearable={false}
           fullWidth
           label="Region"
           loading={isLoading}

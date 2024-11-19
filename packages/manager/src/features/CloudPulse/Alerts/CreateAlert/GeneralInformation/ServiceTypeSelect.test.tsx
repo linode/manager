@@ -1,4 +1,5 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { serviceTypesFactory } from 'src/factories';
@@ -46,13 +47,13 @@ describe('ServiceTypeSelect component tests', () => {
     getAllByText('Service');
   });
 
-  it('should render service types happy path', () => {
+  it('should render service types happy path', async () => {
     renderWithThemeAndHookFormContext({
       component: <CloudPulseServiceSelect name="service_type" />,
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(
-      screen.getByRole('option', {
+      await screen.findByRole('option', {
         name: 'Linode',
       })
     ).toBeInTheDocument();
@@ -63,12 +64,14 @@ describe('ServiceTypeSelect component tests', () => {
     ).toBeInTheDocument();
   });
 
-  it('should be able to select a service type', () => {
+  it('should be able to select a service type', async () => {
     renderWithThemeAndHookFormContext({
       component: <CloudPulseServiceSelect name="service_type" />,
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'Linode' }));
+    userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Linode' })
+    );
     expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Linode');
   });
   it('should render error messages when there is an API call failure', () => {

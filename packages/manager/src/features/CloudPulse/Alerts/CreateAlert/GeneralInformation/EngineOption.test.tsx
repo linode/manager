@@ -1,4 +1,5 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -13,20 +14,22 @@ describe('EngineOption component tests', () => {
     expect(getByLabelText('Engine Option')).toBeInTheDocument();
     expect(getByTestId('engine-option')).toBeInTheDocument();
   });
-  it('should render the options happy path', () => {
+  it('should render the options happy path', async () => {
+    const user = userEvent.setup();
     renderWithThemeAndHookFormContext({
       component: <EngineOption name={'engine_type'} />,
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    expect(screen.getByRole('option', { name: 'MySQL' }));
+    user.click(screen.getByRole('button', { name: 'Open' }));
+    expect(await screen.findByRole('option', { name: 'MySQL' }));
     expect(screen.getByRole('option', { name: 'PostgreSQL' }));
   });
-  it('should be able to select an option', () => {
+  it('should be able to select an option', async () => {
+    const user = userEvent.setup();
     renderWithThemeAndHookFormContext({
       component: <EngineOption name={'engine_type'} />,
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'MySQL' }));
+    user.click(screen.getByRole('button', { name: 'Open' }));
+    await user.click(await screen.findByRole('option', { name: 'MySQL' }));
     expect(screen.getByRole('combobox')).toHaveAttribute('value', 'MySQL');
   });
 });
