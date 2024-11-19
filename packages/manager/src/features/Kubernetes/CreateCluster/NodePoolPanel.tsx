@@ -110,8 +110,12 @@ const Panel = (props: NodePoolPanelProps) => {
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
           types={extendedTypes.filter(
-            (t) => t.class !== 'nanode' && t.class !== 'gpu'
+            (t) =>
+              t.class !== 'nanode' &&
+              t.class !== 'gpu' &&
+              t.class !== 'accelerated'
           )} // No Nanodes or GPUs in clusters
+          // TODO CONNIE confirm whether accelerated should be in LKE clusters (assuming no but confirm)
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"

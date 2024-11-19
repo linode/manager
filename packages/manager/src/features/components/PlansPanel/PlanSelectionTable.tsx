@@ -10,17 +10,12 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 
+import type { PlanSelectionFilterOptionsTable } from './PlanContainer';
 import type { PlanWithAvailability } from './types';
 import type { TooltipIconStatus } from 'src/components/TooltipIcon';
 
-interface PlanSelectionFilterOptionsTable {
-  header?: string;
-  planFilter?: (plan: PlanWithAvailability) => boolean;
-}
-
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
-  planFilter?: (plan: PlanWithAvailability) => boolean;
   plans?: PlanWithAvailability[];
   renderPlanSelection: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
@@ -155,7 +150,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          renderPlanSelection(filterOptions)
+          renderPlanSelection()
         )}
       </TableBody>
     </StyledTable>

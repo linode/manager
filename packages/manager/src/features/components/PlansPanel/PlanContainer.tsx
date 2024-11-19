@@ -15,6 +15,18 @@ import type { PlanWithAvailability } from './types';
 import type { Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import type { Theme } from '@mui/material/styles';
+
+export interface PlanSelectionFilterOptionsTable {
+  header?: string;
+  planFilter?: (plan: PlanWithAvailability) => boolean;
+}
+
+interface PlanSelectionDividers {
+  flag: boolean;
+  planType: LinodeTypeClass;
+  tables: PlanSelectionFilterOptionsTable[];
+}
+
 export interface PlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
   currentPlanHeading?: string;
@@ -69,15 +81,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
     !flags.dbaasV2?.beta &&
     flags.dbaasV2?.enabled &&
     (isDatabaseCreateFlow || isDatabaseResizeFlow);
-  interface PlanSelectionDividerTable {
-    header?: string;
-    planFilter?: (plan: PlanWithAvailability) => boolean;
-  }
-  interface PlanSelectionDividers {
-    flag: boolean;
-    planType: LinodeTypeClass;
-    tables: PlanSelectionDividerTable[];
-  }
 
   /**
    * This features allows us to divide the GPU plans into two separate tables.
@@ -103,7 +106,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
   ];
 
   const renderPlanSelection = React.useCallback(
-    (filterOptions?: PlanSelectionDividerTable) => {
+    (filterOptions?: PlanSelectionFilterOptionsTable) => {
       const _plans = filterOptions?.planFilter
         ? plans.filter(filterOptions.planFilter)
         : plans;
@@ -214,7 +217,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
                         shouldDisplayNoRegionSelectedMessage
                       }
                       key={`plan-filter-${idx}`}
-                      planFilter={table.planFilter}
                       plans={plans}
                       showNetwork={showNetwork}
                       showTransfer={showTransfer}

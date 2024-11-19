@@ -97,7 +97,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
         </>
       ) : null}
       {planType === 'accelerated' && (
-        // TODO: GET THE LINK(s) pls
+        // TODO CONNIE GET THE LINK(s) pls
         <>
           <Notice spacingBottom={8} variant="warning">
             <Typography
