@@ -86,9 +86,9 @@ interface GraphDataOptionsProps {
   serviceType: string;
 
   /**
-   * status returned from react query ( loading | error | success)
+   * status returned from react query ( pending | error | success)
    */
-  status: string | undefined;
+  status: 'error' | 'pending' | 'success';
 
   /**
    * unit of the data
