@@ -179,7 +179,7 @@ export const AccessControls = (props: Props) => {
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <Button
-          buttonType="primary"
+          buttonType="outlined"
           className={classes.addAccessControlBtn}
           data-testid="button-access-control"
           disabled={disabled}

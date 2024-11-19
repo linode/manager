@@ -222,6 +222,12 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           )}
         </StyledValueGrid>
         <Grid md={4} xs={3}>
+          <StyledLabelTypography>Database name</StyledLabelTypography>
+        </Grid>
+        <StyledValueGrid md={8} xs={9}>
+          defaultdb
+        </StyledValueGrid>
+        <Grid md={4} xs={3}>
           <StyledLabelTypography>Host</StyledLabelTypography>
         </Grid>
         <StyledValueGrid md={8} xs={9}>

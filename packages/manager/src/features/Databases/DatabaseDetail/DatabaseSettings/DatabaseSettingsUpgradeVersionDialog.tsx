@@ -119,9 +119,9 @@ export const DatabaseSettingsUpgradeVersionDialog = (props: Props) => {
         Current Version: v{databaseVersion}
       </Typography>
       <Typography>
-        Please select the new MySQL version. Once you select the new version we
+        {`Please select the new ${DATABASE_ENGINE_MAP[databaseEngine]} version. Once you select the new version we
         will check it for compatibility with your current version. If it is
-        compatible you can proceed with the upgrade.
+        compatible you can proceed with the upgrade.`}
       </Typography>
 
       <FormControl sx={{ mb: theme.spacing(2) }}>

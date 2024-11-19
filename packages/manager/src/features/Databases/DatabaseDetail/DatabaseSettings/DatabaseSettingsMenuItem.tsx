@@ -68,7 +68,7 @@ export const DatabaseSettingsMenuItem = (props: Props) => {
         </Typography>
       </div>
       <Button
-        buttonType="primary"
+        buttonType="outlined"
         className={classes.sectionButton}
         data-qa-settings-button={buttonText}
         disabled={disabled}
