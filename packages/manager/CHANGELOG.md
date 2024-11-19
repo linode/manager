@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-11-19] - v1.132.1
+
+
+### Fixed:
+
+- Disable shared CPU whenever APL is enabled ([#11284](https://github.com/linode/manager/pull/11284))
+
 ## [2024-11-12] - v1.132.0
 
 
