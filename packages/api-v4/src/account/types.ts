@@ -68,6 +68,7 @@ export type AccountCapability =
   | 'CloudPulse'
   | 'Disk Encryption'
   | 'Kubernetes'
+  | 'Kubernetes Enterprise'
   | 'Linodes'
   | 'LKE HA Control Planes'
   | 'LKE Network Access Control List (IP ACL)'

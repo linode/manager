@@ -1,4 +1,5 @@
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccountBeta } from 'src/queries/account/account';
 import { useAccountBetaQuery } from 'src/queries/account/betas';
 import { getBetaStatus } from 'src/utilities/betaUtils';
 import { sortByVersion } from 'src/utilities/sort-by';
@@ -11,6 +12,7 @@ import type {
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { ExtendedType } from 'src/utilities/extendType';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
 export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
@@ -183,4 +185,35 @@ export const getLatestVersion = (
   }
 
   return { label: `${latestVersion.value}`, value: `${latestVersion.value}` };
+};
+
+/**
+ * Hook to determine if the LKE-Enterprise feature should be visible to the user.
+ * Based on the user's account capability and the feature flag.
+ *
+ * @returns {boolean, boolean} - Whether the LKE-Enterprise feature is enabled for the current user in LA and GA, respectively.
+ */
+export const useIsLkeEnterpriseEnabled = () => {
+  const flags = useFlags();
+  const { data: account } = useAccountBeta();
+
+  const isLkeEnterpriseLA = Boolean(
+    flags?.lkeEnterprise?.enabled && flags.lkeEnterprise.la
+  );
+  const isLkeEnterpriseGA = Boolean(
+    flags.lkeEnterprise?.enabled && flags.lkeEnterprise.ga
+  );
+
+  const isLkeEnterpriseLAEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise',
+    isLkeEnterpriseLA,
+    account?.capabilities ?? []
+  );
+  const isLkeEnterpriseGAEnabled = isFeatureEnabledV2(
+    'Kubernetes Enterprise',
+    isLkeEnterpriseGA,
+    account?.capabilities ?? []
+  );
+
+  return { isLkeEnterpriseLAEnabled, isLkeEnterpriseGAEnabled };
 };
