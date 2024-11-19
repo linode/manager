@@ -54,6 +54,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     showUsableStorage,
   } = props;
   const flags = useFlags();
+  const planType = plans && plans.length > 0 ? plans[0].class : undefined;
 
   const showTransferTooltip = React.useCallback(
     (cellName: string) =>
@@ -115,6 +116,9 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
               cellName === 'Storage'
             ) {
               cellName = 'Usable Storage';
+            }
+            if (isPlanCell && planType === 'accelerated') {
+              cellName = 'NETINT Quadra T1U';
             }
             return (
               <StyledTableCell

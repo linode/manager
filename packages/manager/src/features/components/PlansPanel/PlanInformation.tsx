@@ -1,9 +1,9 @@
 import { Notice } from '@linode/ui';
-import { ListItem } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { List } from 'src/components/List';
+import { ListItem } from 'src/components/ListItem';
 import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
