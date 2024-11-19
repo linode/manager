@@ -400,6 +400,9 @@ const gpuTypesRX = linodeTypeFactory.buildList(7, {
   gpus: 1,
   transfer: 5000,
 });
+const premiumTypes = linodeTypeFactory.buildList(7, {
+  class: 'premium',
+});
 const acceleratedType = linodeTypeFactory.buildList(7, {
   accelerated_devices: 1,
   class: 'accelerated',
@@ -601,6 +604,7 @@ export const handlers = [
         ...dedicatedTypes,
         ...gpuTypesAda,
         ...gpuTypesRX,
+        ...premiumTypes,
         ...acceleratedType,
         proDedicatedType,
       ])
