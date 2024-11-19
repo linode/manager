@@ -2,9 +2,10 @@
 // Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
 import { ui } from 'support/ui';
 import {
+  accountFactory,
+  linodeTypeFactory,
   regionFactory,
   regionAvailabilityFactory,
-  linodeTypeFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
@@ -12,6 +13,7 @@ import {
   mockGetRegionAvailability,
 } from 'support/intercepts/regions';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 const mockRegions = [
@@ -84,11 +86,20 @@ const mockGPUType = [
   }),
 ];
 
+const mockAcceleratedType = [
+  linodeTypeFactory.build({
+    id: 'accelerated-1',
+    label: 'accelerated-1',
+    class: 'accelerated',
+  }),
+];
+
 const mockLinodeTypes = [
   ...mockDedicatedLinodeTypes,
   ...mockHighMemoryLinodeTypes,
   ...mockSharedLinodeTypes,
   ...mockGPUType,
+  ...mockAcceleratedType,
 ];
 
 const mockRegionAvailability = [
@@ -217,6 +228,9 @@ describe('displays linode plans panel based on availability', () => {
         cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
+
+    // Confirms Accelerated tab does not show up without account availability
+    cy.findByText('Accelerated').should('not.exist');
   });
 });
 
@@ -347,6 +361,9 @@ describe('displays kubernetes plans panel based on availability', () => {
         cy.findAllByTestId('disabled-plan-tooltip').should('have.length', 0);
       });
     });
+
+    // Confirms Accelerated tab does not show up for LKE clusters
+    cy.findByText('Accelerated').should('not.exist');
   });
 });
 
@@ -393,6 +410,43 @@ describe('displays specific linode plans for GPU', () => {
         cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="gpu-1"]').should('be.disabled');
+      });
+    });
+  });
+});
+
+describe.only('Accelerated plans', () => {
+  beforeEach(() => {
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: ['NETINT Quadra T1U'],
+      })
+    ).as('getAccount');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+    mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
+      'getRegionAvailability'
+    );
+  });
+
+  it('displays Accelerated linode plans', () => {
+    cy.visitWithLogin('/linodes/create');
+    cy.wait(['@getRegions', '@getLinodeTypes', '@getAccount']);
+
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+
+    cy.findByText('Accelerated').click();
+    cy.get(linodePlansPanel).within(() => {
+      cy.findAllByRole('alert').should('have.length', 2);
+      cy.get(notices.unavailable).should('be.visible');
+
+      cy.findByRole('table', {
+        name: 'List of Linode Plans',
+      }).within(() => {
+        cy.findByText('NETINT Quadra T1U').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[id="accelerated-1"]').should('be.disabled');
       });
     });
   });
