@@ -1,6 +1,6 @@
 import { Notice, Paper, Stack } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
@@ -25,12 +25,14 @@ export const OperatingSystems = () => {
     getValues,
     setValue,
   } = useFormContext<LinodeCreateFormValues>();
-  const theme = useTheme();
 
   const queryClient = useQueryClient();
-  const [imageDeprecatedText, setImageDeprecatedText] = React.useState<
-    null | string
-  >(null);
+  const [deprecatedImage, setDeprecatedImage] = React.useState<Image | null>(
+    null
+  );
+
+  const showImageDeprecatedWarning =
+    deprecatedImage !== null && isImageDeprecated(deprecatedImage);
 
   const { field, fieldState } = useController<LinodeCreateFormValues>({
     name: 'image',
@@ -48,16 +50,7 @@ export const OperatingSystems = () => {
 
   const onChange = async (image: Image | null) => {
     field.onChange(image?.id ?? null);
-
-    let deprecatedNoticeText = null;
-    if (image && isImageDeprecated(image)) {
-      deprecatedNoticeText = `The selected ${
-        image.label
-      } will reach its end-of-life on ${formatDate(image.eol ?? '', {
-        format: 'MM/dd/yyyy',
-      })}`;
-    }
-    setImageDeprecatedText(deprecatedNoticeText);
+    setDeprecatedImage(image);
 
     if (!isLabelFieldDirty) {
       const label = await getGeneratedLinodeLabel({
@@ -85,19 +78,37 @@ export const OperatingSystems = () => {
           value={field.value}
           variant="public"
         />
-        {imageDeprecatedText && (
+        {showImageDeprecatedWarning && (
           <Notice
             dataTestId="os-distro-deprecated-image-notice"
             spacingBottom={0}
             spacingTop={16}
             variant="warning"
           >
-            <Typography fontFamily={theme.font.bold}>
-              {imageDeprecatedText}. After this date, this OS distribution will
-              no longer receive security updates or technical support. We
-              recommend selecting a newer supported version to ensure continued
-              security and stability for your linodes.
-            </Typography>
+            {deprecatedImage.eol &&
+            DateTime.fromISO(deprecatedImage.eol) > DateTime.now() ? (
+              <Typography fontFamily={(theme) => theme.font.bold}>
+                {deprecatedImage.label} will reach its end-of-life on{' '}
+                {formatDate(deprecatedImage.eol ?? '', {
+                  format: 'MM/dd/yyyy',
+                })}
+                . After this date, this OS distribution will no longer receive
+                security updates or technical support. We recommend selecting a
+                newer supported version to ensure continued security and
+                stability for your linodes.
+              </Typography>
+            ) : (
+              <Typography fontFamily={(theme) => theme.font.bold}>
+                {deprecatedImage.label} reached its end-of-life on{' '}
+                {formatDate(deprecatedImage.eol ?? '', {
+                  format: 'MM/dd/yyyy',
+                })}
+                . This OS distribution will no longer receive security updates
+                or technical support. We recommend selecting a newer supported
+                version to ensure continued security and stability for your
+                linodes.
+              </Typography>
+            )}
           </Notice>
         )}
       </Paper>
