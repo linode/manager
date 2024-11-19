@@ -400,6 +400,12 @@ const gpuTypesRX = linodeTypeFactory.buildList(7, {
   gpus: 1,
   transfer: 5000,
 });
+const acceleratedType = linodeTypeFactory.buildList(7, {
+  accelerated_devices: 1,
+  class: 'accelerated',
+  label: 'Netint Quadra T1U X',
+  transfer: 0,
+});
 const proxyAccountUser = accountUserFactory.build({
   email: 'partner@proxy.com',
   last_login: null,
@@ -595,6 +601,7 @@ export const handlers = [
         ...dedicatedTypes,
         ...gpuTypesAda,
         ...gpuTypesRX,
+        ...acceleratedType,
         proDedicatedType,
       ])
     );
@@ -2324,6 +2331,28 @@ export const handlers = [
       placement_group_type: 'anti_affinity:local',
     });
 
+    return HttpResponse.json(response);
+  }),
+  http.post('*/monitor/alert-definitions', async ({ request }) => {
+    const reqBody = await request.json();
+    const response = {
+      data: [
+        {
+          created: '2021-10-16T04:00:00',
+          created_by: 'user1',
+          id: '35892357',
+          notifications: [
+            {
+              notification_id: '42804',
+              template_name: 'notification',
+            },
+          ],
+          reqBody,
+          updated: '2021-10-16T04:00:00',
+          updated_by: 'user2',
+        },
+      ],
+    };
     return HttpResponse.json(response);
   }),
   http.get('*/monitor/services', () => {
