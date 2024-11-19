@@ -44,6 +44,7 @@ export const EventsLanding = (props: Props) => {
     events,
     fetchNextPage,
     hasNextPage,
+    isFetching,
     isFetchingNextPage,
     isLoading,
   } = useEventsInfiniteQuery(filter);
@@ -111,15 +112,13 @@ export const EventsLanding = (props: Props) => {
         </TableHead>
         <TableBody>{renderTableBody()}</TableBody>
       </Table>
-      {hasNextPage ? (
+      {!isFetching && hasNextPage && (
         <Waypoint onEnter={() => fetchNextPage()}>
           <div />
         </Waypoint>
-      ) : (
-        events &&
-        events.length > 0 && (
-          <StyledTypography>No more events to show</StyledTypography>
-        )
+      )}
+      {events && events.length > 0 && !isFetching && !hasNextPage && (
+        <StyledTypography>No more events to show</StyledTypography>
       )}
     </>
   );
