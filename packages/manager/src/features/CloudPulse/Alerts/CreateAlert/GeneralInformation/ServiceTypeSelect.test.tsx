@@ -31,6 +31,12 @@ const mockResponse = {
   ],
 };
 
+queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+  data: mockResponse,
+  isError: true,
+  isLoading: false,
+  status: 'success',
+});
 describe('ServiceTypeSelect component tests', () => {
   it('should render the Autocomplete component', () => {
     const { getAllByText, getByTestId } = renderWithThemeAndHookFormContext({
@@ -41,12 +47,6 @@ describe('ServiceTypeSelect component tests', () => {
   });
 
   it('should render service types happy path', () => {
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
     renderWithThemeAndHookFormContext({
       component: <CloudPulseServiceSelect name="service_type" />,
     });
@@ -64,12 +64,6 @@ describe('ServiceTypeSelect component tests', () => {
   });
 
   it('should be able to select a service type', () => {
-    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-      data: mockResponse,
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
     renderWithThemeAndHookFormContext({
       component: <CloudPulseServiceSelect name="service_type" />,
     });
@@ -80,9 +74,8 @@ describe('ServiceTypeSelect component tests', () => {
   it('should render error messages when there is an API call failure', () => {
     queryMocks.useCloudPulseServiceTypes.mockReturnValue({
       data: undefined,
-      isError: true,
+      error: 'an error happened',
       isLoading: false,
-      status: 'error',
     });
     renderWithThemeAndHookFormContext({
       component: <CloudPulseServiceSelect name="service_type" />,
