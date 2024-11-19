@@ -182,7 +182,9 @@ export const ContactInformation = React.memo((props: Props) => {
                 }
                 sx={(theme) => ({
                   '& svg': {
-                    color: theme.palette.primary.main,
+                    '& path': {
+                      stroke: theme.palette.primary.main,
+                    },
                   },
                   marginRight: 2,
                 })}
