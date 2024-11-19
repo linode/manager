@@ -5,6 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import {
   DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
   UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
@@ -290,7 +291,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   VPC IPv4
                 </StyledIPv4Label>
                 <StyledIPv4Item component="span" data-testid="vpc-ipv4">
-                  {configInterfaceWithVPC.ipv4.vpc}
+                  <CopyTooltip
+                    copyableText
+                    text={configInterfaceWithVPC.ipv4.vpc}
+                  />
                   <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
                     <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
                   </Box>
