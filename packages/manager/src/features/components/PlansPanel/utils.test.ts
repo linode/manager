@@ -29,6 +29,10 @@ const nanode = typeFactory.build({ class: 'nanode', id: 'g6-nanode-1' });
 const premium = typeFactory.build({ class: 'premium', id: 'g6-premium-2' });
 const highmem = typeFactory.build({ class: 'highmem', id: 'g6-highmem-1' });
 const gpu = typeFactory.build({ class: 'gpu', id: 'g6-gpu-1' });
+const accelerated = typeFactory.build({
+  class: 'accelerated',
+  id: 'accelerated-1',
+});
 
 describe('getPlanSelectionsByPlanType', () => {
   it('should return an object with plans grouped by type', () => {
@@ -60,6 +64,7 @@ describe('getPlanSelectionsByPlanType', () => {
       nanode,
       dedicated,
       prodedicated,
+      accelerated,
     ]);
     const expectedOrder = planTypeOrder;
 

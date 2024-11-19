@@ -8,7 +8,6 @@ import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { linodeFactory } from '@src/factories';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
-import { getClick, fbtClick } from 'support/helpers';
 import { getRegionById } from 'support/util/regions';
 import {
   dcPricingMockLinodeTypes,
@@ -44,7 +43,7 @@ describe('Migrate linodes', () => {
 
     ui.button.findByTitle('Enter Migration Queue').should('be.disabled');
     cy.findByText(`${initialRegion.label}`).should('be.visible');
-    getClick('[data-qa-checked="false"]');
+    cy.get('[data-qa-checked="false"]').click();
     cy.findByText(`North America: ${initialRegion.label}`).should('be.visible');
 
     ui.regionSelect.find().click();
@@ -59,7 +58,12 @@ describe('Migrate linodes', () => {
       }
     ).as('migrateReq');
 
-    fbtClick('Enter Migration Queue');
+    ui.button
+      .findByTitle('Enter Migration Queue')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
     cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
   });
 
@@ -93,7 +97,7 @@ describe('Migrate linodes', () => {
 
     ui.button.findByTitle('Enter Migration Queue').should('be.disabled');
     cy.findByText(`${initialRegion.label}`).should('be.visible');
-    getClick('[data-qa-checked="false"]');
+    cy.get('[data-qa-checked="false"]').click();
     cy.findByText(`North America: ${initialRegion.label}`).should('be.visible');
 
     ui.regionSelect.find().click();
@@ -130,7 +134,11 @@ describe('Migrate linodes', () => {
     // intercept migration request and stub it, respond with 200
     mockMigrateLinode(mockLinode.id).as('migrateReq');
 
-    fbtClick('Enter Migration Queue');
+    ui.button
+      .findByTitle('Enter Migration Queue')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
     cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
   });
 
@@ -164,11 +172,17 @@ describe('Migrate linodes', () => {
 
     ui.button.findByTitle('Enter Migration Queue').should('be.disabled');
     cy.findByText(`${initialRegion.label}`).should('be.visible');
-    getClick('[data-qa-checked="false"]');
+    cy.get('[data-qa-checked="false"]').click();
 
     // Confirm that user cannot select the Linode's current DC when migrating.
-    cy.findByText('New Region').click().type(`${initialRegion.label}{enter}`);
-    cy.findByText('No results').should('be.visible');
+    // TODO Consider refactoring this flow into its own test.
+    ui.autocomplete.findByLabel('New Region').click().type(initialRegion.id);
+
+    ui.autocompletePopper.find().within(() => {
+      cy.contains(initialRegion.id).should('not.exist');
+      cy.findByText('No results').should('be.visible');
+    });
+
     // Confirm that DC pricing information does not show up
     cy.findByText(dcPricingCurrentPriceLabel).should('not.exist');
     cy.get('[data-testid="current-price-panel"]').should('not.exist');
