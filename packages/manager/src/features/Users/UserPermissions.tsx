@@ -4,15 +4,13 @@ import {
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
-import { Box, Notice } from '@linode/ui';
-import { Paper } from '@mui/material';
+import { Box, CircleProgress, Notice, Paper } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';

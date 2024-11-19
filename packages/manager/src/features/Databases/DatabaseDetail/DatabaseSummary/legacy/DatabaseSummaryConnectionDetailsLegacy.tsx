@@ -1,15 +1,12 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
-import { Box } from '@linode/ui';
+import { Box, Button, CircleProgress, TooltipIcon } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases/databases';
@@ -36,7 +33,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
     '&[disabled]': {
       '& g': {
-        stroke: '#cdd0d5',
+        stroke: theme.tokens.color.Neutrals[30],
       },
       '&:hover': {
         backgroundColor: 'inherit',
@@ -44,7 +41,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       },
       // Override disabled background color defined for dark mode
       backgroundColor: 'transparent',
-      color: '#cdd0d5',
+      color: theme.tokens.color.Neutrals[30],
       cursor: 'default',
     },
     color: theme.palette.primary.main,
@@ -64,7 +61,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
       fontFamily: theme.font.bold,
     },
     background: theme.bg.bgAccessRowTransparentGradient,
-    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
+    border: `1px solid ${
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals[40]
+        : theme.tokens.color.Neutrals.Black
+    }`,
     padding: '8px 15px',
   },
   copyToolTip: {

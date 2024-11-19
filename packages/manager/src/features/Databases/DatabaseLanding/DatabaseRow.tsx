@@ -1,7 +1,7 @@
+import { Chip } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Chip } from 'src/components/Chip';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

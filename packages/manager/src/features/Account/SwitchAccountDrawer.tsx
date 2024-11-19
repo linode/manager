@@ -1,7 +1,6 @@
-import { Notice } from '@linode/ui';
+import { Notice, StyledLinkButton } from '@linode/ui';
 import React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Drawer } from 'src/components/Drawer';
 import { Typography } from 'src/components/Typography';
