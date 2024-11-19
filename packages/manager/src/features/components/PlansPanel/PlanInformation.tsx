@@ -6,6 +6,7 @@ import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { APLNotice } from './APLNotice';
 import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
@@ -21,13 +22,17 @@ import type { Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import type { Theme } from '@mui/material/styles';
 
-export interface PlanInformationProps {
+interface ExtendedPlanType {
+  planType: 'shared' | LinodeTypeClass;
+}
+
+export interface PlanInformationProps extends ExtendedPlanType {
   disabledClasses?: LinodeTypeClass[];
   hasMajorityOfPlansDisabled: boolean;
   hasSelectedRegion: boolean;
   hideLimitedAvailabilityBanner?: boolean;
+  isAPLEnabled?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
-  planType: LinodeTypeClass;
   regionsData?: Region[];
 }
 
@@ -37,6 +42,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     hasMajorityOfPlansDisabled,
     hasSelectedRegion,
     hideLimitedAvailabilityBanner,
+    isAPLEnabled,
     isSelectedRegionEligibleForPlan,
     planType,
     regionsData,
@@ -100,6 +106,9 @@ export const PlanInformation = (props: PlanInformationProps) => {
           hasDisabledClass={getDisabledClass('metal')}
         />
       ) : null}
+      {planType === 'shared' && isAPLEnabled ? (
+        <APLNotice dataTestId="apl-notice" />
+      ) : null}
       {planType === 'premium' ? (
         <PlansAvailabilityNotice
           hasSelectedRegion={hasSelectedRegion}
@@ -134,11 +143,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
 
 export const limitedAvailabilityBannerTestId = 'limited-availability-banner';
 
-interface ClassDescriptionCopyProps {
-  planType: 'shared' | LinodeTypeClass;
-}
-
-export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
+export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
   const { planType } = props;
   let planTypeLabel: null | string;
   let docLink: null | string;
