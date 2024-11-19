@@ -8,10 +8,10 @@ import { makeStyles } from 'tss-react/mui';
 import { Typography } from 'src/components/Typography';
 import { convertForAria } from 'src/utilities/stringUtils';
 
-import type { DrawerProps } from '@mui/material/Drawer';
+import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 import type { Theme } from '@mui/material/styles';
 
-interface Props extends DrawerProps {
+export interface DrawerProps extends _DrawerProps {
   /**
    * Whether the drawer is fetching the entity's data.
    *
@@ -40,7 +40,7 @@ interface Props extends DrawerProps {
  * - Clicking a button on the screen opens the drawer.
  * - Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
  */
-export const Drawer = (props: Props) => {
+export const Drawer = (props: DrawerProps) => {
   const { classes, cx } = useStyles();
 
   const { children, isFetching, onClose, open, title, wide, ...rest } = props;

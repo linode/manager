@@ -1,17 +1,18 @@
+import { Button } from '@linode/ui';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Dialog } from './Dialog';
+import { Drawer } from './Drawer';
 
-import type { DialogProps } from './Dialog';
+import type { DrawerProps } from './Drawer';
 
-describe('Dialog', () => {
-  const defaultArgs: DialogProps = {
+describe('Drawer', () => {
+  const defaultArgs: DrawerProps = {
     onClose: vi.fn(),
     open: false,
-    title: 'This is a Dialog',
+    title: 'This is a Drawer',
   };
 
   it.each([
@@ -19,42 +20,43 @@ describe('Dialog', () => {
     ['render', true],
   ])('should %s a Dialog with title when open is %s', (_, isOpen) => {
     const { queryByTestId, queryByText } = renderWithTheme(
-      <Dialog {...defaultArgs} open={isOpen} />
+      <Drawer {...defaultArgs} open={isOpen} />
     );
 
-    const title = queryByText('This is a Dialog');
-    const dialog = queryByTestId('drawer');
+    const title = queryByText('This is a Drawer');
+    const drawer = queryByTestId('drawer');
 
     if (isOpen) {
       expect(title).toBeInTheDocument();
-      expect(dialog).toBeInTheDocument();
+      expect(drawer).toBeInTheDocument();
     } else {
       expect(title).not.toBeInTheDocument();
-      expect(dialog).not.toBeInTheDocument();
+      expect(drawer).not.toBeInTheDocument();
     }
   });
 
   it('should render a Dialog with children if provided', () => {
     const { getByText } = renderWithTheme(
-      <Dialog {...defaultArgs} open={true}>
+      <Drawer {...defaultArgs} open={true}>
         <p>Child items can go here!</p>
-      </Dialog>
+      </Drawer>
     );
 
     expect(getByText('Child items can go here!')).toBeInTheDocument();
   });
 
-  it('should render a Dialog with subtitle if provided', () => {
-    const { getByText } = renderWithTheme(
-      <Dialog {...defaultArgs} open={true} subtitle="This is a subtitle" />
-    );
-
-    expect(getByText('This is a subtitle')).toBeInTheDocument();
-  });
-
   it('should call onClose when the Dialog close button is clicked', async () => {
     const { getByRole } = renderWithTheme(
-      <Dialog {...defaultArgs} open={true} />
+      <Drawer {...defaultArgs} open={true}>
+        <p>Child items can go here!</p>
+        <Button
+          onClick={
+            defaultArgs.onClose as React.MouseEventHandler<HTMLButtonElement>
+          }
+        >
+          Close
+        </Button>
+      </Drawer>
     );
 
     const closeButton = getByRole('button', { name: 'Close' });
@@ -65,21 +67,9 @@ describe('Dialog', () => {
     });
   });
 
-  it('should render a Dialog with an error message if provided', () => {
-    const { getByText } = renderWithTheme(
-      <Dialog
-        {...defaultArgs}
-        error="Error that will be shown in the dialog."
-        open={true}
-      />
-    );
-
-    expect(getByText('Error that will be shown in the dialog.')).toBeVisible();
-  });
-
   it('should render a Dialog with a loading spinner if isFetching is true', () => {
     const { getByRole } = renderWithTheme(
-      <Dialog {...defaultArgs} isFetching open={true} />
+      <Drawer {...defaultArgs} isFetching open={true} />
     );
 
     expect(getByRole('progressbar')).toBeVisible();
