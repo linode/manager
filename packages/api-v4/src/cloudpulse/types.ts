@@ -158,8 +158,8 @@ export interface CreateAlertDefinitionPayload {
 export interface CreateAlertDefinitionForm
   extends CreateAlertDefinitionPayload {
   region: string;
-  service_type: string;
-  engine_type: string;
+  service_type: string | null;
+  engine_type: string | null;
 }
 export interface MetricCriteria {
   metric: string;

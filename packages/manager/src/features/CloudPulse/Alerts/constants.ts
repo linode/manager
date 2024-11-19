@@ -10,3 +10,14 @@ export const alertSeverityOptions: Item<string, AlertSeverityType>[] = [
   { label: 'Medium', value: 1 },
   { label: 'Severe', value: 0 },
 ];
+
+export const engineTypeOptions: Item<string, string>[] = [
+  {
+    label: 'MySQL',
+    value: 'mysql',
+  },
+  {
+    label: 'PostgreSQL',
+    value: 'postgresql',
+  },
+];

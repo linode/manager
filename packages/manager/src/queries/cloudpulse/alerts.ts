@@ -9,10 +9,10 @@ import type {
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError } from '@linode/api-v4/lib/types';
 
-export const useCreateAlertDefinition = () => {
+export const useCreateAlertDefinition = (service_type: string) => {
   const queryClient = useQueryClient();
   return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>({
-    mutationFn: (data) => createAlertDefinition(data),
+    mutationFn: (data) => createAlertDefinition(data, service_type),
     onSuccess() {
       queryClient.invalidateQueries(queryFactory.alerts);
     },

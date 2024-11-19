@@ -13,10 +13,13 @@ import { Typography } from 'src/components/Typography';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
+import { EngineOption } from './GeneralInformation/EngineOption';
+import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
+import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
+import { getCreateAlertPayload } from './utilities';
 
 import type {
   CreateAlertDefinitionForm,
-  CreateAlertDefinitionPayload,
   MetricCriteria,
   TriggerCondition,
 } from '@linode/api-v4/lib/cloudpulse/types';
@@ -37,12 +40,12 @@ const criteriaInitialValues: MetricCriteria[] = [
 ];
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
-  engine_type: '',
+  engine_type: null,
   label: '',
   region: '',
   resource_ids: [],
   rule_criteria: { rules: criteriaInitialValues },
-  service_type: '',
+  service_type: null,
   severity: null,
   triggerCondition: triggerConditionInitialValues,
 };
@@ -64,19 +67,29 @@ export const CreateAlertDefinition = () => {
   const alertCreateExit = () =>
     history.push('/monitor/cloudpulse/alerts/definitions');
 
-  const formMethods = useForm<CreateAlertDefinitionPayload>({
+  const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
     mode: 'onBlur',
     resolver: yupResolver(createAlertDefinitionSchema),
   });
 
-  const { control, formState, handleSubmit, setError } = formMethods;
+  const {
+    control,
+    formState,
+    getValues,
+    handleSubmit,
+    setError,
+    watch,
+  } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: createAlert } = useCreateAlertDefinition();
+  const { mutateAsync: createAlert } = useCreateAlertDefinition(
+    getValues('service_type')!
+  );
 
+  const serviceWatcher = watch('service_type');
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await createAlert(values);
+      await createAlert(getCreateAlertPayload(values));
       enqueueSnackbar('Alert successfully created', {
         variant: 'success',
       });
@@ -132,6 +145,9 @@ export const CreateAlertDefinition = () => {
             control={control}
             name="description"
           />
+          <CloudPulseServiceSelect name="service_type" />
+          {serviceWatcher === 'dbaas' && <EngineOption name={'engine_type'} />}
+          <CloudPulseRegionSelect name="region" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <ActionsPanel
             primaryButtonProps={{
