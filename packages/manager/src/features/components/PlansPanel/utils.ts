@@ -302,7 +302,7 @@ export const extractPlansInformation = ({
         )
       );
       const planIsTooSmallForAPL =
-        isAPLEnabled && Boolean(plan.memory < 8000 || plan.vcpus < 4);
+        isAPLEnabled && Boolean(plan.memory < 16000 || plan.vcpus < 4);
 
       return {
         ...plan,

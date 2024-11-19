@@ -69,6 +69,9 @@ export const KubernetesPlansPanel = (props: Props) => {
     Boolean(flags.soldOutChips) && selectedRegionId !== undefined
   );
 
+  const isPlanDisabledByAPL = (plan: 'shared' | LinodeTypeClass) =>
+    plan === 'shared' && Boolean(isAPLEnabled);
+
   const _types = types.filter(
     (type) =>
       !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
@@ -105,10 +108,14 @@ export const KubernetesPlansPanel = (props: Props) => {
                 )}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
+                isAPLEnabled={isAPLEnabled}
                 planType={plan}
                 regionsData={regionsData}
               />
               <KubernetesPlanContainer
+                wholePanelIsDisabled={
+                  isPlanPanelDisabled(plan) || isPlanDisabledByAPL(plan)
+                }
                 allDisabledPlans={allDisabledPlans}
                 getTypeCount={getTypeCount}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
@@ -118,7 +125,6 @@ export const KubernetesPlansPanel = (props: Props) => {
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionId}
                 updatePlanCount={updatePlanCount}
-                wholePanelIsDisabled={isPlanPanelDisabled(plan)}
               />
             </>
           );
