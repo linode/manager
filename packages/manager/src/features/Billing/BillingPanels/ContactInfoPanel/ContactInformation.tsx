@@ -2,9 +2,11 @@ import { Box, TooltipIcon, VisibilityTooltip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
+import { useState } from 'react';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
@@ -21,7 +23,6 @@ import {
 import BillingContactDrawer from './EditBillingContactDrawer';
 
 import type { Profile } from '@linode/api-v4';
-import { useState } from 'react';
 
 interface Props {
   address1: string;
@@ -164,38 +165,47 @@ export const ContactInformation = React.memo((props: Props) => {
       <BillingPaper data-qa-contact-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>
-          <BillingActionButton
-            onClick={() => {
-              history.push('/account/billing/edit');
-              handleEditDrawerOpen();
-            }}
-            tooltipText={getRestrictedResourceText({
-              includeContactInfo: false,
-              isChildUser,
-              resourceType: 'Account',
-            })}
-            data-testid="edit-contact-info"
-            disableFocusRipple
-            disableRipple
-            disableTouchRipple
-            disabled={isReadOnly}
-          >
-            {EDIT_BILLING_CONTACT}
-          </BillingActionButton>
+          <Box display="flex" marginLeft="auto">
+            {preferences?.maskSensitiveData && (
+              <VisibilityTooltip
+                handleClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
+                isVisible={Boolean(!isContactInfoMasked)}
+                sx={{ marginRight: 2 }}
+              />
+            )}
+            <BillingActionButton
+              onClick={() => {
+                history.push('/account/billing/edit');
+                handleEditDrawerOpen();
+              }}
+              tooltipText={getRestrictedResourceText({
+                includeContactInfo: false,
+                isChildUser,
+                resourceType: 'Account',
+              })}
+              data-testid="edit-contact-info"
+              disableFocusRipple
+              disableRipple
+              disableTouchRipple
+              disabled={isReadOnly}
+            >
+              {EDIT_BILLING_CONTACT}
+            </BillingActionButton>
+          </Box>
         </BillingBox>
-        {isContactInfoMasked ? (
+        {preferences?.maskSensitiveData && isContactInfoMasked ? (
           <Grid
             container
             display="flex"
             flexDirection="row"
-            padding={0}
             marginBottom={1}
+            padding={0}
           >
-            <Typography alignSelf="center">This data is masked.</Typography>
-            <VisibilityTooltip
-              handleClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
-              isVisible={false}
-            />
+            <Typography alignSelf="center">
+              This data is sensitive and masked for privacy. To turn off this
+              setting app-wide, go to{' '}
+              <Link to="/profile/settings">profile settings</Link>.
+            </Typography>
           </Grid>
         ) : (
           <Grid container display="flex" flexDirection="row" spacing={2}>
