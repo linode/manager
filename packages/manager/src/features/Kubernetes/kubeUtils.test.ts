@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 
 import {
   accountBetaFactory,
@@ -6,15 +6,48 @@ import {
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { extendType } from 'src/utilities/extendType';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   getLatestVersion,
   getTotalClusterMemoryCPUAndStorage,
   useAPLAvailability,
+  useIsLkeEnterpriseEnabled,
 } from './kubeUtils';
+
+const queryMocks = vi.hoisted(() => ({
+  useAccountBeta: vi.fn().mockReturnValue({}),
+  useAccountBetaQuery: vi.fn().mockReturnValue({}),
+  useFlags: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/account/account', () => {
+  const actual = vi.importActual('src/queries/account/account');
+  return {
+    ...actual,
+    useAccountBeta: queryMocks.useAccountBeta,
+  };
+});
+
+vi.mock('src/queries/account/betas', () => {
+  const actual = vi.importActual('src/queries/account/betas');
+  return {
+    ...actual,
+    useAccountBetaQuery: queryMocks.useAccountBetaQuery,
+  };
+});
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
+
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
@@ -73,25 +106,26 @@ describe('helper functions', () => {
       });
     });
   });
+
   describe('APL availability', () => {
     it('should return true if the apl flag is true and beta is active', async () => {
       const accountBeta = accountBetaFactory.build({
         enrolled: '2023-01-15T00:00:00Z',
         id: 'apl',
       });
-      server.use(
-        http.get('*/account/betas/apl', () => {
-          return HttpResponse.json(accountBeta);
-        })
-      );
-      const { result } = renderHook(() => useAPLAvailability(), {
-        wrapper: (ui) => wrapWithTheme(ui, { flags: { apl: true } }),
+
+      queryMocks.useAccountBetaQuery.mockReturnValue({
+        data: accountBeta,
       });
-      await waitFor(() => {
-        expect(result.current.showAPL).toBe(true);
+      queryMocks.useFlags.mockReturnValue({
+        apl: true,
       });
+
+      const { result } = renderHook(() => useAPLAvailability());
+      expect(result.current.showAPL).toBe(true);
     });
   });
+
   describe('getLatestVersion', () => {
     it('should return the correct latest version from a list of versions', () => {
       const versions = [
@@ -125,6 +159,71 @@ describe('helper functions', () => {
     it('should return default fallback value when called with empty versions', () => {
       const result = getLatestVersion([]);
       expect(result).toEqual({ label: '', value: '' });
+    });
+  });
+});
+
+describe('useIsLkeEnterpriseEnabled', () => {
+  it('returns false if the account does not have the capability', () => {
+    queryMocks.useAccountBeta.mockReturnValue({
+      data: {
+        capabilities: [],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      lkeEnterprise: {
+        enabled: true,
+        ga: true,
+        la: true,
+      },
+    });
+
+    const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+    expect(result.current).toStrictEqual({
+      isLkeEnterpriseGAEnabled: false,
+      isLkeEnterpriseLAEnabled: false,
+    });
+  });
+
+  it('returns true for LA if the account has the capability + enabled LA feature flag values', () => {
+    queryMocks.useAccountBeta.mockReturnValue({
+      data: {
+        capabilities: ['Kubernetes Enterprise'],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      lkeEnterprise: {
+        enabled: true,
+        ga: false,
+        la: true,
+      },
+    });
+
+    const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+    expect(result.current).toStrictEqual({
+      isLkeEnterpriseGAEnabled: false,
+      isLkeEnterpriseLAEnabled: true,
+    });
+  });
+
+  it('returns true for GA if the account has the capability + enabled GA feature flag values', () => {
+    queryMocks.useAccountBeta.mockReturnValue({
+      data: {
+        capabilities: ['Kubernetes Enterprise'],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      lkeEnterprise: {
+        enabled: true,
+        ga: true,
+        la: true,
+      },
+    });
+
+    const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+    expect(result.current).toStrictEqual({
+      isLkeEnterpriseGAEnabled: true,
+      isLkeEnterpriseLAEnabled: true,
     });
   });
 });

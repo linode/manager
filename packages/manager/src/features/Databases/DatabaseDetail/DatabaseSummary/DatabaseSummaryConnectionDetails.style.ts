@@ -19,7 +19,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
     '&[disabled]': {
       '& g': {
-        stroke: '#cdd0d5',
+        stroke: theme.tokens.color.Neutrals[30],
       },
       '&:hover': {
         backgroundColor: 'inherit',
@@ -27,7 +27,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       },
       // Override disabled background color defined for dark mode
       backgroundColor: 'transparent',
-      color: '#cdd0d5',
+      color: theme.tokens.color.Neutrals[30],
       cursor: 'default',
     },
     color: theme.palette.primary.main,
@@ -47,7 +47,11 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       fontFamily: theme.font.bold,
     },
     background: theme.tokens.interaction.Background.Secondary,
-    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
+    border: `1px solid ${
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals[40]
+        : theme.tokens.color.Neutrals.Black
+    }`,
     padding: `${theme.spacing(1)} 15px`,
   },
   copyToolTip: {

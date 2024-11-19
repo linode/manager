@@ -1,7 +1,6 @@
-import { Tooltip } from '@linode/ui';
+import { Tooltip, Chip } from '@linode/ui';
 import * as React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { StyledItemWithPlusChip } from 'src/components/RemovableSelectionsList/RemovableSelectionsList.style';
 
 export const remainingDataLengthChip = 'remaining-data-length-chip';

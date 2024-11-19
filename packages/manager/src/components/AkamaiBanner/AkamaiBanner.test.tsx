@@ -1,9 +1,9 @@
+import { Button } from '@linode/ui';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Button } from '../Button/Button';
 import { AkamaiBanner } from './AkamaiBanner';
 
 import type { Flags } from 'src/featureFlags';

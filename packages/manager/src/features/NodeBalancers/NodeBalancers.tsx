@@ -1,7 +1,7 @@
+import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 
 const NodeBalancerDetail = React.lazy(() =>
