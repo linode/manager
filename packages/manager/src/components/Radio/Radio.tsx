@@ -24,8 +24,8 @@ import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
  */
 export const Radio = (props: RadioProps) => {
   const sizeInPixels: Record<string, string> = {
-    medium: '25px',
-    small: '15px',
+    medium: '20px',
+    small: '16px',
   };
   const iconDimension = sizeInPixels[props.size ?? 'medium'];
   return (
