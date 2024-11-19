@@ -1,4 +1,4 @@
-import { TooltipIcon } from '@linode/ui';
+import { TooltipIcon } from '../TooltipIcon';
 import _Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
