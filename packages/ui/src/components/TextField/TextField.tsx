@@ -5,14 +5,13 @@ import {
   InputAdornment,
   InputLabel,
   TooltipIcon,
+  convertToKebabCase,
 } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
 import { clamp } from 'ramda';
 import * as React from 'react';
-
-import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 import type { BoxProps, TooltipProps } from '@linode/ui';
 import type { StandardTextFieldProps } from '@mui/material/TextField';

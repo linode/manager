@@ -1,10 +1,9 @@
-import { Box, Button } from '@linode/ui';
+import { Box, Button, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Minus from 'src/assets/icons/LKEminusSign.svg';
 import Plus from 'src/assets/icons/LKEplusSign.svg';
-import { TextField } from 'src/components/TextField';
 
 const sxTextFieldBase = {
   '&::-webkit-inner-spin-button': {

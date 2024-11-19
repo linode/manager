@@ -1,4 +1,4 @@
-import { FormHelperText, InputAdornment, Notice } from '@linode/ui';
+import { FormHelperText, InputAdornment, Notice, TextField } from '@linode/ui';
 import {
   CreateLinodeDiskFromImageSchema,
   CreateLinodeDiskSchema,
@@ -11,7 +11,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
-import { TextField } from 'src/components/TextField';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useAllLinodeDisksQuery,

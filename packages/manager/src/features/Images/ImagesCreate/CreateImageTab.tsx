@@ -1,5 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, Notice, Paper, Stack, TooltipIcon } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+  TooltipIcon,
+} from '@linode/ui';
 import { createImageSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -12,7 +20,6 @@ import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/co
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';

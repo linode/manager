@@ -2,7 +2,7 @@ import {
   createDomainRecord,
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
-import { Notice } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import produce from 'immer';
 import {
   cond,
@@ -20,7 +20,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { TextField } from 'src/components/TextField';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
