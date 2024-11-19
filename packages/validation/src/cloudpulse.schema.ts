@@ -16,7 +16,7 @@ const metricCriteria = object({
   aggregation_type: string().required('Aggregation type is required.'),
   operator: string().required('Criteria Operator is required.'),
   threshold: number()
-    .required('Threshold value is require.')
+    .required('Threshold value is required.')
     .min(0, 'Threshold value cannot be negative.'),
   dimension_filters: array().of(dimensionFilters).notRequired(),
 });
@@ -37,7 +37,7 @@ export const createAlertDefinitionSchema = object().shape({
   description: string().optional(),
   region: string().required('Region is required.'),
   engine_type: engineOptionValidation,
-  service_type: string().required('Service type is required.').nullable(),
+  service_type: string().required('Service is required.').nullable(),
   resource_ids: array().of(string()).min(1, 'At least one resource is needed.'),
   severity: string().required('Severity is required.').nullable(),
   criteria: array()
