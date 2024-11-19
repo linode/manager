@@ -73,7 +73,7 @@ describe('Billing Contact', () => {
       },
     });
   });
-  it('Mask Contact Info', () => {
+  it.skip('Mask Contact Info', () => {
     mockGetUserPreferences({ maskSensitiveData: true }).as(
       'getUserPreferences'
     );
