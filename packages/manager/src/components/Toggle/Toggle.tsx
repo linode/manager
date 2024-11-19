@@ -1,9 +1,11 @@
-import Switch, { SwitchProps } from '@mui/material/Switch';
+import { TooltipIcon } from '@linode/ui';
+import Switch from '@mui/material/Switch';
 import * as React from 'react';
 
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+
+import type { SwitchProps } from '@mui/material/Switch';
 
 export interface ToggleProps extends SwitchProps {
   /**
