@@ -27,7 +27,7 @@ describe('Placement Groups navigation', () => {
   /*
    * - Confirm navigation patterns to the create drawer
    */
-  it.only('can navigate to a placement group details page', () => {
+  it('can navigate to a placement group details page', () => {
     cy.visitWithLogin('/placement-groups');
 
     ui.button

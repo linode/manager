@@ -1,9 +1,8 @@
-import { ObjectStorageKeyBucketAccess } from '@linode/api-v4/lib/object-storage/types';
+import { TooltipIcon } from '@linode/ui';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Toggle } from 'src/components/Toggle/Toggle';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
@@ -11,7 +10,9 @@ import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
-import { MODE } from './types';
+
+import type { MODE } from './types';
+import type { ObjectStorageKeyBucketAccess } from '@linode/api-v4/lib/object-storage/types';
 
 type LabelWithTooltipProps = {
   labelText: string;

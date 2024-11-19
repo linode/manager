@@ -1,10 +1,10 @@
+import { TooltipIcon } from '@linode/ui';
 import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -12,7 +12,7 @@ import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 
 import type { PlanSelectionFilterOptionsTable } from './PlanContainer';
 import type { PlanWithAvailability } from './types';
-import type { TooltipIconStatus } from 'src/components/TooltipIcon';
+import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;

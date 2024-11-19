@@ -36,6 +36,18 @@ export const getAccountInfo = () => {
 };
 
 /**
+ * getAccountInfoBeta
+ *
+ * Return beta endpoint account information,
+ * including contact and billing info.
+ *
+ * @TODO LKE-E - M3-8838: Clean up after released to GA, if not otherwise in use
+ */
+export const getAccountInfoBeta = () => {
+  return Request<Account>(setURL(`${BETA_API_ROOT}/account`), setMethod('GET'));
+};
+
+/**
  * getNetworkUtilization
  *
  * Return your current network transfer quota and usage.
