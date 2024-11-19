@@ -49,6 +49,8 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
+const flags : Partial<Flags>= {aclp: { enabled: true, beta: true}}
+
 const {
   metrics,
   id,
@@ -122,7 +124,7 @@ const getWidgetLegendRowValuesFromResponse = (
 ) => {
   // Generate graph data using the provided parameters
   const graphData = generateGraphData({
-    flags: { enabled: true } as Partial<Flags>,
+    flags,
     label: label,
     metricsList: responsePayload,
     resources: [
@@ -164,9 +166,7 @@ const databaseMock: Database = databaseFactory.build({
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
-    mockAppendFeatureFlags({
-      aclp: { beta: true, enabled: true },
-    });
+    mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
     mockGetLinodes([mockLinode]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
