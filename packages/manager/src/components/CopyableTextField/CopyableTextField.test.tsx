@@ -1,9 +1,12 @@
-import React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-import { CopyableTextField } from './CopyableTextField';
-import { downloadFile } from 'src/utilities/downloadFile';
-import { CopyableTextFieldProps } from './CopyableTextField';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+
+import { downloadFile } from 'src/utilities/downloadFile';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { CopyableTextField } from './CopyableTextField';
+
+import type { CopyableTextFieldProps } from './CopyableTextField';
 
 vi.mock('src/utilities/downloadFile', () => ({
   downloadFile: vi.fn(),
@@ -16,13 +19,11 @@ const defaultProps: CopyableTextFieldProps = {
   value: mockValue,
 };
 
-const setup = (props = {}) => {
-  return renderWithTheme(<CopyableTextField {...defaultProps} {...props} />);
-};
-
 describe('CopyableTextField', () => {
   it('should render label and CopyableText', () => {
-    const { getByRole } = setup();
+    const { getByRole } = renderWithTheme(
+      <CopyableTextField {...defaultProps} />
+    );
 
     const textbox = getByRole('textbox', { name: mockLabel });
 
@@ -34,7 +35,9 @@ describe('CopyableTextField', () => {
   });
 
   it('should render the copy icon button and tooltip and allow user to copy the Text', async () => {
-    const { findByRole, getByRole } = setup();
+    const { findByRole, getByRole } = renderWithTheme(
+      <CopyableTextField {...defaultProps} />
+    );
 
     const copyIcon = getByRole('button', {
       name: `Copy ${mockValue} to clipboard`,
@@ -50,7 +53,9 @@ describe('CopyableTextField', () => {
   });
 
   it('should render the download icon button and tooltip and allow user to download the Text File', async () => {
-    const { findByRole, getByRole } = setup({ showDownloadIcon: true });
+    const { findByRole, getByRole } = renderWithTheme(
+      <CopyableTextField showDownloadIcon {...defaultProps} />
+    );
 
     const downloadIcon = getByRole('button', { name: `Download ${mockValue}` });
 
@@ -65,7 +70,9 @@ describe('CopyableTextField', () => {
   });
 
   it('should not render any icon when hideIcons is true', () => {
-    const { queryByRole } = setup({ hideIcons: true });
+    const { queryByRole } = renderWithTheme(
+      <CopyableTextField hideIcons {...defaultProps} />
+    );
 
     const copyIcon = queryByRole('button', {
       name: `Copy ${mockValue} to clipboard`,
