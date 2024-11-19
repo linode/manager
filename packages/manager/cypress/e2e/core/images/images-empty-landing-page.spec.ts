@@ -65,9 +65,6 @@ describe('Images empty landing page', () => {
    * - Confirms that hovering "Create Image" button shows a Warning for restricted user.
    */
   it('checks restricted user has no access to create Image on Image landing page', () => {
-    // Assert that List of Images table not exist
-    cy.get('table[aria-label="List of Images"]').should('not.exist');
-
     // object to create a mockProfile for non-restricted user
     const mockProfile = profileFactory.build({
       username: randomLabel(),
@@ -97,6 +94,9 @@ describe('Images empty landing page', () => {
     cy.wait('@getImages');
     cy.url().should('endWith', '/images');
 
+    // Assert that List of Images table not exist
+    cy.get('table[aria-label="List of Images"]').should('not.exist');
+
     // confirms 'Create Image' button is disabled
     ui.button
       .findByTitle('Create Image')
@@ -110,4 +110,8 @@ describe('Images empty landing page', () => {
       )
       .should('be.visible');
   });
+
+  // checks for reference section on empty page
+  cy.findByText('Getting Started Guides').should('be.visible');
+  cy.findByText('Video Playlist').should('be.visible');
 });
