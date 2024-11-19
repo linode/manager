@@ -109,9 +109,9 @@ describe('Images empty landing page', () => {
         "You don't have permissions to create Images. Please contact your account administrator to request the necessary permissions."
       )
       .should('be.visible');
-  });
 
-  // checks for reference section on empty page
-  cy.findByText('Getting Started Guides').should('be.visible');
-  cy.findByText('Video Playlist').should('be.visible');
+    // checks for reference section on empty page
+    cy.findByText('Getting Started Guides').should('be.visible');
+    cy.findByText('Video Playlist').should('be.visible');
+  });
 });
