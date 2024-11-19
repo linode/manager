@@ -54,17 +54,6 @@ const config: StorybookConfig = {
       define: {
         'process.env': {},
       },
-      optimizeDeps: {
-        include: [
-          '@storybook/react',
-          '@storybook/react-vite',
-          'react',
-          'react-dom',
-        ],
-        esbuildOptions: {
-          target: 'esnext',
-        },
-      },
     });
   },
 };

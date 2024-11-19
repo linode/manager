@@ -61,7 +61,7 @@ type Story = StoryObj<typeof Dialog>;
 export const Default: Story = {
   render: (args) => (
     <Dialog {...args}>
-      <div>A most sober dialog, with a title and a subtitle.</div>
+      <div>This a basic dialog with children in it.</div>
     </Dialog>
   ),
 };
