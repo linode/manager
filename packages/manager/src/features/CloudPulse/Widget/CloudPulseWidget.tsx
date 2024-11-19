@@ -243,7 +243,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   let legendRows: MetricsDisplayRow[] = [];
   let currentUnit = unit;
   let areas: AreaProps[] = [];
-  const variant: ChartVariant = widget.chart_type === 'line' ? 'line' : 'area';
+  const variant: ChartVariant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       flags,
