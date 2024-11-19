@@ -168,11 +168,29 @@ export const ContactInformation = React.memo((props: Props) => {
           <Box display="flex" marginLeft="auto">
             {preferences?.maskSensitiveData && (
               <VisibilityTooltip
+                label={
+                  <BillingActionButton
+                    disableFocusRipple
+                    disableRipple
+                    disableTouchRipple
+                    disabled={isReadOnly}
+                    onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
+                    sx={{ marginLeft: 1 }}
+                  >
+                    {isContactInfoMasked ? 'Show' : 'Hide'}
+                  </BillingActionButton>
+                }
+                sx={(theme) => ({
+                  '& svg': {
+                    color: theme.palette.primary.main,
+                  },
+                  marginRight: 2,
+                })}
                 handleClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
                 isVisible={Boolean(!isContactInfoMasked)}
-                sx={{ marginRight: 2 }}
               />
             )}
+
             <BillingActionButton
               onClick={() => {
                 history.push('/account/billing/edit');
