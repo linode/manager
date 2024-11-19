@@ -224,6 +224,11 @@ export const PlanContainer = (props: PlanContainerProps) => {
               })
             ) : (
               <PlanSelectionTable
+                // TODO CONNIE:make this less hacky and more customizable
+                filterOptions={{
+                  header:
+                    planType === 'accelerated' ? 'NETINT Quadra T1U' : 'Plan',
+                }}
                 shouldDisplayNoRegionSelectedMessage={
                   shouldDisplayNoRegionSelectedMessage
                 }

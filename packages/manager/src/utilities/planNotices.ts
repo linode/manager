@@ -55,6 +55,7 @@ export const plansNoticesUtils = (props: PremiumPlanInfoProps) => {
 /**
  * Maps the plan type to the capability name
  * We only need to map the GPU and Premium plans for our purposes (notices) but this can be expanded
+ * *** TODO Connie double check if accelerated will only be available in a few regions or not
  * @param planType
  * @returns {Capabilities} the capability name
  */
@@ -67,6 +68,9 @@ export const getCapabilityFromPlanType = (
     }
     case 'premium': {
       return 'Premium Plans';
+    }
+    case 'accelerated': {
+      return 'NETINT Quadra T1U';
     }
     default: {
       return 'Linodes';
