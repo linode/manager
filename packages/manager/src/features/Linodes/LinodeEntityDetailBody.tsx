@@ -5,6 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { HashLink } from 'react-router-hash-link';
 
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import {
   DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY as UNENCRYPTED_LKE_LINODE_GUIDANCE_COPY,
   UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY,
@@ -22,16 +23,15 @@ import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePools
 import {
   StyledBodyGrid,
   StyledColumnLabelGrid,
+  StyledCopyTooltip,
+  StyledIPv4Box,
+  StyledIPv4Item,
+  StyledIPv4Label,
   StyledLabelBox,
   StyledListItem,
-  StyledIPv4Label,
-  StyledIPv4Item,
   StyledSummaryGrid,
   StyledVPCBox,
-  StyledCopyTooltip,
-  StyledGradientDiv,
   sxLastListItem,
-  StyledIPv4Box,
 } from './LinodeEntityDetail.styles';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -45,7 +45,6 @@ import type {
 } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet } from '@linode/api-v4/lib/vpcs';
 import type { TypographyProps } from 'src/components/Typography';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -256,10 +255,10 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               margin: 0,
               padding: '0 0 8px 0',
               [theme.breakpoints.down('md')]: {
+                alignItems: 'start',
                 display: 'flex',
                 flexDirection: 'column',
                 paddingLeft: '8px',
-                alignItems: 'start',
               },
             }}
             alignItems="center"
@@ -292,13 +291,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   VPC IPv4
                 </StyledIPv4Label>
                 <StyledIPv4Item component="span" data-testid="vpc-ipv4">
-                  <StyledGradientDiv>
-                    <CopyTooltip
-                      copyableText
-                      text={configInterfaceWithVPC.ipv4.vpc}
-                    />
-                  </StyledGradientDiv>
-                  <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                  <CopyTooltip
+                    copyableText
+                    text={configInterfaceWithVPC.ipv4.vpc}
+                  />
+                  <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
+                    <StyledCopyTooltip text={configInterfaceWithVPC.ipv4.vpc} />
+                  </Box>
                 </StyledIPv4Item>
               </StyledIPv4Box>
             )}
