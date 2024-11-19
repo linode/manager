@@ -11,36 +11,34 @@ export interface CloudViewRegionSelectProps {
   name: string;
 }
 
-export const CloudPulseRegionSelect = React.memo(
-  (props: CloudViewRegionSelectProps) => {
-    const { name } = props;
-    const { data: regions, isError, isLoading } = useRegionsQuery();
-    const { control } = useFormContext();
-    return (
-      <Controller
-        render={({ field, fieldState }) => (
-          <RegionSelect
-            errorText={
-              fieldState.error?.message ??
-              (isError ? 'Failed to fetch Region.' : '')
-            }
-            onChange={(_, value) => {
-              field.onChange(value?.id);
-            }}
-            currentCapability={undefined}
-            disableClearable={false}
-            fullWidth
-            label="Region"
-            loading={isLoading}
-            placeholder="Select a Region"
-            regions={regions ?? []}
-            textFieldProps={{ onBlur: field.onBlur }}
-            value={field.value}
-          />
-        )}
-        control={control}
-        name={name}
-      />
-    );
-  }
-);
+export const CloudPulseRegionSelect = (props: CloudViewRegionSelectProps) => {
+  const { name } = props;
+  const { data: regions, isError, isLoading } = useRegionsQuery();
+  const { control } = useFormContext();
+  return (
+    <Controller
+      render={({ field, fieldState }) => (
+        <RegionSelect
+          errorText={
+            fieldState.error?.message ??
+            (isError ? 'Failed to fetch Region.' : '')
+          }
+          onChange={(_, value) => {
+            field.onChange(value?.id);
+          }}
+          currentCapability={undefined}
+          disableClearable={false}
+          fullWidth
+          label="Region"
+          loading={isLoading}
+          placeholder="Select a Region"
+          regions={regions ?? []}
+          textFieldProps={{ onBlur: field.onBlur }}
+          value={field.value}
+        />
+      )}
+      control={control}
+      name={name}
+    />
+  );
+};
