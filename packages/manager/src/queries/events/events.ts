@@ -52,7 +52,7 @@ export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
       if (allPages.length === 1 && lastPage.results === 0) {
         // If we did the inital fetch (the one that limits results to 7 days) but got no results,
         // we can't conclude there are no more pages to fetch. There could be more events to fetch
-        // outside of the 7 day window. Therefore, we return a "fake" query key so that React Query
+        // outside of the 7 day window. Therefore, we return a "fake" pageParam so that React Query
         // will still attempt to fetch another page whenever `fetchNextPage` is called next.
         return 'fetch more';
       }
