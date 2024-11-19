@@ -1,8 +1,11 @@
-import { Box, ListItem } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
+import {
+  SelectedIcon,
+  StyledListItem,
+} from 'src/components/Autocomplete/Autocomplete.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { themes } from 'src/utilities/theme';
@@ -146,10 +149,20 @@ export const CloudPulseResourcesSelect = React.memo(
           const isResourceSelected = selectedResources?.some(
             (item) => item.label === option.label
           );
+
+          const isSelectAllORDeslectAllOption =
+            option.label === 'Select All ' || option.label === 'Deselect All ';
+
           const isMaxSelectionsReached =
             selectedResources &&
             selectedResources.length >= maxResourceSelectionLimit &&
-            !isResourceSelected;
+            !isResourceSelected &&
+            !isSelectAllORDeslectAllOption;
+
+          const ListItem = isSelectAllORDeslectAllOption
+            ? StyledListItem
+            : 'li';
+
           return (
             <ListItem
               {...rest}
