@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 import { roundTo } from 'src/utilities/roundTo';
 
-import { LinodeNetworkTimeData } from './types';
+import type { LinodeNetworkTimeData } from './types';
 
 export const getAccessibleTimestamp = (timestamp: number, timezone: string) =>
   DateTime.fromMillis(timestamp, { zone: timezone }).toLocaleString(
@@ -15,7 +15,7 @@ export const tooltipLabelFormatter = (timestamp: number, timezone: string) =>
   );
 
 export const tooltipValueFormatter = (value: number, unit: string) =>
-  `${roundTo(value)}${unit}`;
+  `${roundTo(value)} ${unit}`;
 
 export const humanizeLargeData = (value: number) => {
   if (value >= 1000000000000) {
