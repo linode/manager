@@ -76,29 +76,24 @@ export const Dialog = React.forwardRef(
       ...rest
     } = props;
 
-    const [closingTransition, setClosingTransition] = React.useState(false);
-
     const titleID = convertForAria(title);
 
-    const handleClose = () => {
-      setClosingTransition(true);
-    };
-
-    const handleExited = () => {
-      onClose?.({}, 'escapeKeyDown');
-    };
-
-    React.useEffect(() => {
-      if (open) {
-        setClosingTransition(false);
-      }
-    }, [open]);
+    // Store the last valid children and title in refs
+    // This is to prevent flashes of content during the drawer's closing transition,
+    // and its content becomes potentially undefined
+    const lastChildrenRef = React.useRef(children);
+    const lastTitleRef = React.useRef(title);
+    // Update refs when the drawer is open and content is matched
+    if (open && children) {
+      lastChildrenRef.current = children;
+      lastTitleRef.current = title;
+    }
 
     return (
       <StyledDialog
         onClose={(_, reason) => {
           if (onClose && reason !== 'backdropClick') {
-            handleClose();
+            onClose({}, 'escapeKeyDown');
           }
         }}
         aria-labelledby={titleID}
@@ -109,8 +104,7 @@ export const Dialog = React.forwardRef(
         fullHeight={fullHeight}
         fullWidth={fullWidth}
         maxWidth={(fullWidth && maxWidth) ?? undefined}
-        onTransitionExited={handleExited}
-        open={open && !closingTransition}
+        open={open}
         ref={ref}
         role="dialog"
         title={title}
@@ -124,9 +118,9 @@ export const Dialog = React.forwardRef(
           <DialogTitle
             id={titleID}
             isFetching={isFetching}
-            onClose={handleClose}
+            onClose={() => onClose?.({}, 'escapeKeyDown')}
             subtitle={subtitle}
-            title={title}
+            title={lastTitleRef.current}
           />
           <DialogContent
             sx={{
@@ -142,7 +136,7 @@ export const Dialog = React.forwardRef(
             ) : (
               <>
                 {error && <Notice text={error} variant="error" />}
-                {children}
+                {lastChildrenRef.current}
               </>
             )}
           </DialogContent>

@@ -76,7 +76,7 @@ export const Fetching: Story = {
         } else {
           setTimeout(() => {
             updateArgs({ isFetching: true, onClose: action('onClose') });
-          }, 100);
+          }, 300);
         }
       }, [isFetching, open, updateArgs]);
 

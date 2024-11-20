@@ -82,7 +82,7 @@ export const Fetching: Story = {
         } else {
           setTimeout(() => {
             updateArgs({ isFetching: true, onClose: action('onClose') });
-          }, 100);
+          }, 300);
         }
       }, [isFetching, open, updateArgs]);
 
@@ -104,6 +104,12 @@ export const Fetching: Story = {
             <Typography sx={{ mb: 2 }}>
               A most sober dialog, with a title and a description.
             </Typography>
+            <Button
+              buttonType="primary"
+              onClick={() => updateArgs({ open: false })}
+            >
+              Close This Thing
+            </Button>
           </Dialog>
         </>
       );

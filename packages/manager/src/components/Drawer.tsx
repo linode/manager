@@ -42,25 +42,19 @@ export interface DrawerProps extends _DrawerProps {
  */
 export const Drawer = (props: DrawerProps) => {
   const { classes, cx } = useStyles();
-
   const { children, isFetching, onClose, open, title, wide, ...rest } = props;
-
   const titleID = convertForAria(title);
-  const [closingTransition, setClosingTransition] = React.useState(false);
 
-  const handleClose = () => {
-    setClosingTransition(true);
-  };
-
-  const handleExited = (): void => {
-    onClose?.({}, 'escapeKeyDown');
-  };
-
-  React.useEffect(() => {
-    if (open) {
-      setClosingTransition(false);
-    }
-  }, [open]);
+  // Store the last valid children and title in refs
+  // This is to prevent flashes of content during the drawer's closing transition,
+  // and its content becomes potentially undefined
+  const lastChildrenRef = React.useRef(children);
+  const lastTitleRef = React.useRef(title);
+  // Update refs when the drawer is open and content is matched
+  if (open && children) {
+    lastChildrenRef.current = children;
+    lastTitleRef.current = title;
+  }
 
   return (
     <_Drawer
@@ -72,16 +66,15 @@ export const Drawer = (props: DrawerProps) => {
       }}
       onClose={(_, reason) => {
         if (onClose && reason !== 'backdropClick') {
-          handleClose();
+          onClose({}, 'escapeKeyDown');
         }
       }}
       anchor="right"
-      open={open && !closingTransition}
+      open={open}
       {...rest}
       aria-labelledby={titleID}
       data-qa-drawer
       data-testid="drawer"
-      onTransitionExited={handleExited}
       role="dialog"
     >
       <Grid
@@ -117,7 +110,7 @@ export const Drawer = (props: DrawerProps) => {
             aria-label="Close drawer"
             color="primary"
             data-qa-close-drawer
-            onClick={handleClose}
+            onClick={() => onClose?.({}, 'escapeKeyDown')}
             size="large"
           >
             <Close />
