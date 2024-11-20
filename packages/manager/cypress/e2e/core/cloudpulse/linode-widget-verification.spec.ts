@@ -28,10 +28,11 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { extendRegion } from 'support/util/regions';
 import { CloudPulseMetricsResponse } from '@linode/api-v4';
-import { transformData } from 'src/features/CloudPulse/Utils/unitConversion';
-import { getMetrics } from 'src/utilities/statMetrics';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
 import { Interception } from 'cypress/types/net-stubbing';
+import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
+import { Flags } from 'src/featureFlags';
+import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
 /**
  * This test ensures that widget titles are displayed correctly on the dashboard.
@@ -46,14 +47,8 @@ import { Interception } from 'cypress/types/net-stubbing';
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
 
-const {
-  metrics,
-  id,
-  serviceType,
-  dashboardName,
-  region,
-  resource,
-} = widgetDetails.linode;
+const { metrics, id, serviceType, dashboardName, region, resource } =
+  widgetDetails.linode;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
@@ -97,25 +92,49 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
 });
 
 /**
- * `verifyWidgetValues` processes and verifies the metric values of a widget from the provided response payload.
+ * Generates graph data from a given CloudPulse metrics response and
+ * extracts average, last, and maximum metric values from the first
+ * legend row. The values are rounded to two decimal places for
+ * better readability.
  *
- * This method performs the following steps:
- * 1. Transforms the raw data from the response payload into a more manageable format using `transformData`.
- * 2. Extracts key metrics (average, last, and max) from the transformed data using `getMetrics`.
- * 3. Rounds these metrics to two decimal places for accuracy.
- * 4. Returns an object containing the rounded average, last, and max values for further verification or comparison.
+ * @param responsePayload - The metrics response object containing
+ *                          the necessary data for graph generation.
+ * @param label - The label for the graph, used for display purposes.
  *
- * @param {CloudPulseMetricsResponse} responsePayload - The response payload containing metric data for a widget.
- * @returns {Object} An object with the rounded average, last, and max metric values.
+ * @returns An object containing rounded values for average, last,
+ *
  */
+
 const getWidgetLegendRowValuesFromResponse = (
-  responsePayload: CloudPulseMetricsResponse
+  responsePayload: CloudPulseMetricsResponse,
+  label: string,
+  unit: string
 ) => {
-  const data = transformData(responsePayload.data.result[0].values, 'Bytes');
-  const { average, last, max } = getMetrics(data);
-  const roundedAverage = Math.round(average * 100) / 100;
-  const roundedLast = Math.round(last * 100) / 100;
-  const roundedMax = Math.round(max * 100) / 100;
+  // Generate graph data using the provided parameters
+  const graphData = generateGraphData({
+    flags: { enabled: true } as Partial<Flags>,
+    label: label,
+    metricsList: responsePayload,
+    resources: [
+      {
+        id: '1',
+        label: resource,
+        region: 'us-ord',
+      },
+    ],
+    serviceType: serviceType,
+    status: 'success',
+    unit: unit,
+  });
+
+  // Destructure metrics data from the first legend row
+  const { average, last, max } = graphData.legendRowsData[0].data;
+
+  // Round the metrics values to two decimal places
+  const roundedAverage = formatToolTip(average, unit);
+  const roundedLast = formatToolTip(last, unit);
+  const roundedMax = formatToolTip(max, unit);
+  // Return the rounded values in an object
   return { average: roundedAverage, last: roundedLast, max: roundedMax };
 };
 
@@ -214,34 +233,32 @@ describe('Integration Tests for Linode Dashboard ', () => {
             );
           });
 
-          //validate the widget linegrah is present
-          cy.findByTestId('linegraph-wrapper').within(() => {
+          //validate the widget areachart is present
+          cy.findByTestId('areachart-wrapper').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-              metricsAPIResponsePayload
+              metricsAPIResponsePayload,
+              testData.title,
+              testData.unit
             );
-            cy.findByText(`${testData.title} (${testData.unit})`).should(
-              'be.visible'
-            );
+
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            cy.get(graphRowTitle)
+              .should('be.visible')
+              .should('have.text', `${testData.title} (${testData.unit})`);
+
+            cy.log('expectedWidgetValues ', expectedWidgetValues.max);
+
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.max} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.max}`);
 
             cy.get(`[data-qa-graph-column-title="Avg"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.average} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.average}`);
 
             cy.get(`[data-qa-graph-column-title="Last"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.last} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.last}`);
           });
         });
     });
@@ -273,34 +290,32 @@ describe('Integration Tests for Linode Dashboard ', () => {
             );
           });
 
-          //validate the widget linegrah is present
-          cy.findByTestId('linegraph-wrapper').within(() => {
+          //validate the widget areachart is present
+          cy.findByTestId('areachart-wrapper').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-              metricsAPIResponsePayload
+              metricsAPIResponsePayload,
+              testData.title,
+              testData.unit
             );
-            cy.findByText(`${testData.title} (${testData.unit})`).should(
-              'be.visible'
-            );
-            cy.get(`[data-qa-graph-column-title="Max"]`)
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            cy.get(graphRowTitle)
               .should('be.visible')
               .should(
                 'have.text',
-                `${expectedWidgetValues.max} ${testData.unit}`
+                `${testData.title} (${testData.unit.trim()})`
               );
+
+            cy.get(`[data-qa-graph-column-title="Max"]`)
+              .should('be.visible')
+              .should('have.text', `${expectedWidgetValues.max}`);
 
             cy.get(`[data-qa-graph-column-title="Avg"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.average} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.average}`);
 
             cy.get(`[data-qa-graph-column-title="Last"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.last} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.last}`);
           });
         });
     });
@@ -349,33 +364,28 @@ describe('Integration Tests for Linode Dashboard ', () => {
             .should('be.enabled')
             .click();
           cy.get('@widget').should('be.visible');
-          cy.findByTestId('linegraph-wrapper').within(() => {
+          cy.findByTestId('areachart-wrapper').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-              metricsAPIResponsePayload
+              metricsAPIResponsePayload,
+              testData.title,
+              testData.unit
             );
-            cy.findByText(`${testData.title} (${testData.unit})`).should(
-              'be.visible'
-            );
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            cy.get(graphRowTitle)
+              .should('be.visible')
+              .should('have.text', `${testData.title} (${testData.unit})`);
+
             cy.get(`[data-qa-graph-column-title="Max"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.max} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.max}`);
 
             cy.get(`[data-qa-graph-column-title="Avg"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.average} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.average}`);
 
             cy.get(`[data-qa-graph-column-title="Last"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.last} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.last}`);
           });
 
           // click zoom out and validate the same
@@ -386,33 +396,33 @@ describe('Integration Tests for Linode Dashboard ', () => {
             .scrollIntoView()
             .click({ force: true });
           cy.get('@widget').should('be.visible');
-          cy.findByTestId('linegraph-wrapper').within(() => {
+
+          cy.findByTestId('areachart-wrapper').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
-              metricsAPIResponsePayload
+              metricsAPIResponsePayload,
+              testData.title,
+              testData.unit
             );
-            cy.findByText(`${testData.title} (${testData.unit})`).should(
-              'be.visible'
-            );
-            cy.get(`[data-qa-graph-column-title="Max"]`)
+
+            const graphRowTitle = `[data-qa-graph-row-title="${testData.title} (${testData.unit})"]`;
+            cy.get(graphRowTitle)
               .should('be.visible')
               .should(
                 'have.text',
-                `${expectedWidgetValues.max} ${testData.unit}`
+                `${testData.title} (${testData.unit.trim()})`
               );
+
+            cy.get(`[data-qa-graph-column-title="Max"]`)
+              .should('be.visible')
+              .should('have.text', `${expectedWidgetValues.max}`);
 
             cy.get(`[data-qa-graph-column-title="Avg"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.average} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.average}`);
 
             cy.get(`[data-qa-graph-column-title="Last"]`)
               .should('be.visible')
-              .should(
-                'have.text',
-                `${expectedWidgetValues.last} ${testData.unit}`
-              );
+              .should('have.text', `${expectedWidgetValues.last}`);
           });
         });
     });

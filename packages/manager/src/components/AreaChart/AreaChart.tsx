@@ -247,7 +247,7 @@ export const AreaChart = (props: AreaChartProps) => {
   };
 
   return (
-    <>
+    <Box data-testid="areachart-wrapper">
       <ResponsiveContainer height={height} width={width}>
         <_AreaChart aria-label={ariaLabel} data={data} margin={margin}>
           <CartesianGrid
@@ -326,7 +326,7 @@ export const AreaChart = (props: AreaChartProps) => {
         timezone={timezone}
         unit={unit}
       />
-    </>
+    </Box>
   );
 };
 
