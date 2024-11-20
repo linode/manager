@@ -63,7 +63,7 @@ describe('CloudPulse  navigation', () => {
       },
     }).as('getFeatureFlags');
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
     cy.wait('@getFeatureFlags');
 
     cy.findByText('Not Found').should('be.visible');

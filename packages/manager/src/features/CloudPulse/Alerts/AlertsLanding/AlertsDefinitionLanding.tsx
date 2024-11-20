@@ -1,7 +1,7 @@
+import { Paper } from '@linode/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { Paper } from '@linode/ui';
 import { Typography } from 'src/components/Typography';
 
 export const AlertDefinitionLanding = () => {
@@ -10,7 +10,7 @@ export const AlertDefinitionLanding = () => {
       <Route
         component={AlertDefinition}
         exact
-        path="/monitor/cloudpulse/alerts/definitions"
+        path="/monitor/alerts/definitions"
       />
     </Switch>
   );
