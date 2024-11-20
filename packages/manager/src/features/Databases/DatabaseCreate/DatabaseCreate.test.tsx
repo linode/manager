@@ -1,5 +1,4 @@
 import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import * as React from 'react';
 import { Router } from 'react-router-dom';
 

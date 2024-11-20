@@ -31,7 +31,7 @@ import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction, RenderResult } from '@testing-library/react';
 import type { FormikConfig, FormikValues } from 'formik';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
-import type { MemoryRouterProps } from 'react-router';
+import type { MemoryRouterProps} from 'react-router-dom';
 import type { DeepPartial } from 'redux';
 import type { FlagSet } from 'src/featureFlags';
 import type { ApplicationState, ApplicationStore } from 'src/store';

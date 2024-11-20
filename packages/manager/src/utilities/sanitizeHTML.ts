@@ -68,9 +68,9 @@ export const sanitizeHTML = ({
       anchorHandler(node as HTMLAnchorElement);
     } else if (data.tagName === 'span') {
       // Allow class attribute only for span elements
-      const classAttr = node.getAttribute('class');
+      const classAttr = (node as HTMLSpanElement).getAttribute('class');
       if (classAttr && classAttr.trim() !== 'version') {
-        node.removeAttribute('class');
+        (node as HTMLSpanElement).removeAttribute('class');
       }
     }
   });
