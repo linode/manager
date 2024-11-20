@@ -73,15 +73,26 @@ describe('Billing Contact', () => {
       },
     });
   });
-  it.skip('Mask Contact Info', () => {
+  it('Mask Contact Info', () => {
     mockGetUserPreferences({ maskSensitiveData: true }).as(
       'getUserPreferences'
     );
     mockGetAccount(accountData).as('getAccount');
     cy.visitWithLogin('/account/billing');
 
-    cy.contains('This data is masked.');
+    cy.contains('This data is sensitive and hidden for privacy.');
+
+    // Confirm edit button and contact info is hidden when setting is enabled.
+    cy.findByText('Edit').should('not.exist');
     cy.get('[data-qa-contact-name]').should('not.exist');
+
+    cy.findByRole('button', { name: 'Show' }).should('be.visible').click();
+
+    // Confirm edit button and contact info is visible when setting is disabled.
+    cy.findByText('Edit').should('be.visible');
+    cy.get('[data-qa-contact-name]').should('be.visible');
+
+    cy.findByRole('button', { name: 'Hide' }).should('be.visible').click();
   });
   it('Edit Contact Info', () => {
     mockGetUserPreferences({ maskSensitiveData: false }).as(
