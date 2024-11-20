@@ -18,7 +18,6 @@ import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
   CloudPulseMetricsResponse,
-  DataSet,
   TimeDuration,
   Widgets,
 } from '@linode/api-v4';
