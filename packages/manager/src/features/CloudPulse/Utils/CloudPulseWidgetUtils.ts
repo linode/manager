@@ -130,7 +130,7 @@ interface DimensionNameProperties {
   metric: { [label: string]: string };
 
   /**
-   * list of selected CloudPulseResources
+   * resources list of CloudPulseResources available
    */
   resources: CloudPulseResources[];
 }
@@ -343,7 +343,7 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
 /**
  *
  * @param id resource id that should be searched in resources list
- * @param resources resources list of CloudPulseResources available
+ * @param resources list of CloudPulseResources available
  * @returns resource label if id is found, the id if label is not found, and fall back on an empty string with an undefined id
  */
 export const mapResourceIdToName = (
