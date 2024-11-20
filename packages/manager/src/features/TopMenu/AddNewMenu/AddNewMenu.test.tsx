@@ -5,7 +5,7 @@ import { Router } from 'react-router-dom';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AddNewMenu } from './AddNewMenu';
-import { createMemoryHistory } from '@tanstack/react-router';
+import { createMemoryHistory } from 'history';
 
 describe('AddNewMenu', () => {
   test('renders the Create button', () => {
