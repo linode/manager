@@ -1,4 +1,4 @@
-import { InputAdornment } from '@linode/ui';
+import { InputAdornment } from '../InputAdornment';
 import { fireEvent, getDefaultNormalizer } from '@testing-library/react';
 import * as React from 'react';
 
