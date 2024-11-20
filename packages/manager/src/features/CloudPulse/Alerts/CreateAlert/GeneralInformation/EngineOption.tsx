@@ -5,7 +5,7 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { engineTypeOptions } from '../../constants';
 
-import type { CreateAlertDefinitionForm } from '@linode/api-v4';
+import type { CreateAlertDefinitionForm } from '../types';
 import type { FieldPathByValue } from 'react-hook-form';
 
 interface EngineOptionProps {
