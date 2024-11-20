@@ -25,16 +25,12 @@ interface Props {
    * The placement of the tooltip.
    */
   placement?: TooltipProps['placement'];
-  /**
-   * Optionally, display the label text for the toggle button.
-   */
-  label?: string | JSX.Element;
 }
 /**
  * Toggle-able visibility icon with tooltip on hover
  */
 export const VisibilityTooltip = (props: Props) => {
-  const { handleClick, isVisible, label, sx, placement } = props;
+  const { handleClick, isVisible, sx, placement } = props;
 
   return (
     <Tooltip
@@ -49,7 +45,6 @@ export const VisibilityTooltip = (props: Props) => {
         ) : (
           <VisibilityHideIcon aria-label="Hide" />
         )}
-        {label}
       </StyledToggleButton>
     </Tooltip>
   );

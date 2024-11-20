@@ -1,5 +1,4 @@
-import { Box, TooltipIcon, VisibilityTooltip } from '@linode/ui';
-import { styled } from '@mui/material/styles';
+import { Box, TooltipIcon } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
 import { useState } from 'react';
@@ -20,6 +19,11 @@ import {
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
+import {
+  StyledTypography,
+  StyledVisibilityHideIcon,
+  StyledVisibilityShowIcon,
+} from './ContactInformation.styles';
 import BillingContactDrawer from './EditBillingContactDrawer';
 
 import type { Profile } from '@linode/api-v4';
@@ -39,19 +43,6 @@ interface Props {
   taxId: string;
   zip: string;
 }
-
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  '& .dif': {
-    '& .MuiChip-root': {
-      position: 'absolute',
-      right: -10,
-      top: '-4px',
-    },
-    position: 'relative',
-    width: 'auto',
-  },
-  marginBottom: theme.spacing(1),
-}));
 
 export const ContactInformation = React.memo((props: Props) => {
   const {
@@ -167,60 +158,46 @@ export const ContactInformation = React.memo((props: Props) => {
           <Typography variant="h3">Billing Contact</Typography>
           <Box display="flex" marginLeft="auto">
             {preferences?.maskSensitiveData && (
-              <VisibilityTooltip
-                label={
-                  <BillingActionButton
-                    disableFocusRipple
-                    disableRipple
-                    disableTouchRipple
-                    disabled={isReadOnly}
-                    onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
-                    sx={{ marginLeft: 1 }}
-                  >
-                    {isContactInfoMasked ? 'Show' : 'Hide'}
-                  </BillingActionButton>
-                }
-                sx={(theme) => ({
-                  '& svg': {
-                    '& path': {
-                      stroke: theme.palette.primary.main,
-                    },
-                  },
-                  marginRight: 2,
-                })}
-                handleClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
-                isVisible={Boolean(!isContactInfoMasked)}
-              />
+              <BillingActionButton
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                disabled={isReadOnly}
+                onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
+                sx={{ marginRight: !isContactInfoMasked ? 2 : 0 }}
+              >
+                {isContactInfoMasked ? (
+                  <StyledVisibilityShowIcon />
+                ) : (
+                  <StyledVisibilityHideIcon />
+                )}
+                {isContactInfoMasked ? 'Show' : 'Hide'}
+              </BillingActionButton>
             )}
-
-            <BillingActionButton
-              onClick={() => {
-                history.push('/account/billing/edit');
-                handleEditDrawerOpen();
-              }}
-              tooltipText={getRestrictedResourceText({
-                includeContactInfo: false,
-                isChildUser,
-                resourceType: 'Account',
-              })}
-              data-testid="edit-contact-info"
-              disableFocusRipple
-              disableRipple
-              disableTouchRipple
-              disabled={isReadOnly}
-            >
-              {EDIT_BILLING_CONTACT}
-            </BillingActionButton>
+            {!isContactInfoMasked && (
+              <BillingActionButton
+                onClick={() => {
+                  history.push('/account/billing/edit');
+                  handleEditDrawerOpen();
+                }}
+                tooltipText={getRestrictedResourceText({
+                  includeContactInfo: false,
+                  isChildUser,
+                  resourceType: 'Account',
+                })}
+                data-testid="edit-contact-info"
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                disabled={isReadOnly}
+              >
+                {EDIT_BILLING_CONTACT}
+              </BillingActionButton>
+            )}
           </Box>
         </BillingBox>
         {preferences?.maskSensitiveData && isContactInfoMasked ? (
-          <Grid
-            container
-            display="flex"
-            flexDirection="row"
-            marginBottom={1}
-            padding={0}
-          >
+          <Grid container display="flex" flexDirection="row" padding={0}>
             <Typography alignSelf="center">
               This data is sensitive and masked for privacy. To turn off this
               setting app-wide, go to{' '}
