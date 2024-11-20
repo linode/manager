@@ -1,3 +1,5 @@
+import { renderHook } from '@testing-library/react';
+
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { regionAvailabilityFactory } from 'src/factories';
 import { planSelectionTypeFactory, typeFactory } from 'src/factories/types';
@@ -11,9 +13,31 @@ import {
   getPlanSelectionsByPlanType,
   planTypeOrder,
   replaceOrAppendPlaceholder512GbPlans,
+  useIsAcceleratedEnabled,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
+
+const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
+  useFlags: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/queries/account/account', () => {
+  const actual = vi.importActual('src/queries/account/account');
+  return {
+    ...actual,
+    useAccount: queryMocks.useAccount,
+  };
+});
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
 
 const standard = typeFactory.build({ class: 'standard', id: 'g6-standard-1' });
 const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
@@ -456,6 +480,109 @@ describe('extractPlansInformation', () => {
       ] as PlanSelectionType[];
       const results = replaceOrAppendPlaceholder512GbPlans(plans);
       expect(results[0].id).toEqual('g7-premium-64');
+    });
+  });
+});
+
+describe('useIsAcceleratedEnabled', () => {
+  it('should return false for linode and lke plans: account capability DNE and feature flag false', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: [],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      acceleratedPlans: {
+        linodePlans: false,
+        lkePlans: false,
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
+
+  it('should return false for linode and lke plans: account capability DNE and feature flag true', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: [],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      acceleratedPlans: {
+        linodePlans: true,
+        lkePlans: true,
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
+
+  it('should return false for linode and lke plans: account capability exists and feature flag false', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      acceleratedPlans: {
+        linodePlans: false,
+        lkePlans: false,
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: false,
+    });
+  });
+
+  it('should return true for linode and lke plans', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      acceleratedPlans: {
+        linodePlans: true,
+        lkePlans: true,
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: true,
+      isAcceleratedLinodePlansEnabled: true,
+    });
+  });
+
+  // just adding this test since I matched the feature flag values in all previous tests
+  it('linodePlans and lkePlans status can have different values depending on the feature flag', () => {
+    queryMocks.useAccount.mockReturnValue({
+      data: {
+        capabilities: ['NETINT Quadra T1U'],
+      },
+    });
+    queryMocks.useFlags.mockReturnValue({
+      acceleratedPlans: {
+        linodePlans: true,
+        lkePlans: false,
+      },
+    });
+
+    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    expect(result.current).toStrictEqual({
+      isAcceleratedLKEPlansEnabled: false,
+      isAcceleratedLinodePlansEnabled: true,
     });
   });
 });
