@@ -15,16 +15,13 @@ it('test getDashboardProperties method', () => {
     dashboardObj: mockDashboard,
     filterValue: {
       region: 'us-east',
-      resource_id: [{ id: '1', label: 'linode-1', region: 'us-east' }],
     },
     resource: 1,
   });
 
   expect(result).toBeDefined();
   expect(result.dashboardId).toEqual(mockDashboard.id);
-  expect(result.resources).toEqual([
-    { id: '1', label: 'linode-1', region: 'us-east' },
-  ]);
+  expect(result.resources).toEqual(['1']);
 });
 
 it('test checkMandatoryFiltersSelected method for time duration and resource', () => {

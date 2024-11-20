@@ -35,7 +35,8 @@ interface WidgetProps {
   manualRefreshTimeStamp?: number;
   metricDefinitions: MetricDefinitions | undefined;
   preferences?: AclpConfig;
-  resources: CloudPulseResources[];
+  resources: string[];
+  resourcesList: CloudPulseResources[] | undefined;
   savePref?: boolean;
 }
 
@@ -61,6 +62,7 @@ export const RenderWidgets = React.memo(
       metricDefinitions,
       preferences,
       resources,
+      resourcesList,
       savePref,
     } = props;
 
@@ -75,7 +77,7 @@ export const RenderWidgets = React.memo(
         duration,
         errorLabel: 'Error occurred while loading data.',
         isJweTokenFetching: false,
-        resourceIds: resources.map((resource) => String(resource.id)),
+        resourceIds: resources,
         resources: [],
         serviceType: dashboard?.service_type ?? '',
         timeStamp: manualRefreshTimeStamp,
@@ -123,8 +125,8 @@ export const RenderWidgets = React.memo(
 
     if (
       !dashboard.service_type ||
-      (!isJweTokenFetching && !jweToken?.token) ||
-      !Boolean(resources?.length)
+      !Boolean(resources.length > 0) ||
+      (!isJweTokenFetching && !jweToken?.token)
     ) {
       return renderPlaceHolder(
         'Select a dashboard and filters to visualize metrics.'
@@ -163,7 +165,7 @@ export const RenderWidgets = React.memo(
                 authToken={jweToken?.token}
                 availableMetrics={availMetrics}
                 isJweTokenFetching={isJweTokenFetching}
-                resources={resources}
+                resources={resourcesList!}
                 savePref={savePref}
               />
             );
