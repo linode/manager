@@ -137,8 +137,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       manualRefreshTimeStamp={manualRefreshTimeStamp}
       metricDefinitions={metricDefinitions}
       preferences={preferences}
+      resourceList={resourceList}
       resources={resources}
-      resourcesList={resourceList}
       savePref={savePref}
     />
   );

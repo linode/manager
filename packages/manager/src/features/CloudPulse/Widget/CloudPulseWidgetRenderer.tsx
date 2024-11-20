@@ -35,8 +35,8 @@ interface WidgetProps {
   manualRefreshTimeStamp?: number;
   metricDefinitions: MetricDefinitions | undefined;
   preferences?: AclpConfig;
+  resourceList: CloudPulseResources[] | undefined;
   resources: string[];
-  resourcesList: CloudPulseResources[] | undefined;
   savePref?: boolean;
 }
 
@@ -61,8 +61,8 @@ export const RenderWidgets = React.memo(
       manualRefreshTimeStamp,
       metricDefinitions,
       preferences,
+      resourceList,
       resources,
-      resourcesList,
       savePref,
     } = props;
 
@@ -165,7 +165,7 @@ export const RenderWidgets = React.memo(
                 authToken={jweToken?.token}
                 availableMetrics={availMetrics}
                 isJweTokenFetching={isJweTokenFetching}
-                resources={resourcesList!}
+                resources={resourceList!}
                 savePref={savePref}
               />
             );
