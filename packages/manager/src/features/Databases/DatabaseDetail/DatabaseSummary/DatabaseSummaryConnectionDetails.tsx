@@ -116,11 +116,11 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const readOnlyHost = () => {
     const defaultValue = isLegacy ? '-' : 'N/A';
     const value = readOnlyHostValue ? readOnlyHostValue : defaultValue;
-    const displayCopyTooltip = value !== '-' && value !== 'N/A';
+    const hasHost = value !== '-' && value !== 'N/A';
     return (
       <>
         {value}
-        {value && displayCopyTooltip && (
+        {value && hasHost && (
           <CopyTooltip className={classes.inlineCopyToolTip} text={value} />
         )}
         {isLegacy && (
@@ -128,6 +128,14 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
             status="help"
             sxTooltipIcon={sxTooltipIcon}
             text={privateHostCopy}
+          />
+        )}
+        {!isLegacy && hasHost && (
+          <TooltipIcon
+            componentsProps={hostTooltipComponentProps}
+            status="help"
+            sxTooltipIcon={sxTooltipIcon}
+            text={HOST_TOOLTIP_COPY}
           />
         )}
       </>

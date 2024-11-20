@@ -147,6 +147,7 @@ const DatabaseLanding = () => {
       <DatabaseLandingTable
         data={legacyDatabases?.data}
         handleOrderChange={legacyDatabaseHandleOrderChange}
+        results={legacyDatabases?.results}
         order={legacyDatabaseOrder}
         orderBy={legacyDatabaseOrderBy}
       />
@@ -156,6 +157,7 @@ const DatabaseLanding = () => {
   const defaultTable = () => {
     return (
       <DatabaseLandingTable
+        results={newDatabases?.results}
         data={newDatabases?.data}
         handleOrderChange={newDatabaseHandleOrderChange}
         isNewDatabase={true}
