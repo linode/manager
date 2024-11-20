@@ -12,10 +12,12 @@ import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 
 import type { PlanSelectionFilterOptionsTable } from './PlanContainer';
 import type { PlanWithAvailability } from './types';
+import type { LinodeTypeClass } from '@linode/api-v4/';
 import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
+  planType?: LinodeTypeClass;
   plans?: PlanWithAvailability[];
   renderPlanSelection: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
@@ -46,6 +48,7 @@ const tableCells = [
 export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const {
     filterOptions,
+    planType,
     plans,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
@@ -54,7 +57,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     showUsableStorage,
   } = props;
   const flags = useFlags();
-  const planType = plans && plans.length > 0 ? plans[0].class : undefined;
 
   const showTransferTooltip = React.useCallback(
     (cellName: string) =>

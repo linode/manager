@@ -230,6 +230,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                   shouldDisplayNoRegionSelectedMessage
                 }
                 key={planType}
+                planType={planType}
                 plans={plans}
                 renderPlanSelection={renderPlanSelection}
                 showNetwork={showNetwork}
