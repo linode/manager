@@ -1,3 +1,6 @@
+import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
+import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import { arrayToList } from 'src/utilities/arrayToList';
 
 import {
@@ -44,6 +47,30 @@ export const planTypeOrder: (
   'premium',
   'accelerated',
 ];
+
+export const useIsAcceleratedEnabled = () => {
+  const flags = useFlags();
+
+  const { data: account } = useAccount();
+
+  const isAcceleratedLinodePlans = Boolean(
+    flags?.acceleratedPlans?.linodePlans
+  );
+  const isAcceleratedLKEPlans = Boolean(flags?.acceleratedPlans?.lkePlans);
+
+  const isAcceleratedLinodePlansEnabled = isFeatureEnabledV2(
+    'NETINT Quadra T1U',
+    isAcceleratedLinodePlans,
+    account?.capabilities ?? []
+  );
+  const isAcceleratedLKEPlansEnabled = isFeatureEnabledV2(
+    'NETINT Quadra T1U',
+    isAcceleratedLKEPlans,
+    account?.capabilities ?? []
+  );
+
+  return { isAcceleratedLKEPlansEnabled, isAcceleratedLinodePlansEnabled };
+};
 
 /**
  * getPlanSelectionsByPlanType function takes an array of types, groups

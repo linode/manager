@@ -10,6 +10,7 @@ import { extendType } from 'src/utilities/extendType';
 
 import { ADD_NODE_POOLS_DESCRIPTION } from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+import { useIsAcceleratedEnabled } from 'src/features/components/PlansPanel/utils';
 
 import type {
   KubeNodePoolResponse,
@@ -69,6 +70,8 @@ const Panel = (props: NodePoolPanelProps) => {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
 
+  const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedEnabled();
+
   const regions = useRegionsQuery().data ?? [];
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
@@ -113,9 +116,9 @@ const Panel = (props: NodePoolPanelProps) => {
             (t) =>
               t.class !== 'nanode' &&
               t.class !== 'gpu' &&
-              t.class !== 'accelerated'
+              (!isAcceleratedLKEPlansEnabled ? t.class !== 'accelerated' : true)
           )} // No Nanodes or GPUs in clusters
-          // TODO CONNIE confirm whether accelerated should be in LKE clusters/hide behind a feature flag?
+          // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"

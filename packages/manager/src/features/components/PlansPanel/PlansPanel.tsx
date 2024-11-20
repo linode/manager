@@ -7,7 +7,6 @@ import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -21,6 +20,7 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
+  useIsAcceleratedEnabled,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -88,8 +88,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     location.search
   );
 
-  const { data: account } = useAccount();
-  const hasVPUCapability = account?.capabilities?.includes('NETINT Quadra T1U');
+  const { isAcceleratedLinodePlansEnabled } = useIsAcceleratedEnabled();
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
@@ -100,7 +99,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     (type) =>
       !type.id.includes('dedicated-edge') &&
       !type.id.includes('nanode-edge') &&
-      (!hasVPUCapability ? type.class !== 'accelerated' : true)
+      (!isAcceleratedLinodePlansEnabled ? type.class !== 'accelerated' : true)
   );
   const _plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
