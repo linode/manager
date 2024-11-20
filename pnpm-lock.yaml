@@ -26,8 +26,8 @@ importers:
   packages/api-v4:
     dependencies:
       '@linode/validation':
-        specifier: 0.56.0
-        version: 0.56.0
+        specifier: workspace:*
+        version: link:../validation
       axios:
         specifier: ~1.7.4
         version: 1.7.7
