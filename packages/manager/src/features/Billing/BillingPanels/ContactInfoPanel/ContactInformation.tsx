@@ -157,23 +157,6 @@ export const ContactInformation = React.memo((props: Props) => {
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>
           <Box display="flex" marginLeft="auto">
-            {preferences?.maskSensitiveData && (
-              <BillingActionButton
-                disableFocusRipple
-                disableRipple
-                disableTouchRipple
-                disabled={isReadOnly}
-                onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
-                sx={{ marginRight: !isContactInfoMasked ? 2 : 0 }}
-              >
-                {isContactInfoMasked ? (
-                  <StyledVisibilityShowIcon />
-                ) : (
-                  <StyledVisibilityHideIcon />
-                )}
-                {isContactInfoMasked ? 'Show' : 'Hide'}
-              </BillingActionButton>
-            )}
             {!isContactInfoMasked && (
               <BillingActionButton
                 onClick={() => {
@@ -194,6 +177,23 @@ export const ContactInformation = React.memo((props: Props) => {
                 {EDIT_BILLING_CONTACT}
               </BillingActionButton>
             )}
+            {preferences?.maskSensitiveData && (
+              <BillingActionButton
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                disabled={isReadOnly}
+                onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
+                sx={{ marginLeft: !isContactInfoMasked ? 2 : 0 }}
+              >
+                {isContactInfoMasked ? (
+                  <StyledVisibilityShowIcon />
+                ) : (
+                  <StyledVisibilityHideIcon />
+                )}
+                {isContactInfoMasked ? 'Show' : 'Hide'}
+              </BillingActionButton>
+            )}
           </Box>
         </BillingBox>
         {preferences?.maskSensitiveData && isContactInfoMasked ? (
@@ -203,7 +203,7 @@ export const ContactInformation = React.memo((props: Props) => {
             <Link to="/profile/settings">profile settings</Link>.
           </Typography>
         ) : (
-          <Grid container display="flex" flexDirection="row" spacing={2}>
+          <Grid container spacing={2}>
             {(firstName ||
               lastName ||
               company ||
