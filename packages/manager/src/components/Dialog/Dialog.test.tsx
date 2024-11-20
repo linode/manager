@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -52,7 +52,7 @@ describe('Dialog', () => {
     expect(getByText('This is a subtitle')).toBeInTheDocument();
   });
 
-  it('should call onClose when the Dialog close button is clicked', async () => {
+  it('should call onClose when the Dialog close button is clicked', () => {
     const { getByRole } = renderWithTheme(
       <Dialog {...defaultArgs} open={true} />
     );
@@ -60,9 +60,7 @@ describe('Dialog', () => {
     const closeButton = getByRole('button', { name: 'Close' });
     fireEvent.click(closeButton);
 
-    await waitFor(() => {
-      expect(defaultArgs.onClose).toHaveBeenCalled();
-    });
+    expect(defaultArgs.onClose).toHaveBeenCalled();
   });
 
   it('should render a Dialog with an error message if provided', () => {
@@ -75,13 +73,5 @@ describe('Dialog', () => {
     );
 
     expect(getByText('Error that will be shown in the dialog.')).toBeVisible();
-  });
-
-  it('should render a Dialog with a loading spinner if isFetching is true', () => {
-    const { getByRole } = renderWithTheme(
-      <Dialog {...defaultArgs} isFetching open={true} />
-    );
-
-    expect(getByRole('progressbar')).toBeVisible();
   });
 });

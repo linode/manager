@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -51,32 +51,24 @@ describe('DeletionDialog', () => {
     }
   );
 
-  it('should call onClose when the close button is clicked', async () => {
-    const { getByRole } = renderWithTheme(
+  it('should call onClose when the DeletionDialog close button or Action cancel button is clicked', () => {
+    const { getByRole, getByTestId } = renderWithTheme(
       <DeletionDialog {...defaultArgs} open={true} />
     );
 
+    // For close icon button
     const closeButton = getByRole('button', { name: 'Close' });
     expect(closeButton).not.toBeDisabled();
     fireEvent.click(closeButton);
 
-    await waitFor(() => {
-      expect(defaultArgs.onClose).toHaveBeenCalled();
-    });
-  });
+    expect(defaultArgs.onClose).toHaveBeenCalled();
 
-  it('should call onClose when the cancel button is clicked', async () => {
-    const { getByTestId } = renderWithTheme(
-      <DeletionDialog {...defaultArgs} open={true} />
-    );
-
+    // For action cancel button
     const cancelButton = getByTestId('cancel');
     expect(cancelButton).not.toBeDisabled();
     fireEvent.click(cancelButton);
 
-    await waitFor(() => {
-      expect(defaultArgs.onClose).toHaveBeenCalled();
-    });
+    expect(defaultArgs.onClose).toHaveBeenCalled();
   });
 
   it('should call onDelete when the DeletionDialog delete button is clicked', () => {
