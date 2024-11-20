@@ -62,13 +62,20 @@ describe('EventsLanding', () => {
 
   it('renders a message when there are no more events to load', async () => {
     const event = eventFactory.build();
+    const eventsResponse = makeResourcePage([event], {
+      page: 1,
+      pages: 1,
+      results: 1,
+    });
 
     server.use(
-      http.get('*/events', () =>
-        HttpResponse.json(
-          makeResourcePage([event], { page: 1, pages: 1, results: 1 })
-        )
-      )
+      http.get('*/events', () => HttpResponse.json(eventsResponse), {
+        once: true,
+      }),
+      // `useEventsInfiniteQuery` needs to make two fetches to know if there are no more events to show
+      http.get('*/events', () => HttpResponse.json(makeResourcePage([])), {
+        once: true,
+      })
     );
 
     const { findByText } = renderWithTheme(<EventsLanding />);
