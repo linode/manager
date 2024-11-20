@@ -1,4 +1,4 @@
-import { Divider, Notice, Stack } from '@linode/ui';
+import { Divider, Notice, Stack, Typography } from '@linode/ui';
 import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -12,7 +12,6 @@ import { List } from 'src/components/List';
 import { ListItem } from 'src/components/ListItem';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import {

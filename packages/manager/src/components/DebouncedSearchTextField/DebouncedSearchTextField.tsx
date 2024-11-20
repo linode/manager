@@ -1,5 +1,4 @@
-import { CircleProgress } from '@linode/ui';
-import { IconButton, InputAdornment } from '@linode/ui';
+import { CircleProgress, IconButton, InputAdornment } from '@linode/ui';
 import Clear from '@mui/icons-material/Clear';
 import Search from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';

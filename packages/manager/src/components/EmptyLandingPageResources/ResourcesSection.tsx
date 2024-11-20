@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import DocsIcon from 'src/assets/icons/docs.svg';
@@ -8,7 +9,6 @@ import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { Typography } from 'src/components/Typography';
 import {
   getLinkOnClick,
   youtubeChannelLink,

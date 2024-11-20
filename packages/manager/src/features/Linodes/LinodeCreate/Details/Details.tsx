@@ -1,10 +1,9 @@
+import { Paper, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { Paper } from '@linode/ui';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 

@@ -1,4 +1,10 @@
-import { Button, CircleProgress, Divider, Notice } from '@linode/ui';
+import {
+  Button,
+  CircleProgress,
+  Divider,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { remove, uniq, update } from 'ramda';
@@ -9,7 +15,6 @@ import { Dialog } from 'src/components/Dialog/Dialog';
 import Select from 'src/components/EnhancedSelect/Select';
 import { Link } from 'src/components/Link';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import {

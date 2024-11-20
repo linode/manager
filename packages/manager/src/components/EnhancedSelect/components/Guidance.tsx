@@ -1,8 +1,7 @@
+import { Typography } from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 interface GuidanceProps {
   text: string;

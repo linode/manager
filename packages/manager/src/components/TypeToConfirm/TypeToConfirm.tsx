@@ -1,8 +1,10 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { TextField, TextFieldProps } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
+import { TextField } from 'src/components/TextField';
+
+import type { TextFieldProps } from 'src/components/TextField';
 
 export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   confirmationText?: JSX.Element | string;

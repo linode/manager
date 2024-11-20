@@ -2,10 +2,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { WarningIcon, AlertIcon as Error, CheckIcon } from '../../assets/icons';
-
-import { Typography } from '@mui/material';
-
 import { useStyles } from './Notice.styles';
+import { Typography } from '../Typography';
 
 import type { Grid2Props } from '@mui/material/Unstable_Grid2';
 import type { TypographyProps } from '@mui/material';

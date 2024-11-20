@@ -1,4 +1,4 @@
-import { CircleProgress, Paper, Stack } from '@linode/ui';
+import { CircleProgress, Paper, Stack, Typography } from '@linode/ui';
 import {
   createLazyRoute,
   useNavigate,
@@ -12,7 +12,6 @@ import { Checkbox } from 'src/components/Checkbox';
 import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
-import { Typography } from 'src/components/Typography';
 import { useCreateAccountBetaMutation } from 'src/queries/account/betas';
 import { useBetaQuery } from 'src/queries/betas';
 

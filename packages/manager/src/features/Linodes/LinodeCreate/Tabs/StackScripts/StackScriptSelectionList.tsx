@@ -1,4 +1,5 @@
 import { getAPIFilterFromQuery } from '@linode/search';
+import { Typography } from '@linode/ui';
 import {
   Box,
   Button,
@@ -26,7 +27,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useStackScriptQuery,

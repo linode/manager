@@ -1,5 +1,4 @@
-import { CircleProgress } from '@linode/ui';
-import { Box, InputAdornment } from '@linode/ui';
+import { Box, CircleProgress, InputAdornment } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MuiAutocomplete from '@mui/material/Autocomplete';

@@ -1,8 +1,7 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Typography } from 'src/components/Typography';
 import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';

@@ -1,4 +1,12 @@
-import { Box, Divider, Notice, Paper, Stack, TooltipIcon } from '@linode/ui';
+import {
+  Box,
+  Divider,
+  Notice,
+  Paper,
+  Stack,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -8,7 +16,6 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { VPCSelect } from 'src/components/VPCSelect';
 import {
   REGION_CAVEAT_HELPER_TEXT,
