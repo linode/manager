@@ -1,13 +1,13 @@
+import { Button } from '@linode/ui';
 import { omitProps } from '@linode/ui';
-import { createLink } from '@tanstack/react-router';
 import { LinkComponent } from '@tanstack/react-router';
+import { createLink } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { MenuItem } from 'src/components/MenuItem';
 
+import type { ButtonProps, ButtonType } from '@linode/ui';
 import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
-import type { ButtonProps, ButtonType } from 'src/components/Button/Button';
 
 export interface TanstackLinkComponentProps
   extends Omit<ButtonProps, 'buttonType' | 'href'> {
