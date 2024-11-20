@@ -15,6 +15,7 @@ import {
   HIGH_MEMORY_COMPUTE_INSTANCES_LINK,
   PREMIUM_COMPUTE_INSTANCES_LINK,
   SHARED_COMPUTE_INSTANCES_LINK,
+  TRANSFER_COSTS_LINK,
 } from './constants';
 import { MetalNotice } from './MetalNotice';
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
@@ -87,7 +88,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
                 transfer allotment is 0, all outbound network transfer is
                 subject to charges.
                 <br />
-                <Link to="https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs">
+                <Link to={TRANSFER_COSTS_LINK}>
                   Learn more about transfer costs
                 </Link>
                 .
@@ -118,8 +119,8 @@ export const PlanInformation = (props: PlanInformationProps) => {
                 </ListItem>
                 <ListItem disablePadding sx={{ display: 'list-item' }}>
                   Transfer costs not included in the plan price will be charged
-                  additionally. <Link to="#">Learn more</Link> about pricing and
-                  transfer costs.
+                  additionally. <Link to={TRANSFER_COSTS_LINK}>Learn more</Link>{' '}
+                  about pricing and transfer costs.
                 </ListItem>
               </List>
             </Typography>

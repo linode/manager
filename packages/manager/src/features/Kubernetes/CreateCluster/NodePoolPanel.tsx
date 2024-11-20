@@ -115,7 +115,7 @@ const Panel = (props: NodePoolPanelProps) => {
               t.class !== 'gpu' &&
               t.class !== 'accelerated'
           )} // No Nanodes or GPUs in clusters
-          // TODO CONNIE confirm whether accelerated should be in LKE clusters (assuming no but confirm)
+          // TODO CONNIE confirm whether accelerated should be in LKE clusters/hide behind a feature flag?
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
