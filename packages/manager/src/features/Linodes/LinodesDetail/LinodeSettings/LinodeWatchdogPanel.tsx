@@ -1,11 +1,9 @@
-import { CircleProgress, Notice } from '@linode/ui';
-import { Box, Stack } from '@mui/material';
+import { Box, CircleProgress, Notice, Stack, Toggle } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Accordion } from 'src/components/Accordion';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Toggle } from 'src/components/Toggle/Toggle';
 import { Typography } from 'src/components/Typography';
 import {
   useLinodeQuery,
