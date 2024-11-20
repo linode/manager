@@ -52,7 +52,9 @@ export const ObjectTableRow = (props: Props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
+      <TableCell noWrap>
+        {readableBytes(objectSize, { base10: true }).formatted}
+      </TableCell>
       <Hidden mdDown>
         <TableCell noWrap>
           <DateTimeDisplay value={objectLastModified} />

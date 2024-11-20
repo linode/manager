@@ -184,7 +184,8 @@ export const BucketLanding = () => {
             style={{ marginTop: 18, textAlign: 'center', width: '100%' }}
             variant="body1"
           >
-            Total storage used: {readableBytes(totalUsage).formatted}
+            Total storage used:{' '}
+            {readableBytes(totalUsage, { base10: true }).formatted}
           </Typography>
         ) : null}
         <TransferDisplay

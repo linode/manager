@@ -108,7 +108,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       </Hidden>
       <StyledBucketSizeCell noWrap>
         <Typography data-qa-size variant="body1">
-          {readableBytes(size).formatted}
+          {readableBytes(size, { base10: true }).formatted}
         </Typography>
       </StyledBucketSizeCell>
 

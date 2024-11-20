@@ -64,7 +64,7 @@ export const ObjectDetailsDrawer = React.memo(
       >
         {size ? (
           <Typography variant="subtitle2">
-            {readableBytes(size).formatted}
+            {readableBytes(size, { base10: true }).formatted}
           </Typography>
         ) : null}
         {formattedLastModified && Boolean(profile) ? (

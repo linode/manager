@@ -93,7 +93,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
             })}
             variant="body1"
           >
-            {readableBytes(props.sizeInBytes).formatted}
+            {readableBytes(props.sizeInBytes, { base10: true }).formatted}
           </StyledFileSizeTypography>
           {props.percentCompleted === 100 ? (
             <FileUploadComplete

@@ -123,7 +123,7 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {typeof size === 'number' && (
           <Typography variant="subtitle2">
-            {readableBytes(size).formatted}
+            {readableBytes(size, { base10: true }).formatted}
           </Typography>
         )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled. */}
