@@ -44,7 +44,7 @@ interface LabelNameOptionsProps {
   metric: { [label: string]: string };
 
   /**
-   * list of selected CloudPulseResources
+   * list of CloudPulseResources available
    */
   resources: CloudPulseResources[];
 
@@ -76,7 +76,7 @@ interface GraphDataOptionsProps {
   metricsList: CloudPulseMetricsResponse | undefined;
 
   /**
-   * list of selected CloudPulse resources
+   * list of CloudPulse resources
    */
   resources: CloudPulseResources[];
 
@@ -108,7 +108,7 @@ interface MetricRequestProps {
   resourceIds: string[];
 
   /**
-   * list of selected CloudPulse resources
+   * list of CloudPulse resources available
    */
   resources: CloudPulseResources[];
 
@@ -323,7 +323,7 @@ const getLabelName = (props: LabelNameOptionsProps): string => {
 
 /**
  *
- * @returns generated dimension name based on selected resources
+ * @returns generated dimension name based on resources
  */
 export const getDimensionName = (props: DimensionNameProperties): string => {
   const { flag, metric, resources } = props;
@@ -341,8 +341,8 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
 
 /**
  *
- * @param id resource id that should be searched in selected resources list
- * @param resources list of selected CloudPulseResources
+ * @param id resource id that should be searched in resources list
+ * @param resources resources list of CloudPulseResources available
  * @returns resource label if id is found, the id if label is not found, and fall back on an empty string with an undefined id
  */
 export const mapResourceIdToName = (

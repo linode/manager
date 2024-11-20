@@ -1,9 +1,7 @@
-import { RESOURCE_ID } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
@@ -45,7 +43,7 @@ export const getDashboardProperties = (
     }),
     dashboardId: dashboardObj.id,
     duration: timeDuration ?? { unit: 'min', value: 30 },
-    resources: filterValue[RESOURCE_ID] as CloudPulseResources[],
+    resources: [String(resource)],
     savePref: false,
   };
 };

@@ -4,6 +4,7 @@ import React from 'react';
 import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
+import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import {
   useCloudPulseJWEtokenQuery,
   useGetCloudPulseMetricDefinitionsByServiceType,
@@ -12,7 +13,6 @@ import {
 import { useAclpPreference } from '../Utils/UserPreference';
 import { RenderWidgets } from '../Widget/CloudPulseWidgetRenderer';
 
-import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { JWETokenPayLoad, TimeDuration } from '@linode/api-v4';
 
@@ -45,7 +45,7 @@ export interface DashboardProperties {
   /**
    * Selected resources for the dashboard
    */
-  resources: CloudPulseResources[];
+  resources: string[];
 
   /**
    * optional flag to check whether changes should be stored in preferences or not (in case this component is reused)
@@ -67,7 +67,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
     return {
-      resource_ids: resources?.map((resource) => Number(resource.id)) ?? [],
+      resource_ids: resources?.map((resource) => Number(resource)) ?? [],
     };
   };
 
@@ -76,6 +76,17 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     isError: isDashboardApiError,
     isLoading: isDashboardLoading,
   } = useCloudPulseDashboardByIdQuery(dashboardId);
+
+  const {
+    data: resourceList,
+    isError: isResourcesApiError,
+    isLoading: isResourcesLoading,
+  } = useResourcesQuery(
+    Boolean(dashboard?.service_type),
+    dashboard?.service_type,
+    {},
+    dashboard?.service_type === 'dbaas' ? { platform: 'rdbms-default' } : {}
+  );
 
   const {
     data: metricDefinitions,
@@ -100,6 +111,10 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return renderErrorState('Failed to fetch the dashboard details.');
   }
 
+  if (isResourcesApiError) {
+    return renderErrorState('Failed to fetch Resources.');
+  }
+
   if (isJweTokenError) {
     return renderErrorState('Failed to get the authentication token.');
   }
@@ -108,7 +123,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     return renderErrorState('Error loading the definitions of metrics.');
   }
 
-  if (isMetricDefinitionLoading || isDashboardLoading) {
+  if (isMetricDefinitionLoading || isDashboardLoading || isResourcesLoading) {
     return <CircleProgress />;
   }
 
@@ -123,6 +138,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
       metricDefinitions={metricDefinitions}
       preferences={preferences}
       resources={resources}
+      resourcesList={resourceList}
       savePref={savePref}
     />
   );

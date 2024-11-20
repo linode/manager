@@ -51,7 +51,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * token to fetch metrics data
    */
-  authToken?: string;
+  authToken: string;
 
   /**
    * metrics defined of this widget
@@ -79,7 +79,7 @@ export interface CloudPulseWidgetProperties {
   resourceIds: string[];
 
   /**
-   * List of selected resources available of selected service type
+   * List of resources available of selected service type
    */
   resources: CloudPulseResources[];
 
@@ -332,13 +332,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 ? metricsApiCallError ?? 'Error while rendering graph'
                 : undefined
             }
+            loading={
+              isLoading ||
+              metricsApiCallError === jweTokenExpiryError ||
+              isJweTokenFetching
+            } // keep loading until we are trying to fetch the refresh token
             areas={areas}
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
             dotRadius={1.5}
             height={424}
             legendRows={legendRows}
-            loading={isLoading || isJweTokenFetching} // keep loading until we are trying to fetch the refresh token
             showDot
             showLegend={data.length !== 0}
             timezone={timezone}
