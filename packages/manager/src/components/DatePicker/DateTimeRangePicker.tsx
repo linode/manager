@@ -51,7 +51,7 @@ export const DateTimeRangePicker = ({
   const handleEndDateTimeChange = (newEnd: DateTime | null) => {
     // Check if the end date is before the start date
     if (startDateTime && newEnd && newEnd < startDateTime) {
-      setError('Invalid dae and Time');
+      setError('Invalid date and time');
     } else {
       setEndDateTime(newEnd);
       setError(undefined); // Clear the error if the selection is valid
