@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Paper } from '@linode/ui';
-import { createAlertDefinitionSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -16,10 +15,11 @@ import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeverit
 import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
+import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
+import type { CreateAlertDefinitionForm } from './types';
 import type {
-  CreateAlertDefinitionForm,
   MetricCriteria,
   TriggerCondition,
 } from '@linode/api-v4/lib/cloudpulse/types';
@@ -70,7 +70,7 @@ export const CreateAlertDefinition = () => {
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
     mode: 'onBlur',
-    resolver: yupResolver(createAlertDefinitionSchema),
+    resolver: yupResolver(CreateAlertDefinitionFormSchema),
   });
 
   const {

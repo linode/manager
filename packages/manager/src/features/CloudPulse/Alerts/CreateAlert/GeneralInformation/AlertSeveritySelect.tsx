@@ -5,10 +5,8 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { alertSeverityOptions } from '../../constants';
 
-import type {
-  AlertSeverityType,
-  CreateAlertDefinitionForm,
-} from '@linode/api-v4';
+import type { CreateAlertDefinitionForm } from '../types';
+import type { AlertSeverityType } from '@linode/api-v4';
 import type { FieldPathByValue } from 'react-hook-form';
 export interface CloudPulseAlertSeveritySelectProps {
   /**

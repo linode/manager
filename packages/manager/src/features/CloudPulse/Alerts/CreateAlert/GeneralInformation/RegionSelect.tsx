@@ -4,17 +4,20 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
+import type { CreateAlertDefinitionForm } from '../types';
+import type { FieldPathByValue } from 'react-hook-form';
+
 export interface CloudViewRegionSelectProps {
   /**
    * name used for the component to set in the form
    */
-  name: string;
+  name: FieldPathByValue<CreateAlertDefinitionForm, string>;
 }
 
 export const CloudPulseRegionSelect = (props: CloudViewRegionSelectProps) => {
   const { name } = props;
   const { data: regions, isError, isLoading } = useRegionsQuery();
-  const { control } = useFormContext();
+  const { control } = useFormContext<CreateAlertDefinitionForm>();
   return (
     <Controller
       render={({ field, fieldState }) => (

@@ -156,12 +156,6 @@ export interface CreateAlertDefinitionPayload {
   triggerCondition: TriggerCondition;
   channel_ids: number[];
 }
-export interface CreateAlertDefinitionForm
-  extends CreateAlertDefinitionPayload {
-  region: string;
-  service_type: AlertServiceType | null;
-  engine_type: string | null;
-}
 export interface MetricCriteria {
   metric: string;
   aggregation_type: MetricAggregationType;

@@ -1,9 +1,7 @@
 import { omitProps } from '@linode/ui';
 
-import type {
-  CreateAlertDefinitionForm,
-  CreateAlertDefinitionPayload,
-} from '@linode/api-v4';
+import type { CreateAlertDefinitionForm } from './types';
+import type { CreateAlertDefinitionPayload } from '@linode/api-v4';
 
 export const filterFormValues = (
   formValues: CreateAlertDefinitionForm
