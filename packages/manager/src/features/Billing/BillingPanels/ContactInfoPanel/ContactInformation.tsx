@@ -197,13 +197,11 @@ export const ContactInformation = React.memo((props: Props) => {
           </Box>
         </BillingBox>
         {preferences?.maskSensitiveData && isContactInfoMasked ? (
-          <Grid container display="flex" flexDirection="row" padding={0}>
-            <Typography alignSelf="center">
-              This data is sensitive and masked for privacy. To turn off this
-              setting app-wide, go to{' '}
-              <Link to="/profile/settings">profile settings</Link>.
-            </Typography>
-          </Grid>
+          <Typography>
+            This data is sensitive and hidden for privacy. To unmask all
+            sensitive data by default, go to{' '}
+            <Link to="/profile/settings">profile settings</Link>.
+          </Typography>
         ) : (
           <Grid container display="flex" flexDirection="row" spacing={2}>
             {(firstName ||
