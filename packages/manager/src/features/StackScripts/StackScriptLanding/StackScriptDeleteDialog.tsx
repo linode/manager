@@ -1,8 +1,7 @@
-import { Stack } from '@linode/ui';
+import { Button, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Typography } from 'src/components/Typography';
 import { useDeleteStackScriptMutation } from 'src/queries/stackscripts';
