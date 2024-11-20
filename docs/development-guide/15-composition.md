@@ -52,3 +52,88 @@ The Linode Create Page is a good example of a complex form that is built using r
 ### Uncontrolled Forms
 Uncontrolled forms are a type of form that does not have a state for its values. It is often used for simple forms that do not need to be controlled, such as forms with a single input field or call to action.
 
+## Form Validation (React Hook Form)
+### Best Practices
+1. Keep API validation in `@linode/validation` package
+2. Create extended schemas in `@linode/manager` package when you need validation beyond the API contract
+3. Use yup.concat() to extend existing schemas
+4. Add custom validation logic within the resolver function
+5. Include type definitions for form values and context
+
+### Simple Schema Extension
+For basic form validation, extend the API schema directly:
+
+```typescript
+import { CreateWidgetSchema } from '@linode/validation';
+import { object, string } from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const extendedSchema = CreateWidgetSchema.concat(
+  object({
+    customField: string().required('Required field'),
+  })
+);
+
+const form = useForm({
+  resolver: yupResolver(extendedSchema)
+});
+```
+
+### Complex Schema Extensions
+For forms with multiple variants, you could create a `resolvers.ts` file where you:
+1. Create a resolver map:
+
+```typescript
+export const linodeCreateResolvers = {
+  Backups: CreateLinodeFromBackupSchema,
+  Images: CreateLinodeSchema,
+  OS: CreateLinodeSchema,
+  StackScripts: CreateLinodeFromStackScriptSchema,
+};
+```
+
+2. Create a resolver function (see: [LinodeCreate/resolvers](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/resolvers.ts]))
+
+```typescript
+export const getFormResolver = (
+  formType: string | undefined,
+  queryClient: QueryClient
+): Resolver<FormValues, FormContext> => {
+
+  // Get the appropriate schema based on form type
+  const schema = formResolvers[formType ?? 'basic'];
+
+  return async (values, context, options) => {
+    // Validate against the schema
+    const { errors } = await yupResolver(schema)(values, context, options);
+
+    // Add custom validation logic
+    if (someCondition) {
+      errors.fieldName = {
+        message: 'Custom error message',
+        type: 'validate',
+      };
+    }
+
+    // Use queryClient.ensureQueryData for async validations
+    const serverData = await queryClient.ensureQueryData(someQuery);
+    if (needsExtraValidation(serverData)) {
+      errors.otherField = {
+        message: 'Validation failed based on server data',
+        type: 'validate',
+      };
+    }
+
+    return { errors: errors ?? {}, values };
+  };
+};
+```
+
+3. Usage/Implementation (see: [LinodeCreate/index](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/index.tsx#L78))
+```typescript
+const form = useForm({
+  resolver: getFormResolver(formType, queryClient),
+  defaultValues,
+  context: { /* form context */ },
+});
+```
