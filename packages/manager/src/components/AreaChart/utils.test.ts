@@ -8,6 +8,7 @@ import {
   tooltipValueFormatter,
 } from './utils';
 
+import type { DataSet } from './AreaChart';
 import type { StorageSymbol } from 'src/utilities/unitConversions';
 
 const timestamp = 1704204000000;
@@ -75,14 +76,14 @@ describe('determinePower', () => {
 });
 
 describe('generate x-axis ticks', () => {
-  const data = [
-    { label: '0.3744841110560275', timestamp: 1721854379 },
-    { label: '0.4980357104166823', timestamp: 1721857979 },
-    { label: '0.3290476561287732', timestamp: 1721861579 },
-    { label: '0.42148793964961897', timestamp: 1721865179 },
-    { label: '0.2269247326830727', timestamp: 1721868779 },
-    { label: '0.3393055885526987', timestamp: 1721872379 },
-    { label: '0.5237102833940027', timestamp: 1721875979 },
+  const data: DataSet[] = [
+    { label: 0.3744841110560275, timestamp: 1721854379 },
+    { label: 0.4980357104166823, timestamp: 1721857979 },
+    { label: 0.3290476561287732, timestamp: 1721861579 },
+    { label: 0.4214879396496189, timestamp: 1721865179 },
+    { label: 0.2269247326830727, timestamp: 1721868779 },
+    { label: 0.3393055885526987, timestamp: 1721872379 },
+    { label: 0.5237102833940027, timestamp: 1721875979 },
   ];
   it('should return empty x-axis tick list', () => {
     const ticks = generate12HourTicks(data, 'GMT', 0);
