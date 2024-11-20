@@ -15,7 +15,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';
-import ContactInfo from './BillingPanels/ContactInfoPanel';
+import { ContactInformation } from './BillingPanels/ContactInfoPanel/ContactInformation';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 
 export const BillingDetail = () => {
@@ -67,7 +67,7 @@ export const BillingDetail = () => {
           paymentMethods={paymentMethods}
           promotions={account?.active_promotions}
         />
-        <ContactInfo
+        <ContactInformation
           address1={account.address_1}
           address2={account.address_2}
           city={account.city}

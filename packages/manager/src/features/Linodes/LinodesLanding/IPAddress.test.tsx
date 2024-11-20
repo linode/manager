@@ -130,7 +130,7 @@ describe('IPAddress masked', () => {
       />
     );
 
-    const visibilityToggles = getAllByTestId('VisibilityIcon');
+    const visibilityToggles = getAllByTestId('VisibilityTooltip');
 
     // First IP address should be masked
     expect(getAllByText('•••••••••••••••')[0]).toBeVisible();
@@ -166,7 +166,7 @@ describe('IPAddress masked', () => {
       />
     );
 
-    const visibilityToggles = getAllByTestId('VisibilityIcon');
+    const visibilityToggles = getAllByTestId('VisibilityTooltip');
 
     // First IP address should be masked but visible
     expect(getAllByText('•••••••••••••••')[0]).toBeVisible();

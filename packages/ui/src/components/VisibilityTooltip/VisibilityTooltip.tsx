@@ -1,5 +1,6 @@
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityShowIcon from 'src/assets/icons/visibilityShow.svg';
+import VisibilityHideIcon from 'src/assets/icons/visibilityHide.svg';
+
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -37,12 +38,13 @@ export const VisibilityTooltip = (props: Props) => {
       title={!isVisible ? 'Show' : 'Hide'}
       disableInteractive
       placement={placement ?? 'top'}
+      data-testid="VisibilityTooltip"
     >
       <StyledToggleButton onClick={handleClick}>
         {!isVisible ? (
-          <VisibilityIcon aria-label="Show" />
+          <VisibilityShowIcon aria-label="Show" />
         ) : (
-          <VisibilityOffIcon aria-label="Hide" />
+          <VisibilityHideIcon aria-label="Hide" />
         )}
       </StyledToggleButton>
     </Tooltip>
@@ -53,13 +55,15 @@ const StyledToggleButton = styled(IconButton, {
   label: 'StyledToggleButton',
 })(({ theme }) => ({
   '& svg': {
-    color: theme.palette.grey[500],
-    fontSize: '0.875rem',
+    '& path': {
+      stroke: theme.palette.grey[500],
+    },
   },
   '& svg:hover': {
-    color: theme.palette.primary.main,
+    '& path': {
+      stroke: theme.palette.primary.main,
+    },
   },
-  fontSize: '0.875rem',
   marginLeft: theme.spacing(),
   minHeight: 'auto',
   minWidth: 'auto',

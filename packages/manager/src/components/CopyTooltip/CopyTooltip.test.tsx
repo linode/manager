@@ -69,7 +69,7 @@ describe('CopyTooltip', () => {
     );
 
     const copyIconButton = getByLabelText(`Copy ${mockText} to clipboard`);
-    const visibilityToggle = getByTestId('VisibilityIcon');
+    const visibilityToggle = getByTestId('VisibilityTooltip');
 
     // Text should be masked
     expect(copyIconButton).toBeInTheDocument();
