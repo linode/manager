@@ -520,8 +520,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(eslint@7.32.0)
       eslint-plugin-react-refresh:
-        specifier: ^0.4.13
-        version: 0.4.14(eslint@7.32.0)
+        specifier: 0.4.13
+        version: 0.4.13(eslint@7.32.0)
       eslint-plugin-scanjs-rules:
         specifier: ^0.2.1
         version: 0.2.1
@@ -5406,8 +5406,8 @@ packages:
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
 
-  eslint-plugin-react-refresh@0.4.14:
-    resolution: {integrity: sha512-aXvzCTK7ZBv1e7fahFuR3Z/fyQQSIQ711yPgYRj+Oj64tyTgO4iQIDmYXDBqvSWQ/FA4OSCsXOStlF+noU0/NA==}
+  eslint-plugin-react-refresh@0.4.13:
+    resolution: {integrity: sha512-f1EppwrpJRWmqDTyvAyomFVDYRtrS7iTEqv3nokETnMiMzs2SSTmKRTACce4O2p4jYyowiSMvpdwC/RLcMFhuQ==}
     peerDependencies:
       eslint: '>=7'
 
@@ -15324,7 +15324,7 @@ snapshots:
     dependencies:
       eslint: 7.32.0
 
-  eslint-plugin-react-refresh@0.4.14(eslint@7.32.0):
+  eslint-plugin-react-refresh@0.4.13(eslint@7.32.0):
     dependencies:
       eslint: 7.32.0
 
