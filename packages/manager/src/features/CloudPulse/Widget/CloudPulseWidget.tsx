@@ -51,7 +51,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * token to fetch metrics data
    */
-  authToken: string;
+  authToken?: string;
 
   /**
    * metrics defined of this widget

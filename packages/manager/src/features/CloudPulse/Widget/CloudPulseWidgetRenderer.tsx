@@ -126,7 +126,8 @@ export const RenderWidgets = React.memo(
     if (
       !dashboard.service_type ||
       !Boolean(resources.length > 0) ||
-      (!isJweTokenFetching && !jweToken?.token)
+      (!isJweTokenFetching && !jweToken?.token) ||
+      !Boolean(resourceList?.length)
     ) {
       return renderPlaceHolder(
         'Select a dashboard and filters to visualize metrics.'
