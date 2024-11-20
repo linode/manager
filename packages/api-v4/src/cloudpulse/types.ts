@@ -39,7 +39,7 @@ export interface Widgets {
   namespace_id: number;
   color: string;
   size: number;
-  chart_type: string;
+  chart_type: 'line' | 'area';
   y_label: string;
   filters: Filters[];
   serviceType: string;
