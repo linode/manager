@@ -1,8 +1,9 @@
-import { isToday } from 'src/utilities/isToday';
+import { Alias } from '@linode/design-language-system';
+
 import { getMetrics } from 'src/utilities/statMetrics';
 
-import { COLOR_MAP, DEFAULT } from './CloudPulseWidgetColorPalette';
 import {
+  convertValueToUnit,
   formatToolTip,
   generateUnitByBaseUnit,
   transformData,
@@ -13,7 +14,6 @@ import {
 } from './utils';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { LegendRow } from '../Widget/CloudPulseWidget';
 import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
@@ -22,7 +22,9 @@ import type {
   Widgets,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { DataSet } from 'src/components/LineGraph/LineGraph';
+import type { DataSet } from 'src/components/AreaChart/AreaChart';
+import type { AreaProps } from 'src/components/AreaChart/AreaChart';
+import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
@@ -57,7 +59,7 @@ interface LabelNameOptionsProps {
   unit: string;
 }
 
-interface graphDataOptionsProps {
+interface GraphDataOptionsProps {
   /**
    * flags associated with metricsList
    */
@@ -84,24 +86,14 @@ interface graphDataOptionsProps {
   serviceType: string;
 
   /**
-   * status returned from react query ( loading | error | success)
+   * status returned from react query ( pending | error | success)
    */
-  status: string | undefined;
+  status: 'error' | 'pending' | 'success';
 
   /**
    * unit of the data
    */
   unit: string;
-
-  /**
-   * widget chart type
-   */
-  widgetChartType: string;
-
-  /**
-   * preferred color for the widget's graph
-   */
-  widgetColor: string;
 }
 
 interface MetricRequestProps {
@@ -143,11 +135,33 @@ interface DimensionNameProperties {
   resources: CloudPulseResources[];
 }
 
+interface GraphData {
+  /**
+   * array of area props to be shown on graph
+   */
+  areas: AreaProps[];
+
+  /**
+   * plots to be shown of each dimension
+   */
+  dimensions: DataSet[];
+
+  /**
+   * legends rows available for each dimension
+   */
+  legendRowsData: MetricsDisplayRow[];
+
+  /**
+   * maximum possible rolled up unit for the data
+   */
+  unit: string;
+}
+
 /**
  *
  * @returns parameters which will be necessary to populate graph & legends
  */
-export const generateGraphData = (props: graphDataOptionsProps) => {
+export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   const {
     flags,
     label,
@@ -156,28 +170,22 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
     serviceType,
     status,
     unit,
-    widgetChartType,
-    widgetColor,
   } = props;
-
-  const dimensions: DataSet[] = [];
-  const legendRowsData: LegendRow[] = [];
-
-  // If the color is not found in the map, fallback to default color theme
-  const colors = COLOR_MAP.get(widgetColor) ?? DEFAULT;
-  let today = false;
-
+  const legendRowsData: MetricsDisplayRow[] = [];
+  const dimension: { [timestamp: number]: { [label: string]: number } } = {};
+  const areas: AreaProps[] = [];
+  const colors = Object.values(Alias.Chart.Categorical);
   if (status === 'success') {
     metricsList?.data?.result?.forEach(
       (graphData: CloudPulseMetricsList, index) => {
         if (!graphData) {
           return;
         }
+
         const transformedData = {
           metric: graphData.metric,
           values: transformData(graphData.values, unit),
         };
-        const color = colors[index];
         const { end, start } = convertTimeDurationToStartAndEndTimeRange({
           unit: 'min',
           value: 30,
@@ -194,33 +202,62 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
           serviceType,
           unit,
         };
+        const labelName = getLabelName(labelOptions);
+        const data = seriesDataFormatter(transformedData.values, start, end);
+        const color = colors[index % 22].Primary;
+        areas.push({
+          color,
+          dataKey: labelName,
+        });
 
-        const dimension = {
-          backgroundColor: color,
-          borderColor: color,
-          data: seriesDataFormatter(transformedData.values, start, end),
-          fill: widgetChartType === 'area',
-          label: getLabelName(labelOptions),
-        };
+        // map each label & its data point to its timestamp
+        data.forEach((dataPoint) => {
+          const timestamp = dataPoint[0];
+          const value = dataPoint[1];
+          if (value !== null) {
+            dimension[timestamp] = {
+              ...dimension[timestamp],
+              [labelName]: value,
+            };
+          }
+        });
         // construct a legend row with the dimension
-        const legendRow = {
-          data: getMetrics(dimension.data as number[][]),
+        const legendRow: MetricsDisplayRow = {
+          data: getMetrics(data as number[][]),
           format: (value: number) => formatToolTip(value, unit),
           legendColor: color,
-          legendTitle: dimension.label,
+          legendTitle: labelName,
         };
         legendRowsData.push(legendRow);
-        dimensions.push(dimension);
-        today ||= isToday(start, end);
       }
     );
   }
 
+  const maxUnit = generateMaxUnit(legendRowsData, unit);
+  const dimensions = Object.entries(dimension)
+    .map(
+      ([timestamp, resource]): DataSet => {
+        const rolledUpData = Object.entries(resource).reduce(
+          (oldValue, newValue) => {
+            return {
+              ...oldValue,
+              [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
+            };
+          },
+          {}
+        );
+
+        return { timestamp: Number(timestamp), ...rolledUpData };
+      }
+    )
+    .sort(
+      (dimension1, dimension2) => dimension1.timestamp - dimension2.timestamp
+    );
   return {
+    areas,
     dimensions,
     legendRowsData,
-    today,
-    unit: generateMaxUnit(legendRowsData, unit),
+    unit: maxUnit,
   };
 };
 
@@ -230,7 +267,7 @@ export const generateGraphData = (props: graphDataOptionsProps) => {
  * @param unit base unit of the values
  * @returns maximum possible rolled up unit based on the unit
  */
-const generateMaxUnit = (legendRowsData: LegendRow[], unit: string) => {
+const generateMaxUnit = (legendRowsData: MetricsDisplayRow[], unit: string) => {
   const maxValue = Math.max(
     0,
     ...legendRowsData?.map((row) => row?.data.max ?? 0)
@@ -321,20 +358,6 @@ export const mapResourceIdToName = (
 
 /**
  *
- * @param data data set to be checked for empty
- * @returns true if data is not empty or contains all the null values otherwise false
- */
-export const isDataEmpty = (data: DataSet[]): boolean => {
-  return data.every(
-    (thisSeries) =>
-      thisSeries.data.length === 0 ||
-      // If we've padded the data, every y value will be null
-      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
-  );
-};
-
-/**
- *
  * @param theme mui theme
  * @returns The style needed for widget level autocomplete filters
  */
@@ -347,38 +370,3 @@ export const getAutocompleteWidgetStyles = (theme: Theme) => ({
     width: '90px',
   },
 });
-
-/**
- * This method handles the existing issue in chart JS, and it will deleted when the recharts migration is completed
- * @param arraysToBeFilled The list of dimension data to be filled
- * @returns The list of dimension data filled with null values for missing timestamps
- */
-// TODO: CloudPulse - delete when recharts migration completed
-export const fillMissingTimeStampsAcrossDimensions = (
-  ...arraysToBeFilled: [number, number | null][][]
-): [number, number | null][][] => {
-  if (arraysToBeFilled.length === 0) return [];
-
-  // Step 1: Collect all unique keys from all arrays
-  const allTimestamps = new Set<number>();
-
-  // Collect timestamps from each array, array[0], contains the number timestamp
-  arraysToBeFilled.forEach((array) => {
-    array.forEach(([timeStamp]) => allTimestamps.add(timeStamp));
-  });
-
-  // Step 2: Sort the timestamps to maintain chronological order
-  const sortedTimestamps = Array.from(allTimestamps).sort((a, b) => a - b);
-
-  // Step 3: Synchronize the arrays to have null values for all missing timestamps
-  return arraysToBeFilled.map((array) => {
-    // Step 3.1: Convert the array into a map for fast lookup
-    const map = new Map(array.map(([key, value]) => [key, value]));
-
-    // Step 3.2: Build the synchronized array by checking if a key exists
-    return sortedTimestamps.map((key) => {
-      // If the current array has the key, use its value; otherwise, set it to null, so that the gap is properly visible
-      return [key, map.get(key) ?? null] as [number, number | null];
-    });
-  });
-};
