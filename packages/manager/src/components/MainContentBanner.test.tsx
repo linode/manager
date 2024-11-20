@@ -37,7 +37,7 @@ describe('MainContentBanner', () => {
     expect(link).toBeVisible();
     expect(link).toBeEnabled();
     expect(link).toHaveRole('link');
-    expect(link).toHaveAttribute('href', 'https://akamai.com');
+    expect(link).toHaveAttribute('href', 'https://akamai.com/');
   });
 
   it('should be dismissable', async () => {
