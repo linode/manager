@@ -1,11 +1,10 @@
-import { Notice } from '@linode/ui';
+import { Button, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Typography } from 'src/components/Typography';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';

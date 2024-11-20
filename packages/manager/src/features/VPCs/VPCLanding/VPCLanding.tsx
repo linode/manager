@@ -2,7 +2,7 @@ import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
+import { CircleProgress } from '@linode/ui';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';

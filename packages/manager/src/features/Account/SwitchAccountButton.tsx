@@ -1,7 +1,9 @@
+import { Button } from '@linode/ui';
 import * as React from 'react';
 
 import SwapIcon from 'src/assets/icons/swapSmall.svg';
-import { Button, ButtonProps } from 'src/components/Button/Button';
+
+import type { ButtonProps } from '@linode/ui';
 
 export const SwitchAccountButton = (props: ButtonProps) => {
   return (

@@ -77,7 +77,7 @@ export const useStyles = makeStyles<
   },
   warning: {
     [`& .${classes.icon}`]: {
-      color: '#555',
+      color: theme.tokens.color.Neutrals[80],
     },
     [`&.${classes.important}`]: {
       borderLeftWidth: 32,

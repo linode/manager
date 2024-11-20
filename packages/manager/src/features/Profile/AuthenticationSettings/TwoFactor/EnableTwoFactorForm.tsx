@@ -1,8 +1,7 @@
 import { confirmTwoFactor } from '@linode/api-v4/lib/profile';
-import { Divider, Notice } from '@linode/ui';
+import { CircleProgress, Divider, Notice } from '@linode/ui';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 

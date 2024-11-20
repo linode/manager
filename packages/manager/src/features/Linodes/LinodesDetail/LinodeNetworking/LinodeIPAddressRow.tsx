@@ -1,8 +1,8 @@
+import { CircleProgress } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { parse as parseIP } from 'ipaddr.js';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';

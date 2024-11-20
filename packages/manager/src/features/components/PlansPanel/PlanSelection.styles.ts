@@ -1,6 +1,6 @@
+import { Chip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Chip } from 'src/components/Chip';
 import { TableCell } from 'src/components/TableCell';
 
 export const StyledChip = styled(Chip, { label: 'StyledChip' })(

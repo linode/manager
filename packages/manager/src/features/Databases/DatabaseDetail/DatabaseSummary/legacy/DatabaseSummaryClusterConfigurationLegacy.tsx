@@ -1,8 +1,7 @@
-import { Box } from '@linode/ui';
+import { Box, TooltipIcon } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';

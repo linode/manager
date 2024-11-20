@@ -10,6 +10,7 @@ import { useProfile } from 'src/queries/profile/profile';
 import {
   generateGraphData,
   getCloudPulseMetricRequest,
+  fillMissingTimeStampsAcrossDimensions,
 } from '../Utils/CloudPulseWidgetUtils';
 import { AGGREGATE_FUNCTION, SIZE, TIME_GRANULARITY } from '../Utils/constants';
 import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
@@ -256,6 +257,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     });
 
     data = generatedData.dimensions;
+
+    // add missing timestamps across all the dimensions
+    const filledArrays = fillMissingTimeStampsAcrossDimensions(
+      ...data.map((data) => data.data)
+    );
+
+    //update the chart data with updated arrays
+    filledArrays.forEach((arr, index) => {
+      data[index].data = arr;
+    });
+
     legendRows = generatedData.legendRowsData;
     scaledWidgetUnit.current = generatedData.unit; // here state doesn't matter, as this is always the latest re-render
     currentUnit = generatedData.unit;

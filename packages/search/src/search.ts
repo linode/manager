@@ -1,5 +1,5 @@
 import { generate } from 'peggy';
-import type { Filter } from '@linode/api-v4';
+import type { Filter, FilterConditionTypes } from '@linode/api-v4';
 import grammar from './search.peggy?raw';
 
 const parser = generate(grammar);
@@ -8,10 +8,16 @@ interface Options {
   /**
    * Defines the API fields filtered against (currently using +contains)
    * when the search query contains no operators.
-   * 
+   *
    * @example ['label', 'tags']
    */
   searchableFieldsWithoutOperator: string[];
+  /**
+   * Somtimes, we may need to change the way the parser transforms operations
+   * into API filters. This option allows you to specify a custom transformation
+   * for a specific searchable field.
+   */
+  filterShapeOverrides?: Partial<Record<keyof FilterConditionTypes, { field: string; filter: (value: string) => Filter }>>;
 }
 
 /**

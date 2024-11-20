@@ -17,7 +17,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '&[class*="strength-"]': {
       backgroundColor: theme.palette.primary.main,
     },
-    backgroundColor: '#C9CACB',
+    backgroundColor: theme.tokens.color.Neutrals[40],
     height: '4px',
     transition: 'background-color .5s ease-in-out',
   },

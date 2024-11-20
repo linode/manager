@@ -1,8 +1,7 @@
+import { Radio, RadioGroup } from '@linode/ui';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Radio } from 'src/components/Radio/Radio';
-import { RadioGroup } from 'src/components/RadioGroup';
 
 type Mode = 'attach' | 'create';
 
