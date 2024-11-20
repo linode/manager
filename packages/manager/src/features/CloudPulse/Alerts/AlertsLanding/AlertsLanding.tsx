@@ -1,9 +1,11 @@
+import { Button } from '@linode/ui';
 import { Box, Paper } from '@linode/ui';
 import * as React from 'react';
 import {
   Redirect,
   Route,
   Switch,
+  useHistory,
   useLocation,
   useRouteMatch,
 } from 'react-router-dom';
@@ -20,6 +22,7 @@ export const AlertsLanding = React.memo(() => {
   const flags = useFlags();
   const { url } = useRouteMatch();
   const { pathname } = useLocation();
+  const history = useHistory();
   const alertTabs = React.useMemo<EnabledAlertTab[]>(
     () => [
       {
@@ -44,9 +47,17 @@ export const AlertsLanding = React.memo(() => {
       ),
     [accessibleTabs, pathname]
   );
+  const handleChange = (index: number) => {
+    history.push(alertTabs[index].tab.routeName);
+  };
+
   return (
     <Paper sx={{ padding: 2 }}>
-      <Tabs index={activeTabIndex} style={{ width: '100%' }}>
+      <Tabs
+        index={activeTabIndex}
+        onChange={handleChange}
+        sx={{ width: '100%' }}
+      >
         <Box
           sx={{
             aligneItems: 'center',
@@ -57,6 +68,19 @@ export const AlertsLanding = React.memo(() => {
           }}
         >
           <TabLinkList tabs={accessibleTabs} />
+          {pathname === `${url}/definitions` && (
+            <Box>
+              <Button
+                onClick={() => {
+                  history.push(`${url}/definitions/create`);
+                }}
+                buttonType="primary"
+                variant="contained"
+              >
+                Create
+              </Button>
+            </Box>
+          )}
         </Box>
         <Switch>
           <Route

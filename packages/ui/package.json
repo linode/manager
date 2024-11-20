@@ -2,7 +2,7 @@
   "name": "@linode/ui",
   "author": "Linode",
   "description": "Linode UI component library",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -54,6 +54,7 @@
     "eslint-plugin-prettier": "~3.3.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "lint-staged": "^15.2.9",
-    "prettier": "~2.2.1"
+    "prettier": "~2.2.1",
+    "vite-plugin-svgr": "^3.2.0"
   }
 }

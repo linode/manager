@@ -2,9 +2,10 @@ import { Box } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
+import { MenuItem } from 'src/components/MenuItem';
 
 import { PaginationControls } from '../PaginationControls/PaginationControls';
+import { TextField } from '../TextField';
 
 export const MIN_PAGE_SIZE = 25;
 
@@ -80,36 +81,58 @@ export const PaginationFooter = (props: Props) => {
         />
       )}
       {!fixedSize ? (
-        <PageSizeSelectContainer data-qa-pagination-page-size>
-          <Autocomplete
-            disableClearable
+        <Box data-qa-pagination-page-size padding={0.5}>
+          <StyledTextField
+            SelectProps={{
+              MenuProps: {
+                disablePortal: true,
+              },
+            }}
+            defaultValue={defaultPagination}
+            hideLabel
             label="Number of items to show"
-            onChange={(_, selected) => handleSizeChange(selected.value)}
-            options={finalOptions}
-            textFieldProps={{ hideLabel: true, noMarginTop: true }}
-            value={defaultPagination}
-          />
-        </PageSizeSelectContainer>
+            onChange={(e) => handleSizeChange(Number(e.target.value))}
+            select
+            value={pageSize}
+          >
+            {finalOptions.map((option) => (
+              <MenuItem
+                data-qa-pagination-page-size-option={option.value}
+                key={option.value}
+                value={option.value}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </StyledTextField>
+        </Box>
       ) : null}
     </Box>
   );
 };
 
-const PageSizeSelectContainer = styled(Box, {
-  label: 'PageSizeSelectContainer',
+const StyledTextField = styled(TextField, {
+  label: 'StyledTextField',
 })(({ theme }) => ({
-  '& .MuiInput-input': {
-    paddingTop: 4,
-  },
   '& .MuiInput-root': {
-    '&.Mui-focused': {
-      boxShadow: 'none',
-    },
     backgroundColor: theme.bg.bgPaper,
+    border: '1px solid transparent',
+  },
+  '& .MuiList-root': {
+    border: `1px solid ${theme.palette.primary.main}`,
+  },
+  '& .MuiSelect-select': {
     border: 'none',
   },
-  '& .react-select__value-container': {
-    paddingLeft: 12,
+  '& .MuiSvgIcon-root': {
+    margin: 0,
+    padding: 0,
+    position: 'relative',
+    top: 0,
+  },
+  '&.Mui-focused': {
+    border: `1px dotted ${theme.color.grey1}`,
+    boxShadow: 'none',
   },
 }));
 

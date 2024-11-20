@@ -1,9 +1,9 @@
+import { CircleProgress } from '@linode/ui';
 import { Box } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -37,8 +37,8 @@ const DatabaseLanding = () => {
 
   const {
     isDatabasesV2Enabled,
-    isUserExistingBeta,
     isDatabasesV2GA,
+    isUserExistingBeta,
     isUserNewBeta,
   } = useIsDatabasesEnabled();
 
@@ -147,6 +147,7 @@ const DatabaseLanding = () => {
       <DatabaseLandingTable
         data={legacyDatabases?.data}
         handleOrderChange={legacyDatabaseHandleOrderChange}
+        results={legacyDatabases?.results}
         order={legacyDatabaseOrder}
         orderBy={legacyDatabaseOrderBy}
       />
@@ -156,6 +157,7 @@ const DatabaseLanding = () => {
   const defaultTable = () => {
     return (
       <DatabaseLandingTable
+        results={newDatabases?.results}
         data={newDatabases?.data}
         handleOrderChange={newDatabaseHandleOrderChange}
         isNewDatabase={true}

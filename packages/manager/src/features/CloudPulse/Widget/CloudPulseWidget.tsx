@@ -26,10 +26,10 @@ import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { Widgets } from '@linode/api-v4';
 import type {
   AvailableMetrics,
-  DataSet,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
+import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type {
   AreaProps,
   ChartVariant,
@@ -243,7 +243,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   let legendRows: MetricsDisplayRow[] = [];
   let currentUnit = unit;
   let areas: AreaProps[] = [];
-  const variant: ChartVariant = widget.chart_type === 'line' ? 'line' : 'area';
+  const variant: ChartVariant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       flags,

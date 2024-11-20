@@ -10,7 +10,7 @@ import {
   StyledButton,
   StyledTable,
   StyledTableCell,
-} from './MetricDisplay.styles';
+} from './MetricsDisplay.styles';
 
 import type { Metrics } from 'src/utilities/statMetrics';
 

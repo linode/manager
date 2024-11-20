@@ -1,8 +1,8 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { CircleProgress } from '@linode/ui';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import type { AreaChartProps } from 'src/components/AreaChart/AreaChart';
@@ -17,6 +17,9 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
 
   const theme = useTheme();
 
+  // to reduce the x-axis tick count for small screen
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   if (loading) {
     return <CircleProgress sx={{ minHeight: '380px' }} />;
   }
@@ -26,7 +29,6 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
   }
 
   const noDataMessage = 'No data to display';
-
   return (
     <Box p={2} position="relative">
       {error ? (
@@ -38,7 +40,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           {...rest}
           fillOpacity={0.5}
           legendHeight={theme.spacing(16)}
-          xAxisTickCount={7}
+          xAxisTickCount={isSmallScreen ? undefined : 7}
         />
       )}
       {rest.data.length === 0 && (

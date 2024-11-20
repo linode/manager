@@ -1,15 +1,20 @@
 ## Description 📝
+
 Highlight the Pull Request's context and intentions.
 
 ## Changes  🔄
-List any change relevant to the reviewer.
+
+List any change(s) relevant to the reviewer.
+
 - ...
 - ...
 
 ## Target release date 🗓️
+
 Please specify a release date (and environment, if applicable) to guarantee timely review of this PR. If exact date is not known, please approximate and update it as needed.
 
 ## Preview 📷
+
 **Include a screenshot or screen recording of the change.**
 
 :lock: Use the [Mask Sensitive Data](https://cloud.linode.com/profile/settings) setting for security.
@@ -23,21 +28,27 @@ Please specify a release date (and environment, if applicable) to guarantee time
 ## How to test 🧪
 
 ### Prerequisites
+
 (How to setup test environment)
+
 - ...
 - ...
 
 ### Reproduction steps
+
 (How to reproduce the issue, if applicable)
-- ...
-- ...
+
+- [ ] ...
+- [ ] ...
 
 ### Verification steps
-(How to verify changes)
-- ...
-- ...
 
-## As an Author I have considered 🤔
+(How to verify changes)
+
+- [ ] ...
+- [ ] ...
+
+## As an Author, I have considered 🤔
 
 *Check all that apply*
 
@@ -55,7 +66,18 @@ Please specify a release date (and environment, if applicable) to guarantee time
 - [ ] Keep component size small & move big computing functions to separate utility
 - [ ] 📱 Providing mobile support
 
+<br/>
+
+- [ ] I have read and considered all applicable items listed above.
+
+## As an Author, before moving this PR from Draft to Open, I confirmed ✅
+
+- [ ] All unit tests are passing
+- [ ] TypeScript compilation succeeded without errors
+- [ ] Code passes all linting rules
+
 ---
+
 ## Commit message and pull request title format standards
 
 > **Note**: Remove this section before opening the pull request
@@ -64,6 +86,7 @@ Please specify a release date (and environment, if applicable) to guarantee time
 `<commit type>: [JIRA-ticket-number] - <description>`
 
 **Commit Types:**
+
 - `feat`: New feature for the user (not a part of the code, or ci, ...).
 - `fix`: Bugfix for the user (not a fix to build something, ...).
 - `change`: Modifying an existing visual UI instance. Such as a component or a feature.

@@ -4,6 +4,8 @@ import { Route, Switch } from 'react-router-dom';
 
 import { Typography } from 'src/components/Typography';
 
+import { CreateAlertDefinition } from '../CreateAlert/CreateAlertDefinition';
+
 export const AlertDefinitionLanding = () => {
   return (
     <Switch>
@@ -11,6 +13,10 @@ export const AlertDefinitionLanding = () => {
         component={AlertDefinition}
         exact
         path="/monitor/alerts/definitions"
+      />
+      <Route
+        component={() => <CreateAlertDefinition />}
+        path="/monitor/cloudpulse/alerts/definitions/create"
       />
     </Switch>
   );
