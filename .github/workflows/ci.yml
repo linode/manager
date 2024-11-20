@@ -19,13 +19,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v4
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn --frozen-lockfile
-      - run: yarn workspace ${{ matrix.package }} run lint
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run --filter ${{ matrix.package }} lint
 
   build-validation:
     runs-on: ubuntu-latest
