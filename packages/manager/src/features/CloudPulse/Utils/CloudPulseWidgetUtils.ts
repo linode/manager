@@ -23,6 +23,7 @@ import type {
   Widgets,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
@@ -86,9 +87,9 @@ interface GraphDataOptionsProps {
   serviceType: string;
 
   /**
-   * status returned from react query ( loading | error | success)
+   * status returned from react query ( pending | error | success)
    */
-  status: string | undefined;
+  status: 'error' | 'pending' | 'success';
 
   /**
    * unit of the data
@@ -210,6 +211,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           dataKey: labelName,
         });
 
+        // map each label & its data point to its timestamp
         data.forEach((dataPoint) => {
           const timestamp = dataPoint[0];
           const value = dataPoint[1];
