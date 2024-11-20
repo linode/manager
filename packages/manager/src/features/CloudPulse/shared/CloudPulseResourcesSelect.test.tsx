@@ -253,7 +253,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
     expect(screen.getByText('Failed to fetch Resources.')).toBeInTheDocument();
   });
 
-  it('should be able to select limited resources', () => {
+  it('should be able to select limited resources and select/deselect all will not be available if resource are more than max resource selection limit', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodeFactory.buildList(12),
       isError: false,
@@ -288,5 +288,32 @@ describe('CloudPulseResourcesSelect component tests', () => {
     );
 
     expect(queryByRole('option', { name: SELECT_ALL })).not.toBeInTheDocument();
+  });
+
+  it('should be able to select all and deselect all the resources when number of resources are equal to resource limit', () => {
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(10),
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        handleResourcesSelection={mockResourceHandler}
+        label="Resources"
+        region={'us-east'}
+        resourceType={'linode'}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
+    fireEvent.click(screen.getByRole('option', { name: SELECT_ALL }));
+    fireEvent.click(screen.getByRole('option', { name: 'Deselect All' }));
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+
+    for (let i = 26; i <= 35; i++) {
+      expect(
+        screen.getByRole('option', { name: `linode-${i}` })
+      ).toHaveAttribute(ARIA_SELECTED, 'false');
+    }
   });
 });
