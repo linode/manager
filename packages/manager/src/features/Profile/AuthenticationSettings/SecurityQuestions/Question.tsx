@@ -1,9 +1,9 @@
 import { InputLabel } from '@linode/ui';
-import { MaskableText } from 'linode-manager/src/components/MaskableText/MaskableText';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { LinkButton } from 'src/components/LinkButton';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Typography } from 'src/components/Typography';
 
 import type { SecurityQuestion } from '@linode/api-v4/lib/profile';
