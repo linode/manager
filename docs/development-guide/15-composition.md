@@ -96,12 +96,12 @@ export const linodeCreateResolvers = {
 
 ```typescript
 export const getFormResolver = (
-  formType: string | undefined,
+  type: string | undefined,
   queryClient: QueryClient
 ): Resolver<FormValues, FormContext> => {
 
   // Get the appropriate schema based on form type
-  const schema = formResolvers[formType ?? 'basic'];
+  const schema = linodeCreateResolvers[type ?? 'Backups'];
 
   return async (values, context, options) => {
     // Validate against the schema
@@ -132,7 +132,7 @@ export const getFormResolver = (
 3. Usage/Implementation (see: [LinodeCreate/index](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/index.tsx#L78))
 ```typescript
 const form = useForm({
-  resolver: getFormResolver(formType, queryClient),
+  resolver: getFormResolver(type, queryClient),
   defaultValues,
   context: { /* form context */ },
 });
