@@ -118,6 +118,9 @@ jobs:
     needs: build-sdk
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
@@ -133,10 +136,10 @@ jobs:
           path: packages/api-v4/lib
 
       # Create an api-v4 tarball
-      - run: cd packages/api-v4 && npm pack --pack-destination ../../
+      - run: cd packages/api-v4 && pnpm pack --pack-destination ../../
 
       # Create an validation tarball
-      - run: cd packages/validation && npm pack --pack-destination ../../
+      - run: cd packages/validation && pnpm pack --pack-destination ../../
 
       # Test @linode/api-v4 as an ES Module
       - run: mkdir test-sdk-esm && cd test-sdk-esm && npm init es6 -y && npm install ../$(ls ../ | grep "linode-api-v4-.*\.tgz") ../$(ls ../ | grep "linode-validation-.*\.tgz")
