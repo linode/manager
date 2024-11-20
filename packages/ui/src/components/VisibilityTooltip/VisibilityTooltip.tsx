@@ -38,6 +38,7 @@ export const VisibilityTooltip = (props: Props) => {
       title={!isVisible ? 'Show' : 'Hide'}
       disableInteractive
       placement={placement ?? 'top'}
+      data-testid="VisibilityTooltip"
     >
       <StyledToggleButton onClick={handleClick}>
         {!isVisible ? (
