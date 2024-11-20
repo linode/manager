@@ -14,7 +14,6 @@ import {
 } from './utils';
 
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { DataSet } from '../Widget/components/CloudPulseLineGraph';
 import type {
   CloudPulseMetricsList,
   CloudPulseMetricsRequest,
@@ -23,6 +22,7 @@ import type {
   Widgets,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
+import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';

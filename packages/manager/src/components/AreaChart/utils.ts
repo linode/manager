@@ -2,7 +2,8 @@ import { DateTime } from 'luxon';
 
 import { roundTo } from 'src/utilities/roundTo';
 
-import { LinodeNetworkTimeData } from './types';
+import type { DataSet } from './AreaChart';
+import type { LinodeNetworkTimeData } from './types';
 
 export const getAccessibleTimestamp = (timestamp: number, timezone: string) =>
   DateTime.fromMillis(timestamp, { zone: timezone }).toLocaleString(
@@ -36,8 +37,15 @@ export const humanizeLargeData = (value: number) => {
   return `${value}`;
 };
 
+/**
+ *
+ * @param data dataset for which ticks should be generated
+ * @param timezone timezone applicable to timestamp in the dataset
+ * @param tickCount number of ticks to be generated
+ * @returns list of tickCount number of x-axis ticks
+ */
 export const generate12HourTicks = (
-  data: any[],
+  data: DataSet[],
   timezone: string,
   tickCount: number
 ) => {

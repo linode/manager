@@ -7,11 +7,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 
 import type { AreaChartProps } from 'src/components/AreaChart/AreaChart';
 
-export interface DataSet {
-  [label: string]: number;
-  timestamp: number;
-}
-
 export interface CloudPulseLineGraph extends AreaChartProps {
   error?: string;
   loading?: boolean;

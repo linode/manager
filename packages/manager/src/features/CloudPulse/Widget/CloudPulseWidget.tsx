@@ -23,13 +23,13 @@ import { ZoomIcon } from './components/Zoomer';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
-import type { DataSet } from './components/CloudPulseLineGraph';
 import type { Widgets } from '@linode/api-v4';
 import type {
   AvailableMetrics,
   TimeDuration,
   TimeGranularity,
 } from '@linode/api-v4';
+import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type {
   AreaProps,
   ChartVariant,
