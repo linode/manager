@@ -5,14 +5,17 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import type { Item } from '../../constants';
-import type { CreateAlertDefinitionForm } from '@linode/api-v4';
+import type {
+  AlertServiceType,
+  CreateAlertDefinitionForm,
+} from '@linode/api-v4';
 import type { FieldPathByValue } from 'react-hook-form';
 
 interface CloudPulseServiceSelectProps {
   /**
    * name used for the component in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, null | string>;
+  name: FieldPathByValue<CreateAlertDefinitionForm, AlertServiceType>;
 }
 
 export const CloudPulseServiceSelect = (
@@ -26,11 +29,14 @@ export const CloudPulseServiceSelect = (
   } = useCloudPulseServiceTypes(true);
   const { control } = useFormContext<CreateAlertDefinitionForm>();
 
-  const getServicesList = React.useMemo((): Item<string, string>[] => {
+  const getServicesList = React.useMemo((): Item<
+    string,
+    AlertServiceType
+  >[] => {
     return serviceOptions && serviceOptions.data.length > 0
       ? serviceOptions.data.map((service) => ({
           label: service.label,
-          value: service.service_type,
+          value: service.service_type as AlertServiceType,
         }))
       : [];
   }, [serviceOptions]);
@@ -43,7 +49,11 @@ export const CloudPulseServiceSelect = (
             fieldState.error?.message ??
             (serviceTypesError ? 'Failed to fetch the service types.' : '')
           }
-          onChange={(_, selected: { label: string; value: string }, reason) => {
+          onChange={(
+            _,
+            selected: { label: string; value: AlertServiceType },
+            reason
+          ) => {
             if (selected) {
               field.onChange(selected.value);
             }

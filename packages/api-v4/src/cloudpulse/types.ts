@@ -1,6 +1,7 @@
 export type AlertSeverityType = 0 | 1 | 2 | 3 | null;
 type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count' | null;
 type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte' | null;
+export type AlertServiceType = 'linode' | 'dbaas' | null;
 type DimensionFilterOperatorType =
   | 'eq'
   | 'neq'
@@ -158,7 +159,7 @@ export interface CreateAlertDefinitionPayload {
 export interface CreateAlertDefinitionForm
   extends CreateAlertDefinitionPayload {
   region: string;
-  service_type: string | null;
+  service_type: AlertServiceType | null;
   engine_type: string | null;
 }
 export interface MetricCriteria {
@@ -187,7 +188,7 @@ export interface Alert {
   status: AlertStatusType;
   type: AlertDefinitionType;
   severity: AlertSeverityType;
-  service_type: string;
+  service_type: AlertServiceType;
   resource_ids: string[];
   rule_criteria: {
     rules: MetricCriteria[];

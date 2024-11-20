@@ -16,7 +16,7 @@ import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeverit
 import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
-import { getCreateAlertPayload } from './utilities';
+import { filterFormValues } from './utilities';
 
 import type {
   CreateAlertDefinitionForm,
@@ -89,7 +89,7 @@ export const CreateAlertDefinition = () => {
   const serviceWatcher = watch('service_type');
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await createAlert(getCreateAlertPayload(values));
+      await createAlert(filterFormValues(values));
       enqueueSnackbar('Alert successfully created', {
         variant: 'success',
       });
@@ -146,7 +146,7 @@ export const CreateAlertDefinition = () => {
             name="description"
           />
           <CloudPulseServiceSelect name="service_type" />
-          {serviceWatcher === 'dbaas' && <EngineOption name={'engine_type'} />}
+          {serviceWatcher === 'dbaas' && <EngineOption name="engine_type" />}
           <CloudPulseRegionSelect name="region" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <ActionsPanel
