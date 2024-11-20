@@ -4,13 +4,13 @@ import * as React from 'react';
 
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { useIsAcceleratedEnabled } from 'src/features/components/PlansPanel/utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
 
 import { ADD_NODE_POOLS_DESCRIPTION } from '../ClusterList/constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
-import { useIsAcceleratedEnabled } from 'src/features/components/PlansPanel/utils';
 
 import type {
   KubeNodePoolResponse,
