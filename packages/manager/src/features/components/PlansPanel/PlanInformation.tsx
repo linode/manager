@@ -104,34 +104,26 @@ export const PlanInformation = (props: PlanInformationProps) => {
         </>
       ) : null}
       {planType === 'accelerated' && (
-        // TODO CONNIE GET THE LINK(s) pls
-        <>
-          <Notice spacingBottom={8} variant="warning">
-            <Typography
-              fontFamily={(theme: Theme) => theme.font.bold}
-              fontSize="1rem"
-            >
-              <List sx={{ listStyleType: 'disc', pl: 2 }}>
-                <ListItem disablePadding sx={{ display: 'list-item' }}>
-                  These plans have limited deployment availability.{' '}
-                  <Link to="#">Learn more</Link> and request access to
-                  Accelerated plans.
-                </ListItem>
-                <ListItem disablePadding sx={{ display: 'list-item' }}>
-                  Transfer costs not included in the plan price will be charged
-                  additionally. <Link to={TRANSFER_COSTS_LINK}>Learn more</Link>{' '}
-                  about pricing and transfer costs.
-                </ListItem>
-              </List>
-            </Typography>
-          </Notice>
-          <PlansAvailabilityNotice
-            hasSelectedRegion={hasSelectedRegion}
-            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-            planType={planType}
-            regionsData={regionsData || []}
-          />
-        </>
+        // TODO Connie get the doclinks
+        <Notice variant="warning">
+          <Typography
+            fontFamily={(theme: Theme) => theme.font.bold}
+            fontSize="1rem"
+          >
+            <List sx={{ listStyleType: 'disc', pl: 2 }}>
+              <ListItem disablePadding sx={{ display: 'list-item' }}>
+                These plans have limited deployment availability.{' '}
+                <Link to="#">Learn more</Link> and request access to Accelerated
+                plans.
+              </ListItem>
+              <ListItem disablePadding sx={{ display: 'list-item' }}>
+                Transfer costs not included in the plan price will be charged
+                additionally. <Link to={TRANSFER_COSTS_LINK}>Learn more</Link>{' '}
+                about pricing and transfer costs.
+              </ListItem>
+            </List>
+          </Typography>
+        </Notice>
       )}
       {planType === 'metal' ? (
         <MetalNotice
