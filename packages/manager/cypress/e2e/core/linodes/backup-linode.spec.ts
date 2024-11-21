@@ -19,6 +19,7 @@ import {
   interceptEnableLinodeBackups,
   interceptGetLinode,
   interceptCreateLinodeSnapshot,
+  interceptCancelLinodeBackups,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
@@ -27,6 +28,11 @@ import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specifi
 import { chooseRegion } from 'support/util/regions';
 import { expectManagedDisabled } from 'support/api/managed';
 import { createTestLinode } from 'support/util/linodes';
+
+const BackupsCancellationNote =
+  'Once backups for this Linode have been canceled, you cannot re-enable them for 24 hours.';
+const ReenableBackupsFailureNote =
+  'Please wait 24 hours before reactivating backups for this Linode.';
 
 authenticate();
 describe('linode backups', () => {
@@ -60,9 +66,11 @@ describe('linode backups', () => {
     ).then((linode: Linode) => {
       interceptGetLinode(linode.id).as('getLinode');
       interceptEnableLinodeBackups(linode.id).as('enableBackups');
+      interceptCancelLinodeBackups(linode.id).as('cancelBackups');
 
       // Navigate to Linode details page "Backups" tab.
-      cy.visitWithLogin(`linodes/${linode.id}/backup`);
+      cy.visitWithLogin(`linodes/${linode.id}`);
+      cy.findAllByText('Backups').should('be.visible').click();
       cy.wait('@getLinode');
 
       // Wait for Linode to finish provisioning.
@@ -100,6 +108,47 @@ describe('linode backups', () => {
       cy.findByText('Automatic and manual backups will be listed here').should(
         'be.visible'
       );
+
+      // Confirm Backups Cancellation Note is visible when cancel Linode backups.
+      ui.button
+        .findByTitle('Cancel Backups')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+      ui.dialog
+        .findByTitle('Confirm Cancellation')
+        .should('be.visible')
+        .within(() => {
+          cy.contains(BackupsCancellationNote).should('be.visible');
+          ui.button
+            .findByTitle('Cancel Backups')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+      // Confirm toast notification appears and UI updates to reflect cancel backups.
+      cy.wait('@cancelBackups');
+      ui.toast.assertMessage('Backups are being canceled for this Linode');
+
+      ui.button
+        .findByTitle('Enable Backups')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      ui.dialog
+        .findByTitle('Enable backups?')
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Enable Backups')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Confirm that user is warned of additional backup charges.
+          cy.contains(ReenableBackupsFailureNote).should('be.visible');
+        });
     });
   });
 
@@ -127,7 +176,8 @@ describe('linode backups', () => {
       interceptCreateLinodeSnapshot(linode.id).as('createSnapshot');
 
       // Navigate to Linode details page "Backups" tab.
-      cy.visitWithLogin(`/linodes/${linode.id}/backup`);
+      cy.visitWithLogin(`linodes/${linode.id}`);
+      cy.findAllByText('Backups').should('be.visible').click();
       cy.wait('@getLinode');
 
       // Wait for the Linode to finish provisioning.
