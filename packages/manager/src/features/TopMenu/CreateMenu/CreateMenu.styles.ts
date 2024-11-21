@@ -12,7 +12,6 @@ export const StyledHeading = styled('h3', {
     width: 16,
   },
   alignItems: 'center',
-  background: 'rgb(247, 247, 250)',
   display: 'flex',
   fontFamily: 'LatoWebBold',
   fontSize: '0.75rem',
@@ -40,6 +39,7 @@ export const StyledMenuItem = styled(MenuItem, {
 export const StyledPaper = styled(Paper, {
   label: 'StyledPaper',
 })(({ theme }) => ({
+  background: theme.bg.appBar,
   padding: `${theme.spacing(1)} 0`,
   [theme.breakpoints.down('lg')]: {
     padding: 0,
