@@ -11,6 +11,8 @@ import {
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
+  getKubernetesClustersBeta,
+  getKubernetesTieredVersionsBeta,
   getKubernetesTypes,
   getKubernetesVersions,
   getNodePools,
@@ -30,7 +32,10 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
+import {
+  useAPLAvailability,
+  useIsLkeEnterpriseEnabled,
+} from 'src/features/Kubernetes/kubeUtils';
 import { getAll } from 'src/utilities/getAll';
 
 import { queryPresets } from './base';
@@ -44,6 +49,7 @@ import type {
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
+  KubernetesTieredVersion,
   KubernetesVersion,
   UpdateNodePoolData,
 } from '@linode/api-v4';
@@ -93,15 +99,29 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
   }),
   lists: {
     contextQueries: {
-      all: {
-        queryFn: () => getAllKubernetesClusters(),
-        queryKey: null,
-      },
-      paginated: (params: Params, filter: Filter) => ({
-        queryFn: () => getKubernetesClusters(params, filter),
-        queryKey: [params, filter],
+      all: (useBetaEndpoint: boolean = false) => ({
+        queryFn: () =>
+          useBetaEndpoint
+            ? getAllKubernetesClustersBeta()
+            : getAllKubernetesClusters(),
+        queryKey: [useBetaEndpoint],
+      }),
+      paginated: (
+        params: Params,
+        filter: Filter,
+        useBetaEndpoint: boolean = false
+      ) => ({
+        queryFn: () =>
+          useBetaEndpoint
+            ? getKubernetesClustersBeta()
+            : getKubernetesClusters(params, filter),
+        queryKey: [params, filter, useBetaEndpoint],
       }),
     },
+    queryKey: null,
+  },
+  tieredVersions: {
+    queryFn: () => getAllKubernetesTieredVersionsBeta(),
     queryKey: null,
   },
   types: {
@@ -116,9 +136,11 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 
 export const useKubernetesClusterQuery = (id: number) => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
+  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = showAPL || isLkeEnterpriseLAEnabled;
 
   return useQuery<KubernetesCluster, APIError[]>({
-    ...kubernetesQueries.cluster(id)._ctx.cluster(showAPL),
+    ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
     enabled: !isAPLAvailabilityLoading,
   });
 };
@@ -128,8 +150,11 @@ export const useKubernetesClustersQuery = (
   filter: Filter,
   enabled = true
 ) => {
+  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = isLkeEnterpriseLAEnabled;
+
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>({
-    ...kubernetesQueries.lists._ctx.paginated(params, filter),
+    ...kubernetesQueries.lists._ctx.paginated(params, filter, useBetaEndpoint),
     enabled,
     placeholderData: keepPreviousData,
   });
@@ -354,13 +379,23 @@ export const useKubernetesVersionQuery = () =>
     ...queryPresets.oneTimeFetch,
   });
 
+export const useKubernetesTieredVersionQuery = () => {
+  useQuery<KubernetesTieredVersion[], APIError[]>({
+    ...kubernetesQueries.tieredVersions,
+    ...queryPresets.oneTimeFetch,
+  });
+};
+
 /**
  * Avoiding fetching all Kubernetes Clusters if possible.
- * Before you use this, consider implementing infinite scroll insted.
+ * Before you use this, consider implementing infinite scroll instead.
  */
 export const useAllKubernetesClustersQuery = (enabled = false) => {
+  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = isLkeEnterpriseLAEnabled;
+
   return useQuery<KubernetesCluster[], APIError[]>({
-    ...kubernetesQueries.lists._ctx.all,
+    ...kubernetesQueries.lists._ctx.all(useBetaEndpoint),
     enabled,
   });
 };
@@ -403,9 +438,19 @@ const getAllKubernetesClusters = () =>
     getKubernetesClusters(params, filters)
   )().then((data) => data.data);
 
+const getAllKubernetesClustersBeta = () =>
+  getAll<KubernetesCluster>((params, filters) =>
+    getKubernetesClustersBeta(params, filters)
+  )().then((data) => data.data);
+
 const getAllKubernetesVersions = () =>
   getAll<KubernetesVersion>((params, filters) =>
     getKubernetesVersions(params, filters)
+  )().then((data) => data.data);
+
+const getAllKubernetesTieredVersionsBeta = () =>
+  getAll<KubernetesTieredVersion>((params, filters) =>
+    getKubernetesTieredVersionsBeta(params, filters)
   )().then((data) => data.data);
 
 const getAllAPIEndpointsForCluster = (clusterId: number) =>
