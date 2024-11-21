@@ -39,7 +39,7 @@ export const RebuildImageDrawer = (props: Props) => {
       return;
     }
 
-    onClose();
+    handleClose();
 
     history.push({
       pathname: `/linodes/${values.linodeId}/rebuild`,
@@ -49,10 +49,14 @@ export const RebuildImageDrawer = (props: Props) => {
     });
   });
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   return (
     <Drawer
-      onClose={onClose}
-      onExited={reset}
+      onClose={handleClose}
       open={open}
       title="Rebuild an Existing Linode from an Image"
     >
@@ -105,7 +109,7 @@ export const RebuildImageDrawer = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
           style={{ marginTop: 16 }}
         />

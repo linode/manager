@@ -38,10 +38,6 @@ interface EntityInfo {
 
 interface TypeToConfirmDialogProps {
   /**
-   * Chidlren are rendered above the TypeToConfirm input
-   */
-  children?: React.ReactNode;
-  /**
    * Props to be allow disabling the input
    */
   disableTypeToConfirmInput?: boolean;
@@ -70,10 +66,6 @@ interface TypeToConfirmDialogProps {
    */
   onClick: () => void;
   /**
-   * Optional callback to be executed when the closing animation has completed
-   */
-  onExited?: () => void;
-  /**
    * The open/closed state of the dialog
    */
   open: boolean;
@@ -95,7 +87,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     loading,
     onClick,
     onClose,
-    onExited,
     open,
     textFieldStyle,
     title,
@@ -133,7 +124,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       secondaryButtonProps={{
         'data-testid': 'cancel',
         label: 'Cancel',
-        onClick: onClose,
+        onClick: onClose ? () => onClose({}, 'escapeKeyDown') : undefined,
       }}
       style={{ padding: 0 }}
     />
@@ -144,7 +135,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       actions={actions}
       error={errors ? errors[0].reason : undefined}
       onClose={onClose}
-      onExited={onExited}
       open={open}
       title={title}
     >
