@@ -30,14 +30,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20.17"
-      - uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+          cache: "pnpm"
       - run: |
           echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
@@ -56,9 +49,9 @@ jobs:
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
-          yarn install:all
-          yarn build
-          yarn start:manager:ci &
+          pnpm install:all
+          pnpm build
+          pnpm start:manager:ci &
       - name: Run tests
         uses: cypress-io/github-action@v6
         with:
