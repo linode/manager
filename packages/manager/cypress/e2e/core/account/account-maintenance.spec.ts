@@ -159,26 +159,29 @@ describe('Maintenance', () => {
         );
 
         // Read the downloaded CSV and compare its content to the expected CSV content
-        cy.readFile(`${downloadsFolder}/${fileName}`).then((csvContent) => {
-          const parsedCsvPendingMigration = parseCsv(csvContent);
-          expect(parsedCsvPendingMigration.length).to.equal(
-            expectedPendingMigrationContent.length
-          );
-          // Map the parsedCsv to match the structure of expectedCsvContent
-          const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
-            (entry: any) => ({
-              entity_label: entry['Entity Label'],
-              entity_type: entry['Entity Type'],
-              type: entry['Type'],
-              status: entry['Status'],
-              reason: entry['Reason'],
-            })
-          );
+        cy.readFile(`${downloadsFolder}/${fileName}`)
+          .should('not.eq', null)
+          .should('not.eq', '')
+          .then((csvContent) => {
+            const parsedCsvPendingMigration = parseCsv(csvContent);
+            expect(parsedCsvPendingMigration.length).to.equal(
+              expectedPendingMigrationContent.length
+            );
+            // Map the parsedCsv to match the structure of expectedCsvContent
+            const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
+              (entry: any) => ({
+                entity_label: entry['Entity Label'],
+                entity_type: entry['Entity Type'],
+                type: entry['Type'],
+                status: entry['Status'],
+                reason: entry['Reason'],
+              })
+            );
 
-          expect(actualPendingMigrationCsvContent).to.deep.equal(
-            expectedPendingMigrationContent
-          );
-        });
+            expect(actualPendingMigrationCsvContent).to.deep.equal(
+              expectedPendingMigrationContent
+            );
+          });
       });
 
     // Validate content of the downloaded CSV for completed maintenance
@@ -206,28 +209,31 @@ describe('Maintenance', () => {
         );
 
         // Read the downloaded CSV and compare its content to the expected CSV content
-        cy.readFile(`${downloadsFolder}/${fileName}`).then((csvContent) => {
-          const parsedCsvCompletedMigration = parseCsv(csvContent);
+        cy.readFile(`${downloadsFolder}/${fileName}`)
+          .should('not.eq', null)
+          .should('not.eq', '')
+          .then((csvContent) => {
+            const parsedCsvCompletedMigration = parseCsv(csvContent);
 
-          expect(parsedCsvCompletedMigration.length).to.equal(
-            expectedCompletedMigrationContent.length
-          );
+            expect(parsedCsvCompletedMigration.length).to.equal(
+              expectedCompletedMigrationContent.length
+            );
 
-          // Map the parsedCsv to match the structure of expectedCsvContent
-          const actualCompletedMigrationCsvContent = parsedCsvCompletedMigration.map(
-            (entry: any) => ({
-              entity_label: entry['Entity Label'],
-              entity_type: entry['Entity Type'],
-              type: entry['Type'],
-              status: entry['Status'],
-              reason: entry['Reason'],
-            })
-          );
+            // Map the parsedCsv to match the structure of expectedCsvContent
+            const actualCompletedMigrationCsvContent = parsedCsvCompletedMigration.map(
+              (entry: any) => ({
+                entity_label: entry['Entity Label'],
+                entity_type: entry['Entity Type'],
+                type: entry['Type'],
+                status: entry['Status'],
+                reason: entry['Reason'],
+              })
+            );
 
-          expect(actualCompletedMigrationCsvContent).to.deep.equal(
-            expectedCompletedMigrationContent
-          );
-        });
+            expect(actualCompletedMigrationCsvContent).to.deep.equal(
+              expectedCompletedMigrationContent
+            );
+          });
       });
   });
 });
