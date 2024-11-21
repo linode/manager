@@ -1,11 +1,17 @@
-import { Box, Checkbox, Paper, Stack, TooltipIcon } from '@linode/ui';
+import {
+  Box,
+  Checkbox,
+  Paper,
+  Stack,
+  TextField,
+  TooltipIcon,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import {
   REGION_CAVEAT_HELPER_TEXT,

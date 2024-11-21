@@ -85,7 +85,7 @@ const assertFailed = (label: string, id: string, message: string) => {
 
   cy.get(`[data-qa-image-cell="${id}"]`).within(() => {
     fbtVisible(label);
-    fbtVisible('Failed');
+    fbtVisible('Upload Failed');
     fbtVisible('N/A');
   });
 };
@@ -99,7 +99,7 @@ const assertFailed = (label: string, id: string, message: string) => {
 const assertProcessing = (label: string, id: string) => {
   cy.get(`[data-qa-image-cell="${id}"]`).within(() => {
     fbtVisible(label);
-    fbtVisible('Processing');
+    fbtVisible('Pending Upload');
     fbtVisible('Pending');
   });
 };
@@ -172,7 +172,7 @@ describe('machine image', () => {
 
     cy.get(`[data-qa-image-cell="${mockImage.id}"]`).within(() => {
       cy.findByText(initialLabel).should('be.visible');
-      cy.findByText('Ready').should('be.visible');
+      cy.findByText('Available').should('be.visible');
 
       ui.actionMenu
         .findByTitle(`Action menu for Image ${initialLabel}`)
@@ -262,7 +262,7 @@ describe('machine image', () => {
       ui.toast.assertMessage(availableMessage);
       cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
         fbtVisible(label);
-        fbtVisible('Ready');
+        fbtVisible('Available');
       });
     });
   });
