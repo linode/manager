@@ -26,12 +26,9 @@ export const LinodeCLIPanel = ({
 }: LinodeCLIPanelProps) => {
   const { params } = useLinodeCreateQueryParams();
   const linodeCLIAction = params.type;
-  //  === 'Clone Linode' ? 'clone' : 'create';
 
   const { getValues } = useFormContext<LinodeCreateFormValues>();
-  // const xx = getValues();
   const sourceLinodeID = getValues('linode.id');
-  // console.log('sourceLinodeID', sourceLinodeID);
 
   const cliCommand = useMemo(
     () => generateCLICommand(payLoad, sourceLinodeID, linodeCLIAction),
