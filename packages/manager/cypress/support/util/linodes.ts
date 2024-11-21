@@ -1,3 +1,4 @@
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { createLinode, getLinodeConfigs } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@src/factories';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
@@ -158,13 +159,20 @@ export const createTestLinode = async (
 
   // Wait for Linode status to be 'running' if `waitForBoot` is true.
   if (resolvedOptions.waitForBoot) {
-    // Wait 15 seconds before initial check, then poll again every 5 seconds.
+    // Wait 30 seconds before initial check, then poll again every ~10 seconds.
+    // Note: poll interval is determined by the value of the `LINODE_CREATE_TIMEOUT` constant.
+    const initialDelay = 30_000;
+    const maxAttempts = 25;
+    const interval = Math.round(
+      (LINODE_CREATE_TIMEOUT - initialDelay) / maxAttempts
+    );
+
     await pollLinodeStatus(
       linode.id,
       'running',
-      new SimpleBackoffMethod(5000, {
-        initialDelay: 15000,
-        maxAttempts: 25,
+      new SimpleBackoffMethod(interval, {
+        initialDelay,
+        maxAttempts,
       })
     );
   }
