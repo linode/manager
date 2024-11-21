@@ -72,18 +72,6 @@ describe('DateTimePicker Component', () => {
     expect(defaultProps.onChange).toHaveBeenCalled();
   });
 
-  it.skip('should handle time changes correctly', async () => {
-    renderWithTheme(<DateTimePicker {...defaultProps} />);
-    await userEvent.click(
-      screen.getByRole('textbox', { name: 'Select Date and Time' })
-    );
-
-    // Simulate changing time in the TimePicker (e.g., setting time to 10:45)
-    const timeInput = screen.getByLabelText(/Select Time/i);
-    await userEvent.type(timeInput, '10:45');
-    expect(defaultProps.onChange).toHaveBeenCalled();
-  });
-
   it('should handle timezone changes correctly', async () => {
     const timezoneChangeMock = vi.fn(); // Create a mock function
 

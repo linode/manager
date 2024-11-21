@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material/styles';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -39,6 +40,8 @@ export const DatePicker = ({
   value = null,
   ...props
 }: DatePickerProps) => {
+  const theme = useTheme();
+
   const onChangeHandler = (newDate: DateTime | null) => {
     if (onChange) {
       onChange(newDate);
@@ -50,23 +53,39 @@ export const DatePicker = ({
       <MuiDatePicker
         format={format}
         onChange={onChangeHandler}
+        reduceAnimations // disables the rendering animation
         value={value}
         {...props}
         slotProps={{
+          popper: {
+            sx: {
+              '& .MuiDayCalendar-weekDayLabel': {
+                fontSize: '0.875rem',
+              },
+              '& .MuiPickersCalendarHeader-label': {
+                fontWeight: 'bold',
+              },
+              '& .MuiPickersCalendarHeader-root': {
+                fontSize: '0.875rem',
+              },
+              '& .MuiPickersDay-root': {
+                fontSize: '0.875rem',
+                margin: `${theme.spacing(0.5)}px`,
+              },
+              backgroundColor: theme.bg.main,
+              borderRadius: `${theme.spacing(2)}`,
+              boxShadow: `0px 4px 16px ${theme.color.boxShadowDark}`,
+            },
+          },
           textField: {
             ...textFieldProps,
-            InputProps: {
-              ...textFieldProps?.InputProps,
-            },
             helperText,
             label,
             placeholder,
           },
-          ...props?.slotProps,
         }}
         slots={{
-          textField: TextField, // Use custom TextField
-          ...props?.slots,
+          textField: TextField,
         }}
       />
     </LocalizationProvider>
