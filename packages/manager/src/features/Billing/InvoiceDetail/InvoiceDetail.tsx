@@ -1,6 +1,5 @@
 import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
-import { Notice, Paper } from '@linode/ui';
-import { Box, IconButton } from '@linode/ui';
+import { Box, Button, IconButton, Notice, Paper } from '@linode/ui';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -8,7 +7,6 @@ import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { Currency } from 'src/components/Currency';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { LandingHeader } from 'src/components/LandingHeader';

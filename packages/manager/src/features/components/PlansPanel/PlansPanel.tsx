@@ -2,11 +2,12 @@ import { Notice } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account/account';
 import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -87,6 +88,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
     location.search
   );
 
+  const { data: account } = useAccount();
+  const hasVPUCapability = account?.capabilities?.includes('NETINT Quadra T1U');
+
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
     Boolean(flags.soldOutChips) && selectedRegionID !== undefined
@@ -94,7 +98,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const _types = types.filter(
     (type) =>
-      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+      !type.id.includes('dedicated-edge') &&
+      !type.id.includes('nanode-edge') &&
+      (!hasVPUCapability ? type.class !== 'accelerated' : true)
   );
   const _plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans

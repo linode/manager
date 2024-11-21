@@ -1,11 +1,10 @@
-import { Notice, Paper } from '@linode/ui';
+import { CircleProgress, Notice, Paper } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';

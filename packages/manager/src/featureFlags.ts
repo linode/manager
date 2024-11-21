@@ -64,8 +64,14 @@ interface AclpFlag {
   enabled: boolean;
 }
 
+interface LkeEnterpriseFlag extends BaseFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
+  maxResourceSelections?: number;
   serviceType: string;
 }
 
@@ -108,6 +114,7 @@ export interface Flags {
   imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
   linodeDiskEncryption: boolean;
+  lkeEnterprise: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;

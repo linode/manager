@@ -1,5 +1,4 @@
-import { Paper } from '@linode/ui';
-import { Box } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';

@@ -4,6 +4,89 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2024-11-19] - v1.132.1
+
+
+### Fixed:
+
+- Disable shared CPU whenever APL is enabled ([#11284](https://github.com/linode/manager/pull/11284))
+
+## [2024-11-12] - v1.132.0
+
+
+### Added:
+
+- Tooltip for 'Usable Storage' in Create/Resize Database Table ([#11223](https://github.com/linode/manager/pull/11223))
+- Success toasts to profile display settings page (with other minor improvements) ([#11141](https://github.com/linode/manager/pull/11141))
+- Mask Sensitive Data preference to Profile Settings ([#11143](https://github.com/linode/manager/pull/11143))
+- DBaaS Suspend and Resume for Database Landing and Details ([#11152](https://github.com/linode/manager/pull/11152))
+- Pre-selection of a VPC’s subnet on the Linode Create page when the VPC only has one subnet ([#11188](https://github.com/linode/manager/pull/11188))
+- Summary Section for Database Create GA ([#11193](https://github.com/linode/manager/pull/11193))
+- New GPUv2 egress transfer helpers ([#11209](https://github.com/linode/manager/pull/11209))
+
+### Changed:
+
+- Optimize GPU egress data transfer copy ([#11235](https://github.com/linode/manager/pull/11235))
+- Incorporate Product Family Groups in Side Nav ([#11080](https://github.com/linode/manager/pull/11080))
+- Remove Double border on "Billing & Payment History" table with dark theme. ([#11111](https://github.com/linode/manager/pull/11111))
+- Slightly improve styles on support ticket flows ([#11144](https://github.com/linode/manager/pull/11144))
+- Improve validation error when a backup is not selected ([#11147](https://github.com/linode/manager/pull/11147))
+- Database settings text and labels ([#11166](https://github.com/linode/manager/pull/11166))
+- Refactor DatabaseResize to use shared components for node selection and summary section ([#11180](https://github.com/linode/manager/pull/11180))
+- `.env.example` cypress warning ([#11202](https://github.com/linode/manager/pull/11202))
+- Disable unsupported images for distributed regions ([#11206](https://github.com/linode/manager/pull/11206))
+
+### Fixed:
+
+- Preserve default child cluster creation behavior ([#11234](https://github.com/linode/manager/pull/11234))
+- Misaligned table headers in Account Maintenance page ([#11099](https://github.com/linode/manager/pull/11099))
+- Database create page form being enabled for restricted users ([#11137](https://github.com/linode/manager/pull/11137))
+- Faux bold in Safari with `<strong />` & `<b />` tags ([#11149](https://github.com/linode/manager/pull/11149))
+-  `Coverage Comment` GHA running on drafts ([#11161](https://github.com/linode/manager/pull/11161))
+- Aria label of action menu button in IP address table row ([#11167](https://github.com/linode/manager/pull/11167))
+- UI bugs on the Object Storage bucket and access key landing pages ([#11187](https://github.com/linode/manager/pull/11187))
+- Animation for VPC subnet drawers ([#11195](https://github.com/linode/manager/pull/11195))
+- DBaaS enable creation of two node clusters ([#11218](https://github.com/linode/manager/pull/11218))
+- Crash on the Linode Create flow when a Linode with a `type` of `null` is selected ([#11247](https://github.com/linode/manager/pull/11247))
+
+### Tech Stories:
+
+- Consolidate ImageSelect components ([#11058](https://github.com/linode/manager/pull/11058))
+- Refactor TextField component ([#11134](https://github.com/linode/manager/pull/11134))
+- Clean up Profile Display Settings page ([#11141](https://github.com/linode/manager/pull/11141))
+- `only-export-components` for Tanstack routes ([#11142](https://github.com/linode/manager/pull/11142))
+- Add more customization to legends and charts ([#11145](https://github.com/linode/manager/pull/11145))
+- Update `@types/node` to `20.17.0` ([#11157](https://github.com/linode/manager/pull/11157))
+- Add `cypress_containerized` Docker Compose service ([#11177](https://github.com/linode/manager/pull/11177))
+- Add `nodejs-cloud-manager` Dockerfile target ([#11177](https://github.com/linode/manager/pull/11177))
+- Remove use of Redux for viewing StackScript details ([#11192](https://github.com/linode/manager/pull/11192))
+- Convert from `formik` to `react-hook-form` for `SubnetCreateDrawer` ([#11195](https://github.com/linode/manager/pull/11195))
+- Use unit tested function for Pendo url transformation ([#11211](https://github.com/linode/manager/pull/11211))
+- Remove the feature flag and tracking events used for A/B testing in the API CLI Tools modal, and update the DX Tools modal button copy to 'View Code Snippets ([#11156](https://github.com/linode/manager/pull/11156))
+
+### Tests:
+
+- Add cypress tests for creating LKE clusters with ACL ([#11132](https://github.com/linode/manager/pull/11132))
+- Add unit tests to declutter LKE ACL cypress tests and fix `lke-create.spec.ts` failures ([#11176](https://github.com/linode/manager/pull/11176))
+- Add vitest workspace configuration ([#11184](https://github.com/linode/manager/pull/11184))
+- Delete test Linodes, LKE clusters, and Firewalls after Cypress runs ([#11189](https://github.com/linode/manager/pull/11189))
+- Allow DBaaS resize test to pass when DBaaS v2 is enabled ([#11190](https://github.com/linode/manager/pull/11190))
+- Slight improvements to GitHub test result comment formatting ([#11200](https://github.com/linode/manager/pull/11200))
+
+### Upcoming Features:
+
+- ACLP UI - DBaaS instances order by label ([#11226](https://github.com/linode/manager/pull/11226))
+- Add post processing for missing timestamp data across dimensions in ACLP charts  ([#11225](https://github.com/linode/manager/pull/11225))
+- Add default x-filter for DBasS Aiven clusters fetch in resource selection component ([#11150](https://github.com/linode/manager/pull/11150))
+- Replace one-off hardcoded black and white color values with colorTokens ([#11165](https://github.com/linode/manager/pull/11165))
+- Add global border radius token to theme and replace hard coded values where `borderRadius = 0` ([#11169](https://github.com/linode/manager/pull/11169))
+- Handle API errors for global filters and dashboard components ([#11170](https://github.com/linode/manager/pull/11170))
+- Add global `font` and `spacing` tokens to theme and refactor design tokens ([#11171](https://github.com/linode/manager/pull/11171))
+- DBaaS: Add query to patch API, modify factory to include pendingUpdates ([#11196](https://github.com/linode/manager/pull/11196))
+- DBaaS: Add new Maintenance, Upgrade Version dialog, and Review Updates dialog components ([#11198](https://github.com/linode/manager/pull/11198))
+- DBaaS: major minor updates integration ([#11199](https://github.com/linode/manager/pull/11199))
+
+
 ## [2024-11-05] - v1.131.2
 
 
