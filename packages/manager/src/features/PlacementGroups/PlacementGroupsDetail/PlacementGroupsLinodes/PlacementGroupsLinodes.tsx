@@ -71,10 +71,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
       `/placement-groups/${placementGroup.id}/linodes/unassign/${linode.id}`
     );
   };
-  const handleExitedUnassignModal = () => {
-    setSelectedLinode(undefined);
-  };
   const handleCloseDrawer = () => {
+    setSelectedLinode(undefined);
     history.replace(`/placement-groups/${placementGroup.id}/linodes`);
   };
   const isAssignLinodesDrawerOpen = history.location.pathname.includes(
@@ -127,7 +125,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
       />
       <PlacementGroupsUnassignModal
         onClose={handleCloseDrawer}
-        onExited={handleExitedUnassignModal}
         open={isUnassignLinodesDrawerOpen}
         selectedLinode={selectedLinode}
       />
