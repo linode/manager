@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   CircleProgress,
   Divider,
   Notice,
@@ -11,7 +12,6 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Checkbox } from 'src/components/Checkbox';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Link } from 'src/components/Link';

@@ -1,7 +1,7 @@
+import { Checkbox } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Checkbox } from 'src/components/Checkbox';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
