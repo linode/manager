@@ -1,9 +1,8 @@
-import { Button, Typography } from '@linode/ui';
+import { Button, Checkbox, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Checkbox } from 'src/components/Checkbox';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

@@ -2,6 +2,7 @@ import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
+import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';
@@ -21,7 +22,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
-    { status: { '+or': ['pending, started'] } }
+    PENDING_MAINTENANCE_FILTER
   );
 
   const {

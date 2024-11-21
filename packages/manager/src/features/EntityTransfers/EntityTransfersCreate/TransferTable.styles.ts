@@ -1,7 +1,6 @@
-import { Typography } from '@linode/ui';
+import { Checkbox, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Checkbox } from 'src/components/Checkbox';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';

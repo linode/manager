@@ -1,9 +1,8 @@
-import { Button, Typography, fadeIn } from '@linode/ui';
+import { Button, H1Header, Typography, fadeIn } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import { H1Header } from 'src/components/H1Header/H1Header';
 
 import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
 

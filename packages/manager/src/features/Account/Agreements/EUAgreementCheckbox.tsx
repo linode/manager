@@ -1,8 +1,7 @@
-import { Box, Typography } from '@linode/ui';
+import { Box, Checkbox, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { Checkbox } from 'src/components/Checkbox';
 import { Link } from 'src/components/Link';
 
 interface Props {
