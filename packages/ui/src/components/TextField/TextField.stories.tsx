@@ -1,6 +1,6 @@
-import { InputAdornment } from '@linode/ui';
 import React from 'react';
 
+import { InputAdornment } from '../InputAdornment';
 import { TextField } from './TextField';
 
 import type { Meta, StoryObj } from '@storybook/react';

@@ -1,9 +1,8 @@
-import { FormHelperText } from '@linode/ui';
+import { FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { TextField } from 'src/components/TextField';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';

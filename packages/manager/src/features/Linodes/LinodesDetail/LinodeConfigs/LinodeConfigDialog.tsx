@@ -7,6 +7,7 @@ import {
   FormHelperText,
   Notice,
   Radio,
+  TextField,
   Toggle,
   TooltipIcon,
 } from '@linode/ui';
@@ -25,7 +26,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { DeviceSelection } from 'src/features/Linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/Linodes/presentation';
