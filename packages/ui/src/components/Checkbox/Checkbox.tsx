@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { CheckboxIcon, CheckboxCheckedIcon } from '../../assets/icons';
 
-// @TODO: Import from 'ui' package once FormControlLabel is migrated.
+// @todo: modularization - Import from 'ui' package once FormControlLabel is migrated.
 import { FormControlLabel } from '@mui/material';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
