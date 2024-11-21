@@ -2,6 +2,7 @@ import { appendConfigInterface } from '@linode/api-v4';
 import {
   Box,
   Button,
+  Checkbox,
   FormHelperText,
   Notice,
   TextField,
@@ -12,7 +13,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Checkbox } from 'src/components/Checkbox';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';

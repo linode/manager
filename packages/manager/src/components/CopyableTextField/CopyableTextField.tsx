@@ -9,7 +9,7 @@ import { DownloadTooltip } from '../DownloadTooltip';
 import type { TextFieldProps } from '@linode/ui';
 import type { CopyTooltipProps } from 'src/components/CopyTooltip/CopyTooltip';
 
-interface CopyableTextFieldProps extends TextFieldProps {
+export interface CopyableTextFieldProps extends TextFieldProps {
   /**
    * Optional props that are passed to the underlying CopyTooltip component
    */
