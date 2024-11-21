@@ -47,6 +47,11 @@ export const CaptureSnapshot = (props: Props) => {
     },
   });
 
+  const handleClose = () => {
+    setIsSnapshotConfirmationDialogOpen(false);
+    reset();
+  };
+
   const hasErrorFor = getErrorMap(['label'], snapshotError);
 
   return (
@@ -84,8 +89,7 @@ export const CaptureSnapshot = (props: Props) => {
       <CaptureSnapshotConfirmationDialog
         error={hasErrorFor.none}
         loading={isSnapshotLoading}
-        onClose={() => setIsSnapshotConfirmationDialogOpen(false)}
-        onExited={() => reset()}
+        onClose={handleClose}
         onSnapshot={() => snapshotForm.handleSubmit()}
         open={isSnapshotConfirmationDialogOpen}
       />
