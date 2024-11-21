@@ -25,6 +25,7 @@ import {
 } from 'src/queries/account/maintenance';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
+import { PENDING_MAINTENANCE_FILTER } from './utilities';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
 
@@ -70,7 +71,7 @@ export const MaintenanceTable = ({ type }: Props) => {
    */
   const filters: Record<Props['type'], Filter> = {
     completed: { status: 'completed' },
-    pending: { status: { '+or': ['pending', 'started'] } },
+    pending: PENDING_MAINTENANCE_FILTER,
   };
 
   const filter: Filter = {
