@@ -61,11 +61,12 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const showTransferTooltip = React.useCallback(
     (cellName: string) =>
       plans?.some((plan) => {
+        const showTooltipForGPUPlans =
+          flags.gpuv2?.transferBanner &&
+          plan.class === 'gpu' &&
+          filterOptions?.header?.includes('Ada');
         return (
-          ((flags.gpuv2?.transferBanner &&
-            plan.class === 'gpu' &&
-            filterOptions?.header?.includes('Ada')) ||
-            plan.class === 'accelerated') &&
+          (showTooltipForGPUPlans || plan.class === 'accelerated') &&
           cellName === 'Transfer'
         );
       }),

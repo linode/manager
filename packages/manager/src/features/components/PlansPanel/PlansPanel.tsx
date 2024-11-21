@@ -95,12 +95,15 @@ export const PlansPanel = (props: PlansPanelProps) => {
     Boolean(flags.soldOutChips) && selectedRegionID !== undefined
   );
 
-  const _types = types.filter(
-    (type) =>
-      !type.id.includes('dedicated-edge') &&
-      !type.id.includes('nanode-edge') &&
-      (!isAcceleratedLinodePlansEnabled ? type.class !== 'accelerated' : true)
-  );
+  const _types = types.filter((type) => {
+    if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    return (
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+    );
+  });
   const _plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
       ? replaceOrAppendPlaceholder512GbPlans(_types)
