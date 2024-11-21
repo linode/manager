@@ -134,6 +134,8 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_interval}
                 label="Interval"
+                max={3600}
+                min={2}
                 onChange={onHealthCheckIntervalChange}
                 type="number"
                 value={healthCheckInterval}
@@ -155,6 +157,8 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_timeout}
                 label="Timeout"
+                max={30}
+                min={1}
                 onChange={onHealthCheckTimeoutChange}
                 type="number"
                 value={healthCheckTimeout}
@@ -174,6 +178,8 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_attempts}
                 label="Attempts"
+                max={30}
+                min={1}
                 onChange={onHealthCheckAttemptsChange}
                 type="number"
                 value={healthCheckAttempts}

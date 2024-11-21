@@ -1,5 +1,6 @@
+import { clamp } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { clamp, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
@@ -88,7 +89,7 @@ export const normalizeValue = (value: number, numCores: number) => {
   if (numCores < 0) {
     return 0;
   }
-  const clamped = clamp(0, 100 * numCores)(value);
+  const clamped = clamp(0, 100 * numCores, value);
   return Math.round(clamped);
 };
 
