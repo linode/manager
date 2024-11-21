@@ -13,6 +13,7 @@ import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
   HIGH_MEMORY_COMPUTE_INSTANCES_LINK,
+  MULTIPLE_PLANS_LIMITED_AVAILABILITY_COPY,
   PREMIUM_COMPUTE_INSTANCES_LINK,
   SHARED_COMPUTE_INSTANCES_LINK,
   TRANSFER_COSTS_LINK,
@@ -111,12 +112,12 @@ export const PlanInformation = (props: PlanInformationProps) => {
             fontSize="1rem"
           >
             <List sx={{ listStyleType: 'disc', pl: 2 }}>
-              <ListItem disablePadding sx={{ display: 'list-item' }}>
-                These plans have limited deployment availability.{' '}
+              <ListItem sx={{ display: 'list-item', padding: '2px 0 1px' }}>
+                {MULTIPLE_PLANS_LIMITED_AVAILABILITY_COPY}{' '}
                 <Link to="#">Learn more</Link> and request access to Accelerated
                 plans.
               </ListItem>
-              <ListItem disablePadding sx={{ display: 'list-item' }}>
+              <ListItem sx={{ display: 'list-item', padding: '1px 0 2px' }}>
                 Transfer costs not included in the plan price will be charged
                 additionally. <Link to={TRANSFER_COSTS_LINK}>Learn more</Link>{' '}
                 about pricing and transfer costs.
@@ -157,7 +158,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
             variant="warning"
           >
             <StyledNoticeTypography>
-              These plans have limited deployment availability.
+              {MULTIPLE_PLANS_LIMITED_AVAILABILITY_COPY}
             </StyledNoticeTypography>
           </Notice>
         )}
