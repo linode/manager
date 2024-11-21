@@ -80,42 +80,44 @@ const form = useForm({
 ```
 
 ### Complex Schema Extensions
-1. You may create a `resolver` function that handles the validation (see: [ManageImageRegionsForm.tsx](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Images/ImagesLanding/ImageRegions/ManageImageRegionsForm.tsx#L189-L213)):
+You may create a `resolver` function that handles the validation (see: [ManageImageRegionsForm.tsx](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Images/ImagesLanding/ImageRegions/ManageImageRegionsForm.tsx#L189-L213)):
 
 ```typescript
-export const resolver: Resolver<UpdateImageRegionsPayload, Context> = async (
-  values,
-  context
-) => {
-  const availableRegionIds = context?.imageRegions
-    ?.filter((r) => r.status === 'available')
-    .map((r) => r.region);
+// Step 1: Create a Resolver Function
+// This function validates your form data against specific requirements
 
-  const isMissingAvailableRegion = !values.regions.some((regionId) =>
-    availableRegionIds?.includes(regionId)
+type Resolver<FormData, Context> = (values: FormData, context: Context) => {
+  errors: Record<string, any>;
+  values: FormData;
+};
+
+// Example resolver that checks if at least one item from a list is selected
+const resolver: Resolver<YourFormData, YourContext> = (values, context) => {
+  // Check if at least one valid option is selected
+  const hasValidSelection = values.selectedItems.some(
+    item => context.availableItems.includes(item)
   );
 
-  const availableRegionLabels = context?.regions
-    ?.filter((r) => availableRegionIds?.includes(r.id))
-    .map((r) => r.label);
-
-  if (isMissingAvailableRegion) {
-    const message = `At least one available region must be present (${availableRegionLabels?.join(
-      ', '
-    )}).`;
-    return { errors: { regions: { message, type: 'validate' } }, values };
+  if (!hasValidSelection) {
+    return {
+      errors: {
+        selectedItems: {
+          message: 'Please select at least one valid option',
+          type: 'validate'
+        }
+      },
+      values
+    };
   }
 
   return { errors: {}, values };
 };
-```
 
-2. Usage/Implementation (see: [LinodeCreate/index.tsx](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/index.tsx#L78)):
-```typescript
+// Step 2: Use the Resolver in Your Form
 const form = useForm({
   resolver,
-  defaultValues,
-  context: { /* form context */ },
+  defaultValues: { selectedItems: [] },
+  context: { availableItems: ['item1', 'item2'] }
 });
 ```
 
