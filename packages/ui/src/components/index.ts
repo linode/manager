@@ -8,6 +8,7 @@ export * from './ClickAwayListener';
 export * from './Divider';
 export * from './FormControl';
 export * from './FormHelperText';
+export * from './H1Header';
 export * from './IconButton';
 export * from './Input';
 export * from './InputAdornment';

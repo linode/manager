@@ -2,6 +2,8 @@ import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { Tooltip } from './Tooltip';
+
+// @todo: modularization - Import from 'ui' package once Typography is migrated.
 import { Typography } from '@mui/material';
 
 const meta: Meta<typeof Tooltip> = {
