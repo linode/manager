@@ -80,6 +80,6 @@ export const queryFactory = createQueryKeys(key, {
 
   token: (serviceType: string | undefined, request: JWETokenPayLoad) => ({
     queryFn: () => getJWEToken(request, serviceType!),
-    queryKey: [serviceType, { resource_ids: request.resource_ids }],
+    queryKey: [serviceType, { resource_ids: request.resource_ids.sort() }],
   }),
 });
