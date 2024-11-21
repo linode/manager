@@ -1,11 +1,12 @@
-import { TooltipIcon } from '@linode/ui';
+import { TooltipIcon } from '../TooltipIcon';
 import _Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import CheckboxIcon from 'src/assets/icons/checkbox.svg';
-import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
-import { FormControlLabel } from 'src/components/FormControlLabel';
+import { CheckboxIcon, CheckboxCheckedIcon } from '../../assets/icons';
+
+// @TODO: Import from 'ui' package once FormControlLabel is migrated.
+import { FormControlLabel } from '@mui/material';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';

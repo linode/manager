@@ -1,11 +1,17 @@
 import { appendConfigInterface } from '@linode/api-v4';
-import { Box, Button, FormHelperText, Notice, TooltipIcon } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormHelperText,
+  Notice,
+  TooltipIcon,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Checkbox } from 'src/components/Checkbox';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
