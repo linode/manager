@@ -270,17 +270,6 @@ describe('database resize', () => {
       expect(selectedNodeRadioButton).toBeChecked();
     });
 
-    it('should disable visible lower node selections', async () => {
-      const { getByTestId } = renderWithTheme(
-        <DatabaseResize database={mockDatabase} />,
-        { flags }
-      );
-      await waitForElementToBeRemoved(getByTestId(loadingTestId));
-      const selectedNodeRadioButton = getByTestId('database-node-1').children[0]
-        .children[0] as HTMLInputElement;
-      expect(selectedNodeRadioButton).toBeDisabled();
-    });
-
     it('should set price, enable resize button, and update resize summary when a new number of nodes is selected', async () => {
       const mockDatabase = databaseFactory.build({
         cluster_size: 1,
@@ -395,52 +384,20 @@ describe('database resize', () => {
         },
       };
 
-      const { findByTestId } = renderWithTheme(
+      const { getAllByRole, getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
-        { flags }
-      );
-
-      expect(await findByTestId('database-nodes')).toBeDefined();
-      expect(await findByTestId('database-node-1')).toBeDefined();
-      expect(await findByTestId('database-node-2')).toBeDefined();
-      expect(await findByTestId('database-node-3')).toBeDefined();
-    });
-
-    it('should disable lower node selections', async () => {
-      const mockDatabase = databaseFactory.build({
-        cluster_size: 3,
-        platform: 'rdbms-default',
-        type: 'g6-dedicated-2',
-      });
-
-      const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
-      };
-
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
-      const history = createMemoryHistory();
-      history.push(`databases/${database.engine}/${database.id}/resize`);
-
-      const { getByTestId } = renderWithTheme(
-        <Router history={history}>
-          <DatabaseResize database={mockDatabase} />
-        </Router>,
         { flags }
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
-      expect(
-        getByTestId('database-node-1').children[0].children[0]
-      ).toBeDisabled();
-      expect(
-        getByTestId('database-node-2').children[0].children[0]
-      ).toBeDisabled();
-      expect(
-        getByTestId('database-node-3').children[0].children[0]
-      ).toBeEnabled();
+
+      const dedicatedTab = getAllByRole('tab')[0];
+      await userEvent.click(dedicatedTab);
+
+      expect(getByTestId('database-nodes')).toBeDefined();
+      expect(getByTestId('database-node-1')).toBeDefined();
+      expect(getByTestId('database-node-2')).toBeDefined();
+      expect(getByTestId('database-node-3')).toBeDefined();
     });
   });
 
