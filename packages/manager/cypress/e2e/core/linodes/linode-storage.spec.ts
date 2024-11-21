@@ -133,6 +133,10 @@ describe('linode storage tab', () => {
     cleanUp(['linodes', 'lke-clusters']);
   });
 
+  /*
+   * - Confirms UI flow end-to-end when a user attempts to delete a Linode disk that's in use.
+   * - Confirms that error occurs and user is informed that they must power down their Linode.
+   */
   it('try to delete in use disk', () => {
     const diskName = 'Ubuntu 24.04 LTS Disk';
     cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
@@ -153,6 +157,11 @@ describe('linode storage tab', () => {
     });
   });
 
+  /*
+   * - Confirms UI flow end-to-end when a user deletes a Linode disk.
+   * - Confirms that user can successfully delete a disk from a Linode.
+   * - Confirms that Cloud Manager UI automatically updates to reflect deleted disk.
+   */
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
     cy.defer(() => createTestLinode({ image: null })).then((linode) => {
@@ -179,6 +188,9 @@ describe('linode storage tab', () => {
     });
   });
 
+  /*
+   * - Confirms UI flow when
+   */
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
     cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
