@@ -113,12 +113,16 @@ const Panel = (props: NodePoolPanelProps) => {
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
           types={extendedTypes.filter(
-            (t) =>
-              t.class !== 'nanode' &&
-              t.class !== 'gpu' &&
-              (!isAcceleratedLKEPlansEnabled ? t.class !== 'accelerated' : true)
-          )} // No Nanodes or GPUs in clusters
-          // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
+            (t) => {
+              if (!isAcceleratedLKEPlansEnabled && t.class === "accelerated") {
+                // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
+                return false;
+              }
+
+               // No Nanodes or GPUs in Kubernetes clusters
+              return t.class !== 'nanode' && t.class !== 'gpu';
+            }
+          )}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
