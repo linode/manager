@@ -1,24 +1,29 @@
-import { Box } from '@linode/ui';
-import { styled } from '@mui/material/styles';
+import { Box, TooltipIcon } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
+import { useState } from 'react';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { TooltipIcon } from 'src/components/TooltipIcon';
+import { Link } from 'src/components/Link';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
+import { usePreferences } from 'src/queries/profile/preferences';
 
 import {
   BillingActionButton,
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
+import {
+  StyledTypography,
+  StyledVisibilityHideIcon,
+  StyledVisibilityShowIcon,
+} from './ContactInformation.styles';
 import BillingContactDrawer from './EditBillingContactDrawer';
 
 import type { Profile } from '@linode/api-v4';
@@ -39,20 +44,7 @@ interface Props {
   zip: string;
 }
 
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  '& .dif': {
-    '& .MuiChip-root': {
-      position: 'absolute',
-      right: -10,
-      top: '-4px',
-    },
-    position: 'relative',
-    width: 'auto',
-  },
-  marginBottom: theme.spacing(1),
-}));
-
-const ContactInformation = (props: Props) => {
+export const ContactInformation = React.memo((props: Props) => {
   const {
     address1,
     address2,
@@ -80,6 +72,8 @@ const ContactInformation = (props: Props) => {
   ] = React.useState<boolean>(false);
 
   const { data: notifications } = useNotificationsQuery();
+
+  const { data: preferences } = usePreferences();
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
@@ -124,6 +118,10 @@ const ContactInformation = (props: Props) => {
     }
   }, [editContactDrawerOpen, history.location.state]);
 
+  const [isContactInfoMasked, setIsContactInfoMasked] = useState(
+    preferences?.maskSensitiveData
+  );
+
   /**
    * Finding the country from the countryData JSON
    * `country-region-data` mapping:
@@ -158,105 +156,108 @@ const ContactInformation = (props: Props) => {
       <BillingPaper data-qa-contact-summary variant="outlined">
         <BillingBox>
           <Typography variant="h3">Billing Contact</Typography>
-          <BillingActionButton
-            onClick={() => {
-              history.push('/account/billing/edit');
-              handleEditDrawerOpen();
-            }}
-            tooltipText={getRestrictedResourceText({
-              includeContactInfo: false,
-              isChildUser,
-              resourceType: 'Account',
-            })}
-            data-testid="edit-contact-info"
-            disableFocusRipple
-            disableRipple
-            disableTouchRipple
-            disabled={isReadOnly}
-          >
-            {EDIT_BILLING_CONTACT}
-          </BillingActionButton>
+          <Box display="flex" marginLeft="auto">
+            {!isContactInfoMasked && (
+              <BillingActionButton
+                onClick={() => {
+                  history.push('/account/billing/edit');
+                  handleEditDrawerOpen();
+                }}
+                tooltipText={getRestrictedResourceText({
+                  includeContactInfo: false,
+                  isChildUser,
+                  resourceType: 'Account',
+                })}
+                data-testid="edit-contact-info"
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                disabled={isReadOnly}
+              >
+                {EDIT_BILLING_CONTACT}
+              </BillingActionButton>
+            )}
+            {preferences?.maskSensitiveData && (
+              <BillingActionButton
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
+                disabled={isReadOnly}
+                onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
+                sx={{ marginLeft: !isContactInfoMasked ? 2 : 0 }}
+              >
+                {isContactInfoMasked ? (
+                  <StyledVisibilityShowIcon />
+                ) : (
+                  <StyledVisibilityHideIcon />
+                )}
+                {isContactInfoMasked ? 'Show' : 'Hide'}
+              </BillingActionButton>
+            )}
+          </Box>
         </BillingBox>
-
-        <Grid container spacing={2}>
-          {(firstName ||
-            lastName ||
-            company ||
-            address1 ||
-            address2 ||
-            city ||
-            state ||
-            zip ||
-            country) && (
-            <Grid sx={sxGrid}>
-              {(firstName || lastName) && (
-                <MaskableText
-                  text={`${firstName} ${lastName}`}
-                  length="plaintext"
-                >
+        {preferences?.maskSensitiveData && isContactInfoMasked ? (
+          <Typography>
+            This data is sensitive and hidden for privacy. To unmask all
+            sensitive data by default, go to{' '}
+            <Link to="/profile/settings">profile settings</Link>.
+          </Typography>
+        ) : (
+          <Grid container spacing={2}>
+            {(firstName ||
+              lastName ||
+              company ||
+              address1 ||
+              address2 ||
+              city ||
+              state ||
+              zip ||
+              country) && (
+              <Grid sx={sxGrid}>
+                {(firstName || lastName) && (
                   <StyledTypography
                     data-qa-contact-name
                     sx={{ wordBreak: 'break-all' }}
                   >
                     {firstName} {lastName}
                   </StyledTypography>
-                </MaskableText>
-              )}
-              {company && (
-                <MaskableText text={company} length="plaintext">
-                  <>
-                    {' '}
-                    <StyledTypography
-                      data-qa-company
-                      sx={{ wordBreak: 'break-all' }}
-                    >
-                      {company}
-                    </StyledTypography>
-                  </>
-                </MaskableText>
-              )}
-              {(address1 || address2 || city || state || zip || country) && (
-                <MaskableText
-                  text={`${address1} ${address2}`}
-                  length="plaintext"
-                >
+                )}
+                {company && (
+                  <StyledTypography
+                    data-qa-company
+                    sx={{ wordBreak: 'break-all' }}
+                  >
+                    {company}
+                  </StyledTypography>
+                )}
+                {(address1 || address2 || city || state || zip || country) && (
                   <>
                     <StyledTypography data-qa-contact-address>
                       {address1}
                     </StyledTypography>
                     <StyledTypography>{address2}</StyledTypography>
                   </>
-                </MaskableText>
-              )}
-              <MaskableText text={`${city} ${state} ${zip}`} length="plaintext">
+                )}
                 <StyledTypography>
                   {city}
                   {city && state && ','} {state} {zip}
                 </StyledTypography>
-              </MaskableText>
-              <MaskableText text={countryName}>
                 <StyledTypography>{countryName}</StyledTypography>
-              </MaskableText>
-            </Grid>
-          )}
-          <Grid sx={sxGrid}>
-            <MaskableText text={email} length="plaintext">
+              </Grid>
+            )}
+            <Grid sx={sxGrid}>
               <StyledTypography
                 data-qa-contact-email
                 sx={{ wordBreak: 'break-all' }}
               >
                 {email}
               </StyledTypography>
-            </MaskableText>
-            {phone && (
-              <MaskableText text={phone} length="plaintext">
+              {phone && (
                 <StyledTypography data-qa-contact-phone>
                   {phone}
                 </StyledTypography>
-              </MaskableText>
-            )}
-            {taxId && (
-              <MaskableText text={taxId} length="plaintext">
+              )}
+              {taxId && (
                 <Box alignItems="center" display="flex">
                   <StyledTypography
                     sx={{
@@ -273,10 +274,10 @@ const ContactInformation = (props: Props) => {
                     />
                   )}
                 </Box>
-              </MaskableText>
-            )}
+              )}
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </BillingPaper>
       <BillingContactDrawer
         onClose={() => {
@@ -289,6 +290,4 @@ const ContactInformation = (props: Props) => {
       />
     </Grid>
   );
-};
-
-export default React.memo(ContactInformation);
+});

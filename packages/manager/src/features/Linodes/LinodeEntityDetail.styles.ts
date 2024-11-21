@@ -1,4 +1,4 @@
-// This component was built asuming an unmodified MUI <Table />
+// This component was built assuming an unmodified MUI <Table />
 import { Box } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -97,30 +97,29 @@ export const StyledIPv4Box = styled(Box, { label: 'StyledIPv4Box' })(
     '&:hover .copy-tooltip > svg, & .copy-tooltip:focus > svg': {
       opacity: 1,
     },
+    border: 0,
     display: 'flex',
+    marginLeft: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
       margin: theme.spacing(0),
     },
-    marginLeft: theme.spacing(2),
-    border: 0,
   })
 );
 
 export const StyledIPv4Label = styled(Box, { label: 'StyledIPv4Label' })(
   ({ theme }) => ({
+    alignContent: 'center',
+    backgroundColor: theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
     color: theme.textColors.textAccessTable,
     fontFamily: theme.font.bold,
-    backgroundColor: theme.name === 'light' ? theme.color.grey10 : theme.bg.app,
-    padding: '10px 24px 10px 10px',
-    alignContent: 'center',
+    padding: `${theme.spacing(1)} ${theme.spacing(3)} ${theme.spacing(
+      1
+    )} ${theme.spacing(1.5)}`,
   })
 );
 
 export const StyledIPv4Item = styled(Box, { label: 'StyledIPv4Item' })(
   ({ theme }) => ({
-    '& div': {
-      fontSize: 15,
-    },
     alignItems: 'center',
     backgroundColor: theme.tokens.interaction.Background.Secondary,
     display: 'flex',
