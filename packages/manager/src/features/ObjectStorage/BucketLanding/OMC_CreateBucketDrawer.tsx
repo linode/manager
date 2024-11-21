@@ -144,12 +144,17 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
         }
       }
 
-      onClose();
+      handleClose();
     } catch (errors) {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
       }
     }
+  };
+
+  const handleClose = () => {
+    reset();
+    onClose();
   };
 
   const handleBucketFormSubmit = async (
@@ -276,12 +281,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   }, [watchRegion]);
 
   return (
-    <Drawer
-      onClose={onClose}
-      onExited={reset}
-      open={isOpen}
-      title="Create Bucket"
-    >
+    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -396,7 +396,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                 : '',
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
         />
         <EnableObjectStorageModal
           onClose={() =>

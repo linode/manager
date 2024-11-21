@@ -666,6 +666,7 @@ export const lightTheme: ThemeOptions = {
           },
           justifyContent: 'flex-start',
           margin: 0,
+          marginTop: 24,
           padding: 24,
         },
       },

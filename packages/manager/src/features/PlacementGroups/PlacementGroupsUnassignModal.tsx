@@ -18,13 +18,12 @@ import type {
 
 interface Props {
   onClose: () => void;
-  onExited?: () => void;
   open: boolean;
   selectedLinode: Linode | undefined;
 }
 
 export const PlacementGroupsUnassignModal = (props: Props) => {
-  const { onClose, onExited, open, selectedLinode } = props;
+  const { onClose, open, selectedLinode } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { id: placementGroupId, linodeId } = useParams<{
@@ -104,7 +103,6 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
           },
         }}
         onClose={onClose}
-        onExited={onExited}
         open={open}
         title="Delete Placement Group"
       >
@@ -118,7 +116,6 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
       actions={actions}
       error={error?.[0]?.reason}
       onClose={onClose}
-      onExited={onExited}
       open={open}
       title={linode?.label ? `Unassign ${linode.label}` : 'Unassign'}
     >

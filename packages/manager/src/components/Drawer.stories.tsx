@@ -1,5 +1,6 @@
 import { Button, TextField } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
+import { useArgs } from '@storybook/preview-api';
 import React from 'react';
 
 import { ActionsPanel } from './ActionsPanel/ActionsPanel';
@@ -24,6 +25,7 @@ export const Default: Story = {
   render: (args) => {
     const DrawerExampleWrapper = () => {
       const [open, setOpen] = React.useState(args.open);
+
       return (
         <>
           <Button buttonType="primary" onClick={() => setOpen(true)}>
@@ -52,6 +54,82 @@ export const Default: Story = {
       );
     };
     return <DrawerExampleWrapper />;
+  },
+};
+
+export const Fetching: Story = {
+  args: {
+    isFetching: true,
+    open: false,
+    title: 'My Drawer was Loading',
+  },
+  render: (args) => {
+    const DrawerExampleWrapper = () => {
+      const [{ isFetching, open }, updateArgs] = useArgs();
+
+      React.useEffect(() => {
+        if (open) {
+          setTimeout(() => {
+            updateArgs({ isFetching: false, onClose: action('onClose') });
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            updateArgs({ isFetching: true, onClose: action('onClose') });
+          }, 300);
+        }
+      }, [isFetching, open, updateArgs]);
+
+      return (
+        <>
+          <Button
+            buttonType="primary"
+            onClick={() => updateArgs({ open: true })}
+            sx={{ m: 4 }}
+          >
+            Click to open Drawer
+          </Button>
+          <Drawer
+            {...args}
+            isFetching={isFetching}
+            onClose={() => updateArgs({ open: false })}
+            open={open}
+          >
+            <Typography sx={{ mb: 2 }}>
+              I smirked at their Kale chips banh-mi fingerstache brunch in
+              Williamsburg.
+            </Typography>
+            <Typography sx={{ mb: 2 }}>
+              Meanwhile in my closet-style flat in Red-Hook, my pour-over coffee
+              glitched on my vinyl record player while I styled the bottom left
+              corner of my beard. Those artisan tacos I ordered were infused
+              with turmeric and locally sourced honey, a true farm-to-table
+              vibe. Pabst Blue Ribbon in hand, I sat on my reclaimed wood bench
+              next to the macramé plant holder.
+            </Typography>
+            <Typography sx={{ mb: 2 }}>
+              Narwhal selfies dominated my Instagram feed, hashtagged with "slow
+              living" and "normcore aesthetics". My kombucha brewing kit arrived
+              just in time for me to ferment my own chai-infused blend. As I
+              adjusted my vintage round glasses, a tiny house documentary
+              started playing softly in the background. The retro typewriter
+              clacked as I typed out my minimalist poetry on sustainably sourced
+              paper. The sun glowed through the window, shining light on the
+              delightful cracks of my Apple watch.
+            </Typography>
+            <Typography sx={{ mb: 2 }}>It was Saturday.</Typography>
+            <ActionsPanel
+              secondaryButtonProps={{
+                label: 'Cancel',
+                onClick: () => updateArgs({ open: false }),
+              }}
+              primaryButtonProps={{ label: 'Save' }}
+            />
+          </Drawer>
+        </>
+      );
+    };
+
+    return DrawerExampleWrapper();
   },
 };
 

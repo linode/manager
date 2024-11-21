@@ -135,7 +135,7 @@ export const KubeControlPlaneACLDrawer = (
           control_plane: payload,
         });
       }
-      closeDrawer();
+      handleClose();
     } catch (errors) {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
@@ -144,14 +144,13 @@ export const KubeControlPlaneACLDrawer = (
     }
   };
 
+  const handleClose = () => {
+    reset();
+    closeDrawer();
+  };
+
   return (
-    <Drawer
-      onClose={closeDrawer}
-      onExited={() => reset()}
-      open={open}
-      title={'Control Plane ACL'}
-      wide
-    >
+    <Drawer onClose={handleClose} open={open} title={'Control Plane ACL'} wide>
       <DrawerContent
         error={!!isErrorKubernetesACL && clusterMigrated} // when cluster has not migrated, we expect an error from the query
         errorMessage={isErrorKubernetesACL?.[0].reason} // only on initial loading error do we disable the drawer altogether
@@ -296,7 +295,7 @@ export const KubeControlPlaneACLDrawer = (
                 loading: isSubmitting,
                 type: 'submit',
               }}
-              secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
+              secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
             />
           </Stack>
         </form>

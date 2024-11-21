@@ -9,6 +9,7 @@ import type { SxProps, Theme } from '@mui/material';
 interface DialogTitleProps {
   className?: string;
   id?: string;
+  isFetching?: boolean;
   onClose?: () => void;
   subtitle?: string;
   sx?: SxProps<Theme>;
@@ -17,7 +18,7 @@ interface DialogTitleProps {
 
 const DialogTitle = (props: DialogTitleProps) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const { className, id, onClose, subtitle, sx, title } = props;
+  const { className, id, isFetching, onClose, subtitle, sx, title } = props;
 
   React.useEffect(() => {
     if (ref.current === null) {
@@ -48,8 +49,8 @@ const DialogTitle = (props: DialogTitleProps) => {
         data-qa-dialog-title={title}
         data-qa-drawer-title={title}
       >
-        {title}
-        {onClose != null && (
+        <Box component="span">{!isFetching && title}</Box>
+        {onClose !== null && (
           <IconButton
             sx={{
               right: '-12px',
