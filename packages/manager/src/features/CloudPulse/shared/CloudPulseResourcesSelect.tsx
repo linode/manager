@@ -56,7 +56,7 @@ export const CloudPulseResourcesSelect = React.memo(
       },
     };
 
-    const { data: resources, isLoading, isError } = useResourcesQuery(
+    const { data: resources, isError, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
@@ -123,6 +123,9 @@ export const CloudPulseResourcesSelect = React.memo(
 
     return (
       <Autocomplete
+        helperText={
+          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
+        }
         onChange={(e, resourceSelections) => {
           setSelectedResources(resourceSelections);
 
@@ -166,13 +169,45 @@ export const CloudPulseResourcesSelect = React.memo(
         }}
         textFieldProps={{
           InputProps: {
-            sx: {
+            sx: (theme) => ({
+              '::-webkit-scrollbar': {
+                display: 'none',
+              },
+              background: `
+                /* Top Cover */
+                linear-gradient(
+                  ${theme.tokens.interaction.Background.Primary} 30%,
+                  transparent
+                ),
+
+                /* Bottom Cover */
+                linear-gradient(
+                  transparent,
+                  ${theme.tokens.interaction.Background.Primary} 70%
+                ) 0 100%,
+
+                /* Top shadow */
+                linear-gradient(
+                  rgba(0,0,0,.18),
+                  transparent
+                ),
+
+                /* Bottom shadow */
+                linear-gradient(
+                  transparent,
+                  rgba(0,0,0,.18)
+                ) 0 100%
+              `,
+              backgroundAttachment: 'local, local, scroll, scroll',
+              backgroundColor: theme.tokens.interaction.Background.Primary,
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '100% 40px, 100% 40px, 100% 14px, 100% 14px',
               maxHeight: '55px',
               overflow: 'auto',
               svg: {
                 color: themes.light.color.grey3,
               },
-            },
+            }),
           },
         }}
         autoHighlight
@@ -181,9 +216,6 @@ export const CloudPulseResourcesSelect = React.memo(
         disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
-        helperText={
-          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
-        }
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
         limitTags={1}
