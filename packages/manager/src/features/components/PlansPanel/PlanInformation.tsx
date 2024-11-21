@@ -104,7 +104,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
         </>
       ) : null}
       {planType === 'accelerated' && (
-        // TODO Connie get the doclinks
+        // TODO: acceleratedPlans - add doc links
         <Notice variant="warning">
           <Typography
             fontFamily={(theme: Theme) => theme.font.bold}
