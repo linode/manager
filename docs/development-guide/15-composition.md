@@ -80,60 +80,44 @@ const form = useForm({
 ```
 
 ### Complex Schema Extensions
-For forms with multiple variants, you could create a `resolvers.ts` file where you:
-1. Create a resolver map:
+1. You may create a `resolver` function that handles the validation (see: [ManageImageRegionsForm.tsx](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Images/ImagesLanding/ImageRegions/ManageImageRegionsForm.tsx#L189-L213)):
 
 ```typescript
-export const linodeCreateResolvers = {
-  Backups: CreateLinodeFromBackupSchema,
-  Images: CreateLinodeSchema,
-  OS: CreateLinodeSchema,
-  StackScripts: CreateLinodeFromStackScriptSchema,
+export const resolver: Resolver<UpdateImageRegionsPayload, Context> = async (
+  values,
+  context
+) => {
+  const availableRegionIds = context?.imageRegions
+    ?.filter((r) => r.status === 'available')
+    .map((r) => r.region);
+
+  const isMissingAvailableRegion = !values.regions.some((regionId) =>
+    availableRegionIds?.includes(regionId)
+  );
+
+  const availableRegionLabels = context?.regions
+    ?.filter((r) => availableRegionIds?.includes(r.id))
+    .map((r) => r.label);
+
+  if (isMissingAvailableRegion) {
+    const message = `At least one available region must be present (${availableRegionLabels?.join(
+      ', '
+    )}).`;
+    return { errors: { regions: { message, type: 'validate' } }, values };
+  }
+
+  return { errors: {}, values };
 };
 ```
 
-2. Create a resolver function (see: [LinodeCreate/resolvers](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/resolvers.ts]))
-
-```typescript
-export const getFormResolver = (
-  type: string | undefined,
-  queryClient: QueryClient
-): Resolver<FormValues, FormContext> => {
-
-  // Get the appropriate schema based on form type
-  const schema = linodeCreateResolvers[type ?? 'Backups'];
-
-  return async (values, context, options) => {
-    // Validate against the schema
-    const { errors } = await yupResolver(schema)(values, context, options);
-
-    // Add custom validation logic
-    if (someCondition) {
-      errors.fieldName = {
-        message: 'Custom error message',
-        type: 'validate',
-      };
-    }
-
-    // Use queryClient.ensureQueryData for async validations
-    const serverData = await queryClient.ensureQueryData(someQuery);
-    if (needsExtraValidation(serverData)) {
-      errors.otherField = {
-        message: 'Validation failed based on server data',
-        type: 'validate',
-      };
-    }
-
-    return { errors: errors ?? {}, values };
-  };
-};
-```
-
-3. Usage/Implementation (see: [LinodeCreate/index](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/index.tsx#L78))
+2. Usage/Implementation (see: [LinodeCreate/index.tsx](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/index.tsx#L78)):
 ```typescript
 const form = useForm({
-  resolver: getFormResolver(type, queryClient),
+  resolver,
   defaultValues,
   context: { /* form context */ },
 });
 ```
+
+### Additional Complexity
+When working with multiple sequential schemas that require validation, you can create a resolver map and function (see: [LinodeCreate/resolvers.ts](https://github.com/linode/manager/blob/develop/packages/manager/src/features/Linodes/LinodeCreate/resolvers.ts])).
