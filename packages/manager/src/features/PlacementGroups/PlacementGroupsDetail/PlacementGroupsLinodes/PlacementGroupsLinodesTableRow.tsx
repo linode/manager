@@ -6,12 +6,19 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
+import {
+  getProgressOrDefault,
+  linodeInTransition,
+  transitionText,
+} from 'src/features/Linodes/transitions';
 import {
   PLACEMENT_GROUP_MIGRATION_INBOUND_MESSAGE,
   PLACEMENT_GROUP_MIGRATION_OUTBOUND_MESSAGE,
 } from 'src/features/PlacementGroups/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { usePlacementGroupQuery } from 'src/queries/placementGroups';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
@@ -22,6 +29,8 @@ interface Props {
   linode: Linode;
 }
 
+type MigrationType = 'inbound' | 'outbound' | null;
+
 export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   const { handleUnassignLinodeModal, linode } = props;
   const { label, status } = linode;
@@ -31,26 +40,37 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
     Number(placementGroupId),
     isLinodeMigrating // we only really need to fetch the placement group if the linode is migrating
   );
+  const { data: events } = useInProgressEvents();
+  const recentEvent = events?.find(
+    (e) => e.entity?.type === 'linode' && e.entity.id === linode.id
+  );
   const iconStatus = getLinodeIconStatus(status);
-
+  const isMigrationInProgress = linodeInTransition(status, recentEvent);
   const isLinodeReadOnly = useIsResourceRestricted({
     grantLevel: 'read_write',
     grantType: 'linode',
     id: linode.id,
   });
 
-  const migrationType:
-    | 'inbound'
-    | 'outbound'
-    | null = placementGroup?.migrations?.inbound?.find(
-    (migration) => migration.linode_id === linode.id
-  )
-    ? 'inbound'
-    : placementGroup?.migrations?.outbound?.find(
-        (migration) => migration.linode_id === linode.id
-      )
-    ? 'outbound'
-    : null;
+  const getMigrationType = React.useCallback((): MigrationType => {
+    if (!placementGroup?.migrations) {
+      return null;
+    }
+
+    if (
+      placementGroup.migrations.inbound?.some((m) => m.linode_id === linode.id)
+    ) {
+      return 'inbound';
+    }
+
+    if (
+      placementGroup.migrations.outbound?.some((m) => m.linode_id === linode.id)
+    ) {
+      return 'outbound';
+    }
+
+    return null;
+  }, [placementGroup, linode.id]);
 
   return (
     <TableRow data-testid={`placement-group-linode-${linode.id}`}>
@@ -58,17 +78,31 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
         <Link to={`/linodes/${linode.id}`}>{label}</Link>
       </TableCell>
       <TableCell statusCell>
-        <StatusIcon
-          aria-label={`Linode status ${status ?? iconStatus}`}
-          status={iconStatus}
-        />
-        {capitalizeAllWords(linode.status.replace('_', ' '))}
+        {isMigrationInProgress ? (
+          // there are two migrations events during a PG migration,
+          // and we only really want to show the second one which is the only one with a time_remaining property
+          recentEvent?.time_remaining && (
+            <>
+              <StatusIcon status={iconStatus} />
+              <ProgressDisplay
+                progress={getProgressOrDefault(recentEvent)}
+                sx={{ display: 'inline-block' }}
+                text={transitionText(status, linode.id, recentEvent)}
+              />
+            </>
+          )
+        ) : (
+          <>
+            <StatusIcon status={iconStatus} />
+            {capitalizeAllWords(status.replace('_', ' '))}
+          </>
+        )}
       </TableCell>
       <TableCell actionCell>
         <InlineMenuAction
           tooltip={
             isLinodeMigrating
-              ? migrationType === 'inbound'
+              ? getMigrationType() === 'inbound'
                 ? PLACEMENT_GROUP_MIGRATION_INBOUND_MESSAGE
                 : PLACEMENT_GROUP_MIGRATION_OUTBOUND_MESSAGE
               : undefined
