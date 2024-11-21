@@ -1,8 +1,7 @@
-import { Stack } from '@linode/ui';
+import { Checkbox, Stack } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
-import { Checkbox } from 'src/components/Checkbox';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -34,9 +33,11 @@ export const PrivateIP = () => {
   return (
     <FormControlLabel
       label={
-        <Stack sx={{ pl: 2 }}>
-          <Typography variant="h3">Private IP</Typography>
-          <Typography>
+        <Stack spacing={1} sx={{ pl: 2 }}>
+          <Typography component="span" variant="h3">
+            Private IP
+          </Typography>
+          <Typography component="span" display="block" variant="body1">
             Use Private IP for a backend node to a NodeBalancer. Use VPC instead
             for private communication between your Linodes.
           </Typography>
@@ -46,6 +47,7 @@ export const PrivateIP = () => {
       control={<Checkbox />}
       disabled={isDistributedRegionSelected || isLinodeCreateRestricted}
       onChange={field.onChange}
+      sx={{ alignItems: 'start' }}
     />
   );
 };
