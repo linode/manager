@@ -16,6 +16,7 @@ import type {
   KubernetesDashboardResponse,
   KubernetesVersion,
   KubernetesControlPlaneACLPayload,
+  KubernetesTieredVersion,
 } from './types';
 
 /**
@@ -29,6 +30,19 @@ export const getKubernetesClusters = (params?: Params, filters?: Filter) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/lke/clusters`)
+  );
+
+/**
+ * getKubernetesClusters
+ *
+ * Gets a list of a user's Kubernetes clusters from beta API
+ */
+export const getKubernetesClustersBeta = (params?: Params, filters?: Filter) =>
+  Request<Page<KubernetesCluster>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${BETA_API_ROOT}/lke/clusters`)
   );
 
 /**
@@ -69,11 +83,12 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) => {
 /**
  * createKubernetesClustersBeta
  *
- * Create a new cluster with the BETA api whenever feature flag for APL is enabled
- * and APL is set to enabled in the UI
+ * Create a new cluster with the beta API:
+ * 1. When the feature flag for APL is enabled and APL is set to enabled in the UI
+ * 2. When the LKE-E feature is enabled
  *
  * duplicated function of createKubernetesCluster
- * necessary to call BETA_API_ROOT in a seperate function based on feature flag
+ * necessary to call BETA_API_ROOT in a separate function based on feature flag
  */
 export const createKubernetesClusterBeta = (data: CreateKubeClusterPayload) => {
   return Request<KubernetesCluster>(
@@ -154,6 +169,23 @@ export const getKubernetesVersions = (params?: Params, filters?: Filter) =>
     setURL(`${API_ROOT}/lke/versions`)
   );
 
+/** getKubernetesTieredVersionsBeta
+ *
+ * Returns a paginated list of available Kubernetes tiered versions from the beta API.
+ *
+ */
+
+export const getKubernetesTieredVersionsBeta = (
+  params?: Params,
+  filters?: Filter
+) =>
+  Request<Page<KubernetesTieredVersion>>(
+    setMethod('GET'),
+    setXFilter(filters),
+    setParams(params),
+    setURL(`${BETA_API_ROOT}/lke/versions/:tier`)
+  );
+
 /** getKubernetesVersion
  *
  * Returns a single Kubernetes version by ID.
@@ -164,6 +196,20 @@ export const getKubernetesVersion = (versionID: string) =>
   Request<KubernetesVersion>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/versions/${encodeURIComponent(versionID)}`)
+  );
+
+/** getKubernetesTieredVersion
+ *
+ * Returns a single tiered Kubernetes version by ID from the beta API.
+ *
+ */
+
+export const getKubernetesTieredVersion = (versionID: string) =>
+  Request<KubernetesTieredVersion>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/lke/versions/:tier/${encodeURIComponent(versionID)}`
+    )
   );
 
 /** getKubernetesClusterEndpoint
