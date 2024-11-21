@@ -8,8 +8,8 @@ import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
 import type { APIError, PlacementGroup, Region } from '@linode/api-v4';
+import type { TextFieldProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
-import type { TextFieldProps } from 'src/components/TextField';
 
 export interface PlacementGroupsSelectProps {
   /**

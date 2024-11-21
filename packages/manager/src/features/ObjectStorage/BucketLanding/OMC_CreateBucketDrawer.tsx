@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { CreateBucketSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -8,7 +8,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
 import {
@@ -145,12 +144,17 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
         }
       }
 
-      onClose();
+      handleClose();
     } catch (errors) {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
       }
     }
+  };
+
+  const handleClose = () => {
+    reset();
+    onClose();
   };
 
   const handleBucketFormSubmit = async (
@@ -277,12 +281,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   }, [watchRegion]);
 
   return (
-    <Drawer
-      onClose={onClose}
-      onExited={reset}
-      open={isOpen}
-      title="Create Bucket"
-    >
+    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -397,7 +396,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                 : '',
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
         />
         <EnableObjectStorageModal
           onClose={() =>
