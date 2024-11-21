@@ -10,7 +10,7 @@ import { DownloadTooltip } from '../DownloadTooltip';
 import type { CopyTooltipProps } from 'src/components/CopyTooltip/CopyTooltip';
 import type { TextFieldProps } from 'src/components/TextField';
 
-interface CopyableTextFieldProps extends TextFieldProps {
+export interface CopyableTextFieldProps extends TextFieldProps {
   /**
    * Optional props that are passed to the underlying CopyTooltip component
    */
