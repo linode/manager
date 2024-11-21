@@ -118,7 +118,7 @@ export const generateCLICommand = (
   const dataForCLI = Object.entries(data).reduce(dataEntriesReduce, []);
 
   if (linodeCLIAction === 'Clone Linode') {
-    return `linode-cli linodes ${linodeCLIAction} ${sourceLinodeID} \\\n${dataForCLI.join(
+    return `linode-cli linodes clone ${sourceLinodeID} \\\n${dataForCLI.join(
       ' \\\n'
     )}`;
   }
