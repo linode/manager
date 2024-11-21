@@ -1,10 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, TooltipIcon } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 
 import type {

@@ -244,5 +244,8 @@ export const transformData = (
 ): [number, number][] => {
   const unit: string = generateCurrentUnit(baseUnit);
 
-  return data.map((d) => [d[0], Number(d[1]) * (multiplier[unit] ?? 1)]);
+  return data.map((d) => [
+    d[0],
+    d[1] !== null ? Number(d[1]) * (multiplier[unit] ?? 1) : d[1],
+  ]);
 };

@@ -6,6 +6,7 @@ import {
   IconButton,
   InputAdornment,
   Stack,
+  TooltipIcon,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
@@ -25,7 +26,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextField } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import {

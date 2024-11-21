@@ -17,4 +17,5 @@ export * from './Radio';
 export * from './RadioGroup';
 export * from './Stack';
 export * from './Tooltip';
+export * from './TooltipIcon';
 export * from './VisibilityTooltip';

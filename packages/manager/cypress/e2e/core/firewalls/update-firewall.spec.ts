@@ -222,7 +222,7 @@ describe('update firewall', () => {
       // Confirm that the inbound rules are listed on edit page with expected configuration
       cy.findByText(inboundRule.label!)
         .should('be.visible')
-        .closest('li')
+        .closest('tr')
         .within(() => {
           cy.findByText(inboundRule.protocol).should('be.visible');
           cy.findByText(inboundRule.ports!).should('be.visible');
@@ -237,7 +237,7 @@ describe('update firewall', () => {
       // Confirm that the outbound rules are listed on edit page with expected configuration
       cy.findByText(outboundRule.label!)
         .should('be.visible')
-        .closest('li')
+        .closest('tr')
         .within(() => {
           cy.findByText(outboundRule.protocol).should('be.visible');
           cy.findByText(outboundRule.ports!).should('be.visible');
