@@ -76,10 +76,11 @@ export const CloudPulseTabs = () => {
         <Switch>
           <Route
             component={CloudPulseDashboardLanding}
+            exact
             path={`${url}/dashboards`}
           />
           <Route component={AlertsLanding} path={`${url}/alerts`} />
-          <Redirect from="/monitor" to="/monitor/dashboards" />
+          <Redirect from="*" to="/monitor/dashboards" />
         </Switch>
       </React.Suspense>
     </Tabs>
