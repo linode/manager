@@ -82,8 +82,6 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
       </TableCell>
       <TableCell statusCell>
         {isMigrationInProgress ? (
-          // there are two migrations events during a PG migration,
-          // and we only really want to show the second one which is the only one with a time_remaining property
           <>
             <StatusIcon status={iconStatus} />
             <StyledButton onClick={notificationContext.openMenu}>
