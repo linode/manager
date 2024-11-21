@@ -69,9 +69,11 @@ export const Backups = () => {
       label={
         <Stack spacing={1} sx={{ pl: 2 }}>
           <Stack alignItems="center" direction="row" spacing={2}>
-            <Typography variant="h3">Backups</Typography>
+            <Typography component="span" variant="h3">
+              Backups
+            </Typography>
             {backupsMonthlyPrice && (
-              <Typography>
+              <Typography component="span">
                 <Currency quantity={backupsMonthlyPrice} /> per month
               </Typography>
             )}
@@ -87,7 +89,7 @@ export const Backups = () => {
               variant="warning"
             />
           )}
-          <Typography>
+          <Typography component="span" display="block" variant="body1">
             {isAccountBackupsEnabled ? (
               <React.Fragment>
                 You have enabled automatic backups for your account. This Linode
@@ -108,6 +110,7 @@ export const Backups = () => {
       control={<Checkbox />}
       data-testid="backups"
       onChange={field.onChange}
+      sx={{ alignItems: 'start' }}
     />
   );
 };
