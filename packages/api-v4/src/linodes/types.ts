@@ -13,6 +13,7 @@ export interface LinodeSpecs {
   vcpus: number;
   transfer: number;
   gpus: number;
+  accelerated_devices: number;
 }
 
 export interface Linode {
@@ -322,6 +323,7 @@ export interface LinodeType extends BaseType {
   successor: string | null;
   network_out: number;
   gpus: number;
+  accelerated_devices: number;
   price: PriceObject;
   region_prices: RegionPriceObject[];
   addons: {
@@ -330,6 +332,7 @@ export interface LinodeType extends BaseType {
 }
 
 export type LinodeTypeClass =
+  | 'accelerated'
   | 'nanode'
   | 'standard'
   | 'dedicated'

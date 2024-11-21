@@ -10,6 +10,8 @@ export const PLAN_IS_CURRENTLY_UNAVAILABLE_COPY =
   'This plan is currently unavailable.';
 export const PLAN_IS_TOO_SMALL_FOR_APL_COPY =
   'This plan is too small for Application Platform for LKE.';
+export const APL_NOTICE_COPY =
+  'Shared CPU instances are currently not available for Application Platform for LKE';
 
 export const LIMITED_AVAILABILITY_LINK =
   'https://www.linode.com/global-infrastructure/availability/';
@@ -25,6 +27,7 @@ export const GPU_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/gpu-compute-instances';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {
@@ -83,6 +86,7 @@ export const DEDICATED_512_GB_PLAN: ExtendedType = {
 };
 
 export const PREMIUM_512_GB_PLAN: ExtendedType = {
+  accelerated_devices: 0,
   addons: {
     backups: {
       price: {

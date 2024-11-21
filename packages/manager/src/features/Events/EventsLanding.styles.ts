@@ -1,6 +1,6 @@
+import { H1Header } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { H1Header } from 'src/components/H1Header/H1Header';
 import { TableCell } from 'src/components/TableCell';
 import { Typography } from 'src/components/Typography';
 

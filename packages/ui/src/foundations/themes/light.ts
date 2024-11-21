@@ -485,7 +485,7 @@ export const lightTheme: ThemeOptions = {
             color: Button.Secondary.Hover.Text,
           },
           '&[aria-disabled="true"]': {
-            color: '#c9cacb',
+            color: Color.Neutrals[40],
           },
           backgroundColor: 'transparent',
           color: Button.Secondary.Default.Text,
@@ -832,7 +832,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: 18,
           },
           '&.Mui-disabled': {
-            backgroundColor: '#f4f4f4',
+            backgroundColor: Color.Neutrals[5],
             borderColor: Color.Neutrals[40],
             color: 'rgba(0, 0, 0, 0.75)',
             input: {

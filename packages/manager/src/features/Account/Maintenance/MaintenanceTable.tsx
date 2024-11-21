@@ -1,12 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Box } from '@linode/ui';
+import { Box, Paper } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -26,6 +25,7 @@ import {
 } from 'src/queries/account/maintenance';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
+import { PENDING_MAINTENANCE_FILTER } from './utilities';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
 
@@ -71,7 +71,7 @@ export const MaintenanceTable = ({ type }: Props) => {
    */
   const filters: Record<Props['type'], Filter> = {
     completed: { status: 'completed' },
-    pending: { status: { '+or': ['pending', 'started'] } },
+    pending: PENDING_MAINTENANCE_FILTER,
   };
 
   const filter: Filter = {

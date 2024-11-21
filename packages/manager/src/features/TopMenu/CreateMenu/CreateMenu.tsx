@@ -1,4 +1,4 @@
-import { Box, Divider } from '@linode/ui';
+import { Box, Button, Divider } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { Popover, Stack } from '@mui/material';
@@ -8,7 +8,6 @@ import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import { Button } from 'src/components/Button/Button';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 

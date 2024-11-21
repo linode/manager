@@ -52,6 +52,8 @@ export * from './betas';
 
 export * from './iam';
 
+export * from './resources';
+
 export {
   baseRequest,
   setToken,

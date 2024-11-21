@@ -1,5 +1,4 @@
 import { arrayToList } from 'src/utilities/arrayToList';
-import { ExtendedType } from 'src/utilities/extendType';
 
 import {
   DEDICATED_512_GB_PLAN,
@@ -10,12 +9,12 @@ import {
   PREMIUM_512_GB_PLAN,
   SMALLER_PLAN_DISABLED_COPY,
 } from './constants';
-import {
+
+import type {
   DisabledTooltipReasons,
   PlanSelectionType,
   PlanWithAvailability,
 } from './types';
-
 import type {
   Capabilities,
   LinodeTypeClass,
@@ -23,6 +22,7 @@ import type {
   RegionAvailability,
 } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
+import type { ExtendedType } from 'src/utilities/extendType';
 
 export type PlansTypes<T> = Record<LinodeTypeClass, T[]>;
 
@@ -42,6 +42,7 @@ export const planTypeOrder: (
   'gpu',
   'metal',
   'premium',
+  'accelerated',
 ];
 
 /**
@@ -165,6 +166,14 @@ export const getIsLimitedAvailability = ({
 };
 
 export const planTabInfoContent = {
+  // TODO: to be further handled in M3-8834
+  accelerated: {
+    dataId: 'data-qa-accelerated',
+    key: 'accelerated',
+    title: 'Accelerated',
+    typography:
+      'Accelerated instances leverage ASICs to accelerate specialized tasks such as video transcoding, media processing, and other compute heavy workloads.',
+  },
   dedicated: {
     dataId: 'data-qa-dedicated',
     key: 'dedicated',
@@ -302,7 +311,7 @@ export const extractPlansInformation = ({
         )
       );
       const planIsTooSmallForAPL =
-        isAPLEnabled && Boolean(plan.memory < 8000 || plan.vcpus < 4);
+        isAPLEnabled && Boolean(plan.memory < 16000 || plan.vcpus < 4);
 
       return {
         ...plan,

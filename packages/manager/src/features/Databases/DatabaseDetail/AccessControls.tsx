@@ -1,9 +1,8 @@
-import { Notice } from '@linode/ui';
+import { Button, Notice } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Table } from 'src/components/Table';
@@ -180,7 +179,7 @@ export const AccessControls = (props: Props) => {
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <Button
-          buttonType="primary"
+          buttonType="outlined"
           className={classes.addAccessControlBtn}
           data-testid="button-access-control"
           disabled={disabled}
