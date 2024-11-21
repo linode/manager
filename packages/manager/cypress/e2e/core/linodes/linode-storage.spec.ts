@@ -189,7 +189,8 @@ describe('linode storage tab', () => {
   });
 
   /*
-   * - Confirms UI flow when
+   * - Confirms UI flow when user adds a disk to a Linode.
+   * - Confirms that Cloud Manager UI automatically updates to reflect new disk.
    */
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
@@ -202,6 +203,10 @@ describe('linode storage tab', () => {
     });
   });
 
+  /*
+   * - Confirms UI flow when a user resizes an existing disk.
+   * - Confirms that Cloud Manager UI automatically updates to reflect resize.
+   */
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
     cy.defer(() =>
