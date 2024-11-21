@@ -1,7 +1,7 @@
-import { Box, Paper } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
+import { Paper } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
-import * as React from 'react';
+import React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import {
@@ -26,7 +26,6 @@ export interface TotalTrafficProps {
 }
 
 export interface ChartProps {
-  height: number;
   loading: boolean;
   rangeSelection: string;
   timezone: string;
@@ -105,7 +104,6 @@ export const NetworkGraphs = (props: Props) => {
   const v6Unit = generateNetworkUnits(maxV6InBytes);
 
   const commonGraphProps = {
-    chartHeight: props.height,
     rangeSelection,
     theme,
     timezone: props.timezone,
@@ -115,7 +113,7 @@ export const NetworkGraphs = (props: Props) => {
   return (
     <>
       <Grid md={6} sm={12}>
-        <Paper variant="outlined">
+        <Paper variant="outlined" sx={{ height: 500 }}>
           <StatsPanel
             renderBody={() => (
               <Graph
@@ -132,7 +130,7 @@ export const NetworkGraphs = (props: Props) => {
         </Paper>
       </Grid>
       <Grid md={6} sm={12}>
-        <Paper variant="outlined">
+        <Paper variant="outlined" sx={{ height: 500 }}>
           <StatsPanel
             renderBody={() => (
               <Graph
@@ -154,7 +152,6 @@ export const NetworkGraphs = (props: Props) => {
 
 interface GraphProps {
   ariaLabel: string;
-  chartHeight: number;
   data: NetworkStats;
   metrics: NetworkMetrics;
   rangeSelection: string;
@@ -245,7 +242,6 @@ const Graph = (props: GraphProps) => {
       }}
       ariaLabel={ariaLabel}
       data={timeData}
-      height={420}
       showLegend
       timezone={timezone}
       unit={` ${unit}/s`}

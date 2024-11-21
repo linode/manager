@@ -1,5 +1,5 @@
-import { Box, Paper, Stack } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
+import { Paper, Stack } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -44,11 +44,8 @@ interface Props {
   linodeCreated: string;
 }
 
-const chartHeight = 160;
-const rechartsHeight = 300;
-
-const LinodeSummary: React.FC<Props> = (props) => {
-  const { isBareMetalInstance, linodeCreated } = props;
+const LinodeSummary = (props: Props) => {
+  const { linodeCreated } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
   const theme = useTheme();
@@ -117,7 +114,6 @@ const LinodeSummary: React.FC<Props> = (props) => {
     }, []);
 
     return (
-      <Box marginTop={2}>
         <AreaChart
           areas={[
             {
@@ -139,12 +135,10 @@ const LinodeSummary: React.FC<Props> = (props) => {
           }}
           ariaLabel="CPU Usage Graph"
           data={timeData}
-          height={rechartsHeight}
           showLegend
           timezone={timezone}
           unit={'%'}
         />
-      </Box>
     );
   };
 
@@ -164,7 +158,6 @@ const LinodeSummary: React.FC<Props> = (props) => {
     }
 
     return (
-      <Box marginTop={2}>
         <AreaChart
           areas={[
             {
@@ -196,12 +189,10 @@ const LinodeSummary: React.FC<Props> = (props) => {
           }}
           ariaLabel="Disk I/O Graph"
           data={timeData}
-          height={rechartsHeight}
           showLegend
           timezone={timezone}
           unit={' blocks/s'}
         />
-      </Box>
     );
   };
 
@@ -240,7 +231,6 @@ const LinodeSummary: React.FC<Props> = (props) => {
   }
 
   const chartProps: ChartProps = {
-    height: chartHeight,
     loading: isLoading,
     rangeSelection,
     timezone,
@@ -252,14 +242,19 @@ const LinodeSummary: React.FC<Props> = (props) => {
         <Autocomplete
           defaultValue={options[0]}
           disableClearable
+          noMarginTop
+          sx={{ width: 150, mt: 1 }}
           id="chartRange"
+          textFieldProps={{
+            hideLabel: true,
+          }}
           label="Select Time Range"
           onChange={(e, value) => handleChartRangeChange(value)}
           options={options}
         />
       </Grid>
       <Grid md={6} sm={12}>
-        <Paper variant="outlined">
+        <Paper variant="outlined" sx={{ height: 370 }}>
           <StatsPanel
             renderBody={renderCPUChart}
             title="CPU (%)"
@@ -268,7 +263,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
         </Paper>
       </Grid>
       <Grid md={6} sm={12}>
-        <Paper variant="outlined">
+        <Paper variant="outlined" sx={{ height: 370 }}>
           <StatsPanel
             renderBody={renderDiskIOChart}
             title="Disk I/O (blocks/s)"
