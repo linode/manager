@@ -176,6 +176,7 @@ export const getKubernetesVersions = (params?: Params, filters?: Filter) =>
  */
 
 export const getKubernetesTieredVersionsBeta = (
+  tier: string,
   params?: Params,
   filters?: Filter
 ) =>
@@ -183,7 +184,7 @@ export const getKubernetesTieredVersionsBeta = (
     setMethod('GET'),
     setXFilter(filters),
     setParams(params),
-    setURL(`${BETA_API_ROOT}/lke/versions/:tier`)
+    setURL(`${BETA_API_ROOT}/lke/versions/${encodeURIComponent(tier)}`)
   );
 
 /** getKubernetesVersion
@@ -204,11 +205,13 @@ export const getKubernetesVersion = (versionID: string) =>
  *
  */
 
-export const getKubernetesTieredVersion = (versionID: string) =>
+export const getKubernetesTieredVersion = (tier: string, versionID: string) =>
   Request<KubernetesTieredVersion>(
     setMethod('GET'),
     setURL(
-      `${BETA_API_ROOT}/lke/versions/:tier/${encodeURIComponent(versionID)}`
+      `${BETA_API_ROOT}/lke/versions/${encodeURIComponent(
+        tier
+      )}/${encodeURIComponent(versionID)}`
     )
   );
 

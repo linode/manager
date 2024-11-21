@@ -120,10 +120,10 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
     },
     queryKey: null,
   },
-  tieredVersions: {
-    queryFn: () => getAllKubernetesTieredVersionsBeta(),
-    queryKey: null,
-  },
+  tieredVersions: (tier: string) => ({
+    queryFn: () => getAllKubernetesTieredVersionsBeta(tier),
+    queryKey: [tier],
+  }),
   types: {
     queryFn: () => getAllKubernetesTypes(),
     queryKey: null,
@@ -379,9 +379,9 @@ export const useKubernetesVersionQuery = () =>
     ...queryPresets.oneTimeFetch,
   });
 
-export const useKubernetesTieredVersionQuery = () => {
+export const useKubernetesTieredVersionQuery = (tier: string) => {
   useQuery<KubernetesTieredVersion[], APIError[]>({
-    ...kubernetesQueries.tieredVersions,
+    ...kubernetesQueries.tieredVersions(tier),
     ...queryPresets.oneTimeFetch,
   });
 };
@@ -448,9 +448,9 @@ const getAllKubernetesVersions = () =>
     getKubernetesVersions(params, filters)
   )().then((data) => data.data);
 
-const getAllKubernetesTieredVersionsBeta = () =>
+const getAllKubernetesTieredVersionsBeta = (tier: string) =>
   getAll<KubernetesTieredVersion>((params, filters) =>
-    getKubernetesTieredVersionsBeta(params, filters)
+    getKubernetesTieredVersionsBeta(tier, params, filters)
   )().then((data) => data.data);
 
 const getAllAPIEndpointsForCluster = (clusterId: number) =>
