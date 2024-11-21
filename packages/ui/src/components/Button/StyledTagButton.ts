@@ -1,7 +1,7 @@
 import { omittedProps } from '../../utilities';
 import { styled } from '@mui/material/styles';
 
-import Plus from 'src/assets/icons/plusSign.svg';
+import { PlusSignIcon } from '../../assets/icons';
 
 import { Button } from './Button';
 
@@ -33,7 +33,7 @@ export const StyledTagButton = styled(Button, {
   }),
 }));
 
-export const StyledPlusIcon = styled(Plus, {
+export const StyledPlusIcon = styled(PlusSignIcon, {
   label: 'StyledPlusIcon',
 })(({ theme, ...props }) => ({
   color: props.disabled

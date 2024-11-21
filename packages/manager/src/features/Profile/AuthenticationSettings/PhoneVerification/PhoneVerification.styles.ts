@@ -1,8 +1,7 @@
-import { Box, FormHelperText, omittedProps } from '@linode/ui';
+import { Box, FormHelperText, TextField, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
 export const StyledCodeSentMessageBox = styled(Box, {

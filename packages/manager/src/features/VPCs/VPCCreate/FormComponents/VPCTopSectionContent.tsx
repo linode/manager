@@ -1,9 +1,9 @@
+import { TextField } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { TextField } from 'src/components/TextField';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
