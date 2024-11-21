@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Link } from 'src/components/Link';
@@ -7,6 +8,9 @@ import { Typography } from 'src/components/Typography';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCLICommand } from 'src/utilities/codesnippets/generate-cli';
 
+import { useLinodeCreateQueryParams } from '../utilities';
+
+import type { LinodeCreateFormValues } from '../utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface LinodeCLIPanelProps {
@@ -20,7 +24,19 @@ export const LinodeCLIPanel = ({
   payLoad,
   title,
 }: LinodeCLIPanelProps) => {
-  const cliCommand = useMemo(() => generateCLICommand(payLoad), [payLoad]);
+  const { params } = useLinodeCreateQueryParams();
+  const linodeCLIAction = params.type;
+  //  === 'Clone Linode' ? 'clone' : 'create';
+
+  const { getValues } = useFormContext<LinodeCreateFormValues>();
+  // const xx = getValues();
+  const sourceLinodeID = getValues('linode.id');
+  // console.log('sourceLinodeID', sourceLinodeID);
+
+  const cliCommand = useMemo(
+    () => generateCLICommand(payLoad, sourceLinodeID, linodeCLIAction),
+    [linodeCLIAction, payLoad, sourceLinodeID]
+  );
 
   return (
     <SafeTabPanel index={index}>

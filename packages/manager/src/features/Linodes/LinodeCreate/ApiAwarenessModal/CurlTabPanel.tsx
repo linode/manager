@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material/styles';
 import React, { useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Link } from 'src/components/Link';
@@ -8,6 +9,9 @@ import { Typography } from 'src/components/Typography';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCurlCommand } from 'src/utilities/codesnippets/generate-cURL';
 
+import { useLinodeCreateQueryParams } from '../utilities';
+
+import type { LinodeCreateFormValues } from '../utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 
 export interface CurlTabPanelProps {
@@ -19,10 +23,20 @@ export interface CurlTabPanelProps {
 export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
   const theme = useTheme();
 
-  const curlCommand = useMemo(
-    () => generateCurlCommand(payLoad, '/linode/instances'),
-    [payLoad]
-  );
+  const { getValues } = useFormContext<LinodeCreateFormValues>();
+  const sourceLinodeID = getValues('linode.id');
+
+  const { params } = useLinodeCreateQueryParams();
+  const linodeCLIAction = params.type === 'Clone Linode' ? 'clone' : 'create';
+  const path =
+    linodeCLIAction === 'create'
+      ? '/linode/instances'
+      : `linode/instances/${sourceLinodeID}/clone`;
+
+  const curlCommand = useMemo(() => generateCurlCommand(payLoad, path), [
+    path,
+    payLoad,
+  ]);
 
   return (
     <SafeTabPanel index={index}>
