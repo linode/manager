@@ -1,9 +1,8 @@
+// @todo: modularization - Import from 'ui' package once Typography is migrated.
+import { Typography } from '@mui/material';
 import * as React from 'react';
 
 import type { SxProps, Theme } from '@mui/material/styles';
-
-// @todo: modularization - Import from 'ui' package once Typography is migrated.
-import { Typography } from '@mui/material';
 
 interface H1HeaderProps {
   className?: string;
