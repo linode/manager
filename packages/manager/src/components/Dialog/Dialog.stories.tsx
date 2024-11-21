@@ -1,6 +1,9 @@
+import { Button } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
+import { useArgs } from '@storybook/preview-api';
 import React from 'react';
 
+import { Typography } from '../Typography';
 import { Dialog } from './Dialog';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -35,6 +38,10 @@ const meta: Meta<typeof Dialog> = {
     title: { description: 'Title that appears in the heading of the dialog.' },
   },
   args: {
+    disableAutoFocus: true,
+    disableEnforceFocus: true,
+    disablePortal: true,
+    disableScrollLock: true,
     fullHeight: false,
     fullWidth: false,
     maxWidth: 'md',
@@ -42,11 +49,6 @@ const meta: Meta<typeof Dialog> = {
     open: true,
     style: { position: 'unset' },
     title: 'This is a Dialog',
-    titleBottomBorder: false,
-    disableAutoFocus: true,
-    disableEnforceFocus: true,
-    disablePortal: true,
-    disableScrollLock: true,
   },
   component: Dialog,
   title: 'Components/Dialog',
@@ -62,4 +64,57 @@ export const Default: Story = {
       <div>This a basic dialog with children in it.</div>
     </Dialog>
   ),
+};
+
+export const Fetching: Story = {
+  args: {
+    isFetching: true,
+  },
+  render: (args) => {
+    const DrawerExampleWrapper = () => {
+      const [{ isFetching, open }, updateArgs] = useArgs();
+
+      React.useEffect(() => {
+        if (open) {
+          setTimeout(() => {
+            updateArgs({ isFetching: false, onClose: action('onClose') });
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            updateArgs({ isFetching: true, onClose: action('onClose') });
+          }, 300);
+        }
+      }, [isFetching, open, updateArgs]);
+
+      return (
+        <>
+          <Button
+            buttonType="primary"
+            onClick={() => updateArgs({ open: true })}
+            sx={{ m: 4 }}
+          >
+            Click to open Dialog
+          </Button>
+          <Dialog
+            {...args}
+            isFetching={isFetching}
+            onClose={() => updateArgs({ open: false })}
+            open={open}
+          >
+            <Typography sx={{ mb: 2 }}>
+              A most sober dialog, with a title and a description.
+            </Typography>
+            <Button
+              buttonType="primary"
+              onClick={() => updateArgs({ open: false })}
+            >
+              Close This Thing
+            </Button>
+          </Dialog>
+        </>
+      );
+    };
+
+    return DrawerExampleWrapper();
+  },
 };
