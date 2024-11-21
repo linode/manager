@@ -1,6 +1,6 @@
 import { mockGetMaintenance } from 'support/intercepts/account';
 import { accountMaintenanceFactory } from 'src/factories';
-import { parseCsv } from 'support/util/csvUtils';
+import { parseCsv } from 'support/util/csv';
 
 describe('Maintenance', () => {
   /*
@@ -8,6 +8,21 @@ describe('Maintenance', () => {
    * - When there is no pending maintenance, "No pending maintenance." is shown in the table.
    * - When there is no completed maintenance, "No completed maintenance." is shown in the table.
    */
+  beforeEach(() => {
+    const downloadsFolder = Cypress.config('downloadsFolder');
+    const filePatterns = '{pending-maintenance*,completed-maintenance*}';
+    // Delete the file before the test
+    cy.exec(`rm -f ${downloadsFolder}/${filePatterns}`, {
+      failOnNonZeroExit: false,
+    }).then((result) => {
+      if (result.code === 0) {
+        cy.log(`Deleted file: ${filePatterns}`);
+      } else {
+        cy.log(`Failed to delete file: ${filePatterns}`);
+      }
+    });
+  });
+
   it('table empty when no maintenance', () => {
     mockGetMaintenance([], []).as('getMaintenance');
 
@@ -125,15 +140,6 @@ describe('Maintenance', () => {
       .then((fileName) => {
         const downloadsFolder = Cypress.config('downloadsFolder');
 
-        // Delete the file before the test
-        cy.exec(`rm -f ${downloadsFolder}/${fileName}`).then((result) => {
-          if (result.code === 0) {
-            cy.log(`Deleted file: ${fileName}`);
-          } else {
-            cy.log(`Failed to delete file: ${fileName}`);
-          }
-        });
-
         // Locate the <a> element for pending-maintenance and then find its sibling <button> element
         cy.get('a[download*="pending-maintenance"]')
           .siblings('button')
@@ -153,37 +159,26 @@ describe('Maintenance', () => {
         );
 
         // Read the downloaded CSV and compare its content to the expected CSV content
-        cy.readFile(`${downloadsFolder}/${fileName}`)
-          .then((csvContent) => {
-            const parsedCsvPendingMigration = parseCsv(csvContent);
-            expect(parsedCsvPendingMigration.length).to.equal(
-              expectedPendingMigrationContent.length
-            );
-            // Map the parsedCsv to match the structure of expectedCsvContent
-            const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
-              (entry: any) => ({
-                entity_label: entry['Entity Label'],
-                entity_type: entry['Entity Type'],
-                type: entry['Type'],
-                status: entry['Status'],
-                reason: entry['Reason'],
-              })
-            );
+        cy.readFile(`${downloadsFolder}/${fileName}`).then((csvContent) => {
+          const parsedCsvPendingMigration = parseCsv(csvContent);
+          expect(parsedCsvPendingMigration.length).to.equal(
+            expectedPendingMigrationContent.length
+          );
+          // Map the parsedCsv to match the structure of expectedCsvContent
+          const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
+            (entry: any) => ({
+              entity_label: entry['Entity Label'],
+              entity_type: entry['Entity Type'],
+              type: entry['Type'],
+              status: entry['Status'],
+              reason: entry['Reason'],
+            })
+          );
 
-            expect(actualPendingMigrationCsvContent).to.deep.equal(
-              expectedPendingMigrationContent
-            );
-          })
-          .then(() => {
-            // Delete the file after the assertions
-            cy.exec(`rm -f ${downloadsFolder}/${fileName}`).then((result) => {
-              if (result.code === 0) {
-                cy.log(`Deleted file: ${fileName}`);
-              } else {
-                cy.log(`Failed to delete file: ${fileName}`);
-              }
-            });
-          });
+          expect(actualPendingMigrationCsvContent).to.deep.equal(
+            expectedPendingMigrationContent
+          );
+        });
       });
 
     // Validate content of the downloaded CSV for completed maintenance
@@ -191,15 +186,6 @@ describe('Maintenance', () => {
       .invoke('attr', 'download')
       .then((fileName) => {
         const downloadsFolder = Cypress.config('downloadsFolder');
-
-        // Delete the file before the test
-        cy.exec(`rm -f ${downloadsFolder}/${fileName}`).then((result) => {
-          if (result.code === 0) {
-            cy.log(`Deleted file: ${fileName}`);
-          } else {
-            cy.log(`Failed to delete file: ${fileName}`);
-          }
-        });
 
         // Locate the <a> element for completed-maintenance and then find its sibling <button> element
         cy.get('a[download*="completed-maintenance"]')
@@ -220,39 +206,28 @@ describe('Maintenance', () => {
         );
 
         // Read the downloaded CSV and compare its content to the expected CSV content
-        cy.readFile(`${downloadsFolder}/${fileName}`)
-          .then((csvContent) => {
-            const parsedCsvCompletedMigration = parseCsv(csvContent);
+        cy.readFile(`${downloadsFolder}/${fileName}`).then((csvContent) => {
+          const parsedCsvCompletedMigration = parseCsv(csvContent);
 
-            expect(parsedCsvCompletedMigration.length).to.equal(
-              expectedCompletedMigrationContent.length
-            );
+          expect(parsedCsvCompletedMigration.length).to.equal(
+            expectedCompletedMigrationContent.length
+          );
 
-            // Map the parsedCsv to match the structure of expectedCsvContent
-            const actualCompletedMigrationCsvContent = parsedCsvCompletedMigration.map(
-              (entry: any) => ({
-                entity_label: entry['Entity Label'],
-                entity_type: entry['Entity Type'],
-                type: entry['Type'],
-                status: entry['Status'],
-                reason: entry['Reason'],
-              })
-            );
+          // Map the parsedCsv to match the structure of expectedCsvContent
+          const actualCompletedMigrationCsvContent = parsedCsvCompletedMigration.map(
+            (entry: any) => ({
+              entity_label: entry['Entity Label'],
+              entity_type: entry['Entity Type'],
+              type: entry['Type'],
+              status: entry['Status'],
+              reason: entry['Reason'],
+            })
+          );
 
-            expect(actualCompletedMigrationCsvContent).to.deep.equal(
-              expectedCompletedMigrationContent
-            );
-          })
-          .then(() => {
-            // Delete the file after the assertions
-            cy.exec(`rm -f ${downloadsFolder}/${fileName}`).then((result) => {
-              if (result.code === 0) {
-                cy.log(`Deleted file: ${fileName}`);
-              } else {
-                cy.log(`Failed to delete file: ${fileName}`);
-              }
-            });
-          });
+          expect(actualCompletedMigrationCsvContent).to.deep.equal(
+            expectedCompletedMigrationContent
+          );
+        });
       });
   });
 });
