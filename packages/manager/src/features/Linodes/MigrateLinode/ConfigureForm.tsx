@@ -194,6 +194,8 @@ export const ConfigureForm = React.memo((props: Props) => {
                 handlePlacementGroupSelection(placementGroup);
               }}
               textFieldProps={{
+                helperText:
+                  'If your linode already belongs to a placement group, it will be automatically unassigned during the migration. You can chose to move it a new Placement Group in the same region here.',
                 tooltipText: hasRegionPlacementGroupCapability
                   ? ''
                   : 'Placement Groups are not available in this region.',

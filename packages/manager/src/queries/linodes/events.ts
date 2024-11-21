@@ -126,6 +126,11 @@ export const linodeEventsHandler = ({
         queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
       });
       return;
+    case 'linode_migrate_datacenter':
+      invalidateQueries({
+        queryKey: accountQueries.notifications.queryKey,
+      });
+      return;
   }
 };
 

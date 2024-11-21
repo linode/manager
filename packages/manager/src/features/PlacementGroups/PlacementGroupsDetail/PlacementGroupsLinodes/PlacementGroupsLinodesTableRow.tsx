@@ -7,12 +7,14 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
+import { StyledButton } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow.styles';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import {
   getProgressOrDefault,
   linodeInTransition,
   transitionText,
 } from 'src/features/Linodes/transitions';
+import { notificationCenterContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import {
   PLACEMENT_GROUP_MIGRATION_INBOUND_MESSAGE,
   PLACEMENT_GROUP_MIGRATION_OUTBOUND_MESSAGE,
@@ -35,6 +37,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   const { handleUnassignLinodeModal, linode } = props;
   const { label, status } = linode;
   const { id: placementGroupId } = useParams<{ id: string }>();
+  const notificationContext = React.useContext(notificationCenterContext);
   const isLinodeMigrating = Boolean(linode.placement_group?.migrating_to);
   const { data: placementGroup } = usePlacementGroupQuery(
     Number(placementGroupId),
@@ -81,16 +84,16 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
         {isMigrationInProgress ? (
           // there are two migrations events during a PG migration,
           // and we only really want to show the second one which is the only one with a time_remaining property
-          recentEvent?.time_remaining && (
-            <>
-              <StatusIcon status={iconStatus} />
+          <>
+            <StatusIcon status={iconStatus} />
+            <StyledButton onClick={notificationContext.openMenu}>
               <ProgressDisplay
                 progress={getProgressOrDefault(recentEvent)}
                 sx={{ display: 'inline-block' }}
                 text={transitionText(status, linode.id, recentEvent)}
               />
-            </>
-          )
+            </StyledButton>
+          </>
         ) : (
           <>
             <StatusIcon status={iconStatus} />
