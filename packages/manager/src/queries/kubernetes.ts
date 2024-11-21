@@ -72,7 +72,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
         queryFn: useBetaEndpoint
           ? () => getKubernetesClusterBeta(id)
           : () => getKubernetesCluster(id),
-        queryKey: [useBetaEndpoint],
+        queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
       dashboard: {
         queryFn: () => getKubernetesClusterDashboard(id),
@@ -104,7 +104,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
           useBetaEndpoint
             ? getAllKubernetesClustersBeta()
             : getAllKubernetesClusters(),
-        queryKey: [useBetaEndpoint],
+        queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
       paginated: (
         params: Params,
@@ -115,7 +115,7 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
           useBetaEndpoint
             ? getKubernetesClustersBeta()
             : getKubernetesClusters(params, filter),
-        queryKey: [params, filter, useBetaEndpoint],
+        queryKey: [params, filter, useBetaEndpoint ? 'v4beta' : 'v4'],
       }),
     },
     queryKey: null,
@@ -253,7 +253,7 @@ export const useCreateKubernetesClusterMutation = () => {
 
 /**
  * duplicated function of useCreateKubernetesClusterMutation
- * necessary to call BETA_API_ROOT in a seperate function based on feature flag
+ * necessary to call BETA_API_ROOT in a separate function based on feature flag
  */
 
 export const useCreateKubernetesClusterBetaMutation = () => {

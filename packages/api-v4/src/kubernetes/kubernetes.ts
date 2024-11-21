@@ -33,7 +33,7 @@ export const getKubernetesClusters = (params?: Params, filters?: Filter) =>
   );
 
 /**
- * getKubernetesClusters
+ * getKubernetesClustersBeta
  *
  * Gets a list of a user's Kubernetes clusters from beta API
  */
