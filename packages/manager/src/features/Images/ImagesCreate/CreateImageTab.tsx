@@ -6,6 +6,7 @@ import {
   Notice,
   Paper,
   Stack,
+  TextField,
   TooltipIcon,
 } from '@linode/ui';
 import { createImageSchema } from '@linode/validation';
@@ -19,7 +20,6 @@ import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/co
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';

@@ -5,6 +5,7 @@ import {
   Checkbox,
   FormHelperText,
   Notice,
+  TextField,
   TooltipIcon,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
@@ -17,7 +18,6 @@ import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {

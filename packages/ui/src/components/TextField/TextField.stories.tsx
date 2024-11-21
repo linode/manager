@@ -1,4 +1,4 @@
-import { InputAdornment } from '@linode/ui';
+import { InputAdornment } from '../InputAdornment';
 import React from 'react';
 
 import { TextField } from './TextField';

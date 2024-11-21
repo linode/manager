@@ -1,4 +1,4 @@
-import { InputAdornment } from '@linode/ui';
+import { InputAdornment, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import CloudUpload from '@mui/icons-material/CloudUpload';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -6,7 +6,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { LinearProgress } from 'src/components/LinearProgress';
-import { TextField } from 'src/components/TextField';
 
 import type { FileAttachment } from './index';
 import type { Theme } from '@mui/material/styles';

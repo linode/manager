@@ -1,4 +1,9 @@
-import { CircleProgress, IconButton, InputAdornment } from '@linode/ui';
+import {
+  CircleProgress,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -17,7 +22,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TextField } from 'src/components/TextField';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';

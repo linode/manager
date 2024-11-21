@@ -1,14 +1,13 @@
-import { Box } from '@linode/ui';
+import { Box, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { TextField } from 'src/components/TextField';
 
 import { DownloadTooltip } from '../DownloadTooltip';
 
+import type { TextFieldProps } from '@linode/ui';
 import type { CopyTooltipProps } from 'src/components/CopyTooltip/CopyTooltip';
-import type { TextFieldProps } from 'src/components/TextField';
 
 export interface CopyableTextFieldProps extends TextFieldProps {
   /**

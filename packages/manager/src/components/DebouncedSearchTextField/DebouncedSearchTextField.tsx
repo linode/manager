@@ -1,4 +1,4 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, TextField } from '@linode/ui';
 import { IconButton, InputAdornment } from '@linode/ui';
 import Clear from '@mui/icons-material/Clear';
 import Search from '@mui/icons-material/Search';
@@ -6,9 +6,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { TextField } from 'src/components/TextField';
-
-import type { TextFieldProps } from 'src/components/TextField';
+import type { TextFieldProps } from '@linode/ui';
 
 export interface DebouncedSearchProps extends TextFieldProps {
   className?: string;

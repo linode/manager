@@ -1,4 +1,11 @@
-import { Divider, FormControl, Radio, RadioGroup, Stack } from '@linode/ui';
+import {
+  Divider,
+  FormControl,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+} from '@linode/ui';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -7,7 +14,6 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import PasswordInput from 'src/components/PasswordInput/PasswordInput';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 
 import {
