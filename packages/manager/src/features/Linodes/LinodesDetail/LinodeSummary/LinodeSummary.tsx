@@ -40,7 +40,6 @@ import type { Item } from 'src/components/EnhancedSelect/Select';
 setUpCharts();
 
 interface Props {
-  isBareMetalInstance: boolean;
   linodeCreated: string;
 }
 
@@ -114,31 +113,31 @@ const LinodeSummary = (props: Props) => {
     }, []);
 
     return (
-        <AreaChart
-          areas={[
-            {
-              color: theme.graphs.cpu.percent,
-              dataKey: 'CPU %',
-            },
-          ]}
-          legendRows={[
-            {
-              data: metrics,
-              format: formatPercentage,
-              legendColor: 'blue',
-              legendTitle: 'CPU %',
-            },
-          ]}
-          xAxis={{
-            tickFormat: xAxisTickFormat,
-            tickGap: 60,
-          }}
-          ariaLabel="CPU Usage Graph"
-          data={timeData}
-          showLegend
-          timezone={timezone}
-          unit={'%'}
-        />
+      <AreaChart
+        areas={[
+          {
+            color: theme.graphs.cpu.percent,
+            dataKey: 'CPU %',
+          },
+        ]}
+        legendRows={[
+          {
+            data: metrics,
+            format: formatPercentage,
+            legendColor: 'blue',
+            legendTitle: 'CPU %',
+          },
+        ]}
+        xAxis={{
+          tickFormat: xAxisTickFormat,
+          tickGap: 60,
+        }}
+        ariaLabel="CPU Usage Graph"
+        data={timeData}
+        showLegend
+        timezone={timezone}
+        unit={'%'}
+      />
     );
   };
 
@@ -158,41 +157,41 @@ const LinodeSummary = (props: Props) => {
     }
 
     return (
-        <AreaChart
-          areas={[
-            {
-              color: theme.graphs.diskIO.read,
-              dataKey: 'I/O Rate',
-            },
-            {
-              color: theme.graphs.diskIO.swap,
-              dataKey: 'Swap Rate',
-            },
-          ]}
-          legendRows={[
-            {
-              data: getMetrics(data.io),
-              format: formatNumber,
-              legendColor: 'yellow',
-              legendTitle: 'I/O Rate',
-            },
-            {
-              data: getMetrics(data.swap),
-              format: formatNumber,
-              legendColor: 'red',
-              legendTitle: 'Swap Rate',
-            },
-          ]}
-          xAxis={{
-            tickFormat: xAxisTickFormat,
-            tickGap: 60,
-          }}
-          ariaLabel="Disk I/O Graph"
-          data={timeData}
-          showLegend
-          timezone={timezone}
-          unit={' blocks/s'}
-        />
+      <AreaChart
+        areas={[
+          {
+            color: theme.graphs.diskIO.read,
+            dataKey: 'I/O Rate',
+          },
+          {
+            color: theme.graphs.diskIO.swap,
+            dataKey: 'Swap Rate',
+          },
+        ]}
+        legendRows={[
+          {
+            data: getMetrics(data.io),
+            format: formatNumber,
+            legendColor: 'yellow',
+            legendTitle: 'I/O Rate',
+          },
+          {
+            data: getMetrics(data.swap),
+            format: formatNumber,
+            legendColor: 'red',
+            legendTitle: 'Swap Rate',
+          },
+        ]}
+        xAxis={{
+          tickFormat: xAxisTickFormat,
+          tickGap: 60,
+        }}
+        ariaLabel="Disk I/O Graph"
+        data={timeData}
+        showLegend
+        timezone={timezone}
+        unit={' blocks/s'}
+      />
     );
   };
 
