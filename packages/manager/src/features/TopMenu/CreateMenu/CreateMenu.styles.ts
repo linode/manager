@@ -41,7 +41,7 @@ export const StyledPaper = styled(Paper, {
   label: 'StyledPaper',
 })(({ theme }) => ({
   padding: `${theme.spacing(1)} 0`,
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('lg')]: {
     padding: 0,
   },
 }));
@@ -49,7 +49,7 @@ export const StyledPaper = styled(Paper, {
 export const StyledMenuList = styled(MenuList, {
   label: 'StyledMenuList',
 })(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
+  [theme.breakpoints.up('lg')]: {
     display: 'flex',
   },
 }));
