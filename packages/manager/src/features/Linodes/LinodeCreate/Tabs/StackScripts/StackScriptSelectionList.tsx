@@ -6,6 +6,7 @@ import {
   IconButton,
   InputAdornment,
   Stack,
+  TextField,
   TooltipIcon,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
@@ -24,7 +25,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TextField } from 'src/components/TextField';
 import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
 import { useOrder } from 'src/hooks/useOrder';
 import {

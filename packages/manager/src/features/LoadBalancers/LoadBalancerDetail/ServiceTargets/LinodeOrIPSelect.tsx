@@ -8,7 +8,7 @@ import { useInfiniteLinodesQuery } from 'src/queries/linodes/linodes';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { Filter } from '@linode/api-v4';
-import type { TextFieldProps } from 'src/components/TextField';
+import type { TextFieldProps } from '@linode/ui';
 
 interface Props {
   /**

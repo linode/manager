@@ -1,13 +1,20 @@
-import { Box, Divider, Notice, Paper, Stack, TooltipIcon } from '@linode/ui';
+import {
+  Box,
+  Checkbox,
+  Divider,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+  TooltipIcon,
+} from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Checkbox } from 'src/components/Checkbox';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import { TextField } from 'src/components/TextField';
 import { Typography } from 'src/components/Typography';
 import { VPCSelect } from 'src/components/VPCSelect';
 import {
