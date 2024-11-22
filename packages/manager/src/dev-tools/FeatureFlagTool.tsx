@@ -58,17 +58,14 @@ const renderFlagItem = ({
 
   if (!isObject) {
     return (
-      <>
+      <label title={label}>
         <input
-          style={{
-            marginRight: 12,
-          }}
           checked={Boolean(value)}
           onChange={(e) => onCheck(e, path || label)}
           type="checkbox"
         />
-        <span title={label}>{label}</span>
-      </>
+        {label}
+      </label>
     );
   }
 

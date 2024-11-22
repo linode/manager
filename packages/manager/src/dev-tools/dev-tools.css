@@ -331,6 +331,12 @@
   float: right;
 }
 
+.dev-tools__body input[type="checkbox"] {
+  margin-right: 8px;
+  position: relative;
+  top: 1px;
+}
+
 /*
  * Dev tools body has height of `0` when `.dev-tools--open` class is not present.
  */
@@ -446,7 +452,6 @@
   padding-right: 8px;
   padding-bottom: 9px;
   margin-bottom: 6px;
-  font-weight: bold;
   background-color: transparent;
   border-radius: 0;
 }

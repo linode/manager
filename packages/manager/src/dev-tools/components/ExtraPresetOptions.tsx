@@ -7,7 +7,6 @@ import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
 
 export interface ExtraPresetOptionsProps {
-  disabled: boolean;
   handlers: string[];
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
@@ -19,7 +18,6 @@ export interface ExtraPresetOptionsProps {
  * Renders a list of extra presets with an optional count.
  */
 export const ExtraPresetOptions = ({
-  disabled,
   handlers,
   onPresetCountChange,
   onSelectChange,
@@ -46,7 +44,6 @@ export const ExtraPresetOptions = ({
               <strong>{group}</strong>{' '}
               {currentGroupType === 'select' && (
                 <ExtraPresetOptionSelect
-                  disabled={disabled}
                   group={group}
                   handlers={handlers}
                   onSelectChange={onSelectChange}
@@ -56,7 +53,6 @@ export const ExtraPresetOptions = ({
             </li>
             {currentGroupType === 'checkbox' && (
               <ExtraPresetOptionCheckbox
-                disabled={disabled}
                 group={group}
                 handlers={handlers}
                 onPresetCountChange={onPresetCountChange}

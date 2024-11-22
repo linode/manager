@@ -1,4 +1,3 @@
-import { Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import { mswDB } from 'src/mocks/indexedDB';
@@ -62,6 +61,7 @@ export const ServiceWorkerTool = () => {
   const [seedsCountMap, setSeedsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedSeedsCountMap);
+  const [mswEnabled, setMswEnabled] = React.useState(isMSWEnabled);
   const isCrudPreset =
     loadedBaselinePreset === 'baseline:crud' ||
     baselinePreset === 'baseline:crud';
@@ -136,7 +136,11 @@ export const ServiceWorkerTool = () => {
 
     toggleMSW: (e: React.ChangeEvent<HTMLInputElement>) => {
       saveMSWEnabled(e.target.checked);
-      window.location.reload();
+      setMswEnabled(e.target.checked);
+      setSaveState({
+        hasSaved: false,
+        hasUnsavedChanges: true,
+      });
     },
   };
 
@@ -270,88 +274,73 @@ export const ServiceWorkerTool = () => {
       <div className="dev-tools__tool__header">
         <span title="Configure API mocking rules">API Mocks</span>
       </div>
-      <Tooltip
-        placement="top"
-        title={!isMSWEnabled ? '⚠️ Enable MSW to select a preset' : ''}
-      >
-        <div className="dev-tools__tool__body dev-tools__msw">
-          <div className="dev-tools__msw__presets">
-            <div>
+
+      <div className="dev-tools__tool__body dev-tools__msw">
+        <div className="dev-tools__msw__presets">
+          <div>
+            <label title="Enable MSW">
               <input
-                checked={isMSWEnabled}
+                checked={mswEnabled}
                 onChange={(e) => globalHandlers.toggleMSW(e)}
-                style={{ margin: 0 }}
                 type="checkbox"
               />
-              <span style={{ marginLeft: 8 }}>
-                <span>Enable MSW</span>
-              </span>
+              Enable MSW
+            </label>
+          </div>
+          <div>
+            <span style={{ marginRight: 8 }}>Base Preset</span>
+            <DevToolSelect
+              onChange={(e) => presetHandlers.changeBase(e)}
+              value={baselinePreset}
+            >
+              <BaselinePresetOptions />
+            </DevToolSelect>
+          </div>
+        </div>
+        <div className="dev-tools__msw__extras">
+          <div className="dev-tools__msw__column">
+            <div
+              className={`dev-tools__msw__column__heading ${
+                !isCrudPreset ? 'disabled' : ''
+              }`}
+            >
+              Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
+              <button
+                className="small right-align"
+                disabled={!isCrudPreset}
+                onClick={() => seederHandlers.removeAll()}
+              >
+                Remove all seeds
+              </button>
             </div>
-            <div>
-              <span
-                style={{ marginRight: 8, opacity: !isMSWEnabled ? 0.5 : 1 }}
-              >
-                Base Preset
-              </span>
-              <DevToolSelect
-                disabled={!isMSWEnabled}
-                onChange={(e) => presetHandlers.changeBase(e)}
-                value={baselinePreset}
-              >
-                <BaselinePresetOptions />
-              </DevToolSelect>
+            <div className="dev-tools__msw__column__body">
+              <div className="dev-tools__list-box">
+                <SeedOptions
+                  disabled={!isCrudPreset}
+                  onCountChange={seederHandlers.changeCount}
+                  onToggleSeeder={seederHandlers.toggle}
+                  seeders={seeders}
+                  seedsCountMap={seedsCountMap}
+                />
+              </div>
             </div>
           </div>
-          <div
-            className={`dev-tools__msw__extras ${
-              !isMSWEnabled ? 'disabled' : ''
-            }`}
-          >
-            <div className="dev-tools__msw__column">
-              <div
-                className={`dev-tools__msw__column__heading ${
-                  !isCrudPreset ? 'disabled' : ''
-                }`}
-              >
-                Seeds <span style={{ fontSize: 12 }}>(CRUD preset only)</span>
-                <button
-                  className="small right-align"
-                  disabled={!isMSWEnabled || !isCrudPreset}
-                  onClick={() => seederHandlers.removeAll()}
-                >
-                  Remove all seeds
-                </button>
-              </div>
-              <div className="dev-tools__msw__column__body">
-                <div className="dev-tools__list-box">
-                  <SeedOptions
-                    disabled={!isMSWEnabled || !isCrudPreset}
-                    onCountChange={seederHandlers.changeCount}
-                    onToggleSeeder={seederHandlers.toggle}
-                    seeders={seeders}
-                    seedsCountMap={seedsCountMap}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="dev-tools__msw__column">
-              <div className="dev-tools__msw__column__heading">Presets</div>
-              <div className="dev-tools__msw__column__body">
-                <div className="dev-tools__list-box">
-                  <ExtraPresetOptions
-                    disabled={!isMSWEnabled}
-                    handlers={extraPresets}
-                    onPresetCountChange={presetHandlers.changeCount}
-                    onSelectChange={presetHandlers.changeSelect}
-                    onTogglePreset={presetHandlers.toggle}
-                    presetsCountMap={presetsCountMap}
-                  />
-                </div>
+          <div className="dev-tools__msw__column">
+            <div className="dev-tools__msw__column__heading">Presets</div>
+            <div className="dev-tools__msw__column__body">
+              <div className="dev-tools__list-box">
+                <ExtraPresetOptions
+                  handlers={extraPresets}
+                  onPresetCountChange={presetHandlers.changeCount}
+                  onSelectChange={presetHandlers.changeSelect}
+                  onTogglePreset={presetHandlers.toggle}
+                  presetsCountMap={presetsCountMap}
+                />
               </div>
             </div>
           </div>
         </div>
-      </Tooltip>
+      </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
           <button
