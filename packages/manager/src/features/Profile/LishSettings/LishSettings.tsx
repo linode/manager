@@ -4,6 +4,7 @@ import {
   FormControl,
   Notice,
   Paper,
+  TextField,
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
@@ -14,7 +15,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { TextField } from 'src/components/TextField';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';

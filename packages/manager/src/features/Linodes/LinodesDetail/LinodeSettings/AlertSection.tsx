@@ -1,10 +1,16 @@
-import { Box, Divider, InputAdornment, Typography, fadeIn } from '@linode/ui';
+import {
+  Box,
+  Divider,
+  InputAdornment,
+  TextField,
+  Typography,
+  fadeIn,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { TextField } from 'src/components/TextField';
 import { Toggle } from 'src/components/Toggle/Toggle';
 
 interface Props {

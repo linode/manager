@@ -1,4 +1,12 @@
-import { Box, Button, Notice, Paper, Stack, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -27,7 +35,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { SelectFirewallPanel } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { TextField } from 'src/components/TextField';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {

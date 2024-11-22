@@ -6,7 +6,7 @@ import { Flag } from 'src/components/Flag';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
-import type { ImageRegionStatus } from '@linode/api-v4';
+import type { ImageRegionStatus, ImageStatus } from '@linode/api-v4';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 type ExtendedImageRegionStatus = 'unsaved' | ImageRegionStatus;
@@ -33,9 +33,7 @@ export const ImageRegionRow = (props: Props) => {
       </Stack>
       <Stack alignItems="center" direction="row" gap={1}>
         <Typography textTransform="capitalize">{status}</Typography>
-        <StatusIcon
-          status={IMAGE_REGION_STATUS_TO_STATUS_ICON_STATUS[status]}
-        />
+        <StatusIcon status={imageStatusIconMap[status]} />
         <Tooltip
           title={
             disableRemoveButton
@@ -59,15 +57,16 @@ export const ImageRegionRow = (props: Props) => {
   );
 };
 
-const IMAGE_REGION_STATUS_TO_STATUS_ICON_STATUS: Readonly<
-  Record<ExtendedImageRegionStatus, Status>
+export const imageStatusIconMap: Readonly<
+  Record<ExtendedImageRegionStatus | ImageStatus, Status>
 > = {
   available: 'active',
   creating: 'other',
   pending: 'other',
   'pending deletion': 'other',
-  'pending replication': 'inactive',
+  'pending replication': 'other',
+  pending_upload: 'other',
   replicating: 'other',
-  timedout: 'inactive',
+  timedout: 'error',
   unsaved: 'inactive',
 };

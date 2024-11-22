@@ -5,6 +5,7 @@ import {
   Checkbox,
   FormHelperText,
   Notice,
+  TextField,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -18,7 +19,6 @@ import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
-import { TextField } from 'src/components/TextField';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,

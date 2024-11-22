@@ -3,6 +3,7 @@ import {
   Divider,
   FormHelperText,
   Notice,
+  TextField,
   Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
@@ -12,7 +13,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
 
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';

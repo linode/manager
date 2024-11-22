@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   Stack,
+  TextField,
   TooltipIcon,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
@@ -26,7 +27,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TextField } from 'src/components/TextField';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useStackScriptQuery,
@@ -125,9 +125,9 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: 20 }}></TableCell>
+              <TableCell sx={{ width: 20 }} />
               <TableCell>StackScript</TableCell>
-              <TableCell sx={{ minWidth: 120 }}></TableCell>
+              <TableCell sx={{ minWidth: 120 }} />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -212,7 +212,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
       <Table sx={{ mt: 1 }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 20 }}></TableCell>
+            <TableCell sx={{ width: 20 }} />
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
@@ -221,7 +221,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             >
               StackScript
             </TableSortCell>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

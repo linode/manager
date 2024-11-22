@@ -6,7 +6,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 
 export interface Props {
   currentPlan: string;
-  error?: JSX.Element | string;
+  error?: string;
   isOpen: boolean;
   onClose: () => void;
   onResize: () => void;

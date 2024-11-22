@@ -3,6 +3,7 @@ import {
   Checkbox,
   Paper,
   Stack,
+  TextField,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -12,7 +13,6 @@ import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { TextField } from 'src/components/TextField';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,

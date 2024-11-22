@@ -6,6 +6,7 @@ import {
   Notice,
   Paper,
   Stack,
+  TextField,
   Typography,
 } from '@linode/ui';
 import { useSnackbar } from 'notistack';
@@ -21,7 +22,6 @@ import { Link } from 'src/components/Link';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { TextField } from 'src/components/TextField';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { useFlags } from 'src/hooks/useFlags';

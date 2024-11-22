@@ -2,6 +2,7 @@ import {
   Button,
   InputLabel,
   Notice,
+  TextField,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -12,7 +13,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
-import { TextField } from 'src/components/TextField';
 
 import type { InputBaseProps } from '@mui/material/InputBase';
 import type { Theme } from '@mui/material/styles';

@@ -1,4 +1,11 @@
-import { Button, CircleProgress, Notice, Paper, Typography } from '@linode/ui';
+import {
+  Button,
+  CircleProgress,
+  Notice,
+  Paper,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
@@ -9,7 +16,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
 import {
   useBucketSSLDeleteMutation,
   useBucketSSLMutation,

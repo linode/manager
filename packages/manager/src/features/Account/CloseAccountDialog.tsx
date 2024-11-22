@@ -1,11 +1,10 @@
 import { cancelAccount } from '@linode/api-v4/lib/account';
-import { Notice, Typography } from '@linode/ui';
+import { Notice, TextField, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { TextField } from 'src/components/TextField';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useProfile } from 'src/queries/profile/profile';
 

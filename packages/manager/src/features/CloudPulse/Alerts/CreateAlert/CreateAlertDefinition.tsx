@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Paper, Typography } from '@linode/ui';
+import { Paper, TextField, Typography } from '@linode/ui';
 import { createAlertDefinitionSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { TextField } from 'src/components/TextField';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';

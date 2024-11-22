@@ -1,4 +1,4 @@
-import { Box, Notice, Paper, Stack } from '@linode/ui';
+import { Box, Notice, Paper, Stack, TextField } from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -14,7 +14,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import { TextField } from 'src/components/TextField';
 import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,

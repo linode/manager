@@ -5,6 +5,7 @@ import {
   Notice,
   Paper,
   Stack,
+  TextField,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -15,7 +16,6 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import { TextField } from 'src/components/TextField';
 import { VPCSelect } from 'src/components/VPCSelect';
 import {
   REGION_CAVEAT_HELPER_TEXT,

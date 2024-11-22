@@ -4,6 +4,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  TextField,
   Typography,
 } from '@linode/ui';
 import React from 'react';
@@ -14,7 +15,6 @@ import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import PasswordInput from 'src/components/PasswordInput/PasswordInput';
-import { TextField } from 'src/components/TextField';
 
 import {
   getIsUDFHeader,

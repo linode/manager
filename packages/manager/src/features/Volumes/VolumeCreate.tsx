@@ -4,6 +4,7 @@ import {
   Notice,
   Paper,
   Stack,
+  TextField,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -30,7 +31,6 @@ import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryp
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { TextField } from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
