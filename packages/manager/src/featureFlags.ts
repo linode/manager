@@ -110,6 +110,7 @@ export interface Flags {
   disallowImageUploadToNonObjRegions: boolean;
   gecko2: GeckoFeatureFlag;
   gpuv2: gpuV2;
+  iam: BetaFeatureFlag;
   imageServiceGen2: boolean;
   imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
@@ -223,6 +224,7 @@ export type ProductInformationBannerLocation =
   | 'Databases'
   | 'Domains'
   | 'Firewalls'
+  | 'Identity and Access Management'
   | 'Images'
   | 'Kubernetes'
   | 'LinodeCreate' // Use for Marketplace banners

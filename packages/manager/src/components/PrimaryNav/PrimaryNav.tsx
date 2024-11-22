@@ -10,6 +10,7 @@ import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import More from 'src/assets/icons/more.svg';
+import IAM from 'src/assets/icons/entityIcons/iam.svg';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
@@ -31,6 +32,7 @@ import {
 import { linkIsActive } from './utils';
 
 import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
+import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
 
 export type NavEntity =
   | 'Account'
@@ -42,6 +44,7 @@ export type NavEntity =
   | 'Domains'
   | 'Firewalls'
   | 'Help & Support'
+  | 'Identity and Access'
   | 'Images'
   | 'Kubernetes'
   | 'Linodes'
@@ -80,6 +83,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
+
+  const { isIAMEnabled, isIAMBeta } = useIsIAMEnabled();
 
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
@@ -209,6 +214,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             display: 'Betas',
             hide: !flags.selfServeBetas,
             href: '/betas',
+          },
+          {
+            display: 'Identity and Access',
+            hide: !isIAMEnabled,
+            href: '/iam',
+            icon: <IAM />,
+            isBeta: isIAMBeta,
           },
           {
             display: 'Account',
