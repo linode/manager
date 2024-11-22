@@ -1,5 +1,4 @@
-import { Autocomplete, Chip, Stack } from '@linode/ui';
-import { StyledListItem } from '@linode/ui/src/components/Autocomplete/Autocomplete.styles';
+import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 

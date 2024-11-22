@@ -1,4 +1,4 @@
-import { Box, Paper, Stack } from '@linode/ui';
+import { Autocomplete, Box, Paper, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,7 +9,6 @@ import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 
 import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
-import { Autocomplete } from '@linode/ui/src/components/Autocomplete/Autocomplete';
 import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewallDialog';
 import { LinkButton } from '../LinkButton';
 
