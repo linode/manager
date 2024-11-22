@@ -1,10 +1,9 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { Typography } from 'src/components/Typography';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';

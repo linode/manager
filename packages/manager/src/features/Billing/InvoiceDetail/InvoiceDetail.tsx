@@ -1,5 +1,5 @@
 import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
-import { Box, Button, IconButton, Notice, Paper } from '@linode/ui';
+import { Box, Button, IconButton, Notice, Paper, Typography } from '@linode/ui';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -11,7 +11,6 @@ import { Currency } from 'src/components/Currency';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';

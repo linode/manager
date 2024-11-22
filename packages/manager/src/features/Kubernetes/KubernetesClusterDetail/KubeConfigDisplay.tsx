@@ -1,4 +1,4 @@
-import { Box, CircleProgress, Stack } from '@linode/ui';
+import { Box, CircleProgress, Stack, Typography } from '@linode/ui';
 import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -9,7 +9,6 @@ import CopyIcon from 'src/assets/icons/copy.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { Typography } from 'src/components/Typography';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
   useKubenetesKubeConfigQuery,

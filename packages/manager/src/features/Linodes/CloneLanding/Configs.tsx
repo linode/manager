@@ -34,7 +34,6 @@ export const Configs = (props: ConfigsProps) => {
         return (
           <div>
             <Table
-              aria-label="List of Configurations"
               sx={{
                 '& td': {
                   borderBottom: 'none',
@@ -42,6 +41,7 @@ export const Configs = (props: ConfigsProps) => {
                   paddingTop: 0,
                 },
               }}
+              aria-label="List of Configurations"
             >
               <TableBody>
                 {paginatedData.length === 0 ? (

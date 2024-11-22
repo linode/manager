@@ -1,8 +1,8 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 interface DNSResolversProps {
