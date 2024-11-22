@@ -64,6 +64,7 @@ export const ObjectDetailsDrawer = React.memo(
       >
         {size ? (
           <Typography variant="subtitle2">
+            {/* to convert the Bytes to equivalent MB/GB we need to pass the base10 flag as true */}
             {readableBytes(size, { base10: true }).formatted}
           </Typography>
         ) : null}

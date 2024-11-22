@@ -41,6 +41,6 @@ describe('BucketTableRow', () => {
     const { getByText } = renderWithTheme(
       wrapWithTableBody(<BucketTableRow {...props} />)
     );
-    getByText('5.05 GB');
+    getByText('5.42 GB');
   });
 });

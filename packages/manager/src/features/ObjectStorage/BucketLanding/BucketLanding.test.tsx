@@ -147,7 +147,7 @@ describe('ObjectStorageLanding', () => {
 
   it('renders a "Total usage" section if there is more than one Bucket', async () => {
     const buckets = objectStorageBucketFactory.buildList(2, {
-      size: 1024 * 1024 * 1024 * 5,
+      size: 1e9 * 5,
     });
 
     // Mock Clusters
