@@ -19,7 +19,7 @@ export const APLCopy = () => (
     Add a pre-paved path to build, deploy, monitor and secure applications.
     <br />
     <Link to="https://techdocs.akamai.com/cloud-computing/docs/application-platform">
-      Learn more about Application Platform for LKE.
+      Learn more about Akamai App Platform.
     </Link>
   </Typography>
 );
@@ -45,18 +45,14 @@ export const ApplicationPlatform = (props: APLProps) => {
         })}
       >
         <Box alignItems="center" display="flex" flexDirection="row">
-          <Typography variant="inherit">
-            Application Platform for LKE
-          </Typography>
+          <Typography variant="inherit">Akamai App Platform</Typography>
           <Chip color="primary" label="BETA" sx={{ ml: 1 }} />
         </Box>
       </FormLabel>
       <APLCopy />
       <RadioGroup onChange={(e) => handleChange(e)}>
         <FormControlLabel
-          label={
-            <Typography>Yes, enable Application platform for LKE.</Typography>
-          }
+          label={<Typography>Yes, enable Akamai App Platform.</Typography>}
           control={<Radio />}
           name="yes"
           value="yes"
