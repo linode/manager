@@ -4,15 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2024-11-19] - v1.132.1
+## [2024-11-22] - v1.132.2
 
+### Fixed:
+
+- Changed "Application Platform for LKE" to "Akamai App Platform"([#11312](https://github.com/linode/manager/pull/11312))
+
+## [2024-11-19] - v1.132.1
 
 ### Fixed:
 
 - Disable shared CPU whenever APL is enabled ([#11284](https://github.com/linode/manager/pull/11284))
 
 ## [2024-11-12] - v1.132.0
-
 
 ### Added:
 
@@ -42,7 +46,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Misaligned table headers in Account Maintenance page ([#11099](https://github.com/linode/manager/pull/11099))
 - Database create page form being enabled for restricted users ([#11137](https://github.com/linode/manager/pull/11137))
 - Faux bold in Safari with `<strong />` & `<b />` tags ([#11149](https://github.com/linode/manager/pull/11149))
--  `Coverage Comment` GHA running on drafts ([#11161](https://github.com/linode/manager/pull/11161))
+- `Coverage Comment` GHA running on drafts ([#11161](https://github.com/linode/manager/pull/11161))
 - Aria label of action menu button in IP address table row ([#11167](https://github.com/linode/manager/pull/11167))
 - UI bugs on the Object Storage bucket and access key landing pages ([#11187](https://github.com/linode/manager/pull/11187))
 - Animation for VPC subnet drawers ([#11195](https://github.com/linode/manager/pull/11195))
@@ -76,7 +80,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Upcoming Features:
 
 - ACLP UI - DBaaS instances order by label ([#11226](https://github.com/linode/manager/pull/11226))
-- Add post processing for missing timestamp data across dimensions in ACLP charts  ([#11225](https://github.com/linode/manager/pull/11225))
+- Add post processing for missing timestamp data across dimensions in ACLP charts ([#11225](https://github.com/linode/manager/pull/11225))
 - Add default x-filter for DBasS Aiven clusters fetch in resource selection component ([#11150](https://github.com/linode/manager/pull/11150))
 - Replace one-off hardcoded black and white color values with colorTokens ([#11165](https://github.com/linode/manager/pull/11165))
 - Add global border radius token to theme and replace hard coded values where `borderRadius = 0` ([#11169](https://github.com/linode/manager/pull/11169))
@@ -86,9 +90,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - DBaaS: Add new Maintenance, Upgrade Version dialog, and Review Updates dialog components ([#11198](https://github.com/linode/manager/pull/11198))
 - DBaaS: major minor updates integration ([#11199](https://github.com/linode/manager/pull/11199))
 
-
 ## [2024-11-05] - v1.131.2
-
 
 ### Fixed:
 
@@ -96,13 +98,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2024-10-29] - v1.131.1
 
-
 ### Fixed:
 
 - Hostnames not showing on the Database details page ([#11182](https://github.com/linode/manager/pull/11182))
 
 ## [2024-10-28] - v1.131.0
-
 
 ### Added:
 
@@ -126,7 +126,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Increase Cloud Manager node.js memory allocation (development jobs) ([#11084](https://github.com/linode/manager/pull/11084))
 - Invoice heading from 'Invoice' to 'Tax Invoice' for UAE Customers ([#11097](https://github.com/linode/manager/pull/11097))
 - Revise VPC Not Recommended Configuration Tooltip Text
- ([#11098](https://github.com/linode/manager/pull/11098))
+  ([#11098](https://github.com/linode/manager/pull/11098))
 - cloud-init icon ([#11100](https://github.com/linode/manager/pull/11100))
 - Hide distributed regions in Linode Create StackScripts ([#11139](https://github.com/linode/manager/pull/11139))
 
@@ -157,7 +157,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add new test to confirm changes to the Object details drawer for OBJ Gen 2 ([#11045](https://github.com/linode/manager/pull/11045))
 - Add Cypress test for non-empty Linode landing page with restricted user ([#11060](https://github.com/linode/manager/pull/11060))
 - Allow overriding feature flags via `CY_TEST_FEATURE_FLAGS` environment variable ([#11088](https://github.com/linode/manager/pull/11088))
-- Fix flaky `DatabaseBackups.test.tsx` in coverage job  ([#11130](https://github.com/linode/manager/pull/11130))
+- Fix flaky `DatabaseBackups.test.tsx` in coverage job ([#11130](https://github.com/linode/manager/pull/11130))
 - Allow pipeline Slack notifications to be customized ([#11088](https://github.com/linode/manager/pull/11088))
 - Show PR title in Slack CI notifications ([#11088](https://github.com/linode/manager/pull/11088))
 - Fix `AppSelect.test.tsx` test flake ([#11104](https://github.com/linode/manager/pull/11104))
@@ -176,7 +176,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add Image Service Gen 2 final GA tweaks ([#11115](https://github.com/linode/manager/pull/11115))
 - Add title / label for all global filters in ACLP ([#11118](https://github.com/linode/manager/pull/11118))
 - Add global colorTokens to theme and replace one-off hardcoded white colors ([#11120](https://github.com/linode/manager/pull/11120))
-- Encourage setting access controls during DBaaS creation  ([#11124](https://github.com/linode/manager/pull/11124))
+- Encourage setting access controls during DBaaS creation ([#11124](https://github.com/linode/manager/pull/11124))
 
 ## [2024-10-14] - v1.130.0
 
@@ -249,7 +249,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Upcoming Features:
 
 - Add Region filtering to Linodes landing table ([#10639](https://github.com/linode/manager/pull/10639))
-- Add `useAclpPreference` hook to improve flickering in widget component  ([#10853](https://github.com/linode/manager/pull/10853))
+- Add `useAclpPreference` hook to improve flickering in widget component ([#10853](https://github.com/linode/manager/pull/10853))
 - Restrict Image Upload to regions with Object Storage ([#11038](https://github.com/linode/manager/pull/11038))
 - Add OBJ Gen2 resource links and fix test flake for bucket creation ([#11047](https://github.com/linode/manager/pull/11047))
 - Add DBaaS GA enhancements to backups tab and make Beta fixes ([#11048](https://github.com/linode/manager/pull/11048))
