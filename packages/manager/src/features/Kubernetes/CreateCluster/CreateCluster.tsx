@@ -131,7 +131,10 @@ export const CreateCluster = () => {
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
 
-  const { isLkeEnterpriseLAFlagEnabled } = useIsLkeEnterpriseEnabled();
+  const {
+    isLkeEnterpriseLAFlagEnabled,
+    isLkeEnterpriseLAFeatureEnabled,
+  } = useIsLkeEnterpriseEnabled();
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -204,7 +207,7 @@ export const CreateCluster = () => {
     }
 
     const createClusterFn =
-      showAPL || isLkeEnterpriseLAFlagEnabled
+      showAPL || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
