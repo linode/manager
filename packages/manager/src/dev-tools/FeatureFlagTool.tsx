@@ -39,28 +39,88 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'iam', label: 'Identity and Access Beta' },
 ];
 
-const renderFlagItems = (
-  flags: Partial<Flags>,
-  onCheck: (e: React.ChangeEvent, flag: string) => void
-) => {
-  return options.map((option) => {
-    const flagValue = flags[option.flag];
-    const isChecked =
-      typeof flagValue === 'object' && 'enabled' in flagValue
-        ? Boolean(flagValue.enabled)
-        : Boolean(flagValue);
+interface RenderFlagItemProps {
+  label: string;
+  onCheck: (e: React.ChangeEvent, flag: string) => void;
+  path: string;
+  searchTerm: string;
+  value: boolean | object | string | undefined;
+}
 
+const renderFlagItem = ({
+  label,
+  onCheck,
+  path = '',
+  searchTerm,
+  value,
+}: RenderFlagItemProps) => {
+  const isObject = typeof value === 'object' && value !== null;
+
+  if (!isObject) {
     return (
-      <li key={option.flag}>
+      <>
         <input
           style={{
             marginRight: 12,
           }}
-          checked={isChecked}
-          onChange={(e) => onCheck(e, option.flag)}
+          checked={Boolean(value)}
+          onChange={(e) => onCheck(e, path || label)}
           type="checkbox"
         />
-        <span title={option.label}>{option.label}</span>
+        <span title={label}>{label}</span>
+      </>
+    );
+  }
+
+  const sortedEntries = Object.entries(value).sort((a, b) =>
+    a[0].localeCompare(b[0])
+  );
+
+  return (
+    <ul>
+      <details>
+        <summary>{label}</summary>
+        {sortedEntries.map(([key, nestedValue], index) => (
+          <li key={`${key}-${index}`}>
+            {renderFlagItem({
+              label: key,
+              onCheck,
+              path: path ? `${path}.${key}` : key,
+              searchTerm,
+              value: nestedValue,
+            })}
+          </li>
+        ))}
+      </details>
+    </ul>
+  );
+};
+
+const renderFlagItems = (
+  flags: Partial<Flags>,
+  onCheck: (e: React.ChangeEvent, flag: string) => void,
+  searchTerm: string
+) => {
+  const sortedOptions = options.sort((a, b) => a.label.localeCompare(b.label));
+  return sortedOptions.map((option) => {
+    const flagValue = flags[option.flag];
+    const isSearchMatch = option.label
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    if (!isSearchMatch) {
+      return null;
+    }
+
+    return (
+      <li key={option.flag}>
+        {renderFlagItem({
+          label: option.label,
+          onCheck,
+          path: option.flag,
+          searchTerm,
+          value: flagValue,
+        })}
       </li>
     );
   });
@@ -70,6 +130,7 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
   const ldFlags = ldUseFlags();
+  const [searchTerm, setSearchTerm] = React.useState('');
 
   React.useEffect(() => {
     const storedFlags = getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY);
@@ -82,15 +143,27 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
     e: React.ChangeEvent<HTMLInputElement>,
     flag: keyof FlagSet
   ) => {
-    const currentFlag = flags[flag];
-    const updatedValue =
-      typeof currentFlag == 'object' && 'enabled' in currentFlag
-        ? { ...currentFlag, enabled: e.target.checked } // If current flag is an object, update 'enabled' key
-        : e.target.checked;
-    const updatedFlags = {
-      ...getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY),
-      [flag]: updatedValue,
-    };
+    const updatedValue = e.target.checked;
+    const storedFlags = getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY) || {};
+
+    const flagParts = flag.split('.');
+    const updatedFlags = { ...storedFlags };
+
+    if (flagParts.length === 1) {
+      updatedFlags[flag] = updatedValue;
+    } else {
+      const [parentKey, childKey] = flagParts;
+      const currentParentValue = ldFlags[parentKey];
+      const existingValues = storedFlags[parentKey] || {};
+
+      // Only update the specific property that changed
+      updatedFlags[parentKey] = {
+        ...currentParentValue, // Keep original LD values
+        ...existingValues, // Apply any existing stored overrides
+        [childKey]: updatedValue, // Apply the new change
+      };
+    }
+
     dispatch(setMockFeatureFlags(updatedFlags));
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, JSON.stringify(updatedFlags));
   };
@@ -103,6 +176,10 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, '');
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <div className="dev-tools__tool">
       <div className="dev-tools__tool__header">
@@ -112,7 +189,13 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       </div>
       <div className="dev-tools__tool__body">
         <div className="dev-tools__list-box">
-          <ul>{renderFlagItems(flags, handleCheck)}</ul>
+          <input
+            onChange={handleSearch}
+            placeholder="Search feature flags"
+            style={{ margin: 12 }}
+            type="text"
+          />
+          <ul>{renderFlagItems(flags, handleCheck, searchTerm)}</ul>
         </div>
       </div>
       <div className="dev-tools__tool__footer">
