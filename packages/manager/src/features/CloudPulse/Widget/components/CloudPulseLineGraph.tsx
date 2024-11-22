@@ -42,7 +42,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
             isSmallScreen ? undefined : Math.min(rest.data.length, 7)
           }
           fillOpacity={0.5}
-          legendHeight={theme.spacing(16)}
+          legendHeight={theme.spacing(18)}
         />
       )}
       {rest.data.length === 0 && (
