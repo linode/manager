@@ -160,13 +160,12 @@ module.exports = {
   rules: {
     '@linode/cloud-manager/deprecate-formik': 'warn',
     '@linode/cloud-manager/no-custom-fontWeight': 'error',
-    '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/no-empty-interface': 'warn',
-    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-namespace': 'warn',
     // this would disallow usage of ! postfix operator on non null types
@@ -175,6 +174,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     'array-callback-return': 'error',
+    camelcase: ['warn', { properties: 'always' }],
     'comma-dangle': 'off', // Prettier and TS both handle and check for this one
     // radix: Codacy considers it as an error, i put it here to fix it before push
     curly: 'warn',
@@ -274,6 +274,7 @@ module.exports = {
     'react/no-unescaped-entities': 'warn',
     // requires the definition of proptypes for react components
     'react/prop-types': 'off',
+    'react/self-closing-comp': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
     'react-hooks/rules-of-hooks': 'error',
     'react-refresh/only-export-components': 'warn',

@@ -6,7 +6,7 @@ import { Typography } from 'src/components/Typography';
 
 export interface Props {
   currentPlan: string;
-  error?: JSX.Element | string;
+  error?: string;
   isOpen: boolean;
   onClose: () => void;
   onResize: () => void;

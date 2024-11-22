@@ -1,8 +1,8 @@
+import { Checkbox } from '@linode/ui';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
-import { Checkbox } from 'src/components/Checkbox';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useFlags } from 'src/hooks/useFlags';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
