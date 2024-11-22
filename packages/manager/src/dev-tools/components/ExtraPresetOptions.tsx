@@ -26,6 +26,25 @@ export const ExtraPresetOptions = ({
 }: ExtraPresetOptionsProps) => {
   const extraPresetGroups = getMockPresetGroups(extraMockPresets);
 
+  React.useEffect(() => {
+    if (handlers.length === 0) {
+      const initialSelectedPresets = extraMockPresets
+        .filter((preset) => preset.initialSelected)
+        .map((preset) => preset.id);
+
+      // if (!initialSelectedPresets.length) {
+      initialSelectedPresets.forEach((presetId) => {
+        onTogglePreset(
+          {
+            target: { checked: true },
+          } as React.ChangeEvent<HTMLInputElement>,
+          presetId
+        );
+      });
+      // }
+    }
+  }, [handlers, onTogglePreset]);
+
   return (
     <ul>
       {extraPresetGroups.map((group) => {

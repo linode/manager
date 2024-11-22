@@ -1,3 +1,4 @@
+import type { AccountCapability } from '@linode/api-v4';
 import type {
   Config,
   Event,
@@ -47,12 +48,11 @@ export interface MockPresetBaseline extends MockPresetBase {
  * Mock Preset Extra
  */
 export type MockPresetExtraGroup = {
-  id: 'API' | 'Account' | 'Limits' | 'Managed' | 'Regions';
+  id: 'API' | 'Account' | 'Capabilities' | 'Limits' | 'Managed' | 'Regions';
   type: 'checkbox' | 'select';
 };
 export type MockPresetExtraId =
   | 'account:child-proxy'
-  | 'account:lke-enterprise-enabled'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
   | 'account:parent'
@@ -67,6 +67,12 @@ export interface MockPresetExtra extends MockPresetBase {
   canUpdateCount?: boolean;
   group: MockPresetExtraGroup;
   id: MockPresetExtraId;
+  initialSelected?: boolean;
+  removeSeparator?: boolean;
+}
+
+export interface MockPresetExtraAccountId extends Omit<MockPresetExtra, 'id'> {
+  id: `capabilities:${AccountCapability}`;
 }
 
 /**

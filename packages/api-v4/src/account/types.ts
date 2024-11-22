@@ -59,32 +59,35 @@ export interface Account {
 
 export type BillingSource = 'linode' | 'akamai';
 
-export type AccountCapability =
-  | 'Akamai Cloud Load Balancer'
-  | 'Akamai Cloud Pulse'
-  | 'Block Storage'
-  | 'Block Storage Encryption'
-  | 'Cloud Firewall'
-  | 'CloudPulse'
-  | 'Disk Encryption'
-  | 'Kubernetes'
-  | 'Kubernetes Enterprise'
-  | 'Linodes'
-  | 'LKE HA Control Planes'
-  | 'LKE Network Access Control List (IP ACL)'
-  | 'Machine Images'
-  | 'Managed Databases'
-  | 'Managed Databases Beta'
-  | 'NETINT Quadra T1U'
-  | 'NodeBalancers'
-  | 'Object Storage Access Key Regions'
-  | 'Object Storage Endpoint Types'
-  | 'Object Storage'
-  | 'Placement Group'
-  | 'SMTP Enabled'
-  | 'Support Ticket Severity'
-  | 'Vlans'
-  | 'VPCs';
+export const accountCapabilities = [
+  'Akamai Cloud Load Balancer',
+  'Akamai Cloud Pulse',
+  'Block Storage',
+  'Block Storage Encryption',
+  'Cloud Firewall',
+  'CloudPulse',
+  'Disk Encryption',
+  'Kubernetes',
+  'Kubernetes Enterprise',
+  'Linodes',
+  'LKE HA Control Planes',
+  'LKE Network Access Control List (IP ACL)',
+  'Machine Images',
+  'Managed Databases',
+  'Managed Databases Beta',
+  'NETINT Quadra T1U',
+  'NodeBalancers',
+  'Object Storage Access Key Regions',
+  'Object Storage Endpoint Types',
+  'Object Storage',
+  'Placement Group',
+  'SMTP Enabled',
+  'Support Ticket Severity',
+  'Vlans',
+  'VPCs',
+] as const;
+
+export type AccountCapability = typeof accountCapabilities[number];
 
 export interface AccountAvailability {
   region: string; // will be slug of dc (matches id field of region object returned by API)

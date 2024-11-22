@@ -422,7 +422,6 @@
 .dev-tools__list-box ul {
   padding-left: none;
   padding: 4px 8px;
-  /*padding-left: 0;*/
   margin: 0;
   height: 100%;
 }
@@ -454,6 +453,12 @@
   margin-bottom: 6px;
   background-color: transparent;
   border-radius: 0;
+
+  &.no-separator:not(:last-child) {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
 }
 
 .dev-tools__msw {

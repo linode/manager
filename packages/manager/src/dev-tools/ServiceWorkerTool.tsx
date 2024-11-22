@@ -95,11 +95,7 @@ export const ServiceWorkerTool = () => {
         }));
       });
 
-      // We only have to reload the window if MSW is already enabled. Otherwise,
-      // the changes will automatically be picked up next time MSW is enabled.
-      if (isMSWEnabled) {
-        window.location.reload();
-      }
+      window.location.reload();
     },
 
     discardChanges: () => {

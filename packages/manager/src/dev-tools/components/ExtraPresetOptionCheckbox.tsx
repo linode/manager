@@ -26,7 +26,9 @@ export const ExtraPresetOptionCheckbox = (
       (extraMockPreset) =>
         extraMockPreset.group.type === 'checkbox' && (
           <li
-            className="dev-tools__list-box__separator"
+            className={`dev-tools__list-box__separator ${
+              extraMockPreset.removeSeparator ? 'no-separator' : ''
+            }`}
             key={extraMockPreset.id}
             style={{ display: 'flex', justifyContent: 'space-between' }}
           >
