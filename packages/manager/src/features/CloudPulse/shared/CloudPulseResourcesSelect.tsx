@@ -169,45 +169,18 @@ export const CloudPulseResourcesSelect = React.memo(
         }}
         textFieldProps={{
           InputProps: {
-            sx: (theme) => ({
+            sx: {
               '::-webkit-scrollbar': {
                 display: 'none',
               },
-              background: `
-                /* Top Cover */
-                linear-gradient(
-                  ${theme.tokens.interaction.Background.Primary} 30%,
-                  transparent
-                ),
-
-                /* Bottom Cover */
-                linear-gradient(
-                  transparent,
-                  ${theme.tokens.interaction.Background.Primary} 70%
-                ) 0 100%,
-
-                /* Top shadow */
-                linear-gradient(
-                  rgba(0,0,0,.18),
-                  transparent
-                ),
-
-                /* Bottom shadow */
-                linear-gradient(
-                  transparent,
-                  rgba(0,0,0,.18)
-                ) 0 100%
-              `,
-              backgroundAttachment: 'local, local, scroll, scroll',
-              backgroundColor: theme.tokens.interaction.Background.Primary,
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '100% 40px, 100% 40px, 100% 14px, 100% 14px',
               maxHeight: '55px',
+              msOverflowStyle: 'none',
               overflow: 'auto',
+              scrollbarWidth: 'none',
               svg: {
                 color: themes.light.color.grey3,
               },
-            }),
+            },
           },
         }}
         autoHighlight
