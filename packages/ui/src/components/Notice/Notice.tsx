@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { WarningIcon, AlertIcon as Error, CheckIcon } from '../../assets/icons';
 
+// @todo: modularization - Import from 'ui' package once Typography is migrated.
 import { Typography } from '@mui/material';
 
 import { useStyles } from './Notice.styles';
