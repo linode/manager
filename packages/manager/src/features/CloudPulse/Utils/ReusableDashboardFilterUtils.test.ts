@@ -13,9 +13,7 @@ const mockDashboard = dashboardFactory.build();
 it('test getDashboardProperties method', () => {
   const result = getDashboardProperties({
     dashboardObj: mockDashboard,
-    filterValue: {
-      region: 'us-east',
-    },
+    filterValue: { region: 'us-east' },
     resource: 1,
   });
 
