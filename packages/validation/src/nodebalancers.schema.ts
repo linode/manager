@@ -52,17 +52,29 @@ export const nodeBalancerConfigNodeSchema = object({
 export const createNodeBalancerConfigSchema = object({
   algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
   check_attempts: number()
-    .min(CHECK_ATTEMPTS.MIN)
-    .max(CHECK_ATTEMPTS.MAX)
+    .min(
+      CHECK_ATTEMPTS.MIN,
+      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`
+    )
+    .max(
+      CHECK_ATTEMPTS.MAX,
+      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`
+    )
     .integer(),
   check_body: string().when('check', {
     is: 'http_body',
     then: string().required('An HTTP body regex is required.'),
   }),
   check_interval: number()
-    .min(CHECK_INTERVAL.MIN)
-    .max(CHECK_INTERVAL.MAX)
-    .typeError('Check interval must be a number.')
+    .min(
+      CHECK_INTERVAL.MIN,
+      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`
+    )
+    .max(
+      CHECK_INTERVAL.MAX,
+      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`
+    )
+    .typeError('Interval must be a number.')
     .integer(),
   check_passive: boolean(),
   check_path: string()
@@ -77,8 +89,14 @@ export const createNodeBalancerConfigSchema = object({
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number()
-    .min(CHECK_TIMEOUT.MIN)
-    .max(CHECK_TIMEOUT.MAX)
+    .min(
+      CHECK_TIMEOUT.MIN,
+      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`
+    )
+    .max(
+      CHECK_TIMEOUT.MAX,
+      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`
+    )
     .typeError('Timeout must be a number.')
     .integer(),
   check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
@@ -107,17 +125,30 @@ export const createNodeBalancerConfigSchema = object({
 export const UpdateNodeBalancerConfigSchema = object({
   algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
   check_attempts: number()
-    .min(CHECK_ATTEMPTS.MIN)
-    .max(CHECK_ATTEMPTS.MAX)
+    .min(
+      CHECK_ATTEMPTS.MIN,
+      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`
+    )
+    .max(
+      CHECK_ATTEMPTS.MAX,
+      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`
+    )
     .integer(),
   check_body: string().when('check', {
     is: 'http_body',
     then: string().required('An HTTP body regex is required.'),
   }),
   check_interval: number()
-    .min(CHECK_INTERVAL.MIN)
-    .max(CHECK_INTERVAL.MAX)
-    .typeError('Check interval must be a number.')
+```suggestion
+    .min(
+      CHECK_INTERVAL.MIN,
+      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`
+    )
+    .max(
+      CHECK_INTERVAL.MAX,
+      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`
+    )
+    .typeError('Interval must be a number.')
     .integer(),
   check_passive: boolean(),
   check_path: string()
@@ -132,8 +163,14 @@ export const UpdateNodeBalancerConfigSchema = object({
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number()
-    .min(CHECK_TIMEOUT.MIN)
-    .max(CHECK_TIMEOUT.MAX)
+    .min(
+      CHECK_TIMEOUT.MIN,
+      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`
+    )
+    .max(
+      CHECK_TIMEOUT.MAX,
+      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`
+    )
     .typeError('Timeout must be a number.')
     .integer(),
   check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
