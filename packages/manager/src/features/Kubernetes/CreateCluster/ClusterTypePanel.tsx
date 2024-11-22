@@ -8,6 +8,7 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { StyledDocsLinkContainer } from './CreateCluster.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
+import { useAccount } from 'src/queries/account/account';
 
 interface Props {
   handleClusterTypeSelection: (tier: KubernetesTier) => void;
@@ -16,6 +17,13 @@ interface Props {
 
 export const ClusterTypePanel = (props: Props) => {
   const { handleClusterTypeSelection, selectedTier } = props;
+
+  const { data: account } = useAccount();
+
+  const isLkeEnterpriseSelectionDisabled = !account?.capabilities?.includes(
+    'Kubernetes Enterprise'
+  );
+
   return (
     <Stack>
       <Stack flexDirection="row">
@@ -51,6 +59,13 @@ export const ClusterTypePanel = (props: Props) => {
           checked={selectedTier === 'enterprise'}
           heading={'LKE Enterprise'}
           onClick={() => handleClusterTypeSelection('enterprise')}
+          disabled={isLkeEnterpriseSelectionDisabled}
+          sxTooltip={{ width: 700 }}
+          tooltip={
+            isLkeEnterpriseSelectionDisabled
+              ? 'LKE Enterprise is not currently enabled on this contract. To inquire, fill out the Cloud Computing Sales form or email sales@linode.com.'
+              : undefined
+          }
         />
       </Stack>
     </Stack>
