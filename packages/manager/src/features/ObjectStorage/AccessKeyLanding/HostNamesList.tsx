@@ -1,9 +1,8 @@
-import { Box, omittedProps } from '@linode/ui';
+import { Box, List, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React, { useRef } from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { List } from 'src/components/List';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 

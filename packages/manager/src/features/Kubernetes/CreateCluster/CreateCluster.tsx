@@ -1,4 +1,4 @@
-import { Box, Notice, Paper, Stack, TextField } from '@linode/ui';
+import { Autocomplete, Box, Notice, Paper, Stack, TextField } from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -6,7 +6,6 @@ import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';

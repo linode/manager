@@ -1,9 +1,8 @@
-import { Notice } from '@linode/ui';
+import { Autocomplete, Notice } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';

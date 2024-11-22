@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDebouncedValue } from 'src/hooks/useDebouncedValue';
 import { useVLANsInfiniteQuery } from 'src/queries/vlans';
 
-import { Autocomplete } from './Autocomplete/Autocomplete';
+import { Autocomplete } from '@linode/ui/src/components/Autocomplete/Autocomplete';
 
 import type { Filter } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material';

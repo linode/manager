@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Notice, Paper } from '@linode/ui';
+import { Autocomplete, Box, Button, Divider, Notice, Paper } from '@linode/ui';
 import {
   FormControl,
   FormControlLabel,
@@ -12,7 +12,6 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Typography } from 'src/components/Typography';
 import {
   StyledDateCalendar,

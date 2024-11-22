@@ -1,9 +1,8 @@
-import { Divider, Tooltip } from '@linode/ui';
+import { Divider, ListItem, Tooltip } from '@linode/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { useStyles } from 'tss-react/mui';
 
-import { ListItem } from 'src/components/ListItem';
 import { ListItemText } from 'src/components/ListItemText';
 
 interface Props extends PrimaryLink {

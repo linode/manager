@@ -2,9 +2,9 @@ import React from 'react';
 
 import { useVPCsQuery } from 'src/queries/vpcs/vpcs';
 
-import { Autocomplete } from './Autocomplete/Autocomplete';
+import { Autocomplete } from '@linode/ui/src/components/Autocomplete/Autocomplete';
 
-import type { EnhancedAutocompleteProps } from './Autocomplete/Autocomplete';
+import type { EnhancedAutocompleteProps } from '@linode/ui/src/components/Autocomplete/Autocomplete';
 import type { Filter, VPC } from '@linode/api-v4';
 
 interface Props extends Partial<Omit<EnhancedAutocompleteProps<VPC>, 'value'>> {

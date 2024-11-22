@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   FormControl,
   FormHelperText,
   Notice,
@@ -10,7 +11,6 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

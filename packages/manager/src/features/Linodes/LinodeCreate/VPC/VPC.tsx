@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Checkbox,
   Divider,
@@ -11,7 +12,6 @@ import {
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';

@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Button,
   FormControl,
   Notice,
@@ -13,7 +14,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases/databases';

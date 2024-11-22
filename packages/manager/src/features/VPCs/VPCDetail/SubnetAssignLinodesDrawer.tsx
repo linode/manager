@@ -1,5 +1,6 @@
 import { appendConfigInterface } from '@linode/api-v4';
 import {
+  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -12,7 +13,6 @@ import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';

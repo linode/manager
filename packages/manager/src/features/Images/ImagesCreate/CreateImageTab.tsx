@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -15,7 +16,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DISK_ENCRYPTION_IMAGES_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';

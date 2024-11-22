@@ -1,13 +1,12 @@
-import { Stack, Chip } from '@linode/ui';
+import { Autocomplete, Chip, Stack } from '@linode/ui';
+import { StyledListItem } from '@linode/ui/src/components/Autocomplete/Autocomplete.styles';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Flag } from 'src/components/Flag';
 import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
-import { StyledListItem } from '../Autocomplete/Autocomplete.styles';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {

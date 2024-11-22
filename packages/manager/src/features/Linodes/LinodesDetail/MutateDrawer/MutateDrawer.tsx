@@ -1,10 +1,9 @@
-import { Notice } from '@linode/ui';
+import { ListItem, Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { ListItem } from 'src/components/ListItem';
 import { Typography } from 'src/components/Typography';
 
 interface MutateInfo {

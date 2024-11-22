@@ -1,11 +1,18 @@
-import { Box, Button, FormControl, Notice, Paper, TextField } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  FormControl,
+  Notice,
+  Paper,
+  TextField,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Typography } from 'src/components/Typography';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';

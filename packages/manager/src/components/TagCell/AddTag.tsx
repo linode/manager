@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useProfile } from 'src/queries/profile/profile';
 import { updateTagsSuggestionsData, useAllTagsQuery } from 'src/queries/tags';
 
-import { Autocomplete } from '../Autocomplete/Autocomplete';
+import { Autocomplete } from '@linode/ui/src/components/Autocomplete/Autocomplete';
 
 interface AddTagProps {
   addTag: (tag: string) => Promise<void>;

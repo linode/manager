@@ -1,7 +1,6 @@
-import { Box, Button, TextField } from '@linode/ui';
+import { Autocomplete, Box, Button, TextField } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Typography } from 'src/components/Typography';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 

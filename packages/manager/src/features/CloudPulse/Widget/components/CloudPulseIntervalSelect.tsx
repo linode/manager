@@ -1,6 +1,5 @@
+import { Autocomplete } from '@linode/ui';
 import React from 'react';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { CloudPulseTooltip } from '../../shared/CloudPulseTooltip';
 import { getAutocompleteWidgetStyles } from '../../Utils/CloudPulseWidgetUtils';

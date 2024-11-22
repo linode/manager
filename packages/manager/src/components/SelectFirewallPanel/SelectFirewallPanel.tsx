@@ -9,7 +9,7 @@ import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 
 import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
-import { Autocomplete } from '../Autocomplete/Autocomplete';
+import { Autocomplete } from '@linode/ui/src/components/Autocomplete/Autocomplete';
 import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewallDialog';
 import { LinkButton } from '../LinkButton';
 

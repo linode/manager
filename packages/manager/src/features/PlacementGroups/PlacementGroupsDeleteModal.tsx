@@ -1,10 +1,8 @@
-import { Button, CircleProgress, Notice } from '@linode/ui';
+import { Button, CircleProgress, List, ListItem, Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { Typography } from 'src/components/Typography';
