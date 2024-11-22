@@ -57,6 +57,10 @@ export const generate12HourTicks = (
   const startTime = data[0].timestamp;
   const endTime = data[data.length - 1].timestamp;
 
+  if (tickCount === 1) {
+    return [(startTime + endTime) / 2];
+  }
+
   // Calculate duration in hours
   const duration = DateTime.fromMillis(endTime, { zone: timezone }).diff(
     DateTime.fromMillis(startTime, { zone: timezone }),
