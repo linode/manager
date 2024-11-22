@@ -11,7 +11,7 @@ import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 
-import { StyledMenuList, StyledPaper } from './CreateMenu.styles';
+import { StyledMenuList, StyledPaper, StyledStack } from './CreateMenu.styles';
 import { ProductFamilyGroup } from './ProductFamilyGroup';
 
 import type { BaseNavLink } from 'src/components/PrimaryNav/PrimaryLink';
@@ -168,15 +168,19 @@ export const CreateMenu = () => {
       >
         <StyledPaper>
           <StyledMenuList>
-            <Stack direction="column" tabIndex={-1}>
+            <StyledStack direction="column" tabIndex={-1}>
               <ProductFamilyGroup
                 handleClose={handleClose}
+                /**
+                 * I avoided mapping the first two groups since the MUI Menu components don't like empty fragments
+                 * and adding a Box to contain things messed up the keyboard tabbing/focus
+                 */
                 productFamily={productFamilyLinkGroup[0]}
               />
-            </Stack>
+            </StyledStack>
             <Divider
               orientation="vertical"
-              sx={{ height: 'auto', margin: 0, marginTop: 1 }}
+              sx={{ height: 'auto', margin: 0 }}
             />
             <Stack direction="column" tabIndex={-1}>
               <ProductFamilyGroup
@@ -186,7 +190,7 @@ export const CreateMenu = () => {
             </Stack>
             <Divider
               orientation="vertical"
-              sx={{ height: 'auto', margin: 0, marginTop: 1 }}
+              sx={{ height: 'auto', margin: 0 }}
             />
             <Stack direction="column" tabIndex={-1}>
               {productFamilyLinkGroup.slice(2).map((productFamilyGroup) => (

@@ -1,5 +1,5 @@
 import { Paper, omittedProps } from '@linode/ui';
-import { MenuItem, MenuList, Typography } from '@mui/material';
+import { MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const StyledHeading = styled('h3', {
@@ -12,12 +12,13 @@ export const StyledHeading = styled('h3', {
     width: 16,
   },
   alignItems: 'center',
+  color: theme.name === 'dark' ? '#B8B8B8' : 'inherit',
   display: 'flex',
   fontFamily: 'LatoWebBold',
-  fontSize: '0.75rem',
-  letterSpacing: '0.25px',
+  fontSize: '0.7rem',
+  letterSpacing: '1px',
   margin: 0,
-  padding: '8px 12px',
+  padding: '8px 14px',
   textTransform: 'uppercase',
   [theme.breakpoints.up('lg')]: {
     background: 'inherit',
@@ -40,9 +41,18 @@ export const StyledPaper = styled(Paper, {
   label: 'StyledPaper',
 })(({ theme }) => ({
   background: theme.bg.appBar,
+  maxHeight: 500,
   padding: `${theme.spacing(1)} 0`,
   [theme.breakpoints.down('lg')]: {
     padding: 0,
+  },
+}));
+
+export const StyledStack = styled(Stack, {
+  label: 'StyledStack',
+})(({ theme }) => ({
+  [theme.breakpoints.down('lg')]: {
+    paddingTop: 4,
   },
 }));
 
