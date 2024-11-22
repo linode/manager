@@ -119,7 +119,7 @@ export const KubernetesClusterDetail = () => {
             docsLabel="Docs"
             docsLink="https://apl-docs.net/"
             removeCrumbX={[1, 2, 3]}
-            title="Application Platform for LKE"
+            title="Akamai App Platform"
           />
           <Grid>
             <APLSummaryPanel cluster={cluster} />
