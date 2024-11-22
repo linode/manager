@@ -314,7 +314,7 @@ export const CreateCluster = () => {
           />
           {isLkeEnterpriseLAFlagEnabled && (
             <>
-              <Divider sx={{ marginBottom: 4, marginTop: 4 }} />
+              <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
               <ClusterTypePanel
                 handleClusterTypeSelection={setSelectedTier}
                 selectedTier={selectedTier}
