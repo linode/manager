@@ -19,6 +19,7 @@ import {
   getKubeHighAvailability,
   getLatestVersion,
   useAPLAvailability,
+  useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account/account';
 import {
@@ -38,13 +39,14 @@ import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { ApplicationPlatform } from './ApplicationPlatform';
+import { ClusterTypePanel } from './ClusterTypePanel';
 import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
@@ -58,6 +60,7 @@ import type {
   CreateKubeClusterPayload,
   CreateNodePoolData,
   KubeNodePoolResponse,
+  KubernetesTier,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -92,6 +95,9 @@ export const CreateCluster = () => {
   const [ipV6Addr, setIPv6Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
+  const [selectedTier, setSelectedTier] = React.useState<KubernetesTier>(
+    'standard'
+  );
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -124,6 +130,8 @@ export const CreateCluster = () => {
     data: versionData,
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
+
+  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
 
   const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
@@ -195,9 +203,10 @@ export const CreateCluster = () => {
       payload = { ...payload, apl_enabled };
     }
 
-    const createClusterFn = showAPL
-      ? createKubernetesClusterBeta
-      : createKubernetesCluster;
+    const createClusterFn =
+      showAPL || isLkeEnterpriseLAEnabled
+        ? createKubernetesClusterBeta
+        : createKubernetesCluster;
 
     createClusterFn(payload)
       .then((cluster) => {
@@ -300,6 +309,15 @@ export const CreateCluster = () => {
             label="Cluster Label"
             value={label || ''}
           />
+          {isLkeEnterpriseLAEnabled && (
+            <>
+              <Divider sx={{ marginBottom: 4, marginTop: 4 }} />
+              <ClusterTypePanel
+                handleClusterTypeSelection={setSelectedTier}
+                selectedTier={selectedTier}
+              />
+            </>
+          )}
           <Divider sx={{ marginTop: 4 }} />
           <StyledFieldWithDocsStack>
             <Stack>
@@ -349,7 +367,7 @@ export const CreateCluster = () => {
             </>
           )}
           <Divider sx={{ marginTop: showAPL ? 1 : 4 }} />
-          {showHighAvailability && (
+          {showHighAvailability && selectedTier !== 'enterprise' && (
             <Box data-testid="ha-control-plane">
               <HAControlPlane
                 highAvailabilityPrice={
@@ -367,7 +385,7 @@ export const CreateCluster = () => {
           )}
           {showControlPlaneACL && (
             <>
-              <Divider />
+              {selectedTier !== 'enterprise' && <Divider />}
               <ControlPlaneACLPane
                 handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
                   setIPv4Addr(newIpV4Addr);
