@@ -48,7 +48,7 @@ export const planTypeOrder: (
   'accelerated',
 ];
 
-export const useIsAcceleratedEnabled = () => {
+export const useIsAcceleratedPlansEnabled = () => {
   const flags = useFlags();
 
   const { data: account } = useAccount();

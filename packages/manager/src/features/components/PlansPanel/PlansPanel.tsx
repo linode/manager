@@ -20,7 +20,7 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
-  useIsAcceleratedEnabled,
+  useIsAcceleratedPlansEnabled,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -88,7 +88,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     location.search
   );
 
-  const { isAcceleratedLinodePlansEnabled } = useIsAcceleratedEnabled();
+  const { isAcceleratedLinodePlansEnabled } = useIsAcceleratedPlansEnabled();
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
@@ -166,7 +166,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 hideLimitedAvailabilityBanner={
                   showDistributedRegionPlanTable ||
                   !flags.disableLargestGbPlans ||
-                  plan === 'accelerated' || // accelerated plans have their own limited availability banner
                   plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
                 }
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(

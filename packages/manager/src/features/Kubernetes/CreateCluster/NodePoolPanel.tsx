@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { useIsAcceleratedEnabled } from 'src/features/components/PlansPanel/utils';
+import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
@@ -70,7 +70,7 @@ const Panel = (props: NodePoolPanelProps) => {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
 
-  const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedEnabled();
+  const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
   const regions = useRegionsQuery().data ?? [];
 
@@ -112,17 +112,15 @@ const Panel = (props: NodePoolPanelProps) => {
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
-          types={extendedTypes.filter(
-            (t) => {
-              if (!isAcceleratedLKEPlansEnabled && t.class === "accelerated") {
-                // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
-                return false;
-              }
-
-               // No Nanodes or GPUs in Kubernetes clusters
-              return t.class !== 'nanode' && t.class !== 'gpu';
+          types={extendedTypes.filter((t) => {
+            if (!isAcceleratedLKEPlansEnabled && t.class === 'accelerated') {
+              // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
+              return false;
             }
-          )}
+
+            // No Nanodes or GPUs in Kubernetes clusters
+            return t.class !== 'nanode' && t.class !== 'gpu';
+          })}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"

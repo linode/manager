@@ -13,7 +13,7 @@ import {
   getPlanSelectionsByPlanType,
   planTypeOrder,
   replaceOrAppendPlaceholder512GbPlans,
-  useIsAcceleratedEnabled,
+  useIsAcceleratedPlansEnabled,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -484,7 +484,7 @@ describe('extractPlansInformation', () => {
   });
 });
 
-describe('useIsAcceleratedEnabled', () => {
+describe('useIsAcceleratedPlansEnabled', () => {
   it('should return false for linode and lke plans: account capability DNE and feature flag false', () => {
     queryMocks.useAccount.mockReturnValue({
       data: {
@@ -498,7 +498,7 @@ describe('useIsAcceleratedEnabled', () => {
       },
     });
 
-    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: false,
       isAcceleratedLinodePlansEnabled: false,
@@ -518,7 +518,7 @@ describe('useIsAcceleratedEnabled', () => {
       },
     });
 
-    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: false,
       isAcceleratedLinodePlansEnabled: false,
@@ -538,7 +538,7 @@ describe('useIsAcceleratedEnabled', () => {
       },
     });
 
-    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: false,
       isAcceleratedLinodePlansEnabled: false,
@@ -558,7 +558,7 @@ describe('useIsAcceleratedEnabled', () => {
       },
     });
 
-    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: true,
       isAcceleratedLinodePlansEnabled: true,
@@ -579,7 +579,7 @@ describe('useIsAcceleratedEnabled', () => {
       },
     });
 
-    const { result } = renderHook(() => useIsAcceleratedEnabled());
+    const { result } = renderHook(() => useIsAcceleratedPlansEnabled());
     expect(result.current).toStrictEqual({
       isAcceleratedLKEPlansEnabled: false,
       isAcceleratedLinodePlansEnabled: true,

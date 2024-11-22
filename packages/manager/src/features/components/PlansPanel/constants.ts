@@ -2,8 +2,6 @@ import type { ExtendedType } from 'src/utilities/extendType';
 
 export const LIMITED_AVAILABILITY_COPY =
   'This plan has limited deployment availability.';
-export const MULTIPLE_PLANS_LIMITED_AVAILABILITY_COPY =
-  'These plans have limited deployment availability.';
 export const SMALLER_PLAN_DISABLED_COPY =
   'Resizing to smaller plans is not supported.';
 export const PLAN_NOT_AVAILABLE_IN_REGION_COPY =

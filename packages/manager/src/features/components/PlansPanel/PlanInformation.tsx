@@ -2,8 +2,6 @@ import { Notice } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
 import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
@@ -13,7 +11,6 @@ import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
   HIGH_MEMORY_COMPUTE_INSTANCES_LINK,
-  MULTIPLE_PLANS_LIMITED_AVAILABILITY_COPY,
   PREMIUM_COMPUTE_INSTANCES_LINK,
   SHARED_COMPUTE_INSTANCES_LINK,
   TRANSFER_COSTS_LINK,
@@ -57,6 +54,31 @@ export const PlanInformation = (props: PlanInformationProps) => {
   const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
   const showTransferBanner = Boolean(useFlags().gpuv2?.transferBanner);
 
+  const showLimitedAvailabilityBanner =
+    hasSelectedRegion &&
+    isSelectedRegionEligibleForPlan &&
+    !hideLimitedAvailabilityBanner &&
+    hasMajorityOfPlansDisabled;
+
+  const transferBanner = (
+    <Notice
+      spacingBottom={
+        planType === 'accelerated' && !showLimitedAvailabilityBanner ? 24 : 8
+      }
+      variant="warning"
+    >
+      <Typography
+        fontFamily={(theme: Theme) => theme.font.bold}
+        fontSize="1rem"
+      >
+        Some plans do not include bundled network transfer. If the transfer
+        allotment is 0, all outbound network transfer is subject to charges.
+        <br />
+        <Link to={TRANSFER_COSTS_LINK}>Learn more about transfer costs</Link>.
+      </Typography>
+    </Notice>
+  );
+
   return (
     <>
       {planType === 'gpu' ? (
@@ -79,23 +101,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
               </Typography>
             </Notice>
           )}
-          {showTransferBanner && (
-            <Notice spacingBottom={8} variant="warning">
-              <Typography
-                fontFamily={(theme: Theme) => theme.font.bold}
-                fontSize="1rem"
-              >
-                Some plans do not include bundled network transfer. If the
-                transfer allotment is 0, all outbound network transfer is
-                subject to charges.
-                <br />
-                <Link to={TRANSFER_COSTS_LINK}>
-                  Learn more about transfer costs
-                </Link>
-                .
-              </Typography>
-            </Notice>
-          )}
+          {showTransferBanner && transferBanner}
           <PlansAvailabilityNotice
             hasSelectedRegion={hasSelectedRegion}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
@@ -104,28 +110,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
           />
         </>
       ) : null}
-      {planType === 'accelerated' && (
-        // TODO: acceleratedPlans - add doc links
-        <Notice variant="warning">
-          <Typography
-            fontFamily={(theme: Theme) => theme.font.bold}
-            fontSize="1rem"
-          >
-            <List sx={{ listStyleType: 'disc', pl: 2 }}>
-              <ListItem sx={{ display: 'list-item', padding: '2px 0 1px' }}>
-                {MULTIPLE_PLANS_LIMITED_AVAILABILITY_COPY}{' '}
-                <Link to="#">Learn more</Link> and request access to Accelerated
-                plans.
-              </ListItem>
-              <ListItem sx={{ display: 'list-item', padding: '1px 0 2px' }}>
-                Transfer costs not included in the plan price will be charged
-                additionally. <Link to={TRANSFER_COSTS_LINK}>Learn more</Link>{' '}
-                about pricing and transfer costs.
-              </ListItem>
-            </List>
-          </Typography>
-        </Notice>
-      )}
+      {planType === 'accelerated' && transferBanner}
       {planType === 'metal' ? (
         <MetalNotice
           dataTestId="metal-notice"
@@ -143,25 +128,22 @@ export const PlanInformation = (props: PlanInformationProps) => {
           regionsData={regionsData || []}
         />
       ) : null}
-      {hasSelectedRegion &&
-        isSelectedRegionEligibleForPlan &&
-        !hideLimitedAvailabilityBanner &&
-        hasMajorityOfPlansDisabled && (
-          <Notice
-            sx={(theme: Theme) => ({
-              marginBottom: theme.spacing(3),
-              marginLeft: 0,
-              marginTop: 0,
-              padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
-            })}
-            dataTestId={limitedAvailabilityBannerTestId}
-            variant="warning"
-          >
-            <StyledNoticeTypography>
-              {MULTIPLE_PLANS_LIMITED_AVAILABILITY_COPY}
-            </StyledNoticeTypography>
-          </Notice>
-        )}
+      {showLimitedAvailabilityBanner && (
+        <Notice
+          sx={(theme: Theme) => ({
+            marginBottom: theme.spacing(3),
+            marginLeft: 0,
+            marginTop: 0,
+            padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+          })}
+          dataTestId={limitedAvailabilityBannerTestId}
+          variant="warning"
+        >
+          <StyledNoticeTypography>
+            These plans have limited deployment availability.
+          </StyledNoticeTypography>
+        </Notice>
+      )}
       <ClassDescriptionCopy planType={planType} />
     </>
   );
@@ -196,6 +178,7 @@ export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
       docLink = GPU_COMPUTE_INSTANCES_LINK;
       break;
     case 'accelerated':
+      // TODO: accelerated plans - acquire doc link
       planTypeLabel = 'Accelerated';
       docLink = '#';
       break;
