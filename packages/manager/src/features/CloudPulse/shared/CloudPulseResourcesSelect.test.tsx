@@ -291,33 +291,6 @@ describe('CloudPulseResourcesSelect component tests', () => {
     expect(queryByRole('option', { name: SELECT_ALL })).not.toBeInTheDocument();
   });
 
-  it('should be able to select all and deselect all the resources when number of resources are equal to resource limit', () => {
-    queryMocks.useResourcesQuery.mockReturnValue({
-      data: linodeFactory.buildList(10),
-      isError: false,
-      isLoading: false,
-      status: 'success',
-    });
-    renderWithTheme(
-      <CloudPulseResourcesSelect
-        handleResourcesSelection={mockResourceHandler}
-        label="Resources"
-        region={'us-east'}
-        resourceType={'linode'}
-      />
-    );
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: SELECT_ALL }));
-    fireEvent.click(screen.getByRole('option', { name: 'Deselect All' }));
-    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
-
-    for (let i = 26; i <= 35; i++) {
-      expect(
-        screen.getByRole('option', { name: `linode-${i}` })
-      ).toHaveAttribute(ARIA_SELECTED, 'false');
-    }
-  });
-
   it('should be able to select limited resources', async () => {
     const user = userEvent.setup();
 
@@ -361,5 +334,37 @@ describe('CloudPulseResourcesSelect component tests', () => {
     expect(isResourceWithExceededLimit).toHaveAttribute(ARIA_DISABLED, 'true');
 
     expect(queryByRole('option', { name: SELECT_ALL })).not.toBeInTheDocument();
+  });
+
+  it('should be able to select all and deselect all the resources when number of resources are equal to resource limit', async () => {
+    const user = userEvent.setup();
+
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: linodeFactory.buildList(10),
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        handleResourcesSelection={mockResourceHandler}
+        label="Resources"
+        region={'us-east'}
+        resourceType={'linode'}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    await user.click(screen.getByRole('option', { name: SELECT_ALL }));
+    await user.click(screen.getByRole('option', { name: 'Deselect All' }));
+
+    expect(screen.getByLabelText('Resources')).toBeInTheDocument();
+
+    for (let i = 26; i <= 35; i++) {
+      expect(
+        screen.getByRole('option', { name: `linode-${i}` })
+      ).toHaveAttribute(ARIA_SELECTED, 'false');
+    }
   });
 });
