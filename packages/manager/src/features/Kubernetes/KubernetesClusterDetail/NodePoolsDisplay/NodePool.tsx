@@ -1,9 +1,15 @@
-import { Box, Paper, Stack, StyledActionButton, Tooltip } from '@linode/ui';
+import {
+  Box,
+  Paper,
+  Stack,
+  StyledActionButton,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { Hidden } from 'src/components/Hidden';
-import { Typography } from 'src/components/Typography';
 
 import { NodeTable } from './NodeTable';
 

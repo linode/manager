@@ -1,9 +1,8 @@
-import { TooltipIcon } from '@linode/ui';
+import { TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import {
   StyledGridContainer,

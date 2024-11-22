@@ -20,7 +20,7 @@ export function parseCsv(csvContent: string): any[] {
     .map((header) => header.trim().replace(/^"|"$/g, ''));
 
   // Map the remaining lines to objects using the headers
-  const data = lines.slice(1).map((line) => {
+  return lines.slice(1).map((line) => {
     // Split each line into values, handling quoted values with commas and embedded quotes
     // The regular expression matches:
     // - Values enclosed in double quotes, which may contain commas and escaped double quotes (e.g., "value, with, commas" or "value with ""embedded"" quotes")
@@ -42,7 +42,4 @@ export function parseCsv(csvContent: string): any[] {
     // Return the object representing the row
     return entry;
   });
-
-  // Return the array of objects representing the CSV data
-  return data;
 }

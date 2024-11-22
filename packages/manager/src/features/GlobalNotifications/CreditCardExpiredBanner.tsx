@@ -1,9 +1,8 @@
-import { Button } from '@linode/ui';
+import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Typography } from 'src/components/Typography';
 import { useAccount } from 'src/queries/account/account';
 import { isCreditCardExpired } from 'src/utilities/creditCard';
 

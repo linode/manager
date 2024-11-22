@@ -1,18 +1,16 @@
+import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
 import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
-import { Typography } from 'src/components/Typography';
-import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-import { LongviewPackage } from '../../request.types';
 import {
   getPackageNoticeText,
   getTotalMemoryUsage,
@@ -20,11 +18,14 @@ import {
 } from '../../shared/utilities';
 import {
   StyledHeaderGrid,
-  StyledIconGrid,
   StyledIconContainerGrid,
+  StyledIconGrid,
   StyledIconTextLink,
   StyledPackageGrid,
 } from './IconSection.styles';
+
+import type { LongviewPackage } from '../../request.types';
+import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 interface Props {
   client: string;

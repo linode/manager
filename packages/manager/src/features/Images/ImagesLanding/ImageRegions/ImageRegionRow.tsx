@@ -1,10 +1,9 @@
-import { Box, IconButton, Stack, Tooltip } from '@linode/ui';
+import { Box, IconButton, Stack, Tooltip, Typography } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import type { ImageRegionStatus, ImageStatus } from '@linode/api-v4';

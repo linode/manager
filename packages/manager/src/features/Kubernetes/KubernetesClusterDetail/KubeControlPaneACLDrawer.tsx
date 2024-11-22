@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Notice, TextField, omittedProps } from '@linode/ui';
+import { Box, Notice, TextField, Typography, omittedProps } from '@linode/ui';
 import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -12,7 +12,6 @@ import { DrawerContent } from 'src/components/DrawerContent';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
 import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,

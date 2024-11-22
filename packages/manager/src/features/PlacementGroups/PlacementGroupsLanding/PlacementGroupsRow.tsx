@@ -1,7 +1,8 @@
 import {
-  PLACEMENT_GROUP_TYPES,
   PLACEMENT_GROUP_POLICIES,
+  PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
+import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { Hidden } from 'src/components/Hidden';
@@ -12,7 +13,6 @@ import { ListItem } from 'src/components/ListItem';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 
 import { StyledWarningIcon } from './PlacementGroupsRow.styles';
 

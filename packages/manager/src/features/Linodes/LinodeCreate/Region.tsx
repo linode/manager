@@ -1,4 +1,4 @@
-import { Box, Notice, Paper } from '@linode/ui';
+import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
@@ -12,7 +12,6 @@ import {
   useIsGeckoEnabled,
 } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';

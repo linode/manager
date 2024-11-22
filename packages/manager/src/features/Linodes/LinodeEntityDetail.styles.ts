@@ -1,5 +1,5 @@
 // This component was built assuming an unmodified MUI <Table />
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';
 

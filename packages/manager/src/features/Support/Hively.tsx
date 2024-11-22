@@ -1,9 +1,8 @@
-import { Box, Divider, Stack } from '@linode/ui';
+import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { parseAPIDate } from 'src/utilities/date';
 
 import { OFFICIAL_USERNAMES } from './ticketUtils';

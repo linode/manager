@@ -1,8 +1,10 @@
-import { SxProps, Theme, useTheme } from '@mui/material/styles';
+import { Typography } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
-import { Typography } from 'src/components/Typography';
+
+import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface DisplayPriceProps {
   /**

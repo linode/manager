@@ -1,8 +1,8 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import VisibilityHideIcon from 'src/assets/icons/visibilityHide.svg';
 import VisibilityShowIcon from 'src/assets/icons/visibilityShow.svg';
-import { Typography } from 'src/components/Typography';
 
 export const StyledTypography = styled(Typography)(({ theme }) => ({
   '& .dif': {

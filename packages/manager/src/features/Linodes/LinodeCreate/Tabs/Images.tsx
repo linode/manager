@@ -1,4 +1,4 @@
-import { Box, Paper, Stack } from '@linode/ui';
+import { Box, Paper, Stack, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
@@ -8,7 +8,6 @@ import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
 import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions/regions';

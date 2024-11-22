@@ -1,7 +1,5 @@
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import { StyledPlanSummarySpan } from '../DatabaseDetail/DatabaseResize/DatabaseResize.style';
 import { useIsDatabasesEnabled } from '../utilities';

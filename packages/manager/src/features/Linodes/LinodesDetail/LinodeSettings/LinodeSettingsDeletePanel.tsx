@@ -1,10 +1,9 @@
-import { Button, Notice } from '@linode/ui';
+import { Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Accordion } from 'src/components/Accordion';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   useDeleteLinodeMutation,

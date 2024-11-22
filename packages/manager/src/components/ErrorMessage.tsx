@@ -1,9 +1,9 @@
+import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { LinodeResizeAllocationError } from './LinodeResizeAllocationError';
 import { MigrateError } from './MigrateError';
 import { SupportTicketGeneralError } from './SupportTicketGeneralError';
-import { Typography } from './Typography';
 
 import type { EntityForTicketDetails } from './SupportLink/SupportLink';
 import type { FormPayloadValues } from 'src/features/Support/SupportTickets/SupportTicketDialog';

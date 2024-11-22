@@ -1,21 +1,21 @@
-import { Image } from '@linode/api-v4/lib/images';
 import {
   deleteStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
+import { Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
-import { StackScriptsRequest } from 'src/features/StackScripts/types';
 
-import StackScriptBase, {
-  StateProps,
-} from '../StackScriptBase/StackScriptBase';
+import StackScriptBase from '../StackScriptBase/StackScriptBase';
 import { StackScriptsSection } from './StackScriptsSection';
+
+import type { StateProps } from '../StackScriptBase/StackScriptBase';
+import type { Image } from '@linode/api-v4/lib/images';
+import type { StackScriptsRequest } from 'src/features/StackScripts/types';
 
 interface DialogVariantProps {
   error?: string;

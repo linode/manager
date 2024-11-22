@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import OrderBy from 'src/components/OrderBy';
@@ -11,7 +11,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';

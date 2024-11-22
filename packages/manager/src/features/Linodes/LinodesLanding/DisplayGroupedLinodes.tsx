@@ -1,4 +1,4 @@
-import { Box, Paper, Tooltip } from '@linode/ui';
+import { Box, Paper, Tooltip, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -16,7 +16,6 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Typography } from 'src/components/Typography';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 

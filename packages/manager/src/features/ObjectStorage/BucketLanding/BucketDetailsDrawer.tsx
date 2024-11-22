@@ -1,4 +1,4 @@
-import { Divider } from '@linode/ui';
+import { Divider, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -6,7 +6,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';

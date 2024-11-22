@@ -1,11 +1,10 @@
-import { Button, TextField } from '@linode/ui';
+import { Button, TextField, Typography } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
 import { useArgs } from '@storybook/preview-api';
 import React from 'react';
 
 import { ActionsPanel } from './ActionsPanel/ActionsPanel';
 import { Drawer } from './Drawer';
-import { Typography } from './Typography';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

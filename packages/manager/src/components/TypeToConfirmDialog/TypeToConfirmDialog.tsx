@@ -1,16 +1,13 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import {
-  ConfirmationDialog,
-  ConfirmationDialogProps,
-} from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  TypeToConfirm,
-  TypeToConfirmProps,
-} from 'src/components/TypeToConfirm/TypeToConfirm';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { usePreferences } from 'src/queries/profile/preferences';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { ConfirmationDialogProps } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import type { TypeToConfirmProps } from 'src/components/TypeToConfirm/TypeToConfirm';
 
 interface EntityInfo {
   action?:

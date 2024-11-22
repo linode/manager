@@ -1,9 +1,8 @@
-import { CircleProgress, Paper } from '@linode/ui';
+import { CircleProgress, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
-import { Typography } from 'src/components/Typography';
 
 export const StyledCopyToClipboardGrid = styled(Grid, {
   label: 'StyledCopyToClipboardGrid',
