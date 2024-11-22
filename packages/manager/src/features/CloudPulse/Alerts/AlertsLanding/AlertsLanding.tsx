@@ -1,5 +1,4 @@
-import { Button } from '@linode/ui';
-import { Box, Paper } from '@linode/ui';
+import { Box, Button, Paper } from '@linode/ui';
 import * as React from 'react';
 import {
   Redirect,

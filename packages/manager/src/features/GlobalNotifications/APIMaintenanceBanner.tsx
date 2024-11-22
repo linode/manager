@@ -1,9 +1,8 @@
-import { Stack } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { queryPresets } from 'src/queries/base';
 import { useMaintenanceQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';

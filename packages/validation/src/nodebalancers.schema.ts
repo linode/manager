@@ -139,7 +139,6 @@ export const UpdateNodeBalancerConfigSchema = object({
     then: string().required('An HTTP body regex is required.'),
   }),
   check_interval: number()
-```suggestion
     .min(
       CHECK_INTERVAL.MIN,
       `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`

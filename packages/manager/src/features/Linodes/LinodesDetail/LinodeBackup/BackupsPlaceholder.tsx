@@ -1,13 +1,14 @@
-import { PriceObject } from '@linode/api-v4';
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Currency } from 'src/components/Currency';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
-import { Typography } from 'src/components/Typography';
 
 import { EnableBackupsDialog } from './EnableBackupsDialog';
+
+import type { PriceObject } from '@linode/api-v4';
 
 interface Props {
   backupsMonthlyPrice?: PriceObject['monthly'];

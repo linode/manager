@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   Box,
   Divider,
@@ -11,7 +12,6 @@ import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
 
 import type { MigrationTypes } from '@linode/api-v4/lib/linodes';

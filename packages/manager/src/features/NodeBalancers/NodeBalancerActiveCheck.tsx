@@ -1,4 +1,9 @@
-import { FormHelperText, InputAdornment, TextField } from '@linode/ui';
+import {
+  FormHelperText,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import {
   CHECK_ATTEMPTS,
   CHECK_INTERVAL,
@@ -8,7 +13,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Typography } from 'src/components/Typography';
 
 import { setErrorMap } from './utils';
 
