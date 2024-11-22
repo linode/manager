@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2024-11-22] - v1.132.2
 
-### Fixed:
+### Changed:
 
 - Change "Application Platform for LKE" to "Akamai App Platform"([#11312](https://github.com/linode/manager/pull/11312))
 
