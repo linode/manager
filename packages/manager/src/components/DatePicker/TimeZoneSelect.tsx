@@ -10,6 +10,7 @@ interface TimeZoneSelectProps {
   disabled?: boolean;
   errorText?: string;
   label?: string;
+  noMarginTop?: boolean;
   onChange: (timezone: string) => void;
   value: null | string;
 }
@@ -41,6 +42,7 @@ export const TimeZoneSelect = ({
   disabled = false,
   errorText,
   label = 'Timezone',
+  noMarginTop = false,
   onChange,
   value,
 }: TimeZoneSelectProps) => {
@@ -50,11 +52,10 @@ export const TimeZoneSelect = ({
         timezoneOptions.find((option) => option.value === value) ?? undefined
       }
       autoHighlight
-      disableClearable
       disabled={disabled}
       errorText={errorText}
-      fullWidth
       label={label}
+      noMarginTop={noMarginTop}
       onChange={(e, option) => onChange(option?.value || '')}
       options={timezoneOptions}
       placeholder="Choose a Timezone"

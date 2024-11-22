@@ -1,5 +1,5 @@
-import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
+import { Divider } from '@linode/ui';
 import { Grid, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
@@ -14,6 +14,7 @@ import { TimeZoneSelect } from './TimeZoneSelect';
 
 import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import type { DateTime } from 'luxon';
+import type { TextFieldProps } from 'src/components/TextField';
 
 export interface DateTimePickerProps {
   /** Additional props for the DateCalendar */
@@ -65,6 +66,11 @@ export const DateTimePicker = ({
   const [timezone, setTimezone] = useState<null | string>(
     timeZoneSelectProps?.value || null
   );
+
+  const textFieldProps: TextFieldProps = {
+    label: timeSelectProps?.label ?? 'Select Time',
+    noMarginTop: true,
+  };
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -151,24 +157,56 @@ export const DateTimePicker = ({
       >
         <Box padding={2}>
           <DateCalendar
+            sx={(theme) => ({
+              '& .MuiDayCalendar-weekContainer, & .MuiDayCalendar-header': {
+                justifyContent: 'space-between',
+              },
+              '& .MuiDayCalendar-weekDayLabel': {
+                fontSize: '0.875rem',
+              },
+              '& .MuiPickersCalendarHeader-label': {
+                fontFamily: theme.font.bold,
+              },
+              '& .MuiPickersCalendarHeader-root': {
+                borderBottom: `1px solid ${theme.borderColors.divider}`,
+                fontSize: '0.875rem',
+                paddingBottom: theme.spacing(1),
+              },
+              '& .MuiPickersDay-root': {
+                fontSize: '0.875rem',
+                margin: `${theme.spacing(0.5)}px`,
+              },
+              borderRadius: `${theme.spacing(2)}`,
+              borderWidth: '0px',
+            })}
             onChange={handleDateChange}
             value={dateTime}
             {...dateCalendarProps}
           />
-          <Grid container spacing={2}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+          >
             <Grid item xs={4}>
               <TimePicker
                 slotProps={{
-                  textField: { label: timeSelectProps?.label ?? 'Select Time' },
+                  openPickerButton: {
+                    sx: {
+                      padding: 0, // Remove padding for the icon
+                    },
+                  },
+                  textField: textFieldProps,
                 }}
                 onChange={handleTimeChange}
                 slots={{ textField: TextField }}
                 value={dateTime}
               />
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={7}>
               <TimeZoneSelect
                 label={timeZoneSelectProps?.label || 'Timezone'}
+                noMarginTop
                 onChange={handleTimezoneChange}
                 value={timezone}
               />
