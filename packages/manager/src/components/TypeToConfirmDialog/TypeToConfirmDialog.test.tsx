@@ -1,7 +1,7 @@
+import { Typography } from '@linode/ui';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TypeToConfirmDialog } from './TypeToConfirmDialog';

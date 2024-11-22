@@ -1,7 +1,5 @@
-import { CircleProgress, Stack } from '@linode/ui';
-import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
+import { CircleProgress, Stack, Typography } from '@linode/ui';
+import React from 'react';
 
 interface Props {
   loading: boolean;
@@ -20,10 +18,10 @@ export const StatsPanel = (props: Props) => {
       {loading ? (
         <div
           style={{
-            display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            display: 'flex',
             height: '100%',
+            justifyContent: 'center',
             width: '100%',
           }}
         >

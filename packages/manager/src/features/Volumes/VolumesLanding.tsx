@@ -245,7 +245,7 @@ export const VolumesLanding = () => {
             {isBlockStorageEncryptionFeatureEnabled && (
               <TableCell>Encryption</TableCell>
             )}
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

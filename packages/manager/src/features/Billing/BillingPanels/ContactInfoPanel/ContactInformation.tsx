@@ -1,12 +1,11 @@
-import { Box, TooltipIcon } from '@linode/ui';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { allCountries } from 'country-region-data';
-import { useState } from 'react';
 import * as React from 'react';
+import { useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';

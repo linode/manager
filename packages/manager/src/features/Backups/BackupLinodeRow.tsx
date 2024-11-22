@@ -1,9 +1,8 @@
-import { Linode, PriceObject } from '@linode/api-v4';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
@@ -11,6 +10,8 @@ import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
+
+import type { Linode, PriceObject } from '@linode/api-v4';
 
 interface Props {
   error?: string;
