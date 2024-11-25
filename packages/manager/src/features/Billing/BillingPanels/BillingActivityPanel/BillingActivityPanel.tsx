@@ -1,4 +1,5 @@
 import { getInvoiceItems } from '@linode/api-v4/lib/account';
+import { Typography } from '@linode/ui';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -23,7 +24,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {
@@ -48,7 +48,7 @@ import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
 
 import type { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
-import type { Theme, SxProps } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeSince: {
@@ -358,6 +358,11 @@ export const BillingActivityPanel = React.memo((props: Props) => {
         const lastItem = idx === orderedPaginatedData.length - 1;
         return (
           <ActivityFeedItem
+            downloadPDF={
+              thisItem.type === 'invoice'
+                ? downloadInvoicePDF
+                : downloadPaymentPDF
+            }
             sxRow={
               lastItem
                 ? {
@@ -366,11 +371,6 @@ export const BillingActivityPanel = React.memo((props: Props) => {
                     },
                   }
                 : {}
-            }
-            downloadPDF={
-              thisItem.type === 'invoice'
-                ? downloadInvoicePDF
-                : downloadPaymentPDF
             }
             hasError={pdfErrors.has(`${thisItem.type}-${thisItem.id}`)}
             isLoading={pdfLoading.has(`${thisItem.type}-${thisItem.id}`)}
@@ -506,13 +506,13 @@ export const ActivityFeedItem = React.memo((props: ActivityFeedItemProps) => {
   const { classes } = useStyles();
 
   const {
-    sxRow,
     date,
     downloadPDF,
     hasError,
     id,
     isLoading,
     label,
+    sxRow,
     total,
     type,
   } = props;

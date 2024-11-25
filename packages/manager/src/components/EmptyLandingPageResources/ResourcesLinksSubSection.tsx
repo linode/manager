@@ -1,7 +1,6 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 interface ResourcesLinksSubSectionProps {
   MoreLink?: (props: { className?: any }) => JSX.Element;

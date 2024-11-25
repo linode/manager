@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { profileFactory } from 'src/factories/profile';
@@ -57,7 +57,7 @@ describe('SwitchAccountDrawer', () => {
     );
   });
 
-  it('should close when the close icon is clicked', () => {
+  it('should close when the close icon is clicked', async () => {
     const { getByLabelText } = renderWithTheme(
       <SwitchAccountDrawer {...props} />
     );
@@ -65,6 +65,8 @@ describe('SwitchAccountDrawer', () => {
     const closeIconButton = getByLabelText('Close drawer');
     fireEvent.click(closeIconButton);
 
-    expect(props.onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(props.onClose).toHaveBeenCalledTimes(1);
+    });
   });
 });
