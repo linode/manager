@@ -191,7 +191,7 @@ export const getLatestVersion = (
  * Hook to determine if the LKE-Enterprise feature should be visible to the user.
  * Based on the user's account capability and the feature flag.
  *
- * @returns {boolean, boolean, boolean, boolean} - Whether the LKE-Enterprise feature is enabled for the current user in LA and GA, respectively.
+ * @returns {boolean, boolean, boolean, boolean} - Whether the LKE-Enterprise flags are enabled for LA/GA and whether feature is enabled for LA/GA (flags + account capability).
  */
 export const useIsLkeEnterpriseEnabled = () => {
   const flags = useFlags();
