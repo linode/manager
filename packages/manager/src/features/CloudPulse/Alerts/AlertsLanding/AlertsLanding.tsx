@@ -84,12 +84,10 @@ export const AlertsLanding = React.memo(() => {
         <Switch>
           <Route
             component={AlertDefinitionLanding}
-            path={'/monitor/cloudpulse/alerts/definitions'}
+            exact
+            path={'/monitor/alerts/definitions'}
           />
-          <Redirect
-            from="/monitor/cloudpulse/alerts"
-            to="/monitor/cloudpulse/alerts/definitions"
-          />
+          <Redirect from="*" to="/monitor/alerts/definitions" />
         </Switch>
       </Tabs>
     </Paper>

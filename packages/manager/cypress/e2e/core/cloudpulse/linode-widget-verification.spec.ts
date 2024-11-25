@@ -46,7 +46,7 @@ import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
  */
 const expectedGranularityArray = ['Auto', '1 day', '1 hr', '5 min'];
 const timeDurationToSelect = 'Last 24 Hours';
-const flags : Partial<Flags> = {aclp: {enabled: true, beta: true}}
+const flags: Partial<Flags> = { aclp: { enabled: true, beta: true } };
 const {
   metrics,
   id,
@@ -161,7 +161,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
     mockGetUserPreferences({});
 
     // navigate to the cloudpulse page
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('monitor');
 
     // Wait for the services and dashboard API calls to complete before proceeding
     cy.wait(['@fetchServices', '@fetchDashboard']);
