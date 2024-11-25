@@ -14,35 +14,32 @@ import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { CreateAlertDefinitionFormSchema } from './schemas';
-import { filterFormValues } from './utilities';
+import { filterFormValues, filterMetricCriteriaFormValues } from './utilities';
 
-import type { CreateAlertDefinitionForm } from './types';
-import type {
-  MetricCriteria,
-  TriggerCondition,
-} from '@linode/api-v4/lib/cloudpulse/types';
+import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
+import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
 
 const triggerConditionInitialValues: TriggerCondition = {
   evaluation_period_seconds: 0,
   polling_interval_seconds: 0,
   trigger_occurrences: 0,
 };
-const criteriaInitialValues: MetricCriteria[] = [
-  {
-    aggregation_type: null,
-    dimension_filters: [],
-    metric: '',
-    operator: null,
-    value: 0,
-  },
-];
+const criteriaInitialValues: MetricCriteriaForm = {
+  aggregation_type: null,
+  dimension_filters: [],
+  metric: '',
+  operator: null,
+  value: 0,
+};
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
   engine_type: null,
   label: '',
   region: '',
   resource_ids: [],
-  rule_criteria: { rules: criteriaInitialValues },
+  rule_criteria: {
+    rules: filterMetricCriteriaFormValues(criteriaInitialValues),
+  },
   service_type: null,
   severity: null,
   triggerCondition: triggerConditionInitialValues,

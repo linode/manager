@@ -12,7 +12,7 @@ export interface CloudPulseAlertSeveritySelectProps {
   /**
    * name used for the component in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, AlertSeverityType>;
+  name: FieldPathByValue<CreateAlertDefinitionForm, AlertSeverityType | null>;
 }
 
 export const CloudPulseAlertSeveritySelect = (
