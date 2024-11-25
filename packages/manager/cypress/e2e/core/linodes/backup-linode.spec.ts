@@ -45,6 +45,8 @@ describe('linode backups', () => {
    * - Confirms that enable backup prompt is shown when backups are not enabled.
    * - Confirms that user is warned of additional backups charges before enabling.
    * - Confirms that Linode details page updates to reflect that backups are enabled.
+   * - Confirms that user can cancel Linode backups.
+   * - Confirms that user cannot re-enable Linode backups after canceling.
    */
   it('can enable backups', () => {
     cy.tag('method:e2e');
@@ -130,6 +132,7 @@ describe('linode backups', () => {
       cy.wait('@cancelBackups');
       ui.toast.assertMessage('Backups are being canceled for this Linode');
 
+      // Confirm that user is warned when attempting to re-enable Linode backups after canceling.
       ui.button
         .findByTitle('Enable Backups')
         .should('be.visible')
@@ -146,7 +149,7 @@ describe('linode backups', () => {
             .should('be.enabled')
             .click();
 
-          // Confirm that user is warned of additional backup charges.
+          // Confirm that users cannot re-enable backups without first waiting 24 hrs.
           cy.contains(ReenableBackupsFailureNote).should('be.visible');
         });
     });
