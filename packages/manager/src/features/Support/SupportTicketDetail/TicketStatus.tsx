@@ -1,4 +1,4 @@
-import { Paper, Stack } from '@linode/ui';
+import { Paper, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
@@ -6,7 +6,6 @@ import React from 'react';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';

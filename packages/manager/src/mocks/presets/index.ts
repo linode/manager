@@ -6,6 +6,7 @@ import { baselineCrudPreset } from './baseline/crud';
 import { baselineLegacyPreset } from './baseline/legacy';
 import { baselineNoMocksPreset } from './baseline/noMocks';
 import { childAccountPreset } from './extra/account/childAccount';
+import { lkeEnterpriseEnabledPreset } from './extra/account/lkeEnterpriseEnabled';
 import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
 import { parentAccountPreset } from './extra/account/parentAccount';
@@ -43,6 +44,7 @@ export const extraMockPresets: MockPresetExtra[] = [
   childAccountPreset,
   linodeLimitsPreset,
   lkeLimitsPreset,
+  lkeEnterpriseEnabledPreset,
   managedEnabledPreset,
   managedDisabledPreset,
   coreAndDistributedRegionsPreset,

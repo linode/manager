@@ -1,9 +1,9 @@
 import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithTheme } from '../../utilities/testHelpers';
 import { EditableText } from './EditableText';
 
 const props = {

@@ -1,4 +1,4 @@
-import { CircleProgress, Notice } from '@linode/ui';
+import { CircleProgress, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { NotFound } from 'src/components/NotFound';
-import { Typography } from 'src/components/Typography';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useUnassignLinodesFromPlacementGroup } from 'src/queries/placementGroups';
@@ -18,13 +17,12 @@ import type {
 
 interface Props {
   onClose: () => void;
-  onExited?: () => void;
   open: boolean;
   selectedLinode: Linode | undefined;
 }
 
 export const PlacementGroupsUnassignModal = (props: Props) => {
-  const { onClose, onExited, open, selectedLinode } = props;
+  const { onClose, open, selectedLinode } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { id: placementGroupId, linodeId } = useParams<{
@@ -104,7 +102,6 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
           },
         }}
         onClose={onClose}
-        onExited={onExited}
         open={open}
         title="Delete Placement Group"
       >
@@ -118,7 +115,6 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
       actions={actions}
       error={error?.[0]?.reason}
       onClose={onClose}
-      onExited={onExited}
       open={open}
       title={linode?.label ? `Unassign ${linode.label}` : 'Unassign'}
     >

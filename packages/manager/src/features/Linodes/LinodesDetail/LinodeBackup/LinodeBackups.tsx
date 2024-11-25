@@ -1,4 +1,4 @@
-import { Button, CircleProgress, Paper } from '@linode/ui';
+import { Button, CircleProgress, Paper, Typography } from '@linode/ui';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -12,7 +12,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Typography } from 'src/components/Typography';
 import { useLinodeBackupsQuery } from 'src/queries/linodes/backups';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants, useProfile } from 'src/queries/profile/profile';

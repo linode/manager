@@ -1,4 +1,4 @@
-import { Box, Button, Paper } from '@linode/ui';
+import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -13,7 +13,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSortCell';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useOrder } from 'src/hooks/useOrder';

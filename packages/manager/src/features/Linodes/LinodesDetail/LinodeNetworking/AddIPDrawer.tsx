@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   Box,
   Divider,
@@ -14,7 +15,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import {
   useAllocateIPMutation,
   useLinodeIPsQuery,

@@ -1,8 +1,8 @@
+import { Typography } from '@linode/ui';
 import { Formik } from 'formik';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
-import { Typography } from 'src/components/Typography';
 import { capitalize } from 'src/utilities/capitalize';
 
 import {
@@ -16,6 +16,7 @@ import {
 } from './FirewallRuleDrawer.utils';
 import { FirewallRuleForm } from './FirewallRuleForm';
 
+import type { FirewallOptionItem } from '../../shared';
 import type {
   FirewallRuleDrawerProps,
   FormState,
@@ -24,7 +25,6 @@ import type {
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
-import { FirewallOptionItem } from '../../shared';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 // =============================================================================

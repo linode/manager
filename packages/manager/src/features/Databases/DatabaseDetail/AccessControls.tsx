@@ -1,4 +1,4 @@
-import { Button, Notice } from '@linode/ui';
+import { Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -9,7 +9,6 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
@@ -179,7 +178,7 @@ export const AccessControls = (props: Props) => {
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <Button
-          buttonType="primary"
+          buttonType="outlined"
           className={classes.addAccessControlBtn}
           data-testid="button-access-control"
           disabled={disabled}

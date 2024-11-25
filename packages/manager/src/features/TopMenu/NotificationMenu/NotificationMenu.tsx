@@ -1,4 +1,4 @@
-import { Box, Chip, Divider, rotate360 } from '@linode/ui';
+import { Box, Chip, Divider, Typography, rotate360 } from '@linode/ui';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
 import { LinkButton } from 'src/components/LinkButton';
-import { Typography } from 'src/components/Typography';
 import { NotificationCenterEvent } from 'src/features/NotificationCenter/Events/NotificationCenterEvent';
 import {
   notificationCenterContext as _notificationContext,
@@ -21,7 +20,7 @@ import { usePrevious } from 'src/hooks/usePrevious';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import {
-  useInitialEventsQuery,
+  useEventsInfiniteQuery,
   useMarkEventsAsSeen,
 } from 'src/queries/events/events';
 
@@ -34,8 +33,11 @@ export const NotificationMenu = () => {
   const formattedNotifications = useFormattedNotifications();
   const notificationContext = React.useContext(_notificationContext);
 
-  const { data, events } = useInitialEventsQuery();
-  const eventsData = data?.data ?? [];
+  const { data } = useEventsInfiniteQuery();
+
+  // Just use the first page of events because we `slice` to get the first 20 events anyway
+  const events = data?.pages[0].data ?? [];
+
   const { mutateAsync: markEventsAsSeen } = useMarkEventsAsSeen();
 
   const numNotifications =
@@ -152,8 +154,8 @@ export const NotificationMenu = () => {
           </Box>
           <Divider spacingBottom={0} />
 
-          {eventsData.length > 0 ? (
-            eventsData
+          {events.length > 0 ? (
+            events
               .slice(0, 20)
               .map((event) => (
                 <NotificationCenterEvent
