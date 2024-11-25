@@ -166,6 +166,7 @@ export const NodeBalancerConfigPanel = (
 
   const algorithmHelperText = {
     leastconn: LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
+    ring_hash: '',
     roundrobin: ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
     source: SOURCE_ALGORITHM_HELPER_TEXT,
   };

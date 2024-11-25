@@ -1,13 +1,17 @@
 import type {
+  APIError,
+  Algorithm,
   NodeBalancerConfigNodeMode,
   NodeBalancerProxyProtocol,
-} from '@linode/api-v4/lib/nodebalancers/types';
-import type { APIError } from '@linode/api-v4/lib/types';
+  Protocol,
+  Stickiness,
+} from '@linode/api-v4';
 
 export interface NodeBalancerConfigFieldsWithStatus
   extends NodeBalancerConfigFields {
   modifyStatus?: 'new';
 }
+
 export interface ExtendedNodeBalancerConfigNode {
   address: string;
   config_id?: number;
@@ -23,7 +27,7 @@ export interface ExtendedNodeBalancerConfigNode {
 }
 
 export interface NodeBalancerConfigFields {
-  algorithm?: 'leastconn' | 'roundrobin' | 'source';
+  algorithm?: Algorithm;
   check?: 'connection' | 'http' | 'http_body' | 'none';
   check_attempts?: number /** 1..30 */;
   check_body?: string;
@@ -35,11 +39,11 @@ export interface NodeBalancerConfigFields {
   id?: number;
   nodes: NodeBalancerConfigNodeFields[];
   port?: number /** 1..65535 */;
-  protocol?: 'http' | 'https' | 'tcp';
+  protocol?: Protocol;
   proxy_protocol?: NodeBalancerProxyProtocol;
   ssl_cert?: string;
   ssl_key?: string;
-  stickiness?: 'http_cookie' | 'none' | 'table';
+  stickiness?: Stickiness;
 }
 
 export interface NodeBalancerConfigNodeFields {
@@ -59,7 +63,7 @@ export interface NodeBalancerConfigNodeFields {
 
 export interface NodeBalancerConfigPanelProps {
   addNode: (nodeIdx?: number) => void;
-  algorithm: 'leastconn' | 'roundrobin' | 'source';
+  algorithm: Algorithm;
   checkBody: string;
   checkPassive: boolean;
 
@@ -113,10 +117,10 @@ export interface NodeBalancerConfigPanelProps {
   onSslCertificateChange: (v: string) => void;
   port: number;
   privateKey: string;
-  protocol: 'http' | 'https' | 'tcp';
+  protocol: Protocol;
   proxyProtocol: NodeBalancerProxyProtocol;
   removeNode: (nodeIdx: number) => void;
-  sessionStickiness: 'http_cookie' | 'none' | 'table';
+  sessionStickiness: Stickiness;
   sslCertificate: string;
   submitting?: boolean;
 }
