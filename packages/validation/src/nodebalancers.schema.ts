@@ -39,7 +39,7 @@ export const createNodeBalancerConfigSchema = object({
   check_attempts: number(),
   check_body: string().when('check', {
     is: 'http_body',
-    then: string().required('An HTTP body regex is required.'),
+    then: (schema) => schema.required('An HTTP body regex is required.'),
   }),
   check_interval: number().typeError('Check interval must be a number.'),
   check_passive: boolean(),
@@ -47,11 +47,11 @@ export const createNodeBalancerConfigSchema = object({
     .matches(/\/.*/)
     .when('check', {
       is: 'http',
-      then: string().required('An HTTP path is required.'),
+      then: (schema) => schema.required('An HTTP path is required.'),
     })
     .when('check', {
       is: 'http_body',
-      then: string().required('An HTTP path is required.'),
+      then: (schema) => schema.required('An HTTP path is required.'),
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number().typeError('Timeout must be a number.').integer(),
@@ -65,11 +65,12 @@ export const createNodeBalancerConfigSchema = object({
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
     is: 'https',
-    then: string().required('SSL key is required when using HTTPS.'),
+    then: (schema) => schema.required('SSL key is required when using HTTPS.'),
   }),
   ssl_cert: string().when('protocol', {
     is: 'https',
-    then: string().required('SSL certificate is required when using HTTPS.'),
+    then: (schema) =>
+      schema.required('SSL certificate is required when using HTTPS.'),
   }),
   stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
   nodes: array()
@@ -83,7 +84,7 @@ export const UpdateNodeBalancerConfigSchema = object({
   check_attempts: number(),
   check_body: string().when('check', {
     is: 'http_body',
-    then: string().required('An HTTP body regex is required.'),
+    then: (schema) => schema.required('An HTTP body regex is required.'),
   }),
   check_interval: number().typeError('Check interval must be a number.'),
   check_passive: boolean(),
@@ -91,11 +92,11 @@ export const UpdateNodeBalancerConfigSchema = object({
     .matches(/\/.*/)
     .when('check', {
       is: 'http',
-      then: string().required('An HTTP path is required.'),
+      then: (schema) => schema.required('An HTTP path is required.'),
     })
     .when('check', {
       is: 'http_body',
-      then: string().required('An HTTP path is required.'),
+      then: (schema) => schema.required('An HTTP path is required.'),
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number().typeError('Timeout must be a number.').integer(),
@@ -109,11 +110,11 @@ export const UpdateNodeBalancerConfigSchema = object({
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
     is: 'https',
-    then: string().required(),
+    then: (schema) => schema.required(),
   }),
   ssl_cert: string().when('protocol', {
     is: 'https',
-    then: string().required(),
+    then: (schema) => schema.required(),
   }),
   stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
   nodes: array().of(nodeBalancerConfigNodeSchema),
