@@ -1,5 +1,5 @@
 import { Stack } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -9,6 +9,7 @@ import { StyledDocsLinkContainer } from './CreateCluster.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
 import { useAccount } from 'src/queries/account/account';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
   handleClusterTypeSelection: (tier: KubernetesTier) => void;
@@ -20,13 +21,17 @@ export const ClusterTypePanel = (props: Props) => {
 
   const { data: account } = useAccount();
 
+  const theme = useTheme();
+  const mdDownBreakpoint = useMediaQuery(theme.breakpoints.down('md'));
+  const smDownBreakpoint = useMediaQuery(theme.breakpoints.down('sm'));
+
   const isLkeEnterpriseSelectionDisabled = !account?.capabilities?.includes(
     'Kubernetes Enterprise'
   );
 
   return (
     <Stack>
-      <Stack flexDirection="row">
+      <Stack flexDirection={mdDownBreakpoint ? 'column' : 'row'}>
         <Stack>
           <Typography variant="h3">Cluster Type</Typography>
           <Typography sx={{ marginTop: 1, maxWidth: 700 }}>
@@ -39,7 +44,11 @@ export const ClusterTypePanel = (props: Props) => {
         </StyledDocsLinkContainer>
       </Stack>
 
-      <Stack flexDirection="row" gap={2} marginTop={2}>
+      <Stack
+        flexDirection={smDownBreakpoint ? 'column' : 'row'}
+        gap={2}
+        marginTop={2}
+      >
         <SelectionCard
           subheadings={[
             'Up to 250 nodes, 1000 pods',
@@ -47,7 +56,7 @@ export const ClusterTypePanel = (props: Props) => {
             'HA control plane (optional)',
           ]}
           checked={selectedTier === 'standard'}
-          heading={'LKE'}
+          heading="LKE"
           onClick={() => handleClusterTypeSelection('standard')}
         />
         <SelectionCard
@@ -57,16 +66,15 @@ export const ClusterTypePanel = (props: Props) => {
             'HA control plane (included)',
           ]}
           checked={selectedTier === 'enterprise'}
-          heading={'LKE Enterprise'}
+          heading="LKE Enterprise"
           onClick={() => handleClusterTypeSelection('enterprise')}
           disabled={isLkeEnterpriseSelectionDisabled}
-          sxTooltip={{ width: 700 }}
           tooltip={
             isLkeEnterpriseSelectionDisabled
               ? 'LKE Enterprise is not currently enabled on this contract. To inquire, fill out the Cloud Computing Sales form or email sales@linode.com.'
               : undefined
           }
-          tooltipPlacement="bottom"
+          tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Stack>
     </Stack>
