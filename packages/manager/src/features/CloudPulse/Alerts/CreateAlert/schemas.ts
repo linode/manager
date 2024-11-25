@@ -10,6 +10,6 @@ export const CreateAlertDefinitionFormSchema = createAlertDefinitionSchema.conca
   object({
     engine_type: engineOptionValidation,
     region: string().required('Region is required.'),
-    service_type: string().required('Service is required.').nullable(),
+    service_type: string().required('Service is required.'),
   })
 );
