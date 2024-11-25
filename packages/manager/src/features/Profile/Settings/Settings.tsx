@@ -1,4 +1,11 @@
-import { Paper, Radio, RadioGroup, Stack, Toggle } from '@linode/ui';
+import {
+  Paper,
+  Radio,
+  RadioGroup,
+  Stack,
+  Toggle,
+  Typography,
+} from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -6,7 +13,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Typography } from 'src/components/Typography';
 import {
   useMutatePreferences,
   usePreferences,

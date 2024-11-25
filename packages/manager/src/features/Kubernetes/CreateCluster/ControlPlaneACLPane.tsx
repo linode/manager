@@ -1,11 +1,10 @@
-import { Box, FormControl, Notice, Toggle } from '@linode/ui';
+import { Box, FormControl, Notice, Toggle, Typography } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Typography } from 'src/components/Typography';
 import { validateIPs } from 'src/utilities/ipUtils';
 
 import type { ExtendedIP } from 'src/utilities/ipUtils';

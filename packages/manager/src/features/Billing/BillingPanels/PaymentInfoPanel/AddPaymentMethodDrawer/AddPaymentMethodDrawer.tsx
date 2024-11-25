@@ -1,10 +1,9 @@
-import { Box, Divider, Notice, TooltipIcon } from '@linode/ui';
+import { Box, Divider, Notice, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Drawer } from 'src/components/Drawer';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { Typography } from 'src/components/Typography';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';

@@ -1,9 +1,8 @@
-import { Box, Button } from '@linode/ui';
+import { Box, Button, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 

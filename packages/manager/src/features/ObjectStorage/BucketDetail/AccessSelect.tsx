@@ -1,4 +1,4 @@
-import { Notice, Toggle } from '@linode/ui';
+import { Notice, Toggle, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -7,7 +7,6 @@ import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useBucketAccess,

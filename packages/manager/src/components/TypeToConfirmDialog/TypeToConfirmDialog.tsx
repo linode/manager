@@ -1,16 +1,13 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import {
-  ConfirmationDialog,
-  ConfirmationDialogProps,
-} from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  TypeToConfirm,
-  TypeToConfirmProps,
-} from 'src/components/TypeToConfirm/TypeToConfirm';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { usePreferences } from 'src/queries/profile/preferences';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { ConfirmationDialogProps } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import type { TypeToConfirmProps } from 'src/components/TypeToConfirm/TypeToConfirm';
 
 interface EntityInfo {
   action?:
@@ -37,10 +34,6 @@ interface EntityInfo {
 }
 
 interface TypeToConfirmDialogProps {
-  /**
-   * Chidlren are rendered above the TypeToConfirm input
-   */
-  children?: React.ReactNode;
   /**
    * Props to be allow disabling the input
    */
@@ -70,10 +63,6 @@ interface TypeToConfirmDialogProps {
    */
   onClick: () => void;
   /**
-   * Optional callback to be executed when the closing animation has completed
-   */
-  onExited?: () => void;
-  /**
    * The open/closed state of the dialog
    */
   open: boolean;
@@ -95,7 +84,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     loading,
     onClick,
     onClose,
-    onExited,
     open,
     textFieldStyle,
     title,
@@ -133,7 +121,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       secondaryButtonProps={{
         'data-testid': 'cancel',
         label: 'Cancel',
-        onClick: onClose,
+        onClick: onClose ? () => onClose({}, 'escapeKeyDown') : undefined,
       }}
       style={{ padding: 0 }}
     />
@@ -144,7 +132,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       actions={actions}
       error={errors ? errors[0].reason : undefined}
       onClose={onClose}
-      onExited={onExited}
       open={open}
       title={title}
     >

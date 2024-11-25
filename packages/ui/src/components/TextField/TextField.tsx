@@ -1,10 +1,9 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
-import { clamp } from 'ramda';
-import * as React from 'react';
+import React from 'react';
 
-import { convertToKebabCase } from '../../utilities';
+import { clamp, convertToKebabCase } from '../../utilities';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { FormHelperText } from '../FormHelperText';

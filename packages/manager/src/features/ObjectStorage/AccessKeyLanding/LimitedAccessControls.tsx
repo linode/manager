@@ -1,8 +1,7 @@
-import { Toggle, TooltipIcon } from '@linode/ui';
+import { Toggle, TooltipIcon, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';

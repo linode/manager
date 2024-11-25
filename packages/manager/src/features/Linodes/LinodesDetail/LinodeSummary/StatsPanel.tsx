@@ -1,7 +1,5 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   height: number;

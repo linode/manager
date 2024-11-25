@@ -1,7 +1,7 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
-import { NoticeProps } from 'react-select/src/components/Menu';
 
-import { Typography } from 'src/components/Typography';
+import type { NoticeProps } from 'react-select/src/components/Menu';
 
 type Props = NoticeProps<any, any>;
 
