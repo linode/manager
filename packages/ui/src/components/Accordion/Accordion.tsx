@@ -9,7 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 import { Notice } from '../Notice';
 import { Typography } from '../Typography';
 
-import type { TypographyProps } from '@mui/material';
+import type { TypographyProps } from '../Typography';
 import type { Theme } from '@mui/material';
 import type { AccordionProps as _AccordionProps } from '@mui/material/Accordion';
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails';
