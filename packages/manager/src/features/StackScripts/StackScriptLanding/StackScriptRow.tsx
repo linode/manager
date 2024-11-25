@@ -1,4 +1,4 @@
-import { Stack } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -6,7 +6,6 @@ import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 
 import { getStackScriptImages } from '../stackScriptUtils';
 import { StackScriptActionMenu } from './StackScriptActionMenu';

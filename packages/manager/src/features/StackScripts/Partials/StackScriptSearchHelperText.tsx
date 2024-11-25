@@ -1,8 +1,7 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Code } from 'src/components/Code/Code';
-import { Typography } from 'src/components/Typography';
 
 export const StackScriptSearchHelperText = () => {
   return (
