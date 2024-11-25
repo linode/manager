@@ -66,6 +66,7 @@ export const ClusterTypePanel = (props: Props) => {
               ? 'LKE Enterprise is not currently enabled on this contract. To inquire, fill out the Cloud Computing Sales form or email sales@linode.com.'
               : undefined
           }
+          tooltipPlacement="bottom"
         />
       </Stack>
     </Stack>
