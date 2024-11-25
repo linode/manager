@@ -52,11 +52,15 @@ export interface BalancerTransfer {
   total: number;
 }
 
+/**
+ * 'none' is reserved for nodes used in UDP configurations. They don't support different modes.
+ */
 export type NodeBalancerConfigNodeMode =
   | 'accept'
   | 'reject'
   | 'backup'
-  | 'drain';
+  | 'drain'
+  | 'none';
 
 export interface NodeBalancerConfig {
   id: number;
@@ -159,6 +163,9 @@ export type UpdateNodeBalancerConfig = CreateNodeBalancerConfig;
 export interface CreateNodeBalancerConfigNode {
   address: string;
   label: string;
+  /**
+   * Should not be specified when creating a node used on a UDP configuration
+   */
   mode?: NodeBalancerConfigNodeMode;
   weight?: number;
 }
