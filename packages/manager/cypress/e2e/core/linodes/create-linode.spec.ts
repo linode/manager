@@ -171,8 +171,8 @@ describe('Create Linode', () => {
     });
   });
 
-  // Mocks creating an accelerated Linode due to accelerated linodes having limited deplooyment availability rn
-  // TODO: eventually transition this to an e2e test
+  // Mocks creating an accelerated Linode due to accelerated linodes currently having limited deployment availability
+  // TODO: eventually transition this to an e2e test (in the above test)
   it('creates a mock accelerated Linode and confirms response', () => {
     const linodeLabel = randomLabel();
     const mockLinode = linodeFactory.build({
