@@ -79,8 +79,10 @@ export const ServiceWorkerTool = () => {
   });
 
   React.useEffect(() => {
+    const currentAccountData = getCustomAccountData();
     const hasCustomAccountChanges =
-      getCustomAccountData() !== customAccountData;
+      JSON.stringify(currentAccountData) !== JSON.stringify(customAccountData);
+
     if (hasCustomAccountChanges) {
       setSaveState((prev) => ({
         ...prev,

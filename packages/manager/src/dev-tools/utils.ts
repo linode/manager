@@ -166,7 +166,5 @@ export const saveCustomAccountData = (data: Account | null): void => {
       LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY,
       JSON.stringify(data)
     );
-  } else {
-    localStorage.removeItem(LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY);
   }
 };

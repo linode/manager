@@ -323,7 +323,9 @@
   background-color: var(--background-color-opened);
 }
 
-.dev-tools__body input[type="number"] {
+.dev-tools__body input[type="number"],
+.dev-tools__body input[type="text"],
+.dev-tools__body textarea {
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   font-family: inherit;
@@ -331,10 +333,40 @@
   float: right;
 }
 
+.dev-tools__body textarea {
+  width: 100%;
+}
+
 .dev-tools__body input[type="checkbox"] {
   margin-right: 8px;
   position: relative;
   top: 1px;
+}
+
+.dev-tools__modal-form {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 24px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'LatoWebBold', sans-serif;
+  }
+
+  .dev-tools__modal-form__field {
+    margin-bottom: 12px;
+  }
+
+  input, select {
+    padding: 4px;
+  }
+
+  textarea,
+  select:is([multiple]) {
+    min-height: 200px;
+  }
 }
 
 /*
