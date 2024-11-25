@@ -109,6 +109,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       planHasLimitedAvailability ||
       planIsTooSmall);
 
+  const isDistributedPlan =
+    plan.id.includes('dedicated-edge') || plan.id.includes('nanode-edge');
+
+  const networkOutGbps = plan.network_out && plan.network_out / 1000;
+
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
@@ -205,9 +210,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             <TableCell center data-qa-network noWrap>
               {plan.network_out ? (
                 <>
-                  {LINODE_NETWORK_IN} Gbps{' '}
-                  <span style={{ color: '#9DA4A6' }}>/</span>{' '}
-                  {plan.network_out / 1000} Gbps
+                  {isDistributedPlan ? networkOutGbps : LINODE_NETWORK_IN} Gbps{' '}
+                  <span style={{ color: '#9DA4A6' }}>/</span> {networkOutGbps}{' '}
+                  Gbps
                 </>
               ) : (
                 ''

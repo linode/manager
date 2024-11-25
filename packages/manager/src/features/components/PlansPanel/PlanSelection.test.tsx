@@ -123,6 +123,28 @@ describe('PlanSelection (table, desktop)', () => {
     );
   });
 
+  it('shows the same network_in and network_out values for distributed regions', () => {
+    const { container } = renderWithTheme(
+      wrapWithTableBody(
+        <PlanSelection
+          {...defaultProps}
+          plan={{
+            ...mockPlan,
+            class: 'dedicated',
+            id: 'g6-dedicated-edge-2',
+            // eslint-disable-next-line camelcase
+            network_out: 4000,
+          }}
+          selectedRegionId={'us-den-1'}
+          showNetwork
+        />
+      )
+    );
+    expect(container.querySelector('[data-qa-network]')).toHaveTextContent(
+      '4 Gbps / 4 Gbps'
+    );
+  });
+
   it('should not display an error message for $0 regions', () => {
     const propsWithRegionZeroPrice = {
       ...defaultProps,
