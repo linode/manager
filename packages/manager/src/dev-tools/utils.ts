@@ -152,7 +152,7 @@ export const saveSeeders = (populators: string[]) => {
 /**
  * Retrieves the custom account form data from local storage.
  */
-export const getCustomAccountData = (): Record<string, any> | null => {
+export const getCustomAccountData = (): Account | null => {
   const data = localStorage.getItem(LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY);
   return data ? JSON.parse(data) : null;
 };
@@ -160,9 +160,7 @@ export const getCustomAccountData = (): Record<string, any> | null => {
 /**
  * Saves the custom account form data to local storage.
  */
-export const saveCustomAccountData = (
-  data: Record<string, Partial<Account>> | null
-): void => {
+export const saveCustomAccountData = (data: Account | null): void => {
   if (data) {
     localStorage.setItem(
       LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY,

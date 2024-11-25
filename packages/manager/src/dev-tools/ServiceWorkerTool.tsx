@@ -26,6 +26,7 @@ import {
   saveSeedsCountMap,
 } from './utils';
 
+import type { Account } from '@linode/api-v4';
 import type {
   MockPresetBaselineId,
   MockPresetCrudId,
@@ -56,9 +57,9 @@ export const ServiceWorkerTool = () => {
   const [extraPresets, setExtraPresets] = React.useState<string[]>(
     loadedExtraPresets
   );
-  const [customAccountData, setCustomAccountData] = React.useState(
-    getCustomAccountData()
-  );
+  const [customAccountData, setCustomAccountData] = React.useState<
+    Account | null | undefined
+  >(getCustomAccountData());
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedPresetsMap);

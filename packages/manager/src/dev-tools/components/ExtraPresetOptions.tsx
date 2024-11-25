@@ -10,11 +10,9 @@ import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
 import type { Account } from '@linode/api-v4';
 
 export interface ExtraPresetOptionsProps {
-  customAccountData?: Record<string, Partial<Account>> | null;
+  customAccountData?: Account | null;
   handlers: string[];
-  onCustomAccountChange?: (
-    data: Record<string, Partial<Account>> | null
-  ) => void;
+  onCustomAccountChange?: (data: Account | null | undefined) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
   onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;

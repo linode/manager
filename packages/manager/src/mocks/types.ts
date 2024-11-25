@@ -1,4 +1,3 @@
-import type { AccountCapability } from '@linode/api-v4';
 import type {
   Config,
   Event,

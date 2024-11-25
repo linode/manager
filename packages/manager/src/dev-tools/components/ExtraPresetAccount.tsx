@@ -13,26 +13,10 @@ const customAccountPreset = extraMockPresets.find(
   (p) => p.id === 'account:custom'
 );
 
-interface AccountFormData {
-  address_1: string;
-  address_2: string;
-  balance: number;
-  city: string;
-  company: string;
-  country: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  state: string;
-  tax_id: string;
-  zip: string;
-}
-
 interface ExtraPresetAccountProps {
-  customAccountData: Record<string, Partial<Account>> | null;
+  customAccountData: Account | null | undefined;
   handlers: string[];
-  onFormChange: (data: Record<string, Partial<Account>> | null) => void;
+  onFormChange?: (data: Account | null | undefined) => void;
   onTogglePreset: (
     e: React.ChangeEvent<HTMLInputElement>,
     presetId: string
@@ -46,7 +30,7 @@ export const ExtraPresetAccount = ({
   onTogglePreset,
 }: ExtraPresetAccountProps) => {
   const isEnabled = handlers.includes('account:custom');
-  const [formData, setFormData] = React.useState<AccountFormData>(() => ({
+  const [formData, setFormData] = React.useState<Account>(() => ({
     ...accountFactory.build(),
     ...customAccountData,
   }));
@@ -71,7 +55,7 @@ export const ExtraPresetAccount = ({
       [name]: value,
     };
     setFormData(newFormData);
-    onFormChange(newFormData);
+    onFormChange?.(newFormData);
   };
 
   const handleTogglePreset = (e: React.ChangeEvent<HTMLInputElement>) => {
