@@ -337,7 +337,9 @@ export const CreateCluster = () => {
                 value={selectedRegionId}
               />
             </Stack>
-            <StyledDocsLinkContainer>
+            <StyledDocsLinkContainer
+              sx={(theme) => ({ marginTop: theme.spacing(2) })}
+            >
               <DocsLink
                 href="https://www.linode.com/pricing"
                 label={DOCS_LINK_LABEL_DC_PRICING}
