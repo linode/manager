@@ -1,4 +1,5 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -13,20 +14,22 @@ describe('EngineOption component tests', () => {
     expect(getByLabelText('Severity')).toBeInTheDocument();
     expect(getByTestId('severity')).toBeInTheDocument();
   });
-  it('should render the options happy path', () => {
+  it('should render the options happy path', async () => {
     renderWithThemeAndHookFormContext({
       component: <CloudPulseAlertSeveritySelect name="severity" />,
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    expect(screen.getByRole('option', { name: 'Info' }));
+    userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(await screen.findByRole('option', { name: 'Info' }));
     expect(screen.getByRole('option', { name: 'Low' }));
   });
-  it('should be able to select an option', () => {
+  it('should be able to select an option', async () => {
     renderWithThemeAndHookFormContext({
       component: <CloudPulseAlertSeveritySelect name="severity" />,
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: 'Medium' }));
+    userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Medium' })
+    );
     expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Medium');
   });
   it('should render the tooltip text', () => {
@@ -35,12 +38,12 @@ describe('EngineOption component tests', () => {
     });
 
     const severityContainer = container.getByTestId('severity');
-    fireEvent.click(severityContainer);
+    userEvent.click(severityContainer);
 
     expect(
       screen.getByRole('button', {
         name:
-          'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab',
+          'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.',
       })
     ).toBeVisible();
   });
