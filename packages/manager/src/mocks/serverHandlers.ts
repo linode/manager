@@ -106,10 +106,16 @@ import { getStorage } from 'src/utilities/storage';
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
+import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { pickRandom } from 'src/utilities/random';
 
 import type {
   AccountMaintenance,
+  AlertDefinitionType,
+  AlertServiceType,
+  AlertSeverityType,
+  AlertStatusType,
+  CreateAlertDefinitionPayload,
   CreateObjectStorageKeyPayload,
   Dashboard,
   FirewallStatus,
@@ -2333,28 +2339,28 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
-  http.post('*/monitor/alert-definitions', async ({ request }) => {
-    const reqBody = await request.json();
-    const response = {
-      data: [
-        {
-          created: '2021-10-16T04:00:00',
-          created_by: 'user1',
-          id: '35892357',
-          notifications: [
-            {
-              notification_id: '42804',
-              template_name: 'notification',
-            },
-          ],
-          reqBody,
-          updated: '2021-10-16T04:00:00',
-          updated_by: 'user2',
-        },
-      ],
-    };
-    return HttpResponse.json(response);
-  }),
+  http.post(
+    '*/monitor/services/:service_type/alert-definitions',
+    async ({ request }) => {
+      const types: AlertDefinitionType[] = ['custom', 'default'];
+      const status: AlertStatusType[] = ['enabled', 'disabled'];
+      const severity: AlertSeverityType[] = [0, 1, 2, 3];
+      const users = ['user1', 'user2', 'user3'];
+      const serviceTypes: AlertServiceType[] = ['linode', 'dbaas'];
+
+      const reqBody = await request.json();
+      const response = alertFactory.build({
+        ...(reqBody as CreateAlertDefinitionPayload),
+        created_by: pickRandom(users),
+        service_type: pickRandom(serviceTypes),
+        severity: pickRandom(severity),
+        status: pickRandom(status),
+        type: pickRandom(types),
+        updated_by: pickRandom(users),
+      });
+      return HttpResponse.json(response);
+    }
+  ),
   http.get('*/monitor/services', () => {
     const response: ServiceTypesList = {
       data: [

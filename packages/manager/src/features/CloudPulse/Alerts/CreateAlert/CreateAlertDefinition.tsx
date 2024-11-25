@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Paper, TextField, Typography } from '@linode/ui';
-import { createAlertDefinitionSchema } from '@linode/validation';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -11,36 +10,37 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
+import { EngineOption } from './GeneralInformation/EngineOption';
+import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
+import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
+import { CreateAlertDefinitionFormSchema } from './schemas';
+import { filterFormValues, filterMetricCriteriaFormValues } from './utilities';
 
-import type {
-  CreateAlertDefinitionForm,
-  CreateAlertDefinitionPayload,
-  MetricCriteria,
-  TriggerCondition,
-} from '@linode/api-v4/lib/cloudpulse/types';
+import type { CreateAlertDefinitionForm, MetricCriteriaForm } from './types';
+import type { TriggerCondition } from '@linode/api-v4/lib/cloudpulse/types';
 
 const triggerConditionInitialValues: TriggerCondition = {
   evaluation_period_seconds: 0,
   polling_interval_seconds: 0,
   trigger_occurrences: 0,
 };
-const criteriaInitialValues: MetricCriteria[] = [
-  {
-    aggregation_type: null,
-    dimension_filters: [],
-    metric: '',
-    operator: null,
-    value: 0,
-  },
-];
+const criteriaInitialValues: MetricCriteriaForm = {
+  aggregation_type: null,
+  dimension_filters: [],
+  metric: '',
+  operator: null,
+  value: 0,
+};
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
-  engine_type: '',
+  engine_type: null,
   label: '',
   region: '',
   resource_ids: [],
-  rule_criteria: { rules: criteriaInitialValues },
-  service_type: '',
+  rule_criteria: {
+    rules: filterMetricCriteriaFormValues(criteriaInitialValues),
+  },
+  service_type: null,
   severity: null,
   triggerCondition: triggerConditionInitialValues,
 };
@@ -62,19 +62,29 @@ export const CreateAlertDefinition = () => {
   const alertCreateExit = () =>
     history.push('/monitor/cloudpulse/alerts/definitions');
 
-  const formMethods = useForm<CreateAlertDefinitionPayload>({
+  const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
     mode: 'onBlur',
-    resolver: yupResolver(createAlertDefinitionSchema),
+    resolver: yupResolver(CreateAlertDefinitionFormSchema),
   });
 
-  const { control, formState, handleSubmit, setError } = formMethods;
+  const {
+    control,
+    formState,
+    getValues,
+    handleSubmit,
+    setError,
+    watch,
+  } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
-  const { mutateAsync: createAlert } = useCreateAlertDefinition();
+  const { mutateAsync: createAlert } = useCreateAlertDefinition(
+    getValues('service_type')!
+  );
 
+  const serviceWatcher = watch('service_type');
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await createAlert(values);
+      await createAlert(filterFormValues(values));
       enqueueSnackbar('Alert successfully created', {
         variant: 'success',
       });
@@ -130,6 +140,9 @@ export const CreateAlertDefinition = () => {
             control={control}
             name="description"
           />
+          <CloudPulseServiceSelect name="service_type" />
+          {serviceWatcher === 'dbaas' && <EngineOption name="engine_type" />}
+          <CloudPulseRegionSelect name="region" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <ActionsPanel
             primaryButtonProps={{
