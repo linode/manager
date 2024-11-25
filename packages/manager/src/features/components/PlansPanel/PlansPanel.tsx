@@ -7,7 +7,6 @@ import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
 import { plansNoticesUtils } from 'src/utilities/planNotices';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
@@ -21,6 +20,7 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
+  useIsAcceleratedPlansEnabled,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -88,20 +88,22 @@ export const PlansPanel = (props: PlansPanelProps) => {
     location.search
   );
 
-  const { data: account } = useAccount();
-  const hasVPUCapability = account?.capabilities?.includes('NETINT Quadra T1U');
+  const { isAcceleratedLinodePlansEnabled } = useIsAcceleratedPlansEnabled();
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
     Boolean(flags.soldOutChips) && selectedRegionID !== undefined
   );
 
-  const _types = types.filter(
-    (type) =>
-      !type.id.includes('dedicated-edge') &&
-      !type.id.includes('nanode-edge') &&
-      (!hasVPUCapability ? type.class !== 'accelerated' : true)
-  );
+  const _types = types.filter((type) => {
+    if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    return (
+      !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
+    );
+  });
   const _plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
       ? replaceOrAppendPlaceholder512GbPlans(_types)
