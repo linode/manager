@@ -1,4 +1,4 @@
-import { Box, Paper } from '@linode/ui';
+import { Box, Paper, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
@@ -9,7 +9,6 @@ import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import Select from 'src/components/EnhancedSelect/Select';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
 import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,

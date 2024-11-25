@@ -1,14 +1,10 @@
-export type AlertSeverityType = 0 | 1 | 2 | 3 | null;
-type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count' | null;
-type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte' | null;
-type DimensionFilterOperatorType =
-  | 'eq'
-  | 'neq'
-  | 'startswith'
-  | 'endswith'
-  | null;
-type AlertDefinitionType = 'default' | 'custom';
-type AlertStatusType = 'enabled' | 'disabled';
+export type AlertSeverityType = 0 | 1 | 2 | 3;
+export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
+export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
+export type AlertServiceType = 'linode' | 'dbaas';
+type DimensionFilterOperatorType = 'eq' | 'neq' | 'startswith' | 'endswith';
+export type AlertDefinitionType = 'default' | 'custom';
+export type AlertStatusType = 'enabled' | 'disabled';
 export interface Dashboard {
   id: number;
   label: string;
@@ -39,7 +35,7 @@ export interface Widgets {
   namespace_id: number;
   color: string;
   size: number;
-  chart_type: string;
+  chart_type: 'line' | 'area';
   y_label: string;
   filters: Filters[];
   serviceType: string;
@@ -155,12 +151,6 @@ export interface CreateAlertDefinitionPayload {
   triggerCondition: TriggerCondition;
   channel_ids: number[];
 }
-export interface CreateAlertDefinitionForm
-  extends CreateAlertDefinitionPayload {
-  region: string;
-  service_type: string;
-  engine_type: string;
-}
 export interface MetricCriteria {
   metric: string;
   aggregation_type: MetricAggregationType;
@@ -187,7 +177,7 @@ export interface Alert {
   status: AlertStatusType;
   type: AlertDefinitionType;
   severity: AlertSeverityType;
-  service_type: string;
+  service_type: AlertServiceType;
   resource_ids: string[];
   rule_criteria: {
     rules: MetricCriteria[];

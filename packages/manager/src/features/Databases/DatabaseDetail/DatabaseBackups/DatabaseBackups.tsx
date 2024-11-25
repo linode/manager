@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Notice, Paper } from '@linode/ui';
+import { Box, Button, Divider, Notice, Paper, Typography } from '@linode/ui';
 import {
   FormControl,
   FormControlLabel,
@@ -13,7 +13,6 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { Typography } from 'src/components/Typography';
 import {
   StyledDateCalendar,
   StyledTypography,

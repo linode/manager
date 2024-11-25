@@ -1,7 +1,5 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import type { LinodeStatus } from '@linode/api-v4/lib/linodes/types';
 

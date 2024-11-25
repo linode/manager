@@ -1,8 +1,7 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
 
