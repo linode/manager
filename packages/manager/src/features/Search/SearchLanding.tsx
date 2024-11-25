@@ -1,11 +1,10 @@
-import { CircleProgress, Notice } from '@linode/ui';
+import { CircleProgress, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { Typography } from 'src/components/Typography';
 import { useAPISearch } from 'src/features/Search/useAPISearch';
 import { useIsLargeAccount } from 'src/hooks/useIsLargeAccount';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';

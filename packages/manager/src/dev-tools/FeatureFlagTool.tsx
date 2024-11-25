@@ -27,6 +27,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
   { flag: 'imageServiceGen2Ga', label: 'Image Service Gen2 GA' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
+  { flag: 'lkeEnterprise', label: 'LKE-Enterprise' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },

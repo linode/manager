@@ -1,9 +1,9 @@
+import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import QRCode from 'qrcode.react';
 import * as React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   secret: string;

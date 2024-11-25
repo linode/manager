@@ -1,16 +1,16 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 
 import {
   StyledButton,
   StyledTable,
   StyledTableCell,
-} from './MetricDisplay.styles';
+} from './MetricsDisplay.styles';
 
 import type { Metrics } from 'src/utilities/statMetrics';
 
@@ -18,15 +18,6 @@ const ROW_HEADERS = ['Max', 'Avg', 'Last'] as const;
 
 type MetricKey = 'average' | 'last' | 'max';
 const METRIC_KEYS: MetricKey[] = ['max', 'average', 'last'];
-
-export type LegendColor =
-  | 'blue'
-  | 'darkGreen'
-  | 'green'
-  | 'lightGreen'
-  | 'purple'
-  | 'red'
-  | 'yellow';
 
 interface Props {
   /**
@@ -47,7 +38,7 @@ export interface MetricsDisplayRow {
   data: Metrics;
   format: (n: number) => string;
   handleLegendClick?: () => void;
-  legendColor: LegendColor;
+  legendColor: string;
   legendTitle: string;
 }
 
@@ -95,12 +86,15 @@ const MetricRow = ({
           legendColor={legendColor}
           onClick={handleLegendClick}
         >
-          <Typography component="span">{legendTitle}</Typography>
+          <Typography component="span" data-qa-graph-row-title={legendTitle}>
+            {legendTitle}
+          </Typography>
         </StyledButton>
       </StyledTableCell>
       {METRIC_KEYS.map((key, idx) => (
         <TableCell
           data-qa-body-cell
+          data-qa-graph-column-title={ROW_HEADERS[idx]}
           key={key}
           parentColumn={ROW_HEADERS[idx]}
           sx={{ whiteSpace: 'nowrap' }}

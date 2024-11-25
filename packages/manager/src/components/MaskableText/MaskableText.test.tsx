@@ -85,7 +85,7 @@ describe('MaskableText', () => {
     expect(queryByText(maskedText)).not.toBeInTheDocument();
   });
 
-  it('should render a toggleable VisibilityIcon tooltip if isToggleable is provided', async () => {
+  it('should render a toggleable VisibilityTooltip if isToggleable is provided', async () => {
     queryMocks.usePreferences.mockReturnValue({
       data: preferences,
     });
@@ -94,7 +94,7 @@ describe('MaskableText', () => {
       <MaskableText {...defaultProps} isToggleable />
     );
 
-    const visibilityToggle = getByTestId('VisibilityIcon');
+    const visibilityToggle = getByTestId('VisibilityTooltip');
 
     // Original text should be masked
     expect(getByText(maskedText)).toBeVisible();

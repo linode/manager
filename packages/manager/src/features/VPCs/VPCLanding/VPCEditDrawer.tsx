@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { updateVPCSchema } from '@linode/validation/lib/vpcs.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -6,7 +6,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useUpdateVPCMutation } from 'src/queries/vpcs/vpcs';

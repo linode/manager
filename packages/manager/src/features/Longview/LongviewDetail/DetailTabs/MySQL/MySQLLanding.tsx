@@ -1,17 +1,16 @@
-import { Box, Notice } from '@linode/ui';
+import { Box, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
+import { StyledItemGrid } from '../CommonStyles.styles';
 import {
   StyledTimeRangeSelect,
   StyledTypography,
 } from '../CommonStyles.styles';
-import { StyledItemGrid } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { MySQLGraphs } from './MySQLGraphs';
 

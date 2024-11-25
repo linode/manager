@@ -1,10 +1,12 @@
 import { makePayment } from '@linode/api-v4/lib/account';
+import { Typography } from '@linode/ui';
 import {
   Button,
   Divider,
   InputAdornment,
   Notice,
   Stack,
+  TextField,
   TooltipIcon,
 } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -18,8 +20,6 @@ import { Drawer } from 'src/components/Drawer';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LinearProgress } from 'src/components/LinearProgress';
 import { SupportLink } from 'src/components/SupportLink';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccount } from 'src/queries/account/account';

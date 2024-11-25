@@ -1,8 +1,4 @@
-export type ImageStatus =
-  | 'available'
-  | 'creating'
-  | 'deleted'
-  | 'pending_upload';
+export type ImageStatus = 'available' | 'creating' | 'pending_upload';
 
 export type ImageCapabilities = 'cloud-init' | 'distributed-sites';
 

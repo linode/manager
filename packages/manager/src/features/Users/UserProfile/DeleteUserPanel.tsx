@@ -1,8 +1,7 @@
-import { Box, Button, Paper, Stack } from '@linode/ui';
+import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Typography } from 'src/components/Typography';
 import { PARENT_USER } from 'src/features/Account/constants';
 import { useProfile } from 'src/queries/profile/profile';
 

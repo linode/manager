@@ -1,15 +1,16 @@
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
-import { Typography } from 'src/components/Typography';
 import { isToday as _isToday } from 'src/utilities/isToday';
 
-import { Stat, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
 import { StyledDiv } from './Graphs.styles';
+
+import type { Stat, StatWithDummyPoint } from '../../../request.types';
 
 export interface GraphProps {
   childOf: boolean;

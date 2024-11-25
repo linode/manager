@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { CreateBucketSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -7,7 +7,6 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { TextField } from 'src/components/TextField';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   reportAgreementSigningError,
@@ -110,7 +109,7 @@ export const CreateBucketDrawer = (props: Props) => {
         }
       }
 
-      onClose();
+      handleClose();
     } catch (errors) {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
@@ -138,13 +137,13 @@ export const CreateBucketDrawer = (props: Props) => {
     selectedRegionId: clusterRegion?.id ?? '',
   });
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   return (
-    <Drawer
-      onClose={onClose}
-      onExited={reset}
-      open={isOpen}
-      title="Create Bucket"
-    >
+    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -207,7 +206,7 @@ export const CreateBucketDrawer = (props: Props) => {
                 : '',
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
         />
         <EnableObjectStorageModal
           handleSubmit={handleSubmit(onSubmit)}

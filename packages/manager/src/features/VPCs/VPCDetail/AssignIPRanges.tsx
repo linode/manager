@@ -1,10 +1,9 @@
-import { Box, Divider, Notice, TooltipIcon } from '@linode/ui';
+import { Box, Divider, Notice, TooltipIcon, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { Typography } from 'src/components/Typography';
 import {
   ASSIGN_COMPUTE_INSTANCE_TO_VPC_LINK,
   ASSIGN_IPV4_RANGES_DESCRIPTION,

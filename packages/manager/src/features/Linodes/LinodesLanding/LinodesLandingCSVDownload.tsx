@@ -2,6 +2,7 @@
 import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
+import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useAllAccountMaintenanceQuery } from 'src/queries/account/maintenance';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
@@ -18,7 +19,7 @@ export const LinodesLandingCSVDownload = () => {
 
   const { data: accountMaintenance } = useAllAccountMaintenanceQuery(
     {},
-    { status: { '+or': ['pending, started'] } }
+    PENDING_MAINTENANCE_FILTER
   );
 
   const downloadCSV = async () => {

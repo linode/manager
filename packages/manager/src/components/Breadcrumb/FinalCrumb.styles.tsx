@@ -1,7 +1,5 @@
+import { EditableText, H1Header } from '@linode/ui';
 import { styled } from '@mui/material';
-
-import { EditableText } from 'src/components/EditableText/EditableText';
-import { H1Header } from 'src/components/H1Header/H1Header';
 
 export const StyledDiv = styled('div', { label: 'StyledDiv' })({
   display: 'flex',

@@ -1,11 +1,10 @@
-import { Button } from '@linode/ui';
+import { Button, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account/account';
 

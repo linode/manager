@@ -1,9 +1,9 @@
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
+import type { Theme } from '@mui/material/styles';
 
 type StrengthValues = 0 | 1 | 2 | 3 | 4 | null;
 

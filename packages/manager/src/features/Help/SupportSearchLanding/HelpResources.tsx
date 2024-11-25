@@ -1,5 +1,5 @@
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -7,9 +7,10 @@ import { makeStyles } from 'tss-react/mui';
 import Community from 'src/assets/icons/community.svg';
 import Support from 'src/assets/icons/support.svg';
 import { Tile } from 'src/components/Tile/Tile';
-import { Typography } from 'src/components/Typography';
-import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+
+import type { Theme } from '@mui/material/styles';
+import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   heading: {

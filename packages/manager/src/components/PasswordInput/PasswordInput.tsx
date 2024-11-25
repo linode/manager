@@ -5,7 +5,7 @@ import zxcvbn from 'zxcvbn';
 import { StrengthIndicator } from '../PasswordInput/StrengthIndicator';
 import { HideShowText } from './HideShowText';
 
-import type { TextFieldProps } from 'src/components/TextField';
+import type { TextFieldProps } from '@linode/ui';
 
 interface Props extends TextFieldProps {
   disabledReason?: JSX.Element | string;

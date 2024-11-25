@@ -1,9 +1,8 @@
-import { Notice, StyledLinkButton } from '@linode/ui';
+import { Notice, StyledLinkButton, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useLinodeFirewallsQuery } from 'src/queries/linodes/firewalls';
 

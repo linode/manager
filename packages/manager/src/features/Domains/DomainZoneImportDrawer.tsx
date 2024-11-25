@@ -1,11 +1,10 @@
-import { Notice } from '@linode/ui';
+import { Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { TextField } from 'src/components/TextField';
 import { useImportZoneMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';

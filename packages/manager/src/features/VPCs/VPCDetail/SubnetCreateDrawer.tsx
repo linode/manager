@@ -1,12 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormHelperText, Notice, Stack } from '@linode/ui';
+import { FormHelperText, Notice, Stack, TextField } from '@linode/ui';
 import { createSubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { TextField } from 'src/components/TextField';
 import { useGrants, useProfile } from 'src/queries/profile/profile';
 import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';
 import {
@@ -66,7 +65,7 @@ export const SubnetCreateDrawer = (props: Props) => {
   const onCreateSubnet = async (values: CreateSubnetPayload) => {
     try {
       await createSubnet(values);
-      onClose();
+      handleClose();
     } catch (errors) {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
@@ -74,16 +73,14 @@ export const SubnetCreateDrawer = (props: Props) => {
     }
   };
 
+  const handleClose = () => {
+    resetForm();
+    resetRequest();
+    onClose();
+  };
+
   return (
-    <Drawer
-      onExited={() => {
-        resetForm();
-        resetRequest();
-      }}
-      onClose={onClose}
-      open={open}
-      title={'Create Subnet'}
-    >
+    <Drawer onClose={handleClose} open={open} title={'Create Subnet'}>
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}
@@ -148,7 +145,7 @@ export const SubnetCreateDrawer = (props: Props) => {
             loading: isPending || isSubmitting,
             type: 'submit',
           }}
-          secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
+          secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
         />
       </form>
     </Drawer>

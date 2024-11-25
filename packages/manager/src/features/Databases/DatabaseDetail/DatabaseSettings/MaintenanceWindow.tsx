@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   Button,
   FormControl,
@@ -15,7 +16,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Typography } from 'src/components/Typography';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';

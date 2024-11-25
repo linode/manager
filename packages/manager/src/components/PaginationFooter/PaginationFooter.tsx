@@ -1,11 +1,10 @@
-import { Box } from '@linode/ui';
+import { Box, TextField } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { MenuItem } from 'src/components/MenuItem';
 
 import { PaginationControls } from '../PaginationControls/PaginationControls';
-import { TextField } from '../TextField';
 
 export const MIN_PAGE_SIZE = 25;
 

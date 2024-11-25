@@ -1,8 +1,6 @@
-import { Paper } from '@linode/ui';
+import { Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-
-import { Typography } from 'src/components/Typography';
 
 import { CreateAlertDefinition } from '../CreateAlert/CreateAlertDefinition';
 

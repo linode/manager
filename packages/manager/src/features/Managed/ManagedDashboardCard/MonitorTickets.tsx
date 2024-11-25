@@ -1,12 +1,13 @@
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
-import { Typography } from 'src/components/Typography';
-import { ExtendedIssue } from 'src/queries/managed/types';
 
 import { StyledButton, StyledGrid } from './MonitorTickets.styles';
+
+import type { ExtendedIssue } from 'src/queries/managed/types';
 
 interface MonitorTicketsProps {
   issues: ExtendedIssue[];

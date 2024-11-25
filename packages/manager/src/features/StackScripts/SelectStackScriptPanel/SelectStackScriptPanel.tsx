@@ -1,10 +1,9 @@
 import { getStackScript } from '@linode/api-v4/lib/stackscripts';
-import { Box, Button, CircleProgress, Notice } from '@linode/ui';
+import { Box, Button, CircleProgress, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { RenderGuard } from 'src/components/RenderGuard';
-import { Typography } from 'src/components/Typography';
 import { withProfile } from 'src/containers/profile.container';
 import { formatDate } from 'src/utilities/formatDate';
 import { getQueryParamFromQueryString } from 'src/utilities/queryParams';

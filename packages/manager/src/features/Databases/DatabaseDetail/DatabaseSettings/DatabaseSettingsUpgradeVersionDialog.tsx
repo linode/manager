@@ -1,4 +1,4 @@
-import { FormControl, Notice } from '@linode/ui';
+import { FormControl, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -6,7 +6,6 @@ import * as React from 'react';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import {
   DATABASE_ENGINE_MAP,
   upgradableVersions,
@@ -119,9 +118,9 @@ export const DatabaseSettingsUpgradeVersionDialog = (props: Props) => {
         Current Version: v{databaseVersion}
       </Typography>
       <Typography>
-        Please select the new MySQL version. Once you select the new version we
+        {`Please select the new ${DATABASE_ENGINE_MAP[databaseEngine]} version. Once you select the new version we
         will check it for compatibility with your current version. If it is
-        compatible you can proceed with the upgrade.
+        compatible you can proceed with the upgrade.`}
       </Typography>
 
       <FormControl sx={{ mb: theme.spacing(2) }}>

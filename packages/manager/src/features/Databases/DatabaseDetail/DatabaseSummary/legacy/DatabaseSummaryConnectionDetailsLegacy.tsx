@@ -1,5 +1,11 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
-import { Box, Button, CircleProgress, TooltipIcon } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -7,7 +13,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Typography } from 'src/components/Typography';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases/databases';
 import { downloadFile } from 'src/utilities/downloadFile';

@@ -1,18 +1,17 @@
+import { Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { Paper } from '@linode/ui';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import { Typography } from 'src/components/Typography';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from 'src/queries/nodebalancers';
+import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 

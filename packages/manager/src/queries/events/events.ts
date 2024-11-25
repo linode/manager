@@ -26,46 +26,10 @@ import type {
   QueryKey,
 } from '@tanstack/react-query';
 
-/**
- * This query exists to get the first 7 days of events when you load the app.
- *
- * Using the first page of useEventsInfiniteQuery would be ideal, but we are going to try this...
- *
- * @note This initial query should match X-Filtering that our poller does. If we want this query
- * to have a different filter than our poller, we will need to implement filtering in
- * `updateEventsQueries` like we do for our infinite queries.
- */
-export const useInitialEventsQuery = () => {
-  /**
-   * We only want to get events from the last 7 days.
-   */
-  const [defaultCreatedFilter] = useState(
-    DateTime.now()
-      .minus({ days: 7 })
-      .setZone('utc')
-      .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
-  );
-
-  const query = useQuery<ResourcePage<Event>, APIError[]>({
-    gcTime: Infinity,
-    queryFn: () =>
-      getEvents(
-        {},
-        {
-          ...EVENTS_LIST_FILTER,
-          '+order': 'desc',
-          '+order_by': 'id',
-          created: { '+gt': defaultCreatedFilter },
-        }
-      ),
-    queryKey: ['events', 'initial'],
-    staleTime: Infinity,
-  });
-
-  const events = query.data?.data;
-
-  return { ...query, events };
-};
+const defaultCreatedFilter = DateTime.now()
+  .minus({ days: 7 })
+  .setZone('utc')
+  .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
 
 /**
  * Gets an infinitely scrollable list of all Events
@@ -80,25 +44,56 @@ export const useInitialEventsQuery = () => {
  * the next set of events when the items returned by the server may have shifted.
  */
 export const useEventsInfiniteQuery = (filter: Filter = EVENTS_LIST_FILTER) => {
+  const queryClient = useQueryClient();
+
   const query = useInfiniteQuery<ResourcePage<Event>, APIError[]>({
     gcTime: Infinity,
-    getNextPageParam: ({ data, results }) => {
-      if (results === data.length) {
-        return undefined;
+    getNextPageParam: (lastPage, allPages) => {
+      if (allPages.length === 1 && lastPage.results === 0) {
+        // If we did the inital fetch (the one that limits results to 7 days) but got no results,
+        // we can't conclude there are no more pages to fetch. There could be more events to fetch
+        // outside of the 7 day window. Therefore, we return a "fake" pageParam so that React Query
+        // will still attempt to fetch another page whenever `fetchNextPage` is called next.
+        return 'fetch more';
       }
-      return data[data.length - 1].id;
+      return lastPage.data[lastPage.data.length - 1]?.id;
     },
     initialPageParam: undefined,
-    queryFn: ({ pageParam }) =>
-      getEvents(
+    queryFn: ({ pageParam }) => {
+      const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
+        'events',
+        'infinite',
+        filter,
+      ]);
+      if (data === undefined) {
+        // If there is no data in the cache yet at this query key,
+        // it likely means that this is the initial fetch. For the
+        // initial fetch, we have been asked to use `created` to limit
+        // the timeframe for our initial fetch to a small window.
+        // See M3-8450 for context.
+        return getEvents(
+          {},
+          {
+            ...filter,
+            '+order': 'desc',
+            '+order_by': 'id',
+            created: { '+gt': defaultCreatedFilter },
+          }
+        );
+      }
+      return getEvents(
         {},
         {
           ...filter,
           '+order': 'desc',
           '+order_by': 'id',
-          id: pageParam ? { '+lt': pageParam } : undefined,
+          id:
+            pageParam === 'fetch more'
+              ? undefined
+              : { '+lt': pageParam as number },
         }
-      ),
+      );
+    },
     queryKey: ['events', 'infinite', filter],
     staleTime: Infinity,
   });
@@ -148,9 +143,9 @@ export const useEventsPoller = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: initialEvents } = useInitialEventsQuery();
+  const { data } = useEventsInfiniteQuery();
 
-  const hasFetchedInitialEvents = initialEvents !== undefined;
+  const hasFetchedInitialEvents = data !== undefined;
 
   const [mountTimestamp] = useState(
     DateTime.now().setZone('utc').toFormat(ISO_DATETIME_NO_TZ_FORMAT)
@@ -159,11 +154,15 @@ export const useEventsPoller = () => {
   const { data: events } = useQuery({
     enabled: hasFetchedInitialEvents,
     queryFn: () => {
-      const data = queryClient.getQueryData<ResourcePage<Event>>([
+      const data = queryClient.getQueryData<InfiniteData<ResourcePage<Event>>>([
         'events',
-        'initial',
+        'infinite',
+        EVENTS_LIST_FILTER,
       ]);
-      const events = data?.data;
+      const events = data?.pages.reduce(
+        (events, page) => [...events, ...page.data],
+        []
+      );
 
       // If the user has events, poll for new events based on the most recent event's created time.
       // If the user has no events, poll events from the time the app mounted.
@@ -242,26 +241,8 @@ export const useMarkEventsAsSeen = () => {
   const queryClient = useQueryClient();
 
   return useMutation<{}, APIError[], number>({
-    mutationFn: (eventId) => markEventSeen(eventId),
+    mutationFn: markEventSeen,
     onSuccess: (_, eventId) => {
-      // Update Initial Query
-      queryClient.setQueryData<ResourcePage<Event>>(
-        ['events', 'initial'],
-        (prev) => {
-          if (!prev) {
-            return undefined;
-          }
-
-          for (const event of prev.data) {
-            if (event.id <= eventId) {
-              event.seen = true;
-            }
-          }
-
-          return prev;
-        }
-      );
-
       // Update Infinite Queries
       queryClient.setQueriesData<InfiniteData<ResourcePage<Event>>>(
         { queryKey: ['events', 'infinite'] },
@@ -319,8 +300,6 @@ export const updateEventsQueries = (
 
       updateEventsQuery(filteredEvents, queryKey, queryClient);
     });
-
-  updateInitialEventsQuery(events, queryClient);
 };
 
 /**
@@ -382,47 +361,6 @@ export const updateEventsQuery = (
         pageParams: prev.pageParams,
         pages: prev.pages,
       };
-    }
-  );
-};
-
-export const updateInitialEventsQuery = (
-  events: Event[],
-  queryClient: QueryClient
-) => {
-  queryClient.setQueryData<ResourcePage<Event>>(
-    ['events', 'initial'],
-    (prev) => {
-      if (!prev) {
-        return undefined;
-      }
-      const updatedEventIndexes: number[] = [];
-
-      for (let i = 0; i < events.length; i++) {
-        const indexOfEvent = prev.data.findIndex((e) => e.id === events[i].id);
-
-        if (indexOfEvent !== -1) {
-          prev.data[indexOfEvent] = events[i];
-          updatedEventIndexes.push(i);
-        }
-      }
-
-      const newEvents: Event[] = [];
-
-      for (let i = 0; i < events.length; i++) {
-        if (!updatedEventIndexes.includes(i)) {
-          newEvents.push(events[i]);
-        }
-      }
-
-      if (newEvents.length > 0) {
-        // For all events, that remain, append them to the top of the events list
-        prev.data = [...newEvents, ...prev.data];
-
-        prev.results += newEvents.length;
-      }
-
-      return prev;
     }
   );
 };

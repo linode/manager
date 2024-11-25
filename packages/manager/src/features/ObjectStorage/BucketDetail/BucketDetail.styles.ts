@@ -1,8 +1,7 @@
-import { Button, StyledLinkButton } from '@linode/ui';
+import { Button, StyledLinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
-import { Typography } from 'src/components/Typography';
 
 export const StyledNameColumn = styled(TableCell, {
   label: 'StyledNameColumn',

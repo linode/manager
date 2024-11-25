@@ -1,9 +1,8 @@
-import { TooltipIcon } from '@linode/ui';
+import { TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import {
   StyledGridContainer,
@@ -72,26 +71,26 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       <Typography className={classes.header} variant="h3">
         Cluster Configuration
       </Typography>
-      <StyledGridContainer container md={10} spacing={0}>
+      <StyledGridContainer container md={11} spacing={0}>
         <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>Status</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid lg={1.5} md={4} xs={8}>
+        <StyledValueGrid lg={2} md={4} xs={8}>
           <DatabaseStatusDisplay database={database} events={events} />
         </StyledValueGrid>
-        <Grid lg={1} md={2} xs={4}>
+        <Grid lg={0.9} md={2} xs={4}>
           <StyledLabelTypography>Plan</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid lg={2.5} md={4} xs={8}>
+        <StyledValueGrid lg={2.2} md={4} xs={8}>
           {formatStorageUnits(type.label)}
         </StyledValueGrid>
         <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>Nodes</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid lg={2} md={4} xs={8}>
+        <StyledValueGrid lg={1.7} md={4} xs={8}>
           {configuration}
         </StyledValueGrid>
-        <Grid lg={1.5} md={2} xs={4}>
+        <Grid lg={1.7} md={2} xs={4}>
           <StyledLabelTypography>CPUs</StyledLabelTypography>
         </Grid>
         <StyledValueGrid lg={1.5} md={4} xs={8}>
@@ -100,7 +99,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
         <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>Engine</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid lg={1.5} md={4} xs={8}>
+        <StyledValueGrid lg={2} md={4} xs={8}>
           <DatabaseEngineVersion
             databaseEngine={database.engine}
             databaseID={database.id}
@@ -109,19 +108,19 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
             databaseVersion={database.version}
           />
         </StyledValueGrid>
-        <Grid lg={1} md={2} xs={4}>
+        <Grid lg={0.9} md={2} xs={4}>
           <StyledLabelTypography>Region</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid lg={2.5} md={4} xs={8}>
+        <StyledValueGrid lg={2.2} md={4} xs={8}>
           {region?.label ?? database.region}
         </StyledValueGrid>
         <Grid lg={1} md={2} xs={4}>
           <StyledLabelTypography>RAM</StyledLabelTypography>
         </Grid>
-        <StyledValueGrid lg={2} md={4} xs={8}>
+        <StyledValueGrid lg={1.7} md={4} xs={8}>
           {type.memory / 1024} GB
         </StyledValueGrid>
-        <Grid lg={1.5} md={2} xs={4}>
+        <Grid lg={1.7} md={2} xs={4}>
           <StyledLabelTypography>
             {database.total_disk_size_gb ? 'Total Disk Size' : 'Storage'}
           </StyledLabelTypography>

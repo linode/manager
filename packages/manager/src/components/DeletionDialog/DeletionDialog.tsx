@@ -1,11 +1,10 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { Typography } from 'src/components/Typography';
 import { titlecase } from 'src/features/Linodes/presentation';
 import { usePreferences } from 'src/queries/profile/preferences';
 import { capitalize } from 'src/utilities/capitalize';

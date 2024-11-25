@@ -1,10 +1,9 @@
-import { Divider } from '@linode/ui';
+import { Divider, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
-import { Typography } from 'src/components/Typography';
 import {
   StyledLabelTooltip,
   StyledTextField,

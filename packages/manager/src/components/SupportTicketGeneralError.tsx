@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
@@ -5,7 +6,6 @@ import { SupportLink } from 'src/components/SupportLink';
 import { capitalize } from 'src/utilities/capitalize';
 
 import { supportTextRegex } from './ErrorMessage';
-import { Typography } from './Typography';
 
 import type { EntityForTicketDetails } from './SupportLink/SupportLink';
 import type { FormPayloadValues } from 'src/features/Support/SupportTickets/SupportTicketDialog';

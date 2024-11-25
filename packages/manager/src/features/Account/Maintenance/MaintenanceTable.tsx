@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Box, Paper } from '@linode/ui';
+import { Box, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -15,7 +15,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { useFormattedDate } from 'src/hooks/useFormattedDate';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -25,6 +24,7 @@ import {
 } from 'src/queries/account/maintenance';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
+import { PENDING_MAINTENANCE_FILTER } from './utilities';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
 
@@ -70,7 +70,7 @@ export const MaintenanceTable = ({ type }: Props) => {
    */
   const filters: Record<Props['type'], Filter> = {
     completed: { status: 'completed' },
-    pending: { status: { '+or': ['pending', 'started'] } },
+    pending: PENDING_MAINTENANCE_FILTER,
   };
 
   const filter: Filter = {
