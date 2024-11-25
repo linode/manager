@@ -359,6 +359,11 @@
     margin-bottom: 12px;
   }
 
+  .dev-tools__modal-form__field__radio-group {
+    display: flex;
+    gap: 8px;
+  }
+
   input, select {
     padding: 4px;
   }
@@ -376,6 +381,7 @@
   height: 0;
   padding: 0;
 }
+
 .dev-tools.dev-tools--open .dev-tools__body {
   height: var(--open-height-mobile);
 }

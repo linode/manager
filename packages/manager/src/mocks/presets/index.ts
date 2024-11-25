@@ -6,6 +6,7 @@ import { baselineCrudPreset } from './baseline/crud';
 import { baselineLegacyPreset } from './baseline/legacy';
 import { baselineNoMocksPreset } from './baseline/noMocks';
 import { customAccountPreset } from './extra/account/customAccount';
+import { customProfilePreset } from './extra/account/customProfile';
 import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
 import { apiResponseTimePreset } from './extra/api/api';
@@ -39,6 +40,7 @@ export const baselineMockPresets: MockPresetBaseline[] = [
 export const extraMockPresets: MockPresetExtra[] = [
   apiResponseTimePreset,
   customAccountPreset,
+  customProfilePreset,
   linodeLimitsPreset,
   lkeLimitsPreset,
   managedEnabledPreset,

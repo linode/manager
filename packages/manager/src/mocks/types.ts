@@ -47,8 +47,15 @@ export interface MockPresetBaseline extends MockPresetBase {
  * Mock Preset Extra
  */
 export type MockPresetExtraGroup = {
-  id: 'API' | 'Account' | 'Capabilities' | 'Limits' | 'Managed' | 'Regions';
-  type: 'account' | 'checkbox' | 'select';
+  id:
+    | 'API'
+    | 'Account'
+    | 'Capabilities'
+    | 'Limits'
+    | 'Managed'
+    | 'Profile'
+    | 'Regions';
+  type: 'account' | 'checkbox' | 'profile' | 'select';
 };
 export type MockPresetExtraId =
   | 'account:custom'
@@ -57,6 +64,7 @@ export type MockPresetExtraId =
   | 'api:response-time'
   | 'limits:linode-limits'
   | 'limits:lke-limits'
+  | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
   | 'regions:legacy';

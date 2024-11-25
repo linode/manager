@@ -12,6 +12,7 @@ import { SeedOptions } from './components/SeedOptions';
 import {
   getBaselinePreset,
   getCustomAccountData,
+  getCustomProfileData,
   getExtraPresets,
   getExtraPresetsMap,
   getSeeders,
@@ -19,6 +20,7 @@ import {
   isMSWEnabled,
   saveBaselinePreset,
   saveCustomAccountData,
+  saveCustomProfileData,
   saveExtraPresets,
   saveExtraPresetsMap,
   saveMSWEnabled,
@@ -26,7 +28,7 @@ import {
   saveSeedsCountMap,
 } from './utils';
 
-import type { Account } from '@linode/api-v4';
+import type { Account, Profile } from '@linode/api-v4';
 import type {
   MockPresetBaselineId,
   MockPresetCrudId,
@@ -60,6 +62,9 @@ export const ServiceWorkerTool = () => {
   const [customAccountData, setCustomAccountData] = React.useState<
     Account | null | undefined
   >(getCustomAccountData());
+  const [customProfileData, setCustomProfileData] = React.useState<
+    Profile | null | undefined
+  >(getCustomProfileData());
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedPresetsMap);
@@ -104,6 +109,10 @@ export const ServiceWorkerTool = () => {
         saveCustomAccountData(customAccountData);
       }
 
+      if (extraPresets.includes('profile:custom') && customProfileData) {
+        saveCustomProfileData(customProfileData);
+      }
+
       const promises = seeders.map((seederId) => {
         const seeder = dbSeeders.find((dbSeeder) => dbSeeder.id === seederId);
 
@@ -128,6 +137,7 @@ export const ServiceWorkerTool = () => {
       setSeedsCountMap(getSeedsCountMap());
       setPresetsCountMap(getExtraPresetsMap());
       setCustomAccountData(getCustomAccountData());
+      setCustomProfileData(getCustomProfileData());
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: false,
@@ -142,13 +152,14 @@ export const ServiceWorkerTool = () => {
       setExtraPresets([]);
       setPresetsCountMap({});
       setCustomAccountData(null);
+      setCustomProfileData(null);
       saveBaselinePreset('baseline:preset-mocking');
       saveExtraPresets([]);
       saveSeeders([]);
       saveSeedsCountMap({});
       saveExtraPresetsMap({});
       saveCustomAccountData(null);
-
+      saveCustomProfileData(null);
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
@@ -353,8 +364,10 @@ export const ServiceWorkerTool = () => {
               <div className="dev-tools__list-box">
                 <ExtraPresetOptions
                   customAccountData={customAccountData}
+                  customProfileData={customProfileData}
                   handlers={extraPresets}
                   onCustomAccountChange={setCustomAccountData}
+                  onCustomProfileChange={setCustomProfileData}
                   onPresetCountChange={presetHandlers.changeCount}
                   onSelectChange={presetHandlers.changeSelect}
                   onTogglePreset={presetHandlers.toggle}

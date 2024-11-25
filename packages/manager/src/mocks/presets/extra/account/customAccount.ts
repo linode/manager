@@ -3,12 +3,12 @@ import { http } from 'msw';
 import { accountFactory } from 'src/factories';
 import { makeResponse } from 'src/mocks/utilities/response';
 
+import type { Account } from '@linode/api-v4';
 import type { MockPresetExtra } from 'src/mocks/types';
 
-let customAccountData: Record<string, any> | null = null;
+let customAccountData: Account | null = null;
 
-// Expose a way to update the mock data
-export const setCustomAccountData = (data: Record<string, any> | null) => {
+export const setCustomAccountData = (data: Account | null) => {
   customAccountData = data;
 };
 

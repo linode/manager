@@ -6,13 +6,16 @@ import { extraMockPresets } from 'src/mocks/presets';
 import { ExtraPresetAccount } from './ExtraPresetAccount';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
+import { ExtraPresetProfile } from './ExtraPresetProfile';
 
-import type { Account } from '@linode/api-v4';
+import type { Account, Profile } from '@linode/api-v4';
 
 export interface ExtraPresetOptionsProps {
   customAccountData?: Account | null;
+  customProfileData?: Profile | null;
   handlers: string[];
   onCustomAccountChange?: (data: Account | null | undefined) => void;
+  onCustomProfileChange?: (data: Profile | null | undefined) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
   onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;
@@ -24,8 +27,10 @@ export interface ExtraPresetOptionsProps {
  */
 export const ExtraPresetOptions = ({
   customAccountData,
+  customProfileData,
   handlers,
   onCustomAccountChange,
+  onCustomProfileChange,
   onPresetCountChange,
   onSelectChange,
   onTogglePreset,
@@ -72,6 +77,14 @@ export const ExtraPresetOptions = ({
                 customAccountData={customAccountData}
                 handlers={handlers}
                 onFormChange={onCustomAccountChange}
+                onTogglePreset={onTogglePreset}
+              />
+            )}
+            {currentGroupType === 'profile' && (
+              <ExtraPresetProfile
+                customProfileData={customProfileData}
+                handlers={handlers}
+                onFormChange={onCustomProfileChange}
                 onTogglePreset={onTogglePreset}
               />
             )}

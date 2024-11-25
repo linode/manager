@@ -6,11 +6,12 @@ import {
   LOCAL_STORAGE_PRESET_EXTRAS_KEY,
   LOCAL_STORAGE_PRESET_KEY,
   LOCAL_STORAGE_PRESETS_MAP_KEY,
+  LOCAL_STORAGE_PROFILE_FORM_DATA_KEY,
   LOCAL_STORAGE_SEEDERS_KEY,
   LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
 } from './constants';
 
-import type { Account } from '@linode/api-v4';
+import type { Account, Profile } from '@linode/api-v4';
 import type {
   MockPresetBaselineId,
   MockPresetExtraId,
@@ -164,6 +165,26 @@ export const saveCustomAccountData = (data: Account | null): void => {
   if (data) {
     localStorage.setItem(
       LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY,
+      JSON.stringify(data)
+    );
+  }
+};
+
+/**
+ * Retrieves the custom profile form data from local storage.
+ */
+export const getCustomProfileData = (): Profile | null => {
+  const data = localStorage.getItem(LOCAL_STORAGE_PROFILE_FORM_DATA_KEY);
+  return data ? JSON.parse(data) : null;
+};
+
+/**
+ * Saves the custom profile form data to local storage.
+ */
+export const saveCustomProfileData = (data: Profile | null): void => {
+  if (data) {
+    localStorage.setItem(
+      LOCAL_STORAGE_PROFILE_FORM_DATA_KEY,
       JSON.stringify(data)
     );
   }
