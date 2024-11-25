@@ -1,13 +1,14 @@
+import {
+  SafeTabPanel,
+  TabLinkList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from '@linode/ui';
 import * as React from 'react';
 import { Redirect, matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabPanel } from 'src/components/Tabs/TabPanel';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
-
-import { TabLinkList } from '../Tabs/TabLinkList';
 
 export interface NavTab {
   // especially when a component behind a tab performs network requests.

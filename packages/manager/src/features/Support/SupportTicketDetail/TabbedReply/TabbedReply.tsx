@@ -1,10 +1,5 @@
+import { SafeTabPanel, Tab, TabList, TabPanels, Tabs } from '@linode/ui';
 import React from 'react';
-
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 
 import { PreviewReply } from './PreviewReply';
 import { TicketReply } from './TicketReply';

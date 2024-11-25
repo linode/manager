@@ -1,17 +1,22 @@
-import { Box, Notice, Paper, Tooltip, Typography } from '@linode/ui';
+import {
+  Box,
+  Notice,
+  Paper,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanel } from 'src/components/Tabs/TabPanel';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
-
 import type { SxProps, Theme } from '@mui/material/styles';
 
-export interface Tab {
+export interface TabProps {
   disabled?: boolean;
   render: (props: any) => JSX.Element | null;
   title: string;
@@ -31,7 +36,7 @@ interface TabbedPanelProps {
   rootClass?: string;
   sx?: SxProps<Theme>;
   tabDisabledMessage?: string;
-  tabs: Tab[];
+  tabs: TabProps[];
   value?: number;
 }
 

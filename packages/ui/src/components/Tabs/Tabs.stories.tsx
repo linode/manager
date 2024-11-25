@@ -1,11 +1,11 @@
-import { Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
-
+import { Paper } from '../Paper';
+import { Typography } from '../Typography';
+import { SafeTabPanel } from './SafeTabPanel';
 import { TabLinkList } from './TabLinkList';
+import { TabPanels } from './TabPanels';
+import { Tabs } from './Tabs';
 
 import type { TabsProps } from '@reach/tabs';
 import type { Meta, StoryObj } from '@storybook/react';

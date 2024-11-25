@@ -1,11 +1,11 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { describe, expect, it } from 'vitest';
 
 import { Tab } from './Tab'; // Adjust the import path based on your project structure
 import { TabList } from './TabList';
 import { Tabs } from './Tabs'; // Adjust the import path based on your project structure
+import { wrapWithTheme } from '../../utilities/testHelpers';
 
 describe('TabList component', () => {
   it('renders TabList correctly', () => {

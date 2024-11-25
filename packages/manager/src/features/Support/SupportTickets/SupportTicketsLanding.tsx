@@ -1,14 +1,10 @@
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanel } from 'src/components/Tabs/TabPanel';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { SupportTicketDialog } from './SupportTicketDialog';

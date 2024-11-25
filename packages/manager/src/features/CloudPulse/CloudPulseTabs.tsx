@@ -1,3 +1,4 @@
+import { TabLinkList, Tabs } from '@linode/ui';
 import * as React from 'react';
 import {
   Redirect,
@@ -9,18 +10,16 @@ import {
 } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AlertsLanding } from './Alerts/AlertsLanding/AlertsLanding';
 import { CloudPulseDashboardLanding } from './Dashboard/CloudPulseDashboardLanding';
 
-import type { Tab } from 'src/components/Tabs/TabLinkList';
+import type { TabProps } from '@linode/ui';
 
 export type EnabledAlertTab = {
   isEnabled: boolean;
-  tab: Tab;
+  tab: TabProps;
 };
 export const CloudPulseTabs = () => {
   const flags = useFlags();

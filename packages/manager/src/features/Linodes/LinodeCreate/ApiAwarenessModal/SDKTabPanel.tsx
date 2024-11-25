@@ -1,9 +1,8 @@
-import { Typography } from '@linode/ui';
+import { SafeTabPanel, Typography } from '@linode/ui';
 import React, { useMemo, useState } from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { generateGoLinodeSnippet } from 'src/utilities/codesnippets/generate-goSDKSnippet';
 import { generatePythonLinodeSnippet } from 'src/utilities/codesnippets/generate-pythonSDKSnippet';
 

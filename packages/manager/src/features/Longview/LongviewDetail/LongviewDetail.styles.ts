@@ -1,6 +1,5 @@
+import { Tabs } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Tabs } from 'src/components/Tabs/Tabs';
 
 export const StyledTabs = styled(Tabs, { label: 'StyledTabs' })(
   ({ theme }) => ({

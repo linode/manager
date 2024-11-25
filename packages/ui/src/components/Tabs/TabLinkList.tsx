@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
+import { Tab } from './Tab';
+import { TabList } from './TabList';
 
-export interface Tab {
+export interface TabProps {
+  chip?: React.JSX.Element | null;
   routeName: string;
   title: string;
-  chip?: React.JSX.Element | null;
 }
 
 interface TabLinkListProps {
   noLink?: boolean; // @todo: remove this prop if we use NavTab widely.
-  tabs: Tab[];
+  tabs: TabProps[];
 }
 
 export const TabLinkList = ({ noLink, tabs }: TabLinkListProps) => {

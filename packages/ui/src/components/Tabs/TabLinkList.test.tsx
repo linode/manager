@@ -1,13 +1,15 @@
 import { render } from '@testing-library/react';
 import React from 'react';
+import { describe, expect, it } from 'vitest';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
-
-import { Tab, TabLinkList } from './TabLinkList'; // Import your component and Tab type
+import { wrapWithTheme } from '../../utilities/testHelpers';
+import { TabLinkList } from './TabLinkList';
 import { Tabs } from './Tabs';
 
+import type { TabProps } from './TabLinkList';
+
 describe('TabLinkList', () => {
-  const tabs: Tab[] = [
+  const tabs: TabProps[] = [
     { routeName: '/tab-1', title: 'Tab 1' },
     { routeName: '/tab-2', title: 'Tab 2' },
     { routeName: '/tab-3', title: 'Tab 3' },

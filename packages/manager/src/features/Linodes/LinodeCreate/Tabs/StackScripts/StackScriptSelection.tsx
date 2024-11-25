@@ -1,12 +1,15 @@
-import { Notice, Paper, Typography } from '@linode/ui';
+import {
+  Notice,
+  Paper,
+  SafeTabPanel,
+  Tab,
+  TabList,
+  TabPanels,
+  Tabs,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 
 import { useLinodeCreateQueryParams } from '../../utilities';
 import { StackScriptSelectionList } from './StackScriptSelectionList';

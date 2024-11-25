@@ -1,13 +1,15 @@
-import { CircleProgress } from '@linode/ui';
+import {
+  CircleProgress,
+  SafeTabPanel,
+  TabLinkList,
+  TabPanels,
+  Tabs,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { useInitialRequests } from 'src/hooks/useInitialRequests';
 import {
   useLinodeLishQuery,
@@ -19,7 +21,7 @@ import '../../assets/weblish/xterm.css';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
-import type { Tab } from 'src/components/Tabs/TabLinkList';
+import type { TabProps } from '@linode/ui';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
@@ -143,7 +145,7 @@ const Lish = () => {
           title: 'Glish',
         }
       : null,
-  ].filter(Boolean) as Tab[];
+  ].filter(Boolean) as TabProps[];
 
   const navToURL = (index: number) => {
     history.replace(`/linodes/${id}/lish/${tabs[index].title.toLowerCase()}`);

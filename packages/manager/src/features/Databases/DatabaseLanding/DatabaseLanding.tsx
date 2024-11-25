@@ -1,4 +1,11 @@
-import { CircleProgress } from '@linode/ui';
+import {
+  CircleProgress,
+  SafeTabPanel,
+  Tab,
+  TabList,
+  TabPanels,
+  Tabs,
+} from '@linode/ui';
 import { Box } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -6,11 +13,6 @@ import { useHistory } from 'react-router-dom';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { DatabaseEmptyState } from 'src/features/Databases/DatabaseLanding/DatabaseEmptyState';
 import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
@@ -147,9 +149,9 @@ const DatabaseLanding = () => {
       <DatabaseLandingTable
         data={legacyDatabases?.data}
         handleOrderChange={legacyDatabaseHandleOrderChange}
-        results={legacyDatabases?.results}
         order={legacyDatabaseOrder}
         orderBy={legacyDatabaseOrderBy}
+        results={legacyDatabases?.results}
       />
     );
   };
@@ -157,13 +159,13 @@ const DatabaseLanding = () => {
   const defaultTable = () => {
     return (
       <DatabaseLandingTable
-        results={newDatabases?.results}
         data={newDatabases?.data}
         handleOrderChange={newDatabaseHandleOrderChange}
         isNewDatabase={true}
-        showSuspend={showSuspend}
         order={newDatabaseOrder}
         orderBy={newDatabaseOrderBy}
+        results={newDatabases?.results}
+        showSuspend={showSuspend}
       />
     );
   };

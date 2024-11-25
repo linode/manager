@@ -1,4 +1,11 @@
-import { CircleProgress, Notice, Paper } from '@linode/ui';
+import {
+  CircleProgress,
+  Notice,
+  Paper,
+  SafeTabPanel,
+  TabLinkList,
+  TabPanels,
+} from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -9,9 +16,6 @@ import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
 import withLongviewClients from 'src/containers/longview.container';
 import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';

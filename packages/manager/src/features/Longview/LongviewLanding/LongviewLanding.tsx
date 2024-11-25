@@ -2,6 +2,7 @@ import {
   getActiveLongviewPlan,
   getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
+import { SafeTabPanel, TabLinkList, TabPanels, Tabs } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -11,16 +12,12 @@ import { matchPath } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import withLongviewClients from 'src/containers/longview.container';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';
 
@@ -133,14 +130,6 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
   return (
     <>
       <LandingHeader
-        createButtonText="Add Client"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
-        entity="Client"
-        loading={newClientLoading}
-        onButtonClick={handleAddClient}
-        removeCrumbX={1}
-        title="Longview"
-        disabledCreateButton={isLongviewCreationRestricted}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -148,6 +137,14 @@ export const LongviewLanding = (props: LongviewLandingProps) => {
             resourceType: 'Longview Clients',
           }),
         }}
+        createButtonText="Add Client"
+        disabledCreateButton={isLongviewCreationRestricted}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
+        entity="Client"
+        loading={newClientLoading}
+        onButtonClick={handleAddClient}
+        removeCrumbX={1}
+        title="Longview"
       />
       <StyledTabs
         index={Math.max(
