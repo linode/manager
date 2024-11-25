@@ -8,6 +8,7 @@
   "plugins": [
     "@typescript-eslint",
     "react",
+    "react-hooks",
     "sonarjs",
     "prettier",
     "@linode/eslint-plugin-cloud-manager"
@@ -56,7 +57,7 @@
     "no-trailing-spaces": "warn",
     "no-mixed-requires": "warn",
     "object-shorthand": "warn",
-    // Perfectionist
+    // perfectionist
     "perfectionist/sort-array-includes": "warn",
     "perfectionist/sort-classes": "warn",
     "perfectionist/sort-enums": "warn",
@@ -100,6 +101,10 @@
     "react/self-closing-comp": "warn",
     "react/jsx-no-useless-fragment": "warn",
     "react/no-unescaped-entities": "warn",
+    "react/jsx-no-script-url": "error",
+    "react/prop-types": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error",
     // sonar
     "sonarjs/cognitive-complexity": "off",
     "sonarjs/no-duplicate-string": "warn",

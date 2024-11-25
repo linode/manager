@@ -1,4 +1,3 @@
-import { Button, ClickAwayListener, H1Header, TextField } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
@@ -6,7 +5,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import type { TextFieldProps } from '@linode/ui';
+import { Button } from '../Button';
+import { ClickAwayListener } from '../ClickAwayListener';
+import { H1Header } from '../H1Header';
+import { TextField } from '../TextField';
+
+import type { TextFieldProps } from '../TextField';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(

@@ -6,6 +6,7 @@ export * from './Checkbox';
 export * from './CircleProgress';
 export * from './ClickAwayListener';
 export * from './Divider';
+export * from './EditableText';
 export * from './FormControl';
 export * from './FormHelperText';
 export * from './H1Header';
