@@ -272,7 +272,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           });
 
           //validate the widget areachart is present
-          cy.findByTestId('areachart-wrapper').within(() => {
+          cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
@@ -326,7 +326,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
           });
 
           //validate the widget areachart is present
-          cy.findByTestId('areachart-wrapper').within(() => {
+          cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
@@ -397,7 +397,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             .click();
           cy.get('@widget').should('be.visible');
 
-          cy.findByTestId('areachart-wrapper').within(() => {
+          cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
@@ -429,7 +429,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
             .scrollIntoView()
             .click({ force: true });
           cy.get('@widget').should('be.visible');
-          cy.findByTestId('areachart-wrapper').within(() => {
+          cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
