@@ -112,7 +112,7 @@ export const NetworkGraphs = (props: Props) => {
 
   return (
     <>
-      <Grid md={6} sm={12}>
+      <Grid md={6} xs={12}>
         <Paper variant="outlined" sx={{ height: 500 }}>
           <StatsPanel
             renderBody={() => (
@@ -129,7 +129,7 @@ export const NetworkGraphs = (props: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid md={6} sm={12}>
+      <Grid md={6} xs={12}>
         <Paper variant="outlined" sx={{ height: 500 }}>
           <StatsPanel
             renderBody={() => (

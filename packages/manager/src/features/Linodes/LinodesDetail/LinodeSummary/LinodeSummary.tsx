@@ -252,7 +252,7 @@ const LinodeSummary = (props: Props) => {
           options={options}
         />
       </Grid>
-      <Grid md={6} sm={12}>
+      <Grid md={6} xs={12}>
         <Paper variant="outlined" sx={{ height: 370 }}>
           <StatsPanel
             renderBody={renderCPUChart}
@@ -261,7 +261,7 @@ const LinodeSummary = (props: Props) => {
           />
         </Paper>
       </Grid>
-      <Grid md={6} sm={12}>
+      <Grid md={6} xs={12}>
         <Paper variant="outlined" sx={{ height: 370 }}>
           <StatsPanel
             renderBody={renderDiskIOChart}
