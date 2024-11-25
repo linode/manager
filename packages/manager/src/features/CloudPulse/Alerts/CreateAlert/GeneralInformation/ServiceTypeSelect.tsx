@@ -13,7 +13,7 @@ interface CloudPulseServiceSelectProps {
   /**
    * name used for the component in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, AlertServiceType>;
+  name: FieldPathByValue<CreateAlertDefinitionForm, AlertServiceType | null>;
 }
 
 export const CloudPulseServiceSelect = (
