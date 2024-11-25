@@ -8,8 +8,8 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { StyledDocsLinkContainer } from './CreateCluster.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
-import { useAccount } from 'src/queries/account/account';
 import { useTheme } from '@mui/material/styles';
+import { useAccountBeta } from 'src/queries/account/account';
 
 interface Props {
   handleClusterTypeSelection: (tier: KubernetesTier) => void;
@@ -19,7 +19,7 @@ interface Props {
 export const ClusterTypePanel = (props: Props) => {
   const { handleClusterTypeSelection, selectedTier } = props;
 
-  const { data: account } = useAccount();
+  const { data: account } = useAccountBeta();
 
   const theme = useTheme();
   const mdDownBreakpoint = useMediaQuery(theme.breakpoints.down('md'));
