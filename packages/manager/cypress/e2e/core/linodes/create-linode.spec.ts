@@ -174,6 +174,7 @@ describe('Create Linode', () => {
   // Mocks creating an accelerated Linode due to accelerated linodes currently having limited deployment availability
   // TODO: eventually transition this to an e2e test (in the above test)
   it('creates a mock accelerated Linode and confirms response', () => {
+    // Create mocks
     const linodeLabel = randomLabel();
     const mockLinode = linodeFactory.build({
       label: linodeLabel,
@@ -201,7 +202,9 @@ describe('Create Linode', () => {
         label: 'Newark, NJ',
       }),
     ];
+    const linodeRegion = mockRegions[0];
 
+    // Create request intercepts
     mockGetAccount(
       accountFactory.build({
         capabilities: ['NETINT Quadra T1U'],
@@ -215,12 +218,8 @@ describe('Create Linode', () => {
     }).as('getFeatureFlags');
     mockGetRegions(mockRegions).as('getRegions');
     mockGetLinodeTypes([...mockAcceleratedType]).as('getLinodeTypes');
-
-    const linodeRegion = mockRegions[0];
-
-    interceptGetProfile().as('getProfile');
-
     mockCreateLinode(mockLinode).as('createLinode');
+
     cy.visitWithLogin('/linodes/create');
     cy.wait([
       '@getRegions',
@@ -264,7 +263,8 @@ describe('Create Linode', () => {
       expect(responsePayload['label']).to.equal(linodeLabel);
       expect(responsePayload['region']).to.equal(linodeRegion.id);
       expect(responsePayload['type']).to.equal(mockAcceleratedType[0].id);
-      // Confirm accelerated_devices value is returned as expected
+
+      // Accelerated linodes: Confirm accelerated_devices value is returned as expected
       expect(responsePayload['specs']).has.property('accelerated_devices', 2);
 
       // Confirm that Cloud redirects to details page
