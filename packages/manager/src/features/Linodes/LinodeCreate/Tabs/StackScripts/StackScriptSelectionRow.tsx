@@ -1,11 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Radio, Stack } from '@linode/ui';
+import { Radio, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { isLKEStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { truncate } from 'src/utilities/truncate';
 

@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { default as _Accordion } from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -7,13 +7,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
-
+import type { TypographyProps } from '@linode/ui';
 import type { Theme } from '@mui/material';
 import type { AccordionProps as _AccordionProps } from '@mui/material/Accordion';
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails';
 import type { AccordionSummaryProps } from '@mui/material/AccordionSummary';
-import type { TypographyProps } from 'src/components/Typography';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   itemCount: {

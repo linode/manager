@@ -1,4 +1,4 @@
-import { CircleProgress, Divider, Paper } from '@linode/ui';
+import { CircleProgress, Divider, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';

@@ -124,9 +124,9 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: 20 }}></TableCell>
+              <TableCell sx={{ width: 20 }} />
               <TableCell>StackScript</TableCell>
-              <TableCell sx={{ minWidth: 120 }}></TableCell>
+              <TableCell sx={{ minWidth: 120 }} />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -187,7 +187,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
       <Table sx={{ mt: 1 }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 20 }}></TableCell>
+            <TableCell sx={{ width: 20 }} />
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
@@ -196,7 +196,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             >
               StackScript
             </TableSortCell>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

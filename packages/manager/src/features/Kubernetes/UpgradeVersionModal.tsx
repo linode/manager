@@ -1,10 +1,10 @@
 import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
+import { Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Typography } from 'src/components/Typography';
 import {
   getNextVersion,
   localStorageWarning,

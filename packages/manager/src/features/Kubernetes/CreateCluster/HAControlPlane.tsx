@@ -1,3 +1,4 @@
+import { Typography } from '@linode/ui';
 import {
   Box,
   CircleProgress,
@@ -12,7 +13,6 @@ import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 export interface HAControlPlaneProps {
   highAvailabilityPrice: string;
