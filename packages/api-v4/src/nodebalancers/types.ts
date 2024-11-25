@@ -89,7 +89,6 @@ export interface NodeBalancerConfig {
   ssl_fingerprint: string;
   cipher_suite: 'recommended' | 'legacy';
   nodes: NodeBalancerConfigNode[];
-  modifyStatus?: 'new';
 }
 
 export type NodeBalancerProxyProtocol = 'none' | 'v1' | 'v2';
@@ -120,7 +119,7 @@ export interface CreateNodeBalancerConfig {
    */
   protocol?: Protocol;
   /**
-   * The protocol for this configuration.
+   * The algorithm for this configuration.
    *
    * TCP and HTTP support `roundrobin`, `leastconn`, and `source`
    * UDP supports `roundrobin`, `leastconn`, and `ring_hash`
