@@ -4,7 +4,7 @@ import {
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
-import { Box, CircleProgress, Notice, Paper } from '@linode/ui';
+import { Box, CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
@@ -20,7 +20,6 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
 import { withFeatureFlags } from 'src/containers/flags.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';

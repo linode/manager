@@ -1,12 +1,11 @@
-import { PaymentMethod, deletePaymentMethod } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { deletePaymentMethod } from '@linode/api-v4/lib/account';
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
@@ -22,6 +21,8 @@ import {
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 
 import type { Profile } from '@linode/api-v4';
+import type { PaymentMethod } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface Props {
   error?: APIError[] | null;

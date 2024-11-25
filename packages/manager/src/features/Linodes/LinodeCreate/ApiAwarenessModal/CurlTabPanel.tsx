@@ -1,10 +1,10 @@
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React, { useMemo } from 'react';
 
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Link } from 'src/components/Link';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Typography } from 'src/components/Typography';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCurlCommand } from 'src/utilities/codesnippets/generate-cURL';
 
