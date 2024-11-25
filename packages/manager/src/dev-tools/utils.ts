@@ -1,6 +1,7 @@
 import { defaultBaselineMockPreset, extraMockPresets } from 'src/mocks/presets';
 
 import {
+  LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY,
   LOCAL_STORAGE_KEY,
   LOCAL_STORAGE_PRESET_EXTRAS_KEY,
   LOCAL_STORAGE_PRESET_KEY,
@@ -9,6 +10,7 @@ import {
   LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
 } from './constants';
 
+import type { Account } from '@linode/api-v4';
 import type {
   MockPresetBaselineId,
   MockPresetExtraId,
@@ -145,4 +147,28 @@ export const getSeeders = (dbSeeders: MockSeeder[]): string[] => {
  */
 export const saveSeeders = (populators: string[]) => {
   localStorage.setItem(LOCAL_STORAGE_SEEDERS_KEY, populators.join(','));
+};
+
+/**
+ * Retrieves the custom account form data from local storage.
+ */
+export const getCustomAccountData = (): Record<string, any> | null => {
+  const data = localStorage.getItem(LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY);
+  return data ? JSON.parse(data) : null;
+};
+
+/**
+ * Saves the custom account form data to local storage.
+ */
+export const saveCustomAccountData = (
+  data: Record<string, Partial<Account>> | null
+): void => {
+  if (data) {
+    localStorage.setItem(
+      LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY,
+      JSON.stringify(data)
+    );
+  } else {
+    localStorage.removeItem(LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY);
+  }
 };

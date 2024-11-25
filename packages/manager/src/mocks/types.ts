@@ -49,13 +49,12 @@ export interface MockPresetBaseline extends MockPresetBase {
  */
 export type MockPresetExtraGroup = {
   id: 'API' | 'Account' | 'Capabilities' | 'Limits' | 'Managed' | 'Regions';
-  type: 'checkbox' | 'select';
+  type: 'account' | 'checkbox' | 'select';
 };
 export type MockPresetExtraId =
-  | 'account:child-proxy'
+  | 'account:custom'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
-  | 'account:parent'
   | 'api:response-time'
   | 'limits:linode-limits'
   | 'limits:lke-limits'
@@ -67,12 +66,6 @@ export interface MockPresetExtra extends MockPresetBase {
   canUpdateCount?: boolean;
   group: MockPresetExtraGroup;
   id: MockPresetExtraId;
-  initialSelected?: boolean;
-  removeSeparator?: boolean;
-}
-
-export interface MockPresetExtraAccountId extends Omit<MockPresetExtra, 'id'> {
-  id: `capabilities:${AccountCapability}`;
 }
 
 /**

@@ -5,23 +5,17 @@ import { baselineApiUnstablePreset } from './baseline/apiUnstable';
 import { baselineCrudPreset } from './baseline/crud';
 import { baselineLegacyPreset } from './baseline/legacy';
 import { baselineNoMocksPreset } from './baseline/noMocks';
-import { childAccountPreset } from './extra/account/childAccount';
+import { customAccountPreset } from './extra/account/customAccount';
 import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
-import { parentAccountPreset } from './extra/account/parentAccount';
 import { apiResponseTimePreset } from './extra/api/api';
-import { accountCapabilitiesPresets } from './extra/capabilities/accountCapabilities';
 import { linodeLimitsPreset } from './extra/limits/linode-limits';
 import { lkeLimitsPreset } from './extra/limits/lke-limits';
 import { coreAndDistributedRegionsPreset } from './extra/regions/coreAndDistributed';
 import { coreOnlyRegionsPreset } from './extra/regions/coreOnly';
 import { legacyRegionsPreset } from './extra/regions/legacyRegions';
 
-import type {
-  MockPresetBaseline,
-  MockPresetExtra,
-  MockPresetExtraAccountId,
-} from '../types';
+import type { MockPresetBaseline, MockPresetExtra } from '../types';
 
 /** The preset that we fall back on if the local storage value is unset or invalid. */
 export const defaultBaselineMockPreset = baselineNoMocksPreset;
@@ -42,14 +36,9 @@ export const baselineMockPresets: MockPresetBaseline[] = [
  *
  * ⚠️ The order here is the order shown in the dev tools.
  * */
-export const extraMockPresets: (
-  | MockPresetExtra
-  | MockPresetExtraAccountId
-)[] = [
+export const extraMockPresets: MockPresetExtra[] = [
   apiResponseTimePreset,
-  parentAccountPreset,
-  childAccountPreset,
-  ...accountCapabilitiesPresets,
+  customAccountPreset,
   linodeLimitsPreset,
   lkeLimitsPreset,
   managedEnabledPreset,
@@ -60,8 +49,7 @@ export const extraMockPresets: (
 ];
 
 /** An array of all mock presets. */
-export const allMockPresets: (
-  | MockPresetBaseline
-  | MockPresetExtra
-  | MockPresetExtraAccountId
-)[] = [...baselineMockPresets, ...extraMockPresets];
+export const allMockPresets: (MockPresetBaseline | MockPresetExtra)[] = [
+  ...baselineMockPresets,
+  ...extraMockPresets,
+];

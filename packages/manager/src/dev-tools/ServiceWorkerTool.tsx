@@ -11,12 +11,14 @@ import { ExtraPresetOptions } from './components/ExtraPresetOptions';
 import { SeedOptions } from './components/SeedOptions';
 import {
   getBaselinePreset,
+  getCustomAccountData,
   getExtraPresets,
   getExtraPresetsMap,
   getSeeders,
   getSeedsCountMap,
   isMSWEnabled,
   saveBaselinePreset,
+  saveCustomAccountData,
   saveExtraPresets,
   saveExtraPresetsMap,
   saveMSWEnabled,
@@ -54,6 +56,9 @@ export const ServiceWorkerTool = () => {
   const [extraPresets, setExtraPresets] = React.useState<string[]>(
     loadedExtraPresets
   );
+  const [customAccountData, setCustomAccountData] = React.useState(
+    getCustomAccountData()
+  );
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedPresetsMap);
@@ -72,6 +77,17 @@ export const ServiceWorkerTool = () => {
     mocksCleared: false,
   });
 
+  React.useEffect(() => {
+    const hasCustomAccountChanges =
+      getCustomAccountData() !== customAccountData;
+    if (hasCustomAccountChanges) {
+      setSaveState((prev) => ({
+        ...prev,
+        hasUnsavedChanges: true,
+      }));
+    }
+  }, [customAccountData]);
+
   const globalHandlers = {
     applyChanges: () => {
       // Save base preset, extra presets, and content seeders to local storage.
@@ -80,6 +96,10 @@ export const ServiceWorkerTool = () => {
       saveSeeders(seeders);
       saveSeedsCountMap(seedsCountMap);
       saveExtraPresetsMap(presetsCountMap);
+
+      if (extraPresets.includes('account:custom') && customAccountData) {
+        saveCustomAccountData(customAccountData);
+      }
 
       const promises = seeders.map((seederId) => {
         const seeder = dbSeeders.find((dbSeeder) => dbSeeder.id === seederId);
@@ -104,6 +124,7 @@ export const ServiceWorkerTool = () => {
       setSeeders(getSeeders(dbSeeders));
       setSeedsCountMap(getSeedsCountMap());
       setPresetsCountMap(getExtraPresetsMap());
+      setCustomAccountData(getCustomAccountData());
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: false,
@@ -117,11 +138,13 @@ export const ServiceWorkerTool = () => {
       setBaselinePreset('baseline:preset-mocking');
       setExtraPresets([]);
       setPresetsCountMap({});
+      setCustomAccountData(null);
       saveBaselinePreset('baseline:preset-mocking');
       saveExtraPresets([]);
       saveSeeders([]);
       saveSeedsCountMap({});
       saveExtraPresetsMap({});
+      saveCustomAccountData(null);
 
       setSaveState({
         hasSaved: false,
@@ -326,7 +349,9 @@ export const ServiceWorkerTool = () => {
             <div className="dev-tools__msw__column__body">
               <div className="dev-tools__list-box">
                 <ExtraPresetOptions
+                  customAccountData={customAccountData}
                   handlers={extraPresets}
+                  onCustomAccountChange={setCustomAccountData}
                   onPresetCountChange={presetHandlers.changeCount}
                   onSelectChange={presetHandlers.changeSelect}
                   onTogglePreset={presetHandlers.toggle}

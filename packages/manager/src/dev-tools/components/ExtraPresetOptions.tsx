@@ -3,11 +3,18 @@ import * as React from 'react';
 import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import { extraMockPresets } from 'src/mocks/presets';
 
+import { ExtraPresetAccount } from './ExtraPresetAccount';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
 
+import type { Account } from '@linode/api-v4';
+
 export interface ExtraPresetOptionsProps {
+  customAccountData?: Record<string, Partial<Account>> | null;
   handlers: string[];
+  onCustomAccountChange?: (
+    data: Record<string, Partial<Account>> | null
+  ) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
   onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;
@@ -18,32 +25,15 @@ export interface ExtraPresetOptionsProps {
  * Renders a list of extra presets with an optional count.
  */
 export const ExtraPresetOptions = ({
+  customAccountData,
   handlers,
+  onCustomAccountChange,
   onPresetCountChange,
   onSelectChange,
   onTogglePreset,
   presetsCountMap,
 }: ExtraPresetOptionsProps) => {
   const extraPresetGroups = getMockPresetGroups(extraMockPresets);
-
-  React.useEffect(() => {
-    if (handlers.length === 0) {
-      const initialSelectedPresets = extraMockPresets
-        .filter((preset) => preset.initialSelected)
-        .map((preset) => preset.id);
-
-      // if (!initialSelectedPresets.length) {
-      initialSelectedPresets.forEach((presetId) => {
-        onTogglePreset(
-          {
-            target: { checked: true },
-          } as React.ChangeEvent<HTMLInputElement>,
-          presetId
-        );
-      });
-      // }
-    }
-  }, [handlers, onTogglePreset]);
 
   return (
     <ul>
@@ -77,6 +67,14 @@ export const ExtraPresetOptions = ({
                 onPresetCountChange={onPresetCountChange}
                 onTogglePreset={onTogglePreset}
                 presetsCountMap={presetsCountMap}
+              />
+            )}
+            {currentGroupType === 'account' && (
+              <ExtraPresetAccount
+                customAccountData={customAccountData}
+                handlers={handlers}
+                onFormChange={onCustomAccountChange}
+                onTogglePreset={onTogglePreset}
               />
             )}
           </div>

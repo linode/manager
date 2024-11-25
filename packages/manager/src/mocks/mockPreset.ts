@@ -3,7 +3,6 @@ import type {
   MockPresetBaseline,
   MockPresetCrud,
   MockPresetExtra,
-  MockPresetExtraAccountId,
   MockState,
 } from './types';
 import type { HttpHandler } from 'msw';
@@ -16,11 +15,7 @@ import type { HttpHandler } from 'msw';
  * @returns Array of HTTP handlers generated for the mock preset.
  */
 export const resolveMockPreset = (
-  preset:
-    | MockPresetBaseline
-    | MockPresetCrud
-    | MockPresetExtra
-    | MockPresetExtraAccountId,
+  preset: MockPresetBaseline | MockPresetCrud | MockPresetExtra,
   state: MockState
 ): HttpHandler[] => {
   return preset.handlers.reduce((acc: HttpHandler[], cur: MockHandler) => {
@@ -32,12 +27,7 @@ export const resolveMockPreset = (
  * Describes a collection of HTTP handlers that collectively form a MSW preset.
  * */
 export const getMockPresetGroups = (
-  presets: (
-    | MockPresetBaseline
-    | MockPresetCrud
-    | MockPresetExtra
-    | MockPresetExtraAccountId
-  )[]
+  presets: (MockPresetBaseline | MockPresetCrud | MockPresetExtra)[]
 ): string[] => {
   return presets.reduce((acc: string[], cur) => {
     if (!acc.includes(cur.group.id)) {
