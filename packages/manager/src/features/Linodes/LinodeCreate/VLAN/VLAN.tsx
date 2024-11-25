@@ -1,8 +1,13 @@
-import { Stack, TextField, TooltipIcon, Typography } from '@linode/ui';
+import {
+  Accordion,
+  Stack,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Accordion } from 'src/components/Accordion';
 import { Link } from 'src/components/Link';
 import { VLANSelect } from 'src/components/VLANSelect';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
