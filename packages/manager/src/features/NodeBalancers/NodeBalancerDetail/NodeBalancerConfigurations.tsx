@@ -38,7 +38,6 @@ import { scrollErrorIntoView } from 'src/utilities/scrollErrorIntoView';
 import { NodeBalancerConfigPanel } from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
 import {
-  clampNumericString,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
   nodeForRequest,
@@ -626,13 +625,13 @@ class NodeBalancerConfigurations extends React.Component<
         success={panelMessages[idx]}
       >
         <NodeBalancerConfigPanel
-          onHealthCheckAttemptsChange={this.updateStateWithClamp(
+          onHealthCheckAttemptsChange={this.updateState(
             L.healthCheckAttemptsLens
           )}
-          onHealthCheckIntervalChange={this.updateStateWithClamp(
+          onHealthCheckIntervalChange={this.updateState(
             L.healthCheckIntervalLens
           )}
-          onHealthCheckTimeoutChange={this.updateStateWithClamp(
+          onHealthCheckTimeoutChange={this.updateState(
             L.healthCheckTimeoutLens
           )}
           onHealthCheckTypeChange={this.updateState(
@@ -1078,15 +1077,6 @@ class NodeBalancerConfigurations extends React.Component<
   ) => (value: any) => {
     this.clearMessages();
     this.setState(set(lens, value), L && callback ? callback(L) : undefined);
-  };
-
-  updateStateWithClamp = (
-    lens: Lens,
-    L?: { [key: string]: Lens },
-    callback?: (L: { [key: string]: Lens }) => () => void
-  ) => (value: any) => {
-    const clampedValue = clampNumericString(0, Number.MAX_SAFE_INTEGER)(value);
-    this.updateState(lens, L, callback)(clampedValue);
   };
 
   render() {
