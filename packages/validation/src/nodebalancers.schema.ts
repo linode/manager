@@ -5,6 +5,21 @@ const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
 
 export const PRIVATE_IPv4_REGEX = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
 
+export const CHECK_ATTEMPTS = {
+  MIN: 1,
+  MAX: 30,
+};
+
+export const CHECK_TIMEOUT = {
+  MIN: 1,
+  MAX: 30,
+};
+
+export const CHECK_INTERVAL = {
+  MIN: 2,
+  MAX: 3600,
+};
+
 export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .matches(
@@ -36,12 +51,31 @@ export const nodeBalancerConfigNodeSchema = object({
 
 export const createNodeBalancerConfigSchema = object({
   algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
-  check_attempts: number(),
+  check_attempts: number()
+    .min(
+      CHECK_ATTEMPTS.MIN,
+      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`
+    )
+    .max(
+      CHECK_ATTEMPTS.MAX,
+      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`
+    )
+    .integer(),
   check_body: string().when('check', {
     is: 'http_body',
     then: (schema) => schema.required('An HTTP body regex is required.'),
   }),
-  check_interval: number().typeError('Check interval must be a number.'),
+  check_interval: number()
+    .min(
+      CHECK_INTERVAL.MIN,
+      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`
+    )
+    .max(
+      CHECK_INTERVAL.MAX,
+      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`
+    )
+    .typeError('Interval must be a number.')
+    .integer(),
   check_passive: boolean(),
   check_path: string()
     .matches(/\/.*/)
@@ -54,7 +88,17 @@ export const createNodeBalancerConfigSchema = object({
       then: (schema) => schema.required('An HTTP path is required.'),
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
-  check_timeout: number().typeError('Timeout must be a number.').integer(),
+  check_timeout: number()
+    .min(
+      CHECK_TIMEOUT.MIN,
+      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`
+    )
+    .max(
+      CHECK_TIMEOUT.MAX,
+      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`
+    )
+    .typeError('Timeout must be a number.')
+    .integer(),
   check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
   cipher_suite: mixed().oneOf(['recommended', 'legacy']),
   port: number()
@@ -81,12 +125,31 @@ export const createNodeBalancerConfigSchema = object({
 
 export const UpdateNodeBalancerConfigSchema = object({
   algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
-  check_attempts: number(),
+  check_attempts: number()
+    .min(
+      CHECK_ATTEMPTS.MIN,
+      `Attempts should be greater than or equal to ${CHECK_ATTEMPTS.MIN}.`
+    )
+    .max(
+      CHECK_ATTEMPTS.MAX,
+      `Attempts should be less than or equal to ${CHECK_ATTEMPTS.MAX}.`
+    )
+    .integer(),
   check_body: string().when('check', {
     is: 'http_body',
     then: (schema) => schema.required('An HTTP body regex is required.'),
   }),
-  check_interval: number().typeError('Check interval must be a number.'),
+  check_interval: number()
+    .min(
+      CHECK_INTERVAL.MIN,
+      `Interval should be greater than or equal to ${CHECK_INTERVAL.MIN}.`
+    )
+    .max(
+      CHECK_INTERVAL.MAX,
+      `Interval should be less than or equal to ${CHECK_INTERVAL.MAX}.`
+    )
+    .typeError('Interval must be a number.')
+    .integer(),
   check_passive: boolean(),
   check_path: string()
     .matches(/\/.*/)
@@ -99,7 +162,17 @@ export const UpdateNodeBalancerConfigSchema = object({
       then: (schema) => schema.required('An HTTP path is required.'),
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
-  check_timeout: number().typeError('Timeout must be a number.').integer(),
+  check_timeout: number()
+    .min(
+      CHECK_TIMEOUT.MIN,
+      `Timeout should be greater than or equal to ${CHECK_TIMEOUT.MIN}.`
+    )
+    .max(
+      CHECK_TIMEOUT.MAX,
+      `Timeout should be less than or equal to ${CHECK_TIMEOUT.MAX}.`
+    )
+    .typeError('Timeout must be a number.')
+    .integer(),
   check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
   cipher_suite: mixed().oneOf(['recommended', 'legacy']),
   port: number()
