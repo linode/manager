@@ -1,10 +1,15 @@
-import { Button, FormHelperText, InputAdornment, TextField } from '@linode/ui';
+import {
+  Accordion,
+  Button,
+  FormHelperText,
+  InputAdornment,
+  TextField,
+} from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Accordion } from 'src/components/Accordion';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
