@@ -12,6 +12,7 @@ import {
   HIGH_MEMORY_COMPUTE_INSTANCES_LINK,
   PREMIUM_COMPUTE_INSTANCES_LINK,
   SHARED_COMPUTE_INSTANCES_LINK,
+  TRANSFER_COSTS_LINK,
 } from './constants';
 import { MetalNotice } from './MetalNotice';
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
@@ -52,6 +53,31 @@ export const PlanInformation = (props: PlanInformationProps) => {
   const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
   const showTransferBanner = Boolean(useFlags().gpuv2?.transferBanner);
 
+  const showLimitedAvailabilityBanner =
+    hasSelectedRegion &&
+    isSelectedRegionEligibleForPlan &&
+    !hideLimitedAvailabilityBanner &&
+    hasMajorityOfPlansDisabled;
+
+  const transferBanner = (
+    <Notice
+      spacingBottom={
+        planType === 'accelerated' && !showLimitedAvailabilityBanner ? 24 : 8
+      }
+      variant="warning"
+    >
+      <Typography
+        fontFamily={(theme: Theme) => theme.font.bold}
+        fontSize="1rem"
+      >
+        Some plans do not include bundled network transfer. If the transfer
+        allotment is 0, all outbound network transfer is subject to charges.
+        <br />
+        <Link to={TRANSFER_COSTS_LINK}>Learn more about transfer costs</Link>.
+      </Typography>
+    </Notice>
+  );
+
   return (
     <>
       {planType === 'gpu' ? (
@@ -74,23 +100,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
               </Typography>
             </Notice>
           )}
-          {showTransferBanner && (
-            <Notice spacingBottom={8} variant="warning">
-              <Typography
-                fontFamily={(theme: Theme) => theme.font.bold}
-                fontSize="1rem"
-              >
-                Some plans do not include bundled network transfer. If the
-                transfer allotment is 0, all outbound network transfer is
-                subject to charges.
-                <br />
-                <Link to="https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs">
-                  Learn more about transfer costs
-                </Link>
-                .
-              </Typography>
-            </Notice>
-          )}
+          {showTransferBanner && transferBanner}
           <PlansAvailabilityNotice
             hasSelectedRegion={hasSelectedRegion}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
@@ -99,6 +109,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
           />
         </>
       ) : null}
+      {planType === 'accelerated' && transferBanner}
       {planType === 'metal' ? (
         <MetalNotice
           dataTestId="metal-notice"
@@ -116,25 +127,22 @@ export const PlanInformation = (props: PlanInformationProps) => {
           regionsData={regionsData || []}
         />
       ) : null}
-      {hasSelectedRegion &&
-        isSelectedRegionEligibleForPlan &&
-        !hideLimitedAvailabilityBanner &&
-        hasMajorityOfPlansDisabled && (
-          <Notice
-            sx={(theme: Theme) => ({
-              marginBottom: theme.spacing(3),
-              marginLeft: 0,
-              marginTop: 0,
-              padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
-            })}
-            dataTestId={limitedAvailabilityBannerTestId}
-            variant="warning"
-          >
-            <StyledNoticeTypography>
-              These plans have limited deployment availability.
-            </StyledNoticeTypography>
-          </Notice>
-        )}
+      {showLimitedAvailabilityBanner && (
+        <Notice
+          sx={(theme: Theme) => ({
+            marginBottom: theme.spacing(3),
+            marginLeft: 0,
+            marginTop: 0,
+            padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+          })}
+          dataTestId={limitedAvailabilityBannerTestId}
+          variant="warning"
+        >
+          <StyledNoticeTypography>
+            These plans have limited deployment availability.
+          </StyledNoticeTypography>
+        </Notice>
+      )}
       <ClassDescriptionCopy planType={planType} />
     </>
   );
@@ -167,6 +175,11 @@ export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
     case 'gpu':
       planTypeLabel = 'GPU';
       docLink = GPU_COMPUTE_INSTANCES_LINK;
+      break;
+    case 'accelerated':
+      // TODO: accelerated plans - acquire doc link
+      planTypeLabel = 'Accelerated';
+      docLink = '#';
       break;
     default:
       planTypeLabel = null;
