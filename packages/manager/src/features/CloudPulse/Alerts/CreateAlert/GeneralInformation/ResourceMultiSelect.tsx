@@ -41,14 +41,14 @@ export const CloudPulseMultiResourceSelect = (
     engine !== null ? { engine, region } : { region }
   );
 
-  const getResourcesList = (): Item<string, string>[] => {
+  const getResourcesList = React.useMemo((): Item<string, string>[] => {
     return resources && resources.length > 0
       ? resources.map((resource) => ({
           label: resource.label,
           value: resource.id,
         }))
       : [];
-  };
+  }, [resources]);
 
   React.useEffect(() => {
     setValue('resource_ids', []);
@@ -69,29 +69,29 @@ export const CloudPulseMultiResourceSelect = (
           textFieldProps={{
             InputProps: {
               sx: {
-                maxHeight: '55px',
+                maxHeight: '60px',
                 overflow: 'auto',
               },
             },
           }}
           value={
             field.value
-              ? getResourcesList().filter((resource) =>
+              ? getResourcesList.filter((resource) =>
                   field.value.includes(resource.value)
                 )
               : []
           }
-          isOptionEqualToValue={(option, value) => option.value === value.value}
           autoHighlight
           clearOnBlur
           data-testid="resource-select"
           disabled={!Boolean(region && serviceType)}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           label={serviceType === 'dbaas' ? 'Cluster' : 'Resources'}
           limitTags={2}
           loading={isLoading && Boolean(region && serviceType)}
           multiple
           onBlur={field.onBlur}
-          options={getResourcesList()}
+          options={getResourcesList}
           placeholder="Select Resources"
         />
       )}
