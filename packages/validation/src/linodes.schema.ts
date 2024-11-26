@@ -47,7 +47,7 @@ const LINODE_LABEL_CHAR_REQUIREMENT =
   'Label must contain between 3 and 64 characters.';
 
 // Schemas
-const stackscript_data = array().of(object()).nullable();
+const stackscript_data = object().nullable();
 
 const IPv4 = string()
   .notRequired()
