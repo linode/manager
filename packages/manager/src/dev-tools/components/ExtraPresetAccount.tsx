@@ -7,6 +7,7 @@ import { extraMockPresets } from 'src/mocks/presets';
 import { setCustomAccountData } from 'src/mocks/presets/extra/account/customAccount';
 
 import { saveCustomAccountData } from '../utils';
+import { JsonTextArea } from './JsonTextArea';
 
 import type { Account, AccountCapability } from '@linode/api-v4';
 
@@ -68,19 +69,21 @@ export const ExtraPresetAccount = ({
         [name]: selectedOptions,
       };
       setFormData(newFormData);
+
       if (isEnabled) {
         onFormChange?.(newFormData);
       }
-    } else {
-      // Regular input handling
-      const newFormData = {
-        ...formData,
-        [name]: value,
-      };
-      setFormData(newFormData);
-      if (isEnabled) {
-        onFormChange?.(newFormData);
-      }
+      return;
+    }
+
+    const newFormData = {
+      ...formData,
+      [name]: value,
+    };
+    setFormData(newFormData);
+
+    if (isEnabled) {
+      onFormChange?.(newFormData);
     }
   };
 
@@ -106,7 +109,7 @@ export const ExtraPresetAccount = ({
   }
 
   return (
-    <li className="dev-tools__list-box__separator">
+    <li className="dev-tools__list-box__separator has-button">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
           <label title={customAccountPreset.desc || customAccountPreset.label}>
@@ -279,6 +282,15 @@ export const ExtraPresetAccount = ({
               </label>
             </FieldWrapper>
             <FieldWrapper>
+              <JsonTextArea
+                height={80}
+                label="Credit Card"
+                name="credit_card"
+                onChange={handleInputChange}
+                value={formData.credit_card}
+              />
+            </FieldWrapper>
+            <FieldWrapper>
               <label>
                 Active Since
                 <input
@@ -290,14 +302,12 @@ export const ExtraPresetAccount = ({
               </label>
             </FieldWrapper>
             <FieldWrapper>
-              <label>
-                Active Promotions
-                <textarea
-                  name="active_promotions"
-                  onChange={handleInputChange}
-                  value={JSON.stringify(formData.active_promotions, null, 2)}
-                />
-              </label>
+              <JsonTextArea
+                label="Active Promotions"
+                name="active_promotions"
+                onChange={handleInputChange}
+                value={formData.active_promotions}
+              />
             </FieldWrapper>
             <FieldWrapper>
               <label>

@@ -141,6 +141,7 @@
     padding: 2px 8px 4px 8px;
     border-width: 1px;
     font-size: 12px;
+    margin: 0
   }
 
   &.right-align {
@@ -371,6 +372,8 @@
   textarea,
   select:is([multiple]) {
     min-height: 200px;
+    font-family: monospace;
+    white-space: pre;
   }
 }
 
@@ -481,6 +484,16 @@
   padding-right: 4px;
 }
 
+.dev-tools__msw__presets__toggle {
+  &.enabled {
+    color: #17cf73;
+  }
+
+  &.disabled {
+    color: #ff9800;
+  }
+}
+
 .dev-tools .dev-tools__list-box .dev-tools__list-box__separator {
   border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   margin-left: -8px;
@@ -491,6 +504,10 @@
   margin-bottom: 6px;
   background-color: transparent;
   border-radius: 0;
+
+  &.has-button {
+    min-height: 36px;
+  }
 
   &.no-separator:not(:last-child) {
     border-bottom: none;

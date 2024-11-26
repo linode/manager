@@ -6,6 +6,7 @@ import { extraMockPresets } from 'src/mocks/presets';
 import { setCustomProfileData } from 'src/mocks/presets/extra/account/customProfile';
 
 import { saveCustomProfileData } from '../utils';
+import { JsonTextArea } from './JsonTextArea';
 
 import type { Profile } from '@linode/api-v4';
 
@@ -55,12 +56,18 @@ export const ExtraPresetProfile = ({
     >
   ) => {
     const { name, value } = e.target;
-    if (name === 'restricted' || name === 'email_notifications') {
+    // radios
+    if (
+      name === 'restricted' ||
+      name === 'email_notifications' ||
+      name === 'two_factor_auth'
+    ) {
       const newFormData = {
         ...formData,
-        [name]: value === 'true', // Convert string to boolean
+        [name]: value === 'true',
       };
       setFormData(newFormData);
+
       if (isEnabled) {
         onFormChange?.(newFormData);
       }
@@ -72,6 +79,7 @@ export const ExtraPresetProfile = ({
       [name]: value,
     };
     setFormData(newFormData);
+
     if (isEnabled) {
       onFormChange?.(newFormData);
     }
@@ -99,7 +107,7 @@ export const ExtraPresetProfile = ({
   }
 
   return (
-    <li className="dev-tools__list-box__separator">
+    <li className="dev-tools__list-box__separator has-button">
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
           <label title={profilePreset.desc || profilePreset.label}>
@@ -257,33 +265,45 @@ export const ExtraPresetProfile = ({
             <FieldWrapper>
               <label>
                 Two Factor Auth
-                <input
-                  name="two_factor_auth"
-                  onChange={handleInputChange}
-                  type="radio"
-                  value={formData.two_factor_auth ? 'true' : 'false'}
-                />
+                <div className="dev-tools__modal-form__field__radio-group">
+                  <input
+                    checked={formData.two_factor_auth}
+                    id="two_factor_auth_true"
+                    name="two_factor_auth"
+                    onChange={handleInputChange}
+                    type="radio"
+                    value="true"
+                  />
+                  <label htmlFor="two_factor_auth_true">Yes</label>
+                  <input
+                    checked={!formData.two_factor_auth}
+                    id="two_factor_auth_false"
+                    name="two_factor_auth"
+                    onChange={handleInputChange}
+                    type="radio"
+                    value="false"
+                  />
+                  <label htmlFor="two_factor_auth_false">No</label>
+                </div>
               </label>
             </FieldWrapper>
             <FieldWrapper>
-              <label>
-                Referrals
-                <textarea
-                  name="referrals"
-                  onChange={handleInputChange}
-                  value={JSON.stringify(formData.referrals, null, 2)}
-                />
-              </label>
+              <JsonTextArea
+                height={150}
+                label="Referrals"
+                name="referrals"
+                onChange={handleInputChange}
+                value={formData.referrals}
+              />
             </FieldWrapper>
             <FieldWrapper>
-              <label>
-                Authorized Keys
-                <textarea
-                  name="authorized_keys"
-                  onChange={handleInputChange}
-                  value={formData.authorized_keys.join('\n')}
-                />
-              </label>
+              <JsonTextArea
+                height={80}
+                label="Authorized Keys (one per line)"
+                name="authorized_keys"
+                onChange={handleInputChange}
+                value={formData.authorized_keys}
+              />
             </FieldWrapper>
             <button
               className="button"

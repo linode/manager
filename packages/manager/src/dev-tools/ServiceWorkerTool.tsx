@@ -85,16 +85,19 @@ export const ServiceWorkerTool = () => {
 
   React.useEffect(() => {
     const currentAccountData = getCustomAccountData();
+    const currentProfileData = getCustomProfileData();
     const hasCustomAccountChanges =
       JSON.stringify(currentAccountData) !== JSON.stringify(customAccountData);
+    const hasCustomProfileChanges =
+      JSON.stringify(currentProfileData) !== JSON.stringify(customProfileData);
 
-    if (hasCustomAccountChanges) {
+    if (hasCustomAccountChanges || hasCustomProfileChanges) {
       setSaveState((prev) => ({
         ...prev,
         hasUnsavedChanges: true,
       }));
     }
-  }, [customAccountData]);
+  }, [customAccountData, customProfileData]);
 
   const globalHandlers = {
     applyChanges: () => {
@@ -317,7 +320,13 @@ export const ServiceWorkerTool = () => {
                 onChange={(e) => globalHandlers.toggleMSW(e)}
                 type="checkbox"
               />
-              Enable MSW
+              <span
+                className={`dev-tools__msw__presets__toggle ${
+                  mswEnabled ? 'enabled' : 'disabled'
+                }`}
+              >
+                Enable MSW
+              </span>
             </label>
           </div>
           <div>
