@@ -31,9 +31,9 @@ describe('tooltipLabelFormatter', () => {
 
 describe('tooltipValueFormatter', () => {
   it('should return the rounded value up to a max of 2 decimals', () => {
-    expect(tooltipValueFormatter(5.434939999999999, ' Kb/s')).toBe('5.43 Kb/s');
-    expect(tooltipValueFormatter(5, ' Kb/s')).toBe('5 Kb/s');
-    expect(tooltipValueFormatter(0.000234, '%')).toBe('0%');
+    expect(tooltipValueFormatter(5.434939999999999, 'Kb/s')).toBe('5.43 Kb/s');
+    expect(tooltipValueFormatter(5, 'Kb/s')).toBe('5 Kb/s');
+    expect(tooltipValueFormatter(0.000234, '%')).toBe('0 %');
   });
 });
 

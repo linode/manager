@@ -45,7 +45,7 @@ export const getMetrics = (data: number[][]): Metrics => {
 
 export const formatNumber = (n: number): string => n.toFixed(2);
 
-export const formatPercentage = (value: number) => formatNumber(value) + '%';
+export const formatPercentage = (value: number) => formatNumber(value) + ' %';
 
 export const getTraffic = (averageInBits: number): number => {
   const averageInBytes = averageInBits / 8;

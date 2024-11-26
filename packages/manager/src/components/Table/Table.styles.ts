@@ -26,7 +26,6 @@ export const StyledTableWrapper = styled('div', {
       borderRight: `1px solid ${theme.borderColors.borderTable}`,
       borderTop: `1px solid ${theme.borderColors.borderTable}`,
       fontFamily: theme.font.bold,
-      padding: '10px 15px',
     },
   },
   marginBottom: props.spacingBottom !== undefined ? props.spacingBottom : 0,

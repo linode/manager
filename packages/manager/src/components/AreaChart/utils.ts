@@ -16,7 +16,7 @@ export const tooltipLabelFormatter = (timestamp: number, timezone: string) =>
   );
 
 export const tooltipValueFormatter = (value: number, unit: string) =>
-  `${roundTo(value)}${unit}`;
+  `${roundTo(value)} ${unit}`;
 
 export const humanizeLargeData = (value: number) => {
   if (value >= 1000000000000) {
