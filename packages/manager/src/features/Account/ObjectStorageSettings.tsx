@@ -1,4 +1,5 @@
 import {
+  Accordion,
   Box,
   Button,
   CircleProgress,
@@ -9,7 +10,6 @@ import {
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
 import { Link } from 'src/components/Link';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useAccountSettings } from 'src/queries/account/settings';

@@ -1,9 +1,7 @@
-import { Toggle } from '@linode/ui';
-import { Typography } from '@linode/ui';
+import { Accordion, Toggle, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 
 interface Props {
