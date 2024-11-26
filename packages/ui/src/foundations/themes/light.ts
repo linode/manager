@@ -1296,13 +1296,13 @@ export const lightTheme: ThemeOptions = {
         },
         head: {
           fontSize: '.9rem',
-          height: 46,
+          height: 40,
           lineHeight: 1.1,
         },
         root: {
           borderBottom: `1px solid ${primaryColors.divider}`,
           borderTop: `1px solid ${primaryColors.divider}`,
-          padding: 10,
+          padding: `0 15px`,
         },
       },
     },
