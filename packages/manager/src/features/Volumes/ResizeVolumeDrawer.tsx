@@ -24,13 +24,14 @@ import { SizeField } from './VolumeDrawer/SizeField';
 import type { Volume } from '@linode/api-v4';
 
 interface Props {
+  isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: Volume | undefined;
 }
 
 export const ResizeVolumeDrawer = (props: Props) => {
-  const { onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume } = props;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
 
@@ -94,7 +95,12 @@ export const ResizeVolumeDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={onClose} open={open} title="Resize Volume">
+    <Drawer
+      isFetching={isFetching}
+      onClose={onClose}
+      open={open}
+      title="Resize Volume"
+    >
       <form onSubmit={handleSubmit}>
         {isReadOnly && (
           <Notice

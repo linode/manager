@@ -8,13 +8,14 @@ import { useDeleteVolumeMutation } from 'src/queries/volumes/volumes';
 import type { Volume } from '@linode/api-v4';
 
 interface Props {
+  isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: Volume | undefined;
 }
 
 export const DeleteVolumeDialog = (props: Props) => {
-  const { onClose, open, volume } = props;
+  const { isFetching, onClose, open, volume } = props;
 
   const {
     error,
@@ -39,6 +40,7 @@ export const DeleteVolumeDialog = (props: Props) => {
         primaryBtnText: 'Delete',
         type: 'Volume',
       }}
+      isFetching={isFetching}
       label="Volume Label"
       loading={isPending}
       onClick={onDelete}

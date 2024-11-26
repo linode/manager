@@ -37,13 +37,14 @@ export const VolumeUpgradeCopy = (props: CopyProps) => {
 };
 
 interface Props {
+  isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: Volume | undefined;
 }
 
 export const UpgradeVolumeDialog = (props: Props) => {
-  const { onClose, open, volume } = props;
+  const { isFetching, onClose, open, volume } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -86,6 +87,7 @@ export const UpgradeVolumeDialog = (props: Props) => {
           : undefined
       }
       actions={actions}
+      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title={`Upgrade Volume ${volume?.label}`}

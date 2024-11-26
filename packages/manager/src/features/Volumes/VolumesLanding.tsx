@@ -6,7 +6,6 @@ import {
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
@@ -23,10 +22,11 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useVolumesQuery } from 'src/queries/volumes/volumes';
+import { useVolumeQuery, useVolumesQuery } from 'src/queries/volumes/volumes';
 import {
   VOLUME_TABLE_DEFAULT_ORDER,
   VOLUME_TABLE_DEFAULT_ORDER_BY,
@@ -50,7 +50,6 @@ import type { VolumesSearchParams } from 'src/routes/volumes/index';
 
 export const VolumesLanding = () => {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   const params = useParams({ strict: false });
   const search: VolumesSearchParams = useSearch({
     from: '/volumes',
@@ -98,17 +97,13 @@ export const VolumesLanding = () => {
   const {
     isBlockStorageEncryptionFeatureEnabled,
   } = useIsBlockStorageEncryptionFeatureEnabled();
-  const selectedVolume = volumes?.data.find((v) => v.id === params.volumeId);
 
-  // TODO: Tanstack Router - remove this once we are fully migrated and can implement that logic at the route level
-  React.useEffect(() => {
-    if (params.volumeId && !isFetching && !selectedVolume) {
-      enqueueSnackbar('Volume not found', {
-        variant: 'error',
-      });
-      navigate({ to: '/volumes' });
-    }
-  }, [params.volumeId, isFetching, selectedVolume, navigate, enqueueSnackbar]);
+  const { data: selectedVolume, isFetching: isFetchingVolume } = useDialogData({
+    enabled: !!params.volumeId,
+    paramKey: 'volumeId',
+    queryHook: useVolumeQuery,
+    redirectToOnNotFound: '/volumes',
+  });
 
   const handleDetach = (volume: Volume) => {
     navigate({
@@ -336,41 +331,49 @@ export const VolumesLanding = () => {
         pageSize={pagination.pageSize}
       />
       <AttachVolumeDrawer
+        isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'attach'}
         volume={selectedVolume}
       />
       <VolumeDetailsDrawer
+        isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'details'}
         volume={selectedVolume}
       />
       <EditVolumeDrawer
+        isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'edit'}
         volume={selectedVolume}
       />
       <ResizeVolumeDrawer
+        isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'resize'}
         volume={selectedVolume}
       />
       <CloneVolumeDrawer
+        isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'clone'}
         volume={selectedVolume}
       />
       <DetachVolumeDialog
+        isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'detach'}
         volume={selectedVolume}
       />
       <UpgradeVolumeDialog
+        isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'upgrade'}
         volume={selectedVolume}
       />
       <DeleteVolumeDialog
+        isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'delete'}
         volume={selectedVolume}
