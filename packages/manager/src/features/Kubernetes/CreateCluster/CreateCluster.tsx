@@ -105,6 +105,13 @@ export const CreateCluster = () => {
     isLoading: isLoadingKubernetesTypes,
   } = useKubernetesTypesQuery();
 
+  const handleClusterTypeSelection = (tier: KubernetesTier) => {
+    if (tier === 'enterprise') {
+      setHighAvailability(false);
+    }
+    setSelectedTier(tier);
+  };
+
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
     (type) => type.id === 'lke-ha'
   );
@@ -132,8 +139,8 @@ export const CreateCluster = () => {
   } = useKubernetesVersionQuery();
 
   const {
-    isLkeEnterpriseLAFlagEnabled,
     isLkeEnterpriseLAFeatureEnabled,
+    isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
 
   const versions = (versionData ?? []).map((thisVersion) => ({
@@ -316,7 +323,7 @@ export const CreateCluster = () => {
             <>
               <Divider sx={{ marginBottom: 2, marginTop: 4 }} />
               <ClusterTypePanel
-                handleClusterTypeSelection={setSelectedTier}
+                handleClusterTypeSelection={handleClusterTypeSelection}
                 selectedTier={selectedTier}
               />
             </>

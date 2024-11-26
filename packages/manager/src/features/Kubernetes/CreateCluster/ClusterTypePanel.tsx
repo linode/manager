@@ -4,12 +4,12 @@ import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
+import { useAccountBeta } from 'src/queries/account/account';
 
 import { StyledDocsLinkContainer } from './CreateCluster.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
-import { useTheme } from '@mui/material/styles';
-import { useAccountBeta } from 'src/queries/account/account';
+import type { Theme } from '@mui/material/styles';
 
 interface Props {
   handleClusterTypeSelection: (tier: KubernetesTier) => void;
@@ -21,9 +21,12 @@ export const ClusterTypePanel = (props: Props) => {
 
   const { data: account } = useAccountBeta();
 
-  const theme = useTheme();
-  const mdDownBreakpoint = useMediaQuery(theme.breakpoints.down('md'));
-  const smDownBreakpoint = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDownBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('md')
+  );
+  const smDownBreakpoint = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
 
   const isLkeEnterpriseSelectionDisabled = !account?.capabilities?.includes(
     'Kubernetes Enterprise'
@@ -65,15 +68,15 @@ export const ClusterTypePanel = (props: Props) => {
             'Dedicated control plane',
             'HA control plane (included)',
           ]}
-          checked={selectedTier === 'enterprise'}
-          heading="LKE Enterprise"
-          onClick={() => handleClusterTypeSelection('enterprise')}
-          disabled={isLkeEnterpriseSelectionDisabled}
           tooltip={
             isLkeEnterpriseSelectionDisabled
               ? 'LKE Enterprise is not currently enabled on this contract. To inquire, fill out the Cloud Computing Sales form or email sales@linode.com.'
               : undefined
           }
+          checked={selectedTier === 'enterprise'}
+          disabled={isLkeEnterpriseSelectionDisabled}
+          heading="LKE Enterprise"
+          onClick={() => handleClusterTypeSelection('enterprise')}
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Stack>
