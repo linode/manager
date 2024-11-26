@@ -130,9 +130,12 @@ interface Props {
    */
   textSuffix?: string;
   /**
-   * A custom Link component used when `labelLink` is passed via props
+   * An optional custom Link component used when `labelLink` is passed via props
    * 
    * The component you pass must accept `className`, `link`, and `children` as props
+   * - `link` is just the `labelLink` component forwarded to this Link component
+   * - `className` should be passed to your Link so that it has the correct styles
+   * - `children` contains the link's text/children
    * 
    * @default 'a' - A basic HTML anchor will be used by default if no LinkComponent is passed.
    */
