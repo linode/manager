@@ -32,7 +32,6 @@
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "array-callback-return": "error",
-    "camelcase": ["warn", { "properties": "always" }],
     "comma-dangle": "off",
     "curly": "warn",
     "no-unused-vars": [
