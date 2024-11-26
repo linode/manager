@@ -10,11 +10,7 @@ describe('StatsPanel component', () => {
   it('should render a loading spinner on loading state', () => {
     const renderBody = vi.fn();
     const { getByTestId } = renderWithTheme(
-      <StatsPanel
-        loading={true}
-        renderBody={renderBody}
-        title={title}
-      />
+      <StatsPanel loading={true} renderBody={renderBody} title={title} />
     );
 
     expect(getByTestId('circle-progress')).toBeInTheDocument();
@@ -25,11 +21,7 @@ describe('StatsPanel component', () => {
     const renderBody = vi.fn();
 
     renderWithTheme(
-      <StatsPanel
-        loading={false}
-        renderBody={renderBody}
-        title={title}
-      />
+      <StatsPanel loading={false} renderBody={renderBody} title={title} />
     );
 
     expect(renderBody).toHaveBeenCalled();

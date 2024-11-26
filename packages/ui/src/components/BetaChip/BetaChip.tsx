@@ -1,6 +1,8 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+
 import { Chip } from '../Chip';
+
 import type { ChipProps } from '@mui/material';
 
 export interface BetaChipProps
@@ -52,8 +54,8 @@ const StyledBetaChip = styled(Chip, {
   '& .MuiChip-label': {
     padding: 0,
   },
-  fontSize: '0.625rem',
   fontFamily: '"LatoWebBold", sans-serif', // TODO: remove hardcoded font once theme is added to this package
+  fontSize: '0.625rem',
   height: 16,
   letterSpacing: '.25px',
   marginLeft: theme.spacing(0.5),

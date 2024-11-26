@@ -1,9 +1,8 @@
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
-import { StyledLinkButton } from './StyledLinkButton';
-
 import { Button } from './Button';
+import { StyledLinkButton } from './StyledLinkButton';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

@@ -1,8 +1,7 @@
-import { omittedProps } from '../../utilities';
 import { styled } from '@mui/material/styles';
 
 import { PlusSignIcon } from '../../assets/icons';
-
+import { omittedProps } from '../../utilities';
 import { Button } from './Button';
 
 /**

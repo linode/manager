@@ -1,9 +1,8 @@
-import { TooltipIcon } from '@linode/ui';
 import Switch from '@mui/material/Switch';
 import * as React from 'react';
 
-import ToggleOff from 'src/assets/icons/toggleOff.svg';
-import ToggleOn from 'src/assets/icons/toggleOn.svg';
+import { ToggleOffIcon, ToggleOnIcon } from '../../assets/icons';
+import { TooltipIcon } from '../TooltipIcon';
 
 import type { SwitchProps } from '@mui/material/Switch';
 
@@ -31,10 +30,10 @@ export const Toggle = (props: ToggleProps) => {
   return (
     <React.Fragment>
       <Switch
-        checkedIcon={<ToggleOn />}
+        checkedIcon={<ToggleOnIcon />}
         color="primary"
         data-qa-toggle={props.checked}
-        icon={<ToggleOff />}
+        icon={<ToggleOffIcon />}
         {...rest}
       />
       {tooltipText && <TooltipIcon status="help" text={tooltipText} />}

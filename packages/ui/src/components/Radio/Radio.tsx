@@ -1,7 +1,9 @@
-import { default as _Radio, RadioProps } from '@mui/material/Radio';
+import { default as _Radio } from '@mui/material/Radio';
 import * as React from 'react';
 
 import { RadioIcon, RadioIconRadioed } from '../../assets/icons';
+
+import type { RadioProps } from '@mui/material/Radio';
 
 /**
 ### Use radio buttons to

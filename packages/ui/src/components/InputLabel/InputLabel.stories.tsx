@@ -1,9 +1,10 @@
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { FormControl } from '../FormControl';
 import { Input } from '../Input';
 import { InputLabel } from './InputLabel';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof InputLabel> = {
   component: InputLabel,
