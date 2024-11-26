@@ -143,13 +143,13 @@ export const CreateAlertDefinition = () => {
           <CloudPulseServiceSelect name="serviceType" />
           {serviceWatcher === 'dbaas' && <EngineOption name="engineType" />}
           <CloudPulseRegionSelect name="region" />
-          <CloudPulseAlertSeveritySelect name="severity" />
           <CloudPulseMultiResourceSelect
             engine={watch('engineType')}
             name="resource_ids"
             region={watch('region')}
             serviceType={serviceWatcher}
           />
+          <CloudPulseAlertSeveritySelect name="severity" />
           <ActionsPanel
             primaryButtonProps={{
               label: 'Submit',
