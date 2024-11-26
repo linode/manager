@@ -1,13 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadAttachment } from '@linode/api-v4/lib/support';
-import { Box, Notice, TextField, Typography } from '@linode/ui';
+import { Accordion, Box, Notice, TextField, Typography } from '@linode/ui';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Dialog } from 'src/components/Dialog/Dialog';

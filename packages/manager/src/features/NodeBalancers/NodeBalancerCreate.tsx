@@ -1,4 +1,5 @@
 import {
+  Accordion,
   Box,
   Button,
   Notice,
@@ -22,7 +23,6 @@ import {
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Accordion } from 'src/components/Accordion';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';

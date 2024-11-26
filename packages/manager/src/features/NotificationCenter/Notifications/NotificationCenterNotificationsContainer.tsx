@@ -1,7 +1,6 @@
-import { Box, Typography } from '@linode/ui';
+import { Accordion, Box, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 

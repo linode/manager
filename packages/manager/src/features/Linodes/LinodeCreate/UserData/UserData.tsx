@@ -1,8 +1,7 @@
-import { Notice, TextField, Typography } from '@linode/ui';
+import { Accordion, Notice, TextField, Typography } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Accordion } from 'src/components/Accordion';
 import { Link } from 'src/components/Link';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';
