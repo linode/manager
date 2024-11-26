@@ -1,8 +1,9 @@
 import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { Breadcrumb } from './Breadcrumb';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof Breadcrumb> = {
   component: Breadcrumb,

@@ -1,15 +1,14 @@
-import { Button } from '@linode/ui';
+import { Breadcrumb, Button } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
-import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 
+import type { BreadcrumbProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
-import type { BreadcrumbProps } from 'src/components/Breadcrumb/Breadcrumb';
 
 export interface LandingHeaderProps {
   analyticsLabel?: string;

@@ -1,9 +1,11 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { wrapWithTheme } from '../../utilities/testHelpers';
+import { Breadcrumb } from './Breadcrumb';
 
-import { Breadcrumb, BreadcrumbProps } from './Breadcrumb';
+import type { BreadcrumbProps } from './Breadcrumb';
 
 const props: BreadcrumbProps = {
   pathname: '/linodes/9872893679817/test/lastcrumb',
