@@ -138,7 +138,13 @@ export const ExtraPresetAccount = ({
           open={isEditingCustomAccount}
           title="Edit Custom Account"
         >
-          <form className="dev-tools__modal-form">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setIsEditingCustomAccount(false);
+            }}
+            className="dev-tools__modal-form"
+          >
             <FieldWrapper>
               <label>
                 First Name
@@ -355,11 +361,7 @@ export const ExtraPresetAccount = ({
                 />
               </label>
             </FieldWrapper>
-            <button
-              className="button"
-              onClick={() => setIsEditingCustomAccount(false)}
-              type="submit"
-            >
+            <button className="button" type="submit">
               Save
             </button>
           </form>

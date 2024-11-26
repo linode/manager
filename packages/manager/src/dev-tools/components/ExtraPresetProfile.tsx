@@ -136,7 +136,10 @@ export const ExtraPresetProfile = ({
           open={isEditingCustomProfile}
           title="Edit Custom Profile"
         >
-          <form className="dev-tools__modal-form">
+          <form
+            className="dev-tools__modal-form"
+            onSubmit={() => setIsEditingCustomProfile(false)}
+          >
             <FieldWrapper>
               <label>
                 Username
@@ -305,11 +308,7 @@ export const ExtraPresetProfile = ({
                 value={formData.authorized_keys}
               />
             </FieldWrapper>
-            <button
-              className="button"
-              onClick={() => setIsEditingCustomProfile(false)}
-              type="submit"
-            >
+            <button className="button" type="submit">
               Save
             </button>
           </form>
