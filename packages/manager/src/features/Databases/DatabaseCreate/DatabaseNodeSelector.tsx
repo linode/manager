@@ -1,8 +1,7 @@
-import { FormControl, Notice, Radio, RadioGroup } from '@linode/ui';
+import { FormControl, Notice, Radio, RadioGroup, Typography } from '@linode/ui';
 import React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Typography } from 'src/components/Typography';
 import { StyledChip } from 'src/features/components/PlansPanel/PlanSelection.styles';
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';

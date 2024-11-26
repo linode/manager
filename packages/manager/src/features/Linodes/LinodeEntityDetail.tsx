@@ -25,7 +25,7 @@ import {
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
-import type { TypographyProps } from 'src/components/Typography';
+import type { TypographyProps } from '@linode/ui';
 
 interface LinodeEntityDetailProps {
   id: number;

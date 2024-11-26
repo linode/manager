@@ -1,8 +1,6 @@
-import { Box, TooltipIcon } from '@linode/ui';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import {
   StyledDL,

@@ -1,10 +1,10 @@
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Typography } from 'src/components/Typography';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 

@@ -1,10 +1,16 @@
-import { Box, Button, FormControl, Paper, TextField } from '@linode/ui';
+import {
+  Box,
+  Button,
+  FormControl,
+  Paper,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useLinodeBackupSnapshotMutation } from 'src/queries/linodes/backups';
 import { getErrorMap } from 'src/utilities/errorUtils';

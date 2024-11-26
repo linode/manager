@@ -1,4 +1,4 @@
-import { Button, Notice } from '@linode/ui';
+import { Button, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -6,7 +6,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Typography } from 'src/components/Typography';
 import { useAccount, useMutateAccount } from 'src/queries/account/account';
 import { useNotificationsQuery } from 'src/queries/account/notifications';
 import { useMutateProfile, useProfile } from 'src/queries/profile/profile';

@@ -1,10 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import { Typography } from 'src/components/Typography';
 import { isNumber } from 'src/utilities/isNumber';
 
 import { StyledSpan } from './ConfigureForm.styles';
