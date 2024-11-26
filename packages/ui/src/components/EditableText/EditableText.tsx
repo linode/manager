@@ -132,8 +132,8 @@ interface Props {
   /**
    * An optional custom Link component used when `labelLink` is passed via props
    * 
-   * The component you pass must accept `className`, `link`, and `children` as props
-   * - `link` is just the `labelLink` prop forwarded to this Link component
+   * The component you pass must accept `className`, `to`, and `children` as props
+   * - `to` is just the `labelLink` prop forwarded to this Link component
    * - `className` should be passed to your Link so that it has the correct styles
    * - `children` contains the link's text/children
    * 
