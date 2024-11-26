@@ -1,7 +1,6 @@
-import { Box, Notice, TextField, Typography } from '@linode/ui';
+import { Accordion, Box, Notice, TextField, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Accordion } from 'src/components/Accordion';
 import { Link } from 'src/components/Link';
 
 import { UserDataAccordionHeading } from './UserDataAccordionHeading';

@@ -238,7 +238,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
           });
 
           //validate the widget areachart is present
-          cy.findByTestId('areachart-wrapper').within(() => {
+          cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
@@ -295,7 +295,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
           });
 
           //validate the widget areachart is present
-          cy.findByTestId('areachart-wrapper').within(() => {
+          cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
@@ -368,7 +368,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
             .should('be.enabled')
             .click();
           cy.get('@widget').should('be.visible');
-          cy.findByTestId('areachart-wrapper').within(() => {
+          cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
@@ -401,7 +401,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
             .click({ force: true });
           cy.get('@widget').should('be.visible');
 
-          cy.findByTestId('areachart-wrapper').within(() => {
+          cy.get('.recharts-responsive-container').within(() => {
             const expectedWidgetValues = getWidgetLegendRowValuesFromResponse(
               metricsAPIResponsePayload,
               testData.title,
