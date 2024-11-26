@@ -1,8 +1,7 @@
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Button } from '../Button';
@@ -130,6 +129,14 @@ interface Props {
    * Optional suffix to append to the text when it is not in editing mode
    */
   textSuffix?: string;
+  /**
+   * A custom Link component used when `labelLink` is passed via props
+   * 
+   * The component you pass must accept `className`, `link`, and `children` as props
+   * 
+   * @default 'a' - A basic HTML anchor will be used by default if no LinkComponent is passed.
+   */
+  LinkComponent?: React.ComponentType<React.PropsWithChildren<{ className: string, link: string }>>;
 }
 
 interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
@@ -149,8 +156,13 @@ export const EditableText = (props: PassThroughProps) => {
     onEdit,
     text: propText,
     textSuffix,
+    LinkComponent,
     ...rest
   } = props;
+
+  const DefaultLink = (props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { link: string }) => <a href={props.link} {...props} />
+
+  const Link = LinkComponent ?? DefaultLink;
 
   React.useEffect(() => {
     setText(propText);
@@ -220,7 +232,7 @@ export const EditableText = (props: PassThroughProps) => {
       data-testid={'editable-text'}
     >
       {!!labelLink ? (
-        <Link className={classes.underlineOnHover} to={labelLink!}>
+        <Link className={classes.underlineOnHover} link={labelLink}>
           {labelText}
         </Link>
       ) : (

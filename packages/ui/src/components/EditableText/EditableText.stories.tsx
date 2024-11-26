@@ -42,6 +42,33 @@ export const WithSuffix: Story = {
   },
 };
 
+export const WithLink: Story = {
+  args: {
+    onCancel: action('onCancel'),
+    text: 'I have a link',
+    labelLink: "https://linode.com"
+  },
+  render: (args) => <EditableText {...args} />,
+};
+
+/**
+ * Pretent this is `react-router-dom`'s Link component.
+ * This is just an example to show useage with `EditableText`
+ */
+const MyLink = (props: React.PropsWithChildren<{ to: string, className: string }>) => {
+  return <a {...props} href={props.to} />;
+};
+
+export const WithCustomLinkComponent: Story = {
+  args: {
+    onCancel: action('onCancel'),
+    text: 'I have a link',
+    labelLink: "https://linode.com",
+    LinkComponent: (props) => <MyLink to={props.link} {...props} />
+  },
+  render: (args) => <EditableText {...args} />,
+};
+
 const meta: Meta<typeof EditableText> = {
   component: EditableText,
   title: 'Components/Input/Editable Text',
