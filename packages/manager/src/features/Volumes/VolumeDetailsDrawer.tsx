@@ -7,16 +7,22 @@ import { Drawer } from 'src/components/Drawer';
 import type { Volume } from '@linode/api-v4';
 
 interface Props {
+  isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: Volume | undefined;
 }
 
 export const VolumeDetailsDrawer = (props: Props) => {
-  const { onClose, open, volume } = props;
+  const { isFetching, onClose, open, volume } = props;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Volume Configuration">
+    <Drawer
+      isFetching={isFetching}
+      onClose={onClose}
+      open={open}
+      title="Volume Configuration"
+    >
       <Stack spacing={3}>
         <Stack spacing={1}>
           <Typography data-qa-config-help-msg variant="body1">

@@ -20,6 +20,7 @@ import { ConfigSelect } from './VolumeDrawer/ConfigSelect';
 import type { Volume } from '@linode/api-v4';
 
 interface Props {
+  isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: Volume | undefined;
@@ -35,7 +36,7 @@ const AttachVolumeValidationSchema = object({
 });
 
 export const AttachVolumeDrawer = React.memo((props: Props) => {
-  const { open, volume } = props;
+  const { isFetching, open, volume } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -97,6 +98,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
 
   return (
     <Drawer
+      isFetching={isFetching}
       onClose={handleClose}
       open={open}
       title={`Attach Volume ${volume?.label}`}
