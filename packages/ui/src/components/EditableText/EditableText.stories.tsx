@@ -52,7 +52,7 @@ export const WithLink: Story = {
 };
 
 /**
- * Pretent this is `react-router-dom`'s Link component.
+ * Pretend this is `react-router-dom`'s Link component.
  * This is just an example to show useage with `EditableText`
  */
 const MyLink = (props: React.PropsWithChildren<{ to: string, className: string }>) => {
