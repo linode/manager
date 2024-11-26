@@ -131,15 +131,19 @@ interface Props {
   textSuffix?: string;
   /**
    * An optional custom Link component used when `labelLink` is passed via props
-   * 
+   *
    * The component you pass must accept `className`, `to`, and `children` as props
    * - `to` is just the `labelLink` prop forwarded to this Link component
    * - `className` should be passed to your Link so that it has the correct styles
    * - `children` contains the link's text/children
-   * 
-   * @default 'a' - A basic HTML anchor will be used by default if no LinkComponent is passed.
+   *
+   * A basic HTML anchor will be used by default if no LinkComponent is passed.
+   * @default 'a'
+   *
    */
-  LinkComponent?: React.ComponentType<React.PropsWithChildren<{ className: string, to: string }>>;
+  LinkComponent?: React.ComponentType<
+    React.PropsWithChildren<{ className?: string; to?: string }>
+  >;
 }
 
 interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
@@ -163,7 +167,9 @@ export const EditableText = (props: PassThroughProps) => {
     ...rest
   } = props;
 
-  const DefaultLink = (props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) => <a href={props.to} {...props} />
+  const DefaultLink = (
+    props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }
+  ) => <a href={props.to} {...props} />;
 
   const Link = LinkComponent ?? DefaultLink;
 

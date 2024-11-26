@@ -46,7 +46,7 @@ export const WithLink: Story = {
   args: {
     onCancel: action('onCancel'),
     text: 'I have a link',
-    labelLink: "https://linode.com"
+    labelLink: 'https://linode.com',
   },
   render: (args) => <EditableText {...args} />,
 };
@@ -55,7 +55,9 @@ export const WithLink: Story = {
  * Pretend this is `react-router-dom`'s Link component.
  * This is just an example to show usage with `EditableText`
  */
-const Link = (props: React.PropsWithChildren<{ to: string, className: string }>) => {
+const Link = (
+  props: React.PropsWithChildren<{ to?: string; className?: string }>
+) => {
   return <a {...props} href={props.to} />;
 };
 
@@ -63,8 +65,8 @@ export const WithCustomLinkComponent: Story = {
   args: {
     onCancel: action('onCancel'),
     text: 'I have a link',
-    labelLink: "https://linode.com",
-    LinkComponent: Link
+    labelLink: 'https://linode.com',
+    LinkComponent: Link,
   },
   render: (args) => <EditableText {...args} />,
 };
