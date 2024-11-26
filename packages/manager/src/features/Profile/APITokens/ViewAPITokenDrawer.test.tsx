@@ -111,7 +111,7 @@ describe('View API Token Drawer', () => {
         {...props}
         token={appTokenFactory.build({
           scopes:
-            'databases:read_only domains:read_write child_account:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only vpc:read_write',
+            'databases:read_only domains:read_write child_account:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write monitor:read_only nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only vpc:read_write',
         })}
       />
     );
@@ -128,6 +128,7 @@ describe('View API Token Drawer', () => {
       linodes: 1,
       lke: 1,
       longview: 2,
+      monitor: 1,
       nodebalancers: 2,
       object_storage: 1,
       stackscripts: 2,
