@@ -139,7 +139,7 @@ interface Props {
    * 
    * @default 'a' - A basic HTML anchor will be used by default if no LinkComponent is passed.
    */
-  LinkComponent?: React.ComponentType<React.PropsWithChildren<{ className: string, link: string }>>;
+  LinkComponent?: React.ComponentType<React.PropsWithChildren<{ className: string, to: string }>>;
 }
 
 interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
@@ -163,7 +163,7 @@ export const EditableText = (props: PassThroughProps) => {
     ...rest
   } = props;
 
-  const DefaultLink = (props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { link: string }) => <a href={props.link} {...props} />
+  const DefaultLink = (props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) => <a href={props.to} {...props} />
 
   const Link = LinkComponent ?? DefaultLink;
 
@@ -235,7 +235,7 @@ export const EditableText = (props: PassThroughProps) => {
       data-testid={'editable-text'}
     >
       {!!labelLink ? (
-        <Link className={classes.underlineOnHover} link={labelLink}>
+        <Link className={classes.underlineOnHover} to={labelLink}>
           {labelText}
         </Link>
       ) : (
