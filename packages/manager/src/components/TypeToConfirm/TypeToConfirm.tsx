@@ -1,8 +1,7 @@
-import { TextField } from '@linode/ui';
+import { TextField, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import type { TextFieldProps } from '@linode/ui';
 

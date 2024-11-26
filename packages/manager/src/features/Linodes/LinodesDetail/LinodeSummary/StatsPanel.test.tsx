@@ -11,7 +11,6 @@ describe('StatsPanel component', () => {
     const renderBody = vi.fn();
     const { getByTestId } = renderWithTheme(
       <StatsPanel
-        height={300}
         loading={true}
         renderBody={renderBody}
         title={title}
@@ -27,7 +26,6 @@ describe('StatsPanel component', () => {
 
     renderWithTheme(
       <StatsPanel
-        height={300}
         loading={false}
         renderBody={renderBody}
         title={title}

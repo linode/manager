@@ -1,3 +1,4 @@
+export * from './Accordion';
 export * from './BetaChip';
 export * from './Box';
 export * from './Button';
@@ -6,6 +7,7 @@ export * from './Checkbox';
 export * from './CircleProgress';
 export * from './ClickAwayListener';
 export * from './Divider';
+export * from './EditableText';
 export * from './FormControl';
 export * from './FormHelperText';
 export * from './H1Header';
@@ -21,4 +23,5 @@ export * from './Stack';
 export * from './TextField';
 export * from './Tooltip';
 export * from './TooltipIcon';
+export * from './Typography';
 export * from './VisibilityTooltip';

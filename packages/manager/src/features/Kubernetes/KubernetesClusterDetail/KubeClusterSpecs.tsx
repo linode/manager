@@ -1,10 +1,9 @@
-import { CircleProgress, TooltipIcon } from '@linode/ui';
+import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
 import {
   useAllKubernetesNodePoolQuery,
   useKubernetesTypesQuery,

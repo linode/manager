@@ -1,11 +1,10 @@
-import { Divider } from '@linode/ui';
+import { Divider, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { truncateMiddle } from 'src/utilities/truncate';

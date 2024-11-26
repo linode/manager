@@ -1,8 +1,6 @@
-import { Button } from '@linode/ui';
+import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
-
-import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';
 

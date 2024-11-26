@@ -1,8 +1,7 @@
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 
 import type { BoxProps } from '@linode/ui';
 

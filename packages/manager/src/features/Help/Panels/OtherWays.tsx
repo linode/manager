@@ -1,5 +1,6 @@
-import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import Community from 'src/assets/icons/community.svg';
@@ -7,7 +8,6 @@ import Documentation from 'src/assets/icons/document.svg';
 import Status from 'src/assets/icons/status.svg';
 import Support from 'src/assets/icons/support.svg';
 import { Tile } from 'src/components/Tile/Tile';
-import { Typography } from 'src/components/Typography';
 
 export const OtherWays = () => {
   const theme = useTheme();
