@@ -515,7 +515,7 @@ describe('Linode Accelerated plans', () => {
           '@getFeatureFlags',
         ]);
 
-        // Confirms Accelerated tab does not show up for LKE clusters
+        // Confirms Accelerated tab does not show up for linodes
         cy.findByText('Accelerated').should('not.exist');
       });
     });
