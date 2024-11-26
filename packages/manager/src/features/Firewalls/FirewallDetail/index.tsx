@@ -1,4 +1,10 @@
-import { CircleProgress } from '@linode/ui';
+import {
+  CircleProgress,
+  SafeTabPanel,
+  TabLinkList,
+  TabPanels,
+  Tabs,
+} from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -10,10 +16,6 @@ import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/Ge
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LinkButton } from 'src/components/LinkButton';
 import { NotFound } from 'src/components/NotFound';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';

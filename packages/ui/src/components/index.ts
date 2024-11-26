@@ -20,6 +20,7 @@ export * from './Paper';
 export * from './Radio';
 export * from './RadioGroup';
 export * from './Stack';
+export * from './Tabs';
 export * from './TextField';
 export * from './Tooltip';
 export * from './TooltipIcon';

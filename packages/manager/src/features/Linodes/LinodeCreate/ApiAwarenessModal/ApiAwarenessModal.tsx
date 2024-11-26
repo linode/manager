@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Tab, TabList, TabPanels, Tabs, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -6,10 +6,6 @@ import { useHistory } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 

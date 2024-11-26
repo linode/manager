@@ -1,5 +1,5 @@
 import { isEmpty } from '@linode/api-v4';
-import { Stack } from '@linode/ui';
+import { SafeTabPanel, Stack, Tab, TabList, TabPanels, Tabs } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -9,11 +9,6 @@ import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useMutateAccountAgreements } from 'src/queries/account/agreements';
 import {

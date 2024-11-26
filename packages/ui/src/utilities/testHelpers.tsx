@@ -1,10 +1,14 @@
 import { StyledEngineProvider, ThemeProvider } from '@mui/material';
-import { render, RenderResult } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import * as themes from '../foundations/themes';
 
+import type { RenderResult } from '@testing-library/react';
+import type { MemoryRouterProps } from 'react-router';
+
 interface Options {
+  MemoryRouter?: MemoryRouterProps;
   theme?: 'dark' | 'light';
 }
 
