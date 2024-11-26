@@ -395,16 +395,15 @@ describe('database resize', () => {
         },
       };
 
-      const { getByTestId } = renderWithTheme(
+      const { findByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
-      expect(getByTestId(loadingTestId)).toBeInTheDocument();
-      await waitForElementToBeRemoved(getByTestId(loadingTestId));
-      expect(getByTestId('database-nodes')).toBeDefined();
-      expect(getByTestId('database-node-1')).toBeDefined();
-      expect(getByTestId('database-node-2')).toBeDefined();
-      expect(getByTestId('database-node-3')).toBeDefined();
+
+      expect(await findByTestId('database-nodes')).toBeDefined();
+      expect(await findByTestId('database-node-1')).toBeDefined();
+      expect(await findByTestId('database-node-2')).toBeDefined();
+      expect(await findByTestId('database-node-3')).toBeDefined();
     });
 
     it('should disable lower node selections', async () => {
