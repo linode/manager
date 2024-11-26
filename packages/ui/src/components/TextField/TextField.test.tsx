@@ -1,10 +1,10 @@
-import { InputAdornment } from '../InputAdornment';
 import { fireEvent, getDefaultNormalizer } from '@testing-library/react';
 import * as React from 'react';
+import { describe, expect, it } from 'vitest';
 
-import { TextField } from './TextField';
-import { expect, describe, it } from 'vitest';
 import { renderWithTheme } from '../../utilities/testHelpers';
+import { InputAdornment } from '../InputAdornment';
+import { TextField } from './TextField';
 
 describe('TextField', () => {
   const props = {
