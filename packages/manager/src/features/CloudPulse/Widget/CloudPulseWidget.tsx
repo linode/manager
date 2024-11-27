@@ -51,7 +51,7 @@ export interface CloudPulseWidgetProperties {
   /**
    * token to fetch metrics data
    */
-  authToken: string;
+  authToken?: string;
 
   /**
    * metrics defined of this widget
@@ -67,6 +67,11 @@ export interface CloudPulseWidgetProperties {
    * Any error to be shown in this widget
    */
   errorLabel?: string;
+
+  /**
+   * Jwe token fetching status check
+   */
+  isJweTokenFetching: boolean;
 
   /**
    * resources ids selected by user to show metrics for
@@ -136,6 +141,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     authToken,
     availableMetrics,
     duration,
+    isJweTokenFetching,
     resourceIds,
     resources,
     savePref,
@@ -232,7 +238,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     },
     {
       authToken,
-      isFlags: Boolean(flags),
+      isFlags: Boolean(flags && !isJweTokenFetching),
       label: widget.label,
       timeStamp,
       url: flags.aclpReadEndpoint!,
@@ -326,13 +332,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 ? metricsApiCallError ?? 'Error while rendering graph'
                 : undefined
             }
+            loading={
+              isLoading ||
+              metricsApiCallError === jweTokenExpiryError ||
+              isJweTokenFetching
+            } // keep loading until we are trying to fetch the refresh token
             areas={areas}
             ariaLabel={ariaLabel ? ariaLabel : ''}
             data={data}
             dotRadius={1.5}
             height={424}
             legendRows={legendRows}
-            loading={isLoading || metricsApiCallError === jweTokenExpiryError} // keep loading until we fetch the refresh token
             showDot
             showLegend={data.length !== 0}
             timezone={timezone}
