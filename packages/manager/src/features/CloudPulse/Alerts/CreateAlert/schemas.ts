@@ -6,10 +6,11 @@ const engineOptionValidation = string().when('service_type', {
   otherwise: (schema) => schema.notRequired().nullable(),
   then: (schema) => schema.required('Engine type is required.').nullable(),
 });
+
 export const CreateAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    engine_type: engineOptionValidation,
+    engineType: engineOptionValidation,
     region: string().required('Region is required.'),
-    service_type: string().required('Service is required.'),
+    serviceType: string().required('Service is required.'),
   })
 );
