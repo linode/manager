@@ -6,6 +6,7 @@ import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 import { depaginate } from './paginate';
 
@@ -158,13 +159,20 @@ export const createTestLinode = async (
 
   // Wait for Linode status to be 'running' if `waitForBoot` is true.
   if (resolvedOptions.waitForBoot) {
-    // Wait 15 seconds before initial check, then poll again every 5 seconds.
+    // Wait 15 seconds before initial check, then poll again every 5 seconds
+    // until Linode create timeout is reached.
+    const initialDelay = 15_000;
+    const interval = 5_000;
+    const maxAttempts = Math.ceil(
+      (LINODE_CREATE_TIMEOUT - initialDelay) / interval
+    );
+
     await pollLinodeStatus(
       linode.id,
       'running',
-      new SimpleBackoffMethod(5000, {
-        initialDelay: 15000,
-        maxAttempts: 25,
+      new SimpleBackoffMethod(interval, {
+        initialDelay,
+        maxAttempts,
       })
     );
   }
