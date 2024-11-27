@@ -29,6 +29,10 @@
         "format": ["camelCase"],
         "leadingUnderscore": "allow",
         "selector": "parameter"
+      },
+      {
+        "format": ["PascalCase"],
+        "selector": "typeLike"
       }
     ],
     "@typescript-eslint/no-unused-vars": "off",

@@ -181,6 +181,10 @@ module.exports = {
         leadingUnderscore: 'allow',
         selector: 'parameter',
       },
+      {
+        format: ['PascalCase'],
+        selector: 'typeLike',
+      },
     ],
     '@typescript-eslint/no-empty-interface': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
