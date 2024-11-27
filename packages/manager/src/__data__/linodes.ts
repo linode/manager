@@ -28,6 +28,7 @@ export const linode1: Linode = {
   placement_group: {
     id: 1,
     label: 'pg-1',
+    migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
   },
@@ -76,6 +77,7 @@ export const linode2: Linode = {
   placement_group: {
     id: 1,
     label: 'pg-1',
+    migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
   },
@@ -124,6 +126,7 @@ export const linode3: Linode = {
   placement_group: {
     id: 1,
     label: 'pg-1',
+    migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
   },
@@ -172,6 +175,7 @@ export const linode4: Linode = {
   placement_group: {
     id: 1,
     label: 'pg-1',
+    migrating_to: null,
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
   },
