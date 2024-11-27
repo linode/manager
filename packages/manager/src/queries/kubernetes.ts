@@ -196,7 +196,7 @@ export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
   });
 };
 
-export const useKubenetesKubeConfigQuery = (
+export const useKubernetesKubeConfigQuery = (
   clusterId: number,
   enabled = false
 ) =>
@@ -204,7 +204,7 @@ export const useKubenetesKubeConfigQuery = (
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
     refetchOnMount: true,
-    retry: true,
+    retry: 3,
     retryDelay: 5000,
   });
 

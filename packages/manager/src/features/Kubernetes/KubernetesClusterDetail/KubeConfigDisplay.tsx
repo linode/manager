@@ -11,7 +11,7 @@ import ResetIcon from 'src/assets/icons/reset.svg';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
-  useKubenetesKubeConfigQuery,
+  useKubernetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -103,7 +103,7 @@ export const KubeConfigDisplay = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
 
-  const { isFetching, refetch: getKubeConfig } = useKubenetesKubeConfigQuery(
+  const { isFetching, refetch: getKubeConfig } = useKubernetesKubeConfigQuery(
     clusterId,
     false
   );
