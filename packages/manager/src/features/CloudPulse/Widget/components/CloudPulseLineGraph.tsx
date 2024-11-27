@@ -43,7 +43,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
             bottom: 0,
             left: -15,
             right: 30,
-            top: 0,
+            top: 2,
           }}
           xAxisTickCount={
             isSmallScreen ? undefined : Math.min(rest.data.length, 7)
