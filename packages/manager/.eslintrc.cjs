@@ -173,6 +173,11 @@ module.exports = {
         trailingUnderscore: 'allow',
       },
       {
+        format: null,
+        modifiers: ['destructured'],
+        selector: 'variable',
+      },
+      {
         format: ['camelCase', 'PascalCase'],
         selector: 'function',
       },
