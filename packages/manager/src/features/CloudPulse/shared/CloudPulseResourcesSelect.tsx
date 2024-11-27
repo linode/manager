@@ -55,7 +55,7 @@ export const CloudPulseResourcesSelect = React.memo(
       dbaas: { '+order': 'asc', '+order_by': 'label', platform: 'rdbms-default' },
     };
 
-    const { data: resources, isLoading, isError } = useResourcesQuery(
+    const { data: resources, isError, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
@@ -122,6 +122,9 @@ export const CloudPulseResourcesSelect = React.memo(
 
     return (
       <Autocomplete
+        helperText={
+          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
+        }
         onChange={(e, resourceSelections) => {
           setSelectedResources(resourceSelections);
 
@@ -176,8 +179,13 @@ export const CloudPulseResourcesSelect = React.memo(
         textFieldProps={{
           InputProps: {
             sx: {
+              '::-webkit-scrollbar': {
+                display: 'none',
+              },
               maxHeight: '55px',
+              msOverflowStyle: 'none',
               overflow: 'auto',
+              scrollbarWidth: 'none',
               svg: {
                 color: themes.light.color.grey3,
               },
@@ -190,9 +198,6 @@ export const CloudPulseResourcesSelect = React.memo(
         disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
-        helperText={
-          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
-        }
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
         limitTags={1}

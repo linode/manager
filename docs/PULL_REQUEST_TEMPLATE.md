@@ -48,7 +48,10 @@ Please specify a release date (and environment, if applicable) to guarantee time
 - [ ] ...
 - [ ] ...
 
-## As an Author, I have considered 🤔
+<details>
+<summary> Author Checklists </summary>
+
+## As an Author, to speed up the review process, I considered 🤔
 
 *Check all that apply*
 
@@ -75,6 +78,8 @@ Please specify a release date (and environment, if applicable) to guarantee time
 - [ ] All unit tests are passing
 - [ ] TypeScript compilation succeeded without errors
 - [ ] Code passes all linting rules
+
+</details>
 
 ---
 
