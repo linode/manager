@@ -15,52 +15,38 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { DrawerContent } from 'src/components/DrawerContent';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
-  useKubernetesControlPlaneACLQuery,
 } from 'src/queries/kubernetes';
 import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
-import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
+import type {
+  KubernetesCluster,
+  KubernetesControlPlaneACLPayload,
+} from '@linode/api-v4';
 
 export interface KubeControlPlaneACLDrawerProps {
   closeDrawer: () => void;
-  clusterId: number;
-  clusterLabel: string;
+  cluster: KubernetesCluster;
   clusterMigrated: boolean;
   open: boolean;
-  showControlPlaneACL: boolean;
 }
 
 export const KubeControlPlaneACLDrawer = (
   props: KubeControlPlaneACLDrawerProps
 ) => {
   const formContainerRef = React.useRef<HTMLFormElement>(null);
-  const {
-    closeDrawer,
-    clusterId,
-    clusterLabel,
-    clusterMigrated,
-    open,
-    showControlPlaneACL,
-  } = props;
-
-  const {
-    data: data,
-    error: isErrorKubernetesACL,
-    isLoading: isLoadingKubernetesACL,
-  } = useKubernetesControlPlaneACLQuery(clusterId, showControlPlaneACL);
+  const { closeDrawer, cluster, clusterMigrated, open } = props;
 
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
-  } = useKubernetesControlPlaneACLMutation(clusterId);
+  } = useKubernetesControlPlaneACLMutation(cluster.id);
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterId
+    cluster.id
   );
 
   const {
@@ -71,17 +57,17 @@ export const KubeControlPlaneACLDrawer = (
     setError,
     watch,
   } = useForm<KubernetesControlPlaneACLPayload>({
-    defaultValues: data,
+    defaultValues: cluster.control_plane,
     mode: 'onBlur',
     resolver: yupResolver(kubernetesControlPlaneACLPayloadSchema),
     values: {
       acl: {
         addresses: {
-          ipv4: data?.acl?.addresses?.ipv4 ?? [''],
-          ipv6: data?.acl?.addresses?.ipv6 ?? [''],
+          ipv4: cluster.control_plane.acl?.addresses?.ipv4 ?? [''],
+          ipv6: cluster.control_plane.acl?.addresses?.ipv6 ?? [''],
         },
-        enabled: data?.acl?.enabled ?? false,
-        'revision-id': data?.acl?.['revision-id'] ?? '',
+        enabled: cluster.control_plane.acl?.enabled ?? false,
+        'revision-id': cluster.control_plane.acl?.['revision-id'] ?? '',
       },
     },
   });
@@ -155,156 +141,150 @@ export const KubeControlPlaneACLDrawer = (
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title={'Control Plane ACL'} wide>
-      <DrawerContent
-        error={!!isErrorKubernetesACL && clusterMigrated} // when cluster has not migrated, we expect an error from the query
-        errorMessage={isErrorKubernetesACL?.[0].reason} // only on initial loading error do we disable the drawer altogether
-        loading={isLoadingKubernetesACL}
-        title={clusterLabel}
-      >
-        <form onSubmit={handleSubmit(updateCluster)} ref={formContainerRef}>
-          {errors.root?.message && (
-            <Notice spacingTop={8} variant="error">
-              {errors.root.message}
+    <Drawer
+      onClose={handleClose}
+      open={open}
+      title={`Control Plane ACL for ${cluster.label}`}
+      wide
+    >
+      <form onSubmit={handleSubmit(updateCluster)} ref={formContainerRef}>
+        {errors.root?.message && (
+          <Notice spacingTop={8} variant="error">
+            {errors.root.message}
+          </Notice>
+        )}
+        <Stack sx={{ marginTop: 3 }}>
+          <StyledTypography variant="body1">
+            Control Plane ACL secures network access to your LKE cluster&apos;s
+            control plane. Use this form to enable or disable the ACL on your
+            LKE cluster, update the list of allowed IP addresses, and adjust
+            other settings.
+          </StyledTypography>
+          {!clusterMigrated && (
+            <Notice spacingBottom={0} spacingTop={16} variant="warning">
+              <StyledTypography
+                sx={(theme) => ({
+                  fontFamily: theme.font.bold,
+                  fontSize: '15px',
+                })}
+              >
+                Control Plane ACL has not yet been installed on this cluster.
+                During installation, it may take up to 15 minutes for the access
+                control list to be fully enforced.
+              </StyledTypography>
             </Notice>
           )}
-          <Stack sx={{ marginTop: 3 }}>
-            <StyledTypography variant="body1">
-              Control Plane ACL secures network access to your LKE
-              cluster&apos;s control plane. Use this form to enable or disable
-              the ACL on your LKE cluster, update the list of allowed IP
-              addresses, and adjust other settings.
-            </StyledTypography>
-            {!clusterMigrated && (
-              <Notice spacingBottom={0} spacingTop={16} variant="warning">
-                <StyledTypography
-                  sx={(theme) => ({
-                    fontFamily: theme.font.bold,
-                    fontSize: '15px',
-                  })}
-                >
-                  Control Plane ACL has not yet been installed on this cluster.
-                  During installation, it may take up to 15 minutes for the
-                  access control list to be fully enforced.
-                </StyledTypography>
-              </Notice>
-            )}
-            <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
-            <Typography variant="h3">Activation Status</Typography>
-            <StyledTypography topMargin variant="body1">
-              Enable or disable the Control Plane ACL. If the ACL is not
-              enabled, any public IP address can be used to access your control
-              plane. Once enabled, all network access is denied except for the
-              IP addresses and CIDR ranges defined on the ACL.
-            </StyledTypography>
-            <Box sx={{ marginTop: 1 }}>
+          <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
+          <Typography variant="h3">Activation Status</Typography>
+          <StyledTypography topMargin variant="body1">
+            Enable or disable the Control Plane ACL. If the ACL is not enabled,
+            any public IP address can be used to access your control plane. Once
+            enabled, all network access is denied except for the IP addresses
+            and CIDR ranges defined on the ACL.
+          </StyledTypography>
+          <Box sx={{ marginTop: 1 }}>
+            <Controller
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Toggle
+                      checked={field.value ?? false}
+                      name="ipacl-checkbox"
+                      onBlur={field.onBlur}
+                      onChange={field.onChange}
+                    />
+                  }
+                  label={'Enable Control Plane ACL'}
+                />
+              )}
+              control={control}
+              name="acl.enabled"
+            />
+          </Box>
+          <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
+          {clusterMigrated && (
+            <>
+              <Typography variant="h3">Revision ID</Typography>
+              <StyledTypography topMargin variant="body1">
+                A unique identifying string for this particular revision to the
+                ACL, used by clients to track events related to ACL update
+                requests and enforcement. This defaults to a randomly generated
+                string but can be edited if you prefer to specify your own
+                string to use for tracking this change.
+              </StyledTypography>
               <Controller
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Toggle
-                        checked={field.value ?? false}
-                        name="ipacl-checkbox"
-                        onBlur={field.onBlur}
-                        onChange={field.onChange}
-                      />
-                    }
-                    label={'Enable Control Plane ACL'}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    errorText={fieldState.error?.message}
+                    label="Revision ID"
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                    value={field.value}
                   />
                 )}
                 control={control}
-                name="acl.enabled"
+                name="acl.revision-id"
               />
-            </Box>
-            <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
-            {clusterMigrated && (
-              <>
-                <Typography variant="h3">Revision ID</Typography>
-                <StyledTypography topMargin variant="body1">
-                  A unique identifying string for this particular revision to
-                  the ACL, used by clients to track events related to ACL update
-                  requests and enforcement. This defaults to a randomly
-                  generated string but can be edited if you prefer to specify
-                  your own string to use for tracking this change.
-                </StyledTypography>
-                <Controller
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      errorText={fieldState.error?.message}
-                      label="Revision ID"
-                      onBlur={field.onBlur}
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
-                  )}
-                  control={control}
-                  name="acl.revision-id"
+              <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
+            </>
+          )}
+          <Typography variant="h3">Addresses</Typography>
+          <StyledTypography sx={{ marginBottom: 1 }} topMargin variant="body1">
+            A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This
+            cluster&apos;s control plane will only be accessible from IP
+            addresses within this list.
+          </StyledTypography>
+          {errors.acl?.message && (
+            <Notice spacingBottom={12} spacingTop={8} variant="error">
+              {errors.acl.message}
+            </Notice>
+          )}
+          <Box sx={{ maxWidth: 450 }}>
+            <Controller
+              render={({ field }) => (
+                <MultipleNonExtendedIPInput
+                  buttonText="Add IPv4 Address"
+                  ipErrors={errors.acl?.addresses?.ipv4}
+                  isLinkStyled
+                  nonExtendedIPs={field.value ?? ['']}
+                  onBlur={field.onBlur}
+                  onNonExtendedIPChange={field.onChange}
+                  title="IPv4 Addresses or CIDRs"
                 />
-                <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
-              </>
-            )}
-            <Typography variant="h3">Addresses</Typography>
-            <StyledTypography
-              sx={{ marginBottom: 1 }}
-              topMargin
-              variant="body1"
-            >
-              A list of allowed IPv4 and IPv6 addresses and CIDR ranges. This
-              cluster&apos;s control plane will only be accessible from IP
-              addresses within this list.
-            </StyledTypography>
-            {errors.acl?.message && (
-              <Notice spacingBottom={12} spacingTop={8} variant="error">
-                {errors.acl.message}
-              </Notice>
-            )}
-            <Box sx={{ maxWidth: 450 }}>
+              )}
+              control={control}
+              name="acl.addresses.ipv4"
+            />
+            <Box marginTop={2}>
               <Controller
                 render={({ field }) => (
                   <MultipleNonExtendedIPInput
-                    buttonText="Add IPv4 Address"
-                    ipErrors={errors.acl?.addresses?.ipv4}
+                    buttonText="Add IPv6 Address"
+                    ipErrors={errors.acl?.addresses?.ipv6}
                     isLinkStyled
                     nonExtendedIPs={field.value ?? ['']}
                     onBlur={field.onBlur}
                     onNonExtendedIPChange={field.onChange}
-                    title="IPv4 Addresses or CIDRs"
+                    title="IPv6 Addresses or CIDRs"
                   />
                 )}
                 control={control}
-                name="acl.addresses.ipv4"
+                name="acl.addresses.ipv6"
               />
-              <Box marginTop={2}>
-                <Controller
-                  render={({ field }) => (
-                    <MultipleNonExtendedIPInput
-                      buttonText="Add IPv6 Address"
-                      ipErrors={errors.acl?.addresses?.ipv6}
-                      isLinkStyled
-                      nonExtendedIPs={field.value ?? ['']}
-                      onBlur={field.onBlur}
-                      onNonExtendedIPChange={field.onChange}
-                      title="IPv6 Addresses or CIDRs"
-                    />
-                  )}
-                  control={control}
-                  name="acl.addresses.ipv6"
-                />
-              </Box>
             </Box>
-            <ActionsPanel
-              primaryButtonProps={{
-                'data-testid': 'update-acl-button',
-                disabled: !isDirty,
-                label: 'Update',
-                loading: isSubmitting,
-                type: 'submit',
-              }}
-              secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
-            />
-          </Stack>
-        </form>
-      </DrawerContent>
+          </Box>
+          <ActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'update-acl-button',
+              disabled: !isDirty,
+              label: 'Update',
+              loading: isSubmitting,
+              type: 'submit',
+            }}
+            secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
+          />
+        </Stack>
+      </form>
     </Drawer>
   );
 };

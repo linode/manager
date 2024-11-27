@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { kubernetesClusterFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
@@ -9,11 +10,12 @@ import type { KubeControlPlaneACLDrawerProps } from './KubeControlPaneACLDrawer'
 
 const props: KubeControlPlaneACLDrawerProps = {
   closeDrawer: vi.fn(),
-  clusterId: 1,
-  clusterLabel: 'Test',
+  cluster: kubernetesClusterFactory.build({
+    id: 1,
+    label: 'Test',
+  }),
   clusterMigrated: true,
   open: true,
-  showControlPlaneACL: true,
 };
 
 const queryMocks = vi.hoisted(() => ({
@@ -46,7 +48,7 @@ describe('KubeControlPaneACLDrawer', () => {
       <KubeControlPlaneACLDrawer {...props} />
     );
 
-    expect(getByText('Control Plane ACL')).toBeVisible();
+    expect(getByText('Control Plane ACL for Test')).toBeVisible();
     expect(
       getByText(
         "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
