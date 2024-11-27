@@ -35,7 +35,7 @@ describe('ResourceMultiSelect component tests', () => {
       component: (
         <CloudPulseMultiResourceSelect
           engine="mysql"
-          name="resource_ids"
+          name="entity_ids"
           region={undefined}
           serviceType={null}
         />
@@ -56,7 +56,7 @@ describe('ResourceMultiSelect component tests', () => {
       component: (
         <CloudPulseMultiResourceSelect
           engine="mysql"
-          name="resource_ids"
+          name="entity_ids"
           region="us-east"
           serviceType="linode"
         />
@@ -86,7 +86,7 @@ describe('ResourceMultiSelect component tests', () => {
       component: (
         <CloudPulseMultiResourceSelect
           engine="mysql"
-          name="resource_ids"
+          name="entity_ids"
           region="us-east"
           serviceType="linode"
         />
@@ -117,7 +117,7 @@ describe('ResourceMultiSelect component tests', () => {
       component: (
         <CloudPulseMultiResourceSelect
           engine="mysql"
-          name="resource_ids"
+          name="entity_ids"
           region="us-east"
           serviceType="linode"
         />
@@ -152,7 +152,7 @@ describe('ResourceMultiSelect component tests', () => {
       component: (
         <CloudPulseMultiResourceSelect
           engine="mysql"
-          name="resource_ids"
+          name="entity_ids"
           region="us-east"
           serviceType="linode"
         />
@@ -188,7 +188,7 @@ describe('ResourceMultiSelect component tests', () => {
       component: (
         <CloudPulseMultiResourceSelect
           engine="mysql"
-          name="resource_ids"
+          name="entity_ids"
           region="us-east"
           serviceType="dbaas"
         />
@@ -207,7 +207,7 @@ describe('ResourceMultiSelect component tests', () => {
       component: (
         <CloudPulseMultiResourceSelect
           engine="mysql"
-          name="resource_ids"
+          name="entity_ids"
           region="us-east"
           serviceType="linode"
         />

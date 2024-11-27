@@ -51,8 +51,8 @@ export const CloudPulseMultiResourceSelect = (
   }, [resources]);
 
   React.useEffect(() => {
-    setValue('resource_ids', []);
-  }, [region, serviceType, engine, setValue]);
+    setValue(name, []);
+  }, [region, serviceType, engine, setValue, name]);
 
   return (
     <Controller
@@ -65,14 +65,6 @@ export const CloudPulseMultiResourceSelect = (
           onChange={(_, resources: { label: string; value: string }[]) => {
             const resourceIds = resources.map((resource) => resource.value);
             field.onChange(resourceIds);
-          }}
-          textFieldProps={{
-            InputProps: {
-              sx: {
-                maxHeight: '60px',
-                overflow: 'auto',
-              },
-            },
           }}
           value={
             field.value

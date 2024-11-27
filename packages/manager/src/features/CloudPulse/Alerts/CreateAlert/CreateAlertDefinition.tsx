@@ -35,9 +35,9 @@ const criteriaInitialValues: MetricCriteriaForm = {
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
   engineType: null,
+  entity_ids: [],
   label: '',
   region: '',
-  resource_ids: [],
   rule_criteria: {
     rules: filterMetricCriteriaFormValues(criteriaInitialValues),
   },
@@ -145,7 +145,7 @@ export const CreateAlertDefinition = () => {
           <CloudPulseRegionSelect name="region" />
           <CloudPulseMultiResourceSelect
             engine={watch('engineType')}
-            name="resource_ids"
+            name="entity_ids"
             region={watch('region')}
             serviceType={serviceWatcher}
           />

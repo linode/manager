@@ -18,8 +18,8 @@ export const filterFormValues = (
   ]);
   // severity has a need for null in the form for edge-cases, so null-checking and returning it as an appropriate type
   const severity = formValues.severity!;
-  const resourceIds = formValues.resource_ids!;
-  return { ...values, resource_ids: resourceIds, severity };
+  const entityIds = formValues.entity_ids;
+  return { ...values, entity_ids: entityIds, severity };
 };
 
 export const filterMetricCriteriaFormValues = (
