@@ -82,7 +82,7 @@ export const CloudPulseMultiResourceSelect = (
           data-testid="resource-select"
           disabled={!Boolean(region && serviceType)}
           isOptionEqualToValue={(option, value) => option.value === value.value}
-          label={serviceType === 'dbaas' ? 'Cluster' : 'Resources'}
+          label={serviceType === 'dbaas' ? 'Clusters' : 'Resources'}
           limitTags={2}
           loading={isLoading && Boolean(region && serviceType)}
           multiple

@@ -45,6 +45,7 @@ describe('ResourceMultiSelect component tests', () => {
     expect(getByTestId('resource-select')).toBeInTheDocument();
     expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
   });
+
   it('should render resources happy path', async () => {
     const user = userEvent.setup();
     const mockLinodes = linodeFactory.buildList(2);
@@ -76,6 +77,7 @@ describe('ResourceMultiSelect component tests', () => {
       })
     ).toBeInTheDocument();
   });
+
   it('should be able to select all resources', async () => {
     const user = userEvent.setup();
     const mockLinodes = linodeFactory.buildList(2);
@@ -108,6 +110,7 @@ describe('ResourceMultiSelect component tests', () => {
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
   });
+
   it('should be able to deselect the selected resources', async () => {
     const user = userEvent.setup();
     const mockLinodes = linodeFactory.buildList(2);
@@ -192,6 +195,7 @@ describe('ResourceMultiSelect component tests', () => {
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
+
   it('should render the label as cluster when resource is of dbaas type', () => {
     const { getByLabelText } = renderWithThemeAndHookFormContext({
       component: (
@@ -203,8 +207,9 @@ describe('ResourceMultiSelect component tests', () => {
         />
       ),
     });
-    expect(getByLabelText('Cluster'));
+    expect(getByLabelText('Clusters'));
   });
+
   it('should render error messages when there is an API call failure', () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: undefined,
