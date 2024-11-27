@@ -50,6 +50,10 @@ export const CloudPulseMultiResourceSelect = (
       : [];
   }, [resources]);
 
+  /* useEffect is used here to reset the value of entity_ids back to [] when the region, engine, serviceType props are changed ,
+      as the options to the Autocomplete component are dependent on those props , the values of the Autocomplete won't match with the given options that are passed
+      and this may raise a warning or error with the isOptionEqualToValue prop in the Autocomplete.
+  */
   React.useEffect(() => {
     setValue(name, []);
   }, [region, serviceType, engine, setValue, name]);

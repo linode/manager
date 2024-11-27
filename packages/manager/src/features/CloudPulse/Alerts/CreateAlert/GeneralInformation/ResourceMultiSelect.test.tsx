@@ -22,8 +22,9 @@ const SELECT_ALL = 'Select All';
 const ARIA_SELECTED = 'aria-selected';
 describe('ResourceMultiSelect component tests', () => {
   it('should render disabled component if the props are undefined or regions and service type does not have any values', () => {
+    const mockLinodes = linodeFactory.buildList(2);
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: linodeFactory.buildList(2),
+      data: mockLinodes,
       isError: false,
       isLoading: false,
       status: 'success',
@@ -46,8 +47,9 @@ describe('ResourceMultiSelect component tests', () => {
   });
   it('should render resources happy path', async () => {
     const user = userEvent.setup();
+    const mockLinodes = linodeFactory.buildList(2);
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: linodeFactory.buildList(2),
+      data: mockLinodes,
       isError: false,
       isLoading: false,
       status: 'success',
@@ -65,19 +67,20 @@ describe('ResourceMultiSelect component tests', () => {
     user.click(screen.getByRole('button', { name: 'Open' }));
     expect(
       await screen.findByRole('option', {
-        name: 'linode-3',
+        name: mockLinodes[0].label,
       })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('option', {
-        name: 'linode-4',
+        name: mockLinodes[1].label,
       })
     ).toBeInTheDocument();
   });
   it('should be able to select all resources', async () => {
     const user = userEvent.setup();
+    const mockLinodes = linodeFactory.buildList(2);
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: linodeFactory.buildList(2),
+      data: mockLinodes,
       isError: false,
       isLoading: false,
       status: 'success',
@@ -96,19 +99,20 @@ describe('ResourceMultiSelect component tests', () => {
     await user.click(await screen.findByRole('option', { name: SELECT_ALL }));
     expect(
       await screen.findByRole('option', {
-        name: 'linode-5',
+        name: mockLinodes[0].label,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       screen.getByRole('option', {
-        name: 'linode-6',
+        name: mockLinodes[0].label,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
   });
   it('should be able to deselect the selected resources', async () => {
     const user = userEvent.setup();
+    const mockLinodes = linodeFactory.buildList(2);
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: linodeFactory.buildList(2),
+      data: mockLinodes,
       isError: false,
       isLoading: false,
       status: 'success',
@@ -130,20 +134,21 @@ describe('ResourceMultiSelect component tests', () => {
     );
     expect(
       await screen.findByRole('option', {
-        name: 'linode-7',
+        name: mockLinodes[0].label,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(
       screen.getByRole('option', {
-        name: 'linode-8',
+        name: mockLinodes[1].label,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
   });
 
   it('should select multiple resources', async () => {
     const user = userEvent.setup();
+    const mockLinodes = linodeFactory.buildList(3);
     queryMocks.useResourcesQuery.mockReturnValue({
-      data: linodeFactory.buildList(3),
+      data: mockLinodes,
       isError: false,
       isLoading: false,
       status: 'success',
@@ -159,22 +164,26 @@ describe('ResourceMultiSelect component tests', () => {
       ),
     });
     user.click(screen.getByRole('button', { name: 'Open' }));
-    await user.click(await screen.findByRole('option', { name: 'linode-9' }));
-    await user.click(await screen.findByRole('option', { name: 'linode-10' }));
+    await user.click(
+      await screen.findByRole('option', { name: mockLinodes[0].label })
+    );
+    await user.click(
+      await screen.findByRole('option', { name: mockLinodes[1].label })
+    );
 
     expect(
       await screen.findByRole('option', {
-        name: 'linode-9',
+        name: mockLinodes[0].label,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       screen.getByRole('option', {
-        name: 'linode-10',
+        name: mockLinodes[1].label,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       screen.getByRole('option', {
-        name: 'linode-11',
+        name: mockLinodes[2].label,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'false');
     expect(

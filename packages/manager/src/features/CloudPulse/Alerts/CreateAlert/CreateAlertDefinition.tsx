@@ -81,7 +81,7 @@ export const CreateAlertDefinition = () => {
     getValues('serviceType')!
   );
 
-  const serviceWatcher = watch('serviceType');
+  const serviceTypeWatcher = watch('serviceType');
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
@@ -141,13 +141,13 @@ export const CreateAlertDefinition = () => {
             name="description"
           />
           <CloudPulseServiceSelect name="serviceType" />
-          {serviceWatcher === 'dbaas' && <EngineOption name="engineType" />}
+          {serviceTypeWatcher === 'dbaas' && <EngineOption name="engineType" />}
           <CloudPulseRegionSelect name="region" />
           <CloudPulseMultiResourceSelect
             engine={watch('engineType')}
             name="entity_ids"
             region={watch('region')}
-            serviceType={serviceWatcher}
+            serviceType={serviceTypeWatcher}
           />
           <CloudPulseAlertSeveritySelect name="severity" />
           <ActionsPanel
