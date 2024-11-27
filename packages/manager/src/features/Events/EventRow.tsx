@@ -9,7 +9,6 @@ import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useProfile } from 'src/queries/profile/profile';
-import { getEventTimestamp } from 'src/utilities/eventUtils';
 
 import {
   formatProgressEvent,
@@ -18,16 +17,19 @@ import {
 } from './utils';
 
 import type { Event } from '@linode/api-v4/lib/account';
+import type { DateTime } from 'luxon';
 
+export interface completionEvent extends Event {
+  completionTime: DateTime;
+}
 interface EventRowProps {
   entityId?: number;
-  event: Event;
+  event: completionEvent;
 }
 
 export const EventRow = (props: EventRowProps) => {
   const { event } = props;
   const theme = useTheme();
-  const timestamp = getEventTimestamp(event);
   const { action, message, username } = {
     action: event.action,
     message: getEventMessage(event),
@@ -85,7 +87,7 @@ export const EventRow = (props: EventRowProps) => {
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-event-created-cell parentColumn="Absolute Date">
-          <DateTimeDisplay value={timestamp.toString()} />
+          <DateTimeDisplay value={event.completionTime.toString()} />
         </TableCell>
       </Hidden>
     </TableRow>

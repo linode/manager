@@ -7,6 +7,7 @@ import { getEventTimestamp } from 'src/utilities/eventUtils';
 import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';
 
+import type { completionEvent } from './EventRow';
 import type { Event } from '@linode/api-v4';
 
 type EventMessageManualInput = {
@@ -136,4 +137,20 @@ export const formatProgressEvent = (event: Event): ProgressEventDisplay => {
     progressEventDisplay,
     showProgress,
   };
+};
+
+export const sortEventsChronologically = (
+  events: Event[] | undefined
+): completionEvent[] => {
+  if (events) {
+    return events
+      ?.map((e) => ({
+        ...e,
+        completionTime: getEventTimestamp(e),
+      }))
+      .sort((e1, e2) => {
+        return e2.completionTime.toMillis() - e1.completionTime.toMillis();
+      });
+  }
+  return [];
 };

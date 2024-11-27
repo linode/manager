@@ -21,7 +21,9 @@ import {
   StyledTableCell,
   StyledTypography,
 } from './EventsLanding.styles';
+import { sortEventsChronologically } from './utils';
 
+import type { completionEvent } from './EventRow';
 import type { Filter } from '@linode/api-v4';
 
 interface Props {
@@ -68,9 +70,10 @@ export const EventsLanding = (props: Props) => {
         />
       );
     } else {
+      const sortedEvents: completionEvent[] = sortEventsChronologically(events);
       return (
         <>
-          {events?.map((event) => (
+          {sortedEvents?.map((event) => (
             <EventRow
               entityId={entityId}
               event={event}
