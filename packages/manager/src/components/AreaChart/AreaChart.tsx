@@ -64,7 +64,7 @@ interface YAxisProps {
   /**
    * The formatter function for the y-axis tick.
    */
-  tickFormat: () => string;
+  tickFormat: (value: number) => string;
 }
 
 export interface AreaChartProps {

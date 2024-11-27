@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { roundTo } from 'src/utilities/roundTo';
 
 import type { AreaChartProps } from 'src/components/AreaChart/AreaChart';
 
@@ -38,9 +39,20 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
       ) : (
         <AreaChart
           {...rest}
+          margin={{
+            bottom: 0,
+            left: -15,
+            right: 30,
+            top: 2,
+          }}
+          xAxisTickCount={
+            isSmallScreen ? undefined : Math.min(rest.data.length, 7)
+          }
+          yAxisProps={{
+            tickFormat: (value: number) => `${roundTo(value, 3)}`,
+          }}
           fillOpacity={0.5}
           legendHeight="150px"
-          xAxisTickCount={isSmallScreen ? undefined : 7}
         />
       )}
       {rest.data.length === 0 && (
