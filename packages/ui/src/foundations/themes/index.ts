@@ -9,17 +9,17 @@ import type {
   AccentTypes as AccentTypesLight,
   ActionTypes as ActionTypesLight,
   BackgroundTypes as BackgroundTypesLight,
-  BorderTypes as BorderTypesLight,
   BorderRadiusTypes,
+  BorderTypes as BorderTypesLight,
   ChartTypes,
   ColorTypes,
   ContentTypes as ContentTypesLight,
   ElevationTypes as ElevationTypesLight,
   FontTypes,
   InteractionTypes as InteractionTypesLight,
-  TypographyTypes,
   RadiusTypes,
   SpacingTypes,
+  TypographyTypes,
 } from '@linode/design-language-system';
 import type {
   AccentTypes as AccentTypesDark,
@@ -106,6 +106,7 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles: any;
     name: ThemeName;
     notificationToast: NotificationToast;
+    textColors: TextColors;
     tokens: {
       //  ---- Global tokens: theme agnostic ----
       borderRadius: BorderRadiusTypes;
@@ -124,7 +125,6 @@ declare module '@mui/material/styles/createTheme' {
       radius: RadiusTypes;
       typography: TypographyTypes;
     };
-    textColors: TextColors;
     visually: any;
   }
 
@@ -143,6 +143,7 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles?: any;
     name: ThemeName;
     notificationToast?: NotificationToast;
+    textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
       //  ---- Global tokens: theme agnostic ----
       borderRadius?: BorderRadiusTypes;
@@ -161,7 +162,6 @@ declare module '@mui/material/styles/createTheme' {
       radius?: RadiusTypes;
       typography?: TypographyTypes;
     };
-    textColors?: DarkModeTextColors | LightModeTextColors;
     visually?: any;
   }
 }
