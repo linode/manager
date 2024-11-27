@@ -1,3 +1,4 @@
+export * from './Accordion';
 export * from './BetaChip';
 export * from './Box';
 export * from './Button';
@@ -20,6 +21,7 @@ export * from './Radio';
 export * from './RadioGroup';
 export * from './Stack';
 export * from './TextField';
+export * from './Toggle';
 export * from './Tooltip';
 export * from './TooltipIcon';
 export * from './Typography';

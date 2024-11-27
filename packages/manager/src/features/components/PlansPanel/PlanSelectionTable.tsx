@@ -10,17 +10,14 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 
+import type { PlanSelectionFilterOptionsTable } from './PlanContainer';
 import type { PlanWithAvailability } from './types';
+import type { LinodeTypeClass } from '@linode/api-v4/';
 import type { TooltipIconStatus } from '@linode/ui';
-
-interface PlanSelectionFilterOptionsTable {
-  header?: string;
-  planFilter?: (plan: PlanWithAvailability) => boolean;
-}
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
-  planFilter?: (plan: PlanWithAvailability) => boolean;
+  planType?: LinodeTypeClass;
   plans?: PlanWithAvailability[];
   renderPlanSelection: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
@@ -51,6 +48,7 @@ const tableCells = [
 export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const {
     filterOptions,
+    planType,
     plans,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
@@ -63,10 +61,12 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const showTransferTooltip = React.useCallback(
     (cellName: string) =>
       plans?.some((plan) => {
-        return (
+        const showTooltipForGPUPlans =
           flags.gpuv2?.transferBanner &&
           plan.class === 'gpu' &&
-          filterOptions?.header?.includes('Ada') &&
+          filterOptions?.header?.includes('Ada');
+        return (
+          (showTooltipForGPUPlans || plan.class === 'accelerated') &&
           cellName === 'Transfer'
         );
       }),
@@ -120,6 +120,9 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             ) {
               cellName = 'Usable Storage';
             }
+            if (isPlanCell && planType === 'accelerated') {
+              cellName = 'NETINT Quadra T1U';
+            }
             return (
               <StyledTableCell
                 center={center}
@@ -154,7 +157,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             message={PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE}
           />
         ) : (
-          renderPlanSelection(filterOptions)
+          renderPlanSelection()
         )}
       </TableBody>
     </StyledTable>

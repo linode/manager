@@ -1,4 +1,5 @@
-import { clamp, slice } from 'ramda';
+import { clamp } from '@linode/ui';
+import { slice } from 'ramda';
 import * as React from 'react';
 
 import scrollTo from 'src/utilities/scrollTo';

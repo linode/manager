@@ -1,12 +1,10 @@
-import { Notice, Typography } from '@linode/ui';
+import { Accordion, Notice, Toggle, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Accordion } from 'src/components/Accordion';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Toggle } from 'src/components/Toggle/Toggle';
 
 import type { Theme } from '@mui/material/styles';
 
