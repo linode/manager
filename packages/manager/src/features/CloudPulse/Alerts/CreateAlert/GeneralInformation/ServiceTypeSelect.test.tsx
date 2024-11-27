@@ -41,7 +41,7 @@ queryMocks.useCloudPulseServiceTypes.mockReturnValue({
 describe('ServiceTypeSelect component tests', () => {
   it('should render the Autocomplete component', () => {
     const { getAllByText, getByTestId } = renderWithThemeAndHookFormContext({
-      component: <CloudPulseServiceSelect name="service_type" />,
+      component: <CloudPulseServiceSelect name="serviceType" />,
     });
     expect(getByTestId('servicetype-select')).toBeInTheDocument();
     getAllByText('Service');
@@ -49,7 +49,7 @@ describe('ServiceTypeSelect component tests', () => {
 
   it('should render service types happy path', async () => {
     renderWithThemeAndHookFormContext({
-      component: <CloudPulseServiceSelect name="service_type" />,
+      component: <CloudPulseServiceSelect name="serviceType" />,
     });
     userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(
@@ -66,7 +66,7 @@ describe('ServiceTypeSelect component tests', () => {
 
   it('should be able to select a service type', async () => {
     renderWithThemeAndHookFormContext({
-      component: <CloudPulseServiceSelect name="service_type" />,
+      component: <CloudPulseServiceSelect name="serviceType" />,
     });
     userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await userEvent.click(
@@ -81,7 +81,7 @@ describe('ServiceTypeSelect component tests', () => {
       isLoading: false,
     });
     renderWithThemeAndHookFormContext({
-      component: <CloudPulseServiceSelect name="service_type" />,
+      component: <CloudPulseServiceSelect name="serviceType" />,
     });
     expect(
       screen.getByText('Failed to fetch the service types.')

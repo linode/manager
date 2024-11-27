@@ -9,9 +9,10 @@ import type {
 
 export interface CreateAlertDefinitionForm
   extends Omit<CreateAlertDefinitionPayload, 'severity'> {
-  engine_type: null | string;
+  engineType: null | string;
+  entity_ids: string[];
   region: string;
-  service_type: AlertServiceType | null;
+  serviceType: AlertServiceType | null;
   severity: AlertSeverityType | null;
 }
 

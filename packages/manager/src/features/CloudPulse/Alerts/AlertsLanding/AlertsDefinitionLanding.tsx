@@ -14,7 +14,7 @@ export const AlertDefinitionLanding = () => {
       />
       <Route
         component={() => <CreateAlertDefinition />}
-        path="/monitor/cloudpulse/alerts/definitions/create"
+        path="/monitor/alerts/definitions/create"
       />
     </Switch>
   );
