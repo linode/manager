@@ -203,9 +203,10 @@ export const useKubernetesKubeConfigQuery = (
   useQuery<string, APIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
-    refetchOnMount: true,
     retry: 3,
     retryDelay: 5000,
+    // Disable stale time to prevent caching of the kubeconfig
+    // the config can change from various modifications to the cluster and may not always get invalidated
     staleTime: 0,
   });
 
