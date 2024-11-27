@@ -206,6 +206,7 @@ export const useKubernetesKubeConfigQuery = (
     refetchOnMount: true,
     retry: 3,
     retryDelay: 5000,
+    staleTime: 0,
   });
 
 export const useResetKubeConfigMutation = () => {
