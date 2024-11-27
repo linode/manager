@@ -9,6 +9,7 @@ import { imageEventsHandler } from 'src/queries/images';
 import { linodeEventsHandler } from 'src/queries/linodes/events';
 import { diskEventHandler } from 'src/queries/linodes/events';
 import { nodebalancerEventHandler } from 'src/queries/nodebalancers';
+import { placementGroupEventHandler } from 'src/queries/placementGroups';
 import { sshKeyEventHandler } from 'src/queries/profile/profile';
 import { tokenEventHandler } from 'src/queries/profile/tokens';
 import { stackScriptEventHandler } from 'src/queries/stackscripts';
@@ -68,6 +69,10 @@ export const eventHandlers: {
   {
     filter: (event) => event.action.startsWith('oauth_client'),
     handler: oauthClientsEventHandler,
+  },
+  {
+    filter: (event) => event.action.startsWith('placement_group'),
+    handler: placementGroupEventHandler,
   },
   {
     filter: (event) =>
