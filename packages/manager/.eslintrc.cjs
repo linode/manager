@@ -174,7 +174,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     'array-callback-return': 'error',
-    camelcase: ['warn', { properties: 'always' }],
     'comma-dangle': 'off', // Prettier and TS both handle and check for this one
     // radix: Codacy considers it as an error, i put it here to fix it before push
     curly: 'warn',

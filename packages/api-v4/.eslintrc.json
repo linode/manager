@@ -49,7 +49,6 @@
     "sonarjs/no-redundant-jump": "warn",
     "sonarjs/no-small-switch": "warn",
     "no-multiple-empty-lines": "error",
-    "camelcase": ["warn", { "properties": "always" }],
     "curly": "warn",
     "sort-keys": "off",
     "comma-dangle": "off",
