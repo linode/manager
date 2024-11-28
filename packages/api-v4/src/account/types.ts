@@ -1,5 +1,6 @@
 import type { APIWarning, RequestOptions } from '../types';
 import type { Capabilities, Region } from '../regions';
+
 export type UserType = 'child' | 'parent' | 'proxy' | 'default';
 
 export interface User {

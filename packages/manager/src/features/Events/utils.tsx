@@ -140,17 +140,14 @@ export const formatProgressEvent = (event: Event): ProgressEventDisplay => {
 };
 
 export const sortEventsChronologically = (
-  events: Event[] | undefined
+  events: Event[]
 ): completionEvent[] => {
-  if (events) {
-    return events
-      ?.map((e) => ({
-        ...e,
-        completionTime: getEventTimestamp(e),
-      }))
-      .sort((e1, e2) => {
-        return e2.completionTime.toMillis() - e1.completionTime.toMillis();
-      });
-  }
-  return [];
+  return events
+    ?.map((e) => ({
+      ...e,
+      completionTime: getEventTimestamp(e),
+    }))
+    .sort((e1, e2) => {
+      return e2.completionTime.toMillis() - e1.completionTime.toMillis();
+    });
 };

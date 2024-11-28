@@ -51,6 +51,13 @@ export const EventsLanding = (props: Props) => {
     isLoading,
   } = useEventsInfiniteQuery(filter);
 
+  const eventsInSortedOrder: completionEvent[] = React.useMemo(() => {
+    if (events && events.length > 0) {
+      return sortEventsChronologically(events);
+    }
+    return [];
+  }, [events]);
+
   const renderTableBody = () => {
     if (isLoading) {
       return (
@@ -70,10 +77,9 @@ export const EventsLanding = (props: Props) => {
         />
       );
     } else {
-      const sortedEvents: completionEvent[] = sortEventsChronologically(events);
       return (
         <>
-          {sortedEvents?.map((event) => (
+          {eventsInSortedOrder?.map((event) => (
             <EventRow
               entityId={entityId}
               event={event}
