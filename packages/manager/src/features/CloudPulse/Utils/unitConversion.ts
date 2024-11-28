@@ -166,7 +166,7 @@ export const convertValueToUnit = (value: number, maxUnit: string) => {
   if (convertingValue === 1) {
     return roundTo(value);
   }
-  return value / convertingValue;
+  return roundTo(value / convertingValue);
 };
 
 /**

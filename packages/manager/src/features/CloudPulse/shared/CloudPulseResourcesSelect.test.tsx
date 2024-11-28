@@ -254,7 +254,9 @@ describe('CloudPulseResourcesSelect component tests', () => {
     expect(screen.getByText('Failed to fetch Resources.')).toBeInTheDocument();
   });
 
-  it('should be able to select limited resources and select/deselect all will not be available if resource are more than max resource selection limit', () => {
+  it('should be able to select limited resources and select/deselect all will not be available if resource are more than max resource selection limit', async () => {
+    const user = userEvent.setup();
+
     queryMocks.useResourcesQuery.mockReturnValue({
       data: linodeFactory.buildList(12),
       isError: false,
