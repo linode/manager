@@ -17,7 +17,11 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { AclpConfig, Dashboard, TimeDuration } from '@linode/api-v4';
 
 export interface GlobalFilterProperties {
-  handleAnyFilterChange(filterKey: string, filterValue: FilterValueType): void;
+  handleAnyFilterChange(
+    filterKey: string,
+    filterValue: FilterValueType,
+    labels: string[]
+  ): void;
   handleDashboardChange(dashboard: Dashboard | undefined): void;
   handleTimeDurationChange(timeDuration: TimeDuration): void;
 }
@@ -68,19 +72,20 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     (
       filterKey: string,
       value: FilterValueType,
+      labels: string[],
       savePref: boolean = false,
       updatedPreferenceData: AclpConfig = {}
     ) => {
       if (savePref) {
         updatePreferences(updatedPreferenceData);
       }
-      handleAnyFilterChange(filterKey, value);
+      handleAnyFilterChange(filterKey, value, labels);
     },
     []
   );
 
   const handleGlobalRefresh = React.useCallback(() => {
-    handleAnyFilterChange(REFRESH, Date.now());
+    handleAnyFilterChange(REFRESH, Date.now(), []);
   }, []);
 
   const theme = useTheme();

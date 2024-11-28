@@ -41,6 +41,7 @@ export interface CloudPulseDashboardFilterBuilderProps {
   emitFilterChange: (
     filterKey: string,
     value: FilterValueType,
+    labels: string[],
     savePref?: boolean,
     updatePreferenceData?: {}
   ) => void;
@@ -105,12 +106,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (
         filterKey: string,
         filterValue: FilterValueType,
+        labels: string[],
         savePref: boolean = false,
         updatedPreferenceData: AclpConfig = {}
       ) => {
         emitFilterChange(
           filterKey,
           filterValue,
+          labels,
           savePref,
           updatedPreferenceData
         );
@@ -124,6 +127,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         emitFilterChangeByFilterKey(
           RESOURCE_ID,
           resourceId.map((resource) => resource.id),
+          resourceId.map((resource) => resource.label),
           savePref,
           {
             [RESOURCES]: resourceId.map((resource: { id: string }) =>
@@ -136,7 +140,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     );
 
     const handleRegionChange = React.useCallback(
-      (region: string | undefined, savePref: boolean = false) => {
+      (
+        region: string | undefined,
+        labels: string[],
+        savePref: boolean = false
+      ) => {
         const updatedPreferenceData = {
           [REGION]: region,
           [RESOURCES]: undefined,
@@ -144,6 +152,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         emitFilterChangeByFilterKey(
           REGION,
           region,
+          labels,
           savePref,
           updatedPreferenceData
         );
@@ -155,12 +164,14 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       (
         filterKey: string,
         value: FilterValueType,
+        labels: string[],
         savePref: boolean = false,
         updatedPreferenceData: {} = {}
       ) => {
         emitFilterChangeByFilterKey(
           filterKey,
           value,
+          labels,
           savePref,
           updatedPreferenceData
         );
@@ -228,7 +239,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             CustomIcon={InfoIcon}
             CustomIconStyles={{ height: '40px', width: '40px' }}
             errorText={'Please configure filters to continue'}
-          ></ErrorState>
+          />
         );
       }
 

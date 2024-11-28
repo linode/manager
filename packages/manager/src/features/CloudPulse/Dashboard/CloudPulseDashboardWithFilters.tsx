@@ -16,7 +16,10 @@ import {
 } from '../Utils/ReusableDashboardFilterUtils';
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
-import type { FilterValueType } from './CloudPulseDashboardLanding';
+import type {
+  FilterValue,
+  FilterValueType,
+} from './CloudPulseDashboardLanding';
 import type { TimeDuration } from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
@@ -37,9 +40,10 @@ export const CloudPulseDashboardWithFilters = React.memo(
       dashboardId
     );
 
-    const [filterValue, setFilterValue] = React.useState<{
-      [key: string]: FilterValueType;
-    }>({});
+    const [filterValue, setFilterValue] = React.useState<FilterValue>({
+      id: {},
+      label: [],
+    });
 
     const [timeDuration, setTimeDuration] = React.useState<TimeDuration>({
       unit: 'min',
@@ -47,8 +51,19 @@ export const CloudPulseDashboardWithFilters = React.memo(
     });
 
     const onFilterChange = React.useCallback(
-      (filterKey: string, value: FilterValueType) => {
-        setFilterValue((prev) => ({ ...prev, [filterKey]: value }));
+      (filterKey: string, value: FilterValueType, labels: string[]) => {
+        setFilterValue((prev) => {
+          return {
+            id: {
+              ...prev.id,
+              [filterKey]: value,
+            },
+            label: {
+              ...prev.label,
+              [filterKey]: labels,
+            },
+          };
+        });
       },
       []
     );
@@ -91,7 +106,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
     const isFilterBuilderNeeded = checkIfFilterBuilderNeeded(dashboard);
     const isMandatoryFiltersSelected = checkMandatoryFiltersSelected({
       dashboardObj: dashboard,
-      filterValue,
+      filterValue: filterValue.id,
       resource,
       timeDuration,
     });
@@ -140,7 +155,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
           <CloudPulseDashboard
             {...getDashboardProperties({
               dashboardObj: dashboard,
-              filterValue,
+              filterValue: filterValue.id,
               resource,
               timeDuration,
             })}
