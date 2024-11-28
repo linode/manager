@@ -58,16 +58,14 @@ describe('image landing checks for non-empty state with restricted user', () => 
     cy.wait('@getImages');
     cy.url().should('endWith', '/images');
 
-    cy.contains('Custom Images')
-      .parent('div')
-      .parent('div')
+    cy.contains('h3', 'Custom Images')
+      .closest('div[data-qa-paper="true"]')
       .find('[role="table"]')
       .should('exist')
       .as('customImageTable');
 
-    cy.contains('Recovery Images')
-      .parent('div')
-      .parent('div')
+    cy.contains('h3', 'Recovery Images')
+      .closest('div[data-qa-paper="true"]')
       .find('[role="table"]')
       .should('exist')
       .as('recoveryImageTable');
@@ -97,42 +95,42 @@ describe('image landing checks for non-empty state with restricted user', () => 
         .find('tbody tr')
         .should('have.length', mockImages.length);
 
-      function checkActionMenu(tableAlias: string) {
-        mockImages.forEach((image) => {
-          cy.get(tableAlias)
-            .find('tbody tr')
-            .should('contain', image.label)
-            .then(($row) => {
-              // If the row contains the label, proceed with clicking the action menu
-              const actionButton = $row.find(
-                `button[aria-label="Action menu for Image ${image.label}"]`
-              );
-              if (actionButton) {
-                cy.wrap(actionButton).click();
-
-                // Check that the item with text 'Deploy to New Linode' is active
-                cy.get('ul[role="menu"]')
-                  .contains('Deploy to New Linode')
-                  .should('be.visible')
-                  .and('be.enabled');
-
-                // Check that all other items are disabled
-                cy.get('ul[role="menu"]')
-                  .find('li')
-                  .not(':contains("Deploy to New Linode")')
-                  .each(($li) => {
-                    cy.wrap($li).should('be.visible').and('be.disabled');
-                  });
-
-                // Close the action menu by clicking on Custom Image Title of the screen
-                cy.get('body').click(0, 0);
-              }
-            });
-        });
-      }
-
-      checkActionMenu('@customImageTable'); // For the custom image table
-      checkActionMenu('@recoveryImageTable'); // For the recovery image table
+      checkActionMenu('@customImageTable', mockImages); // For the custom image table
+      checkActionMenu('@recoveryImageTable', mockImages); // For the recovery image table
     });
   });
 });
+
+function checkActionMenu(tableAlias: string, mockImages: any[]) {
+  mockImages.forEach((image) => {
+    cy.get(tableAlias)
+      .find('tbody tr')
+      .should('contain', image.label)
+      .then(($row) => {
+        // If the row contains the label, proceed with clicking the action menu
+        const actionButton = $row.find(
+          `button[aria-label="Action menu for Image ${image.label}"]`
+        );
+        if (actionButton) {
+          cy.wrap(actionButton).click();
+
+          // Check that the item with text 'Deploy to New Linode' is active
+          cy.get('ul[role="menu"]')
+            .contains('Deploy to New Linode')
+            .should('be.visible')
+            .and('be.enabled');
+
+          // Check that all other items are disabled
+          cy.get('ul[role="menu"]')
+            .find('li')
+            .not(':contains("Deploy to New Linode")')
+            .each(($li) => {
+              cy.wrap($li).should('be.visible').and('be.disabled');
+            });
+
+          // Close the action menu by clicking on Custom Image Title of the screen
+          cy.get('body').click(0, 0);
+        }
+      });
+  });
+}
