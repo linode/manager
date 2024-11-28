@@ -1,10 +1,15 @@
-import { Notice, Radio, RadioGroup, Typography } from '@linode/ui';
+import {
+  FormControlLabel,
+  Notice,
+  Radio,
+  RadioGroup,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState } from 'react';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';

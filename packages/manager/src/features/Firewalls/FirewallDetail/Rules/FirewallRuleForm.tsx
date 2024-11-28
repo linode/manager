@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  FormControlLabel,
   Notice,
   Radio,
   RadioGroup,
@@ -10,7 +11,6 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {
   addressOptions,
