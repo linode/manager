@@ -8,6 +8,10 @@ import type { Dashboard, TimeDuration } from '@linode/api-v4';
 
 export type FilterValueType = number | number[] | string | string[] | undefined;
 
+export interface FilterValue {
+  id: { [key: string]: FilterValueType };
+  label: string[];
+}
 export interface DashboardProp {
   dashboard?: Dashboard;
   filterValue: {
@@ -17,26 +21,39 @@ export interface DashboardProp {
 }
 
 export const CloudPulseDashboardLanding = () => {
-  const [filterValue, setFilterValue] = React.useState<{
-    [key: string]: FilterValueType;
-  }>({});
+  const [filterValue, setFilterValue] = React.useState<FilterValue>({
+    id: {},
+    label: [],
+  });
+
   const [timeDuration, setTimeDuration] = React.useState<TimeDuration>();
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
 
   const onFilterChange = React.useCallback(
-    (filterKey: string, filterValue: FilterValueType) => {
-      setFilterValue((prev: { [key: string]: FilterValueType }) => ({
-        ...prev,
-        [filterKey]: filterValue,
-      }));
+    (filterKey: string, filterValue: FilterValueType, labels: string[]) => {
+      setFilterValue((prev: FilterValue) => {
+        return {
+          id: {
+            ...prev.id,
+            [filterKey]: filterValue,
+          },
+          label: {
+            ...prev.label,
+            [filterKey]: labels,
+          },
+        };
+      });
     },
     []
   );
 
   const onDashboardChange = React.useCallback((dashboardObj: Dashboard) => {
     setDashboard(dashboardObj);
-    setFilterValue({}); // clear the filter values on dashboard change
+    setFilterValue({
+      id: {},
+      label: [],
+    }); // clear the filter values on dashboard change
   }, []);
   const onTimeDurationChange = React.useCallback(
     (timeDurationObj: TimeDuration) => {
@@ -57,7 +74,7 @@ export const CloudPulseDashboardLanding = () => {
       </Grid>
       <CloudPulseDashboardRenderer
         dashboard={dashboard}
-        filterValue={filterValue}
+        filterValue={filterValue.id}
         timeDuration={timeDuration}
       />
     </Grid>

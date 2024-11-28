@@ -14,6 +14,7 @@ interface CloudPulseCustomSelectProps {
   handleSelectionChange: (
     filterKey: string,
     value: FilterValueType,
+    labels: string[],
     savePref?: boolean,
     updatedPreferenceData?: AclpConfig
   ) => void;
@@ -139,7 +140,8 @@ export const getInitialDefaultSelections = (
     const initialSelection = isMultiSelect ? [options[0]] : options[0];
     handleSelectionChange(
       filterKey,
-      isMultiSelect ? [options[0].id] : options[0].id
+      isMultiSelect ? [options[0].id] : options[0].id,
+      [options[0].label]
     );
     return initialSelection;
   }
@@ -155,7 +157,12 @@ export const getInitialDefaultSelections = (
       ? isMultiSelect
         ? selectedValues.map(({ id }) => id)
         : selectedValues[0].id
-      : undefined // if this is multiselect, return list of ids, otherwise return single id
+      : undefined, // if this is multiselect, return list of ids, otherwise return single id
+    selectedValues && selectedValues.length > 0
+      ? isMultiSelect
+        ? selectedValues.map(({ label }) => label)
+        : [selectedValues[0].label]
+      : []
   );
   return selectedValues?.length
     ? isMultiSelect
@@ -195,6 +202,12 @@ export const handleCustomSelectionChange = (
       : String(value.id)
     : undefined;
 
+  const labels = value
+    ? Array.isArray(value)
+      ? value.map(({ label }) => label)
+      : [value.label]
+    : [];
+
   let updatedPreferenceData: AclpConfig = {};
 
   // update the preferences
@@ -216,6 +229,7 @@ export const handleCustomSelectionChange = (
   handleSelectionChange(
     filterKey,
     result,
+    labels,
     savePreferences,
     updatedPreferenceData
   );
