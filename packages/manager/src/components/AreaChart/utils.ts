@@ -16,7 +16,7 @@ export const tooltipLabelFormatter = (timestamp: number, timezone: string) =>
   );
 
 export const tooltipValueFormatter = (value: number, unit: string) =>
-  `${roundTo(value)}${unit}`;
+  `${roundTo(value)} ${unit}`;
 
 export const humanizeLargeData = (value: number) => {
   if (value >= 1000000000000) {
@@ -56,6 +56,10 @@ export const generate12HourTicks = (
   // Get start and end time from data
   const startTime = data[0].timestamp;
   const endTime = data[data.length - 1].timestamp;
+
+  if (tickCount === 1) {
+    return [(startTime + endTime) / 2];
+  }
 
   // Calculate duration in hours
   const duration = DateTime.fromMillis(endTime, { zone: timezone }).diff(

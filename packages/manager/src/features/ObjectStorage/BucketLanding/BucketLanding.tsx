@@ -1,4 +1,4 @@
-import { CircleProgress, Notice } from '@linode/ui';
+import { CircleProgress, Notice, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -9,7 +9,6 @@ import { Link } from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useDeleteBucketMutation,

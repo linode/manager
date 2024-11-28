@@ -1,11 +1,10 @@
-import { Box, CircleProgress, IconButton } from '@linode/ui';
+import { Box, CircleProgress, IconButton, Typography } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
 import { convertForAria } from 'src/utilities/stringUtils';
 
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';

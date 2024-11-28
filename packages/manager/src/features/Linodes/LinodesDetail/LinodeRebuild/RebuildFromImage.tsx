@@ -1,5 +1,5 @@
 import { rebuildLinode } from '@linode/api-v4';
-import { Box, Checkbox, Divider } from '@linode/ui';
+import { Box, Checkbox, Divider, Typography } from '@linode/ui';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Formik } from 'formik';
@@ -11,7 +11,6 @@ import { useLocation } from 'react-router-dom';
 import { AccessPanel } from 'src/components/AccessPanel/AccessPanel';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { usePreferences } from 'src/queries/profile/preferences';

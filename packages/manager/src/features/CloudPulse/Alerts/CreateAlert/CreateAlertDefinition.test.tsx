@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -6,18 +6,18 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAlertDefinition } from './CreateAlertDefinition';
 describe('AlertDefinition Create', () => {
-  it('should render input components', () => {
+  it('should render input components', async () => {
     const { getByLabelText } = renderWithTheme(<CreateAlertDefinition />);
 
     expect(getByLabelText('Name')).toBeVisible();
     expect(getByLabelText('Description (optional)')).toBeVisible();
     expect(getByLabelText('Severity')).toBeVisible();
   });
-  it('should be able to enter a value in the textbox', () => {
+  it('should be able to enter a value in the textbox', async () => {
     const { getByLabelText } = renderWithTheme(<CreateAlertDefinition />);
     const input = getByLabelText('Name');
 
-    fireEvent.change(input, { target: { value: 'text' } });
+    await userEvent.type(input, 'text');
     const specificInput = within(screen.getByTestId('alert-name')).getByTestId(
       'textfield-input'
     );
@@ -30,7 +30,10 @@ describe('AlertDefinition Create', () => {
 
     await userEvent.click(submitButton!);
 
-    expect(getByText('Name is required')).toBeVisible();
-    expect(getByText('Severity is required')).toBeVisible();
+    expect(getByText('Name is required.')).toBeVisible();
+    expect(getByText('Severity is required.')).toBeVisible();
+    expect(getByText('Service is required.')).toBeVisible();
+    expect(getByText('Region is required.')).toBeVisible();
+    expect(getByText('At least one resource is needed.')).toBeVisible();
   });
 });

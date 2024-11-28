@@ -1,15 +1,12 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { WarningIcon, AlertIcon as Error, CheckIcon } from '../../assets/icons';
-
-// @todo: modularization - Import from 'ui' package once Typography is migrated.
-import { Typography } from '@mui/material';
-
+import { CheckIcon, AlertIcon as Error, WarningIcon } from '../../assets/icons';
+import { Typography } from '../Typography';
 import { useStyles } from './Notice.styles';
 
+import type { TypographyProps } from '../Typography';
 import type { Grid2Props } from '@mui/material/Unstable_Grid2';
-import type { TypographyProps } from '@mui/material';
 
 export type NoticeVariant =
   | 'error'

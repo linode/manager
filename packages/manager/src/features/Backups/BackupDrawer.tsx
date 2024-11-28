@@ -1,4 +1,4 @@
-import { Box, Notice, Stack } from '@linode/ui';
+import { Box, Notice, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -14,7 +14,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { Typography } from 'src/components/Typography';
 import {
   useAccountSettings,
   useMutateAccountSettings,
