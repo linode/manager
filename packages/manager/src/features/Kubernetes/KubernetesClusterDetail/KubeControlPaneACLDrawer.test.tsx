@@ -1,7 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { kubernetesClusterFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
@@ -9,11 +8,10 @@ import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 import type { KubeControlPlaneACLDrawerProps } from './KubeControlPaneACLDrawer';
 
 const props: KubeControlPlaneACLDrawerProps = {
+  aclData: undefined,
   closeDrawer: vi.fn(),
-  cluster: kubernetesClusterFactory.build({
-    id: 1,
-    label: 'Test',
-  }),
+  clusterId: 1,
+  clusterLabel: 'Test',
   clusterMigrated: true,
   open: true,
 };

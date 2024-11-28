@@ -29,8 +29,10 @@ import type {
 } from '@linode/api-v4';
 
 export interface KubeControlPlaneACLDrawerProps {
+  aclData: KubernetesControlPlaneACLPayload | undefined;
   closeDrawer: () => void;
-  cluster: KubernetesCluster;
+  clusterId: KubernetesCluster['id'];
+  clusterLabel: KubernetesCluster['label'];
   clusterMigrated: boolean;
   open: boolean;
 }
@@ -39,14 +41,22 @@ export const KubeControlPlaneACLDrawer = (
   props: KubeControlPlaneACLDrawerProps
 ) => {
   const formContainerRef = React.useRef<HTMLFormElement>(null);
-  const { closeDrawer, cluster, clusterMigrated, open } = props;
+  const {
+    aclData,
+    closeDrawer,
+    clusterId,
+    clusterLabel,
+    clusterMigrated,
+    open,
+  } = props;
+  const aclPayload = aclData?.acl;
 
   const {
     mutateAsync: updateKubernetesClusterControlPlaneACL,
-  } = useKubernetesControlPlaneACLMutation(cluster.id);
+  } = useKubernetesControlPlaneACLMutation(clusterId);
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    cluster.id
+    clusterId
   );
 
   const {
@@ -57,17 +67,17 @@ export const KubeControlPlaneACLDrawer = (
     setError,
     watch,
   } = useForm<KubernetesControlPlaneACLPayload>({
-    defaultValues: cluster.control_plane,
+    defaultValues: aclData,
     mode: 'onBlur',
     resolver: yupResolver(kubernetesControlPlaneACLPayloadSchema),
     values: {
       acl: {
         addresses: {
-          ipv4: cluster.control_plane.acl?.addresses?.ipv4 ?? [''],
-          ipv6: cluster.control_plane.acl?.addresses?.ipv6 ?? [''],
+          ipv4: aclPayload?.addresses?.ipv4 ?? [''],
+          ipv6: aclPayload?.addresses?.ipv6 ?? [''],
         },
-        enabled: cluster.control_plane.acl?.enabled ?? false,
-        'revision-id': cluster.control_plane.acl?.['revision-id'] ?? '',
+        enabled: aclPayload?.enabled ?? false,
+        'revision-id': aclPayload?.['revision-id'] ?? '',
       },
     },
   });
@@ -144,7 +154,7 @@ export const KubeControlPlaneACLDrawer = (
     <Drawer
       onClose={handleClose}
       open={open}
-      title={`Control Plane ACL for ${cluster.label}`}
+      title={`Control Plane ACL for ${clusterLabel}`}
       wide
     >
       <form onSubmit={handleSubmit(updateCluster)} ref={formContainerRef}>

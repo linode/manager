@@ -206,7 +206,7 @@ export const useKubernetesKubeConfigQuery = (
     retry: 3,
     retryDelay: 5000,
     // Disable stale time to prevent caching of the kubeconfig
-    // the config can change from various modifications to the cluster and may not always get invalidated
+    // because it can take some time for config to get updated in the API
     staleTime: 0,
   });
 

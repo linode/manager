@@ -185,8 +185,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         open={drawerOpen}
       />
       <KubeControlPlaneACLDrawer
+        aclData={aclData}
         closeDrawer={() => setControlPlaneACLDrawerOpen(false)}
-        cluster={cluster}
+        clusterId={cluster.id}
+        clusterLabel={cluster.label}
         clusterMigrated={!isErrorKubernetesACL}
         open={isControlPlaneACLDrawerOpen}
       />
