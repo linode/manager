@@ -30,6 +30,7 @@ interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
   dashboard?: Dashboard | undefined;
   duration: TimeDuration;
+  isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   manualRefreshTimeStamp?: number;
   metricDefinitions: MetricDefinitions | undefined;
@@ -55,6 +56,7 @@ export const RenderWidgets = React.memo(
       additionalFilters,
       dashboard,
       duration,
+      isJweTokenFetching,
       jweToken,
       manualRefreshTimeStamp,
       metricDefinitions,
@@ -74,6 +76,7 @@ export const RenderWidgets = React.memo(
         availableMetrics: undefined,
         duration,
         errorLabel: 'Error occurred while loading data.',
+        isJweTokenFetching: false,
         resourceIds: resources,
         resources: [],
         serviceType: dashboard?.service_type ?? '',
@@ -123,7 +126,7 @@ export const RenderWidgets = React.memo(
     if (
       !dashboard.service_type ||
       !Boolean(resources.length > 0) ||
-      !jweToken?.token ||
+      (!isJweTokenFetching && !jweToken?.token) ||
       !Boolean(resourceList?.length)
     ) {
       return renderPlaceHolder(
@@ -162,6 +165,7 @@ export const RenderWidgets = React.memo(
                 {...cloudPulseWidgetProperties}
                 authToken={jweToken?.token}
                 availableMetrics={availMetrics}
+                isJweTokenFetching={isJweTokenFetching}
                 resources={resourceList!}
                 savePref={savePref}
               />
