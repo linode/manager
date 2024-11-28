@@ -204,6 +204,7 @@ export const placementGroupLinodeAssignment = (mockState: MockState) => [
           placement_group: {
             id: placementGroup.id,
             label: placementGroup.label,
+            migrating_to: null,
             placement_group_policy: placementGroup.placement_group_policy,
             placement_group_type: placementGroup.placement_group_type,
           },
