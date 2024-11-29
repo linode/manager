@@ -1,5 +1,6 @@
 // Customizing `KeyboardSensor` from `dnd-kit` to meet our requirements:
 // - Prevent scrolling while using keyboard keys (for both normal and smaller window sizes).
+//   * This resolves the issue of keystrokes not being recognized or having no effect on smaller screens.
 // - Add a focus style to the draggable element while it is being dragged.
 // - Clear the focus style when the draggable element is dropped.
 
