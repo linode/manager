@@ -70,6 +70,11 @@ authenticate();
  * - Use `Up/Down` arrow keys to move the row up or down.
  * - Press `Space/Enter` key again to drop the focused row.
  * - Press `Esc` key to discard drag and drop operation.
+ *
+ * Confirms:
+ * - All keyboard interactions on Firewall Rules table rows work as expected
+ *   for both normal (no vertical scrollbar) and smaller window sizes (with vertical scrollbar).
+ * - `CustomKeyboardSensor` works as expected.
  */
 describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () => {
   before(() => {
