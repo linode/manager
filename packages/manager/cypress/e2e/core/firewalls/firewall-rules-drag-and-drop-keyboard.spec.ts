@@ -39,6 +39,14 @@ const mockOutboundRules = Array.from({ length: 3 }, () =>
   })
 );
 
+const inboundRule1 = mockInboundRules[0];
+const inboundRule2 = mockInboundRules[1];
+const inboundRule3 = mockInboundRules[2];
+
+const outboundRule1 = mockOutboundRules[0];
+const outboundRule2 = mockOutboundRules[1];
+const outboundRule3 = mockOutboundRules[2];
+
 const getRuleActionLabel = (ruleAction: FirewallPolicyType): string => {
   return `${ruleAction.charAt(0).toUpperCase()}${ruleAction
     .slice(1)
@@ -106,10 +114,6 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
               );
             });
         });
-
-        const inboundRule1 = mockInboundRules[0];
-        const inboundRule2 = mockInboundRules[1];
-        const inboundRule3 = mockInboundRules[2];
 
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
@@ -192,10 +196,6 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             });
         });
 
-        const outboundRule1 = mockOutboundRules[0];
-        const outboundRule2 = mockOutboundRules[1];
-        const outboundRule3 = mockOutboundRules[2];
-
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
@@ -277,10 +277,6 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             });
         });
 
-        const inboundRule1 = mockInboundRules[0];
-        const inboundRule2 = mockInboundRules[1];
-        const inboundRule3 = mockInboundRules[2];
-
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
@@ -338,10 +334,6 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
               );
             });
         });
-
-        const outboundRule1 = mockOutboundRules[0];
-        const outboundRule2 = mockOutboundRules[1];
-        const outboundRule3 = mockOutboundRules[2];
 
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
@@ -412,10 +404,6 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             });
         });
 
-        const inboundRule1 = mockInboundRules[0];
-        const inboundRule2 = mockInboundRules[1];
-        const inboundRule3 = mockInboundRules[2];
-
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
@@ -498,10 +486,6 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
               );
             });
         });
-
-        const outboundRule1 = mockOutboundRules[0];
-        const outboundRule2 = mockOutboundRules[1];
-        const outboundRule3 = mockOutboundRules[2];
 
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
@@ -586,10 +570,6 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             });
         });
 
-        const inboundRule1 = mockInboundRules[0];
-        const inboundRule2 = mockInboundRules[1];
-        const inboundRule3 = mockInboundRules[2];
-
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
@@ -649,10 +629,6 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
               );
             });
         });
-
-        const outboundRule1 = mockOutboundRules[0];
-        const outboundRule2 = mockOutboundRules[1];
-        const outboundRule3 = mockOutboundRules[2];
 
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
