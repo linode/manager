@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { IncidentBanner, IncidentProps, StatusBanners } from './StatusBanners';
 
 const props: IncidentProps = {
-  href: 'https://www.example.com',
+  href: 'https://www.example.com/',
   impact: 'major',
   message: 'We are monitoring this incident.',
   status: 'monitoring',

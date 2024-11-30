@@ -16,7 +16,7 @@
     "peggy": "^4.0.3"
   },
   "peerDependencies": {
-    "@linode/api-v4": "*",
+    "@linode/api-v4": "workspace:*",
     "vite": "*"
   }
 }

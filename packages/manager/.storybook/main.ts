@@ -47,13 +47,6 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
-      base: './',
-      resolve: {
-        preserveSymlinks: true,
-      },
-      define: {
-        'process.env': {},
-      },
       optimizeDeps: {
         include: [
           '@storybook/react',
