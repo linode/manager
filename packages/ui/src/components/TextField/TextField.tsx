@@ -313,8 +313,7 @@ export const TextField = (props: TextFieldProps) => {
       {helperText && helperTextPosition === 'top' && (
         <FormHelperText
           sx={{
-            marginBottom: theme.spacing(),
-            marginTop: theme.spacing(),
+            marginTop: 0,
           }}
           data-qa-textfield-helper-text
         >
