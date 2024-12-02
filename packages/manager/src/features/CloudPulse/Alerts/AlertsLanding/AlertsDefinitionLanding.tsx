@@ -1,14 +1,14 @@
-import { Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import { AlertListing } from '../AlertsListing/AlertListing';
 import { CreateAlertDefinition } from '../CreateAlert/CreateAlertDefinition';
 
 export const AlertDefinitionLanding = () => {
   return (
     <Switch>
       <Route
-        component={AlertDefinition}
+        component={() => <AlertListing />}
         exact
         path="/monitor/alerts/definitions"
       />
@@ -17,13 +17,5 @@ export const AlertDefinitionLanding = () => {
         path="/monitor/alerts/definitions/create"
       />
     </Switch>
-  );
-};
-
-const AlertDefinition = () => {
-  return (
-    <Paper>
-      <Typography variant="body1">Alert Definition</Typography>
-    </Paper>
   );
 };
