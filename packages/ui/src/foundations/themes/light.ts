@@ -1094,22 +1094,22 @@ export const lightTheme: ThemeOptions = {
             fill: `${Color.Neutrals[5]} !important`,
             pointerEvents: 'none',
           },
-          '&:hover': {
-            '& .defaultFill': {
-              fill: theme.color.white,
+          '&.MuiRadio-root': {
+            '.MuiSvgIcon-fontSizeMedium': {
+              fontSize: '20px',
             },
-            color: theme.palette.primary.main,
-            fill: theme.color.white,
           },
           '&.MuiRadio-sizeSmall': {
             '.MuiSvgIcon-fontSizeSmall': {
               fontSize: '16px',
             },
           },
-          '&.MuiRadio-root': {
-            '.MuiSvgIcon-fontSizeMedium': {
-              fontSize: '20px',
+          '&:hover': {
+            '& .defaultFill': {
+              fill: theme.color.white,
             },
+            color: theme.palette.primary.main,
+            fill: theme.color.white,
           },
           color: Color.Neutrals[40],
           padding: '10px 10px',
