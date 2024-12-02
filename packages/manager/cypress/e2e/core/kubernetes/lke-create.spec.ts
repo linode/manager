@@ -4,6 +4,7 @@
 import { createMockedLKECluster } from 'support/util/lke';
 import {
   accountFactory,
+  dedicatedTypeFactory,
   kubernetesClusterFactory,
   kubernetesControlPlaneACLFactory,
   kubernetesControlPlaneACLOptionsFactory,
@@ -15,7 +16,18 @@ import {
   mockGetCluster,
   mockCreateClusterError,
   mockGetControlPlaneACL,
+  mockGetClusterPools,
+  mockGetDashboardUrl,
+  mockGetApiEndpoints,
 } from 'support/intercepts/lke';
+import {
+  clusterRegion,
+  dedicatedCpuPool,
+  nanodeMemoryPool,
+  dedicatedType,
+  nanodeType,
+} from 'support/util/lke';
+import { mockGetAccountBeta } from 'support/intercepts/betas';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetRegions,
@@ -67,34 +79,152 @@ describe('LKE Cluster Creation', () => {
   });
 });
 
-describe.skip('LKE Cluster Creation with APL enabled', () => {
+describe('LKE Cluster Creation with APL enabled', () => {
   it('can create an LKE cluster with APL flag enabled', () => {
+    const clusterLabel = randomLabel();
+    const mockedLKECluster = kubernetesClusterFactory.build({
+      label: clusterLabel,
+      region: clusterRegion.id,
+    });
+    const mockedLKEClusterPools = [nanodeMemoryPool, dedicatedCpuPool];
+    const mockedLKEClusterControlPlane = kubernetesControlPlaneACLFactory.build();
+    const dedicated4Type = dedicatedTypeFactory.build({
+      disk: 163840,
+      id: 'g6-dedicated-4',
+      label: 'Dedicated 8GB',
+      memory: 8192,
+      price: {
+        hourly: 0.108,
+        monthly: 72.0,
+      },
+      region_prices: dcPricingMockLinodeTypes.find(
+        (type) => type.id === 'g6-dedicated-8'
+      )?.region_prices,
+      vcpus: 4,
+    });
+    const dedicated8Type = dedicatedTypeFactory.build({
+      disk: 327680,
+      id: 'g6-dedicated-8',
+      label: 'Dedicated 16GB',
+      memory: 16384,
+      price: {
+        hourly: 0.216,
+        monthly: 144.0,
+      },
+      region_prices: dcPricingMockLinodeTypes.find(
+        (type) => type.id === 'g6-dedicated-8'
+      )?.region_prices,
+      vcpus: 8,
+    });
+    const mockedLKEClusterTypes = [
+      dedicatedType,
+      dedicated4Type,
+      dedicated8Type,
+      nanodeType,
+    ];
     mockAppendFeatureFlags({
       apl: {
         enabled: true,
       },
     }).as('getFeatureFlags');
+    mockGetAccountBeta({
+      id: 'apl',
+      label: 'Akamai App Platform Beta',
+      enrolled: '2024-11-04T21:39:41',
+      description:
+        'Akamai App Platform is a platform that combines developer and operations-centric tools, automation and self-service to streamline the application lifecycle when using Kubernetes. This process will pre-register you for an upcoming beta.',
+      started: '2024-10-31T18:00:00',
+      ended: null,
+    }).as('getAccountBeta');
+    mockCreateCluster(mockedLKECluster).as('createCluster');
+    mockGetCluster(mockedLKECluster).as('getCluster');
+    mockGetClusterPools(mockedLKECluster.id, mockedLKEClusterPools).as(
+      'getClusterPools'
+    );
+    mockGetDashboardUrl(mockedLKECluster.id).as('getDashboardUrl');
+    mockGetControlPlaneACL(
+      mockedLKECluster.id,
+      mockedLKEClusterControlPlane
+    ).as('getControlPlaneACL');
+    mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
+    mockGetApiEndpoints(mockedLKECluster.id).as('getApiEndpoints');
 
-    cy.defer(() => createMockedLKECluster({})).then((mockedLKECluster) => {
-      const clusterLabel = mockedLKECluster.label;
-      // Navigate to the LKE landing page and confirm that new cluster is shown.
-      ui.breadcrumb
-        .find()
+    cy.visitWithLogin('/kubernetes/create');
+
+    cy.wait(['@getFeatureFlags', '@getAccountBeta', '@getLinodeTypes']);
+
+    // Enter cluster details
+    const labelInput = '[data-qa-textfield-label="Cluster Label"]';
+    cy.get(labelInput).should('be.visible');
+    cy.get(labelInput).click();
+    cy.get(labelInput).type(`${clusterLabel}{enter}`);
+
+    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
+
+    cy.findByText('Application Platform for LKE').should('be.visible');
+    cy.findByTestId('apl-radio-button-yes').should('be.visible').click();
+    cy.findByTestId('ha-radio-button-yes').should('be.disabled');
+    cy.get('[aria-label="Enabled by default when APL is enabled."]').should(
+      'be.visible'
+    );
+
+    // Check that Shared CPU plans are disabled
+    ui.tabList.findTabByTitle('Shared CPU').click();
+    cy.findByText(
+      'Shared CPU instances are currently not available for Application Platform for LKE'
+    ).should('be.visible');
+    cy.get('[data-qa-plan-row="Linode 2 GB"]').should('have.attr', 'disabled');
+
+    // Check that Dedicated CPU plans are available if greater than 8GB
+    ui.tabList.findTabByTitle('Dedicated CPU').click();
+    cy.get('[data-qa-plan-row="Dedicated 4 GB"]').should(
+      'have.attr',
+      'disabled'
+    );
+    cy.get('[data-qa-plan-row="Dedicated 8 GB"]').should(
+      'have.attr',
+      'disabled'
+    );
+    cy.get('[data-qa-plan-row="Dedicated 16 GB"]').within(() => {
+      cy.get('[name="Quantity"]').click();
+      cy.get('[name="Quantity"]').type('{selectall}3');
+
+      ui.button
+        .findByTitle('Add')
         .should('be.visible')
-        .within(() => {
-          cy.findByText(clusterLabel).should('be.visible');
-
-          cy.findByText('kubernetes').should('be.visible').click();
-        });
-
-      cy.url().should('endWith', '/kubernetes/clusters');
-      cy.wait('@getClusters');
-      cy.findByText(clusterLabel).should('be.visible');
+        .should('be.enabled')
+        .click();
     });
+
+    // Check that the checkout bar displays the correct information
+    cy.get('[data-testid="kube-checkout-bar"]')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(`Dedicated 16 GB Plan`).should('be.visible');
+        cy.findByText('$432.00').should('be.visible');
+        cy.findByText('High Availability (HA) Control Plane').should(
+          'be.visible'
+        );
+        cy.findByText('$60.00/month').should('be.visible');
+        cy.findByText('$492.00').should('be.visible');
+
+        ui.button
+          .findByTitle('Create Cluster')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait('@createCluster');
+    cy.wait('@getCluster');
+    cy.wait('@getClusterPools');
+    cy.wait('@getDashboardUrl');
+    cy.wait('@getControlPlaneACL');
+    cy.wait('@getApiEndpoints');
   });
 });
 
-describe.skip('LKE Cluster Creation with DC-specific pricing', () => {
+describe('LKE Cluster Creation with DC-specific pricing', () => {
   /*
    * - Confirms that DC-specific prices are present in the LKE create form.
    * - Confirms that pricing docs link is shown in "Region" section.
@@ -105,7 +235,6 @@ describe.skip('LKE Cluster Creation with DC-specific pricing', () => {
   it('can dynamically update prices when creating an LKE cluster based on region', () => {
     const dcSpecificPricingRegion = getRegionById('us-east');
     const clusterLabel = randomLabel();
-    const clusterVersion = '1.27';
     const clusterPlans = new Array(2)
       .fill(null)
       .map(() => randomItem(dcPricingLkeClusterPlans));
@@ -148,17 +277,15 @@ describe.skip('LKE Cluster Creation with DC-specific pricing', () => {
       .click()
       .type(`${clusterLabel}{enter}`);
 
-    ui.regionSelect.find().type(`${dcSpecificPricingRegion.label}{enter}`);
+    ui.regionSelect
+      .find()
+      .click()
+      .type(`${dcSpecificPricingRegion.label}{enter}`);
 
     // Confirm that HA price updates dynamically once region selection is made.
     cy.contains(/\$.*\/month/).should('be.visible');
 
     cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
-
-    cy.findByText('Kubernetes Version')
-      .should('be.visible')
-      .click()
-      .type(`${clusterVersion}{enter}`);
 
     // Confirm that with region and HA selections, create button is still disabled until plan selection is made.
     cy.get('[data-qa-deploy-linode]')
@@ -198,7 +325,7 @@ describe.skip('LKE Cluster Creation with DC-specific pricing', () => {
           // It's possible that multiple pools of the same type get added.
           // We're taking a naive approach here by confirming that at least one
           // instance of the pool appears in the checkout bar.
-          cy.findAllByText(planName).first().should('be.visible');
+          cy.findAllByText(`${planName} Plan`).first().should('be.visible');
         });
     });
 

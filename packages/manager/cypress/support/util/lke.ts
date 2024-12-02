@@ -62,6 +62,10 @@ export const dedicatedType = dedicatedTypeFactory.build({
   id: 'g6-dedicated-2',
   label: 'Dedicated 4 GB',
   memory: 4096,
+  price: {
+    hourly: 0.054,
+    monthly: 36.0,
+  },
   region_prices: dcPricingMockLinodeTypes.find(
     (type) => type.id === 'g6-dedicated-2'
   )?.region_prices,
@@ -72,6 +76,10 @@ export const nanodeType = linodeTypeFactory.build({
   id: 'g6-nanode-1',
   label: 'Linode 2 GB',
   memory: 2048,
+  price: {
+    hourly: 0.0075,
+    monthly: 5.0,
+  },
   region_prices: dcPricingMockLinodeTypes.find(
     (type) => type.id === 'g6-nanode-1'
   )?.region_prices,
@@ -129,7 +137,7 @@ export const createMockedLKECluster = async ({
     'getControlPlaneACL'
   );
   mockGetApiEndpoints(mockedLKECluster.id).as('getApiEndpoints');
-  mockGetLinodeTypes([dedicatedType, nanodeType]).as('getLinodeTypes');
+  mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
   mockGetClusters([mockedLKECluster]).as('getClusters');
 
   cy.visitWithLogin('/kubernetes/clusters');
@@ -273,7 +281,7 @@ const getSimilarPlans = (
   clusterPlan: LkePlanDescription,
   clusterPlans: LkePlanDescription[]
 ) => {
-  return clusterPlans.filter((otherClusterPlan: any) => {
+  return clusterPlans.filter((otherClusterPlan) => {
     return (
       clusterPlan.type === otherClusterPlan.type &&
       clusterPlan.size === otherClusterPlan.size
