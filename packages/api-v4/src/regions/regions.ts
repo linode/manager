@@ -1,4 +1,4 @@
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { Filter, Params, ResourcePage as Page } from '../types';
 import { Region, RegionAvailability } from './types';
@@ -15,9 +15,9 @@ import { Region, RegionAvailability } from './types';
  * in a Region response object are filterable.
  *
  */
-export const getRegions = (params?: Params) =>
+export const getRegions = (params?: Params, isBetaEndpoint?: boolean) =>
   Request<Page<Region>>(
-    setURL(`${API_ROOT}/regions`),
+    setURL(`${isBetaEndpoint ? BETA_API_ROOT : API_ROOT}/regions`),
     setMethod('GET'),
     setParams(params)
   );

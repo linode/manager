@@ -4,8 +4,10 @@ import { getAll } from 'src/utilities/getAll';
 
 import type { Region, RegionAvailability } from '@linode/api-v4';
 
-export const getAllRegionsRequest = () =>
-  getAll<Region>((params) => getRegions(params))().then((data) => data.data);
+export const getAllRegionsRequest = (isBetaEndpoint: boolean) =>
+  getAll<Region>((params) => getRegions(params, isBetaEndpoint))().then(
+    (data) => data.data
+  );
 
 export const getAllRegionAvailabilitiesRequest = () =>
   getAll<RegionAvailability>((params, filters) =>
