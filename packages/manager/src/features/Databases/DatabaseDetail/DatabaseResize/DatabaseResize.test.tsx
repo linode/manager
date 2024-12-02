@@ -384,14 +384,15 @@ describe('database resize', () => {
         },
       };
 
-      const { getAllByRole, getByTestId } = renderWithTheme(
+      const { getByRole, getByTestId } = renderWithTheme(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-      const dedicatedTab = getAllByRole('tab')[0];
+      const dedicatedTab = getByRole('tab', { name: 'Dedicated CPU' });
+
       await userEvent.click(dedicatedTab);
 
       expect(getByTestId('database-nodes')).toBeDefined();
