@@ -7,7 +7,11 @@ import type { Dashboard, FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
-  handleRegionChange: (region: string | undefined, savePref?: boolean) => void;
+  handleRegionChange: (
+    region: string | undefined,
+    labels: string[],
+    savePref?: boolean
+  ) => void;
   label: string;
   placeholder?: string;
   savePreferences?: boolean;
@@ -32,10 +36,10 @@ export const CloudPulseRegionSelect = React.memo(
     React.useEffect(() => {
       if (regions && savePreferences) {
         const region = defaultValue
-          ? regions.find((regionObj) => regionObj.id === defaultValue)?.id
+          ? regions.find((regionObj) => regionObj.id === defaultValue)
           : undefined;
-        handleRegionChange(region);
-        setSelectedRegion(region);
+        handleRegionChange(region?.id, region ? [region.label] : []);
+        setSelectedRegion(region?.id);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [regions]);
@@ -44,7 +48,11 @@ export const CloudPulseRegionSelect = React.memo(
       <RegionSelect
         onChange={(_, region) => {
           setSelectedRegion(region?.id);
-          handleRegionChange(region?.id, savePreferences);
+          handleRegionChange(
+            region?.id,
+            region ? [region.label] : [],
+            savePreferences
+          );
         }}
         currentCapability={undefined}
         data-testid="region-select"

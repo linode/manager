@@ -68,10 +68,12 @@ export interface CloudPulseCustomSelectProps {
    * The callback function , that will be called on a filter change
    * @param filterKey - The filterKey of the component
    * @param value - The selected filter value
+   * @param labels - Lables of the selected filter value
    */
   handleSelectionChange: (
     filterKey: string,
     value: FilterValueType,
+    labels: string[],
     savePref?: boolean,
     updatedPreferenceData?: AclpConfig
   ) => void;
