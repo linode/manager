@@ -1,14 +1,13 @@
+import { TextField } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from 'react';
 
-import { TextField } from 'src/components/TextField';
-
+import type { TextFieldProps } from '@linode/ui';
 import type { DatePickerProps as MuiDatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import type { DateTime } from 'luxon';
-import type { TextFieldProps } from 'src/components/TextField';
 
 export interface DatePickerProps
   extends Omit<MuiDatePickerProps<DateTime>, 'onChange' | 'value'> {

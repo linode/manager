@@ -1,3 +1,4 @@
+import { TextField } from '@linode/ui';
 import { Box } from '@linode/ui';
 import { Divider } from '@linode/ui';
 import { Grid, Popover } from '@mui/material';
@@ -8,13 +9,12 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import React, { useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { TextField } from 'src/components/TextField';
 
 import { TimeZoneSelect } from './TimeZoneSelect';
 
+import type { TextFieldProps } from '@linode/ui';
 import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import type { DateTime } from 'luxon';
-import type { TextFieldProps } from 'src/components/TextField';
 
 export interface DateTimePickerProps {
   /** Additional props for the DateCalendar */
