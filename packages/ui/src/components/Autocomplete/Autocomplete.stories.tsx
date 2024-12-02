@@ -11,7 +11,6 @@ import { Autocomplete } from './Autocomplete';
 import { SelectedIcon } from './Autocomplete.styles';
 
 import type { EnhancedAutocompleteProps } from './Autocomplete';
-import type { Linode } from '@linode/api-v4';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 const LABEL = 'Select a Linode';
@@ -251,6 +250,7 @@ const baseMockLinode = {
   ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
   lke_cluster_id: null,
   region: 'us-east',
+  site_type: 'core',
   specs: {
     accelerated_devices: 1,
     disk: 51200,
@@ -259,7 +259,6 @@ const baseMockLinode = {
     transfer: 2000,
     vcpus: 1,
   },
-  site_type: 'core',
   status: 'running',
   tags: [],
   type: 'g6-standard-1',
@@ -309,3 +308,26 @@ export const MultiSelectWithSeparateSelectionOptions: MultiSelectWithSeparateSel
   },
   render: (args) => <AutocompleteWithSeparateSelectedOptions {...args} />,
 };
+
+// simplified Linode interface for use in this file (api-v4 is not a dependency of ui)
+export interface Linode {
+  alerts: object;
+  backups: object;
+  created: string;
+  group: string;
+  hypervisor: string;
+  id: number;
+  image: null | string;
+  ipv4: string[];
+  ipv6: null | string;
+  label: string;
+  lke_cluster_id: null | number;
+  region: string;
+  site_type: string;
+  specs: object;
+  status: string;
+  tags: string[];
+  type: null | string;
+  updated: string;
+  watchdog_enabled: boolean;
+}
