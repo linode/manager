@@ -38,3 +38,13 @@ export const useAllAlertDefinitionsQuery = (
     placeholderData: keepPreviousData,
   });
 };
+
+export const useAlertDefinitionQuery = (
+  alertId: number,
+  serviceType: string
+) => {
+  return useQuery<Alert, APIError[]>({
+    ...queryFactory.alertById(alertId, serviceType),
+    enabled: alertId !== undefined,
+  });
+};
