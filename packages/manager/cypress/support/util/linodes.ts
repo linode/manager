@@ -15,6 +15,7 @@ import type {
   InterfacePayload,
   Linode,
 } from '@linode/api-v4';
+import { findOrCreateDependencyVlan } from 'support/api/vlans';
 
 /**
  * Linode create interface to configure a Linode with no public internet access.
@@ -84,6 +85,11 @@ export const createTestLinode = async (
     ...(options || {}),
   };
 
+  let regionId = createRequestPayload?.region;
+  if (!regionId) {
+    regionId = chooseRegion().id;
+  }
+
   const securityMethodPayload: Partial<CreateLinodeRequest> = await (async () => {
     switch (resolvedOptions.securityMethod) {
       case 'firewall':
@@ -94,8 +100,13 @@ export const createTestLinode = async (
         };
 
       case 'vlan_no_internet':
+        const vlanConfig = linodeVlanNoInternetConfig;
+        const vlan = await findOrCreateDependencyVlan(regionId);
+        if (vlan && vlan.label) {
+          vlanConfig[0].label = vlan.label;
+        }
         return {
-          interfaces: linodeVlanNoInternetConfig,
+          interfaces: vlanConfig,
         };
 
       case 'powered_off':
@@ -110,7 +121,8 @@ export const createTestLinode = async (
       booted: false,
       image: 'linode/ubuntu24.04',
       label: randomLabel(),
-      region: chooseRegion().id,
+      region: regionId,
+      booted: false,
     }),
     ...(createRequestPayload || {}),
     ...securityMethodPayload,
