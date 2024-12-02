@@ -67,6 +67,7 @@ export const router = createRouter({
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
+  defaultPreload: 'intent',
   routeTree,
 });
 
@@ -96,5 +97,6 @@ export const migrationRouter = createRouter({
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
+  defaultPreload: 'intent',
   routeTree: migrationRouteTree,
 });
