@@ -149,6 +149,13 @@ export const CreateCluster = () => {
   }));
 
   React.useEffect(() => {
+    // reset tier if feature flag changes
+    if (!isLkeEnterpriseLAFeatureEnabled) {
+      setSelectedTier('standard');
+    }
+  }, [isLkeEnterpriseLAFeatureEnabled]);
+
+  React.useEffect(() => {
     if (versions.length > 0) {
       setVersion(getLatestVersion(versions).value);
     }
@@ -332,11 +339,20 @@ export const CreateCluster = () => {
           <StyledFieldWithDocsStack>
             <Stack>
               <RegionSelect
+                currentCapability={
+                  selectedTier === 'enterprise'
+                    ? 'Kubernetes Enterprise'
+                    : 'Kubernetes'
+                }
                 textFieldProps={{
                   helperText: <RegionHelperText mb={2} />,
                   helperTextPosition: 'top',
                 }}
-                currentCapability="Kubernetes"
+                tooltipText={
+                  selectedTier === 'enterprise'
+                    ? 'Only regions that support Kubernetes Enterprise are listed.'
+                    : undefined
+                }
                 disableClearable
                 errorText={errorMap.region}
                 onChange={(e, region) => setSelectedRegionId(region.id)}
