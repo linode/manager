@@ -29,11 +29,11 @@ export const getLinodeCreateResolver = (
 ): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
   return async (values, context, options) => {
-    const transformedValues = getLinodeCreatePayload(values);
+    const transformedValues = getLinodeCreatePayload(structuredClone(values));
 
     const { errors } = await yupResolver(
       schema as ObjectSchema<CreateLinodeRequest>,
-      { strict: true },
+      {},
       { mode: 'async', raw: true }
     )(transformedValues, context, options);
 
