@@ -13,6 +13,7 @@ import {
   mockRebuildLinodeError,
 } from 'support/intercepts/linodes';
 import { createTestLinode } from 'support/util/linodes';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 /**
  * Creates a Linode and StackScript.
@@ -126,7 +127,9 @@ describe('rebuild linode', () => {
       interceptRebuildLinode(linode.id).as('linodeRebuild');
 
       cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.findByText('RUNNING').should('be.visible');
+      cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
+        'be.visible'
+      );
 
       openRebuildDialog(linode.label);
       findRebuildDialog(linode.label).within(() => {
@@ -182,7 +185,9 @@ describe('rebuild linode', () => {
       interceptRebuildLinode(linode.id).as('linodeRebuild');
       interceptGetStackScripts().as('getStackScripts');
       cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.findByText('RUNNING').should('be.visible');
+      cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
+        'be.visible'
+      );
 
       openRebuildDialog(linode.label);
       findRebuildDialog(linode.label).within(() => {
@@ -256,7 +261,9 @@ describe('rebuild linode', () => {
     ).then(([stackScript, linode]) => {
       interceptRebuildLinode(linode.id).as('linodeRebuild');
       cy.visitWithLogin(`/linodes/${linode.id}`);
-      cy.findByText('RUNNING').should('be.visible');
+      cy.findByText('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
+        'be.visible'
+      );
 
       openRebuildDialog(linode.label);
       findRebuildDialog(linode.label).within(() => {
