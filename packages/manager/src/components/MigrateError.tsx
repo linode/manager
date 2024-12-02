@@ -1,7 +1,7 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
-import { Typography } from 'src/components/Typography';
 
 import type { EntityForTicketDetails } from './SupportLink/SupportLink';
 

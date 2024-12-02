@@ -1,5 +1,5 @@
-import { Autocomplete, SelectedIcon } from '@linode/ui';
-import { Box, ListItem } from '@mui/material';
+import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -148,10 +148,20 @@ export const CloudPulseResourcesSelect = React.memo(
           const isResourceSelected = selectedResources?.some(
             (item) => item.label === option.label
           );
+
+          const isSelectAllORDeslectAllOption =
+            option.label === 'Select All ' || option.label === 'Deselect All ';
+
           const isMaxSelectionsReached =
             selectedResources &&
             selectedResources.length >= maxResourceSelectionLimit &&
-            !isResourceSelected;
+            !isResourceSelected &&
+            !isSelectAllORDeslectAllOption;
+
+          const ListItem = isSelectAllORDeslectAllOption
+            ? StyledListItem
+            : 'li';
+
           return (
             <ListItem
               {...rest}
@@ -169,8 +179,13 @@ export const CloudPulseResourcesSelect = React.memo(
         textFieldProps={{
           InputProps: {
             sx: {
+              '::-webkit-scrollbar': {
+                display: 'none',
+              },
               maxHeight: '55px',
+              msOverflowStyle: 'none',
               overflow: 'auto',
+              scrollbarWidth: 'none',
               svg: {
                 color: themes.light.color.grey3,
               },

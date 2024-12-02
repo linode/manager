@@ -25,6 +25,8 @@ export const PREMIUM_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/premium-compute-instances';
 export const GPU_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/gpu-compute-instances';
+export const TRANSFER_COSTS_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs';
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   accelerated_devices: 0,

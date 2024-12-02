@@ -1,9 +1,8 @@
-import { List, ListItem, Notice } from '@linode/ui';
+import { List, ListItem, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
 
 import type { KubeNodePoolResponse } from '@linode/api-v4';

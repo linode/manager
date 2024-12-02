@@ -139,10 +139,7 @@ const LinodesDetailNavigation = () => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeSummary
-                  isBareMetalInstance={isBareMetalInstance}
-                  linodeCreated={linode?.created}
-                />
+                <LinodeSummary linodeCreated={linode?.created} />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeNetwork />

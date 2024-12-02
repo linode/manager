@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Paper } from '@linode/ui';
+import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -9,7 +9,6 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Typography } from 'src/components/Typography';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';

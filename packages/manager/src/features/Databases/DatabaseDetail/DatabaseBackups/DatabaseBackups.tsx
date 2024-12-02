@@ -1,4 +1,12 @@
-import { Autocomplete, Box, Button, Divider, Notice, Paper } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Divider,
+  Notice,
+  Paper,
+  Typography,
+} from '@linode/ui';
 import {
   FormControl,
   FormControlLabel,
@@ -12,7 +20,6 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Typography } from 'src/components/Typography';
 import {
   StyledDateCalendar,
   StyledTypography,
@@ -128,132 +135,142 @@ export const DatabaseBackups = (props: Props) => {
     setSelectedTime(null);
   };
 
-  return isDefaultDatabase ? (
-    <Paper style={{ marginTop: 16 }}>
-      <Typography variant="h2">Summary</Typography>
-      <StyledTypography>
-        Databases are automatically backed-up with full daily backups for the
-        past 14 days, and binary logs recorded continuously. Full backups are
-        version-specific binary backups, which when combined with binary
-        logs allow for consistent recovery to a specific point in time (PITR).
-      </StyledTypography>
-      <Divider spacingBottom={25} spacingTop={25} />
-      <Typography variant="h2">Restore a Backup</Typography>
-      <StyledTypography>
-        {isDatabasesV2GA ? (
-          <span>
-            The newest full backup plus incremental is selected by default. Or,
-            select any date and time within the last 14 days you want to create
-            a fork from.
-          </span>
-        ) : (
-          <span>
-            Select a date and time within the last 14 days you want to create a
-            fork from.
-          </span>
+  if (isDefaultDatabase) {
+    return (
+      <Paper style={{ marginTop: 16 }}>
+        <Typography variant="h2">Summary</Typography>
+        <StyledTypography>
+          Databases are automatically backed-up with full daily backups for the
+          past 14 days, and binary logs recorded continuously. Full backups are
+          version-specific binary backups, which when combined with binary
+          logs allow for consistent recovery to a specific point in time (PITR).
+        </StyledTypography>
+        <Divider spacingBottom={25} spacingTop={25} />
+        <Typography variant="h2">Restore a Backup</Typography>
+        <StyledTypography>
+          {isDatabasesV2GA ? (
+            <span>
+              The newest full backup plus incremental is selected by default.
+              Or, select any date and time within the last 14 days you want to
+              create a fork from.
+            </span>
+          ) : (
+            <span>
+              Select a date and time within the last 14 days you want to create
+              a fork from.
+            </span>
+          )}
+        </StyledTypography>
+        {unableToRestoreCopy && (
+          <Notice spacingTop={16} text={unableToRestoreCopy} variant="info" />
         )}
-      </StyledTypography>
-      {unableToRestoreCopy && (
-        <Notice spacingTop={16} text={unableToRestoreCopy} variant="info" />
-      )}
-      {isDatabasesV2GA && (
-        <RadioGroup
-          aria-label="type"
-          name="type"
-          onChange={handleOnVersionOptionChange}
-          value={versionOption}
-        >
-          <FormControlLabel
-            control={<Radio />}
-            data-qa-dbaas-radio="Newest"
-            disabled={disabled}
-            label="Newest full backup plus incremental"
-            value="newest"
-          />
-          <FormControlLabel
-            control={<Radio />}
-            data-qa-dbaas-radio="DateTime"
-            disabled={disabled}
-            label="Specific date & time"
-            value="dateTime"
-          />
-        </RadioGroup>
-      )}
-      <Grid container justifyContent="flex-start" mt={2}>
-        <Grid item lg={3} md={4} xs={12}>
-          <Typography variant="h3">Date</Typography>
-          <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <StyledDateCalendar
-              shouldDisableDate={(date) =>
-                isDateOutsideBackup(date, oldestBackup?.startOf('day'))
-              }
-              disabled={disabled || versionOption === 'newest'}
-              onChange={handleDateChange}
-              value={selectedDate}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item lg={3} md={4} xs={12}>
-          <Typography variant="h3">Time (UTC)</Typography>
-          <FormControl style={{ marginTop: 0 }}>
-            {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
-            <Autocomplete
-              getOptionDisabled={(option) =>
-                isTimeOutsideBackup(option.value, selectedDate!, oldestBackup!)
-              }
-              isOptionEqualToValue={(option, value) =>
-                option.value === value.value
-              }
-              renderOption={(props, option) => {
-                const { key, ...rest } = props;
-                return (
-                  <li {...rest} key={key}>
-                    {option.label}
-                  </li>
-                );
-              }}
-              textFieldProps={{
-                dataAttrs: {
-                  'data-qa-time-select': true,
-                },
-              }}
-              autoComplete={false}
-              className={classes.timeAutocomplete}
-              disabled={disabled || !selectedDate || versionOption === 'newest'}
-              label=""
-              onChange={(_, newTime) => setSelectedTime(newTime)}
-              options={TIME_OPTIONS}
-              placeholder="Choose a time"
-              value={selectedTime}
-            />
-          </FormControl>
-        </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Box display="flex" justifyContent="flex-end">
-          <Button
-            disabled={
-              versionOption === 'dateTime' && (!selectedDate || !selectedTime)
-            }
-            buttonType="primary"
-            data-qa-settings-button="restore"
-            onClick={onRestoreDatabase}
+        {isDatabasesV2GA && (
+          <RadioGroup
+            aria-label="type"
+            name="type"
+            onChange={handleOnVersionOptionChange}
+            value={versionOption}
           >
-            Restore
-          </Button>
-        </Box>
-      </Grid>
-      {database ? (
-        <DatabaseBackupsDialog
-          database={database}
-          onClose={() => setIsRestoreDialogOpen(false)}
-          open={isRestoreDialogOpen}
-          selectedDate={selectedDate}
-          selectedTime={selectedTime?.value}
-        />
-      ) : null}
-    </Paper>
-  ) : (
+            <FormControlLabel
+              control={<Radio />}
+              data-qa-dbaas-radio="Newest"
+              disabled={disabled}
+              label="Newest full backup plus incremental"
+              value="newest"
+            />
+            <FormControlLabel
+              control={<Radio />}
+              data-qa-dbaas-radio="DateTime"
+              disabled={disabled}
+              label="Specific date & time"
+              value="dateTime"
+            />
+          </RadioGroup>
+        )}
+        <Grid container justifyContent="flex-start" mt={2}>
+          <Grid item lg={3} md={4} xs={12}>
+            <Typography variant="h3">Date</Typography>
+            <LocalizationProvider dateAdapter={AdapterLuxon}>
+              <StyledDateCalendar
+                shouldDisableDate={(date) =>
+                  isDateOutsideBackup(date, oldestBackup?.startOf('day'))
+                }
+                disabled={disabled || versionOption === 'newest'}
+                onChange={handleDateChange}
+                value={selectedDate}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item lg={3} md={4} xs={12}>
+            <Typography variant="h3">Time (UTC)</Typography>
+            <FormControl style={{ marginTop: 0 }}>
+              {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
+              <Autocomplete
+                getOptionDisabled={(option) =>
+                  isTimeOutsideBackup(
+                    option.value,
+                    selectedDate!,
+                    oldestBackup!
+                  )
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option.value === value.value
+                }
+                renderOption={(props, option) => {
+                  const { key, ...rest } = props;
+                  return (
+                    <li {...rest} key={key}>
+                      {option.label}
+                    </li>
+                  );
+                }}
+                textFieldProps={{
+                  dataAttrs: {
+                    'data-qa-time-select': true,
+                  },
+                }}
+                autoComplete={false}
+                className={classes.timeAutocomplete}
+                disabled={
+                  disabled || !selectedDate || versionOption === 'newest'
+                }
+                label=""
+                onChange={(_, newTime) => setSelectedTime(newTime)}
+                options={TIME_OPTIONS}
+                placeholder="Choose a time"
+                value={selectedTime}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Box display="flex" justifyContent="flex-end">
+            <Button
+              disabled={
+                versionOption === 'dateTime' && (!selectedDate || !selectedTime)
+              }
+              buttonType="primary"
+              data-qa-settings-button="restore"
+              onClick={onRestoreDatabase}
+            >
+              Restore
+            </Button>
+          </Box>
+        </Grid>
+        {database && (
+          <DatabaseBackupsDialog
+            database={database}
+            onClose={() => setIsRestoreDialogOpen(false)}
+            open={isRestoreDialogOpen}
+            selectedDate={selectedDate}
+            selectedTime={selectedTime?.value}
+          />
+        )}
+      </Paper>
+    );
+  }
+
+  return (
     <DatabaseBackupsLegacy
       database={database}
       databaseError={databaseError}

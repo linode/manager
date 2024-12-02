@@ -1,11 +1,17 @@
-import { Button, CircleProgress, List, ListItem, Notice } from '@linode/ui';
+import {
+  Button,
+  CircleProgress,
+  List,
+  ListItem,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { RemovableSelectionsList } from 'src/components/RemovableSelectionsList/RemovableSelectionsList';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { Typography } from 'src/components/Typography';
 import {
   useDeletePlacementGroup,
   useUnassignLinodesFromPlacementGroup,

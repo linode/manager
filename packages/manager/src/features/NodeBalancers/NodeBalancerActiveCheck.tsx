@@ -3,11 +3,15 @@ import {
   FormHelperText,
   InputAdornment,
   TextField,
+  Typography,
 } from '@linode/ui';
+import {
+  CHECK_ATTEMPTS,
+  CHECK_INTERVAL,
+  CHECK_TIMEOUT,
+} from '@linode/validation';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-
-import { Typography } from 'src/components/Typography';
 
 import { setErrorMap } from './utils';
 
@@ -138,6 +142,8 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_interval}
                 label="Interval"
+                max={CHECK_INTERVAL.MAX}
+                min={CHECK_INTERVAL.MIN}
                 onChange={onHealthCheckIntervalChange}
                 type="number"
                 value={healthCheckInterval}
@@ -159,6 +165,8 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_timeout}
                 label="Timeout"
+                max={CHECK_TIMEOUT.MAX}
+                min={CHECK_TIMEOUT.MIN}
                 onChange={onHealthCheckTimeoutChange}
                 type="number"
                 value={healthCheckTimeout}
@@ -178,6 +186,8 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_attempts}
                 label="Attempts"
+                max={CHECK_ATTEMPTS.MAX}
+                min={CHECK_ATTEMPTS.MIN}
                 onChange={onHealthCheckAttemptsChange}
                 type="number"
                 value={healthCheckAttempts}

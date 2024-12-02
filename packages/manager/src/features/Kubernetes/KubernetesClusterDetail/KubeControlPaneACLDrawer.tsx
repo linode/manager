@@ -1,5 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Notice, TextField, omittedProps } from '@linode/ui';
+import {
+  Box,
+  Notice,
+  TextField,
+  Toggle,
+  Typography,
+  omittedProps,
+} from '@linode/ui';
 import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -11,8 +18,6 @@ import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
@@ -135,7 +140,7 @@ export const KubeControlPlaneACLDrawer = (
           control_plane: payload,
         });
       }
-      closeDrawer();
+      handleClose();
     } catch (errors) {
       for (const error of errors) {
         setError(error?.field ?? 'root', { message: error.reason });
@@ -144,14 +149,13 @@ export const KubeControlPlaneACLDrawer = (
     }
   };
 
+  const handleClose = () => {
+    reset();
+    closeDrawer();
+  };
+
   return (
-    <Drawer
-      onClose={closeDrawer}
-      onExited={() => reset()}
-      open={open}
-      title={'Control Plane ACL'}
-      wide
-    >
+    <Drawer onClose={handleClose} open={open} title={'Control Plane ACL'} wide>
       <DrawerContent
         error={!!isErrorKubernetesACL && clusterMigrated} // when cluster has not migrated, we expect an error from the query
         errorMessage={isErrorKubernetesACL?.[0].reason} // only on initial loading error do we disable the drawer altogether
@@ -296,7 +300,7 @@ export const KubeControlPlaneACLDrawer = (
                 loading: isSubmitting,
                 type: 'submit',
               }}
-              secondaryButtonProps={{ label: 'Cancel', onClick: closeDrawer }}
+              secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
             />
           </Stack>
         </form>

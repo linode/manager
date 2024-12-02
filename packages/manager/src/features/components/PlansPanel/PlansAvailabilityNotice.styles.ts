@@ -1,8 +1,7 @@
-import { List } from '@linode/ui';
+import { List, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 
 import type { Theme } from '@mui/material/styles';
 

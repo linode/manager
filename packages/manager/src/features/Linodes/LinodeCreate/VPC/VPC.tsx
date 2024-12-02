@@ -8,6 +8,7 @@ import {
   Stack,
   TextField,
   TooltipIcon,
+  Typography,
 } from '@linode/ui';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -15,7 +16,6 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import { Typography } from 'src/components/Typography';
 import { VPCSelect } from 'src/components/VPCSelect';
 import {
   REGION_CAVEAT_HELPER_TEXT,

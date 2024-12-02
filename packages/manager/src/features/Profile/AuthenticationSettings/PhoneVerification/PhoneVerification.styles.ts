@@ -3,11 +3,10 @@ import {
   Box,
   FormHelperText,
   TextField,
+  Typography,
   omittedProps,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Typography } from 'src/components/Typography';
 
 export const StyledCodeSentMessageBox = styled(Box, {
   label: 'StyledCodeSentMessageBox',

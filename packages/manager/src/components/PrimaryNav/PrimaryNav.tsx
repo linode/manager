@@ -34,7 +34,6 @@ import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
 
 export type NavEntity =
   | 'Account'
-  | 'Account'
   | 'Betas'
   | 'Cloud Load Balancers'
   | 'Dashboard'
@@ -56,10 +55,18 @@ export type NavEntity =
   | 'VPC'
   | 'Volumes';
 
-interface PrimaryLinkGroup {
+export type ProductFamily =
+  | 'Compute'
+  | 'Databases'
+  | 'Monitor'
+  | 'More'
+  | 'Networking'
+  | 'Storage';
+
+export interface ProductFamilyLinkGroup<T> {
   icon?: React.JSX.Element;
-  links: PrimaryLinkType[];
-  title?: string;
+  links: T;
+  name?: ProductFamily;
 }
 
 export interface PrimaryNavProps {
@@ -84,7 +91,9 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { data: preferences } = usePreferences();
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const primaryLinkGroups: PrimaryLinkGroup[] = React.useMemo(
+  const productFamilyLinkGroups: ProductFamilyLinkGroup<
+    PrimaryLinkType[]
+  >[] = React.useMemo(
     () => [
       {
         links: [
@@ -132,7 +141,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/linodes/create?type=One-Click',
           },
         ],
-        title: 'Compute',
+        name: 'Compute',
       },
       {
         icon: <Storage />,
@@ -150,7 +159,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/volumes',
           },
         ],
-        title: 'Storage',
+        name: 'Storage',
       },
       {
         icon: <NodeBalancer />,
@@ -172,7 +181,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/domains',
           },
         ],
-        title: 'Networking',
+        name: 'Networking',
       },
       {
         icon: <Database />,
@@ -184,7 +193,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             isBeta: isDatabasesV2Beta,
           },
         ],
-        title: 'Databases',
+        name: 'Databases',
       },
       {
         icon: <Longview />,
@@ -196,11 +205,11 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           {
             display: 'Monitor',
             hide: !isACLPEnabled,
-            href: '/monitor/cloudpulse',
+            href: '/monitor',
             isBeta: flags.aclp?.beta,
           },
         ],
-        title: 'Monitor',
+        name: 'Monitor',
       },
       {
         icon: <More />,
@@ -219,7 +228,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             href: '/support',
           },
         ],
-        title: 'More',
+        name: 'More',
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -282,8 +291,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         </StyledLogoBox>
         <StyledDivider />
       </Grid>
-      {primaryLinkGroups.map((linkGroup, idx) => {
-        const filteredLinks = linkGroup.links.filter((link) => !link.hide);
+      {productFamilyLinkGroups.map((productFamily, idx) => {
+        const filteredLinks = productFamily.links.filter((link) => !link.hide);
         if (filteredLinks.length === 0) {
           return null;
         }
@@ -298,7 +307,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             )
           );
           if (isActiveLink) {
-            activeProductFamily = linkGroup.title ?? '';
+            activeProductFamily = productFamily.name ?? '';
           }
           const props = {
             closeMenu,
@@ -311,17 +320,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
         return (
           <div key={idx} style={{ width: 'inherit' }}>
-            {linkGroup.title ? ( // TODO: we can remove this conditional when Managed is removed
+            {productFamily.name ? ( // TODO: we can remove this conditional when Managed is removed
               <>
                 <StyledAccordion
                   heading={
                     <>
-                      {linkGroup.icon}
-                      <p>{linkGroup.title}</p>
+                      {productFamily.icon}
+                      <p>{productFamily.name}</p>
                     </>
                   }
                   isActiveProductFamily={
-                    activeProductFamily === linkGroup.title
+                    activeProductFamily === productFamily.name
                   }
                   expanded={!collapsedAccordions.includes(idx)}
                   isCollapsed={isCollapsed}

@@ -4,16 +4,14 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { alertSeverityOptions } from '../../constants';
 
-import type {
-  AlertSeverityType,
-  CreateAlertDefinitionForm,
-} from '@linode/api-v4';
+import type { CreateAlertDefinitionForm } from '../types';
+import type { AlertSeverityType } from '@linode/api-v4';
 import type { FieldPathByValue } from 'react-hook-form';
 export interface CloudPulseAlertSeveritySelectProps {
   /**
    * name used for the component in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, AlertSeverityType>;
+  name: FieldPathByValue<CreateAlertDefinitionForm, AlertSeverityType | null>;
 }
 
 export const CloudPulseAlertSeveritySelect = (
@@ -40,7 +38,7 @@ export const CloudPulseAlertSeveritySelect = (
           }}
           textFieldProps={{
             labelTooltipText:
-              'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab',
+              'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.',
           }}
           value={
             field.value !== null

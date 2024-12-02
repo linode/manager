@@ -1,4 +1,4 @@
-import { Autocomplete } from '@linode/ui';
+import { Autocomplete, Typography } from '@linode/ui';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -7,7 +7,6 @@ import { compose } from 'recompose';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Typography } from 'src/components/Typography';
 import withLongviewClients from 'src/containers/longview.container';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useGrants, useProfile } from 'src/queries/profile/profile';

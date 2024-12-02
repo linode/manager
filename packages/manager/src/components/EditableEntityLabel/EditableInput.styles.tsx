@@ -1,8 +1,6 @@
-import { Box, Button, TextField, fadeIn } from '@linode/ui';
+import { Box, Button, TextField, Typography, fadeIn } from '@linode/ui';
 import Edit from '@mui/icons-material/Edit';
 import { styled } from '@mui/material/styles';
-
-import { Typography } from 'src/components/Typography';
 
 import type { EditableTextVariant } from './EditableInput';
 import type { TextFieldProps } from '@linode/ui';

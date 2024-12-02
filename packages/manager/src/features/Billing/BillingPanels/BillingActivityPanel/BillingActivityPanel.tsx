@@ -1,5 +1,5 @@
 import { getInvoiceItems } from '@linode/api-v4/lib/account';
-import { Autocomplete } from '@linode/ui';
+import { Autocomplete, Typography } from '@linode/ui';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -23,7 +23,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { Typography } from 'src/components/Typography';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {

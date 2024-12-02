@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Paper, Stack } from '@linode/ui';
+import { Autocomplete, Box, Paper, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -6,7 +6,6 @@ import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import { Typography } from 'src/components/Typography';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFlags } from 'src/hooks/useFlags';

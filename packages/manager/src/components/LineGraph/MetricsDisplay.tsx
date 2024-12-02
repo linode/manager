@@ -1,10 +1,10 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 
 import {
   StyledButton,
@@ -112,15 +112,13 @@ export const MetricsDisplay = ({
   rows,
 }: Props) => (
   <StyledTable
-    sx={(theme) => ({
+    sx={{
       '.MuiTable-root': {
         border: 0,
       },
+      height: legendHeight,
       overflowY: 'auto',
-      [theme.breakpoints.up(1100)]: {
-        height: legendHeight,
-      },
-    })}
+    }}
     aria-label="Stats and metrics"
     stickyHeader
   >
