@@ -1,10 +1,12 @@
 import { getAPIFilterFromQuery } from '@linode/search';
+import { Typography } from '@linode/ui';
 import {
   CircleProgress,
   IconButton,
   InputAdornment,
   Notice,
   Paper,
+  TextField,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
@@ -31,8 +33,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
@@ -521,7 +521,7 @@ export const ImagesLanding = () => {
                   <TableCell>Image ID</TableCell>
                 </Hidden>
               )}
-              <TableCell></TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -600,7 +600,7 @@ export const ImagesLanding = () => {
               <Hidden smDown>
                 <TableCell>Expires</TableCell>
               </Hidden>
-              <TableCell></TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>

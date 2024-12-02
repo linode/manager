@@ -1,4 +1,4 @@
-import { Divider, Paper } from '@linode/ui';
+import { Divider, Paper, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -13,7 +13,6 @@ import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
-import { Typography } from 'src/components/Typography';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 

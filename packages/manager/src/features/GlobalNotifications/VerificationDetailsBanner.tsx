@@ -1,8 +1,6 @@
-import { Box, Button, Notice } from '@linode/ui';
+import { Box, Button, Notice, Typography } from '@linode/ui';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   hasSecurityQuestions: boolean;

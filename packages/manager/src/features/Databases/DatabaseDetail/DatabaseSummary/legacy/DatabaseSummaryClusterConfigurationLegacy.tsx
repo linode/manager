@@ -1,8 +1,7 @@
-import { Box, TooltipIcon } from '@linode/ui';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
@@ -68,8 +67,10 @@ export const DatabaseSummaryClusterConfigurationLegacy = (props: Props) => {
 
   const configuration =
     database.cluster_size === 1
-      ? 'Primary'
-      : `Primary +${database.cluster_size - 1} replicas`;
+      ? 'Primary (1 Node)'
+      : database.cluster_size > 2
+      ? `Primary (+${database.cluster_size - 1} Nodes)`
+      : `Primary (+${database.cluster_size - 1} Node)`;
 
   const sxTooltipIcon = {
     marginLeft: '4px',

@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -6,7 +6,6 @@ import Download from 'src/assets/icons/download.svg';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Drawer } from 'src/components/Drawer';
 import { DrawerContent } from 'src/components/DrawerContent';
-import { Typography } from 'src/components/Typography';
 import { useKubenetesKubeConfigQuery } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 

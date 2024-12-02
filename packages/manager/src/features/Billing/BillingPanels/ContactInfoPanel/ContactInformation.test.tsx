@@ -4,7 +4,7 @@ import { profileFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import ContactInformation from './ContactInformation';
+import { ContactInformation } from './ContactInformation';
 
 const EDIT_BUTTON_ID = 'edit-contact-info';
 

@@ -1,4 +1,4 @@
-import { Box, Button, InputAdornment } from '@linode/ui';
+import { Box, Button, InputAdornment, TextField, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { parsePhoneNumber } from 'libphonenumber-js';
@@ -7,8 +7,6 @@ import * as React from 'react';
 
 import { LinkButton } from 'src/components/LinkButton';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import {
   profileQueries,
   updateProfileData,

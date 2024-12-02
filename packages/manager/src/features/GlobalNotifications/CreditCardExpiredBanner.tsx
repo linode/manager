@@ -1,5 +1,4 @@
-import { Button } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
