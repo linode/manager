@@ -133,10 +133,8 @@ authenticate();
  * - `CustomKeyboardSensor` works as expected.
  */
 describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () => {
-  before(() => {
-    cleanUp('firewalls');
-  });
   beforeEach(() => {
+    cleanUp('firewalls');
     cy.tag('method:e2e');
   });
 
