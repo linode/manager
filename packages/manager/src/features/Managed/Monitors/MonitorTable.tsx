@@ -51,8 +51,8 @@ export const MonitorTable = () => {
   const { data, error, isLoading } = useAllManagedMonitorsQuery();
   const {
     data: issues,
-    error: issuesError,
-    isLoading: areIssuesLoading,
+    failureReason,
+    isFetching: areIssuesFetching,
   } = useAllManagedIssuesQuery();
   const { data: credentials } = useAllManagedCredentialsQuery();
   const { data: contacts } = useAllManagedContactsQuery();
@@ -283,8 +283,8 @@ export const MonitorTable = () => {
         issues={issues?.filter((thisIssue) =>
           thisIssue.services.includes(editID)
         )}
-        error={issuesError}
-        loading={areIssuesLoading}
+        error={failureReason}
+        isFetching={areIssuesFetching}
         monitorLabel={editLabel}
         onClose={() => setHistoryDrawerOpen(false)}
         open={historyDrawerOpen}

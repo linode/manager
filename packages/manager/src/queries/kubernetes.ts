@@ -196,16 +196,18 @@ export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
   });
 };
 
-export const useKubenetesKubeConfigQuery = (
+export const useKubernetesKubeConfigQuery = (
   clusterId: number,
   enabled = false
 ) =>
   useQuery<string, APIError[]>({
     ...kubernetesQueries.cluster(clusterId)._ctx.kubeconfig,
     enabled,
-    refetchOnMount: true,
-    retry: true,
+    retry: 3,
     retryDelay: 5000,
+    // Disable stale time to prevent caching of the kubeconfig
+    // because it can take some time for config to get updated in the API
+    staleTime: 0,
   });
 
 export const useResetKubeConfigMutation = () => {

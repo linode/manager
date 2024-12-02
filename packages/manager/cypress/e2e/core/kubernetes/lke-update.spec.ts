@@ -1427,7 +1427,7 @@ describe('LKE ACL updates', () => {
         .click();
 
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm submit button is disabled if form has not been changed
@@ -1508,7 +1508,7 @@ describe('LKE ACL updates', () => {
 
       // confirm data within drawer is updated and edit IPs again
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm submit button is disabled if form has not been changed
@@ -1565,7 +1565,7 @@ describe('LKE ACL updates', () => {
 
       // confirm data within drawer is updated again
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // confirm updated IPv6 addresses display
@@ -1625,7 +1625,7 @@ describe('LKE ACL updates', () => {
         .click();
 
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm submit button is disabled if form has not been changed
@@ -1694,7 +1694,7 @@ describe('LKE ACL updates', () => {
 
       // confirm data within drawer is updated
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // confirm enable toggle was updated
@@ -1758,7 +1758,7 @@ describe('LKE ACL updates', () => {
       );
 
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm installation notice is displayed
@@ -1840,7 +1840,7 @@ describe('LKE ACL updates', () => {
         .click();
 
       ui.drawer
-        .findByTitle('Control Plane ACL')
+        .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
           // Confirm ACL IP validation works as expected for IPv4
