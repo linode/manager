@@ -28,6 +28,7 @@ import {
 import {
   useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
+  useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
@@ -60,6 +61,7 @@ import type {
   CreateNodePoolData,
   KubeNodePoolResponse,
   KubernetesTier,
+  KubernetesTieredVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
@@ -137,6 +139,13 @@ export const CreateCluster = () => {
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
 
+  const { data: standardTierVersionData } = useKubernetesTieredVersionsQuery(
+    'standard'
+  );
+  const { data: enterpriseTierVersionData } = useKubernetesTieredVersionsQuery(
+    'enterprise'
+  );
+
   const {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
@@ -147,11 +156,34 @@ export const CreateCluster = () => {
     value: thisVersion.id,
   }));
 
+  const tieredVersionsData =
+    selectedTier === 'enterprise'
+      ? enterpriseTierVersionData
+      : standardTierVersionData;
+  const tieredVersions = (tieredVersionsData ?? []).map(
+    (thisTieredVersion: KubernetesTieredVersion) => ({
+      label: thisTieredVersion.id,
+      value: thisTieredVersion.id,
+    })
+  );
+
+  /**
+   * Use the data from the existing /versions endpoint if LKE-E is disabled.
+   * If LKE-E is enabled, use the new /versions/<tier> endpoint data, which supports enterprise tiers.
+   * @todo LKE-E: Remove the first conditional once LKE-E is in GA.
+   */
   React.useEffect(() => {
-    if (versions.length > 0) {
+    if (versions.length > 0 && !isLkeEnterpriseLAFeatureEnabled) {
       setVersion(getLatestVersion(versions).value);
+    } else {
+      setVersion(getLatestVersion(tieredVersions).value);
     }
-  }, [versionData]);
+  }, [
+    versionData,
+    standardTierVersionData,
+    enterpriseTierVersionData,
+    selectedTier,
+  ]);
 
   const createCluster = () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
