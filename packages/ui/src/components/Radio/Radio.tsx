@@ -2,6 +2,7 @@ import { default as _Radio, RadioProps } from '@mui/material/Radio';
 import * as React from 'react';
 
 import { RadioIcon, RadioIconRadioed } from '../../assets/icons';
+import { SvgIcon } from '@mui/material';
 
 /**
 ### Use radio buttons to
@@ -22,18 +23,23 @@ import { RadioIcon, RadioIconRadioed } from '../../assets/icons';
 - Give people control and align with their expectations
  */
 export const Radio = (props: RadioProps) => {
-  const sizeInPixels: Record<string, string> = {
-    medium: '20px',
-    small: '16px',
-  };
-  const iconDimension = sizeInPixels[props.size ?? 'medium'];
   return (
     <_Radio
       checkedIcon={
-        <RadioIconRadioed height={iconDimension} width={iconDimension} />
+        <SvgIcon
+          viewBox="0 0 25 25"
+          component={RadioIconRadioed}
+          fontSize={props.size}
+        />
       }
       data-qa-radio={props.checked || false}
-      icon={<RadioIcon height={iconDimension} width={iconDimension} />}
+      icon={
+        <SvgIcon
+          viewBox="0 0 25 25"
+          component={RadioIcon}
+          fontSize={props.size}
+        />
+      }
       {...props}
       inputProps={{
         'aria-checked': props.checked,

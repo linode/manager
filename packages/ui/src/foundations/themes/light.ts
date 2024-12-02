@@ -1100,6 +1100,16 @@ export const lightTheme: ThemeOptions = {
             color: theme.palette.primary.main,
             fill: theme.color.white,
           },
+          '&.MuiRadio-sizeSmall': {
+            '.MuiSvgIcon-fontSizeSmall': {
+              fontSize: '16px',
+            },
+          },
+          '&.MuiRadio-root': {
+            '.MuiSvgIcon-fontSizeMedium': {
+              fontSize: '20px',
+            },
+          },
           color: Color.Neutrals[40],
           padding: '10px 10px',
           transition: theme.transitions.create(['color']),
