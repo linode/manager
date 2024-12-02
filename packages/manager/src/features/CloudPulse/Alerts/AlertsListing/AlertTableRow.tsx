@@ -9,6 +9,7 @@ import { capitalize } from 'src/utilities/capitalize';
 
 import { AlertActionMenu } from './AlertActionMenu';
 
+import type { ActionHandlers } from './AlertActionMenu';
 import type { Alert } from '@linode/api-v4';
 
 interface Props {
@@ -16,11 +17,13 @@ interface Props {
    * alert details used by the component to fill the row details
    */
   alert: Alert;
+
+  handlers: ActionHandlers;
 }
 
 export const AlertTableRow = (props: Props) => {
-  const { alert } = props;
-  const { created_by, id, label, service_type, status, updated } = alert;
+  const { alert, handlers } = props;
+  const { created_by, id, label, service_type, status, type, updated } = alert;
   const theme = useTheme();
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
@@ -45,7 +48,7 @@ export const AlertTableRow = (props: Props) => {
         {/* handlers are supposed to be passed to this AlertActionMenu,
         it is dependent on other feature and will added as that feature in the next PR
         */}
-        <AlertActionMenu />
+        <AlertActionMenu alertType={type} handlers={handlers} />
       </TableCell>
     </TableRow>
   );
