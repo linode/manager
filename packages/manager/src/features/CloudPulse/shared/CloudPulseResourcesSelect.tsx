@@ -87,11 +87,11 @@ export const CloudPulseResourcesSelect = React.memo(
 
     // Maximum resource selection limit is fetched from launchdarkly
     const maxResourceSelectionLimit = React.useMemo(() => {
-      const obj = flags.aclpResourceTypeMap?.find(
+      const obj = flags.aclpServiceTypeMap?.find(
         (item) => item.serviceType === resourceType
       );
       return obj?.maxResourceSelections || 10;
-    }, [resourceType, flags.aclpResourceTypeMap]);
+    }, [resourceType, flags.aclpServiceTypeMap]);
 
     const resourcesLimitReached = React.useMemo(() => {
       return getResourcesList.length > maxResourceSelectionLimit;

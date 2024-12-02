@@ -1,4 +1,8 @@
-import type { DatabaseEngine, DatabaseType } from '@linode/api-v4';
+import type {
+  Capabilities,
+  DatabaseEngine,
+  DatabaseType,
+} from '@linode/api-v4';
 import type { QueryFunction, QueryKey } from '@tanstack/react-query';
 
 /**
@@ -82,6 +86,11 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    * example, databaseQueries.types, databaseQueries.engines etc., makes use of existing query key and optimises cache
    */
   apiV4QueryKey?: QueryFunctionAndKey;
+
+  /**
+   * This is the current capability corresponding to the service type
+   */
+  capability: Capabilities;
 
   /**
    * This is an optional field, it is used to disable a certain filter, untill of the dependent filters are selected
