@@ -11,8 +11,8 @@ import { DatabaseSummary } from './DatabaseSummary';
 import type { Database } from '@linode/api-v4';
 
 const CLUSTER_CONFIGURATION = 'Cluster Configuration';
-const THREE_NODE = 'Primary +2 replicas';
-const TWO_NODE = 'Primary +1 replicas';
+const THREE_NODE = 'Primary (+2 Nodes)';
+const TWO_NODE = 'Primary (+1 Node)';
 const VERSION = 'Version';
 
 const CONNECTION_DETAILS = 'Connection Details';

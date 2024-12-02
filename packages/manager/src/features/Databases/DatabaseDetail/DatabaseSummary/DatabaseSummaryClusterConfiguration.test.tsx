@@ -11,7 +11,7 @@ import type { Database, DatabaseStatus } from '@linode/api-v4/lib/databases';
 
 const STATUS_VALUE = 'Active';
 const PLAN_VALUE = 'New DBaaS - Dedicated 8 GB';
-const NODES_VALUE = 'Primary +1 replicas';
+const NODES_VALUE = 'Primary (+1 Node)';
 const REGION_ID = 'us-east';
 const REGION_LABEL = 'Newark, NJ';
 
@@ -150,7 +150,7 @@ describe('DatabaseSummaryClusterConfiguration', () => {
       expect(queryAllByText('Nanode 1 GB')).toHaveLength(1);
 
       expect(queryAllByText('Nodes')).toHaveLength(1);
-      expect(queryAllByText('Primary')).toHaveLength(1);
+      expect(queryAllByText('Primary (1 Node)')).toHaveLength(1);
 
       expect(queryAllByText('CPUs')).toHaveLength(1);
       expect(queryAllByText(1)).toHaveLength(1);

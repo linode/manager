@@ -14,7 +14,6 @@ import type {
   DatabasePriceObject,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
-import type { Theme } from '@mui/material';
 import type {
   PlanSelectionType,
   PlanSelectionWithDatabaseType,
@@ -36,9 +35,6 @@ interface Props {
   selectedPlan: PlanSelectionWithDatabaseType | undefined;
   selectedTab: number;
 }
-const typographyBaseStyles = (theme: Theme) => ({
-  color: theme.palette.mode === 'dark' ? theme.color.grey6 : theme.color.grey1,
-});
 
 export const DatabaseNodeSelector = (props: Props) => {
   const {
@@ -87,17 +83,10 @@ export const DatabaseNodeSelector = (props: Props) => {
       />
     );
 
-    const isDisabled = (nodeSize: ClusterSize) => {
-      return currentClusterSize && nodeSize < currentClusterSize;
-    };
-
     const options = [
       {
         label: (
-          <Typography
-            component="div"
-            sx={isDisabled(1) ? typographyBaseStyles : undefined}
-          >
+          <Typography component="div">
             <span>1 Node {` `}</span>
             {currentClusterSize === 1 && currentChip}
             <br />
@@ -115,10 +104,7 @@ export const DatabaseNodeSelector = (props: Props) => {
     if (hasDedicated && selectedTab === 0 && isDatabasesV2Enabled) {
       options.push({
         label: (
-          <Typography
-            component="div"
-            sx={isDisabled(2) ? typographyBaseStyles : undefined}
-          >
+          <Typography component="div">
             <span>2 Nodes - High Availability</span>
             {currentClusterSize === 2 && currentChip}
             <br />
@@ -135,10 +121,7 @@ export const DatabaseNodeSelector = (props: Props) => {
 
     options.push({
       label: (
-        <Typography
-          component="div"
-          sx={isDisabled(3) ? typographyBaseStyles : undefined}
-        >
+        <Typography component="div">
           <span>3 Nodes - High Availability (recommended)</span>
           {currentClusterSize === 3 && currentChip}
           <br />
@@ -186,9 +169,6 @@ export const DatabaseNodeSelector = (props: Props) => {
         >
           {nodeOptions.map((nodeOption) => (
             <FormControlLabel
-              disabled={
-                currentClusterSize && nodeOption.value < currentClusterSize
-              }
               control={<Radio />}
               data-qa-radio={nodeOption.label}
               data-testid={`database-node-${nodeOption.value}`}

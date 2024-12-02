@@ -82,7 +82,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
 
   const rowIsDisabled =
-    isSamePlan ||
+    (!isDatabaseFlow && isSamePlan) ||
     planIsTooSmall ||
     planBelongsToDisabledClass ||
     planIsDisabled512Gb ||
@@ -125,7 +125,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           onClick={() => (!rowIsDisabled ? onSelect(plan.id) : undefined)}
         >
           <StyledRadioCell>
-            {!isSamePlan && (
+            {(!isSamePlan || (isDatabaseFlow && isSamePlan)) && (
               <FormControlLabel
                 aria-label={`${plan.heading} ${
                   rowIsDisabled ? `- ${disabledPlanReasonCopy}` : ''
