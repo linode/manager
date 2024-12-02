@@ -1,4 +1,4 @@
-import { array, mixed, number, object, string } from 'yup';
+import { array, number, object, string } from 'yup';
 
 const dimensionFilters = object({
   dimension_label: string().required('Label is required for the filter.'),
