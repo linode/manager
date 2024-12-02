@@ -62,13 +62,13 @@ export const createKubeClusterSchema = object().shape({
     .min(1, 'Please add at least one node pool.'),
 });
 
-export const ipv4Address = string().required().test({
+export const ipv4Address = string().defined().test({
   name: 'validateIP',
   message: 'Must be a valid IPv4 address.',
   test: validateIP,
 });
 
-export const ipv6Address = string().required().test({
+export const ipv6Address = string().defined().test({
   name: 'validateIP',
   message: 'Must be a valid IPv6 address.',
   test: validateIP,
