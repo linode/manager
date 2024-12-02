@@ -123,4 +123,21 @@ describe('DateTimePicker Component', () => {
 
     expect(textField).toHaveValue('25/10/2024 15:30');
   });
+  it('should not render the time selector when showTime is false', async () => {
+    renderWithTheme(<DateTimePicker {...defaultProps} showTime={false} />);
+    await userEvent.click(
+      screen.getByRole('textbox', { name: 'Select Date and Time' })
+    );
+    const timePicker = screen.queryByLabelText(/Select Time/i); // Label from timeSelectProps
+    expect(timePicker).not.toBeInTheDocument();
+  });
+
+  it('should not render the timezone selector when showTimeZone is false', async () => {
+    renderWithTheme(<DateTimePicker {...defaultProps} showTimeZone={false} />);
+    await userEvent.click(
+      screen.getByRole('textbox', { name: 'Select Date and Time' })
+    );
+    const timeZoneSelect = screen.queryByLabelText(/Timezone/i); // Label from timeZoneSelectProps
+    expect(timeZoneSelect).not.toBeInTheDocument();
+  });
 });

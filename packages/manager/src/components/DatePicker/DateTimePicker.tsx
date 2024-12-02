@@ -33,6 +33,11 @@ export interface DateTimePickerProps {
   onChange?: (dateTime: DateTime | null) => void;
   /** Placeholder text for the input field */
   placeholder?: string;
+  /** Whether to show the time selector */
+  showTime?: boolean;
+  /** Whether to show the timezone selector */
+  showTimeZone?: boolean;
+  /** Props for customizing the TimePicker component */
   timeSelectProps?: {
     label?: string;
     onChange?: (time: string) => void;
@@ -57,6 +62,8 @@ export const DateTimePicker = ({
   onCancel,
   onChange,
   placeholder = 'yyyy-MM-dd HH:mm',
+  showTime = true,
+  showTimeZone = true,
   timeSelectProps,
   timeZoneSelectProps,
   value = null,
@@ -188,29 +195,33 @@ export const DateTimePicker = ({
             spacing={2}
             sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
-            <Grid item xs={4}>
-              <TimePicker
-                slotProps={{
-                  openPickerButton: {
-                    sx: {
-                      padding: 0, // Remove padding for the icon
+            {showTime && (
+              <Grid item xs={4}>
+                <TimePicker
+                  slotProps={{
+                    openPickerButton: {
+                      sx: {
+                        padding: 0, // Remove padding for the icon
+                      },
                     },
-                  },
-                  textField: textFieldProps,
-                }}
-                onChange={handleTimeChange}
-                slots={{ textField: TextField }}
-                value={dateTime}
-              />
-            </Grid>
-            <Grid item xs={7}>
-              <TimeZoneSelect
-                label={timeZoneSelectProps?.label || 'Timezone'}
-                noMarginTop
-                onChange={handleTimezoneChange}
-                value={timezone}
-              />
-            </Grid>
+                    textField: textFieldProps,
+                  }}
+                  onChange={handleTimeChange}
+                  slots={{ textField: TextField }}
+                  value={dateTime}
+                />
+              </Grid>
+            )}
+            {showTimeZone && (
+              <Grid item xs={7}>
+                <TimeZoneSelect
+                  label={timeZoneSelectProps?.label || 'Timezone'}
+                  noMarginTop
+                  onChange={handleTimezoneChange}
+                  value={timezone}
+                />
+              </Grid>
+            )}
           </Grid>
         </Box>
         <Divider />
