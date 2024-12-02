@@ -48,7 +48,6 @@ const CreatedMenuItemLinkComponent = createLink(MenuItemLinkComponent);
 export const TanstackLink: LinkComponent<typeof LinkComponent> = (props) => {
   return (
     <CreatedLinkComponent
-      preload="intent"
       {...props}
       sx={(theme) => ({
         ...(props.linkType === 'link' && {
@@ -68,5 +67,5 @@ export const TanstackLink: LinkComponent<typeof LinkComponent> = (props) => {
 export const TanstackMenuItemLink: LinkComponent<
   typeof MenuItemLinkComponent
 > = (props) => {
-  return <CreatedMenuItemLinkComponent {...props} preload="intent" />;
+  return <CreatedMenuItemLinkComponent {...props} />;
 };
