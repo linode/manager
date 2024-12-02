@@ -74,6 +74,9 @@ export const CreateCluster = () => {
   const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [version, setVersion] = React.useState<string | undefined>();
+  const [tieredVersions, setTieredVersions] = React.useState<
+    KubernetesTieredVersion[]
+  >();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [hasAgreed, setAgreed] = React.useState<boolean>(false);
@@ -111,6 +114,11 @@ export const CreateCluster = () => {
       setHighAvailability(false);
     }
     setSelectedTier(tier);
+    setTieredVersions(
+      tier === 'enterprise'
+        ? enterpriseTierVersionData
+        : standardTierVersionData
+    );
   };
 
   const lkeHAType = kubernetesHighAvailabilityTypesData?.find(
@@ -139,51 +147,45 @@ export const CreateCluster = () => {
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
 
-  const { data: standardTierVersionData } = useKubernetesTieredVersionsQuery(
-    'standard'
-  );
-  const { data: enterpriseTierVersionData } = useKubernetesTieredVersionsQuery(
-    'enterprise'
-  );
+  const {
+    data: standardTierVersionData,
+    isLoading: standardTierVersionDataIsLoading,
+  } = useKubernetesTieredVersionsQuery('standard');
+  const {
+    data: enterpriseTierVersionData,
+    isLoading: enterpriseTierVersionDataIsLoading,
+  } = useKubernetesTieredVersionsQuery('enterprise');
 
   const {
     isLkeEnterpriseLAFeatureEnabled,
     isLkeEnterpriseLAFlagEnabled,
   } = useIsLkeEnterpriseEnabled();
 
-  const versions = (versionData ?? []).map((thisVersion) => ({
+  /**
+   * If LKE-E is enabled, use the new /versions/<tier> endpoint data, which supports enterprise tiers.
+   * If LKE-E is disabled, use the data from the existing /versions endpoint.
+   * @todo LKE-E: Clean up use of versionData once LKE-E is in GA.
+   */
+  const _versionData = isLkeEnterpriseLAFeatureEnabled
+    ? tieredVersions
+    : versionData;
+
+  const versions = (_versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
     value: thisVersion.id,
   }));
 
-  const tieredVersionsData =
-    selectedTier === 'enterprise'
-      ? enterpriseTierVersionData
-      : standardTierVersionData;
-  const tieredVersions = (tieredVersionsData ?? []).map(
-    (thisTieredVersion: KubernetesTieredVersion) => ({
-      label: thisTieredVersion.id,
-      value: thisTieredVersion.id,
-    })
-  );
-
-  /**
-   * Use the data from the existing /versions endpoint if LKE-E is disabled.
-   * If LKE-E is enabled, use the new /versions/<tier> endpoint data, which supports enterprise tiers.
-   * @todo LKE-E: Remove the first conditional once LKE-E is in GA.
-   */
   React.useEffect(() => {
-    if (versions.length > 0 && !isLkeEnterpriseLAFeatureEnabled) {
-      setVersion(getLatestVersion(versions).value);
-    } else {
-      setVersion(getLatestVersion(tieredVersions).value);
+    if (isLkeEnterpriseLAFeatureEnabled && selectedTier === 'standard') {
+      setTieredVersions(standardTierVersionData);
     }
-  }, [
-    versionData,
-    standardTierVersionData,
-    enterpriseTierVersionData,
-    selectedTier,
-  ]);
+  }, [versions]);
+
+  React.useEffect(() => {
+    if (versions.length > 0) {
+      setVersion(getLatestVersion(versions).value);
+    }
+  }, [versionData, _versionData]);
 
   const createCluster = () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
@@ -395,6 +397,11 @@ export const CreateCluster = () => {
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
+            loading={
+              isLkeEnterpriseLAFeatureEnabled &&
+              (enterpriseTierVersionDataIsLoading ||
+                standardTierVersionDataIsLoading)
+            }
           />
           {showAPL && (
             <>
