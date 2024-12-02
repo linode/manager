@@ -1,17 +1,18 @@
-import { Notice } from '@linode/ui';
+import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { APLNotice } from './APLNotice';
 import {
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
   HIGH_MEMORY_COMPUTE_INSTANCES_LINK,
   PREMIUM_COMPUTE_INSTANCES_LINK,
   SHARED_COMPUTE_INSTANCES_LINK,
+  TRANSFER_COSTS_LINK,
 } from './constants';
 import { MetalNotice } from './MetalNotice';
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
@@ -21,13 +22,17 @@ import type { Region } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import type { Theme } from '@mui/material/styles';
 
-export interface PlanInformationProps {
+interface ExtendedPlanType {
+  planType: 'shared' | LinodeTypeClass;
+}
+
+export interface PlanInformationProps extends ExtendedPlanType {
   disabledClasses?: LinodeTypeClass[];
   hasMajorityOfPlansDisabled: boolean;
   hasSelectedRegion: boolean;
   hideLimitedAvailabilityBanner?: boolean;
+  isAPLEnabled?: boolean;
   isSelectedRegionEligibleForPlan: boolean;
-  planType: LinodeTypeClass;
   regionsData?: Region[];
 }
 
@@ -37,6 +42,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     hasMajorityOfPlansDisabled,
     hasSelectedRegion,
     hideLimitedAvailabilityBanner,
+    isAPLEnabled,
     isSelectedRegionEligibleForPlan,
     planType,
     regionsData,
@@ -46,6 +52,31 @@ export const PlanInformation = (props: PlanInformationProps) => {
   };
   const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
   const showTransferBanner = Boolean(useFlags().gpuv2?.transferBanner);
+
+  const showLimitedAvailabilityBanner =
+    hasSelectedRegion &&
+    isSelectedRegionEligibleForPlan &&
+    !hideLimitedAvailabilityBanner &&
+    hasMajorityOfPlansDisabled;
+
+  const transferBanner = (
+    <Notice
+      spacingBottom={
+        planType === 'accelerated' && !showLimitedAvailabilityBanner ? 24 : 8
+      }
+      variant="warning"
+    >
+      <Typography
+        fontFamily={(theme: Theme) => theme.font.bold}
+        fontSize="1rem"
+      >
+        Some plans do not include bundled network transfer. If the transfer
+        allotment is 0, all outbound network transfer is subject to charges.
+        <br />
+        <Link to={TRANSFER_COSTS_LINK}>Learn more about transfer costs</Link>.
+      </Typography>
+    </Notice>
+  );
 
   return (
     <>
@@ -69,23 +100,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
               </Typography>
             </Notice>
           )}
-          {showTransferBanner && (
-            <Notice spacingBottom={8} variant="warning">
-              <Typography
-                fontFamily={(theme: Theme) => theme.font.bold}
-                fontSize="1rem"
-              >
-                Some plans do not include bundled network transfer. If the
-                transfer allotment is 0, all outbound network transfer is
-                subject to charges.
-                <br />
-                <Link to="https://techdocs.akamai.com/cloud-computing/docs/network-transfer-usage-and-costs">
-                  Learn more about transfer costs
-                </Link>
-                .
-              </Typography>
-            </Notice>
-          )}
+          {showTransferBanner && transferBanner}
           <PlansAvailabilityNotice
             hasSelectedRegion={hasSelectedRegion}
             isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
@@ -94,11 +109,15 @@ export const PlanInformation = (props: PlanInformationProps) => {
           />
         </>
       ) : null}
+      {planType === 'accelerated' && transferBanner}
       {planType === 'metal' ? (
         <MetalNotice
           dataTestId="metal-notice"
           hasDisabledClass={getDisabledClass('metal')}
         />
+      ) : null}
+      {planType === 'shared' && isAPLEnabled ? (
+        <APLNotice dataTestId="apl-notice" />
       ) : null}
       {planType === 'premium' ? (
         <PlansAvailabilityNotice
@@ -108,25 +127,22 @@ export const PlanInformation = (props: PlanInformationProps) => {
           regionsData={regionsData || []}
         />
       ) : null}
-      {hasSelectedRegion &&
-        isSelectedRegionEligibleForPlan &&
-        !hideLimitedAvailabilityBanner &&
-        hasMajorityOfPlansDisabled && (
-          <Notice
-            sx={(theme: Theme) => ({
-              marginBottom: theme.spacing(3),
-              marginLeft: 0,
-              marginTop: 0,
-              padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
-            })}
-            dataTestId={limitedAvailabilityBannerTestId}
-            variant="warning"
-          >
-            <StyledNoticeTypography>
-              These plans have limited deployment availability.
-            </StyledNoticeTypography>
-          </Notice>
-        )}
+      {showLimitedAvailabilityBanner && (
+        <Notice
+          sx={(theme: Theme) => ({
+            marginBottom: theme.spacing(3),
+            marginLeft: 0,
+            marginTop: 0,
+            padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
+          })}
+          dataTestId={limitedAvailabilityBannerTestId}
+          variant="warning"
+        >
+          <StyledNoticeTypography>
+            These plans have limited deployment availability.
+          </StyledNoticeTypography>
+        </Notice>
+      )}
       <ClassDescriptionCopy planType={planType} />
     </>
   );
@@ -134,11 +150,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
 
 export const limitedAvailabilityBannerTestId = 'limited-availability-banner';
 
-interface ClassDescriptionCopyProps {
-  planType: 'shared' | LinodeTypeClass;
-}
-
-export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
+export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
   const { planType } = props;
   let planTypeLabel: null | string;
   let docLink: null | string;
@@ -163,6 +175,11 @@ export const ClassDescriptionCopy = (props: ClassDescriptionCopyProps) => {
     case 'gpu':
       planTypeLabel = 'GPU';
       docLink = GPU_COMPUTE_INSTANCES_LINK;
+      break;
+    case 'accelerated':
+      // TODO: accelerated plans - acquire doc link
+      planTypeLabel = 'Accelerated';
+      docLink = '#';
       break;
     default:
       planTypeLabel = null;

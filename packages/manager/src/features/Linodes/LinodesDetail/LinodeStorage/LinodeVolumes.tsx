@@ -1,12 +1,10 @@
-import { Box } from '@linode/ui';
+import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Paper } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -16,7 +14,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { CloneVolumeDrawer } from 'src/features/Volumes/CloneVolumeDrawer';
 import { DeleteVolumeDialog } from 'src/features/Volumes/DeleteVolumeDialog';
 import { DetachVolumeDialog } from 'src/features/Volumes/DetachVolumeDialog';

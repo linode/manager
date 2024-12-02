@@ -1,9 +1,8 @@
-import { Box, Paper, Stack } from '@linode/ui';
+import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -17,7 +16,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
 import { useGrants } from 'src/queries/profile/profile';

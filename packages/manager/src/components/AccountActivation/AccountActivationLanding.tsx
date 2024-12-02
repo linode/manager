@@ -1,13 +1,11 @@
+import { StyledLinkButton, Typography } from '@linode/ui';
 import Warning from '@mui/icons-material/CheckCircle';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
 import { SupportTicketDialog } from 'src/features/Support/SupportTickets/SupportTicketDialog';
-
-import { StyledLinkButton } from '../Button/StyledLinkButton';
 
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 

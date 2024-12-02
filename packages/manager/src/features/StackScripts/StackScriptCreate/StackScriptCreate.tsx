@@ -3,7 +3,7 @@ import {
   getStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
-import { Notice } from '@linode/ui';
+import { CircleProgress, Notice, Typography } from '@linode/ui';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
@@ -11,12 +11,10 @@ import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Typography } from 'src/components/Typography';
 import { withProfile } from 'src/containers/profile.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { StackScriptForm } from 'src/features/StackScripts/StackScriptForm/StackScriptForm';

@@ -1,11 +1,9 @@
-import { FormHelperText, Stack } from '@linode/ui';
+import { Button, FormHelperText, Stack, TextField } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-import { TextField } from 'src/components/TextField';
 import {
   RESERVED_IP_NUMBER,
   calculateAvailableIPv4sRFC1918,

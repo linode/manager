@@ -1,4 +1,13 @@
-import { Box, Notice, Paper, Stack } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Notice,
+  Paper,
+  Stack,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -8,7 +17,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Button } from 'src/components/Button/Button';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
   BLOCK_STORAGE_CHOOSE_REGION_COPY,
@@ -23,9 +31,6 @@ import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryp
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { TextField } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';

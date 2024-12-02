@@ -1,10 +1,6 @@
-import { Box, Notice } from '@linode/ui';
+import { Box, Button, Notice, TextField, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Button } from 'src/components/Button/Button';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 
 interface Props {
   error?: string;

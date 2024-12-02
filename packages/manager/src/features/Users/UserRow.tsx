@@ -1,16 +1,14 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, Chip, Stack, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
-import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { useAccountUserGrants } from 'src/queries/account/users';
 import { useProfile } from 'src/queries/profile/profile';
 import { capitalize } from 'src/utilities/capitalize';

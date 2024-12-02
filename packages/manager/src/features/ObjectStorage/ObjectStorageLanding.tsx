@@ -1,10 +1,10 @@
+import { StyledLinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -15,7 +15,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Typography } from 'src/components/Typography';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOpenClose } from 'src/hooks/useOpenClose';

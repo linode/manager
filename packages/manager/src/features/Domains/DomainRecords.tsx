@@ -1,12 +1,5 @@
-import {
-  Domain,
-  DomainRecord,
-  DomainType,
-  RecordType,
-  UpdateDomainPayload,
-  deleteDomainRecord,
-} from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
+import { deleteDomainRecord } from '@linode/api-v4/lib/domains';
+import { Button, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   compose,
@@ -23,7 +16,6 @@ import {
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
@@ -35,7 +27,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Typography } from 'src/components/Typography';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
@@ -47,6 +38,15 @@ import { truncateEnd } from 'src/utilities/truncate';
 import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { DomainRecordDrawer } from './DomainRecordDrawer';
 import { StyledDiv, StyledGrid, StyledTableCell } from './DomainRecords.styles';
+
+import type {
+  Domain,
+  DomainRecord,
+  DomainType,
+  RecordType,
+  UpdateDomainPayload,
+} from '@linode/api-v4/lib/domains';
+import type { APIError } from '@linode/api-v4/lib/types';
 
 interface UpdateDomainDataProps extends UpdateDomainPayload {
   id: number;
@@ -98,182 +98,11 @@ const createLink = (title: string, handler: () => void) => (
 );
 
 class DomainRecords extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      confirmDialog: {
-        open: false,
-        submitting: false,
-      },
-      drawer: DomainRecords.defaultDrawerState,
-      types: this.generateTypes(),
-    };
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (
-      !equals(prevProps.domainRecords, this.props.domainRecords) ||
-      !equals(prevProps.domain, this.props.domain)
-    ) {
-      this.setState({ types: this.generateTypes() });
-    }
-  }
-
-  render() {
-    const { domain, domainRecords } = this.props;
-    const { confirmDialog, drawer } = this.state;
-
-    return (
-      <>
-        <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
-        {this.state.types.map((type, eachTypeIdx) => {
-          const ref: React.Ref<any> = React.createRef();
-
-          return (
-            <div key={eachTypeIdx}>
-              <StyledGrid
-                alignItems="center"
-                container
-                justifyContent="space-between"
-                spacing={2}
-              >
-                <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                  <Typography
-                    aria-level={2}
-                    className="m0"
-                    data-qa-domain-record={type.title}
-                    role="heading"
-                    variant="h2"
-                  >
-                    {type.title}
-                  </Typography>
-                </Grid>
-                {type.link && (
-                  <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                    {' '}
-                    <StyledDiv>{type.link()}</StyledDiv>{' '}
-                  </Grid>
-                )}
-              </StyledGrid>
-              <OrderBy
-                data={type.data}
-                order={type.order}
-                orderBy={type.orderBy}
-              >
-                {({ data: orderedData }) => {
-                  return (
-                    <Paginate
-                      data={orderedData}
-                      pageSize={storage.infinitePageSize.get()}
-                      pageSizeSetter={storage.infinitePageSize.set}
-                      scrollToRef={ref}
-                    >
-                      {({
-                        count,
-                        data: paginatedData,
-                        handlePageChange,
-                        handlePageSizeChange,
-                        page,
-                        pageSize,
-                      }) => {
-                        return (
-                          <>
-                            <Table aria-label={`List of Domains ${type.title}`}>
-                              <TableHead>
-                                <TableRow>
-                                  {type.columns.length > 0 &&
-                                    type.columns.map((col, columnIndex) => {
-                                      return (
-                                        <TableCell key={columnIndex}>
-                                          {col.title}
-                                        </TableCell>
-                                      );
-                                    })}
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {type.data.length === 0 ? (
-                                  <TableRowEmpty
-                                    colSpan={type.columns.length}
-                                  />
-                                ) : (
-                                  paginatedData.map((data, idx) => {
-                                    return (
-                                      <TableRow
-                                        data-qa-record-row={type.title}
-                                        key={idx}
-                                      >
-                                        {type.columns.length > 0 &&
-                                          type.columns.map(
-                                            (
-                                              { render, title },
-                                              columnIndex
-                                            ) => {
-                                              return (
-                                                <StyledTableCell
-                                                  data-qa-column={title}
-                                                  key={columnIndex}
-                                                  parentColumn={title}
-                                                >
-                                                  {render(data)}
-                                                </StyledTableCell>
-                                              );
-                                            }
-                                          )}
-                                      </TableRow>
-                                    );
-                                  })
-                                )}
-                              </TableBody>
-                            </Table>
-                            <PaginationFooter
-                              count={count}
-                              eventCategory={`${type.title.toLowerCase()} panel`}
-                              handlePageChange={handlePageChange}
-                              handleSizeChange={handlePageSizeChange}
-                              page={page}
-                              pageSize={pageSize}
-                              // Disabling show All as it is impacting page performance.
-                              showAll={false}
-                            />
-                          </>
-                        );
-                      }}
-                    </Paginate>
-                  );
-                }}
-              </OrderBy>
-            </div>
-          );
-        })}
-        <ConfirmationDialog
-          error={
-            confirmDialog.errors
-              ? getErrorStringOrDefault(confirmDialog.errors)
-              : undefined
-          }
-          actions={this.renderDialogActions}
-          onClose={this.handleCloseDialog}
-          open={confirmDialog.open}
-          title="Confirm Deletion"
-        >
-          Are you sure you want to delete this record?
-        </ConfirmationDialog>
-        <DomainRecordDrawer
-          domain={this.props.domain.domain}
-          domainId={this.props.domain.id}
-          mode={drawer.mode}
-          onClose={this.resetDrawer}
-          open={drawer.open}
-          records={domainRecords}
-          type={drawer.type}
-          updateDomain={this.props.updateDomain}
-          updateRecords={this.props.updateRecords}
-          {...drawer.fields}
-        />
-      </>
-    );
-  }
+  static defaultDrawerState: DrawerState = {
+    mode: 'create',
+    open: false,
+    type: 'NS',
+  };
 
   confirmDeletion = (recordId: number) =>
     this.updateConfirmDialog((confirmDialog) => ({
@@ -281,12 +110,6 @@ class DomainRecords extends React.Component<Props, State> {
       open: true,
       recordId,
     }));
-
-  static defaultDrawerState: DrawerState = {
-    mode: 'create',
-    open: false,
-    type: 'NS',
-  };
 
   deleteDomainRecord = () => {
     const {
@@ -693,17 +516,18 @@ class DomainRecords extends React.Component<Props, State> {
       ? this.openForEditPrimaryDomain(d)
       : this.openForEditSecondaryDomain(d);
   };
+
   openForCreateARecord = () => this.openForCreation('AAAA');
 
   openForCreateCAARecord = () => this.openForCreation('CAA');
+
   openForCreateCNAMERecord = () => this.openForCreation('CNAME');
-
   openForCreateMXRecord = () => this.openForCreation('MX');
+
   openForCreateNSRecord = () => this.openForCreation('NS');
-
   openForCreateSRVRecord = () => this.openForCreation('SRV');
-  openForCreateTXTRecord = () => this.openForCreation('TXT');
 
+  openForCreateTXTRecord = () => this.openForCreation('TXT');
   openForCreation = (type: RecordType) =>
     this.updateDrawer(() => ({
       mode: 'create',
@@ -711,24 +535,24 @@ class DomainRecords extends React.Component<Props, State> {
       submitting: false,
       type,
     }));
+
   openForEditARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('AAAA', f);
-
   openForEditCAARecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CAA', f);
+
   openForEditCNAMERecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CNAME', f);
-
   openForEditMXRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'priority' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('MX', f);
+
   openForEditNSRecord = (
     f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('NS', f);
-
   openForEditPrimaryDomain = (f: Partial<Domain>) =>
     this.openForEditing('master', f);
 
@@ -738,7 +562,6 @@ class DomainRecords extends React.Component<Props, State> {
       'id' | 'name' | 'port' | 'priority' | 'protocol' | 'target' | 'weight'
     >
   ) => this.openForEditing('SRV', f);
-
   openForEditSecondaryDomain = (f: Partial<Domain>) =>
     this.openForEditing('slave', f);
 
@@ -783,6 +606,183 @@ class DomainRecords extends React.Component<Props, State> {
 
   updateDrawer = (fn: (d: DrawerState) => DrawerState) =>
     this.setState(over(lensPath(['drawer']), fn));
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      confirmDialog: {
+        open: false,
+        submitting: false,
+      },
+      drawer: DomainRecords.defaultDrawerState,
+      types: this.generateTypes(),
+    };
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (
+      !equals(prevProps.domainRecords, this.props.domainRecords) ||
+      !equals(prevProps.domain, this.props.domain)
+    ) {
+      this.setState({ types: this.generateTypes() });
+    }
+  }
+
+  render() {
+    const { domain, domainRecords } = this.props;
+    const { confirmDialog, drawer } = this.state;
+
+    return (
+      <>
+        <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
+        {this.state.types.map((type, eachTypeIdx) => {
+          const ref: React.Ref<any> = React.createRef();
+
+          return (
+            <div key={eachTypeIdx}>
+              <StyledGrid
+                alignItems="center"
+                container
+                justifyContent="space-between"
+                spacing={2}
+              >
+                <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
+                  <Typography
+                    aria-level={2}
+                    className="m0"
+                    data-qa-domain-record={type.title}
+                    role="heading"
+                    variant="h2"
+                  >
+                    {type.title}
+                  </Typography>
+                </Grid>
+                {type.link && (
+                  <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
+                    {' '}
+                    <StyledDiv>{type.link()}</StyledDiv>{' '}
+                  </Grid>
+                )}
+              </StyledGrid>
+              <OrderBy
+                data={type.data}
+                order={type.order}
+                orderBy={type.orderBy}
+              >
+                {({ data: orderedData }) => {
+                  return (
+                    <Paginate
+                      data={orderedData}
+                      pageSize={storage.infinitePageSize.get()}
+                      pageSizeSetter={storage.infinitePageSize.set}
+                      scrollToRef={ref}
+                    >
+                      {({
+                        count,
+                        data: paginatedData,
+                        handlePageChange,
+                        handlePageSizeChange,
+                        page,
+                        pageSize,
+                      }) => {
+                        return (
+                          <>
+                            <Table aria-label={`List of Domains ${type.title}`}>
+                              <TableHead>
+                                <TableRow>
+                                  {type.columns.length > 0 &&
+                                    type.columns.map((col, columnIndex) => {
+                                      return (
+                                        <TableCell key={columnIndex}>
+                                          {col.title}
+                                        </TableCell>
+                                      );
+                                    })}
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {type.data.length === 0 ? (
+                                  <TableRowEmpty
+                                    colSpan={type.columns.length}
+                                  />
+                                ) : (
+                                  paginatedData.map((data, idx) => {
+                                    return (
+                                      <TableRow
+                                        data-qa-record-row={type.title}
+                                        key={idx}
+                                      >
+                                        {type.columns.length > 0 &&
+                                          type.columns.map(
+                                            (
+                                              { render, title },
+                                              columnIndex
+                                            ) => {
+                                              return (
+                                                <StyledTableCell
+                                                  data-qa-column={title}
+                                                  key={columnIndex}
+                                                  parentColumn={title}
+                                                >
+                                                  {render(data)}
+                                                </StyledTableCell>
+                                              );
+                                            }
+                                          )}
+                                      </TableRow>
+                                    );
+                                  })
+                                )}
+                              </TableBody>
+                            </Table>
+                            <PaginationFooter
+                              count={count}
+                              eventCategory={`${type.title.toLowerCase()} panel`}
+                              handlePageChange={handlePageChange}
+                              handleSizeChange={handlePageSizeChange}
+                              page={page}
+                              pageSize={pageSize}
+                              // Disabling show All as it is impacting page performance.
+                              showAll={false}
+                            />
+                          </>
+                        );
+                      }}
+                    </Paginate>
+                  );
+                }}
+              </OrderBy>
+            </div>
+          );
+        })}
+        <ConfirmationDialog
+          error={
+            confirmDialog.errors
+              ? getErrorStringOrDefault(confirmDialog.errors)
+              : undefined
+          }
+          actions={this.renderDialogActions}
+          onClose={this.handleCloseDialog}
+          open={confirmDialog.open}
+          title="Confirm Deletion"
+        >
+          Are you sure you want to delete this record?
+        </ConfirmationDialog>
+        <DomainRecordDrawer
+          domain={this.props.domain.domain}
+          domainId={this.props.domain.id}
+          mode={drawer.mode}
+          onClose={this.resetDrawer}
+          open={drawer.open}
+          records={domainRecords}
+          type={drawer.type}
+          updateDomain={this.props.updateDomain}
+          updateRecords={this.props.updateRecords}
+          {...drawer.fields}
+        />
+      </>
+    );
+  }
 }
 
 const msToReadable = (v: number): null | string =>

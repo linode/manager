@@ -1,12 +1,10 @@
-import { Tooltip } from '@linode/ui';
+import { Button, Tooltip, Typography } from '@linode/ui';
 import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
 import { update } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { Button } from 'src/components/Button/Button';
-import { Typography } from 'src/components/Typography';
 import {
   sendEntityTransferCopyDraftEmailEvent,
   sendEntityTransferCopyTokenEvent,

@@ -1,20 +1,18 @@
-import { Box } from '@linode/ui';
+import { Box, Radio, Typography } from '@linode/ui';
 import React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { Radio } from 'src/components/Radio/Radio';
 import { SupportLink } from 'src/components/SupportLink';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 
 import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
-import type { TypographyProps } from 'src/components/Typography';
+import type { TypographyProps } from '@linode/ui';
 
 /**
  * TODO: [IMPORTANT NOTE]: This component is currently using static data until

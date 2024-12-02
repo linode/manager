@@ -1,12 +1,16 @@
-import { Box, Notice, Stack } from '@linode/ui';
+import { Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  Notice,
+  Stack,
+  StyledLinkButton,
+} from '@linode/ui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
-import { Button } from 'src/components/Button/Button';
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Typography } from 'src/components/Typography';
 import { useChildAccountsInfiniteQuery } from 'src/queries/account/account';
 
 import type { Filter, UserType } from '@linode/api-v4';

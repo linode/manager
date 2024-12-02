@@ -1,10 +1,8 @@
-import { Box, Notice, RadioGroup } from '@linode/ui';
+import { Box, Notice, Radio, RadioGroup, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
-import { Radio } from 'src/components/Radio/Radio';
-import { Typography } from 'src/components/Typography';
 
 import {
   CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE,

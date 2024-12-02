@@ -1,15 +1,13 @@
-import { Box } from '@linode/ui';
+import { Box, StyledLinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { Typography } from 'src/components/Typography';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import ObjectActionMenu from './ObjectActionMenu';

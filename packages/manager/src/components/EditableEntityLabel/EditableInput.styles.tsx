@@ -1,14 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, Button, TextField, Typography, fadeIn } from '@linode/ui';
 import Edit from '@mui/icons-material/Edit';
 import { styled } from '@mui/material/styles';
 
-import { Button } from 'src/components/Button/Button';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
-import { fadeIn } from 'src/styles/keyframes';
-
 import type { EditableTextVariant } from './EditableInput';
-import type { TextFieldProps } from 'src/components/TextField';
+import type { TextFieldProps } from '@linode/ui';
 
 export const StyledTypography = styled(Typography, {
   label: 'EditableInput__StyledTypography',

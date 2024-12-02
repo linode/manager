@@ -1,11 +1,10 @@
-import { Notice, Paper } from '@linode/ui';
+import { Button, Notice, Paper, clamp } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
-import { assoc, clamp, equals, pathOr } from 'ramda';
+import { assoc, equals, pathOr } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { usePrevious } from 'src/hooks/usePrevious';

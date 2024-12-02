@@ -1,10 +1,10 @@
+import { Typography } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
 import { Link } from 'src/components/Link';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { Typography } from 'src/components/Typography';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { generateCLICommand } from 'src/utilities/codesnippets/generate-cli';
 

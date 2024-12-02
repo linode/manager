@@ -1,5 +1,15 @@
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Box, IconButton, InputAdornment, Stack } from '@linode/ui';
+import { Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+  TooltipIcon,
+} from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
@@ -7,8 +17,6 @@ import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
 import { debounce } from 'throttle-debounce';
 
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Code } from 'src/components/Code/Code';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -19,9 +27,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TextField } from 'src/components/TextField';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import {
   useStackScriptQuery,
@@ -120,9 +125,9 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: 20 }}></TableCell>
+              <TableCell sx={{ width: 20 }} />
               <TableCell>StackScript</TableCell>
-              <TableCell sx={{ minWidth: 120 }}></TableCell>
+              <TableCell sx={{ minWidth: 120 }} />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -207,7 +212,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
       <Table sx={{ mt: 1 }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ width: 20 }}></TableCell>
+            <TableCell sx={{ width: 20 }} />
             <TableSortCell
               active={orderBy === 'label'}
               direction={order}
@@ -216,7 +221,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             >
               StackScript
             </TableSortCell>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

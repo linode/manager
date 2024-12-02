@@ -1,4 +1,4 @@
-import { Box } from '@linode/ui';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import Lock from 'src/assets/icons/lock.svg';
@@ -16,8 +16,6 @@ import { TableFooter } from 'src/components/TableFooter';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 import { NodeRow as _NodeRow } from './NodeRow';

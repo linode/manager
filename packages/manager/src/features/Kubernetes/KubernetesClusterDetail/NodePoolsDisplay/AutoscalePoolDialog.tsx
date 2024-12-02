@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { Button, Notice, TextField, Toggle, Typography } from '@linode/ui';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
@@ -7,13 +7,9 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Button } from 'src/components/Button/Button';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
 import type { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';

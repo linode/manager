@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Tooltip } from '@linode/ui';
+import { Box, Button, Divider, Stack, Tooltip, Typography } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import { styled, useMediaQuery } from '@mui/material';
@@ -9,10 +9,8 @@ import * as React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarForProxy } from 'src/components/AvatarForProxy';
-import { Button } from 'src/components/Button/Button';
 import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
@@ -181,7 +179,9 @@ export const UserMenu = React.memo(() => {
     return matchesSmDown ? undefined : open ? (
       <KeyboardArrowUp sx={sx} />
     ) : (
-      <KeyboardArrowDown sx={{ color: '#9ea4ae', ...sx }} />
+      <KeyboardArrowDown
+        sx={(theme) => ({ color: theme.tokens.color.Neutrals[50], ...sx })}
+      />
     );
   };
 
@@ -288,7 +288,7 @@ export const UserMenu = React.memo(() => {
           )}
           <Box>
             <Heading>My Profile</Heading>
-            <Divider color="#9ea4ae" />
+            <Divider />
             <Grid columnSpacing={2} container rowSpacing={1}>
               <Grid container direction="column" wrap="nowrap" xs={6}>
                 {profileLinks.slice(0, 4).map(renderLink)}
@@ -301,7 +301,7 @@ export const UserMenu = React.memo(() => {
           {hasAccountAccess && (
             <Box>
               <Heading>Account</Heading>
-              <Divider color="#9ea4ae" />
+              <Divider />
               <Stack mt={1} spacing={1.5}>
                 {accountLinks.map((menuLink) =>
                   menuLink.hide ? null : (

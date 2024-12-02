@@ -2,7 +2,7 @@ import {
   PLACEMENT_GROUP_POLICIES,
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
-import { Divider, Notice, Stack } from '@linode/ui';
+import { CircleProgress, Divider, Notice, Stack, TextField } from '@linode/ui';
 import { updatePlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -10,11 +10,9 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Drawer } from 'src/components/Drawer';
 import { NotFound } from 'src/components/NotFound';
-import { TextField } from 'src/components/TextField';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
 import {
   useMutatePlacementGroup,

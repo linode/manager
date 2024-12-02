@@ -1,12 +1,16 @@
-import { Box, FormControl, RadioGroup } from '@linode/ui';
+import {
+  Box,
+  Chip,
+  FormControl,
+  Radio,
+  RadioGroup,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { Radio } from 'src/components/Radio/Radio';
-import { Typography } from 'src/components/Typography';
 
 export interface APLProps {
   setAPL: (apl: boolean) => void;

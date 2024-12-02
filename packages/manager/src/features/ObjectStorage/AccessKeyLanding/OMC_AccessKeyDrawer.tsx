@@ -1,4 +1,4 @@
-import { Notice } from '@linode/ui';
+import { CircleProgress, Notice, TextField, Typography } from '@linode/ui';
 import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
@@ -7,11 +7,8 @@ import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { useRegionsQuery } from 'src/queries/regions/regions';

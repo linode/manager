@@ -1,3 +1,4 @@
+import { Button, convertToKebabCase } from '@linode/ui';
 import {
   Step,
   StepConnector,
@@ -7,18 +8,16 @@ import {
   useTheme,
 } from '@mui/material';
 import Box from '@mui/material/Box';
-import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React, { useState } from 'react';
-
-import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 import {
   CustomStepIcon,
   StyledCircleIcon,
   StyledColorlibConnector,
 } from './VerticalLinearStepper.styles';
-import { Button } from '../Button/Button';
+
+import type { Theme } from '@mui/material/styles';
 
 type VerticalLinearStep = {
   content: JSX.Element;
@@ -73,10 +72,10 @@ export const VerticalLinearStepper = ({
                   />
                 }
                 sx={{
-                  cursor: 'pointer !important',
                   '& .MuiStepIcon-text': {
                     display: 'none',
                   },
+                  cursor: 'pointer !important',
                   p: 0,
                 }}
               >
@@ -137,10 +136,10 @@ export const VerticalLinearStepper = ({
                     )}
                     {index !== 2 && (
                       <Button
-                        buttonType="primary"
-                        // Generate a 'data-testid' attribute value based on the label of the next step.
-                        //  * 1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
-                        //  * 2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
+                        /* Generate a 'data-testid' attribute value based on the label of the next step.
+                            1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
+                            2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
+                        */
                         data-testid={convertToKebabCase(
                           steps[index + 1]?.label
                         )}
@@ -148,6 +147,7 @@ export const VerticalLinearStepper = ({
                           handleNext();
                           handler?.();
                         }}
+                        buttonType="primary"
                         sx={{ mr: 1, mt: 1 }}
                       >
                         Next: {steps[index + 1]?.label}

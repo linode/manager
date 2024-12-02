@@ -1,11 +1,10 @@
+import { StyledLinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';

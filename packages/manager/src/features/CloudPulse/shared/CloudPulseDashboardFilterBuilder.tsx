@@ -1,10 +1,10 @@
+import { Button } from '@linode/ui';
 import { Grid, Typography, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardArrowDownIcon from 'src/assets/icons/arrow_down.svg';
 import KeyboardArrowRightIcon from 'src/assets/icons/arrow_right.svg';
 import InfoIcon from 'src/assets/icons/info.svg';
-import { Button } from 'src/components/Button/Button';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import NullComponent from 'src/components/NullComponent';
 
@@ -311,7 +311,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           container
           display={showFilter ? 'flex' : 'none'}
           item
-          maxHeight={theme.spacing(22)}
+          maxHeight={theme.spacing(23)}
           overflow={'auto'}
           rowGap={theme.spacing(2)}
           xs={12}

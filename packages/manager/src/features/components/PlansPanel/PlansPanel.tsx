@@ -2,9 +2,9 @@ import { Notice } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
@@ -20,6 +20,7 @@ import {
   getPlanSelectionsByPlanType,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
+  useIsAcceleratedPlansEnabled,
 } from './utils';
 
 import type { PlanSelectionType } from './types';
@@ -87,15 +88,22 @@ export const PlansPanel = (props: PlansPanelProps) => {
     location.search
   );
 
+  const { isAcceleratedLinodePlansEnabled } = useIsAcceleratedPlansEnabled();
+
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
     Boolean(flags.soldOutChips) && selectedRegionID !== undefined
   );
 
-  const _types = types.filter(
-    (type) =>
+  const _types = types.filter((type) => {
+    if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    return (
       !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
-  );
+    );
+  });
   const _plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
       ? replaceOrAppendPlaceholder512GbPlans(_types)

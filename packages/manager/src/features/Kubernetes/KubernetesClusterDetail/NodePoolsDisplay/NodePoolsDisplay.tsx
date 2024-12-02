@@ -1,11 +1,8 @@
-import { Stack } from '@linode/ui';
+import { Button, CircleProgress, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
-import { Button } from 'src/components/Button/Button';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { Typography } from 'src/components/Typography';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';

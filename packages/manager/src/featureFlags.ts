@@ -64,8 +64,14 @@ interface AclpFlag {
   enabled: boolean;
 }
 
+interface LkeEnterpriseFlag extends BaseFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
+  maxResourceSelections?: number;
   serviceType: string;
 }
 
@@ -73,6 +79,11 @@ interface gpuV2 {
   egressBanner: boolean;
   planDivider: boolean;
   transferBanner: boolean;
+}
+
+interface AcceleratedPlansFlag {
+  linodePlans: boolean;
+  lkePlans: boolean;
 }
 
 interface DesignUpdatesBannerFlag extends BaseFeatureFlag {
@@ -86,6 +97,7 @@ interface AclpAlerting {
   recentActivity: boolean;
 }
 export interface Flags {
+  acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpReadEndpoint: string;
@@ -108,6 +120,7 @@ export interface Flags {
   imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
   linodeDiskEncryption: boolean;
+  lkeEnterprise: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;

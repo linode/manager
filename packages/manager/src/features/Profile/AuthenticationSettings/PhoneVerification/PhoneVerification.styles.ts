@@ -1,9 +1,13 @@
-import { Box, FormHelperText, omittedProps } from '@linode/ui';
+import {
+  Box,
+  FormHelperText,
+  TextField,
+  Typography,
+  omittedProps,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { TextField } from 'src/components/TextField';
-import { Typography } from 'src/components/Typography';
 
 export const StyledCodeSentMessageBox = styled(Box, {
   label: 'StyledCodeSentMessageBox',
@@ -21,7 +25,10 @@ export const StyledPhoneNumberTitle = styled(Typography, {
 export const StyledLabel = styled(Typography, {
   label: 'StyledLabel',
 })(({ theme }) => ({
-  color: theme.name === 'light' ? '#555' : '#c9cacb',
+  color:
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals[80]
+      : theme.tokens.color.Neutrals[40],
   fontSize: '.875rem',
   lineHeight: '1',
   marginBottom: '8px',
@@ -34,7 +41,10 @@ export const StyledInputContainer = styled(Box, {
   shouldForwardProp: omittedProps(['isPhoneInputFocused']),
 })<{ isPhoneInputFocused: boolean }>(({ isPhoneInputFocused, theme }) => ({
   backgroundColor: theme.name === 'dark' ? '#343438' : undefined,
-  border: theme.name === 'light' ? '1px solid #ccc' : '1px solid #222',
+  border:
+    theme.name === 'light'
+      ? `1px solid ${theme.tokens.color.Neutrals[40]}`
+      : `1px solid ${theme.tokens.color.Neutrals.Black}`,
   transition: 'border-color 225ms ease-in-out',
   width: 'fit-content',
   ...(isPhoneInputFocused &&
@@ -45,7 +55,7 @@ export const StyledInputContainer = styled(Box, {
         }
       : {
           borderColor: '#3683dc',
-          boxShadow: '0 0 2px 1px #222',
+          boxShadow: `0 0 2px 1px ${theme.tokens.color.Neutrals.Black}`,
         })),
 }));
 

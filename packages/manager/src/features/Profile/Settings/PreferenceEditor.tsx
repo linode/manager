@@ -1,10 +1,8 @@
-import { Box, Notice } from '@linode/ui';
+import { Box, Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import {
   useMutatePreferences,
   usePreferences,

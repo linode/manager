@@ -13,25 +13,24 @@ export const StyledTableWrapper = styled('div', {
     'spacingTop',
   ]),
 })<TableProps>(({ theme, ...props }) => ({
+  '& thead': {
+    '& th': {
+      '&:first-of-type': {
+        borderLeft: 'none',
+      },
+      '&:last-of-type': {
+        borderRight: 'none',
+      },
+      backgroundColor: theme.bg.tableHeader,
+      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+      borderRight: `1px solid ${theme.borderColors.borderTable}`,
+      borderTop: `1px solid ${theme.borderColors.borderTable}`,
+      fontFamily: theme.font.bold,
+    },
+  },
   marginBottom: props.spacingBottom !== undefined ? props.spacingBottom : 0,
   marginTop: props.spacingTop !== undefined ? props.spacingTop : 0,
   ...(!props.noOverflow && {
-    '& thead': {
-      '& th': {
-        '&:first-of-type': {
-          borderLeft: 'none',
-        },
-        '&:last-of-type': {
-          borderRight: 'none',
-        },
-        backgroundColor: theme.bg.tableHeader,
-        borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-        borderRight: `1px solid ${theme.borderColors.borderTable}`,
-        borderTop: `1px solid ${theme.borderColors.borderTable}`,
-        fontFamily: theme.font.bold,
-        padding: '10px 15px',
-      },
-    },
     overflowX: 'auto',
     overflowY: 'hidden',
   }),

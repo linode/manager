@@ -1,25 +1,23 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, CircleProgress, Stack, Typography } from '@linode/ui';
+import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import DetailsIcon from 'src/assets/icons/code-file.svg';
+import CopyIcon from 'src/assets/icons/copy.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
-import CopyIcon from 'src/assets/icons/copy.svg';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { Typography } from 'src/components/Typography';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
   useKubenetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import copy from 'copy-to-clipboard';
-import { CircleProgress } from 'src/components/CircleProgress';
 
+import type { APIError } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import { APIError } from '@linode/api-v4';
 
 interface Props {
   clusterId: number;
@@ -78,7 +76,7 @@ const renderEndpoint = (
   endpointError?: string
 ) => {
   if (endpoint) {
-    return <MaskableText isToggleable text={endpoint} length="plaintext" />;
+    return <MaskableText isToggleable length="plaintext" text={endpoint} />;
   }
   if (endpointLoading) {
     return <Typography>Loading...</Typography>;

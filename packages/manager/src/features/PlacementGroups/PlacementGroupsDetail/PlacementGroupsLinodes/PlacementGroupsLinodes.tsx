@@ -1,9 +1,8 @@
-import { Stack } from '@linode/ui';
+import { Button, Stack } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Button } from 'src/components/Button/Button';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
@@ -72,10 +71,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
       `/placement-groups/${placementGroup.id}/linodes/unassign/${linode.id}`
     );
   };
-  const handleExitedUnassignModal = () => {
-    setSelectedLinode(undefined);
-  };
   const handleCloseDrawer = () => {
+    setSelectedLinode(undefined);
     history.replace(`/placement-groups/${placementGroup.id}/linodes`);
   };
   const isAssignLinodesDrawerOpen = history.location.pathname.includes(
@@ -128,7 +125,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
       />
       <PlacementGroupsUnassignModal
         onClose={handleCloseDrawer}
-        onExited={handleExitedUnassignModal}
         open={isUnassignLinodesDrawerOpen}
         selectedLinode={selectedLinode}
       />

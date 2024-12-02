@@ -1,8 +1,8 @@
+import { CircleProgress, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import {
@@ -21,7 +21,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
-import { Typography } from 'src/components/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';

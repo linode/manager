@@ -1,7 +1,6 @@
-import { Divider, Paper } from '@linode/ui';
+import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Typography } from 'src/components/Typography';
 import { DatabaseSettingsReviewUpdatesDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsReviewUpdatesDialog';
 import { DatabaseSettingsUpgradeVersionDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsUpgradeVersionDialog';
 import {
@@ -111,8 +110,11 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   return (
     <>
       <Paper>
-        {isDatabasesV2GA && isDefaultDB && (
-          <>
+        <Stack
+          divider={<Divider spacingBottom={0} spacingTop={0} />}
+          spacing={3}
+        >
+          {isDatabasesV2GA && isDefaultDB && (
             <DatabaseSettingsMenuItem
               buttonText={'Suspend Cluster'}
               descriptiveText={suspendClusterCopy}
@@ -120,33 +122,27 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
               onClick={onSuspendCluster}
               sectionTitle={'Suspend Cluster'}
             />
-            <Divider spacingBottom={22} spacingTop={28} />
-          </>
-        )}
-        <AccessControls
-          database={database}
-          description={accessControlCopy}
-          disabled={disabled}
-        />
-        <Divider spacingBottom={22} spacingTop={28} />
-        <DatabaseSettingsMenuItem
-          buttonText="Reset Root Password"
-          descriptiveText={resetRootPasswordCopy}
-          disabled={disabled}
-          onClick={onResetRootPassword}
-          sectionTitle="Reset the Root Password"
-        />
-        <Divider spacingBottom={22} spacingTop={28} />
-        <DatabaseSettingsMenuItem
-          buttonText="Delete Cluster"
-          descriptiveText={deleteClusterCopy}
-          disabled={Boolean(profile?.restricted)}
-          onClick={onDeleteCluster}
-          sectionTitle="Delete the Cluster"
-        />
-        {isDatabasesV2GA && isDefaultDB && (
-          <>
-            <Divider spacingBottom={22} spacingTop={28} />
+          )}
+          <AccessControls
+            database={database}
+            description={accessControlCopy}
+            disabled={disabled}
+          />
+          <DatabaseSettingsMenuItem
+            buttonText="Reset Root Password"
+            descriptiveText={resetRootPasswordCopy}
+            disabled={disabled}
+            onClick={onResetRootPassword}
+            sectionTitle="Reset the Root Password"
+          />
+          <DatabaseSettingsMenuItem
+            buttonText="Delete Cluster"
+            descriptiveText={deleteClusterCopy}
+            disabled={Boolean(profile?.restricted)}
+            onClick={onDeleteCluster}
+            sectionTitle="Delete the Cluster"
+          />
+          {isDatabasesV2GA && isDefaultDB && (
             <DatabaseSettingsMaintenance
               databaseEngine={database.engine}
               databasePendingUpdates={database.updates.pending}
@@ -154,14 +150,13 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
               onReviewUpdates={onReviewUpdates}
               onUpgradeVersion={onUpgradeVersion}
             />
-          </>
-        )}
-        <Divider spacingBottom={22} spacingTop={28} />
-        <MaintenanceWindow
-          database={database}
-          disabled={disabled}
-          timezone={profile?.timezone}
-        />
+          )}
+          <MaintenanceWindow
+            database={database}
+            disabled={disabled}
+            timezone={profile?.timezone}
+          />
+        </Stack>
       </Paper>
       <DatabaseSettingsDeleteClusterDialog
         databaseEngine={database.engine}

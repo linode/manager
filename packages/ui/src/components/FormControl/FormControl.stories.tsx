@@ -1,9 +1,9 @@
-import { FormHelperText } from '@linode/ui';
 import React from 'react';
 
-import { FormControl } from './FormControl';
+import { FormHelperText } from '../FormHelperText';
 import { Input } from '../Input';
 import { InputLabel } from '../InputLabel';
+import { FormControl } from './FormControl';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

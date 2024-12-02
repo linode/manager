@@ -1,10 +1,8 @@
-import { Divider } from '@linode/ui';
+import { Divider, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Paper } from '@linode/ui';
-import { Typography } from 'src/components/Typography';
 import AccessControls from 'src/features/Databases/DatabaseDetail/AccessControls';
 import ClusterConfiguration from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration';
 import ConnectionDetails from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryConnectionDetails';

@@ -15,8 +15,8 @@ import {
   NotificationToast,
   Radius,
   Select,
-  Typography,
   Spacing,
+  Typography,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -485,7 +485,7 @@ export const lightTheme: ThemeOptions = {
             color: Button.Secondary.Hover.Text,
           },
           '&[aria-disabled="true"]': {
-            color: '#c9cacb',
+            color: Color.Neutrals[40],
           },
           backgroundColor: 'transparent',
           color: Button.Secondary.Default.Text,
@@ -666,6 +666,7 @@ export const lightTheme: ThemeOptions = {
           },
           justifyContent: 'flex-start',
           margin: 0,
+          marginTop: 24,
           padding: 24,
         },
       },
@@ -832,7 +833,7 @@ export const lightTheme: ThemeOptions = {
             fontSize: 18,
           },
           '&.Mui-disabled': {
-            backgroundColor: '#f4f4f4',
+            backgroundColor: Color.Neutrals[5],
             borderColor: Color.Neutrals[40],
             color: 'rgba(0, 0, 0, 0.75)',
             input: {
@@ -1295,13 +1296,13 @@ export const lightTheme: ThemeOptions = {
         },
         head: {
           fontSize: '.9rem',
-          height: 46,
+          height: 40,
           lineHeight: 1.1,
         },
         root: {
           borderBottom: `1px solid ${primaryColors.divider}`,
           borderTop: `1px solid ${primaryColors.divider}`,
-          padding: 10,
+          padding: `0 15px`,
         },
       },
     },
@@ -1644,15 +1645,15 @@ export const lightTheme: ThemeOptions = {
     background: Background,
     border: Border,
     borderRadius: BorderRadius,
-    color: Color,
     chart: Chart,
+    color: Color,
     content: Content,
     elevation: Elevation,
+    font: Font,
     interaction: Interaction,
     radius: Radius,
-    typography: Typography,
-    font: Font,
     spacing: Spacing,
+    typography: Typography,
   },
   typography: {
     body1: {
