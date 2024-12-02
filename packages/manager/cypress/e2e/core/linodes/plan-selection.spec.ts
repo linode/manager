@@ -2,9 +2,10 @@
 // Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
 import { ui } from 'support/ui';
 import {
+  accountFactory,
+  linodeTypeFactory,
   regionFactory,
   regionAvailabilityFactory,
-  linodeTypeFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
@@ -12,6 +13,7 @@ import {
   mockGetRegionAvailability,
 } from 'support/intercepts/regions';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 const mockRegions = [
@@ -84,11 +86,20 @@ const mockGPUType = [
   }),
 ];
 
+const mockAcceleratedType = [
+  linodeTypeFactory.build({
+    id: 'accelerated-1',
+    label: 'accelerated-1',
+    class: 'accelerated',
+  }),
+];
+
 const mockLinodeTypes = [
   ...mockDedicatedLinodeTypes,
   ...mockHighMemoryLinodeTypes,
   ...mockSharedLinodeTypes,
   ...mockGPUType,
+  ...mockAcceleratedType,
 ];
 
 const mockRegionAvailability = [
@@ -393,6 +404,171 @@ describe('displays specific linode plans for GPU', () => {
         cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="gpu-1"]').should('be.disabled');
+      });
+    });
+  });
+});
+
+describe('Linode Accelerated plans', () => {
+  beforeEach(() => {
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+    mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
+      'getRegionAvailability'
+    );
+  });
+
+  describe('without necessary account capability', () => {
+    beforeEach(() => {
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: [],
+        })
+      ).as('getAccount');
+      mockAppendFeatureFlags({
+        acceleratedPlans: {
+          linodePlans: true,
+          lkePlans: true,
+        },
+      }).as('getFeatureFlags');
+    });
+
+    it('should not render accelerated plans for linodes', () => {
+      cy.visitWithLogin('/linodes/create');
+      cy.wait([
+        '@getRegions',
+        '@getLinodeTypes',
+        '@getAccount',
+        '@getFeatureFlags',
+      ]);
+
+      cy.findByText('Accelerated').should('not.exist');
+    });
+
+    it('should not render accelerated plans for kubernetes', () => {
+      cy.visitWithLogin('/kubernetes/create');
+      cy.wait([
+        '@getRegions',
+        '@getLinodeTypes',
+        '@getAccount',
+        '@getFeatureFlags',
+      ]);
+
+      cy.findByText('Accelerated').should('not.exist');
+    });
+  });
+
+  describe('with necessary account capability', () => {
+    beforeEach(() => {
+      mockGetAccount(
+        accountFactory.build({
+          capabilities: ['NETINT Quadra T1U'],
+        })
+      ).as('getAccount');
+    });
+
+    describe('Linodes plans panel', () => {
+      it('should render Accelerated plans when the feature flag is on', () => {
+        mockAppendFeatureFlags({
+          acceleratedPlans: {
+            linodePlans: true,
+            lkePlans: false,
+          },
+        }).as('getFeatureFlags');
+        cy.visitWithLogin('/linodes/create');
+        cy.wait([
+          '@getRegions',
+          '@getLinodeTypes',
+          '@getAccount',
+          '@getFeatureFlags',
+        ]);
+
+        ui.regionSelect.find().click();
+        ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+
+        cy.findByText('Accelerated').click();
+        cy.get(linodePlansPanel).within(() => {
+          cy.findAllByRole('alert').should('have.length', 1);
+
+          cy.findByRole('table', {
+            name: 'List of Linode Plans',
+          }).within(() => {
+            cy.findByText('NETINT Quadra T1U').should('be.visible');
+            cy.findAllByRole('row').should('have.length', 2);
+            cy.get('[id="accelerated-1"]').should('be.disabled');
+          });
+        });
+      });
+
+      it('should not render Accelerated plans when the feature flag is off', () => {
+        mockAppendFeatureFlags({
+          acceleratedPlans: {
+            linodePlans: false,
+            lkePlans: false,
+          },
+        }).as('getFeatureFlags');
+        cy.visitWithLogin('/linodes/create');
+        cy.wait([
+          '@getRegions',
+          '@getLinodeTypes',
+          '@getAccount',
+          '@getFeatureFlags',
+        ]);
+
+        // Confirms Accelerated tab does not show up for linodes
+        cy.findByText('Accelerated').should('not.exist');
+      });
+    });
+
+    describe('kubernetes plans panel', () => {
+      it('should render Accelerated plans when the feature flag is on', () => {
+        mockAppendFeatureFlags({
+          acceleratedPlans: {
+            linodePlans: false,
+            lkePlans: true,
+          },
+        }).as('getFeatureFlags');
+        cy.visitWithLogin('/kubernetes/create');
+        cy.wait([
+          '@getRegions',
+          '@getLinodeTypes',
+          '@getAccount',
+          '@getFeatureFlags',
+        ]);
+
+        ui.regionSelect.find().click();
+        ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+
+        cy.wait(['@getRegionAvailability']);
+
+        cy.findByText('Accelerated').click();
+        cy.get(k8PlansPanel).within(() => {
+          cy.findAllByRole('alert').should('have.length', 1);
+
+          cy.findByRole('table', { name: planSelectionTable }).within(() => {
+            cy.findAllByRole('row').should('have.length', 2);
+            cy.get('[data-qa-plan-row="accelerated-1"]').should('be.visible');
+          });
+        });
+      });
+
+      it('should not render Accelerated plans when the feature flag is off', () => {
+        mockAppendFeatureFlags({
+          acceleratedPlans: {
+            linodePlans: false,
+            lkePlans: false,
+          },
+        }).as('getFeatureFlags');
+        cy.visitWithLogin('/kubernetes/create');
+        cy.wait([
+          '@getRegions',
+          '@getLinodeTypes',
+          '@getAccount',
+          '@getFeatureFlags',
+        ]);
+
+        // Confirms Accelerated tab does not show up for LKE clusters
+        cy.findByText('Accelerated').should('not.exist');
       });
     });
   });

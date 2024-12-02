@@ -12,6 +12,7 @@ import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { EngineOption } from './GeneralInformation/EngineOption';
 import { CloudPulseRegionSelect } from './GeneralInformation/RegionSelect';
+import { CloudPulseMultiResourceSelect } from './GeneralInformation/ResourceMultiSelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { CreateAlertDefinitionFormSchema } from './schemas';
 import { filterFormValues, filterMetricCriteriaFormValues } from './utilities';
@@ -33,14 +34,14 @@ const criteriaInitialValues: MetricCriteriaForm = {
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
-  engine_type: null,
+  engineType: null,
+  entity_ids: [],
   label: '',
   region: '',
-  resource_ids: [],
   rule_criteria: {
     rules: filterMetricCriteriaFormValues(criteriaInitialValues),
   },
-  service_type: null,
+  serviceType: null,
   severity: null,
   triggerCondition: triggerConditionInitialValues,
 };
@@ -48,19 +49,18 @@ const initialValues: CreateAlertDefinitionForm = {
 const overrides = [
   {
     label: 'Definitions',
-    linkTo: '/monitor/cloudpulse/alerts/definitions',
+    linkTo: '/monitor/alerts/definitions',
     position: 1,
   },
   {
     label: 'Details',
-    linkTo: `/monitor/cloudpulse/alerts/definitions/create`,
+    linkTo: `/monitor/alerts/definitions/create`,
     position: 2,
   },
 ];
 export const CreateAlertDefinition = () => {
   const history = useHistory();
-  const alertCreateExit = () =>
-    history.push('/monitor/cloudpulse/alerts/definitions');
+  const alertCreateExit = () => history.push('/monitor/alerts/definitions');
 
   const formMethods = useForm<CreateAlertDefinitionForm>({
     defaultValues: initialValues,
@@ -78,10 +78,10 @@ export const CreateAlertDefinition = () => {
   } = formMethods;
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: createAlert } = useCreateAlertDefinition(
-    getValues('service_type')!
+    getValues('serviceType')!
   );
 
-  const serviceWatcher = watch('service_type');
+  const serviceTypeWatcher = watch('serviceType');
   const onSubmit = handleSubmit(async (values) => {
     try {
       await createAlert(filterFormValues(values));
@@ -140,9 +140,15 @@ export const CreateAlertDefinition = () => {
             control={control}
             name="description"
           />
-          <CloudPulseServiceSelect name="service_type" />
-          {serviceWatcher === 'dbaas' && <EngineOption name="engine_type" />}
+          <CloudPulseServiceSelect name="serviceType" />
+          {serviceTypeWatcher === 'dbaas' && <EngineOption name="engineType" />}
           <CloudPulseRegionSelect name="region" />
+          <CloudPulseMultiResourceSelect
+            engine={watch('engineType')}
+            name="entity_ids"
+            region={watch('region')}
+            serviceType={serviceTypeWatcher}
+          />
           <CloudPulseAlertSeveritySelect name="severity" />
           <ActionsPanel
             primaryButtonProps={{

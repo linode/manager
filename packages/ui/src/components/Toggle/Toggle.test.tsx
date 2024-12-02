@@ -1,8 +1,8 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
+import { describe, expect, it } from 'vitest';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithTheme } from '../../utilities/testHelpers';
 import { Toggle } from './Toggle';
 
 describe('Toggle component', () => {
