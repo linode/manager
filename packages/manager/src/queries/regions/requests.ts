@@ -4,8 +4,9 @@ import { getAll } from 'src/utilities/getAll';
 
 import type { Region, RegionAvailability } from '@linode/api-v4';
 
-export const getAllRegionsRequest = (isBetaEndpoint: boolean) =>
-  getAll<Region>((params) => getRegions(params, isBetaEndpoint))().then(
+// @TODO LKE-E: Remove useBetaEndpoint argument after LKE-5868 as it will no longer be needed.
+export const getAllRegionsRequest = (useBetaEndpoint: boolean) =>
+  getAll<Region>((params) => getRegions(params, useBetaEndpoint))().then(
     (data) => data.data
   );
 

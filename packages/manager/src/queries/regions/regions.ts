@@ -32,6 +32,7 @@ export const regionQueries = createQueryKeys('regions', {
     queryFn: () => getRegion(regionId),
     queryKey: [regionId],
   }),
+  // @TODO LKE-E: Remove useBetaEndpoint argument after LKE-5868 as it will no longer be needed.
   regions: (useBetaEndpoint: boolean = false) => ({
     queryFn: () => getAllRegionsRequest(useBetaEndpoint),
     queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],

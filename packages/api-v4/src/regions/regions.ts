@@ -14,10 +14,11 @@ import { Region, RegionAvailability } from './types';
  * Filters are not included, as none of the fields
  * in a Region response object are filterable.
  *
+ * @TODO LKE-E: Remove useBetaEndpoint after LKE-5868 is done as it will no longer be needed.
  */
-export const getRegions = (params?: Params, isBetaEndpoint?: boolean) =>
+export const getRegions = (params?: Params, useBetaEndpoint?: boolean) =>
   Request<Page<Region>>(
-    setURL(`${isBetaEndpoint ? BETA_API_ROOT : API_ROOT}/regions`),
+    setURL(`${useBetaEndpoint ? BETA_API_ROOT : API_ROOT}/regions`),
     setMethod('GET'),
     setParams(params)
   );

@@ -909,8 +909,10 @@ describe('LKE Cluster Creation with LKE-E', () => {
       ui.autocompletePopper.find().within(() => {
         cy.findByText('Newark, NJ (us-east)').should('not.exist');
       });
+
       // Select a supported region
       ui.regionSelect.find().clear().type('Washington, DC{enter}');
+
       // Confirm that there is a tooltip explanation for the region dropdown options
       ui.tooltip
         .findByText(
