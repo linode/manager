@@ -1,8 +1,8 @@
+import { SvgIcon } from '@mui/material';
 import { default as _Radio } from '@mui/material/Radio';
 import * as React from 'react';
 
 import { RadioIcon, RadioIconRadioed } from '../../assets/icons';
-import { SvgIcon } from '@mui/material';
 
 import type { RadioProps } from '@mui/material/Radio';
 
@@ -29,19 +29,19 @@ export const Radio = (props: RadioProps) => {
     <_Radio
       checkedIcon={
         <SvgIcon
-          viewBox="0 0 25 25"
           component={RadioIconRadioed}
           fontSize={props.size}
+          viewBox="0 0 25 25"
+        />
+      }
+      icon={
+        <SvgIcon
+          component={RadioIcon}
+          fontSize={props.size}
+          viewBox="0 0 25 25"
         />
       }
       data-qa-radio={props.checked || false}
-      icon={
-        <SvgIcon
-          viewBox="0 0 25 25"
-          component={RadioIcon}
-          fontSize={props.size}
-        />
-      }
       {...props}
       inputProps={{
         'aria-checked': props.checked,
