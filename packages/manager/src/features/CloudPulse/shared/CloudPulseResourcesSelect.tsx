@@ -1,8 +1,11 @@
-import { Box, ListItem } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
+import {
+  SelectedIcon,
+  StyledListItem,
+} from 'src/components/Autocomplete/Autocomplete.styles';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 import { themes } from 'src/utilities/theme';
@@ -56,7 +59,7 @@ export const CloudPulseResourcesSelect = React.memo(
       },
     };
 
-    const { data: resources, isLoading, isError } = useResourcesQuery(
+    const { data: resources, isError, isLoading } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
@@ -123,6 +126,9 @@ export const CloudPulseResourcesSelect = React.memo(
 
     return (
       <Autocomplete
+        helperText={
+          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
+        }
         onChange={(e, resourceSelections) => {
           setSelectedResources(resourceSelections);
 
@@ -146,10 +152,20 @@ export const CloudPulseResourcesSelect = React.memo(
           const isResourceSelected = selectedResources?.some(
             (item) => item.label === option.label
           );
+
+          const isSelectAllORDeslectAllOption =
+            option.label === 'Select All ' || option.label === 'Deselect All ';
+
           const isMaxSelectionsReached =
             selectedResources &&
             selectedResources.length >= maxResourceSelectionLimit &&
-            !isResourceSelected;
+            !isResourceSelected &&
+            !isSelectAllORDeslectAllOption;
+
+          const ListItem = isSelectAllORDeslectAllOption
+            ? StyledListItem
+            : 'li';
+
           return (
             <ListItem
               {...rest}
@@ -167,8 +183,13 @@ export const CloudPulseResourcesSelect = React.memo(
         textFieldProps={{
           InputProps: {
             sx: {
+              '::-webkit-scrollbar': {
+                display: 'none',
+              },
               maxHeight: '55px',
+              msOverflowStyle: 'none',
               overflow: 'auto',
+              scrollbarWidth: 'none',
               svg: {
                 color: themes.light.color.grey3,
               },
@@ -181,9 +202,6 @@ export const CloudPulseResourcesSelect = React.memo(
         disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
-        helperText={
-          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
-        }
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}
         limitTags={1}

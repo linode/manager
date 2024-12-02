@@ -14,7 +14,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { prop, uniqBy } from 'ramda';
@@ -30,7 +30,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { Typography } from 'src/components/Typography';
 import {
   generateAddressesLabel,
   generateRuleLabel,

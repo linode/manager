@@ -1,9 +1,7 @@
-import { Radio } from '@linode/ui';
+import { Checkbox, Radio, Toggle } from '@linode/ui';
 import React from 'react';
 
-import { Checkbox } from './Checkbox';
 import { FormControlLabel } from './FormControlLabel';
-import { Toggle } from './Toggle/Toggle';
 
 import type { Meta, StoryObj } from '@storybook/react';
 

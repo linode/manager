@@ -1,12 +1,14 @@
 import { determinePower } from 'src/utilities/unitConversions';
 
 import {
+  generate12HourTicks,
   getAccessibleTimestamp,
   humanizeLargeData,
   tooltipLabelFormatter,
   tooltipValueFormatter,
 } from './utils';
 
+import type { DataSet } from './AreaChart';
 import type { StorageSymbol } from 'src/utilities/unitConversions';
 
 const timestamp = 1704204000000;
@@ -29,9 +31,9 @@ describe('tooltipLabelFormatter', () => {
 
 describe('tooltipValueFormatter', () => {
   it('should return the rounded value up to a max of 2 decimals', () => {
-    expect(tooltipValueFormatter(5.434939999999999, ' Kb/s')).toBe('5.43 Kb/s');
-    expect(tooltipValueFormatter(5, ' Kb/s')).toBe('5 Kb/s');
-    expect(tooltipValueFormatter(0.000234, '%')).toBe('0%');
+    expect(tooltipValueFormatter(5.434939999999999, 'Kb/s')).toBe('5.43 Kb/s');
+    expect(tooltipValueFormatter(5, 'Kb/s')).toBe('5 Kb/s');
+    expect(tooltipValueFormatter(0.000234, '%')).toBe('0 %');
   });
 });
 
@@ -70,5 +72,26 @@ describe('determinePower', () => {
         maxUnit: 'TB',
       })
     ).toBe(1);
+  });
+});
+
+describe('generate x-axis ticks', () => {
+  const data: DataSet[] = [
+    { label: 0.3744841110560275, timestamp: 1721854379 },
+    { label: 0.4980357104166823, timestamp: 1721857979 },
+    { label: 0.3290476561287732, timestamp: 1721861579 },
+    { label: 0.4214879396496189, timestamp: 1721865179 },
+    { label: 0.2269247326830727, timestamp: 1721868779 },
+    { label: 0.3393055885526987, timestamp: 1721872379 },
+    { label: 0.5237102833940027, timestamp: 1721875979 },
+  ];
+  it('should return empty x-axis tick list', () => {
+    const ticks = generate12HourTicks(data, 'GMT', 0);
+    expect(ticks.length).toBe(0);
+  });
+
+  it('should return 7 x-axis tick', () => {
+    const ticks = generate12HourTicks(data, 'GMT', 7);
+    expect(ticks.length).toBe(7);
   });
 });

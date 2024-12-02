@@ -1,4 +1,11 @@
-import { Box, Button, CircleProgress, Paper, Stack } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -12,7 +19,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { Typography } from 'src/components/Typography';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
 import { useLinodeQuery } from 'src/queries/linodes/linodes';
