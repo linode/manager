@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { CardBase } from './CardBase';
 
+import type { TooltipProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface SelectionCardProps {
@@ -87,6 +88,11 @@ export interface SelectionCardProps {
    * Optional text to set in a tooltip when hovering over the card.
    */
   tooltip?: JSX.Element | string;
+  /**
+   * The placement of the tooltip
+   * @default top
+   */
+  tooltipPlacement?: TooltipProps['placement'];
 }
 
 /**
@@ -114,6 +120,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
     sxGrid,
     sxTooltip,
     tooltip,
+    tooltipPlacement = 'top',
   } = props;
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -171,7 +178,7 @@ export const SelectionCard = React.memo((props: SelectionCardProps) => {
         componentsProps={{
           tooltip: { sx: sxTooltip },
         }}
-        placement="top"
+        placement={tooltipPlacement}
         title={tooltip}
       >
         {cardGrid}
