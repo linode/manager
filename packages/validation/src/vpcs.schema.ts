@@ -130,7 +130,7 @@ export const createSubnetSchema = object().shape(
       then: (schema) =>
         schema.required(IP_EITHER_BOTH_NOT_NEITHER).test({
           name: 'IPv4 CIDR format',
-          message: 'The IPv4 range must be in CIDR format',
+          message: 'The IPv4 range must be in CIDR format.',
           test: (value) =>
             vpcsValidateIP({
               value,
@@ -147,7 +147,7 @@ export const createSubnetSchema = object().shape(
             case 'string':
               return schema.notRequired().test({
                 name: 'IPv4 CIDR format',
-                message: 'The IPv4 range must be in CIDR format',
+                message: 'The IPv4 range must be in CIDR format.',
                 test: (value) =>
                   vpcsValidateIP({
                     value,

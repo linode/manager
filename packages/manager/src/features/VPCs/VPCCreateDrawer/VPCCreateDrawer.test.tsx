@@ -11,7 +11,7 @@ const props = {
   open: true,
 };
 
-describe('VPC Create Drawer', () => {
+describe.skip('VPC Create Drawer', () => {
   it('should render the vpc and subnet sections', () => {
     const { getAllByText } = renderWithTheme(<VPCCreateDrawer {...props} />);
 

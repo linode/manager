@@ -10,7 +10,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { VPC_GETTING_STARTED_LINK } from 'src/features/VPCs/constants';
 import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
-import { useCreateVPC } from 'src/hooks/useCreateVPCv2';
+import { useCreateVPC } from 'src/hooks/useCreateVPC';
 
 import { CannotCreateVPCNotice } from './FormComponents/CannotCreateVPCNotice';
 import { StyledHeaderTypography } from './FormComponents/VPCCreateForm.styles';
