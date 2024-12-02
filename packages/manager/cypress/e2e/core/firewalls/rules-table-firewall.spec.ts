@@ -3,7 +3,7 @@ import type {
   CreateFirewallPayload,
   FirewallPolicyType,
 } from '@linode/api-v4';
-import { createFirewall, deleteFirewall } from '@linode/api-v4';
+import { createFirewall } from '@linode/api-v4';
 import {
   firewallFactory,
   firewallRuleFactory,
@@ -101,7 +101,6 @@ const createFirewalls = async (
 
 authenticate();
 describe('firewall inbound rules drag & drop and keyboard interactions tests', () => {
-  let firewallId: number;
   let inboundRule1: FirewallRuleType;
   let inboundRule2: FirewallRuleType;
   let inboundRule3: FirewallRuleType;
@@ -129,7 +128,6 @@ describe('firewall inbound rules drag & drop and keyboard interactions tests', (
 
     cy.defer(() => createFirewalls(firewallRequest), 'creating firewall').then(
       ([firewall]) => {
-        firewallId = firewall.id;
         cy.visitWithLogin('/firewalls');
 
         // Confirm that firewall is listed on landing page with expected configuration.
@@ -151,11 +149,6 @@ describe('firewall inbound rules drag & drop and keyboard interactions tests', (
         addFirewallRules(inboundRule3, 'inbound');
       }
     );
-  });
-  afterEach(() => {
-    if (firewallId) {
-      deleteFirewall(firewallId);
-    }
   });
 
   /*
@@ -180,7 +173,7 @@ describe('firewall inbound rules drag & drop and keyboard interactions tests', (
     cy.get(tableRow).eq(2).should('contain', inboundRule1.label);
 
     // Drag the 3rd row rule to 1st position
-    cy.get(tableRow).eq(2).drag(firstRow, { force: true });
+    cy.get(tableRow).eq(2).drag(firstRow);
 
     // Verify the labels in the 1st, 2nd, and 3rd rows
     cy.get(tableRow).eq(0).should('contain', inboundRule1.label);
@@ -190,7 +183,6 @@ describe('firewall inbound rules drag & drop and keyboard interactions tests', (
 });
 
 describe('firewall outbound rules drag & drop and keyboard interactions tests', () => {
-  let firewallId: number;
   let outboundRule1: FirewallRuleType;
   let outboundRule2: FirewallRuleType;
   let outboundRule3: FirewallRuleType;
@@ -219,7 +211,6 @@ describe('firewall outbound rules drag & drop and keyboard interactions tests', 
 
     cy.defer(() => createFirewalls(firewallRequest), 'creating firewall').then(
       ([firewall]) => {
-        firewallId = firewall.id;
         cy.visitWithLogin('/firewalls');
 
         // Confirm that firewall is listed on landing page with expected configuration.
@@ -242,16 +233,11 @@ describe('firewall outbound rules drag & drop and keyboard interactions tests', 
       }
     );
   });
-  afterEach(() => {
-    if (firewallId) {
-      deleteFirewall(firewallId);
-    }
-  });
 
   /*
    * - Confirms that firewall outbound rule table drag and drop functionality works as expected.
    */
-  it.only('drag and drop functionality should work for firewall outbound rules table', () => {
+  it('drag and drop functionality should work for firewall outbound rules table', () => {
     // Drag the 1st row rule to 2nd row position
     // Note that eq is 0-indexed
     cy.get(tableRow).eq(0).drag(secondRow);
@@ -270,7 +256,7 @@ describe('firewall outbound rules drag & drop and keyboard interactions tests', 
     cy.get(tableRow).eq(2).should('contain', outboundRule1.label);
 
     // Drag the 3rd row rule to 1st position
-    cy.get(tableRow).eq(2).drag(firstRow, { force: true });
+    cy.get(tableRow).eq(2).drag(firstRow);
 
     // Verify the labels in the 1st, 2nd, and 3rd rows
     cy.get(tableRow).eq(0).should('contain', outboundRule1.label);
