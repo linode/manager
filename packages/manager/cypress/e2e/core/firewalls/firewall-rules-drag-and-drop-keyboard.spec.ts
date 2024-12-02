@@ -54,6 +54,12 @@ const getRuleActionLabel = (ruleAction: FirewallPolicyType): string => {
     .toLowerCase()}`;
 };
 
+/**
+ * Move the focused element either up or down, N times.
+ *
+ * @param options.direction - Direction to move the element (row) "UP" or "DOWN".
+ * @param options.times - Number of times to move the element.
+ */
 const moveFocusedElement = ({ direction, times }: MoveFocusedElementParams) => {
   // `direction` is either "UP" or "DOWN"
   const arrowKey = direction === 'DOWN' ? '{downarrow}' : '{uparrow}';
