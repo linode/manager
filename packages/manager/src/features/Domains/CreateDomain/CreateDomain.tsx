@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   FormHelperText,
   Notice,
   Paper,
@@ -16,7 +17,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { LandingHeader } from 'src/components/LandingHeader';

@@ -1,9 +1,7 @@
-import { Notice, Typography } from '@linode/ui';
+import { List, ListItem, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { regionsWithFeature } from 'src/utilities/doesRegionSupportFeature';

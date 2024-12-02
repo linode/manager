@@ -1,6 +1,6 @@
+import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { useGetCustomFiltersQuery } from 'src/queries/cloudpulse/customfilters';
 
 import {

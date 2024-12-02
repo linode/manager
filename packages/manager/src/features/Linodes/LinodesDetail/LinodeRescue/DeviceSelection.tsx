@@ -1,8 +1,7 @@
-import { FormControl } from '@linode/ui';
+import { Autocomplete, FormControl } from '@linode/ui';
 import { defaultTo } from 'ramda';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { titlecase } from 'src/features/Linodes/presentation';
 
 import { getSelectedDeviceOption } from '../utilities';

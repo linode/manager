@@ -4,8 +4,8 @@ import type {
   Region,
   RegionSite,
 } from '@linode/api-v4';
+import type { EnhancedAutocompleteProps } from '@linode/ui';
 import type React from 'react';
-import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
 import type { DisableItemOption } from 'src/components/ListItemOption';
 
 export type RegionFilterValue =

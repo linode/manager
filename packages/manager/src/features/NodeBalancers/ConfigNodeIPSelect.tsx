@@ -1,8 +1,6 @@
-import { Box, Stack, Typography } from '@linode/ui';
+import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
-import { SelectedIcon } from 'src/components/Autocomplete/Autocomplete.styles';
 import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 
 import { getPrivateIPOptions } from './ConfigNodeIPSelect.utils';

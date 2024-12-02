@@ -1,9 +1,8 @@
-import { FormHelperText, Notice, Typography } from '@linode/ui';
+import { Autocomplete, FormHelperText, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
 import { useEventsPollingActions } from 'src/queries/events/events';

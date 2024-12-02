@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithTheme } from '../../utilities/testHelpers';
 import { Autocomplete } from './Autocomplete';
 
 // Mock the options for testing

@@ -1,16 +1,19 @@
-import { Box, CircleProgress, InputAdornment, TextField } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 import React from 'react';
 
+import { Box } from '../Box';
+import { CircleProgress } from '../CircleProgress';
+import { InputAdornment } from '../InputAdornment';
+import { TextField } from '../TextField';
 import {
   CustomPopper,
   SelectedIcon,
   StyledListItem,
 } from './Autocomplete.styles';
 
-import type { TextFieldProps } from '@linode/ui';
+import type { TextFieldProps } from '../TextField';
 import type { AutocompleteProps } from '@mui/material/Autocomplete';
 
 export interface EnhancedAutocompleteProps<

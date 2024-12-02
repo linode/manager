@@ -1,5 +1,5 @@
 import { getInvoiceItems } from '@linode/api-v4/lib/account';
-import { Typography } from '@linode/ui';
+import { Autocomplete, Typography } from '@linode/ui';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -7,7 +7,6 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Currency } from 'src/components/Currency';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';

@@ -1,10 +1,15 @@
-import { Checkbox, FormControl, FormHelperText, Notice } from '@linode/ui';
+import {
+  Autocomplete,
+  Checkbox,
+  FormControl,
+  FormHelperText,
+  Notice,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Drawer } from 'src/components/Drawer';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useEventsPollingActions } from 'src/queries/events/events';

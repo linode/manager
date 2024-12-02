@@ -1,9 +1,7 @@
-import { Tooltip, Typography } from '@linode/ui';
+import { Autocomplete, ListItem, Tooltip, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Link } from 'src/components/Link';
-import { ListItem } from 'src/components/ListItem';
 
 import { PLACEMENT_GROUPS_DOCS_LINK } from './constants';
 import { placementGroupTypeOptions } from './utils';
