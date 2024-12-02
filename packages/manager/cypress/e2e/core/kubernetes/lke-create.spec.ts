@@ -904,6 +904,20 @@ describe('LKE Cluster Creation with LKE-E', () => {
       // Confirm HA section is hidden since LKE-E includes HA by default
       cy.findByText('HA Control Plane').should('not.exist');
 
+      // Confirm unsupported regions are not displayed
+      ui.regionSelect.find().click().type('Newark, NJ');
+      ui.autocompletePopper.find().within(() => {
+        cy.findByText('Newark, NJ (us-east)').should('not.exist');
+      });
+      // Select a supported region
+      ui.regionSelect.find().clear().type('Washington, DC{enter}');
+      // Confirm that there is a tooltip explanation for the region dropdown options
+      ui.tooltip
+        .findByText(
+          'Only regions that support Kubernetes Enterprise are listed.'
+        )
+        .should('be.visible');
+
       // TODO: finish the rest of this test in subsequent PRs
     });
 
