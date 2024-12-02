@@ -31,7 +31,7 @@ export const CurlTabPanel = ({ index, payLoad, title }: CurlTabPanelProps) => {
   const path =
     linodeCLIAction === 'create'
       ? '/linode/instances'
-      : `linode/instances/${sourceLinodeID}/clone`;
+      : `/linode/instances/${sourceLinodeID}/clone`;
 
   const curlCommand = useMemo(() => generateCurlCommand(payLoad, path), [
     path,
