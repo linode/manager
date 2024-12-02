@@ -1,5 +1,4 @@
 import React from 'react';
-import { i } from 'vite/dist/node/types.d-aGj9QkWt';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
