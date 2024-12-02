@@ -1,7 +1,7 @@
 import { array, boolean, number, object, string } from 'yup';
 
 export const updateIPSchema = object().shape({
-  rdns: string().notRequired().nullable(true),
+  rdns: string().notRequired().nullable(),
 });
 
 export const allocateIPSchema = object().shape({
