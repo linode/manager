@@ -5,12 +5,12 @@ import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 
 export const createAlertDefinition = (
   data: CreateAlertDefinitionPayload,
-  service_type: AlertServiceType
+  serviceType: AlertServiceType
 ) =>
   Request<Alert>(
     setURL(
       `${API_ROOT}/monitor/services/${encodeURIComponent(
-        service_type!
+        serviceType!
       )}/alert-definitions`
     ),
     setMethod('POST'),

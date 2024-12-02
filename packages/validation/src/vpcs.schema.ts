@@ -127,9 +127,8 @@ export const createSubnetSchema = object().shape(
     ipv4: string().when('ipv6', {
       is: (value: unknown) =>
         value === '' || value === null || value === undefined,
-      then: string()
-        .required(IP_EITHER_BOTH_NOT_NEITHER)
-        .test({
+      then: (schema) =>
+        schema.required(IP_EITHER_BOTH_NOT_NEITHER).test({
           name: 'IPv4 CIDR format',
           message: 'The IPv4 range must be in CIDR format',
           test: (value) =>
@@ -139,15 +138,14 @@ export const createSubnetSchema = object().shape(
               mustBeIPMask: false,
             }),
         }),
-      otherwise: lazy((value: string | undefined) => {
-        switch (typeof value) {
-          case 'undefined':
-            return string().notRequired().nullable();
+      otherwise: (schema) =>
+        lazy((value: string | undefined) => {
+          switch (typeof value) {
+            case 'undefined':
+              return schema.notRequired().nullable();
 
-          case 'string':
-            return string()
-              .notRequired()
-              .test({
+            case 'string':
+              return schema.notRequired().test({
                 name: 'IPv4 CIDR format',
                 message: 'The IPv4 range must be in CIDR format',
                 test: (value) =>
@@ -158,17 +156,16 @@ export const createSubnetSchema = object().shape(
                   }),
               });
 
-          default:
-            return string().notRequired().nullable();
-        }
-      }),
+            default:
+              return schema.notRequired().nullable();
+          }
+        }),
     }),
     ipv6: string().when('ipv4', {
       is: (value: unknown) =>
         value === '' || value === null || value === undefined,
-      then: string()
-        .required(IP_EITHER_BOTH_NOT_NEITHER)
-        .test({
+      then: (schema) =>
+        schema.required(IP_EITHER_BOTH_NOT_NEITHER).test({
           name: 'IPv6 prefix length',
           message: 'Must be the prefix length (64-125) of the IP, e.g. /64',
           test: (value) =>
@@ -178,15 +175,14 @@ export const createSubnetSchema = object().shape(
               mustBeIPMask: true,
             }),
         }),
-      otherwise: lazy((value: string | undefined) => {
-        switch (typeof value) {
-          case 'undefined':
-            return string().notRequired().nullable();
+      otherwise: (schema) =>
+        lazy((value: string | undefined) => {
+          switch (typeof value) {
+            case 'undefined':
+              return schema.notRequired().nullable();
 
-          case 'string':
-            return string()
-              .notRequired()
-              .test({
+            case 'string':
+              return schema.notRequired().test({
                 name: 'IPv6 prefix length',
                 message:
                   'Must be the prefix length (64-125) of the IP, e.g. /64',
@@ -198,10 +194,10 @@ export const createSubnetSchema = object().shape(
                   }),
               });
 
-          default:
-            return string().notRequired().nullable();
-        }
-      }),
+            default:
+              return schema.notRequired().nullable();
+          }
+        }),
     }),
   },
   [
