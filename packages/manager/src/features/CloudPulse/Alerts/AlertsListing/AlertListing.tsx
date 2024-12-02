@@ -1,4 +1,4 @@
-import { CircleProgress, Paper } from '@linode/ui';
+import { Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
@@ -8,6 +8,8 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { StyledPlaceholder } from 'src/features/StackScripts/StackScriptBase/StackScriptBase.styles';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
@@ -21,7 +23,7 @@ export const AlertListing = () => {
     return 'asc';
   };
   const { data: alerts, isError, isLoading } = useAllAlertDefinitionsQuery();
-  if (isError || alerts?.length === 0) {
+  if (alerts?.length === 0) {
     return (
       <Grid item xs={12}>
         <Paper>
@@ -33,9 +35,6 @@ export const AlertListing = () => {
         </Paper>
       </Grid>
     );
-  }
-  if (isLoading) {
-    return <CircleProgress />;
   }
   return (
     <Grid marginTop={2}>
@@ -98,6 +97,13 @@ export const AlertListing = () => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {isError === true && (
+            <TableRowError
+              colSpan={7}
+              message={'Error in fetching the alerts.'}
+            />
+          )}
+          {isLoading === true && <TableRowLoading columns={7} />}
           {alerts?.map((alert) => (
             <AlertTableRow alert={alert} key={alert.id} />
           ))}

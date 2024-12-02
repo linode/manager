@@ -14,6 +14,7 @@ describe('Alert Row', () => {
     const { getByText } = renderWithTheme(wrapWithTableBody(renderedAlert));
     expect(getByText(alert.label)).toBeVisible();
   });
+
   it('should render the severity field with its label not value', async () => {
     const severityValue = 0;
     const alert = alertFactory.build({ severity: severityValue });
@@ -24,6 +25,7 @@ describe('Alert Row', () => {
     )?.label;
     expect(getByText(severity!)).toBeVisible;
   });
+
   it('should render the status field in green color if status is enabled', () => {
     const statusValue = 'enabled';
     const alert = alertFactory.build({ status: statusValue });

@@ -12,15 +12,20 @@ import { AlertActionMenu } from './AlertActionMenu';
 import type { Alert } from '@linode/api-v4';
 
 interface Props {
+  /**
+   * alert details used by the component to fill the row details
+   */
   alert: Alert;
 }
 
-export const AlertTableRow = React.memo((props: Props) => {
+export const AlertTableRow = (props: Props) => {
   const { alert } = props;
   const { created_by, id, label, service_type, status, updated } = alert;
-  const alertSeverity = alertSeverityOptions.find(
-    (option) => option.value === alert.severity
-  );
+  const alertSeverity = React.useMemo(() => {
+    return alertSeverityOptions.find(
+      (option) => option.value === alert.severity
+    );
+  }, [alert.severity]);
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>{label}</TableCell>
@@ -43,4 +48,4 @@ export const AlertTableRow = React.memo((props: Props) => {
       </TableCell>
     </TableRow>
   );
-});
+};
