@@ -5,6 +5,7 @@ import {
   firewallRulesFactory,
 } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
+import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { randomItem, randomLabel, randomString } from 'support/util/random';
 
@@ -148,16 +149,22 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
       });
 
       it('should move Inbound rule rows using keyboard interaction', () => {
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        // Verify 'Save Changes' button is initially disabled.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Focus the first row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `inboundRule1` down two rows
+        // Move `inboundRule1` down two rows.
         moveFocusedElement({ direction: 'DOWN', times: 2 });
 
-        // Drop row with Space/Enter key
+        // Drop row with Space/Enter key.
         cy.focused().type(' ');
 
         // Verify that "inboundRule2" is in the 1st row,
@@ -170,16 +177,16 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
           });
         });
 
-        // Focus the 2nd row and activate keyboard drag mode using Space/Enter key
+        // Focus the 2nd row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(inboundRule3.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule3.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `inboundRule3` up one row
+        // Move `inboundRule3` up one row.
         moveFocusedElement({ direction: 'UP', times: 1 });
 
-        // Drop row with Space/Enter key
+        // Drop row with Space/Enter key.
         cy.focused().type(' ');
 
         // Verify that "inboundRule3" is in the 1st row,
@@ -191,22 +198,34 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             expect(rows[2]).to.contain(inboundRule1.label);
           });
         });
+
+        // Verify 'Save Changes' button is enabled after row is moved.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled');
       });
 
       it('should cancel the Inbound rules drag operation with Esc key', () => {
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        // Verify 'Save Changes' button is initially disabled.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Focus the first row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `inboundRule1` down two rows
+        // Move `inboundRule1` down two rows.
         moveFocusedElement({ direction: 'DOWN', times: 2 });
 
-        // Cancel with Esc key
+        // Cancel with Esc key.
         cy.focused().type('{esc}');
 
-        // Ensure row remains in its original position
+        // Ensure row remains in its original position.
         cy.get('[aria-label="inbound Rules List"]').within(() => {
           cy.get('tbody tr').then((rows) => {
             expect(rows[0]).to.contain(inboundRule1.label);
@@ -214,6 +233,12 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             expect(rows[2]).to.contain(inboundRule3.label);
           });
         });
+
+        // Verify 'Save Changes' button remains disabled after discarding with Esc key.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
       });
     });
 
@@ -226,7 +251,13 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
       });
 
       it('should move Outbound rule rows using keyboard interaction', () => {
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        // Verify 'Save Changes' button is initially disabled.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Focus the first row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
           .closest('tr')
@@ -248,16 +279,16 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
           });
         });
 
-        // Focus the 2nd row and activate keyboard drag mode using Space/Enter key
+        // Focus the 2nd row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(outboundRule3.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule3.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `outboundRule3` up one row
+        // Move `outboundRule3` up one row.
         moveFocusedElement({ direction: 'UP', times: 1 });
 
-        // Drop row with Space/Enter key
+        // Drop row with Space/Enter key.
         cy.focused().type(' ');
 
         // Verify that "outboundRule3" is in the 1st row,
@@ -269,22 +300,34 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             expect(rows[2]).to.contain(outboundRule1.label);
           });
         });
+
+        // Verify 'Save Changes' button is enabled after row is moved.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled');
       });
 
       it('should cancel the Outbound rules drag operation with Esc key', () => {
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        // Verify 'Save Changes' button is initially disabled.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Focus the first row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `outboundRule1` down two rows
+        // Move `outboundRule1` down two rows.
         moveFocusedElement({ direction: 'DOWN', times: 2 });
 
-        // Cancel with Esc key
+        // Cancel with Esc key.
         cy.focused().type('{esc}');
 
-        // Ensure row remains in its original position
+        // Ensure row remains in its original position.
         cy.get('[aria-label="outbound Rules List"]').within(() => {
           cy.get('tbody tr').then((rows) => {
             expect(rows[0]).to.contain(outboundRule1.label);
@@ -292,13 +335,19 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             expect(rows[2]).to.contain(outboundRule3.label);
           });
         });
+
+        // Verify 'Save Changes' button remains disabled after discarding with Esc key.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
       });
     });
   });
 
   describe('Window with vertical scrollbar', () => {
     beforeEach(() => {
-      // Browser window with vertical scroll bar enabled (smaller screens)
+      // Browser window with vertical scroll bar enabled (smaller screens).
       cy.viewport(800, 400);
       cy.window().should('have.property', 'innerWidth', 800);
       cy.window().should('have.property', 'innerHeight', 400);
@@ -314,16 +363,22 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
       });
 
       it('should move Inbound rule rows using keyboard interaction', () => {
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        // Verify 'Save Changes' button is initially disabled.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Focus the first row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `inboundRule1` down two rows
+        // Move `inboundRule1` down two rows.
         moveFocusedElement({ direction: 'DOWN', times: 2 });
 
-        // Drop row with Space/Enter key
+        // Drop row with Space/Enter key.
         cy.focused().type(' ');
 
         // Verify that "inboundRule2" is in the 1st row,
@@ -336,16 +391,16 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
           });
         });
 
-        // Focus the 2nd row and activate keyboard drag mode using Space/Enter key
+        // Focus the 2nd row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(inboundRule3.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule3.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `inboundRule3` up one row
+        // Move `inboundRule3` up one row.
         moveFocusedElement({ direction: 'UP', times: 1 });
 
-        // Drop row with Space/Enter key
+        // Drop row with Space/Enter key.
         cy.focused().type(' ');
 
         // Verify that "inboundRule3" is in the 1st row,
@@ -357,22 +412,34 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             expect(rows[2]).to.contain(inboundRule1.label);
           });
         });
+
+        // Verify 'Save Changes' button is enabled after row is moved.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled');
       });
 
       it('should cancel the Inbound rules drag operation with Esc key', () => {
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        // Verify 'Save Changes' button is initially disabled.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Focus the first row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `inboundRule1` down two rows
+        // Move `inboundRule1` down two rows.
         moveFocusedElement({ direction: 'DOWN', times: 2 });
 
-        // Cancel with Esc key
+        // Cancel with Esc key.
         cy.focused().type('{esc}');
 
-        // Ensure row remains in its original position
+        // Ensure row remains in its original position.
         cy.get('[aria-label="inbound Rules List"]').within(() => {
           cy.get('tbody tr').then((rows) => {
             expect(rows[0]).to.contain(inboundRule1.label);
@@ -380,6 +447,12 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             expect(rows[2]).to.contain(inboundRule3.label);
           });
         });
+
+        // Verify 'Save Changes' button remains disabled after discarding with Esc key.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
       });
     });
 
@@ -393,16 +466,22 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
       });
 
       it('should move Outbound rule rows using keyboard interaction', () => {
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        // Verify 'Save Changes' button is initially disabled.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Focus the first row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `outboundRule1` down two rows
+        // Move `outboundRule1` down two rows.
         moveFocusedElement({ direction: 'DOWN', times: 2 });
 
-        // Drop row with Space/Enter key
+        // Drop row with Space/Enter key.
         cy.focused().type(' ');
 
         // Verify that "outboundRule2" is in the 1st row,
@@ -415,16 +494,16 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
           });
         });
 
-        // Focus the 2nd row and activate keyboard drag mode using Space/Enter key
+        // Focus the 2nd row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(outboundRule3.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule3.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `outboundRule3` up one row
+        // Move `outboundRule3` up one row.
         moveFocusedElement({ direction: 'UP', times: 1 });
 
-        // Drop row with Space/Enter key
+        // Drop row with Space/Enter key.
         cy.focused().type(' ');
 
         // Verify that "outboundRule3" is in the 1st row,
@@ -436,22 +515,34 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             expect(rows[2]).to.contain(outboundRule1.label);
           });
         });
+
+        // Verify 'Save Changes' button is enabled after row is moved.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.enabled');
       });
 
       it('should cancel the Outbound rules drag operation with Esc key', () => {
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        // Verify 'Save Changes' button is initially disabled.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
+
+        // Focus the first row and activate keyboard drag mode using Space/Enter key.
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
           .closest('tr')
           .should('have.attr', 'aria-pressed', 'true');
 
-        // Move `outboundRule1` down two rows
+        // Move `outboundRule1` down two rows.
         moveFocusedElement({ direction: 'DOWN', times: 2 });
 
-        // Cancel with Esc key
+        // Cancel with Esc key.
         cy.focused().type('{esc}');
 
-        // Ensure row remains in its original position
+        // Ensure row remains in its original position.
         cy.get('[aria-label="outbound Rules List"]').within(() => {
           cy.get('tbody tr').then((rows) => {
             expect(rows[0]).to.contain(outboundRule1.label);
@@ -459,6 +550,12 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
             expect(rows[2]).to.contain(outboundRule3.label);
           });
         });
+
+        // Verify 'Save Changes' button remains disabled after discarding with Esc key.
+        ui.button
+          .findByTitle('Save Changes')
+          .should('be.visible')
+          .should('be.disabled');
       });
     });
   });
