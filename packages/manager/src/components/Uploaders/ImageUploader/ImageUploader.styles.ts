@@ -51,7 +51,7 @@ export const StyledDropZoneDiv = styled('div', {
   }),
   ...(props.dropzoneDisabled && {
     // When the dropzone is disabled
-    borderColor: '#888',
+    borderColor: theme.tokens.color.Neutrals[60],
   }),
 }));
 

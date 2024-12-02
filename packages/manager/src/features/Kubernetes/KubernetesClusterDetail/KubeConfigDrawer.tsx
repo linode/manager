@@ -71,7 +71,7 @@ export const StyledDownloadButton = styled('button', {
   label: 'StyledDownloadButton',
 })(({ theme }) => ({
   '& svg': {
-    color: '#3683dc',
+    color: theme.tokens.color.Ultramarine[70],
   },
   background: 'none',
   border: 'none',

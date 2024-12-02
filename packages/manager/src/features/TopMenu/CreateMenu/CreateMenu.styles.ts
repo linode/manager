@@ -12,7 +12,7 @@ export const StyledHeading = styled('h3', {
     width: 16,
   },
   alignItems: 'center',
-  color: theme.name === 'dark' ? '#B8B8B8' : 'inherit',
+  color: theme.name === 'dark' ? theme.tokens.color.Neutrals[50] : 'inherit',
   display: 'flex',
   fontFamily: 'LatoWebBold',
   fontSize: '0.7rem',

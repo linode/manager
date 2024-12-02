@@ -61,7 +61,10 @@ export const StyledImageGrid = styled(Grid, {
   label: 'StyledImageGrid',
 })(({ theme }) => ({
   '& svg': {
-    color: theme.name === 'light' ? '#ededf4' : '#83868c',
+    color:
+      theme.name === 'light'
+        ? theme.tokens.color.Neutrals[10]
+        : theme.tokens.color.Neutrals[60],
   },
   alignItems: 'center',
   display: 'flex',

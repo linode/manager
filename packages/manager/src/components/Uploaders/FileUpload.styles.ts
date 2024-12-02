@@ -73,7 +73,8 @@ export const StyledActionsContainer = styled('div', {
 
 export const useStyles = makeStyles()((theme: Theme) => ({
   barColorPrimary: {
-    backgroundColor: theme.name === 'light' ? '#cce2ff' : '#243142',
+    backgroundColor:
+      theme.name === 'light' ? theme.tokens.color.Brand[30] : '#243142',
   },
   error: {
     '& g': {

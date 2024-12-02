@@ -8,14 +8,14 @@ import type { SvgIcon } from 'src/components/SvgIcon';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   active: {
-    color: '#1f64b6',
+    color: theme.tokens.color.Ultramarine[80],
   },
   disabled: {
     '& $icon': {
-      borderColor: '#939598',
-      color: '#939598',
+      borderColor: theme.tokens.color.Neutrals[50],
+      color: theme.tokens.color.Neutrals[50],
     },
-    color: '#939598',
+    color: theme.tokens.color.Neutrals[50],
     pointerEvents: 'none',
   },
   icon: {
