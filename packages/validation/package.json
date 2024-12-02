@@ -37,10 +37,9 @@
     "url": "https://github.com/linode/manager/tree/develop/packages/validation"
   },
   "dependencies": {
-    "@types/yup": "^0.29.13",
     "ipaddr.js": "^2.0.0",
     "libphonenumber-js": "^1.10.6",
-    "yup": "^0.32.9"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",

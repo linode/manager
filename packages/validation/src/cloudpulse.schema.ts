@@ -30,8 +30,8 @@ const triggerCondition = object({
 export const createAlertDefinitionSchema = object({
   label: string().required('Name is required.'),
   description: string().optional(),
+  severity: string().required('Severity is required.'),
   entity_ids: array().of(string()).min(1, 'At least one resource is needed.'),
-  severity: string().required('Severity is required.').nullable(),
   criteria: array()
     .of(metricCriteria)
     .min(1, 'At least one metric criteria is needed.'),
