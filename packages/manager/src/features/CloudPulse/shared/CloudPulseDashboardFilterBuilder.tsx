@@ -46,6 +46,8 @@ export interface CloudPulseDashboardFilterBuilderProps {
     updatePreferenceData?: {}
   ) => void;
 
+  handleToggleAppliedFilter: (isVisible: boolean) => void;
+
   /**
    * this will handle the restrictions, if the parent of the component is going to be integrated in service analytics page
    */
@@ -62,6 +64,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     const {
       dashboard,
       emitFilterChange,
+      handleToggleAppliedFilter,
       isServiceAnalyticsIntegration,
       preferences,
     } = props;
@@ -227,6 +230,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const toggleShowFilter = () => {
       setShowFilter((showFilterPrev) => !showFilterPrev);
+      handleToggleAppliedFilter(showFilter);
     };
 
     const RenderFilters = React.useCallback(() => {

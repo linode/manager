@@ -5,6 +5,7 @@ import React from 'react';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 
+import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
@@ -42,13 +43,21 @@ export const CloudPulseDashboardWithFilters = React.memo(
 
     const [filterValue, setFilterValue] = React.useState<FilterValue>({
       id: {},
-      label: [],
+      label: {},
     });
 
     const [timeDuration, setTimeDuration] = React.useState<TimeDuration>({
       unit: 'min',
       value: 30,
     });
+
+    const [showAppliedFilters, setShowAppliedFilters] = React.useState<boolean>(
+      false
+    );
+
+    const toggleAppliedFilter = (isVisible: boolean) => {
+      setShowAppliedFilters(isVisible);
+    };
 
     const onFilterChange = React.useCallback(
       (filterKey: string, value: FilterValueType, labels: string[]) => {
@@ -147,9 +156,18 @@ export const CloudPulseDashboardWithFilters = React.memo(
             <CloudPulseDashboardFilterBuilder
               dashboard={dashboard}
               emitFilterChange={onFilterChange}
+              handleToggleAppliedFilter={toggleAppliedFilter}
               isServiceAnalyticsIntegration={true}
             />
           )}
+          <Grid item mb={3} mt={-3} xs={12}>
+            {showAppliedFilters && (
+              <CloudPulseAppliedFilterRenderer
+                filters={filterValue.label}
+                serviceType={dashboard.service_type}
+              />
+            )}
+          </Grid>
         </Paper>
         {isMandatoryFiltersSelected ? (
           <CloudPulseDashboard

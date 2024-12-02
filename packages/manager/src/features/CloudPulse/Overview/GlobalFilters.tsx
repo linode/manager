@@ -24,6 +24,7 @@ export interface GlobalFilterProperties {
   ): void;
   handleDashboardChange(dashboard: Dashboard | undefined): void;
   handleTimeDurationChange(timeDuration: TimeDuration): void;
+  handleToggleAppliedFilter(isVisible: boolean): void;
 }
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
@@ -31,6 +32,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleAnyFilterChange,
     handleDashboardChange,
     handleTimeDurationChange,
+    handleToggleAppliedFilter,
   } = props;
 
   const {
@@ -148,6 +150,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         <CloudPulseDashboardFilterBuilder
           dashboard={selectedDashboard}
           emitFilterChange={emitFilterChange}
+          handleToggleAppliedFilter={handleToggleAppliedFilter}
           isServiceAnalyticsIntegration={false}
           preferences={preferences}
         />
