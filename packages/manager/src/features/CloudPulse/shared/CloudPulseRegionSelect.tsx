@@ -70,11 +70,9 @@ export const CloudPulseRegionSelect = React.memo(
         return regions;
       }
 
-      const validatedRegions = regions?.filter((region) =>
+      return regions?.filter((region) =>
         supportedRegionsIdList?.includes(region.id)
       );
-
-      return validatedRegions ? validatedRegions : regions;
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [flags.aclpServiceTypeMap, regions, selectedDashboard?.service_type]);
 
@@ -94,7 +92,7 @@ export const CloudPulseRegionSelect = React.memo(
         loading={isLoading}
         noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
-        regions={supportedRegions ? supportedRegions : []}
+        regions={supportedRegions ? supportedRegions : regions ? regions : []}
         value={selectedRegion}
       />
     );
