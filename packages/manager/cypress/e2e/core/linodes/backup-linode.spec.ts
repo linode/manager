@@ -27,6 +27,7 @@ import { dcPricingMockLinodeTypesForBackups } from 'support/constants/dc-specifi
 import { chooseRegion } from 'support/util/regions';
 import { expectManagedDisabled } from 'support/api/managed';
 import { createTestLinode } from 'support/util/linodes';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 authenticate();
 describe('linode backups', () => {
@@ -66,7 +67,9 @@ describe('linode backups', () => {
       cy.wait('@getLinode');
 
       // Wait for Linode to finish provisioning.
-      cy.findByText('OFFLINE').should('be.visible');
+      cy.findByText('OFFLINE', { timeout: LINODE_CREATE_TIMEOUT }).should(
+        'be.visible'
+      );
 
       // Confirm that enable backups prompt is shown.
       cy.contains(
@@ -131,7 +134,9 @@ describe('linode backups', () => {
       cy.wait('@getLinode');
 
       // Wait for the Linode to finish provisioning.
-      cy.findByText('OFFLINE').should('be.visible');
+      cy.findByText('OFFLINE', { timeout: LINODE_CREATE_TIMEOUT }).should(
+        'be.visible'
+      );
 
       cy.findByText('Manual Snapshot')
         .should('be.visible')
