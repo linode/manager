@@ -12,6 +12,40 @@ import {
 } from 'support/intercepts/profile';
 import { Image } from '@linode/api-v4';
 
+function checkActionMenu(tableAlias: string, mockImages: any[]) {
+  mockImages.forEach((image) => {
+    cy.get(tableAlias)
+      .find('tbody tr')
+      .should('contain', image.label)
+      .then(($row) => {
+        // If the row contains the label, proceed with clicking the action menu
+        const actionButton = $row.find(
+          `button[aria-label="Action menu for Image ${image.label}"]`
+        );
+        if (actionButton) {
+          cy.wrap(actionButton).click();
+
+          // Check that the item with text 'Deploy to New Linode' is active
+          cy.get('ul[role="menu"]')
+            .contains('Deploy to New Linode')
+            .should('be.visible')
+            .and('be.enabled');
+
+          // Check that all other items are disabled
+          cy.get('ul[role="menu"]')
+            .find('li')
+            .not(':contains("Deploy to New Linode")')
+            .each(($li) => {
+              cy.wrap($li).should('be.visible').and('be.disabled');
+            });
+
+          // Close the action menu by clicking on Custom Image Title of the screen
+          cy.get('body').click(0, 0);
+        }
+      });
+  });
+}
+
 describe('image landing checks for non-empty state with restricted user', () => {
   beforeEach(() => {
     const mockImages: Image[] = new Array(3).fill(null).map(
@@ -100,37 +134,3 @@ describe('image landing checks for non-empty state with restricted user', () => 
     });
   });
 });
-
-function checkActionMenu(tableAlias: string, mockImages: any[]) {
-  mockImages.forEach((image) => {
-    cy.get(tableAlias)
-      .find('tbody tr')
-      .should('contain', image.label)
-      .then(($row) => {
-        // If the row contains the label, proceed with clicking the action menu
-        const actionButton = $row.find(
-          `button[aria-label="Action menu for Image ${image.label}"]`
-        );
-        if (actionButton) {
-          cy.wrap(actionButton).click();
-
-          // Check that the item with text 'Deploy to New Linode' is active
-          cy.get('ul[role="menu"]')
-            .contains('Deploy to New Linode')
-            .should('be.visible')
-            .and('be.enabled');
-
-          // Check that all other items are disabled
-          cy.get('ul[role="menu"]')
-            .find('li')
-            .not(':contains("Deploy to New Linode")')
-            .each(($li) => {
-              cy.wrap($li).should('be.visible').and('be.disabled');
-            });
-
-          // Close the action menu by clicking on Custom Image Title of the screen
-          cy.get('body').click(0, 0);
-        }
-      });
-  });
-}
