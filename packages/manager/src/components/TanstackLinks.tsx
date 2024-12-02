@@ -45,6 +45,12 @@ const MenuItemLinkComponent = React.forwardRef<
 const CreatedLinkComponent = createLink(LinkComponent);
 const CreatedMenuItemLinkComponent = createLink(MenuItemLinkComponent);
 
+/**
+ * @deprecated
+ * This is marked as deprecated to discourage usage until the migration is complete.
+ * While not technically deprecated, these components should not be used anywhere in the app.
+ * They will be replacing our Links eventually, but have only been introduced early to test their functionality.
+ */
 export const TanstackLink: LinkComponent<typeof LinkComponent> = (props) => {
   return (
     <CreatedLinkComponent
@@ -64,6 +70,12 @@ export const TanstackLink: LinkComponent<typeof LinkComponent> = (props) => {
   );
 };
 
+/**
+ * @deprecated
+ * This is marked as deprecated to discourage usage until the migration is complete.
+ * While not technically deprecated, these components should not be used anywhere in the app.
+ * They will be replacing our Links eventually, but have only been introduced early to test their functionality.
+ */
 export const TanstackMenuItemLink: LinkComponent<
   typeof MenuItemLinkComponent
 > = (props) => {
