@@ -4,11 +4,13 @@ import Edit from '@mui/icons-material/Edit';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
+import { Link } from '../../internal/Link';
 import { Button } from '../Button';
 import { ClickAwayListener } from '../ClickAwayListener';
 import { H1Header } from '../H1Header';
 import { TextField } from '../TextField';
 
+import type { LinkProps } from '../../internal/Link';
 import type { TextFieldProps } from '../TextField';
 import type { Theme } from '@mui/material/styles';
 
@@ -102,6 +104,19 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
 );
 
 interface Props {
+  /**
+   * An optional custom Link component used when `labelLink` is passed via props
+   *
+   * The component you pass must accept `className`, `to`, and `children` as props
+   * - `to` is just the `labelLink` prop forwarded to this Link component
+   * - `className` should be passed to your Link so that it has the correct styles
+   * - `children` contains the link's text/children
+   *
+   * A basic HTML anchor will be used by default if no LinkComponent is passed.
+   * @default 'a'
+   *
+   */
+  LinkComponent?: React.ComponentType<LinkProps>;
   className?: string;
   disabledBreadcrumbEditButton?: boolean;
   errorText?: string;
@@ -129,21 +144,6 @@ interface Props {
    * Optional suffix to append to the text when it is not in editing mode
    */
   textSuffix?: string;
-  /**
-   * An optional custom Link component used when `labelLink` is passed via props
-   *
-   * The component you pass must accept `className`, `to`, and `children` as props
-   * - `to` is just the `labelLink` prop forwarded to this Link component
-   * - `className` should be passed to your Link so that it has the correct styles
-   * - `children` contains the link's text/children
-   *
-   * A basic HTML anchor will be used by default if no LinkComponent is passed.
-   * @default 'a'
-   *
-   */
-  LinkComponent?: React.ComponentType<
-    React.PropsWithChildren<{ className?: string; to?: string }>
-  >;
 }
 
 interface PassThroughProps extends Props, Omit<TextFieldProps, 'label'> {}
@@ -154,6 +154,7 @@ export const EditableText = (props: PassThroughProps) => {
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
   const {
+    LinkComponent = Link,
     className,
     disabledBreadcrumbEditButton,
     errorText,
@@ -163,15 +164,8 @@ export const EditableText = (props: PassThroughProps) => {
     onEdit,
     text: propText,
     textSuffix,
-    LinkComponent,
     ...rest
   } = props;
-
-  const DefaultLink = (
-    props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }
-  ) => <a href={props.to} {...props} />;
-
-  const Link = LinkComponent ?? DefaultLink;
 
   React.useEffect(() => {
     setText(propText);
@@ -241,9 +235,9 @@ export const EditableText = (props: PassThroughProps) => {
       data-testid={'editable-text'}
     >
       {!!labelLink ? (
-        <Link className={classes.underlineOnHover} to={labelLink}>
+        <LinkComponent className={classes.underlineOnHover} to={labelLink}>
           {labelText}
-        </Link>
+        </LinkComponent>
       ) : (
         labelText
       )}
