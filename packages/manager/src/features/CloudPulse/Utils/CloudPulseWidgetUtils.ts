@@ -25,7 +25,7 @@ import type { Theme } from '@mui/material';
 import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { AreaProps } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
-import type { CloudPulseResourceTypeMapFlag, FlagSet } from 'src/featureFlags';
+import type { CloudPulseServiceTypeMapFlag, FlagSet } from 'src/featureFlags';
 
 interface LabelNameOptionsProps {
   /**
@@ -122,7 +122,7 @@ interface DimensionNameProperties {
   /**
    * flag dimension key mapping for service type
    */
-  flag: CloudPulseResourceTypeMapFlag | undefined;
+  flag: CloudPulseServiceTypeMapFlag | undefined;
 
   /**
    * metric key-value to generate dimension name
@@ -315,8 +315,8 @@ const getLabelName = (props: LabelNameOptionsProps): string => {
     return `${label} (${unit})`;
   }
 
-  const flag = flags?.aclpResourceTypeMap?.find(
-    (obj: CloudPulseResourceTypeMapFlag) => obj.serviceType === serviceType
+  const flag = flags?.aclpServiceTypeMap?.find(
+    (obj: CloudPulseServiceTypeMapFlag) => obj.serviceType === serviceType
   );
 
   return getDimensionName({ flag, metric, resources });
