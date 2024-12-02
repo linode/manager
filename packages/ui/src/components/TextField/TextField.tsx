@@ -113,7 +113,8 @@ interface InputToolTipProps {
   tooltipWidth?: number;
 }
 
-interface TextFieldPropsOverrides extends StandardTextFieldProps {
+interface TextFieldPropsOverrides
+  extends Omit<StandardTextFieldProps, 'label'> {
   // We override this prop to make it required
   label: string;
 }
@@ -248,8 +249,7 @@ export const TextField = (props: TextFieldProps) => {
       : `error-for-scroll`;
   }
 
-  const validInputId =
-    inputId || (label ? convertToKebabCase(`${label}`) : undefined);
+  const validInputId = inputId || convertToKebabCase(label);
 
   const labelSuffixText = required
     ? '(required)'
@@ -364,6 +364,9 @@ export const TextField = (props: TextFieldProps) => {
             ...SelectProps,
           }}
           inputProps={{
+            'aria-describedby': helperText
+              ? `${validInputId}-helper-text`
+              : undefined,
             'data-testid': 'textfield-input',
             id: validInputId,
             ...inputProps,
@@ -437,7 +440,10 @@ export const TextField = (props: TextFieldProps) => {
         </FormHelperText>
       )}
       {helperText && helperTextPosition === 'bottom' && (
-        <FormHelperText data-qa-textfield-helper-text>
+        <FormHelperText
+          data-qa-textfield-helper-text
+          id={`${validInputId}-helper-text`}
+        >
           {helperText}
         </FormHelperText>
       )}
