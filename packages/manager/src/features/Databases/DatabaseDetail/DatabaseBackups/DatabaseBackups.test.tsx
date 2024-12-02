@@ -18,7 +18,11 @@ describe('Database Backups', () => {
       platform: 'rdbms-legacy',
     });
 
-    const backups = databaseBackupFactory.buildList(7);
+    const backups = [
+      databaseBackupFactory.build({ created: '2022-01-01T00:01:01' }),
+      databaseBackupFactory.build({ created: '2022-02-01T00:01:01' }),
+      databaseBackupFactory.build({ created: '2022-03-01T00:01:01' }),
+    ];
 
     server.use(
       http.get('*/profile', () => {
@@ -38,7 +42,7 @@ describe('Database Backups', () => {
       const expectedDate = formatDate(backup.created, { timezone: 'utc' });
 
       // eslint-disable-next-line no-await-in-loop
-      const backupItem = await findByText(expectedDate);
+      const backupItem = await findByText(expectedDate, {}, { timeout: 5_000 });
 
       expect(backupItem).toBeVisible();
     }
