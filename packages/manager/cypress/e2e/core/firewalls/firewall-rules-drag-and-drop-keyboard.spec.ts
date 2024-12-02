@@ -1,4 +1,9 @@
-import { createFirewall, Firewall, FirewallPolicyType } from '@linode/api-v4';
+import {
+  createFirewall,
+  Firewall,
+  FirewallPolicyType,
+  FirewallRuleType,
+} from '@linode/api-v4';
 import {
   firewallFactory,
   firewallRuleFactory,
@@ -106,7 +111,7 @@ const createAndVerifyFirewallWithRules = ({
       cy.findByText(firewall.label).click();
 
       // Confirm the appropriate rules are listed with correct details
-      [...inboundRules, ...outboundRules].forEach((rule: any) => {
+      [...inboundRules, ...outboundRules].forEach((rule: FirewallRuleType) => {
         cy.findByText(rule.label!)
           .should('be.visible')
           .closest('tr')
