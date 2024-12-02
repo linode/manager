@@ -63,6 +63,62 @@ const moveFocusedElement = ({ direction, times }: MoveFocusedElementParams) => {
   cy.focused().type(repeatedArrowKey);
 };
 
+/**
+ * Creates a firewall with the specified inbound and outbound rules, and verifies
+ * that the rules are correctly listed in the firewall table.
+ *
+ * @param options.includeInbound - Boolean flag to specify whether inbound rules should be included.
+ * @param options.includeOutbound - Boolean flag to specify whether outbound rules should be included.
+ * @param options.isSmallViewport - Boolean flag to specify whether the viewport is considered small (default is false).
+ */
+const createAndVerifyFirewallWithRules = ({
+  includeInbound,
+  includeOutbound,
+  isSmallViewport = false,
+}: {
+  includeInbound: boolean;
+  includeOutbound: boolean;
+  isSmallViewport?: boolean;
+}) => {
+  const inboundRules = includeInbound ? mockInboundRules : [];
+  const outboundRules = includeOutbound ? mockOutboundRules : [];
+
+  const firewallRequest = firewallFactory.build({
+    label: randomLabel(),
+    rules: firewallRulesFactory.build({
+      inbound: inboundRules,
+      outbound: outboundRules,
+    }),
+  });
+
+  cy.defer(() => createFirewall(firewallRequest), 'creating firewalls').then(
+    (firewall: Firewall) => {
+      cy.visitWithLogin('/firewalls');
+      cy.findByText(firewall.label).should('be.visible');
+
+      cy.findByText(firewall.label).click();
+
+      // Confirm the appropriate rules are listed with correct details
+      [...inboundRules, ...outboundRules].forEach((rule: any) => {
+        cy.findByText(rule.label!)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            if (isSmallViewport) {
+              // Column 'Protocol' is not visible for smaller screens
+              cy.findByText(rule.protocol).should('not.exist');
+            } else {
+              cy.findByText(rule.protocol).should('be.visible');
+            }
+
+            cy.findByText(rule.ports!).should('be.visible');
+            cy.findByText(getRuleActionLabel(rule.action)).should('be.visible');
+          });
+      });
+    }
+  );
+};
+
 authenticate();
 /**
  * Keyboard keys used to perform interactions with rows in the Firewall Rules table:
@@ -85,41 +141,15 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
   });
 
   describe('Normal window (no vertical scrollbar)', () => {
-    it('should move Inbound rule rows using keyboard interaction', () => {
-      const firewallRequest = firewallFactory.build({
-        label: randomLabel(),
-        rules: firewallRulesFactory.build({
-          inbound: mockInboundRules,
-          outbound: [],
-        }),
+    describe('Inbound Rules', () => {
+      beforeEach(() => {
+        createAndVerifyFirewallWithRules({
+          includeInbound: true,
+          includeOutbound: false,
+        });
       });
 
-      cy.defer(
-        () => createFirewall(firewallRequest),
-        'creating firewalls'
-      ).then((firewall: Firewall) => {
-        cy.visitWithLogin('/firewalls');
-
-        // Confirm that firewall is listed
-        cy.findByText(firewall.label).should('be.visible');
-
-        // Go to the firewall details page
-        cy.findByText(firewall.label).click();
-
-        // Confirm inbound rules are listed with correct details
-        mockInboundRules.forEach((rule) => {
-          cy.findByText(rule.label!)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              cy.findByText(rule.protocol).should('be.visible');
-              cy.findByText(rule.ports!).should('be.visible');
-              cy.findByText(getRuleActionLabel(rule.action)).should(
-                'be.visible'
-              );
-            });
-        });
-
+      it('should move Inbound rule rows using keyboard interaction', () => {
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
@@ -164,43 +194,40 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
           });
         });
       });
+
+      it('should cancel the Inbound rules drag operation with Esc key', () => {
+        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
+        cy.findByText(inboundRule1.label!)
+          .closest('tr')
+          .should('have.attr', 'aria-pressed', 'true');
+
+        // Move `inboundRule1` down two rows
+        moveFocusedElement({ direction: 'DOWN', times: 2 });
+
+        // Cancel with Esc key
+        cy.focused().type('{esc}');
+
+        // Ensure row remains in its original position
+        cy.get('[aria-label="inbound Rules List"]').within(() => {
+          cy.get('tbody tr').then((rows) => {
+            expect(rows[0]).to.contain(inboundRule1.label);
+            expect(rows[1]).to.contain(inboundRule2.label);
+            expect(rows[2]).to.contain(inboundRule3.label);
+          });
+        });
+      });
     });
 
-    it('should move Outbound rule rows using keyboard interaction', () => {
-      const firewallRequest = firewallFactory.build({
-        label: randomLabel(),
-        rules: firewallRulesFactory.build({
-          inbound: [],
-          outbound: mockOutboundRules,
-        }),
+    describe('Outbound Rules', () => {
+      beforeEach(() => {
+        createAndVerifyFirewallWithRules({
+          includeInbound: false,
+          includeOutbound: true,
+        });
       });
 
-      cy.defer(
-        () => createFirewall(firewallRequest),
-        'creating firewalls'
-      ).then((firewall: Firewall) => {
-        cy.visitWithLogin('/firewalls');
-
-        // Confirm that firewall is listed
-        cy.findByText(firewall.label).should('be.visible');
-
-        // Go to the firewall details page
-        cy.findByText(firewall.label).click();
-
-        // Confirm outbound rules are listed with correct details
-        mockOutboundRules.forEach((rule) => {
-          cy.findByText(rule.label!)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              cy.findByText(rule.protocol).should('be.visible');
-              cy.findByText(rule.ports!).should('be.visible');
-              cy.findByText(getRuleActionLabel(rule.action)).should(
-                'be.visible'
-              );
-            });
-        });
-
+      it('should move Outbound rule rows using keyboard interaction', () => {
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
@@ -245,101 +272,8 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
           });
         });
       });
-    });
 
-    it('should cancel the Inbound rules drag operation with Esc key', () => {
-      const firewallRequest = firewallFactory.build({
-        label: randomLabel(),
-        rules: firewallRulesFactory.build({
-          inbound: mockInboundRules,
-          outbound: [],
-        }),
-      });
-
-      cy.defer(
-        () => createFirewall(firewallRequest),
-        'creating firewalls'
-      ).then((firewall: Firewall) => {
-        cy.visitWithLogin('/firewalls');
-
-        // Confirm that firewall is listed
-        cy.findByText(firewall.label).should('be.visible');
-
-        // Go to the firewall details page
-        cy.findByText(firewall.label).click();
-
-        // Confirm inbound rules are listed with correct details
-        mockInboundRules.forEach((rule) => {
-          cy.findByText(rule.label!)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              cy.findByText(rule.protocol).should('be.visible');
-              cy.findByText(rule.ports!).should('be.visible');
-              cy.findByText(getRuleActionLabel(rule.action)).should(
-                'be.visible'
-              );
-            });
-        });
-
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
-        cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
-        cy.findByText(inboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `inboundRule1` down two rows
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Cancel with Esc key
-        cy.focused().type('{esc}');
-
-        // Ensure row remains in its original position
-        cy.get('[aria-label="inbound Rules List"]').within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(inboundRule1.label);
-            expect(rows[1]).to.contain(inboundRule2.label);
-            expect(rows[2]).to.contain(inboundRule3.label);
-          });
-        });
-      });
-    });
-
-    it('should cancel the Outbound rules drag operation with Esc key', () => {
-      const firewallRequest = firewallFactory.build({
-        label: randomLabel(),
-        rules: firewallRulesFactory.build({
-          inbound: [],
-          outbound: mockOutboundRules,
-        }),
-      });
-
-      cy.defer(
-        () => createFirewall(firewallRequest),
-        'creating firewalls'
-      ).then((firewall: Firewall) => {
-        cy.visitWithLogin('/firewalls');
-
-        // Confirm that firewall is listed
-        cy.findByText(firewall.label).should('be.visible');
-
-        // Go to the firewall details page
-        cy.findByText(firewall.label).click();
-
-        // Confirm outbound rules are listed with correct details
-        mockOutboundRules.forEach((rule) => {
-          cy.findByText(rule.label!)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              cy.findByText(rule.protocol).should('be.visible');
-              cy.findByText(rule.ports!).should('be.visible');
-              cy.findByText(getRuleActionLabel(rule.action)).should(
-                'be.visible'
-              );
-            });
-        });
-
+      it('should cancel the Outbound rules drag operation with Esc key', () => {
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
@@ -372,43 +306,16 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
       cy.window().should('have.property', 'innerHeight', 400);
     });
 
-    it('should move Inbound rule rows using keyboard interaction', () => {
-      const firewallRequest = firewallFactory.build({
-        label: randomLabel(),
-        rules: firewallRulesFactory.build({
-          inbound: mockInboundRules,
-          outbound: [],
-        }),
+    describe('Inbound Rules', () => {
+      beforeEach(() => {
+        createAndVerifyFirewallWithRules({
+          includeInbound: true,
+          includeOutbound: false,
+          isSmallViewport: true,
+        });
       });
 
-      cy.defer(
-        () => createFirewall(firewallRequest),
-        'creating firewalls'
-      ).then((firewall: Firewall) => {
-        cy.visitWithLogin('/firewalls');
-
-        // Confirm that firewall is listed
-        cy.findByText(firewall.label).should('be.visible');
-
-        // Go to the firewall details page
-        cy.findByText(firewall.label).click();
-
-        // Confirm inbound rules are listed with correct details
-        mockInboundRules.forEach((rule) => {
-          cy.findByText(rule.label!)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              // Column 'Protocol' is not visible for smaller screens
-              cy.findByText(rule.protocol).should('not.exist');
-
-              cy.findByText(rule.ports!).should('be.visible');
-              cy.findByText(getRuleActionLabel(rule.action)).should(
-                'be.visible'
-              );
-            });
-        });
-
+      it('should move Inbound rule rows using keyboard interaction', () => {
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(inboundRule1.label!)
@@ -453,45 +360,41 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
           });
         });
       });
+
+      it('should cancel the Inbound rules drag operation with Esc key', () => {
+        // Focus the first row and activate keyboard drag mode using Space/Enter key
+        cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
+        cy.findByText(inboundRule1.label!)
+          .closest('tr')
+          .should('have.attr', 'aria-pressed', 'true');
+
+        // Move `inboundRule1` down two rows
+        moveFocusedElement({ direction: 'DOWN', times: 2 });
+
+        // Cancel with Esc key
+        cy.focused().type('{esc}');
+
+        // Ensure row remains in its original position
+        cy.get('[aria-label="inbound Rules List"]').within(() => {
+          cy.get('tbody tr').then((rows) => {
+            expect(rows[0]).to.contain(inboundRule1.label);
+            expect(rows[1]).to.contain(inboundRule2.label);
+            expect(rows[2]).to.contain(inboundRule3.label);
+          });
+        });
+      });
     });
 
-    it('should move Outbound rule rows using keyboard interaction', () => {
-      const firewallRequest = firewallFactory.build({
-        label: randomLabel(),
-        rules: firewallRulesFactory.build({
-          inbound: [],
-          outbound: mockOutboundRules,
-        }),
+    describe('Outbound Rules', () => {
+      beforeEach(() => {
+        createAndVerifyFirewallWithRules({
+          includeInbound: false,
+          includeOutbound: true,
+          isSmallViewport: true,
+        });
       });
 
-      cy.defer(
-        () => createFirewall(firewallRequest),
-        'creating firewalls'
-      ).then((firewall: Firewall) => {
-        cy.visitWithLogin('/firewalls');
-
-        // Confirm that firewall is listed
-        cy.findByText(firewall.label).should('be.visible');
-
-        // Go to the firewall details page
-        cy.findByText(firewall.label).click();
-
-        // Confirm outbound rules are listed with correct details
-        mockOutboundRules.forEach((rule) => {
-          cy.findByText(rule.label!)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              // Column 'Protocol' is not visible for smaller screens
-              cy.findByText(rule.protocol).should('not.exist');
-
-              cy.findByText(rule.ports!).should('be.visible');
-              cy.findByText(getRuleActionLabel(rule.action)).should(
-                'be.visible'
-              );
-            });
-        });
-
+      it('should move Outbound rule rows using keyboard interaction', () => {
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
@@ -536,105 +439,8 @@ describe('Drag and Drop Firewall Rules Table Rows - Keyboard Interaction', () =>
           });
         });
       });
-    });
 
-    it('should cancel the Inbound rules drag operation with Esc key', () => {
-      const firewallRequest = firewallFactory.build({
-        label: randomLabel(),
-        rules: firewallRulesFactory.build({
-          inbound: mockInboundRules,
-          outbound: [],
-        }),
-      });
-
-      cy.defer(
-        () => createFirewall(firewallRequest),
-        'creating firewalls'
-      ).then((firewall: Firewall) => {
-        cy.visitWithLogin('/firewalls');
-
-        // Confirm that firewall is listed
-        cy.findByText(firewall.label).should('be.visible');
-
-        // Go to the firewall details page
-        cy.findByText(firewall.label).click();
-
-        // Confirm inbound rules are listed with correct details
-        mockInboundRules.forEach((rule) => {
-          cy.findByText(rule.label!)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              // Column 'Protocol' is not visible for smaller screens
-              cy.findByText(rule.protocol).should('not.exist');
-
-              cy.findByText(rule.ports!).should('be.visible');
-              cy.findByText(getRuleActionLabel(rule.action)).should(
-                'be.visible'
-              );
-            });
-        });
-
-        // Focus the first row and activate keyboard drag mode using Space/Enter key
-        cy.findByText(inboundRule1.label!).closest('tr').focus().type(' ');
-        cy.findByText(inboundRule1.label!)
-          .closest('tr')
-          .should('have.attr', 'aria-pressed', 'true');
-
-        // Move `inboundRule1` down two rows
-        moveFocusedElement({ direction: 'DOWN', times: 2 });
-
-        // Cancel with Esc key
-        cy.focused().type('{esc}');
-
-        // Ensure row remains in its original position
-        cy.get('[aria-label="inbound Rules List"]').within(() => {
-          cy.get('tbody tr').then((rows) => {
-            expect(rows[0]).to.contain(inboundRule1.label);
-            expect(rows[1]).to.contain(inboundRule2.label);
-            expect(rows[2]).to.contain(inboundRule3.label);
-          });
-        });
-      });
-    });
-
-    it('should cancel the Outbound rules drag operation with Esc key', () => {
-      const firewallRequest = firewallFactory.build({
-        label: randomLabel(),
-        rules: firewallRulesFactory.build({
-          inbound: [],
-          outbound: mockOutboundRules,
-        }),
-      });
-
-      cy.defer(
-        () => createFirewall(firewallRequest),
-        'creating firewalls'
-      ).then((firewall: Firewall) => {
-        cy.visitWithLogin('/firewalls');
-
-        // Confirm that firewall is listed
-        cy.findByText(firewall.label).should('be.visible');
-
-        // Go to the firewall details page
-        cy.findByText(firewall.label).click();
-
-        // Confirm outbound rules are listed with correct details
-        mockOutboundRules.forEach((rule) => {
-          cy.findByText(rule.label!)
-            .should('be.visible')
-            .closest('tr')
-            .within(() => {
-              // Column 'Protocol' is not visible for smaller screens
-              cy.findByText(rule.protocol).should('not.exist');
-
-              cy.findByText(rule.ports!).should('be.visible');
-              cy.findByText(getRuleActionLabel(rule.action)).should(
-                'be.visible'
-              );
-            });
-        });
-
+      it('should cancel the Outbound rules drag operation with Esc key', () => {
         // Focus the first row and activate keyboard drag mode using Space/Enter key
         cy.findByText(outboundRule1.label!).closest('tr').focus().type(' ');
         cy.findByText(outboundRule1.label!)
