@@ -136,8 +136,8 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
 
 export const useKubernetesClusterQuery = (id: number) => {
   const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
-  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = showAPL || isLkeEnterpriseLAEnabled;
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<KubernetesCluster, APIError[]>({
     ...kubernetesQueries.cluster(id)._ctx.cluster(useBetaEndpoint),
@@ -150,8 +150,8 @@ export const useKubernetesClustersQuery = (
   filter: Filter,
   enabled = true
 ) => {
-  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = isLkeEnterpriseLAEnabled;
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>({
     ...kubernetesQueries.lists._ctx.paginated(params, filter, useBetaEndpoint),
@@ -391,8 +391,8 @@ export const useKubernetesTieredVersionQuery = (tier: string) => {
  * Before you use this, consider implementing infinite scroll instead.
  */
 export const useAllKubernetesClustersQuery = (enabled = false) => {
-  const { isLkeEnterpriseLAEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = isLkeEnterpriseLAEnabled;
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const useBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
 
   return useQuery<KubernetesCluster[], APIError[]>({
     ...kubernetesQueries.lists._ctx.all(useBetaEndpoint),
