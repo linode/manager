@@ -100,7 +100,7 @@ const createFirewalls = async (
 };
 
 authenticate();
-describe('firewall inbound rules drag & drop and keyboard interactions tests', () => {
+describe('firewall inbound rules drag & drop with mouse and keyboard tests', () => {
   let inboundRule1: FirewallRuleType;
   let inboundRule2: FirewallRuleType;
   let inboundRule3: FirewallRuleType;
@@ -154,7 +154,7 @@ describe('firewall inbound rules drag & drop and keyboard interactions tests', (
   /*
    * - Confirms that firewall inbound rule table drag and drop functionality works as expected.
    */
-  it('drag and drop functionality should work for firewall inbound rules table', () => {
+  it('mouse drag and drop functionality should work for firewall inbound rules table', () => {
     // Drag the 1st row rule to 2nd row position
     // Note that eq is 0-indexed
     cy.get(tableRow).eq(0).drag(secondRow);
@@ -237,7 +237,7 @@ describe('firewall outbound rules drag & drop and keyboard interactions tests', 
   /*
    * - Confirms that firewall outbound rule table drag and drop functionality works as expected.
    */
-  it('drag and drop functionality should work for firewall outbound rules table', () => {
+  it('mouse drag and drop functionality should work for firewall outbound rules table', () => {
     // Drag the 1st row rule to 2nd row position
     // Note that eq is 0-indexed
     cy.get(tableRow).eq(0).drag(secondRow);
