@@ -8,8 +8,8 @@ const engineOptionValidation = string().when('service_type', {
 });
 export const CreateAlertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    engine_type: engineOptionValidation,
+    engineType: engineOptionValidation,
     region: string().required('Region is required.'),
-    service_type: string().required('Service is required.').nullable(),
+    serviceType: string().required('Service is required.').nullable(),
   })
 );

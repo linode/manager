@@ -9,7 +9,7 @@ import { EngineOption } from './EngineOption';
 describe('EngineOption component tests', () => {
   it('should render the component when resource type is dbaas', () => {
     const { getByLabelText, getByTestId } = renderWithThemeAndHookFormContext({
-      component: <EngineOption name={'engine_type'} />,
+      component: <EngineOption name={'engineType'} />,
     });
     expect(getByLabelText('Engine Option')).toBeInTheDocument();
     expect(getByTestId('engine-option')).toBeInTheDocument();
@@ -17,7 +17,7 @@ describe('EngineOption component tests', () => {
   it('should render the options happy path', async () => {
     const user = userEvent.setup();
     renderWithThemeAndHookFormContext({
-      component: <EngineOption name={'engine_type'} />,
+      component: <EngineOption name={'engineType'} />,
     });
     user.click(screen.getByRole('button', { name: 'Open' }));
     expect(await screen.findByRole('option', { name: 'MySQL' }));
@@ -26,7 +26,7 @@ describe('EngineOption component tests', () => {
   it('should be able to select an option', async () => {
     const user = userEvent.setup();
     renderWithThemeAndHookFormContext({
-      component: <EngineOption name={'engine_type'} />,
+      component: <EngineOption name={'engineType'} />,
     });
     user.click(screen.getByRole('button', { name: 'Open' }));
     await user.click(await screen.findByRole('option', { name: 'MySQL' }));
