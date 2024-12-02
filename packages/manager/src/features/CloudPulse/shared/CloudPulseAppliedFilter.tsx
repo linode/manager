@@ -13,6 +13,7 @@ export const CloudPulseAppliedFilter = (
 
   return (
     <Box
+      data-testid="applied-filter"
       display="flex"
       flexDirection={{ sm: 'row', xs: 'column' }}
       flexWrap={{ sm: 'wrap', xs: 'nowrap' }}
