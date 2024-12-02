@@ -18,8 +18,10 @@ import type {
   LinodeCreateFormContext,
   LinodeCreateFormValues,
 } from './utilities';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 import type { FieldErrors, Resolver } from 'react-hook-form';
+import type { ObjectSchema } from 'yup';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
@@ -27,12 +29,12 @@ export const getLinodeCreateResolver = (
 ): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
   return async (values, context, options) => {
-    const transformedValues = getLinodeCreatePayload(structuredClone(values));
+    const transformedValues = getLinodeCreatePayload(values);
 
     const { errors } = await yupResolver(
-      schema,
-      {},
-      { mode: 'async', rawValues: true }
+      schema as ObjectSchema<CreateLinodeRequest>,
+      { strict: true },
+      { mode: 'async', raw: true }
     )(transformedValues, context, options);
 
     if (tab === 'Clone Linode' && !values.linode) {

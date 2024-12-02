@@ -62,13 +62,13 @@ export const createKubeClusterSchema = object().shape({
     .min(1, 'Please add at least one node pool.'),
 });
 
-export const ipv4Address = string().test({
+export const ipv4Address = string().required().test({
   name: 'validateIP',
   message: 'Must be a valid IPv4 address.',
   test: validateIP,
 });
 
-export const ipv6Address = string().test({
+export const ipv6Address = string().required().test({
   name: 'validateIP',
   message: 'Must be a valid IPv6 address.',
   test: validateIP,
@@ -77,10 +77,12 @@ export const ipv6Address = string().test({
 const controlPlaneACLOptionsSchema = object().shape({
   enabled: boolean(),
   'revision-id': string(),
-  addresses: object().shape({
-    ipv4: array().of(ipv4Address).nullable(),
-    ipv6: array().of(ipv6Address).nullable(),
-  }),
+  addresses: object()
+    .shape({
+      ipv4: array().of(ipv4Address).nullable(),
+      ipv6: array().of(ipv6Address).nullable(),
+    })
+    .notRequired(),
 });
 
 export const kubernetesControlPlaneACLPayloadSchema = object().shape({

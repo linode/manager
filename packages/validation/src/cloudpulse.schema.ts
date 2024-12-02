@@ -1,4 +1,4 @@
-import { array, number, object, string } from 'yup';
+import { array, mixed, number, object, string } from 'yup';
 
 const dimensionFilters = object({
   dimension_label: string().required('Label is required for the filter.'),
@@ -16,10 +16,9 @@ const metricCriteria = object({
   dimension_filters: array().of(dimensionFilters).notRequired(),
 });
 
-const triggerCondition = object({
-  criteria_condition: string().required('Criteria condition is required.'),
-  polling_interval_seconds: string().required('Polling Interval is required.'),
-  evaluation_period_seconds: string().required(
+const trigger_condition = object({
+  polling_interval_seconds: number().required('Polling Interval is required.'),
+  evaluation_period_seconds: number().required(
     'Evaluation Period is required.'
   ),
   trigger_occurrences: number()
@@ -30,10 +29,15 @@ const triggerCondition = object({
 export const createAlertDefinitionSchema = object({
   label: string().required('Name is required.'),
   description: string().optional(),
-  severity: string().required('Severity is required.'),
-  entity_ids: array().of(string()).min(1, 'At least one resource is needed.'),
-  criteria: array()
-    .of(metricCriteria)
-    .min(1, 'At least one metric criteria is needed.'),
-  triggerCondition,
+  severity: number().oneOf([0, 1, 2, 3]).required('Severity is required.'),
+  entity_ids: array()
+    .of(string().required())
+    .min(1, 'At least one resource is needed.'),
+  rule_criteria: object({
+    rules: array()
+      .of(metricCriteria)
+      .min(1, 'At least one metric criteria is needed.'),
+  }),
+  trigger_condition,
+  channel_ids: array(number()),
 });
