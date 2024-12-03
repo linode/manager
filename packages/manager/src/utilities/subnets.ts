@@ -11,23 +11,6 @@ export const SUBNET_LINODE_CSV_HEADERS = [
   { key: 'interfaceData.ip_ranges', label: 'IPv4 VPC Ranges' },
 ];
 
-// @TODO VPC: added ipv6 related fields here, but they will not be used until VPCs support ipv6
-export interface SubnetIPState {
-  availIPv4s?: number;
-  ipv4?: string;
-  ipv4Error?: string;
-  ipv6?: string;
-  ipv6Error?: string;
-}
-
-export interface SubnetFieldState {
-  ip: SubnetIPState;
-  label: string;
-  labelError?: string;
-}
-
-export type SubnetIPType = 'ipv4' | 'ipv6';
-
 /**
  * Maps subnet mask length to number of theoretically available IPs.
  * - To get usable IPs, subtract 2 from the given number, as the first and last
