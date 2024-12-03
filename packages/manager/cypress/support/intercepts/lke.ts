@@ -58,7 +58,7 @@ export const mockGetKubernetesVersions = (versions?: string[] | undefined) => {
  */
 export const mockGetTieredKubernetesVersions = (
   tier: KubernetesTier,
-  versions: KubernetesTieredVersion[]
+  versions?: KubernetesTieredVersion[]
 ) => {
   const defaultTieredVersions =
     tier === 'enterprise'
