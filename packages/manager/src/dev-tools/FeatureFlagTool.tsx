@@ -36,6 +36,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
+  { flag: 'iam', label: 'Identity and Access Beta' },
 ];
 
 const renderFlagItems = (
