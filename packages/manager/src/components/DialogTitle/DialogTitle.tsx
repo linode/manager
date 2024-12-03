@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import type { SxProps, Theme } from '@mui/material';
 
-interface DialogTitleProps {
+export interface DialogTitleProps {
   className?: string;
   id?: string;
   isFetching?: boolean;
