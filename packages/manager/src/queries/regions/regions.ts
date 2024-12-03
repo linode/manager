@@ -3,7 +3,6 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
 import { getNewRegionLabel } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 
 import { queryPresets } from '../base';
 import {
@@ -32,11 +31,10 @@ export const regionQueries = createQueryKeys('regions', {
     queryFn: () => getRegion(regionId),
     queryKey: [regionId],
   }),
-  // @TODO LKE-E: Remove useBetaEndpoint argument after LKE-5868 as it will no longer be needed.
-  regions: (useBetaEndpoint: boolean = false) => ({
-    queryFn: () => getAllRegionsRequest(useBetaEndpoint),
-    queryKey: [useBetaEndpoint ? 'v4beta' : 'v4'],
-  }),
+  regions: {
+    queryFn: getAllRegionsRequest,
+    queryKey: null,
+  },
 });
 
 export const useRegionQuery = (regionId: string) => {
@@ -50,12 +48,9 @@ export const useRegionQuery = (regionId: string) => {
   });
 };
 
-export const useRegionsQuery = () => {
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const useBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
-
-  return useQuery<Region[], APIError[]>({
-    ...regionQueries.regions(useBetaEndpoint),
+export const useRegionsQuery = () =>
+  useQuery<Region[], APIError[]>({
+    ...regionQueries.regions,
     ...queryPresets.longLived,
     select: (regions: Region[]) =>
       regions.map((region) => ({
@@ -63,7 +58,6 @@ export const useRegionsQuery = () => {
         label: getNewRegionLabel(region),
       })),
   });
-};
 
 export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
   useQuery<RegionAvailability[], APIError[]>({
