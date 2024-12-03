@@ -167,6 +167,7 @@ export const TextField = (props: TextFieldProps) => {
 
   const [_value, setValue] = React.useState<Value>(value);
   const theme = useTheme();
+  const fallbackId = React.useId();
 
   React.useEffect(() => {
     setValue(value);
@@ -249,7 +250,12 @@ export const TextField = (props: TextFieldProps) => {
       : `error-for-scroll`;
   }
 
-  const validInputId = inputId || convertToKebabCase(label);
+  const validInputId =
+    inputId ||
+    (label
+      ? convertToKebabCase(label)
+      : // label could still be an empty string
+        fallbackId);
 
   const labelSuffixText = required
     ? '(required)'
