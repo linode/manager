@@ -27,28 +27,39 @@ export const HostNameTableCell = (props: Props) => {
   if (!regionsLookup || !regionsData || !regions || regions.length === 0) {
     return <TableCell>None</TableCell>;
   }
-  const label = regionsLookup[storageKeyData.regions[0].id]?.label;
-  const s3Endpoint = storageKeyData?.regions[0]?.s3_endpoint;
-  const endpointType = storageKeyData?.regions[0]?.endpoint_type;
+  const formatEndpoint = (region: ObjectStorageKeyRegions) => {
+    const label = regionsLookup[region.id]?.label;
+    const endpointType = region.endpoint_type
+      ? ` (${region.endpoint_type})`
+      : '';
+    return `${label}${endpointType}: ${region.s3_endpoint}`;
+  };
+
+  const firstRegion = regions[0];
+  const formattedFirstEndpoint = formatEndpoint(firstRegion);
+  const allEndpoints = regions.map(formatEndpoint).join('\n');
 
   return (
     <TableCell>
-      {label}
-      {endpointType && ` (${endpointType})`}: {s3Endpoint}&nbsp;
-      {storageKeyData?.regions?.length === 1 && (
-        <StyledCopyIcon text={s3Endpoint} />
+      {formattedFirstEndpoint}&nbsp;
+      {regions.length === 1 && (
+        <StyledCopyIcon text={firstRegion.s3_endpoint} />
       )}
-      {storageKeyData.regions.length > 1 && (
-        <StyledLinkButton
-          onClick={() => {
-            setHostNames(storageKeyData.regions);
-            setShowHostNamesDrawers(true);
-          }}
-          type="button"
-        >
-          and {storageKeyData.regions.length - 1} more...
-        </StyledLinkButton>
+      {regions.length > 1 && (
+        <>
+          | +{regions.length - 1} regions |&nbsp;
+          <StyledLinkButton
+            onClick={() => {
+              setHostNames(regions);
+              setShowHostNamesDrawers(true);
+            }}
+            type="button"
+          >
+            Show All
+          </StyledLinkButton>
+        </>
       )}
+      <StyledCopyIcon text={allEndpoints} />
     </TableCell>
   );
 };
@@ -59,5 +70,5 @@ const StyledCopyIcon = styled(CopyTooltip)(({ theme }) => ({
     top: 1,
     width: 12,
   },
-  marginLeft: theme.spacing(),
+  marginLeft: theme.spacing(0.5),
 }));
