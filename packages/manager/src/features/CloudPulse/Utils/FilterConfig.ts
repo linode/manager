@@ -3,8 +3,8 @@ import { CloudPulseSelectTypes } from './models';
 import type { CloudPulseServiceTypeFilterMap } from './models';
 
 const TIME_DURATION = 'Time Range';
-const DBAAS_CAPABILITY = 'Managed Databases';
-const LINODE_CAPABILITY = 'Linodes';
+export const DBAAS_CAPABILITY = 'Managed Databases';
+export const LINODE_CAPABILITY = 'Linodes';
 
 export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   capability: LINODE_CAPABILITY,
