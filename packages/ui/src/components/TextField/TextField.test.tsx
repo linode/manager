@@ -1,6 +1,6 @@
 import { fireEvent, getDefaultNormalizer } from '@testing-library/react';
 import * as React from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { renderWithTheme } from '../../utilities/testHelpers';
 import { InputAdornment } from '../InputAdornment';
