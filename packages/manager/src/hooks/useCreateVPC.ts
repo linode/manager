@@ -60,6 +60,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
         if (handleSelectVPC && onDrawerClose) {
           handleSelectVPC(vpc);
           onDrawerClose();
+          form.reset();
         }
       }
 
