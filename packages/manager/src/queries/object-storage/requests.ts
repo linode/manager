@@ -166,26 +166,29 @@ export const getAllBucketsFromEndpoints = async (
     return { buckets: [], errors: [] };
   }
 
-  // Avoid multiple getBucket calls for the same region while also
-  // keeping some endpoint information in case of an error being
-  // returned for that region
-  const uniqueRegions: Set<string> = new Set();
-  const filteredEndpoints: ObjectStorageEndpoint[] = [];
+  // Initialize a Map to group endpoints by region for better error handling and flexibility.
+  const endpointsByRegion = new Map<string, ObjectStorageEndpoint[]>();
 
   for (const endpoint of endpoints) {
-    if (!uniqueRegions.has(endpoint.region)) {
-      filteredEndpoints.push(endpoint);
-    }
-    uniqueRegions.add(endpoint.region);
+    const existingEndpoint = endpointsByRegion.get(endpoint.region) || [];
+
+    // Update the Map with the current endpoint, maintaining all endpoints per region.
+    endpointsByRegion.set(endpoint.region, [...existingEndpoint, endpoint]);
   }
 
   const results = await Promise.all(
-    filteredEndpoints.map((endpoint) =>
+    Array.from(endpointsByRegion.entries()).map(([region, regionEndpoints]) =>
       getAll<ObjectStorageBucket>((params) =>
-        getBucketsInRegion(endpoint.region, params)
+        getBucketsInRegion(region, params)
       )()
-        .then((data) => ({ buckets: data.data, endpoint }))
-        .catch((error) => ({ endpoint, error }))
+        .then((data) => ({
+          buckets: data.data,
+          endpoints: regionEndpoints,
+        }))
+        .catch((error) => ({
+          endpoints: regionEndpoints,
+          error,
+        }))
     )
   );
 
@@ -196,11 +199,14 @@ export const getAllBucketsFromEndpoints = async (
     if ('buckets' in result) {
       buckets.push(...result.buckets);
     } else {
-      errors.push({ endpoint: result.endpoint, error: result.error });
+      // For each endpoint in the region, log the error to provide detailed error information.
+      result.endpoints.forEach((endpoint) => {
+        errors.push({ endpoint, error: result.error });
+      });
     }
   });
 
-  if (errors.length === filteredEndpoints.length) {
+  if (errors.length === endpoints.length) {
     throw new Error('Unable to get Object Storage buckets.');
   }
 
