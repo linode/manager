@@ -24,11 +24,11 @@ export const CloudPulseAppliedFilter = (
       pb={2}
       rowGap={1.5}
     >
-      {Object.entries(filters).map((data) => {
+      {Object.entries(filters).map((data, index) => {
         const label = data[0];
         const filterValue = data[1];
         return (
-          <>
+          <React.Fragment key={index}>
             <Typography
               fontSize="14px"
               key={label}
@@ -51,7 +51,7 @@ export const CloudPulseAppliedFilter = (
                 />
               );
             })}
-          </>
+          </React.Fragment>
         );
       })}
     </Box>
