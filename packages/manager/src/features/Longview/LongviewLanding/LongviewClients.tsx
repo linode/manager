@@ -1,11 +1,10 @@
-import { Typography } from '@linode/ui';
+import { Autocomplete, Typography } from '@linode/ui';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import withLongviewClients from 'src/containers/longview.container';
