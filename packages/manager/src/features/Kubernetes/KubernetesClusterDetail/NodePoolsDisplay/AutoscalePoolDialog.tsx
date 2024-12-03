@@ -1,4 +1,4 @@
-import { Button, Notice, TextField, Typography } from '@linode/ui';
+import { Button, Notice, TextField, Toggle, Typography } from '@linode/ui';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormik } from 'formik';
@@ -10,7 +10,6 @@ import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
-import { Toggle } from 'src/components/Toggle/Toggle';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 
 import type { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';

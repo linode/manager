@@ -11,21 +11,22 @@ export const filterFormValues = (
   formValues: CreateAlertDefinitionForm
 ): CreateAlertDefinitionPayload => {
   const values = omitProps(formValues, [
-    'service_type',
+    'serviceType',
     'region',
-    'engine_type',
+    'engineType',
     'severity',
   ]);
   // severity has a need for null in the form for edge-cases, so null-checking and returning it as an appropriate type
   const severity = formValues.severity!;
-  return { ...values, severity };
+  const entityIds = formValues.entity_ids;
+  return { ...values, entity_ids: entityIds, severity };
 };
 
 export const filterMetricCriteriaFormValues = (
   formValues: MetricCriteriaForm
 ): MetricCriteria[] => {
-  const aggregation_type = formValues.aggregation_type!;
+  const aggregationType = formValues.aggregation_type!;
   const operator = formValues.operator!;
   const values = omitProps(formValues, ['aggregation_type', 'operator']);
-  return [{ ...values, aggregation_type, operator }];
+  return [{ ...values, aggregation_type: aggregationType, operator }];
 };

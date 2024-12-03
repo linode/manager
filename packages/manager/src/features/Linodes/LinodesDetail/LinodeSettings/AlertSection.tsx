@@ -3,6 +3,7 @@ import {
   Divider,
   InputAdornment,
   TextField,
+  Toggle,
   Typography,
   fadeIn,
 } from '@linode/ui';
@@ -11,7 +12,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Toggle } from 'src/components/Toggle/Toggle';
 
 interface Props {
   copy: string;

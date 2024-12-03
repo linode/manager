@@ -34,5 +34,6 @@ describe('AlertDefinition Create', () => {
     expect(getByText('Severity is required.')).toBeVisible();
     expect(getByText('Service is required.')).toBeVisible();
     expect(getByText('Region is required.')).toBeVisible();
+    expect(getByText('At least one resource is needed.')).toBeVisible();
   });
 });

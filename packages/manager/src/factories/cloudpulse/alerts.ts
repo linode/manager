@@ -7,9 +7,10 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   created: new Date().toISOString(),
   created_by: 'user1',
   description: '',
+  entity_ids: ['0', '1', '2', '3'],
+  has_more_resources: true,
   id: Factory.each((i) => i),
   label: Factory.each((id) => `Alert-${id}`),
-  resource_ids: ['0', '1', '2', '3'],
   rule_criteria: {
     rules: [],
   },

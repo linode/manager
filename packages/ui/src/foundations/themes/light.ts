@@ -15,8 +15,8 @@ import {
   NotificationToast,
   Radius,
   Select,
-  Typography,
   Spacing,
+  Typography,
 } from '@linode/design-language-system';
 
 import { breakpoints } from '../breakpoints';
@@ -1645,15 +1645,15 @@ export const lightTheme: ThemeOptions = {
     background: Background,
     border: Border,
     borderRadius: BorderRadius,
-    color: Color,
     chart: Chart,
+    color: Color,
     content: Content,
     elevation: Elevation,
+    font: Font,
     interaction: Interaction,
     radius: Radius,
-    typography: Typography,
-    font: Font,
     spacing: Spacing,
+    typography: Typography,
   },
   typography: {
     body1: {

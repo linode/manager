@@ -357,7 +357,7 @@ export const MainContent = () => {
                           )}
                           <Route component={VPC} path="/vpcs" />
                           {isACLPEnabled && (
-                          <Route component={CloudPulse} path="/monitor" />
+                            <Route component={CloudPulse} path="/monitor" />
                           )}
                           <Redirect exact from="/" to={defaultRoot} />
                           {/** We don't want to break any bookmarks. This can probably be removed eventually. */}

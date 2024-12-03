@@ -1,8 +1,9 @@
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { Input } from '../Input';
 import { InputAdornment } from './InputAdornment';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof InputAdornment> = {
   component: InputAdornment,
