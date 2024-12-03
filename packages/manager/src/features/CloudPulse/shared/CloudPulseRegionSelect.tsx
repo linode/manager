@@ -60,7 +60,7 @@ export const CloudPulseRegionSelect = React.memo(
 
     // validate launchDrakly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
-      const serviceTypeFlag:
+      const resourceTypeFlag:
         | CloudPulseResourceTypeMapFlag
         | undefined = flags.aclpResourceTypeMap?.find(
         (item: CloudPulseResourceTypeMapFlag) =>
@@ -68,7 +68,7 @@ export const CloudPulseRegionSelect = React.memo(
       );
 
       const supportedRegionsIdList: string[] =
-        serviceTypeFlag?.supportedRegionIds
+        resourceTypeFlag?.supportedRegionIds
           ?.split(',')
           .map((regionId: string) => regionId.trim()) || [];
 
