@@ -257,6 +257,8 @@ export const TextField = (props: TextFieldProps) => {
       : // label could still be an empty string
         fallbackId);
 
+  const helperTextId = `${validInputId}-helper-text`;
+
   const labelSuffixText = required
     ? '(required)'
     : optional
@@ -370,9 +372,7 @@ export const TextField = (props: TextFieldProps) => {
             ...SelectProps,
           }}
           inputProps={{
-            'aria-describedby': helperText
-              ? `${validInputId}-helper-text`
-              : undefined,
+            'aria-describedby': helperText ? helperTextId : undefined,
             'data-testid': 'textfield-input',
             id: validInputId,
             ...inputProps,
@@ -446,10 +446,7 @@ export const TextField = (props: TextFieldProps) => {
         </FormHelperText>
       )}
       {helperText && helperTextPosition === 'bottom' && (
-        <FormHelperText
-          data-qa-textfield-helper-text
-          id={`${validInputId}-helper-text`}
-        >
+        <FormHelperText data-qa-textfield-helper-text id={helperTextId}>
           {helperText}
         </FormHelperText>
       )}
