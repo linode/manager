@@ -14,6 +14,7 @@ import {
   mockGetCluster,
   mockCreateClusterError,
   mockGetControlPlaneACL,
+  mockGetTieredKubernetesVersions,
 } from 'support/intercepts/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -22,7 +23,10 @@ import {
 } from 'support/intercepts/regions';
 import { KubernetesCluster } from '@linode/api-v4';
 import { LkePlanDescription } from 'support/api/lke';
-import { lkeClusterPlans } from 'support/constants/lke';
+import {
+  latestEnterpriseTierKubernetesVersion,
+  lkeClusterPlans,
+} from 'support/constants/lke';
 import { chooseRegion, getRegionById } from 'support/util/regions';
 import { interceptCreateCluster } from 'support/intercepts/lke';
 import { ui } from 'support/ui';
@@ -870,8 +874,12 @@ describe('LKE Cluster Creation with LKE-E', () => {
           capabilities: ['Kubernetes Enterprise'],
         })
       ).as('getAccount');
+      mockGetTieredKubernetesVersions('enterprise', [
+        latestEnterpriseTierKubernetesVersion,
+      ]).as('getTieredKubernetesVersions');
 
       cy.visitWithLogin('/kubernetes/clusters');
+      cy.wait(['@getAccount']);
 
       ui.button
         .findByTitle('Create Cluster')
@@ -880,6 +888,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
+      cy.wait(['@getTieredKubernetesVersions']);
 
       cy.findByText('Cluster Type').should('be.visible');
 
@@ -903,6 +912,18 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       // Confirm HA section is hidden since LKE-E includes HA by default
       cy.findByText('HA Control Plane').should('not.exist');
+
+      // Selects an enterprise version
+      ui.autocomplete
+        .findByLabel('Kubernetes Version')
+        .should('be.visible')
+        .click();
+
+      ui.autocompletePopper
+        .findByTitle(latestEnterpriseTierKubernetesVersion.id)
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       // TODO: finish the rest of this test in subsequent PRs
     });

@@ -6,7 +6,11 @@ import {
   kubeEndpointFactory,
   kubernetesDashboardUrlFactory,
 } from '@src/factories';
-import { kubernetesVersions } from 'support/constants/lke';
+import {
+  kubernetesVersions,
+  latestEnterpriseTierKubernetesVersion,
+  latestStandardTierKubernetesVersion,
+} from 'support/constants/lke';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -18,6 +22,8 @@ import type {
   KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
+  KubernetesTier,
+  KubernetesTieredVersion,
   KubernetesVersion,
 } from '@linode/api-v4';
 
@@ -38,6 +44,39 @@ export const mockGetKubernetesVersions = (versions?: string[] | undefined) => {
   return cy.intercept(
     'GET',
     apiMatcher('lke/versions*'),
+    paginateResponse(versionObjects)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve tiered Kubernetes versions and mocks response.
+ *
+ * @param tier - Standard or enterprise Kubernetes tier.
+ * @param versions - Optional array of strings containing mocked tiered versions.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetTieredKubernetesVersions = (
+  tier: KubernetesTier,
+  versions: KubernetesTieredVersion[]
+) => {
+  const defaultTieredVersions =
+    tier === 'enterprise'
+      ? [latestEnterpriseTierKubernetesVersion]
+      : [latestStandardTierKubernetesVersion];
+
+  const versionObjects = (versions ? versions : defaultTieredVersions).map(
+    (kubernetesTieredVersion): KubernetesTieredVersion => {
+      return {
+        id: kubernetesTieredVersion.id,
+        tier: kubernetesTieredVersion.tier,
+      };
+    }
+  );
+
+  return cy.intercept(
+    'GET',
+    apiMatcher(`lke/versions/${tier}*`),
     paginateResponse(versionObjects)
   );
 };
