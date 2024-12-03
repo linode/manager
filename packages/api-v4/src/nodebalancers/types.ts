@@ -15,13 +15,15 @@ export interface NodeBalancer {
   label: string;
   hostname: string;
   /**
-   * The connections per second throttle for TCP and HTTP connections
+   * Maximum number of new TCP connections that a client (identified by a specific source IP)
+   * is allowed to initiate every second.
    */
   client_conn_throttle: number;
   /**
-   * The connections per second throttle for UDP sessions
+   * Maximum number of new UDP sessions that a client (identified by a specific source IP)
+   * is allowed to initiate every second.
    *
-   * @todo optional until UDP is GA
+   * @todo Remove optionality once UDP support is live
    */
   client_udp_sess_throttle?: number;
   region: string;
@@ -77,12 +79,13 @@ export interface NodeBalancerConfig {
   check_body: string;
   check_path: string;
   /**
-   * @todo Optional until UDP is GA
+   * @todo Remove optionality once UDP support is live
    */
   udp_check_port?: number;
   /**
-   * @readonly this is returned but not editable
-   * @todo Optional until UDP is GA
+   * @readonly This is returned by the API but *not* editable
+   * @todo Remove optionality once UDP support is live
+   * @default 16
    */
   udp_session_timeout?: number;
   proxy_protocol: NodeBalancerProxyProtocol;
@@ -194,12 +197,14 @@ export interface CreateNodeBalancerPayload {
    * The connections per second throttle for TCP and HTTP connections
    *
    * Must be between 0 and 20. Set to 0 to disable throttling.
+   * @default 0
    */
   client_conn_throttle?: number;
   /**
    * The connections per second throttle for UDP sessions
    *
    * Must be between 0 and 20. Set to 0 to disable throttling.
+   * @default 0
    */
   client_udp_sess_throttle?: number;
   configs: CreateNodeBalancerConfig[];

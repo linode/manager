@@ -46,11 +46,15 @@ export const nodeBalancerConfigNodeSchema = object({
     .min(1, `Weight must be between 1 and 255.`)
     .max(255, `Weight must be between 1 and 255.`),
 
-  mode: mixed().oneOf(['accept', 'reject', 'backup', 'drain']),
+  mode: string().oneOf(['accept', 'reject', 'backup', 'drain']),
 });
 
 export const createNodeBalancerConfigSchema = object({
-  algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
+  algorithm: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'ring_hash']),
+    otherwise: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'source']),
+  }),
   check_attempts: number()
     .min(
       CHECK_ATTEMPTS.MIN,
@@ -106,7 +110,7 @@ export const createNodeBalancerConfigSchema = object({
     .required('Port is required')
     .min(1, PORT_WARNING)
     .max(65535, PORT_WARNING),
-  protocol: mixed().oneOf(['http', 'https', 'tcp']),
+  protocol: string().oneOf(['http', 'https', 'tcp', 'udp']),
   ssl_key: string().when('protocol', {
     is: 'https',
     then: (schema) => schema.required('SSL key is required when using HTTPS.'),
@@ -116,7 +120,12 @@ export const createNodeBalancerConfigSchema = object({
     then: (schema) =>
       schema.required('SSL certificate is required when using HTTPS.'),
   }),
-  stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
+  stickiness: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['none', 'source_ip', 'session']),
+    otherwise: (schema) => schema.oneOf(['none', 'table', 'http_cookie']),
+  }),
+  udp_check_port: number().min(1).max(65535),
   nodes: array()
     .of(nodeBalancerConfigNodeSchema)
     .required()
@@ -203,7 +212,12 @@ export const NodeBalancerSchema = object({
       "Label can't contain special characters or spaces."
     ),
 
-  client_conn_throttle: number().typeError('Must be a number.'),
+  client_conn_throttle: number().min(0).max(20).typeError('Must be a number.'),
+
+  client_udp_sess_throttle: number()
+    .min(0)
+    .max(20)
+    .typeError('Must be a number.'),
 
   region: string().required('Region is required.'),
 
@@ -250,7 +264,12 @@ export const UpdateNodeBalancerSchema = object({
       "Label can't contain special characters or spaces."
     ),
 
-  client_conn_throttle: number().typeError('Must be a number.'),
+  client_conn_throttle: number().min(0).max(20).typeError('Must be a number.'),
+
+  client_udp_sess_throttle: number()
+    .min(0)
+    .max(20)
+    .typeError('Must be a number.'),
 
   region: string(),
 });
