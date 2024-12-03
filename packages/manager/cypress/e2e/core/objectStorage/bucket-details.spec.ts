@@ -31,18 +31,6 @@ describe('Object Storage Gen 1 Bucket Details Tabs', () => {
   });
 
   describe('Properties tab without required capabilities', () => {
-    beforeEach(() => {
-      mockGetAccount(
-        accountFactory.build({
-          capabilities: ['Object Storage'],
-        })
-      ).as('getAccount');
-      mockAppendFeatureFlags({
-        objMultiCluster: true,
-        objectStorageGen2: { enabled: false },
-      }).as('getFeatureFlags');
-    });
-
     it(`confirms the Properties tab does not exist for users without 'Object Storage Endpoint Types' capability`, () => {
       const { region, label } = mockBucket;
 
