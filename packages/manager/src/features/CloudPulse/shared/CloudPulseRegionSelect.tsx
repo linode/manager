@@ -39,11 +39,9 @@ export const CloudPulseRegionSelect = React.memo(
     } = props;
 
     const serviceType: string | undefined = selectedDashboard?.service_type;
-    const capability = React.useMemo<Capabilities | undefined>(() => {
-      return serviceType
-        ? FILTER_CONFIG.get(serviceType)?.capability
-        : undefined;
-    }, [serviceType]);
+    const capability = serviceType
+      ? FILTER_CONFIG.get(serviceType)?.capability
+      : undefined;
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
     // Once the data is loaded, set the state variable with value stored in preferences
@@ -60,14 +58,12 @@ export const CloudPulseRegionSelect = React.memo(
 
     // validate launchDrakly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
-      const resourceTypeFlag:
-        | CloudPulseResourceTypeMapFlag
-        | undefined = flags.aclpResourceTypeMap?.find(
+      const resourceTypeFlag = flags.aclpResourceTypeMap?.find(
         (item: CloudPulseResourceTypeMapFlag) =>
           item.serviceType === serviceType
       );
 
-      const supportedRegionsIdList: string[] =
+      const supportedRegionsIdList =
         resourceTypeFlag?.supportedRegionIds
           ?.split(',')
           .map((regionId: string) => regionId.trim()) || [];
