@@ -166,8 +166,21 @@ export const getAllBucketsFromEndpoints = async (
     return { buckets: [], errors: [] };
   }
 
+  // Avoid multiple getBucket calls for the same region while also
+  // keeping some endpoint information in case of an error being
+  // returned for that region
+  const uniqueRegions: Set<string> = new Set();
+  const filteredEndpoints: ObjectStorageEndpoint[] = [];
+
+  for (const endpoint of endpoints) {
+    if (!uniqueRegions.has(endpoint.region)) {
+      filteredEndpoints.push(endpoint);
+    }
+    uniqueRegions.add(endpoint.region);
+  }
+
   const results = await Promise.all(
-    endpoints.map((endpoint) =>
+    filteredEndpoints.map((endpoint) =>
       getAll<ObjectStorageBucket>((params) =>
         getBucketsInRegion(endpoint.region, params)
       )()
@@ -187,7 +200,7 @@ export const getAllBucketsFromEndpoints = async (
     }
   });
 
-  if (errors.length === endpoints.length) {
+  if (errors.length === filteredEndpoints.length) {
     throw new Error('Unable to get Object Storage buckets.');
   }
 
