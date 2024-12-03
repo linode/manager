@@ -34,14 +34,15 @@ describe('Database Backups', () => {
 
     const { findByText, getAllByRole } = renderWithTheme(<DatabaseBackups />);
 
-    for (const backup of backups) {
+    const backupPromises = backups.map((backup) => {
       const expectedDate = formatDate(backup.created, { timezone: 'utc' });
+      return findByText(expectedDate);
+    });
 
-      // eslint-disable-next-line no-await-in-loop
-      const backupItem = await findByText(expectedDate);
-
+    const backupElements = await Promise.all(backupPromises);
+    backupElements.forEach((backupItem) => {
       expect(backupItem).toBeVisible();
-    }
+    });
 
     // Verify there is a table row for each backup (and a row for the table header)
     expect(getAllByRole('row')).toHaveLength(backups.length + 1);

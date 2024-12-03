@@ -1,18 +1,16 @@
-import { IconButton, Stack } from '@linode/ui';
 import Close from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
 
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
-import { linodeFactory } from 'src/factories';
-
+import { IconButton } from '../IconButton';
+import { List } from '../List';
+import { ListItem } from '../ListItem';
+import { Stack } from '../Stack';
 import { Autocomplete } from './Autocomplete';
 import { SelectedIcon } from './Autocomplete.styles';
 
 import type { EnhancedAutocompleteProps } from './Autocomplete';
-import type { Linode } from '@linode/api-v4';
 import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 
 const LABEL = 'Select a Linode';
@@ -226,7 +224,54 @@ export const CustomRenderOptions: RegionStory = {
 
 type MultiSelectStory = StoryObj<EnhancedAutocompleteProps<Linode, true>>;
 
-const linodeList = linodeFactory.buildList(10);
+const baseMockLinode = {
+  alerts: {
+    cpu: 10,
+    io: 10000,
+    network_in: 0,
+    network_out: 0,
+    transfer_quota: 80,
+  },
+  backups: {
+    enabled: false,
+    last_successful: null,
+    schedule: {
+      day: null,
+      window: null,
+    },
+  },
+  capabilities: [],
+  created: '2020-01-01',
+  // disk_encryption: 'enabled',
+  group: '',
+  hypervisor: 'kvm',
+  image: 'linode/debian10',
+  ipv4: ['50.116.6.212', '192.168.203.1'],
+  ipv6: '2600:3c00::f03c:92ff:fee2:6c40/64',
+  lke_cluster_id: null,
+  region: 'us-east',
+  site_type: 'core',
+  specs: {
+    accelerated_devices: 1,
+    disk: 51200,
+    gpus: 0,
+    memory: 2048,
+    transfer: 2000,
+    vcpus: 1,
+  },
+  status: 'running',
+  tags: [],
+  type: 'g6-standard-1',
+  updated: '2020-01-01',
+  watchdog_enabled: true,
+};
+
+const mockLinodes = [
+  { ...baseMockLinode, id: 1, label: 'linode-1' } as Linode,
+  { ...baseMockLinode, id: 2, label: 'linode-2' } as Linode,
+  { ...baseMockLinode, id: 3, label: 'linode-3' } as Linode,
+  { ...baseMockLinode, id: 4, label: 'linode-4' } as Linode,
+];
 
 export const MultiSelect: MultiSelectStory = {
   args: {},
@@ -238,7 +283,7 @@ export const MultiSelect: MultiSelectStory = {
           label="Linodes"
           multiple
           onChange={(_, value) => setSelectedLinodes(value)}
-          options={linodeList}
+          options={mockLinodes}
           value={selectedLinodes}
         />
       );
@@ -263,3 +308,26 @@ export const MultiSelectWithSeparateSelectionOptions: MultiSelectWithSeparateSel
   },
   render: (args) => <AutocompleteWithSeparateSelectedOptions {...args} />,
 };
+
+// simplified Linode interface for use in this file (api-v4 is not a dependency of ui)
+export interface Linode {
+  alerts: object;
+  backups: object;
+  created: string;
+  group: string;
+  hypervisor: string;
+  id: number;
+  image: null | string;
+  ipv4: string[];
+  ipv6: null | string;
+  label: string;
+  lke_cluster_id: null | number;
+  region: string;
+  site_type: string;
+  specs: object;
+  status: string;
+  tags: string[];
+  type: null | string;
+  updated: string;
+  watchdog_enabled: boolean;
+}

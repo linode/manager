@@ -1,8 +1,10 @@
-import type { CypressPlugin } from './plugin';
-import { DateTime } from 'luxon';
 import { writeFileSync } from 'fs';
+import { DateTime } from 'luxon';
 import { resolve } from 'path';
-import { object, string, array, number, SchemaOf } from 'yup';
+import { array, number, object, string } from 'yup';
+
+import type { CypressPlugin } from './plugin';
+import type { ObjectSchema } from 'yup';
 
 // The name of the environment variable to read to check if generation is enabled.
 // The value should be a path to the weights file.
@@ -50,7 +52,7 @@ export interface SpecWeight extends SpecResult {
 /**
  * Spec weights schema for JSON parsing, etc.
  */
-export const specWeightsSchema: SchemaOf<SpecWeights> = object({
+export const specWeightsSchema: ObjectSchema<SpecWeights> = object({
   meta: object({
     datetime: string().required(),
     totalWeight: number().required(),

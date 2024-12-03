@@ -1,6 +1,6 @@
+import { Autocomplete } from '@linode/ui';
 import React, { useMemo } from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { imageFactory } from 'src/factories/images';
 import { useAllImagesQuery } from 'src/queries/images';
 
@@ -13,7 +13,7 @@ import {
 } from './utilities';
 
 import type { Image, RegionSite } from '@linode/api-v4';
-import type { EnhancedAutocompleteProps } from 'src/components/Autocomplete/Autocomplete';
+import type { EnhancedAutocompleteProps } from '@linode/ui';
 
 export type ImageSelectVariant = 'all' | 'private' | 'public';
 
