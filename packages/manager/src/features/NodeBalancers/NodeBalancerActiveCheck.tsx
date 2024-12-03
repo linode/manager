@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   FormHelperText,
   InputAdornment,
   TextField,
@@ -11,8 +12,6 @@ import {
 } from '@linode/validation';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 import { setErrorMap } from './utils';
 
