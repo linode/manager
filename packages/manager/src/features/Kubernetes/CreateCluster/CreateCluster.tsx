@@ -246,6 +246,10 @@ export const CreateCluster = () => {
       payload = { ...payload, apl_enabled };
     }
 
+    if (isLkeEnterpriseLAFeatureEnabled) {
+      payload = { ...payload, tier: selectedTier };
+    }
+
     const createClusterFn =
       showAPL || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
