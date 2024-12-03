@@ -116,6 +116,7 @@ export const KubernetesClusterDetail = () => {
               removeCrumbX={[1, 2, 3]}
               title="Application Platform for LKE"
             />
+
             <APLSummaryPanel cluster={cluster} />
           </Box>
         )}
