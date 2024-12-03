@@ -29,7 +29,7 @@ const flags: Partial<Flags> = {
     },
     {
       serviceType: 'linode',
-      supportedRegionIds: 'us-east',
+      supportedRegionIds: 'us-lax',
     },
   ] as CloudPulseServiceTypeMapFlag[],
 };
@@ -69,7 +69,11 @@ describe('CloudPulseRegionSelect', () => {
     const user = userEvent.setup();
 
     const allRegions: Region[] = [
-      regionFactory.build({ capabilities: ['Linodes'], id: 'us-east' }),
+      regionFactory.build({
+        capabilities: ['Linodes'],
+        id: 'us-lax',
+        label: 'US, Los Angeles, CA',
+      }),
       regionFactory.build({
         capabilities: ['Managed Databases'],
         id: 'us-west',
@@ -83,7 +87,7 @@ describe('CloudPulseRegionSelect', () => {
       isLoading: false,
     });
 
-    const { getByRole } = renderWithTheme(
+    const { getByRole, queryByRole } = renderWithTheme(
       <CloudPulseRegionSelect
         {...props}
         // eslint-disable-next-line camelcase
@@ -99,5 +103,10 @@ describe('CloudPulseRegionSelect', () => {
         name: 'US, Fremont, CA (us-west)',
       })
     ).toBeInTheDocument();
-});
+    expect(
+      queryByRole('option', {
+        name: 'US, Los Angeles, CA (us-lax)',
+      })
+    ).toBeNull();
+  });
 });
