@@ -8,22 +8,22 @@ import { DialogTitle } from './DialogTitle';
 import type { DialogTitleProps } from './DialogTitle';
 
 const mockId = '1';
-const mockSubTitle = 'This a basic dialog';
+const mockSubtitle = 'This a basic dialog';
 const mockTitle = 'This is a Dialog';
 
 const defaultProps: DialogTitleProps = {
   id: mockId,
-  subtitle: mockSubTitle,
+  subtitle: mockSubtitle,
   title: mockTitle,
 };
 
 describe('DialogTitle', () => {
-  it('should render title, subtitle and Id', () => {
+  it('should render title, subtitle and id', () => {
     const { getByRole, getByText } = renderWithTheme(
       <DialogTitle {...defaultProps} />
     );
     expect(getByText(mockTitle)).toBeVisible();
-    expect(getByText(mockSubTitle)).toBeVisible();
+    expect(getByText(mockSubtitle)).toBeVisible();
     const titleElement = getByRole('heading');
     expect(titleElement).toHaveAttribute('id', mockId);
   });
@@ -35,7 +35,7 @@ describe('DialogTitle', () => {
     expect(queryByText(mockTitle)).not.toBeInTheDocument();
   });
 
-  it('should close the dialog Box when clciked on close Button', async () => {
+  it('should close the dialog Box if the close button is clicked', async () => {
     const onCloseMock = vi.fn();
     const { getByRole } = renderWithTheme(
       <DialogTitle
