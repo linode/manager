@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 export const StyledResultsWrapper = styled('div', {
   label: 'StyledResultsWrapper',
 })(({ theme }) => ({
-  borderTop: '1px solid #D6D7D9',
+  borderTop: `1px solid ${theme.tokens.color.Neutrals[30]}`,
   fontSize: '0.875rem',
   lineHeight: '1.125rem',
   marginLeft: theme.spacing(),

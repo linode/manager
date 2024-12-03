@@ -44,7 +44,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
       borderRight: 'none',
     },
     alignItems: 'center',
-    borderRight: '1px solid #c4c4c4',
+    borderRight: `1px solid ${theme.tokens.color.Neutrals[40]}`,
     cursor: 'pointer',
     display: 'flex',
   },
