@@ -126,6 +126,11 @@ describe('CloudPulseRegionSelect', () => {
     ).toBeInTheDocument();
     expect(
       queryByRole('option', {
+        name: 'US, Dallas, TX (us-central)',
+      })
+    ).toBeNull();
+    expect(
+      queryByRole('option', {
         name: 'US, Los Angeles, CA (us-lax)',
       })
     ).toBeNull();
