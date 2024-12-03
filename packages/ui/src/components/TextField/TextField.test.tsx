@@ -1,6 +1,6 @@
 import { fireEvent, getDefaultNormalizer } from '@testing-library/react';
 import * as React from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { renderWithTheme } from '../../utilities/testHelpers';
 import { InputAdornment } from '../InputAdornment';
@@ -90,5 +90,37 @@ describe('TextField', () => {
     expect(input?.getAttribute('value')).toBe('10');
     fireEvent.change(input, { target: { value: '1' } });
     expect(input?.getAttribute('value')).toBe('2');
+  });
+
+  it('renders a helper text with an input id', () => {
+    const { getByText } = renderWithTheme(
+      <TextField helperText="Helper text" inputId="input-id" label="" />
+    );
+
+    expect(getByText('Helper text')).toBeInTheDocument();
+    const helperText = getByText('Helper text');
+    expect(helperText.getAttribute('id')).toBe('input-id-helper-text');
+  });
+
+  it('renders a helper text with a label', () => {
+    const { getByText } = renderWithTheme(
+      <TextField helperText="Helper text" label="Label" />
+    );
+
+    const helperText = getByText('Helper text');
+
+    expect(helperText).toBeInTheDocument();
+    expect(helperText.getAttribute('id')).toBe('label-helper-text');
+  });
+
+  it('renders a helper text with a fallback id', () => {
+    const { getByText } = renderWithTheme(
+      <TextField helperText="Helper text" label="" />
+    );
+
+    const helperText = getByText('Helper text');
+
+    // ':rg:' being the default react generated id
+    expect(helperText.getAttribute('id')).toBe(':rg:-helper-text');
   });
 });
