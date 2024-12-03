@@ -1,64 +1,39 @@
 import type {
   APIError,
   Algorithm,
-  NodeBalancerConfigNodeMode,
+  NodeBalancerConfigNode,
   NodeBalancerProxyProtocol,
   Protocol,
   Stickiness,
+  UpdateNodeBalancerConfig,
 } from '@linode/api-v4';
 
 export interface NodeBalancerConfigFieldsWithStatus
   extends NodeBalancerConfigFields {
+  /**
+   * Exists for the sake of local operations
+   */
   modifyStatus?: 'new';
 }
 
-export interface ExtendedNodeBalancerConfigNode {
-  address: string;
-  config_id?: number;
-  errors?: APIError[];
-  id: number;
-  label: string;
-  mode?: NodeBalancerConfigNodeMode;
-  modifyStatus?: 'delete' | 'new' | 'update';
-  nodebalancer_id: number;
-  port?: number;
-  status: 'DOWN' | 'UP' | 'unknown';
-  weight?: number;
-}
-
-export interface NodeBalancerConfigFields {
-  algorithm?: Algorithm;
-  check?: 'connection' | 'http' | 'http_body' | 'none';
-  check_attempts?: number /** 1..30 */;
-  check_body?: string;
-  check_interval?: number;
-  check_passive?: boolean;
-  check_path?: string;
-  check_timeout?: number /** 1..30 */;
-  cipher_suite?: 'legacy' | 'recommended';
+export interface NodeBalancerConfigFields extends UpdateNodeBalancerConfig {
   id?: number;
   nodes: NodeBalancerConfigNodeFields[];
-  port?: number /** 1..65535 */;
-  protocol?: Protocol;
-  proxy_protocol?: NodeBalancerProxyProtocol;
-  ssl_cert?: string;
-  ssl_key?: string;
-  stickiness?: Stickiness;
 }
 
-export interface NodeBalancerConfigNodeFields {
+export interface NodeBalancerConfigNodeFields
+  extends Partial<NodeBalancerConfigNode> {
   address: string;
-  config_id?: number;
   errors?: APIError[];
-  id?: number;
   label: string;
-  mode?: NodeBalancerConfigNodeMode;
-  /* for the sake of local operations */
+  /**
+   * Exists for the sake of local operations
+   */
   modifyStatus?: 'delete' | 'new' | 'update';
-  nodebalancer_id?: number;
+  /**
+   * @note `port` is an "extended" field. The API includes it in the `address`
+   */
   port?: number;
-  status?: 'DOWN' | 'UP' | 'unknown';
-  weight?: number;
 }
 
 export interface NodeBalancerConfigPanelProps {

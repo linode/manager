@@ -126,6 +126,10 @@ export interface CreateNodeBalancerConfig {
    */
   protocol?: Protocol;
   /**
+   * @default "none"
+   */
+  proxy_protocol?: NodeBalancerProxyProtocol;
+  /**
    * The algorithm for this configuration.
    *
    * TCP and HTTP support `roundrobin`, `leastconn`, and `source`
