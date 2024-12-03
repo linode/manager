@@ -45,6 +45,7 @@ export const CloudPulseAppliedFilter = (
                     px: 1,
                     py: 0.5,
                   }}
+                  data-qa-value={`${label} ${value}`}
                   key={`${label} ${value}`}
                   label={value}
                 />

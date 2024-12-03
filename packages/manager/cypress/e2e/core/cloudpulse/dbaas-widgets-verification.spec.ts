@@ -27,7 +27,6 @@ import { mockGetAccount } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
-import { extendRegion } from 'support/util/regions';
 import { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
 import { Interception } from 'cypress/types/net-stubbing';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
@@ -56,7 +55,6 @@ const {
   id,
   serviceType,
   dashboardName,
-  region,
   engine,
   clusterName,
   nodeType,
@@ -91,14 +89,13 @@ const mockLinode = linodeFactory.build({
 });
 
 const mockAccount = accountFactory.build();
-const mockRegion = extendRegion(
-  regionFactory.build({
-    capabilities: ['Linodes'],
-    id: 'us-ord',
-    label: 'Chicago, IL',
-    country: 'us',
-  })
-);
+
+const mockRegion = regionFactory.build({
+  capabilities: ['Linodes'],
+  id: 'us-ord',
+  label: 'Chicago, IL',
+  country: 'us',
+});
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
@@ -151,9 +148,9 @@ const getWidgetLegendRowValuesFromResponse = (
 };
 
 const databaseMock: Database = databaseFactory.build({
-  label: widgetDetails.dbaas.clusterName,
-  type: widgetDetails.dbaas.engine,
-  region: widgetDetails.dbaas.region,
+  label: clusterName,
+  type: engine,
+  region: mockRegion.label,
   version: '1',
   status: 'provisioning',
   cluster_size: 1,
@@ -191,39 +188,66 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     ui.autocomplete
       .findByLabel('Dashboard')
       .should('be.visible')
-      .type(`${dashboardName}{enter}`)
-      .should('be.visible');
+      .type(dashboardName);
+
+    ui.autocompletePopper
+      .findByTitle(dashboardName)
+      .should('be.visible')
+      .click();
 
     // Select a time duration from the autocomplete input.
     ui.autocomplete
       .findByLabel('Time Range')
       .should('be.visible')
-      .type(`${timeDurationToSelect}{enter}`)
-      .should('be.visible');
+      .type(timeDurationToSelect);
 
-    //Select a Engine from the autocomplete input.
+    ui.autocompletePopper
+      .findByTitle(timeDurationToSelect)
+      .should('be.visible')
+      .click();
+
+    //Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
-      .type(`${engine}{enter}`)
-      .should('be.visible');
+      .type(engine);
 
-    // Select a region from the dropdown.
-    ui.regionSelect.find().click().type(`${region}{enter}`);
+    ui.autocompletePopper
+       .findByTitle(engine)
+        .should('be.visible')
+        .click();
 
-    // Select a resource from the autocomplete input.
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .should('be.visible')
+      .click();
+
+    // Select a resource (Database Clusters) from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Clusters')
       .should('be.visible')
-      .type(`${clusterName}{enter}`)
-      .click();
-    cy.findByText(clusterName).should('be.visible');
+      .type(clusterName);
 
-    //Select a Node from the autocomplete input.
+    ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
+
+    // Select a Node from the autocomplete input.
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
       .type(`${nodeType}{enter}`);
+
+    // Expand the applied filters section
+    ui.button.findByTitle('Filters').should('be.visible').click();
+
+    // Verify that the applied filters
+    cy.get('[data-testid="applied-filter"]').within(() => {
+      cy.get(`[data-qa-value="Database Engine ${engine}"]`);
+      cy.get(`[data-qa-value="Region US, Chicago, IL"]`);
+      cy.get(`[data-qa-value="Node Type ${nodeType}"]`);
+      cy.get(`[data-qa-value="Database Clusters ${databaseMock.label}"]`);
+    });
 
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
