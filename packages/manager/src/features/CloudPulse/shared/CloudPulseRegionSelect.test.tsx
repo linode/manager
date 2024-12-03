@@ -8,7 +8,7 @@ import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { Region } from '@linode/api-v4';
-import type { CloudPulseServiceTypeMapFlag, Flags } from 'src/featureFlags';
+import type { CloudPulseResourceTypeMapFlag, Flags } from 'src/featureFlags';
 import type * as regions from 'src/queries/regions/regions';
 
 const props: CloudPulseRegionSelectProps = {
@@ -22,16 +22,16 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 const flags: Partial<Flags> = {
-  aclpServiceTypeMap: [
+  aclpResourceTypeMap: [
     {
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-west',
+      supportedRegionIds: 'us-west, us-east',
     },
     {
       serviceType: 'linode',
-      supportedRegionIds: 'us-lax',
+      supportedRegionIds: 'us-lax, us-mia',
     },
-  ] as CloudPulseServiceTypeMapFlag[],
+  ] as CloudPulseResourceTypeMapFlag[],
 };
 
 vi.mock('src/queries/regions/regions', async () => {
@@ -75,9 +75,19 @@ describe('CloudPulseRegionSelect', () => {
         label: 'US, Los Angeles, CA',
       }),
       regionFactory.build({
+        capabilities: ['Linodes'],
+        id: 'us-mia',
+        label: 'US, Miami, FL',
+      }),
+      regionFactory.build({
         capabilities: ['Managed Databases'],
         id: 'us-west',
         label: 'US, Fremont, CA',
+      }),
+      regionFactory.build({
+        capabilities: ['Managed Databases'],
+        id: 'us-east',
+        label: 'US, Newark, NJ',
       }),
     ];
 
@@ -104,8 +114,18 @@ describe('CloudPulseRegionSelect', () => {
       })
     ).toBeInTheDocument();
     expect(
+      getByRole('option', {
+        name: 'US, Newark, NJ (us-east)',
+      })
+    ).toBeInTheDocument();
+    expect(
       queryByRole('option', {
         name: 'US, Los Angeles, CA (us-lax)',
+      })
+    ).toBeNull();
+    expect(
+      queryByRole('option', {
+        name: 'US, Miami, FL (us-mia)',
       })
     ).toBeNull();
   });

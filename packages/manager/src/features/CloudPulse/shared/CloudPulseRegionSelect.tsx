@@ -6,8 +6,13 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
-import type { CloudPulseServiceTypeFilters } from '../Utils/models';
-import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
+import type {
+  Capabilities,
+  Dashboard,
+  FilterValue,
+  Region,
+} from '@linode/api-v4';
+import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 export interface CloudPulseRegionSelectProps {
   defaultValue?: FilterValue;
@@ -33,15 +38,12 @@ export const CloudPulseRegionSelect = React.memo(
       selectedDashboard,
     } = props;
 
-    const currentFilterConfig:
-      | CloudPulseServiceTypeFilters
-      | undefined = FILTER_CONFIG.get(
-      selectedDashboard?.service_type
-    )?.filters.filter(
-      (config) => config.configuration.filterKey === 'region'
-    )[0];
-    // Capture the current capability from corresponding filter config
-    const capability = currentFilterConfig?.configuration.capability;
+    const serviceType: string | undefined = selectedDashboard?.service_type;
+    const capability = React.useMemo<Capabilities | undefined>(() => {
+      return serviceType
+        ? FILTER_CONFIG.get(serviceType)?.capability
+        : undefined;
+    }, [serviceType]);
 
     const [selectedRegion, setSelectedRegion] = React.useState<string>();
     // Once the data is loaded, set the state variable with value stored in preferences
@@ -58,23 +60,26 @@ export const CloudPulseRegionSelect = React.memo(
 
     // validate launchDrakly region_ids with the ids from the fetched 'all-regions'
     const supportedRegions = React.useMemo<Region[] | undefined>(() => {
-      const serviceTypeFlag = flags.aclpServiceTypeMap?.find(
-        (item) => item.serviceType === selectedDashboard?.service_type
+      const serviceTypeFlag:
+        | CloudPulseResourceTypeMapFlag
+        | undefined = flags.aclpResourceTypeMap?.find(
+        (item: CloudPulseResourceTypeMapFlag) =>
+          item.serviceType === serviceType
       );
 
-      const supportedRegionsIdList = serviceTypeFlag?.supportedRegionIds
-        ?.split(',')
-        .map((regionId) => regionId.trim());
+      const supportedRegionsIdList: string[] =
+        serviceTypeFlag?.supportedRegionIds
+          ?.split(',')
+          .map((regionId: string) => regionId.trim()) || [];
 
-      if (!supportedRegionsIdList?.length) {
+      if (!supportedRegionsIdList.length) {
         return regions;
       }
 
       return regions?.filter((region) =>
         supportedRegionsIdList?.includes(region.id)
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [flags.aclpServiceTypeMap, regions, selectedDashboard?.service_type]);
+    }, [flags.aclpResourceTypeMap, regions, serviceType]);
 
     return (
       <RegionSelect
@@ -92,7 +97,7 @@ export const CloudPulseRegionSelect = React.memo(
         loading={isLoading}
         noMarginTop
         placeholder={placeholder ?? 'Select a Region'}
-        regions={supportedRegions ? supportedRegions : regions ? regions : []}
+        regions={supportedRegions ? supportedRegions : []}
         value={selectedRegion}
       />
     );
