@@ -43,7 +43,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     justifyContent: 'center',
   },
   root: {
-    '&:focus': { outline: '1px dotted #999' },
+    '&:focus': { outline: `1px dotted ${theme.tokens.color.Neutrals[50]}` },
     '&:hover': {
       '& .border': {
         color: theme.palette.primary.light,
