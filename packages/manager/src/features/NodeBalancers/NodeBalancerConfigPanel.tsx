@@ -166,7 +166,7 @@ export const NodeBalancerConfigPanel = (
 
   const algorithmHelperText = {
     leastconn: LEAST_CONNECTIONS_ALGORITHM_HELPER_TEXT,
-    ring_hash: '',
+    ring_hash: '', // @todo Add copy as part of UDP NodeBalancer project
     roundrobin: ROUND_ROBIN_ALGORITHM_HELPER_TEXT,
     source: SOURCE_ALGORITHM_HELPER_TEXT,
   };
