@@ -6,12 +6,7 @@ import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
-import type {
-  Capabilities,
-  Dashboard,
-  FilterValue,
-  Region,
-} from '@linode/api-v4';
+import type { Dashboard, FilterValue, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
 export interface CloudPulseRegionSelectProps {
