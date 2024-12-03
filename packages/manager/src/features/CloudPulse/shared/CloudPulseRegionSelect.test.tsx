@@ -4,6 +4,7 @@ import * as React from 'react';
 import { dashboardFactory, regionFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { DBAAS_CAPABILITY, LINODE_CAPABILITY } from '../Utils/FilterConfig';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
@@ -70,24 +71,29 @@ describe('CloudPulseRegionSelect', () => {
 
     const allRegions: Region[] = [
       regionFactory.build({
-        capabilities: ['Linodes'],
+        capabilities: [LINODE_CAPABILITY],
         id: 'us-lax',
         label: 'US, Los Angeles, CA',
       }),
       regionFactory.build({
-        capabilities: ['Linodes'],
+        capabilities: [LINODE_CAPABILITY],
         id: 'us-mia',
         label: 'US, Miami, FL',
       }),
       regionFactory.build({
-        capabilities: ['Managed Databases'],
+        capabilities: [DBAAS_CAPABILITY],
         id: 'us-west',
         label: 'US, Fremont, CA',
       }),
       regionFactory.build({
-        capabilities: ['Managed Databases'],
+        capabilities: [DBAAS_CAPABILITY],
         id: 'us-east',
         label: 'US, Newark, NJ',
+      }),
+      regionFactory.build({
+        capabilities: [DBAAS_CAPABILITY],
+        id: 'us-central',
+        label: 'US, Dallas, TX',
       }),
     ];
 
