@@ -75,7 +75,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
       routeName: `${props.match.url}/access`,
       title: 'Access',
     },
-    ...(isGen2Endpoint
+    ...(isObjectStorageGen2Enabled
       ? [
           {
             routeName: `${props.match.url}/properties`,
