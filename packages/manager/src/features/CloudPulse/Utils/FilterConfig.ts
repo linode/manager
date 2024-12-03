@@ -7,10 +7,10 @@ const DBAAS_CAPABILITY = 'Managed Databases';
 const LINODE_CAPABILITY = 'Linodes';
 
 export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: LINODE_CAPABILITY,
   filters: [
     {
       configuration: {
-        capability: LINODE_CAPABILITY,
         filterKey: 'region',
         filterType: 'string',
         isFilterable: false,
@@ -23,7 +23,6 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        capability: LINODE_CAPABILITY,
         dependency: ['region'],
         filterKey: 'resource_id',
         filterType: 'string',
@@ -39,7 +38,6 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        capability: LINODE_CAPABILITY,
         filterKey: 'relative_time_duration',
         filterType: 'string',
         isFilterable: true,
@@ -57,10 +55,10 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
 };
 
 export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: DBAAS_CAPABILITY,
   filters: [
     {
       configuration: {
-        capability: DBAAS_CAPABILITY,
         filterKey: 'engine',
         filterType: 'string',
         isFilterable: false, // isFilterable -- this determines whethere you need to pass it metrics api
@@ -86,7 +84,6 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        capability: DBAAS_CAPABILITY,
         filterKey: 'region',
         filterType: 'string',
         isFilterable: false,
@@ -99,7 +96,6 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        capability: DBAAS_CAPABILITY,
         dependency: ['region', 'engine'],
         filterKey: 'resource_id',
         filterType: 'string',
@@ -115,7 +111,6 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        capability: DBAAS_CAPABILITY,
         filterKey: 'relative_time_duration',
         filterType: 'string',
         isFilterable: true,
@@ -130,7 +125,6 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        capability: DBAAS_CAPABILITY,
         filterKey: 'node_type',
         filterType: 'string',
         isFilterable: true, // isFilterable -- this determines whether you need to pass it metrics api
@@ -159,7 +153,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
 };
 
 export const FILTER_CONFIG: Readonly<
-  Map<string | undefined, CloudPulseServiceTypeFilterMap>
+  Map<string, CloudPulseServiceTypeFilterMap>
 > = new Map([
   ['dbaas', DBAAS_CONFIG],
   ['linode', LINODE_CONFIG],

@@ -69,7 +69,7 @@ interface LkeEnterpriseFlag extends BaseFeatureFlag {
   la: boolean;
 }
 
-export interface CloudPulseServiceTypeMapFlag {
+export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
   serviceType: string;
@@ -102,7 +102,7 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpReadEndpoint: string;
-  aclpServiceTypeMap: CloudPulseServiceTypeMapFlag[];
+  aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apiMaintenance: APIMaintenance;
   apicliButtonCopy: string;
   apl: boolean;
