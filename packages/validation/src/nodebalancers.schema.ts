@@ -20,6 +20,11 @@ export const CHECK_INTERVAL = {
   MAX: 3600,
 };
 
+const CONNECTION_THROTTLE = {
+  MIN: 0,
+  MAX: 20,
+};
+
 export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .matches(
@@ -202,6 +207,28 @@ export const UpdateNodeBalancerConfigSchema = object({
   nodes: array().of(nodeBalancerConfigNodeSchema),
 });
 
+const client_conn_throttle = number()
+  .min(
+    CONNECTION_THROTTLE.MIN,
+    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+  )
+  .max(
+    CONNECTION_THROTTLE.MAX,
+    `Client Connection Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+  )
+  .typeError('Client Connection Throttle must be a number.');
+
+const client_udp_sess_throttle = number()
+  .min(
+    CONNECTION_THROTTLE.MIN,
+    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+  )
+  .max(
+    CONNECTION_THROTTLE.MAX,
+    `UDP Session Throttle must be between ${CONNECTION_THROTTLE.MIN} and ${CONNECTION_THROTTLE.MAX}.`
+  )
+  .typeError('UDP Session Throttle must be a number.');
+
 export const NodeBalancerSchema = object({
   label: string()
     .required('Label is required.')
@@ -212,12 +239,9 @@ export const NodeBalancerSchema = object({
       "Label can't contain special characters or spaces."
     ),
 
-  client_conn_throttle: number().min(0).max(20).typeError('Must be a number.'),
+  client_conn_throttle,
 
-  client_udp_sess_throttle: number()
-    .min(0)
-    .max(20)
-    .typeError('Must be a number.'),
+  client_udp_sess_throttle,
 
   region: string().required('Region is required.'),
 
@@ -264,12 +288,9 @@ export const UpdateNodeBalancerSchema = object({
       "Label can't contain special characters or spaces."
     ),
 
-  client_conn_throttle: number().min(0).max(20).typeError('Must be a number.'),
+  client_conn_throttle,
 
-  client_udp_sess_throttle: number()
-    .min(0)
-    .max(20)
-    .typeError('Must be a number.'),
+  client_udp_sess_throttle,
 
   region: string(),
 });
