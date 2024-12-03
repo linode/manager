@@ -392,6 +392,11 @@ export const CreateCluster = () => {
           </StyledFieldWithDocsStack>
           <Divider sx={{ marginTop: 4 }} />
           <Autocomplete
+            loading={
+              isLkeEnterpriseLAFeatureEnabled &&
+              (enterpriseTierVersionDataIsLoading ||
+                standardTierVersionDataIsLoading)
+            }
             onChange={(_, selected) => {
               setVersion(selected?.value);
             }}
@@ -401,11 +406,6 @@ export const CreateCluster = () => {
             options={versions}
             placeholder={' '}
             value={versions.find((v) => v.value === version) ?? null}
-            loading={
-              isLkeEnterpriseLAFeatureEnabled &&
-              (enterpriseTierVersionDataIsLoading ||
-                standardTierVersionDataIsLoading)
-            }
           />
           {showAPL && (
             <>
