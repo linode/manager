@@ -2,6 +2,7 @@ import { Box, Notice } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
+import { FormProvider } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
@@ -23,80 +24,72 @@ interface Props {
 }
 
 export const VPCCreateDrawer = (props: Props) => {
-  // const theme = useTheme();
-  // const { onClose, onSuccess, open, selectedRegion } = props;
+  const theme = useTheme();
+  const formContainerRef = React.useRef<HTMLFormElement>(null);
+  const { onClose, onSuccess, open, selectedRegion } = props;
 
-  // const {
-  //   formik,
-  //   generalAPIError,
-  //   generalSubnetErrorsFromAPI,
-  //   isLoadingCreateVPC,
-  //   onChangeField,
-  //   onCreateVPC,
-  //   regionsData,
-  //   setGeneralAPIError,
-  //   setGeneralSubnetErrorsFromAPI,
-  //   userCannotAddVPC,
-  // } = useCreateVPC({
-  //   handleSelectVPC: onSuccess,
-  //   onDrawerClose: onClose,
-  //   selectedRegion,
-  // });
+  const {
+    form,
+    isLoadingCreateVPC,
+    onCreateVPC,
+    regionsData,
+    userCannotAddVPC,
+  } = useCreateVPC({
+    formContainerRef,
+    handleSelectVPC: onSuccess,
+    onDrawerClose: onClose,
+    selectedRegion,
+  });
 
-  // const { errors, handleSubmit, resetForm, setFieldValue, values } = formik;
+  const {
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = form;
 
-  // React.useEffect(() => {
-  //   if (open) {
-  //     resetForm();
-  //     setGeneralSubnetErrorsFromAPI([]);
-  //     setGeneralAPIError(undefined);
-  //   }
-  // }, [open, resetForm, setGeneralAPIError, setGeneralSubnetErrorsFromAPI]);
+  return (
+    <Drawer
+      onClose={() => {
+        onClose();
+        reset();
+      }}
+      open={open}
+      title={'Create VPC'}
+    >
+      {userCannotAddVPC && CannotCreateVPCNotice}
 
-  // return (
-  //   <Drawer onClose={onClose} open={open} title={'Create VPC'}>
-  //     {userCannotAddVPC && CannotCreateVPCNotice}
-  //     <Grid>
-  //       {generalAPIError ? (
-  //         <Notice text={generalAPIError} variant="error" />
-  //       ) : null}
-  //       <form onSubmit={handleSubmit}>
-  //         <Box sx={{ marginTop: theme.spacing(3) }}>
-  //           <VPCTopSectionContent
-  //             disabled={userCannotAddVPC}
-  //             errors={errors}
-  //             isDrawer
-  //             onChangeField={onChangeField}
-  //             regions={regionsData}
-  //             values={values}
-  //           />
-  //         </Box>
-  //         <SubnetContent
-  //           disabled={userCannotAddVPC}
-  //           isDrawer
-  //           onChangeField={setFieldValue}
-  //           subnetErrors={generalSubnetErrorsFromAPI}
-  //           subnets={values.subnets}
-  //         />
-  //         <ActionsPanel
-  //           primaryButtonProps={{
-  //             'data-testid': 'submit',
-  //             disabled: userCannotAddVPC,
-  //             label: 'Create VPC',
-  //             loading: isLoadingCreateVPC,
-  //             onClick: () => {
-  //               onCreateVPC();
-  //             },
-  //           }}
-  //           secondaryButtonProps={{
-  //             'data-testid': 'cancel',
-  //             label: 'Cancel',
-  //             onClick: onClose,
-  //           }}
-  //           style={{ marginTop: theme.spacing(3) }}
-  //         />
-  //       </form>
-  //     </Grid>
-  //   </Drawer>
-  // );
+      <FormProvider {...form}>
+        <Grid>
+          <form onSubmit={handleSubmit(onCreateVPC)} ref={formContainerRef}>
+            {errors.root?.message ? (
+              <Notice text={errors.root.message} variant="error" />
+            ) : null}
+            <Box sx={{ marginTop: theme.spacing(3) }}>
+              <VPCTopSectionContent
+                disabled={userCannotAddVPC}
+                isDrawer
+                regions={regionsData}
+              />
+            </Box>
+            <SubnetContent disabled={userCannotAddVPC} isDrawer />
+            <ActionsPanel
+              primaryButtonProps={{
+                'data-testid': 'submit',
+                disabled: userCannotAddVPC,
+                label: 'Create VPC',
+                loading: isLoadingCreateVPC,
+                onClick: handleSubmit(onCreateVPC),
+              }}
+              secondaryButtonProps={{
+                'data-testid': 'cancel',
+                label: 'Cancel',
+                onClick: onClose,
+              }}
+              style={{ marginTop: theme.spacing(3) }}
+            />
+          </form>
+        </Grid>
+      </FormProvider>
+    </Drawer>
+  );
 };

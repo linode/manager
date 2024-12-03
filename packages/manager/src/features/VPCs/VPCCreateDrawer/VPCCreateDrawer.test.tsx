@@ -1,7 +1,7 @@
-import { fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { VPCCreateDrawer } from './VPCCreateDrawer';
 
@@ -11,11 +11,27 @@ const props = {
   open: true,
 };
 
-describe.skip('VPC Create Drawer', () => {
-  it('should render the vpc and subnet sections', () => {
-    const { getAllByText } = renderWithTheme(<VPCCreateDrawer {...props} />);
+const formOptions = {
+  defaultValues: {
+    description: '',
+    label: '',
+    region: '',
+    subnets: [
+      {
+        ipv4: '',
+        label: 'subnet 0',
+      },
+    ],
+  },
+};
 
-    getAllByText('Region');
+describe('VPC Create Drawer', () => {
+  it('should render the vpc and subnet sections', () => {
+    const { getAllByText } = renderWithThemeAndHookFormContext({
+      component: <VPCCreateDrawer {...props} />,
+      useFormOptions: formOptions,
+    });
+
     getAllByText('VPC Label');
     getAllByText('Region');
     getAllByText('Description');
@@ -28,16 +44,21 @@ describe.skip('VPC Create Drawer', () => {
   });
 
   it('should not be able to remove the first subnet', () => {
-    renderWithTheme(<VPCCreateDrawer {...props} />);
+    const { queryByTestId } = renderWithThemeAndHookFormContext({
+      component: <VPCCreateDrawer {...props} />,
+      useFormOptions: formOptions,
+    });
 
-    const deleteSubnet = screen.queryByTestId('delete-subnet-0');
-    expect(deleteSubnet).not.toBeInTheDocument();
+    expect(queryByTestId('delete-subnet-0')).toBeNull();
   });
 
-  it('should close the drawer', () => {
-    renderWithTheme(<VPCCreateDrawer {...props} />);
-    const cancelButton = screen.getByText('Cancel');
-    fireEvent.click(cancelButton);
+  it('should close the drawer', async () => {
+    const { getByText } = renderWithThemeAndHookFormContext({
+      component: <VPCCreateDrawer {...props} />,
+      useFormOptions: formOptions,
+    });
+    const cancelButton = getByText('Cancel');
+    await userEvent.click(cancelButton);
     expect(props.onClose).toHaveBeenCalled();
   });
 });
