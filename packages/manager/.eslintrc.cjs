@@ -250,7 +250,7 @@ module.exports = {
     'perfectionist/sort-enums': 'warn',
     'perfectionist/sort-exports': 'warn',
     'perfectionist/sort-imports': [
-      'warn',
+      'error',
       {
         'custom-groups': {
           type: {
