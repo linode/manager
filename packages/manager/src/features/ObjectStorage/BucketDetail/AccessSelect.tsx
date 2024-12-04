@@ -47,10 +47,10 @@ export const AccessSelect = React.memo((props: Props) => {
 
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
+
+  // CORS is only available at a bucket level, not at an object level.
   const isCorsAvailable =
-    (variant === 'bucket' || variant === 'object') &&
-    endpointType !== 'E2' &&
-    endpointType !== 'E3';
+    variant === 'bucket' && endpointType !== 'E2' && endpointType !== 'E3';
 
   const {
     data: bucketAccessData,
