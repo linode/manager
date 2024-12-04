@@ -6,8 +6,6 @@ You can contribute by [opening an issue](https://github.com/linode/manager/issue
 
 ## Opening an issue
 
-testing
-
 Feel free to open an issue to report a bug or request a feature.
 
 ## Submitting a pull request

@@ -95,7 +95,7 @@
     "lint": "eslint . --ext .js,.ts,.tsx",
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && yarn typecheck",
     "test": "vitest run",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
@@ -112,12 +112,7 @@
     "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
   "lint-staged": {
-    "*.{ts,tsx,js}": [
-      "eslint --ext .js,.ts,.tsx --fix"
-    ],
-    "*.{ts,tsx}": [
-      "yarn typecheck"
-    ]
+    "*.{ts,tsx,js}": "eslint --ext .js,.ts,.tsx --fix"
   },
   "devDependencies": {
     "@linode/eslint-plugin-cloud-manager": "^0.0.5",
