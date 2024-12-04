@@ -38,14 +38,12 @@ export const HostNameTableCell = (props: Props) => {
   const firstRegion = regions[0];
   const formattedFirstEndpoint = formatEndpoint(firstRegion);
   const allEndpoints = regions.map(formatEndpoint).join('\n');
+  const showMultipleRegions = regions.length > 1;
 
   return (
     <TableCell>
       {formattedFirstEndpoint}&nbsp;
-      {regions.length === 1 && (
-        <StyledCopyIcon text={firstRegion.s3_endpoint} />
-      )}
-      {regions.length > 1 && (
+      {showMultipleRegions ? (
         <>
           | +{regions.length - 1} regions |&nbsp;
           <StyledLinkButton
@@ -53,13 +51,14 @@ export const HostNameTableCell = (props: Props) => {
               setHostNames(regions);
               setShowHostNamesDrawers(true);
             }}
-            type="button"
           >
             Show All
           </StyledLinkButton>
+          <StyledCopyIcon text={allEndpoints} />
         </>
+      ) : (
+        <StyledCopyIcon text={firstRegion.s3_endpoint} />
       )}
-      <StyledCopyIcon text={allEndpoints} />
     </TableCell>
   );
 };
