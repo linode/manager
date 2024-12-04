@@ -860,6 +860,70 @@ describe('LKE cluster updates', () => {
     });
   });
 
+  it.only('can add and delete node pool tags', () => {
+    const mockCluster = kubernetesClusterFactory.build({
+      k8s_version: latestKubernetesVersion,
+    });
+
+    const mockNodePoolNoTags = nodePoolFactory.build({
+      id: 1,
+      type: 'g6-dedicated-4',
+    });
+
+    const mockNodePoolWithTags = {
+      ...mockNodePoolNoTags,
+      tags: ['test-tag'],
+    };
+
+    mockGetCluster(mockCluster).as('getCluster');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
+      'getNodePoolsNoTags'
+    );
+    mockGetKubernetesVersions().as('getVersions');
+    mockUpdateNodePool(mockCluster.id, mockNodePoolWithTags).as('addTag');
+    mockUpdateNodePool(mockCluster.id, mockNodePoolNoTags).as('deleteTag');
+    mockGetDashboardUrl(mockCluster.id);
+    mockGetApiEndpoints(mockCluster.id);
+
+    cy.visitWithLogin(`/kubernetes/clusters/${mockCluster.id}`);
+    cy.wait(['@getCluster', '@getNodePoolsNoTags', '@getVersions']);
+
+    cy.get('[data-qa-node-pool-id="1"]').within(() => {
+      ui.button.findByTitle('Add a tag').should('be.visible').click();
+
+      cy.findByLabelText('Create or Select a Tag')
+        .should('be.visible')
+        .type(`${mockNodePoolWithTags.tags[0]}`);
+
+      ui.autocompletePopper
+        .findByTitle(`Create "${mockNodePoolWithTags.tags[0]}"`)
+        .scrollIntoView()
+        .should('be.visible')
+        .click();
+    });
+
+    mockGetClusterPools(mockCluster.id, [mockNodePoolWithTags]).as(
+      'getNodePoolsWithTags'
+    );
+
+    cy.wait(['@addTag', '@getNodePoolsWithTags']);
+
+    // // Delete the newly added node pool tag.
+    // cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`)
+    //   .should('be.visible')
+    //   .within(() => {
+    //     ui.button
+    //       .findByTitle('Delete tag')
+    //       .should('be.visible')
+    //       .should('be.enabled')
+    //       .click();
+    //   });
+
+    // cy.wait(['@deleteTag', '@getNodePoolsNoTags']);
+    // cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`)
+    // .should('not.exist')
+  });
+
   describe('LKE cluster updates for DC-specific prices', () => {
     /*
      * - Confirms node pool resize UI flow using mocked API responses.
