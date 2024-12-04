@@ -23,13 +23,12 @@ import type {
 const key = 'Clousepulse';
 
 export const queryFactory = createQueryKeys(key, {
-  alert: {
-    // contextQueries: {
-    // This query key is a placeholder , it will be updated once the relevant queries are added
-    queryKey: null,
-  },
   alerts: {
     contextQueries: {
+      alert: {
+        // This query key is a placeholder , it will be updated once the relevant queries are added
+        queryKey: null,
+      },
       all: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getAllAlertsRequest(params, filter),
         queryKey: [params, filter],
