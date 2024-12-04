@@ -258,6 +258,7 @@ export const TextField = (props: TextFieldProps) => {
         fallbackId);
 
   const helperTextId = `${validInputId}-helper-text`;
+  const errorTextId = `${validInputId}-error-text`;
 
   const labelSuffixText = required
     ? '(required)'
@@ -325,6 +326,7 @@ export const TextField = (props: TextFieldProps) => {
             marginTop: theme.spacing(),
           }}
           data-qa-textfield-helper-text
+          id={helperTextId}
         >
           {helperText}
         </FormHelperText>
@@ -373,6 +375,8 @@ export const TextField = (props: TextFieldProps) => {
           }}
           inputProps={{
             'aria-describedby': helperText ? helperTextId : undefined,
+            'aria-errormessage': errorText ? errorTextId : undefined,
+            'aria-invalid': !!error || !!errorText,
             'data-testid': 'textfield-input',
             id: validInputId,
             ...inputProps,
