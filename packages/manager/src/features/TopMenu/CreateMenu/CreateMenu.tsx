@@ -1,7 +1,7 @@
 import { Box, Button, Divider } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { Popover, Stack, useMediaQuery, useTheme } from '@mui/material';
+import { Popover, Stack, useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -14,6 +14,7 @@ import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils'
 import { StyledMenuList, StyledPaper, StyledStack } from './CreateMenu.styles';
 import { ProductFamilyGroup } from './ProductFamilyGroup';
 
+import type { Theme } from '@mui/material';
 import type { BaseNavLink } from 'src/components/PrimaryNav/PrimaryLink';
 import type { ProductFamilyLinkGroup } from 'src/components/PrimaryNav/PrimaryNav';
 
@@ -39,8 +40,9 @@ export interface CreateMenuLink extends BaseNavLink {
 export const CreateMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('md')
+  );
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
