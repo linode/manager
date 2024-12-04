@@ -18,6 +18,7 @@ export const Default: Story = {
       { label: 'Option 1', value: 'option-1' },
       { label: 'Option 2', value: 'option-2' },
     ],
+    placeholder: 'Select an option',
   },
   render: (args) => <Select {...args} />,
 };

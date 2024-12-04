@@ -1,4 +1,5 @@
 import { KeyboardArrowDown } from '@mui/icons-material';
+import { styled } from '@mui/material';
 import {
   FormControl,
   InputLabel,
@@ -6,7 +7,6 @@ import {
   Select as MuiSelect,
 } from '@mui/material';
 import React from 'react';
-import { styled } from '@mui/material';
 
 import type { SelectProps as MuiSelectProps } from '@mui/material';
 
@@ -33,13 +33,6 @@ export const Select = (props: SelectProps) => {
         IconComponent={KeyboardArrowDown}
         color="primary"
         variant="standard"
-        MenuProps={{
-          PaperProps: {
-            sx: {
-              left: '0px !important',
-            },
-          },
-        }}
       >
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
@@ -51,8 +44,26 @@ export const Select = (props: SelectProps) => {
   );
 };
 
-const StyledSelect = styled(MuiSelect, {
+const BaseSelect = styled(MuiSelect, {
   label: 'StyledSelect',
-})({
-  border: 'none',
-});
+})(() => ({
+  '& .MuiSvgIcon-root': {
+    top: 4,
+  },
+}));
+
+const StyledSelect = styled(({ className, ...props }: MuiSelectProps) => (
+  <BaseSelect
+    {...props}
+    MenuProps={{ PaperProps: { className }, marginThreshold: 0 }}
+  />
+))(({ theme }) => ({
+  '& .MuiList-root': {
+    border: `1px solid ${theme.palette.primary.main}`,
+    overflow: 'hidden',
+    width: 'calc(100% + 2px)',
+  },
+  marginLeft: -1,
+  marginTop: -1,
+  overflow: 'visible',
+}));
