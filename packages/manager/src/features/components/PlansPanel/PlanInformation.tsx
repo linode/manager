@@ -7,6 +7,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { APLNotice } from './APLNotice';
 import {
+  ACCELERATED_COMPUTE_INSTANCES_LINK,
   DEDICATED_COMPUTE_INSTANCES_LINK,
   GPU_COMPUTE_INSTANCES_LINK,
   HIGH_MEMORY_COMPUTE_INSTANCES_LINK,
@@ -60,12 +61,7 @@ export const PlanInformation = (props: PlanInformationProps) => {
     hasMajorityOfPlansDisabled;
 
   const transferBanner = (
-    <Notice
-      spacingBottom={
-        planType === 'accelerated' && !showLimitedAvailabilityBanner ? 24 : 8
-      }
-      variant="warning"
-    >
+    <Notice spacingBottom={8} variant="warning">
       <Typography
         fontFamily={(theme: Theme) => theme.font.bold}
         fontSize="1rem"
@@ -109,7 +105,17 @@ export const PlanInformation = (props: PlanInformationProps) => {
           />
         </>
       ) : null}
-      {planType === 'accelerated' && transferBanner}
+      {planType === 'accelerated' && (
+        <>
+          {transferBanner}
+          <PlansAvailabilityNotice
+            hasSelectedRegion={hasSelectedRegion}
+            isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+            planType={planType}
+            regionsData={regionsData || []}
+          />
+        </>
+      )}
       {planType === 'metal' ? (
         <MetalNotice
           dataTestId="metal-notice"
@@ -177,9 +183,8 @@ export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
       docLink = GPU_COMPUTE_INSTANCES_LINK;
       break;
     case 'accelerated':
-      // TODO: accelerated plans - acquire doc link
       planTypeLabel = 'Accelerated';
-      docLink = '#';
+      docLink = ACCELERATED_COMPUTE_INSTANCES_LINK;
       break;
     default:
       planTypeLabel = null;

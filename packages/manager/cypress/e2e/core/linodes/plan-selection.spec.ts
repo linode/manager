@@ -488,7 +488,7 @@ describe('Linode Accelerated plans', () => {
 
         cy.findByText('Accelerated').click();
         cy.get(linodePlansPanel).within(() => {
-          cy.findAllByRole('alert').should('have.length', 1);
+          cy.findAllByRole('alert').should('have.length', 2);
 
           cy.findByRole('table', {
             name: 'List of Linode Plans',
@@ -543,7 +543,7 @@ describe('Linode Accelerated plans', () => {
 
         cy.findByText('Accelerated').click();
         cy.get(k8PlansPanel).within(() => {
-          cy.findAllByRole('alert').should('have.length', 1);
+          cy.findAllByRole('alert').should('have.length', 2);
 
           cy.findByRole('table', { name: planSelectionTable }).within(() => {
             cy.findAllByRole('row').should('have.length', 2);
