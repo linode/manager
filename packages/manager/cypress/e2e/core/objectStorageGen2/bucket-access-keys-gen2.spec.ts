@@ -62,7 +62,7 @@ describe('Object Storage gen2 access keys tests', () => {
 
     // Using contains since the text includes additional information, i.e. '| +2 regions | Show All'
     cy.contains('US, Atlanta, GA (E3): us-southeast.com').should('be.visible');
-    cy.contains('+3 regions').should('be.visible');
+    cy.contains('+ 3 regions').should('be.visible');
     cy.findByText('Show All').should('be.visible').click();
 
     ui.drawer
