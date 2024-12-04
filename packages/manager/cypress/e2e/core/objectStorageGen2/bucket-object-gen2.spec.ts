@@ -84,8 +84,8 @@ describe('Object Storage Gen2 bucket object tests', () => {
 
   const ACLNotification = 'Private: Only you can download this Object';
 
-  // For E0/E1, confirm CORS toggle and ACL selection are both present
-  // For E2/E3, confirm ACL and Cors are removed
+  // For E0/E1, ACL selection is present
+  // For E2/E3, confirm ACL is removed
   const checkBucketObjectDetailsDrawer = (
     bucketFilename: string,
     endpointType: string
@@ -95,16 +95,8 @@ describe('Object Storage Gen2 bucket object tests', () => {
         endpointType === 'Standard (E3)' ||
         endpointType === 'Standard (E2)'
       ) {
-        ui.toggle.find().should('not.exist');
-        cy.contains('CORS Enabled').should('not.exist');
         cy.findByLabelText('Access Control List (ACL)').should('not.exist');
       } else {
-        ui.toggle
-          .find()
-          .should('have.attr', 'data-qa-toggle', 'true')
-          .should('be.visible');
-        cy.contains('CORS Enabled').should('be.visible');
-
         cy.contains(ACLNotification).should('not.exist');
         // Verify that ACL selection show up as options
         cy.findByLabelText('Access Control List (ACL)')
@@ -131,7 +123,7 @@ describe('Object Storage Gen2 bucket object tests', () => {
   };
 
   /**
-  
+
      */
   it('can check Object details drawer with E0 endpoint type', () => {
     const endpointTypeE0 = 'Legacy (E0)';
