@@ -1,10 +1,15 @@
-import { Autocomplete, Notice, Toggle, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  FormControlLabel,
+  Notice,
+  Toggle,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
