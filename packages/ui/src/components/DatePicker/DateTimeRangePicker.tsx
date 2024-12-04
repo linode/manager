@@ -32,6 +32,7 @@ export const DateTimeRangePicker = ({
   endLabel = 'End Date and Time',
   format = 'yyyy-MM-dd HH:mm',
   onChange,
+  showEndTimeZone = false,
   startDateTimeValue = null,
   startLabel = 'Start Date and Time',
   startTimeZoneValue = null,
@@ -106,7 +107,7 @@ export const DateTimeRangePicker = ({
         format={format}
         label={endLabel}
         onChange={handleEndDateTimeChange}
-        showTimeZone={false}
+        showTimeZone={showEndTimeZone}
         timeSelectProps={{ label: 'End Time' }}
         value={endDateTime}
       />
