@@ -1,6 +1,6 @@
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetBucketsForRegion } from 'support/intercepts/object-storage';
+import { ui } from 'support/ui';
 import {
   accountFactory,
   objectStorageBucketFactory,
@@ -34,20 +34,21 @@ describe('Object Storage Gen 1 Bucket Details Tabs', () => {
     it(`confirms the Properties tab does not exist for users without 'Object Storage Endpoint Types' capability`, () => {
       const { region, label } = mockBucket;
 
-      mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as(
-        'getBucketsForRegion'
-      );
-
       cy.visitWithLogin(
         `/object-storage/buckets/${region}/${label}/properties`
       );
 
       cy.wait(['@getFeatureFlags', '@getAccount']);
 
-      cy.wait(1000);
+      // Confirm that expected tabs are visible.
+      ui.tabList.findTabByTitle('Objects').should('be.visible');
+      ui.tabList.findTabByTitle('Access').should('be.visible');
+      ui.tabList.findTabByTitle('SSL/TLS').should('be.visible');
 
-      // Confirm Properties tab is not visible
-      cy.findByText('Properties', { timeout: 15000 }).should('not.exist');
+      // Confirm that "Properties" tab is absent.
+      cy.findByText('Properties').should('not.exist');
+
+      // TODO Confirm "Not Found" notice is present.
     });
   });
 });
