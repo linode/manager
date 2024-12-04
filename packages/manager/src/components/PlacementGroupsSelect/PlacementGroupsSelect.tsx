@@ -1,6 +1,6 @@
+import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
 import { useAllPlacementGroupsQuery } from 'src/queries/placementGroups';

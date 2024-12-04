@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Divider,
   FormControl,
   Radio,
@@ -10,7 +11,6 @@ import {
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { FormControlLabel } from 'src/components/FormControlLabel';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';

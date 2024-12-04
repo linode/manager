@@ -7,10 +7,15 @@ import { makeStyles } from 'tss-react/mui';
 
 import { convertForAria } from 'src/utilities/stringUtils';
 
+import { ErrorState } from './ErrorState/ErrorState';
+import { NotFound } from './NotFound';
+
+import type { APIError } from '@linode/api-v4';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 import type { Theme } from '@mui/material/styles';
 
 export interface DrawerProps extends _DrawerProps {
+  error?: APIError[] | null | string;
   /**
    * Whether the drawer is fetching the entity's data.
    *
@@ -39,93 +44,113 @@ export interface DrawerProps extends _DrawerProps {
  * - Clicking a button on the screen opens the drawer.
  * - Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
  */
-export const Drawer = (props: DrawerProps) => {
-  const { classes, cx } = useStyles();
-  const { children, isFetching, onClose, open, title, wide, ...rest } = props;
-  const titleID = convertForAria(title);
+export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
+  (props: DrawerProps, ref) => {
+    const { classes, cx } = useStyles();
+    const {
+      children,
+      error,
+      isFetching,
+      onClose,
+      open,
+      title,
+      wide,
+      ...rest
+    } = props;
+    const titleID = convertForAria(title);
 
-  // Store the last valid children and title in refs
-  // This is to prevent flashes of content during the drawer's closing transition,
-  // and its content becomes potentially undefined
-  const lastChildrenRef = React.useRef(children);
-  const lastTitleRef = React.useRef(title);
-  // Update refs when the drawer is open and content is matched
-  if (open && children) {
-    lastChildrenRef.current = children;
-    lastTitleRef.current = title;
-  }
+    // Store the last valid children and title in refs
+    // This is to prevent flashes of content during the drawer's closing transition,
+    // and its content becomes potentially undefined
+    const lastChildrenRef = React.useRef(children);
+    const lastTitleRef = React.useRef(title);
+    // Update refs when the drawer is open and content is matched
+    if (open && children) {
+      lastChildrenRef.current = children;
+      lastTitleRef.current = title;
+    }
 
-  return (
-    <_Drawer
-      classes={{
-        paper: cx(classes.common, {
-          [classes.default]: !wide,
-          [classes.wide]: wide,
-        }),
-      }}
-      onClose={(_, reason) => {
-        if (onClose && reason !== 'backdropClick') {
-          onClose({}, 'escapeKeyDown');
-        }
-      }}
-      anchor="right"
-      open={open}
-      {...rest}
-      aria-labelledby={titleID}
-      data-qa-drawer
-      data-testid="drawer"
-      role="dialog"
-    >
-      <Grid
-        sx={{
-          position: 'relative',
+    return (
+      <_Drawer
+        classes={{
+          paper: cx(classes.common, {
+            [classes.default]: !wide,
+            [classes.wide]: wide,
+          }),
         }}
-        alignItems="flex-start"
-        className={classes.drawerHeader}
-        container
-        justifyContent="space-between"
-        wrap="nowrap"
+        onClose={(_, reason) => {
+          if (onClose && reason !== 'backdropClick') {
+            onClose({}, 'escapeKeyDown');
+          }
+        }}
+        anchor="right"
+        open={open}
+        ref={ref}
+        {...rest}
+        aria-labelledby={titleID}
+        data-qa-drawer
+        data-testid="drawer"
+        role="dialog"
       >
-        <Grid>
-          {isFetching ? null : (
-            <Typography
-              className={classes.title}
-              data-qa-drawer-title={title}
-              data-testid="drawer-title"
-              id={titleID}
-              variant="h2"
+        <Grid
+          sx={{
+            position: 'relative',
+          }}
+          alignItems="flex-start"
+          className={classes.drawerHeader}
+          container
+          justifyContent="space-between"
+          wrap="nowrap"
+        >
+          <Grid>
+            {isFetching ? null : (
+              <Typography
+                className={classes.title}
+                data-qa-drawer-title={title}
+                data-testid="drawer-title"
+                id={titleID}
+                variant="h2"
+              >
+                {title}
+              </Typography>
+            )}
+          </Grid>
+          <Grid>
+            <IconButton
+              sx={{
+                position: 'absolute',
+                right: '-12px',
+                top: '-12px',
+              }}
+              aria-label="Close drawer"
+              color="primary"
+              data-qa-close-drawer
+              onClick={() => onClose?.({}, 'escapeKeyDown')}
+              size="large"
             >
-              {title}
-            </Typography>
-          )}
+              <Close />
+            </IconButton>
+          </Grid>
         </Grid>
-        <Grid>
-          <IconButton
-            sx={{
-              position: 'absolute',
-              right: '-12px',
-              top: '-12px',
-            }}
-            aria-label="Close drawer"
-            color="primary"
-            data-qa-close-drawer
-            onClick={() => onClose?.({}, 'escapeKeyDown')}
-            size="large"
-          >
-            <Close />
-          </IconButton>
-        </Grid>
-      </Grid>
-      {isFetching ? (
-        <Box display="flex" justifyContent="center" mt={8}>
-          <CircleProgress size="md" />
-        </Box>
-      ) : (
-        children
-      )}
-    </_Drawer>
-  );
-};
+        {error ? (
+          error === 'Not Found' ? (
+            <NotFound />
+          ) : (
+            <ErrorState
+              errorText={Array.isArray(error) ? error[0].reason : error}
+            />
+          )
+        ) : isFetching ? (
+          <Box display="flex" justifyContent="center" mt={12}>
+            <CircleProgress size="md" />
+          </Box>
+        ) : (
+          children
+        )}
+      </_Drawer>
+    );
+  }
+);
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
