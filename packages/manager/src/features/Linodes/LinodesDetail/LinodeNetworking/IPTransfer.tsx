@@ -1,4 +1,10 @@
-import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  CircleProgress,
+  Divider,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
@@ -16,7 +22,6 @@ import {
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 import { Dialog } from 'src/components/Dialog/Dialog';
 import { usePrevious } from 'src/hooks/usePrevious';
 import {

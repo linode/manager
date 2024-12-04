@@ -1,4 +1,12 @@
-import { Divider, Notice, Stack, TextField, Typography } from '@linode/ui';
+import {
+  Divider,
+  List,
+  ListItem,
+  Notice,
+  Stack,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { createPlacementGroupSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -8,8 +16,6 @@ import { useLocation } from 'react-router-dom';
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { Drawer } from 'src/components/Drawer';
-import { List } from 'src/components/List';
-import { ListItem } from 'src/components/ListItem';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFormValidateOnChange } from 'src/hooks/useFormValidateOnChange';
