@@ -1,8 +1,8 @@
+import { Autocomplete } from '@linode/ui';
 import { DateTime } from 'luxon';
 import React from 'react';
 
 import { timezones } from 'src/assets/timezones/timezones';
-import { Autocomplete } from 'src/components/Autocomplete/Autocomplete';
 
 type Timezone = typeof timezones[number];
 
