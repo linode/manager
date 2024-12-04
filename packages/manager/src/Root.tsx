@@ -16,10 +16,7 @@ import {
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from 'src/queries/profile/preferences';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';

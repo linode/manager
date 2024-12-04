@@ -250,7 +250,7 @@ module.exports = {
     'perfectionist/sort-enums': 'warn',
     'perfectionist/sort-exports': 'warn',
     'perfectionist/sort-imports': [
-      'error',
+      'warn',
       {
         'custom-groups': {
           type: {
@@ -287,7 +287,7 @@ module.exports = {
     'perfectionist/sort-objects': 'warn',
     'perfectionist/sort-union-types': 'warn',
     // make prettier issues warnings
-    'prettier/prettier': 'warn',
+    'prettier/prettier': 'error',
     // radix requires to give the base in parseInt https://eslint.org/docs/rules/radix
     radix: 'error',
     // ramda
