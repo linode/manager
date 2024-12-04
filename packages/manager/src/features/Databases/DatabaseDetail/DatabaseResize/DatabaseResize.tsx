@@ -18,9 +18,10 @@ import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/Da
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
+import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 import {
   StyledGrid,
@@ -81,7 +82,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
   const onResize = () => {
     const payload: UpdateDatabasePayload = {};
 
-    if (clusterSize && clusterSize > database.cluster_size && isDatabasesV2GA) {
+    if (clusterSize && isDatabasesV2GA) {
       payload.cluster_size = clusterSize;
     }
 
@@ -110,8 +111,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
   const selectedEngine = database.engine.split('/')[0] as Engine;
 
   const summaryText = React.useMemo(() => {
-    const nodeSelected = clusterSize && clusterSize > database.cluster_size;
-
+    const nodeSelected = clusterSize && clusterSize !== database.cluster_size;
     const isSamePlanSelected = selectedPlanId === database.type;
     if (!dbTypes) {
       return undefined;
@@ -173,13 +173,19 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     if (!dbTypes) {
       return [];
     }
+
     return dbTypes.map((type: DatabaseType) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-      const nodePricing = type.engines[selectedEngine].find(
-        (cluster: DatabaseClusterSizeObject) =>
-          cluster.quantity === database.cluster_size
+
+      const nodePricing = type.engines[
+        selectedEngine
+      ].find((cluster: DatabaseClusterSizeObject) =>
+        selectedTab === 1 && database.cluster_size === 2
+          ? cluster.quantity === 3
+          : cluster.quantity === clusterSize
       );
+
       const price = nodePricing?.price ?? {
         hourly: null,
         monthly: null,
@@ -196,7 +202,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
         subHeadings,
       };
     });
-  }, [database.cluster_size, dbTypes, selectedEngine]);
+  }, [database.cluster_size, dbTypes, selectedEngine, selectedTab]);
 
   const currentPlan = displayTypes?.find((type) => type.id === database.type);
 
@@ -207,14 +213,23 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       currentPlan?.heading
     );
     setSelectedTab(initialTab);
-  }, [database.type, displayTypes]);
+  }, []);
 
   const currentPlanDisk = currentPlan ? currentPlan.disk : 0;
-  const disabledPlans = displayTypes?.filter((type) =>
-    type.class === 'dedicated'
-      ? type.disk < currentPlanDisk
-      : type.disk <= currentPlanDisk
-  );
+  const disabledPlans = !isNewDatabaseGA
+    ? displayTypes?.filter((type) =>
+        type.class === 'dedicated'
+          ? type.disk < currentPlanDisk
+          : type.disk <= currentPlanDisk
+      )
+    : displayTypes?.filter(
+        (type) =>
+          database?.used_disk_size_gb &&
+          database.used_disk_size_gb >
+            +convertMegabytesTo(type.disk, true)
+              .split(/(GB|MB|KB)/i)[0]
+              .trim()
+      );
   const isDisabledSharedTab = database.cluster_size === 2;
 
   const shouldSubmitBeDisabled = React.useMemo(() => {
@@ -249,7 +264,7 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
         setSelectedPlanId(database.type);
         setClusterSize(database.cluster_size);
       } else {
-        setClusterSize(undefined);
+        setClusterSize(3);
         setSelectedPlanId(undefined);
       }
     }
@@ -274,11 +289,13 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       </Paper>
       <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
+          disabledTabs={
+            !isNewDatabaseGA && isDisabledSharedTab ? ['shared'] : []
+          }
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
           disabled={disabled}
           disabledSmallerPlans={disabledPlans}
-          disabledTabs={isDisabledSharedTab ? ['shared'] : []}
           handleTabChange={handleTabChange}
           header="Choose a Plan"
           onSelect={(selected: string) => setSelectedPlanId(selected)}

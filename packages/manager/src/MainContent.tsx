@@ -37,6 +37,7 @@ import { migrationRouter } from './routes';
 
 import type { Theme } from '@mui/material/styles';
 import type { AnyRouter } from '@tanstack/react-router';
+import { useIsIAMEnabled } from './features/IAM/Shared/utilities';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activationWrapper: {
@@ -195,6 +196,12 @@ const CloudPulse = React.lazy(() =>
   }))
 );
 
+const IAM = React.lazy(() =>
+  import('src/features/IAM').then((module) => ({
+    default: module.IdentityAccessManagement,
+  }))
+);
+
 export const MainContent = () => {
   const { classes, cx } = useStyles();
   const { data: preferences } = usePreferences();
@@ -228,6 +235,8 @@ export const MainContent = () => {
 
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
+
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   /**
    * this is the case where the user has successfully completed signup
@@ -343,6 +352,9 @@ export const MainContent = () => {
                             path="/object-storage"
                           />
                           <Route component={Kubernetes} path="/kubernetes" />
+                          {isIAMEnabled && (
+                            <Route component={IAM} path="/iam" />
+                          )}
                           <Route component={Account} path="/account" />
                           <Route component={Profile} path="/profile" />
                           <Route component={Help} path="/support" />
