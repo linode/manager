@@ -4,7 +4,6 @@ import { alertFactory } from 'src/factories/cloudpulse/alerts';
 import { capitalize } from 'src/utilities/capitalize';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
-import { alertSeverityOptions } from '../constants';
 import { AlertTableRow } from './AlertTableRow';
 
 describe('Alert Row', () => {
@@ -15,17 +14,10 @@ describe('Alert Row', () => {
     expect(getByText(alert.label)).toBeVisible();
   });
 
-  it('should render the severity field with its label not value', async () => {
-    const severityValue = 0;
-    const alert = alertFactory.build({ severity: severityValue });
-    const renderedAlert = <AlertTableRow alert={alert} />;
-    const { getByText } = renderWithTheme(wrapWithTableBody(renderedAlert));
-    const severity = alertSeverityOptions.find(
-      (option) => option.value === severityValue
-    )?.label;
-    expect(getByText(severity!)).toBeVisible;
-  });
-
+  /**
+   * As of now the styling for the status 'enabled' is decided, in the future if they decide on the
+  other styles possible status values, will update them and test them accordingly.
+   */
   it('should render the status field in green color if status is enabled', () => {
     const statusValue = 'enabled';
     const alert = alertFactory.build({ status: statusValue });

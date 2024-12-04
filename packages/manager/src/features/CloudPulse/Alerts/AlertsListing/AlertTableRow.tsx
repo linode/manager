@@ -6,7 +6,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { capitalize } from 'src/utilities/capitalize';
 
-import { alertSeverityOptions } from '../constants';
 import { AlertActionMenu } from './AlertActionMenu';
 
 import type { Alert } from '@linode/api-v4';
@@ -21,16 +20,10 @@ interface Props {
 export const AlertTableRow = (props: Props) => {
   const { alert } = props;
   const { created_by, id, label, service_type, status, updated } = alert;
-  const alertSeverity = React.useMemo(() => {
-    return alertSeverityOptions.find(
-      (option) => option.value === alert.severity
-    );
-  }, [alert.severity]);
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>{label}</TableCell>
       <TableCell>{service_type}</TableCell>
-      <TableCell>{alertSeverity?.label}</TableCell>
       <TableCell>
         <Typography color={status === 'enabled' ? 'limegreen' : 'gray'}>
           {capitalize(status)}

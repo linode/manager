@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { alertFactory } from 'src/factories/cloudpulse/alerts';
@@ -40,11 +39,11 @@ describe('Alert Listing', () => {
       status: 'success',
     });
     const { getByText } = renderWithTheme(<AlertListing />);
-    await waitFor(() => expect(getByText('Alert Name')).toBeInTheDocument());
-    await waitFor(() => expect(getByText('Service Type')).toBeInTheDocument());
-    await waitFor(() => expect(getByText('Status')).toBeInTheDocument());
-    await waitFor(() => expect(getByText('Last Modified')).toBeInTheDocument());
-    await waitFor(() => expect(getByText('Created By')).toBeInTheDocument());
+    expect(getByText('Alert Name')).toBeInTheDocument();
+    expect(getByText('Service')).toBeInTheDocument();
+    expect(getByText('Status')).toBeInTheDocument();
+    expect(getByText('Last Modified')).toBeInTheDocument();
+    expect(getByText('Created By')).toBeInTheDocument();
   });
 
   it('should render the alert row', async () => {
@@ -56,14 +55,8 @@ describe('Alert Listing', () => {
     });
 
     const { getByText } = renderWithTheme(<AlertListing />);
-    await waitFor(() =>
-      expect(getByText(mockResponse[0].label)).toBeInTheDocument()
-    );
-    await waitFor(() =>
-      expect(getByText(mockResponse[1].label)).toBeInTheDocument()
-    );
-    await waitFor(() =>
-      expect(getByText(mockResponse[2].label)).toBeInTheDocument()
-    );
+    expect(getByText(mockResponse[0].label)).toBeInTheDocument();
+    expect(getByText(mockResponse[1].label)).toBeInTheDocument();
+    expect(getByText(mockResponse[2].label)).toBeInTheDocument();
   });
 });

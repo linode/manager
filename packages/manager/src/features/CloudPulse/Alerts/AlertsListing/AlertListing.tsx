@@ -2,7 +2,6 @@ import { Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import AlertIcon from 'src/assets/icons/entityIcons/alert.svg';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -17,7 +16,7 @@ import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { AlertTableRow } from './AlertTableRow';
 
 export const AlertListing = () => {
-  // These are dummy order and handlers, will replace them in the next PR
+  // These are dummy order value and handleOrder methods, will replace them in the next PR
   const order = 'asc';
   const handleOrderChange = () => {
     return 'asc';
@@ -28,7 +27,6 @@ export const AlertListing = () => {
       <Grid item xs={12}>
         <Paper>
           <StyledPlaceholder
-            icon={AlertIcon}
             subtitle="Start Monitoring your resources."
             title=""
           />
@@ -55,18 +53,10 @@ export const AlertListing = () => {
               }}
               active={true}
               direction={order}
-              label="serviceType"
+              label="service"
               size="small"
             >
-              Service Type
-            </TableSortCell>
-            <TableSortCell
-              active={true}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="severity"
-            >
-              Severity
+              Service
             </TableSortCell>
             <TableSortCell
               active={true}
@@ -97,13 +87,13 @@ export const AlertListing = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {isError === true && (
+          {isError && (
             <TableRowError
               colSpan={7}
               message={'Error in fetching the alerts.'}
             />
           )}
-          {isLoading === true && <TableRowLoading columns={7} />}
+          {isLoading && <TableRowLoading columns={7} />}
           {alerts?.map((alert) => (
             <AlertTableRow alert={alert} key={alert.id} />
           ))}

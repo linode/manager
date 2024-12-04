@@ -8,12 +8,12 @@ export const AlertDefinitionLanding = () => {
   return (
     <Switch>
       <Route
-        component={() => <AlertListing />}
+        component={AlertListing}
         exact
         path="/monitor/alerts/definitions"
       />
       <Route
-        component={() => <CreateAlertDefinition />}
+        component={CreateAlertDefinition}
         path="/monitor/alerts/definitions/create"
       />
     </Switch>
