@@ -5,6 +5,7 @@ import React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { useRegionsQuery } from 'src/queries/regions/regions';
+import { pluralize } from 'src/utilities/pluralize';
 import { getRegionsByRegionId } from 'src/utilities/regions';
 
 import type { ObjectStorageKey, ObjectStorageKeyRegions } from '@linode/api-v4';
@@ -45,7 +46,7 @@ export const HostNameTableCell = (props: Props) => {
       {formattedFirstEndpoint}&nbsp;
       {showMultipleRegions ? (
         <>
-          | +{regions.length - 1} {pluralize('region', 'regions', regions.length - 1)} |&nbsp;
+          | + {pluralize('region', 'regions', regions.length - 1)} |&nbsp;
           <StyledLinkButton
             onClick={() => {
               setHostNames(regions);
