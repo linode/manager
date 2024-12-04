@@ -45,7 +45,7 @@ export const HostNameTableCell = (props: Props) => {
       {formattedFirstEndpoint}&nbsp;
       {showMultipleRegions ? (
         <>
-          | +{regions.length - 1} regions |&nbsp;
+          | +{regions.length - 1} {pluralize('region', 'regions', regions.length - 1)} |&nbsp;
           <StyledLinkButton
             onClick={() => {
               setHostNames(regions);
