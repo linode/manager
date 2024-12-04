@@ -48,7 +48,7 @@ export const ApplicationPlatform = (props: APLProps) => {
         })}
       >
         <Box alignItems="center" display="flex" flexDirection="row">
-          <Typography>Akamai App Platform</Typography>
+          <Typography data-testid="apl-label">Akamai App Platform</Typography>
           <Chip color="primary" label="BETA" sx={{ ml: 1 }} />
         </Box>
       </FormLabel>
