@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { FormControlLabel, Typography } from '@linode/ui';
 import {
   Box,
   Divider,
@@ -10,7 +10,6 @@ import {
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { capitalize } from 'src/utilities/capitalize';
 

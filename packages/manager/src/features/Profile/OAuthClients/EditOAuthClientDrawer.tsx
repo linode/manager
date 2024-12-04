@@ -1,10 +1,15 @@
-import { Checkbox, FormControl, Notice, TextField } from '@linode/ui';
+import {
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Notice,
+  TextField,
+} from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { useUpdateOAuthClientMutation } from 'src/queries/account/oauth';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 

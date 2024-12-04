@@ -1,7 +1,5 @@
-import { FormControl, Toggle } from '@linode/ui';
+import { FormControl, FormControlLabel, Toggle } from '@linode/ui';
 import * as React from 'react';
-
-import { FormControlLabel } from 'src/components/FormControlLabel';
 
 interface ToggleProps {
   disabled?: boolean;

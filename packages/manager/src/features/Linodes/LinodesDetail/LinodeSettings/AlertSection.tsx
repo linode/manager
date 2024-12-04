@@ -1,6 +1,7 @@
 import {
   Box,
   Divider,
+  FormControlLabel,
   InputAdornment,
   TextField,
   Toggle,
@@ -10,8 +11,6 @@ import {
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
-
-import { FormControlLabel } from 'src/components/FormControlLabel';
 
 interface Props {
   copy: string;

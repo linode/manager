@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Checkbox,
+  FormControlLabel,
   FormHelperText,
   Notice,
   TextField,
@@ -16,7 +17,6 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Drawer } from 'src/components/Drawer';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
