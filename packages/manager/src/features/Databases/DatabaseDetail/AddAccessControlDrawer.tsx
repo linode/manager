@@ -5,13 +5,16 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Drawer } from 'src/components/Drawer';
+import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
+import { isDefaultDatabase } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import {
   extendedIPToString,
   ipFieldPlaceholder,
+  ipV6FieldPlaceholder,
   stringToExtendedIP,
   validateIPs,
 } from 'src/utilities/ipUtils';
@@ -64,6 +67,8 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
     database.engine,
     database.id
   );
+
+  const isDefaultDB = isDefaultDatabase(database);
 
   const handleUpdateAccessControlsClick = (
     { _allowList }: Values,
@@ -166,8 +171,11 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
     }
   }, [open, resetForm]);
 
+  const learnMoreLink = isDefaultDB
+    ? 'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support'
+    : 'https://techdocs.akamai.com/cloud-computing/docs/manage-access-controls';
   return (
-    <Drawer onClose={onClose} open={open} title="Manage Access Controls">
+    <Drawer onClose={onClose} open={open} title="Manage Access">
       <React.Fragment>
         {error ? <Notice text={error} variant="error" /> : null}
         {allowListErrors
@@ -180,11 +188,21 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             ))
           : null}
         <Typography className={classes.instructions} variant="body1">
-          Add, edit, or remove IPv4 addresses and ranges that should be
-          authorized to access your cluster.
+          {isDefaultDB
+            ? 'Add, edit, or remove IPv6 (recommended) or IPv4 addresses or ranges that should be authorized to access your cluster.'
+            : 'Add, edit, or remove IPv4 addresses and ranges that should be authorized to access your cluster.'}{' '}
+          <Link to={learnMoreLink}>Learn more</Link>
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
+            buttonText={
+              values._allowList && values._allowList.length > 0
+                ? 'Add Another IP'
+                : 'Add an IP'
+            }
+            placeholder={
+              isDefaultDB ? ipV6FieldPlaceholder : ipFieldPlaceholder
+            }
             aria-label="Allowed IP Addresses or Ranges"
             className={classes.ipSelect}
             forDatabaseAccessControls
@@ -192,8 +210,7 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
             ips={values._allowList!}
             onBlur={handleIPBlur}
             onChange={handleIPChange}
-            placeholder={ipFieldPlaceholder}
-            title="Allowed IP Address(es) or Range(s)"
+            title="Allowed IP Addresses or Ranges"
           />
           <ActionsPanel
             primaryButtonProps={{
