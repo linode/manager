@@ -136,7 +136,7 @@ export const BucketDetailLanding = React.memo((props: Props) => {
                 endpointType={endpoint_type}
               />
             </SafeTabPanel>
-            {flags.objectStorageGen2?.enabled && bucket && (
+            {isObjectStorageGen2Enabled && bucket && (
               <SafeTabPanel index={2}>
                 <BucketProperties bucket={bucket} />
               </SafeTabPanel>
