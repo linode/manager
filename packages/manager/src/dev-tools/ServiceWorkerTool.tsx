@@ -151,12 +151,12 @@ export const ServiceWorkerTool = () => {
       mswDB.clear('mockState');
       mswDB.clear('seedState');
       seederHandlers.removeAll();
-      setBaselinePreset('baseline:preset-mocking');
+      setBaselinePreset('baseline:static-mocking');
       setExtraPresets([]);
       setPresetsCountMap({});
       setCustomAccountData(null);
       setCustomProfileData(null);
-      saveBaselinePreset('baseline:preset-mocking');
+      saveBaselinePreset('baseline:static-mocking');
       saveExtraPresets([]);
       saveSeeders([]);
       saveSeedsCountMap({});

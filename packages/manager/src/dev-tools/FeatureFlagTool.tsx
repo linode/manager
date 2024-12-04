@@ -146,9 +146,11 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
     const flagParts = flag.split('.');
     const updatedFlags = { ...storedFlags };
 
+    // If the flag is not a nested flag, update it directly
     if (flagParts.length === 1) {
       updatedFlags[flag] = updatedValue;
     } else {
+      // If the flag is a nested flag, update the specific property that changed
       const [parentKey, childKey] = flagParts;
       const currentParentValue = ldFlags[parentKey];
       const existingValues = storedFlags[parentKey] || {};
@@ -161,6 +163,10 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       };
     }
 
+    updateFlagStorage(updatedFlags);
+  };
+
+  const updateFlagStorage = (updatedFlags: object) => {
     dispatch(setMockFeatureFlags(updatedFlags));
     setStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY, JSON.stringify(updatedFlags));
   };

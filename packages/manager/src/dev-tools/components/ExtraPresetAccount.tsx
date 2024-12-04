@@ -40,19 +40,6 @@ export const ExtraPresetAccount = ({
     false
   );
 
-  React.useEffect(() => {
-    if (customAccountData && isEnabled) {
-      setFormData((prev) => ({
-        ...prev,
-        ...customAccountData,
-      }));
-    } else {
-      setFormData({
-        ...accountFactory.build(),
-      });
-    }
-  }, [customAccountData, isEnabled]);
-
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -99,7 +86,14 @@ export const ExtraPresetAccount = ({
   React.useEffect(() => {
     if (!isEnabled) {
       setCustomAccountData(null);
+      setFormData({
+        ...accountFactory.build(),
+      });
     } else if (isEnabled && customAccountData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...customAccountData,
+      }));
       setCustomAccountData(customAccountData);
     }
   }, [isEnabled, customAccountData]);

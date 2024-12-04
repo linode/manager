@@ -21,34 +21,31 @@ export const JsonTextArea = ({
 }: JsonTextAreaProps) => {
   const [rawText, setRawText] = React.useState(JSON.stringify(value, null, 2));
 
-  const debouncedUpdate = React.useCallback(
-    React.useMemo(
-      () =>
-        debounce((text: string) => {
-          try {
-            const parsedJson = JSON.parse(text);
-            const event = {
-              currentTarget: {
-                name,
-                value: parsedJson,
-              },
-              target: {
-                name,
-                value: parsedJson,
-              },
-            } as React.ChangeEvent<HTMLTextAreaElement>;
+  const debouncedUpdate = React.useMemo(
+    () =>
+      debounce((text: string) => {
+        try {
+          const parsedJson = JSON.parse(text);
+          const event = {
+            currentTarget: {
+              name,
+              value: parsedJson,
+            },
+            target: {
+              name,
+              value: parsedJson,
+            },
+          } as React.ChangeEvent<HTMLTextAreaElement>;
 
-            onChange(event);
-          } catch (err) {
-            // Only warn if the text isn't empty and isn't in the middle of editing
-            if (text.trim()) {
-              // eslint-disable-next-line no-console
-              console.warn(`Invalid JSON in ${name}, error: ${err}`);
-            }
+          onChange(event);
+        } catch (err) {
+          // Only warn if the text isn't empty and isn't in the middle of editing
+          if (text.trim()) {
+            // eslint-disable-next-line no-console
+            console.warn(`Invalid JSON in ${name}, error: ${err}`);
           }
-        }, 500),
-      [name, onChange]
-    ),
+        }
+      }, 500),
     [name, onChange]
   );
 

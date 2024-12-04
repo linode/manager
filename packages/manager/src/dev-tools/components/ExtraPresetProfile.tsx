@@ -30,54 +30,34 @@ export const ExtraPresetProfile = ({
 }: ExtraPresetProfileProps) => {
   const isEnabled = handlers.includes('profile:custom');
   const [formData, setFormData] = React.useState<Profile>(() => ({
-    ...profileFactory.build(),
+    ...profileFactory.build({
+      restricted: false,
+    }),
     ...customProfileData,
   }));
   const [isEditingCustomProfile, setIsEditingCustomProfile] = React.useState(
     false
   );
 
-  React.useEffect(() => {
-    if (customProfileData && isEnabled) {
-      setFormData((prev) => ({
-        ...prev,
-        ...customProfileData,
-      }));
-    } else {
-      setFormData({
-        ...profileFactory.build(),
-      });
-    }
-  }, [customProfileData, isEnabled]);
-
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
-    const { name, value } = e.target;
     // radios
-    if (
-      name === 'restricted' ||
-      name === 'email_notifications' ||
-      name === 'two_factor_auth'
-    ) {
-      const newFormData = {
-        ...formData,
-        [name]: value === 'true',
-      };
-      setFormData(newFormData);
+    const { name, value } = e.target;
+    const isRadioToggleField = [
+      'email_notifications',
+      'restricted',
+      'two_factor_auth',
+    ].includes(name);
 
-      if (isEnabled) {
-        onFormChange?.(newFormData);
-      }
-      return;
-    }
-
+    const newValue = isRadioToggleField ? value === 'true' : value;
     const newFormData = {
       ...formData,
-      [name]: value,
+      [name]: newValue,
     };
+
     setFormData(newFormData);
 
     if (isEnabled) {
@@ -96,8 +76,15 @@ export const ExtraPresetProfile = ({
 
   React.useEffect(() => {
     if (!isEnabled) {
+      setFormData({
+        ...profileFactory.build(),
+      });
       setCustomProfileData(null);
     } else if (isEnabled && customProfileData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...customProfileData,
+      }));
       setCustomProfileData(customProfileData);
     }
   }, [isEnabled, customProfileData]);
