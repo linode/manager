@@ -1094,6 +1094,16 @@ export const lightTheme: ThemeOptions = {
             fill: `${Color.Neutrals[5]} !important`,
             pointerEvents: 'none',
           },
+          '&.MuiRadio-root': {
+            '.MuiSvgIcon-fontSizeMedium': {
+              fontSize: '20px',
+            },
+          },
+          '&.MuiRadio-sizeSmall': {
+            '.MuiSvgIcon-fontSizeSmall': {
+              fontSize: '16px',
+            },
+          },
           '&:hover': {
             '& .defaultFill': {
               fill: theme.color.white,
