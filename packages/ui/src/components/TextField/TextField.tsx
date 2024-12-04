@@ -370,7 +370,7 @@ export const TextField = (props: TextFieldProps) => {
           sx={{
             marginTop: 0,
             ...(Boolean(tooltipText) && {
-              width: '415px',
+              width: '416px',
             }),
             ...props.sx,
           }}

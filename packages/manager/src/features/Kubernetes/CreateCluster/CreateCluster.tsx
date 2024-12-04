@@ -149,13 +149,6 @@ export const CreateCluster = () => {
   }));
 
   React.useEffect(() => {
-    // reset tier if feature flag changes
-    if (!isLkeEnterpriseLAFeatureEnabled) {
-      setSelectedTier('standard');
-    }
-  }, [isLkeEnterpriseLAFeatureEnabled]);
-
-  React.useEffect(() => {
     if (versions.length > 0) {
       setVersion(getLatestVersion(versions).value);
     }
@@ -340,6 +333,7 @@ export const CreateCluster = () => {
             <Stack>
               <RegionSelect
                 currentCapability={
+                  isLkeEnterpriseLAFeatureEnabled &&
                   selectedTier === 'enterprise'
                     ? 'Kubernetes Enterprise'
                     : 'Kubernetes'
@@ -349,6 +343,7 @@ export const CreateCluster = () => {
                   helperTextPosition: 'top',
                 }}
                 tooltipText={
+                  isLkeEnterpriseLAFeatureEnabled &&
                   selectedTier === 'enterprise'
                     ? 'Only regions that support Kubernetes Enterprise are listed.'
                     : undefined
