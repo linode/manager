@@ -16,7 +16,7 @@ describe('DateTimeRangePicker Component', () => {
   it('should render start and end DateTimePickers with correct labels', () => {
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
 
-    expect(screen.getByLabelText('Start Date')).toBeVisible();
+    expect(screen.getByLabelText('Start Date and Time')).toBeVisible();
     expect(screen.getByLabelText('End Date and Time')).toBeVisible();
   });
 
@@ -24,7 +24,7 @@ describe('DateTimeRangePicker Component', () => {
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
 
     // Open start date picker
-    await userEvent.click(screen.getByLabelText('Start Date'));
+    await userEvent.click(screen.getByLabelText('Start Date and Time'));
 
     await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
@@ -32,6 +32,7 @@ describe('DateTimeRangePicker Component', () => {
     // Check if the onChange function is called with the expected DateTime value
     expect(onChangeMock).toHaveBeenCalledWith(
       expect.objectContaining({ day: 10 }),
+      null,
       null
     );
   });
@@ -40,7 +41,7 @@ describe('DateTimeRangePicker Component', () => {
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
 
     // Set start date-time to the 15th
-    const startDateField = screen.getByLabelText('Start Date');
+    const startDateField = screen.getByLabelText('Start Date and Time');
     await userEvent.click(startDateField);
     await userEvent.click(screen.getByRole('gridcell', { name: '15' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
