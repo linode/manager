@@ -95,7 +95,7 @@
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "vite build",
     "build:analyze": "bunx vite-bundle-visualizer",
-    "precommit": "lint-staged && yarn typecheck",
+    "precommit": "lint-staged",
     "test": "vitest run",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
@@ -114,6 +114,9 @@
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "eslint --ext .js,.ts,.tsx --fix"
+    ],
+    "*.{ts,tsx}": [
+      "yarn typecheck"
     ]
   },
   "devDependencies": {
