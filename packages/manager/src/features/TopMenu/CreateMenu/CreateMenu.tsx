@@ -1,7 +1,7 @@
 import { Box, Button, Divider } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import { Popover, Stack } from '@mui/material';
+import { Popover, Stack, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -39,7 +39,8 @@ export interface CreateMenuLink extends BaseNavLink {
 export const CreateMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
-
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
 
@@ -142,7 +143,7 @@ export const CreateMenu = () => {
   ];
 
   return (
-    <Box>
+    <Box sx={{ flexGrow: isSmallScreen ? 1 : 0 }}>
       <Button
         aria-controls={open ? 'basic-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
