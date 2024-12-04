@@ -161,9 +161,7 @@ export const DateTimePicker = ({
           value={
             selectedDateTime
               ? `${selectedDateTime.toFormat(format)}${
-                  showTimeZone && selectedTimeZone
-                    ? ` (${selectedTimeZone})`
-                    : ''
+                  selectedTimeZone ? ` (${selectedTimeZone})` : ''
                 }`
               : ''
           }
