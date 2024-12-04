@@ -107,6 +107,18 @@ const mockedLKEClusterPrices: PriceType[] = [
     transfer: 0,
   },
 ];
+const mockedLKEHAClusterPrices: PriceType[] = [
+  {
+    id: 'lke-ha',
+    label: 'LKE High Availability',
+    price: {
+      hourly: 0.09,
+      monthly: 60.0,
+    },
+    region_prices: [],
+    transfer: 0,
+  },
+];
 
 describe('LKE Cluster Creation', () => {
   /*
@@ -371,11 +383,17 @@ describe('LKE Cluster Creation with APL enabled', () => {
       mockedLKEClusterControlPlane
     ).as('getControlPlaneACL');
     mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
+    mockGetLKEClusterTypes(mockedLKEHAClusterPrices).as('getLKEClusterTypes');
     mockGetApiEndpoints(mockedLKECluster.id).as('getApiEndpoints');
 
     cy.visitWithLogin('/kubernetes/create');
 
-    cy.wait(['@getFeatureFlags', '@getAccountBeta', '@getLinodeTypes']);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getAccountBeta',
+      '@getLinodeTypes',
+      '@getLKEClusterTypes',
+    ]);
 
     // Enter cluster details
     const labelInput = '[data-qa-textfield-label="Cluster Label"]';
