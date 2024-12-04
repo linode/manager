@@ -91,10 +91,9 @@ const mockLinode = linodeFactory.build({
 const mockAccount = accountFactory.build();
 
 const mockRegion = regionFactory.build({
-  capabilities: ['Linodes'],
+  capabilities: ['Managed Databases'],
   id: 'us-ord',
   label: 'Chicago, IL',
-  country: 'us',
 });
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),

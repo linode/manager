@@ -83,7 +83,6 @@ const mockRegion = regionFactory.build({
   capabilities: ['Linodes'],
   id: 'us-ord',
   label: 'Chicago, IL',
-  country: 'us',
 });
 const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
