@@ -11,6 +11,7 @@ export type Capabilities =
   | 'Distributed Plans'
   | 'GPU Linodes'
   | 'Kubernetes'
+  | 'Kubernetes Enterprise'
   | 'Linodes'
   | 'Managed Databases'
   | 'Metadata'

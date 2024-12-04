@@ -755,7 +755,7 @@ export const lightTheme: ThemeOptions = {
           },
           fontSize: '0.875rem',
           lineHeight: 1.25,
-          maxWidth: 415,
+          maxWidth: 416,
         },
       },
     },
