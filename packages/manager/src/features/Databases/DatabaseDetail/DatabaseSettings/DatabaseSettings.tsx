@@ -32,8 +32,9 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
 
   const accessControlCopy = (
     <Typography>
-      Add or remove IPv4 addresses or ranges that should be authorized to access
-      your cluster.
+      {isDefaultDB
+        ? 'Add or remove IPv6 (recommended) or IPv4 addresses or ranges that should be authorized to access your cluster.'
+        : 'Add or remove IPv4 addresses or ranges that should be authorized to access your cluster.'}
     </Typography>
   );
 
