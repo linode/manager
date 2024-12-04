@@ -21,6 +21,7 @@ import {
   mockGetDashboardUrl,
   mockGetApiEndpoints,
   mockGetClusters,
+  mockGetLKEClusterTypes,
 } from 'support/intercepts/lke';
 import { mockGetAccountBeta } from 'support/intercepts/betas';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -48,24 +49,25 @@ import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
 
 import type { ExtendedType } from 'src/utilities/extendType';
 import type { LkePlanDescription } from 'support/api/lke';
+import { PriceType } from '@linode/api-v4/lib/types';
 
 const dedicatedNodeCount = 4;
 const nanodeNodeCount = 3;
 
-export const clusterRegion = chooseRegion({
+const clusterRegion = chooseRegion({
   capabilities: ['Kubernetes'],
 });
-export const dedicatedCpuPool = nodePoolFactory.build({
+const dedicatedCpuPool = nodePoolFactory.build({
   count: dedicatedNodeCount,
   nodes: kubeLinodeFactory.buildList(dedicatedNodeCount),
   type: 'g6-dedicated-2',
 });
-export const nanodeMemoryPool = nodePoolFactory.build({
+const nanodeMemoryPool = nodePoolFactory.build({
   count: nanodeNodeCount,
   nodes: kubeLinodeFactory.buildList(nanodeNodeCount),
   type: 'g6-nanode-1',
 });
-export const dedicatedType = dedicatedTypeFactory.build({
+const dedicatedType = dedicatedTypeFactory.build({
   disk: 81920,
   id: 'g6-dedicated-2',
   label: 'Dedicated 4 GB',
@@ -79,7 +81,7 @@ export const dedicatedType = dedicatedTypeFactory.build({
   )?.region_prices,
   vcpus: 2,
 }) as ExtendedType;
-export const nanodeType = linodeTypeFactory.build({
+const nanodeType = linodeTypeFactory.build({
   disk: 25600,
   id: 'g6-nanode-1',
   label: 'Linode 2 GB',
@@ -93,6 +95,18 @@ export const nanodeType = linodeTypeFactory.build({
   )?.region_prices,
   vcpus: 1,
 }) as ExtendedType;
+const mockedLKEClusterPrices: PriceType[] = [
+  {
+    id: 'lke-sa',
+    label: 'LKE Standard Availability',
+    price: {
+      hourly: 0.0,
+      monthly: 0.0,
+    },
+    region_prices: [],
+    transfer: 0,
+  },
+];
 
 describe('LKE Cluster Creation', () => {
   /*
@@ -138,8 +152,6 @@ describe('LKE Cluster Creation', () => {
   );
 
   it('can create an LKE cluster', () => {
-    cy.tag('method:e2e', 'purpose:dcTesting');
-
     mockCreateCluster(mockedLKECluster).as('createCluster');
     mockGetCluster(mockedLKECluster).as('getCluster');
     mockGetClusterPools(mockedLKECluster.id, mockedLKEClusterPools).as(
@@ -152,6 +164,7 @@ describe('LKE Cluster Creation', () => {
     ).as('getControlPlaneACL');
     mockGetApiEndpoints(mockedLKECluster.id).as('getApiEndpoints');
     mockGetLinodeTypes(mockedLKEClusterTypes).as('getLinodeTypes');
+    mockGetLKEClusterTypes(mockedLKEClusterPrices).as('getLKEClusterTypes');
     mockGetClusters([mockedLKECluster]).as('getClusters');
 
     cy.visitWithLogin('/kubernetes/clusters');
@@ -177,7 +190,7 @@ describe('LKE Cluster Creation', () => {
       .click()
       .type(`${clusterVersion}{enter}`);
 
-    cy.get('[data-testid="ha-radio-button-yes"]').should('be.visible').click();
+    cy.get('[data-testid="ha-radio-button-no"]').should('be.visible').click();
 
     let monthPrice = 0;
 
@@ -218,10 +231,10 @@ describe('LKE Cluster Creation', () => {
         });
       // Expected information on the LKE cluster summary page.
       monthPrice = getTotalClusterPrice({
-        highAvailabilityPrice: 60,
+        highAvailabilityPrice: 0,
         pools: [nanodeMemoryPool, dedicatedCpuPool],
         region: clusterRegion.id,
-        types: [nanodeType, dedicatedType],
+        types: mockedLKEClusterTypes,
       });
     });
 
@@ -238,13 +251,16 @@ describe('LKE Cluster Creation', () => {
 
     // Wait for LKE cluster to be created and confirm that we are redirected
     // to the cluster summary page.
-    cy.wait('@createCluster');
-    cy.wait('@getCluster');
-    cy.wait('@getClusterPools');
-    cy.wait('@getDashboardUrl');
-    cy.wait('@getControlPlaneACL');
-    cy.wait('@getApiEndpoints');
-    cy.wait('@getLinodeTypes');
+    cy.wait([
+      '@getCluster',
+      '@getClusterPools',
+      '@createCluster',
+      '@getLKEClusterTypes',
+      '@getLinodeTypes',
+      '@getDashboardUrl',
+      '@getControlPlaneACL',
+      '@getApiEndpoints',
+    ]);
     cy.url().should(
       'endWith',
       `/kubernetes/clusters/${mockedLKECluster.id}/summary`
@@ -369,17 +385,17 @@ describe('LKE Cluster Creation with APL enabled', () => {
 
     ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
-    cy.findByText('Application Platform for LKE').should('be.visible');
+    cy.findAllByText('Akamai App Platform').should('have.length', 2);
     cy.findByTestId('apl-radio-button-yes').should('be.visible').click();
     cy.findByTestId('ha-radio-button-yes').should('be.disabled');
-    cy.get('[aria-label="Enabled by default when APL is enabled."]').should(
-      'be.visible'
-    );
+    cy.get(
+      '[aria-label="Enabled by default when Akamai App Platform is enabled."]'
+    ).should('be.visible');
 
     // Check that Shared CPU plans are disabled
     ui.tabList.findTabByTitle('Shared CPU').click();
     cy.findByText(
-      'Shared CPU instances are currently not available for Application Platform for LKE'
+      'Shared CPU instances are currently not available for Akamai App Platform.'
     ).should('be.visible');
     cy.get('[data-qa-plan-row="Linode 2 GB"]').should('have.attr', 'disabled');
 
@@ -390,7 +406,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
       'disabled'
     );
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]').should(
-      'have.attr',
+      'not.have.attr',
       'disabled'
     );
     cy.get('[data-qa-plan-row="Dedicated 16 GB"]').within(() => {
@@ -423,12 +439,14 @@ describe('LKE Cluster Creation with APL enabled', () => {
           .click();
       });
 
-    cy.wait('@createCluster');
-    cy.wait('@getCluster');
-    cy.wait('@getClusterPools');
-    cy.wait('@getDashboardUrl');
-    cy.wait('@getControlPlaneACL');
-    cy.wait('@getApiEndpoints');
+    cy.wait([
+      '@createCluster',
+      '@getCluster',
+      '@getClusterPools',
+      '@getDashboardUrl',
+      '@getControlPlaneACL',
+      '@getApiEndpoints',
+    ]);
   });
 });
 
