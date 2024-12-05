@@ -276,6 +276,15 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       return <NullComponent />; // in this we don't want to show the filters at all
     }
 
+    // Count number of filters to be render
+    const filterCount = FILTER_CONFIG.get(
+      dashboard.service_type
+    )?.filters?.filter((config) =>
+      isServiceAnalyticsIntegration
+        ? config.configuration.neededInServicePage
+        : config.configuration.filterKey !== RELATIVE_TIME_DURATION
+    ).length;
+
     return (
       <Grid
         container
@@ -284,43 +293,45 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         paddingBottom={isServiceAnalyticsIntegration ? 3 : 0}
         xs={12}
       >
-        <Grid
-          sx={{
-            m: 0,
-            p: 0,
-          }}
-          item
-          key="toggleFilter"
-          xs={12}
-        >
-          <Button
-            startIcon={
-              showFilter ? (
-                <KeyboardArrowDownIcon
-                  sx={{ color: 'grey', height: '30px', width: '30px' }}
-                />
-              ) : (
-                <KeyboardArrowRightIcon
-                  sx={{ color: 'grey', height: '30px', width: '30px' }}
-                />
-              )
-            }
+        {filterCount && filterCount > 1 && (
+          <Grid
             sx={{
-              justifyContent: 'start',
-              m: theme.spacing(0),
-              marginBottom: theme.spacing(showFilter ? 1 : 0),
-              minHeight: 'auto',
-              minWidth: 'auto',
-              p: theme.spacing(0),
-              svg: {
-                color: theme.color.grey4,
-              },
+              m: 0,
+              p: 0,
             }}
-            onClick={toggleShowFilter}
+            item
+            key="toggleFilter"
+            xs={12}
           >
-            <Typography variant="h3">Filters</Typography>
-          </Button>
-        </Grid>
+            <Button
+              startIcon={
+                showFilter ? (
+                  <KeyboardArrowDownIcon
+                    sx={{ color: 'grey', height: '30px', width: '30px' }}
+                  />
+                ) : (
+                  <KeyboardArrowRightIcon
+                    sx={{ color: 'grey', height: '30px', width: '30px' }}
+                  />
+                )
+              }
+              sx={{
+                justifyContent: 'start',
+                m: theme.spacing(0),
+                marginBottom: theme.spacing(showFilter ? 1 : 0),
+                minHeight: 'auto',
+                minWidth: 'auto',
+                p: theme.spacing(0),
+                svg: {
+                  color: theme.color.grey4,
+                },
+              }}
+              onClick={toggleShowFilter}
+            >
+              <Typography variant="h3">Filters</Typography>
+            </Button>
+          </Grid>
+        )}
         <Grid
           columnSpacing={theme.spacing(2)}
           container
