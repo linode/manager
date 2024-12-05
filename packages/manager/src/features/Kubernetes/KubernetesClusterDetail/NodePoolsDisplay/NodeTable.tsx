@@ -167,23 +167,21 @@ export const NodeTable = React.memo((props: Props) => {
                 justifyContent="space-between"
                 px={2}
               >
-                <Box
-                  alignItems="center"
-                  data-testid={encryptionStatusTestId}
-                  display="flex"
-                  flexDirection="row"
-                  width="100%"
-                >
+                <Box display="flex" width="100%">
                   {isDiskEncryptionFeatureEnabled &&
                   encryptionStatus !== undefined ? (
-                    <>
+                    <Box
+                      alignItems="center"
+                      data-testid={encryptionStatusTestId}
+                      display="flex"
+                    >
                       <Typography>Pool ID {poolId}</Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
                         encryptionStatus={encryptionStatus}
                         tooltipText={DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY}
                       />
-                    </>
+                    </Box>
                   ) : (
                     <Typography>Pool ID {poolId}</Typography>
                   )}
