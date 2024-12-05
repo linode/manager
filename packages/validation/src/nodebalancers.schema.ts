@@ -168,7 +168,10 @@ export const UpdateNodeBalancerConfigSchema = object({
     )
     .typeError('Interval must be a number.')
     .integer(),
-  check_passive: boolean(),
+  check_passive: boolean().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.isFalse(), // You can't enable check_passtive with UDP
+  }),
   check_path: string()
     .matches(/\/.*/)
     .when('check', {
@@ -179,7 +182,11 @@ export const UpdateNodeBalancerConfigSchema = object({
       is: 'http_body',
       then: (schema) => schema.required('An HTTP path is required.'),
     }),
-  proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
+  proxy_protocol: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['none']), // UDP does not support proxy_protocol
+    otherwise: (schema) => schema.oneOf(['none', 'v1', 'v2']),
+  }),
   check_timeout: number()
     .min(
       CHECK_TIMEOUT.MIN,
