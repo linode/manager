@@ -1,4 +1,5 @@
 import {
+  FormControlLabel,
   Paper,
   Radio,
   RadioGroup,
@@ -12,7 +13,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import {
   useMutatePreferences,
   usePreferences,

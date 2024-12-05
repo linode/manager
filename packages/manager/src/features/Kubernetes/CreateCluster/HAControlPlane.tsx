@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { FormControlLabel, Typography } from '@linode/ui';
 import {
   Box,
   CircleProgress,
@@ -11,7 +11,6 @@ import {
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
-import { FormControlLabel } from 'src/components/FormControlLabel';
 import { Link } from 'src/components/Link';
 
 export interface HAControlPlaneProps {
