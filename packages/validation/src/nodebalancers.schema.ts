@@ -138,7 +138,11 @@ export const createNodeBalancerConfigSchema = object({
 });
 
 export const UpdateNodeBalancerConfigSchema = object({
-  algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
+  algorithm: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'ring_hash']),
+    otherwise: (schema) => schema.oneOf(['roundrobin', 'leastconn', 'source']),
+  }),
   check_attempts: number()
     .min(
       CHECK_ATTEMPTS.MIN,
@@ -194,7 +198,7 @@ export const UpdateNodeBalancerConfigSchema = object({
     .integer()
     .min(1, PORT_WARNING)
     .max(65535, PORT_WARNING),
-  protocol: mixed().oneOf(['http', 'https', 'tcp']),
+  protocol: string().oneOf(['http', 'https', 'tcp', 'udp']),
   ssl_key: string().when('protocol', {
     is: 'https',
     then: (schema) => schema.required(),
@@ -203,8 +207,12 @@ export const UpdateNodeBalancerConfigSchema = object({
     is: 'https',
     then: (schema) => schema.required(),
   }),
-  stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
-  nodes: array().of(nodeBalancerConfigNodeSchema),
+  udp_check_port: number().min(1).max(65535),
+  stickiness: string().when('protocol', {
+    is: 'udp',
+    then: (schema) => schema.oneOf(['none', 'source_ip', 'session']),
+    otherwise: (schema) => schema.oneOf(['none', 'table', 'http_cookie']),
+  }),
 });
 
 const client_conn_throttle = number()
@@ -242,6 +250,8 @@ export const NodeBalancerSchema = object({
   client_conn_throttle,
 
   client_udp_sess_throttle,
+
+  tags: array(string()),
 
   region: string().required('Region is required.'),
 
@@ -287,10 +297,7 @@ export const UpdateNodeBalancerSchema = object({
       /^[a-zA-Z0-9-_]+$/,
       "Label can't contain special characters or spaces."
     ),
-
   client_conn_throttle,
-
   client_udp_sess_throttle,
-
-  region: string(),
+  tags: array(string()),
 });
