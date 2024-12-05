@@ -61,16 +61,15 @@ export const CloudPulseRegionSelect = React.memo(
         (item: CloudPulseResourceTypeMapFlag) =>
           item.serviceType === serviceType
       );
-
       const supportedRegionsIdList =
         resourceTypeFlag?.supportedRegionIds
           ?.split(',')
-          .map((regionId: string) => regionId.trim()) || [];
+          .map((regionId: string) => regionId.trim())
+          .filter((regionId: string) => regionId.length > 0) || [];
 
       if (!supportedRegionsIdList.length) {
         return regions;
       }
-
       return regions?.filter((region) =>
         supportedRegionsIdList?.includes(region.id)
       );
