@@ -1,20 +1,22 @@
-import { Box } from '@linode/ui';
+import { Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  Checkbox,
+  CircleProgress,
+  Divider,
+  Notice,
+  TooltipIcon,
+} from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-import { Checkbox } from 'src/components/Checkbox';
-import { CircleProgress } from 'src/components/CircleProgress/CircleProgress';
 import { Dialog } from 'src/components/Dialog/Dialog';
-import { Divider } from 'src/components/Divider';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { Typography } from 'src/components/Typography';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';

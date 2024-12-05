@@ -86,7 +86,7 @@ describe('CPUMetrics', () => {
       />
     );
 
-    for (const value of ['10.00%', '5.50%', '7.75%']) {
+    for (const value of ['10.00 %', '5.50 %', '7.75 %']) {
       expect(getByText(value)).toBeVisible();
     }
   });

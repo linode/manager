@@ -1,9 +1,8 @@
 /* eslint-disable react/jsx-no-useless-fragment */
+import { StyledActionButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-import { StyledActionButton } from 'src/components/Button/StyledActionButton';
 
 interface InlineMenuActionProps {
   /** Required action text */

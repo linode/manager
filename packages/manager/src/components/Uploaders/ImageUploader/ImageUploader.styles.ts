@@ -1,8 +1,5 @@
-import { omittedProps } from '@linode/ui';
+import { Button, Typography, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Button } from 'src/components/Button/Button';
-import { Typography } from 'src/components/Typography';
 
 interface DropZoneClassProps {
   dropzoneDisabled: boolean;

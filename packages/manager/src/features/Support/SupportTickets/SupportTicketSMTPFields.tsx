@@ -1,7 +1,7 @@
+import { TextField } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { TextField } from 'src/components/TextField';
 import { useAccount } from 'src/queries/account/account';
 
 import { SMTP_FIELD_NAME_TO_LABEL_MAP } from './constants';

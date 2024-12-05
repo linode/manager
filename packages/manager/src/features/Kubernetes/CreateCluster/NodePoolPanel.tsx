@@ -1,9 +1,10 @@
+import { CircleProgress } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
+import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
 import { useRegionsQuery } from 'src/queries/regions/regions';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
@@ -69,6 +70,8 @@ const Panel = (props: NodePoolPanelProps) => {
     isDiskEncryptionFeatureEnabled,
   } = useIsDiskEncryptionFeatureEnabled();
 
+  const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
+
   const regions = useRegionsQuery().data ?? [];
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
@@ -109,9 +112,15 @@ const Panel = (props: NodePoolPanelProps) => {
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
-          types={extendedTypes.filter(
-            (t) => t.class !== 'nanode' && t.class !== 'gpu'
-          )} // No Nanodes or GPUs in clusters
+          types={extendedTypes.filter((t) => {
+            if (!isAcceleratedLKEPlansEnabled && t.class === 'accelerated') {
+              // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
+              return false;
+            }
+
+            // No Nanodes or GPUs in Kubernetes clusters
+            return t.class !== 'nanode' && t.class !== 'gpu';
+          })}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"

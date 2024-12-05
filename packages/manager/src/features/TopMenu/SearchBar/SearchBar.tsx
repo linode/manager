@@ -323,8 +323,11 @@ const SearchBar = (props: SearchProps) => {
       </StyledIconButton>
       <StyledSearchBarWrapperDiv className={searchActive ? 'active' : ''}>
         <Search
+          sx={(theme) => ({
+            color: theme.tokens.color.Neutrals[40],
+            fontSize: '2rem',
+          })}
           data-qa-search-icon
-          sx={{ color: '#c9cacb', fontSize: '2rem' }}
         />
         <label className="visually-hidden" htmlFor="main-search">
           Main search

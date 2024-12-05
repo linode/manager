@@ -1,10 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, CircleProgress, TooltipIcon } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { TooltipIcon } from 'src/components/TooltipIcon';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
@@ -59,8 +57,10 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
 
   const configuration =
     database.cluster_size === 1
-      ? 'Primary'
-      : `Primary +${database.cluster_size - 1} replicas`;
+      ? 'Primary (1 Node)'
+      : database.cluster_size > 2
+      ? `Primary (+${database.cluster_size - 1} Nodes)`
+      : `Primary (+${database.cluster_size - 1} Node)`;
 
   const sxTooltipIcon = {
     marginLeft: 0.5,

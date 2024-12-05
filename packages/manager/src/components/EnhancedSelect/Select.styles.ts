@@ -86,7 +86,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
     '& .react-select__control': {
       '&:hover': {
-        border: `1px dotted #ccc`,
+        border: `1px dotted ${theme.tokens.color.Neutrals[40]}`,
         cursor: 'text',
       },
       '&--is-focused, &--is-focused:hover': {
@@ -136,7 +136,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
         width: 8,
       },
       '&::-webkit-scrollbar-thumb': {
-        backgroundColor: '#ccc',
+        backgroundColor: theme.tokens.color.Neutrals[40],
         borderRadius: 8,
       },
       backgroundColor: theme.bg.white,
@@ -290,7 +290,7 @@ export const reactSelectStyles = (theme: Theme) => ({
   control: (base: any) => ({
     ...base,
     '&:hover': {
-      border: `1px dotted #ccc`,
+      border: `1px dotted ${theme.tokens.color.Neutrals[40]}`,
       cursor: 'text',
     },
     '&--is-focused, &--is-focused:hover': {
@@ -349,7 +349,7 @@ export const reactSelectStyles = (theme: Theme) => ({
       width: 8,
     },
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#ccc',
+      backgroundColor: theme.tokens.color.Neutrals[40],
       borderRadius: 8,
     },
     backgroundColor: theme.bg.white,

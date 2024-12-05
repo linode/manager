@@ -1,9 +1,8 @@
+import { Notice, Typography } from '@linode/ui';
 import Button from '@mui/material/Button';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Notice } from 'src/components/Notice/Notice';
-import { Typography } from 'src/components/Typography';
 
 import { useStyles } from './Tile.styles';
 

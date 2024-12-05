@@ -1,12 +1,10 @@
-import { Box } from '@linode/ui';
+import { Box, CircleProgress, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
-import { Typography } from 'src/components/Typography';
 import {
   convertNetworkToUnit,
   generateNetworkUnits,

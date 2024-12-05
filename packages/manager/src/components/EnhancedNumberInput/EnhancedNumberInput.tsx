@@ -1,11 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Button, PlusSignIcon, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import Minus from 'src/assets/icons/LKEminusSign.svg';
-import Plus from 'src/assets/icons/LKEplusSign.svg';
-import { Button } from 'src/components/Button/Button';
-import { TextField } from 'src/components/TextField';
 
 const sxTextFieldBase = {
   '&::-webkit-inner-spin-button': {
@@ -156,6 +153,6 @@ const MinusIcon = styled(Minus)({
   width: 12,
 });
 
-const PlusIcon = styled(Plus)({
+const PlusIcon = styled(PlusSignIcon)({
   width: 14,
 });

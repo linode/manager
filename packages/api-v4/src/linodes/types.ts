@@ -1,7 +1,7 @@
 import type { Region, RegionSite } from '../regions';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { SSHKey } from '../profile/types';
-import type { PlacementGroupPayload } from '../placement-groups/types';
+import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -13,6 +13,7 @@ export interface LinodeSpecs {
   vcpus: number;
   transfer: number;
   gpus: number;
+  accelerated_devices: number;
 }
 
 export interface Linode {
@@ -29,7 +30,7 @@ export interface Linode {
   ipv6: string | null;
   label: string;
   lke_cluster_id: number | null;
-  placement_group?: PlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
+  placement_group?: LinodePlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
   type: string | null;
   status: LinodeStatus;
   updated: string;
@@ -322,6 +323,7 @@ export interface LinodeType extends BaseType {
   successor: string | null;
   network_out: number;
   gpus: number;
+  accelerated_devices: number;
   price: PriceObject;
   region_prices: RegionPriceObject[];
   addons: {
@@ -330,6 +332,7 @@ export interface LinodeType extends BaseType {
 }
 
 export type LinodeTypeClass =
+  | 'accelerated'
   | 'nanode'
   | 'standard'
   | 'dedicated'

@@ -1,9 +1,6 @@
-import { Box } from '@linode/ui';
+import { Box, TooltipIcon, Typography } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
-
-import { TooltipIcon } from 'src/components/TooltipIcon';
-import { Typography } from 'src/components/Typography';
 
 import {
   StyledDL,
@@ -11,8 +8,8 @@ import {
   StyledDT,
 } from './DescriptionList.styles';
 
+import type { TooltipIconProps } from '@linode/ui';
 import type { Breakpoint, SxProps, Theme } from '@mui/material/styles';
-import type { TooltipIconProps } from 'src/components/TooltipIcon';
 
 type DescriptionListBaseProps = {
   /**

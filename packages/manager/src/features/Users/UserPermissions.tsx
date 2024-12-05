@@ -4,26 +4,28 @@ import {
   updateGrants,
   updateUser,
 } from '@linode/api-v4/lib/account';
-import { Box } from '@linode/ui';
-import { Paper } from '@mui/material';
+import {
+  Box,
+  CircleProgress,
+  FormControlLabel,
+  Notice,
+  Paper,
+  Toggle,
+  Typography,
+} from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { CircleProgress } from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { FormControlLabel } from 'src/components/FormControlLabel';
-import { Notice } from 'src/components/Notice/Notice';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { Toggle } from 'src/components/Toggle/Toggle';
-import { Typography } from 'src/components/Typography';
 import { withFeatureFlags } from 'src/containers/flags.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { PARENT_USER, grantTypeMap } from 'src/features/Account/constants';

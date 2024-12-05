@@ -1,10 +1,10 @@
+import { Chip } from '@linode/ui';
 import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Chip } from 'src/components/Chip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';

@@ -1,20 +1,17 @@
-import * as React from 'react';
-
-import { CircleProgress } from 'src/components/CircleProgress';
-import { Typography } from 'src/components/Typography';
+import { CircleProgress, Stack, Typography } from '@linode/ui';
+import React from 'react';
 
 interface Props {
-  height: number;
   loading: boolean;
   renderBody: () => JSX.Element;
   title: string;
 }
 
 export const StatsPanel = (props: Props) => {
-  const { height, loading, renderBody, title } = props;
+  const { loading, renderBody, title } = props;
 
   return (
-    <>
+    <Stack height="100%" spacing={1.5}>
       <Typography data-qa-stats-title variant="h2">
         {title}
       </Typography>
@@ -23,8 +20,8 @@ export const StatsPanel = (props: Props) => {
           style={{
             alignItems: 'center',
             display: 'flex',
+            height: '100%',
             justifyContent: 'center',
-            minHeight: height,
             width: '100%',
           }}
         >
@@ -33,6 +30,6 @@ export const StatsPanel = (props: Props) => {
       ) : (
         renderBody()
       )}
-    </>
+    </Stack>
   );
 };

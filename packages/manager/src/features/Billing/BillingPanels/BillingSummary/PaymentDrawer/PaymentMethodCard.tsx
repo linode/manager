@@ -1,8 +1,8 @@
+import { Chip } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Chip } from 'src/components/Chip';
 import {
   getIcon as getTPPIcon,
   thirdPartyPaymentMap,

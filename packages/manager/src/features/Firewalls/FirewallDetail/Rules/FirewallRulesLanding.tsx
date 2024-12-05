@@ -1,3 +1,4 @@
+import { Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -5,9 +6,7 @@ import * as React from 'react';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Notice } from 'src/components/Notice/Notice';
 import { Prompt } from 'src/components/Prompt/Prompt';
-import { Typography } from 'src/components/Typography';
 import {
   useAllFirewallDevicesQuery,
   useUpdateFirewallRulesMutation,

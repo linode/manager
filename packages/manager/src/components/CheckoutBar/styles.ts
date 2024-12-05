@@ -1,6 +1,5 @@
+import { Button } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
-
-import { Button } from 'src/components/Button/Button';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   marginTop: 18,

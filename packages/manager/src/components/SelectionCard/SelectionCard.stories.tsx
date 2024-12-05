@@ -1,10 +1,9 @@
+import { Chip } from '@linode/ui';
 import Alarm from '@mui/icons-material/Alarm';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import DE from 'flag-icons/flags/4x3/de.svg';
 import US from 'flag-icons/flags/4x3/us.svg';
 import * as React from 'react';
-
-import { Chip } from 'src/components/Chip';
 
 import { SelectionCard } from './SelectionCard';
 

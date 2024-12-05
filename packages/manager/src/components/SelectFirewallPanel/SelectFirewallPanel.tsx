@@ -1,16 +1,13 @@
-import { Box, Paper } from '@linode/ui';
+import { Autocomplete, Box, Paper, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useFirewallsQuery } from 'src/queries/firewalls';
 
 import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
-import { Autocomplete } from '../Autocomplete/Autocomplete';
 import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewallDialog';
 import { LinkButton } from '../LinkButton';
 

@@ -1,8 +1,5 @@
-import { Box } from '@linode/ui';
+import { Box, Chip, ListItem } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-
-import { Chip } from 'src/components/Chip';
-import { ListItem } from 'src/components/ListItem';
 
 export const StyledAutocompleteContainer = styled(Box, {
   label: 'RegionSelect',

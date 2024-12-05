@@ -588,3 +588,19 @@ export const mockGetLinodeIPAddresses = (
     makeResponse(ipAddresses)
   );
 };
+
+/**
+ * Intercepts POST request to cancel backups for a Linode.
+ *
+ * @param linodeId - ID of Linode for which to enable backups.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCancelLinodeBackups = (
+  linodeId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/backups/cancel`)
+  );
+};

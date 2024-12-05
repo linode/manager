@@ -1,4 +1,4 @@
-import { Tooltip } from '@linode/ui';
+import { Stack, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
@@ -6,8 +6,6 @@ import { ListItemOption } from 'src/components/ListItemOption';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { OSIcon } from '../OSIcon';
-import { Stack } from '../Stack';
-import { Typography } from '../Typography';
 import { isImageDeprecated } from './utilities';
 
 import type { Image } from '@linode/api-v4';

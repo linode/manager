@@ -8,7 +8,10 @@ import {
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
 import { stackScriptFactory } from '@src/factories';
-import { StackScript } from '@linode/api-v4';
+import { getImages, StackScript } from '@linode/api-v4';
+import { depaginate } from 'support/util/paginate';
+
+import type { Image } from '@linode/api-v4';
 
 // StackScript fixture paths.
 const stackscriptNoShebangPath = 'stackscripts/stackscript-no-shebang.sh';
@@ -22,6 +25,20 @@ const stackScriptErrorNoShebang =
 // StackScript error that is expected to appear when UDFs with non-alphanumeric names are supplied.
 const stackScriptErrorUdfAlphanumeric =
   'UDF names can only contain alphanumeric and underscore characters.';
+
+/**
+ * Sets the StackScript field's value programmatically rather than via simulated typing.
+ *
+ * Cypress's typing operation is slow for long strings, so we can save several
+ * seconds by setting the value directly, then simulating a couple keystrokes.
+ *
+ * @param script - Script contents to input.
+ */
+const inputStackScript = (script: string) => {
+  cy.get('[data-qa-textfield-label="Script"]').should('be.visible').click();
+
+  cy.focused().invoke('val', script).type(' {backspace}');
+};
 
 /**
  * Fills out the StackScript edition form.
@@ -60,10 +77,7 @@ const fillOutStackscriptForm = (
   ui.autocomplete.findByLabel('Target Images').click(); // Close autocomplete popper
 
   // Insert a script with invalid UDF data.
-  cy.get('[data-qa-textfield-label="Script"]')
-    .should('be.visible')
-    .click()
-    .type(script);
+  inputStackScript(script);
 };
 
 authenticate();
@@ -77,7 +91,18 @@ describe('Update stackscripts', () => {
   it('updates a StackScript', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
-    const stackscriptImage = 'Alpine 3.17';
+
+    /**
+     * Returns a Promise that resolves to the first non-deprecated Alpine Image found.
+     */
+    const getAlpineImage = async () => {
+      const allPublicImages = await depaginate((page) =>
+        getImages({ page }, { is_public: true })
+      );
+      return allPublicImages.find(
+        (image) => image.vendor === 'Alpine' && image.deprecated === false
+      );
+    };
 
     const stackScripts = stackScriptFactory.buildList(2);
     // Import StackScript type from Linode API package.
@@ -113,13 +138,15 @@ describe('Update stackscripts', () => {
       .should('be.disabled');
 
     // Submit StackScript edit form with invalid contents, confirm error messages.
-    cy.fixture(stackscriptNoShebangPath).then((stackscriptWithNoShebang) => {
-      fillOutStackscriptForm(
-        stackscriptLabel,
-        stackscriptDesc,
-        stackscriptImage,
-        stackscriptWithNoShebang
-      );
+    cy.defer(getAlpineImage).then((alpineImage: Image) => {
+      cy.fixture(stackscriptNoShebangPath).then((stackscriptWithNoShebang) => {
+        fillOutStackscriptForm(
+          stackscriptLabel,
+          stackscriptDesc,
+          alpineImage.label,
+          stackscriptWithNoShebang
+        );
+      });
     });
 
     mockUpdateStackScriptError(
@@ -137,11 +164,7 @@ describe('Update stackscripts', () => {
 
     // Insert a script with valid UDF data and submit StackScript edit form.
     cy.fixture(stackscriptUdfInvalidPath).then((stackScriptUdfInvalid) => {
-      cy.get('[data-qa-textfield-label="Script"]')
-        .should('be.visible')
-        .click()
-        .type('{selectall}{backspace}')
-        .type(stackScriptUdfInvalid);
+      inputStackScript(stackScriptUdfInvalid);
     });
 
     mockUpdateStackScriptError(
@@ -159,11 +182,7 @@ describe('Update stackscripts', () => {
 
     // Insert a script with valid UDF data and submit StackScript edit form.
     cy.fixture(stackscriptUdfPath).then((stackScriptUdf) => {
-      cy.get('[data-qa-textfield-label="Script"]')
-        .should('be.visible')
-        .click()
-        .type('{selectall}{backspace}')
-        .type(stackScriptUdf);
+      inputStackScript(stackScriptUdf);
     });
 
     updatedStackScripts[0].label = stackscriptLabel;

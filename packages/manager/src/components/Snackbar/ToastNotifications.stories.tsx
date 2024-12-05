@@ -1,11 +1,9 @@
+import { Button, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { Button } from 'src/components/Button/Button';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import { getEventMessage } from 'src/features/Events/utils';
-
-import { Stack } from '../Stack';
 
 import type { Meta, StoryObj } from '@storybook/react';
 import type { VariantType } from 'notistack';

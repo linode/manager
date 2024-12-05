@@ -1,8 +1,8 @@
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { Typography } from 'src/components/Typography';
 import { useFlags } from 'src/hooks/useFlags';
 
 export const DesignUpdateBanner = () => {

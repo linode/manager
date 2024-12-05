@@ -1,9 +1,6 @@
+import { Divider, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
-
-import { Divider } from 'src/components/Divider';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
 
 import { AppSelectionCard } from './AppSelectionCard';
 

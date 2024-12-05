@@ -1,8 +1,5 @@
+import { Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
-
-import { Paper } from '@linode/ui';
-import { Stack } from 'src/components/Stack';
-import { Typography } from 'src/components/Typography';
 
 import { Region } from '../../Region';
 import { LinodeSelectTable } from '../../shared/LinodeSelectTable';

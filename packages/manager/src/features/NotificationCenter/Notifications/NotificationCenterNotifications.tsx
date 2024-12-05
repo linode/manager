@@ -1,7 +1,5 @@
+import { CircleProgress, StyledLinkButton } from '@linode/ui';
 import React from 'react';
-
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { CircleProgress } from 'src/components/CircleProgress';
 
 import { useStyles } from '../NotificationCenter.styles';
 import {

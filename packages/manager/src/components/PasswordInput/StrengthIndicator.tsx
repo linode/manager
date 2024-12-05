@@ -1,9 +1,9 @@
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Theme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { Typography } from 'src/components/Typography';
+import type { Theme } from '@mui/material/styles';
 
 type StrengthValues = 0 | 1 | 2 | 3 | 4 | null;
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '&[class*="strength-"]': {
       backgroundColor: theme.palette.primary.main,
     },
-    backgroundColor: '#C9CACB',
+    backgroundColor: theme.tokens.color.Neutrals[40],
     height: '4px',
     transition: 'background-color .5s ease-in-out',
   },

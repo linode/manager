@@ -1,10 +1,9 @@
-import { Box } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { ListItemOption } from 'src/components/ListItemOption';
 import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { Stack } from 'src/components/Stack';
 
 import type { Region } from '@linode/api-v4';
 import type { ListItemProps } from 'src/components/ListItemOption';

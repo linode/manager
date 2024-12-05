@@ -1,6 +1,5 @@
-import { clamp, compose, filter, isNil, toString } from 'ramda';
+import { filter, isNil } from 'ramda';
 
-import { defaultNumeric } from 'src/utilities/defaultNumeric';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type {
@@ -11,11 +10,6 @@ import type {
 } from './types';
 import type { APIError } from '@linode/api-v4';
 import type { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
-
-export const clampNumericString = (low: number, hi: number) =>
-  compose(toString, clamp(low, hi), (value: number) =>
-    defaultNumeric(0, value)
-  ) as (value: any) => string;
 
 export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
   address: '',

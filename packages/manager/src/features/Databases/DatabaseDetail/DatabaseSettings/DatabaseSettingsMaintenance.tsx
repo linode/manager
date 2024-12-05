@@ -1,8 +1,7 @@
+import { StyledLinkButton, Typography } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 import * as React from 'react';
 
-import { StyledLinkButton } from 'src/components/Button/StyledLinkButton';
-import { Typography } from 'src/components/Typography';
 import {
   getDatabasesDescription,
   hasPendingUpdates,
@@ -35,7 +34,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
 
   return (
     <Grid container data-qa-settings-section="Maintenance">
-      <Grid item xs={4}>
+      <Grid item xs={6}>
         <StyledTypography variant="h3">Maintenance</StyledTypography>
         <BoldTypography>Version</BoldTypography>
         <StyledTypography>{engineVersion}</StyledTypography>
@@ -47,14 +46,14 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
           Upgrade Version
         </StyledLinkButton>
       </Grid>
-      <Grid item xs={4}>
-        {/*
+      {/*
         TODO Uncomment and provide value when the EOL is returned by the API.
         Currently, it is not supported, however they are working on returning it since it has value to the end user
-        <StyledTypography variant="h3">End of life</StyledTypography>
-        */}
-      </Grid>
-      <Grid item xs={4}>
+        <Grid item xs={4}>
+          <StyledTypography variant="h3">End of life</StyledTypography>
+        </Grid>
+      */}
+      <Grid item xs={6}>
         <StyledTypography variant="h3">Maintenance updates</StyledTypography>
         {hasUpdates ? (
           <BoldTypography>

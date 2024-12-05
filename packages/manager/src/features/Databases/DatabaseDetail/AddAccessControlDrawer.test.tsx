@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { databaseFactory } from 'src/factories';
@@ -46,7 +47,7 @@ describe('Add Access Controls drawer', () => {
     await screen.findByDisplayValue(IPv4ListWithMasks[2]);
   });
 
-  it('Should have a disabled Add Inbound Sources button until an inbound source field is touched', () => {
+  it('Should have a disabled Add Inbound Sources button until an inbound source field is touched', async () => {
     const db = {
       allow_list: IPv4List,
       engine: 'postgresql',
@@ -63,8 +64,8 @@ describe('Add Access Controls drawer', () => {
     // Before making a change to the IP addresses, the "Add Inbound Sources" button should be disabled.
     expect(addAccessControlsButton).toHaveAttribute('aria-disabled', 'true');
 
-    const addAnIPButton = getByText('Add an IP');
-    fireEvent.click(addAnIPButton);
+    const addAnIPButton = getByText('Add Another IP');
+    await userEvent.click(addAnIPButton);
 
     expect(addAccessControlsButton).toHaveAttribute('aria-disabled', 'false');
   });

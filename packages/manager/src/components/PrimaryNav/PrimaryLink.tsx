@@ -4,14 +4,18 @@ import * as React from 'react';
 import { StyledActiveLink, StyledPrimaryLinkBox } from './PrimaryNav.styles';
 
 import type { NavEntity } from './PrimaryNav';
+import type { CreateEntity } from 'src/features/TopMenu/CreateMenu/CreateMenu';
 
-export interface PrimaryLink {
-  activeLinks?: Array<string>;
+export interface BaseNavLink {
   attr?: { [key: string]: any };
-  betaChipClassName?: string;
-  display: NavEntity;
+  display: CreateEntity | NavEntity;
   hide?: boolean;
   href: string;
+}
+
+export interface PrimaryLink extends BaseNavLink {
+  activeLinks?: Array<string>;
+  betaChipClassName?: string;
   isBeta?: boolean;
   onClick?: (e: React.ChangeEvent<any>) => void;
 }
@@ -19,7 +23,6 @@ export interface PrimaryLink {
 interface PrimaryLinkProps extends PrimaryLink {
   closeMenu: () => void;
   isActiveLink: boolean;
-  isBeta?: boolean;
   isCollapsed: boolean;
 }
 

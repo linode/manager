@@ -1,13 +1,11 @@
+import { Divider, Notice, Stack } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Divider } from 'src/components/Divider';
 import { Drawer } from 'src/components/Drawer';
-import { Notice } from 'src/components/Notice/Notice';
-import { Stack } from 'src/components/Stack';
 import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from '../../Linodes/LinodesDetail/LinodeRebuild/RebuildFromImage';
@@ -41,7 +39,7 @@ export const RebuildImageDrawer = (props: Props) => {
       return;
     }
 
-    onClose();
+    handleClose();
 
     history.push({
       pathname: `/linodes/${values.linodeId}/rebuild`,
@@ -51,10 +49,14 @@ export const RebuildImageDrawer = (props: Props) => {
     });
   });
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
   return (
     <Drawer
-      onClose={onClose}
-      onExited={reset}
+      onClose={handleClose}
       open={open}
       title="Rebuild an Existing Linode from an Image"
     >
@@ -107,7 +109,7 @@ export const RebuildImageDrawer = (props: Props) => {
           }}
           secondaryButtonProps={{
             label: 'Cancel',
-            onClick: onClose,
+            onClick: handleClose,
           }}
           style={{ marginTop: 16 }}
         />

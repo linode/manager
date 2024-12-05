@@ -1,10 +1,8 @@
-import { Box } from '@linode/ui';
+import { Box, Button, Chip } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Button } from 'src/components/Button/Button';
-import { Chip } from 'src/components/Chip';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
