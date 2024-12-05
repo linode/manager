@@ -136,6 +136,10 @@ export const Autocomplete = <
               </>
             ),
           }}
+          inputProps={{
+            ...params.inputProps,
+            ...textFieldProps?.inputProps,
+          }}
         />
       )}
       renderOption={(props, option, state, ownerState) => {
