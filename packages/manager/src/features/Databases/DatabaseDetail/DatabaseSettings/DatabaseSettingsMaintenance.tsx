@@ -40,7 +40,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
         <StyledTypography>{engineVersion}</StyledTypography>
         <StyledLinkButton
           data-testid="upgrade"
-          disabled={!versions?.length}
+          disabled={!versions?.length || hasUpdates}
           onClick={onUpgradeVersion}
         >
           Upgrade Version
