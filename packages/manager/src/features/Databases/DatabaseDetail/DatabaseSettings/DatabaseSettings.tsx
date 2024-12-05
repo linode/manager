@@ -1,6 +1,15 @@
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
+import {
+  ACCESS_CONTROLS_IN_SETTINGS_TEXT,
+  ACCESS_CONTROLS_IN_SETTINGS_TEXT_LEGACY,
+  DELETE_CLUSTER_TEXT,
+  DELETE_CLUSTER_TEXT_LEGACY,
+  RESET_ROOT_PASSWORD_TEXT,
+  RESET_ROOT_PASSWORD_TEXT_LEGACY,
+  SUSPEND_CLUSTER_TEXT,
+} from 'src/features/Databases/constants';
 import { DatabaseSettingsReviewUpdatesDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsReviewUpdatesDialog';
 import { DatabaseSettingsUpgradeVersionDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsUpgradeVersionDialog';
 import {
@@ -32,21 +41,21 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
 
   const accessControlCopy = (
     <Typography>
-      {isDefaultDB
-        ? 'Add or remove IPv6 (recommended) or IPv4 addresses or ranges that should be authorized to access your cluster.'
-        : 'Add or remove IPv4 addresses or ranges that should be authorized to access your cluster.'}
+      {!isDefaultDB
+        ? ACCESS_CONTROLS_IN_SETTINGS_TEXT_LEGACY
+        : ACCESS_CONTROLS_IN_SETTINGS_TEXT}
     </Typography>
   );
 
-  const suspendClusterCopy = `Suspend the cluster if you don't use it temporarily to prevent being billed for it.`;
+  const suspendClusterCopy = SUSPEND_CLUSTER_TEXT;
 
   const resetRootPasswordCopy = !isDefaultDB
-    ? 'Resetting your root password will automatically generate a new password. You can view the updated password on your database cluster summary page. '
-    : 'Reset your root password if someone should no longer have access to the root user or if you believe your password may have been compromised. This will automatically generate a new password that you’ll be able to see on your database cluster summary page.';
+    ? RESET_ROOT_PASSWORD_TEXT_LEGACY
+    : RESET_ROOT_PASSWORD_TEXT;
 
   const deleteClusterCopy = !isDefaultDB
-    ? 'Deleting a database cluster is permanent and cannot be undone.'
-    : 'Permanently remove an unused database cluster.';
+    ? DELETE_CLUSTER_TEXT_LEGACY
+    : DELETE_CLUSTER_TEXT;
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [
