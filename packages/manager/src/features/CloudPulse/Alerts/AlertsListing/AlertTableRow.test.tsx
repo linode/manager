@@ -24,6 +24,6 @@ describe('Alert Row', () => {
     const renderedAlert = <AlertTableRow alert={alert} />;
     const { getByText } = renderWithTheme(wrapWithTableBody(renderedAlert));
     const statusElement = getByText(capitalize(statusValue));
-    expect(getComputedStyle(statusElement).color).toBe('rgb(50, 205, 50)');
+    expect(getComputedStyle(statusElement).color).toBe('rgb(0, 176, 80)');
   });
 });

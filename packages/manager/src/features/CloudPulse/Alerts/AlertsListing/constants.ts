@@ -1,6 +1,6 @@
 export const AlertListingTableLabelMap = [
   {
-    colName: 'AlertName',
+    colName: 'Alert Name',
     label: 'alertName',
   },
   {
