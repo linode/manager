@@ -6,7 +6,7 @@
 - Extend support for Object Storage in Support tickets ([#11178](https://github.com/linode/manager/pull/11178))
 - New IAM endpoints and types ([#11181](https://github.com/linode/manager/pull/11181))
 - Missing `+eq` type to `FilterConditionTypes` interface ([#11233](https://github.com/linode/manager/pull/11233))
-- New VPU related fields and capabilities to API types ([#11256](https://github.com/linode/manager/pull/11256))
+- New Accelerated-related fields and capabilities to API types ([#11256](https://github.com/linode/manager/pull/11256))
 - Placement Groups migrations Types ([#11261](https://github.com/linode/manager/pull/11261))
 - `service_type` as parameter for the Create Alert POST request ([#11286](https://github.com/linode/manager/pull/11286))
 

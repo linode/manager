@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Linode details summary VPC IPv4 text to be copyable ([#11172](https://github.com/linode/manager/pull/11172))
 - Replace Pagination page size autocomplete with simple select ([#11203](https://github.com/linode/manager/pull/11203))
 - Replace Select component with Autocomplete in DBaaS ([#11245](https://github.com/linode/manager/pull/11245))
-- Update types based on new VPU fields and added mock data ([#11256](https://github.com/linode/manager/pull/11256))
+- Update types based on new Accelerated fields and added mock data ([#11256](https://github.com/linode/manager/pull/11256))
 - Improve the status column on the Images landing page ([#11257](https://github.com/linode/manager/pull/11257))
 - Improve Placement Groups UI during Linode migrations ([#11261](https://github.com/linode/manager/pull/11261))
 - Update docs links on empty Database landing page ([#11262](https://github.com/linode/manager/pull/11262))
