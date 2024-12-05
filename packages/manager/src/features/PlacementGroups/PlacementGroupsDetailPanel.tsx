@@ -1,8 +1,7 @@
-import { Box, Button, Notice, Typography } from '@linode/ui';
+import { Box, Button, ListItem, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ListItem } from 'src/components/ListItem';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
