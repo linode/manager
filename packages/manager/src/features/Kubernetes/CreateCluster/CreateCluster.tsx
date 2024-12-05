@@ -131,7 +131,7 @@ export const CreateCluster = () => {
   } = useCreateKubernetesClusterBetaMutation();
 
   const {
-    data: versionData,
+    data: _versionData,
     isError: versionLoadError,
     isLoading: versionLoading,
   } = useKubernetesVersionQuery();
@@ -151,12 +151,12 @@ export const CreateCluster = () => {
    * If LKE-E is disabled, use the data from the existing /versions endpoint.
    * @todo LKE-E: Clean up use of versionData once LKE-E is in GA.
    */
-  const _versionData =
+  const versionData =
     isLkeEnterpriseLAFeatureEnabled && selectedTier === 'enterprise'
       ? enterpriseTierVersionData
-      : versionData;
+      : _versionData;
 
-  const versions = (_versionData ?? []).map((thisVersion) => ({
+  const versions = (versionData ?? []).map((thisVersion) => ({
     label: thisVersion.id,
     value: thisVersion.id,
   }));
@@ -165,7 +165,7 @@ export const CreateCluster = () => {
     if (versions.length > 0) {
       setVersion(getLatestVersion(versions).value);
     }
-  }, [versionData, _versionData]);
+  }, [versionData]);
 
   const createCluster = () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
