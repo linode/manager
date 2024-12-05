@@ -881,7 +881,6 @@ describe('LKE cluster updates', () => {
     );
     mockGetKubernetesVersions().as('getVersions');
     mockUpdateNodePool(mockCluster.id, mockNodePoolWithTags).as('addTag');
-    mockUpdateNodePool(mockCluster.id, mockNodePoolNoTags).as('deleteTag');
     mockGetDashboardUrl(mockCluster.id);
     mockGetApiEndpoints(mockCluster.id);
 
@@ -908,20 +907,23 @@ describe('LKE cluster updates', () => {
 
     cy.wait(['@addTag', '@getNodePoolsWithTags']);
 
-    // // Delete the newly added node pool tag.
-    // cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`)
-    //   .should('be.visible')
-    //   .within(() => {
-    //     ui.button
-    //       .findByTitle('Delete tag')
-    //       .should('be.visible')
-    //       .should('be.enabled')
-    //       .click();
-    //   });
+    mockUpdateNodePool(mockCluster.id, mockNodePoolNoTags).as('deleteTag');
+    mockGetClusterPools(mockCluster.id, [mockNodePoolNoTags]).as(
+      'getNodePoolsNoTags'
+    );
 
-    // cy.wait(['@deleteTag', '@getNodePoolsNoTags']);
-    // cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`)
-    // .should('not.exist')
+    // Delete the newly added node pool tag.
+    cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`)
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-qa-delete-tag="true"]').should('be.visible').click();
+      });
+
+    cy.wait(['@deleteTag', '@getNodePoolsNoTags']);
+
+    cy.get(`[data-qa-tag="${mockNodePoolWithTags.tags[0]}"]`).should(
+      'not.exist'
+    );
   });
 
   describe('LKE cluster updates for DC-specific prices', () => {
